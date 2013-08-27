@@ -5,7 +5,7 @@ import org.siemac.metamac.core.common.criteria.MetamacCriteriaConjunctionRestric
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaPaginator;
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaResult;
 import org.siemac.metamac.core.common.exception.MetamacException;
-import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionBaseDto;
 import org.siemac.metamac.statistical.resources.core.facade.serviceapi.StatisticalResourcesServiceFacade;
 import org.siemac.metamac.statistical.resources.web.server.utils.MetamacWebCriteriaUtils;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetVersionsAction;
@@ -48,7 +48,7 @@ public class GetDatasetVersionsActionHandler extends SecurityActionHandler<GetDa
         criteria.getPaginator().setCountTotalResults(true);
 
         try {
-            MetamacCriteriaResult<DatasetVersionDto> result = statisticalResourcesServiceFacade.findDatasetsVersionsByCondition(ServiceContextHolder.getCurrentServiceContext(), criteria);
+            MetamacCriteriaResult<DatasetVersionBaseDto> result = statisticalResourcesServiceFacade.findDatasetsVersionsByCondition(ServiceContextHolder.getCurrentServiceContext(), criteria);
             return new GetDatasetVersionsResult(result.getResults(), result.getPaginatorResult().getFirstResult(), result.getPaginatorResult().getTotalResults());
         } catch (MetamacException e) {
             throw WebExceptionUtils.createMetamacWebException(e);

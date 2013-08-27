@@ -1,7 +1,7 @@
 package org.siemac.metamac.statistical.resources.web.client.query.model.record;
 
 import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
-import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionDto;
+import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionBaseDto;
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.web.client.model.record.LifeCycleResourceRecord;
 import org.siemac.metamac.statistical.resources.web.client.query.model.ds.QueryDS;
@@ -23,15 +23,16 @@ public class QueryRecord extends LifeCycleResourceRecord {
         setAttribute(QueryDS.TYPE, value);
     }
 
-    public void setQueryDto(QueryVersionDto queryDto) {
+    public void setQueryVersionBaseDto(QueryVersionBaseDto queryDto) {
         setAttribute(QueryDS.DTO, queryDto);
     }
 
-    public ProcStatusEnum getProcStatus() {
-        return ((QueryVersionDto) getAttributeAsObject(QueryDS.DTO)).getProcStatus();
+    @Override
+    public ProcStatusEnum getProcStatusEnum() {
+        return getQueryVersionBaseDto().getProcStatus();
     }
 
-    public QueryVersionDto getQueryVersionDto() {
-        return (QueryVersionDto) getAttributeAsObject(QueryDS.DTO);
+    public QueryVersionBaseDto getQueryVersionBaseDto() {
+        return (QueryVersionBaseDto) getAttributeAsObject(QueryDS.DTO);
     }
 }

@@ -2,7 +2,7 @@ package org.siemac.metamac.statistical.resources.web.client.dataset.widgets;
 
 import java.util.List;
 
-import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionBaseDto;
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.record.DatasetRecord;
 import org.siemac.metamac.statistical.resources.web.client.utils.ResourceFieldUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.StatisticalResourcesRecordUtils;
@@ -16,13 +16,10 @@ public class DatasetListGrid extends NavigableListGrid {
         this.setFields(ResourceFieldUtils.getDatasetListGridFields());
     }
 
-    public void setDatasets(List<DatasetVersionDto> datasets) {
+    public void setDatasets(List<DatasetVersionBaseDto> datasets) {
         removeAllData();
         if (datasets != null) {
-            DatasetRecord[] datasetRecords = new DatasetRecord[datasets.size()];
-            for (int i = 0; i < datasets.size(); i++) {
-                datasetRecords[i] = StatisticalResourcesRecordUtils.getDatasetRecord(datasets.get(i));
-            }
+            DatasetRecord[] datasetRecords = StatisticalResourcesRecordUtils.getDatasetRecords(datasets);
             setData(datasetRecords);
         }
     }

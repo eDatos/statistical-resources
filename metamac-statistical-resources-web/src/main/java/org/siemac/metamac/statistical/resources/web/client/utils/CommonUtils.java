@@ -14,11 +14,13 @@ import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.core.common.util.shared.UrnUtils;
+import org.siemac.metamac.statistical.resources.core.dto.LifeCycleStatisticalResourceBaseDto;
 import org.siemac.metamac.statistical.resources.core.dto.LifeCycleStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.VersionRationaleTypeDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdAttributeDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.StatisticOfficialityDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.TemporalCodeDto;
+import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionBaseDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionDto;
 import org.siemac.metamac.statistical.resources.core.enume.dataset.domain.AttributeRelationshipTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.dataset.domain.AttributeRepresentationTypeEnum;
@@ -42,6 +44,10 @@ public class CommonUtils {
 
     public static String getProcStatusName(LifeCycleStatisticalResourceDto lifeCycleStatisticalResourceDto) {
         return lifeCycleStatisticalResourceDto != null ? getProcStatusName(lifeCycleStatisticalResourceDto.getProcStatus()) : null;
+    }
+
+    public static String getProcStatusName(LifeCycleStatisticalResourceBaseDto lifeCycleStatisticalResourceBaseDto) {
+        return lifeCycleStatisticalResourceBaseDto != null ? getProcStatusName(lifeCycleStatisticalResourceBaseDto.getProcStatus()) : null;
     }
 
     public static String getProcStatusName(ProcStatusEnum procStatusEnum) {
@@ -72,6 +78,10 @@ public class CommonUtils {
     // -----------------------------------------------------------------------------------------
 
     public static String getQueryTypeName(QueryVersionDto queryDto) {
+        return queryDto != null && queryDto.getType() != null ? getQueryTypeName(queryDto.getType()) : null;
+    }
+
+    public static String getQueryTypeName(QueryVersionBaseDto queryDto) {
         return queryDto != null && queryDto.getType() != null ? getQueryTypeName(queryDto.getType()) : null;
     }
 
@@ -122,6 +132,10 @@ public class CommonUtils {
     }
 
     public static String getQueryStatusName(QueryVersionDto queryDto) {
+        return queryDto != null ? getQueryStatusName(queryDto.getStatus()) : null;
+    }
+
+    public static String getQueryStatusName(QueryVersionBaseDto queryDto) {
         return queryDto != null ? getQueryStatusName(queryDto.getStatus()) : null;
     }
 

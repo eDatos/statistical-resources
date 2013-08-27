@@ -2,6 +2,7 @@ package org.siemac.metamac.statistical.resources.web.client.dataset.widgets;
 
 import java.util.List;
 
+import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionBaseDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.web.client.base.widgets.VersionableResourceSectionStack;
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.ds.DatasetDS;
@@ -16,10 +17,10 @@ public class DatasetVersionsSectionStack extends VersionableResourceSectionStack
         super(title);
     }
 
-    public void setDatasetVersions(List<DatasetVersionDto> datasetVersionDtos) {
+    public void setDatasetVersions(List<DatasetVersionBaseDto> datasetVersionBaseDtos) {
         listGrid.selectAllRecords();
         listGrid.removeSelectedData();
-        for (DatasetVersionDto datasetDto : datasetVersionDtos) {
+        for (DatasetVersionBaseDto datasetDto : datasetVersionBaseDtos) {
             listGrid.addData(StatisticalResourcesRecordUtils.getDatasetRecord(datasetDto));
         }
     }

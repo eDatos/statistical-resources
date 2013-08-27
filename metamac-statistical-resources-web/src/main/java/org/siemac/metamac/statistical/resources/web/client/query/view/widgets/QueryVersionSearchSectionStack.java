@@ -89,7 +89,7 @@ public class QueryVersionSearchSectionStack extends LifeCycleResourceSearchSecti
 
     public void setDatasetVersions(GetDatasetVersionsResult result) {
         if (searchDatasetVesionWindow != null) {
-            List<RelatedResourceDto> relatedResourceDtos = RelatedResourceUtils.getDatasetVersionDtosAsRelatedResourceDtos(result.getDatasetVersionDtos());
+            List<RelatedResourceDto> relatedResourceDtos = RelatedResourceUtils.getDatasetVersionBaseDtosAsRelatedResourceDtos(result.getDatasetVersionBaseDtos());
             searchDatasetVesionWindow.setResources(relatedResourceDtos);
             searchDatasetVesionWindow.refreshSourcePaginationInfo(result.getFirstResultOut(), relatedResourceDtos.size(), result.getTotalResults());
         }

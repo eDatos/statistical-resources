@@ -3,6 +3,7 @@ package org.siemac.metamac.statistical.resources.web.client.dataset.presenter;
 import java.util.List;
 
 import org.siemac.metamac.core.common.util.shared.StringUtils;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionBaseDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.web.client.LoggedInGatekeeper;
 import org.siemac.metamac.statistical.resources.web.client.NameTokens;
@@ -54,7 +55,7 @@ public class DatasetPresenter extends Presenter<DatasetPresenter.DatasetView, Da
     public interface DatasetView extends View, HasUiHandlers<DatasetUiHandlers> {
 
         void setDataset(DatasetVersionDto datasetDto);
-        void setDatasetVersions(List<DatasetVersionDto> datasetVersionDtos);
+        void setDatasetVersions(List<DatasetVersionBaseDto> datasetVersionBaseDtos);
         void selectMetadataTab();
         void selectDatasourcesTab();
         void selectAttributesTab();
@@ -156,7 +157,7 @@ public class DatasetPresenter extends Presenter<DatasetPresenter.DatasetView, Da
 
             @Override
             public void onWaitSuccess(GetVersionsOfDatasetResult result) {
-                getView().setDatasetVersions(result.getDatasetVersionDtos());
+                getView().setDatasetVersions(result.getDatasetVersionBaseDtos());
             }
         });
     }

@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
-import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionDto;
+import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionBaseDto;
 import org.siemac.metamac.statistical.resources.web.client.base.view.LifeCycleBaseListViewImpl;
 import org.siemac.metamac.statistical.resources.web.client.enums.StatisticalResourcesToolStripButtonEnum;
 import org.siemac.metamac.statistical.resources.web.client.query.model.ds.QueryDS;
@@ -78,13 +78,9 @@ public class QueryListViewImpl extends LifeCycleBaseListViewImpl<QueryListUiHand
     }
 
     public void setQueriesPaginatedList(GetQueryVersionsResult result) {
-        QueryRecord[] records = new QueryRecord[result.getQueriesList().size()];
-        int index = 0;
-        for (QueryVersionDto queryDto : result.getQueriesList()) {
-            records[index++] = StatisticalResourcesRecordUtils.getQueryRecord(queryDto);
-        }
+        QueryRecord[] records = StatisticalResourcesRecordUtils.getQueryRecords(result.getQueryVersionBaseDtos());
         listGrid.getListGrid().setData(records);
-        listGrid.refreshPaginationInfo(result.getPageNumber(), result.getQueriesList().size(), result.getTotalResults());
+        listGrid.refreshPaginationInfo(result.getPageNumber(), result.getQueryVersionBaseDtos().size(), result.getTotalResults());
     }
 
     @Override
@@ -158,7 +154,7 @@ public class QueryListViewImpl extends LifeCycleBaseListViewImpl<QueryListUiHand
 
             @Override
             public void onClick(ClickEvent event) {
-                List<QueryVersionDto> queryVersionDtos = StatisticalResourcesRecordUtils.getQueryVersionDtosFromListGridRecords(listGrid.getListGrid().getSelectedRecords());
+                List<QueryVersionBaseDto> queryVersionDtos = StatisticalResourcesRecordUtils.getQueryVersionDtosFromListGridRecords(listGrid.getListGrid().getSelectedRecords());
                 getUiHandlers().sendToProductionValidation(queryVersionDtos);
             }
         };
@@ -172,7 +168,7 @@ public class QueryListViewImpl extends LifeCycleBaseListViewImpl<QueryListUiHand
 
             @Override
             public void onClick(ClickEvent event) {
-                List<QueryVersionDto> queryVersionDtos = StatisticalResourcesRecordUtils.getQueryVersionDtosFromListGridRecords(listGrid.getListGrid().getSelectedRecords());
+                List<QueryVersionBaseDto> queryVersionDtos = StatisticalResourcesRecordUtils.getQueryVersionDtosFromListGridRecords(listGrid.getListGrid().getSelectedRecords());
                 getUiHandlers().sendToDiffusionValidation(queryVersionDtos);
             }
         };
@@ -186,7 +182,7 @@ public class QueryListViewImpl extends LifeCycleBaseListViewImpl<QueryListUiHand
 
             @Override
             public void onClick(ClickEvent event) {
-                List<QueryVersionDto> queryVersionDtos = StatisticalResourcesRecordUtils.getQueryVersionDtosFromListGridRecords(listGrid.getListGrid().getSelectedRecords());
+                List<QueryVersionBaseDto> queryVersionDtos = StatisticalResourcesRecordUtils.getQueryVersionDtosFromListGridRecords(listGrid.getListGrid().getSelectedRecords());
                 getUiHandlers().rejectValidation(queryVersionDtos);
             }
         };
@@ -200,7 +196,7 @@ public class QueryListViewImpl extends LifeCycleBaseListViewImpl<QueryListUiHand
 
             @Override
             public void onClick(ClickEvent event) {
-                List<QueryVersionDto> queryVersionDtos = StatisticalResourcesRecordUtils.getQueryVersionDtosFromListGridRecords(listGrid.getListGrid().getSelectedRecords());
+                List<QueryVersionBaseDto> queryVersionDtos = StatisticalResourcesRecordUtils.getQueryVersionDtosFromListGridRecords(listGrid.getListGrid().getSelectedRecords());
                 getUiHandlers().publish(queryVersionDtos);
             }
         };
@@ -211,7 +207,7 @@ public class QueryListViewImpl extends LifeCycleBaseListViewImpl<QueryListUiHand
     @Override
     protected void programPublication(Date validFrom) {
         // TODO Send to date and hour selected to service
-        List<QueryVersionDto> queryVersionDtos = StatisticalResourcesRecordUtils.getQueryVersionDtosFromListGridRecords(listGrid.getListGrid().getSelectedRecords());
+        List<QueryVersionBaseDto> queryVersionDtos = StatisticalResourcesRecordUtils.getQueryVersionDtosFromListGridRecords(listGrid.getListGrid().getSelectedRecords());
         getUiHandlers().programPublication(queryVersionDtos);
     }
 
@@ -233,7 +229,7 @@ public class QueryListViewImpl extends LifeCycleBaseListViewImpl<QueryListUiHand
 
     @Override
     protected void version(VersionTypeEnum versionType) {
-        List<QueryVersionDto> queryVersionDtos = StatisticalResourcesRecordUtils.getQueryVersionDtosFromListGridRecords(listGrid.getListGrid().getSelectedRecords());
+        List<QueryVersionBaseDto> queryVersionDtos = StatisticalResourcesRecordUtils.getQueryVersionDtosFromListGridRecords(listGrid.getListGrid().getSelectedRecords());
         getUiHandlers().version(queryVersionDtos, versionType);
     }
 

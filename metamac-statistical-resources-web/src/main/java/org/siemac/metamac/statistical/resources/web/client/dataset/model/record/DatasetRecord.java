@@ -1,7 +1,7 @@
 package org.siemac.metamac.statistical.resources.web.client.dataset.model.record;
 
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
-import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionBaseDto;
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.ds.DatasetDS;
 import org.siemac.metamac.statistical.resources.web.client.model.record.SiemacMetadataRecord;
@@ -19,15 +19,16 @@ public class DatasetRecord extends SiemacMetadataRecord {
         setAttribute(DatasetDS.STATISTIC_OFFICIALITY, value);
     }
 
-    public void setDatasetVersionDto(DatasetVersionDto datasetDto) {
-        setAttribute(DatasetDS.DTO, datasetDto);
+    public void setDatasetVersionBaseDto(DatasetVersionBaseDto datasetVersionBaseDto) {
+        setAttribute(DatasetDS.DTO, datasetVersionBaseDto);
     }
 
-    public DatasetVersionDto getDatasetVersionDto() {
-        return (DatasetVersionDto) getAttributeAsObject(DatasetDS.DTO);
+    public DatasetVersionBaseDto getDatasetVersionBaseDto() {
+        return (DatasetVersionBaseDto) getAttributeAsObject(DatasetDS.DTO);
     }
 
-    public ProcStatusEnum getProcStatus() {
-        return ((DatasetVersionDto) getAttributeAsObject(DatasetDS.DTO)).getProcStatus();
+    @Override
+    public ProcStatusEnum getProcStatusEnum() {
+        return getDatasetVersionBaseDto().getProcStatus();
     }
 }

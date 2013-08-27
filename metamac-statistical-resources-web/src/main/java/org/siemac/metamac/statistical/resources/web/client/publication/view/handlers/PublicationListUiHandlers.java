@@ -3,6 +3,7 @@ package org.siemac.metamac.statistical.resources.web.client.publication.view.han
 import java.util.List;
 
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
+import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionBaseDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionDto;
 import org.siemac.metamac.statistical.resources.web.client.base.view.handlers.NewStatisticalResourceUiHandlers;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.PublicationVersionWebCriteria;
@@ -17,12 +18,12 @@ public interface PublicationListUiHandlers extends NewStatisticalResourceUiHandl
 
     // LifeCycle
 
-    void sendToProductionValidation(List<PublicationVersionDto> publicationVersionDtos);
-    void sendToDiffusionValidation(List<PublicationVersionDto> publicationVersionDtos);
-    void rejectValidation(List<PublicationVersionDto> publicationVersionDtos);
-    void publish(List<PublicationVersionDto> publicationVersionDtos);
-    void programPublication(List<PublicationVersionDto> publicationVersionDtos);
-    void version(List<PublicationVersionDto> publicationVersionDtos, VersionTypeEnum versionType);
+    void sendToProductionValidation(List<PublicationVersionBaseDto> publicationVersionBaseDtos);
+    void sendToDiffusionValidation(List<PublicationVersionBaseDto> publicationVersionBaseDtos);
+    void rejectValidation(List<PublicationVersionBaseDto> publicationVersionBaseDtos);
+    void publish(List<PublicationVersionBaseDto> publicationVersionBaseDtos);
+    void programPublication(List<PublicationVersionBaseDto> publicationVersionBaseDtos);
+    void version(List<PublicationVersionBaseDto> publicationVersionBaseDtos, VersionTypeEnum versionType);
 
     // Related resources
     void retrieveStatisticalOperationsForSearchSection(int firstResult, int maxResults, MetamacWebCriteria criteria);

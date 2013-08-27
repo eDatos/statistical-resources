@@ -4,9 +4,9 @@ import static org.siemac.metamac.statistical.resources.web.client.StatisticalRes
 
 import java.util.List;
 
-import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
-import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionDto;
-import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionDto;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionBaseDto;
+import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionBaseDto;
+import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionBaseDto;
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.record.DatasetRecord;
 import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.DatasetListGrid;
 import org.siemac.metamac.statistical.resources.web.client.operation.presenter.OperationResourcesPresenter;
@@ -54,7 +54,7 @@ public class OperationResourcesViewImpl extends ViewWithUiHandlers<OperationReso
             @Override
             public void onRecordClick(RecordClickEvent event) {
                 DatasetRecord record = (DatasetRecord) event.getRecord();
-                getUiHandlers().goToDataset(record.getDatasetVersionDto());
+                getUiHandlers().goToDataset(record.getDatasetVersionBaseDto());
             }
         });
 
@@ -71,7 +71,7 @@ public class OperationResourcesViewImpl extends ViewWithUiHandlers<OperationReso
             @Override
             public void onRecordClick(RecordClickEvent event) {
                 PublicationRecord record = (PublicationRecord) event.getRecord();
-                getUiHandlers().goToPublication(record.getPublicationVersionDto());
+                getUiHandlers().goToPublication(record.getPublicationVersionBaseDto());
             }
         });
 
@@ -88,7 +88,7 @@ public class OperationResourcesViewImpl extends ViewWithUiHandlers<OperationReso
             @Override
             public void onRecordClick(RecordClickEvent event) {
                 QueryRecord record = (QueryRecord) event.getRecord();
-                getUiHandlers().goToQuery(record.getQueryVersionDto());
+                getUiHandlers().goToQuery(record.getQueryVersionBaseDto());
             }
         });
 
@@ -111,20 +111,20 @@ public class OperationResourcesViewImpl extends ViewWithUiHandlers<OperationReso
     }
 
     @Override
-    public void setPublications(List<PublicationVersionDto> publicationDtos) {
-        publicationsListGrid.setPublications(publicationDtos);
+    public void setPublications(List<PublicationVersionBaseDto> publicationVersionBaseDtos) {
+        publicationsListGrid.setPublications(publicationVersionBaseDtos);
         sections.expandSection(PUBLICATIONS_SECTION_ID);
     }
 
     @Override
-    public void setDatasets(List<DatasetVersionDto> datasetsDtos) {
-        datasetsListGrid.setDatasets(datasetsDtos);
+    public void setDatasets(List<DatasetVersionBaseDto> datasetVersionBaseDtos) {
+        datasetsListGrid.setDatasets(datasetVersionBaseDtos);
         sections.expandSection(DATASETS_SECTION_ID);
     }
 
     @Override
-    public void setQueries(List<QueryVersionDto> queryVersionDtos) {
-        queriesListGrid.setQueries(queryVersionDtos);
+    public void setQueries(List<QueryVersionBaseDto> queryVersionBaseDtos) {
+        queriesListGrid.setQueries(queryVersionBaseDtos);
         sections.expandSection(QUERIES_SECTION_ID);
     }
 }

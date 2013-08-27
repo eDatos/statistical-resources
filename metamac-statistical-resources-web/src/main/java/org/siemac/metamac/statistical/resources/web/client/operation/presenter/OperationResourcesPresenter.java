@@ -5,9 +5,9 @@ import static org.siemac.metamac.statistical.resources.web.client.StatisticalRes
 import java.util.List;
 
 import org.siemac.metamac.core.common.util.shared.StringUtils;
-import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
-import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionDto;
-import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionDto;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionBaseDto;
+import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionBaseDto;
+import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionBaseDto;
 import org.siemac.metamac.statistical.resources.web.client.LoggedInGatekeeper;
 import org.siemac.metamac.statistical.resources.web.client.NameTokens;
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesDefaults;
@@ -57,9 +57,9 @@ public class OperationResourcesPresenter extends Presenter<OperationResourcesVie
 
     public interface OperationResourcesView extends View, HasUiHandlers<OperationResourcesUiHandlers> {
 
-        void setDatasets(List<DatasetVersionDto> datasetDtos);
-        void setPublications(List<PublicationVersionDto> publicationDtos);
-        void setQueries(List<QueryVersionDto> queryVersionDtos);
+        void setDatasets(List<DatasetVersionBaseDto> datasetDtos);
+        void setPublications(List<PublicationVersionBaseDto> publicationDtos);
+        void setQueries(List<QueryVersionBaseDto> queryVersionBaseDtos);
     }
 
     @TitleFunction
@@ -140,7 +140,7 @@ public class OperationResourcesPresenter extends Presenter<OperationResourcesVie
             }
             @Override
             public void onWaitSuccess(GetDatasetVersionsResult result) {
-                getView().setDatasets(result.getDatasetVersionDtos());
+                getView().setDatasets(result.getDatasetVersionBaseDtos());
             }
         });
 
@@ -158,7 +158,7 @@ public class OperationResourcesPresenter extends Presenter<OperationResourcesVie
                     }
                     @Override
                     public void onWaitSuccess(GetPublicationVersionsResult result) {
-                        getView().setPublications(result.getPublicationDtos());
+                        getView().setPublications(result.getPublicationBaseDtos());
                     }
                 });
 
@@ -174,7 +174,7 @@ public class OperationResourcesPresenter extends Presenter<OperationResourcesVie
             }
             @Override
             public void onWaitSuccess(GetQueryVersionsResult result) {
-                getView().setQueries(result.getQueriesList());
+                getView().setQueries(result.getQueryVersionBaseDtos());
             }
         });
     }
@@ -184,23 +184,23 @@ public class OperationResourcesPresenter extends Presenter<OperationResourcesVie
     //
 
     @Override
-    public void goToDataset(DatasetVersionDto datasetVersionDto) {
-        if (datasetVersionDto != null) {
-            placeManager.revealPlaceHierarchy(PlaceRequestUtils.buildAbsoluteDatasetPlaceRequest(datasetVersionDto.getStatisticalOperation().getUrn(), datasetVersionDto.getUrn()));
+    public void goToDataset(DatasetVersionBaseDto datasetVersionBaseDto) {
+        if (datasetVersionBaseDto != null) {
+            placeManager.revealPlaceHierarchy(PlaceRequestUtils.buildAbsoluteDatasetPlaceRequest(datasetVersionBaseDto.getStatisticalOperation().getUrn(), datasetVersionBaseDto.getUrn()));
         }
     }
 
     @Override
-    public void goToPublication(PublicationVersionDto publicationVersionDto) {
-        if (publicationVersionDto != null) {
-            placeManager.revealPlaceHierarchy(PlaceRequestUtils.buildAbsolutePublicationPlaceRequest(publicationVersionDto.getStatisticalOperation().getUrn(), publicationVersionDto.getUrn()));
+    public void goToPublication(PublicationVersionBaseDto publicationVersionBaseDto) {
+        if (publicationVersionBaseDto != null) {
+            placeManager.revealPlaceHierarchy(PlaceRequestUtils.buildAbsolutePublicationPlaceRequest(publicationVersionBaseDto.getStatisticalOperation().getUrn(), publicationVersionBaseDto.getUrn()));
         }
     }
 
     @Override
-    public void goToQuery(QueryVersionDto queryVersionDto) {
-        if (queryVersionDto != null) {
-            placeManager.revealPlaceHierarchy(PlaceRequestUtils.buildAbsoluteQueryPlaceRequest(queryVersionDto.getStatisticalOperation().getUrn(), queryVersionDto.getUrn()));
+    public void goToQuery(QueryVersionBaseDto queryVersionBaseDto) {
+        if (queryVersionBaseDto != null) {
+            placeManager.revealPlaceHierarchy(PlaceRequestUtils.buildAbsoluteQueryPlaceRequest(queryVersionBaseDto.getStatisticalOperation().getUrn(), queryVersionBaseDto.getUrn()));
         }
     }
 }

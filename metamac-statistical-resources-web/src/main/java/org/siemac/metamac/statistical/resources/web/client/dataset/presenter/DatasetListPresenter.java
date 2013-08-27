@@ -10,6 +10,7 @@ import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.core.common.util.shared.UrnUtils;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionBaseDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.web.client.LoggedInGatekeeper;
 import org.siemac.metamac.statistical.resources.web.client.NameTokens;
@@ -218,38 +219,38 @@ public class DatasetListPresenter extends StatisticalResourceBaseListPresenter<D
     //
 
     @Override
-    public void sendToProductionValidation(List<DatasetVersionDto> datasetVersionDtos) {
-        UpdateDatasetVersionsProcStatusAction action = new UpdateDatasetVersionsProcStatusAction(datasetVersionDtos, LifeCycleActionEnum.SEND_TO_PRODUCTION_VALIDATION);
+    public void sendToProductionValidation(List<DatasetVersionBaseDto> datasetVersionBaseDtos) {
+        UpdateDatasetVersionsProcStatusAction action = new UpdateDatasetVersionsProcStatusAction(datasetVersionBaseDtos, LifeCycleActionEnum.SEND_TO_PRODUCTION_VALIDATION);
         updateDatasetVersionProcStatus(action, getMessages().lifeCycleResourcesSentToProductionValidation());
     }
 
     @Override
-    public void sendToDiffusionValidation(List<DatasetVersionDto> datasetVersionDtos) {
-        UpdateDatasetVersionsProcStatusAction action = new UpdateDatasetVersionsProcStatusAction(datasetVersionDtos, LifeCycleActionEnum.SEND_TO_DIFFUSION_VALIDATION);
+    public void sendToDiffusionValidation(List<DatasetVersionBaseDto> datasetVersionBaseDtos) {
+        UpdateDatasetVersionsProcStatusAction action = new UpdateDatasetVersionsProcStatusAction(datasetVersionBaseDtos, LifeCycleActionEnum.SEND_TO_DIFFUSION_VALIDATION);
         updateDatasetVersionProcStatus(action, getMessages().lifeCycleResourcesSentToDiffusionValidation());
     }
 
     @Override
-    public void rejectValidation(List<DatasetVersionDto> datasetVersionDtos) {
-        UpdateDatasetVersionsProcStatusAction action = new UpdateDatasetVersionsProcStatusAction(datasetVersionDtos, LifeCycleActionEnum.REJECT_VALIDATION);
+    public void rejectValidation(List<DatasetVersionBaseDto> datasetVersionBaseDtos) {
+        UpdateDatasetVersionsProcStatusAction action = new UpdateDatasetVersionsProcStatusAction(datasetVersionBaseDtos, LifeCycleActionEnum.REJECT_VALIDATION);
         updateDatasetVersionProcStatus(action, getMessages().lifeCycleResourcesRejectValidation());
     }
 
     @Override
-    public void publish(List<DatasetVersionDto> datasetVersionDtos) {
-        UpdateDatasetVersionsProcStatusAction action = new UpdateDatasetVersionsProcStatusAction(datasetVersionDtos, LifeCycleActionEnum.PUBLISH);
+    public void publish(List<DatasetVersionBaseDto> datasetVersionBaseDtos) {
+        UpdateDatasetVersionsProcStatusAction action = new UpdateDatasetVersionsProcStatusAction(datasetVersionBaseDtos, LifeCycleActionEnum.PUBLISH);
         updateDatasetVersionProcStatus(action, getMessages().lifeCycleResourcesPublish());
     }
 
     @Override
-    public void programPublication(List<DatasetVersionDto> datasetVersionDtos) {
+    public void programPublication(List<DatasetVersionBaseDto> datasetVersionDtos) {
         UpdateDatasetVersionsProcStatusAction action = new UpdateDatasetVersionsProcStatusAction(datasetVersionDtos, LifeCycleActionEnum.PUBLISH);
         updateDatasetVersionProcStatus(action, getMessages().lifeCycleResourcesProgramPublication());
     }
 
     @Override
-    public void version(List<DatasetVersionDto> datasetVersionDtos, VersionTypeEnum versionType) {
-        Builder builder = new UpdateDatasetVersionsProcStatusAction.Builder(datasetVersionDtos, LifeCycleActionEnum.VERSION);
+    public void version(List<DatasetVersionBaseDto> datasetVersionBaseDtos, VersionTypeEnum versionType) {
+        Builder builder = new UpdateDatasetVersionsProcStatusAction.Builder(datasetVersionBaseDtos, LifeCycleActionEnum.VERSION);
         builder.versionType(versionType);
         updateDatasetVersionProcStatus(builder.build(), getMessages().lifeCycleResourcesVersion());
     }

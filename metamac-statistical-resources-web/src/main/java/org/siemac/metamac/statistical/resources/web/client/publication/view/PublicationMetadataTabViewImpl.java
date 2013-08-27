@@ -508,13 +508,13 @@ public class PublicationMetadataTabViewImpl extends StatisticalResourceMetadataB
 
     @Override
     public void setPublicationsForReplaces(GetPublicationVersionsResult result) {
-        List<RelatedResourceDto> relatedResourceDtos = RelatedResourceUtils.getPublicationDtosAsRelatedResourceDtos(result.getPublicationDtos());
+        List<RelatedResourceDto> relatedResourceDtos = RelatedResourceUtils.getPublicationVersionBaseDtosAsRelatedResourceDtos(result.getPublicationBaseDtos());
         resourceRelationDescriptorsEditionForm.setRelatedResourcesForReplaces(relatedResourceDtos, result.getFirstResultOut(), relatedResourceDtos.size(), result.getTotalResults());
     }
 
     @Override
     public void setPublicationsForIsReplacedBy(GetPublicationVersionsResult result) {
-        List<RelatedResourceDto> relatedResourceDtos = RelatedResourceUtils.getPublicationDtosAsRelatedResourceDtos(result.getPublicationDtos());
+        List<RelatedResourceDto> relatedResourceDtos = RelatedResourceUtils.getPublicationVersionBaseDtosAsRelatedResourceDtos(result.getPublicationBaseDtos());
         resourceRelationDescriptorsEditionForm.setRelatedResourcesForIsReplacedBy(relatedResourceDtos, result.getFirstResultOut(), relatedResourceDtos.size(), result.getTotalResults());
     }
 

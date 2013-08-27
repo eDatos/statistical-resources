@@ -6,7 +6,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
-import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionDto;
+import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionBaseDto;
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesDefaults;
 import org.siemac.metamac.statistical.resources.web.client.base.view.StatisticalResourceBaseListViewImpl;
 import org.siemac.metamac.statistical.resources.web.client.base.widgets.NewStatisticalResourceWindow;
@@ -77,14 +77,10 @@ public class PublicationListViewImpl extends StatisticalResourceBaseListViewImpl
     }
 
     @Override
-    public void setPublicationPaginatedList(List<PublicationVersionDto> publicationDtos, int firstResult, int totalResults) {
-        PublicationRecord[] records = new PublicationRecord[publicationDtos.size()];
-        int index = 0;
-        for (PublicationVersionDto scheme : publicationDtos) {
-            records[index++] = StatisticalResourcesRecordUtils.getPublicationRecord(scheme);
-        }
+    public void setPublicationPaginatedList(List<PublicationVersionBaseDto> publicationVersionBaseDtos, int firstResult, int totalResults) {
+        PublicationRecord[] records = StatisticalResourcesRecordUtils.getPublicationRecords(publicationVersionBaseDtos);
         listGrid.getListGrid().setData(records);
-        listGrid.refreshPaginationInfo(firstResult, publicationDtos.size(), totalResults);
+        listGrid.refreshPaginationInfo(firstResult, publicationVersionBaseDtos.size(), totalResults);
     }
 
     @Override
@@ -171,7 +167,7 @@ public class PublicationListViewImpl extends StatisticalResourceBaseListViewImpl
 
             @Override
             public void onClick(ClickEvent event) {
-                List<PublicationVersionDto> publicationVersionDtos = StatisticalResourcesRecordUtils.getPublicationVersionDtosFromListGridRecords(listGrid.getListGrid().getSelectedRecords());
+                List<PublicationVersionBaseDto> publicationVersionDtos = StatisticalResourcesRecordUtils.getPublicationVersionBaseDtosFromListGridRecords(listGrid.getListGrid().getSelectedRecords());
                 getUiHandlers().sendToProductionValidation(publicationVersionDtos);
             }
         };
@@ -185,7 +181,7 @@ public class PublicationListViewImpl extends StatisticalResourceBaseListViewImpl
 
             @Override
             public void onClick(ClickEvent event) {
-                List<PublicationVersionDto> publicationVersionDtos = StatisticalResourcesRecordUtils.getPublicationVersionDtosFromListGridRecords(listGrid.getListGrid().getSelectedRecords());
+                List<PublicationVersionBaseDto> publicationVersionDtos = StatisticalResourcesRecordUtils.getPublicationVersionBaseDtosFromListGridRecords(listGrid.getListGrid().getSelectedRecords());
                 getUiHandlers().sendToDiffusionValidation(publicationVersionDtos);
             }
         };
@@ -199,7 +195,7 @@ public class PublicationListViewImpl extends StatisticalResourceBaseListViewImpl
 
             @Override
             public void onClick(ClickEvent event) {
-                List<PublicationVersionDto> publicationVersionDtos = StatisticalResourcesRecordUtils.getPublicationVersionDtosFromListGridRecords(listGrid.getListGrid().getSelectedRecords());
+                List<PublicationVersionBaseDto> publicationVersionDtos = StatisticalResourcesRecordUtils.getPublicationVersionBaseDtosFromListGridRecords(listGrid.getListGrid().getSelectedRecords());
                 getUiHandlers().rejectValidation(publicationVersionDtos);
             }
         };
@@ -213,7 +209,7 @@ public class PublicationListViewImpl extends StatisticalResourceBaseListViewImpl
 
             @Override
             public void onClick(ClickEvent event) {
-                List<PublicationVersionDto> publicationVersionDtos = StatisticalResourcesRecordUtils.getPublicationVersionDtosFromListGridRecords(listGrid.getListGrid().getSelectedRecords());
+                List<PublicationVersionBaseDto> publicationVersionDtos = StatisticalResourcesRecordUtils.getPublicationVersionBaseDtosFromListGridRecords(listGrid.getListGrid().getSelectedRecords());
                 getUiHandlers().publish(publicationVersionDtos);
             }
         };
@@ -224,7 +220,7 @@ public class PublicationListViewImpl extends StatisticalResourceBaseListViewImpl
     @Override
     protected void programPublication(Date validFrom) {
         // TODO Send to date and hour selected to service
-        List<PublicationVersionDto> publicationVersionDtos = StatisticalResourcesRecordUtils.getPublicationVersionDtosFromListGridRecords(listGrid.getListGrid().getSelectedRecords());
+        List<PublicationVersionBaseDto> publicationVersionDtos = StatisticalResourcesRecordUtils.getPublicationVersionBaseDtosFromListGridRecords(listGrid.getListGrid().getSelectedRecords());
         getUiHandlers().programPublication(publicationVersionDtos);
     }
 
@@ -246,8 +242,8 @@ public class PublicationListViewImpl extends StatisticalResourceBaseListViewImpl
 
     @Override
     protected void version(VersionTypeEnum versionType) {
-        List<PublicationVersionDto> publicationVersionDtos = StatisticalResourcesRecordUtils.getPublicationVersionDtosFromListGridRecords(listGrid.getListGrid().getSelectedRecords());
-        getUiHandlers().version(publicationVersionDtos, versionType);
+        List<PublicationVersionBaseDto> publicationVersionBaseDtos = StatisticalResourcesRecordUtils.getPublicationVersionBaseDtosFromListGridRecords(listGrid.getListGrid().getSelectedRecords());
+        getUiHandlers().version(publicationVersionBaseDtos, versionType);
     }
 
     //

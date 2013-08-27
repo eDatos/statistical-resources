@@ -3,7 +3,7 @@ package org.siemac.metamac.statistical.resources.web.shared.query;
 import java.util.List;
 
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
-import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionDto;
+import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionBaseDto;
 import org.siemac.metamac.statistical.resources.web.client.enums.LifeCycleActionEnum;
 
 import com.gwtplatform.dispatch.annotation.GenDispatch;
@@ -14,12 +14,12 @@ import com.gwtplatform.dispatch.annotation.Optional;
 public class UpdateQueryVersionsProcStatus {
 
     @In(1)
-    List<QueryVersionDto> queryVersionsToUpdateProcStatus;
+    List<QueryVersionBaseDto> queryVersionsToUpdateProcStatus;
 
     @In(2)
-    LifeCycleActionEnum   lifeCycleAction;
+    LifeCycleActionEnum       lifeCycleAction;
 
     @Optional
     @In(3)
-    VersionTypeEnum       versionType;
+    VersionTypeEnum           versionType;
 }

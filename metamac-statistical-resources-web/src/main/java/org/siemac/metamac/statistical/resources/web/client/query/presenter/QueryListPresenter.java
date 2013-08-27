@@ -8,7 +8,7 @@ import java.util.List;
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
-import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionDto;
+import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionBaseDto;
 import org.siemac.metamac.statistical.resources.web.client.LoggedInGatekeeper;
 import org.siemac.metamac.statistical.resources.web.client.NameTokens;
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesDefaults;
@@ -181,37 +181,37 @@ public class QueryListPresenter extends LifeCycleBaseListPresenter<QueryListPres
     //
 
     @Override
-    public void sendToProductionValidation(List<QueryVersionDto> queryVersionDtos) {
+    public void sendToProductionValidation(List<QueryVersionBaseDto> queryVersionDtos) {
         UpdateQueryVersionsProcStatusAction action = new UpdateQueryVersionsProcStatusAction(queryVersionDtos, LifeCycleActionEnum.SEND_TO_PRODUCTION_VALIDATION);
         updateQueryProcStatus(action, getMessages().lifeCycleResourcesSentToProductionValidation());
     }
 
     @Override
-    public void sendToDiffusionValidation(List<QueryVersionDto> queryVersionDtos) {
+    public void sendToDiffusionValidation(List<QueryVersionBaseDto> queryVersionDtos) {
         UpdateQueryVersionsProcStatusAction action = new UpdateQueryVersionsProcStatusAction(queryVersionDtos, LifeCycleActionEnum.SEND_TO_DIFFUSION_VALIDATION);
         updateQueryProcStatus(action, getMessages().lifeCycleResourcesSentToDiffusionValidation());
     }
 
     @Override
-    public void rejectValidation(List<QueryVersionDto> queryVersionDtos) {
+    public void rejectValidation(List<QueryVersionBaseDto> queryVersionDtos) {
         UpdateQueryVersionsProcStatusAction action = new UpdateQueryVersionsProcStatusAction(queryVersionDtos, LifeCycleActionEnum.REJECT_VALIDATION);
         updateQueryProcStatus(action, getMessages().lifeCycleResourcesRejectValidation());
     }
 
     @Override
-    public void publish(List<QueryVersionDto> queryVersionDtos) {
+    public void publish(List<QueryVersionBaseDto> queryVersionDtos) {
         UpdateQueryVersionsProcStatusAction action = new UpdateQueryVersionsProcStatusAction(queryVersionDtos, LifeCycleActionEnum.PUBLISH);
         updateQueryProcStatus(action, getMessages().lifeCycleResourcesPublish());
     }
 
     @Override
-    public void programPublication(List<QueryVersionDto> queryVersionDtos) {
+    public void programPublication(List<QueryVersionBaseDto> queryVersionDtos) {
         UpdateQueryVersionsProcStatusAction action = new UpdateQueryVersionsProcStatusAction(queryVersionDtos, LifeCycleActionEnum.PUBLISH);
         updateQueryProcStatus(action, getMessages().lifeCycleResourcesProgramPublication());
     }
 
     @Override
-    public void version(List<QueryVersionDto> queryVersionDtos, VersionTypeEnum versionType) {
+    public void version(List<QueryVersionBaseDto> queryVersionDtos, VersionTypeEnum versionType) {
         Builder builder = new Builder(queryVersionDtos, LifeCycleActionEnum.VERSION);
         builder.versionType(versionType);
         updateQueryProcStatus(builder.build(), getMessages().lifeCycleResourcesVersion());

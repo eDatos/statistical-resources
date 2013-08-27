@@ -3,6 +3,7 @@ package org.siemac.metamac.statistical.resources.web.client.dataset.view.handler
 import java.util.List;
 
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionBaseDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.web.client.base.view.handlers.NewStatisticalResourceUiHandlers;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.DatasetVersionWebCriteria;
@@ -18,12 +19,12 @@ public interface DatasetListUiHandlers extends NewStatisticalResourceUiHandlers 
 
     // LifeCycle
 
-    void sendToProductionValidation(List<DatasetVersionDto> datasetVersionDtos);
-    void sendToDiffusionValidation(List<DatasetVersionDto> datasetVersionDtos);
-    void rejectValidation(List<DatasetVersionDto> datasetVersionDtos);
-    void publish(List<DatasetVersionDto> datasetVersionDtos);
-    void programPublication(List<DatasetVersionDto> datasetVersionDtos);
-    void version(List<DatasetVersionDto> datasetVersionDtos, VersionTypeEnum versionType);
+    void sendToProductionValidation(List<DatasetVersionBaseDto> datasetVersionBaseDtos);
+    void sendToDiffusionValidation(List<DatasetVersionBaseDto> datasetVersionBaseDtos);
+    void rejectValidation(List<DatasetVersionBaseDto> datasetVersionBaseDtos);
+    void publish(List<DatasetVersionBaseDto> datasetVersionBaseDtos);
+    void programPublication(List<DatasetVersionBaseDto> datasetVersionBaseDtos);
+    void version(List<DatasetVersionBaseDto> datasetVersionBaseDtos, VersionTypeEnum versionType);
 
     // DSD related actions
 

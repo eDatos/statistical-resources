@@ -8,7 +8,7 @@ import java.util.Locale;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.core.common.lang.shared.LocaleConstants;
-import org.siemac.metamac.statistical.resources.core.dto.LifeCycleStatisticalResourceDto;
+import org.siemac.metamac.statistical.resources.core.dto.IdentifiableStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.web.client.WebMessageExceptionsConstants;
 import org.siemac.metamac.statistical.resources.web.client.enums.LifeCycleActionEnum;
 import org.siemac.metamac.web.common.server.ServiceContextHolder;
@@ -28,7 +28,7 @@ public abstract class UpdateResourceProcStatusBaseActionHandler<A extends Action
         super(actionType);
     }
 
-    protected void addExceptionsItemToMetamacException(LifeCycleActionEnum lifeCycleAction, LifeCycleStatisticalResourceDto lifeCycleResource, MetamacException mainMetamacException,
+    protected void addExceptionsItemToMetamacException(LifeCycleActionEnum lifeCycleAction, IdentifiableStatisticalResourceDto lifeCycleResource, MetamacException mainMetamacException,
             MetamacException thrownMetamacException) {
 
         MetamacExceptionItem item = createMetamacExceptionItem(lifeCycleAction, lifeCycleResource);
@@ -50,7 +50,7 @@ public abstract class UpdateResourceProcStatusBaseActionHandler<A extends Action
         mainMetamacException.getExceptionItems().add(item);
     }
 
-    protected MetamacExceptionItem createMetamacExceptionItem(LifeCycleActionEnum lifeCycleAction, LifeCycleStatisticalResourceDto lifeCycleResource) {
+    protected MetamacExceptionItem createMetamacExceptionItem(LifeCycleActionEnum lifeCycleAction, IdentifiableStatisticalResourceDto lifeCycleResource) {
         String exceptionCode = getExceptionCode(lifeCycleAction);
         String exceptionMessage = getTranslatedErrorMessage(exceptionCode, lifeCycleResource.getUrn());
 

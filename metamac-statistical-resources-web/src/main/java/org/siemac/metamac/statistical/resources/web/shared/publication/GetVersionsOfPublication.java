@@ -2,7 +2,7 @@ package org.siemac.metamac.statistical.resources.web.shared.publication;
 
 import java.util.List;
 
-import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionDto;
+import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionBaseDto;
 
 import com.gwtplatform.dispatch.annotation.GenDispatch;
 import com.gwtplatform.dispatch.annotation.In;
@@ -12,8 +12,8 @@ import com.gwtplatform.dispatch.annotation.Out;
 public class GetVersionsOfPublication {
 
     @In(1)
-    String                      publicationVersionUrn;
+    String                          publicationVersionUrn;
 
     @Out(1)
-    List<PublicationVersionDto> publicationVersionDtos;
+    List<PublicationVersionBaseDto> publicationVersionBaseDtos;
 }

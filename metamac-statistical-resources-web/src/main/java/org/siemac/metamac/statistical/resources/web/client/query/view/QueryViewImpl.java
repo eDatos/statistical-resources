@@ -95,7 +95,7 @@ public class QueryViewImpl extends ViewWithUiHandlers<QueryUiHandlers> implement
 
     @Override
     public void setDatasetsForQuery(GetDatasetVersionsResult result) {
-        List<RelatedResourceDto> relatedResourceDtos = RelatedResourceUtils.getDatasetVersionDtosAsRelatedResourceDtos(result.getDatasetVersionDtos());
+        List<RelatedResourceDto> relatedResourceDtos = RelatedResourceUtils.getDatasetVersionBaseDtosAsRelatedResourceDtos(result.getDatasetVersionBaseDtos());
         queryFormPanel.productionDescriptorsEditionForm.setDatasetsForQuery(relatedResourceDtos, result.getFirstResultOut(), relatedResourceDtos.size(), result.getTotalResults());
     }
 

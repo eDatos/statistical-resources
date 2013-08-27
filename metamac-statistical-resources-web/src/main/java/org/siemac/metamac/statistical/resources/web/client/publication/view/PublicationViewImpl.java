@@ -4,6 +4,7 @@ import static org.siemac.metamac.statistical.resources.web.client.StatisticalRes
 
 import java.util.List;
 
+import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionBaseDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionDto;
 import org.siemac.metamac.statistical.resources.web.client.base.widgets.CustomTabSet;
 import org.siemac.metamac.statistical.resources.web.client.publication.model.record.PublicationRecord;
@@ -120,8 +121,8 @@ public class PublicationViewImpl extends ViewWithUiHandlers<PublicationUiHandler
     }
 
     @Override
-    public void setPublicationVersions(List<PublicationVersionDto> publicationVersionDtos) {
-        versionsSectionStack.setPublicationVersions(publicationVersionDtos);
+    public void setPublicationVersions(List<PublicationVersionBaseDto> publicationVersionBaseDtos) {
+        versionsSectionStack.setPublicationVersions(publicationVersionBaseDtos);
         versionsSectionStack.selectPublicationVersion(publicationVersionDto);
     }
 

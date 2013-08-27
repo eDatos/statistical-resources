@@ -1,6 +1,7 @@
 package org.siemac.metamac.statistical.resources.web.client.dataset.utils;
 
 import org.siemac.metamac.core.common.util.shared.BooleanUtils;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionBaseDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.security.shared.SharedDatasetsSecurityUtils;
@@ -28,6 +29,10 @@ public class DatasetClientSecurityUtils extends BaseClientSecurityUtils {
         return canDeleteDatasetVersion(datasetVersionDto.getIsTaskInBackground(), datasetVersionDto.getProcStatus());
     }
 
+    public static boolean canDeleteDatasetVersion(DatasetVersionBaseDto datasetVersionBaseDto) {
+        return canDeleteDatasetVersion(datasetVersionBaseDto.getIsTaskInBackground(), datasetVersionBaseDto.getProcStatus());
+    }
+
     public static boolean canDeleteDatasetVersion(boolean isTaskInBackground, ProcStatusEnum procStatus) {
         if (BooleanUtils.isTrue(isTaskInBackground)) {
             return false;
@@ -42,6 +47,10 @@ public class DatasetClientSecurityUtils extends BaseClientSecurityUtils {
         return canVersionDataset(datasetVersionDto.getIsTaskInBackground());
     }
 
+    public static boolean canVersionDataset(DatasetVersionBaseDto datasetVersionBaseDto) {
+        return canVersionDataset(datasetVersionBaseDto.getIsTaskInBackground());
+    }
+
     public static boolean canVersionDataset(boolean isTaskInBackground) {
         if (BooleanUtils.isTrue(isTaskInBackground)) {
             return false;
@@ -51,6 +60,10 @@ public class DatasetClientSecurityUtils extends BaseClientSecurityUtils {
 
     public static boolean canSendDatasetVersionToProductionValidation(DatasetVersionDto datasetVersionDto) {
         return canSendDatasetVersionToProductionValidation(datasetVersionDto.getIsTaskInBackground());
+    }
+
+    public static boolean canSendDatasetVersionToProductionValidation(DatasetVersionBaseDto datasetVersionBaseDto) {
+        return canSendDatasetVersionToProductionValidation(datasetVersionBaseDto.getIsTaskInBackground());
     }
 
     public static boolean canSendDatasetVersionToProductionValidation(boolean isTaskInBackground) {
@@ -64,6 +77,10 @@ public class DatasetClientSecurityUtils extends BaseClientSecurityUtils {
         return canSendDatasetVersionToDiffusionValidation(datasetVersionDto.getIsTaskInBackground());
     }
 
+    public static boolean canSendDatasetVersionToDiffusionValidation(DatasetVersionBaseDto datasetVersionBaseDto) {
+        return canSendDatasetVersionToDiffusionValidation(datasetVersionBaseDto.getIsTaskInBackground());
+    }
+
     public static boolean canSendDatasetVersionToDiffusionValidation(boolean isTaskInBackground) {
         if (BooleanUtils.isTrue(isTaskInBackground)) {
             return false;
@@ -75,6 +92,10 @@ public class DatasetClientSecurityUtils extends BaseClientSecurityUtils {
         return canSendDatasetVersionToValidationRejected(datasetVersionDto.getIsTaskInBackground());
     }
 
+    public static boolean canSendDatasetVersionToValidationRejected(DatasetVersionBaseDto datasetVersionBaseDto) {
+        return canSendDatasetVersionToValidationRejected(datasetVersionBaseDto.getIsTaskInBackground());
+    }
+
     public static boolean canSendDatasetVersionToValidationRejected(boolean isTaskInBackground) {
         if (BooleanUtils.isTrue(isTaskInBackground)) {
             return false;
@@ -84,6 +105,10 @@ public class DatasetClientSecurityUtils extends BaseClientSecurityUtils {
 
     public static boolean canPublishDatasetVersion(DatasetVersionDto datasetVersionDto) {
         return canPublishDatasetVersion(datasetVersionDto.getIsTaskInBackground());
+    }
+
+    public static boolean canPublishDatasetVersion(DatasetVersionBaseDto datasetVersionBaseDto) {
+        return canPublishDatasetVersion(datasetVersionBaseDto.getIsTaskInBackground());
     }
 
     public static boolean canPublishDatasetVersion(boolean isTaskInBackground) {

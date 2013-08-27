@@ -5,7 +5,7 @@ import org.siemac.metamac.core.common.criteria.MetamacCriteriaConjunctionRestric
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaPaginator;
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaResult;
 import org.siemac.metamac.core.common.exception.MetamacException;
-import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionDto;
+import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionBaseDto;
 import org.siemac.metamac.statistical.resources.core.facade.serviceapi.StatisticalResourcesServiceFacade;
 import org.siemac.metamac.statistical.resources.web.server.utils.MetamacWebCriteriaUtils;
 import org.siemac.metamac.statistical.resources.web.shared.query.GetQueryVersionsAction;
@@ -46,7 +46,7 @@ public class GetQueryVersionsActionHandler extends SecurityActionHandler<GetQuer
             criteria.getPaginator().setMaximumResultSize(action.getMaxResults());
             criteria.getPaginator().setCountTotalResults(true);
 
-            MetamacCriteriaResult<QueryVersionDto> result = statisticalResourcesServiceFacade.findQueriesVersionsByCondition(ServiceContextHolder.getCurrentServiceContext(), criteria);
+            MetamacCriteriaResult<QueryVersionBaseDto> result = statisticalResourcesServiceFacade.findQueriesVersionsByCondition(ServiceContextHolder.getCurrentServiceContext(), criteria);
             return new GetQueryVersionsResult(result.getResults(), result.getPaginatorResult().getFirstResult(), result.getPaginatorResult().getTotalResults());
         } catch (MetamacException e) {
             throw WebExceptionUtils.createMetamacWebException(e);

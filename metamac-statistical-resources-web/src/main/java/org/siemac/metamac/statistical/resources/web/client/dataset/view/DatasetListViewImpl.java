@@ -7,7 +7,7 @@ import java.util.List;
 
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
-import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionBaseDto;
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesDefaults;
 import org.siemac.metamac.statistical.resources.web.client.base.view.StatisticalResourceBaseListViewImpl;
 import org.siemac.metamac.statistical.resources.web.client.base.widgets.NewStatisticalResourceWindow;
@@ -112,8 +112,8 @@ public class DatasetListViewImpl extends StatisticalResourceBaseListViewImpl<Dat
 
     @Override
     public void setDatasetPaginatedList(GetDatasetVersionsResult result) {
-        setDatasetList(result.getDatasetVersionDtos());
-        listGrid.refreshPaginationInfo(result.getFirstResultOut(), result.getDatasetVersionDtos().size(), result.getTotalResults());
+        setDatasetList(result.getDatasetVersionBaseDtos());
+        listGrid.refreshPaginationInfo(result.getFirstResultOut(), result.getDatasetVersionBaseDtos().size(), result.getTotalResults());
     }
 
     @Override
@@ -132,12 +132,8 @@ public class DatasetListViewImpl extends StatisticalResourceBaseListViewImpl<Dat
         newDatasetWindow.setStatisticalOperationsForRelatedDsd(results, defaultSelected);
     }
 
-    private void setDatasetList(List<DatasetVersionDto> datasetsDtos) {
-        DatasetRecord[] records = new DatasetRecord[datasetsDtos.size()];
-        int index = 0;
-        for (DatasetVersionDto datasetDto : datasetsDtos) {
-            records[index++] = StatisticalResourcesRecordUtils.getDatasetRecord(datasetDto);
-        }
+    private void setDatasetList(List<DatasetVersionBaseDto> datasetVersionBaseDtos) {
+        DatasetRecord[] records = StatisticalResourcesRecordUtils.getDatasetRecords(datasetVersionBaseDtos);
         listGrid.getListGrid().setData(records);
     }
 
@@ -219,7 +215,7 @@ public class DatasetListViewImpl extends StatisticalResourceBaseListViewImpl<Dat
 
             @Override
             public void onClick(ClickEvent event) {
-                List<DatasetVersionDto> datasetVersionDtos = StatisticalResourcesRecordUtils.getDatasetVersionDtosFromListGridRecords(listGrid.getListGrid().getSelectedRecords());
+                List<DatasetVersionBaseDto> datasetVersionDtos = StatisticalResourcesRecordUtils.getDatasetVersionBaseDtosFromListGridRecords(listGrid.getListGrid().getSelectedRecords());
                 getUiHandlers().sendToProductionValidation(datasetVersionDtos);
             }
         };
@@ -233,7 +229,7 @@ public class DatasetListViewImpl extends StatisticalResourceBaseListViewImpl<Dat
 
             @Override
             public void onClick(ClickEvent event) {
-                List<DatasetVersionDto> datasetVersionDtos = StatisticalResourcesRecordUtils.getDatasetVersionDtosFromListGridRecords(listGrid.getListGrid().getSelectedRecords());
+                List<DatasetVersionBaseDto> datasetVersionDtos = StatisticalResourcesRecordUtils.getDatasetVersionBaseDtosFromListGridRecords(listGrid.getListGrid().getSelectedRecords());
                 getUiHandlers().sendToDiffusionValidation(datasetVersionDtos);
             }
         };
@@ -247,7 +243,7 @@ public class DatasetListViewImpl extends StatisticalResourceBaseListViewImpl<Dat
 
             @Override
             public void onClick(ClickEvent event) {
-                List<DatasetVersionDto> datasetVersionDtos = StatisticalResourcesRecordUtils.getDatasetVersionDtosFromListGridRecords(listGrid.getListGrid().getSelectedRecords());
+                List<DatasetVersionBaseDto> datasetVersionDtos = StatisticalResourcesRecordUtils.getDatasetVersionBaseDtosFromListGridRecords(listGrid.getListGrid().getSelectedRecords());
                 getUiHandlers().rejectValidation(datasetVersionDtos);
             }
         };
@@ -261,7 +257,7 @@ public class DatasetListViewImpl extends StatisticalResourceBaseListViewImpl<Dat
 
             @Override
             public void onClick(ClickEvent event) {
-                List<DatasetVersionDto> datasetVersionDtos = StatisticalResourcesRecordUtils.getDatasetVersionDtosFromListGridRecords(listGrid.getListGrid().getSelectedRecords());
+                List<DatasetVersionBaseDto> datasetVersionDtos = StatisticalResourcesRecordUtils.getDatasetVersionBaseDtosFromListGridRecords(listGrid.getListGrid().getSelectedRecords());
                 getUiHandlers().publish(datasetVersionDtos);
             }
         };
@@ -272,7 +268,7 @@ public class DatasetListViewImpl extends StatisticalResourceBaseListViewImpl<Dat
     @Override
     protected void programPublication(Date validFrom) {
         // TODO Send to date and hour selected to service
-        List<DatasetVersionDto> datasetVersionDtos = StatisticalResourcesRecordUtils.getDatasetVersionDtosFromListGridRecords(listGrid.getListGrid().getSelectedRecords());
+        List<DatasetVersionBaseDto> datasetVersionDtos = StatisticalResourcesRecordUtils.getDatasetVersionBaseDtosFromListGridRecords(listGrid.getListGrid().getSelectedRecords());
         getUiHandlers().programPublication(datasetVersionDtos);
     }
 
@@ -294,7 +290,7 @@ public class DatasetListViewImpl extends StatisticalResourceBaseListViewImpl<Dat
 
     @Override
     protected void version(VersionTypeEnum versionType) {
-        List<DatasetVersionDto> datasetVersionDtos = StatisticalResourcesRecordUtils.getDatasetVersionDtosFromListGridRecords(listGrid.getListGrid().getSelectedRecords());
+        List<DatasetVersionBaseDto> datasetVersionDtos = StatisticalResourcesRecordUtils.getDatasetVersionBaseDtosFromListGridRecords(listGrid.getListGrid().getSelectedRecords());
         getUiHandlers().version(datasetVersionDtos, versionType);
     }
 
@@ -322,37 +318,37 @@ public class DatasetListViewImpl extends StatisticalResourceBaseListViewImpl<Dat
     @Override
     protected boolean canDelete(ListGridRecord record) {
         DatasetRecord datasetRecord = (DatasetRecord) record;
-        return DatasetClientSecurityUtils.canDeleteDatasetVersion(datasetRecord.getDatasetVersionDto());
+        return DatasetClientSecurityUtils.canDeleteDatasetVersion(datasetRecord.getDatasetVersionBaseDto());
     }
 
     @Override
     protected boolean canSendToProductionValidation(ListGridRecord record) {
         DatasetRecord datasetRecord = (DatasetRecord) record;
-        return DatasetClientSecurityUtils.canSendDatasetVersionToProductionValidation(datasetRecord.getDatasetVersionDto());
+        return DatasetClientSecurityUtils.canSendDatasetVersionToProductionValidation(datasetRecord.getDatasetVersionBaseDto());
     }
 
     @Override
     protected boolean canSendToDiffusionValidation(ListGridRecord record) {
         DatasetRecord datasetRecord = (DatasetRecord) record;
-        return DatasetClientSecurityUtils.canSendDatasetVersionToDiffusionValidation(datasetRecord.getDatasetVersionDto());
+        return DatasetClientSecurityUtils.canSendDatasetVersionToDiffusionValidation(datasetRecord.getDatasetVersionBaseDto());
     }
 
     @Override
     protected boolean canRejectValidation(ListGridRecord record) {
         DatasetRecord datasetRecord = (DatasetRecord) record;
-        return DatasetClientSecurityUtils.canSendDatasetVersionToValidationRejected(datasetRecord.getDatasetVersionDto());
+        return DatasetClientSecurityUtils.canSendDatasetVersionToValidationRejected(datasetRecord.getDatasetVersionBaseDto());
     }
 
     @Override
     protected boolean canPublish(ListGridRecord record) {
         DatasetRecord datasetRecord = (DatasetRecord) record;
-        return DatasetClientSecurityUtils.canPublishDatasetVersion(datasetRecord.getDatasetVersionDto());
+        return DatasetClientSecurityUtils.canPublishDatasetVersion(datasetRecord.getDatasetVersionBaseDto());
     }
 
     @Override
     protected boolean canProgramPublication(ListGridRecord record) {
         DatasetRecord datasetRecord = (DatasetRecord) record;
-        return DatasetClientSecurityUtils.canPublishDatasetVersion(datasetRecord.getDatasetVersionDto());
+        return DatasetClientSecurityUtils.canPublishDatasetVersion(datasetRecord.getDatasetVersionBaseDto());
     }
 
     @Override
@@ -364,7 +360,7 @@ public class DatasetListViewImpl extends StatisticalResourceBaseListViewImpl<Dat
     @Override
     protected boolean canVersion(ListGridRecord record) {
         DatasetRecord datasetRecord = (DatasetRecord) record;
-        return DatasetClientSecurityUtils.canVersionDataset(datasetRecord.getDatasetVersionDto());
+        return DatasetClientSecurityUtils.canVersionDataset(datasetRecord.getDatasetVersionBaseDto());
     }
 
     //

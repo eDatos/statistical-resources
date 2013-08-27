@@ -6,13 +6,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.siemac.metamac.statistical.resources.core.dto.IdentifiableStatisticalResourceDto;
+import org.siemac.metamac.statistical.resources.core.dto.LifeCycleStatisticalResourceBaseDto;
 import org.siemac.metamac.statistical.resources.core.dto.LifeCycleStatisticalResourceDto;
+import org.siemac.metamac.statistical.resources.core.dto.NameableStatisticalResourceBaseDto;
 import org.siemac.metamac.statistical.resources.core.dto.NameableStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
+import org.siemac.metamac.statistical.resources.core.dto.SiemacMetadataStatisticalResourceBaseDto;
 import org.siemac.metamac.statistical.resources.core.dto.SiemacMetadataStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.VersionRationaleTypeDto;
+import org.siemac.metamac.statistical.resources.core.dto.VersionableStatisticalResourceBaseDto;
 import org.siemac.metamac.statistical.resources.core.dto.VersionableStatisticalResourceDto;
-import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionBaseDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdAttributeDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdAttributeInstanceDto;
@@ -20,9 +24,9 @@ import org.siemac.metamac.statistical.resources.core.dto.datasets.TemporalCodeDt
 import org.siemac.metamac.statistical.resources.core.dto.publication.ChapterDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.CubeDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.ElementLevelDto;
-import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionDto;
+import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionBaseDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.CodeItemDto;
-import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionDto;
+import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionBaseDto;
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.record.DatasetRecord;
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.record.DatasourceRecord;
 import org.siemac.metamac.statistical.resources.web.client.model.record.CodeItemRecord;
@@ -68,11 +72,23 @@ public class StatisticalResourcesRecordUtils extends RecordUtils {
         return record;
     }
 
+    public static NameableResourceRecord getNameableResourceRecord(NameableResourceRecord record, NameableStatisticalResourceBaseDto dto) {
+        record = (NameableResourceRecord) getIdentifiableResourceRecord(record, dto);
+        record.setTitle(getLocalisedString(dto.getTitle()));
+        return record;
+    }
+
     //
     // VERSIONABLE
     //
 
     public static VersionableResourceRecord getVersionableResourceRecord(VersionableResourceRecord record, VersionableStatisticalResourceDto dto) {
+        record = (VersionableResourceRecord) getNameableResourceRecord(record, dto);
+        record.setVersionLogic(dto.getVersionLogic());
+        return record;
+    }
+
+    public static VersionableResourceRecord getVersionableResourceRecord(VersionableResourceRecord record, VersionableStatisticalResourceBaseDto dto) {
         record = (VersionableResourceRecord) getNameableResourceRecord(record, dto);
         record.setVersionLogic(dto.getVersionLogic());
         return record;
@@ -90,6 +106,14 @@ public class StatisticalResourcesRecordUtils extends RecordUtils {
         return record;
     }
 
+    public static LifeCycleResourceRecord getLifeCycleResourceRecord(LifeCycleResourceRecord record, LifeCycleStatisticalResourceBaseDto dto) {
+        record = (LifeCycleResourceRecord) getVersionableResourceRecord(record, dto);
+        record.setProcStatus(CommonUtils.getProcStatusName(dto));
+        record.setCreationDate(DateUtils.getFormattedDate(dto.getCreationDate()));
+        record.setPublicationDate(DateUtils.getFormattedDate(dto.getPublicationDate()));
+        return record;
+    }
+
     //
     // SIEMAC METADATA
     //
@@ -98,18 +122,30 @@ public class StatisticalResourcesRecordUtils extends RecordUtils {
         return (SiemacMetadataRecord) getLifeCycleResourceRecord(record, dto);
     }
 
+    public static SiemacMetadataRecord getSiemacMetadataRecord(SiemacMetadataRecord record, SiemacMetadataStatisticalResourceBaseDto dto) {
+        return (SiemacMetadataRecord) getLifeCycleResourceRecord(record, dto);
+    }
+
     //
     // DATASETS
     //
 
-    public static DatasetRecord getDatasetRecord(DatasetVersionDto datasetDto) {
-        DatasetRecord record = (DatasetRecord) getSiemacMetadataRecord(new DatasetRecord(), datasetDto);
-        record.setRelatedDSD(datasetDto.getRelatedDsd());
-        if (datasetDto.getStatisticOfficiality() != null) {
-            record.setStatisticOfficiality(getLocalisedString(datasetDto.getStatisticOfficiality().getDescription()));
+    public static DatasetRecord getDatasetRecord(DatasetVersionBaseDto datasetVersionBaseDto) {
+        DatasetRecord record = (DatasetRecord) getSiemacMetadataRecord(new DatasetRecord(), datasetVersionBaseDto);
+        record.setRelatedDSD(datasetVersionBaseDto.getRelatedDsd());
+        if (datasetVersionBaseDto.getStatisticOfficiality() != null) {
+            record.setStatisticOfficiality(getLocalisedString(datasetVersionBaseDto.getStatisticOfficiality().getDescription()));
         }
-        record.setDatasetVersionDto(datasetDto);
+        record.setDatasetVersionBaseDto(datasetVersionBaseDto);
         return record;
+    }
+
+    public static DatasetRecord[] getDatasetRecords(List<DatasetVersionBaseDto> datasetVersionBaseDtos) {
+        DatasetRecord[] records = new DatasetRecord[datasetVersionBaseDtos.size()];
+        for (int i = 0; i < datasetVersionBaseDtos.size(); i++) {
+            records[i] = getDatasetRecord(datasetVersionBaseDtos.get(i));
+        }
+        return records;
     }
 
     public static DatasourceRecord getDatasourceRecord(DatasourceDto datasourceDto) {
@@ -117,24 +153,32 @@ public class StatisticalResourcesRecordUtils extends RecordUtils {
         return record;
     }
 
-    public static List<DatasetVersionDto> getDatasetVersionDtosFromListGridRecords(ListGridRecord[] records) {
-        List<DatasetVersionDto> datasetVersionDtos = new ArrayList<DatasetVersionDto>();
+    public static List<DatasetVersionBaseDto> getDatasetVersionBaseDtosFromListGridRecords(ListGridRecord[] records) {
+        List<DatasetVersionBaseDto> datasetVersionBaseDtos = new ArrayList<DatasetVersionBaseDto>();
         if (records != null) {
             for (ListGridRecord record : records) {
                 DatasetRecord datasetRecord = (DatasetRecord) record;
-                datasetVersionDtos.add(datasetRecord.getDatasetVersionDto());
+                datasetVersionBaseDtos.add(datasetRecord.getDatasetVersionBaseDto());
             }
         }
-        return datasetVersionDtos;
+        return datasetVersionBaseDtos;
     }
 
     //
     // PUBLICATIONS
     //
 
-    public static PublicationRecord getPublicationRecord(PublicationVersionDto publicationDto) {
-        PublicationRecord record = (PublicationRecord) getSiemacMetadataRecord(new PublicationRecord(), publicationDto);
-        record.setPublicationDto(publicationDto);
+    public static PublicationRecord[] getPublicationRecords(List<PublicationVersionBaseDto> publicationVersionBaseDtos) {
+        PublicationRecord[] records = new PublicationRecord[publicationVersionBaseDtos.size()];
+        for (int i = 0; i < publicationVersionBaseDtos.size(); i++) {
+            records[i] = getPublicationRecord(publicationVersionBaseDtos.get(i));
+        }
+        return records;
+    }
+
+    public static PublicationRecord getPublicationRecord(PublicationVersionBaseDto publicationVersionBaseDto) {
+        PublicationRecord record = (PublicationRecord) getSiemacMetadataRecord(new PublicationRecord(), publicationVersionBaseDto);
+        record.setPublicationBaseDto(publicationVersionBaseDto);
         return record;
     }
 
@@ -165,39 +209,47 @@ public class StatisticalResourcesRecordUtils extends RecordUtils {
         return elementLevelTreeNode;
     }
 
-    public static List<PublicationVersionDto> getPublicationVersionDtosFromListGridRecords(ListGridRecord[] records) {
-        List<PublicationVersionDto> publicationVersionDtos = new ArrayList<PublicationVersionDto>();
+    public static List<PublicationVersionBaseDto> getPublicationVersionBaseDtosFromListGridRecords(ListGridRecord[] records) {
+        List<PublicationVersionBaseDto> publicationVersionBaseDtos = new ArrayList<PublicationVersionBaseDto>();
         if (records != null) {
             for (ListGridRecord record : records) {
                 PublicationRecord datasetRecord = (PublicationRecord) record;
-                publicationVersionDtos.add(datasetRecord.getPublicationVersionDto());
+                publicationVersionBaseDtos.add(datasetRecord.getPublicationVersionBaseDto());
             }
         }
-        return publicationVersionDtos;
+        return publicationVersionBaseDtos;
     }
 
     //
     // QUERIES
     //
 
-    public static QueryRecord getQueryRecord(QueryVersionDto queryDto) {
+    public static QueryRecord[] getQueryRecords(List<QueryVersionBaseDto> queryVersionBaseDtos) {
+        QueryRecord[] records = new QueryRecord[queryVersionBaseDtos.size()];
+        for (int i = 0; i < queryVersionBaseDtos.size(); i++) {
+            records[i] = getQueryRecord(queryVersionBaseDtos.get(i));
+        }
+        return records;
+    }
+
+    public static QueryRecord getQueryRecord(QueryVersionBaseDto queryDto) {
         QueryRecord record = (QueryRecord) getLifeCycleResourceRecord(new QueryRecord(), queryDto);
         record.setRelatedDataset(queryDto.getRelatedDatasetVersion());
         record.setStatus(CommonUtils.getQueryStatusName(queryDto));
         record.setType(CommonUtils.getQueryTypeName(queryDto));
-        record.setQueryDto(queryDto);
+        record.setQueryVersionBaseDto(queryDto);
         return record;
     }
 
-    public static List<QueryVersionDto> getQueryVersionDtosFromListGridRecords(ListGridRecord[] records) {
-        List<QueryVersionDto> queryVersionDtos = new ArrayList<QueryVersionDto>();
+    public static List<QueryVersionBaseDto> getQueryVersionDtosFromListGridRecords(ListGridRecord[] records) {
+        List<QueryVersionBaseDto> queryVersionBaseDtos = new ArrayList<QueryVersionBaseDto>();
         if (records != null) {
             for (ListGridRecord record : records) {
                 QueryRecord datasetRecord = (QueryRecord) record;
-                queryVersionDtos.add(datasetRecord.getQueryVersionDto());
+                queryVersionBaseDtos.add(datasetRecord.getQueryVersionBaseDto());
             }
         }
-        return queryVersionDtos;
+        return queryVersionBaseDtos;
     }
 
     // Codes

@@ -3,7 +3,7 @@ package org.siemac.metamac.statistical.resources.web.server.handlers.publication
 import java.util.List;
 
 import org.siemac.metamac.core.common.exception.MetamacException;
-import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionDto;
+import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionBaseDto;
 import org.siemac.metamac.statistical.resources.core.facade.serviceapi.StatisticalResourcesServiceFacade;
 import org.siemac.metamac.statistical.resources.web.shared.publication.GetVersionsOfPublicationAction;
 import org.siemac.metamac.statistical.resources.web.shared.publication.GetVersionsOfPublicationResult;
@@ -28,9 +28,9 @@ public class GetVersionsOfPublicationActionHandler extends SecurityActionHandler
     @Override
     public GetVersionsOfPublicationResult executeSecurityAction(GetVersionsOfPublicationAction action) throws ActionException {
         try {
-            List<PublicationVersionDto> publicationVersionDtos = statisticalResourcesServiceFacade.retrievePublicationVersions(ServiceContextHolder.getCurrentServiceContext(),
+            List<PublicationVersionBaseDto> publicationVersionBaseDtos = statisticalResourcesServiceFacade.retrievePublicationVersions(ServiceContextHolder.getCurrentServiceContext(),
                     action.getPublicationVersionUrn());
-            return new GetVersionsOfPublicationResult(publicationVersionDtos);
+            return new GetVersionsOfPublicationResult(publicationVersionBaseDtos);
         } catch (MetamacException e) {
             throw WebExceptionUtils.createMetamacWebException(e);
         }

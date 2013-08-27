@@ -3,7 +3,7 @@ package org.siemac.metamac.statistical.resources.web.client.query.view.handlers;
 import java.util.List;
 
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
-import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionDto;
+import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionBaseDto;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.DatasetVersionWebCriteria;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.QueryVersionWebCriteria;
 import org.siemac.metamac.web.common.client.view.handlers.BaseUiHandlers;
@@ -19,12 +19,12 @@ public interface QueryListUiHandlers extends BaseUiHandlers {
 
     // LifeCycle
 
-    void sendToProductionValidation(List<QueryVersionDto> queryVersionDtos);
-    void sendToDiffusionValidation(List<QueryVersionDto> queryVersionDtos);
-    void rejectValidation(List<QueryVersionDto> queryVersionDtos);
-    void publish(List<QueryVersionDto> queryVersionDtos);
-    void programPublication(List<QueryVersionDto> queryVersionDtos);
-    void version(List<QueryVersionDto> queryVersionDtos, VersionTypeEnum versionType);
+    void sendToProductionValidation(List<QueryVersionBaseDto> queryVersionBaseDtos);
+    void sendToDiffusionValidation(List<QueryVersionBaseDto> queryVersionBaseDtos);
+    void rejectValidation(List<QueryVersionBaseDto> queryVersionBaseDtos);
+    void publish(List<QueryVersionBaseDto> queryVersionBaseDtos);
+    void programPublication(List<QueryVersionBaseDto> queryVersionBaseDtos);
+    void version(List<QueryVersionBaseDto> queryVersionBaseDtos, VersionTypeEnum versionType);
 
     // Related resources
 

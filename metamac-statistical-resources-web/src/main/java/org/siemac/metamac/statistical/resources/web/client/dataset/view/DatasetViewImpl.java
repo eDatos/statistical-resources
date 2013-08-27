@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.siemac.metamac.core.common.util.shared.BooleanUtils;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionBaseDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.web.client.base.widgets.CustomTabSet;
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.record.DatasetRecord;
@@ -142,8 +143,8 @@ public class DatasetViewImpl extends ViewWithUiHandlers<DatasetUiHandlers> imple
     }
 
     @Override
-    public void setDatasetVersions(List<DatasetVersionDto> datasetVersionDtos) {
-        versionsSectionStack.setDatasetVersions(datasetVersionDtos);
+    public void setDatasetVersions(List<DatasetVersionBaseDto> datasetVersionBaseDtos) {
+        versionsSectionStack.setDatasetVersions(datasetVersionBaseDtos);
         versionsSectionStack.selectDatasetVersion(datasetVersionDto);
     }
 
