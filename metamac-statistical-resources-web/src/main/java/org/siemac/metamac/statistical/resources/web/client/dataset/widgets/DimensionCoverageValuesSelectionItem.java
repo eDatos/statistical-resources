@@ -61,6 +61,7 @@ public class DimensionCoverageValuesSelectionItem extends CustomCanvasItem {
         mainPanel.setOverflow(Overflow.VISIBLE);
         mainPanel.addMember(dimensionsLayout);
         mainPanel.addMember(selectedDimensionValuesListGrid);
+        mainPanel.setPadding(10);
         setCanvas(mainPanel);
     }
 
