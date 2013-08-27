@@ -144,6 +144,8 @@ Application DatasetsStatisticalResources {
 			- Bag<@ExternalItem> measureCoverage cascade="all-delete-orphan" fetch="lazy" databaseJoinTable="TB_DV_MEASURE_COVERAGE" databaseColumn="MEASURE_CODES_FK" databaseJoinColumn="DATASET_VERSION_FK";
 			// Dimensions coverages
 			- Bag<@CodeDimension> dimensionsCoverage cascade="all-delete-orphan" fetch="lazy" inverse orderby="id asc" <-> datasetVersion;
+			// Attributes coverages
+			- Bag<@AttributeValue> attributesCoverage cascade="all-delete-orphan" fetch="lazy" inverse orderby="id asc" <-> datasetVersion;
 			//geographic granularities
 			- Bag<@ExternalItem> geographicGranularities cascade="all-delete-orphan" fetch="lazy" databaseJoinTable="TB_DV_GEO_GRANULARITY" databaseColumn="GEOGRAPHIC_GRANULARITY_FK" databaseJoinColumn="DATASET_VERSION_FK";
 			//temporal granularities
@@ -232,6 +234,24 @@ Application DatasetsStatisticalResources {
     		Repository CodeDimensionRepository {
     			findByQuery;
     			List<@CodeDimension> findCodesForDatasetVersionByDimensionId(long datasetVersionId, String dimensionId, String filter) throws MetamacException;	
+    		}
+    	}
+    	
+    	 Entity AttributeValue {
+    		databaseTable="TB_ATTRIBUTE_VALUES"
+    		hint="idSequence=ATTRIBUTE_VALUES"
+    		!auditable
+    		gap
+    		
+    		"Added explicitly to avoid that Sculptor generate UUID"
+			Long id key;
+    		String dsdComponentId;
+    		String identifier;
+    		String title length="4000";
+    		- @DatasetVersion datasetVersion cascade="none" fetch="lazy" not nullable databaseColumn="DATASET_VERSION_FK" <-> attributesCoverage;
+    		
+    		Repository AttributeValueRepository {
+    			findByQuery;
     		}
     	}
     	
