@@ -26,11 +26,20 @@ public interface MetamacSdmx2StatRepoMapper {
             throws MetamacException;
 
     /**
-     * Convert parser conditions into repository conditions
+     * Convert parser conditions into repository conditions Map to query attributes
      * 
      * @param serieConditions
      * @return
      * @throws MetamacException
      */
-    public List<ConditionDimensionDto> conditionsToRepository(List<DimensionCodeInfo> serieConditions) throws MetamacException;
+    public List<ConditionDimensionDto> conditionsToRepositoryList(List<DimensionCodeInfo> serieConditions) throws MetamacException;
+
+    /**
+     * Convert parser conditions into repository conditions List to query observations
+     * 
+     * @param serieConditions
+     * @return
+     * @throws MetamacException
+     */
+    public Map<String, List<String>> conditionsToRepositoryMap(List<DimensionCodeInfo> serieConditions) throws MetamacException;
 }

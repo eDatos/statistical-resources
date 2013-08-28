@@ -1,6 +1,7 @@
 package org.siemac.metamac.statistical.resources.core.io.mapper;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -114,7 +115,7 @@ public class MetamacSdmx2StatRepoMapperImpl implements MetamacSdmx2StatRepoMappe
     }
 
     @Override
-    public List<ConditionDimensionDto> conditionsToRepository(List<DimensionCodeInfo> serieConditions) throws MetamacException {
+    public List<ConditionDimensionDto> conditionsToRepositoryList(List<DimensionCodeInfo> serieConditions) throws MetamacException {
         if (serieConditions == null) {
             return null;
         }
@@ -128,6 +129,16 @@ public class MetamacSdmx2StatRepoMapperImpl implements MetamacSdmx2StatRepoMappe
         }
 
         return conditions;
+    }
+
+    @Override
+    public Map<String, List<String>> conditionsToRepositoryMap(List<DimensionCodeInfo> serieConditions) throws MetamacException {
+        Map<String, List<String>> conditionsMap = new HashMap<String, List<String>>();
+        for (DimensionCodeInfo dimensionCodeInfo : serieConditions) {
+            conditionsMap.put(dimensionCodeInfo.getCode(), new ArrayList<String>(dimensionCodeInfo.getCodes()));
+        }
+
+        return conditionsMap;
     }
 
     /**************************************************************************

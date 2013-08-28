@@ -1,7 +1,9 @@
 package org.siemac.metamac.statistical.resources.core.io.utils;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -12,10 +14,15 @@ import org.siemac.metamac.statistical.resources.core.constants.StatisticalResour
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 
+import com.arte.statistic.dataset.repository.dto.AttributeBasicDto;
+import com.arte.statistic.dataset.repository.dto.AttributeDto;
 import com.arte.statistic.dataset.repository.dto.AttributeObservationDto;
 import com.arte.statistic.dataset.repository.dto.CodeDimensionDto;
 import com.arte.statistic.dataset.repository.dto.InternationalStringDto;
 import com.arte.statistic.dataset.repository.dto.LocalisedStringDto;
+import com.arte.statistic.parser.sdmx.v2_1.domain.ComponentInfo;
+import com.arte.statistic.parser.sdmx.v2_1.domain.ComponentInfoTypeEnum;
+import com.arte.statistic.parser.sdmx.v2_1.domain.DimensionCodeInfo;
 
 public class ManipulateDataUtils {
 
@@ -55,7 +62,7 @@ public class ManipulateDataUtils {
      * @param codesByDimension
      * @return
      */
-    public static String generateKeyForAttribute(Map<String, List<String>> codesByDimension) {
+    public static String toStringUnorderedKeyForAttribute(Map<String, List<String>> codesByDimension) {
         if (codesByDimension == null || codesByDimension.isEmpty()) {
             return DATASET;
         }
@@ -69,7 +76,7 @@ public class ManipulateDataUtils {
      * @param codesDimension
      * @return
      */
-    public static String generateKeyForObservation(List<CodeDimensionDto> codesDimension) {
+    public static String toStringUnorderedKeyForObservation(List<CodeDimensionDto> codesDimension) {
         if (codesDimension == null || codesDimension.size() == 0) {
             return null;
         }
@@ -87,11 +94,11 @@ public class ManipulateDataUtils {
         for (Map.Entry<String, List<String>> entry : codesByDimension.entrySet()) {
             key.append(entry.getKey()).append(':');
             if (entry.getValue() == null || entry.getValue().isEmpty()) {
-                key.append('*');
+                key.append("[*]");
             } else {
                 key.append(entry.getValue());
             }
-            key.append(entry.getKey()).append(',');
+            key.append(',');
         }
 
         if (key.charAt(key.length() - 1) == ',') {
@@ -101,4 +108,108 @@ public class ManipulateDataUtils {
         return key.toString();
     }
 
+    public static Map<String, List<AttributeBasicDto>> addTransformAttributesToCurrentTransformedAttributes(Map<String, List<AttributeBasicDto>> currentTransformedAttributes,
+            List<DimensionCodeInfo> dimensions, List<AttributeDto> attributeDtos) {
+
+        for (AttributeDto attributeDto : attributeDtos) {
+            transformAttributes(currentTransformedAttributes, dimensions, 0, new LinkedList<CodeDimensionDto>(), attributeDto);
+        }
+
+        return currentTransformedAttributes;
+    }
+
+    private static void transformAttributes(Map<String, List<AttributeBasicDto>> attributesMap, List<DimensionCodeInfo> dimensions, int index, List<CodeDimensionDto> codesDimension,
+            AttributeDto attributeDto) {
+
+        if (index == attributeDto.getCodesByDimension().size()) {
+            String key = generateOrderedKeyFromCodesDimensions(codesDimension);
+
+            if (attributesMap.containsKey(key)) {
+                attributesMap.get(key).add(attributeDto);
+            } else {
+                List<AttributeBasicDto> attributeDtos = new LinkedList<AttributeBasicDto>();
+                attributeDtos.add(attributeDto);
+                attributesMap.put(key, attributeDtos);
+            }
+
+            return;
+        }
+
+        ComponentInfo dimension = dimensions.get(index);
+
+        if (attributeDto.getCodesByDimension() != null && !attributeDto.getCodesByDimension().get(dimension.getCode()).isEmpty()) {
+            List<String> codes = attributeDto.getCodesByDimension().get(dimension.getCode());
+            for (String code : codes) {
+                CodeDimensionDto codeDimensionAuxDto = new CodeDimensionDto(dimension.getCode(), code);
+
+                List<CodeDimensionDto> conditions = new ArrayList<CodeDimensionDto>(codesDimension.size() + 1);
+                conditions.addAll(codesDimension);
+                conditions.add(codeDimensionAuxDto);
+
+                transformAttributes(attributesMap, dimensions, index + 1, conditions, attributeDto);
+            }
+        } else {
+            transformAttributes(attributesMap, dimensions, index + 1, codesDimension, attributeDto);
+        }
+    }
+
+    public static String generateOrderedKeyFromCodesDimensions(List<CodeDimensionDto> codesDimension) {
+        StringBuilder key = new StringBuilder();
+
+        for (CodeDimensionDto codeDimensionDto : codesDimension) {
+            key.append(codeDimensionDto.getDimensionId()).append(':').append(codeDimensionDto.getCodeDimensionId()).append(',');
+        }
+
+        if (key.charAt(key.length() - 1) == ',') {
+            key.deleteCharAt(key.length() - 1);
+        }
+        return key.toString();
+    }
+
+    public static void main(String[] args) {
+
+        Map<String, List<String>> codesByDimension = new HashMap<String, List<String>>();
+
+        codesByDimension.put("FREQ", Arrays.asList("M", "Y", "D"));
+        codesByDimension.put("CURRENCY", Arrays.asList("USD", "GBP"));
+        codesByDimension.put("CURRENCY_DENOM", Arrays.asList("EUR"));
+        codesByDimension.put("EXR_TYPE", Arrays.asList("SP00"));
+        codesByDimension.put("EXR_VAR", Arrays.asList("E", "S", "F"));
+        codesByDimension.put("TIME_PERIOD", Arrays.asList("2010-10", "2011-10", "2012-10"));
+        // codesByDimension.put("KAKA", new ArrayList<String>());
+
+        // System.out.println(generateKeyForAttribute(codesByDimension));
+
+        // AtributeDto
+        AttributeDto attributeDto = new AttributeDto();
+        attributeDto.setAttributeId("ATTRIBUTE");
+        attributeDto.setCodesByDimension(codesByDimension);
+        InternationalStringDto internationalStringDto = new InternationalStringDto();
+        LocalisedStringDto localisedStringDto = new LocalisedStringDto();
+        localisedStringDto.setLabel("hola");
+        localisedStringDto.setLocale("es");
+        internationalStringDto.addText(localisedStringDto);
+        attributeDto.setValue(internationalStringDto);
+
+        // List<ComponentInfo> dimensions,
+        List<DimensionCodeInfo> dimensions = new ArrayList<DimensionCodeInfo>();
+        dimensions.add(new DimensionCodeInfo("FREQ", ComponentInfoTypeEnum.DIMENSION));
+        dimensions.add(new DimensionCodeInfo("CURRENCY", ComponentInfoTypeEnum.DIMENSION));
+        dimensions.add(new DimensionCodeInfo("CURRENCY_DENOM", ComponentInfoTypeEnum.DIMENSION));
+        dimensions.add(new DimensionCodeInfo("EXR_TYPE", ComponentInfoTypeEnum.DIMENSION));
+        dimensions.add(new DimensionCodeInfo("EXR_VAR", ComponentInfoTypeEnum.DIMENSION));
+        dimensions.add(new DimensionCodeInfo("TIME_PERIOD", ComponentInfoTypeEnum.DIMENSION));
+        dimensions.add(new DimensionCodeInfo("KAKA", ComponentInfoTypeEnum.DIMENSION));
+
+        Map<String, List<AttributeBasicDto>> attributesMap = addTransformAttributesToCurrentTransformedAttributes(new HashMap<String, List<AttributeBasicDto>>(), dimensions,
+                Arrays.asList(attributeDto));
+
+        for (Map.Entry<String, List<AttributeBasicDto>> entry : attributesMap.entrySet()) {
+            System.out.println(entry.getKey());
+            List<AttributeBasicDto> value = entry.getValue();
+            System.out.println(toStringUnorderedKeyForAttribute(((AttributeDto) value.iterator().next()).getCodesByDimension()));
+            System.out.println("----------------");
+        }
+
+    }
 }

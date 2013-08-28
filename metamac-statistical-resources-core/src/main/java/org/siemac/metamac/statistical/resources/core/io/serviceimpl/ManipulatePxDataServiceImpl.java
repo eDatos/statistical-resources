@@ -57,7 +57,7 @@ public class ManipulatePxDataServiceImpl implements ManipulatePxDataService {
         if (validateDataVersusDsd.getAttributeIdsAtObservationLevelSet().contains(MetamacPx2StatRepoMapperImpl.ATTR_OBS_NOTE)) {
             List<ComponentInfo> dimensionsInfo = validateDataVersusDsd.retrieveDimensionsInfo();
             Map<String, Integer> dimensionsOrderPxMap = metamacPx2StatRepoMapper.generateDimensionsOrderPxMap(pxModel);
-            attributesObservations = metamacPx2StatRepoMapper.toAttributesObservations(pxModel, "es", dimensionsInfo, dimensionsOrderPxMap);
+            attributesObservations = metamacPx2StatRepoMapper.toAttributesObservations(pxModel, StatisticalResourcesConstants.DEFAULT_DATA_REPOSITORY_LOCALE, dimensionsInfo, dimensionsOrderPxMap);
         }
 
         List<ObservationExtendedDto> dataDtos = new LinkedList<ObservationExtendedDto>();

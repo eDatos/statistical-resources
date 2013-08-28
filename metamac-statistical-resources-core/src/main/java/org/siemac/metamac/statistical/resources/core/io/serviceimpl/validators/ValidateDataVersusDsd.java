@@ -169,7 +169,7 @@ public class ValidateDataVersusDsd {
 
                 // Non Enumerated representation
                 checkDimensionNonEnumeratedRepresentation(codeDimensionDto.getDimensionId(), codeDimensionDto.getCodeDimensionId(),
-                        ManipulateDataUtils.generateKeyForObservation(overExtendedDto.getCodesDimension()), exceptions);
+                        ManipulateDataUtils.toStringUnorderedKeyForObservation(overExtendedDto.getCodesDimension()), exceptions);
             }
             if (exceptions.size() != previousExceptionSize) {
                 continue;
@@ -186,7 +186,7 @@ public class ValidateDataVersusDsd {
                     checkAttributeEnumeratedRepresentation(attributeBasicDto.getAttributeId(), value, exceptions);
 
                     // Non Enumerated representation
-                    checkAttributeNonEnumeratedRepresentation(attributeBasicDto.getAttributeId(), value, ManipulateDataUtils.generateKeyForObservation(overExtendedDto.getCodesDimension()), exceptions);
+                    checkAttributeNonEnumeratedRepresentation(attributeBasicDto.getAttributeId(), value, ManipulateDataUtils.toStringUnorderedKeyForObservation(overExtendedDto.getCodesDimension()), exceptions);
                 }
             }
             if (exceptions.size() != previousExceptionSize) {
@@ -202,11 +202,11 @@ public class ValidateDataVersusDsd {
 
                 // Non Enumerated representation
                 checkPrimaryMeasureNonEnumeratedRepresentation(this.dsdPrimaryMeasure.getComponentId(), overExtendedDto.getPrimaryMeasure(),
-                        ManipulateDataUtils.generateKeyForObservation(overExtendedDto.getCodesDimension()), exceptions);
+                        ManipulateDataUtils.toStringUnorderedKeyForObservation(overExtendedDto.getCodesDimension()), exceptions);
 
                 // Extra validation for primary measure
                 if (this.isExtraValidationForPrimaryMeasureRequired) {
-                    NonEnumeratedRepresentationValidator.checkExtraValidationForPrimaryMeasure(ManipulateDataUtils.generateKeyForObservation(overExtendedDto.getCodesDimension()),
+                    NonEnumeratedRepresentationValidator.checkExtraValidationForPrimaryMeasure(ManipulateDataUtils.toStringUnorderedKeyForObservation(overExtendedDto.getCodesDimension()),
                             overExtendedDto.getPrimaryMeasure(), exceptions);
                 }
             }
@@ -238,7 +238,7 @@ public class ValidateDataVersusDsd {
             checkAttributeEnumeratedRepresentation(attributeDto.getAttributeId(), value, exceptions);
 
             // Non Enumerated representation
-            checkAttributeNonEnumeratedRepresentation(attributeDto.getAttributeId(), value, ManipulateDataUtils.generateKeyForAttribute(attributeDto.getCodesByDimension()), exceptions);
+            checkAttributeNonEnumeratedRepresentation(attributeDto.getAttributeId(), value, ManipulateDataUtils.toStringUnorderedKeyForAttribute(attributeDto.getCodesByDimension()), exceptions);
 
             if (exceptions.size() != previousExceptionSize) {
                 continue;
