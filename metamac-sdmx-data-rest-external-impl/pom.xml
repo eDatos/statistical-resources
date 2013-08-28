@@ -28,6 +28,12 @@
             <classifier>client</classifier>
             <version>${project.version}</version>
         </dependency>
+<!--         <dependency> -->
+<!--             <groupId>com.arte.statistic.statistic-sdmx-srm</groupId> -->
+<!--             <artifactId>statistic-sdmx-srm-core</artifactId> -->
+<!--             <classifier>client</classifier> -->
+<!--             <version>${statistic-sdmx-srm-core.version}</version> -->
+<!--         </dependency> -->
         <dependency>
             <groupId>org.siemac.metamac</groupId>
             <artifactId>metamac-rest-common</artifactId>
