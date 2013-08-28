@@ -84,9 +84,9 @@ Application DatasetsStatisticalResourcesDto {
 
         DataTransferObject RelationshipDto extends @IdentityDto {
         	- @AttributeRelationshipTypeEnum relationshipType;
-        	String group;
 			List<String> dimensions;
-			StringListMap attachmentGroupsDimensions;
+			String group;
+			List<String> groupDimensions;
         }
         
         DataTransferObject RepresentationDto extends @IdentityDto {
