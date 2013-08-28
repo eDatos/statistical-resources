@@ -9,17 +9,17 @@ import org.siemac.metamac.statistical.resources.core.dto.query.CodeItemDto;
 import org.siemac.metamac.statistical.resources.web.client.dataset.view.handlers.DatasetAttributesTabUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.forms.AttributeDatasetLevelEditionForm;
 import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.forms.AttributeDatasetLevelForm;
-import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.forms.AttributeDimensionLevelEditionForm;
-import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.forms.AttributeDimensionLevelForm;
+import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.forms.AttributeDimensionOrGroupLevelEditionForm;
+import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.forms.AttributeDimensionOrGroupLevelForm;
 import org.siemac.metamac.web.common.client.widgets.form.MainFormLayout;
 
 public class AttributeMainFormLayout extends MainFormLayout {
 
-    private AttributeDatasetLevelForm          attributeDatasetLevelForm;
-    private AttributeDatasetLevelEditionForm   attributeDatasetLevelEditionForm;
+    private AttributeDatasetLevelForm                 attributeDatasetLevelForm;
+    private AttributeDatasetLevelEditionForm          attributeDatasetLevelEditionForm;
 
-    private AttributeDimensionLevelForm        attributeDimensionLevelForm;
-    private AttributeDimensionLevelEditionForm attributeDimensionLevelEditionForm;
+    private AttributeDimensionOrGroupLevelForm        attributeDimensionOrGroupLevelForm;
+    private AttributeDimensionOrGroupLevelEditionForm attributeDimensionOrGroupLevelEditionForm;
 
     public AttributeMainFormLayout() {
 
@@ -33,28 +33,31 @@ public class AttributeMainFormLayout extends MainFormLayout {
 
         // DIMENSION LEVEL FORMS
 
-        attributeDimensionLevelForm = new AttributeDimensionLevelForm();
-        addViewCanvas(attributeDimensionLevelForm);
+        attributeDimensionOrGroupLevelForm = new AttributeDimensionOrGroupLevelForm();
+        addViewCanvas(attributeDimensionOrGroupLevelForm);
 
-        attributeDimensionLevelEditionForm = new AttributeDimensionLevelEditionForm();
-        addEditionCanvas(attributeDimensionLevelEditionForm);
+        attributeDimensionOrGroupLevelEditionForm = new AttributeDimensionOrGroupLevelEditionForm();
+        addEditionCanvas(attributeDimensionOrGroupLevelEditionForm);
     }
 
     public void showInstance(DsdAttributeDto dsdAttributeDto, DsdAttributeInstanceDto dsdAttributeInstanceDto) {
         hideAllForms();
         switch (dsdAttributeDto.getAttributeRelationship().getRelationshipType()) {
             case NO_SPECIFIED_RELATIONSHIP:
-                showDataLevelForm(dsdAttributeDto, dsdAttributeInstanceDto);
+                showDatasetLevelForm(dsdAttributeDto, dsdAttributeInstanceDto);
                 break;
             case DIMENSION_RELATIONSHIP:
-                showDimensionLevelForm(dsdAttributeDto, dsdAttributeInstanceDto);
+                showDimensionOrGroupLevelForm(dsdAttributeDto, dsdAttributeInstanceDto);
+                break;
+            case GROUP_RELATIONSHIP:
+                showDimensionOrGroupLevelForm(dsdAttributeDto, dsdAttributeInstanceDto);
                 break;
             default:
                 break;
         }
     }
 
-    private void showDataLevelForm(DsdAttributeDto dsdAttributeDto, DsdAttributeInstanceDto dsdAttributeInstanceDto) {
+    private void showDatasetLevelForm(DsdAttributeDto dsdAttributeDto, DsdAttributeInstanceDto dsdAttributeInstanceDto) {
         attributeDatasetLevelForm.setAttribute(dsdAttributeDto, dsdAttributeInstanceDto);
         attributeDatasetLevelForm.show();
 
@@ -64,12 +67,12 @@ public class AttributeMainFormLayout extends MainFormLayout {
         show();
     }
 
-    private void showDimensionLevelForm(DsdAttributeDto dsdAttributeDto, DsdAttributeInstanceDto dsdAttributeInstanceDto) {
-        attributeDimensionLevelForm.setAttribute(dsdAttributeDto, dsdAttributeInstanceDto);
-        attributeDimensionLevelForm.show();
+    private void showDimensionOrGroupLevelForm(DsdAttributeDto dsdAttributeDto, DsdAttributeInstanceDto dsdAttributeInstanceDto) {
+        attributeDimensionOrGroupLevelForm.setAttribute(dsdAttributeDto, dsdAttributeInstanceDto);
+        attributeDimensionOrGroupLevelForm.show();
 
-        attributeDimensionLevelEditionForm.setAttribute(dsdAttributeDto, dsdAttributeInstanceDto);
-        attributeDimensionLevelEditionForm.show();
+        attributeDimensionOrGroupLevelEditionForm.setAttribute(dsdAttributeDto, dsdAttributeInstanceDto);
+        attributeDimensionOrGroupLevelEditionForm.show();
 
         show();
     }
@@ -77,18 +80,18 @@ public class AttributeMainFormLayout extends MainFormLayout {
     private void hideAllForms() {
         attributeDatasetLevelForm.hide();
         attributeDatasetLevelEditionForm.hide();
-        attributeDimensionLevelForm.hide();
-        attributeDimensionLevelEditionForm.hide();
+        attributeDimensionOrGroupLevelForm.hide();
+        attributeDimensionOrGroupLevelEditionForm.hide();
         hide();
     }
 
     public void setUiHandlers(DatasetAttributesTabUiHandlers uiHandlers) {
         attributeDatasetLevelEditionForm.setUiHandlers(uiHandlers);
-        attributeDimensionLevelEditionForm.setUiHandlers(uiHandlers);
+        attributeDimensionOrGroupLevelEditionForm.setUiHandlers(uiHandlers);
     }
 
     public void setDimensionCoverageValues(String dimensionId, List<CodeItemDto> codeItemDtos) {
-        attributeDimensionLevelEditionForm.setDimensionCoverageValues(dimensionId, codeItemDtos);
+        attributeDimensionOrGroupLevelEditionForm.setDimensionCoverageValues(dimensionId, codeItemDtos);
     }
 
     //
@@ -99,7 +102,7 @@ public class AttributeMainFormLayout extends MainFormLayout {
         attributeDatasetLevelEditionForm.setItemsForDatasetLevelAttributeValueSelection(externalItemDtos, firstResult, totalResults);
     }
 
-    public void setItemsForDimensionLevelAttributeValueSelection(List<ExternalItemDto> externalItemDtos, int firstResult, int totalResults) {
-        attributeDimensionLevelEditionForm.setItemsForDimensionLevelAttributeValueSelection(externalItemDtos, firstResult, totalResults);
+    public void setItemsForDimensionOrGroupLevelAttributeValueSelection(List<ExternalItemDto> externalItemDtos, int firstResult, int totalResults) {
+        attributeDimensionOrGroupLevelEditionForm.setItemsForDimensionOrGroupLevelAttributeValueSelection(externalItemDtos, firstResult, totalResults);
     }
 }

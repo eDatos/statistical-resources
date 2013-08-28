@@ -14,7 +14,6 @@ import org.siemac.metamac.statistical.resources.web.client.model.ds.CodeItemDS;
 import org.siemac.metamac.statistical.resources.web.client.model.record.CodeItemRecord;
 import org.siemac.metamac.statistical.resources.web.client.utils.StatisticalResourcesRecordUtils;
 import org.siemac.metamac.web.common.client.widgets.BaseCustomListGrid;
-import org.siemac.metamac.web.common.client.widgets.CustomListGrid;
 import org.siemac.metamac.web.common.client.widgets.CustomListGridField;
 import org.siemac.metamac.web.common.client.widgets.form.CustomDynamicForm;
 import org.siemac.metamac.web.common.client.widgets.form.fields.CustomCanvasItem;
@@ -22,6 +21,8 @@ import org.siemac.metamac.web.common.client.widgets.form.fields.CustomCanvasItem
 import com.smartgwt.client.data.Record;
 import com.smartgwt.client.types.Autofit;
 import com.smartgwt.client.types.Overflow;
+import com.smartgwt.client.types.SelectionAppearance;
+import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.widgets.grid.HeaderSpan;
 import com.smartgwt.client.widgets.grid.events.SelectionChangedHandler;
 import com.smartgwt.client.widgets.grid.events.SelectionEvent;
@@ -34,9 +35,13 @@ public class DimensionCoverageValuesSelectionItem extends CustomCanvasItem {
 
     private CustomDynamicForm  dimensionsForm;
 
-    public DimensionCoverageValuesSelectionItem(String name, String title, Set<String> dimensionIds) {
+    private boolean            editionMode;
+
+    public DimensionCoverageValuesSelectionItem(String name, String title, Set<String> dimensionIds, boolean editionMode) {
         super(name, title);
         setCellStyle("dragAndDropCellStyle");
+
+        this.editionMode = editionMode;
 
         // Dimensions layout (form)
 
@@ -71,31 +76,33 @@ public class DimensionCoverageValuesSelectionItem extends CustomCanvasItem {
 
     private DimensionsListGridItem createDimensionListGridItem(final String dimensionId) {
         DimensionsListGridItem dimensionsListGridItem = new DimensionsListGridItem(dimensionId);
-        dimensionsListGridItem.getListGrid().addSelectionChangedHandler(new SelectionChangedHandler() {
+        if (editionMode) {
+            dimensionsListGridItem.getListGrid().addSelectionChangedHandler(new SelectionChangedHandler() {
 
-            @Override
-            public void onSelectionChanged(SelectionEvent event) {
-                if (event.getRecord() instanceof CodeItemRecord) {
-                    CodeItemRecord selectedCodeItemRecord = (CodeItemRecord) event.getRecord();
-                    if (event.getState()) {
-                        // The record is being selected, so it is added to the selected values list
-                        CodeItemRecord record = StatisticalResourcesRecordUtils.getCodeItemRecord(dimensionId, selectedCodeItemRecord.getCodeItemDto());
-                        selectedDimensionValuesListGrid.addData(record);
-                    } else {
-                        // The record is being unselected, so it is removed from the selected values list
-                        if (selectedDimensionValuesListGrid.getRecordList() != null) {
-                            Map<String, String> criteriaMap = new HashMap<String, String>();
-                            criteriaMap.put(CodeItemDS.DIMENSION_ID, dimensionId);
-                            criteriaMap.put(CodeItemDS.CODE, selectedCodeItemRecord.getCode());
-                            Record[] records = selectedDimensionValuesListGrid.getRecordList().findAll(criteriaMap);
-                            if (records != null && records.length > 0) {
-                                selectedDimensionValuesListGrid.removeData(records[0]); // the result should be only one
+                @Override
+                public void onSelectionChanged(SelectionEvent event) {
+                    if (event.getRecord() instanceof CodeItemRecord) {
+                        CodeItemRecord selectedCodeItemRecord = (CodeItemRecord) event.getRecord();
+                        if (event.getState()) {
+                            // The record is being selected, so it is added to the selected values list
+                            CodeItemRecord record = StatisticalResourcesRecordUtils.getCodeItemRecord(dimensionId, selectedCodeItemRecord.getCodeItemDto());
+                            selectedDimensionValuesListGrid.addData(record);
+                        } else {
+                            // The record is being unselected, so it is removed from the selected values list
+                            if (selectedDimensionValuesListGrid.getRecordList() != null) {
+                                Map<String, String> criteriaMap = new HashMap<String, String>();
+                                criteriaMap.put(CodeItemDS.DIMENSION_ID, dimensionId);
+                                criteriaMap.put(CodeItemDS.CODE, selectedCodeItemRecord.getCode());
+                                Record[] records = selectedDimensionValuesListGrid.getRecordList().findAll(criteriaMap);
+                                if (records != null && records.length > 0) {
+                                    selectedDimensionValuesListGrid.removeData(records[0]); // the result should be only one
+                                }
                             }
                         }
                     }
                 }
-            }
-        });
+            });
+        }
         return dimensionsListGridItem;
     }
 
@@ -108,17 +115,23 @@ public class DimensionCoverageValuesSelectionItem extends CustomCanvasItem {
 
     private class DimensionsListGridItem extends CustomCanvasItem {
 
-        protected CustomListGrid customListGrid;
+        protected BaseCustomListGrid customListGrid;
 
         public DimensionsListGridItem(String name) {
             super(name, StringUtils.EMPTY);
             setCellStyle("dragAndDropCellStyle");
             setShowTitle(false);
 
-            customListGrid = new CustomListGrid();
+            customListGrid = new BaseCustomListGrid();
+
+            if (editionMode) {
+                customListGrid.setSelectionType(SelectionStyle.SIMPLE);
+                customListGrid.setSelectionAppearance(SelectionAppearance.CHECKBOX);
+                customListGrid.setCanSelectAll(true);
+            }
+
             customListGrid.setAutoFitMaxRecords(6);
             customListGrid.setAutoFitData(Autofit.VERTICAL);
-            customListGrid.setCanSelectAll(true);
             customListGrid.setHeaderHeight(40);
             CustomListGridField codeField = new CustomListGridField(CodeItemDS.CODE, getConstants().codeItemCode());
             CustomListGridField titleField = new CustomListGridField(CodeItemDS.TITLE, getConstants().codeItemTitle());
@@ -132,7 +145,7 @@ public class DimensionCoverageValuesSelectionItem extends CustomCanvasItem {
             setCanvas(hLayout);
         }
 
-        public CustomListGrid getListGrid() {
+        public BaseCustomListGrid getListGrid() {
             return customListGrid;
         }
     }

@@ -12,5 +12,5 @@ public interface DatasetAttributesTabUiHandlers extends BaseUiHandlers {
     void retrieveDimensionCoverage(String dimensionId, MetamacWebCriteria metamacWebCriteria);
 
     void retrieveItemsFromItemSchemeForDatasetLevelAttribute(RepresentationDto representationDto, int firstResult, int maxResults, MetamacWebCriteria criteria);
-    void retrieveItemsFromItemSchemeForDimensionLevelAttribute(RepresentationDto representationDto, int firstResult, int maxResults, MetamacWebCriteria criteria);
+    void retrieveItemsFromItemSchemeForDimensionOrGroupLevelAttribute(RepresentationDto representationDto, int firstResult, int maxResults, MetamacWebCriteria criteria);
 }

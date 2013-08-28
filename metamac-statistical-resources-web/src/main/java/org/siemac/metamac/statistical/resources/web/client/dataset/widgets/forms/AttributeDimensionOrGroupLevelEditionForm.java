@@ -17,7 +17,7 @@ import org.siemac.metamac.statistical.resources.web.client.widgets.forms.fields.
 import org.siemac.metamac.web.common.client.widgets.form.fields.CustomTextItem;
 import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
 
-public class AttributeDimensionLevelEditionForm extends AttributeBaseForm {
+public class AttributeDimensionOrGroupLevelEditionForm extends AttributeBaseForm {
 
     private DatasetAttributesTabUiHandlers uiHandlers;
 
@@ -43,7 +43,7 @@ public class AttributeDimensionLevelEditionForm extends AttributeBaseForm {
 
         Set<String> dimensionIds = dsdAttributeInstanceDto.getCodeDimensions().keySet();
 
-        DimensionCoverageValuesSelectionItem selectionItem = new DimensionCoverageValuesSelectionItem(name, title, dimensionIds);
+        DimensionCoverageValuesSelectionItem selectionItem = new DimensionCoverageValuesSelectionItem(name, title, dimensionIds, true);
         selectionItem.setColSpan(4);
 
         // Load dimension values
@@ -72,7 +72,7 @@ public class AttributeDimensionLevelEditionForm extends AttributeBaseForm {
     // RELATED RESOURCES
     //
 
-    public void setItemsForDimensionLevelAttributeValueSelection(List<ExternalItemDto> externalItemDtos, int firstResult, int totalResults) {
+    public void setItemsForDimensionOrGroupLevelAttributeValueSelection(List<ExternalItemDto> externalItemDtos, int firstResult, int totalResults) {
         if (getItem(DsdAttributeInstanceDS.VALUE) != null && getItem(DsdAttributeInstanceDS.VALUE) instanceof SearchExternalItemSimpleItem) {
             ((SearchExternalItemSimpleItem) getItem(DsdAttributeInstanceDS.VALUE)).setResources(externalItemDtos, firstResult, totalResults);
         }
@@ -83,7 +83,7 @@ public class AttributeDimensionLevelEditionForm extends AttributeBaseForm {
 
             @Override
             protected void retrieveResources(int firstResult, int maxResults, MetamacWebCriteria webCriteria) {
-                getUiHandlers().retrieveItemsFromItemSchemeForDimensionLevelAttribute(dsdAttributeDto.getAttributeRepresentation(), firstResult, maxResults, webCriteria);
+                getUiHandlers().retrieveItemsFromItemSchemeForDimensionOrGroupLevelAttribute(dsdAttributeDto.getAttributeRepresentation(), firstResult, maxResults, webCriteria);
             }
         };
     }

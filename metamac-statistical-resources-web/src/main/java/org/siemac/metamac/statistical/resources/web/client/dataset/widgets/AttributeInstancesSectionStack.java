@@ -11,7 +11,7 @@ import org.siemac.metamac.statistical.resources.web.client.model.ds.DsdAttribute
 import org.siemac.metamac.statistical.resources.web.client.utils.StatisticalResourcesRecordUtils;
 import org.siemac.metamac.web.common.client.MetamacWebCommon;
 import org.siemac.metamac.web.common.client.resources.GlobalResources;
-import org.siemac.metamac.web.common.client.widgets.BaseCustomListGrid;
+import org.siemac.metamac.web.common.client.widgets.CustomListGrid;
 import org.siemac.metamac.web.common.client.widgets.CustomListGridField;
 import org.siemac.metamac.web.common.client.widgets.CustomListGridSectionStack;
 import org.siemac.metamac.web.common.client.widgets.CustomToolStripButton;
@@ -25,7 +25,7 @@ public class AttributeInstancesSectionStack extends CustomListGridSectionStack {
     private CustomToolStripButton deleteInstanceButton;
 
     public AttributeInstancesSectionStack() {
-        super(new BaseCustomListGrid(), getConstants().datasetAttributeInstances(), "versionSectionStackStyle");
+        super(new CustomListGrid(), getConstants().datasetAttributeInstances(), "versionSectionStackStyle");
 
         // ToolStrip
 

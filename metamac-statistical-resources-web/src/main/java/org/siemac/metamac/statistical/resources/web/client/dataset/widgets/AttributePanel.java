@@ -49,7 +49,8 @@ public class AttributePanel extends VLayout {
                     DsdAttributeInstanceDto dsdAttributeInstanceDto = createNewAttributeInstance(dsdAttributeDto.getAttributeRelationship().getDimensions());
                     mainFormLayout.showInstance(dsdAttributeDto, dsdAttributeInstanceDto);
                 } else if (CommonUtils.hasGroupRelationshipType(dsdAttributeDto)) {
-                    // TODO
+                    DsdAttributeInstanceDto dsdAttributeInstanceDto = createNewAttributeInstance(dsdAttributeDto.getAttributeRelationship().getGroupDimensions());
+                    mainFormLayout.showInstance(dsdAttributeDto, dsdAttributeInstanceDto);
                 }
             }
         });
@@ -72,7 +73,7 @@ public class AttributePanel extends VLayout {
         } else if (CommonUtils.hasDimensionRelationshipType(dsdAttributeDto)) {
             showDimensionAttributeInstances(dsdAttributeDto, dsdAttributeInstanceDtos);
         } else if (CommonUtils.hasGroupRelationshipType(dsdAttributeDto)) {
-            // TODO
+            showGroupAttributeInstances(dsdAttributeDto, dsdAttributeInstanceDtos);
         }
         show();
     }
@@ -88,6 +89,10 @@ public class AttributePanel extends VLayout {
     }
 
     private void showDimensionAttributeInstances(DsdAttributeDto dsdAttributeDto, List<DsdAttributeInstanceDto> dsdAttributeInstanceDtos) {
+        instancesSectionStack.showInstances(dsdAttributeDto, dsdAttributeInstanceDtos);
+    }
+
+    private void showGroupAttributeInstances(DsdAttributeDto dsdAttributeDto, List<DsdAttributeInstanceDto> dsdAttributeInstanceDtos) {
         instancesSectionStack.showInstances(dsdAttributeDto, dsdAttributeInstanceDtos);
     }
 
@@ -117,7 +122,7 @@ public class AttributePanel extends VLayout {
         mainFormLayout.setItemsForDatasetLevelAttributeValueSelection(externalItemDtos, firstResult, totalResults);
     }
 
-    public void setItemsForDimensionLevelAttributeValueSelection(List<ExternalItemDto> externalItemDtos, int firstResult, int totalResults) {
-        mainFormLayout.setItemsForDimensionLevelAttributeValueSelection(externalItemDtos, firstResult, totalResults);
+    public void setItemsForDimensionOrGroupLevelAttributeValueSelection(List<ExternalItemDto> externalItemDtos, int firstResult, int totalResults) {
+        mainFormLayout.setItemsForDimensionOrGroupLevelAttributeValueSelection(externalItemDtos, firstResult, totalResults);
     }
 }
