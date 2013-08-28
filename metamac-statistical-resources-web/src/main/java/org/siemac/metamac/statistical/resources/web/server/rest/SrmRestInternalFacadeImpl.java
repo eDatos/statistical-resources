@@ -8,7 +8,9 @@ import static org.siemac.metamac.statistical.resources.web.server.utils.MetamacW
 import static org.siemac.metamac.statistical.resources.web.server.utils.MetamacWebRestCriteriaUtils.buildQueryOrganisationScheme;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.enume.domain.TypeExternalArtefactsEnum;
@@ -23,6 +25,8 @@ import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStr
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Dimension;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DimensionBase;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Dimensions;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Group;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Groups;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.MeasureDimension;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.OrganisationSchemes;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Organisations;
@@ -47,6 +51,9 @@ public class SrmRestInternalFacadeImpl implements SrmRestInternalFacade {
 
     @Autowired
     private SrmRestInternalService srmRestInternalService;
+
+    @Autowired
+    private RestMapper             restMapper;
 
     // DSDs
 
@@ -93,11 +100,29 @@ public class SrmRestInternalFacadeImpl implements SrmRestInternalFacade {
     }
 
     @Override
+    public Map<String, List<String>> retrieveDsdGroupDimensionsIds(String dsdUrn) throws MetamacWebException {
+        try {
+
+            DataStructure structure = srmRestInternalService.retrieveDsdByUrn(dsdUrn);
+            Groups groups = structure.getDataStructureComponents().getGroups();
+
+            Map<String, List<String>> groupDimensionIds = new HashMap<String, List<String>>();
+            for (Group group : groups.getGroups()) {
+                groupDimensionIds.put(group.getId(), group.getDimensions().getDimensions());
+            }
+            return groupDimensionIds;
+        } catch (MetamacException e) {
+            throw WebExceptionUtils.createMetamacWebException(e);
+        }
+    }
+
+    @Override
     public List<DsdAttributeDto> retrieveDsdAttributes(String dsdUrn) throws MetamacWebException {
         try {
             DataStructure dataStructure = srmRestInternalService.retrieveDsdByUrn(dsdUrn);
             List<DsdAttribute> dsdAttributes = DsdProcessor.getAttributes(dataStructure);
-            List<DsdAttributeDto> dsdAttributeDtos = RestMapper.buildDsdAttributeDtosFromDsdAttributes(dsdAttributes);
+            Map<String, List<String>> groupDimensions = retrieveDsdGroupDimensionsIds(dsdUrn);
+            List<DsdAttributeDto> dsdAttributeDtos = restMapper.buildDsdAttributeDtosFromDsdAttributes(dsdAttributes, groupDimensions);
             return dsdAttributeDtos;
         } catch (MetamacException e) {
             throw WebExceptionUtils.createMetamacWebException(e);
