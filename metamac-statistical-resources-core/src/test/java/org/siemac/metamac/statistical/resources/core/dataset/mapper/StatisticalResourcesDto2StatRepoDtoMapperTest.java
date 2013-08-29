@@ -17,8 +17,15 @@ public class StatisticalResourcesDto2StatRepoDtoMapperTest extends StatisticalRe
     private StatisticalResourcesDto2StatRepoDtoMapper dto2StatRepoDtoMapper = new StatisticalResourcesDto2StatRepoDtoMapperImpl();
 
     @Test
-    public void testDsdAttributeInstaceDtoToAttributeDto() throws MetamacException {
+    public void testDsdAttributeInstaceDtoToAttributeDtoWithEnumeratedValue() throws MetamacException {
         DsdAttributeInstanceDto dsdAttributeInstanceDto = StatisticalResourcesDtoMocks.mockDsdAttributeInstanceDtoWithEnumeratedValue();
+        AttributeDto attributeDto = dto2StatRepoDtoMapper.dsdAttributeInstaceDtoToAttributeDto(dsdAttributeInstanceDto);
+        assertEqualsAttributeDtoAndDsdAttributeInstaceDto(attributeDto, dsdAttributeInstanceDto);
+    }
+
+    @Test
+    public void testDsdAttributeInstaceDtoToAttributeDtoWithNonNumeratedValue() throws MetamacException {
+        DsdAttributeInstanceDto dsdAttributeInstanceDto = StatisticalResourcesDtoMocks.mockDsdAttributeInstanceDtoWithNonNumeratedValue();
         AttributeDto attributeDto = dto2StatRepoDtoMapper.dsdAttributeInstaceDtoToAttributeDto(dsdAttributeInstanceDto);
         assertEqualsAttributeDtoAndDsdAttributeInstaceDto(attributeDto, dsdAttributeInstanceDto);
     }
