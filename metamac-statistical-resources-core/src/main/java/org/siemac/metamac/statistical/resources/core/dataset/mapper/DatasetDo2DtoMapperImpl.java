@@ -58,7 +58,6 @@ public class DatasetDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements Dat
 
         // Identity
         target.setId(source.getId());
-        target.setUuid(source.getUuid());
         target.setVersion(source.getVersion());
 
         // Other
@@ -89,7 +88,6 @@ public class DatasetDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements Dat
 
         // Identity
         target.setId(source.getDataset().getId());
-        target.setUuid(source.getDataset().getUuid());
         target.setVersion(source.getDataset().getVersion());
 
         // Type
@@ -131,7 +129,6 @@ public class DatasetDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements Dat
 
         // Identity
         target.setId(source.getId());
-        target.setUuid(source.getUuid());
         target.setVersion(source.getVersion());
 
         target.setRelatedDsd(externalItemDoToDto(source.getRelatedDsd()));
@@ -162,7 +159,6 @@ public class DatasetDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements Dat
 
         // Identity
         target.setId(source.getId());
-        target.setUuid(source.getUuid());
         target.setVersion(source.getVersion());
 
         target.getGeographicGranularities().clear();
@@ -206,7 +202,6 @@ public class DatasetDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements Dat
 
         // Identity
         target.setId(source.getId());
-        target.setUuid(source.getUuid());
         target.setVersion(source.getVersion());
 
         // Other

@@ -95,7 +95,6 @@ public class PublicationServiceInvocationValidatorImpl extends BaseInvocationVal
     }
 
     private static void checkPublicationVersion(PublicationVersion publicationVersion, List<MetamacExceptionItem> exceptions) {
-        StatisticalResourcesValidationUtils.checkMetadataRequired(publicationVersion.getUuid(), ServiceExceptionParameters.PUBLICATION_VERSION__UUID, exceptions);
     }
 
     // ------------------------------------------------------------------------

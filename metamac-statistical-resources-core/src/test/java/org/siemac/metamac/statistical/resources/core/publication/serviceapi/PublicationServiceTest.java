@@ -1352,14 +1352,14 @@ public class PublicationServiceTest extends StatisticalResourcesBaseTest impleme
         ElementLevel updatedElementLevel_03 = updatedPublicationVersion.getChildrenFirstLevel().get(2);
         ElementLevel updatedElementLevel_04 = updatedPublicationVersion.getChildrenFirstLevel().get(3);
 
-        assertEquals(elementLevel_01.getUuid(), updatedElementLevel_01.getUuid());
-        assertEquals(elementLevel_01_02.getUuid(), updatedElementLevel_01_01.getUuid());
-        assertEquals(elementLevel_01_02_01.getUuid(), updatedElementLevel_01_01_01.getUuid());
-        assertEquals(elementLevel_01_03.getUuid(), updatedElementLevel_01_02.getUuid());
-        assertEquals(elementLevel_02.getUuid(), updatedElementLevel_02.getUuid());
-        assertEquals(elementLevel_02_01.getUuid(), updatedElementLevel_02_01.getUuid());
-        assertEquals(elementLevel_03.getUuid(), updatedElementLevel_03.getUuid());
-        assertEquals(elementLevel_04.getUuid(), updatedElementLevel_04.getUuid());
+        assertEquals(elementLevel_01.getElementId(), updatedElementLevel_01.getElementId());
+        assertEquals(elementLevel_01_02.getElementId(), updatedElementLevel_01_01.getElementId());
+        assertEquals(elementLevel_01_02_01.getElementId(), updatedElementLevel_01_01_01.getElementId());
+        assertEquals(elementLevel_01_03.getElementId(), updatedElementLevel_01_02.getElementId());
+        assertEquals(elementLevel_02.getElementId(), updatedElementLevel_02.getElementId());
+        assertEquals(elementLevel_02_01.getElementId(), updatedElementLevel_02_01.getElementId());
+        assertEquals(elementLevel_03.getElementId(), updatedElementLevel_03.getElementId());
+        assertEquals(elementLevel_04.getElementId(), updatedElementLevel_04.getElementId());
     }
 
     @Test

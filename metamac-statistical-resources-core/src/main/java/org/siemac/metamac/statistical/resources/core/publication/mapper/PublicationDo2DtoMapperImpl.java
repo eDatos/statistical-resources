@@ -43,7 +43,6 @@ public class PublicationDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements
 
         // Identity
         target.setId(source.getPublication().getId());
-        target.setUuid(source.getPublication().getUuid());
         target.setVersion(source.getPublication().getVersion());
 
         // Type
@@ -86,7 +85,6 @@ public class PublicationDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements
 
         // Identity
         target.setId(source.getId());
-        target.setUuid(source.getUuid());
         target.setVersion(source.getVersion());
 
         return target;
@@ -122,7 +120,6 @@ public class PublicationDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements
 
         // Identity
         target.setId(source.getId());
-        target.setUuid(source.getUuid());
         target.setVersion(source.getVersion());
 
         // Other
@@ -148,7 +145,6 @@ public class PublicationDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements
 
         // Identity
         target.setId(source.getId());
-        target.setUuid(source.getUuid());
         target.setVersion(source.getVersion());
 
         // Type
@@ -210,7 +206,6 @@ public class PublicationDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements
 
         // Identity
         target.setId(source.getId());
-        target.setUuid(source.getUuid());
         target.setVersion(source.getVersion());
 
         // Other
@@ -243,7 +238,6 @@ public class PublicationDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements
 
         // Identity
         target.setId(source.getId());
-        target.setUuid(source.getUuid());
         target.setVersion(source.getVersion());
 
         // Other

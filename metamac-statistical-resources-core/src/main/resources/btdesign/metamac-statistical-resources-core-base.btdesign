@@ -16,6 +16,9 @@ Application BaseStatisticalResources {
     		hint="idSequence=VERSION_RATIONALE_TYPE"
     		not auditable
     		
+    		"Added explicitly to avoid that Sculptor generate UUID"
+			Long id key;
+    		
     		- @VersionRationaleTypeEnum value required;
     		
     		Repository VersionRationaleTypeRepository {
@@ -35,6 +38,10 @@ Application BaseStatisticalResources {
 			discriminatorColumn="STAT_RESOURCE_TYPE"
 			discriminatorLength="255"
 			
+			"Added explicitly to avoid that Sculptor generate UUID"
+			Long id key;
+			
+			"Statistical Operation related with the statistical resource"
 			- @ExternalItem statisticalOperation nullable cascade="all" databaseColumn="STAT_OPERATION_FK";
 			
 			"Last update to optimistic locking"

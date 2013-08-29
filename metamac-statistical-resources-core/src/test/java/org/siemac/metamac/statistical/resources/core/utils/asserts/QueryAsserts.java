@@ -28,7 +28,6 @@ public class QueryAsserts extends BaseAsserts {
     // -----------------------------------------------------------------
 
     public static void assertEqualsQuery(Query expected, Query actual) {
-        assertEquals(expected.getUuid(), actual.getUuid());
         assertEqualsIdentifiableStatisticalResource(expected.getIdentifiableStatisticalResource(), actual.getIdentifiableStatisticalResource());
         assertEquals(expected.getLatestDataNumber(), actual.getLatestDataNumber());
 
@@ -50,7 +49,6 @@ public class QueryAsserts extends BaseAsserts {
     }
 
     private static void assertEqualsQueryVersion(QueryVersion expected, QueryVersion actual, boolean queryChecked) throws MetamacException {
-        assertEquals(expected.getUuid(), actual.getUuid());
         assertEqualsLifeCycleStatisticalResource(expected.getLifeCycleStatisticalResource(), actual.getLifeCycleStatisticalResource());
         DatasetsAsserts.assertEqualsDatasetVersion(expected.getDatasetVersion(), actual.getDatasetVersion());
         assertEquals(expected.getType(), actual.getType());
@@ -129,9 +127,6 @@ public class QueryAsserts extends BaseAsserts {
         assertNotNull(entity.getQuery().getId());
         assertEquals(entity.getQuery().getId(), dto.getId());
 
-        assertNotNull(entity.getQuery().getUuid());
-        assertEquals(entity.getQuery().getUuid(), dto.getUuid());
-
         assertNotNull(entity.getQuery().getVersion());
         assertEquals(entity.getQuery().getVersion(), dto.getVersion());
 
@@ -198,9 +193,6 @@ public class QueryAsserts extends BaseAsserts {
         if (MapperEnum.DO2DTO.equals(mapperEnum)) {
             assertEquals(entity.getId(), dto.getId());
 
-            assertNotNull(entity.getUuid());
-            assertEquals(entity.getUuid(), dto.getUuid());
-
             assertNotNull(entity.getVersion());
             assertEquals(entity.getVersion(), dto.getVersion());
 
@@ -221,9 +213,6 @@ public class QueryAsserts extends BaseAsserts {
     private static void assertEqualsQueryVersionBase(QueryVersion entity, QueryVersionBaseDto dto, MapperEnum mapperEnum) {
         if (MapperEnum.DO2DTO.equals(mapperEnum)) {
             assertEquals(entity.getId(), dto.getId());
-
-            assertNotNull(entity.getUuid());
-            assertEquals(entity.getUuid(), dto.getUuid());
 
             assertNotNull(entity.getVersion());
             assertEquals(entity.getVersion(), dto.getVersion());

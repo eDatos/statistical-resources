@@ -445,7 +445,7 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
         // Update orders
         for (ElementLevel elementInLevel : elementsAtLevel) {
             // it is possible that element is already added to parent and order is already set
-            if (elementInLevel.getElementUuid().equals(elementToAdd.getElementUuid())) {
+            if (elementInLevel.getElementId().equals(elementToAdd.getElementId())) {
                 // nothing
             } else {
                 // Update order
@@ -589,7 +589,7 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
     private void updatePublicationVersionElementsOrdersInLevelRemovingElement(ServiceContext ctx, List<ElementLevel> elementsAtLevel, ElementLevel elementToRemove, Long orderBeforeUpdate)
             throws MetamacException {
         for (ElementLevel elementInLevel : elementsAtLevel) {
-            if (elementInLevel.getElementUuid().equals(elementToRemove.getElementUuid())) {
+            if (elementInLevel.getElementId().equals(elementToRemove.getElementId())) {
                 // nothing
             } else if (elementInLevel.getOrderInLevel() > orderBeforeUpdate) {
                 elementInLevel.setOrderInLevel(elementInLevel.getOrderInLevel() - 1);
@@ -612,7 +612,7 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
 
         // Update orders
         for (ElementLevel elementAtLevel : elementsAtLevel) {
-            if (elementAtLevel.getElementUuid().equals(elementToChangeOrder.getElementUuid())) {
+            if (elementAtLevel.getElementId().equals(elementToChangeOrder.getElementId())) {
                 continue;
             }
             if (orderAfterUpdate < orderBeforeUpdate) {

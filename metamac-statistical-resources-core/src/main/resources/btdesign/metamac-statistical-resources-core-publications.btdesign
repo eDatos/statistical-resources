@@ -67,6 +67,10 @@ Application PublicationsStatisticalResources {
 			databaseTable="TB_PUBLICATIONS"
 			hint="idSequence=PUBLICATIONS"
 			!auditable
+			
+			"Added explicitly to avoid that Sculptor generate UUID"
+			Long id key;
+			
 			"Root publication will be identifiable to be referenced instead of referencing specific versions"
 			- @IdentifiableStatisticalResource identifiableStatisticalResource databaseColumn="IDENTIFIABLE_RESOURCE_FK" not nullable cascade="all";
 			"All versions"
@@ -85,6 +89,9 @@ Application PublicationsStatisticalResources {
 			hint="idSequence=PUBLICATIONS_VERSIONS"
 			!auditable
 			gap
+			
+			"Added explicitly to avoid that Sculptor generate UUID"
+			Long id key;
 
 			- @SiemacMetadataStatisticalResource siemacMetadataStatisticalResource databaseColumn="SIEMAC_RESOURCE_FK" not nullable cascade="all";
 			
@@ -118,6 +125,9 @@ Application PublicationsStatisticalResources {
         	gap
         	!auditable
         	
+        	"Added explicitly to avoid that Sculptor generate UUID"
+			Long id key;
+        	
             "Order in level"
 			Long orderInLevel not nullable;
 			
@@ -149,6 +159,9 @@ Application PublicationsStatisticalResources {
         	databaseTable="TB_CHAPTERS"
         	hint="idSequence=CHAPTERS"
         	
+        	"Added explicitly to avoid that Sculptor generate UUID"
+			Long id key;
+        	
         	- @NameableStatisticalResource nameableStatisticalResource databaseColumn="STATISTICAL_RESOURCE_FK" not nullable cascade="all";
 
 			// Relations
@@ -171,6 +184,9 @@ Application PublicationsStatisticalResources {
         	databaseTable="TB_CUBES"
         	hint="idSequence=CUBES"
 			gap
+			
+			"Added explicitly to avoid that Sculptor generate UUID"
+			Long id key;
 			
 			- @NameableStatisticalResource nameableStatisticalResource databaseColumn="STATISTICAL_RESOURCE_FK" not nullable cascade="all";
 			

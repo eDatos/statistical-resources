@@ -100,7 +100,6 @@ public class QueryServiceInvocationValidatorImpl extends BaseInvocationValidator
     }
 
     private static void checkQueryVersion(QueryVersion queryVersion, List<MetamacExceptionItem> exceptions) {
-        StatisticalResourcesValidationUtils.checkMetadataRequired(queryVersion.getUuid(), ServiceExceptionParameters.QUERY_VERSION__UUID, exceptions);
         StatisticalResourcesValidationUtils.checkMetadataRequired(queryVersion.getDatasetVersion(), ServiceExceptionParameters.QUERY_VERSION__DATASET_VERSION, exceptions);
         StatisticalResourcesValidationUtils.checkMetadataRequired(queryVersion.getType(), ServiceExceptionParameters.QUERY_VERSION__TYPE, exceptions);
 

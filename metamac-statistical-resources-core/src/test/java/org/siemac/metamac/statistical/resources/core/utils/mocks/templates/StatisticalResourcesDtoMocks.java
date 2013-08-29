@@ -203,6 +203,7 @@ public class StatisticalResourcesDtoMocks extends MetamacMocks {
     // BASE HIERARCHY
     // -----------------------------------------------------------------
 
+    @SuppressWarnings("deprecation")
     private static void mockSiemacMetadataStatisticalResource(SiemacMetadataStatisticalResourceDto siemacMetadataStatisticalResourceDto, StatisticalResourceTypeEnum type) {
         String langCode = mockString(5);
         siemacMetadataStatisticalResourceDto.setLanguage(mockCodeExternalItemDto(langCode));
@@ -345,7 +346,6 @@ public class StatisticalResourcesDtoMocks extends MetamacMocks {
         if (officiality != null) {
             StatisticOfficialityDto dto = new StatisticOfficialityDto();
             dto.setIdentifier(officiality.getIdentifier());
-            dto.setUuid(officiality.getUuid());
             dto.setId(officiality.getId());
             dto.setDescription(createInternationalStringDtoFromDo(officiality.getDescription()));
             return dto;

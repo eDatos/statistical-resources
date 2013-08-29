@@ -432,7 +432,6 @@ public class BaseAsserts extends CommonAsserts {
         assertEquals(expected.getIdentifier(), actual.getIdentifier());
         assertEquals(expected.getId(), actual.getId());
         assertEquals(expected.getKey(), actual.getKey());
-        assertEquals(expected.getUuid(), actual.getKey());
         assertEqualsInternationalString(expected.getDescription(), actual.getDescription());
     }
 
@@ -446,7 +445,6 @@ public class BaseAsserts extends CommonAsserts {
         }
         assertEquals(expected.getIdentifier(), actual.getIdentifier());
         assertEquals(expected.getId(), actual.getId());
-        assertEquals(expected.getUuid(), actual.getUuid());
         assertEqualsInternationalString(expected.getDescription(), actual.getDescription());
     }
 
@@ -460,7 +458,6 @@ public class BaseAsserts extends CommonAsserts {
         }
         assertEquals(expected.getIdentifier(), actual.getIdentifier());
         assertEquals(expected.getId(), actual.getId());
-        assertEquals(expected.getUuid(), actual.getUuid());
         assertEqualsInternationalString(actual.getDescription(), expected.getDescription());
     }
 

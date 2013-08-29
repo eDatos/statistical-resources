@@ -37,11 +37,11 @@ public class ElementLevel extends ElementLevelBase {
         return super.getParent() != null ? super.getParent().getChapter().getNameableStatisticalResource().getUrn() : null;
     }
 
-    public String getElementUuid() {
+    public Long getElementId() {
         if (this.getChapter() != null) {
-            return this.getChapter().getUuid();
+            return this.getChapter().getId();
         } else if (this.getCube() != null) {
-            return this.getCube().getUuid();
+            return this.getCube().getId();
         }
         return null;
     }

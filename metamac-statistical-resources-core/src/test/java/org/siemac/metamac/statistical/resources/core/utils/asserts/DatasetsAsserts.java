@@ -31,7 +31,6 @@ public class DatasetsAsserts extends BaseAsserts {
     // -----------------------------------------------------------------
 
     public static void assertEqualsDataset(Dataset expected, Dataset actual) {
-        assertEquals(expected.getUuid(), actual.getUuid());
         assertEqualsIdentifiableStatisticalResource(expected.getIdentifiableStatisticalResource(), actual.getIdentifiableStatisticalResource());
 
         if (expected.getVersions() != null) {
@@ -128,8 +127,6 @@ public class DatasetsAsserts extends BaseAsserts {
     }
 
     private static void assertEqualsDatasetVersion(DatasetVersion expected, DatasetVersion actual, boolean datasetChecked) throws MetamacException {
-        assertEquals(expected.getUuid(), actual.getUuid());
-
         assertEqualsSiemacMetadataStatisticalResource(expected.getSiemacMetadataStatisticalResource(), actual.getSiemacMetadataStatisticalResource());
 
         assertEqualsDatasetVersionMetadata(expected, actual);
@@ -154,8 +151,6 @@ public class DatasetsAsserts extends BaseAsserts {
     }
 
     private static void assertEqualsDatasetVersionMetadata(DatasetVersion expected, DatasetVersion actual) {
-        assertEquals(expected.getUuid(), actual.getUuid());
-
         assertEqualsExternalItem(expected.getRelatedDsd(), actual.getRelatedDsd());
         assertEqualsExternalItemCollection(expected.getGeographicCoverage(), actual.getGeographicCoverage());
         assertEqualsTemporalCodeCollection(expected.getTemporalCoverage(), actual.getTemporalCoverage());
@@ -189,9 +184,6 @@ public class DatasetsAsserts extends BaseAsserts {
         assertNotNull(entity.getDataset().getId());
         assertEquals(entity.getDataset().getId(), dto.getId());
 
-        assertNotNull(entity.getDataset().getUuid());
-        assertEquals(entity.getDataset().getUuid(), dto.getUuid());
-
         assertNotNull(entity.getDataset().getVersion());
         assertEquals(entity.getDataset().getVersion(), dto.getVersion());
 
@@ -223,7 +215,6 @@ public class DatasetsAsserts extends BaseAsserts {
         switch (mapperEnum) {
             case DO2DTO:
                 assertEquals(entity.getId(), dto.getId());
-                assertEquals(entity.getUuid(), dto.getUuid());
                 assertEquals(entity.getVersion(), dto.getVersion());
 
                 assertEqualsExternalItemCollectionMapper(entity.getTemporalGranularities(), dto.getTemporalGranularities());
@@ -270,7 +261,6 @@ public class DatasetsAsserts extends BaseAsserts {
         switch (mapperEnum) {
             case DO2DTO:
                 assertEquals(entity.getId(), dto.getId());
-                assertEquals(entity.getUuid(), dto.getUuid());
                 assertEquals(entity.getVersion(), dto.getVersion());
                 break;
         }
@@ -334,9 +324,6 @@ public class DatasetsAsserts extends BaseAsserts {
 
         if (MapperEnum.DO2DTO.equals(mapperEnum)) {
             assertEquals(entity.getId(), dto.getId());
-
-            assertNotNull(entity.getUuid());
-            assertEquals(entity.getUuid(), dto.getUuid());
 
             assertNotNull(entity.getVersion());
             assertEquals(entity.getVersion(), dto.getVersion());

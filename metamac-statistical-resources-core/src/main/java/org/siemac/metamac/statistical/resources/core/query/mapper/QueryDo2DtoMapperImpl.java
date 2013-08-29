@@ -40,7 +40,6 @@ public class QueryDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements Query
 
         // Identity
         target.setId(source.getQuery().getId());
-        target.setUuid(source.getQuery().getUuid());
         target.setVersion(source.getQuery().getVersion());
 
         // Type
@@ -108,7 +107,6 @@ public class QueryDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements Query
 
         // Identity
         target.setId(source.getId());
-        target.setUuid(source.getUuid());
         target.setVersion(source.getVersion());
 
         return target;
@@ -143,7 +141,6 @@ public class QueryDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements Query
 
         // Identity
         target.setId(source.getId());
-        target.setUuid(source.getUuid());
         target.setVersion(source.getVersion());
 
         return target;

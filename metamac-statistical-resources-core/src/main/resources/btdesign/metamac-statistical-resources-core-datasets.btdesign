@@ -51,11 +51,11 @@ Application DatasetsStatisticalResources {
     		proccessDatasetFileImportationResult(String datasetImportationId, List<@FileDescriptorResult> fileDescriptors) throws MetamacException;
     		importDatasourcesInDatasetVersion(String datasetVersionUrn, List<URL> fileUrls) throws MetamacException; 
     		importDatasourcesInStatisticalOperation(String statisticalOperationUrn, List<URL> fileUrls) throws MetamacException; 
-
+    		
     		// Datasets
     		"Finds datasets by criteria"
     		PagedResult<@Dataset> findDatasetsByCondition(List<ConditionalCriteria> conditions, PagingParameter pagingParameter)  throws MetamacException;
-
+    		
     		//Data related actions
     		"Retrieve Dataset version dimensions ids"
     		List<String> retrieveDatasetVersionDimensionsIds(String datasetVersionUrn) throws MetamacException;
@@ -65,10 +65,14 @@ Application DatasetsStatisticalResources {
     		List<@CodeDimension> filterCoverageForDatasetVersionDimension(String datasetVersionUrn, String dsdDimensionId, String filter) throws MetamacException;
     		"Create attribute instances"
     		AttributeDto createAttributeInstance(String datasetRepositoryId, AttributeDto attributeDto) throws MetamacException;
-
+    		
     		// Statistic officialities
     		List<@StatisticOfficiality> findStatisticOfficialities() throws MetamacException;
+    		
+    		
 		}  
+
+		
 
 		// ----------------------------------------------------------------
 		// 							ENTITIES
@@ -79,6 +83,8 @@ Application DatasetsStatisticalResources {
 			hint="idSequence=DATASOURCES"
 			not auditable
 
+			"Added explicitly to avoid that Sculptor generate UUID"
+			Long id key;
 
 			- @IdentifiableStatisticalResource identifiableStatisticalResource databaseColumn="STATISTICAL_RESOURCE_FK" not nullable cascade="all";
 			
@@ -107,6 +113,9 @@ Application DatasetsStatisticalResources {
 			hint="idSequence=DATASETS"
 			!auditable
 			
+			"Added explicitly to avoid that Sculptor generate UUID"
+			Long id key;
+			
 			"Root dataset will be identifiable to be referenced instead of referencing specific versions"
 			- @IdentifiableStatisticalResource identifiableStatisticalResource databaseColumn="IDENTIFIABLE_RESOURCE_FK" not nullable cascade="all";
 			"All versions"
@@ -129,6 +138,9 @@ Application DatasetsStatisticalResources {
 			hint="idSequence=DATASETS_VERSIONS"
 			!auditable
 			gap
+
+			"Added explicitly to avoid that Sculptor generate UUID"
+			Long id key;
 
 			- @SiemacMetadataStatisticalResource siemacMetadataStatisticalResource databaseColumn="SIEMAC_RESOURCE_FK" not nullable cascade="all";
 			
@@ -207,6 +219,9 @@ Application DatasetsStatisticalResources {
     		hint="idSequence=STAT_OFFICIALITY"
     		!auditable
     		
+    		"Added explicitly to avoid that Sculptor generate UUID"
+			Long id key;
+    		
     		String identifier;
     		- @InternationalString description nullable cascade="all" databaseColumn="DESCRIPTION_FK";
     		
@@ -224,6 +239,7 @@ Application DatasetsStatisticalResources {
     		
     		"Added explicitly to avoid that Sculptor generate UUID"
 			Long id key;
+			
     		String dsdComponentId;
     		String identifier;
     		String title length="4000";
@@ -243,6 +259,7 @@ Application DatasetsStatisticalResources {
     		
     		"Added explicitly to avoid that Sculptor generate UUID"
 			Long id key;
+			
     		String dsdComponentId;
     		String identifier;
     		String title length="4000";
@@ -260,6 +277,7 @@ Application DatasetsStatisticalResources {
     		
     		"Added explicitly to avoid that Sculptor generate UUID"
 			Long id key;
+			
     		String identifier;
     		String title length="4000";
     	}

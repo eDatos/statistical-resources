@@ -31,8 +31,6 @@ public class PublicationsAsserts extends BaseAsserts {
     // -----------------------------------------------------------------
 
     public static void assertEqualsPublication(Publication expected, Publication actual) {
-        assertEquals(expected.getUuid(), actual.getUuid());
-
         if (expected.getVersions() != null) {
             assertNotNull(actual.getVersions());
             assertEquals(expected.getVersions().size(), actual.getVersions().size());
@@ -63,7 +61,6 @@ public class PublicationsAsserts extends BaseAsserts {
     }
 
     private static void assertEqualsPublicationVersion(PublicationVersion expected, PublicationVersion actual, boolean publicationChecked) throws MetamacException {
-        assertEquals(expected.getUuid(), actual.getUuid());
         assertEqualsSiemacMetadataStatisticalResource(expected.getSiemacMetadataStatisticalResource(), actual.getSiemacMetadataStatisticalResource());
         assertEqualsPublicationVersionMetadata(expected, actual);
 
@@ -90,8 +87,6 @@ public class PublicationsAsserts extends BaseAsserts {
     }
 
     private static void assertEqualsPublicationVersionMetadata(PublicationVersion expected, PublicationVersion actual) {
-        assertEquals(expected.getUuid(), actual.getUuid());
-
         assertEquals(expected.getFormatExtentResources(), actual.getFormatExtentResources());
     }
 
@@ -225,7 +220,6 @@ public class PublicationsAsserts extends BaseAsserts {
             assertEqualsVersionedNameableStatisticalResource(expected.getNameableStatisticalResource(), actual.getNameableStatisticalResource());
             assertNotSame(expected.getCreatedDate(), actual.getCreatedDate());
             assertNotSame(expected.getLastUpdated(), actual.getLastUpdated());
-            assertNotSame(expected.getUuid(), actual.getUuid());
         }
     }
 
@@ -236,9 +230,6 @@ public class PublicationsAsserts extends BaseAsserts {
     public static void assertEqualsPublication(PublicationVersion entity, RelatedResourceDto dto) throws MetamacException {
         assertNotNull(entity.getPublication().getId());
         assertEquals(entity.getPublication().getId(), dto.getId());
-
-        assertNotNull(entity.getPublication().getUuid());
-        assertEquals(entity.getPublication().getUuid(), dto.getUuid());
 
         assertNotNull(entity.getPublication().getVersion());
         assertEquals(entity.getPublication().getVersion(), dto.getVersion());
@@ -257,9 +248,6 @@ public class PublicationsAsserts extends BaseAsserts {
     public static void assertEqualsPublicationVersion(PublicationVersion entity, RelatedResourceDto dto) {
         assertNotNull(entity.getId());
         assertEquals(entity.getId(), dto.getId());
-
-        assertNotNull(entity.getUuid());
-        assertEquals(entity.getUuid(), dto.getUuid());
 
         assertNotNull(entity.getVersion());
         assertEquals(entity.getVersion(), dto.getVersion());
@@ -296,9 +284,6 @@ public class PublicationsAsserts extends BaseAsserts {
         if (MapperEnum.DO2DTO.equals(mapperEnum)) {
             assertEquals(entity.getId(), dto.getId());
 
-            assertNotNull(entity.getUuid());
-            assertEquals(entity.getUuid(), dto.getUuid());
-
             assertNotNull(entity.getVersion());
             assertEquals(entity.getVersion(), dto.getVersion());
         }
@@ -318,9 +303,6 @@ public class PublicationsAsserts extends BaseAsserts {
         // Publication attributes
         if (MapperEnum.DO2DTO.equals(mapperEnum)) {
             assertEquals(entity.getId(), dto.getId());
-
-            assertNotNull(entity.getUuid());
-            assertEquals(entity.getUuid(), dto.getUuid());
 
             assertNotNull(entity.getVersion());
             assertEquals(entity.getVersion(), dto.getVersion());

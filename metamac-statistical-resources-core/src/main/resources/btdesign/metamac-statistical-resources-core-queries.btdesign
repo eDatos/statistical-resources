@@ -50,6 +50,7 @@ Application QueriesStatisticalResources {
 		
 			"Added explicitly to avoid that Sculptor generate UUID"
 			Long id key;
+			
 			String code;
 			String title length="4000";
 			
@@ -84,6 +85,9 @@ Application QueriesStatisticalResources {
 			hint="idSequence=QUERIES"
 			!auditable
 			
+			"Added explicitly to avoid that Sculptor generate UUID"
+			Long id key;
+			
 			- @IdentifiableStatisticalResource identifiableStatisticalResource databaseColumn="IDENTIFIABLE_RESOURCE_FK" not nullable cascade="all";
 			"All versions"
 			- Bag<@QueryVersion> versions cascade="all-delete-orphan" fetch="lazy" inverse <-> query orderby="id asc";
@@ -103,6 +107,9 @@ Application QueriesStatisticalResources {
 			hint="idSequence=QUERIES_VERSIONS"
 			!auditable
 			gap
+			
+			"Added explicitly to avoid that Sculptor generate UUID"
+			Long id key;
 			
 			- @Query query not nullable cascade="none" databaseColumn="QUERY_FK" <-> versions;
 			- @LifeCycleStatisticalResource lifeCycleStatisticalResource databaseColumn="LIFECYCLE_RESOURCE_FK" not nullable cascade="all";
