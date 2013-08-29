@@ -13,6 +13,8 @@ import org.siemac.metamac.statistical.resources.core.common.mapper.CommonDo2DtoM
 import org.siemac.metamac.statistical.resources.core.common.mapper.CommonDto2DoMapperTest;
 import org.siemac.metamac.statistical.resources.core.dataset.mapper.DatasetDo2DtoMapperTest;
 import org.siemac.metamac.statistical.resources.core.dataset.mapper.DatasetDto2DoMapperTest;
+import org.siemac.metamac.statistical.resources.core.dataset.mapper.StatRepoDto2StatisticalResourcesDtoMapperTest;
+import org.siemac.metamac.statistical.resources.core.dataset.mapper.StatisticalResourcesDto2StatRepoDtoMapperTest;
 import org.siemac.metamac.statistical.resources.core.dataset.repositoryimpl.CodeDimensionRepositoryTest;
 import org.siemac.metamac.statistical.resources.core.dataset.repositoryimpl.DatasetRepositoryTest;
 import org.siemac.metamac.statistical.resources.core.dataset.repositoryimpl.DatasetVersionRepositoryTest;
@@ -74,6 +76,8 @@ import org.siemac.metamac.statistical.resources.core.query.serviceapi.QueryVersi
                      DatasetVersionRepositoryTest.class, 
                      DatasetDo2DtoMapperTest.class,
                      DatasetDto2DoMapperTest.class,
+                     StatisticalResourcesDto2StatRepoDtoMapperTest.class, 
+                     StatRepoDto2StatisticalResourcesDtoMapperTest.class,
                      DatasetServiceTest.class, 
                      DatasetServiceImportationTest.class, 
                      DatasetServiceDatasourceManagementTest.class, 

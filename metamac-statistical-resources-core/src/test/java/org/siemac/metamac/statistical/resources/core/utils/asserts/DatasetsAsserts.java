@@ -3,26 +3,36 @@ package org.siemac.metamac.statistical.resources.core.utils.asserts;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.siemac.metamac.core.common.ent.domain.ExternalItem;
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConstants;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.CodeDimension;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.TemporalCode;
 import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.AttributeValueDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionBaseDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionMainCoveragesDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasourceDto;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdAttributeInstanceDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.CodeItemDto;
 import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
+
+import com.arte.statistic.dataset.repository.dto.AttributeDto;
+import com.arte.statistic.dataset.repository.dto.InternationalStringDto;
 
 public class DatasetsAsserts extends BaseAsserts {
 
@@ -72,7 +82,7 @@ public class DatasetsAsserts extends BaseAsserts {
             }
         }
     }
-    
+
     public static void assertEqualsCodeDimension(CodeDimension expected, CodeDimension actual) {
         assertEqualsNullability(expected, actual);
         assertEquals(expected.getDsdComponentId(), actual.getDsdComponentId());
@@ -83,13 +93,13 @@ public class DatasetsAsserts extends BaseAsserts {
             assertEquals(expected.getDatasetVersion().getId(), actual.getDatasetVersion().getId());
         }
     }
-    
+
     public static void assertEqualsCodeItemDtosCollection(List<CodeItemDto> expected, List<CodeItemDto> actual) {
         assertEqualsNullability(expected, actual);
-        
+
         if (expected != null) {
             assertEquals(expected.size(), actual.size());
-            
+
             for (int i = 0; i < expected.size(); i++) {
                 CodeItemDto expectedCode = expected.get(i);
                 CodeItemDto actualCode = actual.get(i);
@@ -97,14 +107,12 @@ public class DatasetsAsserts extends BaseAsserts {
             }
         }
     }
-    
+
     public static void assertEqualsCodeItemDto(CodeItemDto expected, CodeItemDto actual) {
         assertEqualsNullability(expected, actual);
         assertEquals(expected.getCode(), actual.getCode());
         assertEquals(expected.getTitle(), actual.getTitle());
     }
-    
-
 
     // -----------------------------------------------------------------
     // DATASET VERSION: DO & DO
@@ -161,13 +169,13 @@ public class DatasetsAsserts extends BaseAsserts {
         assertEqualsExternalItem(expected.getUpdateFrequency(), actual.getUpdateFrequency());
 
         assertEqualsDate(expected.getDateNextUpdate(), actual.getDateNextUpdate());
-        
+
         assertEqualsDate(expected.getDateStart(), actual.getDateStart());
         assertEqualsDate(expected.getDateEnd(), actual.getDateEnd());
 
         assertEquals(expected.getFormatExtentDimensions(), actual.getFormatExtentDimensions());
         assertEquals(expected.getFormatExtentObservations(), actual.getFormatExtentObservations());
-        
+
         assertEqualsCodeDimensionsCollection(expected.getDimensionsCoverage(), actual.getDimensionsCoverage());
 
         assertEqualsStatisticOfficiality(expected.getStatisticOfficiality(), actual.getStatisticOfficiality());
@@ -193,7 +201,7 @@ public class DatasetsAsserts extends BaseAsserts {
         assertEquals(entity.getDataset().getIdentifiableStatisticalResource().getUrn(), dto.getUrn());
         assertEqualsInternationalString(entity.getSiemacMetadataStatisticalResource().getTitle(), dto.getTitle());
     }
-    
+
     // -----------------------------------------------------------------
     // DATASET VERSION: DTO & DO
     // -----------------------------------------------------------------
@@ -241,8 +249,7 @@ public class DatasetsAsserts extends BaseAsserts {
                 break;
         }
     }
-    
-    
+
     public static void assertEqualsDatasetVersionBase(DatasetVersion entity, DatasetVersionBaseDto dto) throws MetamacException {
         assertEqualsDatasetVersionBase(dto, entity, MapperEnum.DO2DTO);
     }
@@ -257,7 +264,7 @@ public class DatasetsAsserts extends BaseAsserts {
         // Dataset attributes
         assertEqualsStatisticOfficiality(entity.getStatisticOfficiality(), dto.getStatisticOfficiality());
         assertEqualsExternalItem(entity.getRelatedDsd(), dto.getRelatedDsd(), mapperEnum);
-        
+
         switch (mapperEnum) {
             case DO2DTO:
                 assertEquals(entity.getId(), dto.getId());
@@ -265,17 +272,16 @@ public class DatasetsAsserts extends BaseAsserts {
                 break;
         }
     }
-    
+
     // -----------------------------------------------------------------
     // DatasetVersionMainCoverages
     // -----------------------------------------------------------------
-    public static void assertEqualsDatasetVersionMainCoverages(DatasetVersionMainCoveragesDto mainCoverages, List<ExternalItem> geographicCoverage, List<TemporalCode> temporalCoverage, List<ExternalItem> measureCoverage) {
+    public static void assertEqualsDatasetVersionMainCoverages(DatasetVersionMainCoveragesDto mainCoverages, List<ExternalItem> geographicCoverage, List<TemporalCode> temporalCoverage,
+            List<ExternalItem> measureCoverage) {
         assertEqualsExternalItemCollectionMapper(geographicCoverage, mainCoverages.getGeographicCoverage());
         assertEqualsTemporalCodeCollectionMapper(temporalCoverage, mainCoverages.getTemporalCoverage());
         assertEqualsExternalItemCollectionMapper(measureCoverage, mainCoverages.getMeasureCoverage());
     }
-
-
 
     // -----------------------------------------------------------------
     // DATASOURCE: DO & DO
@@ -355,6 +361,47 @@ public class DatasetsAsserts extends BaseAsserts {
             assertNull(entities);
         }
     }
-    
-    
+
+    // -----------------------------------------------------------------
+    // ATTRIBUTES
+    // -----------------------------------------------------------------
+
+    public static void assertEqualsAttributeDtoAndDsdAttributeInstaceDto(AttributeDto attributeDto, DsdAttributeInstanceDto dsdAttributeInstanceDto) {
+        assertEquals(attributeDto.getAttributeId(), attributeDto.getAttributeId());
+        assertEquals(attributeDto.getUuid(), attributeDto.getUuid());
+        assertEqualsAttributeValues(attributeDto.getValue(), dsdAttributeInstanceDto.getValue());
+        assertEqualsCodesByDimensionMap(attributeDto.getCodesByDimension(), dsdAttributeInstanceDto.getCodeDimensions());
+    }
+
+    private static void assertEqualsAttributeValues(InternationalStringDto internationalStringDto, AttributeValueDto attributeValueDto) {
+        if (attributeValueDto != null) {
+            assertNotNull(internationalStringDto);
+            String localisedAttributeValue = internationalStringDto.getLocalisedLabel(StatisticalResourcesConstants.DEFAULT_DATA_REPOSITORY_LOCALE);
+            String attributeInstaceValue = null;
+            if (StringUtils.isNotBlank(attributeValueDto.getStringValue())) {
+                attributeInstaceValue = attributeValueDto.getStringValue();
+            } else if (attributeValueDto.getExternalItemValue() != null) {
+                attributeInstaceValue = attributeValueDto.getExternalItemValue().getCode();
+            }
+            assertEquals(localisedAttributeValue, attributeInstaceValue);
+        } else {
+            assertNull(internationalStringDto);
+        }
+    }
+
+    private static void assertEqualsCodesByDimensionMap(Map<String, List<String>> stringMap, Map<String, List<CodeItemDto>> codeItemMap) {
+        assertEquals(stringMap.size(), codeItemMap.size());
+        for (String stringMapKey : stringMap.keySet()) {
+            assertTrue(codeItemMap.containsKey(stringMapKey));
+            assertEqualsCodeItemListAndStringList(codeItemMap.get(stringMapKey), stringMap.get(stringMapKey));
+        }
+    }
+
+    private static void assertEqualsCodeItemListAndStringList(List<CodeItemDto> codeItemList, List<String> stringList) {
+        assertEquals(codeItemList.size(), stringList.size());
+        HashSet<String> stringSet = new HashSet<String>(stringList);
+        for (CodeItemDto codeItemDto : codeItemList) {
+            assertTrue(stringSet.contains(codeItemDto.getCode()));
+        }
+    }
 }
