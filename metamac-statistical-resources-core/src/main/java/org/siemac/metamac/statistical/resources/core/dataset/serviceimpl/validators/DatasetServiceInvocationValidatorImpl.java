@@ -20,6 +20,8 @@ import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionSingl
 import org.siemac.metamac.statistical.resources.core.task.domain.FileDescriptorResult;
 import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesValidationUtils;
 
+import com.arte.statistic.dataset.repository.dto.AttributeDto;
+
 public class DatasetServiceInvocationValidatorImpl extends BaseInvocationValidator {
 
     // ------------------------------------------------------------------------
@@ -106,11 +108,17 @@ public class DatasetServiceInvocationValidatorImpl extends BaseInvocationValidat
         StatisticalResourcesValidationUtils.checkMetadataRequired(datasetVersionUrn, ServiceExceptionSingleParameters.URN, exceptions);
         StatisticalResourcesValidationUtils.checkMetadataRequired(dsdDimensionId, ServiceExceptionParameters.DSD_DIMENSION_ID, exceptions);
     }
-    
 
     public static void checkFilterCoverageForDatasetVersionDimension(String datasetVersionUrn, String dsdDimensionId, String filter, List<MetamacExceptionItem> exceptions) {
         StatisticalResourcesValidationUtils.checkMetadataRequired(datasetVersionUrn, ServiceExceptionSingleParameters.URN, exceptions);
         StatisticalResourcesValidationUtils.checkMetadataRequired(dsdDimensionId, ServiceExceptionParameters.DSD_DIMENSION_ID, exceptions);
+    }
+
+    // ATTRIBUTES
+    // --------------
+
+    public static void checkCreateAttributeInstance(String datasetRepositoryId, AttributeDto attributeDto, List<MetamacExceptionItem> exceptions) {
+        // TODO
     }
 
     // ------------------------------------------------------------------------
@@ -201,9 +209,9 @@ public class DatasetServiceInvocationValidatorImpl extends BaseInvocationValidat
     private static void checkDatasetVersion(DatasetVersion datasetVersion, String metadataName, List<MetamacExceptionItem> exceptions) {
         StatisticalResourcesValidationUtils.checkMetadataRequired(datasetVersion.getUuid(), ServiceExceptionSingleParameters.UUID, exceptions);
     }
-    
+
     public static void checkFindStatisticOfficialities(List<MetamacExceptionItem> exceptions) {
-        //NOTHING
+        // NOTHING
     }
 
     public static void checkProccessDatasetFileImportationResult(String datasetImportationId, List<FileDescriptorResult> fileDescriptors, List<MetamacExceptionItem> exceptions) {
@@ -220,8 +228,5 @@ public class DatasetServiceInvocationValidatorImpl extends BaseInvocationValidat
         StatisticalResourcesValidationUtils.checkParameterRequired(statisticalOperationUrn, ServiceExceptionParameters.STATISTICAL_OPERATION_URN, exceptions);
         StatisticalResourcesValidationUtils.checkParameterRequired(fileUrls, ServiceExceptionParameters.FILE_URLS, exceptions);
     }
-
-    
-    
 
 }

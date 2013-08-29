@@ -205,6 +205,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
             throw new MetamacException(ServiceExceptionType.DATASOURCE_IN_DATASET_VERSION_WITH_QUERIES_DELETE_ERROR, datasource.getIdentifiableStatisticalResource().getUrn());
         }
     }
+
     private void deleteDatasourceData(Datasource datasource) throws MetamacException {
         try {
             InternationalStringDto internationalStringDto = new InternationalStringDto();
@@ -608,6 +609,24 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
     public List<StatisticOfficiality> findStatisticOfficialities(ServiceContext ctx) throws MetamacException {
         datasetServiceInvocationValidator.checkFindStatisticOfficialities(ctx);
         return getStatisticOfficialityRepository().findAll();
+    }
+
+    // ------------------------------------------------------------------------
+    // DATASET ATTRIBUTES
+    // ------------------------------------------------------------------------
+
+    @Override
+    public AttributeDto createAttributeInstance(ServiceContext ctx, String datasetRepositoryId, AttributeDto attributeDto) throws MetamacException {
+
+        // Validations
+        datasetServiceInvocationValidator.checkCreateAttributeInstance(ctx, datasetRepositoryId, attributeDto);
+
+        try {
+            // Create attribute
+            return statisticsDatasetRepositoriesServiceFacade.createAttribute(datasetRepositoryId, attributeDto);
+        } catch (ApplicationException e) {
+            throw new MetamacException(e, ServiceExceptionType.UNKNOWN, "Error creating attribute instances in datasetRepository " + datasetRepositoryId);
+        }
     }
 
     // ------------------------------------------------------------------------

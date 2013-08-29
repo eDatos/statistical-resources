@@ -51,11 +51,11 @@ Application DatasetsStatisticalResources {
     		proccessDatasetFileImportationResult(String datasetImportationId, List<@FileDescriptorResult> fileDescriptors) throws MetamacException;
     		importDatasourcesInDatasetVersion(String datasetVersionUrn, List<URL> fileUrls) throws MetamacException; 
     		importDatasourcesInStatisticalOperation(String statisticalOperationUrn, List<URL> fileUrls) throws MetamacException; 
-    		
+
     		// Datasets
     		"Finds datasets by criteria"
     		PagedResult<@Dataset> findDatasetsByCondition(List<ConditionalCriteria> conditions, PagingParameter pagingParameter)  throws MetamacException;
-    		
+
     		//Data related actions
     		"Retrieve Dataset version dimensions ids"
     		List<String> retrieveDatasetVersionDimensionsIds(String datasetVersionUrn) throws MetamacException;
@@ -63,14 +63,12 @@ Application DatasetsStatisticalResources {
     		List<@CodeDimension> retrieveCoverageForDatasetVersionDimension(String datasetVersionUrn, String dsdDimensionId) throws MetamacException;
     		"Retrieve the coverage for a given dimension"
     		List<@CodeDimension> filterCoverageForDatasetVersionDimension(String datasetVersionUrn, String dsdDimensionId, String filter) throws MetamacException;
-    		
+    		"Create attribute instances"
+    		AttributeDto createAttributeInstance(String datasetRepositoryId, AttributeDto attributeDto) throws MetamacException;
+
     		// Statistic officialities
     		List<@StatisticOfficiality> findStatisticOfficialities() throws MetamacException;
-    		
-    		
 		}  
-
-		
 
 		// ----------------------------------------------------------------
 		// 							ENTITIES

@@ -27,11 +27,14 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.StatisticOfficiality;
 import org.siemac.metamac.statistical.resources.core.dataset.mapper.DatasetDo2DtoMapper;
 import org.siemac.metamac.statistical.resources.core.dataset.mapper.DatasetDto2DoMapper;
+import org.siemac.metamac.statistical.resources.core.dataset.mapper.StatRepoDto2StatisticalResourcesDtoMapper;
+import org.siemac.metamac.statistical.resources.core.dataset.mapper.StatisticalResourcesDto2StatRepoDtoMapper;
 import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionBaseDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionMainCoveragesDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasourceDto;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdAttributeInstanceDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.StatisticOfficialityDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.ChapterDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.CubeDto;
@@ -66,6 +69,8 @@ import org.siemac.metamac.statistical.resources.core.security.PublicationsSecuri
 import org.siemac.metamac.statistical.resources.core.security.QueriesSecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.arte.statistic.dataset.repository.dto.AttributeDto;
 
 /**
  * Implementation of StatisticalResourcesServiceFacade.
@@ -138,6 +143,12 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
 
     @Autowired
     private LifecycleService<QueryVersion>                           queryLifecycleService;
+
+    @Autowired
+    private StatisticalResourcesDto2StatRepoDtoMapper                statisticalResourcesDto2StatRepoDtoMapper;
+
+    @Autowired
+    private StatRepoDto2StatisticalResourcesDtoMapper                statRepoDto2StatisticalResourcesDtoMapper;
 
     public StatisticalResourcesServiceFacadeImpl() {
     }
@@ -871,6 +882,20 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         getDatasetService().importDatasourcesInStatisticalOperation(ctx, statisticalOperationUrn, fileUrls);
     }
 
+    @Override
+    public DsdAttributeInstanceDto createAttributeInstance(ServiceContext ctx, String datasetRepositoryId, DsdAttributeInstanceDto dsdAttributeInstanceDto) throws MetamacException {
+        // Security
+        DatasetsSecurityUtils.canCreateAttributeInstance(ctx);
+
+        // Transform
+        AttributeDto attributeDto = statisticalResourcesDto2StatRepoDtoMapper.dsdAttributeInstaceDtoToAttributeDto(dsdAttributeInstanceDto);
+
+        // Create attribute
+        AttributeDto attributeCreated = getDatasetService().createAttributeInstance(ctx, datasetRepositoryId, attributeDto);
+
+        return statRepoDto2StatisticalResourcesDtoMapper.attributeDtoToDsdAttributeInstanceDto(attributeCreated);
+    }
+
     // ------------------------------------------------------------------------
     // PUBLICATIONS
     // ------------------------------------------------------------------------
@@ -1087,7 +1112,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
 
         // Check optimistic locking
         publicationDto2DoMapper.checkOptimisticLocking(publicationVersionDto);
-        
+
         // Send to production validation and retrieve
         PublicationVersion publicationVersion = publicationLifecycleService.sendToDiffusionValidation(ctx, publicationVersionDto.getUrn());
 
@@ -1121,7 +1146,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
 
         // Check optimistic locking
         publicationDto2DoMapper.checkOptimisticLocking(publicationVersionDto);
-        
+
         // Send to production validation and retrieve
         PublicationVersion publicationVersion = publicationLifecycleService.sendToValidationRejected(ctx, publicationVersionDto.getUrn());
 
@@ -1155,7 +1180,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
 
         // Check optimistic locking
         publicationDto2DoMapper.checkOptimisticLocking(publicationVersionDto);
-        
+
         // Versioning
         PublicationVersion publicationVersion = publicationLifecycleService.versioning(ctx, publicationVersionDto.getUrn(), versionType);
 

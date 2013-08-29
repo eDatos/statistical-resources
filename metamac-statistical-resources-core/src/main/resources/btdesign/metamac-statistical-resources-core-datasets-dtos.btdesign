@@ -96,6 +96,7 @@ Application DatasetsStatisticalResourcesDto {
         }
 
         DataTransferObject DsdAttributeInstanceDto extends @IdentityDto {
+        	String attributeId;
 			CodeDimensionMap codeDimensions;
 			-@AttributeValueDto value;
         }

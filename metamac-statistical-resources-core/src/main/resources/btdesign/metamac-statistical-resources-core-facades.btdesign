@@ -127,6 +127,7 @@ Application FacadeStatisticalResources {
     		"Import a set of files provided by urn as datasources in a datasetVersion"
     		importDatasourcesInDatasetVersion(@DatasetVersionDto datasetVersionDto, List<URL> fileUrls) throws MetamacException;
     		importDatasourcesInStatisticalOperation(String statisticalOperationUrn, List<URL> fileUrls) throws MetamacException;
+    		@DsdAttributeInstanceDto createAttributeInstance(String datasetRepositoryId, @DsdAttributeInstanceDto dsdAttributeInstanceDto) throws MetamacException;
     		
     		// Statistic officialities
     		List<@StatisticOfficialityDto> findStatisticOfficialities() throws MetamacException;
