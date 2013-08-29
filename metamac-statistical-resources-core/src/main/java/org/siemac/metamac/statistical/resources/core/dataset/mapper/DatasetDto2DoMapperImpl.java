@@ -50,7 +50,7 @@ public class DatasetDto2DoMapperImpl extends BaseDto2DoMapperImpl implements Dat
             try {
                 DatasetVersion target = datasetVersionRepository.findById(source.getId());
                 if (target.getId() != null) {
-                    OptimisticLockingUtils.checkVersion(target.getVersion(), source.getOptimisticLockingVersion());
+                    OptimisticLockingUtils.checkVersion(target.getSiemacMetadataStatisticalResource().getVersion(), source.getOptimisticLockingVersion());
                 }
             } catch (DatasetVersionNotFoundException e) {
                 throw MetamacExceptionBuilder.builder().withCause(e).withExceptionItems(ServiceExceptionType.DATASET_VERSION_NOT_FOUND).withMessageParameters(source.getUrn())

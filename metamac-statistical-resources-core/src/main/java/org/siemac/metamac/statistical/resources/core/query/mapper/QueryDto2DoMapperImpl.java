@@ -44,7 +44,7 @@ public class QueryDto2DoMapperImpl extends BaseDto2DoMapperImpl implements Query
             try {
                 QueryVersion target = queryVersionRepository.findById(source.getId());
                 if (target.getId() != null) {
-                    OptimisticLockingUtils.checkVersion(target.getVersion(), source.getOptimisticLockingVersion());
+                    OptimisticLockingUtils.checkVersion(target.getLifeCycleStatisticalResource().getVersion(), source.getOptimisticLockingVersion());
                 }
             } catch (QueryVersionNotFoundException e) {
                 throw MetamacExceptionBuilder.builder().withCause(e).withExceptionItems(ServiceExceptionType.QUERY_NOT_FOUND).withMessageParameters(source.getUrn())

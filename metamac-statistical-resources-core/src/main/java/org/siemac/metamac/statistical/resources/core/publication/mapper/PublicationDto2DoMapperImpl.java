@@ -62,7 +62,7 @@ public class PublicationDto2DoMapperImpl extends BaseDto2DoMapperImpl implements
             try {
                 PublicationVersion target = publicationVersionRepository.findById(source.getId());
                 if (target.getId() != null) {
-                    OptimisticLockingUtils.checkVersion(target.getVersion(), source.getOptimisticLockingVersion());
+                    OptimisticLockingUtils.checkVersion(target.getSiemacMetadataStatisticalResource().getVersion(), source.getOptimisticLockingVersion());
                 }
             } catch (PublicationVersionNotFoundException e) {
                 throw MetamacExceptionBuilder.builder().withCause(e).withExceptionItems(ServiceExceptionType.PUBLICATION_VERSION_NOT_FOUND).withMessageParameters(source.getUrn())
