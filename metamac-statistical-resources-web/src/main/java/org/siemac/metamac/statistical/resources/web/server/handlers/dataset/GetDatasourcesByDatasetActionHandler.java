@@ -25,7 +25,6 @@ public class GetDatasourcesByDatasetActionHandler extends SecurityActionHandler<
         super(GetDatasourcesByDatasetAction.class);
     }
 
-    // FIXME: Pagination
     @Override
     public GetDatasourcesByDatasetResult executeSecurityAction(GetDatasourcesByDatasetAction action) throws ActionException {
         try {
