@@ -11,7 +11,12 @@ public class StatRepoDto2StatisticalResourcesDtoMapperImpl implements StatRepoDt
 
     @Override
     public DsdAttributeInstanceDto attributeDtoToDsdAttributeInstanceDto(AttributeDto source) throws MetamacException {
-        // TODO Auto-generated method stub
-        return null;
+        DsdAttributeInstanceDto target = new DsdAttributeInstanceDto();
+        target.setUuid(source.getUuid());
+        target.setAttributeId(source.getAttributeId());
+        // TODO
+        // target.setValue()
+        // target.setCodeDimensions()
+        return target;
     }
 }

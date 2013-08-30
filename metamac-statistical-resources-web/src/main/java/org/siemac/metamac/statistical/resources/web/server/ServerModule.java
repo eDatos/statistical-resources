@@ -15,6 +15,7 @@ import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.GetD
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.GetDatasetsActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.GetDatasourcesByDatasetActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.GetVersionsOfDatasetActionHandler;
+import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.SaveAttributeInstanceActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.SaveDatasetVersionActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.SaveDatasourceActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.UpdateDatasetVersionProcStatusActionHandler;
@@ -66,6 +67,7 @@ import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetVer
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetsAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasourcesByDatasetAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetVersionsOfDatasetAction;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.SaveAttributeInstanceAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.SaveDatasetVersionAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.SaveDatasourceAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.UpdateDatasetVersionProcStatusAction;
@@ -168,6 +170,7 @@ public class ServerModule extends HandlerModule {
         bindHandler(GetVersionsOfDatasetAction.class, GetVersionsOfDatasetActionHandler.class);
         bindHandler(GetDatasetAttributesAction.class, GetDatasetAttributesActionHandler.class);
         bindHandler(GetDatasetAttributeInstancesAction.class, GetDatasetAttributeInstancesActionHandler.class);
+        bindHandler(SaveAttributeInstanceAction.class, SaveAttributeInstanceActionHandler.class);
 
         // PUBLICATIONS
         bindHandler(GetPublicationVersionsAction.class, GetPublicationVersionsActionHandler.class);

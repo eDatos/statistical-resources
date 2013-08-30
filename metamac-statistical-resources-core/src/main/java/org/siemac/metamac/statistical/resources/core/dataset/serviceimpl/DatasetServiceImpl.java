@@ -616,16 +616,19 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
     // ------------------------------------------------------------------------
 
     @Override
-    public AttributeDto createAttributeInstance(ServiceContext ctx, String datasetRepositoryId, AttributeDto attributeDto) throws MetamacException {
+    public AttributeDto createAttributeInstance(ServiceContext ctx, String datasetVersionUrn, AttributeDto attributeDto) throws MetamacException {
 
         // Validations
-        datasetServiceInvocationValidator.checkCreateAttributeInstance(ctx, datasetRepositoryId, attributeDto);
+        datasetServiceInvocationValidator.checkCreateAttributeInstance(ctx, datasetVersionUrn, attributeDto);
 
+        // Retrieve the datasetVersion to get the datasetRepositoryId
+        DatasetVersion datasetVersion = retrieveDatasetVersionByUrn(ctx, datasetVersionUrn);
+
+        // Create attribute
         try {
-            // Create attribute
-            return statisticsDatasetRepositoriesServiceFacade.createAttribute(datasetRepositoryId, attributeDto);
+            return statisticsDatasetRepositoriesServiceFacade.createAttribute(datasetVersion.getDatasetRepositoryId(), attributeDto);
         } catch (ApplicationException e) {
-            throw new MetamacException(e, ServiceExceptionType.UNKNOWN, "Error creating attribute instances in datasetRepository " + datasetRepositoryId);
+            throw new MetamacException(e, ServiceExceptionType.UNKNOWN, "Error creating attribute instances in datasetRepository " + datasetVersionUrn);
         }
     }
 

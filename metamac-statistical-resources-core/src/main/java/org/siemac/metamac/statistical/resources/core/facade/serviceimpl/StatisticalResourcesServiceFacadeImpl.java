@@ -883,7 +883,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     }
 
     @Override
-    public DsdAttributeInstanceDto createAttributeInstance(ServiceContext ctx, String datasetRepositoryId, DsdAttributeInstanceDto dsdAttributeInstanceDto) throws MetamacException {
+    public DsdAttributeInstanceDto createAttributeInstance(ServiceContext ctx, String datasetVersionUrn, DsdAttributeInstanceDto dsdAttributeInstanceDto) throws MetamacException {
         // Security
         DatasetsSecurityUtils.canCreateAttributeInstance(ctx);
 
@@ -891,7 +891,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         AttributeDto attributeDto = statisticalResourcesDto2StatRepoDtoMapper.dsdAttributeInstaceDtoToAttributeDto(dsdAttributeInstanceDto);
 
         // Create attribute
-        AttributeDto attributeCreated = getDatasetService().createAttributeInstance(ctx, datasetRepositoryId, attributeDto);
+        AttributeDto attributeCreated = getDatasetService().createAttributeInstance(ctx, datasetVersionUrn, attributeDto);
 
         return statRepoDto2StatisticalResourcesDtoMapper.attributeDtoToDsdAttributeInstanceDto(attributeCreated);
     }

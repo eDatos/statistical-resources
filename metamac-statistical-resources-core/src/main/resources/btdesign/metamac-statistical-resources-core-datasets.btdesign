@@ -64,20 +64,16 @@ Application DatasetsStatisticalResources {
     		"Retrieve the coverage for a given dimension"
     		List<@CodeDimension> filterCoverageForDatasetVersionDimension(String datasetVersionUrn, String dsdDimensionId, String filter) throws MetamacException;
     		"Create attribute instances"
-    		AttributeDto createAttributeInstance(String datasetRepositoryId, AttributeDto attributeDto) throws MetamacException;
+    		AttributeDto createAttributeInstance(String datasetVersionUrn, AttributeDto attributeDto) throws MetamacException;
     		
     		// Statistic officialities
     		List<@StatisticOfficiality> findStatisticOfficialities() throws MetamacException;
-    		
-    		
 		}  
-
-		
 
 		// ----------------------------------------------------------------
 		// 							ENTITIES
 		// ---------------------------------------------------------------- 
-		
+
 		Entity Datasource {
 			databaseTable="TB_DATASOURCES"
 			hint="idSequence=DATASOURCES"
@@ -87,15 +83,15 @@ Application DatasetsStatisticalResources {
 			Long id key;
 
 			- @IdentifiableStatisticalResource identifiableStatisticalResource databaseColumn="STATISTICAL_RESOURCE_FK" not nullable cascade="all";
-			
+
 			"Value of next update metadata if the source of datasource is a px"
 			DateTimeTZ dateNextUpdate nullable;
 			String filename not nullable;
-			
+
 			// Relations
             "Dataset version"
 			- @DatasetVersion datasetVersion cascade="none" fetch="lazy" nullable databaseColumn="DATASET_VERSION_FK" <-> datasources;
-			
+
 			Repository DatasourceRepository {
 				save;
 				delete;
@@ -107,20 +103,20 @@ Application DatasetsStatisticalResources {
 				@Datasource retrieveByUrn(String urn) throws MetamacException;
 			}
 		}
-		
+
 		Entity Dataset {
 			databaseTable="TB_DATASETS"
 			hint="idSequence=DATASETS"
 			!auditable
-			
+
 			"Added explicitly to avoid that Sculptor generate UUID"
 			Long id key;
-			
+
 			"Root dataset will be identifiable to be referenced instead of referencing specific versions"
 			- @IdentifiableStatisticalResource identifiableStatisticalResource databaseColumn="IDENTIFIABLE_RESOURCE_FK" not nullable cascade="all";
 			"All versions"
 			- Bag<@DatasetVersion> versions cascade="all-delete-orphan" fetch="lazy" inverse <-> dataset orderby="id asc";
-			
+
 			Repository DatasetRepository {
 				findByCondition;
 				findByCondition(PagingParameter pagingParameter);
@@ -131,7 +127,6 @@ Application DatasetsStatisticalResources {
 				@Dataset retrieveByUrn(String urn) throws MetamacException;
 			}
 		}
-		
 
 		Entity DatasetVersion {
 			databaseTable="TB_DATASETS_VERSIONS"
@@ -143,9 +138,9 @@ Application DatasetsStatisticalResources {
 			Long id key;
 
 			- @SiemacMetadataStatisticalResource siemacMetadataStatisticalResource databaseColumn="SIEMAC_RESOURCE_FK" not nullable cascade="all";
-			
+
 			//Content descriptors
-			
+
 			// Dimension or attribute id marked as geographic
 			- Bag<@ExternalItem> geographicCoverage cascade="all-delete-orphan" fetch="lazy" databaseJoinTable="TB_DV_GEO_COVERAGE" databaseColumn="GEO_CODE_FK" databaseJoinColumn="DATASET_VERSION_FK";
 			// Dimension or attribute id marked as temporal
@@ -165,21 +160,21 @@ Application DatasetsStatisticalResources {
 			//Last date which data refers to
 			DateTimeTZ dateEnd nullable;
 			- Bag<@ExternalItem> statisticalUnit cascade="all-delete-orphan" fetch="lazy" databaseJoinTable="TB_EI_STATISTICAL_UNIT" databaseColumn="STATISTICAL_UNIT_FK" databaseJoinColumn="DATASET_VERSION_FK";
-			
+
 			//Production descriptor
 			- @ExternalItem relatedDsd nullable cascade="all" databaseColumn="RELATED_DSD_FK"; 
 			boolean relatedDsdChanged transient;
 			String datasetRepositoryId nullable;
-			
+
 			//Class descriptors
-			
+
 			//Number of observations contained in the dataset
 			Long formatExtentObservations nullable;
 			//Number of diemnsions defined in the DSD
 			Integer formatExtentDimensions nullable;
-			
+
 			//Publishing descriptors
-			
+
 			//public date of next update
 			DateTimeTZ dateNextUpdate nullable;
 			//flag indicating if date next update was modified by user
@@ -190,13 +185,13 @@ Application DatasetsStatisticalResources {
 			- @StatisticOfficiality statisticOfficiality nullable databaseColumn="STAT_OFFICIALITY_FK";
 			//Bibliographic citation
 			- @InternationalString bibliographicCitation nullable cascade="all" databaseColumn="BIBLIOGRAPHIC_CITATION_FK";
-			
+
 			// Relations
 			"Parent"
 			- @Dataset dataset not nullable cascade="none" databaseColumn="DATASET_FK" <-> versions;
 			"Data sources"
 			- Bag<@Datasource> datasources cascade="all-delete-orphan" fetch="lazy" inverse orderby="id asc" <-> datasetVersion;
-			
+
 			Repository DatasetVersionRepository {
 				save;
 				delete;
@@ -212,19 +207,19 @@ Application DatasetsStatisticalResources {
 				List<String> retrieveDimensionsIds(@DatasetVersion datasetVersion) throws MetamacException;
 			}
 		}
-		
+
 		"Statistic officiality List"
     	Entity StatisticOfficiality {
     		databaseTable="TB_LIS_STAT_OFFICIALITY"
     		hint="idSequence=STAT_OFFICIALITY"
     		!auditable
-    		
+
     		"Added explicitly to avoid that Sculptor generate UUID"
 			Long id key;
-    		
+
     		String identifier;
     		- @InternationalString description nullable cascade="all" databaseColumn="DESCRIPTION_FK";
-    		
+
     		Repository StatisticOfficialityRepository {
     			findById;
     			findAll;
@@ -236,48 +231,48 @@ Application DatasetsStatisticalResources {
     		hint="idSequence=CODE_DIMENSIONS"
     		!auditable
     		gap
-    		
+
     		"Added explicitly to avoid that Sculptor generate UUID"
 			Long id key;
-			
+
     		String dsdComponentId;
     		String identifier;
     		String title length="4000";
     		- @DatasetVersion datasetVersion cascade="none" fetch="lazy" not nullable databaseColumn="DATASET_VERSION_FK" <-> dimensionsCoverage;
-    		
+
     		Repository CodeDimensionRepository {
     			findByQuery;
     			List<@CodeDimension> findCodesForDatasetVersionByDimensionId(long datasetVersionId, String dimensionId, String filter) throws MetamacException;	
     		}
     	}
-    	
-    	 Entity AttributeValue {
+
+     	Entity AttributeValue {
     		databaseTable="TB_ATTRIBUTE_VALUES"
     		hint="idSequence=ATTRIBUTE_VALUES"
     		!auditable
     		gap
-    		
+
     		"Added explicitly to avoid that Sculptor generate UUID"
 			Long id key;
-			
+
     		String dsdComponentId;
     		String identifier;
     		String title length="4000";
     		- @DatasetVersion datasetVersion cascade="none" fetch="lazy" not nullable databaseColumn="DATASET_VERSION_FK" <-> attributesCoverage;
-    		
+
     		Repository AttributeValueRepository {
     			findByQuery;
     		}
     	}
-    	
+
     	Entity TemporalCode {
     		databaseTable="TB_TEMP_CODES"
     		hint="idSequence=TEMP_CODES"
     		!auditable
-    		
+
     		"Added explicitly to avoid that Sculptor generate UUID"
 			Long id key;
-			
+
     		String identifier;
     		String title length="4000";
     	}

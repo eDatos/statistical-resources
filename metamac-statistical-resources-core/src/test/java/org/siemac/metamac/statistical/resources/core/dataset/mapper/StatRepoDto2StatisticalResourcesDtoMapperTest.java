@@ -13,5 +13,8 @@ public class StatRepoDto2StatisticalResourcesDtoMapperTest extends StatisticalRe
     @Test
     public void testAttributeDtoToDsdAttributeInstaceDto() throws MetamacException {
         // TODO
+        // AttributeDto attributeDto = StatisticalResourcesDtoMocks.mockAttributeDto();
+        // DsdAttributeInstanceDto dsdAttributeInstanceDto = dto2StatisticalResourcesDtoMapper.attributeDtoToDsdAttributeInstanceDto(attributeDto);
+        // assertEqualsAttributeDtoAndDsdAttributeInstaceDto(attributeDto, dsdAttributeInstanceDto);
     }
 }
