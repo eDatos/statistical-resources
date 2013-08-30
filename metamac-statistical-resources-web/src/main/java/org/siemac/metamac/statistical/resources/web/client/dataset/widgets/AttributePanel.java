@@ -57,6 +57,15 @@ public class AttributePanel extends VLayout {
             }
         });
 
+        instancesSectionStack.getDeleteInstanceButton().addClickHandler(new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                // TODO Auto-generated method stub
+
+            }
+        });
+
         addMember(instancesSectionStack);
 
         // Main form layout

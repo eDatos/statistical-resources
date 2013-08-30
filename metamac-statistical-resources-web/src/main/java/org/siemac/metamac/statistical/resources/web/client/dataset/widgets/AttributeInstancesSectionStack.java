@@ -3,11 +3,13 @@ package org.siemac.metamac.statistical.resources.web.client.dataset.widgets;
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getMessages;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdAttributeDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdAttributeInstanceDto;
 import org.siemac.metamac.statistical.resources.web.client.model.ds.DsdAttributeInstanceDS;
+import org.siemac.metamac.statistical.resources.web.client.model.record.DsdAttributeInstanceRecord;
 import org.siemac.metamac.statistical.resources.web.client.utils.StatisticalResourcesRecordUtils;
 import org.siemac.metamac.web.common.client.MetamacWebCommon;
 import org.siemac.metamac.web.common.client.resources.GlobalResources;
@@ -17,6 +19,7 @@ import org.siemac.metamac.web.common.client.widgets.CustomListGridSectionStack;
 import org.siemac.metamac.web.common.client.widgets.CustomToolStripButton;
 
 import com.smartgwt.client.widgets.events.HasClickHandlers;
+import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.toolbar.ToolStrip;
 
 public class AttributeInstancesSectionStack extends CustomListGridSectionStack {
@@ -32,6 +35,7 @@ public class AttributeInstancesSectionStack extends CustomListGridSectionStack {
         ToolStrip toolStrip = new ToolStrip();
         newInstanceButton = new CustomToolStripButton(MetamacWebCommon.getConstants().actionNew(), GlobalResources.RESOURCE.newListGrid().getURL());
         deleteInstanceButton = new CustomToolStripButton(MetamacWebCommon.getConstants().actionDelete(), GlobalResources.RESOURCE.deleteListGrid().getURL());
+        deleteInstanceButton.setVisible(false);
         toolStrip.addButton(newInstanceButton);
         toolStrip.addButton(deleteInstanceButton);
 
@@ -50,8 +54,23 @@ public class AttributeInstancesSectionStack extends CustomListGridSectionStack {
         show();
     }
 
+    public List<String> getSelectedAttributeInstancesUuids() {
+        List<String> uuids = new ArrayList<String>();
+        ListGridRecord[] records = listGrid.getSelectedRecords();
+        for (ListGridRecord record : records) {
+            if (record instanceof DsdAttributeInstanceRecord) {
+                uuids.add(((DsdAttributeInstanceRecord) record).getUuid());
+            }
+        }
+        return uuids;
+    }
+
     public HasClickHandlers getNewInstanceButton() {
         return newInstanceButton;
+    }
+
+    public HasClickHandlers getDeleteInstanceButton() {
+        return deleteInstanceButton;
     }
 
     private void setSectionTitle(String title) {

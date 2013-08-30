@@ -10,6 +10,14 @@ public class DsdAttributeInstanceRecord extends NavigableListGridRecord {
     public DsdAttributeInstanceRecord() {
     }
 
+    public void setUuid(String value) {
+        setAttribute(DsdAttributeInstanceDS.UUID, value);
+    }
+
+    public String getUuid() {
+        return getAttributeAsString(DsdAttributeInstanceDS.UUID);
+    }
+
     public void setStringValue(String value) {
         setAttribute(DsdAttributeInstanceDS.VALUE, value);
     }
