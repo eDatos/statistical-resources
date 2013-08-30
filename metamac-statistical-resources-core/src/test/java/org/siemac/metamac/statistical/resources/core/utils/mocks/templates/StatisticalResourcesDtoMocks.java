@@ -20,6 +20,7 @@ import org.siemac.metamac.core.common.ent.domain.LocalisedString;
 import org.siemac.metamac.core.common.enume.domain.TypeExternalArtefactsEnum;
 import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.NameableStatisticalResource;
+import org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConstants;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.StatisticOfficiality;
 import org.siemac.metamac.statistical.resources.core.dto.IdentifiableStatisticalResourceDto;
@@ -45,6 +46,8 @@ import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalRes
 import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.VersionRationaleTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryTypeEnum;
+
+import com.arte.statistic.dataset.repository.dto.AttributeDto;
 
 public class StatisticalResourcesDtoMocks extends MetamacMocks {
 
@@ -143,6 +146,36 @@ public class StatisticalResourcesDtoMocks extends MetamacMocks {
         DsdAttributeInstanceDto dsdAttributeInstanceDto = mockDsdAttributeInstanceDtoWithoutValue();
         dsdAttributeInstanceDto.setValue(mockEnumeratedAttributeValue());
         return dsdAttributeInstanceDto;
+    }
+
+    public static AttributeDto mockAttributeDto() {
+        AttributeDto attributeDto = new AttributeDto();
+        attributeDto.setUuid(mockString(10));
+        attributeDto.setAttributeId("attribute_" + mockString(8));
+
+        attributeDto.setValue(new com.arte.statistic.dataset.repository.dto.InternationalStringDto());
+        com.arte.statistic.dataset.repository.dto.LocalisedStringDto localisedValue = new com.arte.statistic.dataset.repository.dto.LocalisedStringDto();
+        localisedValue.setLocale(StatisticalResourcesConstants.DEFAULT_DATA_REPOSITORY_LOCALE);
+        localisedValue.setLabel(mockString(10));
+        attributeDto.getValue().addText(localisedValue);
+
+        attributeDto.setCodesByDimension(mockStringListMap());
+
+        return attributeDto;
+    }
+
+    private static Map<String, List<String>> mockStringListMap() {
+        Map<String, List<String>> map = new HashMap<String, List<String>>();
+        map.put(mockString(8), mockStringList(3));
+        return map;
+    }
+
+    private static List<String> mockStringList(int numberOfElemets) {
+        List<String> stringList = new ArrayList<String>();
+        for (int i = 0; i < numberOfElemets; i++) {
+            stringList.add(mockString(8));
+        }
+        return stringList;
     }
 
     private static DsdAttributeInstanceDto mockDsdAttributeInstanceDtoWithoutValue() {
