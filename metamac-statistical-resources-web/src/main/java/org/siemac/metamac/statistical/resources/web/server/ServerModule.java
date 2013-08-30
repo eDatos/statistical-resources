@@ -5,7 +5,6 @@ import org.siemac.metamac.statistical.resources.web.server.handlers.base.GetInit
 import org.siemac.metamac.statistical.resources.web.server.handlers.base.GetLatestResourceVersionActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.DeleteDatasetVersionsActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.DeleteDatasourcesActionHandler;
-import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.GetAttributeInstancesActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.GetDatasetAttributeInstancesActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.GetDatasetAttributesActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.GetDatasetDimensionCoverageActionHandler;
@@ -16,7 +15,7 @@ import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.GetD
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.GetDatasetsActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.GetDatasourcesByDatasetActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.GetVersionsOfDatasetActionHandler;
-import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.SaveAttributeInstanceActionHandler;
+import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.SaveDatasetAttributeInstanceActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.SaveDatasetVersionActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.SaveDatasourceActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.UpdateDatasetVersionProcStatusActionHandler;
@@ -58,7 +57,6 @@ import org.siemac.metamac.statistical.resources.web.shared.base.GetInitialValues
 import org.siemac.metamac.statistical.resources.web.shared.base.GetLatestResourceVersionAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.DeleteDatasetVersionsAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.DeleteDatasourcesAction;
-import org.siemac.metamac.statistical.resources.web.shared.dataset.GetAttributeInstancesAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetAttributeInstancesAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetAttributesAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetDimensionCoverageAction;
@@ -69,7 +67,7 @@ import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetVer
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetsAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasourcesByDatasetAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetVersionsOfDatasetAction;
-import org.siemac.metamac.statistical.resources.web.shared.dataset.SaveAttributeInstanceAction;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.SaveDatasetAttributeInstanceAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.SaveDatasetVersionAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.SaveDatasourceAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.UpdateDatasetVersionProcStatusAction;
@@ -172,8 +170,7 @@ public class ServerModule extends HandlerModule {
         bindHandler(GetVersionsOfDatasetAction.class, GetVersionsOfDatasetActionHandler.class);
         bindHandler(GetDatasetAttributesAction.class, GetDatasetAttributesActionHandler.class);
         bindHandler(GetDatasetAttributeInstancesAction.class, GetDatasetAttributeInstancesActionHandler.class);
-        bindHandler(SaveAttributeInstanceAction.class, SaveAttributeInstanceActionHandler.class);
-        bindHandler(GetAttributeInstancesAction.class, GetAttributeInstancesActionHandler.class);
+        bindHandler(SaveDatasetAttributeInstanceAction.class, SaveDatasetAttributeInstanceActionHandler.class);
 
         // PUBLICATIONS
         bindHandler(GetPublicationVersionsAction.class, GetPublicationVersionsActionHandler.class);

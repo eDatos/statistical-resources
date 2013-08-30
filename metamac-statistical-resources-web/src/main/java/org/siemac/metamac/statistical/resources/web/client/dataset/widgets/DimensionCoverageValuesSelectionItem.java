@@ -24,6 +24,7 @@ import com.smartgwt.client.types.Overflow;
 import com.smartgwt.client.types.SelectionAppearance;
 import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.widgets.grid.HeaderSpan;
+import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.grid.events.SelectionChangedHandler;
 import com.smartgwt.client.widgets.grid.events.SelectionEvent;
 import com.smartgwt.client.widgets.layout.HLayout;
@@ -37,11 +38,14 @@ public class DimensionCoverageValuesSelectionItem extends CustomCanvasItem {
 
     private boolean            editionMode;
 
+    private Set<String>        dimensionIds;
+
     public DimensionCoverageValuesSelectionItem(String name, String title, Set<String> dimensionIds, boolean editionMode) {
         super(name, title);
         setCellStyle("dragAndDropCellStyle");
 
         this.editionMode = editionMode;
+        this.dimensionIds = dimensionIds;
 
         // Dimensions layout (form)
 
@@ -72,6 +76,15 @@ public class DimensionCoverageValuesSelectionItem extends CustomCanvasItem {
         mainPanel.addMember(selectedDimensionValuesListGrid);
         mainPanel.setPadding(10);
         setCanvas(mainPanel);
+    }
+
+    public Map<String, List<CodeItemDto>> getSelectedCodeDimensions() {
+        Map<String, List<CodeItemDto>> values = new HashMap<String, List<CodeItemDto>>();
+        for (String dimensionId : dimensionIds) {
+            List<CodeItemDto> codeItemDtos = ((DimensionsListGridItem) dimensionsForm.getItem(dimensionId)).getSelectedCodeItemDtos();
+            values.put(dimensionId, codeItemDtos);
+        }
+        return values;
     }
 
     private DimensionsListGridItem createDimensionListGridItem(final String dimensionId) {
@@ -147,6 +160,17 @@ public class DimensionCoverageValuesSelectionItem extends CustomCanvasItem {
 
         public BaseCustomListGrid getListGrid() {
             return customListGrid;
+        }
+
+        public List<CodeItemDto> getSelectedCodeItemDtos() {
+            List<CodeItemDto> codeItemDtos = new ArrayList<CodeItemDto>();
+            ListGridRecord[] selectedRecords = customListGrid.getSelectedRecords();
+            for (ListGridRecord record : selectedRecords) {
+                if (record instanceof CodeItemRecord) {
+                    codeItemDtos.add(((CodeItemRecord) record).getCodeItemDto());
+                }
+            }
+            return codeItemDtos;
         }
     }
 }

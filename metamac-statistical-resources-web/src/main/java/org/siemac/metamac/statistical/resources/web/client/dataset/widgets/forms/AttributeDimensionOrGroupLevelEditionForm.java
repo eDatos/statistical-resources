@@ -3,14 +3,15 @@ package org.siemac.metamac.statistical.resources.web.client.dataset.widgets.form
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.AttributeValueDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdAttributeDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdAttributeInstanceDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.CodeItemDto;
 import org.siemac.metamac.statistical.resources.web.client.constants.StatisticalResourceWebConstants;
-import org.siemac.metamac.statistical.resources.web.client.dataset.view.handlers.DatasetAttributesTabUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.DimensionCoverageValuesSelectionItem;
 import org.siemac.metamac.statistical.resources.web.client.model.ds.DsdAttributeInstanceDS;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.fields.SearchExternalItemSimpleItem;
@@ -19,19 +20,21 @@ import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
 
 public class AttributeDimensionOrGroupLevelEditionForm extends AttributeBaseForm {
 
-    private DatasetAttributesTabUiHandlers uiHandlers;
+    private DsdAttributeInstanceDto dsdAttributeInstanceDto;
 
     @Override
     protected void buildEnumeratedRepresentationForm(DsdAttributeDto dsdAttributeDto, DsdAttributeInstanceDto dsdAttributeInstanceDto) {
+        this.dsdAttributeInstanceDto = dsdAttributeInstanceDto;
         DimensionCoverageValuesSelectionItem dimensionCoverageValuesSelectionItem = createDimensionValuesSelectionItem(DsdAttributeInstanceDS.DIMENSION_SELECTION_VALUES, getConstants()
                 .datasetAttributeDimensionValuesSelection(), dsdAttributeInstanceDto);
-        SearchExternalItemSimpleItem value = createEnumeratedValueItem();
+        SearchExternalItemSimpleItem value = createEnumeratedValueItem(DsdAttributeInstanceDS.VALUE, getConstants().datasetAttributeValue());
         // TODO set values
         setFields(dimensionCoverageValuesSelectionItem, value);
     }
 
     @Override
     protected void buildNonEnumeratedRepresentationForm(DsdAttributeInstanceDto dsdAttributeInstanceDto) {
+        this.dsdAttributeInstanceDto = dsdAttributeInstanceDto;
         DimensionCoverageValuesSelectionItem dimensionCoverageValuesSelectionItem = createDimensionValuesSelectionItem(DsdAttributeInstanceDS.DIMENSION_SELECTION_VALUES, getConstants()
                 .datasetAttributeDimensionValuesSelection(), dsdAttributeInstanceDto);
         CustomTextItem value = new CustomTextItem(DsdAttributeInstanceDS.VALUE, getConstants().datasetAttributeValue());
@@ -58,14 +61,22 @@ public class AttributeDimensionOrGroupLevelEditionForm extends AttributeBaseForm
         ((DimensionCoverageValuesSelectionItem) getItem(DsdAttributeInstanceDS.DIMENSION_SELECTION_VALUES)).setDimensionCoverageValues(dimensionId, codeItemDtos);
     }
 
-    @Override
-    public DatasetAttributesTabUiHandlers getUiHandlers() {
-        return uiHandlers;
-    }
+    public DsdAttributeInstanceDto getDsdAttributeInstanceDto() {
+        // Code dimensions
+        Map<String, List<CodeItemDto>> codeItems = ((DimensionCoverageValuesSelectionItem) getItem(DsdAttributeInstanceDS.DIMENSION_SELECTION_VALUES)).getSelectedCodeDimensions();
+        dsdAttributeInstanceDto.setCodeDimensions(codeItems);
 
-    @Override
-    public void setUiHandlers(DatasetAttributesTabUiHandlers uiHandlers) {
-        this.uiHandlers = uiHandlers;
+        // Value
+        AttributeValueDto attributeValueDto = new AttributeValueDto();
+        if (getItem(DsdAttributeInstanceDS.VALUE) instanceof CustomTextItem) {
+            attributeValueDto.setStringValue(getValueAsString(DsdAttributeInstanceDS.VALUE));
+        } else if (getItem(DsdAttributeInstanceDS.VALUE) instanceof SearchExternalItemSimpleItem) {
+            ExternalItemDto selectedExternalItemDto = ((SearchExternalItemSimpleItem) getItem(DsdAttributeInstanceDS.VALUE)).getExternalItemDto();
+            attributeValueDto.setExternalItemValue(selectedExternalItemDto);
+        }
+        dsdAttributeInstanceDto.setValue(attributeValueDto);
+
+        return dsdAttributeInstanceDto;
     }
 
     //
@@ -78,8 +89,8 @@ public class AttributeDimensionOrGroupLevelEditionForm extends AttributeBaseForm
         }
     }
 
-    private SearchExternalItemSimpleItem createEnumeratedValueItem() {
-        return new SearchExternalItemSimpleItem(DsdAttributeInstanceDS.VALUE, getConstants().datasetAttributeValue(), StatisticalResourceWebConstants.FORM_LIST_MAX_RESULTS) {
+    private SearchExternalItemSimpleItem createEnumeratedValueItem(String name, String title) {
+        return new SearchExternalItemSimpleItem(name, title, StatisticalResourceWebConstants.FORM_LIST_MAX_RESULTS) {
 
             @Override
             protected void retrieveResources(int firstResult, int maxResults, MetamacWebCriteria webCriteria) {

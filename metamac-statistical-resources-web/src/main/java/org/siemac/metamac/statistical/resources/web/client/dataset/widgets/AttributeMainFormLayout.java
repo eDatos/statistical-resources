@@ -13,7 +13,12 @@ import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.forms
 import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.forms.AttributeDimensionOrGroupLevelForm;
 import org.siemac.metamac.web.common.client.widgets.form.MainFormLayout;
 
+import com.smartgwt.client.widgets.events.ClickEvent;
+import com.smartgwt.client.widgets.events.ClickHandler;
+
 public class AttributeMainFormLayout extends MainFormLayout {
+
+    private DatasetAttributesTabUiHandlers            uiHandlers;
 
     private AttributeDatasetLevelForm                 attributeDatasetLevelForm;
     private AttributeDatasetLevelEditionForm          attributeDatasetLevelEditionForm;
@@ -38,6 +43,24 @@ public class AttributeMainFormLayout extends MainFormLayout {
 
         attributeDimensionOrGroupLevelEditionForm = new AttributeDimensionOrGroupLevelEditionForm();
         addEditionCanvas(attributeDimensionOrGroupLevelEditionForm);
+
+        // Bind events
+
+        getSave().addClickHandler(new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                if (attributeDatasetLevelEditionForm.isVisible()) {
+                    if (attributeDatasetLevelEditionForm.validate(false)) {
+                        getUiHandlers().saveAttributeInstance(attributeDatasetLevelEditionForm.getDsdAttributeInstanceDto());
+                    }
+                } else if (attributeDimensionOrGroupLevelEditionForm.isVisible()) {
+                    if (attributeDimensionOrGroupLevelEditionForm.validate(false)) {
+                        getUiHandlers().saveAttributeInstance(attributeDimensionOrGroupLevelEditionForm.getDsdAttributeInstanceDto());
+                    }
+                }
+            }
+        });
     }
 
     public void showInstance(DsdAttributeDto dsdAttributeDto, DsdAttributeInstanceDto dsdAttributeInstanceDto) {
@@ -86,8 +109,13 @@ public class AttributeMainFormLayout extends MainFormLayout {
     }
 
     public void setUiHandlers(DatasetAttributesTabUiHandlers uiHandlers) {
+        this.uiHandlers = uiHandlers;
         attributeDatasetLevelEditionForm.setUiHandlers(uiHandlers);
         attributeDimensionOrGroupLevelEditionForm.setUiHandlers(uiHandlers);
+    }
+
+    public DatasetAttributesTabUiHandlers getUiHandlers() {
+        return uiHandlers;
     }
 
     public void setDimensionCoverageValues(String dimensionId, List<CodeItemDto> codeItemDtos) {

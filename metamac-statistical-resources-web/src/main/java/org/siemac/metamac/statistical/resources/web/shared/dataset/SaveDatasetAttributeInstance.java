@@ -7,7 +7,7 @@ import com.gwtplatform.dispatch.annotation.In;
 import com.gwtplatform.dispatch.annotation.Out;
 
 @GenDispatch(isSecure = false)
-public class SaveAttributeInstance {
+public class SaveDatasetAttributeInstance {
 
     @In(1)
     String                  datasetVersionUrn;

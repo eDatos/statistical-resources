@@ -30,6 +30,8 @@ import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetDim
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetDimensionCoverageResult;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetVersionAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetVersionResult;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.SaveDatasetAttributeInstanceAction;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.SaveDatasetAttributeInstanceResult;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetCodesPaginatedListAction;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetCodesPaginatedListResult;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetConceptsPaginatedListAction;
@@ -167,6 +169,18 @@ public class DatasetAttributesTabPresenter extends Presenter<DatasetAttributesTa
             @Override
             public void onWaitSuccess(GetDatasetAttributeInstancesResult result) {
                 getView().setAttributeInstances(dsdAttributeDto, result.getDsdAttributeInstanceDtos());
+            }
+        });
+    }
+
+    @Override
+    public void saveAttributeInstance(DsdAttributeInstanceDto dsdAttributeInstanceDto) {
+        dispatcher.execute(new SaveDatasetAttributeInstanceAction(datasetVersionUrn, dsdAttributeInstanceDto), new WaitingAsyncCallbackHandlingError<SaveDatasetAttributeInstanceResult>(this) {
+
+            @Override
+            public void onWaitSuccess(SaveDatasetAttributeInstanceResult result) {
+                // TODO Auto-generated method stub
+
             }
         });
     }

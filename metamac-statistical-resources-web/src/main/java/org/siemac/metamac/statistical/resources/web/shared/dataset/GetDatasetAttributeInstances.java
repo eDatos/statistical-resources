@@ -12,10 +12,10 @@ import com.gwtplatform.dispatch.annotation.Out;
 public class GetDatasetAttributeInstances {
 
     @In(1)
-    String                        datasetUrn;
+    String                        datasetVersionUrn;
 
     @In(2)
-    String                        attributeIdentifier;
+    String                        attributeId;
 
     @Out(1)
     List<DsdAttributeInstanceDto> dsdAttributeInstanceDtos;

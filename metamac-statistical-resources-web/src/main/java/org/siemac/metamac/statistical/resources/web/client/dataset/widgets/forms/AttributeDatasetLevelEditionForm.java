@@ -5,6 +5,7 @@ import static org.siemac.metamac.statistical.resources.web.client.StatisticalRes
 import java.util.List;
 
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.AttributeValueDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdAttributeDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdAttributeInstanceDto;
 import org.siemac.metamac.statistical.resources.web.client.constants.StatisticalResourceWebConstants;
@@ -15,9 +16,12 @@ import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
 
 public class AttributeDatasetLevelEditionForm extends AttributeBaseForm {
 
+    private DsdAttributeInstanceDto dsdAttributeInstanceDto;
+
     @Override
     protected void buildEnumeratedRepresentationForm(DsdAttributeDto dsdAttributeDto, DsdAttributeInstanceDto dsdAttributeInstanceDto) {
-        SearchExternalItemSimpleItem value = createEnumeratedValueItem();
+        this.dsdAttributeInstanceDto = dsdAttributeInstanceDto;
+        SearchExternalItemSimpleItem value = createEnumeratedValueItem(DsdAttributeInstanceDS.VALUE, getConstants().datasetAttributeValue());
         if (dsdAttributeInstanceDto.getValue() != null) {
             value.setExternalItem(dsdAttributeInstanceDto.getValue().getExternalItemValue());
         }
@@ -26,11 +30,26 @@ public class AttributeDatasetLevelEditionForm extends AttributeBaseForm {
 
     @Override
     protected void buildNonEnumeratedRepresentationForm(DsdAttributeInstanceDto dsdAttributeInstanceDto) {
+        this.dsdAttributeInstanceDto = dsdAttributeInstanceDto;
         CustomTextItem value = new CustomTextItem(DsdAttributeInstanceDS.VALUE, getConstants().datasetAttributeValue());
         if (dsdAttributeInstanceDto.getValue() != null) {
             value.setValue(dsdAttributeInstanceDto.getValue().getStringValue());
         }
         setFields(value);
+    }
+
+    public DsdAttributeInstanceDto getDsdAttributeInstanceDto() {
+
+        AttributeValueDto attributeValueDto = new AttributeValueDto();
+        if (getItem(DsdAttributeInstanceDS.VALUE) instanceof CustomTextItem) {
+            attributeValueDto.setStringValue(getValueAsString(DsdAttributeInstanceDS.VALUE));
+        } else if (getItem(DsdAttributeInstanceDS.VALUE) instanceof SearchExternalItemSimpleItem) {
+            ExternalItemDto selectedExternalItemDto = ((SearchExternalItemSimpleItem) getItem(DsdAttributeInstanceDS.VALUE)).getExternalItemDto();
+            attributeValueDto.setExternalItemValue(selectedExternalItemDto);
+        }
+        dsdAttributeInstanceDto.setValue(attributeValueDto);
+
+        return dsdAttributeInstanceDto;
     }
 
     //
@@ -43,8 +62,8 @@ public class AttributeDatasetLevelEditionForm extends AttributeBaseForm {
         }
     }
 
-    private SearchExternalItemSimpleItem createEnumeratedValueItem() {
-        return new SearchExternalItemSimpleItem(DsdAttributeInstanceDS.VALUE, getConstants().datasetAttributeValue(), StatisticalResourceWebConstants.FORM_LIST_MAX_RESULTS) {
+    private SearchExternalItemSimpleItem createEnumeratedValueItem(String name, String title) {
+        return new SearchExternalItemSimpleItem(name, title, StatisticalResourceWebConstants.FORM_LIST_MAX_RESULTS) {
 
             @Override
             protected void retrieveResources(int firstResult, int maxResults, MetamacWebCriteria webCriteria) {

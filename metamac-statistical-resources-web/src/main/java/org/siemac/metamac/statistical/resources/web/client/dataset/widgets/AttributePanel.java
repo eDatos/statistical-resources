@@ -25,6 +25,8 @@ public class AttributePanel extends VLayout {
 
     private DsdAttributeDto                dsdAttributeDto;
 
+    private DatasetAttributesTabUiHandlers uiHandlers;
+
     public AttributePanel() {
 
         // Instances SectionStack
@@ -36,7 +38,7 @@ public class AttributePanel extends VLayout {
             public void onRecordClick(RecordClickEvent event) {
                 if (event.getRecord() instanceof DsdAttributeInstanceRecord) {
                     DsdAttributeInstanceDto dsdAttributeInstanceDto = ((DsdAttributeInstanceRecord) event.getRecord()).getDsdAttributeInstanceDto();
-                    // TODO
+                    mainFormLayout.showInstance(dsdAttributeDto, dsdAttributeInstanceDto);
                 }
             }
         });
@@ -84,8 +86,16 @@ public class AttributePanel extends VLayout {
 
     private void showDatasetAttributeInstance(DsdAttributeDto dsdAttributeDto, List<DsdAttributeInstanceDto> dsdAttributeInstanceDtos) {
         // Attributes with dataset relationship only have one instance
-        DsdAttributeInstanceDto dsdAttributeInstanceDto = dsdAttributeInstanceDtos != null && !dsdAttributeInstanceDtos.isEmpty() ? dsdAttributeInstanceDtos.get(0) : new DsdAttributeInstanceDto();
+        DsdAttributeInstanceDto dsdAttributeInstanceDto = dsdAttributeInstanceDtos != null && !dsdAttributeInstanceDtos.isEmpty()
+                ? dsdAttributeInstanceDtos.get(0)
+                : createNewDsdAttributeInstanceDtoWithDatasetAttachmentLevel();
         mainFormLayout.showInstance(dsdAttributeDto, dsdAttributeInstanceDto);
+    }
+
+    private DsdAttributeInstanceDto createNewDsdAttributeInstanceDtoWithDatasetAttachmentLevel() {
+        DsdAttributeInstanceDto dsdAttributeInstanceDto = new DsdAttributeInstanceDto();
+        dsdAttributeInstanceDto.setAttributeId(dsdAttributeDto.getIdentifier());
+        return dsdAttributeInstanceDto;
     }
 
     private void showDimensionAttributeInstances(DsdAttributeDto dsdAttributeDto, List<DsdAttributeInstanceDto> dsdAttributeInstanceDtos) {
@@ -98,6 +108,7 @@ public class AttributePanel extends VLayout {
 
     private DsdAttributeInstanceDto createNewAttributeInstance(List<String> dimensionIds) {
         DsdAttributeInstanceDto attributeInstance = new DsdAttributeInstanceDto();
+        attributeInstance.setAttributeId(dsdAttributeDto.getIdentifier());
         attributeInstance.setCodeDimensions(new HashMap<String, List<CodeItemDto>>());
         for (String dimensionId : dimensionIds) {
             attributeInstance.getCodeDimensions().put(dimensionId, new ArrayList<CodeItemDto>());
@@ -107,6 +118,10 @@ public class AttributePanel extends VLayout {
 
     public void setUiHandlers(DatasetAttributesTabUiHandlers uiHandlers) {
         mainFormLayout.setUiHandlers(uiHandlers);
+    }
+
+    public DatasetAttributesTabUiHandlers getUiHandlers() {
+        return uiHandlers;
     }
 
     public void hideInstances() {
