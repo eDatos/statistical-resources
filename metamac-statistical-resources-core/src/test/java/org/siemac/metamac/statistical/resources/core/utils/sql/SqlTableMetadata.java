@@ -7,39 +7,48 @@ import org.siemac.metamac.core.common.utils.EntityMetadata;
 import org.siemac.metamac.core.common.utils.TableMetadata;
 import org.springframework.util.ReflectionUtils;
 
-
 public class SqlTableMetadata extends TableMetadata {
 
-    
     public SqlTableMetadata(EntityMetadata entityMetadata) {
         super(entityMetadata);
     }
-    
+
     @Override
     protected void addColumnsForProperty(String propName, Object value) {
         if (value != null) {
             if (value instanceof DateTime) {
-                DateTime datetime = (DateTime)value;
-                columnValues.put(propName, "TO_TIMESTAMP('"+datetime.toString("yyyy-MM-dd HH:mm:ss.SSS")+"','YYYY-MM-DD HH24:MI:SS.FF')");
-                columnValues.put(propName+"_TZ", "'"+datetime.getZone().toString()+"'");
+                DateTime datetime = (DateTime) value;
+                columnValues.put(propName, "TO_TIMESTAMP('" + datetime.toString("yyyy-MM-dd HH:mm:ss.SSS") + "','YYYY-MM-DD HH24:MI:SS.FF')");
+                columnValues.put(propName + "_TZ", "'" + datetime.getZone().toString() + "'");
             } else if (value instanceof Number) {
-                columnValues.put(propName, ((Number)value).toString());
-            } else if (value instanceof Enum){
+                columnValues.put(propName, ((Number) value).toString());
+            } else if (value instanceof Enum) {
                 Method method = ReflectionUtils.findMethod(value.getClass(), "getValue");
                 if (method != null) {
                     try {
-                        columnValues.put(propName, "'"+method.invoke(value)+"'");
+                        columnValues.put(propName, "'" + method.invoke(value) + "'");
                     } catch (Exception e) {
-                        columnValues.put(propName, "'"+value.toString()+"'");
+                        columnValues.put(propName, "'" + value.toString() + "'");
                     }
                 } else {
-                    columnValues.put(propName, "'"+value.toString()+"'");
+                    columnValues.put(propName, "'" + value.toString() + "'");
                 }
             } else if (value instanceof Boolean) {
-                columnValues.put(propName, (Boolean)value ? "1" : "0");
+                columnValues.put(propName, (Boolean) value ? "1" : "0");
             } else {
-                columnValues.put(propName, "'"+value.toString()+"'");
+                columnValues.put(propName, "'" + value.toString() + "'");
             }
-        }   
+        }
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder strBuilder = new StringBuilder("Table: " + getTableName());
+        strBuilder.append(" { \n");
+        for (String column : getColumnNames()) {
+            strBuilder.append("        ").append(column).append(":").append(getColumnValue(column)).append("\n");
+        }
+        strBuilder.append("}\n");
+        return strBuilder.toString();
     }
 }

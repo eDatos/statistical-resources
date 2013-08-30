@@ -15,6 +15,7 @@ import org.siemac.metamac.core.common.utils.TableMetadata;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.TransactionStatus;
@@ -53,14 +54,22 @@ public class DBSqlMockPersister extends DBMockPersisterBase {
             @Override
             protected void doInTransactionWithoutResult(TransactionStatus status) {
                 disableReferentialConstraints();
+                boolean errorInBatchCaught = false;
                 try {
                     cleanDatabase();
-                    populateDatabase(tableMetadatas);
+                    populateDatabaseBatch(tableMetadatas);
                 } catch (Exception e) {
-                    status.setRollbackOnly();
+                    status.setRollbackOnly(); 
+                    errorInBatchCaught = true;
                     throw new RuntimeException("Error preparing mocks in database ",e);
                 } finally {
-                    enableReferentialConstraints();
+                    try {
+                        enableReferentialConstraints();
+                    } catch (DataAccessException e) {
+                        if (!errorInBatchCaught) {
+                            throw e;
+                        }
+                    }
                 }
             }
         });
@@ -80,7 +89,9 @@ public class DBSqlMockPersister extends DBMockPersisterBase {
         String[] statements = new String[tables.size()];
         int i = 0;
         for (int j = tables.size()-1; j >= 0; j--) {
-            statements[i++] = "Delete from "+tables.get(j);
+            String statement = "Delete from "+tables.get(j);
+            statements[i++] = statement;
+            logger.debug(statement);
         }
         jdbcTemplate.batchUpdate(statements);
     }
@@ -101,9 +112,10 @@ public class DBSqlMockPersister extends DBMockPersisterBase {
         }
     }
     
-    private void populateDatabase(List<TableMetadata> tableMetadatas) {
+    private void populateDatabaseBatch(List<TableMetadata> tableMetadatas) {
         List<String> statements = new ArrayList<String>();
         for (TableMetadata tableMetadata : tableMetadatas) {
+            logger.trace("Table metadata "+tableMetadata);
             String sqlStatement = buildSqlStatement(tableMetadata); 
             if (sqlStatement != null) {
                 statements.add(sqlStatement);
@@ -115,11 +127,24 @@ public class DBSqlMockPersister extends DBMockPersisterBase {
         }
     }
     
+    private void populateDatabase(List<TableMetadata> tableMetadatas) {
+        List<String> statements = new ArrayList<String>();
+        for (TableMetadata tableMetadata : tableMetadatas) {
+            logger.trace("Table metadata "+tableMetadata);
+            String sqlStatement = buildSqlStatement(tableMetadata); 
+            if (sqlStatement != null) {
+                statements.add(sqlStatement);
+                logger.debug("Statement: "+sqlStatement);
+                jdbcTemplate.update(sqlStatement);
+            }
+        }
+    }
+    
     private void disableReferentialConstraints() {
         jdbcTemplate.execute("SET CONSTRAINTS ALL DEFERRED");
     }
     
-    private void enableReferentialConstraints() {
+    private void enableReferentialConstraints() throws DataAccessException {
         jdbcTemplate.execute("SET CONSTRAINTS ALL IMMEDIATE");
     }
     
