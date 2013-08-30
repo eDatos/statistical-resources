@@ -112,10 +112,6 @@ public class SiemacLifecycleChecker {
         // Is replaced by
         // API checks if it's published
 
-        // Requires
-        relatedResourceChecker.checkRelatedResourcesExternallyPublished(resource.getRequires(), resource.getValidFrom(), addParameter(metadataName, ServiceExceptionSingleParameters.REQUIRES),
-                exceptionItems);
-
         // Is required by
         // API checks if it's published
 

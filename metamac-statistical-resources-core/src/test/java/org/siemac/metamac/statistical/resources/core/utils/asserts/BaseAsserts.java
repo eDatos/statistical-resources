@@ -18,7 +18,6 @@ import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataS
 import org.siemac.metamac.statistical.resources.core.base.domain.StatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.VersionRationaleType;
 import org.siemac.metamac.statistical.resources.core.base.domain.VersionableStatisticalResource;
-import org.siemac.metamac.statistical.resources.core.common.utils.RelatedResourceUtils;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.StatisticOfficiality;
 import org.siemac.metamac.statistical.resources.core.dto.IdentifiableStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.LifeCycleStatisticalResourceBaseDto;
@@ -81,7 +80,6 @@ public class BaseAsserts extends CommonAsserts {
         assertEqualsExternalItemCollection(previous.getPublisherContributor(), next.getPublisherContributor());
         assertEqualsExternalItemCollection(previous.getMediator(), next.getMediator());
 
-        assertEqualsRelatedResourceCollection(previous.getRequires(), next.getRequires());
         assertEqualsRelatedResourceCollection(previous.getIsRequiredBy(), next.getIsRequiredBy());
 
         assertEqualsInternationalString(previous.getAccessRights(), next.getAccessRights());
@@ -180,7 +178,6 @@ public class BaseAsserts extends CommonAsserts {
         assertEqualsRelatedResource(expected.getReplacesVersion(), actual.getReplacesVersion());
         assertEqualsRelatedResource(expected.getIsReplacedBy(), actual.getIsReplacedBy());
         assertEqualsRelatedResource(expected.getIsReplacedByVersion(), actual.getIsReplacedByVersion());
-        assertEqualsRelatedResourceCollection(expected.getRequires(), actual.getRequires());
         assertEqualsRelatedResourceCollection(expected.getIsRequiredBy(), actual.getIsRequiredBy());
         assertEqualsRelatedResourceCollection(expected.getHasPart(), actual.getHasPart());
         assertEqualsRelatedResourceCollection(expected.getIsPartOf(), actual.getIsPartOf());
@@ -288,7 +285,6 @@ public class BaseAsserts extends CommonAsserts {
                 assertEqualsRelatedResource(entity.getReplacesVersion(), dto.getReplacesVersion());
                 assertEqualsRelatedResource(entity.getIsReplacedBy(), dto.getIsReplacedBy());
                 assertEqualsRelatedResource(entity.getIsReplacedByVersion(), dto.getIsReplacedByVersion());
-                assertEqualsRelatedResourceCollectionMapper(entity.getRequires(), dto.getRequires());
                 assertEqualsRelatedResourceCollectionMapper(entity.getIsRequiredBy(), dto.getIsRequiredBy());
                 assertEqualsRelatedResourceCollectionMapper(entity.getHasPart(), dto.getHasPart());
                 assertEqualsRelatedResourceCollectionMapper(entity.getIsPartOf(), dto.getIsPartOf());

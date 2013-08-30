@@ -61,9 +61,7 @@ public class BaseVersioningCopyUtils extends CommonVersioningCopyUtils {
         target.getMediator().addAll(copyListExternalItem(source.getMediator()));
 
         // Resources relation descriptors
-        // TODO: requires and is required are inherited, but must be changed if a query is discontinued
-        target.getRequires().clear();
-        target.getRequires().addAll(copyListRelatedResource(source.getRequires()));
+        // TODO: is required is inherited, but must be changed if a query is discontinued
         target.getIsRequiredBy().clear();
         target.getIsRequiredBy().addAll(copyListRelatedResource(source.getIsRequiredBy()));
 

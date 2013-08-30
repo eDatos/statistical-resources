@@ -76,8 +76,6 @@ public class BaseDo2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Base
         target.setIsReplacedBy(relatedResourceDoToDto(source.getIsReplacedBy()));
         target.setIsReplacedByVersion(relatedResourceDoToDto(source.getIsReplacedByVersion()));
 
-        target.getRequires().clear();
-        target.getRequires().addAll(relatedResourceDoCollectionToDtoCollection(source.getRequires()));
         target.getIsRequiredBy().clear();
         target.getIsRequiredBy().addAll(relatedResourceDoCollectionToDtoCollection(source.getIsRequiredBy()));
         target.getHasPart().clear();
@@ -89,8 +87,7 @@ public class BaseDo2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Base
         target.setCopyrightedDate(source.getCopyrightedDate());
         target.setAccessRights(internationalStringDoToDto(source.getAccessRights()));
     }
-    
-    
+
     @Override
     public void siemacMetadataStatisticalResourceDoToBaseDto(SiemacMetadataStatisticalResource source, SiemacMetadataStatisticalResourceBaseDto target) throws MetamacException {
         if (source == null) {
@@ -98,8 +95,7 @@ public class BaseDo2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Base
         }
         lifeCycleStatisticalResourceDoToBaseDto(source, target);
     }
-    
-    
+
     @Override
     public void lifeCycleStatisticalResourceDoToDto(LifeCycleStatisticalResource source, LifeCycleStatisticalResourceDto target) throws MetamacException {
         if (source == null) {
@@ -121,7 +117,7 @@ public class BaseDo2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Base
 
         target.setReplacesVersion(relatedResourceDoToDto(source.getReplacesVersion()));
         target.setIsReplacedByVersion(relatedResourceDoToDto(source.getIsReplacedByVersion()));
-        
+
         target.setMaintainer(externalItemDoToDto(source.getMaintainer()));
     }
 
@@ -136,7 +132,7 @@ public class BaseDo2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Base
         target.setCreationDate(dateDoToDto(source.getCreationDate()));
         target.setPublicationDate(dateDoToDto(source.getPublicationDate()));
     }
-    
+
     @Override
     public void versionableStatisticalResourceDoToDto(VersionableStatisticalResource source, VersionableStatisticalResourceDto target) throws MetamacException {
         if (source == null) {
@@ -153,7 +149,6 @@ public class BaseDo2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Base
         target.setValidFrom(dateDoToDto(source.getValidFrom()));
         target.setValidTo(dateDoToDto(source.getValidTo()));
     }
-    
 
     @Override
     public void versionableStatisticalResourceDoToBaseDto(VersionableStatisticalResource source, VersionableStatisticalResourceBaseDto target) throws MetamacException {
@@ -175,7 +170,7 @@ public class BaseDo2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Base
         target.setTitle(internationalStringDoToDto(source.getTitle()));
         target.setDescription(internationalStringDoToDto(source.getDescription()));
     }
-    
+
     @Override
     public void nameableStatisticalResourceDoToBaseDto(NameableStatisticalResource source, NameableStatisticalResourceBaseDto target) throws MetamacException {
         if (source == null) {
@@ -205,7 +200,7 @@ public class BaseDo2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Base
 
         // Statistical Operation
         target.setStatisticalOperation(externalItemDoToDto(source.getStatisticalOperation()));
-        
+
         // Optimistic locking
         target.setOptimisticLockingVersion(source.getVersion());
 
@@ -219,7 +214,7 @@ public class BaseDo2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Base
         target.setLastUpdated(dateDoToDto(source.getLastUpdated()));
 
     }
-    
+
     // ------------------------------------------------------------
     // RELATED RESOURCE
     // ------------------------------------------------------------
@@ -230,10 +225,9 @@ public class BaseDo2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Base
         target.setUrn(source.getUrn());
         target.setTitle(internationalStringDoToDto(source.getTitle()));
         target.setType(type);
-        target.setStatisticalOperationUrn(source.getStatisticalOperation() != null? source.getStatisticalOperation().getUrn() : null);
+        target.setStatisticalOperationUrn(source.getStatisticalOperation() != null ? source.getStatisticalOperation().getUrn() : null);
         return target;
     }
-    
 
     // ------------------------------------------------------------
     // VERSION RATIONALE TYPE
