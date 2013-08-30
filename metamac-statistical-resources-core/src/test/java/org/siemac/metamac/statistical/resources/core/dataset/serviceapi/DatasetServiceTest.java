@@ -856,6 +856,12 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
 
     }
 
+    @Override
+    public void testRetrieveAttributeInstances() throws Exception {
+        // TODO Auto-generated method stub
+
+    }
+
     // ------------------------------------------------------------------------
     // PRIVATE UTILS
     // ------------------------------------------------------------------------

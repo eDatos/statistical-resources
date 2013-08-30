@@ -64,12 +64,11 @@ Application FacadeStatisticalResources {
     		"Creates a new version of a query version, copying metadata from version with provided urn"
     		@QueryVersionDto versioningQueryVersion(@QueryVersionDto queryVersionDto, @VersionTypeEnum versionType) throws MetamacException;
     		@QueryVersionBaseDto versioningQueryVersion(@QueryVersionBaseDto queryVersionDto, @VersionTypeEnum versionType) throws MetamacException;
-    		
-    		
+
     		// QUERIES
 	   		"Find all queries"
 	   		MetamacCriteriaResult<@RelatedResourceDto> findQueriesByCondition(MetamacCriteria criteria) throws MetamacException; 
-    		 			
+
 			// DATASOURCES
 			"Creates a datasource"
 	    	@DatasourceDto createDatasource(String urnDatasetVersion, @DatasourceDto datasourceDto) throws MetamacException;
@@ -117,7 +116,7 @@ Application FacadeStatisticalResources {
     		"Creates a new version of a dataset, copying metadata from version with provided urn"
     		@DatasetVersionDto versioningDatasetVersion(@DatasetVersionDto datasetVersionDto, @VersionTypeEnum versionType) throws MetamacException;
     		@DatasetVersionBaseDto versioningDatasetVersion(@DatasetVersionBaseDto datasetVersionDto, @VersionTypeEnum versionType) throws MetamacException;
-    		
+
     		//Data related actions
     		"Retrieve Dataset version dimensions ids"
     		List<String> retrieveDatasetVersionDimensionsIds(String datasetVersionUrn) throws MetamacException;
@@ -127,15 +126,18 @@ Application FacadeStatisticalResources {
     		"Import a set of files provided by urn as datasources in a datasetVersion"
     		importDatasourcesInDatasetVersion(@DatasetVersionDto datasetVersionDto, List<URL> fileUrls) throws MetamacException;
     		importDatasourcesInStatisticalOperation(String statisticalOperationUrn, List<URL> fileUrls) throws MetamacException;
+    		"Create an attribute instance"
     		@DsdAttributeInstanceDto createAttributeInstance(String datasetVersionUrn, @DsdAttributeInstanceDto dsdAttributeInstanceDto) throws MetamacException;
-    		
+    		"Retrieve attribute instances given the dataset version URN and the attribute Id"
+    		List<@DsdAttributeInstanceDto> retrieveAttributeInstances(String datasetVersionUrn, String attributeId) throws MetamacException;
+
     		// Statistic officialities
     		List<@StatisticOfficialityDto> findStatisticOfficialities() throws MetamacException;
-    		
+
     		// PUBLICATIONS
 	   		"Find all publications"
 	   		MetamacCriteriaResult<@RelatedResourceDto> findPublicationsByCondition(MetamacCriteria criteria) throws MetamacException; 
-    		
+
     		// PUBLICATION VERSION
 	   		"Creates publication"
 	   		@PublicationVersionDto createPublication(@PublicationVersionDto publicationVersionDto, @ExternalItemDto statisticalOperation) throws MetamacException;
@@ -167,7 +169,7 @@ Application FacadeStatisticalResources {
     		"Creates a new version of a publication, copying metadata from version with provided urn"
     		@PublicationVersionDto versioningPublicationVersion(@PublicationVersionDto publicationVersionDto, @VersionTypeEnum versionType) throws MetamacException;
     		@PublicationVersionBaseDto versioningPublicationVersion(@PublicationVersionBaseDto publicationVersionDto, @VersionTypeEnum versionType) throws MetamacException;
-	    	
+
 	    	// CHAPTERS
 	    	"Creates a chapter"
 	    	@ChapterDto createChapter(String publicationVersionUrn, @ChapterDto chapterDto) throws MetamacException;
@@ -191,6 +193,6 @@ Application FacadeStatisticalResources {
 	    	@CubeDto retrieveCube(String cubeUrn) throws MetamacException;
 	    	"Deletes cube"
 	    	deleteCube(String cubeUrn) throws MetamacException;
-		}  
+		}
 	}
 }

@@ -175,4 +175,10 @@ public class DatasetsSecurityUtils extends SecurityUtils {
             throwExceptionIfOperationNotAllowed(ctx);
         }
     }
+
+    public static void canRetrieveAttributeInstances(ServiceContext ctx) throws MetamacException {
+        if (!SharedDatasetsSecurityUtils.canRetrieveAttributeInstances(getMetamacPrincipal(ctx))) {
+            throwExceptionIfOperationNotAllowed(ctx);
+        }
+    }
 }

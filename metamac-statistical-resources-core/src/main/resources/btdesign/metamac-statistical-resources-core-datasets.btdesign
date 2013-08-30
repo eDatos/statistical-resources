@@ -63,8 +63,11 @@ Application DatasetsStatisticalResources {
     		List<@CodeDimension> retrieveCoverageForDatasetVersionDimension(String datasetVersionUrn, String dsdDimensionId) throws MetamacException;
     		"Retrieve the coverage for a given dimension"
     		List<@CodeDimension> filterCoverageForDatasetVersionDimension(String datasetVersionUrn, String dsdDimensionId, String filter) throws MetamacException;
+    		
     		"Create attribute instances"
     		AttributeDto createAttributeInstance(String datasetVersionUrn, AttributeDto attributeDto) throws MetamacException;
+    		"Retrieve attrubibute instances"
+    		List<AttributeDto> retrieveAttributeInstances(String datasetVersionUrn, String attributeId) throws MetamacException;
     		
     		// Statistic officialities
     		List<@StatisticOfficiality> findStatisticOfficialities() throws MetamacException;

@@ -121,6 +121,11 @@ public class DatasetServiceInvocationValidatorImpl extends BaseInvocationValidat
         // TODO
     }
 
+    public static void checkRetrieveAttributeInstances(String datasetVersionUrn, String attributeId, List<MetamacExceptionItem> exceptions) {
+        StatisticalResourcesValidationUtils.checkMetadataRequired(datasetVersionUrn, ServiceExceptionSingleParameters.URN, exceptions);
+        StatisticalResourcesValidationUtils.checkMetadataRequired(attributeId, ServiceExceptionParameters.ATTRIBUTE_VALUE__ID, exceptions);
+    }
+
     // ------------------------------------------------------------------------
     // PRIVATE METHODS
     // ------------------------------------------------------------------------

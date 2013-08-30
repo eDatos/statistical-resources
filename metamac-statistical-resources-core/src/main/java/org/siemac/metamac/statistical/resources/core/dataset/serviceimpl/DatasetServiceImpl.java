@@ -632,6 +632,23 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         }
     }
 
+    @Override
+    public List<AttributeDto> retrieveAttributeInstances(ServiceContext ctx, String datasetVersionUrn, String attributeId) throws MetamacException {
+
+        // Validations
+        datasetServiceInvocationValidator.checkRetrieveAttributeInstances(ctx, datasetVersionUrn, attributeId);
+
+        // Retrieve the datasetVersion to get the datasetRepositoryId
+        DatasetVersion datasetVersion = retrieveDatasetVersionByUrn(ctx, datasetVersionUrn);
+
+        // Retrieve the attribute instances
+        try {
+            return statisticsDatasetRepositoriesServiceFacade.findAttributes(datasetVersion.getDatasetRepositoryId(), attributeId);
+        } catch (ApplicationException e) {
+            throw new MetamacException(e, ServiceExceptionType.UNKNOWN, "Error retrieve attribute instances in datasetRepository " + datasetVersionUrn);
+        }
+    }
+
     // ------------------------------------------------------------------------
     // PRIVATE METHODS
     // ------------------------------------------------------------------------

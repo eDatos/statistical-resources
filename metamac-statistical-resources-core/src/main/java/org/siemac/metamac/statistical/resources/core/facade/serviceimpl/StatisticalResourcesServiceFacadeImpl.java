@@ -896,6 +896,17 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         return statRepoDto2StatisticalResourcesDtoMapper.attributeDtoToDsdAttributeInstanceDto(attributeCreated);
     }
 
+    @Override
+    public List<DsdAttributeInstanceDto> retrieveAttributeInstances(ServiceContext ctx, String datasetVersionUrn, String attributeId) throws MetamacException {
+        // Security
+        DatasetsSecurityUtils.canRetrieveAttributeInstances(ctx);
+
+        // Retrieve
+        List<AttributeDto> attributes = getDatasetService().retrieveAttributeInstances(ctx, datasetVersionUrn, attributeId);
+
+        return statRepoDto2StatisticalResourcesDtoMapper.attributeDtosToDsdAttributeInstanceDtos(attributes);
+    }
+
     // ------------------------------------------------------------------------
     // PUBLICATIONS
     // ------------------------------------------------------------------------

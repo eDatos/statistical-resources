@@ -182,7 +182,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceFacade;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"classpath:spring/statistical-resources/include/dataset-repository-mockito.xml", "classpath:spring/statistical-resources/include/rest-services-mockito.xml", "classpath:spring/statistical-resources/applicationContext-test.xml"})
+@ContextConfiguration(locations = {"classpath:spring/statistical-resources/include/dataset-repository-mockito.xml", "classpath:spring/statistical-resources/include/rest-services-mockito.xml",
+        "classpath:spring/statistical-resources/applicationContext-test.xml"})
 @TransactionConfiguration(transactionManager = "txManager", defaultRollback = true)
 @Transactional
 public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesBaseTest implements StatisticalResourcesServiceFacadeTestBase {
@@ -1580,6 +1581,12 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
 
     @Override
     public void testCreateAttributeInstance() throws Exception {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void testRetrieveAttributeInstances() throws Exception {
         // TODO Auto-generated method stub
 
     }
