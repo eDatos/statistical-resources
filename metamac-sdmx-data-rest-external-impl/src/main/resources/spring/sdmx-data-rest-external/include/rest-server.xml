@@ -15,8 +15,9 @@
 
 	<bean id="indentingResponse" class="org.siemac.metamac.sdmx.data.rest.external.v2_1.service.utils.IndentingXMLStreamWriterProvider"/>
 
-    <jaxrs:server id="restExternal" address="/sdmx/data-resources">
-
+<!--     <jaxrs:server id="restExternal" address="/sdmx/data-resources"> -->
+    <jaxrs:server id="restExternal" address="/registry">
+    
 <!--         <jaxrs:features> -->
 <!--             <cxf:logging /> -->
 <!--         </jaxrs:features> -->

@@ -8,13 +8,13 @@ import javax.ws.rs.core.Response.Status;
 
 import org.apache.commons.lang.StringUtils;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
-import org.siemac.metamac.core.common.ent.domain.ExternalItem;
 import org.siemac.metamac.core.common.enume.domain.TypeExternalArtefactsEnum;
 import org.siemac.metamac.sdmx.data.rest.external.conf.DataConfiguration;
 import org.siemac.metamac.sdmx.data.rest.external.v2_1.RestExternalConstants;
 import org.siemac.metamac.sdmx.data.rest.external.v2_1.exception.RestException;
 import org.siemac.metamac.sdmx.data.rest.external.v2_1.exception.RestServiceExceptionType;
 import org.siemac.metamac.sdmx.data.rest.external.v2_1.exception.utils.RestExceptionUtils;
+import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
 import org.siemac.metamac.statistical.resources.core.io.domain.RequestParameter;
 import org.siemac.metamac.statistical.resources.core.io.mapper.MetamacSdmx2StatRepoMapper;
 import org.siemac.metamac.statistical.resources.core.io.serviceimpl.WriterDataCallbackImpl;
