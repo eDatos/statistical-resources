@@ -38,6 +38,7 @@ import org.siemac.metamac.statistical.resources.core.lifecycle.SiemacLifecycleCh
 import org.siemac.metamac.statistical.resources.core.lifecycle.SiemacLifecycleFillerTest;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.checker.ExternalItemCheckerTest;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.dataset.DatasetLifecycleServiceTest;
+import org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.dataset.DatasetPublishingServiceTest;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.publication.PublicationLifecycleServiceTest;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.query.QueryLifecycleServiceTest;
 import org.siemac.metamac.statistical.resources.core.publication.mapper.PublicationDo2DtoMapperTest;
@@ -109,6 +110,7 @@ import org.siemac.metamac.statistical.resources.core.query.serviceapi.QueryVersi
                      RestCriteriaUtilsTest.class,
                      StatisticalResourcesUrnParserUtilsTest.class,
                      DatasetVersioningServiceTest.class,
+                     DatasetPublishingServiceTest.class,
                      PublicationVersioningServiceTest.class,
                      QueryVersioningServiceTest.class,
                      DataManipulateTest.class})

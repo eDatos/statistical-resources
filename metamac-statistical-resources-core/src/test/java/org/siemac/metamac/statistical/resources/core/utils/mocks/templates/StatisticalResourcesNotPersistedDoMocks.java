@@ -134,9 +134,9 @@ public class StatisticalResourcesNotPersistedDoMocks extends StatisticalResource
     // -----------------------------------------------------------------
     @Override
     public DatasetVersion mockDatasetVersion() {
-        DatasetVersion datasetVersion = mockDatasetVersionMetadata();
+        DatasetVersion datasetVersion = new DatasetVersion();
         datasetVersion.setDataset(null);
-        datasetVersion.setSiemacMetadataStatisticalResource(mockSiemacMetadataStatisticalResource(TypeRelatedResourceEnum.DATASET_VERSION));
+        datasetVersion.setSiemacMetadataStatisticalResource(mockSiemacMetadataStatisticalResource(new SiemacMetadataStatisticalResource(), TypeRelatedResourceEnum.DATASET_VERSION));
 
         return datasetVersion;
     }
@@ -161,7 +161,7 @@ public class StatisticalResourcesNotPersistedDoMocks extends StatisticalResource
     public PublicationVersion mockPublicationVersion(Publication publication) {
         PublicationVersion publicationVersion = mockPublicationVersionMetadata();
 
-        publicationVersion.setSiemacMetadataStatisticalResource(mockSiemacMetadataStatisticalResource(TypeRelatedResourceEnum.PUBLICATION_VERSION));
+        publicationVersion.setSiemacMetadataStatisticalResource(mockSiemacMetadataStatisticalResource(new SiemacMetadataStatisticalResource(),TypeRelatedResourceEnum.PUBLICATION_VERSION));
         if (publication != null) {
             publicationVersion.setPublication(publication);
         } else {
@@ -220,7 +220,7 @@ public class StatisticalResourcesNotPersistedDoMocks extends StatisticalResource
     }
 
     @Override
-    protected void setSpecialCasesLifeCycleStatisticalResourceMock(LifeCycleStatisticalResource resource) {
+    protected void setSpecialCasesLifeCycleStatisticalResourceMock(LifeCycleStatisticalResource resource, TypeRelatedResourceEnum artefactType) {
         // NOTHING
     }
 

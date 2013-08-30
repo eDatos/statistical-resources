@@ -21,7 +21,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.siemac.metamac.core.common.ent.domain.ExternalItem;
+import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
 import org.siemac.metamac.statistical.resources.core.base.domain.HasLifecycle;
@@ -29,6 +32,9 @@ import org.siemac.metamac.statistical.resources.core.base.domain.HasSiemacMetada
 import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionSingleParameters;
+import org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.checker.ExternalItemChecker;
+import org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.checker.RelatedResourceChecker;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesDoMocks;
 
 /*
  * No spring context, we set the SUT (Software under test) dependencies with mocked objects. Unit testing style ;)
@@ -42,6 +48,12 @@ public class SiemacLifecycleCheckerTest extends StatisticalResourcesBaseTest {
 
     @Mock
     private LifecycleChecker               lifecycleService;
+
+    @Mock
+    private ExternalItemChecker            externalItemChecker;
+
+    @Mock
+    private RelatedResourceChecker         relatedResourceChecker;
 
     @Mock
     private LifecycleCommonMetadataChecker lifecycleCommonMetadataChecker;
@@ -123,20 +135,81 @@ public class SiemacLifecycleCheckerTest extends StatisticalResourcesBaseTest {
     // >> PUBLISHED
     // ------------------------------------------------------------------------------------------------------
 
-    @Ignore
     @Test
-    public void testCheckSendToPublished() throws Exception {
-        fail("not implemented");
-        // TODO: Implementar
+    public void testCheckSendToPublishedFirstVersion() throws Exception {
+        String baseMetadata = ServiceExceptionSingleParameters.SIEMAC_METADATA_STATISTICAL_RESOURCE;
+        List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
+
+        HasSiemacMetadata mockedResource = mock(HasSiemacMetadata.class);
+
+        SiemacMetadataStatisticalResource siemacMetadata = new SiemacMetadataStatisticalResource();
+
+        fillSiemacWithExternalItemMocks(siemacMetadata);
+
+        when(mockedResource.getLifeCycleStatisticalResource()).thenReturn(siemacMetadata);
+        when(mockedResource.getSiemacMetadataStatisticalResource()).thenReturn(siemacMetadata);
+
+        siemacLifecycleServiceImpl.checkSendToPublished(mockedResource, null, baseMetadata, exceptionItems);
+
+        // NO specific checks for siemac
+        Assert.assertEquals(0, exceptionItems.size());
+
+        verifyExternalItemsSiemac(siemacMetadata);
+
+        verify(lifecycleService, times(1)).checkSendToPublished(any(HasLifecycle.class), any(HasLifecycle.class), anyString(), anyListOf(MetamacExceptionItem.class));
+        verify(lifecycleCommonMetadataChecker, times(1)).checkSiemacCommonMetadata(any(HasSiemacMetadata.class), anyString(), anyListOf(MetamacExceptionItem.class));
     }
-    
+
+    private void verifyExternalItemsSiemac(SiemacMetadataStatisticalResource siemacMetadata) throws MetamacException {
+        verifyExternalItemExternallyPublished(siemacMetadata.getLanguage());
+        verifyExternalItemsExternallyPublished(siemacMetadata.getLanguages());
+        verifyExternalItemsExternallyPublished(siemacMetadata.getStatisticalOperationInstances());
+        verifyExternalItemExternallyPublished(siemacMetadata.getCreator());
+        verifyExternalItemsExternallyPublished(siemacMetadata.getContributor());
+        verifyExternalItemsExternallyPublished(siemacMetadata.getPublisher());
+        verifyExternalItemsExternallyPublished(siemacMetadata.getMediator());
+    }
+
+    private void verifyExternalItemExternallyPublished(ExternalItem item) throws MetamacException {
+        verify(externalItemChecker).checkExternalItemsExternallyPublished(Mockito.eq(item), anyString(), Mockito.anyListOf(MetamacExceptionItem.class));
+    }
+
+    private void verifyExternalItemsExternallyPublished(List<ExternalItem> items) throws MetamacException {
+        verify(externalItemChecker).checkExternalItemsExternallyPublished(Mockito.eq(items), anyString(), Mockito.anyListOf(MetamacExceptionItem.class));
+    }
+
+    private void fillSiemacWithExternalItemMocks(SiemacMetadataStatisticalResource siemacMetadata) {
+        siemacMetadata.setLanguage(StatisticalResourcesDoMocks.mockCodeExternalItem("es"));
+
+        siemacMetadata.addLanguage(StatisticalResourcesDoMocks.mockCodeExternalItem("es"));
+        siemacMetadata.addLanguage(StatisticalResourcesDoMocks.mockCodeExternalItem("en"));
+
+        siemacMetadata.addStatisticalOperationInstance(StatisticalResourcesDoMocks.mockStatisticalOperationInstanceExternalItem());
+        siemacMetadata.addStatisticalOperationInstance(StatisticalResourcesDoMocks.mockStatisticalOperationInstanceExternalItem());
+
+        siemacMetadata.setCreator(StatisticalResourcesDoMocks.mockOrganizationUnitExternalItem());
+
+        siemacMetadata.addContributor(StatisticalResourcesDoMocks.mockOrganizationUnitExternalItem());
+        siemacMetadata.addContributor(StatisticalResourcesDoMocks.mockOrganizationUnitExternalItem());
+
+        siemacMetadata.addPublisher(StatisticalResourcesDoMocks.mockOrganizationUnitExternalItem());
+        siemacMetadata.addPublisher(StatisticalResourcesDoMocks.mockOrganizationUnitExternalItem());
+
+        siemacMetadata.addPublisherContributor(StatisticalResourcesDoMocks.mockOrganizationUnitExternalItem());
+        siemacMetadata.addPublisherContributor(StatisticalResourcesDoMocks.mockOrganizationUnitExternalItem());
+
+        siemacMetadata.addMediator(StatisticalResourcesDoMocks.mockOrganizationUnitExternalItem());
+
+        siemacMetadata.setCommonMetadata(StatisticalResourcesDoMocks.mockCommonConfigurationExternalItem());
+    }
+
     @Ignore
     @Test
     public void testCheckExternalItemsPreviouslyPublished() throws Exception {
         fail("not implemented");
         // TODO: Implementar
     }
-    
+
     @Ignore
     @Test
     public void testCheckRelatedResourcesPreviouslyPublished() throws Exception {

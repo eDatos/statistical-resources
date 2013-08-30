@@ -1,5 +1,6 @@
 package org.siemac.metamac.statistical.resources.core.utils.mocks.factories;
 
+import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
 import org.siemac.metamac.statistical.resources.core.publication.domain.Cube;
 import org.springframework.stereotype.Component;
 
@@ -84,11 +85,13 @@ public class CubeMockFactory extends StatisticalResourcesMockFactory<Cube> {
     }
     
     private static Cube createDatasetCube() {
-        return getStatisticalResourcesPersistedDoMocks().mockDatasetCube(getStatisticalResourcesPersistedDoMocks().mockDatasetWithGeneratedDatasetVersions());
+        Dataset template = new Dataset();
+        return getStatisticalResourcesPersistedDoMocks().mockDatasetCube(getStatisticalResourcesPersistedDoMocks().mockDatasetWithGeneratedDatasetVersions(template));
     }
     
     private static Cube createDatasetCubeWithParent() {
-        return getStatisticalResourcesPersistedDoMocks().mockDatasetCubeWithParent(getStatisticalResourcesPersistedDoMocks().mockDatasetWithGeneratedDatasetVersions());
+        Dataset template = new Dataset();
+        return getStatisticalResourcesPersistedDoMocks().mockDatasetCubeWithParent(getStatisticalResourcesPersistedDoMocks().mockDatasetWithGeneratedDatasetVersions(template));
     }
     
     private static Cube createQueryCubeWithParent() {

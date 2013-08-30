@@ -118,9 +118,9 @@ public class SiemacLifecycleFillerTest extends StatisticalResourcesBaseTest {
         HasSiemacMetadata mockedResource = mockHasSiemacMetadataPrepareToPublished();
         HasSiemacMetadata previosMockedVersion = mockHasSiemacMetadataPublished();
 
-        siemacLifecycleFiller.applySendToPublishedActions(getServiceContextAdministrador(), mockedResource, previosMockedVersion);
+        siemacLifecycleFiller.applySendToPublishedCurrentResourceActions(getServiceContextAdministrador(), mockedResource, previosMockedVersion);
 
-        verify(lifecycleFiller, times(1)).applySendToPublishedActions(any(ServiceContext.class), any(HasLifecycle.class), any(HasLifecycle.class));
+        verify(lifecycleFiller, times(1)).applySendToPublishedCurrentResourceActions(any(ServiceContext.class), any(HasLifecycle.class), any(HasLifecycle.class));
         assertNotNull(mockedResource.getSiemacMetadataStatisticalResource().getCopyrightedDate());
         assertEquals(Integer.valueOf(mockedResource.getLifeCycleStatisticalResource().getValidFrom().getYear()), mockedResource.getSiemacMetadataStatisticalResource().getCopyrightedDate());
     }

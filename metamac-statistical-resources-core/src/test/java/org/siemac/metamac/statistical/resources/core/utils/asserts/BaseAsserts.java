@@ -2,9 +2,9 @@ package org.siemac.metamac.statistical.resources.core.utils.asserts;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -18,6 +18,7 @@ import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataS
 import org.siemac.metamac.statistical.resources.core.base.domain.StatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.VersionRationaleType;
 import org.siemac.metamac.statistical.resources.core.base.domain.VersionableStatisticalResource;
+import org.siemac.metamac.statistical.resources.core.common.utils.RelatedResourceUtils;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.StatisticOfficiality;
 import org.siemac.metamac.statistical.resources.core.dto.IdentifiableStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.LifeCycleStatisticalResourceBaseDto;
@@ -60,12 +61,12 @@ public class BaseAsserts extends CommonAsserts {
         assertEqualsInternationalString(previous.getSubtitle(), next.getSubtitle());
         assertEqualsInternationalString(previous.getTitleAlternative(), next.getTitleAlternative());
         assertEqualsInternationalString(previous.getAbstractLogic(), next.getAbstractLogic());
-        
+
         assertEqualsInternationalString(previous.getKeywords(), next.getKeywords());
         assertEquals(previous.getUserModifiedKeywords(), next.getUserModifiedKeywords());
-        
+
         assertEquals(previous.getType(), next.getType());
-        
+
         assertEqualsExternalItem(previous.getCommonMetadata(), next.getCommonMetadata());
 
         assertEqualsExternalItem(previous.getCreator(), next.getCreator());
@@ -75,7 +76,6 @@ public class BaseAsserts extends CommonAsserts {
         assertEqualsInternationalString(previous.getConformsToInternal(), next.getConformsToInternal());
         assertNotNull(next.getLastUpdate());
         assertTrue(next.getLastUpdate().isAfter(previous.getLastUpdate().getMillis()));
-        
 
         assertEqualsExternalItemCollection(previous.getPublisher(), next.getPublisher());
         assertEqualsExternalItemCollection(previous.getPublisherContributor(), next.getPublisherContributor());
@@ -105,10 +105,10 @@ public class BaseAsserts extends CommonAsserts {
         assertNull(next.getPublicationDate());
         assertNull(next.getPublicationUser());
         assertNull(next.getIsReplacedByVersion());
-        
+
         assertNotNull(next.getReplacesVersion());
         assertNotNull(previous.getIsReplacedByVersion());
-        
+
         assertEqualsExternalItem(previous.getMaintainer(), next.getMaintainer());
     }
 
@@ -122,7 +122,7 @@ public class BaseAsserts extends CommonAsserts {
         assertNull(next.getVersionRationale());
         assertNull(next.getValidFrom());
         assertNull(next.getValidTo());
-        assertEquals(previous.getNextVersion(), next.getNextVersion());        
+        assertEquals(previous.getNextVersion(), next.getNextVersion());
         assertNull(next.getNextVersionDate());
     }
 
@@ -135,17 +135,16 @@ public class BaseAsserts extends CommonAsserts {
 
     private static void assertEqualsVersioningIdentifiable(IdentifiableStatisticalResource previous, IdentifiableStatisticalResource next) {
         assertEqualsVersioningStatisticalResource(previous, next);
-        
+
         assertEquals(previous.getCode(), next.getCode());
         assertNotNull(next.getUrn());
         assertFalse(next.getUrn().equals(previous.getUrn()));
     }
-    
+
     private static void assertEqualsVersioningStatisticalResource(IdentifiableStatisticalResource previous, IdentifiableStatisticalResource next) {
         assertNotNull(next.getStatisticalOperation());
         assertEqualsExternalItem(previous.getStatisticalOperation(), next.getStatisticalOperation());
     }
-
 
     // -----------------------------------------------------------------
     // MAIN HERITANCE: DO & DO
@@ -163,7 +162,7 @@ public class BaseAsserts extends CommonAsserts {
         assertEqualsInternationalString(expected.getKeywords(), actual.getKeywords());
 
         assertEquals(expected.getType(), actual.getType());
-        
+
         assertEqualsExternalItem(expected.getCommonMetadata(), actual.getCommonMetadata());
 
         assertEqualsExternalItem(expected.getCreator(), actual.getCreator());
@@ -210,7 +209,7 @@ public class BaseAsserts extends CommonAsserts {
         assertEqualsRelatedResource(expected.getReplacesVersion(), actual.getReplacesVersion());
 
         assertEqualsExternalItem(expected.getMaintainer(), actual.getMaintainer());
-        
+
         assertEqualsVersionableStatisticalResource(expected, actual);
     }
 
@@ -226,14 +225,14 @@ public class BaseAsserts extends CommonAsserts {
 
         assertEqualsNameableStatisticalResource(expected, actual);
     }
-    
+
     protected static void assertEqualsNameableStatisticalResource(NameableStatisticalResource expected, NameableStatisticalResource actual) {
         assertEqualsInternationalString(expected.getTitle(), actual.getTitle());
         assertEqualsInternationalString(expected.getDescription(), actual.getDescription());
 
         assertEqualsIdentifiableStatisticalResource(expected, actual);
     }
-    
+
     protected static void assertEqualsVersionedNameableStatisticalResource(NameableStatisticalResource expected, NameableStatisticalResource actual) {
         assertEqualsInternationalString(expected.getTitle(), actual.getTitle());
         assertEqualsInternationalString(expected.getDescription(), actual.getDescription());
@@ -247,7 +246,7 @@ public class BaseAsserts extends CommonAsserts {
 
         assertEqualsStatisticalResource(expected, actual);
     }
-    
+
     public static void assertEqualsVersionedIdentifiableStatisticalResource(IdentifiableStatisticalResource expected, IdentifiableStatisticalResource actual) {
         assertEquals(expected.getCode(), actual.getCode());
 
@@ -262,7 +261,8 @@ public class BaseAsserts extends CommonAsserts {
     // MAIN HERITANCE: DTO & DO
     // -----------------------------------------------------------------
 
-    protected static void assertEqualsSiemacMetadataStatisticalResource(SiemacMetadataStatisticalResource entity, SiemacMetadataStatisticalResourceDto dto, MapperEnum mapperEnum) throws MetamacException {
+    protected static void assertEqualsSiemacMetadataStatisticalResource(SiemacMetadataStatisticalResource entity, SiemacMetadataStatisticalResourceDto dto, MapperEnum mapperEnum)
+            throws MetamacException {
         switch (mapperEnum) {
             case DO2DTO:
                 assertEqualsExternalItem(entity.getLanguage(), dto.getLanguage(), mapperEnum);
@@ -297,7 +297,7 @@ public class BaseAsserts extends CommonAsserts {
                 assertEquals(entity.getCopyrightedDate(), dto.getCopyrightedDate());
                 assertEqualsInternationalString(entity.getAccessRights(), dto.getAccessRights());
                 break;
-                
+
             case DTO2DO:
                 assertEqualsExternalItem(entity.getLanguage(), dto.getLanguage(), mapperEnum);
                 assertEqualsExternalItemCollectionMapper(entity.getLanguages(), dto.getLanguages());
@@ -342,7 +342,7 @@ public class BaseAsserts extends CommonAsserts {
 
                 assertEqualsRelatedResource(entity.getIsReplacedByVersion(), dto.getIsReplacedByVersion());
                 assertEqualsRelatedResource(entity.getReplacesVersion(), dto.getReplacesVersion());
-                
+
                 assertEqualsExternalItem(entity.getMaintainer(), dto.getMaintainer(), mapperEnum);
                 break;
         }

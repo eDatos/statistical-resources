@@ -145,6 +145,9 @@ public class PublicationVersionMockFactory extends StatisticalResourcesMockFacto
     public static final String        PUBLICATION_VERSION_39_PUBLISHED_WITH_NO_ROOT_MAINTAINER_NAME                          = "PUBLICATION_VERSION_39_PUBLISHED_WITH_NO_ROOT_MAINTAINER";
     private static PublicationVersion PUBLICATION_VERSION_39_PUBLISHED_WITH_NO_ROOT_MAINTAINER;
 
+    public static final String        PUBLICATION_VERSION_40_PREPARED_TO_PUBLISH_EXTERNAL_ITEM_FULL_NAME                     = "PUBLICATION_VERSION_40_PREPARED_TO_PUBLISH_EXTERNAL_ITEM_FULL";
+    private static PublicationVersion PUBLICATION_VERSION_40_PREPARED_TO_PUBLISH_EXTERNAL_ITEM_FULL;
+
     protected static PublicationVersion getPublicationVersion01Basic() {
         if (PUBLICATION_VERSION_01_BASIC == null) {
             PUBLICATION_VERSION_01_BASIC = createPublicationVersion();
@@ -624,19 +627,18 @@ public class PublicationVersionMockFactory extends StatisticalResourcesMockFacto
         }
         return PUBLICATION_VERSION_38_PRODUCTION_VALIDATION_READY_FOR_VALIDATION_REJECTED;
     }
-    
-    
+
     protected static PublicationVersion getPublicationVersion39PublishedWithNoRootMaintainer() {
         if (PUBLICATION_VERSION_39_PUBLISHED_WITH_NO_ROOT_MAINTAINER == null) {
             PUBLICATION_VERSION_39_PUBLISHED_WITH_NO_ROOT_MAINTAINER = createPublicationVersion();
-            PUBLICATION_VERSION_39_PUBLISHED_WITH_NO_ROOT_MAINTAINER.getSiemacMetadataStatisticalResource().setMaintainer(StatisticalResourcesDoMocks.mockAgencyExternalItem("agency01", "ISTAC.agency01"));
+            PUBLICATION_VERSION_39_PUBLISHED_WITH_NO_ROOT_MAINTAINER.getSiemacMetadataStatisticalResource().setMaintainer(
+                    StatisticalResourcesDoMocks.mockAgencyExternalItem("agency01", "ISTAC.agency01"));
             PUBLICATION_VERSION_39_PUBLISHED_WITH_NO_ROOT_MAINTAINER.getSiemacMetadataStatisticalResource().setProcStatus(ProcStatusEnum.PUBLISHED);
             PUBLICATION_VERSION_39_PUBLISHED_WITH_NO_ROOT_MAINTAINER.getSiemacMetadataStatisticalResource().setValidFrom(new DateTime().minusDays(2));
         }
         return PUBLICATION_VERSION_39_PUBLISHED_WITH_NO_ROOT_MAINTAINER;
     }
-    
-    
+
     private static PublicationVersion createPublicationVersion() {
         return getStatisticalResourcesPersistedDoMocks().mockPublicationVersion();
     }

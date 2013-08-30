@@ -5,7 +5,7 @@ import static org.siemac.metamac.statistical.resources.core.utils.LifecycleTestU
 import static org.siemac.metamac.statistical.resources.core.utils.LifecycleTestUtils.prepareToPublished;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.LifecycleAsserts.assertNotNullAutomaticallyFilledMetadataSendToDiffusionValidation;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.LifecycleAsserts.assertNotNullAutomaticallyFilledMetadataSendToProductionValidation;
-import static org.siemac.metamac.statistical.resources.core.utils.asserts.LifecycleAsserts.assertNotNullAutomaticallyFilledMetadataSendToPublished;
+import static org.siemac.metamac.statistical.resources.core.utils.asserts.LifecycleAsserts.assertNotNullAutomaticallyFilledMetadataLifecycleSendToPublished;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.LifecycleAsserts.assertNotNullAutomaticallyFilledMetadataSendToValidationRejected;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.LifecycleAsserts.assertNotNullAutomaticallyFilledMetadataVersioningNewResource;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.LifecycleAsserts.assertNotNullAutomaticallyFilledMetadataVersioningPreviousResource;
@@ -22,16 +22,16 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.MockitoAnnotations;
-import org.siemac.metamac.core.common.enume.domain.VersionPatternEnum;
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
-import org.siemac.metamac.core.common.util.shared.VersionUtil;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
 import org.siemac.metamac.statistical.resources.core.base.domain.HasLifecycle;
+import org.siemac.metamac.statistical.resources.core.common.utils.RelatedResourceUtils;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
+import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesVersionUtils;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesNotPersistedDoMocks;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesPersistedDoMocks;
 import org.springframework.util.ReflectionUtils;
@@ -98,20 +98,20 @@ public class LifecycleFillerTest extends StatisticalResourcesBaseTest {
     public void testLifeCycleResourceApplySendToPublishedActionsDatasetVersionWithoutPreviousVersion() throws Exception {
         DatasetVersion resource = statisticalResourcesNotPersistedDoMocks.mockDatasetVersion();
         prepareToPublished(resource);
-        resource.getSiemacMetadataStatisticalResource().setVersionLogic(VersionUtil.createInitialVersion(VersionPatternEnum.XXX_YYY));
-
-        lifecycleFiller.applySendToPublishedActions(getServiceContextWithoutPrincipal(), resource, null);
-        assertNotNullAutomaticallyFilledMetadataSendToPublished(resource, null);
+        resource.getSiemacMetadataStatisticalResource().setVersionLogic(StatisticalResourcesVersionUtils.INITIAL_VERSION);
+ 
+        lifecycleFiller.applySendToPublishedCurrentResourceActions(getServiceContextWithoutPrincipal(), resource, null);
+        assertNotNullAutomaticallyFilledMetadataLifecycleSendToPublished(resource, null);
     }
 
     @Test
     public void testLifeCycleResourceApplySendToPublishedActionsPublicationVersionWithoutPreviousVersion() throws Exception {
         PublicationVersion resource = statisticalResourcesNotPersistedDoMocks.mockPublicationVersion();
         prepareToPublished(resource);
-        resource.getSiemacMetadataStatisticalResource().setVersionLogic(VersionUtil.createInitialVersion(VersionPatternEnum.XXX_YYY));
+        resource.getSiemacMetadataStatisticalResource().setVersionLogic(StatisticalResourcesVersionUtils.INITIAL_VERSION);
 
-        lifecycleFiller.applySendToPublishedActions(getServiceContextWithoutPrincipal(), resource, null);
-        assertNotNullAutomaticallyFilledMetadataSendToPublished(resource, null);
+        lifecycleFiller.applySendToPublishedCurrentResourceActions(getServiceContextWithoutPrincipal(), resource, null);
+        assertNotNullAutomaticallyFilledMetadataLifecycleSendToPublished(resource, null);
     }
 
     @Test
@@ -122,8 +122,8 @@ public class LifecycleFillerTest extends StatisticalResourcesBaseTest {
         prepareToPublished(resource);
         resource.getSiemacMetadataStatisticalResource().setVersionLogic("002.000");
 
-        lifecycleFiller.applySendToPublishedActions(getServiceContextWithoutPrincipal(), resource, null);
-        assertNotNullAutomaticallyFilledMetadataSendToPublished(resource, null);
+        lifecycleFiller.applySendToPublishedCurrentResourceActions(getServiceContextWithoutPrincipal(), resource, null);
+        assertNotNullAutomaticallyFilledMetadataLifecycleSendToPublished(resource, null);
     }
 
     @Test
@@ -134,40 +134,31 @@ public class LifecycleFillerTest extends StatisticalResourcesBaseTest {
         prepareToPublished(resource);
         resource.getSiemacMetadataStatisticalResource().setVersionLogic("002.000");
 
-        lifecycleFiller.applySendToPublishedActions(getServiceContextWithoutPrincipal(), resource, null);
-        assertNotNullAutomaticallyFilledMetadataSendToPublished(resource, null);
+        lifecycleFiller.applySendToPublishedCurrentResourceActions(getServiceContextWithoutPrincipal(), resource, null);
+        assertNotNullAutomaticallyFilledMetadataLifecycleSendToPublished(resource, null);
     }
 
     @Test
-    public void testLifeCycleResourceApplySendToPublishedActionsDatasetVersionWithPreviousVersion() throws Exception {
+    public void testLifeCycleResourceApplySendToPublishedCurrentResourceActionsDatasetVersionWithPreviousVersion() throws Exception {
         DatasetVersion resource = statisticalResourcesNotPersistedDoMocks.mockDatasetVersion();
         DatasetVersion previousResource = statisticalResourcesNotPersistedDoMocks.mockDatasetVersion();
 
         prepareToPublished(resource);
         createPublished(previousResource);
 
-        lifecycleFiller.applySendToPublishedActions(getServiceContextWithoutPrincipal(), resource, previousResource);
-        assertNotNullAutomaticallyFilledMetadataSendToPublished(resource, previousResource);
+        
+        lifecycleFiller.applySendToPublishedCurrentResourceActions(getServiceContextWithoutPrincipal(), resource, previousResource);
+        lifecycleFiller.applySendToPublishedPreviousResourceActions(getServiceContextWithoutPrincipal(), resource, previousResource, RelatedResourceUtils.createRelatedResourceForHasLifecycleResource(resource));
+        assertNotNullAutomaticallyFilledMetadataLifecycleSendToPublished(resource, previousResource);
     }
-
-    @Test
-    public void testLifeCycleResourceApplySendToPublishedActionsPublicationVersionWithPreviousVersion() throws Exception {
-        PublicationVersion resource = statisticalResourcesNotPersistedDoMocks.mockPublicationVersion();
-        PublicationVersion previousResource = statisticalResourcesNotPersistedDoMocks.mockPublicationVersion();
-
-        prepareToPublished(resource);
-        createPublished(previousResource);
-
-        lifecycleFiller.applySendToPublishedActions(getServiceContextWithoutPrincipal(), resource, previousResource);
-        assertNotNullAutomaticallyFilledMetadataSendToPublished(resource, previousResource);
-    }
+    
 
     @Test
     public void testLifeCycleResourceApplySendToPublishedActionsForUndefinedResourceType() throws Exception {
         HasLifecycle mockedResource = mockHasLifecycleStatisticalResourcePrepareToPublished();
         HasLifecycle mockedPreviousResource = mockHasLifecycleStatisticalResourcePublished();
 
-        lifecycleFiller.applySendToPublishedActions(getServiceContextWithoutPrincipal(), mockedResource, mockedPreviousResource);
+        lifecycleFiller.applySendToPublishedCurrentResourceActions(getServiceContextWithoutPrincipal(), mockedResource, mockedPreviousResource);
     }
 
     // ------------------------------------------------------------------------------------------------------

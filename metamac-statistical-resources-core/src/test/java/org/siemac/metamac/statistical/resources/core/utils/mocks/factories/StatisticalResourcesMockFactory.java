@@ -1,11 +1,13 @@
 package org.siemac.metamac.statistical.resources.core.utils.mocks.factories;
 
+import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.siemac.metamac.core.common.util.ApplicationContextProvider;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.configuration.MockFactory;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesPersistedDoMocks;
+import org.springframework.util.ReflectionUtils;
 
 import com.arte.libs.lang.ObjectUtils;
 
@@ -32,8 +34,18 @@ public abstract class StatisticalResourcesMockFactory<EntityMock> extends MockFa
         StatisticalResourcesMockFactory.statisticalResourcesPersistedDoMocks = statisticalResourcesPersistedDoMocks;
     }
 
+    @SuppressWarnings({"rawtypes", "unchecked"})
     public EntityMock retrieveMock(String mockName) {
-        return ObjectUtils.deepCopy((getMock(mockName)));
+        EntityMock templateInstance;
+        try {
+            // This is the only way to know what is the real class of the parameter EntityMock
+            // For more information http://stackoverflow.com/a/75345/1259208
+            templateInstance = (EntityMock)((Class)((ParameterizedType)this.getClass().getGenericSuperclass()).getActualTypeArguments()[0]).newInstance();
+        } catch (Exception e) {
+            throw new RuntimeException("Error getting instance from generic",e);
+        }
+        EntityMock mock = getMock(mockName);
+        return ObjectUtils.deepCopyInParent(mock, templateInstance);
     }
 
     public List<EntityMock> retrieveMocks(String... names) {

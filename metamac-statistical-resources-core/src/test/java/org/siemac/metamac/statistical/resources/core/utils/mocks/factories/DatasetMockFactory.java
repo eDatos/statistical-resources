@@ -199,7 +199,8 @@ public class DatasetMockFactory extends StatisticalResourcesMockFactory<Dataset>
     }
 
     private static Dataset createDataset() {
-        return getStatisticalResourcesPersistedDoMocks().mockDatasetWithoutGeneratedDatasetVersions();
+        Dataset template = new Dataset();
+        return getStatisticalResourcesPersistedDoMocks().mockDataset(template, null);
     }
 
 }

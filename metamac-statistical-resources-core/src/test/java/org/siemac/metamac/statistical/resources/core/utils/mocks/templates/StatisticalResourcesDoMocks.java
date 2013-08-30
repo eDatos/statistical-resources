@@ -99,12 +99,6 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
 
     public abstract DatasetVersion mockDatasetVersion();
 
-    protected DatasetVersion mockDatasetVersionMetadata() {
-        DatasetVersion datasetVersion = new DatasetVersion();
-
-        return datasetVersion;
-    }
-
     // -----------------------------------------------------------------
     // PUBLICATION
     // -----------------------------------------------------------------
@@ -284,21 +278,37 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
     // BASE HIERARCHY
     // -----------------------------------------------------------------
 
-    protected SiemacMetadataStatisticalResource mockSiemacMetadataStatisticalResource(TypeRelatedResourceEnum artefactType) {
-        SiemacMetadataStatisticalResource resource = new SiemacMetadataStatisticalResource();
+    protected SiemacMetadataStatisticalResource mockSiemacMetadataStatisticalResource(SiemacMetadataStatisticalResource resource, TypeRelatedResourceEnum artefactType) {
+        if (resource == null) {
+            resource = new SiemacMetadataStatisticalResource();
+        }
+        
         mockLifeCycleStatisticalResource(resource, artefactType);
 
         String resourceCode = resource.getCode();
 
-        resource.setLanguage(mockCodeExternalItem("language01"));
-        resource.addLanguage(mockCodeExternalItem("language01"));
-        resource.addLanguage(mockCodeExternalItem("language02"));
-
-        resource.setSubtitle(mockInternationalStringMetadata(resourceCode, "subtitle"));
-        resource.setTitleAlternative(mockInternationalStringMetadata(resourceCode, "titleAlternative"));
-        resource.setAbstractLogic(mockInternationalStringMetadata(resourceCode, "abstract"));
-        resource.setUserModifiedKeywords(false);
-        resource.setKeywords(mockInternationalStringMetadata(resourceCode, "keyword1 keyword2 keyword3"));
+        if (resource.getLanguage() == null) {
+            resource.setLanguage(mockCodeExternalItem("language01"));
+        }
+        if (resource.getLanguages().isEmpty()) {
+            resource.addLanguage(mockCodeExternalItem("language01"));
+            resource.addLanguage(mockCodeExternalItem("language02"));
+        }
+        if (resource.getSubtitle() == null) {
+            resource.setSubtitle(mockInternationalStringMetadata(resourceCode, "subtitle"));
+        }
+        if (resource.getTitleAlternative() == null) {
+            resource.setTitleAlternative(mockInternationalStringMetadata(resourceCode, "titleAlternative"));
+        }
+        if (resource.getAbstractLogic() == null) {
+            resource.setAbstractLogic(mockInternationalStringMetadata(resourceCode, "abstract"));
+        }
+        if (resource.getUserModifiedKeywords() == null) {
+            resource.setUserModifiedKeywords(false);
+        }
+        if (resource.getKeywords() == null) {
+            resource.setKeywords(mockInternationalStringMetadata(resourceCode, "keyword1 keyword2 keyword3"));
+        }
 
         switch (artefactType) {
             case DATASET:
@@ -322,22 +332,41 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
             default:
                 break;
         }
+        if (resource.getCommonMetadata() == null) {
+            resource.setCommonMetadata(mockCommonConfigurationExternalItem());
+        }
 
-        resource.setCommonMetadata(mockCommonConfigurationExternalItem());
-
-        resource.setCreator(mockOrganizationUnitExternalItem("creator"));
-        resource.addContributor(mockOrganizationUnitExternalItem("contributor01"));
-        resource.addContributor(mockOrganizationUnitExternalItem("contributor02"));
-        resource.setConformsTo(mockInternationalStringMetadata(resourceCode, "conformsTo"));
-        resource.setConformsToInternal(mockInternationalStringMetadata(resourceCode, "conformsToInternal"));
-        resource.addPublisher(mockOrganizationUnitExternalItem("publisher01"));
-        resource.addPublisher(mockOrganizationUnitExternalItem("publisher02"));
-        resource.addPublisherContributor(mockOrganizationUnitExternalItem("publisherContributor01"));
-        resource.addPublisherContributor(mockOrganizationUnitExternalItem("publisherContributor02"));
-        resource.addMediator(mockOrganizationUnitExternalItem("mediator01"));
-        resource.addMediator(mockOrganizationUnitExternalItem("mediator02"));
-        resource.setCopyrightedDate(new DateTime().getYear());
-        resource.setAccessRights(mockInternationalStringMetadata(resourceCode, "accessRights"));
+        if (resource.getCreator() == null) {
+            resource.setCreator(mockOrganizationUnitExternalItem("creator"));
+        }
+        if (resource.getContributor().isEmpty()) {
+            resource.addContributor(mockOrganizationUnitExternalItem("contributor01"));
+            resource.addContributor(mockOrganizationUnitExternalItem("contributor02"));
+        }
+        if (resource.getConformsTo() == null) {
+            resource.setConformsTo(mockInternationalStringMetadata(resourceCode, "conformsTo"));
+        }
+        if (resource.getConformsToInternal() == null) {
+            resource.setConformsToInternal(mockInternationalStringMetadata(resourceCode, "conformsToInternal"));
+        }
+        if (resource.getPublisher().isEmpty()) {
+            resource.addPublisher(mockOrganizationUnitExternalItem("publisher01"));
+            resource.addPublisher(mockOrganizationUnitExternalItem("publisher02"));
+        }
+        if (resource.getPublisherContributor().isEmpty()) {
+            resource.addPublisherContributor(mockOrganizationUnitExternalItem("publisherContributor01"));
+            resource.addPublisherContributor(mockOrganizationUnitExternalItem("publisherContributor02"));
+        }
+        if (resource.getMediator().isEmpty()) {
+            resource.addMediator(mockOrganizationUnitExternalItem("mediator01"));
+            resource.addMediator(mockOrganizationUnitExternalItem("mediator02"));
+        }
+        if (resource.getCopyrightedDate() == null) {
+            resource.setCopyrightedDate(new DateTime().getYear());
+        }
+        if (resource.getAccessRights() == null) {
+            resource.setAccessRights(mockInternationalStringMetadata(resourceCode, "accessRights"));
+        }
 
         setSpecialCasesSiemacMetadataStatisticalResourceMock(resource);
 
@@ -347,15 +376,17 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
     protected LifeCycleStatisticalResource mockLifeCycleStatisticalResource(LifeCycleStatisticalResource resource, TypeRelatedResourceEnum artefactType) {
         mockVersionableStatisticalResource(resource, artefactType);
 
-        resource.setMaintainer(mockAgencyExternalItem("agency01"));
+        if (resource.getMaintainer() == null) {
+            resource.setMaintainer(mockAgencyExternalItem(mockString(10)));
+        }
 
-        setSpecialCasesLifeCycleStatisticalResourceMock(resource);
+        setSpecialCasesLifeCycleStatisticalResourceMock(resource, artefactType);
         return resource;
     }
 
     protected VersionableStatisticalResource mockVersionableStatisticalResource(VersionableStatisticalResource resource, TypeRelatedResourceEnum artefactType) {
         mockNameableStatisticalResorce(resource, artefactType);
-
+        
         setSpecialCasesVersionableStatisticalResourceMock(resource);
         return resource;
     }
@@ -371,8 +402,13 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
         mockIdentifiableStatisticalResource(resource, artefactType);
         String resourceCode = resource.getCode();
 
-        resource.setTitle(mockInternationalStringMetadata(resourceCode, "title"));
-        resource.setDescription(mockInternationalStringMetadata(resourceCode, "description"));
+        if (resource.getTitle() == null) {
+            resource.setTitle(mockInternationalStringMetadata(resourceCode, "title"));
+        }
+        
+        if (resource.getDescription() == null) {
+            resource.setDescription(mockInternationalStringMetadata(resourceCode, "description"));
+        }
 
         return resource;
     }
@@ -409,7 +445,7 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
 
     protected abstract void setSpecialCasesSiemacMetadataStatisticalResourceMock(SiemacMetadataStatisticalResource resource);
 
-    protected abstract void setSpecialCasesLifeCycleStatisticalResourceMock(LifeCycleStatisticalResource resource);
+    protected abstract void setSpecialCasesLifeCycleStatisticalResourceMock(LifeCycleStatisticalResource resource, TypeRelatedResourceEnum artefactType);
 
     protected abstract void setSpecialCasesVersionableStatisticalResourceMock(VersionableStatisticalResource resource);
 
@@ -652,6 +688,13 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
     public static RelatedResource mockPublicationVersionRelated(PublicationVersion pubVersion) {
         RelatedResource resource = new RelatedResource(TypeRelatedResourceEnum.PUBLICATION_VERSION);
         resource.setPublicationVersion(pubVersion);
+        resource.setVersion(Long.valueOf(0));
+        return resource;
+    }
+    
+    public static RelatedResource mockQueryVersionRelated(QueryVersion queryVersion) {
+        RelatedResource resource = new RelatedResource(TypeRelatedResourceEnum.QUERY_VERSION);
+        resource.setQueryVersion(queryVersion);
         resource.setVersion(Long.valueOf(0));
         return resource;
     }

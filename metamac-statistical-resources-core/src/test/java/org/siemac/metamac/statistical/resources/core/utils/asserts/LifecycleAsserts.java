@@ -6,22 +6,47 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import org.junit.Assert;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.base.domain.HasLifecycle;
+import org.siemac.metamac.statistical.resources.core.base.domain.HasSiemacMetadata;
+import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatisticalResource;
+import org.siemac.metamac.statistical.resources.core.base.domain.NameableStatisticalResource;
+import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataStatisticalResource;
+import org.siemac.metamac.statistical.resources.core.base.domain.VersionableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.common.utils.RelatedResourceUtils;
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
+import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesVersionUtils;
 
 public class LifecycleAsserts extends CommonAsserts {
 
     // ------------------------------------------------------------------------------------------------------
     // >> PRODUCTION VALIDATION
     // ------------------------------------------------------------------------------------------------------
-
+    
     public static void assertNotNullAutomaticallyFilledMetadataSendToProductionValidation(HasLifecycle resource) {
-        assertNotNullAutomaticallyFilledMetadataSendToProductionValidation(resource, true);
+        assertFilledMetadataLifecycleSendToProductionValidation(resource, true);
     }
 
-    private static void assertNotNullAutomaticallyFilledMetadataSendToProductionValidation(HasLifecycle resource, boolean checkStatus) {
+    private static void assertFilledMetadataSiemacSendToProductionValidation(HasSiemacMetadata resource) {
+        SiemacMetadataStatisticalResource siemac = resource.getSiemacMetadataStatisticalResource();
+        
+        assertNotNull(siemac.getLanguage());
+        assertNotNull(siemac.getLanguages());
+        assertFalse(siemac.getLanguages().isEmpty());
+        
+        assertNotNull(siemac.getKeywords());
+        assertNotNull(siemac.getType());
+        
+        assertNotNull(siemac.getCreator());
+        assertNotNull(siemac.getLastUpdate());
+        assertNotNull(siemac.getPublisher());
+        assertFalse(siemac.getPublisher().isEmpty());
+        
+        assertNotNull(siemac.getCommonMetadata());
+    }
+
+    private static void assertFilledMetadataLifecycleSendToProductionValidation(HasLifecycle resource, boolean checkStatus) {
         assertNotNull(resource.getLifeCycleStatisticalResource().getProductionValidationDate());
         assertNotNull(resource.getLifeCycleStatisticalResource().getProductionValidationUser());
         if (checkStatus) {
@@ -34,11 +59,11 @@ public class LifecycleAsserts extends CommonAsserts {
     // ------------------------------------------------------------------------------------------------------
 
     public static void assertNotNullAutomaticallyFilledMetadataSendToDiffusionValidation(HasLifecycle resource) {
-        assertNotNullAutomaticallyFilledMetadataSendToDiffusionValidation(resource, true);
+        assertFilledMetadataLifecycleSendToDiffusionValidation(resource, true);
     }
 
-    private static void assertNotNullAutomaticallyFilledMetadataSendToDiffusionValidation(HasLifecycle resource, boolean checkStatus) {
-        assertNotNullAutomaticallyFilledMetadataSendToProductionValidation(resource, false);
+    private static void assertFilledMetadataLifecycleSendToDiffusionValidation(HasLifecycle resource, boolean checkStatus) {
+        assertFilledMetadataLifecycleSendToProductionValidation(resource, false);
 
         assertNotNull(resource.getLifeCycleStatisticalResource().getDiffusionValidationDate());
         assertNotNull(resource.getLifeCycleStatisticalResource().getDiffusionValidationUser());
@@ -47,6 +72,11 @@ public class LifecycleAsserts extends CommonAsserts {
             assertEquals(ProcStatusEnum.DIFFUSION_VALIDATION, resource.getLifeCycleStatisticalResource().getProcStatus());
         }
     }
+
+    private static void assertFilledMetadataSiemacSendToDiffusionValidation(HasSiemacMetadata resource) {
+        assertFilledMetadataSiemacSendToProductionValidation(resource);
+    }
+    
 
     // ------------------------------------------------------------------------------------------------------
     // >> VALIDATION REJECTED
@@ -57,7 +87,7 @@ public class LifecycleAsserts extends CommonAsserts {
     }
 
     private static void assertNotNullAutomaticallyFilledMetadataSendToValidationRejected(HasLifecycle resource, boolean checkStatus) {
-        assertNotNullAutomaticallyFilledMetadataSendToProductionValidation(resource, false);
+        assertFilledMetadataLifecycleSendToProductionValidation(resource, false);
 
         assertNotNull(resource.getLifeCycleStatisticalResource().getRejectValidationDate());
         assertNotNull(resource.getLifeCycleStatisticalResource().getRejectValidationUser());
@@ -70,31 +100,75 @@ public class LifecycleAsserts extends CommonAsserts {
     // ------------------------------------------------------------------------------------------------------
     // >> PUBLISHED
     // ------------------------------------------------------------------------------------------------------
-
-    public static void assertNotNullAutomaticallyFilledMetadataSendToPublished(HasLifecycle resource, HasLifecycle previousVersion) {
-        assertNotNullAutomaticallyFilledMetadataSendToPublished(resource, previousVersion, true);
+    
+    public static void assertNotNullAutomaticallyFilledMetadataSiemacSendToPublished(HasSiemacMetadata current, HasSiemacMetadata previous) {
+        assertNotNullAutomaticallyFilledMetadataLifecycleSendToPublished(current, previous);
+        
+        assertFilledMetadataSiemacAfterPublishing(current, previous);
     }
 
-    private static void assertNotNullAutomaticallyFilledMetadataSendToPublished(HasLifecycle resource, HasLifecycle previousVersion, boolean checkStatus) {
-        assertNotNullAutomaticallyFilledMetadataForAPublishedResource(resource);
-
-        if (previousVersion != null) {
-            assertNotNullAutomaticallyFilledMetadataForAPublishedResource(previousVersion);
-            assertNotNull(previousVersion.getLifeCycleStatisticalResource().getValidTo());
-            assertEquals(resource.getLifeCycleStatisticalResource().getValidFrom(), previousVersion.getLifeCycleStatisticalResource().getValidTo());
+    public static void assertNotNullAutomaticallyFilledMetadataLifecycleSendToPublished(HasLifecycle current, HasLifecycle previous) {
+        assertFilledMetadataLifecycleAfterPublishing(current, previous);
+    }
+    
+    private static void assertFilledMetadataLifecycleAfterPublishing(HasLifecycle current, HasLifecycle previous) {
+        assertFilledMetadataLifecycleForAPublishedResource(current);
+        if (!StatisticalResourcesVersionUtils.isInitialVersion(current)) {
+            assertFilledMetadataLifecycleForAPreviousVersionOfPublishedResource(previous, current);
         }
     }
-
-    private static void assertNotNullAutomaticallyFilledMetadataForAPublishedResource(HasLifecycle resource) {
-        assertNotNullAutomaticallyFilledMetadataSendToProductionValidation(resource, false);
-        assertNotNullAutomaticallyFilledMetadataSendToDiffusionValidation(resource, false);
+    
+    private static void assertFilledMetadataLifecycleForAPublishedResource(HasLifecycle resource) {
+        assertFilledMetadataLifecycleSendToDiffusionValidation(resource, false);
         
-        assertNotNull(resource.getLifeCycleStatisticalResource().getPublicationDate());
-        assertNotNull(resource.getLifeCycleStatisticalResource().getPublicationUser());
-        assertNotNull(resource.getLifeCycleStatisticalResource().getValidFrom());
-        assertEquals(ProcStatusEnum.PUBLISHED, resource.getLifeCycleStatisticalResource().getProcStatus());
+        LifeCycleStatisticalResource lifeCycleStatisticalResource = resource.getLifeCycleStatisticalResource();
+        
+        assertNotNull(lifeCycleStatisticalResource.getPublicationDate());
+        assertNotNull(lifeCycleStatisticalResource.getPublicationUser());
+        assertNotNull(lifeCycleStatisticalResource.getValidFrom());
+        assertTrue(lifeCycleStatisticalResource.getPublicationDate().isBeforeNow());
+        assertFalse(lifeCycleStatisticalResource.getValidFrom().isBefore(lifeCycleStatisticalResource.getPublicationDate()));
+        assertEquals(ProcStatusEnum.PUBLISHED, lifeCycleStatisticalResource.getProcStatus());
+        
+        if (StatisticalResourcesVersionUtils.isInitialVersion(resource)) {
+            assertNull(lifeCycleStatisticalResource.getReplacesVersion());
+        } else {
+            assertNotNull(lifeCycleStatisticalResource.getReplacesVersion());
+        }
     }
-
+    
+    private static void assertFilledMetadataLifecycleForAPreviousVersionOfPublishedResource(HasLifecycle previous, HasLifecycle current) {
+        LifeCycleStatisticalResource currentLifecycle = current.getLifeCycleStatisticalResource();
+        LifeCycleStatisticalResource previousLifecycle = previous.getLifeCycleStatisticalResource();
+        
+        assertFilledMetadataLifecycleForAPublishedResource(previous);
+        
+        // VALID_TO
+        assertTrue(previousLifecycle.getValidFrom().isBefore(currentLifecycle.getValidFrom()));
+        assertEqualsDate(currentLifecycle.getValidFrom(), previousLifecycle.getValidTo());
+        
+        // REPLACES_VERSION and IS_REPLACED_BY_VERSION
+        try {
+            NameableStatisticalResource previousIsReplacedByNameable = RelatedResourceUtils.retrieveNameableResourceLinkedToRelatedResource(previousLifecycle.getIsReplacedByVersion());
+            assertEquals(currentLifecycle.getUrn(), previousIsReplacedByNameable.getUrn());
+    
+            NameableStatisticalResource currentReplacesNameable = RelatedResourceUtils.retrieveNameableResourceLinkedToRelatedResource(currentLifecycle.getReplacesVersion());
+            assertEquals(previousLifecycle.getUrn(), currentReplacesNameable.getUrn());
+        } catch (MetamacException e) {
+            Assert.fail("Error retrieving nameable from related resource:"+e);
+        }
+        assertNull(currentLifecycle.getIsReplacedByVersion());
+    }
+    
+    private static void assertFilledMetadataSiemacAfterPublishing(HasSiemacMetadata current, HasSiemacMetadata previous) {
+        SiemacMetadataStatisticalResource currentSiemac = current.getSiemacMetadataStatisticalResource();
+        
+        assertFilledMetadataSiemacSendToDiffusionValidation(current);
+        
+        // COPYRIGHTED_DATE
+        assertEquals(Integer.valueOf(currentSiemac.getValidFrom().getYear()), currentSiemac.getCopyrightedDate());
+    }
+    
 
     // ------------------------------------------------------------------------------------------------------
     // >> VERSIONING
@@ -113,7 +187,7 @@ public class LifecycleAsserts extends CommonAsserts {
         assertFalse(previousVersion.getLifeCycleStatisticalResource().getLastVersion());
         assertNotNull(previousVersion.getLifeCycleStatisticalResource().getIsReplacedByVersion());
         assertEqualsRelatedResource(previousVersion.getLifeCycleStatisticalResource().getIsReplacedByVersion(), RelatedResourceUtils.createRelatedResourceForHasLifecycleResource(resource));
-        assertNotNullAutomaticallyFilledMetadataForAPublishedResource(previousVersion);
+        assertFilledMetadataLifecycleForAPublishedResource(previousVersion);
     }
 
     private static void assertNotNullAutomaticallyFilledMetadataForAVersionedResource(HasLifecycle resource, HasLifecycle previousVersion) throws MetamacException {
