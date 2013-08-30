@@ -38,6 +38,7 @@ public class AttributeDimensionOrGroupLevelEditionForm extends AttributeBaseForm
         DimensionCoverageValuesSelectionItem dimensionCoverageValuesSelectionItem = createDimensionValuesSelectionItem(DsdAttributeInstanceDS.DIMENSION_SELECTION_VALUES, getConstants()
                 .datasetAttributeDimensionValuesSelection(), dsdAttributeInstanceDto);
         CustomTextItem value = new CustomTextItem(DsdAttributeInstanceDS.VALUE, getConstants().datasetAttributeValue());
+        value.setRequired(true);
         // TODO set values
         setFields(dimensionCoverageValuesSelectionItem, value);
     }
@@ -90,12 +91,14 @@ public class AttributeDimensionOrGroupLevelEditionForm extends AttributeBaseForm
     }
 
     private SearchExternalItemSimpleItem createEnumeratedValueItem(String name, String title) {
-        return new SearchExternalItemSimpleItem(name, title, StatisticalResourceWebConstants.FORM_LIST_MAX_RESULTS) {
+        SearchExternalItemSimpleItem searchExternalItemSimpleItem = new SearchExternalItemSimpleItem(name, title, StatisticalResourceWebConstants.FORM_LIST_MAX_RESULTS) {
 
             @Override
             protected void retrieveResources(int firstResult, int maxResults, MetamacWebCriteria webCriteria) {
                 getUiHandlers().retrieveItemsFromItemSchemeForDimensionOrGroupLevelAttribute(dsdAttributeDto.getAttributeRepresentation(), firstResult, maxResults, webCriteria);
             }
         };
+        searchExternalItemSimpleItem.setRequired(true);
+        return searchExternalItemSimpleItem;
     }
 }
