@@ -181,24 +181,6 @@
                 <cdomain:text xml:lang="es">title-replacedBy01 en Espanol</cdomain:text>
             </cdomain:name>
         </stat:isReplacedBy>
-        <stat:requires total="2">
-            <cdomain:resource kind="statisticalResources#dataset">
-                <cdomain:id>require01</cdomain:id>
-                <cdomain:urn>urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Dataset=agency1:require01(01.000)</cdomain:urn>
-                <cdomain:selfLink kind="statisticalResources#dataset" href="http://data.istac.es/apis/statistical-resources/v1.0/datasets/agency1/require01/01.000" />
-                <cdomain:name>
-                    <cdomain:text xml:lang="es">title-require01 en Espanol</cdomain:text>
-                </cdomain:name>
-            </cdomain:resource>
-            <cdomain:resource kind="statisticalResources#dataset">
-                <cdomain:id>require02</cdomain:id>
-                <cdomain:urn>urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Dataset=agency1:require02(01.000)</cdomain:urn>
-                <cdomain:selfLink kind="statisticalResources#dataset" href="http://data.istac.es/apis/statistical-resources/v1.0/datasets/agency1/require02/01.000" />
-                <cdomain:name>
-                    <cdomain:text xml:lang="es">title-require02 en Espanol</cdomain:text>
-                </cdomain:name>
-            </cdomain:resource>
-        </stat:requires>
         <stat:isRequiredBy total="2">
             <cdomain:resource kind="statisticalResources#dataset">
                 <cdomain:id>isRequiredBy01</cdomain:id>

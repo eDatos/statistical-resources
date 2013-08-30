@@ -110,6 +110,7 @@
             <xs:element name="status" type="tns:QueryStatus" />
             <xs:element name="type" type="tns:QueryType" />
             <xs:element name="latestDataNumber" type="xs:int" minOccurs="0" />
+            <xs:element name="requires" type="common:Resource" />
             <xs:element name="statisticalOperation" type="common:Resource" />
             <xs:element name="maintainer" type="common:Resource" />
             <xs:element name="validFrom" type="xs:dateTime" />
@@ -146,7 +147,6 @@
             <xs:element name="newnessUntilDate" type="xs:dateTime" minOccurs="0" />
             <xs:element name="replaces" type="common:Resource" />
             <xs:element name="isReplacedBy" type="common:Resource" />
-            <xs:element name="requires" type="common:Resources" />
             <xs:element name="isRequiredBy" type="common:Resources" />
             <xs:element name="hasPart" type="common:Resources" />
             <xs:element name="isPartOf" type="common:Resources" />

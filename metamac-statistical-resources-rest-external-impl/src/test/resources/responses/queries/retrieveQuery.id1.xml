@@ -276,6 +276,14 @@
                 </stat:dimensionValues>
             </stat:dimension>
         </stat:dimensions>
+        <stat:requires kind="statisticalResources#dataset">
+            <cdomain:id>dataset01</cdomain:id>
+            <cdomain:urn>urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Dataset=agency1:dataset01(01.000)</cdomain:urn>
+            <cdomain:selfLink kind="statisticalResources#dataset" href="http://data.istac.es/apis/statistical-resources/v1.0/datasets/agency1/dataset01/01.000" />
+            <cdomain:name>
+                <cdomain:text xml:lang="es">title-dataset01 en Espanol</cdomain:text>
+            </cdomain:name>
+        </stat:requires>        
         <stat:status>ACTIVE</stat:status>
         <stat:type>FIXED</stat:type>
         <stat:statisticalOperation kind="statisticalOperations#operation">

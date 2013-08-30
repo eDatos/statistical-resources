@@ -214,8 +214,6 @@ public class RestDoMocks {
         target.setNewnessUntilDate(new DateTime(2013, 9, 2, 15, 4, 5, 0));
         target.setReplaces(mockDatasetRelatedResource(agencyID, "replace01", "01.000"));
         target.setIsReplacedBy(mockDatasetRelatedResource(agencyID, "replacedBy01", "02.000"));
-        target.addRequire(mockDatasetRelatedResource(agencyID, "require01", "01.000"));
-        target.addRequire(mockDatasetRelatedResource(agencyID, "require02", "01.000"));
         target.addIsRequiredBy(mockDatasetRelatedResource(agencyID, "isRequiredBy01", "01.000"));
         target.addIsRequiredBy(mockDatasetRelatedResource(agencyID, "isRequiredBy02", "01.000"));
         target.addHasPart(mockDatasetRelatedResource(agencyID, "hasPart01", "01.000"));

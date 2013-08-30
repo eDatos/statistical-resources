@@ -128,6 +128,7 @@ public class QueriesDo2RestMapperV10Impl implements QueriesDo2RestMapperV10 {
         target.setMaintainer(commonDo2RestMapper.toResourceExternalItemSrm(source.getLifeCycleStatisticalResource().getMaintainer(), selectedLanguages));
         target.setValidFrom(commonDo2RestMapper.toDate(source.getLifeCycleStatisticalResource().getValidFrom()));
         target.setValidTo(commonDo2RestMapper.toDate(source.getLifeCycleStatisticalResource().getValidTo()));
+        target.setRequires(datasetsDo2RestMapper.toResource(source.getDatasetVersion(), selectedLanguages));
         return target;
     }
 

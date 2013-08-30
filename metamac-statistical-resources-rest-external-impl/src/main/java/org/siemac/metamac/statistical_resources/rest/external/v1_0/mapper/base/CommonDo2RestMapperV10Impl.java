@@ -171,7 +171,6 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
         target.setReplaces(toResource(source.getReplaces(), selectedLanguages));
         target.setIsReplacedBy(toResource(source.getIsReplacedBy(), selectedLanguages));
         target.setIsReplacedBy(toResource(source.getIsReplacedBy(), selectedLanguages));
-        target.setRequires(toResources(source.getRequires(), selectedLanguages));
         target.setIsRequiredBy(toResources(source.getIsRequiredBy(), selectedLanguages));
         target.setHasPart(toResources(source.getHasPart(), selectedLanguages));
         target.setIsPartOf(toResources(source.getIsPartOf(), selectedLanguages));
