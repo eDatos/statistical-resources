@@ -10,9 +10,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.siemac.metamac.common.test.utils.MetamacMocks;
 import org.siemac.metamac.core.common.constants.CoreCommonConstants;
-import org.siemac.metamac.core.common.ent.domain.ExternalItem;
-import org.siemac.metamac.core.common.ent.domain.InternationalString;
-import org.siemac.metamac.core.common.ent.domain.LocalisedString;
 import org.siemac.metamac.core.common.enume.domain.TypeExternalArtefactsEnum;
 import org.siemac.metamac.core.common.enume.utils.TypeExternalArtefactsEnumUtils;
 import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableStatisticalResource;
@@ -21,6 +18,9 @@ import org.siemac.metamac.statistical.resources.core.base.domain.NameableStatist
 import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.StatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.VersionableStatisticalResource;
+import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
+import org.siemac.metamac.statistical.resources.core.common.domain.InternationalString;
+import org.siemac.metamac.statistical.resources.core.common.domain.LocalisedString;
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResource;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.CodeDimension;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
@@ -282,7 +282,7 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
         if (resource == null) {
             resource = new SiemacMetadataStatisticalResource();
         }
-        
+
         mockLifeCycleStatisticalResource(resource, artefactType);
 
         String resourceCode = resource.getCode();
@@ -386,7 +386,7 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
 
     protected VersionableStatisticalResource mockVersionableStatisticalResource(VersionableStatisticalResource resource, TypeRelatedResourceEnum artefactType) {
         mockNameableStatisticalResorce(resource, artefactType);
-        
+
         setSpecialCasesVersionableStatisticalResourceMock(resource);
         return resource;
     }
@@ -405,7 +405,7 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
         if (resource.getTitle() == null) {
             resource.setTitle(mockInternationalStringMetadata(resourceCode, "title"));
         }
-        
+
         if (resource.getDescription() == null) {
             resource.setDescription(mockInternationalStringMetadata(resourceCode, "description"));
         }
@@ -691,7 +691,7 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
         resource.setVersion(Long.valueOf(0));
         return resource;
     }
-    
+
     public static RelatedResource mockQueryVersionRelated(QueryVersion queryVersion) {
         RelatedResource resource = new RelatedResource(TypeRelatedResourceEnum.QUERY_VERSION);
         resource.setQueryVersion(queryVersion);

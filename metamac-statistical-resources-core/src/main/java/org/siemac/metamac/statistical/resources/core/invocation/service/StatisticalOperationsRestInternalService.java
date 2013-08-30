@@ -2,7 +2,7 @@ package org.siemac.metamac.statistical.resources.core.invocation.service;
 
 import java.util.List;
 
-import org.siemac.metamac.core.common.ent.domain.ExternalItem;
+import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.rest.statistical_operations_internal.v1_0.domain.Instances;
 import org.siemac.metamac.rest.statistical_operations_internal.v1_0.domain.Operation;

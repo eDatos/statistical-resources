@@ -6,7 +6,7 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.siemac.metamac.core.common.ent.domain.ExternalItem;
+import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
 import org.siemac.metamac.statistical.resources.core.utils.asserts.CommonAsserts;

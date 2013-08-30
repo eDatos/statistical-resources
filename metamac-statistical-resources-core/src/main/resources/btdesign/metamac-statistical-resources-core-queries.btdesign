@@ -1,7 +1,7 @@
 import "classpath:/btdesign/metamac-statistical-resources-core-base.btdesign"
 import "classpath:/btdesign/metamac-statistical-resources-core-datasets.btdesign"
 import "classpath:/btdesign/metamac-statistical-resources-core-queries-enums.btdesign"
-import "classpath:/btdesign/export/metamac-core-common-entity.btdesign"
+import "classpath:/btdesign/metamac-statistical-resources-core-common.btdesign"
 
 Application QueriesStatisticalResources {
 	basePackage=unused

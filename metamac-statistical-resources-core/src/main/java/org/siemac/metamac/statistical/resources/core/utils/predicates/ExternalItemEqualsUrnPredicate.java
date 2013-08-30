@@ -1,7 +1,7 @@
 package org.siemac.metamac.statistical.resources.core.utils.predicates;
 
 import org.apache.commons.lang3.StringUtils;
-import org.siemac.metamac.core.common.ent.domain.ExternalItem;
+import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
 import org.siemac.metamac.core.common.util.MetamacPredicate;
 
 

@@ -27,7 +27,6 @@ public class StatisticalResourcesDto2StatRepoDtoMapperImpl implements Statistica
         }
         AttributeDto target = new AttributeDto();
         target.setAttributeId(source.getAttributeId());
-        target.setUuid(source.getUuid());
         target.setValue(attributeValueDtoToInternationalStringValue(source.getValue()));
         target.setCodesByDimension(codeItemMapToStringMap(source.getCodeDimensions()));
         return target;

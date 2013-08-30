@@ -17,9 +17,9 @@ import org.jsoup.safety.Whitelist;
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.dto.InternationalStringDto;
 import org.siemac.metamac.core.common.dto.LocalisedStringDto;
-import org.siemac.metamac.core.common.ent.domain.ExternalItem;
-import org.siemac.metamac.core.common.ent.domain.InternationalString;
-import org.siemac.metamac.core.common.ent.domain.LocalisedString;
+import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
+import org.siemac.metamac.statistical.resources.core.common.domain.InternationalString;
+import org.siemac.metamac.statistical.resources.core.common.domain.LocalisedString;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.util.CoreCommonUtil;
 import org.siemac.metamac.core.common.util.OptimisticLockingUtils;
@@ -160,7 +160,7 @@ public class BaseDto2DoMapperImpl extends CommonDto2DoMapperImpl implements Base
         return false;
     }
     
-    private boolean hasLocalisedStringBeModified(org.siemac.metamac.core.common.ent.domain.LocalisedString previous, LocalisedStringDto current) {
+    private boolean hasLocalisedStringBeModified(org.siemac.metamac.statistical.resources.core.common.domain.LocalisedString previous, LocalisedStringDto current) {
         if ((previous == null && current != null) || (previous != null && current == null)) {
             return true;
         }

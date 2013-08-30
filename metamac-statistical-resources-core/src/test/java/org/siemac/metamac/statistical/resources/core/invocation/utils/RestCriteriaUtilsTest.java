@@ -8,7 +8,7 @@ import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.junit.Test;
-import org.siemac.metamac.core.common.ent.domain.ExternalItem;
+import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
 import org.siemac.metamac.rest.common.v1_0.domain.ComparisonOperator;
 import org.siemac.metamac.rest.common.v1_0.domain.LogicalOperator;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;

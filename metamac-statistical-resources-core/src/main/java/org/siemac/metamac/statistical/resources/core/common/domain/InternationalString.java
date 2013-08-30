@@ -1,10 +1,12 @@
-package org.siemac.metamac.core.common.ent.domain;
+package org.siemac.metamac.statistical.resources.core.common.domain;
 
 import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
+
+import org.siemac.metamac.statistical.resources.core.common.domain.LocalisedString;
 
 /**
  * The International String is a collection of Localised Strings and supports the representation of text in multiple locales.

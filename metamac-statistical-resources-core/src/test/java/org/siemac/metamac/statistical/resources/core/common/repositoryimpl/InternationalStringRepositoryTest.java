@@ -1,4 +1,4 @@
-package org.siemac.metamac.core.common.ent.repositoryimpl;
+package org.siemac.metamac.statistical.resources.core.common.repositoryimpl;
 
 import java.util.Arrays;
 
@@ -6,7 +6,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
 import org.siemac.metamac.statistical.resources.core.common.domain.InternationalStringRepository;
-import org.siemac.metamac.statistical.resources.core.common.repositoryimpl.InternationalStringRepositoryTestBase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -14,7 +13,7 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"classpath:spring/statistical-resources/include/rest-services-mockito.xml", "classpath:spring/statistical-resources/applicationContext-test.xml"})
+@ContextConfiguration(locations = {"classpath:spring/statistical-resources/applicationContext-test.xml"})
 @TransactionConfiguration(transactionManager = "txManager", defaultRollback = true)
 @Transactional
 public class InternationalStringRepositoryTest extends StatisticalResourcesBaseTest implements InternationalStringRepositoryTestBase {

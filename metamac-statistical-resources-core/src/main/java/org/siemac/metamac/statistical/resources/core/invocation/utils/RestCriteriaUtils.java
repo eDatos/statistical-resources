@@ -9,7 +9,7 @@ import static org.siemac.metamac.rest.api.constants.RestApiConstants.RIGHT_PAREN
 import java.util.ArrayList;
 import java.util.List;
 
-import org.siemac.metamac.core.common.ent.domain.ExternalItem;
+import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
 import org.siemac.metamac.rest.common.v1_0.domain.ComparisonOperator;
 import org.siemac.metamac.rest.common.v1_0.domain.LogicalOperator;
 

@@ -19,7 +19,6 @@ import org.fornax.cartridges.sculptor.framework.errorhandling.ApplicationExcepti
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.joda.time.DateTime;
 import org.siemac.metamac.core.common.criteria.utils.CriteriaUtils;
-import org.siemac.metamac.core.common.ent.domain.ExternalItem;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionBuilder;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
@@ -38,6 +37,7 @@ import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableSta
 import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableStatisticalResourceRepository;
 import org.siemac.metamac.statistical.resources.core.base.utils.FillMetadataForCreateResourceUtils;
 import org.siemac.metamac.statistical.resources.core.base.validators.BaseValidator;
+import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResource;
 import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor;
 import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor.DsdAttribute;
@@ -628,7 +628,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         try {
             return statisticsDatasetRepositoriesServiceFacade.createAttribute(datasetVersion.getDatasetRepositoryId(), attributeDto);
         } catch (ApplicationException e) {
-            throw new MetamacException(e, ServiceExceptionType.UNKNOWN, "Error creating attribute instances in datasetRepository " + datasetVersionUrn);
+            throw new MetamacException(e, ServiceExceptionType.UNKNOWN, "Error creating attribute instances in datasetRepository " + datasetVersionUrn + ". Details: " + e.getMessage());
         }
     }
 
@@ -645,7 +645,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         try {
             return statisticsDatasetRepositoriesServiceFacade.findAttributes(datasetVersion.getDatasetRepositoryId(), attributeId);
         } catch (ApplicationException e) {
-            throw new MetamacException(e, ServiceExceptionType.UNKNOWN, "Error retrieve attribute instances in datasetRepository " + datasetVersionUrn);
+            throw new MetamacException(e, ServiceExceptionType.UNKNOWN, "Error retrieve attribute instances in datasetRepository " + datasetVersionUrn + ". Details: " + e.getMessage());
         }
     }
 
@@ -725,7 +725,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
             long num = statisticsDatasetRepositoriesServiceFacade.countObservations(resource.getDatasetRepositoryId());
             resource.setFormatExtentObservations(num);
         } catch (ApplicationException e) {
-            throw new MetamacException(e, ServiceExceptionType.UNKNOWN, "Error retrieving datasetRepository " + resource.getDatasetRepositoryId());
+            throw new MetamacException(e, ServiceExceptionType.UNKNOWN, "Error retrieving datasetRepository " + resource.getDatasetRepositoryId() + ". Details: " + e.getMessage());
         }
     }
 

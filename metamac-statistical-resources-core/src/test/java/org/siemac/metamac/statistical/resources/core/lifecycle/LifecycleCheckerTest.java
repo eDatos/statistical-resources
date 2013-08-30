@@ -24,7 +24,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.siemac.metamac.common.test.utils.MetamacAsserts;
-import org.siemac.metamac.core.common.ent.domain.ExternalItem;
 import org.siemac.metamac.core.common.enume.domain.VersionPatternEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
@@ -33,6 +32,7 @@ import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTes
 import org.siemac.metamac.statistical.resources.core.base.domain.HasLifecycle;
 import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.VersionRationaleType;
+import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.VersionRationaleTypeEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionSingleParameters;
@@ -202,10 +202,10 @@ public class LifecycleCheckerTest extends StatisticalResourcesBaseTest {
             if (ProcStatusEnum.DIFFUSION_VALIDATION.equals(procStatus)) {
                 List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
                 lifecycleChecker.checkSendToPublished(mockedResource, mockedPreviousVersion, baseMetadata, exceptionItems);
-                
+
                 verifyExternalItemExternallyPublished(mockedResource.getLifeCycleStatisticalResource().getStatisticalOperation());
                 verifyExternalItemExternallyPublished(mockedResource.getLifeCycleStatisticalResource().getMaintainer());
-                
+
                 assertEquals(0, exceptionItems.size());
             } else {
                 try {
@@ -231,12 +231,11 @@ public class LifecycleCheckerTest extends StatisticalResourcesBaseTest {
 
         ArrayList<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
         lifecycleChecker.checkSendToPublished(mockedResource, mockedPreviousVersion, baseMetadata, exceptionItems);
-        
+
         assertEquals(1, exceptionItems.size());
         MetamacAsserts.assertEqualsMetamacExceptionItem(new MetamacExceptionItem(ServiceExceptionType.METADATA_REQUIRED, addParameter(baseMetadata, ServiceExceptionSingleParameters.VALID_FROM)),
                 exceptionItems.get(0));
     }
-    
 
     private void verifyExternalItemExternallyPublished(ExternalItem item) throws MetamacException {
         verify(externalItemChecker).checkExternalItemsExternallyPublished(Mockito.eq(item), anyString(), Mockito.anyListOf(MetamacExceptionItem.class));

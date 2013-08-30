@@ -1,4 +1,4 @@
-package org.siemac.metamac.core.common.ent.domain;
+package org.siemac.metamac.statistical.resources.core.common.domain;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -11,6 +11,7 @@ import javax.persistence.UniqueConstraint;
 @Entity
 @Table(name = "TB_LOCALISED_STRINGS", uniqueConstraints = {@UniqueConstraint(columnNames = {"LOCALE", "INTERNATIONAL_STRING_FK"})})
 public class LocalisedString extends LocalisedStringBase {
+
     private static final long serialVersionUID = 1L;
 
     public LocalisedString() {

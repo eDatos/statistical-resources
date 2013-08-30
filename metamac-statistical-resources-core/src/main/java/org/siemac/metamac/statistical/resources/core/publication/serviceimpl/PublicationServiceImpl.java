@@ -11,7 +11,6 @@ import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.joda.time.DateTime;
 import org.siemac.metamac.core.common.criteria.utils.CriteriaUtils;
-import org.siemac.metamac.core.common.ent.domain.ExternalItem;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.util.GeneratorUrnUtils;
 import org.siemac.metamac.core.common.util.shared.VersionUtil;
@@ -20,6 +19,7 @@ import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableSta
 import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableStatisticalResourceRepository;
 import org.siemac.metamac.statistical.resources.core.base.utils.FillMetadataForCreateResourceUtils;
 import org.siemac.metamac.statistical.resources.core.base.validators.BaseValidator;
+import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
@@ -636,13 +636,13 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
 
         // Get order of the element that will be deleted
         Long orderInLevelOfDeletedElement = elementLevel.getOrderInLevel();
-        
+
         // Delete
         getElementLevelRepository().delete(elementLevel);
 
         // Update publicationVersion
         publicationVersion = retrievePublicationVersionByUrn(ctx, elementLevel.getPublicationVersion().getSiemacMetadataStatisticalResource().getUrn());
-        
+
         // Update orders of other elements in level
         List<ElementLevel> elementsAtLevel = null;
         if (elementLevel.getParent() == null) {

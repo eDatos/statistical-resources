@@ -1,12 +1,12 @@
 package org.siemac.metamac.statistical.resources.core.utils;
 
 import org.joda.time.DateTime;
-import org.siemac.metamac.core.common.ent.domain.ExternalItem;
 import org.siemac.metamac.statistical.resources.core.base.domain.HasLifecycle;
 import org.siemac.metamac.statistical.resources.core.base.domain.HasSiemacMetadata;
 import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.VersionRationaleType;
+import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
 import org.siemac.metamac.statistical.resources.core.enume.domain.NextVersionTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.VersionRationaleTypeEnum;
@@ -41,9 +41,9 @@ public class LifecycleTestUtils {
 
     public static void prepareToDiffusionValidation(HasLifecycle resource) {
         prepareToProductionValidation(resource);
-        
+
         LifeCycleStatisticalResource lifeCycleStatisticalResource = resource.getLifeCycleStatisticalResource();
-        
+
         lifeCycleStatisticalResource.setProcStatus(ProcStatusEnum.PRODUCTION_VALIDATION);
         if (lifeCycleStatisticalResource.getProductionValidationDate() == null) {
             lifeCycleStatisticalResource.setProductionValidationDate(new DateTime());
@@ -64,9 +64,9 @@ public class LifecycleTestUtils {
 
     public static void prepareToValidationRejected(HasLifecycle resource) {
         prepareToProductionValidation(resource);
-        
+
         LifeCycleStatisticalResource lifeCycleStatisticalResource = resource.getLifeCycleStatisticalResource();
-        
+
         lifeCycleStatisticalResource.setProcStatus(ProcStatusEnum.PRODUCTION_VALIDATION);
         if (lifeCycleStatisticalResource.getProductionValidationDate() == null) {
             lifeCycleStatisticalResource.setProductionValidationDate(new DateTime());
@@ -88,11 +88,11 @@ public class LifecycleTestUtils {
 
     public static void prepareToPublished(HasLifecycle resource) {
         prepareToDiffusionValidation(resource);
-        
+
         LifeCycleStatisticalResource lifeCycleStatisticalResource = resource.getLifeCycleStatisticalResource();
-        
+
         lifeCycleStatisticalResource.setProcStatus(ProcStatusEnum.DIFFUSION_VALIDATION);
-        
+
         if (lifeCycleStatisticalResource.getDiffusionValidationDate() == null) {
             lifeCycleStatisticalResource.setDiffusionValidationDate(new DateTime());
         }
@@ -108,18 +108,18 @@ public class LifecycleTestUtils {
         prepareToPublished(resource);
         createPublished((HasLifecycle) resource);
     }
-    
+
     public static void createPublished(HasLifecycle resource) {
         prepareToPublished(resource);
-        
+
         LifeCycleStatisticalResource lifeCycleStatisticalResource = resource.getLifeCycleStatisticalResource();
-        
+
         lifeCycleStatisticalResource.setProcStatus(ProcStatusEnum.PUBLISHED);
-        
+
         if (lifeCycleStatisticalResource.getPublicationDate() == null) {
             lifeCycleStatisticalResource.setPublicationDate(new DateTime());
         }
-        
+
         if (lifeCycleStatisticalResource.getValidFrom() == null) {
             lifeCycleStatisticalResource.setValidFrom(new DateTime());
         }
@@ -138,7 +138,7 @@ public class LifecycleTestUtils {
 
     public static void createVersioned(HasLifecycle resource) {
         LifeCycleStatisticalResource lifeCycleStatisticalResource = resource.getLifeCycleStatisticalResource();
-        
+
         if (lifeCycleStatisticalResource.getStatisticalOperation() == null) {
             ExternalItem operation = StatisticalResourcesPersistedDoMocks.mockStatisticalOperationExternalItem();
             lifeCycleStatisticalResource.setStatisticalOperation(operation);
@@ -147,19 +147,19 @@ public class LifecycleTestUtils {
         if (lifeCycleStatisticalResource.getVersionLogic() == null) {
             lifeCycleStatisticalResource.setVersionLogic("002.000");
         }
-        
+
         if (lifeCycleStatisticalResource.getVersionRationaleTypes().isEmpty()) {
             lifeCycleStatisticalResource.addVersionRationaleType(new VersionRationaleType(VersionRationaleTypeEnum.MAJOR_CATEGORIES));
         }
-        
+
         if (lifeCycleStatisticalResource.getNextVersion() == null) {
             lifeCycleStatisticalResource.setNextVersion(NextVersionTypeEnum.NON_SCHEDULED_UPDATE);
         }
-        
+
         if (lifeCycleStatisticalResource.getTitle() == null) {
             lifeCycleStatisticalResource.setTitle(StatisticalResourcesPersistedDoMocks.mockInternationalString());
         }
-        
+
         if (lifeCycleStatisticalResource.getDescription() == null) {
             lifeCycleStatisticalResource.setDescription(StatisticalResourcesPersistedDoMocks.mockInternationalString());
         }
@@ -169,11 +169,11 @@ public class LifecycleTestUtils {
         }
 
         lifeCycleStatisticalResource.setProcStatus(ProcStatusEnum.DRAFT);
-        
+
         if (lifeCycleStatisticalResource.getCreationDate() == null) {
             lifeCycleStatisticalResource.setCreationDate(new DateTime());
         }
-        
+
         if (lifeCycleStatisticalResource.getCreationUser() == null) {
             lifeCycleStatisticalResource.setCreationUser("VERSIONED_USER");
         }
@@ -187,7 +187,7 @@ public class LifecycleTestUtils {
         resource.getSiemacMetadataStatisticalResource().getStatisticalOperationInstances().clear();
         resource.getSiemacMetadataStatisticalResource().addStatisticalOperationInstance(StatisticalResourcesPersistedDoMocks.mockStatisticalOperationInstanceExternalItem());
         resource.getSiemacMetadataStatisticalResource().addStatisticalOperationInstance(StatisticalResourcesPersistedDoMocks.mockStatisticalOperationInstanceExternalItem());
-        
+
         resource.getSiemacMetadataStatisticalResource().getContributor().clear();
         resource.getSiemacMetadataStatisticalResource().addContributor(StatisticalResourcesPersistedDoMocks.mockOrganizationUnitExternalItem());
         resource.getSiemacMetadataStatisticalResource().addContributor(StatisticalResourcesPersistedDoMocks.mockOrganizationUnitExternalItem());
@@ -195,20 +195,19 @@ public class LifecycleTestUtils {
         resource.getSiemacMetadataStatisticalResource().getPublisherContributor().clear();
         resource.getSiemacMetadataStatisticalResource().addPublisherContributor(StatisticalResourcesPersistedDoMocks.mockOrganizationUnitExternalItem());
         resource.getSiemacMetadataStatisticalResource().addPublisherContributor(StatisticalResourcesPersistedDoMocks.mockOrganizationUnitExternalItem());
-        
+
         resource.getSiemacMetadataStatisticalResource().getMediator().clear();
         resource.getSiemacMetadataStatisticalResource().addMediator(StatisticalResourcesPersistedDoMocks.mockOrganizationUnitExternalItem());
         resource.getSiemacMetadataStatisticalResource().addMediator(StatisticalResourcesPersistedDoMocks.mockOrganizationUnitExternalItem());
     }
-    
-    
+
     private static void prepareToLifecycleCommonSiemacResource(HasSiemacMetadata resource) {
         SiemacMetadataStatisticalResource siemacResource = resource.getSiemacMetadataStatisticalResource();
-        
+
         if (siemacResource.getLanguage() == null) {
             siemacResource.setLanguage(StatisticalResourcesPersistedDoMocks.mockCodeExternalItem());
         }
-        
+
         if (siemacResource.getLanguages().isEmpty()) {
             siemacResource.addLanguage(StatisticalResourcesPersistedDoMocks.mockCodeExternalItem(siemacResource.getLanguage().getCode()));
             siemacResource.addLanguage(StatisticalResourcesPersistedDoMocks.mockCodeExternalItem());
@@ -221,7 +220,7 @@ public class LifecycleTestUtils {
         if (siemacResource.getCreator() == null) {
             siemacResource.setCreator(StatisticalResourcesPersistedDoMocks.mockOrganizationUnitExternalItem());
         }
-        
+
         if (siemacResource.getLastUpdate() == null) {
             siemacResource.setLastUpdate(new DateTime().minusMinutes(10));
         }
@@ -233,7 +232,7 @@ public class LifecycleTestUtils {
 
     private static void prepareToLifecycleCommonLifeCycleResource(HasLifecycle resource) {
         LifeCycleStatisticalResource lifeCycleStatisticalResource = resource.getLifeCycleStatisticalResource();
-        
+
         if (lifeCycleStatisticalResource.getStatisticalOperation() == null) {
             ExternalItem operation = StatisticalResourcesPersistedDoMocks.mockStatisticalOperationExternalItem();
             lifeCycleStatisticalResource.setStatisticalOperation(operation);
@@ -242,21 +241,21 @@ public class LifecycleTestUtils {
         if (lifeCycleStatisticalResource.getVersionLogic() == null) {
             lifeCycleStatisticalResource.setVersionLogic("001.000");
         }
-        
+
         if (lifeCycleStatisticalResource.getVersionRationaleTypes().isEmpty()) {
             lifeCycleStatisticalResource.addVersionRationaleType(new VersionRationaleType(VersionRationaleTypeEnum.MAJOR_NEW_RESOURCE));
         }
-        
+
         if (lifeCycleStatisticalResource.getNextVersion() == null) {
             lifeCycleStatisticalResource.setNextVersion(NextVersionTypeEnum.NON_SCHEDULED_UPDATE);
         }
-        
+
         // ReplacesVersion can not be filled because depends of the type: DatasetVersion, PublicationVersion or QueryVersion
 
         if (lifeCycleStatisticalResource.getTitle() == null) {
             lifeCycleStatisticalResource.setTitle(StatisticalResourcesPersistedDoMocks.mockInternationalString());
         }
-        
+
         if (lifeCycleStatisticalResource.getDescription() == null) {
             lifeCycleStatisticalResource.setDescription(StatisticalResourcesPersistedDoMocks.mockInternationalString());
         }

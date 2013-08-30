@@ -9,8 +9,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import org.siemac.metamac.core.common.ent.domain.InternationalString;
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.statistical.resources.core.common.domain.InternationalString;
 import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.CodeItemDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionBaseDto;
@@ -209,7 +209,7 @@ public class QueryAsserts extends BaseAsserts {
 
         assertEqualsSelection(entity.getSelection(), dto.getSelection(), mapperEnum);
     }
-    
+
     private static void assertEqualsQueryVersionBase(QueryVersion entity, QueryVersionBaseDto dto, MapperEnum mapperEnum) {
         if (MapperEnum.DO2DTO.equals(mapperEnum)) {
             assertEquals(entity.getId(), dto.getId());
@@ -226,7 +226,6 @@ public class QueryAsserts extends BaseAsserts {
         assertNotNull(entity.getType());
         assertEquals(entity.getType(), dto.getType());
     }
-    
 
     private static void assertEqualsSelection(List<QuerySelectionItem> entitySelection, Map<String, List<CodeItemDto>> dtoSelection, MapperEnum mapperEnum) {
         assertEqualsNullability(entitySelection, dtoSelection);

@@ -13,8 +13,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
-import org.siemac.metamac.core.common.ent.domain.ExternalItem;
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
 import org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConstants;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.CodeDimension;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
@@ -368,7 +368,6 @@ public class DatasetsAsserts extends BaseAsserts {
 
     public static void assertEqualsAttributeDtoAndDsdAttributeInstaceDto(AttributeDto attributeDto, DsdAttributeInstanceDto dsdAttributeInstanceDto) {
         assertEquals(attributeDto.getAttributeId(), attributeDto.getAttributeId());
-        assertEquals(attributeDto.getUuid(), attributeDto.getUuid());
         assertEqualsAttributeValues(attributeDto.getValue(), dsdAttributeInstanceDto.getValue());
         assertEqualsCodesByDimensionMap(attributeDto.getCodesByDimension(), dsdAttributeInstanceDto.getCodeDimensions());
     }

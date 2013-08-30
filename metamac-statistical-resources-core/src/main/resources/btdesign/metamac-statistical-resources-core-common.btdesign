@@ -2,7 +2,6 @@ import "classpath:/btdesign/metamac-statistical-resources-core-base-enums.btdesi
 import "classpath:/btdesign/metamac-statistical-resources-core-datasets.btdesign"
 import "classpath:/btdesign/metamac-statistical-resources-core-publications.btdesign"
 import "classpath:/btdesign/metamac-statistical-resources-core-queries.btdesign"
-import "classpath:/btdesign/export/metamac-core-common-entity.btdesign"
 import "classpath:/btdesign/metamac-core-common-enum.btdesign"
 
 Application CommonStatisticalResources {
@@ -37,5 +36,74 @@ Application CommonStatisticalResources {
 				findAll;
 			}
     	}
-	}
+	
+	    "The International String is a collection of Localised Strings and supports the representation of text in multiple locales."
+		Entity InternationalString {
+			gap
+			
+			databaseTable = "TB_INTERNATIONAL_STRINGS"
+			hint="idSequence=I18NSTRS"
+			not auditable
+			
+			"Added explicitly to avoid that Sculptor generate UUID"
+			Long id key;
+			- Set<@LocalisedString> texts cascade="all-delete-orphan" inverse <-> internationalString;
+			
+			Repository InternationalStringRepository {
+				findById;
+				delete;
+				findAll;
+				deleteInternationalStringsEfficiently(Collection<Long> internationalStringToDelete);
+			}
+		}
+
+		"The Localised String supports the representation of text in one locale (locale is similar to language but includes geographic 
+        variations such as Canadian French, US English etc.)."
+		Entity LocalisedString {
+			gap
+			
+			databaseTable = "TB_LOCALISED_STRINGS"
+			hint="idSequence=L10NSTRS"
+			! aggregateRoot
+			not auditable
+
+			"Added explicitly to avoid that Sculptor generate UUID"
+			Long id key;
+			
+			"Label of the string."
+			String label length="4000";
+			"The geographic locale of the string e.g French, Canadian French."
+			String locale;
+			"True is LocalisedString cannot be deleted or modified"
+			Boolean isUnmodifiable nullable;
+			
+			"Relation to InternationalString owner"
+			- @InternationalString internationalString not nullable cascade="none" databaseColumn="INTERNATIONAL_STRING_FK" <-> texts;
+		}
+		
+		
+		"Entity for store information about ExternalItems."	
+    	Entity ExternalItem {
+    		databaseTable = "TB_EXTERNAL_ITEMS"
+    		hint="idSequence=EXTERNAL_ITEMS"
+    		not auditable
+    		
+    		"Added explicitly to avoid that Sculptor generate UUID"
+			Long id key;
+			
+			String code databaseColumn="CODE" not nullable;
+			String codeNested databaseColumn="CODE_NESTED" nullable;
+			String uri databaseColumn="URI" not nullable length="4000";
+			String urn databaseColumn="URN" nullable length="4000";
+			String urnProvider databaseColumn="URN_PROVIDER" nullable length="4000";
+			- @TypeExternalArtefactsEnum type databaseColumn="TYPE" not nullable;
+			- @InternationalString title cascade="all" databaseColumn="TITLE_FK" nullable;
+			String managementAppUrl databaseColumn="MANAGEMENT_APP_URL" nullable length="4000";
+    		
+    		Repository ExternalItemRepository {
+				findById;
+				delete;
+				findAll;
+			}
+    	}
 }

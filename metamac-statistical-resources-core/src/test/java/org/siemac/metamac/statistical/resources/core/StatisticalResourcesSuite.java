@@ -2,7 +2,7 @@ package org.siemac.metamac.statistical.resources.core;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
-import org.siemac.metamac.core.common.ent.repositoryimpl.InternationalStringRepositoryTest;
+import org.siemac.metamac.statistical.resources.core.common.repositoryimpl.InternationalStringRepositoryTest;
 import org.siemac.metamac.statistical.resources.core.base.mapper.BaseDto2DoMapperTest;
 import org.siemac.metamac.statistical.resources.core.base.repositoryimpl.IdentifiableStatisticalResourceRepositoryTest;
 import org.siemac.metamac.statistical.resources.core.base.repositoryimpl.SiemacMetadataStatisticalResourceRepositoryTest;

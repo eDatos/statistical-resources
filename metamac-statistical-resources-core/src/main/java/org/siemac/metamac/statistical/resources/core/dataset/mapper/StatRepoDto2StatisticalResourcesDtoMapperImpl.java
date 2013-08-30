@@ -15,7 +15,6 @@ public class StatRepoDto2StatisticalResourcesDtoMapperImpl implements StatRepoDt
     @Override
     public DsdAttributeInstanceDto attributeDtoToDsdAttributeInstanceDto(AttributeDto source) throws MetamacException {
         DsdAttributeInstanceDto target = new DsdAttributeInstanceDto();
-        target.setUuid(source.getUuid());
         target.setAttributeId(source.getAttributeId());
         // TODO
         // target.setValue()
