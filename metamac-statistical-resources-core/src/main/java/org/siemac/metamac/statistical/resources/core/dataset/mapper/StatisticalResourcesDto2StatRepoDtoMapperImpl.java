@@ -25,12 +25,12 @@ public class StatisticalResourcesDto2StatRepoDtoMapperImpl implements Statistica
         if (source == null) {
             return null;
         }
-        AttributeDto attributeDto = new AttributeDto();
-        attributeDto.setAttributeId(source.getAttributeId());
-        attributeDto.setUuid(source.getUuid());
-        attributeDto.setValue(attributeValueDtoToInternationalStringValue(source.getValue()));
-        attributeDto.setCodesByDimension(codeItemMapToStringMap(source.getCodeDimensions()));
-        return attributeDto;
+        AttributeDto target = new AttributeDto();
+        target.setAttributeId(source.getAttributeId());
+        target.setUuid(source.getUuid());
+        target.setValue(attributeValueDtoToInternationalStringValue(source.getValue()));
+        target.setCodesByDimension(codeItemMapToStringMap(source.getCodeDimensions()));
+        return target;
     }
 
     private InternationalStringDto attributeValueDtoToInternationalStringValue(AttributeValueDto attributeValueDto) {
