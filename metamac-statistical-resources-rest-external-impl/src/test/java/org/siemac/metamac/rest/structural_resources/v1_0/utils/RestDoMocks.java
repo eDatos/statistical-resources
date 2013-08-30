@@ -10,7 +10,7 @@ import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.joda.time.DateTime;
-import org.siemac.metamac.core.common.ent.domain.InternationalString;
+import org.siemac.metamac.statistical.resources.core.common.domain.InternationalString;
 import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.VersionRationaleType;
