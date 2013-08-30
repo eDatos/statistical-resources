@@ -10,6 +10,7 @@ import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.core.common.exception.utils.ExceptionUtils;
 import org.siemac.metamac.statistical.resources.core.base.domain.HasLifecycle;
 import org.siemac.metamac.statistical.resources.core.base.domain.HasSiemacMetadata;
+import org.siemac.metamac.statistical.resources.core.common.utils.RelatedResourceUtils;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.lifecycle.LifecycleChecker;
 import org.siemac.metamac.statistical.resources.core.lifecycle.LifecycleFiller;
@@ -177,7 +178,7 @@ public abstract class LifecycleTemplateService<E extends Object> implements Life
 
     protected void checkSendToValidationRejected(ServiceContext ctx, E resource) throws MetamacException {
         List<MetamacExceptionItem> exceptions = new ArrayList<MetamacExceptionItem>();
-        
+
         checkNotTasksInProgress(ctx, resource);
         checkSendToValidationRejectedLinkedStatisticalResource(resource, exceptions);
 
@@ -230,9 +231,15 @@ public abstract class LifecycleTemplateService<E extends Object> implements Life
 
         checkSendToPublished(ctx, resource, previousResource);
 
-        applySendToPublished(ctx, resource, previousResource);
+        applySendToPublishedCurrentVersion(ctx, resource, previousResource);
+        resource = saveResource(resource);
 
-        return saveResource(resource);
+        if (previousResource != null) {
+            applySendToPublishedPreviousVersion(ctx, resource, previousResource);
+            saveResource(previousResource);
+        }
+
+        return retrieveResourceByResource(resource);
     }
 
     protected void checkSendToPublished(ServiceContext ctx, E resource, E previousResource) throws MetamacException {
@@ -247,10 +254,14 @@ public abstract class LifecycleTemplateService<E extends Object> implements Life
         ExceptionUtils.throwIfException(exceptions);
     }
 
-    protected void applySendToPublished(ServiceContext ctx, E resource, E previousResource) throws MetamacException {
-        applySendToPublishedLinkedStatisticalResource(ctx, resource, previousResource);
+    protected void applySendToPublishedCurrentVersion(ServiceContext ctx, E resource, E previousResource) throws MetamacException {
+        applySendToPublishedCurrentLinkedStatisticalResource(ctx, resource, previousResource);
+        applySendToPublishedCurrentResource(ctx, resource);
+    }
 
-        applySendToPublishedResource(ctx, resource);
+    protected void applySendToPublishedPreviousVersion(ServiceContext ctx, E resource, E previousResource) throws MetamacException {
+        applySendToPublishedPreviousLinkedStatisticalResource(ctx, resource, previousResource);
+        applySendToPublishedPreviousResource(ctx, previousResource);
     }
 
     protected void checkSendToPublishedLinkedStatisticalResource(E resource, E previousResource, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
@@ -263,11 +274,22 @@ public abstract class LifecycleTemplateService<E extends Object> implements Life
         }
     }
 
-    protected void applySendToPublishedLinkedStatisticalResource(ServiceContext ctx, E resource, E previousResource) throws MetamacException {
+    protected void applySendToPublishedCurrentLinkedStatisticalResource(ServiceContext ctx, E resource, E previousResource) throws MetamacException {
         if (resource instanceof HasSiemacMetadata) {
-            siemacLifecycleFiller.applySendToPublishedActions(ctx, (HasSiemacMetadata) resource, (HasSiemacMetadata) previousResource);
+            siemacLifecycleFiller.applySendToPublishedCurrentResourceActions(ctx, (HasSiemacMetadata) resource, (HasSiemacMetadata) previousResource);
         } else if (resource instanceof HasLifecycle) {
-            lifecycleFiller.applySendToPublishedActions(ctx, (HasLifecycle) resource, (HasSiemacMetadata) previousResource);
+            lifecycleFiller.applySendToPublishedCurrentResourceActions(ctx, (HasLifecycle) resource, (HasLifecycle) previousResource);
+        } else {
+            throw new MetamacException(ServiceExceptionType.UNKNOWN, "Found an unknown resource type sending to published");
+        }
+    }
+    protected void applySendToPublishedPreviousLinkedStatisticalResource(ServiceContext ctx, E resource, E previousResource) throws MetamacException {
+        if (resource instanceof HasSiemacMetadata) {
+            siemacLifecycleFiller.applySendToPublishedPreviousResourceActions(ctx, (HasSiemacMetadata) resource, (HasSiemacMetadata) previousResource,
+                    RelatedResourceUtils.createRelatedResourceForHasLifecycleResource((HasSiemacMetadata) resource));
+        } else if (resource instanceof HasLifecycle) {
+            lifecycleFiller.applySendToPublishedPreviousResourceActions(ctx, (HasLifecycle) resource, (HasLifecycle) previousResource,
+                    RelatedResourceUtils.createRelatedResourceForHasLifecycleResource((HasLifecycle) resource));
         } else {
             throw new MetamacException(ServiceExceptionType.UNKNOWN, "Found an unknown resource type sending to published");
         }
@@ -275,7 +297,9 @@ public abstract class LifecycleTemplateService<E extends Object> implements Life
 
     protected abstract void checkSendToPublishedResource(E resource, List<MetamacExceptionItem> exceptionItems) throws MetamacException;
 
-    protected abstract void applySendToPublishedResource(ServiceContext ctx, E resource) throws MetamacException;
+    protected abstract void applySendToPublishedCurrentResource(ServiceContext ctx, E resource) throws MetamacException;
+
+    protected abstract void applySendToPublishedPreviousResource(ServiceContext ctx, E previousResource) throws MetamacException;
 
     // ------------------------------------------------------------------------------------------------------
     // >> VERSIONING
@@ -313,7 +337,7 @@ public abstract class LifecycleTemplateService<E extends Object> implements Life
 
     protected void applyVersioningNewResource(ServiceContext ctx, E resource, E previousResource, VersionTypeEnum versionType) throws MetamacException {
         applyVersioningLinkedStatisticalNewResource(ctx, resource, previousResource, versionType);
-        
+
         resource = updateResourceUrn(resource);
 
         applyVersioningNewResource(ctx, resource);
@@ -394,7 +418,7 @@ public abstract class LifecycleTemplateService<E extends Object> implements Life
     protected abstract E saveResource(E resource);
 
     protected abstract String getResourceMetadataName() throws MetamacException;
-    
-    protected abstract String getResourceUrn(E resource); 
+
+    protected abstract String getResourceUrn(E resource);
 
 }

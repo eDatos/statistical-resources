@@ -64,7 +64,7 @@ public class EntityMetadata {
             properties.put(propertyName, null);
         }
     }
-    
+
     public Object getPropertyValue(String propertyName) {
         return properties.get(propertyName);
     }
@@ -88,13 +88,13 @@ public class EntityMetadata {
     }
 
     public Long getId() {
-        return (Long)properties.get("ID");
+        return (Long) properties.get("ID");
     }
 
     public void setId(Long id) {
         setPropertyValue("ID", id);
     }
-    
+
     public void setSingleTable(boolean singleTable) {
         isSingleTable = singleTable;
     }
@@ -129,7 +129,6 @@ public class EntityMetadata {
         for (String propName : attributes) {
             Object value = properties.get(propName);
             buffer.append(propName).append("=");
-            //FIXME: Get String representation for value
             if (value != null) {
                 buffer.append("\"").append(value).append("\"\n");
             } else {

@@ -154,7 +154,7 @@ public class QueryServiceImpl extends QueryServiceImplBase {
         // Retrieve entity
         QueryVersion queryVersion = retrieveQueryVersionByUrn(ctx, urn);
 
-        // Check that query is pending_review
+        // Check that query is with a correct procStatus
         BaseValidator.checkStatisticalResourceCanBeDeleted(queryVersion);
 
         if (VersionUtil.isInitialVersion(queryVersion.getLifeCycleStatisticalResource().getVersionLogic())) {

@@ -4,6 +4,7 @@ import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.base.domain.HasSiemacMetadata;
+import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -43,9 +44,16 @@ public class SiemacLifecycleFiller {
     // >> PUBLISHED
     // ------------------------------------------------------------------------------------------------------
 
-    public void applySendToPublishedActions(ServiceContext ctx, HasSiemacMetadata resource, HasSiemacMetadata previousResource) throws MetamacException {
-        lifecycleFiller.applySendToPublishedActions(ctx, resource, previousResource);
+    public void applySendToPublishedCurrentResourceActions(ServiceContext ctx, HasSiemacMetadata resource, HasSiemacMetadata previousResource) throws MetamacException {
+        lifecycleFiller.applySendToPublishedCurrentResourceActions(ctx, resource, previousResource);
         resource.getSiemacMetadataStatisticalResource().setCopyrightedDate(resource.getLifeCycleStatisticalResource().getValidFrom().getYear());
+
+        // TODO: Metadatos de relaciones entre recursos
+    }
+    
+    public void applySendToPublishedPreviousResourceActions(ServiceContext ctx, HasSiemacMetadata resource, HasSiemacMetadata previousResource, RelatedResource currentAsRelatedResource) throws MetamacException {
+        lifecycleFiller.applySendToPublishedPreviousResourceActions(ctx, resource, previousResource, currentAsRelatedResource);
+        
 
         // TODO: Metadatos de relaciones entre recursos
     }

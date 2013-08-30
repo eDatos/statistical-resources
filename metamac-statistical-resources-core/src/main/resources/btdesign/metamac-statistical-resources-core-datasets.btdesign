@@ -189,7 +189,7 @@ Application DatasetsStatisticalResources {
 			//Official/no official statistic
 			- @StatisticOfficiality statisticOfficiality nullable databaseColumn="STAT_OFFICIALITY_FK";
 			//Bibliographic citation
-			- @InternationalString bibliographicCitation nullable databaseColumn="BIBLIOGRAPHIC_CITATION_FK";
+			- @InternationalString bibliographicCitation nullable cascade="all" databaseColumn="BIBLIOGRAPHIC_CITATION_FK";
 			
 			// Relations
 			"Parent"

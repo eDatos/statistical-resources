@@ -8,6 +8,8 @@ import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.core.common.util.GeneratorUrnUtils;
+import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResource;
+import org.siemac.metamac.statistical.resources.core.common.utils.RelatedResourceUtils;
 import org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConstants;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
 import org.siemac.metamac.statistical.resources.core.lifecycle.LifecycleCommonMetadataChecker;
@@ -79,7 +81,13 @@ public class QueryLifecycleServiceImpl extends LifecycleTemplateService<QueryVer
     // ------------------------------------------------------------------------------------------------------
 
     @Override
-    protected void applySendToPublishedResource(ServiceContext ctx, QueryVersion resource) throws MetamacException {
+    protected void applySendToPublishedCurrentResource(ServiceContext ctx, QueryVersion resource) throws MetamacException {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Not implemented");
+    }
+    
+    @Override
+    protected void applySendToPublishedPreviousResource(ServiceContext ctx, QueryVersion resource) throws MetamacException {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Not implemented");
     }
@@ -159,4 +167,5 @@ public class QueryLifecycleServiceImpl extends LifecycleTemplateService<QueryVer
     protected String getResourceUrn(QueryVersion resource) {
         return resource.getLifeCycleStatisticalResource().getUrn();
     }
+
 }

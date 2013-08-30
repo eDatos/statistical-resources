@@ -76,10 +76,19 @@ public class PublicationLifecycleServiceImpl extends LifecycleTemplateService<Pu
     // ------------------------------------------------------------------------------------------------------
 
     @Override
-    protected void applySendToPublishedResource(ServiceContext ctx, PublicationVersion resource) throws MetamacException {
+    protected void applySendToPublishedCurrentResource(ServiceContext ctx, PublicationVersion resource) throws MetamacException {
         // TODO:
         // - cumplimentar format_extent_resources
 
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Not implemented");
+    }
+    
+    @Override
+    protected void applySendToPublishedPreviousResource(ServiceContext ctx, PublicationVersion resource) throws MetamacException {
+        // TODO:
+        // - cumplimentar format_extent_resources
+        
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Not implemented");
     }

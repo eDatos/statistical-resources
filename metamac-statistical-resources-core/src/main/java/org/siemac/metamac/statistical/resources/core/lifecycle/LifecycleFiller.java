@@ -53,29 +53,24 @@ public class LifecycleFiller {
     // PUBLISHED
     // ------------------------------------------------------------------------------------------------------
 
-    public void applySendToPublishedActions(ServiceContext ctx, HasLifecycle resource, HasLifecycle previousVersion) throws MetamacException {
+    public void applySendToPublishedCurrentResourceActions(ServiceContext ctx, HasLifecycle resource, HasLifecycle previousVersion) throws MetamacException {
         if (!StatisticalResourcesVersionUtils.isInitialVersion(resource) && ValidationUtils.isEmpty(previousVersion)) {
             throw new MetamacException(ServiceExceptionType.PARAMETER_REQUIRED, ServiceExceptionParameters.PREVIOUS_VERSION);
         }
-
-        DateTime publicationDate = resource.getLifeCycleStatisticalResource().getValidFrom();
-
-        // Actual version
+        DateTime now = new DateTime();
+        DateTime pubDate = resource.getLifeCycleStatisticalResource().getValidFrom().isBefore(now) ? resource.getLifeCycleStatisticalResource().getValidFrom() : now;
         // We don't need to fill validFrom because it is required for publish
-        resource.getLifeCycleStatisticalResource().setPublicationDate(new DateTime());
+        resource.getLifeCycleStatisticalResource().setPublicationDate(pubDate);
         resource.getLifeCycleStatisticalResource().setPublicationUser(ctx.getUserId());
         resource.getLifeCycleStatisticalResource().setProcStatus(ProcStatusEnum.PUBLISHED);
 
-        // Previous version
-        applySendToPublishedActionsIfExistsPreviousVersion(previousVersion, publicationDate);
-
         // TODO: Metadatos de relaciones entre recursos
     }
+    public void applySendToPublishedPreviousResourceActions(ServiceContext ctx, HasLifecycle resource, HasLifecycle previousVersion, RelatedResource currentAsRelatedResource) throws MetamacException {
+        DateTime publicationDate = resource.getLifeCycleStatisticalResource().getValidFrom();
+        previousVersion.getLifeCycleStatisticalResource().setValidTo(publicationDate);
 
-    private void applySendToPublishedActionsIfExistsPreviousVersion(HasLifecycle previousVersion, DateTime publicationDate) throws MetamacException {
-        if (previousVersion != null) {
-            previousVersion.getLifeCycleStatisticalResource().setValidTo(publicationDate);
-        }
+        previousVersion.getLifeCycleStatisticalResource().setIsReplacedByVersion(cloneRelatedResource(currentAsRelatedResource));
     }
 
     // ------------------------------------------------------------------------------------------------------
@@ -97,7 +92,7 @@ public class LifecycleFiller {
         resource.getLifeCycleStatisticalResource().setVersionLogic(
                 VersionUtil.createNextVersion(previousVersion.getLifeCycleStatisticalResource().getVersionLogic(), VersionPatternEnum.XXX_YYY, versionType));
     }
-    
+
     public void applyVersioningPreviousResourceActions(ServiceContext ctx, HasLifecycle resource, HasLifecycle previousVersion, VersionTypeEnum versionType) throws MetamacException {
         if (ValidationUtils.isEmpty(previousVersion)) {
             throw new MetamacException(ServiceExceptionType.PARAMETER_REQUIRED, ServiceExceptionParameters.PREVIOUS_VERSION);
@@ -108,4 +103,16 @@ public class LifecycleFiller {
         previousVersion.getLifeCycleStatisticalResource().setLastVersion(false);
     }
 
+    private RelatedResource cloneRelatedResource(RelatedResource relatedResource) {
+        RelatedResource cloned = new RelatedResource();
+        cloned.setDataset(relatedResource.getDataset());
+        cloned.setDatasetVersion(relatedResource.getDatasetVersion());
+        cloned.setPublication(relatedResource.getPublication());
+        cloned.setPublicationVersion(relatedResource.getPublicationVersion());
+        cloned.setQuery(relatedResource.getQuery());
+        cloned.setQueryVersion(relatedResource.getQueryVersion());
+        cloned.setType(relatedResource.getType());
+        cloned.setVersion(0L);
+        return cloned;
+    }
 }

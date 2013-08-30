@@ -101,8 +101,10 @@ public class LifecycleChecker {
                 exceptionItems);
 
         // Replaces Version
-        relatedResourceChecker.checkRelatedResourceExternallyPublished(resource.getLifeCycleStatisticalResource().getReplacesVersion(), resource.getLifeCycleStatisticalResource().getValidFrom(),
-                addParameter(metadataName, ServiceExceptionSingleParameters.REPLACES_VERSION), exceptionItems);
+        if (resource.getLifeCycleStatisticalResource().getReplacesVersion() != null) {
+            relatedResourceChecker.checkRelatedResourceExternallyPublished(resource.getLifeCycleStatisticalResource().getReplacesVersion(), resource.getLifeCycleStatisticalResource().getValidFrom(),
+                    addParameter(metadataName, ServiceExceptionSingleParameters.REPLACES_VERSION), exceptionItems);
+        }
 
         // Is replaced by version: It can be private. API checks that can be returned.
     }

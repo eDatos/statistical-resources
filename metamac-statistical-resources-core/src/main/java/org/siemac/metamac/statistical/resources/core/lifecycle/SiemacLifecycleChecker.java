@@ -61,7 +61,7 @@ public class SiemacLifecycleChecker {
     // ------------------------------------------------------------------------------------------------------
 
     public void checkSendToPublished(HasSiemacMetadata resource, HasSiemacMetadata previousVersion, String metadataName, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
-        lifecycleChecker.checkSendToPublished(resource, previousVersion, metadataName, exceptionItems);
+        lifecycleChecker.checkSendToPublished(resource, previousVersion, addParameter(metadataName, ServiceExceptionSingleParameters.SIEMAC_METADATA_STATISTICAL_RESOURCE), exceptionItems);
         checkSiemacMetadataAllActions(resource, metadataName, exceptionItems);
         checkExternalItemsPreviouslyPublished(resource.getSiemacMetadataStatisticalResource(), addParameter(metadataName, ServiceExceptionSingleParameters.SIEMAC_METADATA_STATISTICAL_RESOURCE),
                 exceptionItems);
@@ -77,8 +77,10 @@ public class SiemacLifecycleChecker {
         externalItemChecker.checkExternalItemsExternallyPublished(resource.getLanguages(), addParameter(metadataName, ServiceExceptionSingleParameters.LANGUAGES), exceptionItems);
 
         // Statistical Operation Instance
-        externalItemChecker.checkExternalItemsExternallyPublished(resource.getStatisticalOperationInstances(),
-                addParameter(metadataName, ServiceExceptionSingleParameters.STATISTICAL_OPERATION_INSTANCES), exceptionItems);
+        if (!resource.getStatisticalOperationInstances().isEmpty()) {
+            externalItemChecker.checkExternalItemsExternallyPublished(resource.getStatisticalOperationInstances(),
+                    addParameter(metadataName, ServiceExceptionSingleParameters.STATISTICAL_OPERATION_INSTANCES), exceptionItems);
+        }
 
         // Creator
         externalItemChecker.checkExternalItemsExternallyPublished(resource.getCreator(), addParameter(metadataName, ServiceExceptionSingleParameters.CREATOR), exceptionItems);
@@ -102,8 +104,10 @@ public class SiemacLifecycleChecker {
 
     private void checkRelatedResourcesPreviouslyPublished(SiemacMetadataStatisticalResource resource, String metadataName, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
         // Replaces
-        relatedResourceChecker.checkRelatedResourceExternallyPublished(resource.getReplaces(), resource.getValidFrom(), addParameter(metadataName, ServiceExceptionSingleParameters.REPLACES),
-                exceptionItems);
+        if (resource.getReplaces() != null) {
+            relatedResourceChecker.checkRelatedResourceExternallyPublished(resource.getReplaces(), resource.getValidFrom(), addParameter(metadataName, ServiceExceptionSingleParameters.REPLACES),
+                    exceptionItems);
+        }
 
         // Is replaced by
         // API checks if it's published
@@ -116,7 +120,8 @@ public class SiemacLifecycleChecker {
         // API checks if it's published
 
         // Has part
-        relatedResourceChecker.checkRelatedResourcesExternallyPublished(resource.getHasPart(), resource.getValidFrom(), addParameter(metadataName, ServiceExceptionSingleParameters.HAS_PART), exceptionItems);
+        relatedResourceChecker.checkRelatedResourcesExternallyPublished(resource.getHasPart(), resource.getValidFrom(), addParameter(metadataName, ServiceExceptionSingleParameters.HAS_PART),
+                exceptionItems);
 
         // Is part of
         // API checks if it's published
