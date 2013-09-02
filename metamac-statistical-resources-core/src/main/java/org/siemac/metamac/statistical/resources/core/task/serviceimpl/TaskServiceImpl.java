@@ -20,6 +20,7 @@ import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteriaBuilder;
 import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
 import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
+import org.fornax.cartridges.sculptor.framework.errorhandling.ApplicationException;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ExceptionHelper;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.joda.time.DateTime;
@@ -43,6 +44,7 @@ import org.siemac.metamac.statistical.resources.core.enume.task.domain.TaskStatu
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.invocation.service.SrmRestInternalService;
 import org.siemac.metamac.statistical.resources.core.io.mapper.MetamacSdmx2StatRepoMapper;
+import org.siemac.metamac.statistical.resources.core.io.serviceimpl.DuplicationDatasetJob;
 import org.siemac.metamac.statistical.resources.core.io.serviceimpl.ImportDatasetJob;
 import org.siemac.metamac.statistical.resources.core.io.serviceimpl.ManipulateCsvDataService;
 import org.siemac.metamac.statistical.resources.core.io.serviceimpl.ManipulatePxDataService;
@@ -64,6 +66,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.arte.statistic.dataset.repository.dto.AttributeObservationDto;
+import com.arte.statistic.dataset.repository.dto.DatasetRepositoryDto;
 import com.arte.statistic.dataset.repository.dto.InternationalStringDto;
 import com.arte.statistic.dataset.repository.dto.LocalisedStringDto;
 import com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceFacade;
@@ -246,18 +249,23 @@ public class TaskServiceImpl extends TaskServiceImplBase {
                 throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.TASKS_JOB_RECOVERY_IN_PROCESS).withLoggedLevel(ExceptionLevelEnum.ERROR).build(); // Error
             }
 
-            // // put triggers in group named after the cluster node instance just to distinguish (in logging) what was scheduled from where
-            // JobDetail recoveryImportJob = newJob(RecoveryImportDatasetJob.class).withIdentity(recoveryImportJobKey)
-            // .usingJobData(RecoveryImportDatasetJob.DATASET_VERSION_ID, taskInfoDataset.getDatasetVersionId()).usingJobData(RecoveryImportDatasetJob.USER, ctx.getUserId()).requestRecovery()
-            // .build();
-            //
-            // SimpleTrigger recoveryImportTrigger = newTrigger().withIdentity(recoveryImportTriggerKey).startAt(futureDate(10, IntervalUnit.SECOND)).withSchedule(simpleSchedule()).build();
-            //
-            // try {
-            // sched.scheduleJob(recoveryImportJob, recoveryImportTrigger);
-            // } catch (SchedulerException e) {
-            // logger.error("PlannifyRecoveryImportDataset: the recovery importation with key " + recoveryImportJobKey.getName() + " has failed", e);
-            // }
+            // put triggers in group named after the cluster node instance just to distinguish (in logging) what was scheduled from where
+            JobDetail duplicationImportJob = newJob(DuplicationDatasetJob.class).withIdentity(duplicationJobKey)
+                    .usingJobData(DuplicationDatasetJob.DATASET_VERSION_ID, taskInfoDataset.getDatasetVersionId()).usingJobData(DuplicationDatasetJob.USER, ctx.getUserId())
+                    .usingJobData(DuplicationDatasetJob.NEW_DATASET_VERSION_ID, newDatasetId).requestRecovery().build();
+
+            Task task = new Task(duplicationJobKey.getName());
+            task.setStatus(TaskStatusTypeEnum.IN_PROGRESS);
+            task.setExtensionPoint(newDatasetId);
+            createTask(ctx, task);
+
+            SimpleTrigger duplicationImportTrigger = newTrigger().withIdentity(duplicationTriggerKey).startAt(futureDate(10, IntervalUnit.SECOND)).withSchedule(simpleSchedule()).build();
+
+            try {
+                sched.scheduleJob(duplicationImportJob, duplicationImportTrigger);
+            } catch (SchedulerException e) {
+                logger.error("PlannifyRecoveryImportDataset: the recovery importation with key " + duplicationJobKey.getName() + " has failed", e);
+            }
         } catch (Exception e) {
             throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.TASKS_ERROR).withMessageParameters(e.getMessage()).withCause(e).withLoggedLevel(ExceptionLevelEnum.ERROR)
                     .build(); // Error
@@ -265,6 +273,7 @@ public class TaskServiceImpl extends TaskServiceImplBase {
 
         return duplicationJobKey.getName();
     }
+
     @Override
     public void processImportationTask(ServiceContext ctx, String importationJobKey, TaskInfoDataset taskInfoDataset) throws MetamacException {
         // Validation
@@ -343,6 +352,23 @@ public class TaskServiceImpl extends TaskServiceImplBase {
         markTaskAsFinished(ctx, duplicationJobKey); // Finish the importation
     }
 
+    private void processRollbackDuplicationTask(ServiceContext ctx, Task task) throws MetamacException {
+        try {
+            DatasetRepositoryDto datasetRepository = datasetRepositoriesServiceFacade.retrieveDatasetRepository(task.getExtensionPoint());
+
+            if (datasetRepository != null) {
+                // If it exists, all is correct, the duplicate successfully finished but did not notice the application.
+                markTaskAsFinished(ctx, task.getJob());
+            } else {
+                // If not, send notification about the failure. No further action is necessary because there is no waste in the repository.
+                markTaskAsFinished(ctx, task.getJob()); // Clear the error task
+                // TODO gestor de avisos: La tarea de duplicado acabó inesperadamente
+            }
+        } catch (ApplicationException e) {
+            logger.error("Unable to connect to the repository", e);
+        }
+    }
+
     @Override
     public boolean existsTaskForResource(ServiceContext ctx, String resourceId) throws MetamacException {
         taskServiceInvocationValidator.checkExistsTaskForResource(ctx, resourceId);
@@ -406,18 +432,23 @@ public class TaskServiceImpl extends TaskServiceImplBase {
 
     @Override
     public void markTaskAsFailed(ServiceContext ctx, String jobKey, Exception exception) throws MetamacException {
-        // Update
         Task task = retrieveTaskByJob(ctx, jobKey);
-        task.setStatus(TaskStatusTypeEnum.FAILED);
-        updateTask(ctx, task);
 
         // Plannify a recovery job
         if (jobKey.startsWith(PREFIX_JOB_IMPORT_DATA)) {
+            // Update
+            task.setStatus(TaskStatusTypeEnum.FAILED);
+            updateTask(ctx, task);
+
             TaskInfoDataset recoveryTaskInfo = new TaskInfoDataset();
-            recoveryTaskInfo.setDatasetVersionId(extractDatasetIdFormJobKeyImportationDataset(jobKey));
+            recoveryTaskInfo.setDatasetVersionId(extractDatasetIdFromJobKeyImportationDataset(jobKey));
             planifyRecoveryImportDataset(ctx, recoveryTaskInfo);
+
+            // TODO envio al gestor de avisos de fallo de importación
+        } else if (jobKey.startsWith(PREFIX_JOB_DUPLICATION_DATA)) {
+            processRollbackDuplicationTask(ctx, task);
         }
-        // TODO envio al gestor de avisos de fallo de importación
+
     }
 
     @Override
@@ -474,11 +505,11 @@ public class TaskServiceImpl extends TaskServiceImplBase {
         return new TriggerKey(PREFIX_JOB_DUPLICATION_DATA + datasetId, GROUP_IMPORTATION);
     }
 
-    private String extractDatasetIdFormJobKeyImportationDataset(String jobImportKeyName) {
-        if (StringUtils.isEmpty(jobImportKeyName)) {
+    private String extractDatasetIdFromJobKeyImportationDataset(String jobKeyName) {
+        if (StringUtils.isEmpty(jobKeyName)) {
             return null;
         }
-        return StringUtils.substringAfter(jobImportKeyName, PREFIX_JOB_IMPORT_DATA);
+        return StringUtils.substringAfter(jobKeyName, PREFIX_JOB_IMPORT_DATA);
     }
 
     protected void serializeFilePathsAndNames(TaskInfoDataset taskInfoDataset, StringBuilder filePaths, StringBuilder fileNames, StringBuilder fileFormats) throws IOException, FileNotFoundException {
