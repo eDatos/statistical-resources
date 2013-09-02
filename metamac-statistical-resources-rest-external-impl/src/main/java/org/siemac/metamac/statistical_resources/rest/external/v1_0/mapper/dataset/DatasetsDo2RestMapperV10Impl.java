@@ -200,13 +200,13 @@ public class DatasetsDo2RestMapperV10Impl implements DatasetsDo2RestMapperV10 {
         return commonDo2RestMapper.toResourceLink(resourceSubpath, agencyID, resourceID, version);
     }
 
-    private InternationalString toBibliographicCitation(DatasetVersion datasetVersion, org.siemac.metamac.core.common.ent.domain.InternationalString sources, List<String> selectedLanguages)
-            throws MetamacException {
+    private InternationalString toBibliographicCitation(DatasetVersion datasetVersion, org.siemac.metamac.statistical.resources.core.common.domain.InternationalString sources,
+            List<String> selectedLanguages) throws MetamacException {
         if (sources == null) {
             return null;
         }
         InternationalString targets = new InternationalString();
-        for (org.siemac.metamac.core.common.ent.domain.LocalisedString source : sources.getTexts()) {
+        for (org.siemac.metamac.statistical.resources.core.common.domain.LocalisedString source : sources.getTexts()) {
             if (selectedLanguages.contains(source.getLocale())) {
                 LocalisedString target = new LocalisedString();
                 target.setLang(source.getLocale());
