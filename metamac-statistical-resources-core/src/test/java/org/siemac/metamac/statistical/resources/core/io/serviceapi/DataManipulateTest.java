@@ -427,4 +427,71 @@ public class DataManipulateTest extends StatisticalResourcesBaseTest {
         assertNotNull(datasetRepositoryDto);
     }
 
+    @Test
+    public void testDuplicateDatasource() throws Exception {
+        // New Transaction: Because the job needs persisted data
+        final TransactionTemplate tt = new TransactionTemplate(transactionManager);
+        tt.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
+        tt.execute(new TransactionCallbackWithoutResult() {
+
+            @Override
+            public void doInTransactionWithoutResult(TransactionStatus status) {
+                try {
+
+                    TaskInfoDataset taskInfoDataset = new TaskInfoDataset();
+                    taskInfoDataset.setDataStructureUrn(URN_DSD_ECB_EXR_RG);
+                    taskInfoDataset.setDatasetVersionId("TEST_DATA_STR_ECB_EXR_RG");
+
+                    // File 01
+                    {
+                        FileDescriptor fileDescriptorDto = new FileDescriptor();
+                        fileDescriptorDto.setFileName(StringUtils.substringAfterLast(DATA_TSV_ECB_EXR_RG, "/"));
+                        fileDescriptorDto.setFile(new File(DataManipulateTest.class.getResource(DATA_TSV_ECB_EXR_RG).toURI()));
+                        fileDescriptorDto.setDatasetFileFormatEnum(DatasetFileFormatEnum.CSV);
+                        taskInfoDataset.addFile(fileDescriptorDto);
+                    }
+
+                    jobKey = taskService.planifyImportationDataset(serviceContext, taskInfoDataset);
+
+                } catch (MetamacException e) {
+                    e.printStackTrace();
+                } catch (URISyntaxException e) {
+                    e.printStackTrace();
+                }
+                logger.info("-- doInTransactionWithoutResult -- expects transaction commit");
+            }
+        });
+
+        // Wait until the job is finished
+        waitUntilJobFinished();
+
+        // Duplication JOB
+        final TransactionTemplate tt2 = new TransactionTemplate(transactionManager);
+        tt2.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
+        tt2.execute(new TransactionCallbackWithoutResult() {
+
+            @Override
+            public void doInTransactionWithoutResult(TransactionStatus status) {
+                try {
+
+                    TaskInfoDataset taskInfoDataset = new TaskInfoDataset();
+                    taskInfoDataset.setDataStructureUrn(URN_DSD_ECB_EXR_RG);
+                    taskInfoDataset.setDatasetVersionId("TEST_DATA_STR_ECB_EXR_RG");
+
+                    jobKey = taskService.planifyDuplicationDataset(serviceContext, taskInfoDataset, "TEST_DATA_STR_ECB_EXR_RG_NEW");
+
+                } catch (MetamacException e) {
+                    e.printStackTrace();
+                }
+                logger.info("-- doInTransactionWithoutResult -- expects transaction commit");
+            }
+        });
+
+        // Wait until the job is finished
+        waitUntilJobFinished();
+
+        DatasetRepositoryDto datasetRepositoryDto = datasetRepositoriesServiceFacade.retrieveDatasetRepository("TEST_DATA_STR_ECB_EXR_RG_NEW");
+
+        assertNotNull(datasetRepositoryDto);
+    }
 }
