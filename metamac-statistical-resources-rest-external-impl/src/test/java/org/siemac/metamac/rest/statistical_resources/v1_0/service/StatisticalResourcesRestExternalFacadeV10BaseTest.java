@@ -5,6 +5,8 @@ import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 import static org.siemac.metamac.rest.statistical_resources.constants.RestTestConstants.AGENCY_1;
 import static org.siemac.metamac.rest.statistical_resources.constants.RestTestConstants.AGENCY_2;
+import static org.siemac.metamac.rest.statistical_resources.constants.RestTestConstants.ATTRIBUTE_GLOBAL_1;
+import static org.siemac.metamac.rest.statistical_resources.constants.RestTestConstants.ATTRIBUTE_GLOBAL_2;
 import static org.siemac.metamac.rest.statistical_resources.constants.RestTestConstants.COLLECTION_1_CODE;
 import static org.siemac.metamac.rest.statistical_resources.constants.RestTestConstants.COLLECTION_2_CODE;
 import static org.siemac.metamac.rest.statistical_resources.constants.RestTestConstants.DATASET_1_CODE;
@@ -77,6 +79,7 @@ import org.siemac.metamac.statistical_resources.rest.external.invocation.SrmRest
 import org.siemac.metamac.statistical_resources.rest.external.v1_0.service.StatisticalResourcesV1_0;
 import org.springframework.context.ApplicationContext;
 
+import com.arte.statistic.dataset.repository.dto.AttributeDto;
 import com.arte.statistic.dataset.repository.dto.ObservationExtendedDto;
 import com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceFacade;
 
@@ -420,6 +423,23 @@ public abstract class StatisticalResourcesRestExternalFacadeV10BaseTest extends 
         });
     }
 
+    private void mockFindAttributesWithDatasetAttachmentLevel() throws Exception {
+        when(datasetRepositoriesServiceFacade.findAttributesWithDatasetAttachmentLevel(any(String.class), any(String.class))).thenAnswer(new Answer<List<AttributeDto>>() {
+
+            @Override
+            public List<AttributeDto> answer(InvocationOnMock invocation) throws Throwable {
+                String attributeId = (String) invocation.getArguments()[1];
+                List<AttributeDto> attributes = new ArrayList<AttributeDto>();
+                if (ATTRIBUTE_GLOBAL_1.equals(attributeId) || ATTRIBUTE_GLOBAL_2.equals(attributeId)) {
+                    attributes.add(restDoMocks.mockAttribute(attributeId, "Value " + attributeId));
+                } else {
+                    fail("Attribute " + attributeId + " unsupported");
+                }
+                return attributes;
+            };
+        });
+    }
+
     private void mockRetrieveDataStructureByUrn() throws MetamacException {
         when(srmRestExternalFacade.retrieveDataStructureByUrn(any(String.class))).thenAnswer(new Answer<DataStructure>() {
 
@@ -539,6 +559,7 @@ public abstract class StatisticalResourcesRestExternalFacadeV10BaseTest extends 
         mockRetrieveDatasetVersionDimensionsIds();
         mockRetrieveCoverageForDatasetVersionDimension();
         mockFindObservationsExtendedByDimensions();
+        mockFindAttributesWithDatasetAttachmentLevel();
 
         mockRetrieveDataStructureByUrn();
         mockRetrieveCodelistByUrn();

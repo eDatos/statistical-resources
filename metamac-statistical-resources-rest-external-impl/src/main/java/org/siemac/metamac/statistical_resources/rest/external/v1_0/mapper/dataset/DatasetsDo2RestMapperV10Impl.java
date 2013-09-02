@@ -22,6 +22,7 @@ import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Datasets;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructure;
 import org.siemac.metamac.rest.utils.RestUtils;
 import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor;
+import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor.DsdAttribute;
 import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor.DsdDimension;
 import org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConstants;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
@@ -115,9 +116,9 @@ public class DatasetsDo2RestMapperV10Impl implements DatasetsDo2RestMapperV10 {
         List<DsdDimension> dimensions = DsdProcessor.getDimensions(dataStructure);
         target.setDimensions(commonDo2RestMapper.toDimensions(dataStructure, dimensions, source.getSiemacMetadataStatisticalResource().getUrn(), null, selectedLanguages));
 
-        // TODO attributes
-        // target.setAttributes(commonDo2RestMapper.toAttributes(dataStructure, dataStructure.getDataStructureComponents().getAttributes(), source.getSiemacMetadataStatisticalResource().getUrn(),
-        // selectedLanguages));
+        List<DsdAttribute> attributes = DsdProcessor.getAttributes(dataStructure);
+        target.setAttributes(commonDo2RestMapper.toAttributes(attributes, source.getSiemacMetadataStatisticalResource().getUrn(), null, selectedLanguages));
+
         target.setGeographicCoverages(commonDo2RestMapper.toResourcesExternalItemsSrm(source.getGeographicCoverage(), selectedLanguages));
         target.setTemporalCoverages(toTemporalCoverages(source.getTemporalCoverage(), selectedLanguages));
         target.setMeasureCoverages(commonDo2RestMapper.toResourcesExternalItemsSrm(source.getMeasureCoverage(), selectedLanguages));

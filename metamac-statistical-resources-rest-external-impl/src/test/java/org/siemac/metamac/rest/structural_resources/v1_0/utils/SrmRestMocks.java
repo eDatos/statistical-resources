@@ -1,5 +1,7 @@
 package org.siemac.metamac.rest.structural_resources.v1_0.utils;
 
+import static org.siemac.metamac.rest.statistical_resources.constants.RestTestConstants.ATTRIBUTE_GLOBAL_1;
+import static org.siemac.metamac.rest.statistical_resources.constants.RestTestConstants.ATTRIBUTE_GLOBAL_2;
 import static org.siemac.metamac.rest.structural_resources.v1_0.utils.RestMocks.mockInternationalString;
 
 import org.siemac.metamac.rest.common.v1_0.domain.ResourceLink;
@@ -19,6 +21,7 @@ import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Dimensi
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DimensionReferences;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DimensionType;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Dimensions;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Empty;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ItemResourceInternal;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.MeasureDimension;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Representation;
@@ -55,9 +58,11 @@ public class SrmRestMocks {
         components.getDimensions().getDimensions().add(mockDimension("dim01", Boolean.FALSE));
 
         components.setAttributes(new Attributes());
-        components.getAttributes().getAttributes().add(mockAttributePrimaryMeasure("attribute1", false));
+        components.getAttributes().getAttributes().add(mockAttributeDataset(ATTRIBUTE_GLOBAL_1, false));
+        components.getAttributes().getAttributes().add(mockAttributeDataset(ATTRIBUTE_GLOBAL_2, false));
+        // components.getAttributes().getAttributes().add(mockAttributePrimaryMeasure("attribute1", false));
         // components.getAttributes().getAttributes().add(mockAttributeDimension("attribute2", Arrays.asList("GEO_DIM", "dim01"))); // TODO resto de atributos de diferente nivel
-        components.getAttributes().getAttributes().add(mockAttributePrimaryMeasure("attribute3", true));
+        // components.getAttributes().getAttributes().add(mockAttributePrimaryMeasure("attribute3", true));
 
         dataStructure.setShowDecimals(Integer.valueOf(2));
         dataStructure.setShowDecimalsPrecisions(new ShowDecimalPrecisions());
@@ -258,6 +263,14 @@ public class SrmRestMocks {
         dimension.getLocalRepresentation().setTextFormat(mockTimeTextFormatType());
         dimension.setConceptIdentity(mockConceptResource("agency01", "conceptScheme01", "01.000", id + "-conceptTimeDimension01", null));
         return dimension;
+    }
+
+    private static AttributeBase mockAttributeDataset(String id, boolean enumerated) {
+        Attribute attribute = new Attribute();
+        mockAttributeBase(id, attribute, enumerated);
+        attribute.setAttributeRelationship(new AttributeRelationship());
+        attribute.getAttributeRelationship().setNone(new Empty());
+        return attribute;
     }
 
     private static AttributeBase mockAttributePrimaryMeasure(String id, boolean enumerated) {

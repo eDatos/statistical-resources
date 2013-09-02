@@ -27,9 +27,14 @@ import org.siemac.metamac.rest.common.v1_0.domain.Resources;
 import org.siemac.metamac.rest.common_metadata.v1_0.domain.Configuration;
 import org.siemac.metamac.rest.exception.RestException;
 import org.siemac.metamac.rest.exception.utils.RestExceptionUtils;
+import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Attribute;
+import org.siemac.metamac.rest.statistical_resources.v1_0.domain.AttributeAttachmentLevelType;
+import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Attributes;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.CodeRepresentation;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.CodeRepresentations;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Data;
+import org.siemac.metamac.rest.statistical_resources.v1_0.domain.DataAttribute;
+import org.siemac.metamac.rest.statistical_resources.v1_0.domain.DataAttributes;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.DataStructureDefinition;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Dimension;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.DimensionRepresentation;
@@ -61,6 +66,8 @@ import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataS
 import org.siemac.metamac.statistical.resources.core.base.domain.VersionRationaleType;
 import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResource;
+import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor;
+import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor.DsdAttribute;
 import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor.DsdComponentType;
 import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor.DsdDimension;
 import org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConstants;
@@ -86,6 +93,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.arte.statistic.dataset.repository.dto.AttributeDto;
 import com.arte.statistic.dataset.repository.dto.ConditionDimensionDto;
 import com.arte.statistic.dataset.repository.dto.ObservationExtendedDto;
 import com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceFacade;
@@ -200,12 +208,12 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
         }
         Data target = new Data();
 
-        // Filter values // TODO validate values in coverage?
+        // Filter values
         List<String> dimensions = datasetService.retrieveDatasetVersionDimensionsIds(SERVICE_CONTEXT, source.getSiemacMetadataStatisticalResource().getUrn());
-        Map<String, List<String>> dimensionsValuesSelectedEffective = buildDimensionsSelectedWithValues(source, dimensionValuesSelected, dimensions);
+        Map<String, List<String>> dimensionsCodesSelectedEffective = buildDimensionsSelectedWithValues(source, dimensionValuesSelected, dimensions);
 
         // Observations
-        String observations = toDataObservations(source, dimensions, dimensionValuesSelected, dimensionsValuesSelectedEffective);
+        String observations = toDataObservations(source, dimensions, dimensionValuesSelected, dimensionsCodesSelectedEffective);
         target.setObservations(observations);
 
         // Dimensions
@@ -217,7 +225,7 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
             representation.setRepresentations(new CodeRepresentations());
 
             int valuesSize = 0;
-            for (String dimensionValue : dimensionsValuesSelectedEffective.get(dimension)) {
+            for (String dimensionValue : dimensionsCodesSelectedEffective.get(dimension)) {
                 CodeRepresentation codeRepresentation = new CodeRepresentation();
                 codeRepresentation.setCode(dimensionValue);
                 codeRepresentation.setIndex(valuesSize);
@@ -228,6 +236,9 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
             target.getDimensions().getDimensions().add(representation);
         }
         target.getDimensions().setTotal(BigInteger.valueOf(target.getDimensions().getDimensions().size()));
+
+        // Attributes
+        target.setAttributes(toDataAttributes(source.getRelatedDsd().getUrn(), source.getDatasetRepositoryId(), dimensions, dimensionsCodesSelectedEffective));
 
         return target;
     }
@@ -285,26 +296,26 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
         return targets;
     }
 
-    // TODO attributes
     /**
-     * TODO effectiveAttributesValues to queries It is necessary when query is retrieved, to filter attributes. It can be null; in this case, returns all
+     * TODO @param effectiveDimensionValuesToDataByDimension It is necessary when query is retrieved, to filter dimension values. It can be null; in this case, returns all
      */
-    // @Override
-    // public Attributes toAttributes(DataStructure dataStructure, org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Attributes sources, String datasetVersionUrn,
-    // List<String> selectedLanguages) throws MetamacException {
-    //
-    // if (sources == null || CollectionUtils.isEmpty(sources.getAttributes())) {
-    // return null;
-    // }
-    //
-    // Attributes targets = new Attributes();
-    // for (AttributeBase source : sources.getAttributes()) {
-    // Attribute target = toAttribute(datasetVersionUrn, dataStructure, source, selectedLanguages);
-    // targets.getAttributes().add(target);
-    // }
-    // targets.setTotal(BigInteger.valueOf(targets.getAttributes().size()));
-    // return targets;
-    // }
+    @Override
+    public Attributes toAttributes(List<DsdAttribute> sources, String datasetVersionUrn, Map<String, List<String>> effectiveDimensionValuesToDataByDimension, List<String> selectedLanguages)
+            throws MetamacException {
+
+        if (CollectionUtils.isEmpty(sources)) {
+            return null;
+        }
+
+        Attributes targets = new Attributes();
+        for (DsdAttribute source : sources) {
+            // TODO effectiveDimensionCodes
+            Attribute target = toAttribute(source, selectedLanguages);
+            targets.getAttributes().add(target);
+        }
+        targets.setTotal(BigInteger.valueOf(targets.getAttributes().size()));
+        return targets;
+    }
 
     @Override
     public List<String> codeItemToString(List<CodeItem> sources) {
@@ -683,87 +694,24 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
         return targets;
     }
 
-    // TODO Attributes
-    // private Attribute toAttribute(String datasetVersionUrn, DataStructure dataStructure, AttributeBase source, List<String> selectedLanguages) throws MetamacException {
-    // if (source == null) {
-    // return null;
-    // }
-    //
-    // Attribute target = null;
-    // if (source instanceof org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Attribute) {
-    // target = toAttribute(datasetVersionUrn, dataStructure, (org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Attribute) source, selectedLanguages);
-    // } else {
-    // logger.error("Attribute type unsupported: " + source.getId());
-    // org.siemac.metamac.rest.common.v1_0.domain.Exception exception = RestExceptionUtils.getException(RestServiceExceptionType.UNKNOWN);
-    // throw new RestException(exception, Status.INTERNAL_SERVER_ERROR);
-    // }
-    // target.setId(source.getId());
-    // target.setName(toInternationalString(source.getConceptIdentity().getName(), selectedLanguages));
-    //
-    // // Attribute values
-    // target.setValues(toAttributeValues(datasetVersionUrn, dataStructure, source, selectedLanguages));
-    //
-    // return target;
-    //
-    // }
-    //
-    // private Attribute toAttribute(String datasetVersionUrn, DataStructure dataStructure, org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Attribute source,
-    // List<String> selectedLanguages) throws MetamacException {
-    // if (source == null) {
-    // return null;
-    // }
-    // Attribute target = new Attribute();
-    // if (source.getAttributeRelationship() != null && source.getAttributeRelationship().getPrimaryMeasure() != null) {
-    // target.setType(AttributeLevelType.PRIMARY_MEASURE);
-    // } else {
-    // // TODO PTE CORE: resto de atributos de diferente nivel
-    // }
-    // return target;
-    // }
-    //
-    // private AttributeValues toAttributeValues(String datasetVersionUrn, DataStructure dataStructure, AttributeBase attribute, List<String> selectedLanguages) throws MetamacException {
-    // if (attribute == null) {
-    // return null;
-    // }
-    // // TODO PTE CORE: filtrar coverage de atributos
-    //
-    // AttributeValues targets = null;
-    // Representation representation = getRepresentation(attribute);
-    // if (representation.getEnumerationCodelist() != null) {
-    // targets = toEnumeratedAttributeValuesFromCodelist(representation.getEnumerationCodelist().getUrn(), selectedLanguages);
-    // } else if (representation.getTextFormat() != null) {
-    // // nothing. values in observations or dimensions attributes are the real value, not a code
-    // } else {
-    // logger.error("Attribute definition unsupported for attribute: " + attribute.getId());
-    // org.siemac.metamac.rest.common.v1_0.domain.Exception exception = RestExceptionUtils.getException(RestServiceExceptionType.UNKNOWN);
-    // throw new RestException(exception, Status.INTERNAL_SERVER_ERROR);
-    // }
-    //
-    // return targets;
-    // }
-    //
-    // private EnumeratedAttributeValues toEnumeratedAttributeValuesFromCodelist(String codelistUrn, List<String> selectedLanguages) throws MetamacException {
-    // if (codelistUrn == null) {
-    // return null;
-    // }
-    // EnumeratedAttributeValues targets = new EnumeratedAttributeValues();
-    //
-    // Codes codes = srmRestExternalFacade.retrieveCodesByCodelistUrn(codelistUrn, null, null);
-    // for (CodeResourceInternal code : codes.getCodes()) {
-    // targets.getValues().add(toEnumeratedAttributeValue(code, selectedLanguages));
-    // }
-    // targets.setTotal(BigInteger.valueOf(targets.getValues().size()));
-    // return targets;
-    // }
-    //
-    // private EnumeratedAttributeValue toEnumeratedAttributeValue(CodeResourceInternal source, List<String> selectedLanguages) throws MetamacException {
-    // if (source == null) {
-    // return null;
-    // }
-    // EnumeratedAttributeValue target = new EnumeratedAttributeValue();
-    // toResource(source, target, selectedLanguages);
-    // return target;
-    // }
+    private Attribute toAttribute(DsdAttribute source, List<String> selectedLanguages) throws MetamacException {
+        if (source == null) {
+            return null;
+        }
+        Attribute target = new Attribute();
+        target.setId(source.getComponentId());
+        target.setName(toInternationalString(source.getConceptIdentity().getName(), selectedLanguages));
+
+        if (source.getAttributeRelationship().getNone() != null) {
+            target.setAttachmentLevel(AttributeAttachmentLevelType.DATASET);
+        } else {
+            // TODO resto de atributos de diferente nivel
+            // TODO los atributos en la parte de metadata tienen q tener las dimensiones ordenadas
+        }
+
+        // TODO toAttributeValues
+        return target;
+    }
 
     /**
      * Update map with parent visualisation.
@@ -1015,7 +963,7 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
 
         // Observation Size
         int sizeObservation = 1;
-        for (String dimension : dimensionsCodesSelectedEffective.keySet()) {
+        for (String dimension : dimensions) {
             sizeObservation = sizeObservation * dimensionsCodesSelectedEffective.get(dimension).size();
         }
         // OBSERVATIONS (return sorted)
@@ -1028,7 +976,6 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
         }
 
         int lastDimension = dimensions.size() - 1;
-        int current = 0;
         while (stack.size() > 0) {
             // POP
             OrderingStackElement elem = stack.pop();
@@ -1052,7 +999,6 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
                     dataObservations.add(null); // Return observation null
                 }
                 entryId.set(elemDimension, StringUtils.EMPTY);
-                current++;
             } else {
                 String dimension = dimensions.get(elemDimension + 1);
                 List<String> dimensionValues = dimensionsCodesSelectedEffective.get(dimension);
@@ -1064,6 +1010,106 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
         }
         return StringUtils.join(dataObservations.iterator(), RestExternalConstants.DATA_OBSERVATION_SEPARATOR);
     }
+
+    private DataAttributes toDataAttributes(String dsdUrn, String datasetId, List<String> datasetDimensionsOrdered, Map<String, List<String>> dimensionsCodesSelectedEffective) throws Exception {
+
+        DataStructure dataStructure = srmRestExternalFacade.retrieveDataStructureByUrn(dsdUrn);
+        List<DsdAttribute> sources = DsdProcessor.getAttributes(dataStructure);
+
+        if (CollectionUtils.isEmpty(sources) || MapUtils.isEmpty(dimensionsCodesSelectedEffective)) {
+            return null;
+        }
+
+        DataAttributes targets = new DataAttributes();
+        for (DsdAttribute source : sources) {
+            String attributeId = source.getComponentId();
+
+            DataAttribute target = new DataAttribute();
+            target.setId(attributeId);
+            if (source.getAttributeRelationship().getNone() != null) {
+                target.setValue(toAttributeValueWithDatasetAttachmentLevel(datasetId, attributeId));
+            } else if (CollectionUtils.isEmpty(source.getAttributeRelationship().getDimensions())) {
+                // TODO dimensions
+                List<String> attributeDimensionsOrdered = toAttributeDimensionsOrdered(datasetDimensionsOrdered, source.getAttributeRelationship().getDimensions());
+                // String result = toAttributeValueWithDimensionAttachmentLevel(datasetId, attributeId, attributeDimensionsOrdered, dimensionsCodesSelectedEffective);
+            } else {
+                // TODO group
+                // TODO measure
+            }
+            targets.getAttributes().add(target);
+        }
+        targets.setTotal(BigInteger.valueOf(targets.getAttributes().size()));
+        return targets;
+    }
+
+    private String toAttributeValueWithDatasetAttachmentLevel(String datasetId, String attributeId) throws Exception {
+
+        // Find attributes
+        List<AttributeDto> sources = datasetRepositoriesServiceFacade.findAttributesWithDatasetAttachmentLevel(datasetId, attributeId);
+        if (CollectionUtils.isEmpty(sources)) {
+            return null;
+        }
+        AttributeDto source = sources.get(0); // must be only one
+        return getAttributeValue(source);
+    }
+
+    // TODO toAttributeWithDimensionAttachmentLevel
+    // private String toAttributeValueWithDimensionAttachmentLevel(String datasetId, String attributeId, List<String> attributeDimensionsOrdered, Map<String, List<String>>
+    // dimensionsCodesSelectedEffective)
+    // throws Exception {
+    //
+    // // Find attributes
+    // List<AttributeDto> sources = datasetRepositoriesServiceFacade.findAttributesWithDimensionAttachmentLevel(datasetId, attributeId, dimensionsCodesSelectedEffective); // TODO desnormalizar
+    // Map<String, AttributeDto> sourcesByKey = null;
+    //
+    // // Attributes Size
+    // int sizeAttribute = 1;
+    // for (String dimension : attributeDimensionsOrdered) {
+    // sizeAttribute = sizeAttribute * dimensionsCodesSelectedEffective.get(dimension).size();
+    // }
+    // // ATTRIBUTES
+    // List<String> dataAttributes = new ArrayList<String>(sizeAttribute);
+    // Stack<OrderingStackElement> stack = new Stack<OrderingStackElement>();
+    // stack.push(new OrderingStackElement(StringUtils.EMPTY, -1));
+    // ArrayList<String> entryId = new ArrayList<String>(attributeDimensionsOrdered.size());
+    // for (int i = 0; i < attributeDimensionsOrdered.size(); i++) {
+    // entryId.add(i, StringUtils.EMPTY);
+    // }
+    //
+    // int lastDimension = attributeDimensionsOrdered.size() - 1;
+    // while (stack.size() > 0) {
+    // // POP
+    // OrderingStackElement elem = stack.pop();
+    // int elemDimension = elem.getDimNum();
+    // String elemCode = elem.getCodeId();
+    //
+    // // The first time we don't need a hash (#)
+    // if (elemDimension != -1) {
+    // entryId.set(elemDimension, elemCode);
+    // }
+    //
+    // // The entry is complete
+    // if (elemDimension == lastDimension) {
+    // String id = StringUtils.join(entryId, "#");
+    //
+    // AttributeDto value = sourcesByKey.get(id);
+    // if (value != null) {
+    // dataAttributes.add(value.getValue().getLocalisedLabel(StatisticalResourcesConstants.DEFAULT_DATA_REPOSITORY_LOCALE)); // all attributes has only one locale
+    // } else {
+    // dataAttributes.add(null); // Return value null
+    // }
+    // entryId.set(elemDimension, StringUtils.EMPTY);
+    // } else {
+    // String dimension = attributeDimensionsOrdered.get(elemDimension + 1);
+    // List<String> dimensionValues = dimensionsCodesSelectedEffective.get(dimension);
+    // for (int i = dimensionValues.size() - 1; i >= 0; i--) {
+    // OrderingStackElement temp = new OrderingStackElement(dimensionValues.get(i), elemDimension + 1);
+    // stack.push(temp);
+    // }
+    // }
+    // }
+    // return StringUtils.join(dataAttributes.iterator(), RestExternalConstants.DATA_OBSERVATION_SEPARATOR); // TODO refactor constante
+    // }
 
     private List<ConditionDimensionDto> generateConditions(Map<String, List<String>> dimensions) {
         List<ConditionDimensionDto> conditionDimensionDtos = new ArrayList<ConditionDimensionDto>();
@@ -1130,4 +1176,17 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
         }
     }
 
+    private List<String> toAttributeDimensionsOrdered(List<String> datasetDimensionsOrdered, List<String> attributeDimensions) {
+        List<String> attributeDimensionsOrdered = new ArrayList<String>(attributeDimensions.size());
+        for (String datasetDimension : datasetDimensionsOrdered) {
+            if (attributeDimensions.contains(datasetDimension)) {
+                attributeDimensionsOrdered.add(datasetDimension);
+            }
+        }
+        return attributeDimensionsOrdered;
+    }
+
+    private String getAttributeValue(AttributeDto attributeDto) {
+        return attributeDto.getValue().getLocalisedLabel(StatisticalResourcesConstants.DEFAULT_DATA_REPOSITORY_LOCALE); // all attributes has only one locale
+    }
 }

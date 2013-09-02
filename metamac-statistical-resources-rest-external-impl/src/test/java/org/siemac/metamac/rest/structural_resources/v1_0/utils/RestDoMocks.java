@@ -16,6 +16,7 @@ import org.siemac.metamac.statistical.resources.core.base.domain.VersionRational
 import org.siemac.metamac.statistical.resources.core.base.domain.VersionableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.common.domain.InternationalString;
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResource;
+import org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConstants;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.CodeDimension;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.TemporalCode;
@@ -30,7 +31,10 @@ import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.Publi
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesDoMocks;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesPersistedDoMocks;
 
+import com.arte.statistic.dataset.repository.dto.AttributeDto;
 import com.arte.statistic.dataset.repository.dto.CodeDimensionDto;
+import com.arte.statistic.dataset.repository.dto.InternationalStringDto;
+import com.arte.statistic.dataset.repository.dto.LocalisedStringDto;
 import com.arte.statistic.dataset.repository.dto.ObservationExtendedDto;
 
 public class RestDoMocks {
@@ -176,6 +180,13 @@ public class RestDoMocks {
         return observationExtendedDto;
     }
 
+    public AttributeDto mockAttribute(String attributeId, String value) {
+        AttributeDto attributeDto = new AttributeDto();
+        attributeDto.setAttributeId(attributeId);
+        attributeDto.setValue(mockInternationalStringDtoDatasetRepository(StatisticalResourcesConstants.DEFAULT_DATA_REPOSITORY_LOCALE, value));
+        return attributeDto;
+    }
+
     private DatasetVersion mockDatasetVersionBasic(String agencyID, String resourceID, String version) {
         DatasetVersion target = coreDoMocks.mockDatasetVersion();
         target.getSiemacMetadataStatisticalResource().setUrn("urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Dataset=" + agencyID + ":" + resourceID + "(" + version + ")");
@@ -258,6 +269,12 @@ public class RestDoMocks {
 
     private TemporalCode mockTemporalCode(String code) {
         return StatisticalResourcesDoMocks.mockTemporalCode(code, code);
+    }
+
+    private InternationalStringDto mockInternationalStringDtoDatasetRepository(String locale, String label) {
+        InternationalStringDto internationalStringDto = new InternationalStringDto();
+        internationalStringDto.addText(new LocalisedStringDto(locale, label));
+        return internationalStringDto;
     }
 
 }

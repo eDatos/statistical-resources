@@ -33,4 +33,7 @@ public class RestTestConstants {
     public static String QUERY_LATEST                = "LATEST " + ComparisonOperator.EQ + " \"true\"";
 
     public static String ORDER_BY_ID_DESC            = "ID " + OrderOperator.DESC;
+
+    public static String ATTRIBUTE_GLOBAL_1          = "attributeGlobal1";
+    public static String ATTRIBUTE_GLOBAL_2          = "attributeGlobal2";
 }
