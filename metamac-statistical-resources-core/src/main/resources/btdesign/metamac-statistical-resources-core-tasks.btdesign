@@ -54,6 +54,8 @@ Application DatasetsStatisticalResources {
 			"Check if exists a recovery importation job task in the @param resourceId"
     		boolean existRecoveryImportationTaskInResource(String resourceId) throws MetamacException;
 
+			"Check if exists a duplication job task in the @param resourceId"
+			boolean existDuplicationTaskInResource(String resourceId) throws MetamacException;
     		
     		"Creates a task"
 			@Task createTask(@Task task) throws MetamacException;
