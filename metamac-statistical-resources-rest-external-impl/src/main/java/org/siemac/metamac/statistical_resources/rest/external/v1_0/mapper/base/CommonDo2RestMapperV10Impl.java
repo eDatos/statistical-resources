@@ -18,7 +18,6 @@ import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.siemac.metamac.core.common.conf.ConfigurationService;
-import org.siemac.metamac.core.common.ent.domain.ExternalItem;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.rest.common.v1_0.domain.InternationalString;
 import org.siemac.metamac.rest.common.v1_0.domain.LocalisedString;
@@ -60,6 +59,7 @@ import org.siemac.metamac.rest.utils.RestCommonUtil;
 import org.siemac.metamac.rest.utils.RestUtils;
 import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.VersionRationaleType;
+import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResource;
 import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor.DsdComponentType;
 import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor.DsdDimension;
@@ -192,6 +192,7 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
         target.setValidFrom(toDate(source.getValidFrom()));
         target.setValidTo(toDate(source.getValidTo()));
     }
+
     @Override
     public Data toData(DatasetVersion source, List<String> selectedLanguages, Map<String, List<String>> dimensionValuesSelected) throws Exception {
         if (source == null) {
@@ -446,12 +447,12 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
     }
 
     @Override
-    public InternationalString toInternationalString(org.siemac.metamac.core.common.ent.domain.InternationalString sources, List<String> selectedLanguages) {
+    public InternationalString toInternationalString(org.siemac.metamac.statistical.resources.core.common.domain.InternationalString sources, List<String> selectedLanguages) {
         if (sources == null) {
             return null;
         }
         InternationalString targets = new InternationalString();
-        for (org.siemac.metamac.core.common.ent.domain.LocalisedString source : sources.getTexts()) {
+        for (org.siemac.metamac.statistical.resources.core.common.domain.LocalisedString source : sources.getTexts()) {
             if (selectedLanguages.contains(source.getLocale())) {
                 LocalisedString target = new LocalisedString();
                 target.setLang(source.getLocale());

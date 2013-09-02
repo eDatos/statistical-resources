@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.joda.time.DateTime;
-import org.siemac.metamac.core.common.ent.domain.ExternalItem;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.rest.common.v1_0.domain.InternationalString;
 import org.siemac.metamac.rest.common.v1_0.domain.Resource;
@@ -18,6 +17,7 @@ import org.siemac.metamac.rest.statistical_resources.v1_0.domain.SelectedLanguag
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.StatisticalResource;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructure;
 import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataStatisticalResource;
+import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
 import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor.DsdDimension;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.TemporalCode;
@@ -40,7 +40,7 @@ public interface CommonDo2RestMapperV10 {
     public ResourceLink toResourceLink(String kind, String href);
     public String toResourceLink(String resourceSubpath, String agencyID, String resourceID, String version);
 
-    public InternationalString toInternationalString(org.siemac.metamac.core.common.ent.domain.InternationalString sources, List<String> selectedLanguages);
+    public InternationalString toInternationalString(org.siemac.metamac.statistical.resources.core.common.domain.InternationalString sources, List<String> selectedLanguages);
     public InternationalString toInternationalString(InternationalString sources, List<String> selectedLanguages);
     public InternationalString toInternationalString(String source, List<String> selectedLanguages);
 
