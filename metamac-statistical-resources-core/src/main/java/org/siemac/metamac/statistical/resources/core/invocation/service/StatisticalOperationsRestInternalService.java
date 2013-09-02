@@ -2,14 +2,16 @@ package org.siemac.metamac.statistical.resources.core.invocation.service;
 
 import java.util.List;
 
-import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.rest.statistical_operations_internal.v1_0.domain.Instances;
 import org.siemac.metamac.rest.statistical_operations_internal.v1_0.domain.Operation;
 import org.siemac.metamac.rest.statistical_operations_internal.v1_0.domain.Operations;
 import org.siemac.metamac.rest.statistical_operations_internal.v1_0.domain.ResourceInternal;
+import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
 
 public interface StatisticalOperationsRestInternalService {
+
+    public static final String BEAN_ID = "statisticalOperationsRestInternalService";
 
     public Operation retrieveOperationById(String operationCode) throws MetamacException;
 
@@ -17,7 +19,7 @@ public interface StatisticalOperationsRestInternalService {
     public Operations findOperations(int firstResult, int maxResult, String query) throws MetamacException;
     public List<String> findOperationsAsUrnsList(String query) throws MetamacException;
     public List<ExternalItem> findOperationsAsExternalItems(int firstResult, int maxResult, String query) throws MetamacException;
-    
+
     public List<ResourceInternal> findInstances(String query) throws MetamacException;
     public Instances findInstances(int firstResult, int maxResult, String query) throws MetamacException;
     public Instances findInstances(String operationId, int firstResult, int maxResult, String query) throws MetamacException;

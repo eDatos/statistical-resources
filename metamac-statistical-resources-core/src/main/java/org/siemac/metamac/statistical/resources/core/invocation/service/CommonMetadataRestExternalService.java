@@ -8,6 +8,8 @@ import org.siemac.metamac.rest.common_metadata.v1_0.domain.Configurations;
 
 public interface CommonMetadataRestExternalService {
 
+    public static final String BEAN_ID = "commonMetadataRestExternalService";
+
     public Configurations findConfigurations(String query) throws MetamacException;
     public List<String> findConfigurationsAsUrnsList(String query) throws MetamacException;
 

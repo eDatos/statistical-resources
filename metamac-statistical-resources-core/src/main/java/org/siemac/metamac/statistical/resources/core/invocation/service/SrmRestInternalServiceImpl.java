@@ -33,7 +33,7 @@ import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionUtils
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-@Component
+@Component(SrmRestInternalService.BEAN_ID)
 public class SrmRestInternalServiceImpl implements SrmRestInternalService {
 
     @Autowired
@@ -534,7 +534,7 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
             throw manageSrmInternalRestException(e);
         }
     }
-    
+
     // -------------------------------------------------------------------------------------------------
     // CATEGORY SCHEMES
     // -------------------------------------------------------------------------------------------------
@@ -645,7 +645,6 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
             throw manageSrmInternalRestException(e);
         }
     }
-
 
     // -------------------------------------------------------------------------------------------------
     // PRIVATE UTILS

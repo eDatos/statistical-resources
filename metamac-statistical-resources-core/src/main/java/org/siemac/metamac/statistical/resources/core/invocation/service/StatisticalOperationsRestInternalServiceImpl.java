@@ -10,9 +10,6 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
-import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
-import org.siemac.metamac.statistical.resources.core.common.domain.InternationalString;
-import org.siemac.metamac.statistical.resources.core.common.domain.LocalisedString;
 import org.siemac.metamac.core.common.enume.domain.TypeExternalArtefactsEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.rest.api.constants.RestApiConstants;
@@ -20,12 +17,15 @@ import org.siemac.metamac.rest.statistical_operations_internal.v1_0.domain.Insta
 import org.siemac.metamac.rest.statistical_operations_internal.v1_0.domain.Operation;
 import org.siemac.metamac.rest.statistical_operations_internal.v1_0.domain.Operations;
 import org.siemac.metamac.rest.statistical_operations_internal.v1_0.domain.ResourceInternal;
+import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
+import org.siemac.metamac.statistical.resources.core.common.domain.InternationalString;
+import org.siemac.metamac.statistical.resources.core.common.domain.LocalisedString;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-@Component
+@Component(StatisticalOperationsRestInternalService.BEAN_ID)
 public class StatisticalOperationsRestInternalServiceImpl implements StatisticalOperationsRestInternalService {
 
     @Autowired
@@ -72,7 +72,7 @@ public class StatisticalOperationsRestInternalServiceImpl implements Statistical
             throw manageStatisticalOperationsInternalRestException(e);
         }
     }
-    
+
     @Override
     public List<String> findOperationsAsUrnsList(String query) throws MetamacException {
         try {
@@ -133,7 +133,7 @@ public class StatisticalOperationsRestInternalServiceImpl implements Statistical
     public Instances findInstances(int firstResult, int maxResult, String query) {
         return findInstances(null, firstResult, maxResult, query);
     }
-    
+
     @Override
     public Instances findInstances(String operationId, int firstResult, int maxResult, String query) {
         String limit = String.valueOf(maxResult);
@@ -162,8 +162,7 @@ public class StatisticalOperationsRestInternalServiceImpl implements Statistical
             throw manageStatisticalOperationsInternalRestException(e);
         }
     }
-    
-    
+
     @Override
     public List<String> findInstancesAsUrnsList(String query) throws MetamacException {
         List<ResourceInternal> instances = findInstances(query);

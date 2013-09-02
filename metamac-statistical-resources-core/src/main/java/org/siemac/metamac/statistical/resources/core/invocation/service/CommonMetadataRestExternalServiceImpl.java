@@ -12,7 +12,7 @@ import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionUtils
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-@Component
+@Component(CommonMetadataRestExternalService.BEAN_ID)
 public class CommonMetadataRestExternalServiceImpl implements CommonMetadataRestExternalService {
 
     @Autowired
@@ -50,7 +50,7 @@ public class CommonMetadataRestExternalServiceImpl implements CommonMetadataRest
             throw manageCommonMetadataRestException(e);
         }
     }
-    
+
     private MetamacException manageCommonMetadataRestException(Exception e) throws MetamacException {
         return ServiceExceptionUtils.manageMetamacRestException(e, ServiceExceptionParameters.API_COMMON_METADATA_EXTERNAL, restApiLocator.getCommonMetadataRestExternalFacadeV10());
     }

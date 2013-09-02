@@ -327,7 +327,6 @@ public class TaskServiceImpl extends TaskServiceImplBase {
         Task task = retrieveTaskByJob(ctx, duplicationJobKey);
 
         try {
-            // TODO duplicar el dataset
             datasetRepositoriesServiceFacade.duplicateDatasetRepository(taskInfoDataset.getDatasetVersionId(), newDatasetId);
         } catch (Exception e) {
             // Convert parser exception to metamac exception
@@ -343,6 +342,7 @@ public class TaskServiceImpl extends TaskServiceImplBase {
 
         markTaskAsFinished(ctx, duplicationJobKey); // Finish the importation
     }
+
     @Override
     public boolean existsTaskForResource(ServiceContext ctx, String resourceId) throws MetamacException {
         taskServiceInvocationValidator.checkExistsTaskForResource(ctx, resourceId);
