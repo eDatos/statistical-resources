@@ -8,7 +8,7 @@
         <cdomain:text xml:lang="es">title-query1 en Espanol</cdomain:text>
     </stat:name>
     <stat:description>
-        <cdomain:text xml:lang="es">description-resource-6ZASGLnG9G en Espanol</cdomain:text>
+        <cdomain:text xml:lang="es">description-resource-RRXqo7wLC1 en Espanol</cdomain:text>
     </stat:description>
     <stat:selectedLanguages total="1">
         <stat:language>es</stat:language>
@@ -276,6 +276,24 @@
                 </stat:dimensionValues>
             </stat:dimension>
         </stat:dimensions>
+        <stat:attributes total="2">
+            <stat:attribute>
+                <stat:id>attributeGlobal1</stat:id>
+                <stat:name>
+                    <cdomain:text xml:lang="es">attributeGlobal1-concept01 en Español</cdomain:text>
+                </stat:name>
+                <stat:attachmentLevel>DATASET</stat:attachmentLevel>
+            </stat:attribute>
+            <stat:attribute>
+                <stat:id>attributeGlobal2</stat:id>
+                <stat:name>
+                    <cdomain:text xml:lang="es">attributeGlobal2-concept01 en Español</cdomain:text>
+                </stat:name>
+                <stat:attachmentLevel>DATASET</stat:attachmentLevel>
+            </stat:attribute>
+        </stat:attributes>
+        <stat:status>ACTIVE</stat:status>
+        <stat:type>FIXED</stat:type>
         <stat:requires kind="statisticalResources#dataset">
             <cdomain:id>dataset01</cdomain:id>
             <cdomain:urn>urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Dataset=agency1:dataset01(01.000)</cdomain:urn>
@@ -283,24 +301,22 @@
             <cdomain:name>
                 <cdomain:text xml:lang="es">title-dataset01 en Espanol</cdomain:text>
             </cdomain:name>
-        </stat:requires>        
-        <stat:status>ACTIVE</stat:status>
-        <stat:type>FIXED</stat:type>
+        </stat:requires>
         <stat:statisticalOperation kind="statisticalOperations#operation">
-            <cdomain:id>statisticalOperation01</cdomain:id>
-            <cdomain:urn>urn:siemac:org.siemac.metamac.infomodel.statisticaloperations.Operation=statisticalOperation01</cdomain:urn>
-            <cdomain:selfLink kind="statisticalOperations#operation" href="http://data.istac.es/apis/operations/latest/statisticalOperation01" />
+            <cdomain:id>bzkqKGWa6G</cdomain:id>
+            <cdomain:urn>urn:siemac:org.siemac.metamac.infomodel.statisticaloperations.Operation=bzkqKGWa6G</cdomain:urn>
+            <cdomain:selfLink kind="statisticalOperations#operation" href="http://data.istac.es/apis/operations/latest/bzkqKGWa6G" />
             <cdomain:name>
-                <cdomain:text xml:lang="es">title-statisticalOperation01 en Espanol</cdomain:text>
+                <cdomain:text xml:lang="es">title-bzkqKGWa6G en Espanol</cdomain:text>
             </cdomain:name>
         </stat:statisticalOperation>
         <stat:maintainer kind="structuralResources#agency">
-            <cdomain:id>agency01</cdomain:id>
+            <cdomain:id>LS8OftwZjo</cdomain:id>
             <cdomain:nestedId>agency1</cdomain:nestedId>
-            <cdomain:urn>urn:sdmx:org.sdmx.infomodel.base.Agency=MaintainerMock:AgencySchemeMock(1.0).agency01</cdomain:urn>
-            <cdomain:selfLink kind="structuralResources#agency" href="http://data.istac.es/apis/srm/latest/agency01" />
+            <cdomain:urn>urn:sdmx:org.sdmx.infomodel.base.Agency=MaintainerMock:AgencySchemeMock(1.0).LS8OftwZjo</cdomain:urn>
+            <cdomain:selfLink kind="structuralResources#agency" href="http://data.istac.es/apis/srm/latest/LS8OftwZjo" />
             <cdomain:name>
-                <cdomain:text xml:lang="es">title-agency01 en Espanol</cdomain:text>
+                <cdomain:text xml:lang="es">title-LS8OftwZjo en Espanol</cdomain:text>
             </cdomain:name>
         </stat:maintainer>
         <stat:validFrom>2013-01-01T03:04:12Z</stat:validFrom>
@@ -343,6 +359,10 @@
                 </stat:representations>
             </stat:dimension>
         </stat:dimensions>
+        <stat:attributes total="2">
+            <stat:attribute id="attributeGlobal1">Value attributeGlobal1</stat:attribute>
+            <stat:attribute id="attributeGlobal2">Value attributeGlobal2</stat:attribute>
+        </stat:attributes>
         <stat:observations>1 | 4 | 7 | 19 | 22 | 25 | 37 | 40 | 43 | 55 | 58 | 61 | 73 | 76 | 79 | 91 | 94 | 97 | 109 | 112 | 115 | 127 | 130 | 133 | 145 | 148 | 151 | 163 | 166 | 169 | 217 | 220 | 223 | 235 | 238 | 241 | 325 | 328 | 331 | 343 | 346 | 349 | 397 | 400 | 403 | 415 | 418 | 421</stat:observations>
     </stat:data>
 </stat:query>

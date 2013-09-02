@@ -19,6 +19,7 @@ import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Query;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.QueryMetadata;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructure;
 import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor;
+import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor.DsdAttribute;
 import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor.DsdDimension;
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryTypeEnum;
@@ -117,9 +118,10 @@ public class QueriesDo2RestMapperV10Impl implements QueriesDo2RestMapperV10 {
         List<DsdDimension> dimensions = DsdProcessor.getDimensions(dataStructure);
         target.setDimensions(commonDo2RestMapper.toDimensions(dataStructure, dimensions, source.getDatasetVersion().getSiemacMetadataStatisticalResource().getUrn(),
                 effectiveDimensionValuesToDataByDimension, selectedLanguages));
-        // TODO attributes
-        // target.setAttributes(commonDo2RestMapper.toAttributes(dataStructure, dataStructure.getDataStructureComponents().getAttributes(), source.getDatasetVersion()
-        // .getSiemacMetadataStatisticalResource().getUrn(), selectedLanguages));
+
+        List<DsdAttribute> attributes = DsdProcessor.getAttributes(dataStructure);
+        target.setAttributes(commonDo2RestMapper.toAttributes(attributes, source.getDatasetVersion().getSiemacMetadataStatisticalResource().getUrn(), null, selectedLanguages));
+
         target.setRelatedDataset(datasetsDo2RestMapper.toResource(source.getDatasetVersion(), selectedLanguages));
         target.setStatus(toQueryStatus(source.getStatus()));
         target.setType(toQueryType(source.getType()));
