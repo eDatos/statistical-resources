@@ -25,7 +25,7 @@ import com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceF
 
 public abstract class SdmxRestExternalFacadeV21BaseTest extends MetamacRestBaseTest {
 
-    private static String                          jaxrsServerAddress = "http://localhost:" + ServerResource.PORT + "/apis/sdmx/data-resources";
+    private static String                          jaxrsServerAddress = "http://localhost:" + ServerResource.PORT + "/apis/registry";
     protected String                               baseApi            = jaxrsServerAddress + "/v2.1";
     protected static ApplicationContext            applicationContext = null;
     protected static SdmxDataRestExternalFacadeV21 sdmxDataRestExternalFacadeClientXml;
