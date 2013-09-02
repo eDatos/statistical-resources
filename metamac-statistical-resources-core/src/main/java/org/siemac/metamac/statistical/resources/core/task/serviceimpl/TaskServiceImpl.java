@@ -398,6 +398,17 @@ public class TaskServiceImpl extends TaskServiceImplBase {
     }
 
     @Override
+    public boolean existDuplicationTaskInResource(ServiceContext ctx, String resourceId) throws MetamacException {
+        taskServiceInvocationValidator.checkExistDuplicationTaskInResource(ctx, resourceId);
+        try {
+            Scheduler sched = SchedulerRepository.getInstance().lookup(SCHEDULER_INSTANCE_NAME); // get a reference to a scheduler
+            return sched.checkExists(createJobKeyForDuplicationResource(resourceId));
+        } catch (SchedulerException e) {
+            throw MetamacExceptionBuilder.builder().withCause(e).withExceptionItems(ServiceExceptionType.TASKS_SCHEDULER_ERROR).withMessageParameters(e.getMessage()).build();
+        }
+    }
+
+    @Override
     public Task createTask(ServiceContext ctx, Task task) throws MetamacException {
         // Save version
         task = getTaskRepository().save(task);
