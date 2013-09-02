@@ -87,4 +87,10 @@ public class TaskServiceTest extends StatisticalResourcesBaseTest implements Tas
         // TODO Auto-generated method stub
 
     }
+
+    @Override
+    public void testExistDuplicationTaskInResource() throws Exception {
+        // TODO Auto-generated method stub
+
+    }
 }
