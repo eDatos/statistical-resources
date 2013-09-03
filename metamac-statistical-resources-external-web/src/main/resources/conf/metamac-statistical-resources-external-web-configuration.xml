@@ -29,6 +29,9 @@
     <entry key="metamac.statistical_operations.rest.external">http://FILL_ME_WITH_HOST_AND_PORT/FILL_ME_WITH_STATISTICAL_OPERATIONS_EXTERNAL_APP/apis/operations</entry>
     <entry key="metamac.common_metadata.rest.external">http://FILL_ME_WITH_HOST_AND_PORT/FILL_ME_WITH_COMMON_METADATA_EXTERNAL_APP/apis/cmetadata</entry>
     
+    <!-- LA SIGUIENTE PROPIEDAD ES TEMPORAL HASTA QUE SE IMPLEMENTE LA API EXTERNA DE SRM. LA API EXTERNA DEL GPE INVOCARA A LA API EXTERNA DEL SRM -->
+    <entry key="metamac.srm.rest.internal">http://FILL_ME_WITH_HOST_AND_PORT/FILL_ME_WITH_SRM_INTERNAL_APP/apis/structural-resources-internal</entry>
+    
     <!--  ********************************************************************************************** -->
     <!--  **************************** WEB APPLICATIONS  *********************************************** -->
     <!--  ********************************************************************************************** -->

@@ -1,0 +1,7 @@
+Sólo en web externa:
+
+- Añadida propiedad en 'metamac-statistical-resources-external-web-configuration.xml':
+	
+	metamac.srm.rest.internal
+	
+	Esta propiedad no existirá cuando se cree la API Externa del SRM, por lo que no se ha añadido al manual de instalación para evitar confusiones
