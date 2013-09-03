@@ -8,9 +8,9 @@ import static org.siemac.metamac.statistical.resources.core.invocation.utils.Res
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.collections.CollectionUtils;
-import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
 import org.siemac.metamac.core.common.enume.domain.TypeExternalArtefactsEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
@@ -28,6 +28,7 @@ import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Concept
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructureCriteriaPropertyRestriction;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.OrganisationCriteriaPropertyRestriction;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.OrganisationSchemeCriteriaPropertyRestriction;
+import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.invocation.service.CommonMetadataRestExternalService;
 import org.siemac.metamac.statistical.resources.core.invocation.service.SrmRestInternalService;
@@ -51,14 +52,27 @@ public class ExternalItemChecker {
         checkExternalItemsExternallyPublished(Arrays.asList(externalItem), metadataName, exceptionItems);
     }
 
+    public void checkExternalItemsExternallyPublished(Set<ExternalItem> externalItems, String metadataName, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
+        if (!externalItems.isEmpty()) {
+            TypeExternalArtefactsEnum externalItemType = externalItems.iterator().next().getType();
+            checkExternalItemsExternallyPublished(externalItems, metadataName, externalItemType, exceptionItems);
+        }
+    }
+    
     public void checkExternalItemsExternallyPublished(List<ExternalItem> externalItems, String metadataName, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
-        TypeExternalArtefactsEnum externalItemType = externalItems.get(0).getType(); // we know that all the externalItems of a collection have same type
+        if (!externalItems.isEmpty()) {
+            TypeExternalArtefactsEnum externalItemType = externalItems.get(0).getType(); // we know that all the externalItems of a collection have same type
+            checkExternalItemsExternallyPublished(externalItems, metadataName, externalItemType, exceptionItems);
+        }
+    }
+    
+    private void checkExternalItemsExternallyPublished(Collection<ExternalItem> externalItems, String metadataName, TypeExternalArtefactsEnum typeExternalItem, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
         String query = null;
         Collection<String> result = null;
 
         List<String> expectedUrns = processExternalItemsUrns(externalItems);
 
-        switch (externalItemType) {
+        switch (typeExternalItem) {
             case AGENCY:
                 query = createQueryForPublishedResourcesSearchingByUrn(OrganisationCriteriaPropertyRestriction.URN, OrganisationCriteriaPropertyRestriction.ORGANISATION_SCHEME_PROC_STATUS,
                         org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ProcStatus.EXTERNALLY_PUBLISHED.toString(), expectedUrns);
@@ -197,7 +211,7 @@ public class ExternalItemChecker {
                 checkResult(expectedUrns, result, metadataName, exceptionItems);
                 break;
             default:
-                throw new MetamacException(ServiceExceptionType.UNKNOWN, "Type of externalItem not supported: " + externalItemType);
+                throw new MetamacException(ServiceExceptionType.UNKNOWN, "Type of externalItem not supported: " + typeExternalItem);
         }
 
     }

@@ -53,6 +53,7 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_45_NEXT_VERSION_SCHEDULED_UPDATE_JANUARY_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_46_NEXT_VERSION_SCHEDULED_UPDATE_JULY_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_47_WITH_COVERAGE_FILLED_WITH_TITLES_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_48_WITH_TEMPORAL_COVERAGE_FILLED_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasourceMockFactory.DATASOURCE_01_BASIC_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationMockFactory.PUBLICATION_02_BASIC_WITH_GENERATED_VERSION_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationMockFactory.PUBLICATION_03_BASIC_WITH_2_PUBLICATION_VERSIONS_NAME;
@@ -113,6 +114,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.siemac.metamac.core.common.criteria.MetamacCriteria;
+import org.siemac.metamac.core.common.criteria.MetamacCriteriaConjunctionRestriction;
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaDisjunctionRestriction;
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaOrder;
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaOrder.OrderTypeEnum;
@@ -1433,6 +1435,51 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         assertEquals(datasetOper1Code3.getSiemacMetadataStatisticalResource().getUrn(), results.get(0).getUrn());
     }
 
+    
+    @Test
+    @MetamacMock({DATASET_VERSION_48_WITH_TEMPORAL_COVERAGE_FILLED_NAME})
+    public void testFindDatasetsVersionsByConditionByGeographicGranularity() throws Exception {
+        DatasetVersion datasetVersionGeographicCoverage = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_48_WITH_TEMPORAL_COVERAGE_FILLED_NAME);
+
+        MetamacCriteria metamacCriteria = new MetamacCriteria();
+        setCriteriaPaginator(metamacCriteria, 0, Integer.MAX_VALUE, Boolean.TRUE);
+        setCriteriaStringPropertyRestriction(metamacCriteria, StatisticalResourcesCriteriaPropertyEnum.DATASET_GEOGRAPHIC_GRANULARITY_URN, OperationType.EQ, datasetVersionGeographicCoverage
+                .getGeographicGranularities().iterator().next().getUrn());
+
+        MetamacCriteriaResult<DatasetVersionBaseDto> pagedResults = statisticalResourcesServiceFacade.findDatasetsVersionsByCondition(getServiceContextAdministrador(), metamacCriteria);
+        assertEquals(1, pagedResults.getPaginatorResult().getTotalResults().intValue());
+        assertEqualsCollectionByField(Arrays.asList(datasetVersionGeographicCoverage), pagedResults.getResults(), SIEMAC_METADATA_URN_FIELD, URN_FIELD);
+    }
+    
+    @Test
+    @MetamacMock({DATASET_VERSION_48_WITH_TEMPORAL_COVERAGE_FILLED_NAME})
+    public void testFindDatasetsVersionsByConditionByTemporalGranularity() throws Exception {
+        DatasetVersion datasetVersionGeographicCoverage = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_48_WITH_TEMPORAL_COVERAGE_FILLED_NAME);
+
+        MetamacCriteria metamacCriteria = new MetamacCriteria();
+        setCriteriaPaginator(metamacCriteria, 0, Integer.MAX_VALUE, Boolean.TRUE);
+        setCriteriaStringPropertyRestriction(metamacCriteria, StatisticalResourcesCriteriaPropertyEnum.DATASET_TEMPORAL_GRANULARITY_URN, OperationType.EQ, datasetVersionGeographicCoverage
+                .getTemporalGranularities().iterator().next().getUrn());
+
+        MetamacCriteriaResult<DatasetVersionBaseDto> pagedResults = statisticalResourcesServiceFacade.findDatasetsVersionsByCondition(getServiceContextAdministrador(), metamacCriteria);
+        assertEquals(1, pagedResults.getPaginatorResult().getTotalResults().intValue());
+        assertEqualsCollectionByField(Arrays.asList(datasetVersionGeographicCoverage), pagedResults.getResults(), SIEMAC_METADATA_URN_FIELD, URN_FIELD);
+    }
+    
+    @Test
+    @MetamacMock({DATASET_VERSION_48_WITH_TEMPORAL_COVERAGE_FILLED_NAME})
+    public void testFindDatasetsVersionsByConditionByTemporalGranularityAndGeographicGranaularity() throws Exception {
+        DatasetVersion datasetVersionGeographicCoverage = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_48_WITH_TEMPORAL_COVERAGE_FILLED_NAME);
+
+        MetamacCriteria metamacCriteria = new MetamacCriteria();
+        setConjunctionCriteriaStringPropertyRestriction(metamacCriteria, StatisticalResourcesCriteriaPropertyEnum.DATASET_TEMPORAL_GRANULARITY_URN, StatisticalResourcesCriteriaPropertyEnum.DATASET_GEOGRAPHIC_GRANULARITY_URN, OperationType.EQ, datasetVersionGeographicCoverage.getTemporalGranularities().iterator().next().getUrn(), datasetVersionGeographicCoverage
+                .getGeographicGranularities().iterator().next().getUrn());
+
+        MetamacCriteriaResult<DatasetVersionBaseDto> pagedResults = statisticalResourcesServiceFacade.findDatasetsVersionsByCondition(getServiceContextAdministrador(), metamacCriteria);
+        assertEquals(1, pagedResults.getPaginatorResult().getTotalResults().intValue());
+        assertEqualsCollectionByField(Arrays.asList(datasetVersionGeographicCoverage), pagedResults.getResults(), SIEMAC_METADATA_URN_FIELD, URN_FIELD);
+    }
+    
     @Override
     @Test
     @MetamacMock(DATASET_VERSION_47_WITH_COVERAGE_FILLED_WITH_TITLES_NAME)
@@ -2318,6 +2365,14 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         metamacCriteria.setRestriction(propertyRestriction);
     }
 
+    @SuppressWarnings("rawtypes")
+    private void setConjunctionCriteriaStringPropertyRestriction(MetamacCriteria metamacCriteria, Enum property01, Enum property02, OperationType operationType, String stringValue01, String stringValue02) {
+        MetamacCriteriaConjunctionRestriction conjunctionRestriction = new MetamacCriteriaConjunctionRestriction();
+        conjunctionRestriction.getRestrictions().add(new MetamacCriteriaPropertyRestriction(property01.name(), stringValue01, OperationType.EQ));
+        conjunctionRestriction.getRestrictions().add(new MetamacCriteriaPropertyRestriction(property02.name(), stringValue02, OperationType.EQ));
+        metamacCriteria.setRestriction(conjunctionRestriction);
+    }
+    
     @SuppressWarnings("rawtypes")
     private void setDisjunctionCriteriaEnumPropertyRestriction(MetamacCriteria metamacCriteria, Enum property, OperationType operationType, Enum enumValue01, Enum enumValue02) {
         MetamacCriteriaDisjunctionRestriction disjunctionRestriction = new MetamacCriteriaDisjunctionRestriction();

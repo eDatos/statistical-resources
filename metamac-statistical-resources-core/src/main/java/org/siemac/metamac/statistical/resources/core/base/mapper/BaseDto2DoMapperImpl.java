@@ -83,7 +83,7 @@ public class BaseDto2DoMapperImpl extends CommonDto2DoMapperImpl implements Base
         // Always Modifiable
         languagesDtoListToDoListEnsuringLanguageIsContained(source.getLanguages(), target.getLanguages(), target.getLanguage(), addParameter(metadataName, ServiceExceptionSingleParameters.LANGUAGES));
         
-        externalItemDtoListToDoList(source.getStatisticalOperationInstances(), target.getStatisticalOperationInstances(),
+        externalItemDtoCollectionToDoList(source.getStatisticalOperationInstances(), target.getStatisticalOperationInstances(),
                 addParameter(metadataName, ServiceExceptionSingleParameters.STATISTICAL_OPERATION_INSTANCES));
 
         target.setSubtitle(internationalStringDtoToDo(source.getSubtitle(), target.getSubtitle(), addParameter(metadataName, ServiceExceptionSingleParameters.SUBTITLE)));
@@ -92,14 +92,14 @@ public class BaseDto2DoMapperImpl extends CommonDto2DoMapperImpl implements Base
         target.setAbstractLogic(internationalStringDtoToDo(source.getAbstractLogic(), target.getAbstractLogic(), addParameter(metadataName, ServiceExceptionSingleParameters.ABSTRACT_LOGIC)));
 
         target.setCreator(externalItemDtoToDo(source.getCreator(), target.getCreator(), addParameter(metadataName, ServiceExceptionSingleParameters.CREATOR)));
-        externalItemDtoListToDoList(source.getContributor(), target.getContributor(), addParameter(metadataName, ServiceExceptionSingleParameters.CONTRIBUTOR));
+        externalItemDtoCollectionToDoList(source.getContributor(), target.getContributor(), addParameter(metadataName, ServiceExceptionSingleParameters.CONTRIBUTOR));
         target.setConformsTo(internationalStringDtoToDo(source.getConformsTo(), target.getConformsTo(), addParameter(metadataName, ServiceExceptionSingleParameters.CONFORMS_TO)));
         target.setConformsToInternal(internationalStringDtoToDo(source.getConformsToInternal(), target.getConformsToInternal(),
                 addParameter(metadataName, ServiceExceptionSingleParameters.CONFORMS_TO_INTERNAL)));
 
-        externalItemDtoListToDoList(source.getPublisher(), target.getPublisher(), addParameter(metadataName, ServiceExceptionSingleParameters.PUBLISHER));
-        externalItemDtoListToDoList(source.getPublisherContributor(), target.getPublisherContributor(), addParameter(metadataName, ServiceExceptionSingleParameters.PUBLISHER_CONTRIBUTOR));
-        externalItemDtoListToDoList(source.getMediator(), target.getMediator(), addParameter(metadataName, ServiceExceptionSingleParameters.MEDIATOR));
+        externalItemDtoCollectionToDoList(source.getPublisher(), target.getPublisher(), addParameter(metadataName, ServiceExceptionSingleParameters.PUBLISHER));
+        externalItemDtoCollectionToDoList(source.getPublisherContributor(), target.getPublisherContributor(), addParameter(metadataName, ServiceExceptionSingleParameters.PUBLISHER_CONTRIBUTOR));
+        externalItemDtoCollectionToDoList(source.getMediator(), target.getMediator(), addParameter(metadataName, ServiceExceptionSingleParameters.MEDIATOR));
         target.setNewnessUntilDate(dateDtoToDo(source.getNewnessUntilDate()));
 
         target.setReplaces(relatedResourceDtoToDo(source.getReplaces(), target.getReplaces(), addParameter(metadataName, ServiceExceptionSingleParameters.REPLACES)));
@@ -111,14 +111,14 @@ public class BaseDto2DoMapperImpl extends CommonDto2DoMapperImpl implements Base
         return target;
     }
     
-    public List<ExternalItem> languagesDtoListToDoListEnsuringLanguageIsContained(List<ExternalItemDto> sources, List<ExternalItem> targets, final ExternalItem language, String metadataName) throws MetamacException {
+    public Collection<ExternalItem> languagesDtoListToDoListEnsuringLanguageIsContained(Collection<ExternalItemDto> sources, Collection<ExternalItem> targets, final ExternalItem language, String metadataName) throws MetamacException {
         if (targets == null) {
             targets = new ArrayList<ExternalItem>();
         }
         
-        List<ExternalItem> targetsBefore = targets;
+        Collection<ExternalItem> targetsBefore = targets;
         
-        List<ExternalItem> newTargets = calculateNewExternalItemsToPersit(sources, metadataName, targetsBefore);
+        Collection<ExternalItem> newTargets = calculateNewExternalItemsToPersit(sources, metadataName, targetsBefore);
         
         if (language != null && !StatisticalResourcesCollectionUtils.isExternalItemInCollection(newTargets, language)) {
             newTargets.add(CommonVersioningCopyUtils.copyExternalItem(language));

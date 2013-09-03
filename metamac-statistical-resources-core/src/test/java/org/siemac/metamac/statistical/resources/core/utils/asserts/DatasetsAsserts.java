@@ -163,8 +163,8 @@ public class DatasetsAsserts extends BaseAsserts {
         assertEqualsExternalItemCollection(expected.getGeographicCoverage(), actual.getGeographicCoverage());
         assertEqualsTemporalCodeCollection(expected.getTemporalCoverage(), actual.getTemporalCoverage());
         assertEqualsExternalItemCollection(expected.getMeasureCoverage(), actual.getMeasureCoverage());
-        assertEqualsExternalItemList(expected.getGeographicGranularities(), actual.getGeographicGranularities());
-        assertEqualsExternalItemList(expected.getTemporalGranularities(), actual.getTemporalGranularities());
+        assertEqualsExternalItemCollection(expected.getGeographicGranularities(), actual.getGeographicGranularities());
+        assertEqualsExternalItemCollection(expected.getTemporalGranularities(), actual.getTemporalGranularities());
         assertEqualsExternalItemList(expected.getStatisticalUnit(), actual.getStatisticalUnit());
         assertEqualsExternalItem(expected.getUpdateFrequency(), actual.getUpdateFrequency());
 

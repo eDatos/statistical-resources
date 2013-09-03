@@ -11,6 +11,7 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.template
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -337,7 +338,7 @@ public class CommonDto2DoMapperTest extends StatisticalResourcesBaseTest {
     }
 
     private void testExternalItemDtoListToDoList(List<ExternalItemDto> dtos, List<ExternalItem> entities) throws Exception {
-        List<ExternalItem> result = commonDto2DoMapper.externalItemDtoListToDoList(dtos, entities, METADATA_NAME);
+        Collection<ExternalItem> result = commonDto2DoMapper.externalItemDtoCollectionToDoList(dtos, entities, METADATA_NAME);
         BaseAsserts.assertEqualsExternalItemCollectionMapper(result, dtos);
 
     }

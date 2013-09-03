@@ -25,11 +25,11 @@ public class BaseVersioningCopyUtils extends CommonVersioningCopyUtils {
         // Languages
         target.setLanguage(copyExternalItem(source.getLanguage()));
         target.getLanguages().clear();
-        target.getLanguages().addAll(copyListExternalItem(source.getLanguages()));
+        target.getLanguages().addAll(copyCollectionExternalItem(source.getLanguages()));
 
         // Theme content classifiers
         target.getStatisticalOperationInstances().clear();
-        target.getStatisticalOperationInstances().addAll(copyListExternalItem(source.getStatisticalOperationInstances()));
+        target.getStatisticalOperationInstances().addAll(copyCollectionExternalItem(source.getStatisticalOperationInstances()));
 
         // Content descriptors
         target.setSubtitle(copyInternationalString(source.getSubtitle()));
@@ -47,18 +47,18 @@ public class BaseVersioningCopyUtils extends CommonVersioningCopyUtils {
         // Production descriptors
         target.setCreator(copyExternalItem(source.getCreator()));
         target.getContributor().clear();
-        target.getContributor().addAll(copyListExternalItem(source.getContributor()));
+        target.getContributor().addAll(copyCollectionExternalItem(source.getContributor()));
         target.setCreatedDate(source.getCreatedDate());
         target.setConformsTo(copyInternationalString(source.getConformsTo()));
         target.setConformsToInternal(copyInternationalString(source.getConformsToInternal()));
 
         // Publishing descriptors
         target.getPublisher().clear();
-        target.getPublisher().addAll(copyListExternalItem(source.getPublisher()));
+        target.getPublisher().addAll(copyCollectionExternalItem(source.getPublisher()));
         target.getPublisherContributor().clear();
-        target.getPublisherContributor().addAll(copyListExternalItem(source.getPublisherContributor()));
+        target.getPublisherContributor().addAll(copyCollectionExternalItem(source.getPublisherContributor()));
         target.getMediator().clear();
-        target.getMediator().addAll(copyListExternalItem(source.getMediator()));
+        target.getMediator().addAll(copyCollectionExternalItem(source.getMediator()));
 
         // Resources relation descriptors
         // TODO: is required is inherited, but must be changed if a query is discontinued

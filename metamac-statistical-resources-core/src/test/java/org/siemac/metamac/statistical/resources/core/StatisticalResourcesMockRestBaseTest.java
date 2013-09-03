@@ -2,6 +2,7 @@ package org.siemac.metamac.statistical.resources.core;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -11,6 +12,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.siemac.metamac.common_metadata.rest.external.v1_0.service.CommonMetadataV1_0;
+import org.siemac.metamac.core.common.enume.domain.TypeExternalArtefactsEnum;
 import org.siemac.metamac.core.common.exception.CommonServiceExceptionType;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
@@ -69,17 +71,18 @@ public class StatisticalResourcesMockRestBaseTest extends StatisticalResourcesBa
         }
     }
 
-    protected void mockExternalItemsPublished(List<ExternalItem> items) {
+    protected void mockExternalItemsPublished(Collection<ExternalItem> items) {
         mockExternalItemsPublished(items, items);
     }
 
-    protected void mockExternalItemsNotPublished(List<ExternalItem> items) {
+    protected void mockExternalItemsNotPublished(Collection<ExternalItem> items) {
         mockExternalItemsPublished(items, new ArrayList<ExternalItem>());
     }
 
-    private void mockExternalItemsPublished(List<ExternalItem> allItems, List<ExternalItem> publishedItems) {
+    private void mockExternalItemsPublished(Collection<ExternalItem> allItems, Collection<ExternalItem> publishedItems) {
         if (allItems != null && allItems.size() > 0) {
-            switch (allItems.get(0).getType()) {
+            TypeExternalArtefactsEnum typeExternalItem = allItems.iterator().next().getType();
+            switch (typeExternalItem) {
                 case ORGANISATION_UNIT:
                 case AGENCY:
                     mockFindPublishedOrganisations(allItems, publishedItems);
@@ -103,12 +106,12 @@ public class StatisticalResourcesMockRestBaseTest extends StatisticalResourcesBa
                     mockFindPublishedStatisticalOperationInstances(allItems, publishedItems);
                     break;
                 default:
-                    throw new RuntimeException("Found unknown external item type " + allItems.get(0).getType());
+                    throw new RuntimeException("Found unknown external item type " + typeExternalItem);
             }
         }
     }
 
-    private void mockFindPublishedOrganisations(List<ExternalItem> allItems, List<ExternalItem> publishedItems) {
+    private void mockFindPublishedOrganisations(Collection<ExternalItem> allItems, Collection<ExternalItem> publishedItems) {
         List<String> urns = getUrnsFromExternalItems(allItems);
         List<String> publishedUrns = getUrnsFromExternalItems(publishedItems);
         Mockito.when(
@@ -117,7 +120,7 @@ public class StatisticalResourcesMockRestBaseTest extends StatisticalResourcesBa
                 .thenReturn(SrmRestInternalFacadeV10MockUtils.mockOrganisationsWithOnlyUrns(publishedUrns));
     }
 
-    protected void mockFindPublishedCodes(List<ExternalItem> allItems, List<ExternalItem> publishedItems) {
+    protected void mockFindPublishedCodes(Collection<ExternalItem> allItems, Collection<ExternalItem> publishedItems) {
         List<String> urns = getUrnsFromExternalItems(allItems);
         List<String> urnsPublished = getUrnsFromExternalItems(publishedItems);
         Mockito.when(
@@ -126,7 +129,7 @@ public class StatisticalResourcesMockRestBaseTest extends StatisticalResourcesBa
                         Mockito.anyString(), Mockito.anyString())).thenReturn(SrmRestInternalFacadeV10MockUtils.mockCodesWithOnlyUrns(urnsPublished));
     }
 
-    protected void mockFindPublishedConcepts(List<ExternalItem> allItems, List<ExternalItem> publishedItems) {
+    protected void mockFindPublishedConcepts(Collection<ExternalItem> allItems, Collection<ExternalItem> publishedItems) {
         List<String> urns = getUrnsFromExternalItems(allItems);
         List<String> publishedUrns = getUrnsFromExternalItems(publishedItems);
         Mockito.when(
@@ -135,7 +138,7 @@ public class StatisticalResourcesMockRestBaseTest extends StatisticalResourcesBa
                 .thenReturn(SrmRestInternalFacadeV10MockUtils.mockConceptsWithOnlyUrns(publishedUrns));
     }
 
-    protected void mockFindPublishedDsd(List<ExternalItem> allItems, List<ExternalItem> publishedItems) {
+    protected void mockFindPublishedDsd(Collection<ExternalItem> allItems, Collection<ExternalItem> publishedItems) {
         List<String> urns = getUrnsFromExternalItems(allItems);
         List<String> publishedUrns = getUrnsFromExternalItems(publishedItems);
         Mockito.when(
@@ -143,14 +146,14 @@ public class StatisticalResourcesMockRestBaseTest extends StatisticalResourcesBa
                         Mockito.anyString(), Mockito.anyString())).thenReturn(SrmRestInternalFacadeV10MockUtils.mockDsdsWithOnlyUrns(publishedUrns));
     }
 
-    protected void mockFindPublishedConfiguration(List<ExternalItem> allItems, List<ExternalItem> publishedItems) {
+    protected void mockFindPublishedConfiguration(Collection<ExternalItem> allItems, Collection<ExternalItem> publishedItems) {
         List<String> urns = getUrnsFromExternalItems(allItems);
         List<String> publishedUrns = getUrnsFromExternalItems(publishedItems);
         Mockito.when(commonMetadataV10.findConfigurations(Mockito.eq(CommonMetadataRestInternalFacadeV10MockUtils.mockQueryFindPublishedConfigurationsUrnsAsList(urns)), Mockito.isNull(String.class)))
                 .thenReturn(CommonMetadataRestInternalFacadeV10MockUtils.mockConfigurationsWithOnlyUrns(publishedUrns));
     }
 
-    protected void mockFindPublishedStatisticalOperation(List<ExternalItem> allItems, List<ExternalItem> publishedItems) {
+    protected void mockFindPublishedStatisticalOperation(Collection<ExternalItem> allItems, Collection<ExternalItem> publishedItems) {
         List<String> urns = getUrnsFromExternalItems(allItems);
         List<String> publishedUrns = getUrnsFromExternalItems(publishedItems);
         Mockito.when(
@@ -159,7 +162,7 @@ public class StatisticalResourcesMockRestBaseTest extends StatisticalResourcesBa
                 StatisticalOperationsRestInternalFacadeV10MockUtils.mockStatisticalOperationsWithOnlyUrns(publishedUrns));
     }
 
-    protected void mockFindPublishedStatisticalOperationInstances(List<ExternalItem> allItems, List<ExternalItem> publishedItems) {
+    protected void mockFindPublishedStatisticalOperationInstances(Collection<ExternalItem> allItems, Collection<ExternalItem> publishedItems) {
         List<String> urns = getUrnsFromExternalItems(allItems);
         List<String> publishedUrns = getUrnsFromExternalItems(publishedItems);
         Mockito.when(
@@ -168,7 +171,7 @@ public class StatisticalResourcesMockRestBaseTest extends StatisticalResourcesBa
                         Mockito.anyString(), Mockito.anyString())).thenReturn(StatisticalOperationsRestInternalFacadeV10MockUtils.mockStatisticalOperationInstancesWithOnlyUrns(publishedUrns));
     }
 
-    protected List<String> getUrnsFromExternalItems(List<ExternalItem> items) {
+    protected List<String> getUrnsFromExternalItems(Collection<ExternalItem> items) {
         List<String> urns = new ArrayList<String>();
         StatisticalResourcesCollectionUtils.mapCollection(items, urns, new ExternalItemToUrnTransformer());
         return urns;
@@ -178,7 +181,7 @@ public class StatisticalResourcesMockRestBaseTest extends StatisticalResourcesBa
         return buildExpectedExceptionForAllItems(ServiceExceptionType.EXTERNAL_ITEM_NOT_PUBLISHED, items, field);
     }
 
-    protected List<MetamacExceptionItem> buildExpectedExceptionForAllItems(CommonServiceExceptionType exceptionType, List<ExternalItem> items, String messageParameter) {
+    protected List<MetamacExceptionItem> buildExpectedExceptionForAllItems(CommonServiceExceptionType exceptionType, Collection<ExternalItem> items, String messageParameter) {
         List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
         for (ExternalItem item : items) {
             exceptionItems.add(new MetamacExceptionItem(exceptionType, messageParameter, item.getUrn()));
@@ -218,7 +221,7 @@ public class StatisticalResourcesMockRestBaseTest extends StatisticalResourcesBa
         return new MetamacExceptionItem(ServiceExceptionType.RELATED_RESOURCE_NOT_PUBLISHED, buildField(entity, field), nameable.getUrn());
     }
 
-    protected List<MetamacExceptionItem> buildExternalItemsNotPublishedExceptions(List<ExternalItem> items, String entity, String field) {
+    protected List<MetamacExceptionItem> buildExternalItemsNotPublishedExceptions(Collection<ExternalItem> items, String entity, String field) {
         return buildExpectedExceptionForAllItems(ServiceExceptionType.EXTERNAL_ITEM_NOT_PUBLISHED, items, buildField(entity, field));
     }
 

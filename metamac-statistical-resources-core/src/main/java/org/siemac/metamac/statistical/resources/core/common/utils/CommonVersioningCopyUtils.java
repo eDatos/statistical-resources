@@ -1,6 +1,7 @@
 package org.siemac.metamac.statistical.resources.core.common.utils;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
@@ -60,7 +61,7 @@ public class CommonVersioningCopyUtils {
         return target;
     }
 
-    public static List<ExternalItem> copyListExternalItem(List<ExternalItem> source) {
+    public static Collection<ExternalItem> copyCollectionExternalItem(Collection<ExternalItem> source) {
         if (source.isEmpty()) {
             return new ArrayList<ExternalItem>();
         }

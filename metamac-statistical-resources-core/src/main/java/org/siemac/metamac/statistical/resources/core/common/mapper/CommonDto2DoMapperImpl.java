@@ -1,6 +1,7 @@
 package org.siemac.metamac.statistical.resources.core.common.mapper;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -197,14 +198,14 @@ public class CommonDto2DoMapperImpl extends BaseDto2DoMapperImpl implements Comm
     }
 
     @Override
-    public List<ExternalItem> externalItemDtoListToDoList(List<ExternalItemDto> sources, List<ExternalItem> targets, String metadataName) throws MetamacException {
+    public Collection<ExternalItem> externalItemDtoCollectionToDoList(Collection<ExternalItemDto> sources, Collection<ExternalItem> targets, String metadataName) throws MetamacException {
         if (targets == null) {
             targets = new ArrayList<ExternalItem>();
         }
 
-        List<ExternalItem> targetsBefore = targets;
+        Collection<ExternalItem> targetsBefore = targets;
 
-        List<ExternalItem> newTargets = calculateNewExternalItemsToPersit(sources, metadataName, targetsBefore);
+        Collection<ExternalItem> newTargets = calculateNewExternalItemsToPersit(sources, metadataName, targetsBefore);
 
         // Delete missing
         deleteExternalItemsNotFoundInSource(targetsBefore, newTargets, metadataName);
@@ -217,7 +218,7 @@ public class CommonDto2DoMapperImpl extends BaseDto2DoMapperImpl implements Comm
         return targets;
     }
 
-    protected void deleteExternalItemsNotFoundInSource(List<ExternalItem> targetBefore, List<ExternalItem> source, String metadataName) throws MetamacException {
+    protected void deleteExternalItemsNotFoundInSource(Collection<ExternalItem> targetBefore, Collection<ExternalItem> source, String metadataName) throws MetamacException {
         for (ExternalItem oldTarget : targetBefore) {
             boolean found = false;
             for (ExternalItem newTarget : source) {
@@ -230,7 +231,7 @@ public class CommonDto2DoMapperImpl extends BaseDto2DoMapperImpl implements Comm
         }
     }
 
-    protected List<ExternalItem> calculateNewExternalItemsToPersit(List<ExternalItemDto> sources, String metadataName, List<ExternalItem> targetsBefore) throws MetamacException {
+    protected Collection<ExternalItem> calculateNewExternalItemsToPersit(Collection<ExternalItemDto> sources, String metadataName, Collection<ExternalItem> targetsBefore) throws MetamacException {
         List<ExternalItem> newTargets = new ArrayList<ExternalItem>();
 
         if (sources != null) {

@@ -1264,8 +1264,12 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
     }
 
     private static void prepareToLifecycleCommonDatasetVersion(DatasetVersion datasetVersion) {
-        ExternalItem geoGranularity = StatisticalResourcesPersistedDoMocks.mockCodeExternalItem();
-        datasetVersion.addGeographicGranularity(geoGranularity);
+        ExternalItem geoGranularity01 = StatisticalResourcesPersistedDoMocks.mockCodeExternalItem();
+        ExternalItem geoGranularity02 = StatisticalResourcesPersistedDoMocks.mockCodeExternalItem();
+        ExternalItem geoGranularity03 = StatisticalResourcesPersistedDoMocks.mockCodeExternalItem();
+        datasetVersion.addGeographicGranularity(geoGranularity01);
+        datasetVersion.addGeographicGranularity(geoGranularity02);
+        datasetVersion.addGeographicGranularity(geoGranularity03);
 
         ExternalItem timeGranularity = StatisticalResourcesPersistedDoMocks.mockCodeExternalItem();
         datasetVersion.addTemporalGranularity(timeGranularity);

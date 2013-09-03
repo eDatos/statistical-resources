@@ -7,6 +7,7 @@ import static org.siemac.metamac.rest.api.constants.RestApiConstants.QUOTE;
 import static org.siemac.metamac.rest.api.constants.RestApiConstants.RIGHT_PARENTHESIS;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
@@ -56,7 +57,7 @@ public class RestCriteriaUtils {
         return result.toString();
     }
 
-    public static List<String> processExternalItemsUrns(List<ExternalItem> externalItems) {
+    public static List<String> processExternalItemsUrns(Collection<ExternalItem> externalItems) {
         List<String> urns = new ArrayList<String>();
         for (ExternalItem item : externalItems) {
             urns.add(item.getUrn());

@@ -1,5 +1,6 @@
 package org.siemac.metamac.statistical.resources.core.common.mapper;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -20,7 +21,7 @@ public interface CommonDto2DoMapper extends BaseDto2DoMapper {
 
     // External Items
     public ExternalItem externalItemDtoToDo(ExternalItemDto source, ExternalItem target, String metadataName) throws MetamacException;
-    public List<ExternalItem> externalItemDtoListToDoList(List<ExternalItemDto> source, List<ExternalItem> target, String metadataName) throws MetamacException;
+    public Collection<ExternalItem> externalItemDtoCollectionToDoList(Collection<ExternalItemDto> source, Collection<ExternalItem> target, String metadataName) throws MetamacException;
 
     // Related Resource
     public RelatedResource relatedResourceDtoToDo(RelatedResourceDto source, RelatedResource target, String metadataName) throws MetamacException;

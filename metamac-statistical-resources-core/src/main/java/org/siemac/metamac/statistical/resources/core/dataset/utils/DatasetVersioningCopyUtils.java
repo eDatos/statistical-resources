@@ -59,26 +59,26 @@ public class DatasetVersioningCopyUtils extends CommonVersioningCopyUtils {
         target.setSiemacMetadataStatisticalResource(copySiemacMetadataStatisticalResource(source.getSiemacMetadataStatisticalResource(), target.getSiemacMetadataStatisticalResource()));
                
         target.getGeographicCoverage().clear();
-        target.getGeographicCoverage().addAll(copyListExternalItem(source.getGeographicCoverage()));
+        target.getGeographicCoverage().addAll(copyCollectionExternalItem(source.getGeographicCoverage()));
         
         target.getTemporalCoverage().clear();
         target.getTemporalCoverage().addAll(copyListTemporalCode(source.getTemporalCoverage()));
         
         target.getMeasureCoverage().clear();
-        target.getMeasureCoverage().addAll(copyListExternalItem(source.getMeasureCoverage()));
+        target.getMeasureCoverage().addAll(copyCollectionExternalItem(source.getMeasureCoverage()));
         
         target.getGeographicGranularities().clear();
-        target.getGeographicGranularities().addAll(copyListExternalItem(source.getGeographicGranularities()));
+        target.getGeographicGranularities().addAll(copyCollectionExternalItem(source.getGeographicGranularities()));
         
         target.getTemporalGranularities().clear();
-        target.getTemporalGranularities().addAll(copyListExternalItem(source.getTemporalGranularities()));
+        target.getTemporalGranularities().addAll(copyCollectionExternalItem(source.getTemporalGranularities()));
         
         target.setDateStart(source.getDateStart());
         
         target.setDateEnd(source.getDateEnd());
         
         target.getStatisticalUnit().clear();
-        target.getStatisticalUnit().addAll(copyListExternalItem(source.getStatisticalUnit()));
+        target.getStatisticalUnit().addAll(copyCollectionExternalItem(source.getStatisticalUnit()));
         
         target.setRelatedDsd(copyExternalItem(source.getRelatedDsd()));
         
