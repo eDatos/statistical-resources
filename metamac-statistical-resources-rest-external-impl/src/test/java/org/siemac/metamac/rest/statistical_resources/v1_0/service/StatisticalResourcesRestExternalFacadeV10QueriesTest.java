@@ -170,7 +170,7 @@ public class StatisticalResourcesRestExternalFacadeV10QueriesTest extends Statis
         }
 
         // Data
-        assertEquals(48, StringUtils.splitByWholeSeparatorPreserveAllTokens(query.getData().getObservations(), RestExternalConstants.DATA_OBSERVATION_SEPARATOR).length);
+        assertEquals(48, StringUtils.splitByWholeSeparatorPreserveAllTokens(query.getData().getObservations(), RestExternalConstants.DATA_SEPARATOR).length);
     }
 
     @Test
@@ -239,7 +239,7 @@ public class StatisticalResourcesRestExternalFacadeV10QueriesTest extends Statis
         }
 
         // Data
-        assertEquals(42, StringUtils.splitByWholeSeparatorPreserveAllTokens(query.getData().getObservations(), RestExternalConstants.DATA_OBSERVATION_SEPARATOR).length);
+        assertEquals(42, StringUtils.splitByWholeSeparatorPreserveAllTokens(query.getData().getObservations(), RestExternalConstants.DATA_SEPARATOR).length);
     }
 
     @Test
@@ -274,7 +274,7 @@ public class StatisticalResourcesRestExternalFacadeV10QueriesTest extends Statis
         }
 
         // Data
-        assertEquals(18, StringUtils.splitByWholeSeparatorPreserveAllTokens(query.getData().getObservations(), RestExternalConstants.DATA_OBSERVATION_SEPARATOR).length);
+        assertEquals(18, StringUtils.splitByWholeSeparatorPreserveAllTokens(query.getData().getObservations(), RestExternalConstants.DATA_SEPARATOR).length);
     }
 
     @Test
@@ -308,7 +308,7 @@ public class StatisticalResourcesRestExternalFacadeV10QueriesTest extends Statis
         }
 
         // Data
-        assertEquals(12, StringUtils.splitByWholeSeparatorPreserveAllTokens(query.getData().getObservations(), RestExternalConstants.DATA_OBSERVATION_SEPARATOR).length);
+        assertEquals(12, StringUtils.splitByWholeSeparatorPreserveAllTokens(query.getData().getObservations(), RestExternalConstants.DATA_SEPARATOR).length);
     }
 
     @Test

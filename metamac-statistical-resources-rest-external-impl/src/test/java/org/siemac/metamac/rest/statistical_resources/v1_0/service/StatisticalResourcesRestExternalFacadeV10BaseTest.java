@@ -5,8 +5,13 @@ import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 import static org.siemac.metamac.rest.statistical_resources.constants.RestTestConstants.AGENCY_1;
 import static org.siemac.metamac.rest.statistical_resources.constants.RestTestConstants.AGENCY_2;
-import static org.siemac.metamac.rest.statistical_resources.constants.RestTestConstants.ATTRIBUTE_GLOBAL_1;
-import static org.siemac.metamac.rest.statistical_resources.constants.RestTestConstants.ATTRIBUTE_GLOBAL_2;
+import static org.siemac.metamac.rest.statistical_resources.constants.RestTestConstants.ATTRIBUTE_1_GLOBAL;
+import static org.siemac.metamac.rest.statistical_resources.constants.RestTestConstants.ATTRIBUTE_2_GLOBAL;
+import static org.siemac.metamac.rest.statistical_resources.constants.RestTestConstants.ATTRIBUTE_3_DIMENSION;
+import static org.siemac.metamac.rest.statistical_resources.constants.RestTestConstants.ATTRIBUTE_4_DIMENSION;
+import static org.siemac.metamac.rest.statistical_resources.constants.RestTestConstants.ATTRIBUTE_5_DIMENSION;
+import static org.siemac.metamac.rest.statistical_resources.constants.RestTestConstants.ATTRIBUTE_6_DIMENSION;
+import static org.siemac.metamac.rest.statistical_resources.constants.RestTestConstants.ATTRIBUTE_7_DIMENSION;
 import static org.siemac.metamac.rest.statistical_resources.constants.RestTestConstants.COLLECTION_1_CODE;
 import static org.siemac.metamac.rest.statistical_resources.constants.RestTestConstants.COLLECTION_2_CODE;
 import static org.siemac.metamac.rest.statistical_resources.constants.RestTestConstants.DATASET_1_CODE;
@@ -65,6 +70,7 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.CodeDimensio
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionRepository;
 import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.DatasetService;
+import org.siemac.metamac.statistical.resources.core.invocation.service.SrmRestInternalService;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersionProperties;
 import org.siemac.metamac.statistical.resources.core.publication.serviceapi.PublicationService;
@@ -98,6 +104,10 @@ public abstract class StatisticalResourcesRestExternalFacadeV10BaseTest extends 
     private QueryVersionRepository            queryVersionRepository;
     private DatasetService                    datasetService;
     private QueryService                      queryService;
+
+    // TODO habrá que cambiar el mock cuando se consuma a la api externa
+    private SrmRestInternalService            srmRestInternalService;
+
     private SrmRestExternalFacade             srmRestExternalFacade;
     private CommonMetadataRestExternalFacade  commonMetadataRestExternalFacade;
     private DatasetRepositoriesServiceFacade  datasetRepositoriesServiceFacade;
@@ -429,9 +439,10 @@ public abstract class StatisticalResourcesRestExternalFacadeV10BaseTest extends 
             @Override
             public List<AttributeDto> answer(InvocationOnMock invocation) throws Throwable {
                 String attributeId = (String) invocation.getArguments()[1];
+                String value = "Value " + attributeId;
                 List<AttributeDto> attributes = new ArrayList<AttributeDto>();
-                if (ATTRIBUTE_GLOBAL_1.equals(attributeId) || ATTRIBUTE_GLOBAL_2.equals(attributeId)) {
-                    attributes.add(restDoMocks.mockAttribute(attributeId, "Value " + attributeId));
+                if (ATTRIBUTE_1_GLOBAL.equals(attributeId) || ATTRIBUTE_2_GLOBAL.equals(attributeId)) {
+                    attributes.add(restDoMocks.mockAttributeWithDatasetAttachmentLevel(attributeId, value));
                 } else {
                     fail("Attribute " + attributeId + " unsupported");
                 }
@@ -440,6 +451,81 @@ public abstract class StatisticalResourcesRestExternalFacadeV10BaseTest extends 
         });
     }
 
+    @SuppressWarnings("unchecked")
+    private void mockFindAttributesWithDimensionAttachmentLevelDenormalized() throws Exception {
+        when(datasetRepositoriesServiceFacade.findAttributesWithDimensionAttachmentLevelDenormalized(any(String.class), any(String.class), any(Map.class))).thenAnswer(
+                new Answer<List<AttributeDto>>() {
+
+                    @Override
+                    public List<AttributeDto> answer(InvocationOnMock invocation) throws Throwable {
+                        String attributeId = (String) invocation.getArguments()[1];
+                        String value = "Value " + attributeId;
+                        List<AttributeDto> attributes = new ArrayList<AttributeDto>();
+                        int i = 1;
+                        if (ATTRIBUTE_3_DIMENSION.equals(attributeId)) {
+                            attributes.add(restDoMocks.mockAttributeWithDimensionAttachmentLevelDenormalized(attributeId, value + "-" + i++, "GEO_DIM", "santa-cruz-tenerife", null, null, null, null,
+                                    null, null));
+                            attributes.add(restDoMocks
+                                    .mockAttributeWithDimensionAttachmentLevelDenormalized(attributeId, value + "-" + i++, "GEO_DIM", "la-laguna", null, null, null, null, null, null));
+                            attributes.add(restDoMocks
+                                    .mockAttributeWithDimensionAttachmentLevelDenormalized(attributeId, value + "-" + i++, "GEO_DIM", "el-hierro", null, null, null, null, null, null));
+                            attributes.add(restDoMocks
+                                    .mockAttributeWithDimensionAttachmentLevelDenormalized(attributeId, value + "-" + i++, "GEO_DIM", "lanzarote", null, null, null, null, null, null));
+                        } else if (ATTRIBUTE_4_DIMENSION.equals(attributeId)) {
+                            attributes.add(restDoMocks.mockAttributeWithDimensionAttachmentLevelDenormalized(attributeId, value + "-" + i++, "GEO_DIM", "santa-cruz-tenerife", "dim01",
+                                    "dim01-codelist01-code01", null, null, null, null));
+                            attributes.add(restDoMocks.mockAttributeWithDimensionAttachmentLevelDenormalized(attributeId, value + "-" + i++, "GEO_DIM", "la-laguna", "dim01",
+                                    "dim01-codelist01-code01", null, null, null, null));
+                            attributes.add(restDoMocks.mockAttributeWithDimensionAttachmentLevelDenormalized(attributeId, value + "-" + i++, "GEO_DIM", "el-hierro", "dim01",
+                                    "dim01-codelist01-code01", null, null, null, null));
+                            attributes.add(restDoMocks.mockAttributeWithDimensionAttachmentLevelDenormalized(attributeId, value + "-" + i++, "GEO_DIM", "santa-cruz-tenerife", "dim01",
+                                    "dim01-codelist01-code03", null, null, null, null));
+                            attributes.add(restDoMocks.mockAttributeWithDimensionAttachmentLevelDenormalized(attributeId, value + "-" + i++, "GEO_DIM", "lanzarote", "dim01",
+                                    "dim01-codelist01-code03", null, null, null, null));
+                            attributes.add(restDoMocks.mockAttributeWithDimensionAttachmentLevelDenormalized(attributeId, value + "-" + i++, "GEO_DIM", "lanzarote", "dim01",
+                                    "dim01-codelist01-code04", null, null, null, null));
+                        } else if (ATTRIBUTE_5_DIMENSION.equals(attributeId)) {
+                            attributes.add(restDoMocks.mockAttributeWithDimensionAttachmentLevelDenormalized(attributeId, value + "-" + i++, "GEO_DIM", "santa-cruz-tenerife", "TIME_PERIOD", "2011",
+                                    null, null, null, null));
+                            attributes.add(restDoMocks.mockAttributeWithDimensionAttachmentLevelDenormalized(attributeId, value + "-" + i++, "GEO_DIM", "santa-cruz-tenerife", "TIME_PERIOD", "2012",
+                                    null, null, null, null));
+                            attributes.add(restDoMocks.mockAttributeWithDimensionAttachmentLevelDenormalized(attributeId, value + "-" + i++, "GEO_DIM", "santa-cruz-tenerife", "TIME_PERIOD", "2013",
+                                    null, null, null, null));
+                            attributes.add(restDoMocks.mockAttributeWithDimensionAttachmentLevelDenormalized(attributeId, value + "-" + i++, "GEO_DIM", "santa-cruz-tenerife", "TIME_PERIOD", "2014",
+                                    null, null, null, null));
+                            attributes.add(restDoMocks.mockAttributeWithDimensionAttachmentLevelDenormalized(attributeId, value + "-" + i++, "GEO_DIM", "tenerife", "TIME_PERIOD", "2012", null, null,
+                                    null, null));
+                            attributes.add(restDoMocks.mockAttributeWithDimensionAttachmentLevelDenormalized(attributeId, value + "-" + i++, "GEO_DIM", "la-laguna", "TIME_PERIOD", "2012", null, null,
+                                    null, null));
+                            attributes.add(restDoMocks.mockAttributeWithDimensionAttachmentLevelDenormalized(attributeId, value + "-" + i++, "GEO_DIM", "fuerteventura", "TIME_PERIOD", "2011", null,
+                                    null, null, null));
+                            attributes.add(restDoMocks.mockAttributeWithDimensionAttachmentLevelDenormalized(attributeId, value + "-" + i++, "GEO_DIM", "fuerteventura", "TIME_PERIOD", "2012", null,
+                                    null, null, null));
+                            attributes.add(restDoMocks.mockAttributeWithDimensionAttachmentLevelDenormalized(attributeId, value + "-" + i++, "GEO_DIM", "fuerteventura", "TIME_PERIOD", "2013", null,
+                                    null, null, null));
+                            attributes.add(restDoMocks.mockAttributeWithDimensionAttachmentLevelDenormalized(attributeId, value + "-" + i++, "GEO_DIM", "fuerteventura", "TIME_PERIOD", "2014", null,
+                                    null, null, null));
+                            attributes.add(restDoMocks.mockAttributeWithDimensionAttachmentLevelDenormalized(attributeId, value + "-" + i++, "GEO_DIM", "lanzarote", "TIME_PERIOD", "2011", null, null,
+                                    null, null));
+                        } else if (ATTRIBUTE_6_DIMENSION.equals(attributeId)) {
+                            attributes.add(restDoMocks.mockAttributeWithDimensionAttachmentLevelDenormalized(attributeId, value + "-" + i++, "GEO_DIM", "santa-cruz-tenerife", "TIME_PERIOD", "2011",
+                                    "measure01", "measure01-conceptScheme01-concept01", null, null));
+                            attributes.add(restDoMocks.mockAttributeWithDimensionAttachmentLevelDenormalized(attributeId, value + "-" + i++, "GEO_DIM", "la-laguna", "TIME_PERIOD", "2011",
+                                    "measure01", "measure01-conceptScheme01-concept01", null, null));
+                        } else if (ATTRIBUTE_7_DIMENSION.equals(attributeId)) {
+                            attributes.add(restDoMocks.mockAttributeWithDimensionAttachmentLevelDenormalized(attributeId, value + "-" + i++, "GEO_DIM", "santa-cruz-tenerife", "TIME_PERIOD", "2011",
+                                    "measure01", "measure01-conceptScheme01-concept01", "dim01", "dim01-codelist01-code01"));
+                            attributes.add(restDoMocks.mockAttributeWithDimensionAttachmentLevelDenormalized(attributeId, value + "-" + i++, "GEO_DIM", "santa-cruz-tenerife", "TIME_PERIOD", "2011",
+                                    "measure01", "measure01-conceptScheme01-concept01", "dim01", "dim01-codelist01-code02"));
+                            attributes.add(restDoMocks.mockAttributeWithDimensionAttachmentLevelDenormalized(attributeId, value + "-" + i++, "GEO_DIM", "lanzarote", "TIME_PERIOD", "2014",
+                                    "measure01", "measure01-conceptScheme01-concept05", "dim01", "dim01-codelist01-code05"));
+                        } else {
+                            fail("Attribute " + attributeId + " unsupported");
+                        }
+                        return attributes;
+                    };
+                });
+    }
     private void mockRetrieveDataStructureByUrn() throws MetamacException {
         when(srmRestExternalFacade.retrieveDataStructureByUrn(any(String.class))).thenAnswer(new Answer<DataStructure>() {
 
@@ -498,6 +584,15 @@ public abstract class StatisticalResourcesRestExternalFacadeV10BaseTest extends 
                 return SrmRestMocks.mockConcept(urnSplited[0], urnSplited[1], urnSplited[2], urnSplited[3]);
             };
         });
+        when(srmRestInternalService.retrieveConceptByUrn(any(String.class))).thenAnswer(new Answer<Concept>() {
+
+            @Override
+            public Concept answer(InvocationOnMock invocation) throws Throwable {
+                String urn = (String) invocation.getArguments()[0];
+                String[] urnSplited = UrnUtils.splitUrnItem(urn);
+                return SrmRestMocks.mockConcept(urnSplited[0], urnSplited[1], urnSplited[2], urnSplited[3]);
+            };
+        });
     }
 
     private void mockRetrieveConfigurationById() throws MetamacException {
@@ -548,6 +643,8 @@ public abstract class StatisticalResourcesRestExternalFacadeV10BaseTest extends 
 
         srmRestExternalFacade = applicationContext.getBean(SrmRestExternalFacade.class);
         reset(srmRestExternalFacade);
+        srmRestInternalService = applicationContext.getBean(SrmRestInternalService.class);
+        reset(srmRestInternalService);
         datasetRepositoriesServiceFacade = applicationContext.getBean(DatasetRepositoriesServiceFacade.class);
         reset(datasetRepositoriesServiceFacade);
 
@@ -560,6 +657,7 @@ public abstract class StatisticalResourcesRestExternalFacadeV10BaseTest extends 
         mockRetrieveCoverageForDatasetVersionDimension();
         mockFindObservationsExtendedByDimensions();
         mockFindAttributesWithDatasetAttachmentLevel();
+        mockFindAttributesWithDimensionAttachmentLevelDenormalized();
 
         mockRetrieveDataStructureByUrn();
         mockRetrieveCodelistByUrn();

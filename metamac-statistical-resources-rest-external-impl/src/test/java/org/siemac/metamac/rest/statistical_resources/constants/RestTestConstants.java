@@ -34,6 +34,11 @@ public class RestTestConstants {
 
     public static String ORDER_BY_ID_DESC            = "ID " + OrderOperator.DESC;
 
-    public static String ATTRIBUTE_GLOBAL_1          = "attributeGlobal1";
-    public static String ATTRIBUTE_GLOBAL_2          = "attributeGlobal2";
+    public static String ATTRIBUTE_1_GLOBAL          = "at1";
+    public static String ATTRIBUTE_2_GLOBAL          = "at2";
+    public static String ATTRIBUTE_3_DIMENSION       = "at3";
+    public static String ATTRIBUTE_4_DIMENSION       = "at4";
+    public static String ATTRIBUTE_5_DIMENSION       = "at5";
+    public static String ATTRIBUTE_6_DIMENSION       = "at6";
+    public static String ATTRIBUTE_7_DIMENSION       = "at7";
 }

@@ -27,7 +27,11 @@
     <bean id="datasetRepositoriesServiceFacade" class="org.mockito.Mockito" factory-method="mock">
         <constructor-arg value="com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceFacade" />
     </bean>
-    
+
+    <bean id="srmRestInternalService" class="org.mockito.Mockito" factory-method="mock">
+        <constructor-arg value="org.siemac.metamac.statistical.resources.core.invocation.service.SrmRestInternalService" />
+    </bean>
+
     <bean id="srmRestExternalFacade" class="org.mockito.Mockito" factory-method="mock">
         <constructor-arg value="org.siemac.metamac.statistical_resources.rest.external.invocation.SrmRestExternalFacade" />
     </bean>

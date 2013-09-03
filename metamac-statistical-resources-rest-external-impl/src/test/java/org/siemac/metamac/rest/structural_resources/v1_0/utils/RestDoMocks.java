@@ -6,6 +6,7 @@ import static org.siemac.metamac.rest.statistical_resources.constants.RestTestCo
 import static org.siemac.metamac.rest.statistical_resources.constants.RestTestConstants.QUERY_4_CODE;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -180,10 +181,31 @@ public class RestDoMocks {
         return observationExtendedDto;
     }
 
-    public AttributeDto mockAttribute(String attributeId, String value) {
+    public AttributeDto mockAttributeWithDatasetAttachmentLevel(String attributeId, String value) {
         AttributeDto attributeDto = new AttributeDto();
         attributeDto.setAttributeId(attributeId);
-        attributeDto.setValue(mockInternationalStringDtoDatasetRepository(StatisticalResourcesConstants.DEFAULT_DATA_REPOSITORY_LOCALE, value));
+        attributeDto.setValue(mockInternationalStringAttributeDto(value));
+        return attributeDto;
+    }
+
+    public AttributeDto mockAttributeWithDimensionAttachmentLevelDenormalized(String attributeId, String value, String dimension1, String codeDimension1, String dimension2, String codeDimension2,
+            String dimension3, String codeDimension3, String dimension4, String codeDimension4) {
+        AttributeDto attributeDto = new AttributeDto();
+        attributeDto.setAttributeId(attributeId);
+        attributeDto.setValue(mockInternationalStringAttributeDto(value));
+        attributeDto.setCodesByDimension(new HashMap<String, List<String>>());
+        if (dimension1 != null) {
+            attributeDto.getCodesByDimension().put(dimension1, Arrays.asList(codeDimension1));
+        }
+        if (dimension2 != null) {
+            attributeDto.getCodesByDimension().put(dimension2, Arrays.asList(codeDimension2));
+        }
+        if (dimension3 != null) {
+            attributeDto.getCodesByDimension().put(dimension3, Arrays.asList(codeDimension3));
+        }
+        if (dimension4 != null) {
+            attributeDto.getCodesByDimension().put(dimension4, Arrays.asList(codeDimension4));
+        }
         return attributeDto;
     }
 
@@ -271,9 +293,9 @@ public class RestDoMocks {
         return StatisticalResourcesDoMocks.mockTemporalCode(code, code);
     }
 
-    private InternationalStringDto mockInternationalStringDtoDatasetRepository(String locale, String label) {
+    private InternationalStringDto mockInternationalStringAttributeDto(String label) {
         InternationalStringDto internationalStringDto = new InternationalStringDto();
-        internationalStringDto.addText(new LocalisedStringDto(locale, label));
+        internationalStringDto.addText(new LocalisedStringDto(StatisticalResourcesConstants.DEFAULT_DATA_REPOSITORY_LOCALE, label));
         return internationalStringDto;
     }
 
