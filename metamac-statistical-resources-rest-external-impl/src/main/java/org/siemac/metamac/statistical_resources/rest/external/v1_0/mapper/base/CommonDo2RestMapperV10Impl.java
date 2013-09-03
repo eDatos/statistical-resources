@@ -98,6 +98,7 @@ import org.springframework.stereotype.Component;
 
 import com.arte.statistic.dataset.repository.dto.AttributeDto;
 import com.arte.statistic.dataset.repository.dto.ConditionDimensionDto;
+import com.arte.statistic.dataset.repository.dto.ObservationDto;
 import com.arte.statistic.dataset.repository.dto.ObservationExtendedDto;
 import com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceFacade;
 
@@ -985,56 +986,11 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
 
         // Search observations in repository
         List<ConditionDimensionDto> conditions = generateConditions(dimensionsSelected);
-        Map<String, ObservationExtendedDto> datas = datasetRepositoriesServiceFacade.findObservationsExtendedByDimensions(source.getDatasetRepositoryId(), conditions);
+        Map<String, ObservationExtendedDto> observations = datasetRepositoriesServiceFacade.findObservationsExtendedByDimensions(source.getDatasetRepositoryId(), conditions);
 
-        // Observation Size
-        int sizeObservation = 1;
-        for (String dimension : dimensions) {
-            sizeObservation = sizeObservation * dimensionsCodesSelectedEffective.get(dimension).size();
-        }
-        // OBSERVATIONS (return sorted)
-        List<String> dataObservations = new ArrayList<String>(sizeObservation);
-        Stack<OrderingStackElement> stack = new Stack<OrderingStackElement>();
-        stack.push(new OrderingStackElement(StringUtils.EMPTY, -1));
-        ArrayList<String> entryId = new ArrayList<String>(dimensions.size());
-        for (int i = 0; i < dimensions.size(); i++) {
-            entryId.add(i, StringUtils.EMPTY);
-        }
-
-        int lastDimension = dimensions.size() - 1;
-        while (stack.size() > 0) {
-            // POP
-            OrderingStackElement elem = stack.pop();
-            int elemDimension = elem.getDimNum();
-            String elemCode = elem.getCodeId();
-
-            // The first time we don't need a hash (#)
-            if (elemDimension != -1) {
-                entryId.set(elemDimension, elemCode);
-            }
-
-            // The entry is complete
-            if (elemDimension == lastDimension) {
-                String id = StringUtils.join(entryId, KEY_DIMENSIONS_SEPARATOR);
-
-                // We have the full entry here
-                ObservationExtendedDto value = datas.get(id);
-                if (value != null) {
-                    dataObservations.add(value.getPrimaryMeasure());
-                } else {
-                    dataObservations.add(null); // Return observation null
-                }
-                entryId.set(elemDimension, StringUtils.EMPTY);
-            } else {
-                String dimension = dimensions.get(elemDimension + 1);
-                List<String> dimensionValues = dimensionsCodesSelectedEffective.get(dimension);
-                for (int i = dimensionValues.size() - 1; i >= 0; i--) {
-                    OrderingStackElement temp = new OrderingStackElement(dimensionValues.get(i), elemDimension + 1);
-                    stack.push(temp);
-                }
-            }
-        }
-        return StringUtils.join(dataObservations.iterator(), RestExternalConstants.DATA_SEPARATOR);
+        // Build data
+        DataValueExtraction dataValueExtraction = new DataValueExtractionToObservation(observations);
+        return toDataCommon(dimensions, dimensionsCodesSelectedEffective, dataValueExtraction);
     }
 
     private DataAttributes toDataAttributes(String dsdUrn, String datasetId, List<String> datasetDimensionsOrdered, Map<String, List<String>> dimensionsCodesSelectedEffective) throws Exception {
@@ -1090,56 +1046,12 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
             return null;
         }
 
+        // Build data
         List<String> attributeDimensionsOrdered = toAttributeDimensionsOrdered(datasetDimensionsOrdered, attribute.getAttributeRelationship().getDimensions());
         Map<String, AttributeDto> attributesByCodeDimensions = buildMapToAttributesWithDimensionAttachmentLevelDenormalizedByCodeDimensions(attributeDimensionsOrdered, sources);
 
-        // Attributes value size
-        int sizeAttribute = 1;
-        for (String dimension : attributeDimensionsOrdered) {
-            sizeAttribute = sizeAttribute * dimensionsCodesSelectedEffective.get(dimension).size();
-        }
-
-        // Generate value
-        List<String> dataAttributes = new ArrayList<String>(sizeAttribute);
-        Stack<OrderingStackElement> stack = new Stack<OrderingStackElement>();
-        stack.push(new OrderingStackElement(StringUtils.EMPTY, -1));
-        ArrayList<String> entryId = new ArrayList<String>(attributeDimensionsOrdered.size());
-        for (int i = 0; i < attributeDimensionsOrdered.size(); i++) {
-            entryId.add(i, StringUtils.EMPTY);
-        }
-
-        int lastDimension = attributeDimensionsOrdered.size() - 1;
-        while (stack.size() > 0) {
-            // POP
-            OrderingStackElement elem = stack.pop();
-            int elemDimension = elem.getDimNum();
-            String elemCode = elem.getCodeId();
-
-            // The first time we don't need a hash (#)
-            if (elemDimension != -1) {
-                entryId.set(elemDimension, elemCode);
-            }
-
-            // The entry is complete
-            if (elemDimension == lastDimension) {
-                String key = StringUtils.join(entryId, KEY_DIMENSIONS_SEPARATOR);
-                AttributeDto value = attributesByCodeDimensions.get(key);
-                if (value != null) {
-                    dataAttributes.add(getAttributeValue(value));
-                } else {
-                    dataAttributes.add(null); // Return value null
-                }
-                entryId.set(elemDimension, StringUtils.EMPTY);
-            } else {
-                String dimension = attributeDimensionsOrdered.get(elemDimension + 1);
-                List<String> dimensionValues = dimensionsCodesSelectedEffective.get(dimension);
-                for (int i = dimensionValues.size() - 1; i >= 0; i--) {
-                    OrderingStackElement temp = new OrderingStackElement(dimensionValues.get(i), elemDimension + 1);
-                    stack.push(temp);
-                }
-            }
-        }
-        return StringUtils.join(dataAttributes.iterator(), RestExternalConstants.DATA_SEPARATOR);
+        DataValueExtraction dataValueExtraction = new DataValueExtractionToAttributeWithDimensionAttachmentLevel(attributesByCodeDimensions);
+        return toDataCommon(attributeDimensionsOrdered, dimensionsCodesSelectedEffective, dataValueExtraction);
     }
 
     private List<ConditionDimensionDto> generateConditions(Map<String, List<String>> dimensions) {
@@ -1236,5 +1148,99 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
             attributesByCodeDimensions.put(key.toString(), attributeDto);
         }
         return attributesByCodeDimensions;
+    }
+
+    private String toDataCommon(List<String> dimensions, Map<String, List<String>> dimensionsCodesSelectedEffective, DataValueExtraction dataValueExtraction) throws Exception {
+
+        // Data size
+        int dataSize = 1;
+        for (String dimension : dimensions) {
+            dataSize = dataSize * dimensionsCodesSelectedEffective.get(dimension).size();
+        }
+
+        // Build data
+        List<String> dataResult = new ArrayList<String>(dataSize);
+        Stack<OrderingStackElement> stack = new Stack<OrderingStackElement>();
+        stack.push(new OrderingStackElement(StringUtils.EMPTY, -1));
+        ArrayList<String> entryId = new ArrayList<String>(dimensions.size());
+        for (int i = 0; i < dimensions.size(); i++) {
+            entryId.add(i, StringUtils.EMPTY);
+        }
+
+        int lastDimension = dimensions.size() - 1;
+        while (stack.size() > 0) {
+            // POP
+            OrderingStackElement elem = stack.pop();
+            int elemDimension = elem.getDimNum();
+            String elemCode = elem.getCodeId();
+
+            // The first time we don't need a hash (#)
+            if (elemDimension != -1) {
+                entryId.set(elemDimension, elemCode);
+            }
+
+            // The entry is complete
+            if (elemDimension == lastDimension) {
+                String id = StringUtils.join(entryId, KEY_DIMENSIONS_SEPARATOR);
+
+                // We have the full entry here
+                String value = dataValueExtraction.getValue(id);
+                if (value != null) {
+                    dataResult.add(value);
+                } else {
+                    dataResult.add(null); // Return observation null
+                }
+                entryId.set(elemDimension, StringUtils.EMPTY);
+            } else {
+                String dimension = dimensions.get(elemDimension + 1);
+                List<String> dimensionValues = dimensionsCodesSelectedEffective.get(dimension);
+                for (int i = dimensionValues.size() - 1; i >= 0; i--) {
+                    OrderingStackElement temp = new OrderingStackElement(dimensionValues.get(i), elemDimension + 1);
+                    stack.push(temp);
+                }
+            }
+        }
+        return StringUtils.join(dataResult.iterator(), RestExternalConstants.DATA_SEPARATOR);
+    }
+
+    private interface DataValueExtraction {
+
+        public String getValue(String key);
+    }
+
+    private class DataValueExtractionToAttributeWithDimensionAttachmentLevel implements DataValueExtraction {
+
+        private final Map<String, AttributeDto> attributesByCodeDimensions;
+
+        public DataValueExtractionToAttributeWithDimensionAttachmentLevel(Map<String, AttributeDto> attributesByCodeDimensions) {
+            this.attributesByCodeDimensions = attributesByCodeDimensions;
+        }
+
+        @Override
+        public String getValue(String key) {
+            AttributeDto attributeDto = attributesByCodeDimensions.get(key);
+            if (attributeDto == null) {
+                return null;
+            }
+            return getAttributeValue(attributeDto);
+        }
+    }
+
+    private class DataValueExtractionToObservation implements DataValueExtraction {
+
+        private final Map<String, ObservationExtendedDto> observations;
+
+        public DataValueExtractionToObservation(Map<String, ObservationExtendedDto> observations) {
+            this.observations = observations;
+        }
+
+        @Override
+        public String getValue(String key) {
+            ObservationDto observationDto = observations.get(key);
+            if (observationDto == null) {
+                return null;
+            }
+            return observationDto.getPrimaryMeasure();
+        }
     }
 }
