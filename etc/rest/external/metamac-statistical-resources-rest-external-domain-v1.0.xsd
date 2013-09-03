@@ -81,6 +81,7 @@
     <xs:complexType name="Data">
         <xs:sequence>
             <xs:element name="dimensions" type="tns:DimensionRepresentations" />
+            <xs:element name="attributes" type="tns:DataAttributes" minOccurs="0" />
             <xs:element name="observations" type="xs:string" minOccurs="1" />
         </xs:sequence>
     </xs:complexType>
@@ -151,7 +152,7 @@
             <xs:element name="hasPart" type="common:Resources" />
             <xs:element name="isPartOf" type="common:Resources" />
             <xs:element name="rightsHolder" type="common:Resource" />
-            <xs:element name="copyrightDate" type="xs:int" minOccurs="0"/>
+            <xs:element name="copyrightDate" type="xs:int" minOccurs="0" />
             <xs:element name="license" type="common:InternationalString" />
             <xs:element name="accessRights" type="common:InternationalString" minOccurs="0" />
             <xs:element name="replacesVersion" type="common:Resource" minOccurs="0" />
@@ -232,6 +233,21 @@
     <xs:complexType name="CodeRepresentation">
         <xs:attribute name="code" type="xs:string" use="required" />
         <xs:attribute name="index" type="xs:long" use="required" />
+    </xs:complexType>
+
+    <xs:complexType name="DataAttributes">
+        <xs:sequence>
+            <xs:element name="attribute" type="tns:DataAttribute" minOccurs="1" maxOccurs="unbounded" />
+        </xs:sequence>
+        <xs:attribute name="total" type="xs:unsignedLong" use="required" />
+    </xs:complexType>
+
+    <xs:complexType name="DataAttribute">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute name="id" type="xs:string" use="required" />
+            </xs:extension>
+        </xs:simpleContent>
     </xs:complexType>
 
     <xs:complexType name="DataStructureDefinition">
@@ -327,11 +343,25 @@
         <xs:sequence>
             <xs:element name="id" type="xs:string" />
             <xs:element name="name" type="common:InternationalString" />
-            <xs:element name="type" type="tns:AttributeLevelType" />
+            <xs:element name="attachmentLevel" type="tns:AttributeAttachmentLevelType" />
+            <xs:element name="dimensions" type="tns:AttributeDimensions" minOccurs="0" />
+        </xs:sequence>
+    </xs:complexType>
+    
+    <xs:complexType name="AttributeDimensions">
+        <xs:sequence>
+            <xs:element name="dimension" type="tns:AttributeDimension" minOccurs="1" maxOccurs="unbounded" />
+        </xs:sequence>
+        <xs:attribute name="total" type="xs:unsignedLong" use="required" />
+    </xs:complexType>    
+
+    <xs:complexType name="AttributeDimension">
+        <xs:sequence>
+            <xs:element name="dimensionId" type="xs:string" minOccurs="1" />
             <xs:element name="values" type="tns:AttributeValues" minOccurs="0" />
         </xs:sequence>
     </xs:complexType>
-
+    
     <xs:complexType name="AttributeValues" abstract="true">
     </xs:complexType>
 
@@ -396,8 +426,10 @@
         </xs:restriction>
     </xs:simpleType>
 
-    <xs:simpleType name="AttributeLevelType">
+    <xs:simpleType name="AttributeAttachmentLevelType">
         <xs:restriction base="xs:token">
+            <xs:enumeration value="DATASET" />
+            <xs:enumeration value="DIMENSION" />
             <xs:enumeration value="PRIMARY_MEASURE" />
         </xs:restriction>
     </xs:simpleType>
