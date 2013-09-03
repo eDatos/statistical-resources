@@ -1,7 +1,9 @@
 package org.siemac.metamac.statistical.resources.core.common.utils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -19,6 +21,8 @@ import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStr
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Dimension;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DimensionBase;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Dimensions;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Group;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Groups;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ItemResourceInternal;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.MeasureDimension;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.PrimaryMeasure;
@@ -73,6 +77,21 @@ public class DsdProcessor {
             }
         }
         return attributes;
+    }
+
+    /**
+     * Gets groups as a map indexed by groupId and list of dimensions id as value
+     */
+    public static Map<String, List<String>> getGroups(DataStructure dsd) throws MetamacException {
+        Map<String, List<String>> groups = new HashMap<String, List<String>>();
+        DataStructureComponents components = dsd.getDataStructureComponents();
+        if (components != null && components.getGroups() != null) {
+            Groups groupList = components.getGroups();
+            for (Group group : groupList.getGroups()) {
+                groups.put(group.getId(), group.getDimensions().getDimensions());
+            }
+        }
+        return groups;
     }
 
     public abstract static class DsdComponent {

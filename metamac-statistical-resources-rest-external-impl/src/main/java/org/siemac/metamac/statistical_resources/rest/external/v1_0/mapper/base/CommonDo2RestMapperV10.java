@@ -1,5 +1,6 @@
 package org.siemac.metamac.statistical_resources.rest.external.v1_0.mapper.base;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -19,21 +20,21 @@ import org.siemac.metamac.rest.statistical_resources.v1_0.domain.StatisticalReso
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructure;
 import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
-import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor.DsdAttribute;
-import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor.DsdDimension;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.TemporalCode;
 import org.siemac.metamac.statistical.resources.core.query.domain.CodeItem;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
+import org.siemac.metamac.statistical_resources.rest.external.v1_0.domain.DsdProcessorResult;
 
 public interface CommonDo2RestMapperV10 {
 
+    public DsdProcessorResult processDataStructure(String urn) throws MetamacException;
     public void toMetadataStatisticalResource(SiemacMetadataStatisticalResource source, StatisticalResource target, List<String> selectedLanguages) throws MetamacException;
-    public Data toData(DatasetVersion source, List<String> selectedLanguages, Map<String, List<String>> dimensionValuesSelected) throws Exception;
+    public Data toData(DatasetVersion source, DsdProcessorResult dsdProcessorResult, Map<String, List<String>> dimensionValuesSelected, List<String> selectedLanguages) throws Exception;
     public DataStructureDefinition toDataStructureDefinition(ExternalItem source, DataStructure dataStructure, List<String> selectedLanguages);
-    public Dimensions toDimensions(DataStructure dataStructure, List<DsdDimension> sources, String datasetVersionUrn, Map<String, List<String>> effectiveDimensionValuesToDataByDimension,
-            List<String> selectedLanguages) throws MetamacException;
-    public Attributes toAttributes(List<DsdAttribute> sources, String datasetVersionUrn, Map<String, List<String>> effectiveDimensionValuesToDataByDimension, List<String> selectedLanguages)
+    public Dimensions toDimensions(String datasetVersionUrn, DsdProcessorResult dsdProcessorResult, Map<String, List<String>> effectiveDimensionValuesToDataByDimension, List<String> selectedLanguages)
+            throws MetamacException;
+    public Attributes toAttributes(String datasetVersionUrn, DsdProcessorResult dsdProcessorResult, Map<String, List<String>> effectiveDimensionValuesToDataByDimension, List<String> selectedLanguages)
             throws MetamacException;
 
     public Resource toResource(Resource source, List<String> selectedLanguages);
@@ -54,7 +55,7 @@ public interface CommonDo2RestMapperV10 {
     public List<String> temporalCoverageToString(List<TemporalCode> sources);
     public Map<String, List<String>> calculateEffectiveDimensionValuesToQuery(QueryVersion source);
 
-    public Resources toResourcesExternalItemsSrm(List<ExternalItem> sources, List<String> selectedLanguages);
+    public Resources toResourcesExternalItemsSrm(Collection<ExternalItem> sources, List<String> selectedLanguages);
     public Resource toResourceExternalItemSrm(ExternalItem source, List<String> selectedLanguages);
     public void toResourceExternalItemSrm(ExternalItem source, Resource target, List<String> selectedLanguages);
     public Resource toResourceExternalItemStatisticalOperations(ExternalItem source, List<String> selectedLanguages);

@@ -19,18 +19,14 @@ import org.siemac.metamac.rest.search.criteria.mapper.SculptorCriteria2RestCrite
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Dataset;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.DatasetMetadata;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Datasets;
-import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructure;
 import org.siemac.metamac.rest.utils.RestUtils;
-import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor;
-import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor.DsdAttribute;
-import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor.DsdDimension;
 import org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConstants;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.StatisticOfficiality;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.TemporalCode;
 import org.siemac.metamac.statistical_resources.rest.external.RestExternalConstants;
 import org.siemac.metamac.statistical_resources.rest.external.RestExternalConstantsPrivate;
-import org.siemac.metamac.statistical_resources.rest.external.invocation.SrmRestExternalFacade;
+import org.siemac.metamac.statistical_resources.rest.external.v1_0.domain.DsdProcessorResult;
 import org.siemac.metamac.statistical_resources.rest.external.v1_0.mapper.base.CommonDo2RestMapperV10;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -40,9 +36,6 @@ public class DatasetsDo2RestMapperV10Impl implements DatasetsDo2RestMapperV10 {
 
     @Autowired
     private CommonDo2RestMapperV10 commonDo2RestMapper;
-
-    @Autowired
-    private SrmRestExternalFacade  srmRestExternalFacade;
 
     @Autowired
     private ConfigurationService   configurationService;
@@ -81,11 +74,15 @@ public class DatasetsDo2RestMapperV10Impl implements DatasetsDo2RestMapperV10 {
         target.setChildLinks(toDatasetChildLinks(source));
         target.setSelectedLanguages(commonDo2RestMapper.toLanguages(selectedLanguages));
 
+        DsdProcessorResult dsdProcessorResult = null;
+        if (includeMetadata || includeData) {
+            dsdProcessorResult = commonDo2RestMapper.processDataStructure(source.getRelatedDsd().getUrn());
+        }
         if (includeMetadata) {
-            target.setMetadata(toDatasetMetadata(source, selectedLanguages));
+            target.setMetadata(toDatasetMetadata(source, dsdProcessorResult, selectedLanguages));
         }
         if (includeData) {
-            target.setData(commonDo2RestMapper.toData(source, selectedLanguages, selectedDimensions));
+            target.setData(commonDo2RestMapper.toData(source, dsdProcessorResult, selectedDimensions, selectedLanguages));
         }
         return target;
     }
@@ -104,21 +101,14 @@ public class DatasetsDo2RestMapperV10Impl implements DatasetsDo2RestMapperV10 {
         return target;
     }
 
-    private DatasetMetadata toDatasetMetadata(DatasetVersion source, List<String> selectedLanguages) throws MetamacException {
+    private DatasetMetadata toDatasetMetadata(DatasetVersion source, DsdProcessorResult dsdProcessorResult, List<String> selectedLanguages) throws MetamacException {
         if (source == null) {
             return null;
         }
         DatasetMetadata target = new DatasetMetadata();
-
-        DataStructure dataStructure = srmRestExternalFacade.retrieveDataStructureByUrn(source.getRelatedDsd().getUrn());
-        target.setRelatedDsd(commonDo2RestMapper.toDataStructureDefinition(source.getRelatedDsd(), dataStructure, selectedLanguages));
-
-        List<DsdDimension> dimensions = DsdProcessor.getDimensions(dataStructure);
-        target.setDimensions(commonDo2RestMapper.toDimensions(dataStructure, dimensions, source.getSiemacMetadataStatisticalResource().getUrn(), null, selectedLanguages));
-
-        List<DsdAttribute> attributes = DsdProcessor.getAttributes(dataStructure);
-        target.setAttributes(commonDo2RestMapper.toAttributes(attributes, source.getSiemacMetadataStatisticalResource().getUrn(), null, selectedLanguages));
-
+        target.setRelatedDsd(commonDo2RestMapper.toDataStructureDefinition(source.getRelatedDsd(), dsdProcessorResult.getDataStructure(), selectedLanguages));
+        target.setDimensions(commonDo2RestMapper.toDimensions(source.getSiemacMetadataStatisticalResource().getUrn(), dsdProcessorResult, null, selectedLanguages));
+        target.setAttributes(commonDo2RestMapper.toAttributes(source.getSiemacMetadataStatisticalResource().getUrn(), dsdProcessorResult, null, selectedLanguages));
         target.setGeographicCoverages(commonDo2RestMapper.toResourcesExternalItemsSrm(source.getGeographicCoverage(), selectedLanguages));
         target.setTemporalCoverages(toTemporalCoverages(source.getTemporalCoverage(), selectedLanguages));
         target.setMeasureCoverages(commonDo2RestMapper.toResourcesExternalItemsSrm(source.getMeasureCoverage(), selectedLanguages));

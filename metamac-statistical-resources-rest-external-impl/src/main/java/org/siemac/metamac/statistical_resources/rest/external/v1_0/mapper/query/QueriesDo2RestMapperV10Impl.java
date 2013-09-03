@@ -17,16 +17,12 @@ import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Data;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Queries;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Query;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.QueryMetadata;
-import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructure;
-import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor;
-import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor.DsdAttribute;
-import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor.DsdDimension;
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryTypeEnum;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
 import org.siemac.metamac.statistical_resources.rest.external.RestExternalConstants;
 import org.siemac.metamac.statistical_resources.rest.external.exception.RestServiceExceptionType;
-import org.siemac.metamac.statistical_resources.rest.external.invocation.SrmRestExternalFacade;
+import org.siemac.metamac.statistical_resources.rest.external.v1_0.domain.DsdProcessorResult;
 import org.siemac.metamac.statistical_resources.rest.external.v1_0.mapper.base.CommonDo2RestMapperV10;
 import org.siemac.metamac.statistical_resources.rest.external.v1_0.mapper.dataset.DatasetsDo2RestMapperV10;
 import org.slf4j.Logger;
@@ -42,9 +38,6 @@ public class QueriesDo2RestMapperV10Impl implements QueriesDo2RestMapperV10 {
 
     @Autowired
     private DatasetsDo2RestMapperV10 datasetsDo2RestMapper;
-
-    @Autowired
-    private SrmRestExternalFacade    srmRestExternalFacade;
 
     private static final Logger      logger = LoggerFactory.getLogger(QueriesDo2RestMapperV10Impl.class);
 
@@ -81,11 +74,15 @@ public class QueriesDo2RestMapperV10Impl implements QueriesDo2RestMapperV10 {
         target.setParentLink(toQueryParentLink(source));
         target.setChildLinks(toQueryChildLinks(source));
         target.setSelectedLanguages(commonDo2RestMapper.toLanguages(selectedLanguages));
+        DsdProcessorResult dsdProcessorResult = null;
+        if (includeMetadata || includeData) {
+            dsdProcessorResult = commonDo2RestMapper.processDataStructure(source.getDatasetVersion().getRelatedDsd().getUrn());
+        }
         if (includeMetadata) {
-            target.setMetadata(toQueryMetadata(source, selectedLanguages));
+            target.setMetadata(toQueryMetadata(source, dsdProcessorResult, selectedLanguages));
         }
         if (includeData) {
-            target.setData(toQueryData(source, selectedLanguages));
+            target.setData(toQueryData(source, dsdProcessorResult, selectedLanguages));
         }
         return target;
     }
@@ -104,7 +101,7 @@ public class QueriesDo2RestMapperV10Impl implements QueriesDo2RestMapperV10 {
         return target;
     }
 
-    private QueryMetadata toQueryMetadata(QueryVersion source, List<String> selectedLanguages) throws MetamacException {
+    private QueryMetadata toQueryMetadata(QueryVersion source, DsdProcessorResult dsdProcessorResult, List<String> selectedLanguages) throws MetamacException {
         if (source == null) {
             return null;
         }
@@ -112,16 +109,11 @@ public class QueriesDo2RestMapperV10Impl implements QueriesDo2RestMapperV10 {
 
         Map<String, List<String>> effectiveDimensionValuesToDataByDimension = commonDo2RestMapper.calculateEffectiveDimensionValuesToQuery(source);
 
-        DataStructure dataStructure = srmRestExternalFacade.retrieveDataStructureByUrn(source.getDatasetVersion().getRelatedDsd().getUrn());
-        target.setRelatedDsd(commonDo2RestMapper.toDataStructureDefinition(source.getDatasetVersion().getRelatedDsd(), dataStructure, selectedLanguages));
-
-        List<DsdDimension> dimensions = DsdProcessor.getDimensions(dataStructure);
-        target.setDimensions(commonDo2RestMapper.toDimensions(dataStructure, dimensions, source.getDatasetVersion().getSiemacMetadataStatisticalResource().getUrn(),
+        target.setRelatedDsd(commonDo2RestMapper.toDataStructureDefinition(source.getDatasetVersion().getRelatedDsd(), dsdProcessorResult.getDataStructure(), selectedLanguages));
+        target.setDimensions(commonDo2RestMapper.toDimensions(source.getDatasetVersion().getSiemacMetadataStatisticalResource().getUrn(), dsdProcessorResult,
                 effectiveDimensionValuesToDataByDimension, selectedLanguages));
-
-        List<DsdAttribute> attributes = DsdProcessor.getAttributes(dataStructure);
-        target.setAttributes(commonDo2RestMapper.toAttributes(attributes, source.getDatasetVersion().getSiemacMetadataStatisticalResource().getUrn(), null, selectedLanguages));
-
+        target.setAttributes(commonDo2RestMapper.toAttributes(source.getDatasetVersion().getSiemacMetadataStatisticalResource().getUrn(), dsdProcessorResult,
+                effectiveDimensionValuesToDataByDimension, selectedLanguages));
         target.setRelatedDataset(datasetsDo2RestMapper.toResource(source.getDatasetVersion(), selectedLanguages));
         target.setStatus(toQueryStatus(source.getStatus()));
         target.setType(toQueryType(source.getType()));
@@ -134,12 +126,12 @@ public class QueriesDo2RestMapperV10Impl implements QueriesDo2RestMapperV10 {
         return target;
     }
 
-    private Data toQueryData(QueryVersion source, List<String> selectedLanguages) throws Exception {
+    private Data toQueryData(QueryVersion source, DsdProcessorResult dsdProcessorResult, List<String> selectedLanguages) throws Exception {
         if (source == null) {
             return null;
         }
-        Map<String, List<String>> dimensionValuesSelected = commonDo2RestMapper.calculateEffectiveDimensionValuesToQuery(source);
-        return commonDo2RestMapper.toData(source.getDatasetVersion(), selectedLanguages, dimensionValuesSelected);
+        Map<String, List<String>> effectiveDimensionValuesToDataByDimension = commonDo2RestMapper.calculateEffectiveDimensionValuesToQuery(source);
+        return commonDo2RestMapper.toData(source.getDatasetVersion(), dsdProcessorResult, effectiveDimensionValuesToDataByDimension, selectedLanguages);
     }
 
     private ResourceLink toQueryParentLink(QueryVersion source) {

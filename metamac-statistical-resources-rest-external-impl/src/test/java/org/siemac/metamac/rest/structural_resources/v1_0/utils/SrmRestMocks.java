@@ -7,6 +7,8 @@ import static org.siemac.metamac.rest.statistical_resources.constants.RestTestCo
 import static org.siemac.metamac.rest.statistical_resources.constants.RestTestConstants.ATTRIBUTE_5_DIMENSION;
 import static org.siemac.metamac.rest.statistical_resources.constants.RestTestConstants.ATTRIBUTE_6_DIMENSION;
 import static org.siemac.metamac.rest.statistical_resources.constants.RestTestConstants.ATTRIBUTE_7_DIMENSION;
+import static org.siemac.metamac.rest.statistical_resources.constants.RestTestConstants.ATTRIBUTE_8_DIMENSION;
+import static org.siemac.metamac.rest.statistical_resources.constants.RestTestConstants.ATTRIBUTE_9_DIMENSION;
 import static org.siemac.metamac.rest.structural_resources.v1_0.utils.RestMocks.mockInternationalString;
 
 import java.util.Arrays;
@@ -30,6 +32,8 @@ import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Dimensi
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DimensionType;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Dimensions;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Empty;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Group;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Groups;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ItemResourceInternal;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.MeasureDimension;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Representation;
@@ -59,11 +63,16 @@ public class SrmRestMocks {
 
         DataStructureComponents components = new DataStructureComponents();
         dataStructure.setDataStructureComponents(components);
+
         components.setDimensions(new Dimensions());
         components.getDimensions().getDimensions().add(mockDimension("GEO_DIM", Boolean.TRUE));
         components.getDimensions().getDimensions().add(mockTimeDimension("TIME_PERIOD"));
         components.getDimensions().getDimensions().add(mockMeasureDimension("measure01"));
         components.getDimensions().getDimensions().add(mockDimension("dim01", Boolean.FALSE));
+
+        components.setGroups(new Groups());
+        components.getGroups().getGroups().add(mockGroup("group01", Arrays.asList("TIME_PERIOD", "GEO_DIM")));
+        components.getGroups().getGroups().add(mockGroup("group02", Arrays.asList("GEO_DIM", "TIME_PERIOD", "dim01")));
 
         components.setAttributes(new Attributes());
         components.getAttributes().getAttributes().add(mockAttributeDataset(ATTRIBUTE_1_GLOBAL, false));
@@ -73,9 +82,10 @@ public class SrmRestMocks {
         components.getAttributes().getAttributes().add(mockAttributeDimension(ATTRIBUTE_5_DIMENSION, Arrays.asList("GEO_DIM", "TIME_PERIOD"), false));
         components.getAttributes().getAttributes().add(mockAttributeDimension(ATTRIBUTE_6_DIMENSION, Arrays.asList("GEO_DIM", "TIME_PERIOD", "measure01"), false));
         components.getAttributes().getAttributes().add(mockAttributeDimension(ATTRIBUTE_7_DIMENSION, Arrays.asList("GEO_DIM", "dim01", "measure01", "TIME_PERIOD"), false));
+        components.getAttributes().getAttributes().add(mockAttributeGroup(ATTRIBUTE_8_DIMENSION, "group01", false));
+        components.getAttributes().getAttributes().add(mockAttributeGroup(ATTRIBUTE_9_DIMENSION, "group02", false));
         // components.getAttributes().getAttributes().add(mockAttributePrimaryMeasure("attribute1", false)); // TODO primary measure
         // components.getAttributes().getAttributes().add(mockAttributePrimaryMeasure("attribute3", true));
-        // TODO groups
 
         dataStructure.setShowDecimals(Integer.valueOf(2));
         dataStructure.setShowDecimalsPrecisions(new ShowDecimalPrecisions());
@@ -278,6 +288,14 @@ public class SrmRestMocks {
         return dimension;
     }
 
+    private static Group mockGroup(String id, List<String> dimensions) {
+        Group group = new Group();
+        group.setId(id);
+        group.setDimensions(new DimensionReferences());
+        group.getDimensions().getDimensions().addAll(dimensions);
+        return group;
+    }
+
     private static AttributeBase mockAttributeDataset(String id, boolean enumerated) {
         Attribute attribute = new Attribute();
         mockAttributeBase(id, attribute, enumerated);
@@ -291,6 +309,14 @@ public class SrmRestMocks {
         mockAttributeBase(id, attribute, enumerated);
         attribute.setAttributeRelationship(new AttributeRelationship());
         attribute.getAttributeRelationship().getDimensions().addAll(dimensions);
+        return attribute;
+    }
+
+    private static AttributeBase mockAttributeGroup(String id, String group, boolean enumerated) {
+        Attribute attribute = new Attribute();
+        mockAttributeBase(id, attribute, enumerated);
+        attribute.setAttributeRelationship(new AttributeRelationship());
+        attribute.getAttributeRelationship().setGroup(group);
         return attribute;
     }
 
