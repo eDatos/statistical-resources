@@ -8,7 +8,7 @@
         <cdomain:text xml:lang="es">title-query1 en Espanol</cdomain:text>
     </stat:name>
     <stat:description>
-        <cdomain:text xml:lang="es">description-resource-RRXqo7wLC1 en Espanol</cdomain:text>
+        <cdomain:text xml:lang="es">description-resource-QXAeIPd11m en Espanol</cdomain:text>
     </stat:description>
     <stat:selectedLanguages total="1">
         <stat:language>es</stat:language>
@@ -231,7 +231,8 @@
                     <stat:value kind="structuralResources#concept">
                         <cdomain:id>measure01-conceptScheme01-concept01</cdomain:id>
                         <cdomain:urn>urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=agency01:measure01-conceptScheme01(01.000).measure01-conceptScheme01-concept01</cdomain:urn>
-                        <cdomain:selfLink href="http://apis.metamac.org/metamac-srm-web/apis/structural-resources-internal/v1.0/conceptschemes/agency01/measure01-conceptScheme01/01.000/concepts/measure01-conceptScheme01-concept01" />
+                        <cdomain:selfLink
+                            href="http://apis.metamac.org/metamac-srm-web/apis/structural-resources-internal/v1.0/conceptschemes/agency01/measure01-conceptScheme01/01.000/concepts/measure01-conceptScheme01-concept01" />
                         <cdomain:name>
                             <cdomain:text xml:lang="es">measure01-conceptScheme01-concept01 en Español</cdomain:text>
                         </cdomain:name>
@@ -240,7 +241,8 @@
                     <stat:value kind="structuralResources#concept">
                         <cdomain:id>measure01-conceptScheme01-concept02</cdomain:id>
                         <cdomain:urn>urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=agency01:measure01-conceptScheme01(01.000).measure01-conceptScheme01-concept02</cdomain:urn>
-                        <cdomain:selfLink href="http://apis.metamac.org/metamac-srm-web/apis/structural-resources-internal/v1.0/conceptschemes/agency01/measure01-conceptScheme01/01.000/concepts/measure01-conceptScheme01-concept02" />
+                        <cdomain:selfLink
+                            href="http://apis.metamac.org/metamac-srm-web/apis/structural-resources-internal/v1.0/conceptschemes/agency01/measure01-conceptScheme01/01.000/concepts/measure01-conceptScheme01-concept02" />
                         <cdomain:name>
                             <cdomain:text xml:lang="es">measure01-conceptScheme01-concept02 en Español</cdomain:text>
                         </cdomain:name>
@@ -249,7 +251,8 @@
                     <stat:value kind="structuralResources#concept">
                         <cdomain:id>measure01-conceptScheme01-concept05</cdomain:id>
                         <cdomain:urn>urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=agency01:measure01-conceptScheme01(01.000).measure01-conceptScheme01-concept05</cdomain:urn>
-                        <cdomain:selfLink href="http://apis.metamac.org/metamac-srm-web/apis/structural-resources-internal/v1.0/conceptschemes/agency01/measure01-conceptScheme01/01.000/concepts/measure01-conceptScheme01-concept05" />
+                        <cdomain:selfLink
+                            href="http://apis.metamac.org/metamac-srm-web/apis/structural-resources-internal/v1.0/conceptschemes/agency01/measure01-conceptScheme01/01.000/concepts/measure01-conceptScheme01-concept05" />
                         <cdomain:name>
                             <cdomain:text xml:lang="es">measure01-conceptScheme01-concept05 en Español</cdomain:text>
                         </cdomain:name>
@@ -276,20 +279,101 @@
                 </stat:dimensionValues>
             </stat:dimension>
         </stat:dimensions>
-        <stat:attributes total="2">
+        <stat:attributes total="7">
             <stat:attribute>
-                <stat:id>attributeGlobal1</stat:id>
+                <stat:id>at1</stat:id>
                 <stat:name>
-                    <cdomain:text xml:lang="es">attributeGlobal1-concept01 en Español</cdomain:text>
+                    <cdomain:text xml:lang="es">at1-concept01 en Español</cdomain:text>
                 </stat:name>
                 <stat:attachmentLevel>DATASET</stat:attachmentLevel>
             </stat:attribute>
             <stat:attribute>
-                <stat:id>attributeGlobal2</stat:id>
+                <stat:id>at2</stat:id>
                 <stat:name>
-                    <cdomain:text xml:lang="es">attributeGlobal2-concept01 en Español</cdomain:text>
+                    <cdomain:text xml:lang="es">at2-concept01 en Español</cdomain:text>
                 </stat:name>
                 <stat:attachmentLevel>DATASET</stat:attachmentLevel>
+            </stat:attribute>
+            <stat:attribute>
+                <stat:id>at3</stat:id>
+                <stat:name>
+                    <cdomain:text xml:lang="es">at3-concept01 en Español</cdomain:text>
+                </stat:name>
+                <stat:attachmentLevel>DIMENSION</stat:attachmentLevel>
+                <stat:dimensions total="1">
+                    <stat:dimension>
+                        <stat:dimensionId>GEO_DIM</stat:dimensionId>
+                    </stat:dimension>
+                </stat:dimensions>
+            </stat:attribute>
+            <stat:attribute>
+                <stat:id>at4</stat:id>
+                <stat:name>
+                    <cdomain:text xml:lang="es">at4-concept01 en Español</cdomain:text>
+                </stat:name>
+                <stat:attachmentLevel>DIMENSION</stat:attachmentLevel>
+                <stat:dimensions total="2">
+                    <stat:dimension>
+                        <stat:dimensionId>GEO_DIM</stat:dimensionId>
+                    </stat:dimension>
+                    <stat:dimension>
+                        <stat:dimensionId>dim01</stat:dimensionId>
+                    </stat:dimension>
+                </stat:dimensions>
+            </stat:attribute>
+            <stat:attribute>
+                <stat:id>at5</stat:id>
+                <stat:name>
+                    <cdomain:text xml:lang="es">at5-concept01 en Español</cdomain:text>
+                </stat:name>
+                <stat:attachmentLevel>DIMENSION</stat:attachmentLevel>
+                <stat:dimensions total="2">
+                    <stat:dimension>
+                        <stat:dimensionId>GEO_DIM</stat:dimensionId>
+                    </stat:dimension>
+                    <stat:dimension>
+                        <stat:dimensionId>TIME_PERIOD</stat:dimensionId>
+                    </stat:dimension>
+                </stat:dimensions>
+            </stat:attribute>
+            <stat:attribute>
+                <stat:id>at6</stat:id>
+                <stat:name>
+                    <cdomain:text xml:lang="es">at6-concept01 en Español</cdomain:text>
+                </stat:name>
+                <stat:attachmentLevel>DIMENSION</stat:attachmentLevel>
+                <stat:dimensions total="3">
+                    <stat:dimension>
+                        <stat:dimensionId>GEO_DIM</stat:dimensionId>
+                    </stat:dimension>
+                    <stat:dimension>
+                        <stat:dimensionId>TIME_PERIOD</stat:dimensionId>
+                    </stat:dimension>
+                    <stat:dimension>
+                        <stat:dimensionId>measure01</stat:dimensionId>
+                    </stat:dimension>
+                </stat:dimensions>
+            </stat:attribute>
+            <stat:attribute>
+                <stat:id>at7</stat:id>
+                <stat:name>
+                    <cdomain:text xml:lang="es">at7-concept01 en Español</cdomain:text>
+                </stat:name>
+                <stat:attachmentLevel>DIMENSION</stat:attachmentLevel>
+                <stat:dimensions total="4">
+                    <stat:dimension>
+                        <stat:dimensionId>GEO_DIM</stat:dimensionId>
+                    </stat:dimension>
+                    <stat:dimension>
+                        <stat:dimensionId>TIME_PERIOD</stat:dimensionId>
+                    </stat:dimension>
+                    <stat:dimension>
+                        <stat:dimensionId>measure01</stat:dimensionId>
+                    </stat:dimension>
+                    <stat:dimension>
+                        <stat:dimensionId>dim01</stat:dimensionId>
+                    </stat:dimension>
+                </stat:dimensions>
             </stat:attribute>
         </stat:attributes>
         <stat:status>ACTIVE</stat:status>
@@ -303,20 +387,20 @@
             </cdomain:name>
         </stat:requires>
         <stat:statisticalOperation kind="statisticalOperations#operation">
-            <cdomain:id>bzkqKGWa6G</cdomain:id>
-            <cdomain:urn>urn:siemac:org.siemac.metamac.infomodel.statisticaloperations.Operation=bzkqKGWa6G</cdomain:urn>
-            <cdomain:selfLink kind="statisticalOperations#operation" href="http://data.istac.es/apis/operations/latest/bzkqKGWa6G" />
+            <cdomain:id>mVfDVrq0KY</cdomain:id>
+            <cdomain:urn>urn:siemac:org.siemac.metamac.infomodel.statisticaloperations.Operation=mVfDVrq0KY</cdomain:urn>
+            <cdomain:selfLink kind="statisticalOperations#operation" href="http://data.istac.es/apis/operations/latest/mVfDVrq0KY" />
             <cdomain:name>
-                <cdomain:text xml:lang="es">title-bzkqKGWa6G en Espanol</cdomain:text>
+                <cdomain:text xml:lang="es">title-mVfDVrq0KY en Espanol</cdomain:text>
             </cdomain:name>
         </stat:statisticalOperation>
         <stat:maintainer kind="structuralResources#agency">
-            <cdomain:id>LS8OftwZjo</cdomain:id>
+            <cdomain:id>gn0LKtScwX</cdomain:id>
             <cdomain:nestedId>agency1</cdomain:nestedId>
-            <cdomain:urn>urn:sdmx:org.sdmx.infomodel.base.Agency=MaintainerMock:AgencySchemeMock(1.0).LS8OftwZjo</cdomain:urn>
-            <cdomain:selfLink kind="structuralResources#agency" href="http://data.istac.es/apis/srm/latest/LS8OftwZjo" />
+            <cdomain:urn>urn:sdmx:org.sdmx.infomodel.base.Agency=MaintainerMock:AgencySchemeMock(1.0).gn0LKtScwX</cdomain:urn>
+            <cdomain:selfLink kind="structuralResources#agency" href="http://data.istac.es/apis/srm/latest/gn0LKtScwX" />
             <cdomain:name>
-                <cdomain:text xml:lang="es">title-LS8OftwZjo en Espanol</cdomain:text>
+                <cdomain:text xml:lang="es">title-gn0LKtScwX en Espanol</cdomain:text>
             </cdomain:name>
         </stat:maintainer>
         <stat:validFrom>2013-01-01T03:04:12Z</stat:validFrom>
@@ -359,10 +443,16 @@
                 </stat:representations>
             </stat:dimension>
         </stat:dimensions>
-        <stat:attributes total="2">
-            <stat:attribute id="attributeGlobal1">Value attributeGlobal1</stat:attribute>
-            <stat:attribute id="attributeGlobal2">Value attributeGlobal2</stat:attribute>
+        <stat:attributes total="7">
+            <stat:attribute id="at1">Value at1</stat:attribute>
+            <stat:attribute id="at2">Value at2</stat:attribute>
+            <stat:attribute id="at3">Value at3-1 | | Value at3-2 | | | | | </stat:attribute>
+            <stat:attribute id="at4">Value at4-1 | | Value at4-2 | | | | | </stat:attribute>
+            <stat:attribute id="at5">Value at5-1 | Value at5-3 | | | | | | | | | | | | | Value at5-7 | Value at5-9</stat:attribute>
+            <stat:attribute id="at6">Value at6-1 | | | | | | | | | | | | Value at6-2 | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | </stat:attribute>
+            <stat:attribute id="at7">Value at7-1 | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | </stat:attribute>
         </stat:attributes>
-        <stat:observations>1 | 4 | 7 | 19 | 22 | 25 | 37 | 40 | 43 | 55 | 58 | 61 | 73 | 76 | 79 | 91 | 94 | 97 | 109 | 112 | 115 | 127 | 130 | 133 | 145 | 148 | 151 | 163 | 166 | 169 | 217 | 220 | 223 | 235 | 238 | 241 | 325 | 328 | 331 | 343 | 346 | 349 | 397 | 400 | 403 | 415 | 418 | 421</stat:observations>
+        <stat:observations>1 | 4 | 7 | 19 | 22 | 25 | 37 | 40 | 43 | 55 | 58 | 61 | 73 | 76 | 79 | 91 | 94 | 97 | 109 | 112 | 115 | 127 | 130 | 133 | 145 | 148 | 151 | 163 | 166 | 169 | 217 | 220 | 223 | 235 |
+            238 | 241 | 325 | 328 | 331 | 343 | 346 | 349 | 397 | 400 | 403 | 415 | 418 | 421</stat:observations>
     </stat:data>
 </stat:query>
