@@ -1,5 +1,7 @@
 package org.siemac.metamac.rest.structural_resources.v1_0.utils;
 
+import static org.siemac.metamac.rest.statistical_resources.constants.RestTestConstants.ATTRIBUTE_10_OBSERVATION;
+import static org.siemac.metamac.rest.statistical_resources.constants.RestTestConstants.ATTRIBUTE_11_OBSERVATION;
 import static org.siemac.metamac.rest.statistical_resources.constants.RestTestConstants.ATTRIBUTE_1_GLOBAL;
 import static org.siemac.metamac.rest.statistical_resources.constants.RestTestConstants.ATTRIBUTE_2_GLOBAL;
 import static org.siemac.metamac.rest.statistical_resources.constants.RestTestConstants.ATTRIBUTE_3_DIMENSION;
@@ -8,7 +10,7 @@ import static org.siemac.metamac.rest.statistical_resources.constants.RestTestCo
 import static org.siemac.metamac.rest.statistical_resources.constants.RestTestConstants.ATTRIBUTE_6_DIMENSION;
 import static org.siemac.metamac.rest.statistical_resources.constants.RestTestConstants.ATTRIBUTE_7_DIMENSION;
 import static org.siemac.metamac.rest.statistical_resources.constants.RestTestConstants.ATTRIBUTE_8_DIMENSION;
-import static org.siemac.metamac.rest.statistical_resources.constants.RestTestConstants.ATTRIBUTE_9_DIMENSION;
+import static org.siemac.metamac.rest.statistical_resources.constants.RestTestConstants.*;
 import static org.siemac.metamac.rest.structural_resources.v1_0.utils.RestMocks.mockInternationalString;
 
 import java.util.Arrays;
@@ -84,8 +86,8 @@ public class SrmRestMocks {
         components.getAttributes().getAttributes().add(mockAttributeDimension(ATTRIBUTE_7_DIMENSION, Arrays.asList("GEO_DIM", "dim01", "measure01", "TIME_PERIOD"), false));
         components.getAttributes().getAttributes().add(mockAttributeGroup(ATTRIBUTE_8_DIMENSION, "group01", false));
         components.getAttributes().getAttributes().add(mockAttributeGroup(ATTRIBUTE_9_DIMENSION, "group02", false));
-        // components.getAttributes().getAttributes().add(mockAttributePrimaryMeasure("attribute1", false)); // TODO primary measure
-        // components.getAttributes().getAttributes().add(mockAttributePrimaryMeasure("attribute3", true));
+        components.getAttributes().getAttributes().add(mockAttributePrimaryMeasure(ATTRIBUTE_10_OBSERVATION, false));
+        components.getAttributes().getAttributes().add(mockAttributePrimaryMeasure(ATTRIBUTE_11_OBSERVATION, false));
 
         dataStructure.setShowDecimals(Integer.valueOf(2));
         dataStructure.setShowDecimalsPrecisions(new ShowDecimalPrecisions());
@@ -320,14 +322,13 @@ public class SrmRestMocks {
         return attribute;
     }
 
-    // TODO mockAttributePrimaryMeasure
-    // private static AttributeBase mockAttributePrimaryMeasure(String id, boolean enumerated) {
-    // Attribute attribute = new Attribute();
-    // mockAttributeBase(id, attribute, enumerated);
-    // attribute.setAttributeRelationship(new AttributeRelationship());
-    // attribute.getAttributeRelationship().setPrimaryMeasure("OBS_VALUE");
-    // return attribute;
-    // }
+    private static AttributeBase mockAttributePrimaryMeasure(String id, boolean enumerated) {
+        Attribute attribute = new Attribute();
+        mockAttributeBase(id, attribute, enumerated);
+        attribute.setAttributeRelationship(new AttributeRelationship());
+        attribute.getAttributeRelationship().setPrimaryMeasure("OBS_VALUE");
+        return attribute;
+    }
 
     private static void mockAttributeBase(String id, AttributeBase attribute, boolean enumerated) {
         attribute.setId(id);

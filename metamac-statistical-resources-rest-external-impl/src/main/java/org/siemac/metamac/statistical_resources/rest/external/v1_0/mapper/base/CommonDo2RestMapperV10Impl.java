@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
@@ -98,9 +99,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.arte.statistic.dataset.repository.dto.AttributeBasicDto;
 import com.arte.statistic.dataset.repository.dto.AttributeDto;
+import com.arte.statistic.dataset.repository.dto.AttributeObservationDto;
 import com.arte.statistic.dataset.repository.dto.ConditionDimensionDto;
-import com.arte.statistic.dataset.repository.dto.ObservationDto;
 import com.arte.statistic.dataset.repository.dto.ObservationExtendedDto;
 import com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceFacade;
 
@@ -229,9 +231,17 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
         Map<String, List<String>> dimensionsCodesSelectedEffective = buildDimensionsSelectedWithValues(source, dimensionValuesSelected, datasetDimensions);
 
         // Transform data
-        target.setDimensions(toDataDimensionRepresentations(datasetDimensions, dimensionsCodesSelectedEffective));
-        target.setObservations(toDataObservations(source, datasetDimensions, dimensionValuesSelected, dimensionsCodesSelectedEffective));
-        target.setAttributes(toDataAttributes(dsdProcessorResult, source.getDatasetRepositoryId(), datasetDimensions, dimensionsCodesSelectedEffective));
+        // Dimensions
+        toDataDimensionRepresentations(datasetDimensions, dimensionsCodesSelectedEffective, target);
+        // Observations and attributes
+        target.setAttributes(new DataAttributes());
+        toDataAttributesWithDatasetAndDimensionAttachmenteLevel(dsdProcessorResult, source.getDatasetRepositoryId(), datasetDimensions, dimensionsCodesSelectedEffective, target.getAttributes());
+        toDataObservationsAndAttributeWithObservationAttachmentLevel(source, dsdProcessorResult, datasetDimensions, dimensionValuesSelected, dimensionsCodesSelectedEffective, target);
+        if (CollectionUtils.isEmpty(target.getAttributes().getAttributes())) {
+            target.setAttributes(null);
+        } else {
+            target.getAttributes().setTotal(BigInteger.valueOf(target.getAttributes().getAttributes().size()));
+        }
         return target;
     }
 
@@ -919,7 +929,7 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
         return dimensionsCodesSelected;
     }
 
-    private DimensionRepresentations toDataDimensionRepresentations(List<String> datasetDimensions, Map<String, List<String>> dimensionsCodesSelectedEffective) {
+    private void toDataDimensionRepresentations(List<String> datasetDimensions, Map<String, List<String>> dimensionsCodesSelectedEffective, Data target) {
         DimensionRepresentations targets = new DimensionRepresentations();
         for (String dimension : datasetDimensions) {
             DimensionRepresentation representation = new DimensionRepresentation();
@@ -938,38 +948,53 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
             targets.getDimensions().add(representation);
         }
         targets.setTotal(BigInteger.valueOf(targets.getDimensions().size()));
-        return targets;
+        target.setDimensions(targets);
     }
 
     /**
-     * Retrieve observations of selected code
-     * FIXME attributes
+     * Retrieve observations of selected codes
      */
-    private String toDataObservations(DatasetVersion source, List<String> dimensions, Map<String, List<String>> dimensionsSelected, Map<String, List<String>> dimensionsCodesSelectedEffective)
-            throws Exception {
+    private void toDataObservationsAndAttributeWithObservationAttachmentLevel(DatasetVersion source, DsdProcessorResult dsdProcessorResult, List<String> dimensions,
+            Map<String, List<String>> dimensionsSelected, Map<String, List<String>> dimensionsCodesSelectedEffective, Data target) throws Exception {
 
         if (MapUtils.isEmpty(dimensionsCodesSelectedEffective)) {
-            return null;
+            return;
         }
 
-        // Search observations in repository
+        // Search observations and attributes in repository
         List<ConditionDimensionDto> conditions = generateConditions(dimensionsSelected);
         Map<String, ObservationExtendedDto> observations = datasetRepositoriesServiceFacade.findObservationsExtendedByDimensions(source.getDatasetRepositoryId(), conditions);
 
-        // Build data
-        DataValueExtraction dataValueExtraction = new DataValueExtractionForObservation(observations);
-        return toDataCommon(dimensions, dimensionsCodesSelectedEffective, dataValueExtraction);
-    }
+        // Build data (observations and attribute in observation attachment level)
+        int dataSize = calculateDataSize(dimensions, dimensionsCodesSelectedEffective);
+        DataProcessorForObservation dataProcessor = new DataProcessorForObservation(observations, dataSize);
+        toDataCommon(dimensions, dimensionsCodesSelectedEffective, dataProcessor);
 
-    private DataAttributes toDataAttributes(DsdProcessorResult dsdProcessorResult, String datasetRepositoryId, List<String> datasetDimensionsOrdered,
-            Map<String, List<String>> dimensionsCodesSelectedEffective) throws Exception {
+        // Observations
+        target.setObservations(dataProcessor.getDataObservationsForResponse());
+
+        // Attributes
+        for (DsdAttribute dsdAttribute : dsdProcessorResult.getAttributes()) {
+            if (dsdAttribute.getAttributeRelationship().getPrimaryMeasure() != null) {
+                String attributeId = dsdAttribute.getComponentId();
+                String dataAttributeValue = dataProcessor.getDataAttributeForResponse(attributeId);
+                if (dataAttributeValue != null) {
+                    DataAttribute dataAttribute = new DataAttribute();
+                    dataAttribute.setId(attributeId);
+                    dataAttribute.setValue(dataAttributeValue);
+                    target.getAttributes().getAttributes().add(dataAttribute);
+                }
+            }
+        }
+    }
+    private void toDataAttributesWithDatasetAndDimensionAttachmenteLevel(DsdProcessorResult dsdProcessorResult, String datasetRepositoryId, List<String> datasetDimensionsOrdered,
+            Map<String, List<String>> dimensionsCodesSelectedEffective, DataAttributes targets) throws Exception {
 
         List<DsdAttribute> sources = dsdProcessorResult.getAttributes();
         if (CollectionUtils.isEmpty(sources) || MapUtils.isEmpty(dimensionsCodesSelectedEffective)) {
-            return null;
+            return;
         }
 
-        DataAttributes targets = new DataAttributes();
         for (DsdAttribute source : sources) {
             String attributeId = source.getComponentId();
 
@@ -983,7 +1008,7 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
                 List<String> attributeDimensions = dsdProcessorResult.getGroups().get(source.getAttributeRelationship().getGroup());
                 value = toDataAttributeForDimensionAttachmentLevel(attributeId, attributeDimensions, datasetDimensionsOrdered, dimensionsCodesSelectedEffective, datasetRepositoryId);
             } else if (source.getAttributeRelationship().getPrimaryMeasure() != null) {
-                // These attributes are retrieved with observations
+                // These attributes are transformed with observations
             } else {
                 logger.error("AttributeRelationship unsupported to attributeId " + source.getComponentId());
                 org.siemac.metamac.rest.common.v1_0.domain.Exception exception = RestExceptionUtils.getException(RestServiceExceptionType.UNKNOWN);
@@ -996,8 +1021,6 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
                 targets.getAttributes().add(target);
             }
         }
-        targets.setTotal(BigInteger.valueOf(targets.getAttributes().size()));
-        return targets;
     }
 
     private String toDataAttributeForDatasetAttachmentLevel(String datasetId, String attributeId) throws Exception {
@@ -1020,12 +1043,15 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
             return null;
         }
 
-        // Build data
         List<String> attributeDimensionsOrdered = toAttributeDimensionsOrdered(datasetDimensionsOrdered, attributeDimensions);
         Map<String, AttributeDto> attributesByCodeDimensions = buildMapToAttributesWithDimensionAttachmentLevelDenormalizedByCodeDimensions(attributeDimensionsOrdered, sources);
 
-        DataValueExtraction dataValueExtraction = new DataValueExtractionForAttributeWithDimensionAttachmentLevel(attributesByCodeDimensions);
-        return toDataCommon(attributeDimensionsOrdered, dimensionsCodesSelectedEffective, dataValueExtraction);
+        // Build data
+        int dataSize = calculateDataSize(attributeDimensions, dimensionsCodesSelectedEffective);
+        DataProcessorForAttributeWithDimensionAttachmentLevel dataProcessor = new DataProcessorForAttributeWithDimensionAttachmentLevel(attributesByCodeDimensions, dataSize);
+        toDataCommon(attributeDimensionsOrdered, dimensionsCodesSelectedEffective, dataProcessor);
+
+        return dataProcessor.getDataAttributeForResponse();
     }
 
     private List<ConditionDimensionDto> generateConditions(Map<String, List<String>> dimensions) {
@@ -1103,7 +1129,7 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
         return attributeDimensionsOrdered;
     }
 
-    private String getAttributeValue(AttributeDto attributeDto) {
+    private String getAttributeValue(AttributeBasicDto attributeDto) {
         return attributeDto.getValue().getLocalisedLabel(StatisticalResourcesConstants.DEFAULT_DATA_REPOSITORY_LOCALE); // all attributes has only one locale
     }
 
@@ -1124,16 +1150,9 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
         return attributesByCodeDimensions;
     }
 
-    private String toDataCommon(List<String> dimensions, Map<String, List<String>> dimensionsCodesSelectedEffective, DataValueExtraction dataValueExtraction) throws Exception {
-
-        // Data size
-        int dataSize = 1;
-        for (String dimension : dimensions) {
-            dataSize = dataSize * dimensionsCodesSelectedEffective.get(dimension).size();
-        }
+    private void toDataCommon(List<String> dimensions, Map<String, List<String>> dimensionsCodesSelectedEffective, DataProcessor dataProcessor) throws Exception {
 
         // Build data
-        List<String> dataResult = new ArrayList<String>(dataSize);
         Stack<OrderingStackElement> stack = new Stack<OrderingStackElement>();
         stack.push(new OrderingStackElement(StringUtils.EMPTY, -1));
         ArrayList<String> entryId = new ArrayList<String>(dimensions.size());
@@ -1158,8 +1177,7 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
                 String id = StringUtils.join(entryId, KEY_DIMENSIONS_SEPARATOR);
 
                 // We have the full entry here
-                String value = dataValueExtraction.getValue(id);
-                dataResult.add(value); // value can be null
+                dataProcessor.processFullEntry(id);
                 entryId.set(elemDimension, StringUtils.EMPTY);
             } else {
                 String dimension = dimensions.get(elemDimension + 1);
@@ -1170,47 +1188,130 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
                 }
             }
         }
-        return StringUtils.join(dataResult.iterator(), RestExternalConstants.DATA_SEPARATOR);
     }
 
-    private interface DataValueExtraction {
+    private abstract class DataProcessor {
 
-        public String getValue(String key);
+        @SuppressWarnings("rawtypes")
+        public String transformDataListToDataResponse(Iterator iterator) {
+            return StringUtils.join(iterator, RestExternalConstants.DATA_SEPARATOR);
+        }
+
+        protected abstract void processFullEntry(String key);
     }
 
-    private class DataValueExtractionForAttributeWithDimensionAttachmentLevel implements DataValueExtraction {
+    private abstract class DataIterator implements Iterator<String> {
+
+        private int pos = 0;
+        private int max = -1;
+
+        @SuppressWarnings("rawtypes")
+        public DataIterator(List targets) {
+            max = targets.size();
+        }
+
+        @Override
+        public boolean hasNext() {
+            return pos < max;
+        }
+
+        @Override
+        public String next() {
+            String value = getValue(pos);
+            pos++;
+            return value;
+        }
+
+        @Override
+        public void remove() {
+            throw new UnsupportedOperationException("remove unsupported");
+        }
+
+        protected abstract String getValue(int position);
+    }
+
+    private class DataProcessorForAttributeWithDimensionAttachmentLevel extends DataProcessor {
 
         private final Map<String, AttributeDto> attributesByCodeDimensions;
+        private final List<AttributeDto>        targets;
 
-        public DataValueExtractionForAttributeWithDimensionAttachmentLevel(Map<String, AttributeDto> attributesByCodeDimensions) {
+        public DataProcessorForAttributeWithDimensionAttachmentLevel(Map<String, AttributeDto> attributesByCodeDimensions, int dataSize) {
             this.attributesByCodeDimensions = attributesByCodeDimensions;
+            this.targets = new ArrayList<AttributeDto>(dataSize);
         }
 
         @Override
-        public String getValue(String key) {
+        protected void processFullEntry(String key) {
             AttributeDto attributeDto = attributesByCodeDimensions.get(key);
-            if (attributeDto == null) {
-                return null;
-            }
-            return getAttributeValue(attributeDto);
+            targets.add(attributeDto);
+        }
+
+        public String getDataAttributeForResponse() {
+            Iterator<String> it = new DataIterator(targets) {
+
+                @Override
+                protected String getValue(int position) {
+                    String value = null;
+                    AttributeDto attributeDto = targets.get(position);
+                    if (attributeDto != null) {
+                        value = getAttributeValue(attributeDto);
+                    }
+                    return value;
+                }
+            };
+            return transformDataListToDataResponse(it);
         }
     }
 
-    private class DataValueExtractionForObservation implements DataValueExtraction {
+    private class DataProcessorForObservation extends DataProcessor {
 
-        private final Map<String, ObservationExtendedDto> observations;
+        private final Map<String, ObservationExtendedDto> sources;
+        private final List<ObservationExtendedDto>        targets;
 
-        public DataValueExtractionForObservation(Map<String, ObservationExtendedDto> observations) {
-            this.observations = observations;
+        public DataProcessorForObservation(Map<String, ObservationExtendedDto> observations, int dataSize) {
+            this.sources = observations;
+            this.targets = new ArrayList<ObservationExtendedDto>(dataSize);
         }
 
         @Override
-        public String getValue(String key) {
-            ObservationDto observationDto = observations.get(key);
-            if (observationDto == null) {
-                return null;
-            }
-            return observationDto.getPrimaryMeasure();
+        public void processFullEntry(String key) {
+            ObservationExtendedDto observationDto = sources.get(key);
+            targets.add(observationDto);
+        }
+
+        public String getDataObservationsForResponse() {
+            Iterator<String> it = new DataIterator(targets) {
+
+                @Override
+                protected String getValue(int position) {
+                    String value = null;
+                    ObservationExtendedDto observationExtendedDto = targets.get(position);
+                    if (observationExtendedDto != null) {
+                        value = observationExtendedDto.getPrimaryMeasure();
+                    }
+                    return value;
+                }
+            };
+            return transformDataListToDataResponse(it);
+        }
+
+        public String getDataAttributeForResponse(final String attributeId) {
+            Iterator<String> it = new DataIterator(targets) {
+
+                @Override
+                protected String getValue(int position) {
+                    String value = null;
+                    ObservationExtendedDto observationExtendedDto = targets.get(position);
+                    if (observationExtendedDto != null) {
+                        AttributeObservationDto attributeObservationDto = observationExtendedDto.getAttributesAsMap().get(attributeId);
+                        if (attributeObservationDto != null) {
+                            value = getAttributeValue(attributeObservationDto);
+                        }
+                    }
+                    return value;
+                }
+            };
+            return transformDataListToDataResponse(it);
         }
     }
 
@@ -1262,5 +1363,13 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
             org.siemac.metamac.rest.common.v1_0.domain.Exception exception = RestExceptionUtils.getException(RestServiceExceptionType.UNKNOWN);
             throw new RestException(exception, Status.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    private int calculateDataSize(List<String> dimensions, Map<String, List<String>> dimensionsCodesSelectedEffective) {
+        int dataSize = 1;
+        for (String dimension : dimensions) {
+            dataSize = dataSize * dimensionsCodesSelectedEffective.get(dimension).size();
+        }
+        return dataSize;
     }
 }

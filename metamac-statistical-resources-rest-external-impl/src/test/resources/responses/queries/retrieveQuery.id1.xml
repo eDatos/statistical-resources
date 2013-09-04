@@ -8,7 +8,7 @@
         <cdomain:text xml:lang="es">title-query1 en Espanol</cdomain:text>
     </stat:name>
     <stat:description>
-        <cdomain:text xml:lang="es">description-resource-UNccKORMDh en Espanol</cdomain:text>
+        <cdomain:text xml:lang="es">description-resource-YQR9DY7kT5 en Espanol</cdomain:text>
     </stat:description>
     <stat:selectedLanguages total="1">
         <stat:language>es</stat:language>
@@ -276,7 +276,7 @@
                 </stat:dimensionValues>
             </stat:dimension>
         </stat:dimensions>
-        <stat:attributes total="9">
+        <stat:attributes total="11">
             <stat:attribute>
                 <stat:id>at1</stat:id>
                 <stat:name>
@@ -405,6 +405,20 @@
                     </stat:dimension>
                 </stat:dimensions>
             </stat:attribute>
+            <stat:attribute>
+                <stat:id>at10</stat:id>
+                <stat:name>
+                    <cdomain:text xml:lang="es">at10-concept01 en Español</cdomain:text>
+                </stat:name>
+                <stat:attachmentLevel>PRIMARY_MEASURE</stat:attachmentLevel>
+            </stat:attribute>
+            <stat:attribute>
+                <stat:id>at11</stat:id>
+                <stat:name>
+                    <cdomain:text xml:lang="es">at11-concept01 en Español</cdomain:text>
+                </stat:name>
+                <stat:attachmentLevel>PRIMARY_MEASURE</stat:attachmentLevel>
+            </stat:attribute>
         </stat:attributes>
         <stat:status>ACTIVE</stat:status>
         <stat:type>FIXED</stat:type>
@@ -417,20 +431,20 @@
             </cdomain:name>
         </stat:requires>
         <stat:statisticalOperation kind="statisticalOperations#operation">
-            <cdomain:id>nN1K9AyAPt</cdomain:id>
-            <cdomain:urn>urn:siemac:org.siemac.metamac.infomodel.statisticaloperations.Operation=nN1K9AyAPt</cdomain:urn>
-            <cdomain:selfLink kind="statisticalOperations#operation" href="http://data.istac.es/apis/operations/latest/nN1K9AyAPt"/>
+            <cdomain:id>IurOoylhU4</cdomain:id>
+            <cdomain:urn>urn:siemac:org.siemac.metamac.infomodel.statisticaloperations.Operation=IurOoylhU4</cdomain:urn>
+            <cdomain:selfLink kind="statisticalOperations#operation" href="http://data.istac.es/apis/operations/latest/IurOoylhU4"/>
             <cdomain:name>
-                <cdomain:text xml:lang="es">title-nN1K9AyAPt en Espanol</cdomain:text>
+                <cdomain:text xml:lang="es">title-IurOoylhU4 en Espanol</cdomain:text>
             </cdomain:name>
         </stat:statisticalOperation>
         <stat:maintainer kind="structuralResources#agency">
-            <cdomain:id>6J77PdKhVF</cdomain:id>
+            <cdomain:id>aXVGbNE8mW</cdomain:id>
             <cdomain:nestedId>agency1</cdomain:nestedId>
-            <cdomain:urn>urn:sdmx:org.sdmx.infomodel.base.Agency=MaintainerMock:AgencySchemeMock(1.0).6J77PdKhVF</cdomain:urn>
-            <cdomain:selfLink kind="structuralResources#agency" href="http://data.istac.es/apis/srm/latest/6J77PdKhVF"/>
+            <cdomain:urn>urn:sdmx:org.sdmx.infomodel.base.Agency=MaintainerMock:AgencySchemeMock(1.0).aXVGbNE8mW</cdomain:urn>
+            <cdomain:selfLink kind="structuralResources#agency" href="http://data.istac.es/apis/srm/latest/aXVGbNE8mW"/>
             <cdomain:name>
-                <cdomain:text xml:lang="es">title-6J77PdKhVF en Espanol</cdomain:text>
+                <cdomain:text xml:lang="es">title-aXVGbNE8mW en Espanol</cdomain:text>
             </cdomain:name>
         </stat:maintainer>
         <stat:validFrom>2013-01-01T03:04:12Z</stat:validFrom>
@@ -473,7 +487,7 @@
                 </stat:representations>
             </stat:dimension>
         </stat:dimensions>
-        <stat:attributes total="9">
+        <stat:attributes total="11">
             <stat:attribute id="at1">Value at1</stat:attribute>
             <stat:attribute id="at2">Value at2</stat:attribute>
             <stat:attribute id="at3">Value at3-1 |  | Value at3-2 |  |  |  |  | </stat:attribute>
@@ -483,6 +497,8 @@
             <stat:attribute id="at7">Value at7-1 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | </stat:attribute>
             <stat:attribute id="at8">Value at8-1 |  |  |  |  |  |  |  |  |  |  |  |  |  |  | </stat:attribute>
             <stat:attribute id="at9">Value at9-1 |  |  |  |  |  |  |  |  |  |  |  |  |  |  | </stat:attribute>
+            <stat:attribute id="at10">Value 1 |  |  |  |  |  | Value 3 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | </stat:attribute>
+            <stat:attribute id="at11">Value 5 |  |  |  |  |  | Value 6 |  |  |  |  |  | Value 7 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | </stat:attribute>
         </stat:attributes>
         <stat:observations>1 | 4 | 7 | 19 | 22 | 25 | 37 | 40 | 43 | 55 | 58 | 61 | 73 | 76 | 79 | 91 | 94 | 97 | 109 | 112 | 115 | 127 | 130 | 133 | 145 | 148 | 151 | 163 | 166 | 169 | 217 | 220 | 223 | 235 | 238 | 241 | 325 | 328 | 331 | 343 | 346 | 349 | 397 | 400 | 403 | 415 | 418 | 421</stat:observations>
     </stat:data>

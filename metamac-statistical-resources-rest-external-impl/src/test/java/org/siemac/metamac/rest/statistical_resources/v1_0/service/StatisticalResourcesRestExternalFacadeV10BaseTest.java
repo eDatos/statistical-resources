@@ -5,6 +5,8 @@ import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 import static org.siemac.metamac.rest.statistical_resources.constants.RestTestConstants.AGENCY_1;
 import static org.siemac.metamac.rest.statistical_resources.constants.RestTestConstants.AGENCY_2;
+import static org.siemac.metamac.rest.statistical_resources.constants.RestTestConstants.ATTRIBUTE_10_OBSERVATION;
+import static org.siemac.metamac.rest.statistical_resources.constants.RestTestConstants.ATTRIBUTE_11_OBSERVATION;
 import static org.siemac.metamac.rest.statistical_resources.constants.RestTestConstants.ATTRIBUTE_1_GLOBAL;
 import static org.siemac.metamac.rest.statistical_resources.constants.RestTestConstants.ATTRIBUTE_2_GLOBAL;
 import static org.siemac.metamac.rest.statistical_resources.constants.RestTestConstants.ATTRIBUTE_3_DIMENSION;
@@ -430,6 +432,27 @@ public abstract class StatisticalResourcesRestExternalFacadeV10BaseTest extends 
                 // Test one observation empty
                 observationsMap.remove("santa-cruz-tenerife#2011#measure01-conceptScheme01-concept01#dim01-codelist01-code04");
 
+                // Attributes
+                int i = 1;
+                observationsMap.get("santa-cruz-tenerife#2011#measure01-conceptScheme01-concept01#dim01-codelist01-code01").addAttribute(
+                        restDoMocks.mockAttributeObservation(ATTRIBUTE_10_OBSERVATION, "Value " + i++));
+                observationsMap.get("santa-cruz-tenerife#2011#measure01-conceptScheme01-concept01#dim01-codelist01-code03").addAttribute(
+                        restDoMocks.mockAttributeObservation(ATTRIBUTE_10_OBSERVATION, "Value " + i++));
+                observationsMap.get("tenerife#2011#measure01-conceptScheme01-concept01#dim01-codelist01-code01").addAttribute(
+                        restDoMocks.mockAttributeObservation(ATTRIBUTE_10_OBSERVATION, "Value " + i++));
+                observationsMap.get("lanzarote#2014#measure01-conceptScheme01-concept05#dim01-codelist01-code04").addAttribute(
+                        restDoMocks.mockAttributeObservation(ATTRIBUTE_10_OBSERVATION, "Value " + i++));
+
+                observationsMap.get("santa-cruz-tenerife#2011#measure01-conceptScheme01-concept01#dim01-codelist01-code01").addAttribute(
+                        restDoMocks.mockAttributeObservation(ATTRIBUTE_11_OBSERVATION, "Value " + i++));
+                observationsMap.get("tenerife#2011#measure01-conceptScheme01-concept01#dim01-codelist01-code01").addAttribute(
+                        restDoMocks.mockAttributeObservation(ATTRIBUTE_11_OBSERVATION, "Value " + i++));
+                observationsMap.get("la-laguna#2011#measure01-conceptScheme01-concept01#dim01-codelist01-code01").addAttribute(
+                        restDoMocks.mockAttributeObservation(ATTRIBUTE_11_OBSERVATION, "Value " + i++));
+
+                // internal attribute -> do not return
+                observationsMap.get("la-laguna#2011#measure01-conceptScheme01-concept01#dim01-codelist01-code01").addAttribute(
+                        restDoMocks.mockAttributeObservation("internalAttribute01", "Value " + i++));
                 return observationsMap;
             };
         });

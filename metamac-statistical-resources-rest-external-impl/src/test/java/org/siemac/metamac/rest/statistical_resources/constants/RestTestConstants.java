@@ -43,5 +43,6 @@ public class RestTestConstants {
     public static String ATTRIBUTE_7_DIMENSION       = "at7";
     public static String ATTRIBUTE_8_DIMENSION       = "at8";
     public static String ATTRIBUTE_9_DIMENSION       = "at9";
-    public static String ATTRIBUTE_10_DIMENSION      = "at10";
+    public static String ATTRIBUTE_10_OBSERVATION    = "at10";
+    public static String ATTRIBUTE_11_OBSERVATION    = "at11";
 }

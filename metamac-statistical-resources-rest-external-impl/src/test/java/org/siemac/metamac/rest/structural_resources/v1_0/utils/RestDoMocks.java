@@ -33,6 +33,7 @@ import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.Stati
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesPersistedDoMocks;
 
 import com.arte.statistic.dataset.repository.dto.AttributeDto;
+import com.arte.statistic.dataset.repository.dto.AttributeObservationDto;
 import com.arte.statistic.dataset.repository.dto.CodeDimensionDto;
 import com.arte.statistic.dataset.repository.dto.InternationalStringDto;
 import com.arte.statistic.dataset.repository.dto.LocalisedStringDto;
@@ -206,6 +207,13 @@ public class RestDoMocks {
         if (dimension4 != null) {
             attributeDto.getCodesByDimension().put(dimension4, Arrays.asList(codeDimension4));
         }
+        return attributeDto;
+    }
+
+    public AttributeObservationDto mockAttributeObservation(String attributeId, String value) {
+        AttributeObservationDto attributeDto = new AttributeObservationDto();
+        attributeDto.setAttributeId(attributeId);
+        attributeDto.setValue(mockInternationalStringAttributeDto(value));
         return attributeDto;
     }
 
