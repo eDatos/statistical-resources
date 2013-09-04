@@ -112,8 +112,7 @@ public class QueriesDo2RestMapperV10Impl implements QueriesDo2RestMapperV10 {
         target.setRelatedDsd(commonDo2RestMapper.toDataStructureDefinition(source.getDatasetVersion().getRelatedDsd(), dsdProcessorResult.getDataStructure(), selectedLanguages));
         target.setDimensions(commonDo2RestMapper.toDimensions(source.getDatasetVersion().getSiemacMetadataStatisticalResource().getUrn(), dsdProcessorResult,
                 effectiveDimensionValuesToDataByDimension, selectedLanguages));
-        target.setAttributes(commonDo2RestMapper.toAttributes(source.getDatasetVersion().getSiemacMetadataStatisticalResource().getUrn(), dsdProcessorResult,
-                effectiveDimensionValuesToDataByDimension, selectedLanguages));
+        target.setAttributes(commonDo2RestMapper.toAttributes(source.getDatasetVersion().getSiemacMetadataStatisticalResource().getUrn(), dsdProcessorResult, selectedLanguages));
         target.setRelatedDataset(datasetsDo2RestMapper.toResource(source.getDatasetVersion(), selectedLanguages));
         target.setStatus(toQueryStatus(source.getStatus()));
         target.setType(toQueryType(source.getType()));

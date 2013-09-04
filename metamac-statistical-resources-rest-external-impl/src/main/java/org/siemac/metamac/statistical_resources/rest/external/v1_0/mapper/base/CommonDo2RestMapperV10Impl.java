@@ -301,12 +301,8 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
         return targets;
     }
 
-    /**
-     * @param effectiveDimensionValuesToDataByDimension It is necessary when query is retrieved, to filter dimension values. It can be null; in this case, returns all
-     */
     @Override
-    public Attributes toAttributes(String datasetVersionUrn, DsdProcessorResult dsdProcessorResult, Map<String, List<String>> effectiveDimensionValuesToDataByDimension, List<String> selectedLanguages)
-            throws MetamacException {
+    public Attributes toAttributes(String datasetVersionUrn, DsdProcessorResult dsdProcessorResult, List<String> selectedLanguages) throws MetamacException {
 
         List<DsdAttribute> sources = dsdProcessorResult.getAttributes();
         if (CollectionUtils.isEmpty(sources)) {
@@ -317,7 +313,6 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
 
         Attributes targets = new Attributes();
         for (DsdAttribute source : sources) {
-            // TODO effectiveDimensionValuesToDataByDimension
             Attribute target = toAttribute(source, dsdProcessorResult, datasetDimensionsOrdered, selectedLanguages);
             targets.getAttributes().add(target);
         }
@@ -677,6 +672,9 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
             org.siemac.metamac.rest.common.v1_0.domain.Exception exception = RestExceptionUtils.getException(RestServiceExceptionType.UNKNOWN);
             throw new RestException(exception, Status.INTERNAL_SERVER_ERROR);
         }
+
+        // TODO toAttributeValues
+
         return target;
     }
 
@@ -690,7 +688,6 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
             AttributeDimension target = new AttributeDimension();
             target.setDimensionId(attributeDimensionOrdered);
             targets.getDimensions().add(target);
-            // TODO toAttributeValues
         }
         targets.setTotal(BigInteger.valueOf(targets.getDimensions().size()));
         return targets;
