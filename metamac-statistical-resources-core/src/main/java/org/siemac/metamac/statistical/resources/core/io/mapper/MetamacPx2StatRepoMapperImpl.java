@@ -181,7 +181,7 @@ public class MetamacPx2StatRepoMapperImpl implements MetamacPx2StatRepoMapper {
         if (index == keys.size()) {
             String generateUniqueKeyWithCodes = DtoUtils.generateUniqueKeyWithCodes(codesDimension);
             if (attributesObservations.get(generateUniqueKeyWithCodes) != null) {
-                observationExtendedDto.getAttributes().add(attributesObservations.get(generateUniqueKeyWithCodes));
+                observationExtendedDto.addAttribute(attributesObservations.get(generateUniqueKeyWithCodes));
             }
             return;
         }
