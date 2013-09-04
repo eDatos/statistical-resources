@@ -1000,13 +1000,13 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
 
             String value = null;
             if (source.getAttributeRelationship().getNone() != null) {
-                value = toDataAttributeForDatasetAttachmentLevel(datasetRepositoryId, attributeId);
+                value = toDataAttributeWithDatasetAttachmentLevel(datasetRepositoryId, attributeId);
             } else if (!CollectionUtils.isEmpty(source.getAttributeRelationship().getDimensions())) {
                 List<String> attributeDimensions = source.getAttributeRelationship().getDimensions();
-                value = toDataAttributeForDimensionAttachmentLevel(attributeId, attributeDimensions, datasetDimensionsOrdered, dimensionsCodesSelectedEffective, datasetRepositoryId);
+                value = toDataAttributeWithDimensionAttachmentLevel(attributeId, attributeDimensions, datasetDimensionsOrdered, dimensionsCodesSelectedEffective, datasetRepositoryId);
             } else if (source.getAttributeRelationship().getGroup() != null) {
                 List<String> attributeDimensions = dsdProcessorResult.getGroups().get(source.getAttributeRelationship().getGroup());
-                value = toDataAttributeForDimensionAttachmentLevel(attributeId, attributeDimensions, datasetDimensionsOrdered, dimensionsCodesSelectedEffective, datasetRepositoryId);
+                value = toDataAttributeWithDimensionAttachmentLevel(attributeId, attributeDimensions, datasetDimensionsOrdered, dimensionsCodesSelectedEffective, datasetRepositoryId);
             } else if (source.getAttributeRelationship().getPrimaryMeasure() != null) {
                 // These attributes are transformed with observations
             } else {
@@ -1023,7 +1023,7 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
         }
     }
 
-    private String toDataAttributeForDatasetAttachmentLevel(String datasetId, String attributeId) throws Exception {
+    private String toDataAttributeWithDatasetAttachmentLevel(String datasetId, String attributeId) throws Exception {
 
         // Find attributes
         List<AttributeDto> sources = datasetRepositoriesServiceFacade.findAttributesWithDatasetAttachmentLevel(datasetId, attributeId);
@@ -1034,7 +1034,7 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
         return getAttributeValue(source);
     }
 
-    private String toDataAttributeForDimensionAttachmentLevel(String attributeId, List<String> attributeDimensions, List<String> datasetDimensionsOrdered,
+    private String toDataAttributeWithDimensionAttachmentLevel(String attributeId, List<String> attributeDimensions, List<String> datasetDimensionsOrdered,
             Map<String, List<String>> dimensionsCodesSelectedEffective, String datasetId) throws Exception {
 
         // Find attributes
@@ -1200,14 +1200,68 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
         protected abstract void processFullEntry(String key);
     }
 
+    private class DataProcessorForAttributeWithDimensionAttachmentLevel extends DataProcessor {
+
+        private final Map<String, AttributeDto> attributesByCodeDimensions;
+        private final List<AttributeDto>        targets;
+
+        public DataProcessorForAttributeWithDimensionAttachmentLevel(Map<String, AttributeDto> attributesByCodeDimensions, int dataSize) {
+            this.attributesByCodeDimensions = attributesByCodeDimensions;
+            this.targets = new ArrayList<AttributeDto>(dataSize);
+        }
+
+        @Override
+        protected void processFullEntry(String key) {
+            AttributeDto attributeDto = attributesByCodeDimensions.get(key);
+            targets.add(attributeDto);
+        }
+
+        public String getDataAttributeForResponse() {
+            Iterator<String> iterator = new DataAttributeWithDimensionAttachmentLevelIterator(targets);
+            return transformDataListToDataResponse(iterator);
+        }
+    }
+
+    private class DataProcessorForObservation extends DataProcessor {
+
+        private final Map<String, ObservationExtendedDto> sources;
+        private final List<ObservationExtendedDto>        targets;
+
+        public DataProcessorForObservation(Map<String, ObservationExtendedDto> observations, int dataSize) {
+            this.sources = observations;
+            this.targets = new ArrayList<ObservationExtendedDto>(dataSize);
+        }
+
+        @Override
+        public void processFullEntry(String key) {
+            ObservationExtendedDto observationDto = sources.get(key);
+            targets.add(observationDto);
+        }
+
+        public String getDataObservationsForResponse() {
+            Iterator<String> iterator = new DataObservationIterator(targets);
+            return transformDataListToDataResponse(iterator);
+        }
+
+        public String getDataAttributeForResponse(String attributeId) {
+            DataAttributeObservationIterator iterator = new DataAttributeObservationIterator(targets, attributeId);
+            String value = transformDataListToDataResponse(iterator);
+            if (!iterator.isAnyObservationHasAttribute()) {
+                value = null;
+            }
+            return value;
+        }
+    }
+
     private abstract class DataIterator implements Iterator<String> {
 
-        private int pos = 0;
-        private int max = -1;
+        private int       pos = 0;
+        private int       max = -1;
+        protected List<?> list;
 
-        @SuppressWarnings("rawtypes")
-        public DataIterator(List targets) {
-            max = targets.size();
+        public DataIterator(List<?> list) {
+            this.list = list;
+            this.max = list.size();
         }
 
         @Override
@@ -1230,88 +1284,66 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
         protected abstract String getValue(int position);
     }
 
-    private class DataProcessorForAttributeWithDimensionAttachmentLevel extends DataProcessor {
+    private class DataAttributeWithDimensionAttachmentLevelIterator extends DataIterator {
 
-        private final Map<String, AttributeDto> attributesByCodeDimensions;
-        private final List<AttributeDto>        targets;
-
-        public DataProcessorForAttributeWithDimensionAttachmentLevel(Map<String, AttributeDto> attributesByCodeDimensions, int dataSize) {
-            this.attributesByCodeDimensions = attributesByCodeDimensions;
-            this.targets = new ArrayList<AttributeDto>(dataSize);
+        public DataAttributeWithDimensionAttachmentLevelIterator(List<AttributeDto> list) {
+            super(list);
         }
 
         @Override
-        protected void processFullEntry(String key) {
-            AttributeDto attributeDto = attributesByCodeDimensions.get(key);
-            targets.add(attributeDto);
-        }
-
-        public String getDataAttributeForResponse() {
-            Iterator<String> it = new DataIterator(targets) {
-
-                @Override
-                protected String getValue(int position) {
-                    String value = null;
-                    AttributeDto attributeDto = targets.get(position);
-                    if (attributeDto != null) {
-                        value = getAttributeValue(attributeDto);
-                    }
-                    return value;
-                }
-            };
-            return transformDataListToDataResponse(it);
+        protected String getValue(int position) {
+            String value = null;
+            AttributeDto attributeDto = (AttributeDto) list.get(position);
+            if (attributeDto != null) {
+                value = getAttributeValue(attributeDto);
+            }
+            return value;
         }
     }
 
-    private class DataProcessorForObservation extends DataProcessor {
+    private class DataObservationIterator extends DataIterator {
 
-        private final Map<String, ObservationExtendedDto> sources;
-        private final List<ObservationExtendedDto>        targets;
-
-        public DataProcessorForObservation(Map<String, ObservationExtendedDto> observations, int dataSize) {
-            this.sources = observations;
-            this.targets = new ArrayList<ObservationExtendedDto>(dataSize);
+        public DataObservationIterator(List<ObservationExtendedDto> list) {
+            super(list);
         }
 
         @Override
-        public void processFullEntry(String key) {
-            ObservationExtendedDto observationDto = sources.get(key);
-            targets.add(observationDto);
+        protected String getValue(int position) {
+            String value = null;
+            ObservationExtendedDto observationExtendedDto = (ObservationExtendedDto) list.get(position);
+            if (observationExtendedDto != null) {
+                value = observationExtendedDto.getPrimaryMeasure();
+            }
+            return value;
+        }
+    }
+
+    private class DataAttributeObservationIterator extends DataIterator {
+
+        private final String attributeId;
+        private boolean      anyObservationHasAttribute = false;
+
+        public DataAttributeObservationIterator(List<ObservationExtendedDto> list, String attributeId) {
+            super(list);
+            this.attributeId = attributeId;
         }
 
-        public String getDataObservationsForResponse() {
-            Iterator<String> it = new DataIterator(targets) {
-
-                @Override
-                protected String getValue(int position) {
-                    String value = null;
-                    ObservationExtendedDto observationExtendedDto = targets.get(position);
-                    if (observationExtendedDto != null) {
-                        value = observationExtendedDto.getPrimaryMeasure();
-                    }
-                    return value;
+        @Override
+        protected String getValue(int position) {
+            String value = null;
+            ObservationExtendedDto observationExtendedDto = (ObservationExtendedDto) list.get(position);
+            if (observationExtendedDto != null) {
+                AttributeObservationDto attributeObservationDto = observationExtendedDto.getAttributesAsMap().get(attributeId);
+                if (attributeObservationDto != null) {
+                    anyObservationHasAttribute = true;
+                    value = getAttributeValue(attributeObservationDto);
                 }
-            };
-            return transformDataListToDataResponse(it);
+            }
+            return value;
         }
 
-        public String getDataAttributeForResponse(final String attributeId) {
-            Iterator<String> it = new DataIterator(targets) {
-
-                @Override
-                protected String getValue(int position) {
-                    String value = null;
-                    ObservationExtendedDto observationExtendedDto = targets.get(position);
-                    if (observationExtendedDto != null) {
-                        AttributeObservationDto attributeObservationDto = observationExtendedDto.getAttributesAsMap().get(attributeId);
-                        if (attributeObservationDto != null) {
-                            value = getAttributeValue(attributeObservationDto);
-                        }
-                    }
-                    return value;
-                }
-            };
-            return transformDataListToDataResponse(it);
+        public boolean isAnyObservationHasAttribute() {
+            return anyObservationHasAttribute;
         }
     }
 
