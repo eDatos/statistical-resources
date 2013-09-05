@@ -24,7 +24,7 @@ import org.siemac.metamac.statistical.resources.core.publication.domain.ElementL
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersionRepository;
-import org.siemac.metamac.statistical_resources.rest.external.RestExternalConstants;
+import org.siemac.metamac.statistical_resources.rest.external.StatisticalResourcesRestExternalConstants;
 import org.siemac.metamac.statistical_resources.rest.external.v1_0.mapper.base.CommonDo2RestMapperV10;
 import org.siemac.metamac.statistical_resources.rest.external.v1_0.mapper.dataset.DatasetsDo2RestMapperV10;
 import org.siemac.metamac.statistical_resources.rest.external.v1_0.mapper.query.QueriesDo2RestMapperV10;
@@ -53,7 +53,7 @@ public class CollectionsDo2RestMapperV10Impl implements CollectionsDo2RestMapper
     public Collections toCollections(PagedResult<PublicationVersion> sources, String agencyID, String resourceID, String query, String orderBy, Integer limit, List<String> selectedLanguages) {
 
         Collections targets = new Collections();
-        targets.setKind(RestExternalConstants.KIND_COLLECTIONS);
+        targets.setKind(StatisticalResourcesRestExternalConstants.KIND_COLLECTIONS);
 
         // Pagination
         String baseLink = toCollectionsLink(agencyID, resourceID, null);
@@ -73,7 +73,7 @@ public class CollectionsDo2RestMapperV10Impl implements CollectionsDo2RestMapper
             return null;
         }
         Collection target = new Collection();
-        target.setKind(RestExternalConstants.KIND_COLLECTION);
+        target.setKind(StatisticalResourcesRestExternalConstants.KIND_COLLECTION);
         target.setId(source.getSiemacMetadataStatisticalResource().getCode());
         target.setUrn(source.getSiemacMetadataStatisticalResource().getUrn());
         target.setSelfLink(toCollectionSelfLink(source));
@@ -99,7 +99,7 @@ public class CollectionsDo2RestMapperV10Impl implements CollectionsDo2RestMapper
         Resource target = new Resource();
         target.setId(source.getSiemacMetadataStatisticalResource().getCode());
         target.setUrn(source.getSiemacMetadataStatisticalResource().getUrn());
-        target.setKind(RestExternalConstants.KIND_COLLECTION);
+        target.setKind(StatisticalResourcesRestExternalConstants.KIND_COLLECTION);
         target.setSelfLink(toCollectionSelfLink(source));
         target.setName(commonDo2RestMapper.toInternationalString(source.getSiemacMetadataStatisticalResource().getTitle(), selectedLanguages));
         return target;
@@ -187,20 +187,20 @@ public class CollectionsDo2RestMapperV10Impl implements CollectionsDo2RestMapper
     }
 
     private ResourceLink toCollectionsSelfLink(String agencyID, String resourceID, String version) {
-        return commonDo2RestMapper.toResourceLink(RestExternalConstants.KIND_COLLECTIONS, toCollectionsLink(agencyID, resourceID, version));
+        return commonDo2RestMapper.toResourceLink(StatisticalResourcesRestExternalConstants.KIND_COLLECTIONS, toCollectionsLink(agencyID, resourceID, version));
     }
 
     private String toCollectionsLink(String agencyID, String resourceID, String version) {
-        String resourceSubpath = RestExternalConstants.LINK_SUBPATH_COLLECTIONS;
+        String resourceSubpath = StatisticalResourcesRestExternalConstants.LINK_SUBPATH_COLLECTIONS;
         return commonDo2RestMapper.toResourceLink(resourceSubpath, agencyID, resourceID, version);
     }
 
     private ResourceLink toCollectionSelfLink(PublicationVersion source) {
-        return commonDo2RestMapper.toResourceLink(RestExternalConstants.KIND_COLLECTION, toCollectionLink(source));
+        return commonDo2RestMapper.toResourceLink(StatisticalResourcesRestExternalConstants.KIND_COLLECTION, toCollectionLink(source));
     }
 
     private String toCollectionLink(PublicationVersion source) {
-        String resourceSubpath = RestExternalConstants.LINK_SUBPATH_COLLECTIONS;
+        String resourceSubpath = StatisticalResourcesRestExternalConstants.LINK_SUBPATH_COLLECTIONS;
         String agencyID = source.getSiemacMetadataStatisticalResource().getMaintainer().getCodeNested();
         String resourceID = source.getSiemacMetadataStatisticalResource().getCode();
         String version = source.getSiemacMetadataStatisticalResource().getVersionLogic(); // TODO devolver versión?

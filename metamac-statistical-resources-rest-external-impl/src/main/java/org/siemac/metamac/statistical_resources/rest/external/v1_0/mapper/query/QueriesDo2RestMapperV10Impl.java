@@ -20,7 +20,7 @@ import org.siemac.metamac.rest.statistical_resources.v1_0.domain.QueryMetadata;
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryTypeEnum;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
-import org.siemac.metamac.statistical_resources.rest.external.RestExternalConstants;
+import org.siemac.metamac.statistical_resources.rest.external.StatisticalResourcesRestExternalConstants;
 import org.siemac.metamac.statistical_resources.rest.external.exception.RestServiceExceptionType;
 import org.siemac.metamac.statistical_resources.rest.external.v1_0.domain.DsdProcessorResult;
 import org.siemac.metamac.statistical_resources.rest.external.v1_0.mapper.base.CommonDo2RestMapperV10;
@@ -45,7 +45,7 @@ public class QueriesDo2RestMapperV10Impl implements QueriesDo2RestMapperV10 {
     public Queries toQueries(PagedResult<QueryVersion> sources, String agencyID, String query, String orderBy, Integer limit, List<String> selectedLanguages) {
 
         Queries targets = new Queries();
-        targets.setKind(RestExternalConstants.KIND_QUERIES);
+        targets.setKind(StatisticalResourcesRestExternalConstants.KIND_QUERIES);
 
         // Pagination
         String baseLink = toQueriesLink(agencyID, null);
@@ -65,7 +65,7 @@ public class QueriesDo2RestMapperV10Impl implements QueriesDo2RestMapperV10 {
             return null;
         }
         Query target = new Query();
-        target.setKind(RestExternalConstants.KIND_QUERY);
+        target.setKind(StatisticalResourcesRestExternalConstants.KIND_QUERY);
         target.setId(source.getLifeCycleStatisticalResource().getCode());
         target.setUrn(source.getLifeCycleStatisticalResource().getUrn());
         target.setSelfLink(toQuerySelfLink(source));
@@ -95,7 +95,7 @@ public class QueriesDo2RestMapperV10Impl implements QueriesDo2RestMapperV10 {
         Resource target = new Resource();
         target.setId(source.getLifeCycleStatisticalResource().getCode());
         target.setUrn(source.getLifeCycleStatisticalResource().getUrn());
-        target.setKind(RestExternalConstants.KIND_QUERY);
+        target.setKind(StatisticalResourcesRestExternalConstants.KIND_QUERY);
         target.setSelfLink(toQuerySelfLink(source));
         target.setName(commonDo2RestMapper.toInternationalString(source.getLifeCycleStatisticalResource().getTitle(), selectedLanguages));
         return target;
@@ -143,20 +143,20 @@ public class QueriesDo2RestMapperV10Impl implements QueriesDo2RestMapperV10 {
     }
 
     private ResourceLink toQueriesSelfLink(String agencyID, String resourceID) {
-        return commonDo2RestMapper.toResourceLink(RestExternalConstants.KIND_QUERIES, toQueriesLink(agencyID, resourceID));
+        return commonDo2RestMapper.toResourceLink(StatisticalResourcesRestExternalConstants.KIND_QUERIES, toQueriesLink(agencyID, resourceID));
     }
 
     private String toQueriesLink(String agencyID, String resourceID) {
-        String resourceSubpath = RestExternalConstants.LINK_SUBPATH_QUERIES;
+        String resourceSubpath = StatisticalResourcesRestExternalConstants.LINK_SUBPATH_QUERIES;
         return commonDo2RestMapper.toResourceLink(resourceSubpath, agencyID, resourceID, null);
     }
 
     private ResourceLink toQuerySelfLink(QueryVersion source) {
-        return commonDo2RestMapper.toResourceLink(RestExternalConstants.KIND_QUERY, toQueryLink(source));
+        return commonDo2RestMapper.toResourceLink(StatisticalResourcesRestExternalConstants.KIND_QUERY, toQueryLink(source));
     }
 
     private String toQueryLink(QueryVersion source) {
-        String resourceSubpath = RestExternalConstants.LINK_SUBPATH_QUERIES;
+        String resourceSubpath = StatisticalResourcesRestExternalConstants.LINK_SUBPATH_QUERIES;
         String agencyID = source.getLifeCycleStatisticalResource().getMaintainer().getCodeNested();
         String resourceID = source.getLifeCycleStatisticalResource().getCode();
         String version = null; // no devolver versión

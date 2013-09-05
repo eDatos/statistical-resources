@@ -1,7 +1,7 @@
 package org.siemac.metamac.statistical_resources.rest.external.v1_0.mapper.base;
 
-import static org.siemac.metamac.statistical_resources.rest.external.RestExternalConstantsPrivate.KEY_DIMENSIONS_SEPARATOR;
-import static org.siemac.metamac.statistical_resources.rest.external.RestExternalConstantsPrivate.SERVICE_CONTEXT;
+import static org.siemac.metamac.statistical_resources.rest.external.StatisticalResourcesRestExternalConstants.KEY_DIMENSIONS_SEPARATOR;
+import static org.siemac.metamac.statistical_resources.rest.external.StatisticalResourcesRestExternalConstants.SERVICE_CONTEXT;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -86,7 +86,7 @@ import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryTyp
 import org.siemac.metamac.statistical.resources.core.query.domain.CodeItem;
 import org.siemac.metamac.statistical.resources.core.query.domain.QuerySelectionItem;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
-import org.siemac.metamac.statistical_resources.rest.external.RestExternalConstants;
+import org.siemac.metamac.statistical_resources.rest.external.StatisticalResourcesRestExternalConstants;
 import org.siemac.metamac.statistical_resources.rest.external.exception.RestServiceExceptionType;
 import org.siemac.metamac.statistical_resources.rest.external.invocation.CommonMetadataRestExternalFacade;
 import org.siemac.metamac.statistical_resources.rest.external.invocation.SrmRestExternalFacade;
@@ -146,7 +146,7 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
         // ENDPOINTS
         // Statistical resources external Api V1.0
         String statisticalResourcesApiExternalEndpoint = configurationService.retrieveStatisticalResourcesExternalApiUrlBase();
-        statisticalResourcesApiExternalEndpointV10 = RestUtils.createLink(statisticalResourcesApiExternalEndpoint, RestExternalConstants.API_VERSION_1_0);
+        statisticalResourcesApiExternalEndpointV10 = RestUtils.createLink(statisticalResourcesApiExternalEndpoint, StatisticalResourcesRestExternalConstants.API_VERSION_1_0);
 
         // SRM external Api (do not add api version! it is already stored in database (~latest))
         srmApiExternalEndpoint = configurationService.retrieveSrmExternalApiUrlBase();
@@ -1190,7 +1190,7 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
 
         @SuppressWarnings("rawtypes")
         public String transformDataListToDataResponse(Iterator iterator) {
-            return StringUtils.join(iterator, RestExternalConstants.DATA_SEPARATOR);
+            return StringUtils.join(iterator, StatisticalResourcesRestExternalConstants.DATA_SEPARATOR);
         }
 
         protected abstract void processFullEntry(String key);

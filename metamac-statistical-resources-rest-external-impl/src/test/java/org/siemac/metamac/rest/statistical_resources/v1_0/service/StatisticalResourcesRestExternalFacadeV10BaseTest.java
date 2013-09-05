@@ -83,7 +83,7 @@ import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersionRe
 import org.siemac.metamac.statistical.resources.core.query.serviceapi.QueryService;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesPersistedDoMocks;
 import org.siemac.metamac.statistical.resources.core.utils.shared.StatisticalResourcesUrnUtils;
-import org.siemac.metamac.statistical_resources.rest.external.RestExternalConstants;
+import org.siemac.metamac.statistical_resources.rest.external.StatisticalResourcesRestExternalConstants;
 import org.siemac.metamac.statistical_resources.rest.external.invocation.CommonMetadataRestExternalFacade;
 import org.siemac.metamac.statistical_resources.rest.external.invocation.SrmRestExternalFacade;
 import org.siemac.metamac.statistical_resources.rest.external.v1_0.service.StatisticalResourcesV1_0;
@@ -176,8 +176,8 @@ public abstract class StatisticalResourcesRestExternalFacadeV10BaseTest extends 
                 }
             }
         }
-        uri = RestUtils.createLinkWithQueryParam(uri, RestExternalConstants.PARAMETER_FIELDS, RestUtils.encodeParameter(fields));
-        uri = RestUtils.createLinkWithQueryParam(uri, RestExternalConstants.PARAMETER_LANGS, RestUtils.encodeParameter(langs));
+        uri = RestUtils.createLinkWithQueryParam(uri, StatisticalResourcesRestExternalConstants.PARAMETER_FIELDS, RestUtils.encodeParameter(fields));
+        uri = RestUtils.createLinkWithQueryParam(uri, StatisticalResourcesRestExternalConstants.PARAMETER_LANGS, RestUtils.encodeParameter(langs));
         return uri;
     }
 
@@ -189,7 +189,7 @@ public abstract class StatisticalResourcesRestExternalFacadeV10BaseTest extends 
                 uri = RestUtils.createLink(uri, resourceID);
             }
         }
-        uri = RestUtils.createLinkWithQueryParam(uri, RestExternalConstants.PARAMETER_LANGS, RestUtils.encodeParameter(langs));
+        uri = RestUtils.createLinkWithQueryParam(uri, StatisticalResourcesRestExternalConstants.PARAMETER_LANGS, RestUtils.encodeParameter(langs));
         uri = RestUtils.createLinkWithQueryParam(uri, RestConstants.PARAMETER_QUERY, RestUtils.encodeParameter(query));
         uri = RestUtils.createLinkWithQueryParam(uri, RestConstants.PARAMETER_LIMIT, RestUtils.encodeParameter(limit));
         uri = RestUtils.createLinkWithQueryParam(uri, RestConstants.PARAMETER_OFFSET, RestUtils.encodeParameter(offset));

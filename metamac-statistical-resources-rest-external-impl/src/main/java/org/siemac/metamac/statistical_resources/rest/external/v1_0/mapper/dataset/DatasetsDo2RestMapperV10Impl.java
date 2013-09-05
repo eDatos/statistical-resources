@@ -24,8 +24,7 @@ import org.siemac.metamac.statistical.resources.core.constants.StatisticalResour
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.StatisticOfficiality;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.TemporalCode;
-import org.siemac.metamac.statistical_resources.rest.external.RestExternalConstants;
-import org.siemac.metamac.statistical_resources.rest.external.RestExternalConstantsPrivate;
+import org.siemac.metamac.statistical_resources.rest.external.StatisticalResourcesRestExternalConstants;
 import org.siemac.metamac.statistical_resources.rest.external.v1_0.domain.DsdProcessorResult;
 import org.siemac.metamac.statistical_resources.rest.external.v1_0.mapper.base.CommonDo2RestMapperV10;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +43,7 @@ public class DatasetsDo2RestMapperV10Impl implements DatasetsDo2RestMapperV10 {
     public Datasets toDatasets(PagedResult<DatasetVersion> sources, String agencyID, String resourceID, String query, String orderBy, Integer limit, List<String> selectedLanguages) {
 
         Datasets targets = new Datasets();
-        targets.setKind(RestExternalConstants.KIND_DATASETS);
+        targets.setKind(StatisticalResourcesRestExternalConstants.KIND_DATASETS);
 
         // Pagination
         String baseLink = toDatasetsLink(agencyID, resourceID, null);
@@ -64,7 +63,7 @@ public class DatasetsDo2RestMapperV10Impl implements DatasetsDo2RestMapperV10 {
             return null;
         }
         Dataset target = new Dataset();
-        target.setKind(RestExternalConstants.KIND_DATASET);
+        target.setKind(StatisticalResourcesRestExternalConstants.KIND_DATASET);
         target.setId(source.getSiemacMetadataStatisticalResource().getCode());
         target.setUrn(source.getSiemacMetadataStatisticalResource().getUrn());
         target.setSelfLink(toDatasetSelfLink(source));
@@ -95,7 +94,7 @@ public class DatasetsDo2RestMapperV10Impl implements DatasetsDo2RestMapperV10 {
         Resource target = new Resource();
         target.setId(source.getSiemacMetadataStatisticalResource().getCode());
         target.setUrn(source.getSiemacMetadataStatisticalResource().getUrn());
-        target.setKind(RestExternalConstants.KIND_DATASET);
+        target.setKind(StatisticalResourcesRestExternalConstants.KIND_DATASET);
         target.setSelfLink(toDatasetSelfLink(source));
         target.setName(commonDo2RestMapper.toInternationalString(source.getSiemacMetadataStatisticalResource().getTitle(), selectedLanguages));
         return target;
@@ -171,20 +170,20 @@ public class DatasetsDo2RestMapperV10Impl implements DatasetsDo2RestMapperV10 {
     }
 
     private ResourceLink toDatasetsSelfLink(String agencyID, String resourceID, String version) {
-        return commonDo2RestMapper.toResourceLink(RestExternalConstants.KIND_DATASETS, toDatasetsLink(agencyID, resourceID, version));
+        return commonDo2RestMapper.toResourceLink(StatisticalResourcesRestExternalConstants.KIND_DATASETS, toDatasetsLink(agencyID, resourceID, version));
     }
 
     private String toDatasetsLink(String agencyID, String resourceID, String version) {
-        String resourceSubpath = RestExternalConstants.LINK_SUBPATH_DATASETS;
+        String resourceSubpath = StatisticalResourcesRestExternalConstants.LINK_SUBPATH_DATASETS;
         return commonDo2RestMapper.toResourceLink(resourceSubpath, agencyID, resourceID, version);
     }
 
     private ResourceLink toDatasetSelfLink(DatasetVersion source) {
-        return commonDo2RestMapper.toResourceLink(RestExternalConstants.KIND_DATASET, toDatasetLink(source));
+        return commonDo2RestMapper.toResourceLink(StatisticalResourcesRestExternalConstants.KIND_DATASET, toDatasetLink(source));
     }
 
     private String toDatasetLink(DatasetVersion source) {
-        String resourceSubpath = RestExternalConstants.LINK_SUBPATH_DATASETS;
+        String resourceSubpath = StatisticalResourcesRestExternalConstants.LINK_SUBPATH_DATASETS;
         String agencyID = source.getSiemacMetadataStatisticalResource().getMaintainer().getCodeNested();
         String resourceID = source.getSiemacMetadataStatisticalResource().getCode();
         String version = source.getSiemacMetadataStatisticalResource().getVersionLogic();
@@ -215,7 +214,7 @@ public class DatasetsDo2RestMapperV10Impl implements DatasetsDo2RestMapperV10 {
         String resourceID = source.getSiemacMetadataStatisticalResource().getCode();
         String version = source.getSiemacMetadataStatisticalResource().getVersionLogic();
 
-        String link = RestUtils.createLink(portalWeb, RestExternalConstantsPrivate.PORTAL_PATH_DATASETS);
+        String link = RestUtils.createLink(portalWeb, StatisticalResourcesRestExternalConstants.PORTAL_PATH_DATASETS);
         link = RestUtils.createLink(link, agencyID);
         link = RestUtils.createLink(link, resourceID);
         link = RestUtils.createLink(link, version);

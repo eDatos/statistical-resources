@@ -23,7 +23,7 @@ import org.siemac.metamac.rest.statistical_resources.v1_0.domain.EnumeratedDimen
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.NonEnumeratedDimensionValues;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Queries;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Query;
-import org.siemac.metamac.statistical_resources.rest.external.RestExternalConstants;
+import org.siemac.metamac.statistical_resources.rest.external.StatisticalResourcesRestExternalConstants;
 import org.siemac.metamac.statistical_resources.rest.external.exception.RestServiceExceptionType;
 
 public class StatisticalResourcesRestExternalFacadeV10QueriesTest extends StatisticalResourcesRestExternalFacadeV10BaseTest {
@@ -33,7 +33,7 @@ public class StatisticalResourcesRestExternalFacadeV10QueriesTest extends Statis
         Queries queries = statisticalResourcesRestExternalFacadeClientXml.findQueries(null, null, null, null, null);
 
         assertEquals(4, queries.getQueries().size());
-        assertEquals(RestExternalConstants.KIND_QUERIES, queries.getKind());
+        assertEquals(StatisticalResourcesRestExternalConstants.KIND_QUERIES, queries.getKind());
     }
 
     @Test
@@ -49,7 +49,7 @@ public class StatisticalResourcesRestExternalFacadeV10QueriesTest extends Statis
 
         assertEquals(QUERY_1_CODE, query.getId());
         assertEquals("urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Query=agency1:query1(01.000)", query.getUrn());
-        assertEquals(RestExternalConstants.KIND_QUERY, query.getKind());
+        assertEquals(StatisticalResourcesRestExternalConstants.KIND_QUERY, query.getKind());
 
         MetamacRestAsserts.assertEqualsInternationalString("es", "title-query1 en Espanol", null, null, query.getName());
     }
@@ -170,7 +170,7 @@ public class StatisticalResourcesRestExternalFacadeV10QueriesTest extends Statis
         }
 
         // Data
-        assertEquals(48, StringUtils.splitByWholeSeparatorPreserveAllTokens(query.getData().getObservations(), RestExternalConstants.DATA_SEPARATOR).length);
+        assertEquals(48, StringUtils.splitByWholeSeparatorPreserveAllTokens(query.getData().getObservations(), StatisticalResourcesRestExternalConstants.DATA_SEPARATOR).length);
     }
 
     @Test
@@ -239,7 +239,7 @@ public class StatisticalResourcesRestExternalFacadeV10QueriesTest extends Statis
         }
 
         // Data
-        assertEquals(42, StringUtils.splitByWholeSeparatorPreserveAllTokens(query.getData().getObservations(), RestExternalConstants.DATA_SEPARATOR).length);
+        assertEquals(42, StringUtils.splitByWholeSeparatorPreserveAllTokens(query.getData().getObservations(), StatisticalResourcesRestExternalConstants.DATA_SEPARATOR).length);
     }
 
     @Test
@@ -274,7 +274,7 @@ public class StatisticalResourcesRestExternalFacadeV10QueriesTest extends Statis
         }
 
         // Data
-        assertEquals(18, StringUtils.splitByWholeSeparatorPreserveAllTokens(query.getData().getObservations(), RestExternalConstants.DATA_SEPARATOR).length);
+        assertEquals(18, StringUtils.splitByWholeSeparatorPreserveAllTokens(query.getData().getObservations(), StatisticalResourcesRestExternalConstants.DATA_SEPARATOR).length);
     }
 
     @Test
@@ -308,7 +308,7 @@ public class StatisticalResourcesRestExternalFacadeV10QueriesTest extends Statis
         }
 
         // Data
-        assertEquals(12, StringUtils.splitByWholeSeparatorPreserveAllTokens(query.getData().getObservations(), RestExternalConstants.DATA_SEPARATOR).length);
+        assertEquals(12, StringUtils.splitByWholeSeparatorPreserveAllTokens(query.getData().getObservations(), StatisticalResourcesRestExternalConstants.DATA_SEPARATOR).length);
     }
 
     @Test
@@ -333,11 +333,11 @@ public class StatisticalResourcesRestExternalFacadeV10QueriesTest extends Statis
     }
 
     public String getRetrieveQueryUri(String agencyID, String resourceID, String fields, String langs) throws Exception {
-        return getRetrieveResourceUri(RestExternalConstants.LINK_SUBPATH_QUERIES, agencyID, resourceID, null, fields, langs);
+        return getRetrieveResourceUri(StatisticalResourcesRestExternalConstants.LINK_SUBPATH_QUERIES, agencyID, resourceID, null, fields, langs);
     }
 
     public String getFindQueriesUri(String agencyID, String query, String limit, String offset, String langs) throws Exception {
-        return getFindResourcesUri(RestExternalConstants.LINK_SUBPATH_QUERIES, agencyID, null, query, limit, offset, langs);
+        return getFindResourcesUri(StatisticalResourcesRestExternalConstants.LINK_SUBPATH_QUERIES, agencyID, null, query, limit, offset, langs);
     }
 
 }

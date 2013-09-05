@@ -15,7 +15,7 @@ import org.junit.Test;
 import org.siemac.metamac.rest.common.test.utils.MetamacRestAsserts;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Dataset;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Datasets;
-import org.siemac.metamac.statistical_resources.rest.external.RestExternalConstants;
+import org.siemac.metamac.statistical_resources.rest.external.StatisticalResourcesRestExternalConstants;
 import org.siemac.metamac.statistical_resources.rest.external.exception.RestServiceExceptionType;
 
 public class StatisticalResourcesRestExternalFacadeV10DatasetsTest extends StatisticalResourcesRestExternalFacadeV10BaseTest {
@@ -25,7 +25,7 @@ public class StatisticalResourcesRestExternalFacadeV10DatasetsTest extends Stati
         Datasets datasets = statisticalResourcesRestExternalFacadeClientXml.findDatasets(null, null, null, null, null);
 
         assertEquals(4, datasets.getDatasets().size());
-        assertEquals(RestExternalConstants.KIND_DATASETS, datasets.getKind());
+        assertEquals(StatisticalResourcesRestExternalConstants.KIND_DATASETS, datasets.getKind());
     }
 
     @Test
@@ -41,7 +41,7 @@ public class StatisticalResourcesRestExternalFacadeV10DatasetsTest extends Stati
 
         assertEquals(DATASET_1_CODE, dataset.getId());
         assertEquals("urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Dataset=agency1:dataset1(01.000)", dataset.getUrn());
-        assertEquals(RestExternalConstants.KIND_DATASET, dataset.getKind());
+        assertEquals(StatisticalResourcesRestExternalConstants.KIND_DATASET, dataset.getKind());
 
         MetamacRestAsserts.assertEqualsInternationalString("es", "title-dataset1 en Espanol", null, null, dataset.getName());
     }
@@ -93,11 +93,11 @@ public class StatisticalResourcesRestExternalFacadeV10DatasetsTest extends Stati
     }
 
     public String getRetrieveDatasetUri(String agencyID, String resourceID, String version, String fields, String langs) throws Exception {
-        return getRetrieveResourceUri(RestExternalConstants.LINK_SUBPATH_DATASETS, agencyID, resourceID, version, fields, langs);
+        return getRetrieveResourceUri(StatisticalResourcesRestExternalConstants.LINK_SUBPATH_DATASETS, agencyID, resourceID, version, fields, langs);
     }
 
     public String getFindDatasetsUri(String agencyID, String resourceID, String query, String limit, String offset, String langs) throws Exception {
-        return getFindResourcesUri(RestExternalConstants.LINK_SUBPATH_DATASETS, agencyID, resourceID, query, limit, offset, langs);
+        return getFindResourcesUri(StatisticalResourcesRestExternalConstants.LINK_SUBPATH_DATASETS, agencyID, resourceID, query, limit, offset, langs);
     }
 
 }

@@ -15,7 +15,7 @@ import org.junit.Test;
 import org.siemac.metamac.rest.common.test.utils.MetamacRestAsserts;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Collection;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Collections;
-import org.siemac.metamac.statistical_resources.rest.external.RestExternalConstants;
+import org.siemac.metamac.statistical_resources.rest.external.StatisticalResourcesRestExternalConstants;
 import org.siemac.metamac.statistical_resources.rest.external.exception.RestServiceExceptionType;
 
 public class StatisticalResourcesRestExternalFacadeV10CollectionsTest extends StatisticalResourcesRestExternalFacadeV10BaseTest {
@@ -25,7 +25,7 @@ public class StatisticalResourcesRestExternalFacadeV10CollectionsTest extends St
         Collections collections = statisticalResourcesRestExternalFacadeClientXml.findCollections(null, null, null, null, null);
 
         assertEquals(4, collections.getCollections().size());
-        assertEquals(RestExternalConstants.KIND_COLLECTIONS, collections.getKind());
+        assertEquals(StatisticalResourcesRestExternalConstants.KIND_COLLECTIONS, collections.getKind());
     }
 
     @Test
@@ -41,7 +41,7 @@ public class StatisticalResourcesRestExternalFacadeV10CollectionsTest extends St
 
         assertEquals(COLLECTION_1_CODE, collection.getId());
         assertEquals("urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Collection=agency1:collection1(01.000)", collection.getUrn());
-        assertEquals(RestExternalConstants.KIND_COLLECTION, collection.getKind());
+        assertEquals(StatisticalResourcesRestExternalConstants.KIND_COLLECTION, collection.getKind());
 
         MetamacRestAsserts.assertEqualsInternationalString("es", "title-collection1 en Espanol", null, null, collection.getName());
     }
@@ -93,11 +93,11 @@ public class StatisticalResourcesRestExternalFacadeV10CollectionsTest extends St
     }
 
     public String getRetrieveCollectionUri(String agencyID, String resourceID, String version, String fields, String langs) throws Exception {
-        return getRetrieveResourceUri(RestExternalConstants.LINK_SUBPATH_COLLECTIONS, agencyID, resourceID, version, fields, langs);
+        return getRetrieveResourceUri(StatisticalResourcesRestExternalConstants.LINK_SUBPATH_COLLECTIONS, agencyID, resourceID, version, fields, langs);
     }
 
     public String getFindCollectionsUri(String agencyID, String resourceID, String query, String limit, String offset, String langs) throws Exception {
-        return getFindResourcesUri(RestExternalConstants.LINK_SUBPATH_COLLECTIONS, agencyID, resourceID, query, limit, offset, langs);
+        return getFindResourcesUri(StatisticalResourcesRestExternalConstants.LINK_SUBPATH_COLLECTIONS, agencyID, resourceID, query, limit, offset, langs);
     }
 
 }

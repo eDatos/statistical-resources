@@ -1,8 +1,9 @@
 package org.siemac.metamac.statistical_resources.rest.external;
 
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
+import org.siemac.metamac.statistical_resources.rest.common.StatisticalResourcesRestConstants;
 
-public class RestExternalConstantsPrivate extends RestExternalConstants {
+public class StatisticalResourcesRestExternalConstants extends StatisticalResourcesRestConstants {
 
     public static final ServiceContext SERVICE_CONTEXT          = new ServiceContext("restExternal", "restExternal", "restExternal");
 

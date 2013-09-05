@@ -23,7 +23,7 @@ import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Query;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
-import org.siemac.metamac.statistical_resources.rest.external.RestExternalConstants;
+import org.siemac.metamac.statistical_resources.rest.external.StatisticalResourcesRestExternalConstants;
 import org.siemac.metamac.statistical_resources.rest.external.service.StatisticalResourcesRestExternalCommonService;
 import org.siemac.metamac.statistical_resources.rest.external.v1_0.mapper.collection.CollectionsDo2RestMapperV10;
 import org.siemac.metamac.statistical_resources.rest.external.v1_0.mapper.collection.CollectionsRest2DoMapper;
@@ -68,13 +68,13 @@ public class StatisticalResourcesRestExternalFacadeV10Impl implements Statistica
 
     @Override
     public Datasets findDatasets(String agencyID, String query, String orderBy, String limit, String offset, List<String> lang) {
-        checkParameterNotWildcardAll(RestExternalConstants.PARAMETER_AGENCY_ID, agencyID);
+        checkParameterNotWildcardAll(StatisticalResourcesRestExternalConstants.PARAMETER_AGENCY_ID, agencyID);
         return findDatasetsCommon(agencyID, null, null, query, orderBy, limit, offset, lang);
     }
 
     @Override
     public Datasets findDatasets(String agencyID, String resourceID, String query, String orderBy, String limit, String offset, List<String> lang) {
-        checkParameterNotWildcardAll(RestExternalConstants.PARAMETER_RESOURCE_ID, resourceID);
+        checkParameterNotWildcardAll(StatisticalResourcesRestExternalConstants.PARAMETER_RESOURCE_ID, resourceID);
         return findDatasetsCommon(agencyID, resourceID, null, query, orderBy, limit, offset, lang);
     }
 
@@ -84,8 +84,8 @@ public class StatisticalResourcesRestExternalFacadeV10Impl implements Statistica
             DatasetVersion datasetVersion = commonService.retrieveDatasetVersion(agencyID, resourceID, version);
 
             Map<String, List<String>> dimensions = parseDimensionExpression(dim);
-            boolean includeMetadata = !hasField(fields, RestExternalConstants.FIELD_EXCLUDE_METADATA);
-            boolean includeData = !hasField(fields, RestExternalConstants.FIELD_EXCLUDE_DATA);
+            boolean includeMetadata = !hasField(fields, StatisticalResourcesRestExternalConstants.FIELD_EXCLUDE_METADATA);
+            boolean includeData = !hasField(fields, StatisticalResourcesRestExternalConstants.FIELD_EXCLUDE_DATA);
             List<String> selectedLanguages = languagesRequestedToEffectiveLanguages(lang);
             Dataset dataset = datasetsDo2RestMapper.toDataset(datasetVersion, dimensions, selectedLanguages, includeMetadata, includeData);
             return dataset;
@@ -101,13 +101,13 @@ public class StatisticalResourcesRestExternalFacadeV10Impl implements Statistica
 
     @Override
     public Collections findCollections(String agencyID, String query, String orderBy, String limit, String offset, List<String> lang) {
-        checkParameterNotWildcardAll(RestExternalConstants.PARAMETER_AGENCY_ID, agencyID);
+        checkParameterNotWildcardAll(StatisticalResourcesRestExternalConstants.PARAMETER_AGENCY_ID, agencyID);
         return findCollectionsCommon(agencyID, null, null, query, orderBy, limit, offset, lang);
     }
 
     @Override
     public Collections findCollections(String agencyID, String resourceID, String query, String orderBy, String limit, String offset, List<String> lang) {
-        checkParameterNotWildcardAll(RestExternalConstants.PARAMETER_RESOURCE_ID, resourceID);
+        checkParameterNotWildcardAll(StatisticalResourcesRestExternalConstants.PARAMETER_RESOURCE_ID, resourceID);
         return findCollectionsCommon(agencyID, resourceID, null, query, orderBy, limit, offset, lang);
     }
 
@@ -116,8 +116,8 @@ public class StatisticalResourcesRestExternalFacadeV10Impl implements Statistica
         try {
             PublicationVersion publicationVersion = commonService.retrievePublicationVersion(agencyID, resourceID, version);
 
-            boolean includeMetadata = !hasField(fields, RestExternalConstants.FIELD_EXCLUDE_METADATA);
-            boolean includeData = !hasField(fields, RestExternalConstants.FIELD_EXCLUDE_DATA);
+            boolean includeMetadata = !hasField(fields, StatisticalResourcesRestExternalConstants.FIELD_EXCLUDE_METADATA);
+            boolean includeData = !hasField(fields, StatisticalResourcesRestExternalConstants.FIELD_EXCLUDE_DATA);
             List<String> selectedLanguages = languagesRequestedToEffectiveLanguages(lang);
             Collection collection = collectionsDo2RestMapper.toCollection(publicationVersion, selectedLanguages, includeMetadata, includeData);
             return collection;
@@ -141,8 +141,8 @@ public class StatisticalResourcesRestExternalFacadeV10Impl implements Statistica
         try {
             QueryVersion queryVersion = commonService.retrieveQueryVersion(agencyID, resourceID);
 
-            boolean includeMetadata = !hasField(fields, RestExternalConstants.FIELD_EXCLUDE_METADATA);
-            boolean includeData = !hasField(fields, RestExternalConstants.FIELD_EXCLUDE_DATA);
+            boolean includeMetadata = !hasField(fields, StatisticalResourcesRestExternalConstants.FIELD_EXCLUDE_METADATA);
+            boolean includeData = !hasField(fields, StatisticalResourcesRestExternalConstants.FIELD_EXCLUDE_DATA);
             List<String> selectedLanguages = languagesRequestedToEffectiveLanguages(lang);
             Query query = queriesDo2RestMapper.toQuery(queryVersion, selectedLanguages, includeMetadata, includeData);
             return query;
