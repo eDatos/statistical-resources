@@ -576,8 +576,7 @@
                      </structure:ConceptIdentity>
                      <structure:LocalRepresentation>
                         <structure:Enumeration>
-                           <URN>urn:sdmx:org.sdmx.infomodel.codelist.Codelist=ISO:CL_CURRENCY(1.0)
-									</URN>
+                           <URN>urn:sdmx:org.sdmx.infomodel.codelist.Codelist=ISO:CL_CURRENCY(1.0)</URN>
                         </structure:Enumeration>
                      </structure:LocalRepresentation>
                      <structure:AttributeRelationship>
