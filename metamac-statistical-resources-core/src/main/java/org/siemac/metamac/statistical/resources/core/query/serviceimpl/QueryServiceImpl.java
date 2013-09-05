@@ -94,8 +94,8 @@ public class QueryServiceImpl extends QueryServiceImplBase {
         fillMetadataForCreateQueryVersion(ctx, queryVersion, statisticalOperation);
 
         // Check unique URN
-        identifiableStatisticalResourceRepository.checkDuplicatedUrn(query.getIdentifiableStatisticalResource());
         identifiableStatisticalResourceRepository.checkDuplicatedUrn(queryVersion.getLifeCycleStatisticalResource());
+        identifiableStatisticalResourceRepository.checkDuplicatedUrn(query.getIdentifiableStatisticalResource());
 
         // Checks
         // TODO: Comprobar si hay que hacer alguno más

@@ -2,7 +2,6 @@ package org.siemac.metamac.statistical.resources.core;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
-import org.siemac.metamac.statistical.resources.core.common.repositoryimpl.InternationalStringRepositoryTest;
 import org.siemac.metamac.statistical.resources.core.base.mapper.BaseDto2DoMapperTest;
 import org.siemac.metamac.statistical.resources.core.base.repositoryimpl.IdentifiableStatisticalResourceRepositoryTest;
 import org.siemac.metamac.statistical.resources.core.base.repositoryimpl.SiemacMetadataStatisticalResourceRepositoryTest;
@@ -11,6 +10,7 @@ import org.siemac.metamac.statistical.resources.core.base.utils.VersionUtilsTest
 import org.siemac.metamac.statistical.resources.core.base.validators.BaseInvocationValidatorTest;
 import org.siemac.metamac.statistical.resources.core.common.mapper.CommonDo2DtoMapperTest;
 import org.siemac.metamac.statistical.resources.core.common.mapper.CommonDto2DoMapperTest;
+import org.siemac.metamac.statistical.resources.core.common.repositoryimpl.InternationalStringRepositoryTest;
 import org.siemac.metamac.statistical.resources.core.dataset.mapper.DatasetDo2DtoMapperTest;
 import org.siemac.metamac.statistical.resources.core.dataset.mapper.DatasetDto2DoMapperTest;
 import org.siemac.metamac.statistical.resources.core.dataset.mapper.StatRepoDto2StatisticalResourcesDtoMapperTest;
@@ -58,6 +58,8 @@ import org.siemac.metamac.statistical.resources.core.query.serviceapi.QueryInteg
 import org.siemac.metamac.statistical.resources.core.query.serviceapi.QueryServiceTest;
 import org.siemac.metamac.statistical.resources.core.query.serviceapi.QueryVersioningServiceTest;
 
+
+//@formatter:off
 @RunWith(Suite.class)
 @Suite.SuiteClasses({StatisticalResourcesServiceFacadeTest.class,
                      StatisticalResourcesOptimisticLockingTest.class,
@@ -114,5 +116,6 @@ import org.siemac.metamac.statistical.resources.core.query.serviceapi.QueryVersi
                      PublicationVersioningServiceTest.class,
                      QueryVersioningServiceTest.class,
                      DataManipulateTest.class})
+// @formatter:on
 public class StatisticalResourcesSuite {
 }

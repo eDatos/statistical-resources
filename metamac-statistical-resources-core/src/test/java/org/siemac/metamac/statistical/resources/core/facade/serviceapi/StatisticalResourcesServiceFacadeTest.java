@@ -33,6 +33,7 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_02_BASIC_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_03_FOR_DATASET_03_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_04_FOR_DATASET_03_AND_LAST_VERSION_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_05_FOR_DATASET_04_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_06_FOR_QUERIES_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_09_OPER_0001_CODE_000003_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_10_OPER_0002_CODE_000001_NAME;
@@ -52,7 +53,7 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_44_NEXT_VERSION_NON_SCHEDULED_UPDATE_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_45_NEXT_VERSION_SCHEDULED_UPDATE_JANUARY_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_46_NEXT_VERSION_SCHEDULED_UPDATE_JULY_NAME;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.*;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_47_WITH_COVERAGE_FILLED_WITH_TITLES_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_48_WITH_TEMPORAL_COVERAGE_FILLED_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasourceMockFactory.DATASOURCE_01_BASIC_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationMockFactory.PUBLICATION_02_BASIC_WITH_GENERATED_VERSION_NAME;
@@ -172,6 +173,7 @@ import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.Publi
 import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryMockFactory;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.StatisticOfficialityMockFactory;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.StatisticalResourcesMockFactory;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesDoMocks;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesDtoMocks;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesNotPersistedDoMocks;
@@ -352,6 +354,42 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         assertNotNull(persistedQuery.getUrn());
     }
 
+    @MetamacMock(DATASET_VERSION_06_FOR_QUERIES_NAME)
+    @Test
+    public void testCreateQueryHasExpectedUrn() throws Exception {
+        ExternalItemDto statisticalOperation = StatisticalResourcesDtoMocks.mockStatisticalOperationExternalItemDto();
+        ExternalItemDto maintainer = StatisticalResourcesDtoMocks.mockAgencyExternalItemDto("SIEMAC");
+        QueryVersionDto queryVersionDto = StatisticalResourcesDtoMocks.mockQueryVersionDto(datasetVersionMockFactory.retrieveMock(DATASET_VERSION_06_FOR_QUERIES_NAME));
+        queryVersionDto.setCode("ULTIMOS_DATOS_ALOJAMIENTO");
+        queryVersionDto.setMaintainer(maintainer);
+
+        String persistedQueryUrn = statisticalResourcesServiceFacade.createQuery(getServiceContextAdministrador(), queryVersionDto, statisticalOperation).getUrn();
+        assertEquals("urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Query=SIEMAC:ULTIMOS_DATOS_ALOJAMIENTO(001.000)", persistedQueryUrn);
+    }
+
+    @MetamacMock({DATASET_VERSION_06_FOR_QUERIES_NAME, QUERY_VERSION_01_WITH_SELECTION_NAME})
+    @Test
+    public void testCreateErrorDuplicatedUrn() throws Exception {
+        QueryVersion originalQueryVersion = queryVersionMockFactory.retrieveMock(QUERY_VERSION_01_WITH_SELECTION_NAME);
+
+        expectedMetamacException(new MetamacException(ServiceExceptionType.IDENTIFIABLE_STATISTICAL_RESOURCE_URN_DUPLICATED, originalQueryVersion.getLifeCycleStatisticalResource().getUrn()));
+
+        ExternalItemDto statisticalOperation = StatisticalResourcesDtoMocks.mockStatisticalOperationExternalItemDto();
+        ExternalItemDto maintainer = StatisticalResourcesDtoMocks.mockAgencyExternalItemDto(originalQueryVersion.getLifeCycleStatisticalResource().getMaintainer().getCode());
+        QueryVersionDto queryVersionDto = StatisticalResourcesDtoMocks.mockQueryVersionDto(datasetVersionMockFactory.retrieveMock(DATASET_VERSION_06_FOR_QUERIES_NAME));
+        queryVersionDto.setCode(originalQueryVersion.getLifeCycleStatisticalResource().getCode());
+        queryVersionDto.setMaintainer(maintainer);
+
+
+        
+        statisticalResourcesServiceFacade.createQuery(getServiceContextAdministrador(), queryVersionDto, statisticalOperation).getUrn();
+    }
+
+    @Test
+    public void testUpdateQueryVersionErrorDuplicatedUrn() throws Exception {
+        // Code and maintainer can not be modified after creation
+    }
+    
     @Override
     @Test
     @MetamacMock({QUERY_VERSION_01_WITH_SELECTION_NAME, QUERY_VERSION_02_BASIC_ORDERED_01_NAME})
@@ -943,6 +981,31 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         assertNotNull(newDatasetVersionDto.getUrn());
     }
 
+    @MetamacMock(STATISTIC_OFFICIALITY_01_BASIC_NAME)
+    @Test
+    public void testCreateDatasetHasExpectedUrn() throws Exception {
+        ExternalItemDto statisticalOperation = StatisticalResourcesDtoMocks.mockStatisticalOperationExternalItemDto(StatisticalResourcesMockFactory.OPERATION_01_CODE);
+        ExternalItemDto maintainer = StatisticalResourcesDtoMocks.mockAgencyExternalItemDto("SIEMAC");
+
+        StatisticOfficiality officiality = statisticOfficialityMockFactory.retrieveMock(STATISTIC_OFFICIALITY_01_BASIC_NAME);
+        DatasetVersionDto datasetVersionDto = StatisticalResourcesDtoMocks.mockDatasetVersionDto(officiality);
+        datasetVersionDto.setMaintainer(maintainer);
+
+        String persistedDatasetVersionUrn = statisticalResourcesServiceFacade.createDataset(getServiceContextAdministrador(), datasetVersionDto, statisticalOperation).getUrn();
+        assertEquals("urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Dataset=SIEMAC:C00025A_000001(001.000)", persistedDatasetVersionUrn);
+    }
+
+    @Test
+    public void testCreateDatasetErrorDuplicatedUrn() throws Exception {
+        // Codes are setting automatically, so URN can not be duplicated
+    }
+
+    @Test
+    @MetamacMock({STATISTIC_OFFICIALITY_01_BASIC_NAME, DATASET_VERSION_01_BASIC_NAME, DATASET_VERSION_02_BASIC_NAME})
+    public void testUpdateDatasetVersionErrorDuplicatedUrn() throws Exception {
+        // Codes are setting automatically, so URN can not be duplicated
+    }
+
     @Override
     @Test
     @MetamacMock({DATASET_VERSION_01_BASIC_NAME})
@@ -1435,7 +1498,6 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         assertEquals(datasetOper1Code3.getSiemacMetadataStatisticalResource().getUrn(), results.get(0).getUrn());
     }
 
-    
     @Test
     @MetamacMock({DATASET_VERSION_48_WITH_TEMPORAL_COVERAGE_FILLED_NAME})
     public void testFindDatasetsVersionsByConditionByGeographicGranularity() throws Exception {
@@ -1450,7 +1512,7 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         assertEquals(1, pagedResults.getPaginatorResult().getTotalResults().intValue());
         assertEqualsCollectionByField(Arrays.asList(datasetVersionGeographicCoverage), pagedResults.getResults(), SIEMAC_METADATA_URN_FIELD, URN_FIELD);
     }
-    
+
     @Test
     @MetamacMock({DATASET_VERSION_48_WITH_TEMPORAL_COVERAGE_FILLED_NAME})
     public void testFindDatasetsVersionsByConditionByTemporalGranularity() throws Exception {
@@ -1465,21 +1527,22 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         assertEquals(1, pagedResults.getPaginatorResult().getTotalResults().intValue());
         assertEqualsCollectionByField(Arrays.asList(datasetVersionGeographicCoverage), pagedResults.getResults(), SIEMAC_METADATA_URN_FIELD, URN_FIELD);
     }
-    
+
     @Test
     @MetamacMock({DATASET_VERSION_48_WITH_TEMPORAL_COVERAGE_FILLED_NAME})
     public void testFindDatasetsVersionsByConditionByTemporalGranularityAndGeographicGranaularity() throws Exception {
         DatasetVersion datasetVersionGeographicCoverage = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_48_WITH_TEMPORAL_COVERAGE_FILLED_NAME);
 
         MetamacCriteria metamacCriteria = new MetamacCriteria();
-        setConjunctionCriteriaStringPropertyRestriction(metamacCriteria, StatisticalResourcesCriteriaPropertyEnum.DATASET_TEMPORAL_GRANULARITY_URN, StatisticalResourcesCriteriaPropertyEnum.DATASET_GEOGRAPHIC_GRANULARITY_URN, OperationType.EQ, datasetVersionGeographicCoverage.getTemporalGranularities().iterator().next().getUrn(), datasetVersionGeographicCoverage
-                .getGeographicGranularities().iterator().next().getUrn());
+        setConjunctionCriteriaStringPropertyRestriction(metamacCriteria, StatisticalResourcesCriteriaPropertyEnum.DATASET_TEMPORAL_GRANULARITY_URN,
+                StatisticalResourcesCriteriaPropertyEnum.DATASET_GEOGRAPHIC_GRANULARITY_URN, OperationType.EQ, datasetVersionGeographicCoverage.getTemporalGranularities().iterator().next().getUrn(),
+                datasetVersionGeographicCoverage.getGeographicGranularities().iterator().next().getUrn());
 
         MetamacCriteriaResult<DatasetVersionBaseDto> pagedResults = statisticalResourcesServiceFacade.findDatasetsVersionsByCondition(getServiceContextAdministrador(), metamacCriteria);
         assertEquals(1, pagedResults.getPaginatorResult().getTotalResults().intValue());
         assertEqualsCollectionByField(Arrays.asList(datasetVersionGeographicCoverage), pagedResults.getResults(), SIEMAC_METADATA_URN_FIELD, URN_FIELD);
     }
-    
+
     @Override
     @Test
     @MetamacMock(DATASET_VERSION_47_WITH_COVERAGE_FILLED_WITH_TITLES_NAME)
@@ -1691,6 +1754,29 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         PublicationVersionDto newPublicationVersionDto = statisticalResourcesServiceFacade.createPublication(getServiceContextAdministrador(), publicationVersionDto, statisticalOperation);
         assertNotNull(newPublicationVersionDto);
         assertNotNull(newPublicationVersionDto.getUrn());
+    }
+
+    @Test
+    public void testCreatePublicationHasExpectedUrn() throws Exception {
+        ExternalItemDto statisticalOperation = StatisticalResourcesDtoMocks.mockStatisticalOperationExternalItemDto(StatisticalResourcesMockFactory.OPERATION_01_CODE);
+        ExternalItemDto maintainer = StatisticalResourcesDtoMocks.mockAgencyExternalItemDto("SIEMAC");
+
+        PublicationVersionDto publicationVersionDto = StatisticalResourcesDtoMocks.mockPublicationVersionDto();
+        publicationVersionDto.setMaintainer(maintainer);
+
+        String persistedPublicationUrn = statisticalResourcesServiceFacade.createPublication(getServiceContextAdministrador(), publicationVersionDto, statisticalOperation).getUrn();
+        assertEquals("urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Collection=SIEMAC:C00025A_000001(001.000)", persistedPublicationUrn);
+    }
+
+    @Test
+    public void testCreatePublicationErrorDuplicatedUrn() throws Exception {
+        // Codes are setting automatically, so URN can not be duplicated
+    }
+
+    @Test
+    @MetamacMock({PUBLICATION_VERSION_01_BASIC_NAME, PUBLICATION_VERSION_02_BASIC_NAME})
+    public void testUpdatePublicationVersionErrorDuplicatedUrn() throws Exception {
+        // Codes are setting automatically, so URN can not be duplicated
     }
 
     @Override
@@ -2366,13 +2452,14 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
     }
 
     @SuppressWarnings("rawtypes")
-    private void setConjunctionCriteriaStringPropertyRestriction(MetamacCriteria metamacCriteria, Enum property01, Enum property02, OperationType operationType, String stringValue01, String stringValue02) {
+    private void setConjunctionCriteriaStringPropertyRestriction(MetamacCriteria metamacCriteria, Enum property01, Enum property02, OperationType operationType, String stringValue01,
+            String stringValue02) {
         MetamacCriteriaConjunctionRestriction conjunctionRestriction = new MetamacCriteriaConjunctionRestriction();
         conjunctionRestriction.getRestrictions().add(new MetamacCriteriaPropertyRestriction(property01.name(), stringValue01, OperationType.EQ));
         conjunctionRestriction.getRestrictions().add(new MetamacCriteriaPropertyRestriction(property02.name(), stringValue02, OperationType.EQ));
         metamacCriteria.setRestriction(conjunctionRestriction);
     }
-    
+
     @SuppressWarnings("rawtypes")
     private void setDisjunctionCriteriaEnumPropertyRestriction(MetamacCriteria metamacCriteria, Enum property, OperationType operationType, Enum enumValue01, Enum enumValue02) {
         MetamacCriteriaDisjunctionRestriction disjunctionRestriction = new MetamacCriteriaDisjunctionRestriction();

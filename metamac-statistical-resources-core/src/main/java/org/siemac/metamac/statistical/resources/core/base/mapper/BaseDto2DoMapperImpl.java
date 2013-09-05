@@ -17,10 +17,9 @@ import org.jsoup.safety.Whitelist;
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.dto.InternationalStringDto;
 import org.siemac.metamac.core.common.dto.LocalisedStringDto;
-import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
-import org.siemac.metamac.statistical.resources.core.common.domain.InternationalString;
-import org.siemac.metamac.statistical.resources.core.common.domain.LocalisedString;
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
+import org.siemac.metamac.core.common.exception.utils.ExceptionUtils;
 import org.siemac.metamac.core.common.util.CoreCommonUtil;
 import org.siemac.metamac.core.common.util.OptimisticLockingUtils;
 import org.siemac.metamac.statistical.resources.core.base.checks.MetadataEditionChecks;
@@ -32,6 +31,9 @@ import org.siemac.metamac.statistical.resources.core.base.domain.StatisticalReso
 import org.siemac.metamac.statistical.resources.core.base.domain.VersionRationaleType;
 import org.siemac.metamac.statistical.resources.core.base.domain.VersionRationaleTypeRepository;
 import org.siemac.metamac.statistical.resources.core.base.domain.VersionableStatisticalResource;
+import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
+import org.siemac.metamac.statistical.resources.core.common.domain.InternationalString;
+import org.siemac.metamac.statistical.resources.core.common.domain.LocalisedString;
 import org.siemac.metamac.statistical.resources.core.common.mapper.CommonDto2DoMapperImpl;
 import org.siemac.metamac.statistical.resources.core.common.utils.CommonVersioningCopyUtils;
 import org.siemac.metamac.statistical.resources.core.dto.IdentifiableStatisticalResourceDto;
@@ -43,6 +45,7 @@ import org.siemac.metamac.statistical.resources.core.dto.VersionRationaleTypeDto
 import org.siemac.metamac.statistical.resources.core.dto.VersionableStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionSingleParameters;
 import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesCollectionUtils;
+import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesValidationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @org.springframework.stereotype.Component("baseDto2DoMapper")
@@ -58,14 +61,14 @@ public class BaseDto2DoMapperImpl extends CommonDto2DoMapperImpl implements Base
     @Override
     public SiemacMetadataStatisticalResource siemacMetadataStatisticalResourceDtoToDo(SiemacMetadataStatisticalResourceDto source, SiemacMetadataStatisticalResource target, String metadataName)
             throws MetamacException {
-        
+
         InternationalString oldTitle = target.getTitle();
         InternationalString oldDescription = target.getDescription();
-        
+
         // Hierarchy
         lifeCycleStatisticalResourceDtoToDo(source, target, metadataName);
 
-        //KEYWORDS
+        // KEYWORDS
         boolean keywordsModifiedByUser = hasInternationalStringBeModified(target.getKeywords(), source.getKeywords());
         if (keywordsModifiedByUser) {
             target.setUserModifiedKeywords(true);
@@ -82,7 +85,7 @@ public class BaseDto2DoMapperImpl extends CommonDto2DoMapperImpl implements Base
         }
         // Always Modifiable
         languagesDtoListToDoListEnsuringLanguageIsContained(source.getLanguages(), target.getLanguages(), target.getLanguage(), addParameter(metadataName, ServiceExceptionSingleParameters.LANGUAGES));
-        
+
         externalItemDtoCollectionToDoList(source.getStatisticalOperationInstances(), target.getStatisticalOperationInstances(),
                 addParameter(metadataName, ServiceExceptionSingleParameters.STATISTICAL_OPERATION_INSTANCES));
 
@@ -110,35 +113,35 @@ public class BaseDto2DoMapperImpl extends CommonDto2DoMapperImpl implements Base
 
         return target;
     }
-    
-    public Collection<ExternalItem> languagesDtoListToDoListEnsuringLanguageIsContained(Collection<ExternalItemDto> sources, Collection<ExternalItem> targets, final ExternalItem language, String metadataName) throws MetamacException {
+
+    public Collection<ExternalItem> languagesDtoListToDoListEnsuringLanguageIsContained(Collection<ExternalItemDto> sources, Collection<ExternalItem> targets, final ExternalItem language,
+            String metadataName) throws MetamacException {
         if (targets == null) {
             targets = new ArrayList<ExternalItem>();
         }
-        
+
         Collection<ExternalItem> targetsBefore = targets;
-        
+
         Collection<ExternalItem> newTargets = calculateNewExternalItemsToPersit(sources, metadataName, targetsBefore);
-        
+
         if (language != null && !StatisticalResourcesCollectionUtils.isExternalItemInCollection(newTargets, language)) {
             newTargets.add(CommonVersioningCopyUtils.copyExternalItem(language));
         }
-        
+
         // Delete missing
         deleteExternalItemsNotFoundInSource(targetsBefore, newTargets, metadataName);
-        
+
         targets.clear();
         for (ExternalItem target : newTargets) {
             targets.add(target);
         }
-        
+
         return targets;
     }
 
-
     private boolean shouldKeywordsBeRebuilt(InternationalString oldTitle, InternationalString oldDescription, SiemacMetadataStatisticalResource previous, SiemacMetadataStatisticalResourceDto current) {
         boolean titleChanged = hasInternationalStringBeModified(oldTitle, current.getTitle());
-        boolean descriptionChanged = hasInternationalStringBeModified(oldDescription, current.getDescription()); 
+        boolean descriptionChanged = hasInternationalStringBeModified(oldDescription, current.getDescription());
         return BooleanUtils.isNotTrue(previous.getUserModifiedKeywords()) && (titleChanged || descriptionChanged);
     }
 
@@ -159,7 +162,7 @@ public class BaseDto2DoMapperImpl extends CommonDto2DoMapperImpl implements Base
         }
         return false;
     }
-    
+
     private boolean hasLocalisedStringBeModified(org.siemac.metamac.statistical.resources.core.common.domain.LocalisedString previous, LocalisedStringDto current) {
         if ((previous == null && current != null) || (previous != null && current == null)) {
             return true;
@@ -167,10 +170,9 @@ public class BaseDto2DoMapperImpl extends CommonDto2DoMapperImpl implements Base
         if (previous == null && current == null) {
             return false;
         }
-        return !(StringUtils.equals(previous.getLocale(),current.getLocale()) && StringUtils.equals(previous.getLabel(),current.getLabel()));
+        return !(StringUtils.equals(previous.getLocale(), current.getLocale()) && StringUtils.equals(previous.getLabel(), current.getLabel()));
     }
-    
-    
+
     private InternationalString buildKeywords(SiemacMetadataStatisticalResource resource) {
         Set<String> locales = new HashSet<String>();
         if (resource.getTitle() != null) {
@@ -254,7 +256,8 @@ public class BaseDto2DoMapperImpl extends CommonDto2DoMapperImpl implements Base
                 addParameter(metadataName, ServiceExceptionSingleParameters.VERSION_RATIONALE)));
 
         if (MetadataEditionChecks.canVersionRationaleTypesBeEdited(source.getVersionLogic())) {
-            versionRationaleTypeDtoListToDoList(source.getVersionRationaleTypes(), target.getVersionRationaleTypes(), addParameter(metadataName, ServiceExceptionSingleParameters.VERSION_RATIONALE_TYPES));
+            versionRationaleTypeDtoListToDoList(source.getVersionRationaleTypes(), target.getVersionRationaleTypes(),
+                    addParameter(metadataName, ServiceExceptionSingleParameters.VERSION_RATIONALE_TYPES));
         }
         return target;
     }
@@ -279,9 +282,6 @@ public class BaseDto2DoMapperImpl extends CommonDto2DoMapperImpl implements Base
         // Hierarchy
         statisticalResourceDtoToDo(source, target, metadataName);
 
-        // Non modifiable after creation
-
-        // Attributes modifiable
         if (target.getId() == null) {
             target.setCode(source.getCode());
         }
