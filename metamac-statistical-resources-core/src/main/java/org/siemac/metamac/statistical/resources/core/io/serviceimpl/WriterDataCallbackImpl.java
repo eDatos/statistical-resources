@@ -7,12 +7,11 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.UUID;
 
-import org.apache.commons.lang.StringUtils;
 import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
-import org.fornax.cartridges.sculptor.framework.errorhandling.ApplicationException;
 import org.joda.time.DateTime;
 import org.siemac.metamac.core.common.util.CoreCommonUtil;
 import org.siemac.metamac.core.common.util.shared.UrnUtils;
@@ -20,6 +19,7 @@ import org.siemac.metamac.statistical.resources.core.constants.StatisticalResour
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.io.domain.AttributeInfo;
 import org.siemac.metamac.statistical.resources.core.io.domain.AttributeInfo.AttachmentLevel;
+import org.siemac.metamac.statistical.resources.core.io.domain.DatasetInfo;
 import org.siemac.metamac.statistical.resources.core.io.domain.DsdSdmxInfo;
 import org.siemac.metamac.statistical.resources.core.io.domain.DsdSdmxInfo.DsdSdmxExtractor;
 import org.siemac.metamac.statistical.resources.core.io.domain.GroupInfo;
@@ -30,14 +30,11 @@ import org.siemac.metamac.statistical.resources.core.io.utils.ManipulateDataUtil
 import com.arte.statistic.dataset.repository.dto.AttributeInstanceBasicDto;
 import com.arte.statistic.dataset.repository.dto.AttributeInstanceDto;
 import com.arte.statistic.dataset.repository.dto.CodeDimensionDto;
-import com.arte.statistic.dataset.repository.dto.ConditionObservationDto;
-import com.arte.statistic.dataset.repository.dto.DatasetRepositoryDto;
 import com.arte.statistic.dataset.repository.dto.ObservationExtendedDto;
 import com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceFacade;
 import com.arte.statistic.parser.sdmx.v2_1.WriterDataCallback;
 import com.arte.statistic.parser.sdmx.v2_1.constants.MappingConstants;
 import com.arte.statistic.parser.sdmx.v2_1.domain.ComponentInfo;
-import com.arte.statistic.parser.sdmx.v2_1.domain.ComponentInfoTypeEnum;
 import com.arte.statistic.parser.sdmx.v2_1.domain.DimensionCodeInfo;
 import com.arte.statistic.parser.sdmx.v2_1.domain.Group;
 import com.arte.statistic.parser.sdmx.v2_1.domain.Header;
@@ -56,57 +53,50 @@ public class WriterDataCallbackImpl implements WriterDataCallback {
     // Calculated an cache data
     // --- For MessageContext
     private String                           queryKey                         = null;
-    private PagedResult<DatasetVersion>      datasetsToFetch                  = null;
     private String                           sender                           = null;
-    // --- For DatasetContext
-    private final int                        currentDatasetVersionIndex       = 0;
-    protected DimensionCodeInfo              dimensionAtObservation           = null;
-    protected DimensionCodeInfo              timeDimension                    = null;
-    protected DimensionCodeInfo              measureDimension                 = null;
-    private List<ConditionObservationDto>    coverage                         = null;
-    private List<DimensionCodeInfo>          conditions                       = null; // Input conditions for query
-    private Map<String, List<String>>        conditionsMap                    = null; // Input conditions for query transformed into a map
     private RequestParameter                 requestParameter                 = null;
-    private DsdSdmxInfo                      dsdSdmxInfo                      = null;
+
+    // --- For DatasetContext
+    private List<DatasetInfo>                datasetInfoCache                 = null;
+    private int                              currentDatasetVersionIndex       = -1;
 
     public WriterDataCallbackImpl(DatasetRepositoriesServiceFacade datasetRepositoriesServiceFacade, MetamacSdmx2StatRepoMapper metamac2StatRepoMapper, DsdSdmxExtractor dsdSdmxExtractor,
             PagedResult<DatasetVersion> datasetsToFetch, String querykey, RequestParameter requestParameter, String sender) throws Exception {
         this.datasetRepositoriesServiceFacade = datasetRepositoriesServiceFacade;
         this.metamac2StatRepoMapper = metamac2StatRepoMapper;
         this.queryKey = querykey;
-        this.datasetsToFetch = datasetsToFetch;
         this.requestParameter = requestParameter;
         this.sender = sender;
         this.dsdSdmxExtractor = dsdSdmxExtractor;
 
-        calculateCacheInfo();
+        calculateCacheInfo(datasetsToFetch);
     }
 
     @Override
     public Header retrieveHeader() throws Exception {
-        // TODO HEADER
         Header header = new Header();
         header.setId(generateMessageId());
         header.setTest(false);
         header.setPrepared(CoreCommonUtil.jodaDateTime2xsDateTime(new DateTime()));
         header.setSenderID(this.sender);
 
-        // Structure: Note, in this implementation, we use only one structure in header.
-        PayloadStructure payloadStructure = new PayloadStructure();
-        payloadStructure.setDimensionAtObservation(getDimensionAtObservation().getCode());
-        payloadStructure.setStructureID(datasetsToFetch.getValues().get(currentDatasetVersionIndex).getDatasetRepositoryId()); // TODO procesar más de un dataset por mensaje
+        // Structures
+        for (DatasetInfo datasetInfo : getDatasetInfoCache()) {
+            PayloadStructure payloadStructure = new PayloadStructure();
+            payloadStructure.setDimensionAtObservation(datasetInfo.getDimensionAtObservation().getCode());
+            payloadStructure.setStructureID(datasetInfo.getDatasetVersion().getDatasetRepositoryId());
 
-        String[] splitItemScheme = UrnUtils
-                .splitUrnWithoutPrefixItemScheme(datasetsToFetch.getValues().get(currentDatasetVersionIndex).getSiemacMetadataStatisticalResource().getMaintainer().getUrn());
+            String[] splitItemScheme = UrnUtils.splitUrnWithoutPrefixItemScheme(datasetInfo.getDatasetVersion().getSiemacMetadataStatisticalResource().getMaintainer().getUrn());
 
-        StructureReferenceBase structureReferenceBase = new StructureReferenceBase();
-        structureReferenceBase.setAgency(splitItemScheme[0]);
-        structureReferenceBase.setCode(splitItemScheme[1]);
-        structureReferenceBase.setVersionLogic(splitItemScheme[2]);
+            StructureReferenceBase structureReferenceBase = new StructureReferenceBase();
+            structureReferenceBase.setAgency(splitItemScheme[0]);
+            structureReferenceBase.setCode(splitItemScheme[1]);
+            structureReferenceBase.setVersionLogic(splitItemScheme[2]);
 
-        payloadStructure.setStructure(structureReferenceBase);
+            payloadStructure.setStructure(structureReferenceBase);
 
-        header.addStructure(payloadStructure);
+            header.addStructure(payloadStructure);
+        }
 
         return header;
     }
@@ -115,8 +105,7 @@ public class WriterDataCallbackImpl implements WriterDataCallback {
     public Set<IdValuePair> retrieveAttributesAtDatasetLevel() throws Exception {
         Set<IdValuePair> attributes = new HashSet<IdValuePair>();
 
-        List<AttributeInstanceDto> attributesFound = datasetRepositoriesServiceFacade.findAttributesInstancesWithDatasetAttachmentLevel(datasetsToFetch.getValues().get(currentDatasetVersionIndex)
-                .getDatasetRepositoryId(), null);
+        List<AttributeInstanceDto> attributesFound = datasetRepositoriesServiceFacade.findAttributesInstancesWithDatasetAttachmentLevel(getCurrentDatasetVersion().getDatasetRepositoryId(), null);
 
         for (AttributeInstanceDto attributeDto : attributesFound) {
             attributes.add(new IdValuePair(attributeDto.getAttributeId(), attributeDto.getValue().getLocalisedLabel(StatisticalResourcesConstants.DEFAULT_DATA_REPOSITORY_LOCALE)));
@@ -139,7 +128,7 @@ public class WriterDataCallbackImpl implements WriterDataCallback {
         }
         DimensionCodeInfo currentDimensionCodeAtObservation = itSerieCondition.next();
 
-        Map<String, ObservationExtendedDto> observationsMap = datasetRepositoriesServiceFacade.findObservationsExtendedByDimensions(datasetsToFetch.getValues().get(currentDatasetVersionIndex)
+        Map<String, ObservationExtendedDto> observationsMap = datasetRepositoriesServiceFacade.findObservationsExtendedByDimensions(getCurrentDatasetInfo().getDatasetVersion()
                 .getDatasetRepositoryId(), metamac2StatRepoMapper.conditionsToRepositoryList(serieConditions)); // TODO procesar más de un dataset por mensaje
 
         for (Map.Entry<String, ObservationExtendedDto> entry : observationsMap.entrySet()) {
@@ -156,7 +145,7 @@ public class WriterDataCallbackImpl implements WriterDataCallback {
         Map<String, List<AttributeInstanceBasicDto>> transformedAttributesMap = new HashMap<String, List<AttributeInstanceBasicDto>>();
 
         // For all attributes that can be on the message group element
-        Iterator<AttributeInfo> it = dsdSdmxInfo.getAttributes().values().iterator();
+        Iterator<AttributeInfo> it = getCurrentDatasetInfo().getDsdSdmxInfo().getAttributes().values().iterator();
         while (it.hasNext()) {
             AttributeInfo attributeInfo = it.next();
             if (AttachmentLevel.DIMENSION.equals(attributeInfo.getAttachmentLevel()) || AttachmentLevel.GROUP.equals(attributeInfo.getAttachmentLevel())) {
@@ -164,15 +153,15 @@ public class WriterDataCallbackImpl implements WriterDataCallback {
                 // para obtenerlos así y luego construir la key.
 
                 // Find all instances of attributes with ID, attributeId.
-                List<AttributeInstanceDto> attributes = datasetRepositoriesServiceFacade.findAttributesInstancesWithDimensionAttachmentLevel(datasetsToFetch.getValues()
-                        .get(currentDatasetVersionIndex).getDatasetRepositoryId(), attributeInfo.getAttributeId(), this.conditionsMap);
+                List<AttributeInstanceDto> attributes = datasetRepositoriesServiceFacade.findAttributesInstancesWithDimensionAttachmentLevel(getCurrentDatasetVersion().getDatasetRepositoryId(),
+                        attributeInfo.getAttributeId(), getCurrentDatasetInfo().getConditionsMap());
                 // Transform all fetched attributes in map indexed by key and add to the transformed attributes map
                 transformedAttributesMap = ManipulateDataUtils.addTransformAttributesToCurrentTransformedAttributes(transformedAttributesMap, getQueryConditions(), attributes);
             }
         }
 
         // For all groups definition: generate keys and add attributes
-        for (GroupInfo groupInfo : dsdSdmxInfo.getGroups().values()) {
+        for (GroupInfo groupInfo : getCurrentDatasetInfo().getDsdSdmxInfo().getGroups().values()) {
             buildGroups(groups, groupInfo, transformedAttributesMap, new LinkedList<CodeDimensionDto>(), 0);
         }
 
@@ -183,136 +172,64 @@ public class WriterDataCallbackImpl implements WriterDataCallback {
 
     @Override
     public List<DimensionCodeInfo> getQueryConditions() throws Exception {
-        return conditions;
+        return getCurrentDatasetInfo().getConditions();
     }
 
     @Override
     public DimensionCodeInfo getDimensionAtObservation() throws Exception {
-        return dimensionAtObservation;
+        return getCurrentDatasetInfo().getDimensionAtObservation();
     }
 
     @Override
     public DimensionCodeInfo getMeasureDimension() throws Exception {
-        return measureDimension;
+        return getCurrentDatasetInfo().getMeasureDimension();
     }
 
     @Override
     public DimensionCodeInfo getTimeDimension() throws Exception {
-        return timeDimension;
+        return getCurrentDatasetInfo().getTimeDimension();
     }
 
-    private List<ConditionObservationDto> retrieveCoverage() throws ApplicationException {
-        if (coverage == null) {
-            coverage = datasetRepositoriesServiceFacade.findCodeDimensions(datasetsToFetch.getValues().get(currentDatasetVersionIndex).getDatasetRepositoryId());
+    @Override
+    public boolean hasNextDataset() {
+        if (currentDatasetVersionIndex >= datasetInfoCache.size() - 1) {
+            return false;
+        } else {
+            return true;
         }
-        return coverage;
+    }
+
+    @Override
+    public String nextDataset() {
+        if (currentDatasetVersionIndex >= datasetInfoCache.size() - 1) {
+            throw new NoSuchElementException();
+        }
+        currentDatasetVersionIndex++;
+
+        return getCurrentDatasetVersion().getDatasetRepositoryId();
     }
 
     /**************************************************************************
      * PROCESSORS
      **************************************************************************/
-    private void calculateCacheInfo() throws Exception {
-        DatasetRepositoryDto datasetRepository = datasetRepositoriesServiceFacade.retrieveDatasetRepository(datasetsToFetch.getValues().get(currentDatasetVersionIndex).getDatasetRepositoryId());
+    private void calculateCacheInfo(PagedResult<DatasetVersion> datasetsToFetch) throws Exception {
 
-        // Dsd extractor
-        dsdSdmxInfo = dsdSdmxExtractor.extractDsdInfo(datasetsToFetch.getValues().get(currentDatasetVersionIndex).getRelatedDsd().getUrn());
-
-        // Calculate conditions
-        this.conditions = calculateConditionsFromQuery(datasetRepository);
-        this.conditionsMap = metamac2StatRepoMapper.conditionsToRepositoryMap(this.conditions);
-
-        // Calculate DimensionAtObservation
-        this.dimensionAtObservation = calculateDimensionAtObservation();
-
-        // Calculate MeasureDimension
-        this.measureDimension = calculateMeasureDimension();
-
-        // Calculate TimeDimension
-        this.timeDimension = calculateTimeDimension();
-    }
-
-    private DimensionCodeInfo calculateMeasureDimension() throws Exception {
-        for (DimensionCodeInfo dimensionCodeInfo : getQueryConditions()) {
-            if (ComponentInfoTypeEnum.MEASURE_DIMENSION.equals(dimensionCodeInfo.getTypeComponentInfo())) {
-                return dimensionCodeInfo;
+        // Build Data Structure cache
+        Map<String, DsdSdmxInfo> dataStructureDefinitionCache = new HashMap<String, DsdSdmxInfo>();
+        for (DatasetVersion datasetVersion : datasetsToFetch.getValues()) {
+            if (!dataStructureDefinitionCache.containsKey(datasetVersion.getRelatedDsd().getUrn())) {
+                dataStructureDefinitionCache.put(datasetVersion.getRelatedDsd().getUrn(), dsdSdmxExtractor.extractDsdInfo(datasetVersion.getRelatedDsd().getUrn()));
             }
         }
-        return null;
-    }
 
-    private DimensionCodeInfo calculateTimeDimension() throws Exception {
-        for (DimensionCodeInfo dimensionCodeInfo : getQueryConditions()) {
-            if (ComponentInfoTypeEnum.TIME_DIMENSION.equals(dimensionCodeInfo.getTypeComponentInfo())) {
-                return dimensionCodeInfo;
-            }
+        // Build DatasetInfo cache
+        List<DatasetInfo> datasetInfoCache = new ArrayList<DatasetInfo>(datasetsToFetch.getValues().size());
+        for (DatasetVersion datasetVersion : datasetsToFetch.getValues()) {
+            datasetInfoCache.add(new DatasetInfo(datasetRepositoriesServiceFacade, metamac2StatRepoMapper, queryKey, datasetVersion, dataStructureDefinitionCache.get(datasetVersion.getRelatedDsd()
+                    .getUrn()), requestParameter));
         }
-        return null;
-    }
 
-    private DimensionCodeInfo calculateDimensionAtObservation() throws Exception {
-        if (StringUtils.isNotBlank(requestParameter.getDimensionAtObservation())) {
-            for (DimensionCodeInfo dimensionCodeInfo : getQueryConditions()) {
-                if (dimensionCodeInfo.getCode().equals(requestParameter.getDimensionAtObservation())) {
-                    return dimensionCodeInfo;
-                }
-            }
-            throw new Exception("Impossible to determinate the dimension at observation level");
-        } else {
-            DimensionCodeInfo timeDimension = getTimeDimension();
-            if (timeDimension != null) {
-                return timeDimension;
-            } else {
-                List<DimensionCodeInfo> queryCconditions = getQueryConditions();
-                int maxValue = -1;
-                DimensionCodeInfo currentDimensionAtObservation = null;
-                for (DimensionCodeInfo dimensionCodeInfo : queryCconditions) {
-                    if (dimensionCodeInfo.getCodes().size() > 0 && dimensionCodeInfo.getCodes().size() > maxValue) {
-                        maxValue = dimensionCodeInfo.getCodes().size();
-                        currentDimensionAtObservation = dimensionCodeInfo;
-                    }
-                }
-                return currentDimensionAtObservation;
-            }
-        }
-    }
-
-    private List<DimensionCodeInfo> calculateConditionsFromQuery(DatasetRepositoryDto datasetRepository) throws ApplicationException {
-        // The key are formed by dimension codes splitted by dots
-        // Wildcarding is supported by omitting the dimension code for the dimension.
-        // The OR operator is supported using the '+' character.
-        // Examples: Normal key -> D.USD.EUR.SP00.A
-        // Examples: Wildcard key -> D..EUR.SP00.A
-        // Examples: Wildcard key -> D.USD+CHF.EUR.SP00.A
-        List<DimensionCodeInfo> conditions = new LinkedList<DimensionCodeInfo>();
-        if (StringUtils.isEmpty(this.queryKey)) {
-            // If is a empty query, then all observations are needed
-            for (int i = 0; i < datasetRepository.getDimensions().size(); i++) {
-                addAllCodesConditionForDimension(datasetRepository, i, conditions);
-            }
-        } else {
-            // Split the key by dots
-            String str = this.queryKey.replaceAll("\\.", ". ");
-            String[] split = str.split("\\.");
-            for (int i = 0; i < split.length; i++) {
-                split[i] = (StringUtils.isBlank(split[i]) ? null : split[i].trim());
-
-                if (StringUtils.isEmpty(split[i])) {
-                    // If is a wildcard dimension, all dimension codes are needed
-                    addAllCodesConditionForDimension(datasetRepository, i, conditions);
-                } else {
-                    DimensionCodeInfo dimensionCodeInfo = new DimensionCodeInfo(datasetRepository.getDimensions().get(i), dsdSdmxInfo.getDimensions().get(datasetRepository.getDimensions().get(i))
-                            .getTypeComponentInfo());
-                    // Split the code by '+' to find OR operators for codes
-                    String[] codes = split[i].split("\\+");
-                    for (int j = 0; j < codes.length; j++) {
-                        dimensionCodeInfo.addCode(codes[j]);
-                    }
-
-                    conditions.add(dimensionCodeInfo);
-                }
-            }
-        }
-        return conditions;
+        this.datasetInfoCache = datasetInfoCache;
     }
 
     /**
@@ -349,7 +266,7 @@ public class WriterDataCallbackImpl implements WriterDataCallback {
         } else {
             // Next dimension to process code
             ComponentInfo dimensionInfo = groupInfo.getDimensionsInfoList().get(numDimProcess);
-            List<String> actualConditionsForCurrentDimension = conditionsMap.get(dimensionInfo.getCode());
+            List<String> actualConditionsForCurrentDimension = getCurrentDatasetInfo().getConditionsMap().get(dimensionInfo.getCode());
 
             for (String code : actualConditionsForCurrentDimension) {
                 // Auxiliary
@@ -362,20 +279,6 @@ public class WriterDataCallbackImpl implements WriterDataCallback {
                 buildGroups(instanceGroups, groupInfo, transformedAttributesMap, newObservationConditions, numDimProcess + 1);
             }
         }
-    }
-
-    private void addAllCodesConditionForDimension(DatasetRepositoryDto datasetRepository, int dimensionOrder, List<DimensionCodeInfo> conditions) throws ApplicationException {
-
-        String dimensionID = datasetRepository.getDimensions().get(dimensionOrder);
-
-        ConditionObservationDto conditionObservationDto = retrieveCoverage().get(dimensionOrder);
-
-        DimensionCodeInfo dimensionCodeInfo = new DimensionCodeInfo(dimensionID, dsdSdmxInfo.getDimensions().get(dimensionID).getTypeComponentInfo());
-
-        for (CodeDimensionDto codeDimensionDto : conditionObservationDto.getCodesDimension()) {
-            dimensionCodeInfo.addCode(codeDimensionDto.getCodeDimensionId());
-        }
-        conditions.add(dimensionCodeInfo);
     }
 
     private Observation observationRepositoryToGroupedObservationWriter(ObservationExtendedDto observation, DimensionCodeInfo currentDimensionCodeAtObservation) throws Exception {
@@ -398,7 +301,7 @@ public class WriterDataCallbackImpl implements WriterDataCallback {
             }
         }
 
-        // TODO Añadir otros attr que en este mensaje van a nivel de observation List<AttributeBasicDto> attributes = observation.getAttributes();
+        // TODO Añadir otros attr que en este mensaje van a nivel de observation List<AttributeInstanceBasicDto> attributes = observation.getAttributes();
         return result;
     }
 
@@ -406,6 +309,18 @@ public class WriterDataCallbackImpl implements WriterDataCallback {
         StringBuilder stringBuilder = new StringBuilder("DATA_");
         stringBuilder.append(this.sender).append("_").append(UUID.randomUUID());
         return stringBuilder.toString();
+    }
+
+    private DatasetInfo getCurrentDatasetInfo() {
+        return datasetInfoCache.get(currentDatasetVersionIndex);
+    }
+
+    private DatasetVersion getCurrentDatasetVersion() {
+        return datasetInfoCache.get(currentDatasetVersionIndex).getDatasetVersion();
+    }
+
+    private List<DatasetInfo> getDatasetInfoCache() {
+        return datasetInfoCache;
     }
 
 }
