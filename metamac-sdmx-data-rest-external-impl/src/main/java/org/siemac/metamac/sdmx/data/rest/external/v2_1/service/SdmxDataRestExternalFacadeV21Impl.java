@@ -182,11 +182,12 @@ public class SdmxDataRestExternalFacadeV21Impl implements SdmxDataRestExternalFa
 
         if (datasetVersions.getValues().isEmpty()) {
             manageException(new RestException(RestExceptionUtils.getError(RestServiceExceptionType.UNKNOWN), Status.NOT_FOUND)); // TODO establecer el mesnaje de error correcto si no se encuentran las
-            throw new MetamacExceptionBuilder().builder().withExceptionItems(CommonServiceExceptionType.UNKNOWN).build();
+            throw MetamacExceptionBuilder.builder().withExceptionItems(CommonServiceExceptionType.UNKNOWN).build();
         }
 
         return datasetVersions;
     }
+
     /**
      * Throws response error, logging exception
      */
