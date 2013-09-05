@@ -127,7 +127,7 @@ public abstract class StatisticalResourcesRestExternalFacadeV10BaseTest extends 
 
         // Get application context from Jetty
         applicationContext = ApplicationContextProvider.getApplicationContext();
-        StatisticalResourcesPersistedDoMocks statisticalResourcesPersistedDoMocks = ApplicationContextProvider.getApplicationContext().getBean(StatisticalResourcesPersistedDoMocks.class);
+        StatisticalResourcesPersistedDoMocks statisticalResourcesPersistedDoMocks = StatisticalResourcesPersistedDoMocks.getInstance();
         restDoMocks = new RestDoMocks(statisticalResourcesPersistedDoMocks);
 
         // Rest clients
