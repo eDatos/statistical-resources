@@ -4,41 +4,46 @@ import java.util.Map;
 
 import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
 
-
 public class RelatedResourceResult {
-    private static final long serialVersionUID = 1L;
-    private String statisticalOperationUrn;
+
+    private static final long       serialVersionUID = 1L;
+    private String                  statisticalOperationUrn;
+    private String                  statisticalOperationCode;
     private TypeRelatedResourceEnum type;
-    private String code;
-    private String urn;
-    private String maintainer;
-    private String version;
-    private Map<String,String> title;
-    
+    private String                  code;
+    private String                  urn;
+    private String                  maintainerNestedCode;
+    private String                  version;
+    private Map<String, String>     title;
+
+    public String getStatisticalOperationCode() {
+        return statisticalOperationCode;
+    }
+
+    public void setStatisticalOperationCode(String statisticalOperationCode) {
+        this.statisticalOperationCode = statisticalOperationCode;
+    }
+
     public String getStatisticalOperationUrn() {
         return statisticalOperationUrn;
     }
-    
+
     public void setStatisticalOperationUrn(String statisticalOperationUrn) {
         this.statisticalOperationUrn = statisticalOperationUrn;
     }
-    
-    
-    public String getMaintainer() {
-        return maintainer;
+
+    public String getMaintainerNestedCode() {
+        return maintainerNestedCode;
     }
 
-    
-    public void setMaintainer(String maintainer) {
-        this.maintainer = maintainer;
+    public void setMaintainerNestedCode(String maintainer) {
+        this.maintainerNestedCode = maintainer;
     }
 
-    
     public String getVersion() {
         return version;
     }
 
-    
     public void setVersion(String version) {
         this.version = version;
     }
@@ -46,33 +51,33 @@ public class RelatedResourceResult {
     public TypeRelatedResourceEnum getType() {
         return type;
     }
-    
+
     public void setType(TypeRelatedResourceEnum type) {
         this.type = type;
     }
-    
+
     public String getCode() {
         return code;
     }
-    
+
     public void setCode(String code) {
         this.code = code;
     }
-    
+
     public String getUrn() {
         return urn;
     }
-    
+
     public void setUrn(String urn) {
         this.urn = urn;
     }
-    
+
     public Map<String, String> getTitle() {
         return title;
     }
-    
+
     public void setTitle(Map<String, String> title) {
         this.title = title;
     }
-    
+
 }

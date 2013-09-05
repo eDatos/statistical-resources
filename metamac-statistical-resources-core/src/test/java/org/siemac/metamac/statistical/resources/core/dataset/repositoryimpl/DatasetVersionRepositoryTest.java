@@ -294,12 +294,13 @@ public class DatasetVersionRepositoryTest extends StatisticalResourcesBaseTest i
             RelatedResourceResult resource = resources.get(0); 
             assertEquals("Q01", resource.getCode());
             assertEquals(GeneratorUrnUtils.generateSiemacStatisticalResourceQueryVersionUrn(new String[] {"agency01"}, "Q01", "001.000"), resource.getUrn());
+            assertEquals("OPER01", resource.getStatisticalOperationCode());
             assertEquals(GeneratorUrnUtils.generateSiemacStatisticalOperationUrn("OPER01"), resource.getStatisticalOperationUrn());
             assertNotNull(resource.getTitle());
             assertEquals("title-Q01 en Espanol", resource.getTitle().get("es"));
             assertEquals("title-Q01 in English", resource.getTitle().get("en"));
             assertEquals(TypeRelatedResourceEnum.QUERY_VERSION, resource.getType());
-            assertEquals("agency01", resource.getMaintainer());
+            assertEquals("agency01", resource.getMaintainerNestedCode());
             assertEquals("001.000", resource.getVersion());
         }
     }
