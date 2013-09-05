@@ -495,7 +495,7 @@
             <xs:enumeration value="NEWNESS_UNTIL_DATE" />
             <xs:enumeration value="VALID_FROM" />
             <xs:enumeration value="VALID_TO" />
-            <xs:enumeration value="STATISTIC_OPERATION_URN" />
+            <xs:enumeration value="STATISTICAL_OPERATION_URN" />
         </xs:restriction>
     </xs:simpleType>
 
@@ -515,7 +515,7 @@
             <xs:enumeration value="NEWNESS_UNTIL_DATE" />
             <xs:enumeration value="VALID_FROM" />
             <xs:enumeration value="VALID_TO" />
-            <xs:enumeration value="STATISTIC_OPERATION_URN" />
+            <xs:enumeration value="STATISTICAL_OPERATION_URN" />
         </xs:restriction>
     </xs:simpleType>
 
@@ -535,7 +535,7 @@
             <xs:enumeration value="TYPE" />
             <xs:enumeration value="VALID_FROM" />
             <xs:enumeration value="VALID_TO" />
-            <xs:enumeration value="STATISTIC_OPERATION_URN" />
+            <xs:enumeration value="STATISTICAL_OPERATION_URN" />
         </xs:restriction>
     </xs:simpleType>
 

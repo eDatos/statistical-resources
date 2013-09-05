@@ -78,7 +78,7 @@ public class DatasetsRest2DoMapperImpl extends BaseRest2DoMapperV10Impl implemen
                     return buildSculptorPropertyCriteriaForDateProperty(propertyRestriction, DatasetVersionProperties.siemacMetadataStatisticalResource().validTo(), DatasetVersion.class, false);
                 case VALID_TO:
                     return buildSculptorPropertyCriteriaForDateProperty(propertyRestriction, DatasetVersionProperties.siemacMetadataStatisticalResource().validTo(), DatasetVersion.class, false);
-                case STATISTIC_OPERATION_URN:
+                case STATISTICAL_OPERATION_URN:
                     return buildSculptorPropertyCriteriaDisjunctionForUrnProperty(propertyRestriction, DatasetVersionProperties.siemacMetadataStatisticalResource().statisticalOperation());
                 default:
                     throw toRestExceptionParameterIncorrect(propertyNameCriteria.name());

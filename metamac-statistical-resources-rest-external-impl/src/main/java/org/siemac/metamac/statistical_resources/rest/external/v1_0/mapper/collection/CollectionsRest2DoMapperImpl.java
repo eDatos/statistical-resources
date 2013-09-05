@@ -57,7 +57,7 @@ public class CollectionsRest2DoMapperImpl extends BaseRest2DoMapperV10Impl imple
                 case VALID_TO:
                     return buildSculptorPropertyCriteriaForDateProperty(propertyRestriction, PublicationVersionProperties.siemacMetadataStatisticalResource().validTo(), PublicationVersion.class,
                             false);
-                case STATISTIC_OPERATION_URN:
+                case STATISTICAL_OPERATION_URN:
                     return buildSculptorPropertyCriteriaDisjunctionForUrnProperty(propertyRestriction, PublicationVersionProperties.siemacMetadataStatisticalResource().statisticalOperation());
                 default:
                     throw toRestExceptionParameterIncorrect(propertyNameCriteria.name());
