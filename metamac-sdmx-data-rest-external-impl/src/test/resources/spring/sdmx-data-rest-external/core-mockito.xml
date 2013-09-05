@@ -8,4 +8,12 @@
         <constructor-arg value="com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceFacade" />
     </bean>
     
+    <bean id="datasetService" class="org.mockito.Mockito" factory-method="mock">
+        <constructor-arg value="org.siemac.metamac.statistical.resources.core.dataset.serviceapi.DatasetService" />
+    </bean>
+    
+    <bean id="apisLocator" class="org.mockito.Mockito" factory-method="mock">
+        <constructor-arg value="org.siemac.metamac.sdmx.data.rest.external.v2_1.service.ApisLocator" />
+    </bean>
+    
 </beans>

@@ -19,6 +19,9 @@ import org.siemac.metamac.core.common.conf.ConfigurationService;
 import org.siemac.metamac.core.common.util.ApplicationContextProvider;
 import org.siemac.metamac.rest.common.test.MetamacRestBaseTest;
 import org.siemac.metamac.rest.common.test.ServerResource;
+import org.siemac.metamac.sdmx.data.rest.external.v2_1.utils.SdmxDataCoreMocks;
+import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.DatasetService;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesPersistedDoMocks;
 import org.springframework.context.ApplicationContext;
 
 import com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceFacade;
@@ -30,7 +33,11 @@ public abstract class SdmxRestExternalFacadeV21BaseTest extends MetamacRestBaseT
     protected static ApplicationContext            applicationContext = null;
     protected static SdmxDataRestExternalFacadeV21 sdmxDataRestExternalFacadeClientXml;
 
+    protected static SdmxDataCoreMocks             sdmxDataCoreMocks;
+
     protected DatasetRepositoriesServiceFacade     datasetRepositoriesServiceFacade;
+    protected DatasetService                       datasetService;
+    protected ApisLocator                          apisLocator;
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     @BeforeClass
@@ -41,6 +48,9 @@ public abstract class SdmxRestExternalFacadeV21BaseTest extends MetamacRestBaseT
 
         // Get application context from Jetty
         applicationContext = ApplicationContextProvider.getApplicationContext();
+
+        StatisticalResourcesPersistedDoMocks statisticalResourcesPersistedDoMocks = StatisticalResourcesPersistedDoMocks.getInstance();
+        sdmxDataCoreMocks = new SdmxDataCoreMocks(statisticalResourcesPersistedDoMocks);
 
         // Rest clients
         // xml
