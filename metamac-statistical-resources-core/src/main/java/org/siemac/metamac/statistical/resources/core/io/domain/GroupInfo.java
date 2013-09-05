@@ -9,8 +9,8 @@ public class GroupInfo {
     private String              groupId            = null;
     private List<ComponentInfo> dimensionsInfoList = null;
 
-    public GroupInfo(String attributeId, List<ComponentInfo> dimensionsInfoList) {
-        this.groupId = attributeId;
+    public GroupInfo(String groupId, List<ComponentInfo> dimensionsInfoList) {
+        this.groupId = groupId;
         this.dimensionsInfoList = dimensionsInfoList;
     }
 
@@ -18,7 +18,7 @@ public class GroupInfo {
         return dimensionsInfoList;
     }
 
-    public String getAttributeId() {
+    public String getGroupId() {
         return groupId;
     }
 }

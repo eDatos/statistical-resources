@@ -108,10 +108,19 @@ public class ManipulateDataUtils {
         return key.toString();
     }
 
+    /**
+     * Transform all attributes in map indexed by key
+     * 
+     * @param currentTransformedAttributes
+     * @param dimensions
+     * @param attributeDtos
+     * @return
+     */
     public static Map<String, List<AttributeBasicDto>> addTransformAttributesToCurrentTransformedAttributes(Map<String, List<AttributeBasicDto>> currentTransformedAttributes,
             List<DimensionCodeInfo> dimensions, List<AttributeDto> attributeDtos) {
 
         for (AttributeDto attributeDto : attributeDtos) {
+            // For current attribute
             transformAttributes(currentTransformedAttributes, dimensions, 0, new LinkedList<CodeDimensionDto>(), attributeDto);
         }
 
@@ -121,9 +130,11 @@ public class ManipulateDataUtils {
     private static void transformAttributes(Map<String, List<AttributeBasicDto>> attributesMap, List<DimensionCodeInfo> dimensions, int index, List<CodeDimensionDto> codesDimension,
             AttributeDto attributeDto) {
 
+        // If the key of current attribute is fully generated
         if (index == attributeDto.getCodesByDimension().size()) {
-            String key = generateOrderedKeyFromCodesDimensions(codesDimension);
+            String key = generateKeyFromCodesDimensions(codesDimension);
 
+            // Add current attribute to this key in the map
             if (attributesMap.containsKey(key)) {
                 attributesMap.get(key).add(attributeDto);
             } else {
@@ -135,10 +146,13 @@ public class ManipulateDataUtils {
             return;
         }
 
+        // Next dimension to process code
         ComponentInfo dimension = dimensions.get(index);
 
+        // If the attribute contains the current dimension in his key
         if (attributeDto.getCodesByDimension() != null && !attributeDto.getCodesByDimension().get(dimension.getCode()).isEmpty()) {
             List<String> codes = attributeDto.getCodesByDimension().get(dimension.getCode());
+            // Generate all keys with the query codes of the current dimension
             for (String code : codes) {
                 CodeDimensionDto codeDimensionAuxDto = new CodeDimensionDto(dimension.getCode(), code);
 
@@ -153,7 +167,7 @@ public class ManipulateDataUtils {
         }
     }
 
-    public static String generateOrderedKeyFromCodesDimensions(List<CodeDimensionDto> codesDimension) {
+    public static String generateKeyFromCodesDimensions(List<CodeDimensionDto> codesDimension) {
         StringBuilder key = new StringBuilder();
 
         for (CodeDimensionDto codeDimensionDto : codesDimension) {

@@ -4,7 +4,6 @@ import org.joda.time.DateTime;
 import org.siemac.metamac.core.common.util.GeneratorUrnUtils;
 import org.siemac.metamac.core.common.util.shared.VersionUtil;
 import org.siemac.metamac.statistical.resources.core.base.domain.HasLifecycle;
-import org.siemac.metamac.statistical.resources.core.base.domain.HasSiemacMetadata;
 import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataStatisticalResource;
@@ -24,7 +23,6 @@ import org.siemac.metamac.statistical.resources.core.publication.domain.Publicat
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
 import org.siemac.metamac.statistical.resources.core.query.domain.Query;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
-import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesVersionUtils;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.DatasetMock;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.DatasetVersionMock;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.PublicationMock;
@@ -35,17 +33,17 @@ import org.siemac.metamac.statistical.resources.core.utils.mocks.QueryVersionMoc
 public class StatisticalResourcesPersistedDoMocks extends StatisticalResourcesDoMocks {
 
     private static StatisticalResourcesPersistedDoMocks instance;
-    
+
     private StatisticalResourcesPersistedDoMocks() {
     }
-    
+
     public static StatisticalResourcesPersistedDoMocks getInstance() {
         if (instance == null) {
             instance = new StatisticalResourcesPersistedDoMocks();
         }
         return instance;
     }
-    
+
     // -----------------------------------------------------------------
     // QUERY
     // -----------------------------------------------------------------
@@ -55,7 +53,7 @@ public class StatisticalResourcesPersistedDoMocks extends StatisticalResourcesDo
         }
 
         fillNeededMetadataToGenerateQueryUrn(query);
-        
+
         mockIdentifiableStatisticalResource(query.getIdentifiableStatisticalResource(), TypeRelatedResourceEnum.QUERY);
 
         String[] maintainerAgencyId = new String[]{query.getMaintainerCode()};
@@ -64,7 +62,7 @@ public class StatisticalResourcesPersistedDoMocks extends StatisticalResourcesDo
 
         return query;
     }
-    
+
     private void fillNeededMetadataToGenerateQueryUrn(QueryMock query) {
         if (query.getMaintainerCode() == null) {
             query.setMaintainerCode(mockString(10));
@@ -74,7 +72,6 @@ public class StatisticalResourcesPersistedDoMocks extends StatisticalResourcesDo
     public Query mockQueryWithGeneratedQueryVersion(QueryMock queryMock) {
         String maintainerId = mockString(10);
 
-        
         Query query = mockQuery(queryMock);
 
         QueryVersionMock queryVersionTemplate = new QueryVersionMock();
@@ -88,7 +85,7 @@ public class StatisticalResourcesPersistedDoMocks extends StatisticalResourcesDo
 
         return query;
     }
-    
+
     public Query mockQueryWithGeneratedQueryVersion() {
         return mockQueryWithGeneratedQueryVersion(new QueryMock());
     }
@@ -179,7 +176,7 @@ public class StatisticalResourcesPersistedDoMocks extends StatisticalResourcesDo
         dataset.getIdentifiableStatisticalResource().setCode(buildSequentialResourceCode(dataset.getIdentifiableStatisticalResource().getStatisticalOperation().getCode(), dataset.getSequentialId()));
 
         mockIdentifiableStatisticalResource(dataset.getIdentifiableStatisticalResource(), TypeRelatedResourceEnum.DATASET);
-        
+
         String maintainerId = dataset.getMaintainerCode();
 
         String[] maintainerAgencyId = new String[]{maintainerId};
@@ -214,7 +211,7 @@ public class StatisticalResourcesPersistedDoMocks extends StatisticalResourcesDo
 
         return datasetVersion.getDataset();
     }
-    
+
     public Dataset mockDatasetWithGeneratedDatasetVersion() {
         return mockDatasetWithGeneratedDatasetVersion(null);
     }
@@ -232,13 +229,14 @@ public class StatisticalResourcesPersistedDoMocks extends StatisticalResourcesDo
             datasetVersion = new DatasetVersionMock();
         }
 
-        Dataset dataset = datasetVersion.getDataset(); 
-        
+        Dataset dataset = datasetVersion.getDataset();
+
         // Statistical Operation
         if (dataset != null && dataset.getIdentifiableStatisticalResource() != null && dataset.getIdentifiableStatisticalResource().getStatisticalOperation() != null) {
-            datasetVersion.getSiemacMetadataStatisticalResource().setStatisticalOperation(mockStatisticalOperationExternalItem(dataset.getIdentifiableStatisticalResource().getStatisticalOperation().getCode()));
+            datasetVersion.getSiemacMetadataStatisticalResource().setStatisticalOperation(
+                    mockStatisticalOperationExternalItem(dataset.getIdentifiableStatisticalResource().getStatisticalOperation().getCode()));
         }
-        
+
         // CODE
         if (dataset != null && dataset.getIdentifiableStatisticalResource() != null && dataset.getIdentifiableStatisticalResource().getCode() != null) {
             datasetVersion.getSiemacMetadataStatisticalResource().setCode(datasetVersion.getDataset().getIdentifiableStatisticalResource().getCode());
@@ -289,11 +287,10 @@ public class StatisticalResourcesPersistedDoMocks extends StatisticalResourcesDo
         return operationCode + "_" + String.format("%06d", sequentialId);
     }
 
-
     // -----------------------------------------------------------------
     // PUBLICATION
     // -----------------------------------------------------------------
-    
+
     public void mockPublication(PublicationMock publication) {
         if (publication.getIdentifiableStatisticalResource() == null) {
             publication.setIdentifiableStatisticalResource(new IdentifiableStatisticalResource());
@@ -301,18 +298,20 @@ public class StatisticalResourcesPersistedDoMocks extends StatisticalResourcesDo
 
         fillNeededMetadataToGeneratePublicationCode(publication);
 
-        publication.getIdentifiableStatisticalResource().setCode(buildSequentialResourceCode(publication.getIdentifiableStatisticalResource().getStatisticalOperation().getCode(), publication.getSequentialId()));
+        publication.getIdentifiableStatisticalResource().setCode(
+                buildSequentialResourceCode(publication.getIdentifiableStatisticalResource().getStatisticalOperation().getCode(), publication.getSequentialId()));
 
         mockIdentifiableStatisticalResource(publication.getIdentifiableStatisticalResource(), TypeRelatedResourceEnum.PUBLICATION);
-        
+
         String maintainerId = publication.getMaintainerCode();
 
         String[] maintainerAgencyId = new String[]{maintainerId};
 
-        publication.getIdentifiableStatisticalResource().setUrn(GeneratorUrnUtils.generateSiemacStatisticalResourceDatasetUrn(maintainerAgencyId, publication.getIdentifiableStatisticalResource().getCode()));
+        publication.getIdentifiableStatisticalResource().setUrn(
+                GeneratorUrnUtils.generateSiemacStatisticalResourceDatasetUrn(maintainerAgencyId, publication.getIdentifiableStatisticalResource().getCode()));
 
     }
-    
+
     private void fillNeededMetadataToGeneratePublicationCode(PublicationMock publication) {
         if (publication.getSequentialId() == null) {
             publication.setSequentialId(1);
@@ -339,12 +338,11 @@ public class StatisticalResourcesPersistedDoMocks extends StatisticalResourcesDo
 
         return publicationVersion.getPublication();
     }
-    
+
     public Publication mockPublicationWithGeneratedPublicationVersion() {
         return mockPublicationWithGeneratedDatasetVersion(null);
     }
-    
-    
+
     // -----------------------------------------------------------------
     // PUBLICATION VERSION
     // -----------------------------------------------------------------
@@ -358,13 +356,14 @@ public class StatisticalResourcesPersistedDoMocks extends StatisticalResourcesDo
             publicationVersion = new PublicationVersionMock();
         }
 
-        Publication publication = publicationVersion.getPublication(); 
-        
+        Publication publication = publicationVersion.getPublication();
+
         // Statistical Operation
         if (publication != null && publication.getIdentifiableStatisticalResource() != null && publication.getIdentifiableStatisticalResource().getStatisticalOperation() != null) {
-            publicationVersion.getSiemacMetadataStatisticalResource().setStatisticalOperation(mockStatisticalOperationExternalItem(publication.getIdentifiableStatisticalResource().getStatisticalOperation().getCode()));
+            publicationVersion.getSiemacMetadataStatisticalResource().setStatisticalOperation(
+                    mockStatisticalOperationExternalItem(publication.getIdentifiableStatisticalResource().getStatisticalOperation().getCode()));
         }
-        
+
         // CODE
         if (publication != null && publication.getIdentifiableStatisticalResource() != null && publication.getIdentifiableStatisticalResource().getCode() != null) {
             publicationVersion.getSiemacMetadataStatisticalResource().setCode(publicationVersion.getPublication().getIdentifiableStatisticalResource().getCode());
@@ -374,7 +373,8 @@ public class StatisticalResourcesPersistedDoMocks extends StatisticalResourcesDo
             publicationVersion.getSiemacMetadataStatisticalResource().setCode(publicationCode);
         }
 
-        publicationVersion.setSiemacMetadataStatisticalResource(mockSiemacMetadataStatisticalResource(publicationVersion.getSiemacMetadataStatisticalResource(), TypeRelatedResourceEnum.PUBLICATION_VERSION));
+        publicationVersion.setSiemacMetadataStatisticalResource(mockSiemacMetadataStatisticalResource(publicationVersion.getSiemacMetadataStatisticalResource(),
+                TypeRelatedResourceEnum.PUBLICATION_VERSION));
 
         // PUBLICATION CODE
         String publicationCode = publicationVersion.getSiemacMetadataStatisticalResource().getCode();
@@ -402,11 +402,11 @@ public class StatisticalResourcesPersistedDoMocks extends StatisticalResourcesDo
             publicationVersion.getSiemacMetadataStatisticalResource().setStatisticalOperation(mockStatisticalOperationExternalItem(mockString(10)));
         }
     }
-    
+
     private String getMaintainerCode(HasLifecycle resourceWithLifecycle) {
         if (resourceWithLifecycle != null && resourceWithLifecycle.getLifeCycleStatisticalResource() != null && resourceWithLifecycle.getLifeCycleStatisticalResource().getMaintainer() != null) {
             return resourceWithLifecycle.getLifeCycleStatisticalResource().getMaintainer().getCodeNested();
-        }            
+        }
         return null;
     }
 
