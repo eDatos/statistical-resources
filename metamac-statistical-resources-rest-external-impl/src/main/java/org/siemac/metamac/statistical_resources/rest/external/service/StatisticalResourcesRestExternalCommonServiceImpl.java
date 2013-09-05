@@ -20,7 +20,7 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.util.GeneratorUrnUtils;
 import org.siemac.metamac.rest.exception.RestException;
 import org.siemac.metamac.rest.exception.utils.RestExceptionUtils;
-import org.siemac.metamac.srm.rest.internal.RestInternalConstants;
+import org.siemac.metamac.srm.rest.common.SrmRestConstants;
 import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatisticalResourceProperties.LifeCycleStatisticalResourceProperty;
 import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataStatisticalResourceProperties.SiemacMetadataStatisticalResourceProperty;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
@@ -221,7 +221,7 @@ public class StatisticalResourcesRestExternalCommonServiceImpl implements Statis
     @SuppressWarnings({"unchecked", "rawtypes"})
     private void addConditionalCriteriaAgencyIfApplicable(String agencyID, Class entityClass, SiemacMetadataStatisticalResourceProperty siemacMetadataStatisticalResourceProperty,
             List<ConditionalCriteria> conditionalCriteria) {
-        if (agencyID != null && !RestInternalConstants.WILDCARD_ALL.equals(agencyID)) {
+        if (agencyID != null && !SrmRestConstants.WILDCARD_ALL.equals(agencyID)) {
             conditionalCriteria.add(ConditionalCriteriaBuilder.criteriaFor(entityClass).withProperty(siemacMetadataStatisticalResourceProperty.maintainer().codeNested()).eq(agencyID).buildSingle());
         }
     }
@@ -229,7 +229,7 @@ public class StatisticalResourcesRestExternalCommonServiceImpl implements Statis
     @SuppressWarnings({"unchecked", "rawtypes"})
     private void addConditionalCriteriaResourceIfApplicable(String resourceID, Class entityClass, SiemacMetadataStatisticalResourceProperty siemacMetadataStatisticalResourceProperty,
             List<ConditionalCriteria> conditionalCriteria) {
-        if (resourceID != null && !RestInternalConstants.WILDCARD_ALL.equals(resourceID)) {
+        if (resourceID != null && !SrmRestConstants.WILDCARD_ALL.equals(resourceID)) {
             conditionalCriteria.add(ConditionalCriteriaBuilder.criteriaFor(entityClass).withProperty(siemacMetadataStatisticalResourceProperty.code()).eq(resourceID).buildSingle());
         }
     }
@@ -237,9 +237,9 @@ public class StatisticalResourcesRestExternalCommonServiceImpl implements Statis
     @SuppressWarnings({"unchecked", "rawtypes"})
     private void addConditionalCriteriaVersionIfApplicable(String version, Class entityClass, SiemacMetadataStatisticalResourceProperty siemacMetadataStatisticalResourceProperty,
             List<ConditionalCriteria> conditionalCriteria) {
-        if (RestInternalConstants.WILDCARD_LATEST.equals(version)) {
+        if (SrmRestConstants.WILDCARD_LATEST.equals(version)) {
             // TODO Latest
-        } else if (version != null && !RestInternalConstants.WILDCARD_ALL.equals(version)) {
+        } else if (version != null && !SrmRestConstants.WILDCARD_ALL.equals(version)) {
             conditionalCriteria.add(ConditionalCriteriaBuilder.criteriaFor(entityClass).withProperty(siemacMetadataStatisticalResourceProperty.versionLogic()).eq(version).buildSingle());
         }
     }
@@ -247,7 +247,7 @@ public class StatisticalResourcesRestExternalCommonServiceImpl implements Statis
     @SuppressWarnings({"unchecked", "rawtypes"})
     private void addConditionalCriteriaAgencyIfApplicable(String agencyID, Class entityClass, LifeCycleStatisticalResourceProperty lifeCycleStatisticalResourceProperty,
             List<ConditionalCriteria> conditionalCriteria) {
-        if (agencyID != null && !RestInternalConstants.WILDCARD_ALL.equals(agencyID)) {
+        if (agencyID != null && !SrmRestConstants.WILDCARD_ALL.equals(agencyID)) {
             conditionalCriteria.add(ConditionalCriteriaBuilder.criteriaFor(entityClass).withProperty(lifeCycleStatisticalResourceProperty.maintainer().codeNested()).eq(agencyID).buildSingle());
         }
     }
@@ -255,7 +255,7 @@ public class StatisticalResourcesRestExternalCommonServiceImpl implements Statis
     @SuppressWarnings({"unchecked", "rawtypes"})
     private void addConditionalCriteriaResourceIfApplicable(String resourceID, Class entityClass, LifeCycleStatisticalResourceProperty lifeCycleStatisticalResourceProperty,
             List<ConditionalCriteria> conditionalCriteria) {
-        if (resourceID != null && !RestInternalConstants.WILDCARD_ALL.equals(resourceID)) {
+        if (resourceID != null && !SrmRestConstants.WILDCARD_ALL.equals(resourceID)) {
             conditionalCriteria.add(ConditionalCriteriaBuilder.criteriaFor(entityClass).withProperty(lifeCycleStatisticalResourceProperty.code()).eq(resourceID).buildSingle());
         }
     }
@@ -263,9 +263,9 @@ public class StatisticalResourcesRestExternalCommonServiceImpl implements Statis
     @SuppressWarnings({"unchecked", "rawtypes"})
     private void addConditionalCriteriaVersionIfApplicable(String version, Class entityClass, LifeCycleStatisticalResourceProperty lifeCycleStatisticalResourceProperty,
             List<ConditionalCriteria> conditionalCriteria) {
-        if (RestInternalConstants.WILDCARD_LATEST.equals(version)) {
+        if (SrmRestConstants.WILDCARD_LATEST.equals(version)) {
             // TODO Latest
-        } else if (version != null && !RestInternalConstants.WILDCARD_ALL.equals(version)) {
+        } else if (version != null && !SrmRestConstants.WILDCARD_ALL.equals(version)) {
             conditionalCriteria.add(ConditionalCriteriaBuilder.criteriaFor(entityClass).withProperty(lifeCycleStatisticalResourceProperty.versionLogic()).eq(version).buildSingle());
         }
     }
