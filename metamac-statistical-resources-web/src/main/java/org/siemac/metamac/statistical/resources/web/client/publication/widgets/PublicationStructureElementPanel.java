@@ -284,8 +284,13 @@ public class PublicationStructureElementPanel extends VLayout {
         element.setDescription((InternationalStringDto) editionForm.getValue(ElementLevelDS.DESCRIPTION));
 
         if (element instanceof CubeDto) {
-            ((CubeDto) element).setDatasetUrn(editionForm.getValueAsString(ElementLevelDS.DATASET));
-            ((CubeDto) element).setQueryUrn(editionForm.getValueAsString(ElementLevelDS.QUERY));
+            if (StatisticalResourceTypeEnum.DATASET.name().equals(editionForm.getValueAsString(ElementLevelDS.RESOURCE_TYPE_TO_LINK))) {
+                ((CubeDto) element).setDatasetUrn(editionForm.getValueAsString(ElementLevelDS.DATASET));
+                ((CubeDto) element).setQueryUrn(null);
+            } else if (StatisticalResourceTypeEnum.QUERY.name().equals(editionForm.getValueAsString(ElementLevelDS.RESOURCE_TYPE_TO_LINK))) {
+                ((CubeDto) element).setQueryUrn(editionForm.getValueAsString(ElementLevelDS.QUERY));
+                ((CubeDto) element).setDatasetUrn(null);
+            }
         }
 
         return element;
