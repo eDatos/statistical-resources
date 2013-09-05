@@ -1,22 +1,22 @@
 package org.siemac.metamac.statistical.resources.core.utils.mocks.factories;
 
+import static org.siemac.metamac.statistical.resources.core.utils.PublicationLifecycleTestUtils.prepareToDiffusionValidation;
+import static org.siemac.metamac.statistical.resources.core.utils.PublicationLifecycleTestUtils.prepareToProductionValidation;
+import static org.siemac.metamac.statistical.resources.core.utils.PublicationLifecycleTestUtils.prepareToValidationRejected;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetMockFactory.getDataset01Basic;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetMockFactory.getDataset03With2DatasetVersions;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryMockFactory.getQuery01Simple;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryMockFactory.generateQueryWithGeneratedVersion;
 
 import org.joda.time.DateTime;
-import org.siemac.metamac.core.common.util.GeneratorUrnUtils;
 import org.siemac.metamac.statistical.resources.core.base.domain.VersionRationaleType;
 import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
 import org.siemac.metamac.statistical.resources.core.enume.domain.NextVersionTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
-import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.VersionRationaleTypeEnum;
 import org.siemac.metamac.statistical.resources.core.publication.domain.ElementLevel;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
 import org.siemac.metamac.statistical.resources.core.query.domain.Query;
-import org.siemac.metamac.statistical.resources.core.utils.LifecycleTestUtils;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesDoMocks;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesPersistedDoMocks;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -164,37 +164,14 @@ public class PublicationVersionMockFactory extends StatisticalResourcesMockFacto
 
     protected static PublicationVersion getPublicationVersion03ForPublication03() {
         if (PUBLICATION_VERSION_03_FOR_PUBLICATION_03 == null) {
-
-            PublicationVersion publicationVersion = createPublicationVersion();
-            publicationVersion.getSiemacMetadataStatisticalResource().setVersionLogic(INIT_VERSION);
-            publicationVersion.getSiemacMetadataStatisticalResource().setProcStatus(ProcStatusEnum.PUBLISHED);
-
-            publicationVersion.getSiemacMetadataStatisticalResource().setCreationDate(new DateTime().minusDays(2));
-
-            publicationVersion.getSiemacMetadataStatisticalResource().setLastVersion(Boolean.FALSE);
-            publicationVersion.getSiemacMetadataStatisticalResource().setValidFrom(new DateTime().minusDays(2));
-
-            // Relations
-            PUBLICATION_VERSION_03_FOR_PUBLICATION_03 = publicationVersion;
-            PUBLICATION_VERSION_03_FOR_PUBLICATION_03.setPublication(PublicationMockFactory.getPublication03BasicWith2PublicationVersions());
+            PUBLICATION_VERSION_03_FOR_PUBLICATION_03 = PublicationMockFactory.getPublication03BasicWith2PublicationVersions().getVersions().get(0);
         }
         return PUBLICATION_VERSION_03_FOR_PUBLICATION_03;
     }
 
     protected static PublicationVersion getPublicationVersion04ForPublication03AndLastVersion() {
         if (PUBLICATION_VERSION_04_FOR_PUBLICATION_03_AND_LAST_VERSION == null) {
-            PublicationVersion publicationVersion = createPublicationVersion();
-
-            // Version 002.000
-            publicationVersion.getSiemacMetadataStatisticalResource().setVersionLogic(SECOND_VERSION);
-
-            // Last version
-            publicationVersion.getSiemacMetadataStatisticalResource().setLastVersion(Boolean.TRUE);
-            publicationVersion.getSiemacMetadataStatisticalResource().setCreationDate(new DateTime().minusDays(1));
-
-            // Relations
-            PUBLICATION_VERSION_04_FOR_PUBLICATION_03_AND_LAST_VERSION = publicationVersion;
-            PUBLICATION_VERSION_04_FOR_PUBLICATION_03_AND_LAST_VERSION.setPublication(PublicationMockFactory.getPublication03BasicWith2PublicationVersions());
+            PUBLICATION_VERSION_04_FOR_PUBLICATION_03_AND_LAST_VERSION = PublicationMockFactory.getPublication03BasicWith2PublicationVersions().getVersions().get(1);
         }
         return PUBLICATION_VERSION_04_FOR_PUBLICATION_03_AND_LAST_VERSION;
     }
@@ -291,72 +268,14 @@ public class PublicationVersionMockFactory extends StatisticalResourcesMockFacto
 
     protected static PublicationVersion getPublicationVersion17WithStructureForPublicationVersion04() {
         if (PUBLICATION_VERSION_17_WITH_STRUCTURE_FOR_PUBLICATION_VERSION_04 == null) {
-
-            // General metadata
-            PublicationVersion publicationVersion = createPublicationVersion();
-            publicationVersion.getSiemacMetadataStatisticalResource().setVersionLogic(INIT_VERSION);
-            publicationVersion.getSiemacMetadataStatisticalResource().setProcStatus(ProcStatusEnum.PUBLISHED);
-            publicationVersion.getSiemacMetadataStatisticalResource().setCreationDate(new DateTime().minusDays(2));
-
-            // Structure
-            // Chapter 01
-            ElementLevel elementLevel01 = createChapterElementLevel(publicationVersion);
-            elementLevel01.setOrderInLevel(Long.valueOf(1));
-            // --> Chapter 01.01
-            ElementLevel elementLevel01_01 = createChapterElementLevel(publicationVersion, elementLevel01);
-            elementLevel01_01.setOrderInLevel(Long.valueOf(1));
-            // ----> Cube 01.01.01
-            ElementLevel elementLevel01_01_01 = createDatasetCubeElementLevel(publicationVersion, getDataset03With2DatasetVersions(), elementLevel01_01);
-            elementLevel01_01_01.setOrderInLevel(Long.valueOf(1));
-            // --> Chapter 01.02
-            ElementLevel elementLevel01_02 = createChapterElementLevel(publicationVersion, elementLevel01);
-            elementLevel01_02.setOrderInLevel(Long.valueOf(2));
-            // ----> Cube 01.02.01
-            ElementLevel elementLevel01_02_01 = createQueryCubeElementLevel(publicationVersion, getQuery01Simple(), elementLevel01_02);
-            elementLevel01_02_01.setOrderInLevel(Long.valueOf(1));
-            // --> Cube 01.03
-            ElementLevel elementLevel01_03 = createDatasetCubeElementLevel(publicationVersion, getDataset01Basic(), elementLevel01);
-            elementLevel01_03.setOrderInLevel(Long.valueOf(3));
-            // Chapter 02
-            ElementLevel elementLevel02 = createChapterElementLevel(publicationVersion);
-            elementLevel02.setOrderInLevel(Long.valueOf(2));
-            // --> Cube 02.01
-            ElementLevel elementLevel02_01 = createQueryCubeElementLevel(publicationVersion, getQuery01Simple(), elementLevel02);
-            elementLevel02_01.setOrderInLevel(Long.valueOf(1));
-            // Cube 03
-            ElementLevel elementLevel03 = createQueryCubeElementLevel(publicationVersion, getQuery01Simple());
-            elementLevel03.setOrderInLevel(Long.valueOf(3));
-
-            // Relations
-            PUBLICATION_VERSION_17_WITH_STRUCTURE_FOR_PUBLICATION_VERSION_04 = publicationVersion;
-            PUBLICATION_VERSION_17_WITH_STRUCTURE_FOR_PUBLICATION_VERSION_04.setPublication(PublicationMockFactory.getPublication03BasicWith2PublicationVersions());
+            PUBLICATION_VERSION_17_WITH_STRUCTURE_FOR_PUBLICATION_VERSION_04 = PublicationMockFactory.getPublication04StructuredWith2PublicationVersions().getVersions().get(0);
         }
         return PUBLICATION_VERSION_17_WITH_STRUCTURE_FOR_PUBLICATION_VERSION_04;
     }
 
     protected static PublicationVersion getPublicationVersion18WithStructureForPublicationVersion04AndLastVersion() {
         if (PUBLICATION_VERSION_18_WITH_STRUCTURE_FOR_PUBLICATION_VERSION_04_AND_LAST_VERSION == null) {
-
-            // General metadata
-            PublicationVersion publicationVersion = createPublicationVersion();
-            publicationVersion.getSiemacMetadataStatisticalResource().setVersionLogic(SECOND_VERSION);
-            publicationVersion.getSiemacMetadataStatisticalResource().setCreationDate(new DateTime().minusDays(1));
-            publicationVersion.getSiemacMetadataStatisticalResource().setProcStatus(ProcStatusEnum.DRAFT);
-
-            // Structure
-            // Chapter 01
-            ElementLevel elementLevel01 = createChapterElementLevel(publicationVersion);
-            elementLevel01.setOrderInLevel(Long.valueOf(1));
-            // Chapter 02
-            ElementLevel elementLevel02 = createChapterElementLevel(publicationVersion);
-            elementLevel02.setOrderInLevel(Long.valueOf(2));
-            // --> Chapter 02.01
-            ElementLevel elementLevel02_01 = createChapterElementLevel(publicationVersion, elementLevel02);
-            elementLevel02_01.setOrderInLevel(Long.valueOf(1));
-
-            // Relations
-            PUBLICATION_VERSION_18_WITH_STRUCTURE_FOR_PUBLICATION_VERSION_04_AND_LAST_VERSION = publicationVersion;
-            PUBLICATION_VERSION_18_WITH_STRUCTURE_FOR_PUBLICATION_VERSION_04_AND_LAST_VERSION.setPublication(PublicationMockFactory.getPublication03BasicWith2PublicationVersions());
+            PUBLICATION_VERSION_18_WITH_STRUCTURE_FOR_PUBLICATION_VERSION_04_AND_LAST_VERSION = PublicationMockFactory.getPublication04StructuredWith2PublicationVersions().getVersions().get(1);
         }
         return PUBLICATION_VERSION_18_WITH_STRUCTURE_FOR_PUBLICATION_VERSION_04_AND_LAST_VERSION;
     }
@@ -484,85 +403,35 @@ public class PublicationVersionMockFactory extends StatisticalResourcesMockFacto
 
     protected static PublicationVersion getPublicationVersion27V1PublishedForPublication05() {
         if (PUBLICATION_VERSION_27_V1_PUBLISHED_FOR_PUBLICATION_05 == null) {
-            PublicationVersion publicationVersion = createPublicationVersion();
-            publicationVersion.getSiemacMetadataStatisticalResource().setVersionLogic(INIT_VERSION);
-            publicationVersion.getSiemacMetadataStatisticalResource().setProcStatus(ProcStatusEnum.PUBLISHED);
-
-            // not last version
-            publicationVersion.getSiemacMetadataStatisticalResource().setCreationDate(new DateTime().minusDays(3));
-            publicationVersion.getSiemacMetadataStatisticalResource().setValidFrom(new DateTime().minusDays(3));
-
-            // Relations
-            PUBLICATION_VERSION_27_V1_PUBLISHED_FOR_PUBLICATION_05 = publicationVersion;
-            PUBLICATION_VERSION_27_V1_PUBLISHED_FOR_PUBLICATION_05.setPublication(PublicationMockFactory.getPublication05WithMultiplePublishedVersions());
+            PUBLICATION_VERSION_27_V1_PUBLISHED_FOR_PUBLICATION_05 = PublicationMockFactory.getPublication05WithMultiplePublishedVersions().getVersions().get(0);
         }
         return PUBLICATION_VERSION_27_V1_PUBLISHED_FOR_PUBLICATION_05;
     }
 
     protected static PublicationVersion getPublicationVersion28V2PublishedForPublication05() {
         if (PUBLICATION_VERSION_28_V2_PUBLISHED_FOR_PUBLICATION_05 == null) {
-            PublicationVersion publicationVersion = createPublicationVersion();
-            publicationVersion.getSiemacMetadataStatisticalResource().setVersionLogic(SECOND_VERSION);
-            publicationVersion.getSiemacMetadataStatisticalResource().setProcStatus(ProcStatusEnum.PUBLISHED);
-
-            // not last version
-            publicationVersion.getSiemacMetadataStatisticalResource().setCreationDate(new DateTime().minusDays(2));
-            publicationVersion.getSiemacMetadataStatisticalResource().setValidFrom(new DateTime().minusDays(2));
-
-            // Relations
-            PUBLICATION_VERSION_28_V2_PUBLISHED_FOR_PUBLICATION_05 = publicationVersion;
-            PUBLICATION_VERSION_28_V2_PUBLISHED_FOR_PUBLICATION_05.setPublication(PublicationMockFactory.getPublication05WithMultiplePublishedVersions());
+            PUBLICATION_VERSION_28_V2_PUBLISHED_FOR_PUBLICATION_05 = PublicationMockFactory.getPublication05WithMultiplePublishedVersions().getVersions().get(1);
         }
         return PUBLICATION_VERSION_28_V2_PUBLISHED_FOR_PUBLICATION_05;
     }
 
     protected static PublicationVersion getPublicationVersion29V3PublishedForPublication05() {
         if (PUBLICATION_VERSION_29_V3_PUBLISHED_FOR_PUBLICATION_05 == null) {
-            PublicationVersion publicationVersion = createPublicationVersion();
-            publicationVersion.getSiemacMetadataStatisticalResource().setVersionLogic(THIRD_VERSION);
-            publicationVersion.getSiemacMetadataStatisticalResource().setProcStatus(ProcStatusEnum.PUBLISHED);
-
-            // last version
-            publicationVersion.getSiemacMetadataStatisticalResource().setCreationDate(new DateTime().minusDays(1));
-            publicationVersion.getSiemacMetadataStatisticalResource().setValidFrom(new DateTime().minusDays(1));
-
-            // Relations
-            PUBLICATION_VERSION_29_V3_PUBLISHED_FOR_PUBLICATION_05 = publicationVersion;
-            PUBLICATION_VERSION_29_V3_PUBLISHED_FOR_PUBLICATION_05.setPublication(PublicationMockFactory.getPublication05WithMultiplePublishedVersions());
+            PUBLICATION_VERSION_29_V3_PUBLISHED_FOR_PUBLICATION_05 = PublicationMockFactory.getPublication05WithMultiplePublishedVersions().getVersions().get(2);
         }
         return PUBLICATION_VERSION_29_V3_PUBLISHED_FOR_PUBLICATION_05;
     }
 
     protected static PublicationVersion getPublicationVersion30V1PublishedForPublication06() {
         if (PUBLICATION_VERSION_30_V1_PUBLISHED_FOR_PUBLICATION_06 == null) {
-            PublicationVersion publicationVersion = createPublicationVersion();
-            publicationVersion.getSiemacMetadataStatisticalResource().setVersionLogic(INIT_VERSION);
-            publicationVersion.getSiemacMetadataStatisticalResource().setProcStatus(ProcStatusEnum.PUBLISHED);
-
-            // last version
-            publicationVersion.getSiemacMetadataStatisticalResource().setCreationDate(new DateTime().minusDays(1));
-            publicationVersion.getSiemacMetadataStatisticalResource().setValidFrom(new DateTime().minusDays(1));
-
-            // Relations
-            PUBLICATION_VERSION_30_V1_PUBLISHED_FOR_PUBLICATION_06 = publicationVersion;
-            PUBLICATION_VERSION_30_V1_PUBLISHED_FOR_PUBLICATION_06.setPublication(PublicationMockFactory.getPublication06WithMultiplePublishedVersionsAndLatestNoVisible());
+            PUBLICATION_VERSION_30_V1_PUBLISHED_FOR_PUBLICATION_06 = PublicationMockFactory.getPublication06WithMultiplePublishedVersionsAndLatestNoVisible().getVersions().get(0);
         }
         return PUBLICATION_VERSION_30_V1_PUBLISHED_FOR_PUBLICATION_06;
     }
 
     protected static PublicationVersion getPublicationVersion31V2PublishedNoVisibleForPublication06() {
         if (PUBLICATION_VERSION_31_V2_PUBLISHED_NO_VISIBLE_FOR_PUBLICATION_06 == null) {
-            PublicationVersion publicationVersion = createPublicationVersion();
-            publicationVersion.getSiemacMetadataStatisticalResource().setVersionLogic(SECOND_VERSION);
-            publicationVersion.getSiemacMetadataStatisticalResource().setProcStatus(ProcStatusEnum.PUBLISHED);
-
-            // last version
-            publicationVersion.getSiemacMetadataStatisticalResource().setCreationDate(new DateTime());
-            publicationVersion.getSiemacMetadataStatisticalResource().setValidFrom(new DateTime().plusDays(1));
-
-            // Relations
-            PUBLICATION_VERSION_31_V2_PUBLISHED_NO_VISIBLE_FOR_PUBLICATION_06 = publicationVersion;
-            PUBLICATION_VERSION_31_V2_PUBLISHED_NO_VISIBLE_FOR_PUBLICATION_06.setPublication(PublicationMockFactory.getPublication06WithMultiplePublishedVersionsAndLatestNoVisible());
+            PUBLICATION_VERSION_31_V2_PUBLISHED_NO_VISIBLE_FOR_PUBLICATION_06 = PublicationMockFactory.getPublication06WithMultiplePublishedVersionsAndLatestNoVisible().getVersions().get(1);
         }
         return PUBLICATION_VERSION_31_V2_PUBLISHED_NO_VISIBLE_FOR_PUBLICATION_06;
     }
@@ -655,31 +524,27 @@ public class PublicationVersionMockFactory extends StatisticalResourcesMockFacto
         return operationCode + "_" + String.format("%06d", sequentialId);
     }
 
-    private static String buildPublicationVersionUrn(String code, String version) {
-        return GeneratorUrnUtils.generateSiemacStatisticalResourceCollectionVersionUrn(new String[]{"maitainer"}, code, version);
-    }
-
     // -----------------------------------------------------------------
     // PUBLICATION STRUCTURE
     // -----------------------------------------------------------------
 
-    private static ElementLevel createQueryCubeElementLevel(PublicationVersion publicationVersion, Query query) {
+    protected static ElementLevel createQueryCubeElementLevel(PublicationVersion publicationVersion, Query query) {
         return getStatisticalResourcesPersistedDoMocks().mockQueryCubeElementLevel(publicationVersion, query);
     }
 
-    private static ElementLevel createQueryCubeElementLevel(PublicationVersion publicationVersion, Query query, ElementLevel parentElementLevel) {
+    protected static ElementLevel createQueryCubeElementLevel(PublicationVersion publicationVersion, Query query, ElementLevel parentElementLevel) {
         return getStatisticalResourcesPersistedDoMocks().mockQueryCubeElementLevel(publicationVersion, query, parentElementLevel);
     }
 
-    private static ElementLevel createDatasetCubeElementLevel(PublicationVersion publicationVersion, Dataset dataset, ElementLevel parentElementLevel) {
+    protected static ElementLevel createDatasetCubeElementLevel(PublicationVersion publicationVersion, Dataset dataset, ElementLevel parentElementLevel) {
         return getStatisticalResourcesPersistedDoMocks().mockDatasetCubeElementLevel(publicationVersion, dataset, parentElementLevel);
     }
 
-    private static ElementLevel createChapterElementLevel(PublicationVersion publicationVersion, ElementLevel parentElementLevel) {
+    protected static ElementLevel createChapterElementLevel(PublicationVersion publicationVersion, ElementLevel parentElementLevel) {
         return getStatisticalResourcesPersistedDoMocks().mockChapterElementLevel(publicationVersion, parentElementLevel);
     }
 
-    private static ElementLevel createChapterElementLevel(PublicationVersion publicationVersion) {
+    protected static ElementLevel createChapterElementLevel(PublicationVersion publicationVersion) {
         return getStatisticalResourcesPersistedDoMocks().mockChapterElementLevel(publicationVersion);
     }
 
@@ -702,7 +567,7 @@ public class PublicationVersionMockFactory extends StatisticalResourcesMockFacto
         ElementLevel elementLevel01_02 = createChapterElementLevel(publicationVersion, elementLevel01);
         elementLevel01_02.setOrderInLevel(Long.valueOf(2));
         // ----> Cube 01.02.01
-        ElementLevel elementLevel01_02_01 = createQueryCubeElementLevel(publicationVersion, getQuery01Simple(), elementLevel01_02);
+        ElementLevel elementLevel01_02_01 = createQueryCubeElementLevel(publicationVersion, generateQueryWithGeneratedVersion(), elementLevel01_02);
         elementLevel01_02_01.setOrderInLevel(Long.valueOf(1));
         // --> Cube 01.03
         ElementLevel elementLevel01_03 = createDatasetCubeElementLevel(publicationVersion, getDataset01Basic(), elementLevel01);
@@ -711,13 +576,13 @@ public class PublicationVersionMockFactory extends StatisticalResourcesMockFacto
         ElementLevel elementLevel02 = createChapterElementLevel(publicationVersion);
         elementLevel02.setOrderInLevel(Long.valueOf(2));
         // --> Cube 02.01
-        ElementLevel elementLevel02_01 = createQueryCubeElementLevel(publicationVersion, getQuery01Simple(), elementLevel02);
+        ElementLevel elementLevel02_01 = createQueryCubeElementLevel(publicationVersion, generateQueryWithGeneratedVersion(), elementLevel02);
         elementLevel02_01.setOrderInLevel(Long.valueOf(1));
         // Chapter 03
         ElementLevel elementLevel03 = createChapterElementLevel(publicationVersion);
         elementLevel03.setOrderInLevel(Long.valueOf(3));
         // Cube 04
-        ElementLevel elementLevel04 = createQueryCubeElementLevel(publicationVersion, getQuery01Simple());
+        ElementLevel elementLevel04 = createQueryCubeElementLevel(publicationVersion, generateQueryWithGeneratedVersion());
         elementLevel04.setOrderInLevel(Long.valueOf(4));
         return publicationVersion;
     }
@@ -725,28 +590,5 @@ public class PublicationVersionMockFactory extends StatisticalResourcesMockFacto
     // -----------------------------------------------------------------
     // LIFE CYCLE PREPARATIONS
     // -----------------------------------------------------------------
-
-    private static void prepareToProductionValidation(PublicationVersion publicationVersion) {
-        LifecycleTestUtils.prepareToProductionValidation(publicationVersion);
-        prepareToLifecycleCommonPublicationVersion(publicationVersion);
-    }
-
-    private static void prepareToDiffusionValidation(PublicationVersion publicationVersion) {
-        prepareToProductionValidation(publicationVersion);
-        LifecycleTestUtils.prepareToDiffusionValidation(publicationVersion);
-    }
-
-    private static void prepareToValidationRejected(PublicationVersion publicationVersion) {
-        prepareToProductionValidation(publicationVersion);
-        LifecycleTestUtils.prepareToValidationRejected(publicationVersion);
-    }
-
-    private static void prepareToLifecycleCommonPublicationVersion(PublicationVersion publicationVersion) {
-        // Inherited fields that need customization based on Resource's type
-        String code = buildPublicationCode(publicationVersion.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode(), 1);
-        publicationVersion.getSiemacMetadataStatisticalResource().setCode(code);
-        publicationVersion.getSiemacMetadataStatisticalResource().setUrn(buildPublicationVersionUrn(code, publicationVersion.getSiemacMetadataStatisticalResource().getVersionLogic()));
-        publicationVersion.getSiemacMetadataStatisticalResource().setType(StatisticalResourceTypeEnum.COLLECTION);
-    }
 
 }

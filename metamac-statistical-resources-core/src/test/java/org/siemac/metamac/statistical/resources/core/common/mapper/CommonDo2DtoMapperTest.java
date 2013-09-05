@@ -50,8 +50,7 @@ public class CommonDo2DtoMapperTest extends StatisticalResourcesBaseTest {
     
     private DatasetVersionRepository      datasetVersionRepository      = Mockito.mock(DatasetVersionRepository.class);
     
-    @Autowired
-    private StatisticalResourcesNotPersistedDoMocks statisticalResourcesNotPersistedDoMocks;
+    private StatisticalResourcesNotPersistedDoMocks statisticalResourcesNotPersistedDoMocks = StatisticalResourcesNotPersistedDoMocks.getInstance();
 
     // ------------------------------------------------------------
     // INTERNATIONAL STRINGS

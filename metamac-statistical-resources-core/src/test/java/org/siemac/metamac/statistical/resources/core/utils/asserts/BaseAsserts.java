@@ -80,8 +80,6 @@ public class BaseAsserts extends CommonAsserts {
         assertEqualsExternalItemCollection(previous.getPublisherContributor(), next.getPublisherContributor());
         assertEqualsExternalItemCollection(previous.getMediator(), next.getMediator());
 
-        assertEqualsRelatedResourceCollection(previous.getIsRequiredBy(), next.getIsRequiredBy());
-
         assertEqualsInternationalString(previous.getAccessRights(), next.getAccessRights());
     }
 
@@ -178,7 +176,6 @@ public class BaseAsserts extends CommonAsserts {
         assertEqualsRelatedResource(expected.getReplacesVersion(), actual.getReplacesVersion());
         assertEqualsRelatedResource(expected.getIsReplacedBy(), actual.getIsReplacedBy());
         assertEqualsRelatedResource(expected.getIsReplacedByVersion(), actual.getIsReplacedByVersion());
-        assertEqualsRelatedResourceCollection(expected.getIsRequiredBy(), actual.getIsRequiredBy());
         assertEqualsRelatedResourceCollection(expected.getHasPart(), actual.getHasPart());
         assertEqualsRelatedResourceCollection(expected.getIsPartOf(), actual.getIsPartOf());
 
@@ -285,7 +282,6 @@ public class BaseAsserts extends CommonAsserts {
                 assertEqualsRelatedResource(entity.getReplacesVersion(), dto.getReplacesVersion());
                 assertEqualsRelatedResource(entity.getIsReplacedBy(), dto.getIsReplacedBy());
                 assertEqualsRelatedResource(entity.getIsReplacedByVersion(), dto.getIsReplacedByVersion());
-                assertEqualsRelatedResourceCollectionMapper(entity.getIsRequiredBy(), dto.getIsRequiredBy());
                 assertEqualsRelatedResourceCollectionMapper(entity.getHasPart(), dto.getHasPart());
                 assertEqualsRelatedResourceCollectionMapper(entity.getIsPartOf(), dto.getIsPartOf());
 

@@ -88,11 +88,11 @@ public class QueryVersionMockFactory extends StatisticalResourcesMockFactory<Que
 
     public static final String  QUERY_VERSION_28_V2_PUBLISHED_NO_VISIBLE_FOR_QUERY_06_NAME = "QUERY_VERSION_28_V2_PUBLISHED_NO_VISIBLE_FOR_QUERY_06";
     private static QueryVersion QUERY_VERSION_28_V2_PUBLISHED_NO_VISIBLE_FOR_QUERY_06;
-    
-    public static final String  QUERY_VERSION_29_SIMPLE_FOR_QUERY_07_DATASET_56_NAME            = "QUERY_VERSION_29_SIMPLE_FOR_QUERY_07_DATASET_56";
+
+    public static final String  QUERY_VERSION_29_SIMPLE_FOR_QUERY_07_DATASET_56_NAME       = "QUERY_VERSION_29_SIMPLE_FOR_QUERY_07_DATASET_56";
     private static QueryVersion QUERY_VERSION_29_SIMPLE_FOR_QUERY_07_DATASET_56;
 
-    public static final String  QUERY_VERSION_30_SIMPLE_FOR_QUERY_07_DATASET_56_NAME            = "QUERY_VERSION_30_SIMPLE_FOR_QUERY_07_DATASET_56";
+    public static final String  QUERY_VERSION_30_SIMPLE_FOR_QUERY_07_DATASET_56_NAME       = "QUERY_VERSION_30_SIMPLE_FOR_QUERY_07_DATASET_56";
     private static QueryVersion QUERY_VERSION_30_SIMPLE_FOR_QUERY_07_DATASET_56;
 
     protected static QueryVersion getQueryVersion01WithSelection() {
@@ -411,7 +411,7 @@ public class QueryVersionMockFactory extends StatisticalResourcesMockFactory<Que
         return QUERY_VERSION_28_V2_PUBLISHED_NO_VISIBLE_FOR_QUERY_06;
 
     }
-    
+
     protected static QueryVersion getQueryVersion29SimpleForQuery07Dataset56() {
         if (QUERY_VERSION_29_SIMPLE_FOR_QUERY_07_DATASET_56 == null) {
             QUERY_VERSION_29_SIMPLE_FOR_QUERY_07_DATASET_56 = createQueryWithDatasetVersion(DatasetVersionMockFactory.getDatasetVersion56DraftWithDatasourceAndQueries(), true);
@@ -419,7 +419,7 @@ public class QueryVersionMockFactory extends StatisticalResourcesMockFactory<Que
         }
         return QUERY_VERSION_29_SIMPLE_FOR_QUERY_07_DATASET_56;
     }
-    
+
     protected static QueryVersion getQueryVersion30SimpleForQuery07Dataset56() {
         if (QUERY_VERSION_30_SIMPLE_FOR_QUERY_07_DATASET_56 == null) {
             QUERY_VERSION_30_SIMPLE_FOR_QUERY_07_DATASET_56 = createQueryWithDatasetVersion(DatasetVersionMockFactory.getDatasetVersion56DraftWithDatasourceAndQueries(), true);
@@ -435,7 +435,7 @@ public class QueryVersionMockFactory extends StatisticalResourcesMockFactory<Que
     private static QueryVersion createQueryWithGeneratedDatasetVersion() {
         return getStatisticalResourcesPersistedDoMocks().mockQueryVersionWithGeneratedDatasetVersion();
     }
-    
+
     // -----------------------------------------------------------------
     // LIFE CYCLE PREPARATIONS
     // -----------------------------------------------------------------

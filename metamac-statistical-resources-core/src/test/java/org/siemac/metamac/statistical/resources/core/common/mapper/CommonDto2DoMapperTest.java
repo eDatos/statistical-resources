@@ -72,8 +72,7 @@ public class CommonDto2DoMapperTest extends StatisticalResourcesBaseTest {
     private final DatasetVersionRepository          datasetVersionRepository      = Mockito.mock(DatasetVersionRepository.class);
     private final PublicationVersionRepository      publicationVersionRepository  = Mockito.mock(PublicationVersionRepository.class);
 
-    @Autowired
-    private StatisticalResourcesNotPersistedDoMocks statisticalResourcesNotPersistedDoMocks;
+    private StatisticalResourcesNotPersistedDoMocks statisticalResourcesNotPersistedDoMocks = StatisticalResourcesNotPersistedDoMocks.getInstance();
 
     @Autowired
     private CommonDto2DoMapper                      commonDto2DoMapper;

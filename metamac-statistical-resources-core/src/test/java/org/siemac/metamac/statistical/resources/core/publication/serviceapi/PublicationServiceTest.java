@@ -16,7 +16,6 @@ import static org.siemac.metamac.statistical.resources.core.utils.asserts.Public
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.PublicationsAsserts.assertRelaxedEqualsChapter;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.PublicationsAsserts.assertRelaxedEqualsCube;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetMockFactory.DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationMockFactory.PUBLICATION_01_BASIC_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationMockFactory.PUBLICATION_02_BASIC_WITH_GENERATED_VERSION_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationMockFactory.PUBLICATION_03_BASIC_WITH_2_PUBLICATION_VERSIONS_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_01_BASIC_NAME;
@@ -51,9 +50,9 @@ import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.siemac.metamac.common.test.utils.MetamacAsserts;
-import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
+import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
@@ -99,15 +98,14 @@ public class PublicationServiceTest extends StatisticalResourcesBaseTest impleme
     @Autowired
     private QueryMockFactory                        queryMockFactory;
 
-    @Autowired
-    private StatisticalResourcesNotPersistedDoMocks statisticalResourcesNotPersistedDoMocks;
+    private StatisticalResourcesNotPersistedDoMocks statisticalResourcesNotPersistedDoMocks = StatisticalResourcesNotPersistedDoMocks.getInstance();
 
     @Autowired
     private PublicationService                      publicationService;
 
     @Autowired
     @Qualifier("txManager")
-    private final PlatformTransactionManager        transactionManager = null;
+    private final PlatformTransactionManager        transactionManager                      = null;
 
     // ------------------------------------------------------------------------
     // PUBLICATIONS
@@ -378,7 +376,7 @@ public class PublicationServiceTest extends StatisticalResourcesBaseTest impleme
 
     @Override
     @Test
-    @MetamacMock({PUBLICATION_03_BASIC_WITH_2_PUBLICATION_VERSIONS_NAME, PUBLICATION_01_BASIC_NAME, PUBLICATION_02_BASIC_WITH_GENERATED_VERSION_NAME})
+    @MetamacMock({PUBLICATION_03_BASIC_WITH_2_PUBLICATION_VERSIONS_NAME, PUBLICATION_02_BASIC_WITH_GENERATED_VERSION_NAME})
     public void testRetrievePublicationVersions() throws Exception {
         String urn = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_03_FOR_PUBLICATION_03_NAME).getSiemacMetadataStatisticalResource().getUrn();
         List<PublicationVersion> actual = publicationService.retrievePublicationVersions(getServiceContextWithoutPrincipal(), urn);
@@ -389,7 +387,7 @@ public class PublicationServiceTest extends StatisticalResourcesBaseTest impleme
 
     @Override
     @Test
-    @MetamacMock({PUBLICATION_03_BASIC_WITH_2_PUBLICATION_VERSIONS_NAME, PUBLICATION_01_BASIC_NAME, PUBLICATION_VERSION_01_BASIC_NAME})
+    @MetamacMock({PUBLICATION_03_BASIC_WITH_2_PUBLICATION_VERSIONS_NAME, PUBLICATION_VERSION_01_BASIC_NAME})
     public void testFindPublicationVersionsByCondition() throws Exception {
 
         {
@@ -408,7 +406,7 @@ public class PublicationServiceTest extends StatisticalResourcesBaseTest impleme
 
     @Override
     @Test
-    @MetamacMock({PUBLICATION_03_BASIC_WITH_2_PUBLICATION_VERSIONS_NAME, PUBLICATION_01_BASIC_NAME, PUBLICATION_VERSION_01_BASIC_NAME})
+    @MetamacMock({PUBLICATION_03_BASIC_WITH_2_PUBLICATION_VERSIONS_NAME, PUBLICATION_VERSION_01_BASIC_NAME})
     public void testDeletePublicationVersion() throws Exception {
         String urn = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_01_BASIC_NAME).getSiemacMetadataStatisticalResource().getUrn();
 
@@ -1475,7 +1473,7 @@ public class PublicationServiceTest extends StatisticalResourcesBaseTest impleme
     }
 
     @Test
-    @MetamacMock({PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME, DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME})
+    @MetamacMock({PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME, DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME, QUERY_01_SIMPLE_NAME})
     public void testCreateCubeQuery() throws Exception {
         Query query = queryMockFactory.retrieveMock(QUERY_01_SIMPLE_NAME);
         String publicationVersionUrn = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME).getSiemacMetadataStatisticalResource().getUrn();
@@ -2049,7 +2047,7 @@ public class PublicationServiceTest extends StatisticalResourcesBaseTest impleme
         // Check updatedChapter
         assertNull(updatedCube.getElementLevel().getParent());
         assertEquals(Long.valueOf(5), updatedCube.getElementLevel().getOrderInLevel());
- 
+
         // Commit
         transactionManager.commit(status);
 

@@ -9,9 +9,15 @@ public abstract class MockPersisterBase implements MockPersister {
 
     @Override
     public final void persistMocks(String... ids) throws Exception {
+        prepareFactories();
+        
         List<Object> mocks = locateMocks(ids);
-
+        
         persistMocks(mocks);
+    }
+
+    private void prepareFactories() {
+        MockFactory.clearFactory();
     }
 
     protected abstract void persistMocks(List<Object> mocks) throws Exception;
@@ -26,6 +32,10 @@ public abstract class MockPersisterBase implements MockPersister {
                 throw new IllegalArgumentException("Mock with id " + id + " was not found");
             }
         }
+        
+        //Get All dependencies registered for mocks
+        mocks.addAll(MockFactory.getDependencies());
+        
         return mocks;
     }
 
@@ -37,6 +47,10 @@ public abstract class MockPersisterBase implements MockPersister {
             if (factory.getMock(id) != null) {
                 found = factory.getMock(id);
             }
+        }
+        
+        for (MockFactory factory : factories) {
+            factory.getDependencies();
         }
         return found;
     }

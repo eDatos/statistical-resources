@@ -20,20 +20,16 @@ public class SiemacMetadataResourceRelationDescriptorsForm extends NavigationEna
         RelatedResourceLinkItem replaces = new RelatedResourceLinkItem(SiemacMetadataDS.REPLACES, getConstants().siemacMetadataStatisticalResourceReplaces(), getCustomLinkItemNavigationClickHandler());
         RelatedResourceLinkItem isReplacedBy = new RelatedResourceLinkItem(SiemacMetadataDS.IS_REPLACED_BY, getConstants().siemacMetadataStatisticalResourceIsReplacedBy(),
                 getCustomLinkItemNavigationClickHandler());
-        RelatedResourceListItem isRequiredBy = new RelatedResourceListItem(SiemacMetadataDS.IS_REQUIRED_BY, getConstants().siemacMetadataStatisticalResourceIsRequiredBy(), false,
-                getRecordNavigationHandler());
+
         RelatedResourceListItem hasPart = new RelatedResourceListItem(SiemacMetadataDS.HAS_PART, getConstants().siemacMetadataStatisticalResourceHasPart(), false, getRecordNavigationHandler());
         RelatedResourceListItem isPartOf = new RelatedResourceListItem(SiemacMetadataDS.IS_PART_OF, getConstants().siemacMetadataStatisticalResourceIsPartOf(), false, getRecordNavigationHandler());
 
-        setFields(replaces, isReplacedBy, isRequiredBy, hasPart, isPartOf);
+        setFields(replaces, isReplacedBy, hasPart, isPartOf);
     }
 
     public void setSiemacMetadataStatisticalResourceDto(SiemacMetadataStatisticalResourceDto dto) {
         setRelatedResourceValue(getItem(SiemacMetadataDS.REPLACES), dto.getReplaces());
         setRelatedResourceValue(getItem(SiemacMetadataDS.IS_REPLACED_BY), dto.getIsReplacedBy());
-
-        setRelatedResourcesValue(getItem(SiemacMetadataDS.IS_REQUIRED_BY), dto.getIsRequiredBy());
-
         setRelatedResourcesValue(getItem(SiemacMetadataDS.HAS_PART), dto.getHasPart());
         setRelatedResourcesValue(getItem(SiemacMetadataDS.IS_PART_OF), dto.getIsPartOf());
     }

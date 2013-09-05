@@ -1,19 +1,17 @@
 package org.siemac.metamac.statistical.resources.core.utils.mocks;
 
 import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataStatisticalResource;
-import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
-import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
+import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
 import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesVersionUtils;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesPersistedDoMocks;
 
 
-public class DatasetVersionMock extends DatasetVersion {
+public class PublicationVersionMock extends PublicationVersion {
     
     private Integer sequentialId;
     
-    
-    public static DatasetVersionMock buildBasicSingleVersionWithSequence(int sequenceId) {
-        DatasetVersionMock instance = new DatasetVersionMock();
+    public static PublicationVersionMock buildBasicSingleVersionWithSequence(int sequenceId) {
+        PublicationVersionMock instance = new PublicationVersionMock();
         instance.setSequentialId(sequenceId);
         instance.getSiemacMetadataStatisticalResource().setLastVersion(true);
         instance.setVersionLogic(StatisticalResourcesVersionUtils.INITIAL_VERSION);
@@ -40,10 +38,10 @@ public class DatasetVersionMock extends DatasetVersion {
         getSiemacMetadataStatisticalResource().setMaintainer(StatisticalResourcesPersistedDoMocks.mockAgencyExternalItem(maintainerCode));
     }
     
-    public void setDataset(DatasetMock dataset) {
-        super.setDataset(dataset);
-        if (dataset.getMaintainerCode() != null) {
-            setMaintainerCode(dataset.getMaintainerCode());
+    public void setPublication(PublicationMock publication) {
+        super.setPublication(publication);
+        if (publication.getMaintainerCode() != null) {
+            setMaintainerCode(publication.getMaintainerCode());
         }
     }
     

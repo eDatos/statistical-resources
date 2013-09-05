@@ -333,7 +333,6 @@ public class StatisticalResourcesDtoMocks extends MetamacMocks {
         // TODO: mock Related resources
         siemacMetadataStatisticalResourceDto.setReplacesVersion(null);
         siemacMetadataStatisticalResourceDto.setIsReplacedByVersion(null);
-        siemacMetadataStatisticalResourceDto.addIsRequiredBy(null);
         siemacMetadataStatisticalResourceDto.addHasPart(null);
         siemacMetadataStatisticalResourceDto.addIsPartOf(null);
 

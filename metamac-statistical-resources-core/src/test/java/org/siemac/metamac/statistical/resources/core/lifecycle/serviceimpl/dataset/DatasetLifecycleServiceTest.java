@@ -97,7 +97,6 @@ public class DatasetLifecycleServiceTest extends StatisticalResourcesBaseTest im
     @Before
     public void setUp() {
         datasetVersionMockFactory = new DatasetVersionMockFactory();
-        datasetVersionMockFactory.setStatisticalResourcesPersistedDoMocks(new StatisticalResourcesPersistedDoMocks());
         MockitoAnnotations.initMocks(this);
     }
 

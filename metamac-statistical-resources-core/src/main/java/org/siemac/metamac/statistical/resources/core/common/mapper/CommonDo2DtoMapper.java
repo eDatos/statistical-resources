@@ -9,6 +9,7 @@ import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.dto.InternationalStringDto;
 import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
 import org.siemac.metamac.statistical.resources.core.common.domain.InternationalString;
+import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResourceResult;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.mapper.BaseDo2DtoMapper;
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResource;
@@ -24,7 +25,9 @@ public interface CommonDo2DtoMapper extends BaseDo2DtoMapper {
     public ExternalItemDto externalItemDoToDto(ExternalItem source) throws MetamacException;
 
     // Related resource
+    public Collection<RelatedResourceDto> relatedResourceResultCollectionToDtoCollection(Collection<RelatedResourceResult> source) throws MetamacException;
     public Collection<RelatedResourceDto> relatedResourceDoCollectionToDtoCollection(Collection<RelatedResource> source) throws MetamacException;
+    public RelatedResourceDto relatedResourceResultToDto(RelatedResourceResult source) throws MetamacException;
     public RelatedResourceDto relatedResourceDoToDto(RelatedResource source) throws MetamacException;
     
     // International String

@@ -37,6 +37,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
@@ -48,6 +49,7 @@ import org.siemac.metamac.statistical.resources.core.utils.DataMockUtils;
 import org.siemac.metamac.statistical.resources.core.utils.TaskMockUtils;
 import org.siemac.metamac.statistical.resources.core.utils.asserts.BaseAsserts;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.configuration.MetamacMock;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetMockFactory;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasourceMockFactory;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesNotPersistedDoMocks;
@@ -74,6 +76,9 @@ public class DatasetServiceDatasourceManagementTest extends StatisticalResources
     private DatasetVersionMockFactory               datasetVersionMockFactory;
 
     @Autowired
+    private DatasetMockFactory                      datasetMockFactory;
+
+    @Autowired
     private DatasourceMockFactory                   datasourceMockFactory;
 
     @Autowired
@@ -82,8 +87,7 @@ public class DatasetServiceDatasourceManagementTest extends StatisticalResources
     @Autowired
     private SrmRestInternalService                  srmRestInternalService;
 
-    @Autowired
-    private StatisticalResourcesNotPersistedDoMocks statisticalResourcesNotPersistedDoMocks;
+    private StatisticalResourcesNotPersistedDoMocks statisticalResourcesNotPersistedDoMocks = StatisticalResourcesNotPersistedDoMocks.getInstance();
 
     @Autowired
     private TaskService                             taskService;
@@ -276,7 +280,9 @@ public class DatasetServiceDatasourceManagementTest extends StatisticalResources
 
         expectedMetamacException(new MetamacException(ServiceExceptionType.METADATA_UNEXPECTED, ServiceExceptionParameters.DATASOURCE__DATASET_VERSION));
 
-        Datasource expected = statisticalResourcesNotPersistedDoMocks.mockDatasource(expectedDatasetVersion);
+        Datasource template = new Datasource();
+        template.setDatasetVersion(expectedDatasetVersion);
+        Datasource expected = statisticalResourcesNotPersistedDoMocks.mockDatasource(template);
         datasetService.createDatasource(getServiceContextWithoutPrincipal(), datasetVersionUrn, expected);
     }
 
@@ -539,20 +545,11 @@ public class DatasetServiceDatasourceManagementTest extends StatisticalResources
     @Test
     @MetamacMock({DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME})
     public void testRetrieveDatasourcesByDatasetVersion() throws Exception {
-        // Version DATASET_VERSION_03_ASSOCIATED_WITH_DATASET_03
-        {
-            String datasetVersionUrn = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_03_FOR_DATASET_03_NAME).getSiemacMetadataStatisticalResource().getUrn();
-            List<Datasource> expected = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_03_FOR_DATASET_03_NAME).getDatasources();
-
-            List<Datasource> actual = datasetService.retrieveDatasourcesByDatasetVersion(getServiceContextWithoutPrincipal(), datasetVersionUrn);
-            assertEquals(expected.size(), actual.size());
-            assertEqualsDatasourceCollection(expected, actual);
-        }
-
-        // Version DATASET_VERSION_03_ASSOCIATED_WITH_DATASET_03
-        {
-            String datasetVersionUrn = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_04_FOR_DATASET_03_AND_LAST_VERSION_NAME).getSiemacMetadataStatisticalResource().getUrn();
-            List<Datasource> expected = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_04_FOR_DATASET_03_AND_LAST_VERSION_NAME).getDatasources();
+        Dataset dataset = datasetMockFactory.retrieveMock(DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME);
+        
+        for (DatasetVersion datasetVersion : dataset.getVersions()) {
+            String datasetVersionUrn = datasetVersion.getSiemacMetadataStatisticalResource().getUrn();
+            List<Datasource> expected = datasetVersion.getDatasources();
 
             List<Datasource> actual = datasetService.retrieveDatasourcesByDatasetVersion(getServiceContextWithoutPrincipal(), datasetVersionUrn);
             assertEquals(expected.size(), actual.size());

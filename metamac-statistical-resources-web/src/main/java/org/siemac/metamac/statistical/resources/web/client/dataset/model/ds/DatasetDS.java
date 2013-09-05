@@ -27,4 +27,7 @@ public class DatasetDS extends SiemacMetadataDS {
     // PRODUCTION DESCRIPTORS
     public static final String RELATED_DSD                = "ds-dsd";
     public static final String RELATED_DSD_VIEW           = "ds-dsd-view";
+
+    // RESOURCE RELATION DESCRIPTORS
+    public static final String IS_REQUIRED_BY             = "ds-is-req-by";
 }

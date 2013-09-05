@@ -1,24 +1,30 @@
 package org.siemac.metamac.statistical.resources.core.utils.mocks.factories;
 
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasourceMockFactory.getDatasorce03BasicForDatasetVersion03;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasourceMockFactory.getDatasorce04BasicForDatasetVersion03;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasourceMockFactory.getDatasorce05BasicForDatasetVersion04;
+import static org.siemac.metamac.statistical.resources.core.utils.DatasetLifecycleTestUtils.prepareToDiffusionValidation;
+import static org.siemac.metamac.statistical.resources.core.utils.DatasetLifecycleTestUtils.prepareToProductionValidation;
+import static org.siemac.metamac.statistical.resources.core.utils.DatasetLifecycleTestUtils.prepareToPublished;
+import static org.siemac.metamac.statistical.resources.core.utils.DatasetLifecycleTestUtils.prepareToValidationRejected;
+import static org.siemac.metamac.statistical.resources.core.utils.DatasetLifecycleTestUtils.prepareToVersioning;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasourceMockFactory.getDatasorce06LinkedToFileForDatasetVersion30;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasourceMockFactory.getDatasorce07LinkedToFileWithUnderscore;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.joda.time.DateTime;
 import org.siemac.metamac.statistical.resources.core.base.domain.VersionRationaleType;
-import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.CodeDimension;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
-import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
-import org.siemac.metamac.statistical.resources.core.dataset.domain.StatisticOfficiality;
 import org.siemac.metamac.statistical.resources.core.enume.domain.NextVersionTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.VersionRationaleTypeEnum;
+import org.siemac.metamac.statistical.resources.core.utils.DatasetLifecycleTestUtils;
 import org.siemac.metamac.statistical.resources.core.utils.LifecycleTestUtils;
 import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesVersionUtils;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.DatasetVersionMock;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.QueryMock;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.QueryVersionMock;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesDoMocks;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesPersistedDoMocks;
 import org.springframework.stereotype.Component;
@@ -117,9 +123,6 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
 
     public static final String    DATASET_VERSION_30_WITH_DATASOURCE_NAME                                                                = "DATASET_VERSION_30_WITH_DATASOURCE";
     private static DatasetVersion DATASET_VERSION_30_WITH_DATASOURCE;
-
-    public static final String    DATASET_VERSION_31_WITH_SINGLE_DATASOURCE_LINKED_TO_FILE_NAME                                          = "DATASET_VERSION_31_WITH_SINGLE_DATASOURCE_LINKED_TO_FILE";
-    private static DatasetVersion DATASET_VERSION_31_WITH_SINGLE_DATASOURCE_LINKED_TO_FILE;
 
     public static final String    DATASET_VERSION_32_WITH_MULTIPLE_DATASOURCES_LINKED_TO_FILE_NAME                                       = "DATASET_VERSION_32_WITH_MULTIPLE_DATASOURCES_LINKED_TO_FILE";
     private static DatasetVersion DATASET_VERSION_32_WITH_MULTIPLE_DATASOURCES_LINKED_TO_FILE;
@@ -244,6 +247,18 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
     public static final String    DATASET_VERSION_72_PREPARED_TO_PUBLISH_WITH_PREVIOUS_VERSION_NAME                                      = "DATASET_VERSION_72_PREPARED_TO_PUBLISH_WITH_PREVIOUS_VERSION";
     private static DatasetVersion DATASET_VERSION_72_PREPARED_TO_PUBLISH_WITH_PREVIOUS_VERSION;
 
+    public static final String    DATASET_VERSION_73_V01_FOR_DATASET_11_NAME                                                             = "DATASET_VERSION_73_V01_FOR_DATASET_11";
+    private static DatasetVersion DATASET_VERSION_73_V01_FOR_DATASET_11;
+
+    public static final String    DATASET_VERSION_74_V02_FOR_DATASET_11_NAME                                                             = "DATASET_VERSION_74_V02_FOR_DATASET_11";
+    private static DatasetVersion DATASET_VERSION_74_V02_FOR_DATASET_11;
+    
+    public static final String    DATASET_VERSION_75_V01_FOR_DATASET_12_NAME                                                             = "DATASET_VERSION_75_V01_FOR_DATASET_12";
+    private static DatasetVersion DATASET_VERSION_75_V01_FOR_DATASET_12;
+    
+    public static final String    DATASET_VERSION_76_V02_FOR_DATASET_12_NAME                                                             = "DATASET_VERSION_76_V02_FOR_DATASET_12";
+    private static DatasetVersion DATASET_VERSION_76_V02_FOR_DATASET_12;
+
     private static final String   INIT_VERSION                                                                                           = "001.000";
     private static final String   SECOND_VERSION                                                                                         = "002.000";
     private static final String   THIRD_VERSION                                                                                          = "003.000";
@@ -266,87 +281,24 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
 
     protected static DatasetVersion getDatasetVersion03ForDataset03() {
         if (DATASET_VERSION_03_FOR_DATASET_03 == null) {
-            DatasetVersionMock template = new DatasetVersionMock();
-            template.setSequentialId(1);
-            template.setVersionLogic(INIT_VERSION);
-            // not last version
-            template.getSiemacMetadataStatisticalResource().setCreationDate(new DateTime().minusDays(4));
-            template.getSiemacMetadataStatisticalResource().setValidFrom(new DateTime().minusDays(3));
-            // datasources
-            template.addDatasource(getDatasorce03BasicForDatasetVersion03());
-            template.addDatasource(getDatasorce04BasicForDatasetVersion03());
-            template.addDatasource(DatasourceMockFactory.generateSimpleDatasource());
-
-            DatasetVersion datasetVersion = createDatasetVersionFromTemplate(template);
-            prepareToVersioning(datasetVersion);
-
-            // Relations
-            DATASET_VERSION_03_FOR_DATASET_03 = datasetVersion;
-            DATASET_VERSION_03_FOR_DATASET_03.setDataset(DatasetMockFactory.getDataset03With2DatasetVersions());
+            Dataset dataset = DatasetMockFactory.getDataset03With2DatasetVersions();
+            DATASET_VERSION_03_FOR_DATASET_03 = dataset.getVersions().get(0);
         }
         return DATASET_VERSION_03_FOR_DATASET_03;
     }
 
     protected static DatasetVersion getDatasetVersion04ForDataset03AndLastVersion() {
         if (DATASET_VERSION_04_FOR_DATASET_03_AND_LAST_VERSION == null) {
-
-            DatasetVersionMock template = new DatasetVersionMock();
-            template.setSequentialId(1);
-            // Version 002.000
-            template.setVersionLogic(SECOND_VERSION);
-            // last version
-            template.getSiemacMetadataStatisticalResource().setCreationDate(new DateTime().minusDays(1));
-            template.getSiemacMetadataStatisticalResource().setLastVersion(true);
-            // datasources
-            template.addDatasource(getDatasorce05BasicForDatasetVersion04());
-            DatasetVersion datasetVersion = createDatasetVersionFromTemplate(template);
-
-            // Relations
-            DATASET_VERSION_04_FOR_DATASET_03_AND_LAST_VERSION = datasetVersion;
-            DATASET_VERSION_04_FOR_DATASET_03_AND_LAST_VERSION.setDataset(DatasetMockFactory.getDataset03With2DatasetVersions());
+            Dataset dataset = DatasetMockFactory.getDataset03With2DatasetVersions();
+            DATASET_VERSION_04_FOR_DATASET_03_AND_LAST_VERSION = dataset.getVersions().get(1);
         }
         return DATASET_VERSION_04_FOR_DATASET_03_AND_LAST_VERSION;
     }
 
     protected static DatasetVersion getDatasetVersion05ForDataset04() {
         if (DATASET_VERSION_05_FOR_DATASET_04 == null) {
-            DatasetVersionMock template = new DatasetVersionMock();
-            template.setSequentialId(1);
-            template.setVersionLogic(INIT_VERSION);
-            template.setStatisticalOperationCode("statOper02");
-
-            template.addGeographicCoverage(StatisticalResourcesDoMocks.mockCodeExternalItem());
-
-            template.getTemporalCoverage().add(StatisticalResourcesDoMocks.mockTemporalCode());
-
-            template.getMeasureCoverage().add(StatisticalResourcesDoMocks.mockConceptExternalItem());
-            template.addGeographicGranularity(StatisticalResourcesDoMocks.mockCodeExternalItem());
-
-            template.addTemporalGranularity(StatisticalResourcesDoMocks.mockCodeExternalItem());
-
-            template.addStatisticalUnit(StatisticalResourcesDoMocks.mockConceptExternalItem());
-            template.addStatisticalUnit(StatisticalResourcesDoMocks.mockConceptExternalItem());
-
-            template.setDateStart(new DateTime().minusYears(10));
-
-            template.setRelatedDsd(StatisticalResourcesDoMocks.mockDsdExternalItem());
-            template.setUpdateFrequency(StatisticalResourcesDoMocks.mockCodeExternalItem());
-
-            template.setFormatExtentDimensions(3);
-            template.setFormatExtentObservations(1354L);
-            template.setDateNextUpdate(new DateTime().plusMonths(1));
-            template.setBibliographicCitation(StatisticalResourcesDoMocks.mockInternationalString("es", "biblio"));
-
-            template.getSiemacMetadataStatisticalResource().setCreatedBy(StatisticalResourcesDoMocks.mockString(10));
-            template.getSiemacMetadataStatisticalResource().setCreatedDate(StatisticalResourcesDoMocks.mockDateTime());
-            template.getSiemacMetadataStatisticalResource().setLastUpdatedBy(StatisticalResourcesDoMocks.mockString(10));
-            template.getSiemacMetadataStatisticalResource().setLastUpdated(StatisticalResourcesDoMocks.mockDateTime());
-
-            DatasetVersion datasetVersion = createDatasetVersionFromTemplate(template);
-
-            // Relations
-            DATASET_VERSION_05_FOR_DATASET_04 = datasetVersion;
-            DATASET_VERSION_05_FOR_DATASET_04.setDataset(DatasetMockFactory.getDataset04FullFilledWith1DatasetVersions());
+            Dataset dataset = DatasetMockFactory.getDataset04FullFilledWith1DatasetVersions();
+            DATASET_VERSION_05_FOR_DATASET_04 = dataset.getVersions().get(0);
         }
         return DATASET_VERSION_05_FOR_DATASET_04;
     }
@@ -479,89 +431,37 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
 
     protected static DatasetVersion getDatasetVersion22V1PublishedForDataset05() {
         if (DATASET_VERSION_22_V1_PUBLISHED_FOR_DATASET_05 == null) {
-            DatasetVersion datasetVersion = createDatasetVersionWithSequence(1);
-            datasetVersion.getSiemacMetadataStatisticalResource().setVersionLogic(INIT_VERSION);
-            datasetVersion.getSiemacMetadataStatisticalResource().setProcStatus(ProcStatusEnum.PUBLISHED);
-
-            // not last version
-            datasetVersion.getSiemacMetadataStatisticalResource().setCreationDate(new DateTime().minusDays(3));
-            datasetVersion.getSiemacMetadataStatisticalResource().setValidFrom(new DateTime().minusDays(3));
-
-            // Relations
-            DATASET_VERSION_22_V1_PUBLISHED_FOR_DATASET_05 = datasetVersion;
-            DATASET_VERSION_22_V1_PUBLISHED_FOR_DATASET_05.setDataset(DatasetMockFactory.getDataset05WithMultiplePublishedVersions());
+            DATASET_VERSION_22_V1_PUBLISHED_FOR_DATASET_05 = DatasetMockFactory.getDataset05WithMultiplePublishedVersions().getVersions().get(0);
         }
         return DATASET_VERSION_22_V1_PUBLISHED_FOR_DATASET_05;
     }
 
     protected static DatasetVersion getDatasetVersion23V2PublishedForDataset05() {
         if (DATASET_VERSION_23_V2_PUBLISHED_FOR_DATASET_05 == null) {
-            DatasetVersion datasetVersion = createDatasetVersionWithSequence(2);
-            datasetVersion.getSiemacMetadataStatisticalResource().setVersionLogic(SECOND_VERSION);
-            datasetVersion.getSiemacMetadataStatisticalResource().setProcStatus(ProcStatusEnum.PUBLISHED);
-
-            // not last version
-            datasetVersion.getSiemacMetadataStatisticalResource().setCreationDate(new DateTime().minusDays(2));
-            datasetVersion.getSiemacMetadataStatisticalResource().setValidFrom(new DateTime().minusDays(2));
-
-            // Relations
-            DATASET_VERSION_23_V2_PUBLISHED_FOR_DATASET_05 = datasetVersion;
-            DATASET_VERSION_23_V2_PUBLISHED_FOR_DATASET_05.setDataset(DatasetMockFactory.getDataset05WithMultiplePublishedVersions());
+            DATASET_VERSION_23_V2_PUBLISHED_FOR_DATASET_05 = DatasetMockFactory.getDataset05WithMultiplePublishedVersions().getVersions().get(1);
         }
         return DATASET_VERSION_23_V2_PUBLISHED_FOR_DATASET_05;
     }
 
     protected static DatasetVersion getDatasetVersion24V3PublishedForDataset05() {
         if (DATASET_VERSION_24_V3_PUBLISHED_FOR_DATASET_05 == null) {
-            DatasetVersion datasetVersion = createDatasetVersionWithSequence(3);
-            datasetVersion.getSiemacMetadataStatisticalResource().setVersionLogic(THIRD_VERSION);
-            datasetVersion.getSiemacMetadataStatisticalResource().setProcStatus(ProcStatusEnum.PUBLISHED);
-
-            // last version
-            datasetVersion.getSiemacMetadataStatisticalResource().setCreationDate(new DateTime().minusDays(1));
-            datasetVersion.getSiemacMetadataStatisticalResource().setValidFrom(new DateTime().minusDays(1));
-
-            // Relations
-            DATASET_VERSION_24_V3_PUBLISHED_FOR_DATASET_05 = datasetVersion;
-            DATASET_VERSION_24_V3_PUBLISHED_FOR_DATASET_05.setDataset(DatasetMockFactory.getDataset05WithMultiplePublishedVersions());
+            DATASET_VERSION_24_V3_PUBLISHED_FOR_DATASET_05 = DatasetMockFactory.getDataset05WithMultiplePublishedVersions().getVersions().get(2);
         }
         return DATASET_VERSION_24_V3_PUBLISHED_FOR_DATASET_05;
     }
 
     protected static DatasetVersion getDatasetVersion25V1PublishedForDataset06() {
         if (DATASET_VERSION_25_V1_PUBLISHED_FOR_DATASET_06 == null) {
-            DatasetVersion datasetVersion = createDatasetVersionWithSequence(1);
-            datasetVersion.getSiemacMetadataStatisticalResource().setVersionLogic(INIT_VERSION);
-            datasetVersion.getSiemacMetadataStatisticalResource().setProcStatus(ProcStatusEnum.PUBLISHED);
-
-            // last version
-            datasetVersion.getSiemacMetadataStatisticalResource().setCreationDate(new DateTime().minusDays(1));
-            datasetVersion.getSiemacMetadataStatisticalResource().setValidFrom(new DateTime().minusDays(1));
-
-            // Relations
-            DATASET_VERSION_25_V1_PUBLISHED_FOR_DATASET_06 = datasetVersion;
-            DATASET_VERSION_25_V1_PUBLISHED_FOR_DATASET_06.setDataset(DatasetMockFactory.getDataset06WithMultiplePublishedVersionsAndLatestNoVisible());
+            DATASET_VERSION_25_V1_PUBLISHED_FOR_DATASET_06 = DatasetMockFactory.getDataset06WithMultiplePublishedVersionsAndLatestNoVisible().getVersions().get(0);
         }
         return DATASET_VERSION_25_V1_PUBLISHED_FOR_DATASET_06;
     }
 
     protected static DatasetVersion getDatasetVersion26V2PublishedNoVisibleForDataset06() {
         if (DATASET_VERSION_26_V2_PUBLISHED_NO_VISIBLE_FOR_DATASET_06 == null) {
-            DatasetVersion datasetVersion = createDatasetVersionWithSequence(2);
-            prepareToVersioning(datasetVersion);
-            datasetVersion.getSiemacMetadataStatisticalResource().setVersionLogic(SECOND_VERSION);
-            datasetVersion.getSiemacMetadataStatisticalResource().setProcStatus(ProcStatusEnum.PUBLISHED);
-
-            // last version
-            datasetVersion.getSiemacMetadataStatisticalResource().setCreationDate(new DateTime());
-            datasetVersion.getSiemacMetadataStatisticalResource().setValidFrom(new DateTime().plusDays(1));
-
-            // Relations
-            DATASET_VERSION_26_V2_PUBLISHED_NO_VISIBLE_FOR_DATASET_06 = datasetVersion;
-            DATASET_VERSION_26_V2_PUBLISHED_NO_VISIBLE_FOR_DATASET_06.setDataset(DatasetMockFactory.getDataset06WithMultiplePublishedVersionsAndLatestNoVisible());
+            DATASET_VERSION_26_V2_PUBLISHED_NO_VISIBLE_FOR_DATASET_06 = DatasetMockFactory.getDataset06WithMultiplePublishedVersionsAndLatestNoVisible().getVersions().get(1);
         }
         return DATASET_VERSION_26_V2_PUBLISHED_NO_VISIBLE_FOR_DATASET_06;
-
     }
 
     protected static DatasetVersion getDatasetVersion27WithCoverageFilled() {
@@ -571,18 +471,13 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
             prepareToProductionValidation(datasetVersion);
 
             datasetVersion.getDimensionsCoverage().clear();
-            datasetVersion.getDimensionsCoverage().add(new CodeDimension("dim1", "code-d1-1"));
-            datasetVersion.getDimensionsCoverage().add(new CodeDimension("dim1", "code-d1-2"));
-            datasetVersion.getDimensionsCoverage().add(new CodeDimension("dim2", "code-d2-1"));
-            datasetVersion.getDimensionsCoverage().add(new CodeDimension("dim2", "code-d2-2"));
-            datasetVersion.getDimensionsCoverage().add(new CodeDimension("dim3", "code-d3-1"));
+            datasetVersion.addDimensionsCoverage(new CodeDimension("dim1", "code-d1-1"));
+            datasetVersion.addDimensionsCoverage(new CodeDimension("dim1", "code-d1-2"));
+            datasetVersion.addDimensionsCoverage(new CodeDimension("dim2", "code-d2-1"));
+            datasetVersion.addDimensionsCoverage(new CodeDimension("dim2", "code-d2-2"));
+            datasetVersion.addDimensionsCoverage(new CodeDimension("dim3", "code-d3-1"));
 
             DATASET_VERSION_27_WITH_COVERAGE_FILLED = datasetVersion;
-
-            // Relations
-            for (CodeDimension code : datasetVersion.getDimensionsCoverage()) {
-                code.setDatasetVersion(DATASET_VERSION_27_WITH_COVERAGE_FILLED);
-            }
         }
         return DATASET_VERSION_27_WITH_COVERAGE_FILLED;
     }
@@ -616,20 +511,6 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
     private static void setDatasetVersion30Datasources() {
         DatasetVersion datasetVersion30 = getDatasetVersion30WithDatasource();
         datasetVersion30.addDatasource(getDatasorce06LinkedToFileForDatasetVersion30());
-    }
-
-    protected static DatasetVersion getDatasetVersion31WithSingleDatasourceLinkedToFile() {
-        if (DATASET_VERSION_31_WITH_SINGLE_DATASOURCE_LINKED_TO_FILE == null) {
-            DatasetVersion datasetVersion = createDatasetVersionWithSequence(1);
-            DATASET_VERSION_31_WITH_SINGLE_DATASOURCE_LINKED_TO_FILE = datasetVersion;
-            setDatasetVersion31Datasources();
-        }
-        return DATASET_VERSION_31_WITH_SINGLE_DATASOURCE_LINKED_TO_FILE;
-    }
-
-    private static void setDatasetVersion31Datasources() {
-        DatasetVersion datasetVersion31 = getDatasetVersion31WithSingleDatasourceLinkedToFile();
-        datasetVersion31.addDatasource(DatasourceMockFactory.generateSimpleDatasource());
     }
 
     protected static DatasetVersion getDatasetVersion32WithMultipleDatasourcesLinkedToFile() {
@@ -1158,6 +1039,39 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
         return DATASET_VERSION_72_PREPARED_TO_PUBLISH_WITH_PREVIOUS_VERSION;
     }
 
+    protected static DatasetVersion getDatasetVersion73V01ForDataset11() {
+        if (DATASET_VERSION_73_V01_FOR_DATASET_11 == null) {
+            DATASET_VERSION_73_V01_FOR_DATASET_11 = DatasetMockFactory.getDataset11WithTwoVersionsWith3QueriesFirstVersionIsPublishedSecondVersionIsNotVisibleAllQueriesCompatible().getVersions()
+                    .get(0);
+        }
+        return DATASET_VERSION_73_V01_FOR_DATASET_11;
+    }
+
+    protected static DatasetVersion getDatasetVersion74V02ForDataset11() {
+        if (DATASET_VERSION_74_V02_FOR_DATASET_11 == null) {
+            DATASET_VERSION_74_V02_FOR_DATASET_11 = DatasetMockFactory.getDataset11WithTwoVersionsWith3QueriesFirstVersionIsPublishedSecondVersionIsNotVisibleAllQueriesCompatible().getVersions()
+                    .get(1);
+        }
+        return DATASET_VERSION_74_V02_FOR_DATASET_11;
+    }
+    
+    
+    protected static DatasetVersion getDatasetVersion75V01ForDataset12() {
+        if (DATASET_VERSION_75_V01_FOR_DATASET_12 == null) {
+            DATASET_VERSION_75_V01_FOR_DATASET_12 = DatasetMockFactory.getDataset12WithTwoVersionsWithQueriesInDraft().getVersions().get(0);
+        }
+        return DATASET_VERSION_75_V01_FOR_DATASET_12;
+    }
+    
+    
+    protected static DatasetVersion getDatasetVersion76V02ForDataset12() {
+        if (DATASET_VERSION_76_V02_FOR_DATASET_12 == null) {
+            DATASET_VERSION_76_V02_FOR_DATASET_12 = DatasetMockFactory.getDataset12WithTwoVersionsWithQueriesInDraft().getVersions().get(1);
+        }
+        return DATASET_VERSION_76_V02_FOR_DATASET_12;
+    }
+
+
     // -----------------------------------------------------------------
     // PRIVATE UTILS
     // -----------------------------------------------------------------
@@ -1213,7 +1127,7 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
 
         DatasetVersion previousDatasetVersion = createDatasetVersionFromTemplate(replacesVersionTemplate);
 
-        prepareToVersioning(previousDatasetVersion);
+        DatasetLifecycleTestUtils.prepareToVersioning(previousDatasetVersion);
 
         datasetVersion.getSiemacMetadataStatisticalResource().setReplacesVersion(StatisticalResourcesPersistedDoMocks.mockDatasetVersionRelated(previousDatasetVersion));
         previousDatasetVersion.getSiemacMetadataStatisticalResource().setIsReplacedByVersion(StatisticalResourcesPersistedDoMocks.mockDatasetVersionRelated(datasetVersion));
@@ -1236,94 +1150,6 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
         datasetVersion.getStatisticalUnit().clear();
         datasetVersion.addStatisticalUnit(StatisticalResourcesPersistedDoMocks.mockConceptExternalItem());
         datasetVersion.addStatisticalUnit(StatisticalResourcesPersistedDoMocks.mockConceptExternalItem());
-    }
-
-    private static void prepareToProductionValidation(DatasetVersion datasetVersion) {
-        LifecycleTestUtils.prepareToProductionValidation(datasetVersion);
-        prepareToLifecycleCommonDatasetVersion(datasetVersion);
-    }
-
-    private static void prepareToDiffusionValidation(DatasetVersion datasetVersion) {
-        prepareToProductionValidation(datasetVersion);
-        LifecycleTestUtils.prepareToDiffusionValidation(datasetVersion);
-    }
-
-    private static void prepareToPublished(DatasetVersion datasetVersion) {
-        prepareToDiffusionValidation(datasetVersion);
-        LifecycleTestUtils.prepareToPublished(datasetVersion);
-    }
-
-    private static void prepareToVersioning(DatasetVersion datasetVersion) {
-        prepareToPublished(datasetVersion);
-        LifecycleTestUtils.createPublished(datasetVersion);
-    }
-
-    private static void prepareToValidationRejected(DatasetVersion datasetVersion) {
-        prepareToProductionValidation(datasetVersion);
-        LifecycleTestUtils.prepareToValidationRejected(datasetVersion);
-    }
-
-    private static void prepareToLifecycleCommonDatasetVersion(DatasetVersion datasetVersion) {
-        ExternalItem geoGranularity01 = StatisticalResourcesPersistedDoMocks.mockCodeExternalItem();
-        ExternalItem geoGranularity02 = StatisticalResourcesPersistedDoMocks.mockCodeExternalItem();
-        ExternalItem geoGranularity03 = StatisticalResourcesPersistedDoMocks.mockCodeExternalItem();
-        datasetVersion.addGeographicGranularity(geoGranularity01);
-        datasetVersion.addGeographicGranularity(geoGranularity02);
-        datasetVersion.addGeographicGranularity(geoGranularity03);
-
-        ExternalItem timeGranularity = StatisticalResourcesPersistedDoMocks.mockCodeExternalItem();
-        datasetVersion.addTemporalGranularity(timeGranularity);
-
-        ExternalItem dsd = StatisticalResourcesPersistedDoMocks.mockDsdExternalItem();
-        datasetVersion.setRelatedDsd(dsd);
-
-        datasetVersion.setDateNextUpdate(new DateTime().plusDays(10));
-
-        ExternalItem codeUpdateFreq = StatisticalResourcesPersistedDoMocks.mockCodeExternalItem();
-        datasetVersion.setUpdateFrequency(codeUpdateFreq);
-
-        StatisticOfficiality officiality = getStatisticalResourcesPersistedDoMocks().mockStatisticOfficiality("officiality");
-        datasetVersion.setStatisticOfficiality(officiality);
-
-        if (datasetVersion.getDatasources().isEmpty()) {
-            Datasource datasource = DatasourceMockFactory.generateSimpleDatasource();
-            datasource.setDatasetVersion(datasetVersion);
-            datasetVersion.addDatasource(datasource);
-        }
-
-        // Coverages
-        fillDimensionCoverages(datasetVersion);
-    }
-
-    private static void fillDimensionCoverages(DatasetVersion datasetVersion) {
-        datasetVersion.addDimensionsCoverage(new CodeDimension("TIME_PERIOD", "2012", "2012"));
-        datasetVersion.addDimensionsCoverage(new CodeDimension("TIME_PERIOD", "2011", "2011"));
-        datasetVersion.addDimensionsCoverage(new CodeDimension("TIME_PERIOD", "2010", "2010"));
-        datasetVersion.addDimensionsCoverage(new CodeDimension("GEO_DIM", "ES", "España"));
-        datasetVersion.addDimensionsCoverage(new CodeDimension("GEO_DIM", "ES61", "Andalucia"));
-        datasetVersion.addDimensionsCoverage(new CodeDimension("GEO_DIM", "ES70", "Canarias"));
-        datasetVersion.addDimensionsCoverage(new CodeDimension("GEO_DIM", "ES45", "Cataluña"));
-        datasetVersion.addDimensionsCoverage(new CodeDimension("MEAS_DIM", "C01", "Concept 01"));
-        datasetVersion.addDimensionsCoverage(new CodeDimension("MEAS_DIM", "C02", "Concept 02"));
-        datasetVersion.addDimensionsCoverage(new CodeDimension("MEAS_DIM", "C03", "Concept 03"));
-
-        datasetVersion.addTemporalCoverage(StatisticalResourcesDoMocks.mockTemporalCode("2012", "2012"));
-        datasetVersion.addTemporalCoverage(StatisticalResourcesDoMocks.mockTemporalCode("2011", "2011"));
-        datasetVersion.addTemporalCoverage(StatisticalResourcesDoMocks.mockTemporalCode("2010", "2010"));
-
-        datasetVersion.addGeographicCoverage(StatisticalResourcesDoMocks.mockCodeExternalItem("ES"));
-        datasetVersion.addGeographicCoverage(StatisticalResourcesDoMocks.mockCodeExternalItem("ES61"));
-        datasetVersion.addGeographicCoverage(StatisticalResourcesDoMocks.mockCodeExternalItem("ES70"));
-        datasetVersion.addGeographicCoverage(StatisticalResourcesDoMocks.mockCodeExternalItem("ES45"));
-
-        datasetVersion.addMeasureCoverage(StatisticalResourcesDoMocks.mockConceptExternalItem("C01"));
-        datasetVersion.addMeasureCoverage(StatisticalResourcesDoMocks.mockConceptExternalItem("C02"));
-        datasetVersion.addMeasureCoverage(StatisticalResourcesDoMocks.mockConceptExternalItem("C03"));
-
-        // Relations
-        for (CodeDimension code : datasetVersion.getDimensionsCoverage()) {
-            code.setDatasetVersion(datasetVersion);
-        }
     }
 
 }

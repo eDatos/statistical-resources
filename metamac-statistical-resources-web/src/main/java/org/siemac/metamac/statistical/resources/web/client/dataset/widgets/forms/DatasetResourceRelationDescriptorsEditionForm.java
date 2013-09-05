@@ -1,7 +1,14 @@
 package org.siemac.metamac.statistical.resources.web.client.dataset.widgets.forms;
 
+import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
+import static org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourcesFormUtils.setRelatedResourcesValue;
+
+import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
+import org.siemac.metamac.statistical.resources.web.client.dataset.model.ds.DatasetDS;
 import org.siemac.metamac.statistical.resources.web.client.dataset.view.handlers.DatasetMetadataTabUiHandlers;
+import org.siemac.metamac.statistical.resources.web.client.model.ds.SiemacMetadataDS;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.SiemacMetadataResourceRelationDescriptorsEditionForm;
+import org.siemac.metamac.statistical.resources.web.client.widgets.forms.fields.RelatedResourceListItem;
 import org.siemac.metamac.web.common.client.view.handlers.BaseUiHandlers;
 import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
 
@@ -11,6 +18,22 @@ public class DatasetResourceRelationDescriptorsEditionForm extends SiemacMetadat
 
     private DatasetMetadataTabUiHandlers uiHandlers;
 
+    
+    public DatasetResourceRelationDescriptorsEditionForm() {
+        super();
+        
+        RelatedResourceListItem isRequiredBy = new RelatedResourceListItem(DatasetDS.IS_REQUIRED_BY, getConstants().siemacMetadataStatisticalResourceIsRequiredBy(), false,
+                getRecordNavigationHandler());
+        
+        addFields(isRequiredBy);
+    }
+    
+    public void setDatasetVersionDto(DatasetVersionDto dto) {
+        setSiemacMetadataStatisticalResourceDto(dto);
+        
+        setRelatedResourcesValue(getItem(DatasetDS.IS_REQUIRED_BY), dto.getIsRequiredBy());
+    }
+    
     @Override
     public void setUiHandlers(UiHandlers uiHandlers) {
         this.uiHandlers = (DatasetMetadataTabUiHandlers) uiHandlers;

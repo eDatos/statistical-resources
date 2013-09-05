@@ -40,17 +40,11 @@ public class LifecycleFillerTest extends StatisticalResourcesBaseTest {
 
     private LifecycleFiller                         lifecycleFiller                         = new LifecycleFiller();
 
-    @InjectMocks
-    private StatisticalResourcesNotPersistedDoMocks statisticalResourcesNotPersistedDoMocks = new StatisticalResourcesNotPersistedDoMocks();
-
-    private StatisticalResourcesPersistedDoMocks    statisticalResourcesPersistedDoMocks    = new StatisticalResourcesPersistedDoMocks();
+    private StatisticalResourcesNotPersistedDoMocks statisticalResourcesNotPersistedDoMocks = StatisticalResourcesNotPersistedDoMocks.getInstance();
 
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        Field field = ReflectionUtils.findField(StatisticalResourcesNotPersistedDoMocks.class, "statisticalResourcesPersistedDoMocks");
-        field.setAccessible(true);
-        ReflectionUtils.setField(field, statisticalResourcesNotPersistedDoMocks, statisticalResourcesPersistedDoMocks);
     }
 
     // ------------------------------------------------------------------------------------------------------

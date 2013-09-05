@@ -85,8 +85,7 @@ public class QueryServiceTest extends StatisticalResourcesBaseTest implements Qu
     @Autowired
     private DatasetVersionMockFactory               datasetVersionMockFactory;
 
-    @Autowired
-    private StatisticalResourcesNotPersistedDoMocks statisticalResourcesNotPersistedDoMocks;
+    private StatisticalResourcesNotPersistedDoMocks notPersistedMocks = StatisticalResourcesNotPersistedDoMocks.getInstance();
 
     @Autowired
     private StatisticalResourceRepository           statisticalResourceRepository;
@@ -219,7 +218,7 @@ public class QueryServiceTest extends StatisticalResourcesBaseTest implements Qu
     public void testCreateQueryVersion() throws Exception {
         ExternalItem statisticalOperation = StatisticalResourcesNotPersistedDoMocks.mockStatisticalOperationExternalItem();
 
-        QueryVersion expected = statisticalResourcesNotPersistedDoMocks.mockQueryVersionWithDatasetVersion(datasetVersionMockFactory.retrieveMock(DATASET_VERSION_06_FOR_QUERIES_NAME), true);
+        QueryVersion expected = notPersistedMocks.mockQueryVersionWithDatasetVersion(datasetVersionMockFactory.retrieveMock(DATASET_VERSION_06_FOR_QUERIES_NAME), true);
         QueryVersion actual = queryService.createQueryVersion(getServiceContextWithoutPrincipal(), expected, statisticalOperation);
         assertEqualsQueryVersion(expected, actual);
     }
@@ -229,7 +228,7 @@ public class QueryServiceTest extends StatisticalResourcesBaseTest implements Qu
     public void testCreateQueryVersionIncremental() throws Exception {
         ExternalItem statisticalOperation = StatisticalResourcesNotPersistedDoMocks.mockStatisticalOperationExternalItem();
 
-        QueryVersion expected = statisticalResourcesNotPersistedDoMocks.mockQueryVersionWithDatasetVersion(
+        QueryVersion expected = notPersistedMocks.mockQueryVersionWithDatasetVersion(
                 datasetVersionMockFactory.retrieveMock(DATASET_VERSION_48_WITH_TEMPORAL_COVERAGE_FILLED_NAME), true);
         expected.setType(QueryTypeEnum.AUTOINCREMENTAL);
         expected.setLatestTemporalCodeInCreation("2012");
@@ -242,7 +241,7 @@ public class QueryServiceTest extends StatisticalResourcesBaseTest implements Qu
     public void testCreateQueryVersionDiscontinued() throws Exception {
         ExternalItem statisticalOperation = StatisticalResourcesNotPersistedDoMocks.mockStatisticalOperationExternalItem();
 
-        QueryVersion expected = statisticalResourcesNotPersistedDoMocks.mockQueryVersionWithDatasetVersion(datasetVersionMockFactory.retrieveMock(DATASET_VERSION_03_FOR_DATASET_03_NAME), false);
+        QueryVersion expected = notPersistedMocks.mockQueryVersionWithDatasetVersion(datasetVersionMockFactory.retrieveMock(DATASET_VERSION_03_FOR_DATASET_03_NAME), false);
         QueryVersion actual = queryService.createQueryVersion(getServiceContextWithoutPrincipal(), expected, statisticalOperation);
         assertEqualsQueryVersion(expected, actual);
         assertEquals(QueryStatusEnum.DISCONTINUED, actual.getStatus());
@@ -253,7 +252,7 @@ public class QueryServiceTest extends StatisticalResourcesBaseTest implements Qu
     public void testCreateQueryVersionActive() throws Exception {
         ExternalItem statisticalOperation = StatisticalResourcesNotPersistedDoMocks.mockStatisticalOperationExternalItem();
 
-        QueryVersion expected = statisticalResourcesNotPersistedDoMocks.mockQueryVersionWithDatasetVersion(
+        QueryVersion expected = notPersistedMocks.mockQueryVersionWithDatasetVersion(
                 datasetVersionMockFactory.retrieveMock(DATASET_VERSION_04_FOR_DATASET_03_AND_LAST_VERSION_NAME), true);
         QueryVersion actual = queryService.createQueryVersion(getServiceContextWithoutPrincipal(), expected, statisticalOperation);
         assertEqualsQueryVersion(expected, actual);
@@ -265,7 +264,7 @@ public class QueryServiceTest extends StatisticalResourcesBaseTest implements Qu
     public void testCreateQueryVersionErrorParameterStatisticalOperationRequired() throws Exception {
         expectedMetamacException(new MetamacException(ServiceExceptionType.PARAMETER_REQUIRED, ServiceExceptionParameters.STATISTICAL_OPERATION));
 
-        QueryVersion expected = statisticalResourcesNotPersistedDoMocks.mockQueryVersionWithDatasetVersion(
+        QueryVersion expected = notPersistedMocks.mockQueryVersionWithDatasetVersion(
                 datasetVersionMockFactory.retrieveMock(DATASET_VERSION_04_FOR_DATASET_03_AND_LAST_VERSION_NAME), true);
         queryService.createQueryVersion(getServiceContextWithoutPrincipal(), expected, null);
     }
@@ -284,7 +283,7 @@ public class QueryServiceTest extends StatisticalResourcesBaseTest implements Qu
     public void testCreateQueryWithSelection() throws Exception {
         ExternalItem statisticalOperation = StatisticalResourcesNotPersistedDoMocks.mockStatisticalOperationExternalItem();
 
-        QueryVersion expected = statisticalResourcesNotPersistedDoMocks.mockQueryVersionWithDatasetVersion(datasetVersionMockFactory.retrieveMock(DATASET_VERSION_06_FOR_QUERIES_NAME), true);
+        QueryVersion expected = notPersistedMocks.mockQueryVersionWithDatasetVersion(datasetVersionMockFactory.retrieveMock(DATASET_VERSION_06_FOR_QUERIES_NAME), true);
         QueryVersion actual = queryService.createQueryVersion(getServiceContextWithoutPrincipal(), expected, statisticalOperation);
         assertEqualsQueryVersion(expected, actual);
     }
@@ -294,7 +293,7 @@ public class QueryServiceTest extends StatisticalResourcesBaseTest implements Qu
         expectedMetamacException(new MetamacException(ServiceExceptionType.METADATA_REQUIRED, ServiceExceptionParameters.QUERY_VERSION__DATASET_VERSION));
 
         ExternalItem statisticalOperation = StatisticalResourcesNotPersistedDoMocks.mockStatisticalOperationExternalItem();
-        QueryVersion query = statisticalResourcesNotPersistedDoMocks.mockQueryVersionWithDatasetVersion(null, true);
+        QueryVersion query = notPersistedMocks.mockQueryVersionWithDatasetVersion(null, true);
         queryService.createQueryVersion(getServiceContextWithoutPrincipal(), query, statisticalOperation);
     }
 
@@ -304,7 +303,7 @@ public class QueryServiceTest extends StatisticalResourcesBaseTest implements Qu
         expectedMetamacException(new MetamacException(ServiceExceptionType.METADATA_REQUIRED, ServiceExceptionParameters.QUERY_VERSION__SELECTION));
 
         ExternalItem statisticalOperation = StatisticalResourcesNotPersistedDoMocks.mockStatisticalOperationExternalItem();
-        QueryVersion query = statisticalResourcesNotPersistedDoMocks.mockQueryVersionWithSelectionNull(datasetVersionMockFactory.retrieveMock(DATASET_VERSION_06_FOR_QUERIES_NAME));
+        QueryVersion query = notPersistedMocks.mockQueryVersionWithSelectionNull(datasetVersionMockFactory.retrieveMock(DATASET_VERSION_06_FOR_QUERIES_NAME));
         queryService.createQueryVersion(getServiceContextWithoutPrincipal(), query, statisticalOperation);
     }
 
@@ -314,7 +313,7 @@ public class QueryServiceTest extends StatisticalResourcesBaseTest implements Qu
         expectedMetamacException(new MetamacException(ServiceExceptionType.METADATA_REQUIRED, ServiceExceptionParameters.QUERY_VERSION__LIFE_CYCLE_STATISTICAL_RESOURCE));
 
         ExternalItem statisticalOperation = StatisticalResourcesNotPersistedDoMocks.mockStatisticalOperationExternalItem();
-        QueryVersion query = statisticalResourcesNotPersistedDoMocks.mockQueryVersionWithStatisticalResourceNull(datasetVersionMockFactory.retrieveMock(DATASET_VERSION_06_FOR_QUERIES_NAME));
+        QueryVersion query = notPersistedMocks.mockQueryVersionWithStatisticalResourceNull(datasetVersionMockFactory.retrieveMock(DATASET_VERSION_06_FOR_QUERIES_NAME));
         queryService.createQueryVersion(getServiceContextWithoutPrincipal(), query, statisticalOperation);
     }
 
@@ -324,7 +323,7 @@ public class QueryServiceTest extends StatisticalResourcesBaseTest implements Qu
         expectedMetamacException(new MetamacException(ServiceExceptionType.METADATA_REQUIRED, ServiceExceptionParameters.QUERY_VERSION__SELECTION));
 
         ExternalItem statisticalOperation = StatisticalResourcesNotPersistedDoMocks.mockStatisticalOperationExternalItem();
-        QueryVersion expected = statisticalResourcesNotPersistedDoMocks.mockQueryVersionWithSelectionNull(datasetVersionMockFactory.retrieveMock(DATASET_VERSION_06_FOR_QUERIES_NAME));
+        QueryVersion expected = notPersistedMocks.mockQueryVersionWithSelectionNull(datasetVersionMockFactory.retrieveMock(DATASET_VERSION_06_FOR_QUERIES_NAME));
         queryService.createQueryVersion(getServiceContextWithoutPrincipal(), expected, statisticalOperation);
     }
 
@@ -334,7 +333,7 @@ public class QueryServiceTest extends StatisticalResourcesBaseTest implements Qu
         expectedMetamacException(new MetamacException(ServiceExceptionType.METADATA_INCORRECT, ServiceExceptionParameters.QUERY_VERSION__SELECTION));
 
         ExternalItem statisticalOperation = StatisticalResourcesNotPersistedDoMocks.mockStatisticalOperationExternalItem();
-        QueryVersion query = statisticalResourcesNotPersistedDoMocks.mockQueryVersionWithSelectionIncorrectDimensionNull(datasetVersionMockFactory.retrieveMock(DATASET_VERSION_06_FOR_QUERIES_NAME));
+        QueryVersion query = notPersistedMocks.mockQueryVersionWithSelectionIncorrectDimensionNull(datasetVersionMockFactory.retrieveMock(DATASET_VERSION_06_FOR_QUERIES_NAME));
         queryService.createQueryVersion(getServiceContextWithoutPrincipal(), query, statisticalOperation);
     }
 
@@ -344,7 +343,7 @@ public class QueryServiceTest extends StatisticalResourcesBaseTest implements Qu
         expectedMetamacException(new MetamacException(ServiceExceptionType.METADATA_UNEXPECTED, ServiceExceptionParameters.QUERY_VERSION__SELECTION__TIME_PERIOD));
 
         ExternalItem statisticalOperation = StatisticalResourcesNotPersistedDoMocks.mockStatisticalOperationExternalItem();
-        QueryVersion query = statisticalResourcesNotPersistedDoMocks.mockQueryVersionLatestDataWithTimeSelectionNotEmpty(datasetVersionMockFactory.retrieveMock(DATASET_VERSION_06_FOR_QUERIES_NAME));
+        QueryVersion query = notPersistedMocks.mockQueryVersionLatestDataWithTimeSelectionNotEmpty(datasetVersionMockFactory.retrieveMock(DATASET_VERSION_06_FOR_QUERIES_NAME));
         queryService.createQueryVersion(getServiceContextWithoutPrincipal(), query, statisticalOperation);
     }
 
@@ -354,7 +353,7 @@ public class QueryServiceTest extends StatisticalResourcesBaseTest implements Qu
         expectedMetamacException(new MetamacException(ServiceExceptionType.METADATA_INCORRECT, ServiceExceptionParameters.QUERY_VERSION__SELECTION));
 
         ExternalItem statisticalOperation = StatisticalResourcesNotPersistedDoMocks.mockStatisticalOperationExternalItem();
-        QueryVersion query = statisticalResourcesNotPersistedDoMocks.mockQueryVersionWithSelectionIncorrectCodesNull(datasetVersionMockFactory.retrieveMock(DATASET_VERSION_06_FOR_QUERIES_NAME));
+        QueryVersion query = notPersistedMocks.mockQueryVersionWithSelectionIncorrectCodesNull(datasetVersionMockFactory.retrieveMock(DATASET_VERSION_06_FOR_QUERIES_NAME));
         queryService.createQueryVersion(getServiceContextWithoutPrincipal(), query, statisticalOperation);
     }
 

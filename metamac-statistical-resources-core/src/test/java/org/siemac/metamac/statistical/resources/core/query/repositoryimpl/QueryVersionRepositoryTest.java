@@ -65,8 +65,7 @@ public class QueryVersionRepositoryTest extends StatisticalResourcesBaseTest imp
     @Autowired
     private QueryMockFactory                        queryMockFactory;
 
-    @Autowired
-    private StatisticalResourcesNotPersistedDoMocks statisticalResourcesNotPersistedDoMocks;
+    private StatisticalResourcesNotPersistedDoMocks statisticalResourcesNotPersistedDoMocks = StatisticalResourcesNotPersistedDoMocks.getInstance();
 
     @Autowired
     private DatasetVersionMockFactory               datasetVersionMockFactory;

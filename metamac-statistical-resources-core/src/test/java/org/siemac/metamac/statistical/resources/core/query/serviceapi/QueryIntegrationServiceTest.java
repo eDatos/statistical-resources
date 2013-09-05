@@ -31,8 +31,7 @@ public class QueryIntegrationServiceTest extends StatisticalResourcesBaseTest {
     @Autowired
     private DatasetVersionMockFactory               datasetVersionMockFactory;
 
-    @Autowired
-    private StatisticalResourcesNotPersistedDoMocks statisticalResourcesNotPersistedDoMocks;
+    private StatisticalResourcesNotPersistedDoMocks statisticalResourcesNotPersistedDoMocks = StatisticalResourcesNotPersistedDoMocks.getInstance();
 
 
     // ------------------------------------------------------------------------

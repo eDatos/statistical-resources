@@ -13,6 +13,7 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 
 import org.siemac.metamac.statistical.resources.core.query.domain.Query;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.QueryMock;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesNotPersistedDoMocks;
 import org.springframework.stereotype.Component;
 
@@ -47,7 +48,7 @@ public class QueryMockFactory extends StatisticalResourcesMockFactory<Query> {
         return QUERY_01_SIMPLE;
     }
 
-    protected static Query getQuery02BasicWithGeneratedVersion() {
+    private static Query getQuery02BasicWithGeneratedVersion() {
         if (QUERY_02_BASIC_WITH_GENERATED_VERSION == null) {
             Query query = createQueryWithGeneratedVersion();
             query.getVersions().get(0).getLifeCycleStatisticalResource().setLastVersion(Boolean.TRUE);
@@ -65,7 +66,7 @@ public class QueryMockFactory extends StatisticalResourcesMockFactory<Query> {
         return QUERY_03_BASIC_WITH_2_QUERY_VERSIONS;
     }
 
-    protected static void setQuery03Versions(Query query) {
+    private static void setQuery03Versions(Query query) {
         QueryVersion dsV1 = getQueryVersion21ForQuery03();
         QueryVersion dsV2 = getQueryVersion22ForQuery03AndLastVersion();
 
@@ -144,7 +145,7 @@ public class QueryMockFactory extends StatisticalResourcesMockFactory<Query> {
         dsV2.getLifeCycleStatisticalResource().setReplacesVersion(StatisticalResourcesNotPersistedDoMocks.mockRelatedResourceLinkedToQueryVersion(dsV1));
     }
 
-    protected static Query getQuery07MultiVersion() {
+    private static Query getQuery07MultiVersion() {
         if (QUERY_07_SIMPLE_MULTI_VERSION == null) {
             Query query = createQueryWithoutGeneratedVersion();
             QUERY_07_SIMPLE_MULTI_VERSION = query;
@@ -153,7 +154,7 @@ public class QueryMockFactory extends StatisticalResourcesMockFactory<Query> {
         return QUERY_07_SIMPLE_MULTI_VERSION;
     }
 
-    protected static void setQuery07Versions(Query query) {
+    private static void setQuery07Versions(Query query) {
         QueryVersion dsV1 = getQueryVersion29SimpleForQuery07Dataset56();
         QueryVersion dsV2 = getQueryVersion30SimpleForQuery07Dataset56();
 
@@ -166,11 +167,15 @@ public class QueryMockFactory extends StatisticalResourcesMockFactory<Query> {
         dsV2.getLifeCycleStatisticalResource().setReplacesVersion(StatisticalResourcesNotPersistedDoMocks.mockRelatedResourceLinkedToQueryVersion(dsV1));
     }
 
+    public static Query generateQueryWithGeneratedVersion() {
+        return getStatisticalResourcesPersistedDoMocks().mockQueryWithGeneratedQueryVersion();
+    }
+    
     private static Query createQueryWithGeneratedVersion() {
-        return getStatisticalResourcesPersistedDoMocks().mockQueryWithGeneratedQueryVersions();
+        return getStatisticalResourcesPersistedDoMocks().mockQueryWithGeneratedQueryVersion();
     }
 
     private static Query createQueryWithoutGeneratedVersion() {
-        return getStatisticalResourcesPersistedDoMocks().mockQueryWithoutGeneratedQueryVersions();
+        return getStatisticalResourcesPersistedDoMocks().mockQuery(new QueryMock());
     }
 }

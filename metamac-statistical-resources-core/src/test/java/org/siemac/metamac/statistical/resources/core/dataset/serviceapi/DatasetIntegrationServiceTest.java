@@ -37,8 +37,7 @@ public class DatasetIntegrationServiceTest extends StatisticalResourcesBaseTest 
     @Autowired
     private DatasetVersionMockFactory               datasetVersionMockFactory;
 
-    @Autowired
-    private StatisticalResourcesNotPersistedDoMocks statisticalResourcesNotPersistedDoMocks;
+    private StatisticalResourcesNotPersistedDoMocks statisticalResourcesNotPersistedDoMocks = StatisticalResourcesNotPersistedDoMocks.getInstance();
 
     @Autowired
     private DatasetRepositoriesServiceFacade        datasetRepositoriesServiceFacade;

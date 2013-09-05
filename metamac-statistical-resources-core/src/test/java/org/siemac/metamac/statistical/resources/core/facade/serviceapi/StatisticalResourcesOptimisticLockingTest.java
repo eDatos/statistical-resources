@@ -400,7 +400,7 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
         queryVersionDtoSession1AfterUpdate01.setTitle(StatisticalResourcesDtoMocks.mockInternationalStringDto());
         QueryVersionDto queryVersionDtoSession1AfterUpdate02 = statisticalResourcesServiceFacade.updateQueryVersion(getServiceContextAdministrador(), queryVersionDtoSession1AfterUpdate01);
         assertTrue(queryVersionDtoSession1AfterUpdate02.getOptimisticLockingVersion() > queryVersionDtoSession1AfterUpdate01.getOptimisticLockingVersion());
-        assertEquals(Long.valueOf(4), queryVersionDtoSession1AfterUpdate02.getOptimisticLockingVersion());
+        assertEquals(Long.valueOf(3), queryVersionDtoSession1AfterUpdate02.getOptimisticLockingVersion());
     }
 
     @Override

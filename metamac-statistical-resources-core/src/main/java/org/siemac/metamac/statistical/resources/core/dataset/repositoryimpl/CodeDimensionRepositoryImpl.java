@@ -17,15 +17,6 @@ import org.springframework.stereotype.Repository;
 public class CodeDimensionRepositoryImpl extends CodeDimensionRepositoryBase {
     public CodeDimensionRepositoryImpl() {
     }
-
-    public List<CodeDimension> findCodesForDatasetVersionByDimensionId(
-        DatasetVersion datasetVersion, String dimensionId) {
-
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException(
-            "findCodesForDatasetVersionByDimensionId not implemented");
-
-    }
     
     @Override
     public List<CodeDimension> findCodesForDatasetVersionByDimensionId(long datasetVersionId, String dimensionId, String filter) throws MetamacException {

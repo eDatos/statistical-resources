@@ -13,8 +13,6 @@ import com.arte.libs.lang.ObjectUtils;
 
 public abstract class StatisticalResourcesMockFactory<EntityMock> extends MockFactory<EntityMock> {
 
-    private static StatisticalResourcesPersistedDoMocks statisticalResourcesPersistedDoMocks;
-
     public static final String                          OPERATION_01_CODE = "C00025A";
     public static final String                          OPERATION_02_CODE = "C00025B";
     public static final String                          OPERATION_03_CODE = "C00025C";
@@ -24,14 +22,7 @@ public abstract class StatisticalResourcesMockFactory<EntityMock> extends MockFa
     public static final String                          THIRD_VERSION     = "003.000";
 
     protected static StatisticalResourcesPersistedDoMocks getStatisticalResourcesPersistedDoMocks() {
-        if (statisticalResourcesPersistedDoMocks == null) {
-            statisticalResourcesPersistedDoMocks = ApplicationContextProvider.getApplicationContext().getBean(StatisticalResourcesPersistedDoMocks.class);
-        }
-        return statisticalResourcesPersistedDoMocks;
-    }
-
-    public void setStatisticalResourcesPersistedDoMocks(StatisticalResourcesPersistedDoMocks statisticalResourcesPersistedDoMocks) {
-        StatisticalResourcesMockFactory.statisticalResourcesPersistedDoMocks = statisticalResourcesPersistedDoMocks;
+        return StatisticalResourcesPersistedDoMocks.getInstance();
     }
 
     @SuppressWarnings({"rawtypes", "unchecked"})

@@ -13,12 +13,6 @@ public class DatasourceMockFactory extends StatisticalResourcesMockFactory<Datas
     public static final String DATASOURCE_02_BASIC_NAME                                 = "DATASOURCE_02_BASIC";
     private static Datasource  DATASOURCE_02_BASIC;
 
-    public static final String DATASOURCE_03_BASIC_FOR_DATASET_VERSION_03_NAME          = "DATASOURCE_03_BASIC_FOR_DATASET_VERSION_03";
-    private static Datasource  DATASOURCE_03_BASIC_FOR_DATASET_VERSION_03;
-
-    public static final String DATASOURCE_04_BASIC_FOR_DATASET_VERSION_03_NAME          = "DATASOURCE_04_BASIC_FOR_DATASET_VERSION_03";
-    private static Datasource  DATASOURCE_04_BASIC_FOR_DATASET_VERSION_03;
-
     public static final String DATASOURCE_05_BASIC_FOR_DATASET_VERSION_04_NAME          = "DATASOURCE_05_BASIC_FOR_DATASET_VERSION_04";
     private static Datasource  DATASOURCE_05_BASIC_FOR_DATASET_VERSION_04;
 
@@ -40,22 +34,6 @@ public class DatasourceMockFactory extends StatisticalResourcesMockFactory<Datas
             DATASOURCE_02_BASIC = createDatasource();
         }
         return DATASOURCE_02_BASIC;
-    }
-
-    protected static Datasource getDatasorce03BasicForDatasetVersion03() {
-        if (DATASOURCE_03_BASIC_FOR_DATASET_VERSION_03 == null) {
-            DATASOURCE_03_BASIC_FOR_DATASET_VERSION_03 = createDatasource();
-            // Dataset link set in datasetversion
-        }
-        return DATASOURCE_03_BASIC_FOR_DATASET_VERSION_03;
-    }
-
-    protected static Datasource getDatasorce04BasicForDatasetVersion03() {
-        if (DATASOURCE_04_BASIC_FOR_DATASET_VERSION_03 == null) {
-            DATASOURCE_04_BASIC_FOR_DATASET_VERSION_03 = createDatasource();
-            // Dataset link set in datasetversion
-        }
-        return DATASOURCE_04_BASIC_FOR_DATASET_VERSION_03;
     }
 
     protected static Datasource getDatasorce05BasicForDatasetVersion04() {
@@ -87,7 +65,7 @@ public class DatasourceMockFactory extends StatisticalResourcesMockFactory<Datas
     }
 
     public static Datasource generateSimpleDatasource() {
-        return createDatasource();
+        return getStatisticalResourcesPersistedDoMocks().mockDatasource(new Datasource());
     }
 
     public static Datasource generatePxDatasource(DateTime dateNextUpdate) {

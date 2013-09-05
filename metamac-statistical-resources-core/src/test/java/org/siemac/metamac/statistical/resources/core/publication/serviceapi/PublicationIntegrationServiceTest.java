@@ -36,8 +36,7 @@ public class PublicationIntegrationServiceTest extends StatisticalResourcesBaseT
     @Autowired
     private DatasetMockFactory                      datasetMockFactory;
 
-    @Autowired
-    private StatisticalResourcesNotPersistedDoMocks statisticalResourcesNotPersistedDoMocks;
+    private StatisticalResourcesNotPersistedDoMocks statisticalResourcesNotPersistedDoMocks = StatisticalResourcesNotPersistedDoMocks.getInstance();
 
     @Autowired
     private PublicationService                      publicationService;

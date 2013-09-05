@@ -52,7 +52,7 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_44_NEXT_VERSION_NON_SCHEDULED_UPDATE_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_45_NEXT_VERSION_SCHEDULED_UPDATE_JANUARY_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_46_NEXT_VERSION_SCHEDULED_UPDATE_JULY_NAME;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_47_WITH_COVERAGE_FILLED_WITH_TITLES_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.*;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_48_WITH_TEMPORAL_COVERAGE_FILLED_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasourceMockFactory.DATASOURCE_01_BASIC_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationMockFactory.PUBLICATION_02_BASIC_WITH_GENERATED_VERSION_NAME;
@@ -841,7 +841,7 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
     @MetamacMock({DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME, DATASET_04_FULL_FILLED_WITH_1_DATASET_VERSIONS_NAME})
     public void testFindDatasetsByCondition() throws Exception {
         DatasetVersion latestDatasetVersionDataset03 = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_04_FOR_DATASET_03_AND_LAST_VERSION_NAME);
-        DatasetVersion latestDatasetVersionDataset04 = datasetMockFactory.retrieveMock(DATASET_04_FULL_FILLED_WITH_1_DATASET_VERSIONS_NAME).getVersions().get(0);
+        DatasetVersion latestDatasetVersionDataset04 = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_05_FOR_DATASET_04_NAME);
 
         MetamacCriteria metamacCriteria = new MetamacCriteria();
 
@@ -909,8 +909,8 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
     @Test
     @MetamacMock({DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME})
     public void testRetrieveDatasetVersions() throws Exception {
-        DatasetVersion datasetVersionFirst = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_03_FOR_DATASET_03_NAME);
-        DatasetVersion datasetVersionLast = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_04_FOR_DATASET_03_AND_LAST_VERSION_NAME);
+        DatasetVersion datasetVersionFirst = datasetMockFactory.retrieveMock(DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME).getVersions().get(0);
+        DatasetVersion datasetVersionLast = datasetMockFactory.retrieveMock(DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME).getVersions().get(1);
         // Version in urn does not care
         {
             List<DatasetVersionBaseDto> datasets = statisticalResourcesServiceFacade.retrieveDatasetVersions(getServiceContextAdministrador(), datasetVersionLast

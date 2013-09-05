@@ -76,8 +76,6 @@ public class BaseDo2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Base
         target.setIsReplacedBy(relatedResourceDoToDto(source.getIsReplacedBy()));
         target.setIsReplacedByVersion(relatedResourceDoToDto(source.getIsReplacedByVersion()));
 
-        target.getIsRequiredBy().clear();
-        target.getIsRequiredBy().addAll(relatedResourceDoCollectionToDtoCollection(source.getIsRequiredBy()));
         target.getHasPart().clear();
         target.getHasPart().addAll(relatedResourceDoCollectionToDtoCollection(source.getHasPart()));
         target.getIsPartOf().clear();

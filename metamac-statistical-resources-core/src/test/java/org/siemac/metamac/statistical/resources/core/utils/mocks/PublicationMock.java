@@ -1,18 +1,15 @@
 package org.siemac.metamac.statistical.resources.core.utils.mocks;
 
 import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableStatisticalResource;
-import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
-import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.StatisticalResourcesMockFactory;
+import org.siemac.metamac.statistical.resources.core.publication.domain.Publication;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesPersistedDoMocks;
 
 
-public class DatasetMock extends Dataset {
-    
+public class PublicationMock extends Publication {
     private String maintainerCode;
     private Integer sequentialId;
     
-    
-    public DatasetMock() {
+    public PublicationMock() {
         maintainerCode = StatisticalResourcesPersistedDoMocks.mockString(10);
     }
     

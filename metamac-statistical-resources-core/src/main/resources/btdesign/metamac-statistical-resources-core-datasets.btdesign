@@ -202,6 +202,8 @@ Application DatasetsStatisticalResources {
 				findById;
 				findByCondition;
 				findByCondition(PagingParameter pagingParameter);
+				List<RelatedResourceResult> retrieveLastVersionResourcesThatRequiresDatasetVersion(@DatasetVersion datasetVersion) throws MetamacException;  
+				List<RelatedResourceResult> retrieveLastPublishedVersionResourcesThatRequiresDatasetVersion(@DatasetVersion datasetVersion) throws MetamacException;  
 				@DatasetVersion retrieveByUrn(String urn) throws MetamacException;  
 				@DatasetVersion retrieveLastVersion(String datasetUrn) throws MetamacException;
 				@DatasetVersion retrieveLastPublishedVersion(String datasetUrn) throws MetamacException;

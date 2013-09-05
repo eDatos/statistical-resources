@@ -12,19 +12,21 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.StatisticOfficiality;
 import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryTypeEnum;
-import org.siemac.metamac.statistical.resources.core.publication.domain.Publication;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
 import org.siemac.metamac.statistical.resources.core.query.domain.CodeItem;
 import org.siemac.metamac.statistical.resources.core.query.domain.QuerySelectionItem;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
-@Component
 public class StatisticalResourcesNotPersistedDoMocks extends StatisticalResourcesDoMocks {
 
-    @Autowired
-    private StatisticalResourcesPersistedDoMocks statisticalResourcesPersistedDoMocks;
+    private static StatisticalResourcesPersistedDoMocks persistedMocks = StatisticalResourcesPersistedDoMocks.getInstance();
+
+    private StatisticalResourcesNotPersistedDoMocks() {
+    }
+
+    public static StatisticalResourcesNotPersistedDoMocks getInstance() {
+        return new StatisticalResourcesNotPersistedDoMocks();
+    }
 
     // -----------------------------------------------------------------
     // QUERY
@@ -55,7 +57,7 @@ public class StatisticalResourcesNotPersistedDoMocks extends StatisticalResource
 
     @Override
     public QueryVersion mockQueryVersionWithGeneratedDatasetVersion() {
-        QueryVersion queryVersion = mockQueryVersion(statisticalResourcesPersistedDoMocks.mockDatasetVersion(), true);
+        QueryVersion queryVersion = mockQueryVersion(persistedMocks.mockDatasetVersion(), true);
         return queryVersion;
     }
 
@@ -118,7 +120,7 @@ public class StatisticalResourcesNotPersistedDoMocks extends StatisticalResource
     // DATASOURCE
     // -----------------------------------------------------------------
     public Datasource mockDatasourceWithIdentifiableAndDatasetVersionNull(DatasetVersion datasetVersion) {
-        Datasource datasource = mockDatasource(datasetVersion);
+        Datasource datasource = mockDatasource(new Datasource());
         datasource.setIdentifiableStatisticalResource(null);
         datasource.setDatasetVersion(null);
 
@@ -126,7 +128,7 @@ public class StatisticalResourcesNotPersistedDoMocks extends StatisticalResource
     }
 
     public Datasource mockDatasourceForPersist() {
-        return mockDatasource();
+        return mockDatasource(new Datasource());
     }
 
     // -----------------------------------------------------------------
@@ -152,24 +154,9 @@ public class StatisticalResourcesNotPersistedDoMocks extends StatisticalResource
     // -----------------------------------------------------------------
     @Override
     public PublicationVersion mockPublicationVersion() {
-        PublicationVersion publicationVersion = mockPublicationVersion(null);
+        PublicationVersion publicationVersion = new PublicationVersion();
         publicationVersion.setPublication(null);
-        return publicationVersion;
-    }
-
-    @Override
-    public PublicationVersion mockPublicationVersion(Publication publication) {
-        PublicationVersion publicationVersion = mockPublicationVersionMetadata();
-
-        publicationVersion.setSiemacMetadataStatisticalResource(mockSiemacMetadataStatisticalResource(new SiemacMetadataStatisticalResource(),TypeRelatedResourceEnum.PUBLICATION_VERSION));
-        if (publication != null) {
-            publicationVersion.setPublication(publication);
-        } else {
-            Publication pub = statisticalResourcesPersistedDoMocks.mockPublicationWithoutGeneratedPublicationVersion();
-            publicationVersion.setPublication(pub);
-            pub.addVersion(publicationVersion);
-        }
-
+        publicationVersion.setSiemacMetadataStatisticalResource(mockSiemacMetadataStatisticalResource(new SiemacMetadataStatisticalResource(), TypeRelatedResourceEnum.PUBLICATION_VERSION));
         return publicationVersion;
     }
 
@@ -180,7 +167,7 @@ public class StatisticalResourcesNotPersistedDoMocks extends StatisticalResource
     }
 
     public RelatedResource mockRelatedResourceLinkedToMockedDatasetVersion(String datasetVersionUrn) throws MetamacException {
-        DatasetVersion previousDatasetVersion = statisticalResourcesPersistedDoMocks.mockDatasetVersion();
+        DatasetVersion previousDatasetVersion = persistedMocks.mockDatasetVersion();
         previousDatasetVersion.getSiemacMetadataStatisticalResource().setUrn(datasetVersionUrn);
 
         RelatedResource target = new RelatedResource();

@@ -12,6 +12,7 @@ import org.siemac.metamac.common.test.utils.MetamacMocks;
 import org.siemac.metamac.core.common.constants.CoreCommonConstants;
 import org.siemac.metamac.core.common.enume.domain.TypeExternalArtefactsEnum;
 import org.siemac.metamac.core.common.enume.utils.TypeExternalArtefactsEnumUtils;
+import org.siemac.metamac.core.common.util.GeneratorUrnUtils;
 import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.NameableStatisticalResource;
@@ -39,6 +40,7 @@ import org.siemac.metamac.statistical.resources.core.query.domain.CodeItem;
 import org.siemac.metamac.statistical.resources.core.query.domain.Query;
 import org.siemac.metamac.statistical.resources.core.query.domain.QuerySelectionItem;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.DatasetMock;
 
 public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
 
@@ -77,19 +79,30 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
     // -----------------------------------------------------------------
     // DATASOURCE
     // -----------------------------------------------------------------
-    public Datasource mockDatasource(DatasetVersion datasetVersion) {
-        Datasource datasource = mockDatasource();
-        datasource.setDatasetVersion(datasetVersion);
+    public Datasource mockDatasource(Datasource datasource) {
+        if (datasource.getIdentifiableStatisticalResource() == null) {
+            datasource.setIdentifiableStatisticalResource(new IdentifiableStatisticalResource());
+        }
+        
+        if (datasource.getFilename() == null) {
+            datasource.setFilename(mockString(10));
+        }
 
+        if (datasource.getIdentifiableStatisticalResource().getCode() == null) {
+            datasource.getIdentifiableStatisticalResource().setCode(datasource.getFilename() + "_" + new DateTime().toString());
+        }
+        
+        datasource.setIdentifiableStatisticalResource(mockIdentifiableStatisticalResource(datasource.getIdentifiableStatisticalResource(), TypeRelatedResourceEnum.DATASOURCE));
+        
         return datasource;
     }
-
-    protected Datasource mockDatasource() {
+    
+    protected Datasource mockDatasourceWithGeneratedDatasetVersion() {
         Datasource datasource = new Datasource();
         datasource.setFilename(mockString(10));
         datasource.setIdentifiableStatisticalResource(mockIdentifiableStatisticalResource(new IdentifiableStatisticalResource(), TypeRelatedResourceEnum.DATASOURCE));
         datasource.getIdentifiableStatisticalResource().setCode(datasource.getFilename() + "_" + new DateTime().toString());
-
+        
         return datasource;
     }
 
@@ -100,37 +113,10 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
     public abstract DatasetVersion mockDatasetVersion();
 
     // -----------------------------------------------------------------
-    // PUBLICATION
-    // -----------------------------------------------------------------
-    public Publication mockPublicationWithoutGeneratedPublicationVersion() {
-        return mockPublication(false);
-    }
-
-    public Publication mockPublicationWithGeneratedPublicationVersion() {
-        return mockPublication(true);
-    }
-
-    private Publication mockPublication(boolean withVersion) {
-        Publication publication = new Publication();
-        publication.setIdentifiableStatisticalResource(mockIdentifiableStatisticalResource(new IdentifiableStatisticalResource(), TypeRelatedResourceEnum.PUBLICATION));
-        if (withVersion) {
-            publication.addVersion(mockPublicationVersion(publication));
-        }
-        return publication;
-    }
-
-    // -----------------------------------------------------------------
     // PUBLICATION VERSION
     // -----------------------------------------------------------------
 
-    protected PublicationVersion mockPublicationVersionMetadata() {
-        PublicationVersion publicationVersion = new PublicationVersion();
-        return publicationVersion;
-    }
-
-    protected abstract PublicationVersion mockPublicationVersion();
-
-    protected abstract PublicationVersion mockPublicationVersion(Publication publication);
+    public abstract PublicationVersion mockPublicationVersion();
 
     // CHAPTER
     public Chapter mockChapter() {

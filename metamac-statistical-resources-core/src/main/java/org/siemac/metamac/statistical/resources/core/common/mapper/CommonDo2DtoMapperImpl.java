@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.joda.time.DateTime;
@@ -14,6 +15,7 @@ import org.siemac.metamac.core.common.dto.LocalisedStringDto;
 import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
 import org.siemac.metamac.statistical.resources.core.common.domain.InternationalString;
 import org.siemac.metamac.statistical.resources.core.common.domain.LocalisedString;
+import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResourceResult;
 import org.siemac.metamac.core.common.enume.utils.TypeExternalArtefactsEnumUtils;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.mapper.BaseDo2DtoMapperImpl;
@@ -147,6 +149,17 @@ public class CommonDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements Comm
     }
 
     @Override
+    public Collection<RelatedResourceDto> relatedResourceResultCollectionToDtoCollection(Collection<RelatedResourceResult> source) throws MetamacException {
+        HashSet<RelatedResourceDto> result = new HashSet<RelatedResourceDto>();
+        if (source != null) {
+            for (RelatedResourceResult resource : source) {
+                result.add(relatedResourceResultToDto(resource));
+            }
+        }
+        return result;
+    }
+    
+    @Override
     public Collection<RelatedResourceDto> relatedResourceDoCollectionToDtoCollection(Collection<RelatedResource> source) throws MetamacException {
         HashSet<RelatedResourceDto> result = new HashSet<RelatedResourceDto>();
         if (source != null) {
@@ -155,6 +168,34 @@ public class CommonDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements Comm
             }
         }
         return result;
+    }
+
+    @Override
+    public RelatedResourceDto relatedResourceResultToDto(RelatedResourceResult source) throws MetamacException {
+        if (source == null) {
+            return null;
+        }
+        RelatedResourceDto target = new RelatedResourceDto();
+        target.setCode(source.getCode());
+        target.setTitle(buildInternationalStrinFromLocalesMap(source.getTitle()));
+        target.setType(source.getType());
+        target.setUrn(source.getUrn());
+        target.setStatisticalOperationUrn(source.getStatisticalOperationUrn());
+        return target;
+    }
+    
+    private InternationalStringDto buildInternationalStrinFromLocalesMap(Map<String, String> localisedTexts) {
+        if (localisedTexts.isEmpty()) {
+            return null;
+        }
+        InternationalStringDto internationalStringDto = new InternationalStringDto();
+        for (String locale : localisedTexts.keySet()) {
+            LocalisedStringDto localised = new LocalisedStringDto();
+            localised.setLabel(localisedTexts.get(locale));
+            localised.setLocale(locale);
+            internationalStringDto.addText(localised);
+        }
+        return internationalStringDto;
     }
 
     @Override

@@ -37,7 +37,6 @@ import org.siemac.metamac.statistical.resources.core.task.domain.TaskInfoDataset
 import org.siemac.metamac.statistical.resources.core.task.serviceapi.TaskService;
 import org.siemac.metamac.statistical.resources.core.utils.TaskInfoPredicateByDatasetId;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory;
-import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesPersistedDoMocks;
 
 public class DatasetServiceImportationTest extends StatisticalResourcesBaseTest {
     
@@ -63,7 +62,6 @@ public class DatasetServiceImportationTest extends StatisticalResourcesBaseTest 
 
     @Before
     public void setUp() {
-        datasetVersionMockFactory.setStatisticalResourcesPersistedDoMocks(new StatisticalResourcesPersistedDoMocks());
         MockitoAnnotations.initMocks(this);
     }
 

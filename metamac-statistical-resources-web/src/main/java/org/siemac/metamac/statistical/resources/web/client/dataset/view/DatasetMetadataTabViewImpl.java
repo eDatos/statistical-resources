@@ -24,6 +24,7 @@ import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.forms
 import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.forms.DatasetPublicationDescriptorsEditionForm;
 import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.forms.DatasetPublicationDescriptorsForm;
 import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.forms.DatasetResourceRelationDescriptorsEditionForm;
+import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.forms.DatasetResourceRelationDescriptorsForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.ProgramPublicationWindow;
 import org.siemac.metamac.statistical.resources.web.client.widgets.VersionWindow;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.LifeCycleResourceLifeCycleForm;
@@ -39,7 +40,6 @@ import org.siemac.metamac.statistical.resources.web.client.widgets.forms.SiemacM
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.SiemacMetadataLanguageForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.SiemacMetadataProductionDescriptorsEditionForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.SiemacMetadataPublicationDescriptorsEditionForm;
-import org.siemac.metamac.statistical.resources.web.client.widgets.forms.SiemacMetadataResourceRelationDescriptorsForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.SiemacMetadataThematicContentClassifiersEditionForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.SiemacMetadataThematicContentClassifiersForm;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetVersionMainCoveragesResult;
@@ -68,7 +68,7 @@ public class DatasetMetadataTabViewImpl extends StatisticalResourceMetadataBaseV
     private SiemacMetadataLanguageForm                               languageForm;
     private DatasetProductionDescriptorsForm                         productionDescriptorsForm;
     private DatasetClassDescriptorsForm                              classDescriptorsForm;
-    private SiemacMetadataResourceRelationDescriptorsForm            resourceRelationDescriptorsForm;
+    private DatasetResourceRelationDescriptorsForm                   resourceRelationDescriptorsForm;
     private DatasetPublicationDescriptorsForm                        publicationDescriptorsForm;
     private LifeCycleResourceLifeCycleForm                           lifeCycleForm;
     private LifeCycleResourceVersionForm                             versionForm;
@@ -304,7 +304,7 @@ public class DatasetMetadataTabViewImpl extends StatisticalResourceMetadataBaseV
         mainFormLayout.addViewCanvas(classDescriptorsForm);
 
         // Resource relation descriptors
-        resourceRelationDescriptorsForm = new SiemacMetadataResourceRelationDescriptorsForm();
+        resourceRelationDescriptorsForm = new DatasetResourceRelationDescriptorsForm();
         mainFormLayout.addViewCanvas(resourceRelationDescriptorsForm);
 
         // Publication descriptors
@@ -412,7 +412,7 @@ public class DatasetMetadataTabViewImpl extends StatisticalResourceMetadataBaseV
         classDescriptorsForm.setDatasetVersionDto(datasetDto);
 
         // Resource relation descriptors
-        resourceRelationDescriptorsForm.setSiemacMetadataStatisticalResourceDto(datasetDto);
+        resourceRelationDescriptorsForm.setDatasetVersionDto(datasetDto);
 
         // Publication descriptors
         publicationDescriptorsForm.setDatasetVersionDto(datasetDto);

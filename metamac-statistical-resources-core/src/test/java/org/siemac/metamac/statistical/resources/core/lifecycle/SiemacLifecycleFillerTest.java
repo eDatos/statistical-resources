@@ -43,10 +43,7 @@ import org.springframework.util.ReflectionUtils;
 @RunWith(MockitoJUnitRunner.class)
 public class SiemacLifecycleFillerTest extends StatisticalResourcesBaseTest {
 
-    @InjectMocks
-    private StatisticalResourcesNotPersistedDoMocks statisticalResourcesNotPersistedDoMocks = new StatisticalResourcesNotPersistedDoMocks();
-
-    private StatisticalResourcesPersistedDoMocks    statisticalResourcesPersistedDoMocks    = new StatisticalResourcesPersistedDoMocks();
+    private StatisticalResourcesNotPersistedDoMocks statisticalResourcesNotPersistedDoMocks = StatisticalResourcesNotPersistedDoMocks.getInstance();
 
     @InjectMocks
     private SiemacLifecycleFiller                   siemacLifecycleFiller                   = new SiemacLifecycleFiller();
@@ -57,9 +54,6 @@ public class SiemacLifecycleFillerTest extends StatisticalResourcesBaseTest {
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        Field field = ReflectionUtils.findField(StatisticalResourcesNotPersistedDoMocks.class, "statisticalResourcesPersistedDoMocks");
-        field.setAccessible(true);
-        ReflectionUtils.setField(field, statisticalResourcesNotPersistedDoMocks, statisticalResourcesPersistedDoMocks);
     }
 
     @After

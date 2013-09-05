@@ -1,4 +1,5 @@
 import "classpath:/btdesign/metamac-core-common-dtos.btdesign"
+import "classpath:/btdesign/metamac-statistical-resources-core-common-dtos.btdesign"
 import "classpath:/btdesign/metamac-statistical-resources-core-base-dtos.btdesign"
 import "classpath:/btdesign/metamac-statistical-resources-core-datasets-enums.btdesign"
 
@@ -40,6 +41,9 @@ Application DatasetsStatisticalResourcesDto {
 			Integer formatExtentDimensions;
 
 			//Publishing descriptors
+			
+			//relation descriptors
+			- Bag<@RelatedResourceDto> isRequiredBy;
 
 			//public date of next update
 			JAVADATE dateNextUpdate;

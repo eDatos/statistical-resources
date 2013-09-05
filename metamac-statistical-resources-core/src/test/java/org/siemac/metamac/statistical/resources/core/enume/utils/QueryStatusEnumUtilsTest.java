@@ -20,8 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class QueryStatusEnumUtilsTest extends StatisticalResourcesBaseTest {
 
-    @Autowired
-    private StatisticalResourcesPersistedDoMocks statisticalResourcesPersistedDoMocks;
+    private StatisticalResourcesPersistedDoMocks statisticalResourcesPersistedDoMocks = StatisticalResourcesPersistedDoMocks.getInstance();
     
     @Test
     public void testCheckPossibleQueryStatus() throws Exception {

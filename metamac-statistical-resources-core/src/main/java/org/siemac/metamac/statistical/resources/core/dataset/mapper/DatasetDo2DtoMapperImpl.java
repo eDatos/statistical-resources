@@ -6,8 +6,10 @@ import java.util.List;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.base.mapper.BaseDo2DtoMapperImpl;
+import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResourceResult;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.CodeDimension;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionRepository;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.StatisticOfficiality;
 import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
@@ -25,6 +27,11 @@ public class DatasetDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements Dat
 
     @Autowired
     private TaskService taskService;
+    
+    
+    @Autowired
+    private DatasetVersionRepository datasetVersionRepository;
+    
     // ---------------------------------------------------------------------------------------------------------
     // DATASOURCES
     // ---------------------------------------------------------------------------------------------------------
@@ -182,6 +189,10 @@ public class DatasetDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements Dat
         target.setUpdateFrequency(externalItemDoToDto(source.getUpdateFrequency()));
         target.setStatisticOfficiality(statisticOfficialityDo2Dto(source.getStatisticOfficiality()));
         target.setBibliographicCitation(internationalStringDoToDto(source.getBibliographicCitation()));
+        
+        List<RelatedResourceResult> isRequiredBy = datasetVersionRepository.retrieveLastVersionResourcesThatRequiresDatasetVersion(source);
+        target.getIsRequiredBy().clear();
+        target.getIsRequiredBy().addAll(relatedResourceResultCollectionToDtoCollection(isRequiredBy));
         
         target.setIsTaskInBackground(taskService.existImportationTaskInResource(ctx, source.getSiemacMetadataStatisticalResource().getUrn()));
 
