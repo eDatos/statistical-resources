@@ -44,7 +44,7 @@ import org.siemac.metamac.statistical.resources.core.enume.domain.VersionRationa
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesDoMocks;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesPersistedDoMocks;
 
-import com.arte.statistic.dataset.repository.dto.AttributeObservationDto;
+import com.arte.statistic.dataset.repository.dto.AttributeInstanceObservationDto;
 import com.arte.statistic.dataset.repository.dto.CodeDimensionDto;
 import com.arte.statistic.dataset.repository.dto.InternationalStringDto;
 import com.arte.statistic.dataset.repository.dto.LocalisedStringDto;
@@ -72,8 +72,8 @@ public class SdmxDataCoreMocks extends BaseJaxbMocks {
             observationExtendedDto.getCodesDimension().add(new CodeDimensionDto("EXR_VAR", "E"));
             observationExtendedDto.getCodesDimension().add(new CodeDimensionDto("TIME_PERIOD", "2010-08"));
 
-            observationExtendedDto.addAttribute(createAttributeDto("OBS_STATUS", "A"));
-            observationExtendedDto.addAttribute(createAttributeDto("CONF_STATUS_OBS", "F"));
+            observationExtendedDto.addAttribute(createAttributeInstanceObservationDto("OBS_STATUS", "A"));
+            observationExtendedDto.addAttribute(createAttributeInstanceObservationDto("CONF_STATUS_OBS", "F"));
 
             observationExtendedDto.setPrimaryMeasure("1.3413");
             observationsMap.put(observationExtendedDto.getUniqueKey(), observationExtendedDto);
@@ -89,8 +89,8 @@ public class SdmxDataCoreMocks extends BaseJaxbMocks {
             observationExtendedDto.getCodesDimension().add(new CodeDimensionDto("EXR_VAR", "E"));
             observationExtendedDto.getCodesDimension().add(new CodeDimensionDto("TIME_PERIOD", "2010-08"));
 
-            observationExtendedDto.addAttribute(createAttributeDto("OBS_STATUS", "A"));
-            observationExtendedDto.addAttribute(createAttributeDto("CONF_STATUS_OBS", "F"));
+            observationExtendedDto.addAttribute(createAttributeInstanceObservationDto("OBS_STATUS", "A"));
+            observationExtendedDto.addAttribute(createAttributeInstanceObservationDto("CONF_STATUS_OBS", "F"));
 
             observationExtendedDto.setPrimaryMeasure("110.04");
             observationsMap.put(observationExtendedDto.getUniqueKey(), observationExtendedDto);
@@ -120,8 +120,8 @@ public class SdmxDataCoreMocks extends BaseJaxbMocks {
             observationExtendedDto.getCodesDimension().add(new CodeDimensionDto("EXR_VAR", "E"));
             observationExtendedDto.getCodesDimension().add(new CodeDimensionDto("TIME_PERIOD", "2010-08"));
 
-            observationExtendedDto.addAttribute(createAttributeDto("OBS_STATUS", "A"));
-            observationExtendedDto.addAttribute(createAttributeDto("CONF_STATUS_OBS", "F"));
+            observationExtendedDto.addAttribute(createAttributeInstanceObservationDto("OBS_STATUS", "A"));
+            observationExtendedDto.addAttribute(createAttributeInstanceObservationDto("CONF_STATUS_OBS", "F"));
 
             observationExtendedDto.setPrimaryMeasure("1.2894");
             observationsMap.put(observationExtendedDto.getUniqueKey(), observationExtendedDto);
@@ -137,8 +137,8 @@ public class SdmxDataCoreMocks extends BaseJaxbMocks {
             observationExtendedDto.getCodesDimension().add(new CodeDimensionDto("EXR_VAR", "E"));
             observationExtendedDto.getCodesDimension().add(new CodeDimensionDto("TIME_PERIOD", "2010-09"));
 
-            observationExtendedDto.addAttribute(createAttributeDto("OBS_STATUS", "A"));
-            observationExtendedDto.addAttribute(createAttributeDto("CONF_STATUS_OBS", "F"));
+            observationExtendedDto.addAttribute(createAttributeInstanceObservationDto("OBS_STATUS", "A"));
+            observationExtendedDto.addAttribute(createAttributeInstanceObservationDto("CONF_STATUS_OBS", "F"));
 
             observationExtendedDto.setPrimaryMeasure("1.3089");
             observationsMap.put(observationExtendedDto.getUniqueKey(), observationExtendedDto);
@@ -154,8 +154,8 @@ public class SdmxDataCoreMocks extends BaseJaxbMocks {
             observationExtendedDto.getCodesDimension().add(new CodeDimensionDto("EXR_VAR", "E"));
             observationExtendedDto.getCodesDimension().add(new CodeDimensionDto("TIME_PERIOD", "2010-09"));
 
-            observationExtendedDto.addAttribute(createAttributeDto("OBS_STATUS", "A"));
-            observationExtendedDto.addAttribute(createAttributeDto("CONF_STATUS_OBS", "F"));
+            observationExtendedDto.addAttribute(createAttributeInstanceObservationDto("OBS_STATUS", "A"));
+            observationExtendedDto.addAttribute(createAttributeInstanceObservationDto("CONF_STATUS_OBS", "F"));
 
             observationExtendedDto.setPrimaryMeasure("0.83987");
             observationsMap.put(observationExtendedDto.getUniqueKey(), observationExtendedDto);
@@ -171,8 +171,8 @@ public class SdmxDataCoreMocks extends BaseJaxbMocks {
             observationExtendedDto.getCodesDimension().add(new CodeDimensionDto("EXR_VAR", "E"));
             observationExtendedDto.getCodesDimension().add(new CodeDimensionDto("TIME_PERIOD", "2010-09"));
 
-            observationExtendedDto.addAttribute(createAttributeDto("OBS_STATUS", "A"));
-            observationExtendedDto.addAttribute(createAttributeDto("CONF_STATUS_OBS", "F"));
+            observationExtendedDto.addAttribute(createAttributeInstanceObservationDto("OBS_STATUS", "A"));
+            observationExtendedDto.addAttribute(createAttributeInstanceObservationDto("CONF_STATUS_OBS", "F"));
 
             observationExtendedDto.setPrimaryMeasure("110.26");
             observationsMap.put(observationExtendedDto.getUniqueKey(), observationExtendedDto);
@@ -188,8 +188,8 @@ public class SdmxDataCoreMocks extends BaseJaxbMocks {
             observationExtendedDto.getCodesDimension().add(new CodeDimensionDto("EXR_VAR", "E"));
             observationExtendedDto.getCodesDimension().add(new CodeDimensionDto("TIME_PERIOD", "2010-09"));
 
-            observationExtendedDto.addAttribute(createAttributeDto("OBS_STATUS", "A"));
-            observationExtendedDto.addAttribute(createAttributeDto("CONF_STATUS_OBS", "F"));
+            observationExtendedDto.addAttribute(createAttributeInstanceObservationDto("OBS_STATUS", "A"));
+            observationExtendedDto.addAttribute(createAttributeInstanceObservationDto("CONF_STATUS_OBS", "F"));
 
             observationExtendedDto.setPrimaryMeasure("1.3067");
             observationsMap.put(observationExtendedDto.getUniqueKey(), observationExtendedDto);
@@ -205,8 +205,8 @@ public class SdmxDataCoreMocks extends BaseJaxbMocks {
             observationExtendedDto.getCodesDimension().add(new CodeDimensionDto("EXR_VAR", "E"));
             observationExtendedDto.getCodesDimension().add(new CodeDimensionDto("TIME_PERIOD", "2010-10"));
 
-            observationExtendedDto.addAttribute(createAttributeDto("OBS_STATUS", "A"));
-            observationExtendedDto.addAttribute(createAttributeDto("CONF_STATUS_OBS", "F"));
+            observationExtendedDto.addAttribute(createAttributeInstanceObservationDto("OBS_STATUS", "A"));
+            observationExtendedDto.addAttribute(createAttributeInstanceObservationDto("CONF_STATUS_OBS", "F"));
 
             observationExtendedDto.setPrimaryMeasure("1.3452");
             observationsMap.put(observationExtendedDto.getUniqueKey(), observationExtendedDto);
@@ -222,8 +222,8 @@ public class SdmxDataCoreMocks extends BaseJaxbMocks {
             observationExtendedDto.getCodesDimension().add(new CodeDimensionDto("EXR_VAR", "E"));
             observationExtendedDto.getCodesDimension().add(new CodeDimensionDto("TIME_PERIOD", "2010-10"));
 
-            observationExtendedDto.addAttribute(createAttributeDto("OBS_STATUS", "A"));
-            observationExtendedDto.addAttribute(createAttributeDto("CONF_STATUS_OBS", "F"));
+            observationExtendedDto.addAttribute(createAttributeInstanceObservationDto("OBS_STATUS", "A"));
+            observationExtendedDto.addAttribute(createAttributeInstanceObservationDto("CONF_STATUS_OBS", "F"));
 
             observationExtendedDto.setPrimaryMeasure("0.87637");
             observationsMap.put(observationExtendedDto.getUniqueKey(), observationExtendedDto);
@@ -239,8 +239,8 @@ public class SdmxDataCoreMocks extends BaseJaxbMocks {
             observationExtendedDto.getCodesDimension().add(new CodeDimensionDto("EXR_VAR", "E"));
             observationExtendedDto.getCodesDimension().add(new CodeDimensionDto("TIME_PERIOD", "2010-10"));
 
-            observationExtendedDto.addAttribute(createAttributeDto("OBS_STATUS", "A"));
-            observationExtendedDto.addAttribute(createAttributeDto("CONF_STATUS_OBS", "F"));
+            observationExtendedDto.addAttribute(createAttributeInstanceObservationDto("OBS_STATUS", "A"));
+            observationExtendedDto.addAttribute(createAttributeInstanceObservationDto("CONF_STATUS_OBS", "F"));
 
             observationExtendedDto.setPrimaryMeasure("113.67");
             observationsMap.put(observationExtendedDto.getUniqueKey(), observationExtendedDto);
@@ -256,8 +256,8 @@ public class SdmxDataCoreMocks extends BaseJaxbMocks {
             observationExtendedDto.getCodesDimension().add(new CodeDimensionDto("EXR_VAR", "E"));
             observationExtendedDto.getCodesDimension().add(new CodeDimensionDto("TIME_PERIOD", "2010-10"));
 
-            observationExtendedDto.addAttribute(createAttributeDto("OBS_STATUS", "A"));
-            observationExtendedDto.addAttribute(createAttributeDto("CONF_STATUS_OBS", "F"));
+            observationExtendedDto.addAttribute(createAttributeInstanceObservationDto("OBS_STATUS", "A"));
+            observationExtendedDto.addAttribute(createAttributeInstanceObservationDto("CONF_STATUS_OBS", "F"));
 
             observationExtendedDto.setPrimaryMeasure("1.3898");
             observationsMap.put(observationExtendedDto.getUniqueKey(), observationExtendedDto);
@@ -286,7 +286,7 @@ public class SdmxDataCoreMocks extends BaseJaxbMocks {
         return set;
     }
 
-    public static AttributeObservationDto createAttributeDto(String attributeId, String value) {
+    public static AttributeInstanceObservationDto createAttributeInstanceObservationDto(String attributeId, String value) {
         InternationalStringDto internationalStringDto = new InternationalStringDto();
         LocalisedStringDto localisedStringDto = new LocalisedStringDto();
         localisedStringDto.setLabel(value);
@@ -295,7 +295,7 @@ public class SdmxDataCoreMocks extends BaseJaxbMocks {
         localisedStringDto.setLocale(StatisticalResourcesConstants.DEFAULT_DATA_REPOSITORY_LOCALE);
         internationalStringDto.addText(localisedStringDto);
 
-        return new AttributeObservationDto(attributeId, internationalStringDto);
+        return new AttributeInstanceObservationDto(attributeId, internationalStringDto);
     }
 
     private DatasetVersion mockDatasetVersionBasic(String agencyID, String resourceID, String version) {

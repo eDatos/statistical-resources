@@ -9,7 +9,7 @@ import org.siemac.metamac.statistical.resources.core.constants.StatisticalResour
 import org.siemac.metamac.statistical.resources.core.io.utils.ManipulateDataUtils;
 import org.springframework.stereotype.Component;
 
-import com.arte.statistic.dataset.repository.dto.AttributeObservationDto;
+import com.arte.statistic.dataset.repository.dto.AttributeInstanceObservationDto;
 import com.arte.statistic.dataset.repository.dto.CodeDimensionDto;
 import com.arte.statistic.dataset.repository.dto.InternationalStringDto;
 import com.arte.statistic.dataset.repository.dto.LocalisedStringDto;
@@ -42,7 +42,7 @@ public class MetamacCsv2StatRepoMapperImpl implements MetamacCsv2StatRepoMapper 
 
         for (CsvObservationAttribute csvObservationAttribute : observation.getAttributes()) {
             // All attributes of CSV are in observation level
-            AttributeObservationDto attributeObservationDto = processAttribute(observationExtendedDto.getCodesDimension(), csvObservationAttribute);
+            AttributeInstanceObservationDto attributeObservationDto = processAttribute(observationExtendedDto.getCodesDimension(), csvObservationAttribute);
             observationExtendedDto.addAttribute(attributeObservationDto);
         }
 
@@ -65,7 +65,7 @@ public class MetamacCsv2StatRepoMapperImpl implements MetamacCsv2StatRepoMapper 
      * @param idValuePair
      * @return AttributeDto
      */
-    private AttributeObservationDto processAttribute(List<CodeDimensionDto> keys, CsvObservationAttribute csvObservationAttribute) {
+    private AttributeInstanceObservationDto processAttribute(List<CodeDimensionDto> keys, CsvObservationAttribute csvObservationAttribute) {
         if (StringUtils.isEmpty(csvObservationAttribute.getAttributeValue())) {
             return null;
         }
@@ -82,7 +82,7 @@ public class MetamacCsv2StatRepoMapperImpl implements MetamacCsv2StatRepoMapper 
         localisedStringDto.setLocale(StatisticalResourcesConstants.DEFAULT_DATA_REPOSITORY_LOCALE);
         internationalStringDto.addText(localisedStringDto);
 
-        AttributeObservationDto attributeObservationDto = new AttributeObservationDto(csvObservationAttribute.getAttributeId(), internationalStringDto);
+        AttributeInstanceObservationDto attributeObservationDto = new AttributeInstanceObservationDto(csvObservationAttribute.getAttributeId(), internationalStringDto);
 
         return attributeObservationDto;
     }

@@ -9,24 +9,24 @@ import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTes
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdAttributeInstanceDto;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesDtoMocks;
 
-import com.arte.statistic.dataset.repository.dto.AttributeDto;
+import com.arte.statistic.dataset.repository.dto.AttributeInstanceDto;
 
 public class StatisticalResourcesDto2StatRepoDtoMapperTest extends StatisticalResourcesBaseTest {
 
     @InjectMocks
-    private StatisticalResourcesDto2StatRepoDtoMapper dto2StatRepoDtoMapper = new StatisticalResourcesDto2StatRepoDtoMapperImpl();
+    private final StatisticalResourcesDto2StatRepoDtoMapper dto2StatRepoDtoMapper = new StatisticalResourcesDto2StatRepoDtoMapperImpl();
 
     @Test
     public void testDsdAttributeInstaceDtoToAttributeDtoWithEnumeratedValue() throws MetamacException {
         DsdAttributeInstanceDto dsdAttributeInstanceDto = StatisticalResourcesDtoMocks.mockDsdAttributeInstanceDtoWithEnumeratedValue();
-        AttributeDto attributeDto = dto2StatRepoDtoMapper.dsdAttributeInstaceDtoToAttributeDto(dsdAttributeInstanceDto);
-        assertEqualsAttributeDtoAndDsdAttributeInstaceDto(attributeDto, dsdAttributeInstanceDto);
+        AttributeInstanceDto attributeInstanceDto = dto2StatRepoDtoMapper.dsdAttributeInstanceDtoToAttributeInstanceDto(dsdAttributeInstanceDto);
+        assertEqualsAttributeDtoAndDsdAttributeInstaceDto(attributeInstanceDto, dsdAttributeInstanceDto);
     }
 
     @Test
     public void testDsdAttributeInstaceDtoToAttributeDtoWithNonNumeratedValue() throws MetamacException {
         DsdAttributeInstanceDto dsdAttributeInstanceDto = StatisticalResourcesDtoMocks.mockDsdAttributeInstanceDtoWithNonNumeratedValue();
-        AttributeDto attributeDto = dto2StatRepoDtoMapper.dsdAttributeInstaceDtoToAttributeDto(dsdAttributeInstanceDto);
-        assertEqualsAttributeDtoAndDsdAttributeInstaceDto(attributeDto, dsdAttributeInstanceDto);
+        AttributeInstanceDto attributeInstanceDto = dto2StatRepoDtoMapper.dsdAttributeInstanceDtoToAttributeInstanceDto(dsdAttributeInstanceDto);
+        assertEqualsAttributeDtoAndDsdAttributeInstaceDto(attributeInstanceDto, dsdAttributeInstanceDto);
     }
 }

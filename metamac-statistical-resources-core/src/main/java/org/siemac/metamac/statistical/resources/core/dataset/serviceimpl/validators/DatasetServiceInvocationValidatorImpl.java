@@ -20,7 +20,7 @@ import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionSingl
 import org.siemac.metamac.statistical.resources.core.task.domain.FileDescriptorResult;
 import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesValidationUtils;
 
-import com.arte.statistic.dataset.repository.dto.AttributeDto;
+import com.arte.statistic.dataset.repository.dto.AttributeInstanceDto;
 
 public class DatasetServiceInvocationValidatorImpl extends BaseInvocationValidator {
 
@@ -117,7 +117,7 @@ public class DatasetServiceInvocationValidatorImpl extends BaseInvocationValidat
     // ATTRIBUTES
     // --------------
 
-    public static void checkCreateAttributeInstance(String datasetVersionUrn, AttributeDto attributeDto, List<MetamacExceptionItem> exceptions) {
+    public static void checkCreateAttributeInstance(String datasetVersionUrn, AttributeInstanceDto attributeInstanceDto, List<MetamacExceptionItem> exceptions) {
         // TODO
     }
 

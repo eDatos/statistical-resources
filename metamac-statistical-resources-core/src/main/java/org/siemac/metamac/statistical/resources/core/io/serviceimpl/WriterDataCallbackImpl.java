@@ -27,8 +27,8 @@ import org.siemac.metamac.statistical.resources.core.io.domain.RequestParameter;
 import org.siemac.metamac.statistical.resources.core.io.mapper.MetamacSdmx2StatRepoMapper;
 import org.siemac.metamac.statistical.resources.core.io.utils.ManipulateDataUtils;
 
-import com.arte.statistic.dataset.repository.dto.AttributeBasicDto;
-import com.arte.statistic.dataset.repository.dto.AttributeDto;
+import com.arte.statistic.dataset.repository.dto.AttributeInstanceBasicDto;
+import com.arte.statistic.dataset.repository.dto.AttributeInstanceDto;
 import com.arte.statistic.dataset.repository.dto.CodeDimensionDto;
 import com.arte.statistic.dataset.repository.dto.ConditionObservationDto;
 import com.arte.statistic.dataset.repository.dto.DatasetRepositoryDto;
@@ -59,7 +59,7 @@ public class WriterDataCallbackImpl implements WriterDataCallback {
     private PagedResult<DatasetVersion>      datasetsToFetch                  = null;
     private String                           sender                           = null;
     // --- For DatasetContext
-    private int                              currentDatasetVersionIndex       = 0;
+    private final int                        currentDatasetVersionIndex       = 0;
     protected DimensionCodeInfo              dimensionAtObservation           = null;
     protected DimensionCodeInfo              timeDimension                    = null;
     protected DimensionCodeInfo              measureDimension                 = null;
@@ -115,10 +115,10 @@ public class WriterDataCallbackImpl implements WriterDataCallback {
     public Set<IdValuePair> retrieveAttributesAtDatasetLevel() throws Exception {
         Set<IdValuePair> attributes = new HashSet<IdValuePair>();
 
-        List<AttributeDto> attributesFound = datasetRepositoriesServiceFacade.findAttributesWithDatasetAttachmentLevel(datasetsToFetch.getValues().get(currentDatasetVersionIndex)
+        List<AttributeInstanceDto> attributesFound = datasetRepositoriesServiceFacade.findAttributesInstancesWithDatasetAttachmentLevel(datasetsToFetch.getValues().get(currentDatasetVersionIndex)
                 .getDatasetRepositoryId(), null);
 
-        for (AttributeDto attributeDto : attributesFound) {
+        for (AttributeInstanceDto attributeDto : attributesFound) {
             attributes.add(new IdValuePair(attributeDto.getAttributeId(), attributeDto.getValue().getLocalisedLabel(StatisticalResourcesConstants.DEFAULT_DATA_REPOSITORY_LOCALE)));
         }
 
@@ -153,7 +153,7 @@ public class WriterDataCallbackImpl implements WriterDataCallback {
     public List<Group> fetchAttributesInGroups() throws Exception {
 
         List<Group> groups = new LinkedList<Group>();
-        Map<String, List<AttributeBasicDto>> transformedAttributesMap = new HashMap<String, List<AttributeBasicDto>>();
+        Map<String, List<AttributeInstanceBasicDto>> transformedAttributesMap = new HashMap<String, List<AttributeInstanceBasicDto>>();
 
         // For all attributes that can be on the message group element
         Iterator<AttributeInfo> it = dsdSdmxInfo.getAttributes().values().iterator();
@@ -164,8 +164,8 @@ public class WriterDataCallbackImpl implements WriterDataCallback {
                 // para obtenerlos así y luego construir la key.
 
                 // Find all instances of attributes with ID, attributeId.
-                List<AttributeDto> attributes = datasetRepositoriesServiceFacade.findAttributesWithDimensionAttachmentLevel(datasetsToFetch.getValues().get(currentDatasetVersionIndex)
-                        .getDatasetRepositoryId(), attributeInfo.getAttributeId(), this.conditionsMap);
+                List<AttributeInstanceDto> attributes = datasetRepositoriesServiceFacade.findAttributesInstancesWithDimensionAttachmentLevel(datasetsToFetch.getValues()
+                        .get(currentDatasetVersionIndex).getDatasetRepositoryId(), attributeInfo.getAttributeId(), this.conditionsMap);
                 // Transform all fetched attributes in map indexed by key and add to the transformed attributes map
                 transformedAttributesMap = ManipulateDataUtils.addTransformAttributesToCurrentTransformedAttributes(transformedAttributesMap, getQueryConditions(), attributes);
             }
@@ -324,7 +324,8 @@ public class WriterDataCallbackImpl implements WriterDataCallback {
      * @param observationkeys
      * @param numDimProcess
      */
-    private void buildGroups(List<Group> instanceGroups, GroupInfo groupInfo, Map<String, List<AttributeBasicDto>> transformedAttributesMap, List<CodeDimensionDto> observationkeys, int numDimProcess) {
+    private void buildGroups(List<Group> instanceGroups, GroupInfo groupInfo, Map<String, List<AttributeInstanceBasicDto>> transformedAttributesMap, List<CodeDimensionDto> observationkeys,
+            int numDimProcess) {
 
         // If the key of current group is fully generated
         if (numDimProcess == groupInfo.getDimensionsInfoList().size()) {
@@ -338,7 +339,7 @@ public class WriterDataCallbackImpl implements WriterDataCallback {
                     group.addGroupKey(new IdValuePair(codeDimensionDto.getDimensionId(), codeDimensionDto.getCodeDimensionId()));
                 }
                 // Attributes
-                for (AttributeBasicDto attributeBasicDto : transformedAttributesMap.get(key)) {
+                for (AttributeInstanceBasicDto attributeBasicDto : transformedAttributesMap.get(key)) {
                     group.addAttribute(new IdValuePair(attributeBasicDto.getAttributeId(), attributeBasicDto.getValue().getLocalisedLabel(StatisticalResourcesConstants.DEFAULT_DATA_REPOSITORY_LOCALE)));
                 }
 
@@ -391,7 +392,7 @@ public class WriterDataCallbackImpl implements WriterDataCallback {
         result.setObservationValue(new IdValuePair(MappingConstants.OBS_VALUE, observation.getPrimaryMeasure()));
 
         // Attribute
-        for (AttributeBasicDto attributeBasicDto : observation.getAttributes()) {
+        for (AttributeInstanceBasicDto attributeBasicDto : observation.getAttributes()) {
             if (!ManipulateDataUtils.DATA_SOURCE_ID.equals(attributeBasicDto.getAttributeId())) {
                 result.addAttribute(new IdValuePair(attributeBasicDto.getAttributeId(), attributeBasicDto.getValue().getLocalisedLabel(StatisticalResourcesConstants.DEFAULT_DATA_REPOSITORY_LOCALE)));
             }

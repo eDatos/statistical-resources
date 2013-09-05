@@ -34,8 +34,8 @@ import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.Publi
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesDoMocks;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesPersistedDoMocks;
 
-import com.arte.statistic.dataset.repository.dto.AttributeDto;
-import com.arte.statistic.dataset.repository.dto.AttributeObservationDto;
+import com.arte.statistic.dataset.repository.dto.AttributeInstanceDto;
+import com.arte.statistic.dataset.repository.dto.AttributeInstanceObservationDto;
 import com.arte.statistic.dataset.repository.dto.CodeDimensionDto;
 import com.arte.statistic.dataset.repository.dto.InternationalStringDto;
 import com.arte.statistic.dataset.repository.dto.LocalisedStringDto;
@@ -184,16 +184,16 @@ public class RestDoMocks {
         return observationExtendedDto;
     }
 
-    public AttributeDto mockAttributeWithDatasetAttachmentLevel(String attributeId, String value) {
-        AttributeDto attributeDto = new AttributeDto();
+    public AttributeInstanceDto mockAttributeInstanceWithDatasetAttachmentLevel(String attributeId, String value) {
+        AttributeInstanceDto attributeDto = new AttributeInstanceDto();
         attributeDto.setAttributeId(attributeId);
         attributeDto.setValue(mockInternationalStringAttributeDto(value));
         return attributeDto;
     }
 
-    public AttributeDto mockAttributeWithDimensionAttachmentLevelDenormalized(String attributeId, String value, String dimension1, String codeDimension1, String dimension2, String codeDimension2,
-            String dimension3, String codeDimension3, String dimension4, String codeDimension4) {
-        AttributeDto attributeDto = new AttributeDto();
+    public AttributeInstanceDto mockAttributeInstanceWithDimensionAttachmentLevelDenormalized(String attributeId, String value, String dimension1, String codeDimension1, String dimension2,
+            String codeDimension2, String dimension3, String codeDimension3, String dimension4, String codeDimension4) {
+        AttributeInstanceDto attributeDto = new AttributeInstanceDto();
         attributeDto.setAttributeId(attributeId);
         attributeDto.setValue(mockInternationalStringAttributeDto(value));
         attributeDto.setCodesByDimension(new HashMap<String, List<String>>());
@@ -212,8 +212,8 @@ public class RestDoMocks {
         return attributeDto;
     }
 
-    public AttributeObservationDto mockAttributeObservation(String attributeId, String value) {
-        AttributeObservationDto attributeDto = new AttributeObservationDto();
+    public AttributeInstanceObservationDto mockAttributeInstanceObservation(String attributeId, String value) {
+        AttributeInstanceObservationDto attributeDto = new AttributeInstanceObservationDto();
         attributeDto.setAttributeId(attributeId);
         attributeDto.setValue(mockInternationalStringAttributeDto(value));
         return attributeDto;

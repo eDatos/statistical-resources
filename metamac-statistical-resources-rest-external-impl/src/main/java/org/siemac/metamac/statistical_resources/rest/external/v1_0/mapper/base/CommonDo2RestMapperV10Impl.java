@@ -99,9 +99,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.arte.statistic.dataset.repository.dto.AttributeBasicDto;
-import com.arte.statistic.dataset.repository.dto.AttributeDto;
-import com.arte.statistic.dataset.repository.dto.AttributeObservationDto;
+import com.arte.statistic.dataset.repository.dto.AttributeInstanceBasicDto;
+import com.arte.statistic.dataset.repository.dto.AttributeInstanceDto;
+import com.arte.statistic.dataset.repository.dto.AttributeInstanceObservationDto;
 import com.arte.statistic.dataset.repository.dto.ConditionDimensionDto;
 import com.arte.statistic.dataset.repository.dto.ObservationExtendedDto;
 import com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceFacade;
@@ -1037,25 +1037,25 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
     private String toDataAttributeWithDatasetAttachmentLevel(String datasetId, String attributeId) throws Exception {
 
         // Find attributes
-        List<AttributeDto> sources = datasetRepositoriesServiceFacade.findAttributesWithDatasetAttachmentLevel(datasetId, attributeId);
+        List<AttributeInstanceDto> sources = datasetRepositoriesServiceFacade.findAttributesInstancesWithDatasetAttachmentLevel(datasetId, attributeId);
         if (CollectionUtils.isEmpty(sources)) {
             return null;
         }
-        AttributeDto source = sources.get(0); // must be only one
-        return getAttributeValue(source);
+        AttributeInstanceDto source = sources.get(0); // must be only one
+        return getAttributeInstanceValue(source);
     }
 
     private String toDataAttributeWithDimensionAttachmentLevel(String attributeId, List<String> attributeDimensions, List<String> datasetDimensionsOrdered,
             Map<String, List<String>> dimensionsCodesSelectedEffective, String datasetId) throws Exception {
 
         // Find attributes
-        List<AttributeDto> sources = datasetRepositoriesServiceFacade.findAttributesWithDimensionAttachmentLevelDenormalized(datasetId, attributeId, dimensionsCodesSelectedEffective);
+        List<AttributeInstanceDto> sources = datasetRepositoriesServiceFacade.findAttributesInstancesWithDimensionAttachmentLevelDenormalized(datasetId, attributeId, dimensionsCodesSelectedEffective);
         if (CollectionUtils.isEmpty(sources)) {
             return null;
         }
 
         List<String> attributeDimensionsOrdered = toAttributeDimensionsOrdered(datasetDimensionsOrdered, attributeDimensions);
-        Map<String, AttributeDto> attributesByCodeDimensions = buildMapToAttributesWithDimensionAttachmentLevelDenormalizedByCodeDimensions(attributeDimensionsOrdered, sources);
+        Map<String, AttributeInstanceDto> attributesByCodeDimensions = buildMapToAttributesWithDimensionAttachmentLevelDenormalizedByCodeDimensions(attributeDimensionsOrdered, sources);
 
         // Build data
         int dataSize = calculateDataSize(attributeDimensions, dimensionsCodesSelectedEffective);
@@ -1140,23 +1140,24 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
         return attributeDimensionsOrdered;
     }
 
-    private String getAttributeValue(AttributeBasicDto attributeDto) {
+    private String getAttributeInstanceValue(AttributeInstanceBasicDto attributeDto) {
         return attributeDto.getValue().getLocalisedLabel(StatisticalResourcesConstants.DEFAULT_DATA_REPOSITORY_LOCALE); // all attributes has only one locale
     }
 
-    private Map<String, AttributeDto> buildMapToAttributesWithDimensionAttachmentLevelDenormalizedByCodeDimensions(List<String> attributeDimensionsOrdered, List<AttributeDto> attributeInstances) {
-        Map<String, AttributeDto> attributesByCodeDimensions = new HashMap<String, AttributeDto>(attributeInstances.size());
-        for (AttributeDto attributeDto : attributeInstances) {
+    private Map<String, AttributeInstanceDto> buildMapToAttributesWithDimensionAttachmentLevelDenormalizedByCodeDimensions(List<String> attributeDimensionsOrdered,
+            List<AttributeInstanceDto> attributeInstances) {
+        Map<String, AttributeInstanceDto> attributesByCodeDimensions = new HashMap<String, AttributeInstanceDto>(attributeInstances.size());
+        for (AttributeInstanceDto attributeInstanceDto : attributeInstances) {
             StringBuilder key = new StringBuilder();
             for (int i = 0; i < attributeDimensionsOrdered.size(); i++) {
                 String dimensionId = attributeDimensionsOrdered.get(i);
-                String codeDimension = attributeDto.getCodesByDimension().get(dimensionId).get(0); // only to denormalized!!
+                String codeDimension = attributeInstanceDto.getCodesByDimension().get(dimensionId).get(0); // only to denormalized!!
                 key.append(codeDimension);
                 if (i != attributeDimensionsOrdered.size() - 1) {
                     key.append(KEY_DIMENSIONS_SEPARATOR);
                 }
             }
-            attributesByCodeDimensions.put(key.toString(), attributeDto);
+            attributesByCodeDimensions.put(key.toString(), attributeInstanceDto);
         }
         return attributesByCodeDimensions;
     }
@@ -1213,18 +1214,18 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
 
     private class DataProcessorForAttributeWithDimensionAttachmentLevel extends DataProcessor {
 
-        private final Map<String, AttributeDto> attributesByCodeDimensions;
-        private final List<AttributeDto>        targets;
+        private final Map<String, AttributeInstanceDto> attributesByCodeDimensions;
+        private final List<AttributeInstanceDto>        targets;
 
-        public DataProcessorForAttributeWithDimensionAttachmentLevel(Map<String, AttributeDto> attributesByCodeDimensions, int dataSize) {
+        public DataProcessorForAttributeWithDimensionAttachmentLevel(Map<String, AttributeInstanceDto> attributesByCodeDimensions, int dataSize) {
             this.attributesByCodeDimensions = attributesByCodeDimensions;
-            this.targets = new ArrayList<AttributeDto>(dataSize);
+            this.targets = new ArrayList<AttributeInstanceDto>(dataSize);
         }
 
         @Override
         protected void processFullEntry(String key) {
-            AttributeDto attributeDto = attributesByCodeDimensions.get(key);
-            targets.add(attributeDto);
+            AttributeInstanceDto attributeInstanceDto = attributesByCodeDimensions.get(key);
+            targets.add(attributeInstanceDto);
         }
 
         public String getDataAttributeForResponse() {
@@ -1297,16 +1298,16 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
 
     private class DataAttributeWithDimensionAttachmentLevelIterator extends DataIterator {
 
-        public DataAttributeWithDimensionAttachmentLevelIterator(List<AttributeDto> list) {
+        public DataAttributeWithDimensionAttachmentLevelIterator(List<AttributeInstanceDto> list) {
             super(list);
         }
 
         @Override
         protected String getValue(int position) {
             String value = null;
-            AttributeDto attributeDto = (AttributeDto) list.get(position);
-            if (attributeDto != null) {
-                value = getAttributeValue(attributeDto);
+            AttributeInstanceDto attributeInstanceDto = (AttributeInstanceDto) list.get(position);
+            if (attributeInstanceDto != null) {
+                value = getAttributeInstanceValue(attributeInstanceDto);
             }
             return value;
         }
@@ -1344,10 +1345,10 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
             String value = null;
             ObservationExtendedDto observationExtendedDto = (ObservationExtendedDto) list.get(position);
             if (observationExtendedDto != null) {
-                AttributeObservationDto attributeObservationDto = observationExtendedDto.getAttributesAsMap().get(attributeId);
-                if (attributeObservationDto != null) {
+                AttributeInstanceObservationDto attributeInstanceObservationDto = observationExtendedDto.getAttributesAsMap().get(attributeId);
+                if (attributeInstanceObservationDto != null) {
                     anyObservationHasAttribute = true;
-                    value = getAttributeValue(attributeObservationDto);
+                    value = getAttributeInstanceValue(attributeInstanceObservationDto);
                 }
             }
             return value;

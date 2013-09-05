@@ -13,7 +13,7 @@ import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdAttributeIn
 import org.siemac.metamac.statistical.resources.core.dto.query.CodeItemDto;
 import org.springframework.stereotype.Component;
 
-import com.arte.statistic.dataset.repository.dto.AttributeDto;
+import com.arte.statistic.dataset.repository.dto.AttributeInstanceDto;
 import com.arte.statistic.dataset.repository.dto.InternationalStringDto;
 import com.arte.statistic.dataset.repository.dto.LocalisedStringDto;
 
@@ -21,11 +21,11 @@ import com.arte.statistic.dataset.repository.dto.LocalisedStringDto;
 public class StatisticalResourcesDto2StatRepoDtoMapperImpl implements StatisticalResourcesDto2StatRepoDtoMapper {
 
     @Override
-    public AttributeDto dsdAttributeInstaceDtoToAttributeDto(DsdAttributeInstanceDto source) throws MetamacException {
+    public AttributeInstanceDto dsdAttributeInstanceDtoToAttributeInstanceDto(DsdAttributeInstanceDto source) throws MetamacException {
         if (source == null) {
             return null;
         }
-        AttributeDto target = new AttributeDto();
+        AttributeInstanceDto target = new AttributeInstanceDto();
         target.setAttributeId(source.getAttributeId());
         target.setValue(attributeValueDtoToInternationalStringValue(source.getValue()));
         target.setCodesByDimension(codeItemMapToStringMap(source.getCodeDimensions()));

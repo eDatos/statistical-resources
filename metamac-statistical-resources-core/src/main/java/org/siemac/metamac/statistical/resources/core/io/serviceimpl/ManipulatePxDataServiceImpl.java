@@ -19,7 +19,7 @@ import org.siemac.metamac.statistical.resources.core.io.serviceimpl.validators.V
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.arte.statistic.dataset.repository.dto.AttributeObservationDto;
+import com.arte.statistic.dataset.repository.dto.AttributeInstanceObservationDto;
 import com.arte.statistic.dataset.repository.dto.DatasetRepositoryDto;
 import com.arte.statistic.dataset.repository.dto.ObservationExtendedDto;
 import com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceFacade;
@@ -53,7 +53,7 @@ public class ManipulatePxDataServiceImpl implements ManipulatePxDataService {
         PxDataByDimensionsIterator pxDataByDimensionsIterator = readPxData(pxFile, pxModel); // Data iterator
 
         // Prepare attribute at observation level
-        Map<String, AttributeObservationDto> attributesObservations = null;
+        Map<String, AttributeInstanceObservationDto> attributesObservations = null;
         if (validateDataVersusDsd.getAttributeIdsAtObservationLevelSet().contains(MetamacPx2StatRepoMapperImpl.ATTR_OBS_NOTE)) {
             List<ComponentInfo> dimensionsInfo = validateDataVersusDsd.retrieveDimensionsInfo();
             Map<String, Integer> dimensionsOrderPxMap = metamacPx2StatRepoMapper.generateDimensionsOrderPxMap(pxModel);

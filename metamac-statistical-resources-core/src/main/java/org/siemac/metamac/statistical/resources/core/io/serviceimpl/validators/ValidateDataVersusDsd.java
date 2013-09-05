@@ -36,8 +36,8 @@ import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.invocation.service.SrmRestInternalService;
 import org.siemac.metamac.statistical.resources.core.io.utils.ManipulateDataUtils;
 
-import com.arte.statistic.dataset.repository.dto.AttributeBasicDto;
-import com.arte.statistic.dataset.repository.dto.AttributeDto;
+import com.arte.statistic.dataset.repository.dto.AttributeInstanceBasicDto;
+import com.arte.statistic.dataset.repository.dto.AttributeInstanceDto;
 import com.arte.statistic.dataset.repository.dto.CodeDimensionDto;
 import com.arte.statistic.dataset.repository.dto.ObservationExtendedDto;
 import com.arte.statistic.parser.sdmx.v2_1.domain.ComponentInfo;
@@ -137,7 +137,7 @@ public class ValidateDataVersusDsd {
 
             // The used attribute if correct
             previousExceptionSize = exceptions.size();
-            for (AttributeBasicDto attributeBasicDto : overExtendedDto.getAttributes()) {
+            for (AttributeInstanceBasicDto attributeBasicDto : overExtendedDto.getAttributes()) {
                 if (!this.attributeIdsAtObservationLevelSet.contains(attributeBasicDto.getAttributeId()) && !ManipulateDataUtils.DATA_SOURCE_ID.equals(attributeBasicDto.getAttributeId())) {
                     exceptions.add(new MetamacExceptionItem(ServiceExceptionType.IMPORTATION_OBSERVATION_ATTR_NOT_MATCH, attributeBasicDto.getAttributeId()));
                 }
@@ -149,7 +149,7 @@ public class ValidateDataVersusDsd {
             // Mandatory attributes at observation level
             previousExceptionSize = exceptions.size();
             Set<String> attributesInCurrentObservation = new HashSet<String>();
-            for (AttributeBasicDto attributeBasicDto : overExtendedDto.getAttributes()) {
+            for (AttributeInstanceBasicDto attributeBasicDto : overExtendedDto.getAttributes()) {
                 attributesInCurrentObservation.add(attributeBasicDto.getAttributeId());
             }
             for (String attributeId : this.mandatoryAttributeIdsAtObservationLevel) {
@@ -177,7 +177,7 @@ public class ValidateDataVersusDsd {
 
             // The codes of attributes must be defined in the enumerated representation
             previousExceptionSize = exceptions.size();
-            for (AttributeBasicDto attributeBasicDto : overExtendedDto.getAttributes()) {
+            for (AttributeInstanceBasicDto attributeBasicDto : overExtendedDto.getAttributes()) {
                 if (!ManipulateDataUtils.DATA_SOURCE_ID.equals(attributeBasicDto.getAttributeId())) {
 
                     String value = attributeBasicDto.getValue().getLocalisedLabel(StatisticalResourcesConstants.DEFAULT_DATA_REPOSITORY_LOCALE);
@@ -186,7 +186,8 @@ public class ValidateDataVersusDsd {
                     checkAttributeEnumeratedRepresentation(attributeBasicDto.getAttributeId(), value, exceptions);
 
                     // Non Enumerated representation
-                    checkAttributeNonEnumeratedRepresentation(attributeBasicDto.getAttributeId(), value, ManipulateDataUtils.toStringUnorderedKeyForObservation(overExtendedDto.getCodesDimension()), exceptions);
+                    checkAttributeNonEnumeratedRepresentation(attributeBasicDto.getAttributeId(), value, ManipulateDataUtils.toStringUnorderedKeyForObservation(overExtendedDto.getCodesDimension()),
+                            exceptions);
                 }
             }
             if (exceptions.size() != previousExceptionSize) {
@@ -219,26 +220,27 @@ public class ValidateDataVersusDsd {
         ExceptionUtils.throwIfException(exceptions);
     }
 
-    public void checkAttributes(List<AttributeDto> attributeDtos) throws MetamacException {
+    public void checkAttributesInstances(List<AttributeInstanceDto> attributeInstanceDtos) throws MetamacException {
         List<MetamacExceptionItem> exceptions = new LinkedList<MetamacExceptionItem>();
 
         int previousExceptionSize = 0;
-        for (AttributeDto attributeDto : attributeDtos) {
+        for (AttributeInstanceDto attributeInstanceDto : attributeInstanceDtos) {
             previousExceptionSize = exceptions.size();
 
             // The used attribute if correct
-            if (!this.attributesCodeSet.contains(attributeDto.getAttributeId()) || this.attributeIdsAtObservationLevelSet.contains(attributeDto.getAttributeId())) {
-                exceptions.add(new MetamacExceptionItem(ServiceExceptionType.IMPORTATION_ATTR_NOT_MATCH, attributeDto.getAttributeId()));
+            if (!this.attributesCodeSet.contains(attributeInstanceDto.getAttributeId()) || this.attributeIdsAtObservationLevelSet.contains(attributeInstanceDto.getAttributeId())) {
+                exceptions.add(new MetamacExceptionItem(ServiceExceptionType.IMPORTATION_ATTR_NOT_MATCH, attributeInstanceDto.getAttributeId()));
                 continue;
             }
 
-            String value = attributeDto.getValue().getLocalisedLabel(StatisticalResourcesConstants.DEFAULT_DATA_REPOSITORY_LOCALE);
+            String value = attributeInstanceDto.getValue().getLocalisedLabel(StatisticalResourcesConstants.DEFAULT_DATA_REPOSITORY_LOCALE);
 
             // Enumerated representation of attributes
-            checkAttributeEnumeratedRepresentation(attributeDto.getAttributeId(), value, exceptions);
+            checkAttributeEnumeratedRepresentation(attributeInstanceDto.getAttributeId(), value, exceptions);
 
             // Non Enumerated representation
-            checkAttributeNonEnumeratedRepresentation(attributeDto.getAttributeId(), value, ManipulateDataUtils.toStringUnorderedKeyForAttribute(attributeDto.getCodesByDimension()), exceptions);
+            checkAttributeNonEnumeratedRepresentation(attributeInstanceDto.getAttributeId(), value, ManipulateDataUtils.toStringUnorderedKeyForAttribute(attributeInstanceDto.getCodesByDimension()),
+                    exceptions);
 
             if (exceptions.size() != previousExceptionSize) {
                 continue;

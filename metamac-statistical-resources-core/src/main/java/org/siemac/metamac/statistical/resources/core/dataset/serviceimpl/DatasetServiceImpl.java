@@ -70,8 +70,8 @@ import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesC
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.arte.statistic.dataset.repository.dto.AttributeDto;
-import com.arte.statistic.dataset.repository.dto.AttributeObservationDto;
+import com.arte.statistic.dataset.repository.dto.AttributeInstanceDto;
+import com.arte.statistic.dataset.repository.dto.AttributeInstanceObservationDto;
 import com.arte.statistic.dataset.repository.dto.CodeDimensionDto;
 import com.arte.statistic.dataset.repository.dto.ConditionObservationDto;
 import com.arte.statistic.dataset.repository.dto.DatasetRepositoryDto;
@@ -214,9 +214,9 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
             localisedStringDto.setLocale(StatisticalResourcesConstants.DEFAULT_DATA_REPOSITORY_LOCALE);
             internationalStringDto.addText(localisedStringDto);
 
-            AttributeObservationDto attributeObservationDto = new AttributeObservationDto(ManipulateDataUtils.DATA_SOURCE_ID, internationalStringDto);
+            AttributeInstanceObservationDto attributeInstanceObservationDto = new AttributeInstanceObservationDto(ManipulateDataUtils.DATA_SOURCE_ID, internationalStringDto);
 
-            statisticsDatasetRepositoriesServiceFacade.deleteObservationsByAttributeValue(ManipulateDataUtils.DATA_SOURCE_ID, 0, attributeObservationDto);
+            statisticsDatasetRepositoriesServiceFacade.deleteObservationsByAttributeInstanceValue(ManipulateDataUtils.DATA_SOURCE_ID, 0, attributeInstanceObservationDto);
         } catch (ApplicationException e) {
             throw new MetamacException(e, ServiceExceptionType.DATASOURCE_DATA_DELETE_ERROR, datasource.getIdentifiableStatisticalResource().getCode());
         }
@@ -616,24 +616,24 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
     // ------------------------------------------------------------------------
 
     @Override
-    public AttributeDto createAttributeInstance(ServiceContext ctx, String datasetVersionUrn, AttributeDto attributeDto) throws MetamacException {
+    public AttributeInstanceDto createAttributeInstance(ServiceContext ctx, String datasetVersionUrn, AttributeInstanceDto attributeInstanceDto) throws MetamacException {
 
         // Validations
-        datasetServiceInvocationValidator.checkCreateAttributeInstance(ctx, datasetVersionUrn, attributeDto);
+        datasetServiceInvocationValidator.checkCreateAttributeInstance(ctx, datasetVersionUrn, attributeInstanceDto);
 
         // Retrieve the datasetVersion to get the datasetRepositoryId
         DatasetVersion datasetVersion = retrieveDatasetVersionByUrn(ctx, datasetVersionUrn);
 
         // Create attribute
         try {
-            return statisticsDatasetRepositoriesServiceFacade.createAttribute(datasetVersion.getDatasetRepositoryId(), attributeDto);
+            return statisticsDatasetRepositoriesServiceFacade.createAttributeInstance(datasetVersion.getDatasetRepositoryId(), attributeInstanceDto);
         } catch (ApplicationException e) {
-            throw new MetamacException(e, ServiceExceptionType.UNKNOWN, "Error creating attribute instances in datasetRepository " + datasetVersionUrn + ". Details: " + e.getMessage());
+            throw new MetamacException(e, ServiceExceptionType.UNKNOWN, "Error creating attribute instance in datasetRepository " + datasetVersionUrn + ". Details: " + e.getMessage());
         }
     }
 
     @Override
-    public List<AttributeDto> retrieveAttributeInstances(ServiceContext ctx, String datasetVersionUrn, String attributeId) throws MetamacException {
+    public List<AttributeInstanceDto> retrieveAttributeInstances(ServiceContext ctx, String datasetVersionUrn, String attributeId) throws MetamacException {
 
         // Validations
         datasetServiceInvocationValidator.checkRetrieveAttributeInstances(ctx, datasetVersionUrn, attributeId);
@@ -643,7 +643,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
 
         // Retrieve the attribute instances
         try {
-            return statisticsDatasetRepositoriesServiceFacade.findAttributes(datasetVersion.getDatasetRepositoryId(), attributeId);
+            return statisticsDatasetRepositoriesServiceFacade.findAttributesInstances(datasetVersion.getDatasetRepositoryId(), attributeId);
         } catch (ApplicationException e) {
             throw new MetamacException(e, ServiceExceptionType.UNKNOWN, "Error retrieve attribute instances in datasetRepository " + datasetVersionUrn + ". Details: " + e.getMessage());
         }
@@ -786,7 +786,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
     private void sortTemporalCodeDimensions(List<CodeDimension> codes) {
         Collections.sort(codes, new Comparator<CodeDimension>() {
 
-            private TimeSdmxComparator sdmxComparator = new TimeSdmxComparator();
+            private final TimeSdmxComparator sdmxComparator = new TimeSdmxComparator();
 
             @Override
             public int compare(CodeDimension o1, CodeDimension o2) {
@@ -942,7 +942,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
 
     private List<CodeDimension> filterCodesFromAttribute(DatasetVersion resource, String datasetRepositoryId, String attributeId) throws MetamacException {
         try {
-            List<AttributeDto> attributes = statisticsDatasetRepositoriesServiceFacade.findAttributes(datasetRepositoryId, attributeId);
+            List<AttributeInstanceDto> attributes = statisticsDatasetRepositoriesServiceFacade.findAttributesInstances(datasetRepositoryId, attributeId);
 
             List<CodeDimension> codes = new ArrayList<CodeDimension>();
             if (attributes.size() > 0) {

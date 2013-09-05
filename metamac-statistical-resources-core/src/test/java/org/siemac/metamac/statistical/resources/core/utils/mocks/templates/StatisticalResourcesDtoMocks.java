@@ -47,7 +47,7 @@ import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedRes
 import org.siemac.metamac.statistical.resources.core.enume.domain.VersionRationaleTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryTypeEnum;
 
-import com.arte.statistic.dataset.repository.dto.AttributeDto;
+import com.arte.statistic.dataset.repository.dto.AttributeInstanceDto;
 
 public class StatisticalResourcesDtoMocks extends MetamacMocks {
 
@@ -148,19 +148,19 @@ public class StatisticalResourcesDtoMocks extends MetamacMocks {
         return dsdAttributeInstanceDto;
     }
 
-    public static AttributeDto mockAttributeDto() {
-        AttributeDto attributeDto = new AttributeDto();
-        attributeDto.setAttributeId("attribute_" + mockString(8));
+    public static AttributeInstanceDto mockAttributeInstanceDto() {
+        AttributeInstanceDto attributeInstanceDto = new AttributeInstanceDto();
+        attributeInstanceDto.setAttributeId("attribute_" + mockString(8));
 
-        attributeDto.setValue(new com.arte.statistic.dataset.repository.dto.InternationalStringDto());
+        attributeInstanceDto.setValue(new com.arte.statistic.dataset.repository.dto.InternationalStringDto());
         com.arte.statistic.dataset.repository.dto.LocalisedStringDto localisedValue = new com.arte.statistic.dataset.repository.dto.LocalisedStringDto();
         localisedValue.setLocale(StatisticalResourcesConstants.DEFAULT_DATA_REPOSITORY_LOCALE);
         localisedValue.setLabel(mockString(10));
-        attributeDto.getValue().addText(localisedValue);
+        attributeInstanceDto.getValue().addText(localisedValue);
 
-        attributeDto.setCodesByDimension(mockStringListMap());
+        attributeInstanceDto.setCodesByDimension(mockStringListMap());
 
-        return attributeDto;
+        return attributeInstanceDto;
     }
 
     private static Map<String, List<String>> mockStringListMap() {

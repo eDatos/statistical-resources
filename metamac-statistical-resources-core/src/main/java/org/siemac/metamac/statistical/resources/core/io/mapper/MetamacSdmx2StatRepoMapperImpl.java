@@ -13,7 +13,7 @@ import org.siemac.metamac.statistical.resources.core.constants.StatisticalResour
 import org.siemac.metamac.statistical.resources.core.io.utils.ManipulateDataUtils;
 import org.springframework.stereotype.Component;
 
-import com.arte.statistic.dataset.repository.dto.AttributeObservationDto;
+import com.arte.statistic.dataset.repository.dto.AttributeInstanceObservationDto;
 import com.arte.statistic.dataset.repository.dto.CodeDimensionDto;
 import com.arte.statistic.dataset.repository.dto.ConditionDimensionDto;
 import com.arte.statistic.dataset.repository.dto.InternationalStringDto;
@@ -152,7 +152,7 @@ public class MetamacSdmx2StatRepoMapperImpl implements MetamacSdmx2StatRepoMappe
      * @param idValuePair
      * @return AttributeDto
      */
-    private AttributeObservationDto processAttributeObservation(IdValuePair idValuePair) {
+    private AttributeInstanceObservationDto processAttributeObservation(IdValuePair idValuePair) {
         // AttributeDto attributeDto = new AttributeDto();
         if (StringUtils.isEmpty(idValuePair.getValue())) {
             return null;
@@ -167,7 +167,7 @@ public class MetamacSdmx2StatRepoMapperImpl implements MetamacSdmx2StatRepoMappe
         localisedStringDto.setLocale(StatisticalResourcesConstants.DEFAULT_DATA_REPOSITORY_LOCALE);
         internationalStringDto.addText(localisedStringDto);
 
-        AttributeObservationDto attributeObservationDto = new AttributeObservationDto(idValuePair.getCode(), internationalStringDto);
+        AttributeInstanceObservationDto attributeObservationDto = new AttributeInstanceObservationDto(idValuePair.getCode(), internationalStringDto);
 
         return attributeObservationDto;
     }

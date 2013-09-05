@@ -65,7 +65,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.arte.statistic.dataset.repository.dto.AttributeObservationDto;
+import com.arte.statistic.dataset.repository.dto.AttributeInstanceObservationDto;
 import com.arte.statistic.dataset.repository.dto.DatasetRepositoryDto;
 import com.arte.statistic.dataset.repository.dto.InternationalStringDto;
 import com.arte.statistic.dataset.repository.dto.LocalisedStringDto;
@@ -315,9 +315,9 @@ public class TaskServiceImpl extends TaskServiceImplBase {
                 localisedStringDto.setLocale(StatisticalResourcesConstants.DEFAULT_DATA_REPOSITORY_LOCALE);
                 internationalStringDto.addText(localisedStringDto);
 
-                AttributeObservationDto attributeObservationDto = new AttributeObservationDto(ManipulateDataUtils.DATA_SOURCE_ID, internationalStringDto);
+                AttributeInstanceObservationDto attributeInstanceObservationDto = new AttributeInstanceObservationDto(ManipulateDataUtils.DATA_SOURCE_ID, internationalStringDto);
 
-                datasetRepositoriesServiceFacade.deleteObservationsByAttributeValue(names[0], 0, attributeObservationDto);
+                datasetRepositoriesServiceFacade.deleteObservationsByAttributeInstanceValue(names[0], 0, attributeInstanceObservationDto);
             }
 
             // Delete failed entry

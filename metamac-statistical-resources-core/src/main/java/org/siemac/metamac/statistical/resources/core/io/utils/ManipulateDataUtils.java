@@ -14,9 +14,9 @@ import org.siemac.metamac.statistical.resources.core.constants.StatisticalResour
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 
-import com.arte.statistic.dataset.repository.dto.AttributeBasicDto;
-import com.arte.statistic.dataset.repository.dto.AttributeDto;
-import com.arte.statistic.dataset.repository.dto.AttributeObservationDto;
+import com.arte.statistic.dataset.repository.dto.AttributeInstanceBasicDto;
+import com.arte.statistic.dataset.repository.dto.AttributeInstanceDto;
+import com.arte.statistic.dataset.repository.dto.AttributeInstanceObservationDto;
 import com.arte.statistic.dataset.repository.dto.CodeDimensionDto;
 import com.arte.statistic.dataset.repository.dto.InternationalStringDto;
 import com.arte.statistic.dataset.repository.dto.LocalisedStringDto;
@@ -36,7 +36,7 @@ public class ManipulateDataUtils {
      * @param dataSourceId
      * @return AttributeDto
      */
-    public static AttributeObservationDto createDataSourceIdentificationAttribute(List<CodeDimensionDto> keys, String dataSourceId) throws MetamacException {
+    public static AttributeInstanceObservationDto createDataSourceIdentificationAttribute(List<CodeDimensionDto> keys, String dataSourceId) throws MetamacException {
 
         if (StringUtils.isEmpty(dataSourceId)) {
             throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.PARAMETER_REQUIRED).withMessageParameters(ServiceExceptionParameters.TASK_DATASOURCE_ID).build();
@@ -51,7 +51,7 @@ public class ManipulateDataUtils {
         localisedStringDto.setLocale(StatisticalResourcesConstants.DEFAULT_DATA_REPOSITORY_LOCALE);
         internationalStringDto.addText(localisedStringDto);
 
-        AttributeObservationDto attributeDto = new AttributeObservationDto(DATA_SOURCE_ID, internationalStringDto);
+        AttributeInstanceObservationDto attributeDto = new AttributeInstanceObservationDto(DATA_SOURCE_ID, internationalStringDto);
 
         return attributeDto;
     }
@@ -113,22 +113,22 @@ public class ManipulateDataUtils {
      * 
      * @param currentTransformedAttributes
      * @param dimensions
-     * @param attributeDtos
+     * @param attributeInstanceDtos
      * @return
      */
-    public static Map<String, List<AttributeBasicDto>> addTransformAttributesToCurrentTransformedAttributes(Map<String, List<AttributeBasicDto>> currentTransformedAttributes,
-            List<DimensionCodeInfo> dimensions, List<AttributeDto> attributeDtos) {
+    public static Map<String, List<AttributeInstanceBasicDto>> addTransformAttributesToCurrentTransformedAttributes(Map<String, List<AttributeInstanceBasicDto>> currentTransformedAttributes,
+            List<DimensionCodeInfo> dimensions, List<AttributeInstanceDto> attributeInstanceDtos) {
 
-        for (AttributeDto attributeDto : attributeDtos) {
+        for (AttributeInstanceDto attributeInstanceDto : attributeInstanceDtos) {
             // For current attribute
-            transformAttributes(currentTransformedAttributes, dimensions, 0, new LinkedList<CodeDimensionDto>(), attributeDto);
+            transformAttributes(currentTransformedAttributes, dimensions, 0, new LinkedList<CodeDimensionDto>(), attributeInstanceDto);
         }
 
         return currentTransformedAttributes;
     }
 
-    private static void transformAttributes(Map<String, List<AttributeBasicDto>> attributesMap, List<DimensionCodeInfo> dimensions, int index, List<CodeDimensionDto> codesDimension,
-            AttributeDto attributeDto) {
+    private static void transformAttributes(Map<String, List<AttributeInstanceBasicDto>> attributesMap, List<DimensionCodeInfo> dimensions, int index, List<CodeDimensionDto> codesDimension,
+            AttributeInstanceDto attributeDto) {
 
         // If the key of current attribute is fully generated
         if (index == attributeDto.getCodesByDimension().size()) {
@@ -138,7 +138,7 @@ public class ManipulateDataUtils {
             if (attributesMap.containsKey(key)) {
                 attributesMap.get(key).add(attributeDto);
             } else {
-                List<AttributeBasicDto> attributeDtos = new LinkedList<AttributeBasicDto>();
+                List<AttributeInstanceBasicDto> attributeDtos = new LinkedList<AttributeInstanceBasicDto>();
                 attributeDtos.add(attributeDto);
                 attributesMap.put(key, attributeDtos);
             }
@@ -195,15 +195,15 @@ public class ManipulateDataUtils {
         // System.out.println(generateKeyForAttribute(codesByDimension));
 
         // AtributeDto
-        AttributeDto attributeDto = new AttributeDto();
-        attributeDto.setAttributeId("ATTRIBUTE");
-        attributeDto.setCodesByDimension(codesByDimension);
+        AttributeInstanceDto attributeInstanceDto = new AttributeInstanceDto();
+        attributeInstanceDto.setAttributeId("ATTRIBUTE");
+        attributeInstanceDto.setCodesByDimension(codesByDimension);
         InternationalStringDto internationalStringDto = new InternationalStringDto();
         LocalisedStringDto localisedStringDto = new LocalisedStringDto();
         localisedStringDto.setLabel("hola");
         localisedStringDto.setLocale("es");
         internationalStringDto.addText(localisedStringDto);
-        attributeDto.setValue(internationalStringDto);
+        attributeInstanceDto.setValue(internationalStringDto);
 
         // List<ComponentInfo> dimensions,
         List<DimensionCodeInfo> dimensions = new ArrayList<DimensionCodeInfo>();
@@ -215,13 +215,13 @@ public class ManipulateDataUtils {
         dimensions.add(new DimensionCodeInfo("TIME_PERIOD", ComponentInfoTypeEnum.DIMENSION));
         dimensions.add(new DimensionCodeInfo("KAKA", ComponentInfoTypeEnum.DIMENSION));
 
-        Map<String, List<AttributeBasicDto>> attributesMap = addTransformAttributesToCurrentTransformedAttributes(new HashMap<String, List<AttributeBasicDto>>(), dimensions,
-                Arrays.asList(attributeDto));
+        Map<String, List<AttributeInstanceBasicDto>> attributesMap = addTransformAttributesToCurrentTransformedAttributes(new HashMap<String, List<AttributeInstanceBasicDto>>(), dimensions,
+                Arrays.asList(attributeInstanceDto));
 
-        for (Map.Entry<String, List<AttributeBasicDto>> entry : attributesMap.entrySet()) {
+        for (Map.Entry<String, List<AttributeInstanceBasicDto>> entry : attributesMap.entrySet()) {
             System.out.println(entry.getKey());
-            List<AttributeBasicDto> value = entry.getValue();
-            System.out.println(toStringUnorderedKeyForAttribute(((AttributeDto) value.iterator().next()).getCodesByDimension()));
+            List<AttributeInstanceBasicDto> value = entry.getValue();
+            System.out.println(toStringUnorderedKeyForAttribute(((AttributeInstanceDto) value.iterator().next()).getCodesByDimension()));
             System.out.println("----------------");
         }
 

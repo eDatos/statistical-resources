@@ -31,7 +31,7 @@ import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdAttributeIn
 import org.siemac.metamac.statistical.resources.core.dto.query.CodeItemDto;
 import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
 
-import com.arte.statistic.dataset.repository.dto.AttributeDto;
+import com.arte.statistic.dataset.repository.dto.AttributeInstanceDto;
 import com.arte.statistic.dataset.repository.dto.InternationalStringDto;
 
 public class DatasetsAsserts extends BaseAsserts {
@@ -366,10 +366,10 @@ public class DatasetsAsserts extends BaseAsserts {
     // ATTRIBUTES
     // -----------------------------------------------------------------
 
-    public static void assertEqualsAttributeDtoAndDsdAttributeInstaceDto(AttributeDto attributeDto, DsdAttributeInstanceDto dsdAttributeInstanceDto) {
-        assertEquals(attributeDto.getAttributeId(), attributeDto.getAttributeId());
-        assertEqualsAttributeValues(attributeDto.getValue(), dsdAttributeInstanceDto.getValue());
-        assertEqualsCodesByDimensionMap(attributeDto.getCodesByDimension(), dsdAttributeInstanceDto.getCodeDimensions());
+    public static void assertEqualsAttributeDtoAndDsdAttributeInstaceDto(AttributeInstanceDto attributeInstanceDto, DsdAttributeInstanceDto dsdAttributeInstanceDto) {
+        assertEquals(attributeInstanceDto.getAttributeId(), attributeInstanceDto.getAttributeId());
+        assertEqualsAttributeValues(attributeInstanceDto.getValue(), dsdAttributeInstanceDto.getValue());
+        assertEqualsCodesByDimensionMap(attributeInstanceDto.getCodesByDimension(), dsdAttributeInstanceDto.getCodeDimensions());
     }
 
     private static void assertEqualsAttributeValues(InternationalStringDto internationalStringDto, AttributeValueDto attributeValueDto) {

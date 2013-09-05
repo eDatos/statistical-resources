@@ -10,8 +10,6 @@ import static org.siemac.metamac.statistical.resources.core.utils.asserts.Datase
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetMockFactory.DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_01_BASIC_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_02_BASIC_NAME;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_03_FOR_DATASET_03_NAME;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_04_FOR_DATASET_03_AND_LAST_VERSION_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_49_WITH_DATASOURCE_FROM_PX_WITH_NEXT_UPDATE_IN_ONE_MONTH_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_50_WITH_DATASOURCE_FROM_PX_WITH_USER_NEXT_UPDATE_IN_ONE_MONTH_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_51_IN_DRAFT_WITH_DATASOURCE_NAME;
@@ -59,7 +57,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.arte.statistic.dataset.repository.dto.AttributeObservationDto;
+import com.arte.statistic.dataset.repository.dto.AttributeInstanceObservationDto;
 import com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceFacade;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -70,27 +68,27 @@ import com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceF
 public class DatasetServiceDatasourceManagementTest extends StatisticalResourcesBaseTest {
 
     @Autowired
-    private DatasetService                          datasetService;
+    private DatasetService                                datasetService;
 
     @Autowired
-    private DatasetVersionMockFactory               datasetVersionMockFactory;
+    private DatasetVersionMockFactory                     datasetVersionMockFactory;
 
     @Autowired
-    private DatasetMockFactory                      datasetMockFactory;
+    private DatasetMockFactory                            datasetMockFactory;
 
     @Autowired
-    private DatasourceMockFactory                   datasourceMockFactory;
+    private DatasourceMockFactory                         datasourceMockFactory;
 
     @Autowired
-    private DatasetRepositoriesServiceFacade        datasetRepositoriesServiceFacade;
+    private DatasetRepositoriesServiceFacade              datasetRepositoriesServiceFacade;
 
     @Autowired
-    private SrmRestInternalService                  srmRestInternalService;
+    private SrmRestInternalService                        srmRestInternalService;
 
-    private StatisticalResourcesNotPersistedDoMocks statisticalResourcesNotPersistedDoMocks = StatisticalResourcesNotPersistedDoMocks.getInstance();
+    private final StatisticalResourcesNotPersistedDoMocks statisticalResourcesNotPersistedDoMocks = StatisticalResourcesNotPersistedDoMocks.getInstance();
 
     @Autowired
-    private TaskService                             taskService;
+    private TaskService                                   taskService;
 
     @Before
     public void setUp() throws MetamacException {
@@ -489,7 +487,7 @@ public class DatasetServiceDatasourceManagementTest extends StatisticalResources
         String datasourceUrn = expected.getIdentifiableStatisticalResource().getUrn();
 
         Mockito.doThrow(ApplicationException.class).when(datasetRepositoriesServiceFacade)
-                .deleteObservationsByAttributeValue(Mockito.anyString(), Mockito.anyInt(), Mockito.any(AttributeObservationDto.class));
+                .deleteObservationsByAttributeInstanceValue(Mockito.anyString(), Mockito.anyInt(), Mockito.any(AttributeInstanceObservationDto.class));
 
         expectedMetamacException(new MetamacException(ServiceExceptionType.DATASOURCE_DATA_DELETE_ERROR, expected.getIdentifiableStatisticalResource().getCode()));
 
@@ -546,7 +544,7 @@ public class DatasetServiceDatasourceManagementTest extends StatisticalResources
     @MetamacMock({DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME})
     public void testRetrieveDatasourcesByDatasetVersion() throws Exception {
         Dataset dataset = datasetMockFactory.retrieveMock(DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME);
-        
+
         for (DatasetVersion datasetVersion : dataset.getVersions()) {
             String datasetVersionUrn = datasetVersion.getSiemacMetadataStatisticalResource().getUrn();
             List<Datasource> expected = datasetVersion.getDatasources();

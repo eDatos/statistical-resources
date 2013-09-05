@@ -20,8 +20,8 @@ import org.siemac.metamac.statistical.resources.core.io.utils.ManipulateDataUtil
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.arte.statistic.dataset.repository.dto.AttributeBasicDto;
-import com.arte.statistic.dataset.repository.dto.AttributeObservationDto;
+import com.arte.statistic.dataset.repository.dto.AttributeInstanceBasicDto;
+import com.arte.statistic.dataset.repository.dto.AttributeInstanceObservationDto;
 import com.arte.statistic.dataset.repository.dto.CodeDimensionDto;
 import com.arte.statistic.dataset.repository.dto.InternationalStringDto;
 import com.arte.statistic.dataset.repository.dto.LocalisedStringDto;
@@ -49,7 +49,7 @@ public class MetamacPx2StatRepoMapperImpl implements MetamacPx2StatRepoMapper {
     private StatisticalResourcesConfiguration statisticalResourcesConfiguration;
 
     @Override
-    public ObservationExtendedDto toObservation(PxObservation observation, String datasourceId, Map<String, AttributeObservationDto> attributesObservations) throws MetamacException {
+    public ObservationExtendedDto toObservation(PxObservation observation, String datasourceId, Map<String, AttributeInstanceObservationDto> attributesObservations) throws MetamacException {
 
         ObservationExtendedDto observationExtendedDto = null;
 
@@ -63,7 +63,7 @@ public class MetamacPx2StatRepoMapperImpl implements MetamacPx2StatRepoMapper {
         observationExtendedDto.getCodesDimension().addAll(processKeyOfObservation(observation.getCodesDimensions()));
 
         // Data
-        AttributeBasicDto dotCode2Attribute = transformDotCode2Attribute(observation.getObservationValue());
+        AttributeInstanceBasicDto dotCode2Attribute = transformDotCode2Attribute(observation.getObservationValue());
         if (dotCode2Attribute == null) {
             observationExtendedDto.setPrimaryMeasure(observation.getObservationValue());
         } else {
@@ -79,9 +79,9 @@ public class MetamacPx2StatRepoMapperImpl implements MetamacPx2StatRepoMapper {
         return observationExtendedDto;
     }
 
-    private AttributeObservationDto transformDotCode2Attribute(String observationValue) throws MetamacException {
+    private AttributeInstanceObservationDto transformDotCode2Attribute(String observationValue) throws MetamacException {
 
-        AttributeObservationDto obsConfAttr = null;
+        AttributeInstanceObservationDto obsConfAttr = null;
 
         Matcher matching = PATTERN_DOT.matcher(observationValue);
 
@@ -112,7 +112,7 @@ public class MetamacPx2StatRepoMapperImpl implements MetamacPx2StatRepoMapper {
             localisedStringDto.setLocale(StatisticalResourcesConstants.DEFAULT_DATA_REPOSITORY_LOCALE);
             internationalStringDto.addText(localisedStringDto);
 
-            obsConfAttr = new AttributeObservationDto(ATTR_OBS_CONF, internationalStringDto);
+            obsConfAttr = new AttributeInstanceObservationDto(ATTR_OBS_CONF, internationalStringDto);
         }
 
         return obsConfAttr;
@@ -134,10 +134,10 @@ public class MetamacPx2StatRepoMapperImpl implements MetamacPx2StatRepoMapper {
      * @return Map with key = unique key of observations; value = list of attributes of observation
      */
     @Override
-    public Map<String, AttributeObservationDto> toAttributesObservations(PxModel pxModel, String preferredLanguage, List<ComponentInfo> dimensionsInfos, Map<String, Integer> dimensionsOrderPxMap)
-            throws MetamacException {
+    public Map<String, AttributeInstanceObservationDto> toAttributesObservations(PxModel pxModel, String preferredLanguage, List<ComponentInfo> dimensionsInfos,
+            Map<String, Integer> dimensionsOrderPxMap) throws MetamacException {
 
-        Map<String, AttributeObservationDto> attributes = new HashMap<String, AttributeObservationDto>();
+        Map<String, AttributeInstanceObservationDto> attributes = new HashMap<String, AttributeInstanceObservationDto>();
 
         for (PxAttribute pxAttributeDto : pxModel.getAttributesObservations()) {
             if (PxAttributeCodes.CELLNOTE.equals(pxAttributeDto.getIdentifier()) || PxAttributeCodes.CELLNOTEX.equals(pxAttributeDto.getIdentifier())) {
@@ -147,7 +147,7 @@ public class MetamacPx2StatRepoMapperImpl implements MetamacPx2StatRepoMapper {
                     continue;
                 }
 
-                AttributeObservationDto attributeObservationDto = new AttributeObservationDto(ATTR_OBS_NOTE, internationalString);
+                AttributeInstanceObservationDto attributeObservationDto = new AttributeInstanceObservationDto(ATTR_OBS_NOTE, internationalString);
 
                 // key
                 List<String> codesPxAttribute = new ArrayList<String>(dimensionsInfos.size());
@@ -162,7 +162,7 @@ public class MetamacPx2StatRepoMapperImpl implements MetamacPx2StatRepoMapper {
                 if (!attributes.containsKey(uniqueKey)) {
                     attributes.put(uniqueKey, attributeObservationDto);
                 } else {
-                    AttributeObservationDto previousObsNotes = attributes.get(uniqueKey);
+                    AttributeInstanceObservationDto previousObsNotes = attributes.get(uniqueKey);
                     previousObsNotes.setValue(concatInternationalStrings(previousObsNotes.getValue(), attributeObservationDto.getValue()));
                 }
             }
@@ -171,8 +171,8 @@ public class MetamacPx2StatRepoMapperImpl implements MetamacPx2StatRepoMapper {
         return attributes;
     }
 
-    public void addValidAttributesForCurrentObservation(List<CodeDimensionDto> keys, Map<String, AttributeObservationDto> attributesObservations, ObservationExtendedDto observationExtendedDto,
-            final List<String> codesDimension, int index) {
+    public void addValidAttributesForCurrentObservation(List<CodeDimensionDto> keys, Map<String, AttributeInstanceObservationDto> attributesObservations,
+            ObservationExtendedDto observationExtendedDto, final List<String> codesDimension, int index) {
 
         if (attributesObservations == null || attributesObservations.isEmpty()) {
             return;
