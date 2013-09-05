@@ -196,7 +196,6 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
 
         target.setReplaces(toResource(source.getReplaces(), selectedLanguages));
         target.setIsReplacedBy(toResource(source.getIsReplacedBy(), selectedLanguages));
-        target.setIsRequiredBy(toResources(source.getIsRequiredBy(), selectedLanguages));
         target.setHasPart(toResources(source.getHasPart(), selectedLanguages));
         target.setIsPartOf(toResources(source.getIsPartOf(), selectedLanguages));
 
@@ -217,7 +216,6 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
         target.setValidFrom(toDate(source.getValidFrom()));
         target.setValidTo(toDate(source.getValidTo()));
     }
-
     @Override
     public Data toData(DatasetVersion source, DsdProcessorResult dsdProcessorResult, Map<String, List<String>> dimensionValuesSelected, List<String> selectedLanguages) throws Exception {
         if (source == null) {
@@ -435,6 +433,23 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
         for (LocalisedString source : sources.getTexts()) {
             if (selectedLanguages.contains(source.getLang())) {
                 targets.getTexts().add(source);
+            }
+        }
+        return targets;
+    }
+
+    @Override
+    public InternationalString toInternationalString(Map<String, String> sources, List<String> selectedLanguages) {
+        if (MapUtils.isEmpty(sources)) {
+            return null;
+        }
+        InternationalString targets = new InternationalString();
+        for (String locale : sources.keySet()) {
+            if (selectedLanguages.contains(locale)) {
+                LocalisedString target = new LocalisedString();
+                target.setLang(locale);
+                target.setValue(sources.get(locale));
+                targets.getTexts().add(target);
             }
         }
         return targets;

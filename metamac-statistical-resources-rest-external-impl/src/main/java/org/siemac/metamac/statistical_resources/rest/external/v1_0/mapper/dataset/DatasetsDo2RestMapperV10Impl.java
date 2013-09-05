@@ -4,6 +4,8 @@ import java.math.BigInteger;
 import java.util.List;
 import java.util.Map;
 
+import javax.ws.rs.core.Response.Status;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
 import org.siemac.metamac.core.common.conf.ConfigurationService;
@@ -15,18 +17,28 @@ import org.siemac.metamac.rest.common.v1_0.domain.Items;
 import org.siemac.metamac.rest.common.v1_0.domain.LocalisedString;
 import org.siemac.metamac.rest.common.v1_0.domain.Resource;
 import org.siemac.metamac.rest.common.v1_0.domain.ResourceLink;
+import org.siemac.metamac.rest.common.v1_0.domain.Resources;
+import org.siemac.metamac.rest.exception.RestException;
+import org.siemac.metamac.rest.exception.utils.RestExceptionUtils;
 import org.siemac.metamac.rest.search.criteria.mapper.SculptorCriteria2RestCriteria;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Dataset;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.DatasetMetadata;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Datasets;
 import org.siemac.metamac.rest.utils.RestUtils;
+import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResourceResult;
 import org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConstants;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionRepository;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.StatisticOfficiality;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.TemporalCode;
+import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
 import org.siemac.metamac.statistical_resources.rest.external.StatisticalResourcesRestExternalConstants;
+import org.siemac.metamac.statistical_resources.rest.external.exception.RestServiceExceptionType;
 import org.siemac.metamac.statistical_resources.rest.external.v1_0.domain.DsdProcessorResult;
 import org.siemac.metamac.statistical_resources.rest.external.v1_0.mapper.base.CommonDo2RestMapperV10;
+import org.siemac.metamac.statistical_resources.rest.external.v1_0.mapper.query.QueriesDo2RestMapperV10;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -34,10 +46,18 @@ import org.springframework.stereotype.Component;
 public class DatasetsDo2RestMapperV10Impl implements DatasetsDo2RestMapperV10 {
 
     @Autowired
-    private CommonDo2RestMapperV10 commonDo2RestMapper;
+    private CommonDo2RestMapperV10   commonDo2RestMapper;
 
     @Autowired
-    private ConfigurationService   configurationService;
+    private QueriesDo2RestMapperV10  queriesDo2RestMapper;
+
+    @Autowired
+    private ConfigurationService     configurationService;
+
+    @Autowired
+    private DatasetVersionRepository datasetVersionRepository;
+
+    private static final Logger      logger = LoggerFactory.getLogger(DatasetsDo2RestMapperV10Impl.class);
 
     @Override
     public Datasets toDatasets(PagedResult<DatasetVersion> sources, String agencyID, String resourceID, String query, String orderBy, Integer limit, List<String> selectedLanguages) {
@@ -122,10 +142,38 @@ public class DatasetsDo2RestMapperV10Impl implements DatasetsDo2RestMapperV10 {
         target.setUpdateFrequency(commonDo2RestMapper.toResourceExternalItemSrm(source.getUpdateFrequency(), selectedLanguages));
         target.setStatisticOfficiality(toStatisticOfficiality(source.getStatisticOfficiality(), selectedLanguages));
         target.setBibliographicCitation(toBibliographicCitation(source, source.getBibliographicCitation(), selectedLanguages));
+        target.setIsRequiredBy(toDatasetIsRequiredBy(source, selectedLanguages));
 
         // StatisticalResource and other
         commonDo2RestMapper.toMetadataStatisticalResource(source.getSiemacMetadataStatisticalResource(), target, selectedLanguages);
         return target;
+    }
+
+    private Resources toDatasetIsRequiredBy(DatasetVersion source, List<String> selectedLanguages) throws MetamacException {
+        List<RelatedResourceResult> relatedResourceIsRequiredBy = datasetVersionRepository.retrieveLastVersionResourcesThatRequiresDatasetVersion(source); // TODO sustituir por
+                                                                                                                                                           // retrieveLastPublishedVersionResourcesThatRequiresDatasetVersion
+        if (CollectionUtils.isEmpty(relatedResourceIsRequiredBy)) {
+            return null;
+        }
+        Resources targets = new Resources();
+        for (RelatedResourceResult relatedResourceResult : relatedResourceIsRequiredBy) {
+            targets.getResources().add(toResource(relatedResourceResult, selectedLanguages));
+        }
+        targets.setTotal(BigInteger.valueOf(targets.getResources().size()));
+        return targets;
+    }
+
+    private Resource toResource(RelatedResourceResult source, List<String> selectedLanguages) throws MetamacException {
+        if (source == null) {
+            return null;
+        }
+        if (TypeRelatedResourceEnum.QUERY_VERSION.equals(source.getType())) {
+            return queriesDo2RestMapper.toResource(source, selectedLanguages);
+        } else {
+            logger.error("RelatedResource unsupported: " + source.getType());
+            org.siemac.metamac.rest.common.v1_0.domain.Exception exception = RestExceptionUtils.getException(RestServiceExceptionType.UNKNOWN);
+            throw new RestException(exception, Status.INTERNAL_SERVER_ERROR);
+        }
     }
 
     private Items toTemporalCoverages(List<TemporalCode> sources, List<String> selectedLanguages) {

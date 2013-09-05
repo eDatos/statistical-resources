@@ -56,6 +56,7 @@
         <xs:complexContent>
             <xs:extension base="tns:StatisticalResource">
                 <xs:sequence>
+                    <xs:element name="isRequiredBy" type="common:Resources" />
                     <xs:element name="geographicCoverages" type="common:Resources" />
                     <xs:element name="temporalCoverages" type="common:Items" />
                     <xs:element name="measureCoverages" type="common:Resources" />
@@ -148,7 +149,6 @@
             <xs:element name="newnessUntilDate" type="xs:dateTime" minOccurs="0" />
             <xs:element name="replaces" type="common:Resource" />
             <xs:element name="isReplacedBy" type="common:Resource" />
-            <xs:element name="isRequiredBy" type="common:Resources" />
             <xs:element name="hasPart" type="common:Resources" />
             <xs:element name="isPartOf" type="common:Resources" />
             <xs:element name="rightsHolder" type="common:Resource" />

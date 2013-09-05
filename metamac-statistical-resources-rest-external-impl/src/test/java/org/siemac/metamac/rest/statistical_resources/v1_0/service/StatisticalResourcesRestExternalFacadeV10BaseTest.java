@@ -70,6 +70,7 @@ import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Concept
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Concepts;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructure;
 import org.siemac.metamac.rest.utils.RestUtils;
+import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResourceResult;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.CodeDimension;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionRepository;
@@ -263,6 +264,21 @@ public abstract class StatisticalResourcesRestExternalFacadeV10BaseTest extends 
                         String datasetUrn = (String) invocation.getArguments()[0];
                         String[] datasetUrnSplited = StatisticalResourcesUrnUtils.splitUrnDatasetGlobal(datasetUrn);
                         return restDoMocks.mockDatasetVersion(datasetUrnSplited[0], datasetUrnSplited[1], VERSION_1);
+                    };
+                });
+    }
+
+    private void mockRetrieveLastPublishedVersionResourcesThatRequiresDatasetVersion() throws MetamacException {
+        when(datasetVersionRepository.retrieveLastVersionResourcesThatRequiresDatasetVersion(any(DatasetVersion.class))).thenAnswer(new Answer<List<RelatedResourceResult>>() { // TODO
+
+                    // retrieveLastPublishedVersionResourcesThatRequiresDatasetVersion
+
+                    @Override
+                    public List<RelatedResourceResult> answer(InvocationOnMock invocation) throws Throwable {
+                        List<RelatedResourceResult> queries = new ArrayList<RelatedResourceResult>();
+                        queries.add(restDoMocks.mockQueryRelatedResourceResult("agency01", "isRequiredBy01", "01.000"));
+                        queries.add(restDoMocks.mockQueryRelatedResourceResult("agency02", "isRequiredBy02", "01.000"));
+                        return queries;
                     };
                 });
     }
@@ -703,6 +719,7 @@ public abstract class StatisticalResourcesRestExternalFacadeV10BaseTest extends 
         mockFindObservationsExtendedByDimensions();
         mockFindAttributesWithDatasetAttachmentLevel();
         mockFindAttributesWithDimensionAttachmentLevelDenormalized();
+        mockRetrieveLastPublishedVersionResourcesThatRequiresDatasetVersion();
 
         mockRetrieveDataStructureByUrn();
         mockRetrieveCodelistByUrn();

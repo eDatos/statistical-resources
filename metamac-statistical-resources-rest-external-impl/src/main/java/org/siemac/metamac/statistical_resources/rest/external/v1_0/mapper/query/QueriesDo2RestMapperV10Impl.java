@@ -17,6 +17,7 @@ import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Data;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Queries;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Query;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.QueryMetadata;
+import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResourceResult;
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryTypeEnum;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
@@ -101,6 +102,20 @@ public class QueriesDo2RestMapperV10Impl implements QueriesDo2RestMapperV10 {
         return target;
     }
 
+    @Override
+    public Resource toResource(RelatedResourceResult source, List<String> selectedLanguages) {
+        if (source == null) {
+            return null;
+        }
+        Resource target = new Resource();
+        target.setId(source.getCode());
+        target.setUrn(source.getUrn());
+        target.setKind(StatisticalResourcesRestExternalConstants.KIND_QUERY);
+        target.setSelfLink(toQuerySelfLink(source));
+        target.setName(commonDo2RestMapper.toInternationalString(source.getTitle(), selectedLanguages));
+        return target;
+    }
+
     private QueryMetadata toQueryMetadata(QueryVersion source, DsdProcessorResult dsdProcessorResult, List<String> selectedLanguages) throws MetamacException {
         if (source == null) {
             return null;
@@ -155,10 +170,24 @@ public class QueriesDo2RestMapperV10Impl implements QueriesDo2RestMapperV10 {
         return commonDo2RestMapper.toResourceLink(StatisticalResourcesRestExternalConstants.KIND_QUERY, toQueryLink(source));
     }
 
+    private ResourceLink toQuerySelfLink(RelatedResourceResult source) {
+        return commonDo2RestMapper.toResourceLink(StatisticalResourcesRestExternalConstants.KIND_QUERY, toQueryLink(source));
+    }
+
     private String toQueryLink(QueryVersion source) {
-        String resourceSubpath = StatisticalResourcesRestExternalConstants.LINK_SUBPATH_QUERIES;
         String agencyID = source.getLifeCycleStatisticalResource().getMaintainer().getCodeNested();
         String resourceID = source.getLifeCycleStatisticalResource().getCode();
+        return toQueryLink(agencyID, resourceID);
+    }
+
+    private String toQueryLink(RelatedResourceResult source) {
+        String agencyID = source.getMaintainerNestedCode();
+        String resourceID = source.getCode();
+        return toQueryLink(agencyID, resourceID);
+    }
+
+    private String toQueryLink(String agencyID, String resourceID) {
+        String resourceSubpath = StatisticalResourcesRestExternalConstants.LINK_SUBPATH_QUERIES;
         String version = null; // no devolver versión
         return commonDo2RestMapper.toResourceLink(resourceSubpath, agencyID, resourceID, version);
     }

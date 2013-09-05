@@ -45,6 +45,7 @@ public interface CommonDo2RestMapperV10 {
     public InternationalString toInternationalString(org.siemac.metamac.statistical.resources.core.common.domain.InternationalString sources, List<String> selectedLanguages);
     public InternationalString toInternationalString(InternationalString sources, List<String> selectedLanguages);
     public InternationalString toInternationalString(String source, List<String> selectedLanguages);
+    public InternationalString toInternationalString(Map<String, String> sources, List<String> selectedLanguages);
 
     public Date toDate(DateTime source);
 

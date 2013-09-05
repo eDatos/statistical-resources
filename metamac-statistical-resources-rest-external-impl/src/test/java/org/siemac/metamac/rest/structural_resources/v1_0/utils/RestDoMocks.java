@@ -17,10 +17,12 @@ import org.siemac.metamac.statistical.resources.core.base.domain.VersionRational
 import org.siemac.metamac.statistical.resources.core.base.domain.VersionableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.common.domain.InternationalString;
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResource;
+import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResourceResult;
 import org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConstants;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.CodeDimension;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.TemporalCode;
+import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.VersionRationaleTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryTypeEnum;
@@ -255,8 +257,6 @@ public class RestDoMocks {
         target.setNewnessUntilDate(new DateTime(2013, 9, 2, 15, 4, 5, 0));
         target.setReplaces(mockDatasetRelatedResource(agencyID, "replace01", "01.000"));
         target.setIsReplacedBy(mockDatasetRelatedResource(agencyID, "replacedBy01", "02.000"));
-        target.addIsRequiredBy(mockDatasetRelatedResource(agencyID, "isRequiredBy01", "01.000"));
-        target.addIsRequiredBy(mockDatasetRelatedResource(agencyID, "isRequiredBy02", "01.000"));
         target.addHasPart(mockDatasetRelatedResource(agencyID, "hasPart01", "01.000"));
         target.addHasPart(mockDatasetRelatedResource(agencyID, "hasPart02", "01.000"));
         target.addIsPartOf(mockDatasetRelatedResource(agencyID, "isPartOf01", "01.000"));
@@ -289,6 +289,17 @@ public class RestDoMocks {
             }
         }
         return querySelectionItem;
+    }
+
+    public RelatedResourceResult mockQueryRelatedResourceResult(String agencyID, String resourceID, String version) {
+        RelatedResourceResult query = new RelatedResourceResult();
+        query.setMaintainerNestedCode(agencyID);
+        query.setCode(resourceID);
+        query.setVersion(version);
+        query.setType(TypeRelatedResourceEnum.QUERY_VERSION);
+        query.setUrn("urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Query=" + agencyID + ":" + resourceID + "(" + version + ")");
+        query.setTitle(StatisticalResourcesDoMocks.mockInternationalStringAsMap("es", "título " + resourceID, "en", "title " + resourceID));
+        return query;
     }
 
     private CodeItem mockCodeItem(String codeId) {
