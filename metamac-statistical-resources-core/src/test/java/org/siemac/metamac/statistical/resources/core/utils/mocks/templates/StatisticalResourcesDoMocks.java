@@ -4,7 +4,9 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
@@ -12,7 +14,6 @@ import org.siemac.metamac.common.test.utils.MetamacMocks;
 import org.siemac.metamac.core.common.constants.CoreCommonConstants;
 import org.siemac.metamac.core.common.enume.domain.TypeExternalArtefactsEnum;
 import org.siemac.metamac.core.common.enume.utils.TypeExternalArtefactsEnumUtils;
-import org.siemac.metamac.core.common.util.GeneratorUrnUtils;
 import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.NameableStatisticalResource;
@@ -34,13 +35,11 @@ import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedRes
 import org.siemac.metamac.statistical.resources.core.publication.domain.Chapter;
 import org.siemac.metamac.statistical.resources.core.publication.domain.Cube;
 import org.siemac.metamac.statistical.resources.core.publication.domain.ElementLevel;
-import org.siemac.metamac.statistical.resources.core.publication.domain.Publication;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
 import org.siemac.metamac.statistical.resources.core.query.domain.CodeItem;
 import org.siemac.metamac.statistical.resources.core.query.domain.Query;
 import org.siemac.metamac.statistical.resources.core.query.domain.QuerySelectionItem;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
-import org.siemac.metamac.statistical.resources.core.utils.mocks.DatasetMock;
 
 public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
 
@@ -83,7 +82,7 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
         if (datasource.getIdentifiableStatisticalResource() == null) {
             datasource.setIdentifiableStatisticalResource(new IdentifiableStatisticalResource());
         }
-        
+
         if (datasource.getFilename() == null) {
             datasource.setFilename(mockString(10));
         }
@@ -91,18 +90,18 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
         if (datasource.getIdentifiableStatisticalResource().getCode() == null) {
             datasource.getIdentifiableStatisticalResource().setCode(datasource.getFilename() + "_" + new DateTime().toString());
         }
-        
+
         datasource.setIdentifiableStatisticalResource(mockIdentifiableStatisticalResource(datasource.getIdentifiableStatisticalResource(), TypeRelatedResourceEnum.DATASOURCE));
-        
+
         return datasource;
     }
-    
+
     protected Datasource mockDatasourceWithGeneratedDatasetVersion() {
         Datasource datasource = new Datasource();
         datasource.setFilename(mockString(10));
         datasource.setIdentifiableStatisticalResource(mockIdentifiableStatisticalResource(new IdentifiableStatisticalResource(), TypeRelatedResourceEnum.DATASOURCE));
         datasource.getIdentifiableStatisticalResource().setCode(datasource.getFilename() + "_" + new DateTime().toString());
-        
+
         return datasource;
     }
 
@@ -507,6 +506,20 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
         localisedString02.setLocale(locale02);
         localisedString02.setLabel(label02);
         target.addText(localisedString02);
+        return target;
+    }
+
+    /**
+     * Mock an InternationalString with two locales
+     */
+    public static Map<String, String> mockInternationalStringAsMap(String locale01, String label01, String locale02, String label02) {
+        Map<String, String> target = new HashMap<String, String>();
+        if (locale01 != null) {
+            target.put(locale01, label01);
+        }
+        if (locale02 != null) {
+            target.put(locale02, label02);
+        }
         return target;
     }
 
