@@ -99,7 +99,7 @@ public class BaseDo2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Base
         }
         versionableStatisticalResourceDoToDto(source, target);
 
-        target.setProcStatus(source.getProcStatus());
+        target.setProcStatus(source.getEffectiveProcStatus());
         target.setCreationDate(dateDoToDto(source.getCreationDate()));
         target.setCreationUser(source.getCreationUser());
         target.setProductionValidationDate(dateDoToDto(source.getProductionValidationDate()));

@@ -19,6 +19,8 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_03_FOR_PUBLICATION_03_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_04_FOR_PUBLICATION_03_AND_LAST_VERSION_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_27_V1_PUBLISHED_FOR_PUBLICATION_05_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_31_V2_PUBLISHED_NO_VISIBLE_FOR_PUBLICATION_06_NAME;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +36,7 @@ import org.siemac.metamac.statistical.resources.core.dto.publication.ElementLeve
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationStructureDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionBaseDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionDto;
+import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.publication.domain.Chapter;
 import org.siemac.metamac.statistical.resources.core.publication.domain.Cube;
 import org.siemac.metamac.statistical.resources.core.publication.domain.ElementLevel;
@@ -72,6 +75,22 @@ public class PublicationDo2DtoMapperTest extends StatisticalResourcesBaseTest {
         PublicationVersion expected = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_03_FOR_PUBLICATION_03_NAME);
         PublicationVersionDto actual = publicationDo2DtoMapper.publicationVersionDoToDto(expected);
         assertEqualsPublicationVersion(expected, actual);
+    }
+
+    @Test
+    @MetamacMock({PUBLICATION_VERSION_31_V2_PUBLISHED_NO_VISIBLE_FOR_PUBLICATION_06_NAME})
+    public void testPublicationDoToDtoProcStatusPublishedNotVisible() throws MetamacException {
+        PublicationVersion expected = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_31_V2_PUBLISHED_NO_VISIBLE_FOR_PUBLICATION_06_NAME);
+        PublicationVersionDto actual = publicationDo2DtoMapper.publicationVersionDoToDto(expected);
+        assertEquals(ProcStatusEnum.PUBLISHED_NOT_VISIBLE, actual.getProcStatus());
+    }
+
+    @Test
+    @MetamacMock({PUBLICATION_VERSION_27_V1_PUBLISHED_FOR_PUBLICATION_05_NAME})
+    public void testPublicationDoToDtoProcStatusPublishedVisible() throws MetamacException {
+        PublicationVersion expected = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_27_V1_PUBLISHED_FOR_PUBLICATION_05_NAME);
+        PublicationVersionDto actual = publicationDo2DtoMapper.publicationVersionDoToDto(expected);
+        assertEquals(ProcStatusEnum.PUBLISHED, actual.getProcStatus());
     }
 
     @Test
@@ -147,12 +166,12 @@ public class PublicationDo2DtoMapperTest extends StatisticalResourcesBaseTest {
         expected.add(cubeMockFactory.retrieveMock(CUBE_07_QUERY_WITH_PARENT_NAME).getElementLevel());
         expected.add(chapterMockFactory.retrieveMock(CHAPTER_01_BASIC_NAME).getElementLevel());
         expected.add(chapterMockFactory.retrieveMock(CHAPTER_04_WITH_PARENT_NAME).getElementLevel());
-        
+
         List<ElementLevelDto> actual = publicationDo2DtoMapper.elementsLevelDoListToDtoList(expected);
-        
+
         assertRelaxedEqualsElementLevelCollection(expected, actual);
     }
-    
+
     @Test
     @MetamacMock(PUBLICATION_VERSION_04_FOR_PUBLICATION_03_AND_LAST_VERSION_NAME)
     public void testPublicationVersionDoToPublicationRelatedResourceDto() throws MetamacException {
@@ -160,7 +179,7 @@ public class PublicationDo2DtoMapperTest extends StatisticalResourcesBaseTest {
         RelatedResourceDto actual = publicationDo2DtoMapper.publicationVersionDoToPublicationRelatedResourceDto(expected);
         assertEqualsPublication(expected, actual);
     }
-    
+
     @Test
     @MetamacMock(PUBLICATION_VERSION_04_FOR_PUBLICATION_03_AND_LAST_VERSION_NAME)
     public void testPublicationVersionDoToPublicationVersionRelatedResourceDto() throws MetamacException {
@@ -168,7 +187,7 @@ public class PublicationDo2DtoMapperTest extends StatisticalResourcesBaseTest {
         RelatedResourceDto actual = publicationDo2DtoMapper.publicationVersionDoToPublicationVersionRelatedResourceDto(expected);
         assertEqualsPublicationVersion(expected, actual);
     }
-    
+
     @Test
     @MetamacMock(PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME)
     public void testPublicationVersionStructureDoToDto() throws MetamacException {

@@ -8,6 +8,8 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_02_BASIC_ORDERED_01_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_03_BASIC_ORDERED_02_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_05_BASIC_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_15_PUBLISHED_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_28_V2_PUBLISHED_NO_VISIBLE_FOR_QUERY_06_NAME;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +21,7 @@ import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTes
 import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionBaseDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionDto;
+import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.configuration.MetamacMock;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory;
@@ -46,6 +49,22 @@ public class QueryDo2DtoMapperTest extends StatisticalResourcesBaseTest {
         QueryVersion expected = queryVersionMockFactory.retrieveMock(QUERY_VERSION_01_WITH_SELECTION_NAME);
         QueryVersionDto actual = queryDo2DtoMapper.queryVersionDoToDto(expected);
         assertEqualsQueryVersion(expected, actual);
+    }
+
+    @Test
+    @MetamacMock(QUERY_VERSION_28_V2_PUBLISHED_NO_VISIBLE_FOR_QUERY_06_NAME)
+    public void testQueryDo2DtoProcStatusPublishedNotVisible() throws MetamacException {
+        QueryVersion expected = queryVersionMockFactory.retrieveMock(QUERY_VERSION_28_V2_PUBLISHED_NO_VISIBLE_FOR_QUERY_06_NAME);
+        QueryVersionDto actual = queryDo2DtoMapper.queryVersionDoToDto(expected);
+        assertEquals(ProcStatusEnum.PUBLISHED_NOT_VISIBLE, actual.getProcStatus());
+    }
+
+    @Test
+    @MetamacMock(QUERY_VERSION_15_PUBLISHED_NAME)
+    public void testQueryDo2DtoProcStatusPublishedVisible() throws MetamacException {
+        QueryVersion expected = queryVersionMockFactory.retrieveMock(QUERY_VERSION_15_PUBLISHED_NAME);
+        QueryVersionDto actual = queryDo2DtoMapper.queryVersionDoToDto(expected);
+        assertEquals(ProcStatusEnum.PUBLISHED, actual.getProcStatus());
     }
 
     @Test

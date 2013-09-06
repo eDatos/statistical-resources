@@ -311,10 +311,11 @@ public class BaseAsserts extends CommonAsserts {
         }
         assertEqualsLifeCycleStatisticalResource(entity, dto, mapperEnum);
     }
+
     protected static void assertEqualsLifeCycleStatisticalResource(LifeCycleStatisticalResource entity, LifeCycleStatisticalResourceDto dto, MapperEnum mapperEnum) throws MetamacException {
         switch (mapperEnum) {
             case DO2DTO:
-                assertEquals(entity.getProcStatus(), dto.getProcStatus());
+                assertEquals(entity.getEffectiveProcStatus(), dto.getProcStatus());
 
                 assertEqualsDate(entity.getCreationDate(), dto.getCreationDate());
                 assertEquals(entity.getCreationUser(), dto.getCreationUser());
@@ -334,6 +335,7 @@ public class BaseAsserts extends CommonAsserts {
         }
         assertEqualsVersionableStatisticalResource(entity, dto, mapperEnum);
     }
+
     protected static void assertEqualsVersionableStatisticalResource(VersionableStatisticalResource entity, VersionableStatisticalResourceDto dto, MapperEnum mapperEnum) {
         switch (mapperEnum) {
             case DO2DTO:
@@ -377,10 +379,12 @@ public class BaseAsserts extends CommonAsserts {
             assertEqualsExternalItem(entity.getStatisticalOperation(), dto.getStatisticalOperation(), mapperEnum);
         }
     }
-    
-    protected static void assertEqualsSiemacMetadataStatisticalResourceBase(SiemacMetadataStatisticalResource entity, SiemacMetadataStatisticalResourceBaseDto dto, MapperEnum mapperEnum) throws MetamacException {
+
+    protected static void assertEqualsSiemacMetadataStatisticalResourceBase(SiemacMetadataStatisticalResource entity, SiemacMetadataStatisticalResourceBaseDto dto, MapperEnum mapperEnum)
+            throws MetamacException {
         assertEqualsLifeCycleStatisticalResourceBase(entity, dto, mapperEnum);
     }
+
     protected static void assertEqualsLifeCycleStatisticalResourceBase(LifeCycleStatisticalResource entity, LifeCycleStatisticalResourceBaseDto dto, MapperEnum mapperEnum) throws MetamacException {
         switch (mapperEnum) {
             case DO2DTO:
@@ -392,6 +396,7 @@ public class BaseAsserts extends CommonAsserts {
         }
         assertEqualsVersionableStatisticalResourceBase(entity, dto, mapperEnum);
     }
+
     protected static void assertEqualsVersionableStatisticalResourceBase(VersionableStatisticalResource entity, VersionableStatisticalResourceBaseDto dto, MapperEnum mapperEnum) {
         switch (mapperEnum) {
             case DO2DTO:
