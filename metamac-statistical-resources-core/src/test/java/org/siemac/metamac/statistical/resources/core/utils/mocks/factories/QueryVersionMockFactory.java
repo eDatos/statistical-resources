@@ -50,8 +50,8 @@ public class QueryVersionMockFactory extends StatisticalResourcesMockFactory<Que
     public static final String  QUERY_VERSION_12_PRODUCTION_VALIDATION_NAME                = "QUERY_VERSION_12_PRODUCTION_VALIDATION";
     private static QueryVersion QUERY_VERSION_12_PRODUCTION_VALIDATION;
 
-    public static final String  QUERY_VERSION_13_DIFUSSION_VALIDATION_NAME                 = "QUERY_VERSION_13_DIFUSSION_VALIDATION";
-    private static QueryVersion QUERY_VERSION_13_DIFUSSION_VALIDATION;
+    public static final String  QUERY_VERSION_13_DIFFUSION_VALIDATION_NAME                 = "QUERY_VERSION_13_DIFFUSION_VALIDATION";
+    private static QueryVersion QUERY_VERSION_13_DIFFUSION_VALIDATION;
 
     public static final String  QUERY_VERSION_14_VALIDATION_REJECTED_NAME                  = "QUERY_VERSION_14_VALIDATION_REJECTED";
     private static QueryVersion QUERY_VERSION_14_VALIDATION_REJECTED;
@@ -205,12 +205,12 @@ public class QueryVersionMockFactory extends StatisticalResourcesMockFactory<Que
         return QUERY_VERSION_12_PRODUCTION_VALIDATION;
     }
 
-    protected static QueryVersion getQueryVersion13DifussionValidation() {
-        if (QUERY_VERSION_13_DIFUSSION_VALIDATION == null) {
-            QUERY_VERSION_13_DIFUSSION_VALIDATION = createQueryWithGeneratedDatasetVersion();
-            prepareToValidationRejected(QUERY_VERSION_13_DIFUSSION_VALIDATION);
+    protected static QueryVersion getQueryVersion13DiffusionValidation() {
+        if (QUERY_VERSION_13_DIFFUSION_VALIDATION == null) {
+            QUERY_VERSION_13_DIFFUSION_VALIDATION = createQueryWithGeneratedDatasetVersion();
+            prepareToValidationRejected(QUERY_VERSION_13_DIFFUSION_VALIDATION);
         }
-        return QUERY_VERSION_13_DIFUSSION_VALIDATION;
+        return QUERY_VERSION_13_DIFFUSION_VALIDATION;
     }
 
     protected static QueryVersion getQueryVersion14ValidationRejected() {
