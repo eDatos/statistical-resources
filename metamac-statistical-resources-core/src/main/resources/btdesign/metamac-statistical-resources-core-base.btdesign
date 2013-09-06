@@ -109,9 +109,13 @@ Application BaseStatisticalResources {
 			Boolean lastVersion nullable;
 						
 			- @RelatedResource replacesVersion cascade="all" databaseColumn="REPLACES_VERSION_FK" nullable;
-			- @RelatedResource isReplacedByVersion cascade="all" databaseColumn="IS_REPLACED_BY_VERSION_FK" nullable;
 			
 			- @ExternalItem maintainer cascade="all" databaseColumn="MAINTAINER_FK" nullable;
+			
+			Repository LifeCycleStatisticalResourceRepository {
+				RelatedResourceResult retrieveResourceThatReplacesThisResourceVersion(Long currentResourceId, @TypeRelatedResourceEnum type) throws MetamacException;  
+				RelatedResourceResult retrieveLastPublishedVersionResourceThatReplacesThisResourceVersion(Long currentResourceId, @TypeRelatedResourceEnum type) throws MetamacException;
+			}
 		}
 
 		Entity SiemacMetadataStatisticalResource extends @LifeCycleStatisticalResource {

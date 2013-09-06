@@ -132,6 +132,7 @@ Application QueriesStatisticalResources {
 				@QueryVersion retrieveLastVersion(String queryUrn) throws MetamacException;
 				@QueryVersion retrieveLastPublishedVersion(String queryUrn) throws MetamacException;
 				List<@QueryVersion> findLinkedToDatasetVersion(Long datasetVersionId);
+				RelatedResourceResult retrieveResourceThatReplacesQueryVersion(@QueryVersion queryVersion) throws MetamacException;
 			}
 		}
 	}

@@ -114,6 +114,7 @@ Application PublicationsStatisticalResources {
 				@PublicationVersion retrieveLastVersion(String publicationUrn) throws MetamacException;
 				@PublicationVersion retrieveLastPublishedVersion(String publicationUrn) throws MetamacException;
 				@PublicationVersion retrieveByVersion(Long statisticalResourceId, String versionLogic) throws MetamacException;
+				RelatedResourceResult retrieveResourceThatReplacesPublicationVersion(@PublicationVersion publicationVersion) throws MetamacException;
 			}
 		}
 		
