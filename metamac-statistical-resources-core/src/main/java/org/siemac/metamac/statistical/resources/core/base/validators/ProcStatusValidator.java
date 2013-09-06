@@ -7,7 +7,7 @@ import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum
 import org.siemac.metamac.statistical.resources.core.enume.utils.ProcStatusEnumUtils;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
 
-public abstract class BaseValidator {
+public abstract class ProcStatusValidator {
 
 
 

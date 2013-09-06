@@ -15,7 +15,7 @@ import org.siemac.metamac.core.common.util.shared.VersionUtil;
 import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableStatisticalResourceRepository;
 import org.siemac.metamac.statistical.resources.core.base.utils.FillMetadataForCreateResourceUtils;
-import org.siemac.metamac.statistical.resources.core.base.validators.BaseValidator;
+import org.siemac.metamac.statistical.resources.core.base.validators.ProcStatusValidator;
 import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionRepository;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.TemporalCode;
@@ -117,7 +117,7 @@ public class QueryServiceImpl extends QueryServiceImplBase {
         queryServiceInvocationValidator.checkUpdateQueryVersion(ctx, queryVersion);
 
         // Check procStatus
-        BaseValidator.checkQueryVersionCanBeEdited(queryVersion);
+        ProcStatusValidator.checkQueryVersionCanBeEdited(queryVersion);
 
         // Fill metadata
         fillMetadataForUpdateQueryVersion(queryVersion);
@@ -158,7 +158,7 @@ public class QueryServiceImpl extends QueryServiceImplBase {
         QueryVersion queryVersion = retrieveQueryVersionByUrn(ctx, urn);
 
         // Check that query is with a correct procStatus
-        BaseValidator.checkStatisticalResourceCanBeDeleted(queryVersion);
+        ProcStatusValidator.checkStatisticalResourceCanBeDeleted(queryVersion);
 
         if (VersionUtil.isInitialVersion(queryVersion.getLifeCycleStatisticalResource().getVersionLogic())) {
             Query query = queryVersion.getQuery();

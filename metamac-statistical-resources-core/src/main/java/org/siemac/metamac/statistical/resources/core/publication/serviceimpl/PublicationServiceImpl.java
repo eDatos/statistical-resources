@@ -18,7 +18,7 @@ import org.siemac.metamac.statistical.resources.core.base.components.SiemacStati
 import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableStatisticalResourceRepository;
 import org.siemac.metamac.statistical.resources.core.base.utils.FillMetadataForCreateResourceUtils;
-import org.siemac.metamac.statistical.resources.core.base.validators.BaseValidator;
+import org.siemac.metamac.statistical.resources.core.base.validators.ProcStatusValidator;
 import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
@@ -80,7 +80,7 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
         publicationServiceInvocationValidator.checkUpdatePublicationVersion(ctx, publicationVersion);
 
         // Check status
-        BaseValidator.checkStatisticalResourceCanBeEdited(publicationVersion);
+        ProcStatusValidator.checkStatisticalResourceCanBeEdited(publicationVersion);
 
         // TODO RI: Comprobar si el código ha cambiado, si puede cambair y si sigue siendo unico (ver ConceptsServiceImpl.java)
         identifiableStatisticalResourceRepository.checkDuplicatedUrn(publicationVersion.getSiemacMetadataStatisticalResource());
@@ -153,7 +153,7 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
         PublicationVersion publicationVersion = retrievePublicationVersionByUrn(ctx, publicationVersionUrn);
 
         // Check can be deleted
-        BaseValidator.checkStatisticalResourceCanBeDeleted(publicationVersion);
+        ProcStatusValidator.checkStatisticalResourceCanBeDeleted(publicationVersion);
 
         // TODO: Determinar si hay algunas comprobaciones que impiden el borrado
 
@@ -179,7 +179,7 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
         // Validations
         publicationServiceInvocationValidator.checkCreateChapter(ctx, publicationVersionUrn, chapter);
         PublicationVersion publicationVersion = retrievePublicationVersionByUrn(ctx, publicationVersionUrn);
-        BaseValidator.checkStatisticalResourceStructureCanBeEdited(publicationVersion);
+        ProcStatusValidator.checkStatisticalResourceStructureCanBeEdited(publicationVersion);
 
         // Fill metadata for create chapter
         fillMetadataForCreateChapter(ctx, chapter, publicationVersion.getSiemacMetadataStatisticalResource().getStatisticalOperation());
@@ -204,7 +204,7 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
         // Validations
         publicationServiceInvocationValidator.checkUpdateChapter(ctx, chapter);
         PublicationVersion publicationVersion = retrievePublicationVersionByUrn(ctx, chapter.getElementLevel().getPublicationVersion().getSiemacMetadataStatisticalResource().getUrn());
-        BaseValidator.checkStatisticalResourceStructureCanBeEdited(publicationVersion);
+        ProcStatusValidator.checkStatisticalResourceStructureCanBeEdited(publicationVersion);
 
         updateLastUpdateMetadata(publicationVersion);
 
@@ -256,7 +256,7 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
         // Validations
         publicationServiceInvocationValidator.checkCreateCube(ctx, publicationVersionUrn, cube);
         PublicationVersion publicationVersion = retrievePublicationVersionByUrn(ctx, publicationVersionUrn);
-        BaseValidator.checkStatisticalResourceStructureCanBeEdited(publicationVersion);
+        ProcStatusValidator.checkStatisticalResourceStructureCanBeEdited(publicationVersion);
 
         // Fill metadata for create cube
         fillMetadataForCreateCube(ctx, cube, publicationVersion.getSiemacMetadataStatisticalResource().getStatisticalOperation());
@@ -282,7 +282,7 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
         // Validations
         publicationServiceInvocationValidator.checkUpdateCube(ctx, cube);
         PublicationVersion publicationVersion = retrievePublicationVersionByUrn(ctx, cube.getElementLevel().getPublicationVersion().getSiemacMetadataStatisticalResource().getUrn());
-        BaseValidator.checkStatisticalResourceStructureCanBeEdited(publicationVersion);
+        ProcStatusValidator.checkStatisticalResourceStructureCanBeEdited(publicationVersion);
 
         updateLastUpdateMetadata(publicationVersion);
 
@@ -478,7 +478,7 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
     private ElementLevel updateElementLevelLocation(ServiceContext ctx, ElementLevel elementLevel, String targetParentChapterUrn, Long orderInLevel) throws MetamacException {
         // Check indicators system proc status
         PublicationVersion publicationVersion = retrievePublicationVersionByUrn(ctx, elementLevel.getPublicationVersion().getSiemacMetadataStatisticalResource().getUrn());
-        BaseValidator.checkStatisticalResourceStructureCanBeEdited(publicationVersion);
+        ProcStatusValidator.checkStatisticalResourceStructureCanBeEdited(publicationVersion);
 
         // Change order
         Long orderInLevelBefore = elementLevel.getOrderInLevel();
@@ -632,7 +632,7 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
     private void deleteElementLevel(ServiceContext ctx, ElementLevel elementLevel) throws MetamacException {
         // Check indicators system proc status
         PublicationVersion publicationVersion = retrievePublicationVersionByUrn(ctx, elementLevel.getPublicationVersion().getSiemacMetadataStatisticalResource().getUrn());
-        BaseValidator.checkStatisticalResourceStructureCanBeEdited(publicationVersion);
+        ProcStatusValidator.checkStatisticalResourceStructureCanBeEdited(publicationVersion);
 
         // Get order of the element that will be deleted
         Long orderInLevelOfDeletedElement = elementLevel.getOrderInLevel();

@@ -36,7 +36,7 @@ import org.siemac.metamac.statistical.resources.core.base.components.SiemacStati
 import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableStatisticalResourceRepository;
 import org.siemac.metamac.statistical.resources.core.base.utils.FillMetadataForCreateResourceUtils;
-import org.siemac.metamac.statistical.resources.core.base.validators.BaseValidator;
+import org.siemac.metamac.statistical.resources.core.base.validators.ProcStatusValidator;
 import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResource;
 import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor;
@@ -268,7 +268,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         checkDsdChanges(datasetVersion);
 
         // Check status
-        BaseValidator.checkStatisticalResourceCanBeEdited(datasetVersion);
+        ProcStatusValidator.checkStatisticalResourceCanBeEdited(datasetVersion);
 
         identifiableStatisticalResourceRepository.checkDuplicatedUrn(datasetVersion.getSiemacMetadataStatisticalResource());
 
@@ -390,7 +390,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         checkNotTasksInProgress(ctx, datasetVersionUrn);
 
         // Check can be deleted
-        BaseValidator.checkStatisticalResourceCanBeDeleted(datasetVersion);
+        ProcStatusValidator.checkStatisticalResourceCanBeDeleted(datasetVersion);
 
         // TODO: Determinar si hay algunas comprobaciones que impiden el borrado
 
@@ -421,7 +421,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
 
         checkNotTasksInProgress(ctx, datasetVersionUrn);
 
-        BaseValidator.checkDatasetVersionCanImportDatasources(datasetVersion);
+        ProcStatusValidator.checkDatasetVersionCanImportDatasources(datasetVersion);
 
         String datasetUrn = datasetVersion.getDataset().getIdentifiableStatisticalResource().getUrn();
 

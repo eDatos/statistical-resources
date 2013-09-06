@@ -32,7 +32,7 @@ import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTes
 import org.siemac.metamac.statistical.resources.core.base.domain.HasLifecycle;
 import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.VersionRationaleType;
-import org.siemac.metamac.statistical.resources.core.base.validators.BaseValidator;
+import org.siemac.metamac.statistical.resources.core.base.validators.ProcStatusValidator;
 import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.VersionRationaleTypeEnum;
@@ -363,7 +363,7 @@ public class LifecycleCheckerTest extends StatisticalResourcesBaseTest {
         mockedResourceToVersion.getLifeCycleStatisticalResource().setValidFrom(new DateTime().plusMinutes(10));
 
         expectedMetamacException(new MetamacException(ServiceExceptionType.LIFE_CYCLE_WRONG_PROC_STATUS, mockedResourceToVersion.getLifeCycleStatisticalResource().getUrn(),
-                BaseEnumUtils.enumToString(BaseValidator.procStatusForSendResourceToVersion)));
+                BaseEnumUtils.enumToString(ProcStatusValidator.procStatusForSendResourceToVersion)));
 
         lifecycleChecker.checkVersioning(mockedResourceToVersion, baseMetadata, new ArrayList<MetamacExceptionItem>());
     }

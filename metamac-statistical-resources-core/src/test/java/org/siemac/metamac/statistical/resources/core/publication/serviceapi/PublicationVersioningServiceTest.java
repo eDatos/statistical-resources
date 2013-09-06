@@ -21,7 +21,7 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.util.GeneratorUrnUtils;
 import org.siemac.metamac.core.common.util.shared.VersionUtil;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
-import org.siemac.metamac.statistical.resources.core.base.validators.BaseValidator;
+import org.siemac.metamac.statistical.resources.core.base.validators.ProcStatusValidator;
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.utils.BaseEnumUtils;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
@@ -159,7 +159,7 @@ public class PublicationVersioningServiceTest extends StatisticalResourcesBaseTe
                 .getUrn();
 
         expectedMetamacException(new MetamacException(ServiceExceptionType.LIFE_CYCLE_WRONG_PROC_STATUS, publicationVersionUrn,
-                BaseEnumUtils.enumToString(BaseValidator.procStatusForSendResourceToVersion)));
+                BaseEnumUtils.enumToString(ProcStatusValidator.procStatusForSendResourceToVersion)));
         publicationVersionLifecycleService.versioning(getServiceContextWithoutPrincipal(), publicationVersionUrn, VersionTypeEnum.MAJOR);
     }
 
