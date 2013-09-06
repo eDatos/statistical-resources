@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.base.mapper.BaseDo2DtoMapperImpl;
+import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResourceResult;
 import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.CodeItemDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionBaseDto;
@@ -15,10 +16,15 @@ import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedRes
 import org.siemac.metamac.statistical.resources.core.query.domain.CodeItem;
 import org.siemac.metamac.statistical.resources.core.query.domain.QuerySelectionItem;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
+import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersionRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @org.springframework.stereotype.Component("queryDo2DtoMapper")
 public class QueryDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements QueryDo2DtoMapper {
 
+    @Autowired
+    private QueryVersionRepository queryVersionRepository;
+    
     // ---------------------------------------------------------------------------------------------------------
     // QUERY VERSION
     // ---------------------------------------------------------------------------------------------------------
@@ -142,6 +148,9 @@ public class QueryDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements Query
         // Identity
         target.setId(source.getId());
         target.setVersion(source.getVersion());
+        
+        RelatedResourceResult isReplacedByVersion = queryVersionRepository.retrieveResourceThatReplacesQueryVersion(source);
+        target.setIsReplacedByVersion(relatedResourceResultToDto(isReplacedByVersion));
 
         return target;
     }

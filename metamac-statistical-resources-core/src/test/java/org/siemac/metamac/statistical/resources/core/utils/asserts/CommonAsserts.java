@@ -21,17 +21,23 @@ import org.siemac.metamac.common.test.utils.MetamacAsserts;
 import org.siemac.metamac.core.common.constants.shared.RegularExpressionConstants;
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.dto.InternationalStringDto;
+import org.siemac.metamac.core.common.enume.utils.TypeExternalArtefactsEnumUtils;
+import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatisticalResource;
+import org.siemac.metamac.statistical.resources.core.base.domain.NameableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
 import org.siemac.metamac.statistical.resources.core.common.domain.InternationalString;
 import org.siemac.metamac.statistical.resources.core.common.domain.LocalisedString;
-import org.siemac.metamac.core.common.enume.utils.TypeExternalArtefactsEnumUtils;
-import org.siemac.metamac.core.common.exception.MetamacException;
-import org.siemac.metamac.statistical.resources.core.base.domain.NameableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResource;
+import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResourceResult;
 import org.siemac.metamac.statistical.resources.core.common.utils.RelatedResourceUtils;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.TemporalCode;
 import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.TemporalCodeDto;
+import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
+import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
+import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
 import org.siemac.metamac.statistical.resources.core.utils.MetamacReflectionUtils;
 import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesCollectionUtils;
 
@@ -91,6 +97,43 @@ public class CommonAsserts extends MetamacAsserts {
         for (LocalisedString localisedStringExpected : entity.getTexts()) {
             assertEquals(localisedStringExpected.getLabel(), dto.getLocalisedLabel(localisedStringExpected.getLocale()));
         }
+    }
+
+    // -----------------------------------------------------------------
+    // RELATED RESOURCE RESULT: DO & DATASTE VERSION
+    // -----------------------------------------------------------------
+    public static void assertEqualsRelatedResourceResultLifecycleResource(LifeCycleStatisticalResource expected, RelatedResourceResult actual, TypeRelatedResourceEnum type) throws MetamacException {
+
+        assertEqualsNullability(expected, actual);
+        if (expected == null) {
+            return;
+        }
+
+        assertEquals(expected.getCode(), actual.getCode());
+        assertEquals(expected.getUrn(), actual.getUrn());
+        assertEquals(expected.getStatisticalOperation().getCode(), actual.getStatisticalOperationCode());
+        assertEquals(expected.getStatisticalOperation().getUrn(), actual.getStatisticalOperationUrn());
+        assertEquals(expected.getMaintainer().getCodeNested(), actual.getMaintainerNestedCode());
+        assertEquals(type, actual.getType());
+
+        assertEquals(expected.getTitle().getLocales().size(), actual.getTitle().size());
+
+        for (String locale : expected.getTitle().getLocales()) {
+            assertTrue(actual.getTitle().containsKey(locale));
+            assertEquals(expected.getTitle().getLocalisedLabel(locale), actual.getTitle().get(locale));
+        }
+    }
+
+    public static void assertEqualsRelatedResourceResultDatasetVersion(DatasetVersion expected, RelatedResourceResult actual) throws MetamacException {
+        assertEqualsRelatedResourceResultLifecycleResource(expected.getSiemacMetadataStatisticalResource(), actual, TypeRelatedResourceEnum.DATASET_VERSION);
+    }
+
+    public static void assertEqualsRelatedResourceResultQueryVersion(QueryVersion expected, RelatedResourceResult actual) throws MetamacException {
+        assertEqualsRelatedResourceResultLifecycleResource(expected.getLifeCycleStatisticalResource(), actual, TypeRelatedResourceEnum.QUERY_VERSION);
+    }
+
+    public static void assertEqualsRelatedResourceResultPublicationVersion(PublicationVersion expected, RelatedResourceResult actual) throws MetamacException {
+        assertEqualsRelatedResourceResultLifecycleResource(expected.getSiemacMetadataStatisticalResource(), actual, TypeRelatedResourceEnum.PUBLICATION_VERSION);
     }
 
     // -----------------------------------------------------------------
@@ -292,7 +335,7 @@ public class CommonAsserts extends MetamacAsserts {
         for (ExternalItem expec : expected) {
             boolean found = false;
             for (ExternalItem actualItem : actual) {
-                if (StringUtils.equals(actualItem.getUrn(), expec.getUrn()) || StringUtils.equals(actualItem.getUrnProvider(),expec.getUrnProvider())) {
+                if (StringUtils.equals(actualItem.getUrn(), expec.getUrn()) || StringUtils.equals(actualItem.getUrnProvider(), expec.getUrnProvider())) {
                     found = true;
                 }
             }
@@ -411,11 +454,11 @@ public class CommonAsserts extends MetamacAsserts {
     // -----------------------------------------------------------------
     // OTHER
     // -----------------------------------------------------------------
-    
+
     public static <T, R> void assertEqualsCollectionByField(Collection<T> expected, Collection<R> actual, String expectedFieldName, String actualFieldName) throws Exception {
         StatisticalResourcesCollectionUtils.equalsCollectionByField(expected, actual, expectedFieldName, actualFieldName);
     }
-    
+
     protected static void assertRelaxedEqualsObject(Object expected, Object actual) {
         if ((expected != null && actual == null) || (expected == null && actual != null)) {
             fail("The expected object and the actual are not equals");

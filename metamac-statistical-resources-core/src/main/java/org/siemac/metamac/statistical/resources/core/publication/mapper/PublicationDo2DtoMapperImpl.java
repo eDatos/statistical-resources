@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.base.mapper.BaseDo2DtoMapperImpl;
+import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResourceResult;
 import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.ChapterDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.CubeDto;
@@ -17,11 +18,16 @@ import org.siemac.metamac.statistical.resources.core.publication.domain.Chapter;
 import org.siemac.metamac.statistical.resources.core.publication.domain.Cube;
 import org.siemac.metamac.statistical.resources.core.publication.domain.ElementLevel;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
+import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersionRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component("publicationDo2DtoMapper")
 public class PublicationDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements PublicationDo2DtoMapper {
 
+    @Autowired
+    private PublicationVersionRepository publicationVersionRepository;
+    
     // ---------------------------------------------------------------------------------------------------------
     // PUBLICATIONS
     // ---------------------------------------------------------------------------------------------------------
@@ -118,6 +124,10 @@ public class PublicationDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements
         // Hierarchy
         siemacMetadataStatisticalResourceDoToDto(source.getSiemacMetadataStatisticalResource(), target);
 
+        // Is replaced by version
+        RelatedResourceResult isReplacedByVersion = publicationVersionRepository.retrieveResourceThatReplacesPublicationVersion(source);
+        target.setIsReplacedByVersion(relatedResourceResultToDto(isReplacedByVersion));
+        
         // Identity
         target.setId(source.getId());
         target.setVersion(source.getVersion());

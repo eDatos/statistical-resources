@@ -11,10 +11,14 @@ import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
 import org.joda.time.DateTime;
 import org.siemac.metamac.core.common.criteria.utils.CriteriaUtils;
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatisticalResourceRepository;
+import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResourceResult;
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
+import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersionProperties;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -23,6 +27,9 @@ import org.springframework.stereotype.Repository;
 @Repository("queryVersionRepository")
 public class QueryVersionRepositoryImpl extends QueryVersionRepositoryBase {
 
+    @Autowired
+    private LifeCycleStatisticalResourceRepository lifeCycleStatisticalResourceRepository;
+    
     public QueryVersionRepositoryImpl() {
     }
 
@@ -90,4 +97,8 @@ public class QueryVersionRepositoryImpl extends QueryVersionRepositoryBase {
         return findByCondition(conditions);
     }
 
+    @Override
+    public RelatedResourceResult retrieveResourceThatReplacesQueryVersion(QueryVersion queryVersion) throws MetamacException {
+        return lifeCycleStatisticalResourceRepository.retrieveResourceThatReplacesThisResourceVersion(queryVersion.getId(), TypeRelatedResourceEnum.QUERY_VERSION);
+    }
 }

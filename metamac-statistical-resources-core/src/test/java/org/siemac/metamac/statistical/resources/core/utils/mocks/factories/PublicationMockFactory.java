@@ -197,10 +197,12 @@ public class PublicationMockFactory extends StatisticalResourcesMockFactory<Publ
 
             DateTime secondVersionPublishTime = new DateTime().plusDays(1);
 
-            buildPublication06Version01Published(publication, new DateTime().minusDays(1), secondVersionPublishTime);
+            PublicationVersion publicationVersion01 = buildPublication06Version01Published(publication, new DateTime().minusDays(1), secondVersionPublishTime);
 
-            buildPublication06Version02Published(publication, new DateTime().plusDays(1));
+            PublicationVersion publicationVersion02 = buildPublication06Version02Published(publication, secondVersionPublishTime);
 
+            publicationVersion02.getSiemacMetadataStatisticalResource().setReplacesVersion(StatisticalResourcesPersistedDoMocks.mockPublicationVersionRelated(publicationVersion01));
+            
             PUBLICATION_06_WITH_MULTIPLE_PUBLISHED_VERSIONS_AND_LATEST_NO_VISIBLE = publication;
         }
         return PUBLICATION_06_WITH_MULTIPLE_PUBLISHED_VERSIONS_AND_LATEST_NO_VISIBLE;

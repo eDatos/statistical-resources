@@ -145,17 +145,13 @@ public class LifecycleAsserts extends CommonAsserts {
         assertTrue(previousLifecycle.getValidFrom().isBefore(currentLifecycle.getValidFrom()));
         assertEqualsDate(currentLifecycle.getValidFrom(), previousLifecycle.getValidTo());
 
-        // REPLACES_VERSION and IS_REPLACED_BY_VERSION
+        // REPLACES_VERSION
         try {
-            NameableStatisticalResource previousIsReplacedByNameable = RelatedResourceUtils.retrieveNameableResourceLinkedToRelatedResource(previousLifecycle.getIsReplacedByVersion());
-            assertEquals(currentLifecycle.getUrn(), previousIsReplacedByNameable.getUrn());
-
             NameableStatisticalResource currentReplacesNameable = RelatedResourceUtils.retrieveNameableResourceLinkedToRelatedResource(currentLifecycle.getReplacesVersion());
             assertEquals(previousLifecycle.getUrn(), currentReplacesNameable.getUrn());
         } catch (MetamacException e) {
             Assert.fail("Error retrieving nameable from related resource:" + e);
         }
-        assertNull(currentLifecycle.getIsReplacedByVersion());
     }
 
     private static void assertFilledMetadataSiemacAfterPublishing(HasSiemacMetadata current, HasSiemacMetadata previous) {
@@ -182,8 +178,6 @@ public class LifecycleAsserts extends CommonAsserts {
 
     private static void assertNotNullAutomaticallyFilledForAPreviosVersionOfVersionedResource(HasLifecycle resource, HasLifecycle previousVersion) throws MetamacException {
         assertFalse(previousVersion.getLifeCycleStatisticalResource().getLastVersion());
-        assertNotNull(previousVersion.getLifeCycleStatisticalResource().getIsReplacedByVersion());
-        assertEqualsRelatedResource(previousVersion.getLifeCycleStatisticalResource().getIsReplacedByVersion(), RelatedResourceUtils.createRelatedResourceForHasLifecycleResource(resource));
         assertFilledMetadataLifecycleForAPublishedResource(previousVersion);
     }
 

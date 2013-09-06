@@ -1,11 +1,9 @@
 package org.siemac.metamac.statistical.resources.core.dataset.repositoryimpl;
 
 import static org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteriaBuilder.criteriaFor;
+import static org.siemac.metamac.statistical.resources.core.base.domain.utils.RelatedResourceResultUtils.getRelatedResourceResultsFromRows;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.persistence.Query;
 
@@ -16,12 +14,14 @@ import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
 import org.joda.time.DateTime;
 import org.siemac.metamac.core.common.criteria.utils.CriteriaUtils;
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatisticalResourceRepository;
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResourceResult;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionProperties;
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -29,6 +29,19 @@ import org.springframework.stereotype.Repository;
  */
 @Repository("datasetVersionRepository")
 public class DatasetVersionRepositoryImpl extends DatasetVersionRepositoryBase {
+
+
+    @Autowired
+    private LifeCycleStatisticalResourceRepository lifeCycleStatisticalResourceRepository;
+    
+    //@formatter:off
+    private static final String isLastPublishedVersionConditions = 
+        "( " +
+        " lifecycle.proc_status = :publishedProcStatus " +
+        "AND lifecycle.Valid_From <= :now " +
+        "AND (lifecycle.Valid_To > :now or lifecycle.Valid_To is null)" +
+    ")";
+    //@formatter:on
 
     public DatasetVersionRepositoryImpl() {
     }
@@ -142,12 +155,6 @@ public class DatasetVersionRepositoryImpl extends DatasetVersionRepositoryBase {
     @Override
     public List<RelatedResourceResult> retrieveLastPublishedVersionResourcesThatRequiresDatasetVersion(DatasetVersion datasetVersion) throws MetamacException {
         //@formatter:off
-        String isLastPublishedVersion = "( " +
-        		"lifecycle.proc_status = :publishedProcStatus " +
-    		    "and lifecycle.Valid_From <= :now and " +
-        		    "( lifecycle.Valid_To > :now or lifecycle.Valid_To is null)" +
-        		")";
-        
         Query query = getEntityManager().createNativeQuery(
                 "select lifecycle.code,"+
                 "       lifecycle.urn, " +
@@ -166,7 +173,7 @@ public class DatasetVersionRepositoryImpl extends DatasetVersionRepositoryBase {
                 "   And lifecycle.Maintainer_Fk = maintainerItems.Id "+
                 "   And lifecycle.Title_Fk = loc.International_String_Fk " +
                 "   And query.Dataset_Version_Fk = :datasetVersionFk " +
-                "   And  " + isLastPublishedVersion);
+                "   And  " + isLastPublishedVersionConditions);
 
         //     @formatter:on
         query.setParameter("publishedProcStatus", ProcStatusEnum.PUBLISHED.name());
@@ -181,9 +188,6 @@ public class DatasetVersionRepositoryImpl extends DatasetVersionRepositoryBase {
     @SuppressWarnings("unchecked")
     @Override
     public List<RelatedResourceResult> retrieveLastVersionResourcesThatRequiresDatasetVersion(DatasetVersion datasetVersion) throws MetamacException {
-        String isLastPublishedVersion = "( " + "lifecycle.proc_status = :publishedProcStatus " + "and " + "lifecycle.Valid_From <= :now " + "and "
-                + "( lifecycle.Valid_To > :now or lifecycle.Valid_To is null)" + ")";
-
         //     @formatter:off
         Query query = getEntityManager().createNativeQuery(
                 "select lifecycle.code, " +
@@ -205,7 +209,7 @@ public class DatasetVersionRepositoryImpl extends DatasetVersionRepositoryBase {
         		"     And ( " +
         		"         lifecycle.Last_Version = 1 " +
         		"         OR" +
-        		"       "+isLastPublishedVersion + ")");
+        		"       "+isLastPublishedVersionConditions + ")");
 
         //     @formatter:on
         query.setParameter("publishedProcStatus", ProcStatusEnum.PUBLISHED.name());
@@ -217,34 +221,14 @@ public class DatasetVersionRepositoryImpl extends DatasetVersionRepositoryBase {
         return resources;
     }
 
-    private List<RelatedResourceResult> getRelatedResourceResultsFromRows(List<Object> rows, TypeRelatedResourceEnum type) {
-        Map<String, RelatedResourceResult> resourcesByUrn = new HashMap<String, RelatedResourceResult>();
-        for (Object row : rows) {
-            Object[] cols = (Object[]) row;
-            String queryUrn = (String) cols[1];
-            RelatedResourceResult resource = resourcesByUrn.get(queryUrn);
-            if (resource == null) {
-                resource = new RelatedResourceResult();
-                resourcesByUrn.put(queryUrn, resource);
-            }
-            populateResultWithRow(resource, cols, type);
-        }
-        List<RelatedResourceResult> resources = new ArrayList<RelatedResourceResult>(resourcesByUrn.values());
-        return resources;
+    @Override
+    public RelatedResourceResult retrieveLastPublishedVersionResourceThatReplacesDatasetVersion(DatasetVersion datasetVersion) throws MetamacException {
+        return lifeCycleStatisticalResourceRepository.retrieveLastPublishedVersionResourceThatReplacesThisResourceVersion(datasetVersion.getId(), TypeRelatedResourceEnum.DATASET_VERSION);
     }
 
-    private void populateResultWithRow(RelatedResourceResult resource, Object[] cols, TypeRelatedResourceEnum type) {
-        resource.setCode((String) cols[0]);
-        resource.setUrn((String) cols[1]);
-        resource.setStatisticalOperationCode((String) cols[2]);
-        resource.setStatisticalOperationUrn((String) cols[3]);
-        resource.setMaintainerNestedCode((String) cols[4]);
-        resource.setVersion((String) cols[5]);
-        if (resource.getTitle() == null) {
-            resource.setTitle(new HashMap<String, String>());
-        }
-        resource.getTitle().put((String) cols[6], (String) cols[7]);
-        resource.setType(type);
+    @Override
+    public RelatedResourceResult retrieveResourceThatReplacesDatasetVersion(DatasetVersion datasetVersion) throws MetamacException {
+        return lifeCycleStatisticalResourceRepository.retrieveResourceThatReplacesThisResourceVersion(datasetVersion.getId(), TypeRelatedResourceEnum.DATASET_VERSION);
     }
 
 }

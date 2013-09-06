@@ -194,6 +194,8 @@ public class DatasetDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements Dat
         target.getIsRequiredBy().clear();
         target.getIsRequiredBy().addAll(relatedResourceResultCollectionToDtoCollection(isRequiredBy));
         
+        target.setIsReplacedByVersion(relatedResourceResultToDto(datasetVersionRepository.retrieveResourceThatReplacesDatasetVersion(source)));
+        
         target.setIsTaskInBackground(taskService.existImportationTaskInResource(ctx, source.getSiemacMetadataStatisticalResource().getUrn()));
 
         return target;

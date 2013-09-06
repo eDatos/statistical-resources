@@ -48,7 +48,7 @@ public class QueryMockFactory extends StatisticalResourcesMockFactory<Query> {
         return QUERY_01_SIMPLE;
     }
 
-    private static Query getQuery02BasicWithGeneratedVersion() {
+    protected static Query getQuery02BasicWithGeneratedVersion() {
         if (QUERY_02_BASIC_WITH_GENERATED_VERSION == null) {
             Query query = createQueryWithGeneratedVersion();
             query.getVersions().get(0).getLifeCycleStatisticalResource().setLastVersion(Boolean.TRUE);
@@ -145,7 +145,7 @@ public class QueryMockFactory extends StatisticalResourcesMockFactory<Query> {
         dsV2.getLifeCycleStatisticalResource().setReplacesVersion(StatisticalResourcesNotPersistedDoMocks.mockRelatedResourceLinkedToQueryVersion(dsV1));
     }
 
-    private static Query getQuery07MultiVersion() {
+    protected static Query getQuery07SimpleMultiVersion() {
         if (QUERY_07_SIMPLE_MULTI_VERSION == null) {
             Query query = createQueryWithoutGeneratedVersion();
             QUERY_07_SIMPLE_MULTI_VERSION = query;

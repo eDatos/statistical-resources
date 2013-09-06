@@ -69,8 +69,6 @@ public class LifecycleFiller {
     public void applySendToPublishedPreviousResourceActions(ServiceContext ctx, HasLifecycle resource, HasLifecycle previousVersion, RelatedResource currentAsRelatedResource) throws MetamacException {
         DateTime publicationDate = resource.getLifeCycleStatisticalResource().getValidFrom();
         previousVersion.getLifeCycleStatisticalResource().setValidTo(publicationDate);
-
-        previousVersion.getLifeCycleStatisticalResource().setIsReplacedByVersion(cloneRelatedResource(currentAsRelatedResource));
     }
 
     // ------------------------------------------------------------------------------------------------------
@@ -97,9 +95,6 @@ public class LifecycleFiller {
         if (ValidationUtils.isEmpty(previousVersion)) {
             throw new MetamacException(ServiceExceptionType.PARAMETER_REQUIRED, ServiceExceptionParameters.PREVIOUS_VERSION);
         }
-        RelatedResource actualVersionRelatedResource = RelatedResourceUtils.createRelatedResourceForHasLifecycleResource(resource);
-
-        previousVersion.getLifeCycleStatisticalResource().setIsReplacedByVersion(actualVersionRelatedResource);
         previousVersion.getLifeCycleStatisticalResource().setLastVersion(false);
     }
 

@@ -72,9 +72,7 @@ public class BaseDo2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Base
         target.setNewnessUntilDate(dateDoToDto(source.getNewnessUntilDate()));
 
         target.setReplaces(relatedResourceDoToDto(source.getReplaces()));
-        target.setReplacesVersion(relatedResourceDoToDto(source.getReplacesVersion()));
         target.setIsReplacedBy(relatedResourceDoToDto(source.getIsReplacedBy()));
-        target.setIsReplacedByVersion(relatedResourceDoToDto(source.getIsReplacedByVersion()));
 
         target.getHasPart().clear();
         target.getHasPart().addAll(relatedResourceDoCollectionToDtoCollection(source.getHasPart()));
@@ -114,7 +112,6 @@ public class BaseDo2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Base
         target.setPublicationUser(source.getPublicationUser());
 
         target.setReplacesVersion(relatedResourceDoToDto(source.getReplacesVersion()));
-        target.setIsReplacedByVersion(relatedResourceDoToDto(source.getIsReplacedByVersion()));
 
         target.setMaintainer(externalItemDoToDto(source.getMaintainer()));
     }

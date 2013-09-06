@@ -1130,7 +1130,6 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
         DatasetLifecycleTestUtils.prepareToVersioning(previousDatasetVersion);
 
         datasetVersion.getSiemacMetadataStatisticalResource().setReplacesVersion(StatisticalResourcesPersistedDoMocks.mockDatasetVersionRelated(previousDatasetVersion));
-        previousDatasetVersion.getSiemacMetadataStatisticalResource().setIsReplacedByVersion(StatisticalResourcesPersistedDoMocks.mockDatasetVersionRelated(datasetVersion));
 
         DatasetVersionMock replacesTemplate = new DatasetVersionMock();
         replacesTemplate.setSequentialId(2);

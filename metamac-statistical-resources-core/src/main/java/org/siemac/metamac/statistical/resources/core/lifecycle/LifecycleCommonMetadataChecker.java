@@ -58,7 +58,6 @@ public class LifecycleCommonMetadataChecker {
 
         // LifeCycleResource
         checkMetadataRequired(lifeCycleStatisticalResource.getProcStatus(), addParameter(metadataName, ServiceExceptionSingleParameters.PROC_STATUS), exceptionItems);
-        checkMetadataEmpty(lifeCycleStatisticalResource.getIsReplacedByVersion(), addParameter(metadataName, ServiceExceptionSingleParameters.IS_REPLACED_BY_VERSION), exceptionItems);
         if (StringUtils.isNotBlank(lifeCycleStatisticalResource.getVersionLogic()) && !StatisticalResourcesVersionUtils.isInitialVersion(lifeCycleStatisticalResource.getVersionLogic())) {
             checkMetadataRequired(lifeCycleStatisticalResource.getReplacesVersion(), addParameter(metadataName, ServiceExceptionSingleParameters.REPLACES_VERSION), exceptionItems);
         }

@@ -19,7 +19,6 @@ import org.siemac.metamac.statistical.resources.core.base.domain.HasSiemacMetada
 import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.VersionRationaleType;
-import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResource;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
 import org.siemac.metamac.statistical.resources.core.enume.domain.NextVersionTypeEnum;
@@ -44,7 +43,6 @@ public class LifecycleCommonMetadataCheckerTest extends StatisticalResourcesBase
     public void testCheckLifecycleCommonMetadata() throws Exception {
         HasLifecycle mockedResource = mock(HasLifecycle.class);
         when(mockedResource.getLifeCycleStatisticalResource()).thenReturn(new LifeCycleStatisticalResource());
-        mockedResource.getLifeCycleStatisticalResource().setIsReplacedByVersion(new RelatedResource());
 
         String baseMetadata = ServiceExceptionSingleParameters.LIFE_CYCLE_STATISTICAL_RESOURCE;
         expectedMetamacException(new MetamacException(Arrays.asList(
@@ -57,7 +55,6 @@ public class LifecycleCommonMetadataCheckerTest extends StatisticalResourcesBase
                         ServiceExceptionType.METADATA_REQUIRED, addParameter(baseMetadata, ServiceExceptionSingleParameters.VERSION_RATIONALE_TYPES)), new MetamacExceptionItem(
                         ServiceExceptionType.METADATA_REQUIRED, addParameter(baseMetadata, ServiceExceptionSingleParameters.NEXT_VERSION)), new MetamacExceptionItem(
                         ServiceExceptionType.METADATA_REQUIRED, addParameter(baseMetadata, ServiceExceptionSingleParameters.PROC_STATUS)), new MetamacExceptionItem(
-                        ServiceExceptionType.METADATA_UNEXPECTED, addParameter(baseMetadata, ServiceExceptionSingleParameters.IS_REPLACED_BY_VERSION)), new MetamacExceptionItem(
                         ServiceExceptionType.METADATA_REQUIRED, addParameter(baseMetadata, ServiceExceptionSingleParameters.MAINTAINER)))));
 
         List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
@@ -69,7 +66,6 @@ public class LifecycleCommonMetadataCheckerTest extends StatisticalResourcesBase
     public void testCheckLifecycleCommonMetadataReplacesVersionNotRequired() throws Exception {
         HasLifecycle mockedResource = mock(HasLifecycle.class);
         when(mockedResource.getLifeCycleStatisticalResource()).thenReturn(new LifeCycleStatisticalResource());
-        mockedResource.getLifeCycleStatisticalResource().setIsReplacedByVersion(new RelatedResource());
         mockedResource.getLifeCycleStatisticalResource().setVersionLogic(StatisticalResourcesVersionUtils.INITIAL_VERSION);
 
         String baseMetadata = ServiceExceptionSingleParameters.LIFE_CYCLE_STATISTICAL_RESOURCE;
@@ -82,7 +78,6 @@ public class LifecycleCommonMetadataCheckerTest extends StatisticalResourcesBase
                         ServiceExceptionType.METADATA_REQUIRED, addParameter(baseMetadata, ServiceExceptionSingleParameters.VERSION_RATIONALE_TYPES)), new MetamacExceptionItem(
                         ServiceExceptionType.METADATA_REQUIRED, addParameter(baseMetadata, ServiceExceptionSingleParameters.NEXT_VERSION)), new MetamacExceptionItem(
                         ServiceExceptionType.METADATA_REQUIRED, addParameter(baseMetadata, ServiceExceptionSingleParameters.PROC_STATUS)), new MetamacExceptionItem(
-                        ServiceExceptionType.METADATA_UNEXPECTED, addParameter(baseMetadata, ServiceExceptionSingleParameters.IS_REPLACED_BY_VERSION)), new MetamacExceptionItem(
                         ServiceExceptionType.METADATA_REQUIRED, addParameter(baseMetadata, ServiceExceptionSingleParameters.MAINTAINER)))));
 
         List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
@@ -94,7 +89,6 @@ public class LifecycleCommonMetadataCheckerTest extends StatisticalResourcesBase
     public void testCheckLifecycleCommonMetadataReplacesVersionRequired() throws Exception {
         HasLifecycle mockedResource = mock(HasLifecycle.class);
         when(mockedResource.getLifeCycleStatisticalResource()).thenReturn(new LifeCycleStatisticalResource());
-        mockedResource.getLifeCycleStatisticalResource().setIsReplacedByVersion(new RelatedResource());
         mockedResource.getLifeCycleStatisticalResource().setVersionLogic("0002.000");
 
         String baseMetadata = ServiceExceptionSingleParameters.LIFE_CYCLE_STATISTICAL_RESOURCE;
@@ -107,7 +101,6 @@ public class LifecycleCommonMetadataCheckerTest extends StatisticalResourcesBase
                         ServiceExceptionType.METADATA_REQUIRED, addParameter(baseMetadata, ServiceExceptionSingleParameters.VERSION_RATIONALE_TYPES)), new MetamacExceptionItem(
                         ServiceExceptionType.METADATA_REQUIRED, addParameter(baseMetadata, ServiceExceptionSingleParameters.NEXT_VERSION)), new MetamacExceptionItem(
                         ServiceExceptionType.METADATA_REQUIRED, addParameter(baseMetadata, ServiceExceptionSingleParameters.PROC_STATUS)), new MetamacExceptionItem(
-                        ServiceExceptionType.METADATA_UNEXPECTED, addParameter(baseMetadata, ServiceExceptionSingleParameters.IS_REPLACED_BY_VERSION)), new MetamacExceptionItem(
                         ServiceExceptionType.METADATA_REQUIRED, addParameter(baseMetadata, ServiceExceptionSingleParameters.REPLACES_VERSION)), new MetamacExceptionItem(
                         ServiceExceptionType.METADATA_REQUIRED, addParameter(baseMetadata, ServiceExceptionSingleParameters.MAINTAINER)))));
 

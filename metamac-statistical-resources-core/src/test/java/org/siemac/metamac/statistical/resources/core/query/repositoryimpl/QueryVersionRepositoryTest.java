@@ -1,5 +1,7 @@
 package org.siemac.metamac.statistical.resources.core.query.repositoryimpl;
 
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.QueryAsserts.assertEqualsQueryVersion;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_03_FOR_DATASET_03_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_06_FOR_QUERIES_NAME;
@@ -23,10 +25,12 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 import java.util.Arrays;
 import java.util.List;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
+import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResourceResult;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryTypeEnum;
@@ -36,6 +40,7 @@ import org.siemac.metamac.statistical.resources.core.query.domain.Query;
 import org.siemac.metamac.statistical.resources.core.query.domain.QuerySelectionItem;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersionRepository;
+import org.siemac.metamac.statistical.resources.core.utils.asserts.CommonAsserts;
 import org.siemac.metamac.statistical.resources.core.utils.asserts.QueryAsserts;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.configuration.MetamacMock;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory;
@@ -285,4 +290,21 @@ public class QueryVersionRepositoryTest extends StatisticalResourcesBaseTest imp
         QueryAsserts.assertEqualsQueryVersionCollection(Arrays.asList(query01, query02), queryVersions);
     }
 
+    @Test
+    @Override
+    @MetamacMock(QUERY_06_WITH_MULTIPLE_PUBLISHED_VERSIONS_AND_LATEST_NO_VISIBLE_NAME)
+    public void testRetrieveResourceThatReplacesQueryVersion() throws Exception {
+        QueryVersion firstVersion = queryVersionMockFactory.retrieveMock(QUERY_VERSION_27_V1_PUBLISHED_FOR_QUERY_06_NAME);
+        QueryVersion secondVersion = queryVersionMockFactory.retrieveMock(QUERY_VERSION_28_V2_PUBLISHED_NO_VISIBLE_FOR_QUERY_06_NAME);
+        
+        {   
+            RelatedResourceResult resource = queryVersionRepository.retrieveResourceThatReplacesQueryVersion(firstVersion);
+            assertNotNull(resource);
+            CommonAsserts.assertEqualsRelatedResourceResultQueryVersion(secondVersion, resource);
+        }
+        {
+            RelatedResourceResult resource = queryVersionRepository.retrieveResourceThatReplacesQueryVersion(secondVersion);
+            assertNull(resource);
+        }
+    }
 }

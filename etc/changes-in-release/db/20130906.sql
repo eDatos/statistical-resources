@@ -1,3 +1,5 @@
 -- Eliminar campos de relaciones no necesarios o posiblemente calculables
 
-drop table TB_RR_IS_REQUIRED_BY;
+
+Alter Table Tb_Stat_Resources
+drop column is_replaced_by_version_fk;
