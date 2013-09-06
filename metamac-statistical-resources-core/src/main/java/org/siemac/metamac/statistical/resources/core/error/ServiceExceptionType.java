@@ -45,7 +45,6 @@ public class ServiceExceptionType extends CommonServiceExceptionType {
 
     // Life Cycle Statistical Resource
     public static final CommonServiceExceptionType LIFE_CYCLE_WRONG_PROC_STATUS                            = create("exception.resources.life_cycle.wrong_proc_status");
-    public static final CommonServiceExceptionType LIFE_CYCLE_WRONG_PROC_STATUS_NOT_VISIBLE                = create("exception.resources.life_cycle.wrong_proc_status_not_visible");
 
     // Related resources
     public static final CommonServiceExceptionType RELATED_RESOURCE_NOT_PUBLISHED                          = create("exception.resources.related_resource.not_published");
