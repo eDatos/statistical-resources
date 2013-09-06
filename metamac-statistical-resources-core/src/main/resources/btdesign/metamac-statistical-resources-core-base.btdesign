@@ -94,6 +94,8 @@ Application BaseStatisticalResources {
 			databaseTable="TB_STAT_RESOURCES"
 			discriminatorValue="LIFE_CYCLE_RESOURCE"
 
+			gap
+
 			- @ProcStatusEnum procStatus nullable;
 			
 			DateTimeTZ creationDate nullable;

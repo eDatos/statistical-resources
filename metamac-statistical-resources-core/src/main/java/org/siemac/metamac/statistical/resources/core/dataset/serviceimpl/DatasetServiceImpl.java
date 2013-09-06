@@ -53,10 +53,8 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.StatisticOfficiality;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.TemporalCode;
 import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.validators.DatasetServiceInvocationValidator;
-import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.task.domain.DatasetFileFormatEnum;
-import org.siemac.metamac.statistical.resources.core.enume.utils.ProcStatusEnumUtils;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.invocation.service.SrmRestInternalService;
 import org.siemac.metamac.statistical.resources.core.invocation.utils.RestMapper;
@@ -423,7 +421,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
 
         checkNotTasksInProgress(ctx, datasetVersionUrn);
 
-        ProcStatusEnumUtils.checkPossibleProcStatus(datasetVersion, ProcStatusEnum.DRAFT, ProcStatusEnum.VALIDATION_REJECTED);
+        BaseValidator.checkDatasetVersionCanImportDatasources(datasetVersion);
 
         String datasetUrn = datasetVersion.getDataset().getIdentifiableStatisticalResource().getUrn();
 

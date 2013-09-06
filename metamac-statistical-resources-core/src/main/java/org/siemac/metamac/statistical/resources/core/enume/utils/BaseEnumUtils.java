@@ -7,10 +7,10 @@ import org.apache.commons.lang.text.StrBuilder;
 
 public abstract class BaseEnumUtils {
 
-    protected static String enumToString(Object... possibleProcStatus) {
+    public static String enumToString(Object[] possibleProcStatus) {
         return join(possibleProcStatus, ", ");
     }
-    
+
     protected static String join(Object[] enumArray, String separator) {
         if (enumArray == null) {
             return null;

@@ -29,10 +29,12 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.util.GeneratorUrnUtils;
 import org.siemac.metamac.core.common.util.shared.VersionUtil;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
+import org.siemac.metamac.statistical.resources.core.base.validators.BaseValidator;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.CodeDimension;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
+import org.siemac.metamac.statistical.resources.core.enume.utils.BaseEnumUtils;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceapi.LifecycleService;
 import org.siemac.metamac.statistical.resources.core.task.serviceapi.TaskService;
@@ -158,10 +160,11 @@ public class DatasetVersioningServiceTest extends StatisticalResourcesBaseTest {
     public void testVersioningDatasetVersionErrorDatasetVersionNotVisible() throws Exception {
         String datasetVersionUrn = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_26_V2_PUBLISHED_NO_VISIBLE_FOR_DATASET_06_NAME).getSiemacMetadataStatisticalResource().getUrn();
 
-        expectedMetamacException(new MetamacException(ServiceExceptionType.LIFE_CYCLE_WRONG_PROC_STATUS_NOT_VISIBLE, datasetVersionUrn));
+        expectedMetamacException(new MetamacException(ServiceExceptionType.LIFE_CYCLE_WRONG_PROC_STATUS, datasetVersionUrn,
+                BaseEnumUtils.enumToString(BaseValidator.procStatusForSendResourceToVersion)));
         datasetVersionLifecycleService.versioning(getServiceContextWithoutPrincipal(), datasetVersionUrn, VersionTypeEnum.MAJOR);
     }
-    
+
     @Test
     @MetamacMock(DATASET_VERSION_16_DRAFT_READY_FOR_PRODUCTION_VALIDATION_NAME)
     public void testVersioningDatasetVersionErrorDraftProcStatus() throws Exception {
@@ -170,7 +173,7 @@ public class DatasetVersioningServiceTest extends StatisticalResourcesBaseTest {
         expectedMetamacException(new MetamacException(ServiceExceptionType.LIFE_CYCLE_WRONG_PROC_STATUS, datasetVersionUrn, ProcStatusEnum.PUBLISHED.getName()));
         datasetVersionLifecycleService.versioning(getServiceContextWithoutPrincipal(), datasetVersionUrn, VersionTypeEnum.MAJOR);
     }
-    
+
     @Test
     @MetamacMock(DATASET_VERSION_21_PRODUCTION_VALIDATION_READY_FOR_VALIDATION_REJECTED_NAME)
     public void testVersioningDatasetVersionErrorProductionValidationProcStatus() throws Exception {
@@ -179,7 +182,7 @@ public class DatasetVersioningServiceTest extends StatisticalResourcesBaseTest {
         expectedMetamacException(new MetamacException(ServiceExceptionType.LIFE_CYCLE_WRONG_PROC_STATUS, datasetVersionUrn, ProcStatusEnum.PUBLISHED.getName()));
         datasetVersionLifecycleService.versioning(getServiceContextWithoutPrincipal(), datasetVersionUrn, VersionTypeEnum.MAJOR);
     }
-    
+
     @Test
     @MetamacMock(DATASET_VERSION_64_DIFFUSION_VALIDATION_NOT_INITIAL_VERSION_NAME)
     public void testVersioningDatasetVersionErrorDiffusionValidationProcStatus() throws Exception {
@@ -188,7 +191,7 @@ public class DatasetVersioningServiceTest extends StatisticalResourcesBaseTest {
         expectedMetamacException(new MetamacException(ServiceExceptionType.LIFE_CYCLE_WRONG_PROC_STATUS, datasetVersionUrn, ProcStatusEnum.PUBLISHED.getName()));
         datasetVersionLifecycleService.versioning(getServiceContextWithoutPrincipal(), datasetVersionUrn, VersionTypeEnum.MAJOR);
     }
-    
+
     @Test
     @MetamacMock(DATASET_VERSION_60_VALIDATION_REJECTED_INITIAL_VERSION_NAME)
     public void testVersioningDatasetVersionErrorValidationRejectedProcStatus() throws Exception {
@@ -209,7 +212,7 @@ public class DatasetVersioningServiceTest extends StatisticalResourcesBaseTest {
 
         datasetVersionLifecycleService.versioning(getServiceContextWithoutPrincipal(), urn, VersionTypeEnum.MINOR);
     }
-    
+
     // -------------------------------------------------------------------------------------------
     // PRIVATE UTILS
     // -------------------------------------------------------------------------------------------

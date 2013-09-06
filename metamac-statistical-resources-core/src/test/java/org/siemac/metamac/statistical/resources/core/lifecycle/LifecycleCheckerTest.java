@@ -32,9 +32,11 @@ import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTes
 import org.siemac.metamac.statistical.resources.core.base.domain.HasLifecycle;
 import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.VersionRationaleType;
+import org.siemac.metamac.statistical.resources.core.base.validators.BaseValidator;
 import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.VersionRationaleTypeEnum;
+import org.siemac.metamac.statistical.resources.core.enume.utils.BaseEnumUtils;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionSingleParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.checker.ExternalItemChecker;
@@ -44,12 +46,11 @@ import org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.check
 public class LifecycleCheckerTest extends StatisticalResourcesBaseTest {
 
     @InjectMocks
-    private LifecycleChecker               lifecycleChecker = new LifecycleChecker();
+    private final LifecycleChecker         lifecycleChecker = new LifecycleChecker();
 
     @Mock
     private LifecycleCommonMetadataChecker lifecycleCommonMetadataChecker;
 
-    @SuppressWarnings("unused")
     @Mock
     private ExternalItemChecker            externalItemChecker;
 
@@ -111,6 +112,9 @@ public class LifecycleCheckerTest extends StatisticalResourcesBaseTest {
         for (ProcStatusEnum procStatus : ProcStatusEnum.values()) {
             HasLifecycle mockedResource = mockHasLifecycleStatisticalResourcePrepareToProductionValidation();
             mockedResource.getLifeCycleStatisticalResource().setProcStatus(procStatus);
+            if (ProcStatusEnum.PUBLISHED.equals(procStatus)) {
+                mockedResource.getLifeCycleStatisticalResource().setValidFrom(new DateTime().minusDays(1));
+            }
 
             if (ProcStatusEnum.DRAFT.equals(procStatus) || ProcStatusEnum.VALIDATION_REJECTED.equals(procStatus)) {
                 List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
@@ -139,6 +143,9 @@ public class LifecycleCheckerTest extends StatisticalResourcesBaseTest {
         for (ProcStatusEnum procStatus : ProcStatusEnum.values()) {
             HasLifecycle mockedResource = mockHasLifecycleStatisticalResourcePrepareToDiffusionValidation();
             mockedResource.getLifeCycleStatisticalResource().setProcStatus(procStatus);
+            if (ProcStatusEnum.PUBLISHED.equals(procStatus)) {
+                mockedResource.getLifeCycleStatisticalResource().setValidFrom(new DateTime().minusDays(1));
+            }
 
             if (ProcStatusEnum.PRODUCTION_VALIDATION.equals(procStatus)) {
                 List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
@@ -167,6 +174,9 @@ public class LifecycleCheckerTest extends StatisticalResourcesBaseTest {
         for (ProcStatusEnum procStatus : ProcStatusEnum.values()) {
             HasLifecycle mockedResource = mockHasLifecycleStatisticalResourcePrepareToValidationRejected();
             mockedResource.getLifeCycleStatisticalResource().setProcStatus(procStatus);
+            if (ProcStatusEnum.PUBLISHED.equals(procStatus)) {
+                mockedResource.getLifeCycleStatisticalResource().setValidFrom(new DateTime().minusDays(1));
+            }
 
             if (ProcStatusEnum.PRODUCTION_VALIDATION.equals(procStatus) || ProcStatusEnum.DIFFUSION_VALIDATION.equals(procStatus)) {
                 List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
@@ -196,6 +206,9 @@ public class LifecycleCheckerTest extends StatisticalResourcesBaseTest {
         for (ProcStatusEnum procStatus : ProcStatusEnum.values()) {
             HasLifecycle mockedResource = mockHasLifecycleStatisticalResourcePrepareToPublished();
             mockedResource.getLifeCycleStatisticalResource().setProcStatus(procStatus);
+            if (ProcStatusEnum.PUBLISHED.equals(procStatus)) {
+                mockedResource.getLifeCycleStatisticalResource().setValidFrom(new DateTime().minusDays(1));
+            }
 
             HasLifecycle mockedPreviousVersion = mockHasLifecycleStatisticalResourcePublished();
 
@@ -322,6 +335,9 @@ public class LifecycleCheckerTest extends StatisticalResourcesBaseTest {
         for (ProcStatusEnum procStatus : ProcStatusEnum.values()) {
             HasLifecycle mockedResource = mockHasLifecycleStatisticalResourcePublished();
             mockedResource.getLifeCycleStatisticalResource().setProcStatus(procStatus);
+            if (ProcStatusEnum.PUBLISHED.equals(procStatus)) {
+                mockedResource.getLifeCycleStatisticalResource().setValidFrom(new DateTime().minusDays(1));
+            }
 
             if (ProcStatusEnum.PUBLISHED.equals(procStatus)) {
                 List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
@@ -343,14 +359,13 @@ public class LifecycleCheckerTest extends StatisticalResourcesBaseTest {
     public void testLifeCycleResourceCheckVersioningErrorPublishedResourceNotVisible() throws Exception {
         String baseMetadata = ServiceExceptionSingleParameters.LIFE_CYCLE_STATISTICAL_RESOURCE;
 
-        HasLifecycle mockedPreviousVersion = mockHasLifecycleStatisticalResourcePublished();
-        mockedPreviousVersion.getLifeCycleStatisticalResource().setValidFrom(new DateTime().plusMinutes(10));
+        HasLifecycle mockedResourceToVersion = mockHasLifecycleStatisticalResourcePublished();
+        mockedResourceToVersion.getLifeCycleStatisticalResource().setValidFrom(new DateTime().plusMinutes(10));
 
-        ArrayList<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
-        lifecycleChecker.checkVersioning(mockedPreviousVersion, baseMetadata, exceptionItems);
-        assertEquals(1, exceptionItems.size());
-        MetamacAsserts.assertEqualsMetamacExceptionItem(new MetamacExceptionItem(ServiceExceptionType.LIFE_CYCLE_WRONG_PROC_STATUS_NOT_VISIBLE, mockedPreviousVersion.getLifeCycleStatisticalResource()
-                .getUrn()), exceptionItems.get(0));
+        expectedMetamacException(new MetamacException(ServiceExceptionType.LIFE_CYCLE_WRONG_PROC_STATUS, mockedResourceToVersion.getLifeCycleStatisticalResource().getUrn(),
+                BaseEnumUtils.enumToString(BaseValidator.procStatusForSendResourceToVersion)));
+
+        lifecycleChecker.checkVersioning(mockedResourceToVersion, baseMetadata, new ArrayList<MetamacExceptionItem>());
     }
 
     // ------------------------------------------------------------------------------------------------------

@@ -10,9 +10,8 @@ import org.siemac.metamac.core.common.exception.CommonServiceExceptionType;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.statistical.resources.core.base.domain.HasLifecycle;
-import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
+import org.siemac.metamac.statistical.resources.core.base.validators.BaseValidator;
 import org.siemac.metamac.statistical.resources.core.enume.domain.VersionRationaleTypeEnum;
-import org.siemac.metamac.statistical.resources.core.enume.utils.ProcStatusEnumUtils;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionSingleParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
@@ -41,7 +40,7 @@ public class LifecycleChecker {
     // ------------------------------------------------------------------------------------------------------
 
     public void checkSendToProductionValidation(HasLifecycle resource, String metadataName, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
-        ProcStatusEnumUtils.checkPossibleProcStatus(resource, ProcStatusEnum.DRAFT, ProcStatusEnum.VALIDATION_REJECTED);
+        BaseValidator.checkStatisticalResourceCanSendToProductionValidation(resource);
 
         checkLifeCycleMetadataAllActions(resource, metadataName, exceptionItems);
 
@@ -61,7 +60,7 @@ public class LifecycleChecker {
     // ------------------------------------------------------------------------------------------------------
 
     public void checkSendToDiffusionValidation(HasLifecycle resource, String metadataName, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
-        ProcStatusEnumUtils.checkPossibleProcStatus(resource, ProcStatusEnum.PRODUCTION_VALIDATION);
+        BaseValidator.checkStatisticalResourceCanSendToDiffusionValidation(resource);
         checkLifeCycleMetadataAllActions(resource, metadataName, exceptionItems);
     }
 
@@ -70,7 +69,7 @@ public class LifecycleChecker {
     // ------------------------------------------------------------------------------------------------------
 
     public void checkSendToValidationRejected(HasLifecycle resource, String metadataName, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
-        ProcStatusEnumUtils.checkPossibleProcStatus(resource, ProcStatusEnum.PRODUCTION_VALIDATION, ProcStatusEnum.DIFFUSION_VALIDATION);
+        BaseValidator.checkStatisticalResourceCanSendToValidationRejected(resource);
         checkLifeCycleMetadataAllActions(resource, metadataName, exceptionItems);
     }
 
@@ -79,7 +78,7 @@ public class LifecycleChecker {
     // ------------------------------------------------------------------------------------------------------
 
     public void checkSendToPublished(HasLifecycle resource, HasLifecycle previousVersion, String metadataName, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
-        ProcStatusEnumUtils.checkPossibleProcStatus(resource, ProcStatusEnum.DIFFUSION_VALIDATION);
+        BaseValidator.checkStatisticalResourceCanSendToPublish(resource);
 
         if (!StatisticalResourcesVersionUtils.isInitialVersion(resource)) {
             checkParameterRequired(previousVersion, ServiceExceptionParameters.PREVIOUS_VERSION, exceptionItems);
@@ -114,10 +113,7 @@ public class LifecycleChecker {
     // ------------------------------------------------------------------------------------------------------
 
     public void checkVersioning(HasLifecycle resource, String metadataName, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
-        ProcStatusEnumUtils.checkPossibleProcStatus(resource, ProcStatusEnum.PUBLISHED);
-        if (ProcStatusEnum.PUBLISHED.equals(resource.getLifeCycleStatisticalResource().getProcStatus()) && resource.getLifeCycleStatisticalResource().getValidFrom().isAfterNow()) {
-            exceptionItems.add(new MetamacExceptionItem(ServiceExceptionType.LIFE_CYCLE_WRONG_PROC_STATUS_NOT_VISIBLE, resource.getLifeCycleStatisticalResource().getUrn()));
-        }
+        BaseValidator.checkStatisticalResourceCanSendToVersion(resource);
     }
 
     // ------------------------------------------------------------------------------------------------------

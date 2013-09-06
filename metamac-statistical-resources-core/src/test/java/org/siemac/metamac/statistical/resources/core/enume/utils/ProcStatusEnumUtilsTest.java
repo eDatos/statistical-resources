@@ -17,12 +17,12 @@ public class ProcStatusEnumUtilsTest extends StatisticalResourcesBaseTest {
     public void testCheckPossibleProcStatus() throws Exception {
         HasLifecycle mockedResource = mock(HasLifecycle.class);
         when(mockedResource.getLifeCycleStatisticalResource()).thenReturn(new LifeCycleStatisticalResource());
-        
+
         mockedResource.getLifeCycleStatisticalResource().setProcStatus(ProcStatusEnum.DRAFT);
-        
-        ProcStatusEnumUtils.checkPossibleProcStatus(mockedResource, ProcStatusEnum.DRAFT, ProcStatusEnum.PUBLISHED);
+
+        ProcStatusEnumUtils.checkPossibleProcStatus(mockedResource, new ProcStatusEnum[]{ProcStatusEnum.DRAFT, ProcStatusEnum.PUBLISHED});
     }
-    
+
     @Test
     public void testCheckPossibleProcStatusExpectingException() throws Exception {
         String urn = "URN_DUMMY";
@@ -30,11 +30,11 @@ public class ProcStatusEnumUtilsTest extends StatisticalResourcesBaseTest {
 
         HasLifecycle mockedResource = mock(HasLifecycle.class);
         when(mockedResource.getLifeCycleStatisticalResource()).thenReturn(new LifeCycleStatisticalResource());
-        
+
         mockedResource.getLifeCycleStatisticalResource().setProcStatus(ProcStatusEnum.PRODUCTION_VALIDATION);
         mockedResource.getLifeCycleStatisticalResource().setUrn(urn);
-        
-        ProcStatusEnumUtils.checkPossibleProcStatus(mockedResource, ProcStatusEnum.DRAFT, ProcStatusEnum.PUBLISHED);
+
+        ProcStatusEnumUtils.checkPossibleProcStatus(mockedResource, new ProcStatusEnum[]{ProcStatusEnum.DRAFT, ProcStatusEnum.PUBLISHED});
     }
 
 }

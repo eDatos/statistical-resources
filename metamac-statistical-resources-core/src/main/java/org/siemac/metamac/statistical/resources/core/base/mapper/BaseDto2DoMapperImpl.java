@@ -18,8 +18,6 @@ import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.dto.InternationalStringDto;
 import org.siemac.metamac.core.common.dto.LocalisedStringDto;
 import org.siemac.metamac.core.common.exception.MetamacException;
-import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
-import org.siemac.metamac.core.common.exception.utils.ExceptionUtils;
 import org.siemac.metamac.core.common.util.CoreCommonUtil;
 import org.siemac.metamac.core.common.util.OptimisticLockingUtils;
 import org.siemac.metamac.statistical.resources.core.base.checks.MetadataEditionChecks;
@@ -45,7 +43,6 @@ import org.siemac.metamac.statistical.resources.core.dto.VersionRationaleTypeDto
 import org.siemac.metamac.statistical.resources.core.dto.VersionableStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionSingleParameters;
 import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesCollectionUtils;
-import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesValidationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @org.springframework.stereotype.Component("baseDto2DoMapper")

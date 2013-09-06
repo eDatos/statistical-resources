@@ -9,10 +9,11 @@ import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 
 public class ProcStatusEnumUtils extends BaseEnumUtils {
 
-    public static void checkPossibleProcStatus(HasLifecycle resource, ProcStatusEnum... possibleProcStatus) throws MetamacException {
-        if (!ArrayUtils.contains(possibleProcStatus, resource.getLifeCycleStatisticalResource().getProcStatus())) {
+    public static void checkPossibleProcStatus(HasLifecycle resource, ProcStatusEnum[] possibleProcStatus) throws MetamacException {
+        if (!ArrayUtils.contains(possibleProcStatus, resource.getLifeCycleStatisticalResource().getEffectiveProcStatus())) {
             String procStatusString = enumToString(possibleProcStatus);
-            throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.LIFE_CYCLE_WRONG_PROC_STATUS).withMessageParameters(resource.getLifeCycleStatisticalResource().getUrn(), procStatusString).build();
+            throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.LIFE_CYCLE_WRONG_PROC_STATUS)
+                    .withMessageParameters(resource.getLifeCycleStatisticalResource().getUrn(), procStatusString).build();
         }
     }
 }

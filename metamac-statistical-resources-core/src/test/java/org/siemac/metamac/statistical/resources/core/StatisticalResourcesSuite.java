@@ -58,10 +58,9 @@ import org.siemac.metamac.statistical.resources.core.query.serviceapi.QueryInteg
 import org.siemac.metamac.statistical.resources.core.query.serviceapi.QueryServiceTest;
 import org.siemac.metamac.statistical.resources.core.query.serviceapi.QueryVersioningServiceTest;
 
-
-//@formatter:off
+// @formatter:off
 @RunWith(Suite.class)
-@Suite.SuiteClasses({StatisticalResourcesServiceFacadeTest.class,
+@Suite.SuiteClasses({StatisticalResourcesServiceFacadeTest.class,  
                      StatisticalResourcesOptimisticLockingTest.class,
                      InternationalStringRepositoryTest.class,
                      SiemacMetadataStatisticalResourceRepositoryTest.class,
