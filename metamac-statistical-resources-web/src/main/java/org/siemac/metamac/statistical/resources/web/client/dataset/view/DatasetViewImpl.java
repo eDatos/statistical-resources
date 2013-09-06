@@ -143,9 +143,9 @@ public class DatasetViewImpl extends ViewWithUiHandlers<DatasetUiHandlers> imple
     }
 
     @Override
-    public void setDatasetVersions(List<DatasetVersionBaseDto> datasetVersionBaseDtos) {
+    public void setDatasetVersionsAndSelectCurrent(String currentDatasetUrn, List<DatasetVersionBaseDto> datasetVersionBaseDtos) {
         versionsSectionStack.setDatasetVersions(datasetVersionBaseDtos);
-        versionsSectionStack.selectDatasetVersion(datasetVersionDto);
+        versionsSectionStack.selectDatasetVersion(currentDatasetUrn);
     }
 
     private void setTitleLabelContents(DatasetVersionDto datasetVersionDto) {

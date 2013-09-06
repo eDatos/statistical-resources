@@ -3,7 +3,6 @@ package org.siemac.metamac.statistical.resources.web.client.publication.widgets;
 import java.util.List;
 
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionBaseDto;
-import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionDto;
 import org.siemac.metamac.statistical.resources.web.client.base.widgets.VersionableResourceSectionStack;
 import org.siemac.metamac.statistical.resources.web.client.publication.model.ds.PublicationDS;
 import org.siemac.metamac.statistical.resources.web.client.utils.StatisticalResourcesRecordUtils;
@@ -25,9 +24,9 @@ public class PublicationVersionsSectionStack extends VersionableResourceSectionS
         }
     }
 
-    public void selectPublicationVersion(PublicationVersionDto publicationVersionDto) {
+    public void selectPublicationVersion(String urn) {
         RecordList recordList = listGrid.getRecordList();
-        Record record = recordList.find(PublicationDS.URN, publicationVersionDto.getUrn());
+        Record record = recordList.find(PublicationDS.URN, urn);
         if (record != null) {
             listGrid.selectRecord(record);
         }

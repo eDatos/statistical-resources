@@ -121,9 +121,9 @@ public class PublicationViewImpl extends ViewWithUiHandlers<PublicationUiHandler
     }
 
     @Override
-    public void setPublicationVersions(List<PublicationVersionBaseDto> publicationVersionBaseDtos) {
+    public void setPublicationVersionsAndSelectCurrent(String currentUrn, List<PublicationVersionBaseDto> publicationVersionBaseDtos) {
         versionsSectionStack.setPublicationVersions(publicationVersionBaseDtos);
-        versionsSectionStack.selectPublicationVersion(publicationVersionDto);
+        versionsSectionStack.selectPublicationVersion(currentUrn);
     }
 
     @Override

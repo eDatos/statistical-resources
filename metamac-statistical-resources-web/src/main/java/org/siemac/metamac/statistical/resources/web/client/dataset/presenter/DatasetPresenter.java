@@ -55,7 +55,7 @@ public class DatasetPresenter extends Presenter<DatasetPresenter.DatasetView, Da
     public interface DatasetView extends View, HasUiHandlers<DatasetUiHandlers> {
 
         void setDataset(DatasetVersionDto datasetDto);
-        void setDatasetVersions(List<DatasetVersionBaseDto> datasetVersionBaseDtos);
+        void setDatasetVersionsAndSelectCurrent(String currentDatasetUrn, List<DatasetVersionBaseDto> datasetVersionBaseDtos);
         void selectMetadataTab();
         void selectDatasourcesTab();
         void selectAttributesTab();
@@ -152,12 +152,12 @@ public class DatasetPresenter extends Presenter<DatasetPresenter.DatasetView, Da
         retrieveDatasetVersions(datasetVersionUrn);
     }
 
-    private void retrieveDatasetVersions(String urn) {
+    private void retrieveDatasetVersions(final String urn) {
         dispatcher.execute(new GetVersionsOfDatasetAction(urn), new WaitingAsyncCallbackHandlingError<GetVersionsOfDatasetResult>(this) {
 
             @Override
             public void onWaitSuccess(GetVersionsOfDatasetResult result) {
-                getView().setDatasetVersions(result.getDatasetVersionBaseDtos());
+                getView().setDatasetVersionsAndSelectCurrent(urn, result.getDatasetVersionBaseDtos());
             }
         });
     }

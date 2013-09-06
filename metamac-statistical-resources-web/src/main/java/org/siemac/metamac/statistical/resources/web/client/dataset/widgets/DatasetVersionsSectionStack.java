@@ -3,7 +3,6 @@ package org.siemac.metamac.statistical.resources.web.client.dataset.widgets;
 import java.util.List;
 
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionBaseDto;
-import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.web.client.base.widgets.VersionableResourceSectionStack;
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.ds.DatasetDS;
 import org.siemac.metamac.statistical.resources.web.client.utils.StatisticalResourcesRecordUtils;
@@ -25,9 +24,9 @@ public class DatasetVersionsSectionStack extends VersionableResourceSectionStack
         }
     }
 
-    public void selectDatasetVersion(DatasetVersionDto datasetVersionDto) {
+    public void selectDatasetVersion(String currentDatasetVersionUrn) {
         RecordList recordList = listGrid.getRecordList();
-        Record record = recordList.find(DatasetDS.URN, datasetVersionDto.getUrn());
+        Record record = recordList.find(DatasetDS.URN, currentDatasetVersionUrn);
         if (record != null) {
             listGrid.selectRecord(record);
         }

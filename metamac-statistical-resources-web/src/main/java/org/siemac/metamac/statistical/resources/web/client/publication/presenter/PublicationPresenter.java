@@ -72,7 +72,7 @@ public class PublicationPresenter extends Presenter<PublicationPresenter.Publica
     public interface PublicationView extends View, HasUiHandlers<PublicationUiHandlers> {
 
         void setPublication(PublicationVersionDto publicationDto);
-        void setPublicationVersions(List<PublicationVersionBaseDto> publicationVersionBaseDtos);
+        void setPublicationVersionsAndSelectCurrent(String currentUrn, List<PublicationVersionBaseDto> publicationVersionBaseDtos);
         void selectMetadataTab();
         void selectStructureTab();
     }
@@ -155,12 +155,12 @@ public class PublicationPresenter extends Presenter<PublicationPresenter.Publica
         retrievePublicationVersions(publicationVersionUrn);
     }
 
-    private void retrievePublicationVersions(String urn) {
+    private void retrievePublicationVersions(final String urn) {
         dispatcher.execute(new GetVersionsOfPublicationAction(urn), new WaitingAsyncCallbackHandlingError<GetVersionsOfPublicationResult>(this) {
 
             @Override
             public void onWaitSuccess(GetVersionsOfPublicationResult result) {
-                getView().setPublicationVersions(result.getPublicationVersionBaseDtos());
+                getView().setPublicationVersionsAndSelectCurrent(urn, result.getPublicationVersionBaseDtos());
             }
         });
     }
