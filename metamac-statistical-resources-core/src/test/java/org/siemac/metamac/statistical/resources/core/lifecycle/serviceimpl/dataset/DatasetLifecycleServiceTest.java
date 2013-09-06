@@ -12,6 +12,7 @@ import static org.siemac.metamac.statistical.resources.core.utils.asserts.Common
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_14_OPER_03_CODE_01_PUBLISHED_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_15_DRAFT_NOT_READY_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_16_DRAFT_READY_FOR_PRODUCTION_VALIDATION_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_19_PRODUCTION_VALIDATION_NOT_READY_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_20_PRODUCTION_VALIDATION_READY_FOR_DIFFUSION_VALIDATION_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_21_PRODUCTION_VALIDATION_READY_FOR_VALIDATION_REJECTED_NAME;
 
@@ -24,7 +25,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
 import org.siemac.metamac.core.common.enume.domain.TypeExternalArtefactsEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
@@ -34,6 +34,7 @@ import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStr
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ItemResourceInternal;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
 import org.siemac.metamac.statistical.resources.core.base.domain.HasSiemacMetadata;
+import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionRepository;
 import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.DatasetService;
@@ -49,7 +50,6 @@ import org.siemac.metamac.statistical.resources.core.task.serviceapi.TaskService
 import org.siemac.metamac.statistical.resources.core.utils.DataMockUtils;
 import org.siemac.metamac.statistical.resources.core.utils.TaskMockUtils;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory;
-import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesPersistedDoMocks;
 
 import com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceFacade;
 
@@ -227,7 +227,7 @@ public class DatasetLifecycleServiceTest extends StatisticalResourcesBaseTest im
 
     @Test
     public void testSendToDiffusionValidationRequiredFields() throws Exception {
-        DatasetVersion datasetVersion = mockDatasetVersionInRepoFromMockFactory(DATASET_VERSION_15_DRAFT_NOT_READY_NAME);
+        DatasetVersion datasetVersion = mockDatasetVersionInRepoFromMockFactory(DATASET_VERSION_19_PRODUCTION_VALIDATION_NOT_READY_NAME);
         String datasteVersionUrn = datasetVersion.getSiemacMetadataStatisticalResource().getUrn();
 
         datasetLifecycleService.sendToDiffusionValidation(getServiceContextAdministrador(), datasteVersionUrn);
@@ -280,7 +280,7 @@ public class DatasetLifecycleServiceTest extends StatisticalResourcesBaseTest im
 
     @Test
     public void testSendToValidationRejectedFail() throws Exception {
-        DatasetVersion datasetVersion = mockDatasetVersionInRepoFromMockFactory(DATASET_VERSION_15_DRAFT_NOT_READY_NAME);
+        DatasetVersion datasetVersion = mockDatasetVersionInRepoFromMockFactory(DATASET_VERSION_19_PRODUCTION_VALIDATION_NOT_READY_NAME);
         String datasetVersionUrn = datasetVersion.getSiemacMetadataStatisticalResource().getUrn();
 
         datasetLifecycleService.sendToValidationRejected(getServiceContextAdministrador(), datasetVersionUrn);

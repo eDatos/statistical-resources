@@ -10,6 +10,7 @@ import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.core.common.exception.utils.ExceptionUtils;
 import org.siemac.metamac.statistical.resources.core.base.domain.HasLifecycle;
 import org.siemac.metamac.statistical.resources.core.base.domain.HasSiemacMetadata;
+import org.siemac.metamac.statistical.resources.core.base.validators.ProcStatusValidator;
 import org.siemac.metamac.statistical.resources.core.common.utils.RelatedResourceUtils;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.lifecycle.LifecycleChecker;
@@ -62,6 +63,7 @@ public abstract class LifecycleTemplateService<E extends Object> implements Life
         List<MetamacExceptionItem> exceptions = new ArrayList<MetamacExceptionItem>();
 
         checkNotTasksInProgress(ctx, resource);
+        ProcStatusValidator.checkStatisticalResourceCanSendToProductionValidation((HasLifecycle) resource);
         checkSendToProductionValidationLinkedStatisticalResource(resource, exceptions);
 
         checkResourceMetadataAllActions(ctx, resource, exceptions);
@@ -121,6 +123,7 @@ public abstract class LifecycleTemplateService<E extends Object> implements Life
         List<MetamacExceptionItem> exceptions = new ArrayList<MetamacExceptionItem>();
 
         checkNotTasksInProgress(ctx, resource);
+        ProcStatusValidator.checkStatisticalResourceCanSendToDiffusionValidation((HasLifecycle) resource);
         checkSendToDiffusionValidationLinkedStatisticalResource(resource, exceptions);
 
         checkResourceMetadataAllActions(ctx, resource, exceptions);
@@ -180,6 +183,7 @@ public abstract class LifecycleTemplateService<E extends Object> implements Life
         List<MetamacExceptionItem> exceptions = new ArrayList<MetamacExceptionItem>();
 
         checkNotTasksInProgress(ctx, resource);
+        ProcStatusValidator.checkStatisticalResourceCanSendToValidationRejected((HasLifecycle) resource);
         checkSendToValidationRejectedLinkedStatisticalResource(resource, exceptions);
 
         checkResourceMetadataAllActions(ctx, resource, exceptions);
@@ -246,6 +250,7 @@ public abstract class LifecycleTemplateService<E extends Object> implements Life
         List<MetamacExceptionItem> exceptions = new ArrayList<MetamacExceptionItem>();
 
         checkNotTasksInProgress(ctx, resource);
+        ProcStatusValidator.checkStatisticalResourceCanSendToPublish((HasLifecycle) resource);
         checkSendToPublishedLinkedStatisticalResource(resource, previousResource, exceptions);
 
         checkResourceMetadataAllActions(ctx, resource, exceptions);
@@ -283,6 +288,7 @@ public abstract class LifecycleTemplateService<E extends Object> implements Life
             throw new MetamacException(ServiceExceptionType.UNKNOWN, "Found an unknown resource type sending to published");
         }
     }
+
     protected void applySendToPublishedPreviousLinkedStatisticalResource(ServiceContext ctx, E resource, E previousResource) throws MetamacException {
         if (resource instanceof HasSiemacMetadata) {
             siemacLifecycleFiller.applySendToPublishedPreviousResourceActions(ctx, (HasSiemacMetadata) resource, (HasSiemacMetadata) previousResource,
@@ -327,6 +333,7 @@ public abstract class LifecycleTemplateService<E extends Object> implements Life
         List<MetamacExceptionItem> exceptions = new ArrayList<MetamacExceptionItem>();
 
         checkNotTasksInProgress(ctx, resource);
+        ProcStatusValidator.checkStatisticalResourceCanSendToVersion((HasLifecycle) resource);
         checkVersioningLinkedStatisticalResource(resource, exceptions);
 
         checkResourceMetadataAllActions(ctx, resource, exceptions);

@@ -2,7 +2,6 @@ package org.siemac.metamac.statistical.resources.core.utils.mocks.configuration;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -22,8 +21,8 @@ import org.siemac.metamac.statistical.resources.core.utils.MetamacReflectionUtil
 public abstract class MockFactory<EntityMock> {
 
     protected static final String NAME_FIELD_SUFFIX = "_NAME";
-    
-    private static List<Object> dependencies = new ArrayList<Object>();
+
+    private static List<Object>   dependencies      = new ArrayList<Object>();
 
     @SuppressWarnings("unchecked")
     protected EntityMock getMock(String id) {
@@ -43,20 +42,19 @@ public abstract class MockFactory<EntityMock> {
     public static void clearFactory() {
         dependencies.clear();
     }
-    
-    
+
     public static List<Object> getDependencies() {
         return dependencies;
     }
-    
+
     public static void registerDependency(Object obj) {
         dependencies.add(obj);
     }
-    
+
     public static void registerDependencies(Collection<Object> objs) {
         dependencies.addAll(objs);
     }
-    
+
     protected List<EntityMock> getMocks(String... ids) {
         List<EntityMock> list = new ArrayList<EntityMock>();
         for (String id : ids) {

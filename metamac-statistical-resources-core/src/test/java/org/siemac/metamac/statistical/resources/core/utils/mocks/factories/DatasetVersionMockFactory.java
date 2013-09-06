@@ -8,9 +8,6 @@ import static org.siemac.metamac.statistical.resources.core.utils.DatasetLifecyc
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasourceMockFactory.getDatasorce06LinkedToFileForDatasetVersion30;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasourceMockFactory.getDatasorce07LinkedToFileWithUnderscore;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.joda.time.DateTime;
 import org.siemac.metamac.statistical.resources.core.base.domain.VersionRationaleType;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.CodeDimension;
@@ -23,8 +20,6 @@ import org.siemac.metamac.statistical.resources.core.utils.DatasetLifecycleTestU
 import org.siemac.metamac.statistical.resources.core.utils.LifecycleTestUtils;
 import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesVersionUtils;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.DatasetVersionMock;
-import org.siemac.metamac.statistical.resources.core.utils.mocks.QueryMock;
-import org.siemac.metamac.statistical.resources.core.utils.mocks.QueryVersionMock;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesDoMocks;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesPersistedDoMocks;
 import org.springframework.stereotype.Component;
@@ -252,16 +247,12 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
 
     public static final String    DATASET_VERSION_74_V02_FOR_DATASET_11_NAME                                                             = "DATASET_VERSION_74_V02_FOR_DATASET_11";
     private static DatasetVersion DATASET_VERSION_74_V02_FOR_DATASET_11;
-    
+
     public static final String    DATASET_VERSION_75_V01_FOR_DATASET_12_NAME                                                             = "DATASET_VERSION_75_V01_FOR_DATASET_12";
     private static DatasetVersion DATASET_VERSION_75_V01_FOR_DATASET_12;
-    
+
     public static final String    DATASET_VERSION_76_V02_FOR_DATASET_12_NAME                                                             = "DATASET_VERSION_76_V02_FOR_DATASET_12";
     private static DatasetVersion DATASET_VERSION_76_V02_FOR_DATASET_12;
-
-    private static final String   INIT_VERSION                                                                                           = "001.000";
-    private static final String   SECOND_VERSION                                                                                         = "002.000";
-    private static final String   THIRD_VERSION                                                                                          = "003.000";
 
     protected static DatasetVersion getDatasetVersion01Basic() {
         if (DATASET_VERSION_01_BASIC == null) {
@@ -1054,23 +1045,20 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
         }
         return DATASET_VERSION_74_V02_FOR_DATASET_11;
     }
-    
-    
+
     protected static DatasetVersion getDatasetVersion75V01ForDataset12() {
         if (DATASET_VERSION_75_V01_FOR_DATASET_12 == null) {
             DATASET_VERSION_75_V01_FOR_DATASET_12 = DatasetMockFactory.getDataset12WithTwoVersionsWithQueriesInDraft().getVersions().get(0);
         }
         return DATASET_VERSION_75_V01_FOR_DATASET_12;
     }
-    
-    
+
     protected static DatasetVersion getDatasetVersion76V02ForDataset12() {
         if (DATASET_VERSION_76_V02_FOR_DATASET_12 == null) {
             DATASET_VERSION_76_V02_FOR_DATASET_12 = DatasetMockFactory.getDataset12WithTwoVersionsWithQueriesInDraft().getVersions().get(1);
         }
         return DATASET_VERSION_76_V02_FOR_DATASET_12;
     }
-
 
     // -----------------------------------------------------------------
     // PRIVATE UTILS
