@@ -23,6 +23,7 @@ import com.arte.statistic.dataset.repository.dto.LocalisedStringDto;
 import com.arte.statistic.parser.sdmx.v2_1.domain.ComponentInfo;
 import com.arte.statistic.parser.sdmx.v2_1.domain.ComponentInfoTypeEnum;
 import com.arte.statistic.parser.sdmx.v2_1.domain.DimensionCodeInfo;
+import com.arte.statistic.parser.sdmx.v2_1.domain.IdValuePair;
 
 public class ManipulateDataUtils {
 
@@ -172,6 +173,19 @@ public class ManipulateDataUtils {
 
         for (CodeDimensionDto codeDimensionDto : codesDimension) {
             key.append(codeDimensionDto.getDimensionId()).append(':').append(codeDimensionDto.getCodeDimensionId()).append(',');
+        }
+
+        if (key.charAt(key.length() - 1) == ',') {
+            key.deleteCharAt(key.length() - 1);
+        }
+        return key.toString();
+    }
+
+    public static String generateKeyFromIdValuePairs(List<IdValuePair> codesDimensions) {
+        StringBuilder key = new StringBuilder();
+
+        for (IdValuePair idValuePair : codesDimensions) {
+            key.append(idValuePair.getCode()).append(':').append(idValuePair.getValue()).append(',');
         }
 
         if (key.charAt(key.length() - 1) == ',') {

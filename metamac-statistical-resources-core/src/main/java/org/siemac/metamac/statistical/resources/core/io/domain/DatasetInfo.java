@@ -1,31 +1,42 @@
 package org.siemac.metamac.statistical.resources.core.io.domain;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ApplicationException;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
+import org.siemac.metamac.statistical.resources.core.io.domain.AttributeInfo.AttachmentLevel;
 import org.siemac.metamac.statistical.resources.core.io.mapper.MetamacSdmx2StatRepoMapper;
+import org.siemac.metamac.statistical.resources.core.io.utils.ManipulateDataUtils;
 
+import com.arte.statistic.dataset.repository.dto.AttributeInstanceBasicDto;
+import com.arte.statistic.dataset.repository.dto.AttributeInstanceDto;
 import com.arte.statistic.dataset.repository.dto.CodeDimensionDto;
 import com.arte.statistic.dataset.repository.dto.ConditionObservationDto;
 import com.arte.statistic.dataset.repository.dto.DatasetRepositoryDto;
 import com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceFacade;
+import com.arte.statistic.parser.sdmx.v2_1.domain.ComponentInfo;
 import com.arte.statistic.parser.sdmx.v2_1.domain.ComponentInfoTypeEnum;
 import com.arte.statistic.parser.sdmx.v2_1.domain.DimensionCodeInfo;
+import com.arte.statistic.parser.sdmx.v2_1.domain.IdValuePair;
 
 public class DatasetInfo {
 
-    private DatasetVersion                datasetVersion         = null;
-    private DimensionCodeInfo             dimensionAtObservation = null;
-    private DimensionCodeInfo             timeDimension          = null;
-    private DimensionCodeInfo             measureDimension       = null;
-    private List<ConditionObservationDto> coverage               = null;
-    private List<DimensionCodeInfo>       conditions             = null; // Input conditions for query
-    private Map<String, List<String>>     conditionsMap          = null; // Input conditions for query transformed into a map
-    private DsdSdmxInfo                   dsdSdmxInfo            = null;
+    private DatasetVersion                               datasetVersion         = null;
+    private DimensionCodeInfo                            dimensionAtObservation = null;
+    private DimensionCodeInfo                            timeDimension          = null;
+    private DimensionCodeInfo                            measureDimension       = null;
+    private List<ConditionObservationDto>                coverage               = null;
+    private List<DimensionCodeInfo>                      conditions             = null; // Input conditions for query
+    private Map<String, List<String>>                    conditionsMap          = null; // Input conditions for query transformed into a map
+    private Map<String, List<AttributeInstanceBasicDto>> attributeInstances     = null;
+    private DsdSdmxInfo                                  dsdSdmxInfo            = null;
 
     public DatasetInfo(DatasetRepositoriesServiceFacade datasetRepositoriesServiceFacade, MetamacSdmx2StatRepoMapper metamac2StatRepoMapper, String queryKey, DatasetVersion datasetVersion,
             DsdSdmxInfo dsdSdmxInfo, RequestParameter requestParameter) throws Exception {
@@ -52,6 +63,17 @@ public class DatasetInfo {
 
         // 6- Calculate DimensionAtObservation
         this.dimensionAtObservation = calculateDimensionAtObservation(requestParameter);
+
+        // 7- Calculate attributeInstances
+        this.attributeInstances = calculateAttributes(datasetRepositoriesServiceFacade); // TODO Si no es necesario sacar atributos en el mensaje hacer este calculo opcional por performance
+    }
+
+    public void setAttributeInstances(Map<String, List<AttributeInstanceBasicDto>> attributeInstances) {
+        this.attributeInstances = attributeInstances;
+    }
+
+    public Map<String, List<AttributeInstanceBasicDto>> getAttributeInstances() {
+        return attributeInstances;
     }
 
     public DatasetVersion getDatasetVersion() {
@@ -110,8 +132,8 @@ public class DatasetInfo {
                     // If is a wildcard dimension, all dimension codes are needed
                     addAllCodesConditionForDimension(datasetRepository, i, conditions);
                 } else {
-                    DimensionCodeInfo dimensionCodeInfo = new DimensionCodeInfo(datasetRepository.getDimensions().get(i), dsdSdmxInfo.getDimensions().get(datasetRepository.getDimensions().get(i))
-                            .getTypeComponentInfo());
+                    DimensionCodeInfo dimensionCodeInfo = new DimensionCodeInfo(datasetRepository.getDimensions().get(i), getDsdSdmxInfo().getDimensions()
+                            .get(datasetRepository.getDimensions().get(i)).getTypeComponentInfo());
                     // Split the code by '+' to find OR operators for codes
                     String[] codes = split[i].split("\\+");
                     for (int j = 0; j < codes.length; j++) {
@@ -129,7 +151,7 @@ public class DatasetInfo {
 
         String dimensionID = datasetRepository.getDimensions().get(dimensionOrder);
         ConditionObservationDto conditionObservationDto = getCoverage().get(dimensionOrder);
-        DimensionCodeInfo dimensionCodeInfo = new DimensionCodeInfo(dimensionID, dsdSdmxInfo.getDimensions().get(dimensionID).getTypeComponentInfo());
+        DimensionCodeInfo dimensionCodeInfo = new DimensionCodeInfo(dimensionID, getDsdSdmxInfo().getDimensions().get(dimensionID).getTypeComponentInfo());
 
         for (CodeDimensionDto codeDimensionDto : conditionObservationDto.getCodesDimension()) {
             dimensionCodeInfo.addCode(codeDimensionDto.getCodeDimensionId());
@@ -186,4 +208,61 @@ public class DatasetInfo {
         }
     }
 
+    private Map<String, List<AttributeInstanceBasicDto>> calculateAttributes(DatasetRepositoriesServiceFacade datasetRepositoriesServiceFacade) throws Exception {
+        Map<String, List<AttributeInstanceBasicDto>> normalizedAttributesMap = new HashMap<String, List<AttributeInstanceBasicDto>>(); // Generate Map of attributes by key
+
+        // For all attributes that can be on the message group element
+        Iterator<AttributeInfo> it = getDsdSdmxInfo().getAttributes().values().iterator();
+        while (it.hasNext()) {
+            AttributeInfo attributeInfo = it.next();
+            if (AttachmentLevel.DIMENSION.equals(attributeInfo.getAttachmentLevel()) || AttachmentLevel.GROUP.equals(attributeInfo.getAttachmentLevel())) {
+                List<AttributeInstanceDto> attributes = datasetRepositoriesServiceFacade.findAttributesInstancesWithDimensionAttachmentLevelDenormalized(getDatasetVersion().getDatasetRepositoryId(),
+                        attributeInfo.getAttributeId(), getConditionsMap());
+                if (CollectionUtils.isEmpty(attributes)) {
+                    continue;
+                }
+
+                List<DimensionCodeInfo> attributeDimensionsOrdered = null;
+                if (AttachmentLevel.DIMENSION.equals(attributeInfo.getAttachmentLevel())) {
+                    attributeDimensionsOrdered = toAttributeDimensionsOrdered(attributeInfo.getDimensionsInfoList());
+                } else {
+                    // Group
+                    attributeDimensionsOrdered = toAttributeDimensionsOrdered(attributeInfo.getGroup().getDimensionsInfoList());
+                }
+                addDenormalizedAttributesToCurrentNormalizedAttributes(normalizedAttributesMap, attributes, attributeDimensionsOrdered);
+            }
+        }
+        return normalizedAttributesMap;
+    }
+
+    private List<DimensionCodeInfo> toAttributeDimensionsOrdered(List<ComponentInfo> attributeDimensions) throws Exception {
+        List<DimensionCodeInfo> attributeDimensionsOrdered = new ArrayList<DimensionCodeInfo>(attributeDimensions.size());
+        for (DimensionCodeInfo datasetDimension : getConditions()) {
+            if (attributeDimensions.contains(datasetDimension)) {
+                attributeDimensionsOrdered.add(datasetDimension);
+            }
+        }
+        return attributeDimensionsOrdered;
+    }
+
+    private void addDenormalizedAttributesToCurrentNormalizedAttributes(Map<String, List<AttributeInstanceBasicDto>> normalizedAttributesMap, List<AttributeInstanceDto> attributeInstances,
+            List<DimensionCodeInfo> attributeDimensionsOrdered) {
+
+        for (AttributeInstanceDto attributeInstanceDto : attributeInstances) {
+            List<IdValuePair> keyList = new ArrayList<IdValuePair>();
+            for (DimensionCodeInfo dimension : attributeDimensionsOrdered) {
+                keyList.add(new IdValuePair(dimension.getCode(), attributeInstanceDto.getCodesByDimension().get(dimension.getCode()).get(0)));
+            }
+
+            // Add current attribute to this key in the map
+            String key = ManipulateDataUtils.generateKeyFromIdValuePairs(keyList);
+            if (normalizedAttributesMap.containsKey(key)) {
+                normalizedAttributesMap.get(key).add(attributeInstanceDto);
+            } else {
+                List<AttributeInstanceBasicDto> attributeDtos = new LinkedList<AttributeInstanceBasicDto>();
+                attributeDtos.add(attributeInstanceDto);
+                normalizedAttributesMap.put(key, attributeDtos);
+            }
+        }
+    }
 }

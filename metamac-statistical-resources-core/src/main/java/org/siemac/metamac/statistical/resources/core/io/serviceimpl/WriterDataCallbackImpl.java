@@ -46,6 +46,8 @@ import com.arte.statistic.parser.sdmx.v2_1.domain.StructureReferenceBase;
 
 public class WriterDataCallbackImpl implements WriterDataCallback {
 
+    private static final String              SEPARATOR                        = "#";
+
     private DatasetRepositoriesServiceFacade datasetRepositoriesServiceFacade = null;
     private MetamacSdmx2StatRepoMapper       metamac2StatRepoMapper           = null;
     private DsdSdmxExtractor                 dsdSdmxExtractor                 = null;
@@ -55,6 +57,7 @@ public class WriterDataCallbackImpl implements WriterDataCallback {
     private String                           queryKey                         = null;
     private String                           sender                           = null;
     private RequestParameter                 requestParameter                 = null;
+    private boolean                          allDatasetsContainsTimeDimension = false;
 
     // --- For DatasetContext
     private List<DatasetInfo>                datasetInfoCache                 = null;
@@ -118,6 +121,7 @@ public class WriterDataCallbackImpl implements WriterDataCallback {
     public Serie fecthSerie(List<DimensionCodeInfo> serieConditions) throws Exception {
         Serie serie = new Serie();
 
+        // key
         // The last element in list is the key of dimension at observation level, the other elements have only one key
         int i = 0;
         Iterator<DimensionCodeInfo> itSerieCondition = serieConditions.iterator();
@@ -126,13 +130,19 @@ public class WriterDataCallbackImpl implements WriterDataCallback {
             serie.getSeriesKey().add(new IdValuePair(keyCondition.getCode(), keyCondition.getCodes().iterator().next()));
             i++;
         }
-        DimensionCodeInfo currentDimensionCodeAtObservation = itSerieCondition.next();
 
+        // Attributes
+        Set<String> addedKeys = new HashSet<String>();
+        // extractAttributesForSerie(serie, addedKeys);
+
+        // serie.addAttribute(attributeElement);
+
+        // Observations
         Map<String, ObservationExtendedDto> observationsMap = datasetRepositoriesServiceFacade.findObservationsExtendedByDimensions(getCurrentDatasetInfo().getDatasetVersion()
-                .getDatasetRepositoryId(), metamac2StatRepoMapper.conditionsToRepositoryList(serieConditions)); // TODO procesar más de un dataset por mensaje
+                .getDatasetRepositoryId(), metamac2StatRepoMapper.conditionsToRepositoryList(serieConditions));
 
         for (Map.Entry<String, ObservationExtendedDto> entry : observationsMap.entrySet()) {
-            serie.getObs().add(observationRepositoryToGroupedObservationWriter(entry.getValue(), currentDimensionCodeAtObservation));
+            serie.getObs().add(observationRepositoryToGroupedObservationWriter(entry.getValue()));
         }
 
         return serie;
@@ -142,30 +152,15 @@ public class WriterDataCallbackImpl implements WriterDataCallback {
     public List<Group> fetchAttributesInGroups() throws Exception {
 
         List<Group> groups = new LinkedList<Group>();
-        Map<String, List<AttributeInstanceBasicDto>> transformedAttributesMap = new HashMap<String, List<AttributeInstanceBasicDto>>();
 
-        // For all attributes that can be on the message group element
-        Iterator<AttributeInfo> it = getCurrentDatasetInfo().getDsdSdmxInfo().getAttributes().values().iterator();
-        while (it.hasNext()) {
-            AttributeInfo attributeInfo = it.next();
-            if (AttachmentLevel.DIMENSION.equals(attributeInfo.getAttachmentLevel()) || AttachmentLevel.GROUP.equals(attributeInfo.getAttachmentLevel())) {
-                // TODO: SAN hizo un método para obtener los attr desnormalizados, luego puedo cambiar este código.
-                // para obtenerlos así y luego construir la key.
+        Map<String, List<AttributeInstanceBasicDto>> normalizedAttributesMap = getCurrentDatasetInfo().getAttributeInstances();
 
-                // Find all instances of attributes with ID, attributeId.
-                List<AttributeInstanceDto> attributes = datasetRepositoriesServiceFacade.findAttributesInstancesWithDimensionAttachmentLevel(getCurrentDatasetVersion().getDatasetRepositoryId(),
-                        attributeInfo.getAttributeId(), getCurrentDatasetInfo().getConditionsMap());
-                // Transform all fetched attributes in map indexed by key and add to the transformed attributes map
-                transformedAttributesMap = ManipulateDataUtils.addTransformAttributesToCurrentTransformedAttributes(transformedAttributesMap, getQueryConditions(), attributes);
+        if (normalizedAttributesMap != null) {
+            // For all groups definition: generate keys and add attributes
+            for (GroupInfo groupInfo : getCurrentDatasetInfo().getDsdSdmxInfo().getGroups().values()) {
+                buildGroups(groups, groupInfo, normalizedAttributesMap, new LinkedList<IdValuePair>(), 0);
             }
         }
-
-        // For all groups definition: generate keys and add attributes
-        for (GroupInfo groupInfo : getCurrentDatasetInfo().getDsdSdmxInfo().getGroups().values()) {
-            buildGroups(groups, groupInfo, transformedAttributesMap, new LinkedList<CodeDimensionDto>(), 0);
-        }
-
-        // TODO hay que poner los atrbutos en los grupos que sean, el q diga en groupp o uno de los attachment
 
         return groups;
     }
@@ -209,6 +204,11 @@ public class WriterDataCallbackImpl implements WriterDataCallback {
         return getCurrentDatasetVersion().getDatasetRepositoryId();
     }
 
+    @Override
+    public boolean allDatasetsContainsTimeDimension() {
+        return this.allDatasetsContainsTimeDimension;
+    }
+
     /**************************************************************************
      * PROCESSORS
      **************************************************************************/
@@ -223,13 +223,22 @@ public class WriterDataCallbackImpl implements WriterDataCallback {
         }
 
         // Build DatasetInfo cache
+        boolean allDatasetsContainsTimeDimension = true;
         List<DatasetInfo> datasetInfoCache = new ArrayList<DatasetInfo>(datasetsToFetch.getValues().size());
         for (DatasetVersion datasetVersion : datasetsToFetch.getValues()) {
-            datasetInfoCache.add(new DatasetInfo(datasetRepositoriesServiceFacade, metamac2StatRepoMapper, queryKey, datasetVersion, dataStructureDefinitionCache.get(datasetVersion.getRelatedDsd()
-                    .getUrn()), requestParameter));
+            DatasetInfo datasetInfo = new DatasetInfo(datasetRepositoriesServiceFacade, metamac2StatRepoMapper, queryKey, datasetVersion, dataStructureDefinitionCache.get(datasetVersion
+                    .getRelatedDsd().getUrn()), requestParameter);
+            datasetInfoCache.add(datasetInfo);
+
+            if (datasetInfo.getTimeDimension() == null) {
+                allDatasetsContainsTimeDimension = false;
+            }
+
         }
 
         this.datasetInfoCache = datasetInfoCache;
+        this.allDatasetsContainsTimeDimension = allDatasetsContainsTimeDimension;
+
     }
 
     /**
@@ -241,27 +250,36 @@ public class WriterDataCallbackImpl implements WriterDataCallback {
      * @param observationkeys
      * @param numDimProcess
      */
-    private void buildGroups(List<Group> instanceGroups, GroupInfo groupInfo, Map<String, List<AttributeInstanceBasicDto>> transformedAttributesMap, List<CodeDimensionDto> observationkeys,
+    private void buildGroups(List<Group> instanceGroups, GroupInfo groupInfo, Map<String, List<AttributeInstanceBasicDto>> transformedAttributesMap, List<IdValuePair> observationkeys,
             int numDimProcess) {
 
         // If the key of current group is fully generated
         if (numDimProcess == groupInfo.getDimensionsInfoList().size()) {
-            String key = ManipulateDataUtils.generateKeyFromCodesDimensions(observationkeys);
+            String key = ManipulateDataUtils.generateKeyFromIdValuePairs(observationkeys);
             if (transformedAttributesMap.containsKey(key)) {
-                // new instace of group
+                // new instance of group
                 Group group = new Group();
-                // TODO hay que poner los atrbutos en los grupos que sean, el q diga en groupp o uno de los attachment
-                // Keys
-                for (CodeDimensionDto codeDimensionDto : observationkeys) {
-                    group.addGroupKey(new IdValuePair(codeDimensionDto.getDimensionId(), codeDimensionDto.getCodeDimensionId()));
-                }
-                // Attributes
-                for (AttributeInstanceBasicDto attributeBasicDto : transformedAttributesMap.get(key)) {
-                    group.addAttribute(new IdValuePair(attributeBasicDto.getAttributeId(), attributeBasicDto.getValue().getLocalisedLabel(StatisticalResourcesConstants.DEFAULT_DATA_REPOSITORY_LOCALE)));
-                }
 
-                instanceGroups.add(group);
-                // TODO EXCLUSION SET
+                // Keys
+                group.getGroupKey().addAll(observationkeys);
+                // Attributes
+                Iterator<AttributeInstanceBasicDto> itAttributes = transformedAttributesMap.get(key).iterator();
+                while (itAttributes.hasNext()) {
+                    AttributeInstanceBasicDto attributeBasicDto = itAttributes.next();
+
+                    // Only attributes that can be in this group
+                    AttributeInfo attributeInfo = getCurrentDatasetInfo().getDsdSdmxInfo().getAttributes().get(attributeBasicDto.getAttributeId());
+                    if (isValidAttributeForThisGroup(attributeInfo, groupInfo.getGroupId())) {
+                        group.addAttribute(new IdValuePair(attributeBasicDto.getAttributeId(), attributeBasicDto.getValue().getLocalisedLabel(
+                                StatisticalResourcesConstants.DEFAULT_DATA_REPOSITORY_LOCALE)));
+
+                        itAttributes.remove(); // Remove this instance of attribute
+                    }
+                }
+                // Remove is if necessary the map key
+                if (transformedAttributesMap.get(key).isEmpty()) {
+                    transformedAttributesMap.remove(key);
+                }
             }
         } else {
             // Next dimension to process code
@@ -270,18 +288,62 @@ public class WriterDataCallbackImpl implements WriterDataCallback {
 
             for (String code : actualConditionsForCurrentDimension) {
                 // Auxiliary
-                CodeDimensionDto dimensionCodeInfoAux = new CodeDimensionDto(dimensionInfo.getCode(), code);
+                IdValuePair idValuePairAux = new IdValuePair(dimensionInfo.getCode(), code);
 
-                List<CodeDimensionDto> newObservationConditions = new ArrayList<CodeDimensionDto>(observationkeys.size() + 1);
+                List<IdValuePair> newObservationConditions = new ArrayList<IdValuePair>(observationkeys.size() + 1);
                 newObservationConditions.addAll(observationkeys);
-                newObservationConditions.add(dimensionCodeInfoAux);
-
-                buildGroups(instanceGroups, groupInfo, transformedAttributesMap, newObservationConditions, numDimProcess + 1);
+                newObservationConditions.add(idValuePairAux);
             }
         }
     }
 
-    private Observation observationRepositoryToGroupedObservationWriter(ObservationExtendedDto observation, DimensionCodeInfo currentDimensionCodeAtObservation) throws Exception {
+    private void extractAttributesForSerie(Serie serie, int numDimProcess, Set<String> addedKeys) {
+        if (numDimProcess == 0) {
+
+        } else {
+            // for () {
+            //
+            // }
+        }
+
+        // serie.getSeriesKey()
+    }
+
+    // public static void main(String[] args) {
+    // permutation("", "abcd");
+    // }
+    //
+    // private static void permutation(String prefix, String str) {
+    // int n = str.length();
+    // if (n == 0)
+    // System.out.println(prefix);
+    // else {
+    // for (int i = 0; i < n; i++) {
+    //
+    // }
+    // // permutation(prefix + str.charAt(i), str.substring(0, i) + str.substring(i + 1, n));
+    // }
+    // }
+
+    private boolean isValidAttributeForThisGroup(AttributeInfo attributeInfo, String groupId) {
+        if (attributeInfo != null) {
+            if (AttachmentLevel.DIMENSION.equals(attributeInfo.getAttachmentLevel())) {
+                for (GroupInfo groupInfo : attributeInfo.getAttachmentGroups()) {
+                    if (groupId.equals(groupInfo.getGroupId())) {
+                        return true;
+                    }
+                }
+            } else {
+                // GROUP
+                if (groupId.equals(attributeInfo.getGroup().getGroupId())) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private Observation observationRepositoryToGroupedObservationWriter(ObservationExtendedDto observation) throws Exception {
         Observation result = new Observation();
 
         // Key
@@ -302,6 +364,9 @@ public class WriterDataCallbackImpl implements WriterDataCallback {
         }
 
         // TODO Añadir otros attr que en este mensaje van a nivel de observation List<AttributeInstanceBasicDto> attributes = observation.getAttributes();
+
+        // observation.getCodesDimension()
+
         return result;
     }
 
