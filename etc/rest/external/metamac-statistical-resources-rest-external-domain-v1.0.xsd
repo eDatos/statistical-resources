@@ -345,6 +345,7 @@
             <xs:element name="name" type="common:InternationalString" />
             <xs:element name="attachmentLevel" type="tns:AttributeAttachmentLevelType" />
             <xs:element name="dimensions" type="tns:AttributeDimensions" minOccurs="0" />
+            <xs:element name="attributeValues" type="tns:AttributeValues" />
         </xs:sequence>
     </xs:complexType>
     
