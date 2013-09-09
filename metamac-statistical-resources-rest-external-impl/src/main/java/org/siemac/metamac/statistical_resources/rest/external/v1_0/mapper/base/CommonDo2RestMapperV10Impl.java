@@ -1144,7 +1144,7 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
             return null;
         }
         AttributeInstanceDto source = sources.get(0); // must be only one
-        return getAttributeInstanceValue(source);
+        return getAttributeInstanceValueToData(source);
     }
 
     private String toDataAttributeWithDimensionAttachmentLevel(String attributeId, List<String> attributeDimensions, List<String> datasetDimensionsOrdered,
@@ -1242,7 +1242,7 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
         return attributeDimensionsOrdered;
     }
 
-    private String getAttributeInstanceValue(AttributeInstanceBasicDto attributeDto) {
+    private String getAttributeInstanceValueToData(AttributeInstanceBasicDto attributeDto) {
         return attributeDto.getValue().getLocalisedLabel(StatisticalResourcesConstants.DEFAULT_DATA_REPOSITORY_LOCALE); // all attributes has only one locale
     }
 
@@ -1409,7 +1409,7 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
             String value = null;
             AttributeInstanceDto attributeInstanceDto = (AttributeInstanceDto) list.get(position);
             if (attributeInstanceDto != null) {
-                value = getAttributeInstanceValue(attributeInstanceDto);
+                value = getAttributeInstanceValueToData(attributeInstanceDto);
             }
             return value;
         }
@@ -1450,7 +1450,7 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
                 AttributeInstanceObservationDto attributeInstanceObservationDto = observationExtendedDto.getAttributesAsMap().get(attributeId);
                 if (attributeInstanceObservationDto != null) {
                     anyObservationHasAttribute = true;
-                    value = getAttributeInstanceValue(attributeInstanceObservationDto);
+                    value = getAttributeInstanceValueToData(attributeInstanceObservationDto);
                 }
             }
             return value;
