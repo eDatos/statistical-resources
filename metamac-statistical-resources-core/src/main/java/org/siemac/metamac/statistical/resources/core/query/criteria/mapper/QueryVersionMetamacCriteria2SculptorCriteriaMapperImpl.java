@@ -1,17 +1,23 @@
 package org.siemac.metamac.statistical.resources.core.query.criteria.mapper;
 
+import java.util.Date;
+
 import org.fornax.cartridges.sculptor.framework.domain.LeafProperty;
 import org.fornax.cartridges.sculptor.framework.domain.Property;
 import org.siemac.metamac.core.common.constants.CoreCommonConstants;
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaOrder;
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaPropertyRestriction;
+import org.siemac.metamac.core.common.criteria.MetamacCriteriaPropertyRestriction.OperationType;
 import org.siemac.metamac.core.common.criteria.SculptorPropertyCriteria;
+import org.siemac.metamac.core.common.criteria.SculptorPropertyCriteriaBase;
+import org.siemac.metamac.core.common.criteria.SculptorPropertyCriteriaConjunction;
 import org.siemac.metamac.core.common.criteria.mapper.MetamacCriteria2SculptorCriteria;
 import org.siemac.metamac.core.common.criteria.mapper.MetamacCriteria2SculptorCriteria.CriteriaCallback;
 import org.siemac.metamac.core.common.criteria.utils.CriteriaUtils;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.common.criteria.enums.StatisticalResourcesCriteriaOrderEnum;
 import org.siemac.metamac.statistical.resources.core.common.criteria.enums.StatisticalResourcesCriteriaPropertyEnum;
+import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersionProperties;
@@ -27,7 +33,8 @@ public class QueryVersionMetamacCriteria2SculptorCriteriaMapperImpl implements Q
      **************************************************************************/
 
     public QueryVersionMetamacCriteria2SculptorCriteriaMapperImpl() throws MetamacException {
-        queryCriteriaMapper = new MetamacCriteria2SculptorCriteria<QueryVersion>(QueryVersion.class, StatisticalResourcesCriteriaOrderEnum.class, StatisticalResourcesCriteriaPropertyEnum.class, new QueryCriteriaCallback());
+        queryCriteriaMapper = new MetamacCriteria2SculptorCriteria<QueryVersion>(QueryVersion.class, StatisticalResourcesCriteriaOrderEnum.class, StatisticalResourcesCriteriaPropertyEnum.class,
+                new QueryCriteriaCallback());
     }
 
     /**************************************************************************
@@ -46,7 +53,7 @@ public class QueryVersionMetamacCriteria2SculptorCriteriaMapperImpl implements Q
     private class QueryCriteriaCallback implements CriteriaCallback {
 
         @Override
-        public SculptorPropertyCriteria retrieveProperty(MetamacCriteriaPropertyRestriction propertyRestriction) throws MetamacException {
+        public SculptorPropertyCriteriaBase retrieveProperty(MetamacCriteriaPropertyRestriction propertyRestriction) throws MetamacException {
             StatisticalResourcesCriteriaPropertyEnum propertyEnum = StatisticalResourcesCriteriaPropertyEnum.fromValue(propertyRestriction.getPropertyName());
             switch (propertyEnum) {
                 case STATISTICAL_OPERATION_URN:
@@ -64,10 +71,18 @@ public class QueryVersionMetamacCriteria2SculptorCriteriaMapperImpl implements Q
                 case NEXT_VERSION:
                     return new SculptorPropertyCriteria(QueryVersionProperties.lifeCycleStatisticalResource().nextVersion(), propertyRestriction.getEnumValue());
                 case NEXT_VERSION_DATE:
-                    return new SculptorPropertyCriteria(CriteriaUtils.getDatetimeLeafPropertyEmbedded(QueryVersionProperties.lifeCycleStatisticalResource().nextVersionDate(),
-                            QueryVersion.class), propertyRestriction.getDateValue());
+                    return new SculptorPropertyCriteria(CriteriaUtils.getDatetimeLeafPropertyEmbedded(QueryVersionProperties.lifeCycleStatisticalResource().nextVersionDate(), QueryVersion.class),
+                            propertyRestriction.getDateValue());
                 case PROC_STATUS:
-                    return new SculptorPropertyCriteria(QueryVersionProperties.lifeCycleStatisticalResource().procStatus(), propertyRestriction.getEnumValue());
+                    if (ProcStatusEnum.PUBLISHED.equals(propertyRestriction.getEnumValue())) {
+                        return new SculptorPropertyCriteriaConjunction(QueryVersionProperties.lifeCycleStatisticalResource().procStatus(), ProcStatusEnum.PUBLISHED, OperationType.EQ,
+                                CriteriaUtils.getDatetimeLeafPropertyEmbedded(QueryVersionProperties.lifeCycleStatisticalResource().validFrom(), QueryVersion.class), new Date(), OperationType.LE);
+                    } else if (ProcStatusEnum.PUBLISHED_NOT_VISIBLE.equals(propertyRestriction.getEnumValue())) {
+                        return new SculptorPropertyCriteriaConjunction(QueryVersionProperties.lifeCycleStatisticalResource().procStatus(), ProcStatusEnum.PUBLISHED, OperationType.EQ,
+                                CriteriaUtils.getDatetimeLeafPropertyEmbedded(QueryVersionProperties.lifeCycleStatisticalResource().validFrom(), QueryVersion.class), new Date(), OperationType.GT);
+                    } else {
+                        return new SculptorPropertyCriteria(QueryVersionProperties.lifeCycleStatisticalResource().procStatus(), propertyRestriction.getEnumValue());
+                    }
                 case QUERY_STATUS:
                     return new SculptorPropertyCriteria(QueryVersionProperties.status(), propertyRestriction.getEnumValue());
                 case QUERY_TYPE:
@@ -100,7 +115,8 @@ public class QueryVersionMetamacCriteria2SculptorCriteriaMapperImpl implements Q
                 case STATISTICAL_OPERATION_URN:
                     QueryVersionProperties.lifeCycleStatisticalResource().statisticalOperation().urn();
                 case LAST_UPDATED:
-                    return new LeafProperty<QueryVersion>(QueryVersionProperties.lifeCycleStatisticalResource().lastUpdated().getName(), CoreCommonConstants.CRITERIA_DATETIME_COLUMN_DATETIME, true, QueryVersion.class);
+                    return new LeafProperty<QueryVersion>(QueryVersionProperties.lifeCycleStatisticalResource().lastUpdated().getName(), CoreCommonConstants.CRITERIA_DATETIME_COLUMN_DATETIME, true,
+                            QueryVersion.class);
                 default:
                     throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, order.getPropertyName());
             }
@@ -108,7 +124,8 @@ public class QueryVersionMetamacCriteria2SculptorCriteriaMapperImpl implements Q
 
         @Override
         public Property<QueryVersion> retrievePropertyOrderDefault() throws MetamacException {
-            return new LeafProperty<QueryVersion>(QueryVersionProperties.lifeCycleStatisticalResource().lastUpdated().getName(), CoreCommonConstants.CRITERIA_DATETIME_COLUMN_DATETIME, true, QueryVersion.class);
+            return new LeafProperty<QueryVersion>(QueryVersionProperties.lifeCycleStatisticalResource().lastUpdated().getName(), CoreCommonConstants.CRITERIA_DATETIME_COLUMN_DATETIME, true,
+                    QueryVersion.class);
         }
     }
 }

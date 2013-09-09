@@ -985,6 +985,32 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
         DatasetVersion datasetVersion = createDatasetVersionWithSequence(1);
         datasetVersion.getSiemacMetadataStatisticalResource().setProcStatus(procStatus);
         datasetVersion.addDatasource(DatasourceMockFactory.generateSimpleDatasource());
+
+        switch (procStatus) {
+            case DRAFT:
+                prepareToProductionValidation(datasetVersion);
+                break;
+            case PRODUCTION_VALIDATION:
+                prepareToDiffusionValidation(datasetVersion);
+                break;
+            case DIFFUSION_VALIDATION:
+                prepareToPublished(datasetVersion);
+                break;
+            case VALIDATION_REJECTED:
+                prepareToDiffusionValidation(datasetVersion);
+                datasetVersion.getSiemacMetadataStatisticalResource().setProcStatus(procStatus);
+                break;
+            case PUBLISHED:
+                datasetVersion.getSiemacMetadataStatisticalResource().setValidFrom(new DateTime().minusDays(2));
+                prepareToVersioning(datasetVersion);
+                break;
+            case PUBLISHED_NOT_VISIBLE:
+                datasetVersion.getSiemacMetadataStatisticalResource().setValidFrom(new DateTime().plusDays(2));
+                prepareToVersioning(datasetVersion);
+                break;
+            default:
+                break;
+        }
         return datasetVersion;
     }
 

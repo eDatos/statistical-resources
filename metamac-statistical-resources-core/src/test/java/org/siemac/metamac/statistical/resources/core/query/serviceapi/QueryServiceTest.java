@@ -27,6 +27,7 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_20_WITH_CODE_AND_URN_QUERY02_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_21_FOR_QUERY_03_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_22_FOR_QUERY_03_AND_LAST_VERSION_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_27_V1_PUBLISHED_FOR_QUERY_06_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_28_V2_PUBLISHED_NO_VISIBLE_FOR_QUERY_06_NAME;
 
 import java.util.List;
@@ -316,8 +317,11 @@ public class QueryServiceTest extends StatisticalResourcesBaseTest implements Qu
         PagedResult<QueryVersion> queriesPagedResult = queryService.findQueryVersionsByCondition(getServiceContextAdministrador(), null, null);
 
         assertEquals(2, queriesPagedResult.getTotalRows());
-        assertEquals((queryVersionMockFactory.retrieveMock(QUERY_VERSION_28_V2_PUBLISHED_NO_VISIBLE_FOR_QUERY_06_NAME)).getLifeCycleStatisticalResource().getUrn(), queriesPagedResult.getValues()
-                .iterator().next().getLifeCycleStatisticalResource().getUrn());
+        int i = 0;
+        assertEquals((queryVersionMockFactory.retrieveMock(QUERY_VERSION_27_V1_PUBLISHED_FOR_QUERY_06_NAME)).getLifeCycleStatisticalResource().getUrn(), queriesPagedResult.getValues().get(i++)
+                .getLifeCycleStatisticalResource().getUrn());
+        assertEquals((queryVersionMockFactory.retrieveMock(QUERY_VERSION_28_V2_PUBLISHED_NO_VISIBLE_FOR_QUERY_06_NAME)).getLifeCycleStatisticalResource().getUrn(),
+                queriesPagedResult.getValues().get(i++).getLifeCycleStatisticalResource().getUrn());
     }
 
     @Test

@@ -42,7 +42,9 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_13_OPER_0002_CODE_000003_PROD_VAL_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_14_OPER_03_CODE_01_PUBLISHED_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_16_DRAFT_READY_FOR_PRODUCTION_VALIDATION_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_19_PRODUCTION_VALIDATION_NOT_READY_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_20_PRODUCTION_VALIDATION_READY_FOR_DIFFUSION_VALIDATION_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_26_V2_PUBLISHED_NO_VISIBLE_FOR_DATASET_06_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_27_WITH_COVERAGE_FILLED_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_29_WITHOUT_DATASOURCES_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_39_VERSION_RATIONALE_TYPE_MAJOR_NEW_RESOURCE_NAME;
@@ -55,6 +57,9 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_46_NEXT_VERSION_SCHEDULED_UPDATE_JULY_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_47_WITH_COVERAGE_FILLED_WITH_TITLES_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_48_WITH_TEMPORAL_COVERAGE_FILLED_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_53_IN_DIFFUSION_VALIDATION_WITH_DATASOURCE_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_54_IN_VALIDATION_REJECTED_WITH_DATASOURCE_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_55_PUBLISHED_WITH_DATASOURCE_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasourceMockFactory.DATASOURCE_01_BASIC_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationMockFactory.PUBLICATION_02_BASIC_WITH_GENERATED_VERSION_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationMockFactory.PUBLICATION_03_BASIC_WITH_2_PUBLICATION_VERSIONS_NAME;
@@ -74,6 +79,7 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_15_VALIDATION_REJECTED_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_16_PUBLISHED_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_31_V2_PUBLISHED_NO_VISIBLE_FOR_PUBLICATION_06_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_33_DRAFT_READY_FOR_PRODUCTION_VALIDATION_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_37_PRODUCTION_VALIDATION_READY_FOR_DIFFUSION_VALIDATION_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_38_PRODUCTION_VALIDATION_READY_FOR_VALIDATION_REJECTED_NAME;
@@ -92,11 +98,13 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_11_DRAFT_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_12_PRODUCTION_VALIDATION_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_13_DIFFUSION_VALIDATION_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_14_VALIDATION_REJECTED_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_15_PUBLISHED_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_19_WITH_CODE_AND_URN_QUERY01_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_20_WITH_CODE_AND_URN_QUERY02_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_21_FOR_QUERY_03_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_22_FOR_QUERY_03_AND_LAST_VERSION_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_28_V2_PUBLISHED_NO_VISIBLE_FOR_QUERY_06_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.StatisticOfficialityMockFactory.STATISTIC_OFFICIALITY_01_BASIC_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.StatisticOfficialityMockFactory.STATISTIC_OFFICIALITY_02_BASIC_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesDtoMocks.mockCodeItemDtosWithIdentifiers;
@@ -288,6 +296,112 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         assertEqualsQuery(latestQueryVersionQuery03, results.get(0));
     }
 
+    @Test
+    @MetamacMock({QUERY_VERSION_11_DRAFT_NAME, QUERY_VERSION_12_PRODUCTION_VALIDATION_NAME, QUERY_VERSION_13_DIFFUSION_VALIDATION_NAME, QUERY_VERSION_14_VALIDATION_REJECTED_NAME,
+            QUERY_VERSION_15_PUBLISHED_NAME, QUERY_VERSION_28_V2_PUBLISHED_NO_VISIBLE_FOR_QUERY_06_NAME})
+    public void testFindQueriesByConditionProcStatusDraft() throws Exception {
+        QueryVersion expectedResult = queryVersionMockFactory.retrieveMock(QUERY_VERSION_11_DRAFT_NAME);
+
+        // Restrictions
+        MetamacCriteria metamacCriteria = new MetamacCriteria();
+        setCriteriaEnumPropertyRestriction(metamacCriteria, StatisticalResourcesCriteriaPropertyEnum.PROC_STATUS, OperationType.EQ, ProcStatusEnum.DRAFT);
+
+        MetamacCriteriaResult<RelatedResourceDto> pagedResults = statisticalResourcesServiceFacade.findQueriesByCondition(getServiceContextAdministrador(), metamacCriteria);
+        assertEquals(1, pagedResults.getPaginatorResult().getTotalResults().intValue());
+        List<RelatedResourceDto> results = pagedResults.getResults();
+        assertEquals(1, results.size());
+
+        assertEqualsQuery(expectedResult, results.get(0));
+    }
+
+    @Test
+    @MetamacMock({QUERY_VERSION_11_DRAFT_NAME, QUERY_VERSION_12_PRODUCTION_VALIDATION_NAME, QUERY_VERSION_13_DIFFUSION_VALIDATION_NAME, QUERY_VERSION_14_VALIDATION_REJECTED_NAME,
+            QUERY_VERSION_15_PUBLISHED_NAME, QUERY_VERSION_28_V2_PUBLISHED_NO_VISIBLE_FOR_QUERY_06_NAME})
+    public void testFindQueriesByConditionProcStatusProductionValidation() throws Exception {
+        QueryVersion expectedResult = queryVersionMockFactory.retrieveMock(QUERY_VERSION_12_PRODUCTION_VALIDATION_NAME);
+
+        // Restrictions
+        MetamacCriteria metamacCriteria = new MetamacCriteria();
+        setCriteriaEnumPropertyRestriction(metamacCriteria, StatisticalResourcesCriteriaPropertyEnum.PROC_STATUS, OperationType.EQ, ProcStatusEnum.PRODUCTION_VALIDATION);
+
+        MetamacCriteriaResult<RelatedResourceDto> pagedResults = statisticalResourcesServiceFacade.findQueriesByCondition(getServiceContextAdministrador(), metamacCriteria);
+        assertEquals(1, pagedResults.getPaginatorResult().getTotalResults().intValue());
+        List<RelatedResourceDto> results = pagedResults.getResults();
+        assertEquals(1, results.size());
+
+        assertEqualsQuery(expectedResult, results.get(0));
+    }
+
+    @Test
+    @MetamacMock({QUERY_VERSION_11_DRAFT_NAME, QUERY_VERSION_12_PRODUCTION_VALIDATION_NAME, QUERY_VERSION_13_DIFFUSION_VALIDATION_NAME, QUERY_VERSION_14_VALIDATION_REJECTED_NAME,
+            QUERY_VERSION_15_PUBLISHED_NAME, QUERY_VERSION_28_V2_PUBLISHED_NO_VISIBLE_FOR_QUERY_06_NAME})
+    public void testFindQueriesByConditionProcStatusDiffusionValidation() throws Exception {
+        QueryVersion expectedResult = queryVersionMockFactory.retrieveMock(QUERY_VERSION_13_DIFFUSION_VALIDATION_NAME);
+
+        // Restrictions
+        MetamacCriteria metamacCriteria = new MetamacCriteria();
+        setCriteriaEnumPropertyRestriction(metamacCriteria, StatisticalResourcesCriteriaPropertyEnum.PROC_STATUS, OperationType.EQ, ProcStatusEnum.DIFFUSION_VALIDATION);
+
+        MetamacCriteriaResult<RelatedResourceDto> pagedResults = statisticalResourcesServiceFacade.findQueriesByCondition(getServiceContextAdministrador(), metamacCriteria);
+        assertEquals(1, pagedResults.getPaginatorResult().getTotalResults().intValue());
+        List<RelatedResourceDto> results = pagedResults.getResults();
+        assertEquals(1, results.size());
+
+        assertEqualsQuery(expectedResult, results.get(0));
+    }
+
+    @Test
+    @MetamacMock({QUERY_VERSION_11_DRAFT_NAME, QUERY_VERSION_12_PRODUCTION_VALIDATION_NAME, QUERY_VERSION_13_DIFFUSION_VALIDATION_NAME, QUERY_VERSION_14_VALIDATION_REJECTED_NAME,
+            QUERY_VERSION_15_PUBLISHED_NAME, QUERY_VERSION_28_V2_PUBLISHED_NO_VISIBLE_FOR_QUERY_06_NAME})
+    public void testFindQueriesByConditionProcStatusValidationRejected() throws Exception {
+        QueryVersion expectedResult = queryVersionMockFactory.retrieveMock(QUERY_VERSION_14_VALIDATION_REJECTED_NAME);
+
+        // Restrictions
+        MetamacCriteria metamacCriteria = new MetamacCriteria();
+        setCriteriaEnumPropertyRestriction(metamacCriteria, StatisticalResourcesCriteriaPropertyEnum.PROC_STATUS, OperationType.EQ, ProcStatusEnum.VALIDATION_REJECTED);
+
+        MetamacCriteriaResult<RelatedResourceDto> pagedResults = statisticalResourcesServiceFacade.findQueriesByCondition(getServiceContextAdministrador(), metamacCriteria);
+        assertEquals(1, pagedResults.getPaginatorResult().getTotalResults().intValue());
+        List<RelatedResourceDto> results = pagedResults.getResults();
+        assertEquals(1, results.size());
+
+        assertEqualsQuery(expectedResult, results.get(0));
+    }
+
+    @Test
+    @MetamacMock({QUERY_VERSION_11_DRAFT_NAME, QUERY_VERSION_12_PRODUCTION_VALIDATION_NAME, QUERY_VERSION_13_DIFFUSION_VALIDATION_NAME, QUERY_VERSION_14_VALIDATION_REJECTED_NAME,
+            QUERY_VERSION_15_PUBLISHED_NAME})
+    public void testFindQueriesByConditionProcStatusPublished() throws Exception {
+        QueryVersion expectedResult = queryVersionMockFactory.retrieveMock(QUERY_VERSION_15_PUBLISHED_NAME);
+
+        // Restrictions
+        MetamacCriteria metamacCriteria = new MetamacCriteria();
+        setCriteriaEnumPropertyRestriction(metamacCriteria, StatisticalResourcesCriteriaPropertyEnum.PROC_STATUS, OperationType.EQ, ProcStatusEnum.PUBLISHED);
+        MetamacCriteriaResult<RelatedResourceDto> pagedResults = statisticalResourcesServiceFacade.findQueriesByCondition(getServiceContextAdministrador(), metamacCriteria);
+        assertEquals(1, pagedResults.getPaginatorResult().getTotalResults().intValue());
+        List<RelatedResourceDto> results = pagedResults.getResults();
+        assertEquals(1, results.size());
+
+        assertEqualsQuery(expectedResult, results.get(0));
+    }
+
+    @Test
+    @MetamacMock({QUERY_VERSION_11_DRAFT_NAME, QUERY_VERSION_12_PRODUCTION_VALIDATION_NAME, QUERY_VERSION_13_DIFFUSION_VALIDATION_NAME, QUERY_VERSION_14_VALIDATION_REJECTED_NAME,
+            QUERY_VERSION_15_PUBLISHED_NAME, QUERY_VERSION_28_V2_PUBLISHED_NO_VISIBLE_FOR_QUERY_06_NAME})
+    public void testFindQueriesByConditionProcStatusPublishedNotVisible() throws Exception {
+        QueryVersion expectedResult = queryVersionMockFactory.retrieveMock(QUERY_VERSION_28_V2_PUBLISHED_NO_VISIBLE_FOR_QUERY_06_NAME);
+
+        // Restrictions
+        MetamacCriteria metamacCriteria = new MetamacCriteria();
+        setCriteriaEnumPropertyRestriction(metamacCriteria, StatisticalResourcesCriteriaPropertyEnum.PROC_STATUS, OperationType.EQ, ProcStatusEnum.PUBLISHED_NOT_VISIBLE);
+        MetamacCriteriaResult<RelatedResourceDto> pagedResults = statisticalResourcesServiceFacade.findQueriesByCondition(getServiceContextAdministrador(), metamacCriteria);
+        assertEquals(1, pagedResults.getPaginatorResult().getTotalResults().intValue());
+        List<RelatedResourceDto> results = pagedResults.getResults();
+        assertEquals(1, results.size());
+
+        assertEqualsQuery(expectedResult, results.get(0));
+    }
+
     // ------------------------------------------------------------------------
     // QUERIES VERSIONS
     // ------------------------------------------------------------------------
@@ -380,8 +494,6 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         queryVersionDto.setCode(originalQueryVersion.getLifeCycleStatisticalResource().getCode());
         queryVersionDto.setMaintainer(maintainer);
 
-
-        
         statisticalResourcesServiceFacade.createQuery(getServiceContextAdministrador(), queryVersionDto, statisticalOperation).getUrn();
     }
 
@@ -389,7 +501,7 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
     public void testUpdateQueryVersionErrorDuplicatedUrn() throws Exception {
         // Code and maintainer can not be modified after creation
     }
-    
+
     @Override
     @Test
     @MetamacMock({QUERY_VERSION_01_WITH_SELECTION_NAME, QUERY_VERSION_02_BASIC_ORDERED_01_NAME})
@@ -719,6 +831,112 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         }
     }
 
+    @Test
+    @MetamacMock({QUERY_VERSION_11_DRAFT_NAME, QUERY_VERSION_12_PRODUCTION_VALIDATION_NAME, QUERY_VERSION_13_DIFFUSION_VALIDATION_NAME, QUERY_VERSION_14_VALIDATION_REJECTED_NAME,
+            QUERY_VERSION_15_PUBLISHED_NAME, QUERY_VERSION_28_V2_PUBLISHED_NO_VISIBLE_FOR_QUERY_06_NAME})
+    public void testFindQueriesVersionsByConditionProcStatusDraft() throws Exception {
+        QueryVersion expectedResult = queryVersionMockFactory.retrieveMock(QUERY_VERSION_11_DRAFT_NAME);
+
+        // Restrictions
+        MetamacCriteria metamacCriteria = new MetamacCriteria();
+        setCriteriaEnumPropertyRestriction(metamacCriteria, StatisticalResourcesCriteriaPropertyEnum.PROC_STATUS, OperationType.EQ, ProcStatusEnum.DRAFT);
+
+        MetamacCriteriaResult<QueryVersionBaseDto> pagedResults = statisticalResourcesServiceFacade.findQueriesVersionsByCondition(getServiceContextAdministrador(), metamacCriteria);
+        assertEquals(1, pagedResults.getPaginatorResult().getTotalResults().intValue());
+        List<QueryVersionBaseDto> results = pagedResults.getResults();
+        assertEquals(1, results.size());
+
+        assertEquals(expectedResult.getLifeCycleStatisticalResource().getUrn(), results.get(0).getUrn());
+    }
+
+    @Test
+    @MetamacMock({QUERY_VERSION_11_DRAFT_NAME, QUERY_VERSION_12_PRODUCTION_VALIDATION_NAME, QUERY_VERSION_13_DIFFUSION_VALIDATION_NAME, QUERY_VERSION_14_VALIDATION_REJECTED_NAME,
+            QUERY_VERSION_15_PUBLISHED_NAME, QUERY_VERSION_28_V2_PUBLISHED_NO_VISIBLE_FOR_QUERY_06_NAME})
+    public void testFindQueriesVersionsByConditionProcStatusProductionValidation() throws Exception {
+        QueryVersion expectedResult = queryVersionMockFactory.retrieveMock(QUERY_VERSION_12_PRODUCTION_VALIDATION_NAME);
+
+        // Restrictions
+        MetamacCriteria metamacCriteria = new MetamacCriteria();
+        setCriteriaEnumPropertyRestriction(metamacCriteria, StatisticalResourcesCriteriaPropertyEnum.PROC_STATUS, OperationType.EQ, ProcStatusEnum.PRODUCTION_VALIDATION);
+
+        MetamacCriteriaResult<QueryVersionBaseDto> pagedResults = statisticalResourcesServiceFacade.findQueriesVersionsByCondition(getServiceContextAdministrador(), metamacCriteria);
+        assertEquals(1, pagedResults.getPaginatorResult().getTotalResults().intValue());
+        List<QueryVersionBaseDto> results = pagedResults.getResults();
+        assertEquals(1, results.size());
+
+        assertEquals(expectedResult.getLifeCycleStatisticalResource().getUrn(), results.get(0).getUrn());
+    }
+
+    @Test
+    @MetamacMock({QUERY_VERSION_11_DRAFT_NAME, QUERY_VERSION_12_PRODUCTION_VALIDATION_NAME, QUERY_VERSION_13_DIFFUSION_VALIDATION_NAME, QUERY_VERSION_14_VALIDATION_REJECTED_NAME,
+            QUERY_VERSION_15_PUBLISHED_NAME, QUERY_VERSION_28_V2_PUBLISHED_NO_VISIBLE_FOR_QUERY_06_NAME})
+    public void testFindQueriesVersionsByConditionProcStatusDiffusionValidation() throws Exception {
+        QueryVersion expectedResult = queryVersionMockFactory.retrieveMock(QUERY_VERSION_13_DIFFUSION_VALIDATION_NAME);
+
+        // Restrictions
+        MetamacCriteria metamacCriteria = new MetamacCriteria();
+        setCriteriaEnumPropertyRestriction(metamacCriteria, StatisticalResourcesCriteriaPropertyEnum.PROC_STATUS, OperationType.EQ, ProcStatusEnum.DIFFUSION_VALIDATION);
+
+        MetamacCriteriaResult<QueryVersionBaseDto> pagedResults = statisticalResourcesServiceFacade.findQueriesVersionsByCondition(getServiceContextAdministrador(), metamacCriteria);
+        assertEquals(1, pagedResults.getPaginatorResult().getTotalResults().intValue());
+        List<QueryVersionBaseDto> results = pagedResults.getResults();
+        assertEquals(1, results.size());
+
+        assertEquals(expectedResult.getLifeCycleStatisticalResource().getUrn(), results.get(0).getUrn());
+    }
+
+    @Test
+    @MetamacMock({QUERY_VERSION_11_DRAFT_NAME, QUERY_VERSION_12_PRODUCTION_VALIDATION_NAME, QUERY_VERSION_13_DIFFUSION_VALIDATION_NAME, QUERY_VERSION_14_VALIDATION_REJECTED_NAME,
+            QUERY_VERSION_15_PUBLISHED_NAME, QUERY_VERSION_28_V2_PUBLISHED_NO_VISIBLE_FOR_QUERY_06_NAME})
+    public void testFindQueriesVersionsByConditionProcStatusValidationRejected() throws Exception {
+        QueryVersion expectedResult = queryVersionMockFactory.retrieveMock(QUERY_VERSION_14_VALIDATION_REJECTED_NAME);
+
+        // Restrictions
+        MetamacCriteria metamacCriteria = new MetamacCriteria();
+        setCriteriaEnumPropertyRestriction(metamacCriteria, StatisticalResourcesCriteriaPropertyEnum.PROC_STATUS, OperationType.EQ, ProcStatusEnum.VALIDATION_REJECTED);
+
+        MetamacCriteriaResult<QueryVersionBaseDto> pagedResults = statisticalResourcesServiceFacade.findQueriesVersionsByCondition(getServiceContextAdministrador(), metamacCriteria);
+        assertEquals(1, pagedResults.getPaginatorResult().getTotalResults().intValue());
+        List<QueryVersionBaseDto> results = pagedResults.getResults();
+        assertEquals(1, results.size());
+
+        assertEquals(expectedResult.getLifeCycleStatisticalResource().getUrn(), results.get(0).getUrn());
+    }
+
+    @Test
+    @MetamacMock({QUERY_VERSION_11_DRAFT_NAME, QUERY_VERSION_12_PRODUCTION_VALIDATION_NAME, QUERY_VERSION_13_DIFFUSION_VALIDATION_NAME, QUERY_VERSION_14_VALIDATION_REJECTED_NAME,
+            QUERY_VERSION_15_PUBLISHED_NAME})
+    public void testFindQueriesVersionsByConditionProcStatusPublished() throws Exception {
+        QueryVersion expectedResult = queryVersionMockFactory.retrieveMock(QUERY_VERSION_15_PUBLISHED_NAME);
+
+        // Restrictions
+        MetamacCriteria metamacCriteria = new MetamacCriteria();
+        setCriteriaEnumPropertyRestriction(metamacCriteria, StatisticalResourcesCriteriaPropertyEnum.PROC_STATUS, OperationType.EQ, ProcStatusEnum.PUBLISHED);
+        MetamacCriteriaResult<QueryVersionBaseDto> pagedResults = statisticalResourcesServiceFacade.findQueriesVersionsByCondition(getServiceContextAdministrador(), metamacCriteria);
+        assertEquals(1, pagedResults.getPaginatorResult().getTotalResults().intValue());
+        List<QueryVersionBaseDto> results = pagedResults.getResults();
+        assertEquals(1, results.size());
+
+        assertEquals(expectedResult.getLifeCycleStatisticalResource().getUrn(), results.get(0).getUrn());
+    }
+
+    @Test
+    @MetamacMock({QUERY_VERSION_11_DRAFT_NAME, QUERY_VERSION_12_PRODUCTION_VALIDATION_NAME, QUERY_VERSION_13_DIFFUSION_VALIDATION_NAME, QUERY_VERSION_14_VALIDATION_REJECTED_NAME,
+            QUERY_VERSION_15_PUBLISHED_NAME, QUERY_VERSION_28_V2_PUBLISHED_NO_VISIBLE_FOR_QUERY_06_NAME})
+    public void testFindQueriesVersionsByConditionProcStatusPublishedNotVisible() throws Exception {
+        QueryVersion expectedResult = queryVersionMockFactory.retrieveMock(QUERY_VERSION_28_V2_PUBLISHED_NO_VISIBLE_FOR_QUERY_06_NAME);
+
+        // Restrictions
+        MetamacCriteria metamacCriteria = new MetamacCriteria();
+        setCriteriaEnumPropertyRestriction(metamacCriteria, StatisticalResourcesCriteriaPropertyEnum.PROC_STATUS, OperationType.EQ, ProcStatusEnum.PUBLISHED_NOT_VISIBLE);
+        MetamacCriteriaResult<QueryVersionBaseDto> pagedResults = statisticalResourcesServiceFacade.findQueriesVersionsByCondition(getServiceContextAdministrador(), metamacCriteria);
+        assertEquals(1, pagedResults.getPaginatorResult().getTotalResults().intValue());
+        List<QueryVersionBaseDto> results = pagedResults.getResults();
+        assertEquals(1, results.size());
+
+        assertEquals(expectedResult.getLifeCycleStatisticalResource().getUrn(), results.get(0).getUrn());
+    }
+
     @Override
     @Test
     @MetamacMock(QUERY_VERSION_11_DRAFT_NAME)
@@ -908,6 +1126,117 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         assertEquals(1, results.size());
 
         assertEqualsDataset(latestDatasetVersionDataset03, results.get(0));
+    }
+
+    @Test
+    @MetamacMock({DATASET_VERSION_16_DRAFT_READY_FOR_PRODUCTION_VALIDATION_NAME, DATASET_VERSION_19_PRODUCTION_VALIDATION_NOT_READY_NAME,
+            DATASET_VERSION_53_IN_DIFFUSION_VALIDATION_WITH_DATASOURCE_NAME, DATASET_VERSION_54_IN_VALIDATION_REJECTED_WITH_DATASOURCE_NAME, DATASET_VERSION_55_PUBLISHED_WITH_DATASOURCE_NAME,
+            DATASET_VERSION_26_V2_PUBLISHED_NO_VISIBLE_FOR_DATASET_06_NAME})
+    public void testFindDatasetsByConditionProcStatusDraft() throws Exception {
+        DatasetVersion expectedResult = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_16_DRAFT_READY_FOR_PRODUCTION_VALIDATION_NAME);
+
+        // Restrictions
+        MetamacCriteria metamacCriteria = new MetamacCriteria();
+        setCriteriaEnumPropertyRestriction(metamacCriteria, StatisticalResourcesCriteriaPropertyEnum.PROC_STATUS, OperationType.EQ, ProcStatusEnum.DRAFT);
+
+        MetamacCriteriaResult<RelatedResourceDto> pagedResults = statisticalResourcesServiceFacade.findDatasetsByCondition(getServiceContextAdministrador(), metamacCriteria);
+        assertEquals(1, pagedResults.getPaginatorResult().getTotalResults().intValue());
+        List<RelatedResourceDto> results = pagedResults.getResults();
+        assertEquals(1, results.size());
+
+        assertEqualsDataset(expectedResult, results.get(0));
+    }
+
+    @Test
+    @MetamacMock({DATASET_VERSION_16_DRAFT_READY_FOR_PRODUCTION_VALIDATION_NAME, DATASET_VERSION_19_PRODUCTION_VALIDATION_NOT_READY_NAME,
+            DATASET_VERSION_53_IN_DIFFUSION_VALIDATION_WITH_DATASOURCE_NAME, DATASET_VERSION_54_IN_VALIDATION_REJECTED_WITH_DATASOURCE_NAME, DATASET_VERSION_55_PUBLISHED_WITH_DATASOURCE_NAME,
+            DATASET_VERSION_26_V2_PUBLISHED_NO_VISIBLE_FOR_DATASET_06_NAME})
+    public void testFindDatasetsByConditionProcStatusProductionValidation() throws Exception {
+        DatasetVersion expectedResult = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_19_PRODUCTION_VALIDATION_NOT_READY_NAME);
+
+        // Restrictions
+        MetamacCriteria metamacCriteria = new MetamacCriteria();
+        setCriteriaEnumPropertyRestriction(metamacCriteria, StatisticalResourcesCriteriaPropertyEnum.PROC_STATUS, OperationType.EQ, ProcStatusEnum.PRODUCTION_VALIDATION);
+
+        MetamacCriteriaResult<RelatedResourceDto> pagedResults = statisticalResourcesServiceFacade.findDatasetsByCondition(getServiceContextAdministrador(), metamacCriteria);
+        assertEquals(1, pagedResults.getPaginatorResult().getTotalResults().intValue());
+        List<RelatedResourceDto> results = pagedResults.getResults();
+        assertEquals(1, results.size());
+
+        assertEqualsDataset(expectedResult, results.get(0));
+    }
+
+    @Test
+    @MetamacMock({DATASET_VERSION_16_DRAFT_READY_FOR_PRODUCTION_VALIDATION_NAME, DATASET_VERSION_19_PRODUCTION_VALIDATION_NOT_READY_NAME,
+            DATASET_VERSION_53_IN_DIFFUSION_VALIDATION_WITH_DATASOURCE_NAME, DATASET_VERSION_54_IN_VALIDATION_REJECTED_WITH_DATASOURCE_NAME, DATASET_VERSION_55_PUBLISHED_WITH_DATASOURCE_NAME,
+            DATASET_VERSION_26_V2_PUBLISHED_NO_VISIBLE_FOR_DATASET_06_NAME})
+    public void testFindDatasetsByConditionProcStatusDiffusionValidation() throws Exception {
+        DatasetVersion expectedResult = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_53_IN_DIFFUSION_VALIDATION_WITH_DATASOURCE_NAME);
+
+        // Restrictions
+        MetamacCriteria metamacCriteria = new MetamacCriteria();
+        setCriteriaEnumPropertyRestriction(metamacCriteria, StatisticalResourcesCriteriaPropertyEnum.PROC_STATUS, OperationType.EQ, ProcStatusEnum.DIFFUSION_VALIDATION);
+
+        MetamacCriteriaResult<RelatedResourceDto> pagedResults = statisticalResourcesServiceFacade.findDatasetsByCondition(getServiceContextAdministrador(), metamacCriteria);
+        assertEquals(1, pagedResults.getPaginatorResult().getTotalResults().intValue());
+        List<RelatedResourceDto> results = pagedResults.getResults();
+        assertEquals(1, results.size());
+
+        assertEqualsDataset(expectedResult, results.get(0));
+    }
+
+    @Test
+    @MetamacMock({DATASET_VERSION_16_DRAFT_READY_FOR_PRODUCTION_VALIDATION_NAME, DATASET_VERSION_19_PRODUCTION_VALIDATION_NOT_READY_NAME,
+            DATASET_VERSION_53_IN_DIFFUSION_VALIDATION_WITH_DATASOURCE_NAME, DATASET_VERSION_54_IN_VALIDATION_REJECTED_WITH_DATASOURCE_NAME, DATASET_VERSION_55_PUBLISHED_WITH_DATASOURCE_NAME,
+            DATASET_VERSION_26_V2_PUBLISHED_NO_VISIBLE_FOR_DATASET_06_NAME})
+    public void testFindDatasetsByConditionProcStatusValidationRejected() throws Exception {
+        DatasetVersion expectedResult = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_54_IN_VALIDATION_REJECTED_WITH_DATASOURCE_NAME);
+
+        // Restrictions
+        MetamacCriteria metamacCriteria = new MetamacCriteria();
+        setCriteriaEnumPropertyRestriction(metamacCriteria, StatisticalResourcesCriteriaPropertyEnum.PROC_STATUS, OperationType.EQ, ProcStatusEnum.VALIDATION_REJECTED);
+
+        MetamacCriteriaResult<RelatedResourceDto> pagedResults = statisticalResourcesServiceFacade.findDatasetsByCondition(getServiceContextAdministrador(), metamacCriteria);
+        assertEquals(1, pagedResults.getPaginatorResult().getTotalResults().intValue());
+        List<RelatedResourceDto> results = pagedResults.getResults();
+        assertEquals(1, results.size());
+
+        assertEqualsDataset(expectedResult, results.get(0));
+    }
+
+    @Test
+    @MetamacMock({DATASET_VERSION_16_DRAFT_READY_FOR_PRODUCTION_VALIDATION_NAME, DATASET_VERSION_19_PRODUCTION_VALIDATION_NOT_READY_NAME,
+            DATASET_VERSION_53_IN_DIFFUSION_VALIDATION_WITH_DATASOURCE_NAME, DATASET_VERSION_54_IN_VALIDATION_REJECTED_WITH_DATASOURCE_NAME, DATASET_VERSION_55_PUBLISHED_WITH_DATASOURCE_NAME})
+    public void testFindDatasetsByConditionProcStatusPublished() throws Exception {
+        DatasetVersion expectedResult = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_55_PUBLISHED_WITH_DATASOURCE_NAME);
+
+        // Restrictions
+        MetamacCriteria metamacCriteria = new MetamacCriteria();
+        setCriteriaEnumPropertyRestriction(metamacCriteria, StatisticalResourcesCriteriaPropertyEnum.PROC_STATUS, OperationType.EQ, ProcStatusEnum.PUBLISHED);
+        MetamacCriteriaResult<RelatedResourceDto> pagedResults = statisticalResourcesServiceFacade.findDatasetsByCondition(getServiceContextAdministrador(), metamacCriteria);
+        assertEquals(1, pagedResults.getPaginatorResult().getTotalResults().intValue());
+        List<RelatedResourceDto> results = pagedResults.getResults();
+        assertEquals(1, results.size());
+
+        assertEqualsDataset(expectedResult, results.get(0));
+    }
+
+    @Test
+    @MetamacMock({DATASET_VERSION_16_DRAFT_READY_FOR_PRODUCTION_VALIDATION_NAME, DATASET_VERSION_19_PRODUCTION_VALIDATION_NOT_READY_NAME,
+            DATASET_VERSION_53_IN_DIFFUSION_VALIDATION_WITH_DATASOURCE_NAME, DATASET_VERSION_54_IN_VALIDATION_REJECTED_WITH_DATASOURCE_NAME, DATASET_VERSION_55_PUBLISHED_WITH_DATASOURCE_NAME,
+            DATASET_VERSION_26_V2_PUBLISHED_NO_VISIBLE_FOR_DATASET_06_NAME})
+    public void testFindDatasetsByConditionProcStatusPublishedNotVisible() throws Exception {
+        DatasetVersion expectedResult = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_26_V2_PUBLISHED_NO_VISIBLE_FOR_DATASET_06_NAME);
+
+        // Restrictions
+        MetamacCriteria metamacCriteria = new MetamacCriteria();
+        setCriteriaEnumPropertyRestriction(metamacCriteria, StatisticalResourcesCriteriaPropertyEnum.PROC_STATUS, OperationType.EQ, ProcStatusEnum.PUBLISHED_NOT_VISIBLE);
+        MetamacCriteriaResult<RelatedResourceDto> pagedResults = statisticalResourcesServiceFacade.findDatasetsByCondition(getServiceContextAdministrador(), metamacCriteria);
+        assertEquals(1, pagedResults.getPaginatorResult().getTotalResults().intValue());
+        List<RelatedResourceDto> results = pagedResults.getResults();
+        assertEquals(1, results.size());
+
+        assertEqualsDataset(expectedResult, results.get(0));
     }
 
     // ------------------------------------------------------------------------
@@ -1543,15 +1872,124 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         assertEqualsCollectionByField(Arrays.asList(datasetVersionGeographicCoverage), pagedResults.getResults(), SIEMAC_METADATA_URN_FIELD, URN_FIELD);
     }
 
+    @Test
+    @MetamacMock({DATASET_VERSION_16_DRAFT_READY_FOR_PRODUCTION_VALIDATION_NAME, DATASET_VERSION_19_PRODUCTION_VALIDATION_NOT_READY_NAME,
+            DATASET_VERSION_53_IN_DIFFUSION_VALIDATION_WITH_DATASOURCE_NAME, DATASET_VERSION_54_IN_VALIDATION_REJECTED_WITH_DATASOURCE_NAME, DATASET_VERSION_55_PUBLISHED_WITH_DATASOURCE_NAME,
+            DATASET_VERSION_26_V2_PUBLISHED_NO_VISIBLE_FOR_DATASET_06_NAME})
+    public void testFindDatasetsVersionsByConditionProcStatusDraft() throws Exception {
+        DatasetVersion expectedResult = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_16_DRAFT_READY_FOR_PRODUCTION_VALIDATION_NAME);
+
+        // Restrictions
+        MetamacCriteria metamacCriteria = new MetamacCriteria();
+        setCriteriaEnumPropertyRestriction(metamacCriteria, StatisticalResourcesCriteriaPropertyEnum.PROC_STATUS, OperationType.EQ, ProcStatusEnum.DRAFT);
+
+        MetamacCriteriaResult<DatasetVersionBaseDto> pagedResults = statisticalResourcesServiceFacade.findDatasetsVersionsByCondition(getServiceContextAdministrador(), metamacCriteria);
+        assertEquals(1, pagedResults.getPaginatorResult().getTotalResults().intValue());
+        List<DatasetVersionBaseDto> results = pagedResults.getResults();
+        assertEquals(1, results.size());
+
+        assertEquals(expectedResult.getLifeCycleStatisticalResource().getUrn(), results.get(0).getUrn());
+    }
+
+    @Test
+    @MetamacMock({DATASET_VERSION_16_DRAFT_READY_FOR_PRODUCTION_VALIDATION_NAME, DATASET_VERSION_19_PRODUCTION_VALIDATION_NOT_READY_NAME,
+            DATASET_VERSION_53_IN_DIFFUSION_VALIDATION_WITH_DATASOURCE_NAME, DATASET_VERSION_54_IN_VALIDATION_REJECTED_WITH_DATASOURCE_NAME, DATASET_VERSION_55_PUBLISHED_WITH_DATASOURCE_NAME,
+            DATASET_VERSION_26_V2_PUBLISHED_NO_VISIBLE_FOR_DATASET_06_NAME})
+    public void testFindDatasetsVersionsByConditionProcStatusProductionValidation() throws Exception {
+        DatasetVersion expectedResult = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_19_PRODUCTION_VALIDATION_NOT_READY_NAME);
+
+        // Restrictions
+        MetamacCriteria metamacCriteria = new MetamacCriteria();
+        setCriteriaEnumPropertyRestriction(metamacCriteria, StatisticalResourcesCriteriaPropertyEnum.PROC_STATUS, OperationType.EQ, ProcStatusEnum.PRODUCTION_VALIDATION);
+
+        MetamacCriteriaResult<DatasetVersionBaseDto> pagedResults = statisticalResourcesServiceFacade.findDatasetsVersionsByCondition(getServiceContextAdministrador(), metamacCriteria);
+        assertEquals(1, pagedResults.getPaginatorResult().getTotalResults().intValue());
+        List<DatasetVersionBaseDto> results = pagedResults.getResults();
+        assertEquals(1, results.size());
+
+        assertEquals(expectedResult.getLifeCycleStatisticalResource().getUrn(), results.get(0).getUrn());
+    }
+
+    @Test
+    @MetamacMock({DATASET_VERSION_16_DRAFT_READY_FOR_PRODUCTION_VALIDATION_NAME, DATASET_VERSION_19_PRODUCTION_VALIDATION_NOT_READY_NAME,
+            DATASET_VERSION_53_IN_DIFFUSION_VALIDATION_WITH_DATASOURCE_NAME, DATASET_VERSION_54_IN_VALIDATION_REJECTED_WITH_DATASOURCE_NAME, DATASET_VERSION_55_PUBLISHED_WITH_DATASOURCE_NAME,
+            DATASET_VERSION_26_V2_PUBLISHED_NO_VISIBLE_FOR_DATASET_06_NAME})
+    public void testFindDatasetsVersionsByConditionProcStatusDiffusionValidation() throws Exception {
+        DatasetVersion expectedResult = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_53_IN_DIFFUSION_VALIDATION_WITH_DATASOURCE_NAME);
+
+        // Restrictions
+        MetamacCriteria metamacCriteria = new MetamacCriteria();
+        setCriteriaEnumPropertyRestriction(metamacCriteria, StatisticalResourcesCriteriaPropertyEnum.PROC_STATUS, OperationType.EQ, ProcStatusEnum.DIFFUSION_VALIDATION);
+
+        MetamacCriteriaResult<DatasetVersionBaseDto> pagedResults = statisticalResourcesServiceFacade.findDatasetsVersionsByCondition(getServiceContextAdministrador(), metamacCriteria);
+        assertEquals(1, pagedResults.getPaginatorResult().getTotalResults().intValue());
+        List<DatasetVersionBaseDto> results = pagedResults.getResults();
+        assertEquals(1, results.size());
+
+        assertEquals(expectedResult.getLifeCycleStatisticalResource().getUrn(), results.get(0).getUrn());
+    }
+
+    @Test
+    @MetamacMock({DATASET_VERSION_16_DRAFT_READY_FOR_PRODUCTION_VALIDATION_NAME, DATASET_VERSION_19_PRODUCTION_VALIDATION_NOT_READY_NAME,
+            DATASET_VERSION_53_IN_DIFFUSION_VALIDATION_WITH_DATASOURCE_NAME, DATASET_VERSION_54_IN_VALIDATION_REJECTED_WITH_DATASOURCE_NAME, DATASET_VERSION_55_PUBLISHED_WITH_DATASOURCE_NAME,
+            DATASET_VERSION_26_V2_PUBLISHED_NO_VISIBLE_FOR_DATASET_06_NAME})
+    public void testFindDatasetsVersionsByConditionProcStatusValidationRejected() throws Exception {
+        DatasetVersion expectedResult = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_54_IN_VALIDATION_REJECTED_WITH_DATASOURCE_NAME);
+
+        // Restrictions
+        MetamacCriteria metamacCriteria = new MetamacCriteria();
+        setCriteriaEnumPropertyRestriction(metamacCriteria, StatisticalResourcesCriteriaPropertyEnum.PROC_STATUS, OperationType.EQ, ProcStatusEnum.VALIDATION_REJECTED);
+
+        MetamacCriteriaResult<DatasetVersionBaseDto> pagedResults = statisticalResourcesServiceFacade.findDatasetsVersionsByCondition(getServiceContextAdministrador(), metamacCriteria);
+        assertEquals(1, pagedResults.getPaginatorResult().getTotalResults().intValue());
+        List<DatasetVersionBaseDto> results = pagedResults.getResults();
+        assertEquals(1, results.size());
+
+        assertEquals(expectedResult.getLifeCycleStatisticalResource().getUrn(), results.get(0).getUrn());
+    }
+
+    @Test
+    @MetamacMock({DATASET_VERSION_16_DRAFT_READY_FOR_PRODUCTION_VALIDATION_NAME, DATASET_VERSION_19_PRODUCTION_VALIDATION_NOT_READY_NAME,
+            DATASET_VERSION_53_IN_DIFFUSION_VALIDATION_WITH_DATASOURCE_NAME, DATASET_VERSION_54_IN_VALIDATION_REJECTED_WITH_DATASOURCE_NAME, DATASET_VERSION_55_PUBLISHED_WITH_DATASOURCE_NAME})
+    public void testFindDatasetsVersionsByConditionProcStatusPublished() throws Exception {
+        DatasetVersion expectedResult = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_55_PUBLISHED_WITH_DATASOURCE_NAME);
+
+        // Restrictions
+        MetamacCriteria metamacCriteria = new MetamacCriteria();
+        setCriteriaEnumPropertyRestriction(metamacCriteria, StatisticalResourcesCriteriaPropertyEnum.PROC_STATUS, OperationType.EQ, ProcStatusEnum.PUBLISHED);
+        MetamacCriteriaResult<DatasetVersionBaseDto> pagedResults = statisticalResourcesServiceFacade.findDatasetsVersionsByCondition(getServiceContextAdministrador(), metamacCriteria);
+        assertEquals(1, pagedResults.getPaginatorResult().getTotalResults().intValue());
+        List<DatasetVersionBaseDto> results = pagedResults.getResults();
+        assertEquals(1, results.size());
+
+        assertEquals(expectedResult.getLifeCycleStatisticalResource().getUrn(), results.get(0).getUrn());
+    }
+
+    @Test
+    @MetamacMock({DATASET_VERSION_16_DRAFT_READY_FOR_PRODUCTION_VALIDATION_NAME, DATASET_VERSION_19_PRODUCTION_VALIDATION_NOT_READY_NAME,
+            DATASET_VERSION_53_IN_DIFFUSION_VALIDATION_WITH_DATASOURCE_NAME, DATASET_VERSION_54_IN_VALIDATION_REJECTED_WITH_DATASOURCE_NAME, DATASET_VERSION_55_PUBLISHED_WITH_DATASOURCE_NAME,
+            DATASET_VERSION_26_V2_PUBLISHED_NO_VISIBLE_FOR_DATASET_06_NAME})
+    public void testFindDatasetsVersionsByConditionProcStatusPublishedNotVisible() throws Exception {
+        DatasetVersion expectedResult = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_26_V2_PUBLISHED_NO_VISIBLE_FOR_DATASET_06_NAME);
+
+        // Restrictions
+        MetamacCriteria metamacCriteria = new MetamacCriteria();
+        setCriteriaEnumPropertyRestriction(metamacCriteria, StatisticalResourcesCriteriaPropertyEnum.PROC_STATUS, OperationType.EQ, ProcStatusEnum.PUBLISHED_NOT_VISIBLE);
+        MetamacCriteriaResult<DatasetVersionBaseDto> pagedResults = statisticalResourcesServiceFacade.findDatasetsVersionsByCondition(getServiceContextAdministrador(), metamacCriteria);
+        assertEquals(1, pagedResults.getPaginatorResult().getTotalResults().intValue());
+        List<DatasetVersionBaseDto> results = pagedResults.getResults();
+        assertEquals(1, results.size());
+
+        assertEquals(expectedResult.getLifeCycleStatisticalResource().getUrn(), results.get(0).getUrn());
+    }
+
     @Override
     @Test
     @MetamacMock(DATASET_VERSION_47_WITH_COVERAGE_FILLED_WITH_TITLES_NAME)
     public void testRetrieveDatasetVersionMainCoverages() throws Exception {
         DatasetVersion datasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_47_WITH_COVERAGE_FILLED_WITH_TITLES_NAME);
         String urn = datasetVersion.getSiemacMetadataStatisticalResource().getUrn();
-
         DatasetVersionMainCoveragesDto mainCoveragesDto = statisticalResourcesServiceFacade.retrieveDatasetVersionMainCoverages(getServiceContextAdministrador(), urn);
-
         DatasetsAsserts.assertEqualsDatasetVersionMainCoverages(mainCoveragesDto, datasetVersion.getGeographicCoverage(), datasetVersion.getTemporalCoverage(), datasetVersion.getMeasureCoverage());
     }
 
@@ -1739,6 +2177,112 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         assertEquals(1, results.size());
 
         assertEqualsPublication(latestPublicationVersionPublication03, results.get(0));
+    }
+
+    @Test
+    @MetamacMock({PUBLICATION_VERSION_12_DRAFT_NAME, PUBLICATION_VERSION_13_PRODUCTION_VALIDATION_NAME, PUBLICATION_VERSION_14_DIFFUSION_VALIDATION_NAME,
+            PUBLICATION_VERSION_15_VALIDATION_REJECTED_NAME, PUBLICATION_VERSION_16_PUBLISHED_NAME, PUBLICATION_VERSION_31_V2_PUBLISHED_NO_VISIBLE_FOR_PUBLICATION_06_NAME})
+    public void testFindPublicationsByConditionProcStatusDraft() throws Exception {
+        PublicationVersion expectedResult = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_12_DRAFT_NAME);
+
+        // Restrictions
+        MetamacCriteria metamacCriteria = new MetamacCriteria();
+        setCriteriaEnumPropertyRestriction(metamacCriteria, StatisticalResourcesCriteriaPropertyEnum.PROC_STATUS, OperationType.EQ, ProcStatusEnum.DRAFT);
+
+        MetamacCriteriaResult<RelatedResourceDto> pagedResults = statisticalResourcesServiceFacade.findPublicationsByCondition(getServiceContextAdministrador(), metamacCriteria);
+        assertEquals(1, pagedResults.getPaginatorResult().getTotalResults().intValue());
+        List<RelatedResourceDto> results = pagedResults.getResults();
+        assertEquals(1, results.size());
+
+        assertEqualsPublication(expectedResult, results.get(0));
+    }
+
+    @Test
+    @MetamacMock({PUBLICATION_VERSION_12_DRAFT_NAME, PUBLICATION_VERSION_13_PRODUCTION_VALIDATION_NAME, PUBLICATION_VERSION_14_DIFFUSION_VALIDATION_NAME,
+            PUBLICATION_VERSION_15_VALIDATION_REJECTED_NAME, PUBLICATION_VERSION_16_PUBLISHED_NAME, PUBLICATION_VERSION_31_V2_PUBLISHED_NO_VISIBLE_FOR_PUBLICATION_06_NAME})
+    public void testFindPublicationsByConditionProcStatusProductionValidation() throws Exception {
+        PublicationVersion expectedResult = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_13_PRODUCTION_VALIDATION_NAME);
+
+        // Restrictions
+        MetamacCriteria metamacCriteria = new MetamacCriteria();
+        setCriteriaEnumPropertyRestriction(metamacCriteria, StatisticalResourcesCriteriaPropertyEnum.PROC_STATUS, OperationType.EQ, ProcStatusEnum.PRODUCTION_VALIDATION);
+
+        MetamacCriteriaResult<RelatedResourceDto> pagedResults = statisticalResourcesServiceFacade.findPublicationsByCondition(getServiceContextAdministrador(), metamacCriteria);
+        assertEquals(1, pagedResults.getPaginatorResult().getTotalResults().intValue());
+        List<RelatedResourceDto> results = pagedResults.getResults();
+        assertEquals(1, results.size());
+
+        assertEqualsPublication(expectedResult, results.get(0));
+    }
+
+    @Test
+    @MetamacMock({PUBLICATION_VERSION_12_DRAFT_NAME, PUBLICATION_VERSION_13_PRODUCTION_VALIDATION_NAME, PUBLICATION_VERSION_14_DIFFUSION_VALIDATION_NAME,
+            PUBLICATION_VERSION_15_VALIDATION_REJECTED_NAME, PUBLICATION_VERSION_16_PUBLISHED_NAME, PUBLICATION_VERSION_31_V2_PUBLISHED_NO_VISIBLE_FOR_PUBLICATION_06_NAME})
+    public void testFindPublicationsByConditionProcStatusDiffusionValidation() throws Exception {
+        PublicationVersion expectedResult = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_14_DIFFUSION_VALIDATION_NAME);
+
+        // Restrictions
+        MetamacCriteria metamacCriteria = new MetamacCriteria();
+        setCriteriaEnumPropertyRestriction(metamacCriteria, StatisticalResourcesCriteriaPropertyEnum.PROC_STATUS, OperationType.EQ, ProcStatusEnum.DIFFUSION_VALIDATION);
+
+        MetamacCriteriaResult<RelatedResourceDto> pagedResults = statisticalResourcesServiceFacade.findPublicationsByCondition(getServiceContextAdministrador(), metamacCriteria);
+        assertEquals(1, pagedResults.getPaginatorResult().getTotalResults().intValue());
+        List<RelatedResourceDto> results = pagedResults.getResults();
+        assertEquals(1, results.size());
+
+        assertEqualsPublication(expectedResult, results.get(0));
+    }
+
+    @Test
+    @MetamacMock({PUBLICATION_VERSION_12_DRAFT_NAME, PUBLICATION_VERSION_13_PRODUCTION_VALIDATION_NAME, PUBLICATION_VERSION_14_DIFFUSION_VALIDATION_NAME,
+            PUBLICATION_VERSION_15_VALIDATION_REJECTED_NAME, PUBLICATION_VERSION_16_PUBLISHED_NAME, PUBLICATION_VERSION_31_V2_PUBLISHED_NO_VISIBLE_FOR_PUBLICATION_06_NAME})
+    public void testFindPublicationsByConditionProcStatusValidationRejected() throws Exception {
+        PublicationVersion expectedResult = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_15_VALIDATION_REJECTED_NAME);
+
+        // Restrictions
+        MetamacCriteria metamacCriteria = new MetamacCriteria();
+        setCriteriaEnumPropertyRestriction(metamacCriteria, StatisticalResourcesCriteriaPropertyEnum.PROC_STATUS, OperationType.EQ, ProcStatusEnum.VALIDATION_REJECTED);
+
+        MetamacCriteriaResult<RelatedResourceDto> pagedResults = statisticalResourcesServiceFacade.findPublicationsByCondition(getServiceContextAdministrador(), metamacCriteria);
+        assertEquals(1, pagedResults.getPaginatorResult().getTotalResults().intValue());
+        List<RelatedResourceDto> results = pagedResults.getResults();
+        assertEquals(1, results.size());
+
+        assertEqualsPublication(expectedResult, results.get(0));
+    }
+
+    @Test
+    @MetamacMock({PUBLICATION_VERSION_12_DRAFT_NAME, PUBLICATION_VERSION_13_PRODUCTION_VALIDATION_NAME, PUBLICATION_VERSION_14_DIFFUSION_VALIDATION_NAME,
+            PUBLICATION_VERSION_15_VALIDATION_REJECTED_NAME, PUBLICATION_VERSION_16_PUBLISHED_NAME})
+    public void testFindPublicationsByConditionProcStatusPublished() throws Exception {
+        PublicationVersion expectedResult = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_16_PUBLISHED_NAME);
+
+        // Restrictions
+        MetamacCriteria metamacCriteria = new MetamacCriteria();
+        setCriteriaEnumPropertyRestriction(metamacCriteria, StatisticalResourcesCriteriaPropertyEnum.PROC_STATUS, OperationType.EQ, ProcStatusEnum.PUBLISHED);
+        MetamacCriteriaResult<RelatedResourceDto> pagedResults = statisticalResourcesServiceFacade.findPublicationsByCondition(getServiceContextAdministrador(), metamacCriteria);
+        assertEquals(1, pagedResults.getPaginatorResult().getTotalResults().intValue());
+        List<RelatedResourceDto> results = pagedResults.getResults();
+        assertEquals(1, results.size());
+
+        assertEqualsPublication(expectedResult, results.get(0));
+    }
+
+    @Test
+    @MetamacMock({PUBLICATION_VERSION_12_DRAFT_NAME, PUBLICATION_VERSION_13_PRODUCTION_VALIDATION_NAME, PUBLICATION_VERSION_14_DIFFUSION_VALIDATION_NAME,
+            PUBLICATION_VERSION_15_VALIDATION_REJECTED_NAME, PUBLICATION_VERSION_16_PUBLISHED_NAME, PUBLICATION_VERSION_31_V2_PUBLISHED_NO_VISIBLE_FOR_PUBLICATION_06_NAME})
+    public void testFindPublicationsByConditionProcStatusPublishedNotVisible() throws Exception {
+        PublicationVersion expectedResult = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_31_V2_PUBLISHED_NO_VISIBLE_FOR_PUBLICATION_06_NAME);
+
+        // Restrictions
+        MetamacCriteria metamacCriteria = new MetamacCriteria();
+        setCriteriaEnumPropertyRestriction(metamacCriteria, StatisticalResourcesCriteriaPropertyEnum.PROC_STATUS, OperationType.EQ, ProcStatusEnum.PUBLISHED_NOT_VISIBLE);
+        MetamacCriteriaResult<RelatedResourceDto> pagedResults = statisticalResourcesServiceFacade.findPublicationsByCondition(getServiceContextAdministrador(), metamacCriteria);
+        assertEquals(1, pagedResults.getPaginatorResult().getTotalResults().intValue());
+        List<RelatedResourceDto> results = pagedResults.getResults();
+        assertEquals(1, results.size());
+
+        assertEqualsPublication(expectedResult, results.get(0));
     }
 
     // ------------------------------------------------------------------------
@@ -2151,6 +2695,112 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
 
         assertEquals(publicationOperation1Code3.getSiemacMetadataStatisticalResource().getUrn(), results.get(0).getUrn());
         assertEquals(publicationOperation2Code3.getSiemacMetadataStatisticalResource().getUrn(), results.get(1).getUrn());
+    }
+
+    @Test
+    @MetamacMock({PUBLICATION_VERSION_12_DRAFT_NAME, PUBLICATION_VERSION_13_PRODUCTION_VALIDATION_NAME, PUBLICATION_VERSION_14_DIFFUSION_VALIDATION_NAME,
+            PUBLICATION_VERSION_15_VALIDATION_REJECTED_NAME, PUBLICATION_VERSION_16_PUBLISHED_NAME, PUBLICATION_VERSION_31_V2_PUBLISHED_NO_VISIBLE_FOR_PUBLICATION_06_NAME})
+    public void testFindPublicationsVersionsByConditionProcStatusDraft() throws Exception {
+        PublicationVersion expectedResult = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_12_DRAFT_NAME);
+
+        // Restrictions
+        MetamacCriteria metamacCriteria = new MetamacCriteria();
+        setCriteriaEnumPropertyRestriction(metamacCriteria, StatisticalResourcesCriteriaPropertyEnum.PROC_STATUS, OperationType.EQ, ProcStatusEnum.DRAFT);
+
+        MetamacCriteriaResult<PublicationVersionBaseDto> pagedResults = statisticalResourcesServiceFacade.findPublicationVersionByCondition(getServiceContextAdministrador(), metamacCriteria);
+        assertEquals(1, pagedResults.getPaginatorResult().getTotalResults().intValue());
+        List<PublicationVersionBaseDto> results = pagedResults.getResults();
+        assertEquals(1, results.size());
+
+        assertEquals(expectedResult.getLifeCycleStatisticalResource().getUrn(), results.get(0).getUrn());
+    }
+
+    @Test
+    @MetamacMock({PUBLICATION_VERSION_12_DRAFT_NAME, PUBLICATION_VERSION_13_PRODUCTION_VALIDATION_NAME, PUBLICATION_VERSION_14_DIFFUSION_VALIDATION_NAME,
+            PUBLICATION_VERSION_15_VALIDATION_REJECTED_NAME, PUBLICATION_VERSION_16_PUBLISHED_NAME, PUBLICATION_VERSION_31_V2_PUBLISHED_NO_VISIBLE_FOR_PUBLICATION_06_NAME})
+    public void testFindPublicationsVersionsByConditionProcStatusProductionValidation() throws Exception {
+        PublicationVersion expectedResult = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_13_PRODUCTION_VALIDATION_NAME);
+
+        // Restrictions
+        MetamacCriteria metamacCriteria = new MetamacCriteria();
+        setCriteriaEnumPropertyRestriction(metamacCriteria, StatisticalResourcesCriteriaPropertyEnum.PROC_STATUS, OperationType.EQ, ProcStatusEnum.PRODUCTION_VALIDATION);
+
+        MetamacCriteriaResult<PublicationVersionBaseDto> pagedResults = statisticalResourcesServiceFacade.findPublicationVersionByCondition(getServiceContextAdministrador(), metamacCriteria);
+        assertEquals(1, pagedResults.getPaginatorResult().getTotalResults().intValue());
+        List<PublicationVersionBaseDto> results = pagedResults.getResults();
+        assertEquals(1, results.size());
+
+        assertEquals(expectedResult.getLifeCycleStatisticalResource().getUrn(), results.get(0).getUrn());
+    }
+
+    @Test
+    @MetamacMock({PUBLICATION_VERSION_12_DRAFT_NAME, PUBLICATION_VERSION_13_PRODUCTION_VALIDATION_NAME, PUBLICATION_VERSION_14_DIFFUSION_VALIDATION_NAME,
+            PUBLICATION_VERSION_15_VALIDATION_REJECTED_NAME, PUBLICATION_VERSION_16_PUBLISHED_NAME, PUBLICATION_VERSION_31_V2_PUBLISHED_NO_VISIBLE_FOR_PUBLICATION_06_NAME})
+    public void testFindPublicationsVersionsByConditionProcStatusDiffusionValidation() throws Exception {
+        PublicationVersion expectedResult = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_14_DIFFUSION_VALIDATION_NAME);
+
+        // Restrictions
+        MetamacCriteria metamacCriteria = new MetamacCriteria();
+        setCriteriaEnumPropertyRestriction(metamacCriteria, StatisticalResourcesCriteriaPropertyEnum.PROC_STATUS, OperationType.EQ, ProcStatusEnum.DIFFUSION_VALIDATION);
+
+        MetamacCriteriaResult<PublicationVersionBaseDto> pagedResults = statisticalResourcesServiceFacade.findPublicationVersionByCondition(getServiceContextAdministrador(), metamacCriteria);
+        assertEquals(1, pagedResults.getPaginatorResult().getTotalResults().intValue());
+        List<PublicationVersionBaseDto> results = pagedResults.getResults();
+        assertEquals(1, results.size());
+
+        assertEquals(expectedResult.getLifeCycleStatisticalResource().getUrn(), results.get(0).getUrn());
+    }
+
+    @Test
+    @MetamacMock({PUBLICATION_VERSION_12_DRAFT_NAME, PUBLICATION_VERSION_13_PRODUCTION_VALIDATION_NAME, PUBLICATION_VERSION_14_DIFFUSION_VALIDATION_NAME,
+            PUBLICATION_VERSION_15_VALIDATION_REJECTED_NAME, PUBLICATION_VERSION_16_PUBLISHED_NAME, PUBLICATION_VERSION_31_V2_PUBLISHED_NO_VISIBLE_FOR_PUBLICATION_06_NAME})
+    public void testFindPublicationsVersionsByConditionProcStatusValidationRejected() throws Exception {
+        PublicationVersion expectedResult = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_15_VALIDATION_REJECTED_NAME);
+
+        // Restrictions
+        MetamacCriteria metamacCriteria = new MetamacCriteria();
+        setCriteriaEnumPropertyRestriction(metamacCriteria, StatisticalResourcesCriteriaPropertyEnum.PROC_STATUS, OperationType.EQ, ProcStatusEnum.VALIDATION_REJECTED);
+
+        MetamacCriteriaResult<PublicationVersionBaseDto> pagedResults = statisticalResourcesServiceFacade.findPublicationVersionByCondition(getServiceContextAdministrador(), metamacCriteria);
+        assertEquals(1, pagedResults.getPaginatorResult().getTotalResults().intValue());
+        List<PublicationVersionBaseDto> results = pagedResults.getResults();
+        assertEquals(1, results.size());
+
+        assertEquals(expectedResult.getLifeCycleStatisticalResource().getUrn(), results.get(0).getUrn());
+    }
+
+    @Test
+    @MetamacMock({PUBLICATION_VERSION_12_DRAFT_NAME, PUBLICATION_VERSION_13_PRODUCTION_VALIDATION_NAME, PUBLICATION_VERSION_14_DIFFUSION_VALIDATION_NAME,
+            PUBLICATION_VERSION_15_VALIDATION_REJECTED_NAME, PUBLICATION_VERSION_16_PUBLISHED_NAME})
+    public void testFindPublicationsVersionsByConditionProcStatusPublished() throws Exception {
+        PublicationVersion expectedResult = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_16_PUBLISHED_NAME);
+
+        // Restrictions
+        MetamacCriteria metamacCriteria = new MetamacCriteria();
+        setCriteriaEnumPropertyRestriction(metamacCriteria, StatisticalResourcesCriteriaPropertyEnum.PROC_STATUS, OperationType.EQ, ProcStatusEnum.PUBLISHED);
+        MetamacCriteriaResult<PublicationVersionBaseDto> pagedResults = statisticalResourcesServiceFacade.findPublicationVersionByCondition(getServiceContextAdministrador(), metamacCriteria);
+        assertEquals(1, pagedResults.getPaginatorResult().getTotalResults().intValue());
+        List<PublicationVersionBaseDto> results = pagedResults.getResults();
+        assertEquals(1, results.size());
+
+        assertEquals(expectedResult.getLifeCycleStatisticalResource().getUrn(), results.get(0).getUrn());
+    }
+
+    @Test
+    @MetamacMock({PUBLICATION_VERSION_12_DRAFT_NAME, PUBLICATION_VERSION_13_PRODUCTION_VALIDATION_NAME, PUBLICATION_VERSION_14_DIFFUSION_VALIDATION_NAME,
+            PUBLICATION_VERSION_15_VALIDATION_REJECTED_NAME, PUBLICATION_VERSION_16_PUBLISHED_NAME, PUBLICATION_VERSION_31_V2_PUBLISHED_NO_VISIBLE_FOR_PUBLICATION_06_NAME})
+    public void testFindPublicationsVersionsByConditionProcStatusPublishedNotVisible() throws Exception {
+        PublicationVersion expectedResult = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_31_V2_PUBLISHED_NO_VISIBLE_FOR_PUBLICATION_06_NAME);
+
+        // Restrictions
+        MetamacCriteria metamacCriteria = new MetamacCriteria();
+        setCriteriaEnumPropertyRestriction(metamacCriteria, StatisticalResourcesCriteriaPropertyEnum.PROC_STATUS, OperationType.EQ, ProcStatusEnum.PUBLISHED_NOT_VISIBLE);
+        MetamacCriteriaResult<PublicationVersionBaseDto> pagedResults = statisticalResourcesServiceFacade.findPublicationVersionByCondition(getServiceContextAdministrador(), metamacCriteria);
+        assertEquals(1, pagedResults.getPaginatorResult().getTotalResults().intValue());
+        List<PublicationVersionBaseDto> results = pagedResults.getResults();
+        assertEquals(1, results.size());
+
+        assertEquals(expectedResult.getLifeCycleStatisticalResource().getUrn(), results.get(0).getUrn());
     }
 
     @Override

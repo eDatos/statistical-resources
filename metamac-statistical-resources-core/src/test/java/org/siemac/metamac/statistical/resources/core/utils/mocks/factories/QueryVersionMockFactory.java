@@ -209,6 +209,7 @@ public class QueryVersionMockFactory extends StatisticalResourcesMockFactory<Que
         if (QUERY_VERSION_13_DIFFUSION_VALIDATION == null) {
             QUERY_VERSION_13_DIFFUSION_VALIDATION = createQueryWithGeneratedDatasetVersion();
             prepareToValidationRejected(QUERY_VERSION_13_DIFFUSION_VALIDATION);
+            QUERY_VERSION_13_DIFFUSION_VALIDATION.getLifeCycleStatisticalResource().setProcStatus(ProcStatusEnum.DIFFUSION_VALIDATION);
         }
         return QUERY_VERSION_13_DIFFUSION_VALIDATION;
     }
@@ -217,6 +218,7 @@ public class QueryVersionMockFactory extends StatisticalResourcesMockFactory<Que
         if (QUERY_VERSION_14_VALIDATION_REJECTED == null) {
             QUERY_VERSION_14_VALIDATION_REJECTED = createQueryWithGeneratedDatasetVersion();
             prepareToDiffusionValidation(QUERY_VERSION_14_VALIDATION_REJECTED);
+            QUERY_VERSION_14_VALIDATION_REJECTED.getLifeCycleStatisticalResource().setProcStatus(ProcStatusEnum.VALIDATION_REJECTED);
         }
         return QUERY_VERSION_14_VALIDATION_REJECTED;
     }
