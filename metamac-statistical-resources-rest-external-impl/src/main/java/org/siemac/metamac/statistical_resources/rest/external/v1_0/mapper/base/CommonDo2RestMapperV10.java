@@ -20,6 +20,8 @@ import org.siemac.metamac.rest.statistical_resources.v1_0.domain.StatisticalReso
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructure;
 import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
+import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResource;
+import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResourceResult;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.TemporalCode;
 import org.siemac.metamac.statistical.resources.core.query.domain.CodeItem;
@@ -38,6 +40,9 @@ public interface CommonDo2RestMapperV10 {
 
     public Resource toResource(Resource source, List<String> selectedLanguages);
     public void toResource(Resource source, Resource target, List<String> selectedLanguages);
+    public Resources toResources(List<RelatedResource> sources, List<String> selectedLanguages);
+    public Resource toResource(RelatedResource source, List<String> selectedLanguages);
+    public Resource toResource(RelatedResourceResult source, List<String> selectedLanguages) throws MetamacException;
 
     public ResourceLink toResourceLink(String kind, String href);
     public String toResourceLink(String resourceSubpath, String agencyID, String resourceID, String version);

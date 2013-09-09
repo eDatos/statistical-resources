@@ -256,7 +256,8 @@ public abstract class StatisticalResourcesRestExternalFacadeV10BaseTest extends 
         });
     }
 
-    private void mockRetrieveDatasetLastPublishedVersion() throws MetamacException {
+    private void mockDatasetVersionRepository() throws MetamacException {
+
         when(datasetVersionRepository.retrieveLastVersion(any(String.class))).thenAnswer(new Answer<DatasetVersion>() { // TODO retrieveLastPublishedVersion
 
                     @Override
@@ -266,21 +267,30 @@ public abstract class StatisticalResourcesRestExternalFacadeV10BaseTest extends 
                         return restDoMocks.mockDatasetVersion(datasetUrnSplited[0], datasetUrnSplited[1], VERSION_1);
                     };
                 });
-    }
+        when(datasetVersionRepository.retrieveLastVersionResourcesThatRequiresDatasetVersion(any(DatasetVersion.class))).thenAnswer(new Answer<List<RelatedResourceResult>>() {
 
-    private void mockRetrieveLastPublishedVersionResourcesThatRequiresDatasetVersion() throws MetamacException {
-        when(datasetVersionRepository.retrieveLastVersionResourcesThatRequiresDatasetVersion(any(DatasetVersion.class))).thenAnswer(new Answer<List<RelatedResourceResult>>() { // TODO
+            // TODO cambiar por retrieveLastPublishedVersionResourcesThatRequiresDatasetVersion
 
-                    // retrieveLastPublishedVersionResourcesThatRequiresDatasetVersion
+            @Override
+            public List<RelatedResourceResult> answer(InvocationOnMock invocation) throws Throwable {
+                List<RelatedResourceResult> queries = new ArrayList<RelatedResourceResult>();
+                queries.add(restDoMocks.mockQueryRelatedResourceResult("agency01", "isRequiredBy01", "01.000"));
+                queries.add(restDoMocks.mockQueryRelatedResourceResult("agency02", "isRequiredBy02", "01.000"));
+                return queries;
+            };
+        });
 
-                    @Override
-                    public List<RelatedResourceResult> answer(InvocationOnMock invocation) throws Throwable {
-                        List<RelatedResourceResult> queries = new ArrayList<RelatedResourceResult>();
-                        queries.add(restDoMocks.mockQueryRelatedResourceResult("agency01", "isRequiredBy01", "01.000"));
-                        queries.add(restDoMocks.mockQueryRelatedResourceResult("agency02", "isRequiredBy02", "01.000"));
-                        return queries;
-                    };
-                });
+        when(datasetVersionRepository.retrieveResourceThatReplacesDatasetVersion(any(DatasetVersion.class))).thenAnswer(new Answer<RelatedResourceResult>() {
+
+            // TODO retrieveLastPublishedVersionResourcesThatRequiresDatasetVersion
+
+            @Override
+            public RelatedResourceResult answer(InvocationOnMock invocation) throws Throwable {
+                DatasetVersion datasetVersion = (DatasetVersion) invocation.getArguments()[0];
+                return restDoMocks.mockDatasetRelatedResourceResult(datasetVersion.getSiemacMetadataStatisticalResource().getMaintainer().getCodeNested(), datasetVersion
+                        .getSiemacMetadataStatisticalResource().getCode(), "02.000");
+            };
+        });
     }
 
     @SuppressWarnings("unchecked")
@@ -713,13 +723,12 @@ public abstract class StatisticalResourcesRestExternalFacadeV10BaseTest extends 
         reset(commonMetadataRestExternalFacade);
 
         mockFindDatasetsByCondition();
-        mockRetrieveDatasetLastPublishedVersion();
         mockRetrieveDatasetVersionDimensionsIds();
         mockRetrieveCoverageForDatasetVersionDimension();
         mockFindObservationsExtendedByDimensions();
         mockFindAttributesInstancesWithDatasetAttachmentLevel();
         mockFindAttributesInstancesWithDimensionAttachmentLevelDenormalized();
-        mockRetrieveLastPublishedVersionResourcesThatRequiresDatasetVersion();
+        mockDatasetVersionRepository();
 
         mockRetrieveDataStructureByUrn();
         mockRetrieveCodelistByUrn();

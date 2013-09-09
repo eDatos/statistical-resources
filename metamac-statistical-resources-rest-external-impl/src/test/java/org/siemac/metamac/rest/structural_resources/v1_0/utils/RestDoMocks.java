@@ -98,6 +98,17 @@ public class RestDoMocks {
         return StatisticalResourcesDoMocks.mockDatasetVersionRelated(dataset);
     }
 
+    public RelatedResourceResult mockDatasetRelatedResourceResult(String agencyID, String resourceID, String version) {
+        RelatedResourceResult query = new RelatedResourceResult();
+        query.setMaintainerNestedCode(agencyID);
+        query.setCode(resourceID);
+        query.setVersion(version);
+        query.setType(TypeRelatedResourceEnum.DATASET_VERSION);
+        query.setUrn("urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Dataset=" + agencyID + ":" + resourceID + "(" + version + ")");
+        query.setTitle(StatisticalResourcesDoMocks.mockInternationalStringAsMap("es", "título " + resourceID, "en", "title " + resourceID));
+        return query;
+    }
+
     public PublicationVersion mockPublicationVersion(String agencyID, String resourceID, String version) {
         PublicationVersion target = mockPublicationVersionBasic(agencyID, resourceID, version);
         target.setFormatExtentResources(Integer.valueOf(5));
@@ -267,8 +278,7 @@ public class RestDoMocks {
 
     private void mockLifeCycleStatisticalResource(String agencyID, String resourceID, String version, LifeCycleStatisticalResource target) {
         target.setPublicationDate(new DateTime(2013, 1, 1, 3, 4, 13, 0));
-        target.setReplacesVersion(mockDatasetRelatedResource(agencyID, version, "00.001"));
-        target.setIsReplacedByVersion(mockDatasetRelatedResource(agencyID, version, "02.000"));
+        target.setReplacesVersion(mockDatasetRelatedResource(agencyID, resourceID, "00.001"));
         mockVersionableStatisticalResource(agencyID, resourceID, version, target);
     }
 

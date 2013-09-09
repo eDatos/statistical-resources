@@ -71,6 +71,7 @@ import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataS
 import org.siemac.metamac.statistical.resources.core.base.domain.VersionRationaleType;
 import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResource;
+import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResourceResult;
 import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor;
 import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor.DsdAttribute;
 import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor.DsdComponentType;
@@ -109,7 +110,7 @@ import com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceF
 @Component
 public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
 
-    private static final Logger              logger = LoggerFactory.getLogger(CommonDo2RestMapperV10Impl.class);
+    private static final Logger              logger = LoggerFactory.getLogger(CommonDo2RestMapperV10.class);
 
     @Autowired
     private ConfigurationService             configurationService;
@@ -194,6 +195,7 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
         target.setMediators(toResourcesExternalItemsSrm(source.getMediator(), selectedLanguages));
         target.setNewnessUntilDate(toDate(source.getNewnessUntilDate()));
 
+        // TODO se eliminará el metadato. Se tendrá que mover al mapper correspondiente, xq será diferente la operación para cada recurso
         target.setReplaces(toResource(source.getReplaces(), selectedLanguages));
         target.setIsReplacedBy(toResource(source.getIsReplacedBy(), selectedLanguages));
         target.setHasPart(toResources(source.getHasPart(), selectedLanguages));
@@ -205,8 +207,7 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
         target.setAccessRights(toInternationalString(source.getAccessRights(), selectedLanguages));
 
         // Lifecycle
-        target.setReplacesVersion(toResource(source.getReplacesVersion(), selectedLanguages));
-        target.setIsReplacedByVersion(toResource(source.getIsReplacedByVersion(), selectedLanguages));
+        // note: replacesVersion and isReplacedByVersion are only valid to datasets. So, they are mapped in Dataset mapper
         target.setMaintainer(toResourceExternalItemSrm(source.getMaintainer(), selectedLanguages));
 
         // Versionable
@@ -531,19 +532,8 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
         return link;
     }
 
-    private void toResourceExternalItem(ExternalItem source, String apiExternalItemBase, Resource target, List<String> selectedLanguages) {
-        if (source == null) {
-            return;
-        }
-        target.setId(source.getCode());
-        target.setNestedId(source.getCodeNested());
-        target.setUrn(source.getUrn());
-        target.setKind(source.getType().getValue());
-        target.setSelfLink(toResourceLink(target.getKind(), RestUtils.createLink(apiExternalItemBase, source.getUri())));
-        target.setName(toInternationalString(source.getTitle(), selectedLanguages));
-    }
-
-    private Resources toResources(List<RelatedResource> sources, List<String> selectedLanguages) {
+    @Override
+    public Resources toResources(List<RelatedResource> sources, List<String> selectedLanguages) {
         if (CollectionUtils.isEmpty(sources)) {
             return null;
         }
@@ -555,7 +545,8 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
         return targets;
     }
 
-    private Resource toResource(RelatedResource source, List<String> selectedLanguages) {
+    @Override
+    public Resource toResource(RelatedResource source, List<String> selectedLanguages) {
         if (source == null) {
             return null;
         }
@@ -571,6 +562,35 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
                 org.siemac.metamac.rest.common.v1_0.domain.Exception exception = RestExceptionUtils.getException(RestServiceExceptionType.UNKNOWN);
                 throw new RestException(exception, Status.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    @Override
+    public Resource toResource(RelatedResourceResult source, List<String> selectedLanguages) throws MetamacException {
+        if (source == null) {
+            return null;
+        }
+        switch (source.getType()) {
+            case DATASET_VERSION:
+                return datasetsDo2RestMapper.toResource(source, selectedLanguages);
+            case QUERY_VERSION:
+                return queriesDo2RestMapper.toResource(source, selectedLanguages);
+            default:
+                logger.error("RelatedResource unsupported: " + source.getType());
+                org.siemac.metamac.rest.common.v1_0.domain.Exception exception = RestExceptionUtils.getException(RestServiceExceptionType.UNKNOWN);
+                throw new RestException(exception, Status.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    private void toResourceExternalItem(ExternalItem source, String apiExternalItemBase, Resource target, List<String> selectedLanguages) {
+        if (source == null) {
+            return;
+        }
+        target.setId(source.getCode());
+        target.setNestedId(source.getCodeNested());
+        target.setUrn(source.getUrn());
+        target.setKind(source.getType().getValue());
+        target.setSelfLink(toResourceLink(target.getKind(), RestUtils.createLink(apiExternalItemBase, source.getUri())));
+        target.setName(toInternationalString(source.getTitle(), selectedLanguages));
     }
 
     private Dimension toDimension(String datasetVersionUrn, DataStructure dataStructure, DsdDimension source, DimensionVisualisation dimensionVisualisation,
