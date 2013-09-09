@@ -17,8 +17,6 @@ import org.siemac.metamac.statistical.resources.core.io.utils.ManipulateDataUtil
 
 import com.arte.statistic.dataset.repository.dto.AttributeInstanceBasicDto;
 import com.arte.statistic.dataset.repository.dto.AttributeInstanceDto;
-import com.arte.statistic.dataset.repository.dto.CodeDimensionDto;
-import com.arte.statistic.dataset.repository.dto.ConditionObservationDto;
 import com.arte.statistic.dataset.repository.dto.DatasetRepositoryDto;
 import com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceFacade;
 import com.arte.statistic.parser.sdmx.v2_1.domain.ComponentInfo;
@@ -32,7 +30,7 @@ public class DatasetInfo {
     private DimensionCodeInfo                            dimensionAtObservation = null;
     private DimensionCodeInfo                            timeDimension          = null;
     private DimensionCodeInfo                            measureDimension       = null;
-    private List<ConditionObservationDto>                coverage               = null;
+    private Map<String, List<String>>                    coverage               = null;
     private List<DimensionCodeInfo>                      conditions             = null; // Input conditions for query
     private Map<String, List<String>>                    conditionsMap          = null; // Input conditions for query transformed into a map
     private Map<String, List<AttributeInstanceBasicDto>> attributeInstances     = null;
@@ -80,7 +78,7 @@ public class DatasetInfo {
         return datasetVersion;
     }
 
-    public List<ConditionObservationDto> getCoverage() {
+    public Map<String, List<String>> getCoverage() {
         return coverage;
     }
 
@@ -148,18 +146,17 @@ public class DatasetInfo {
     }
 
     private void addAllCodesConditionForDimension(DatasetRepositoryDto datasetRepository, int dimensionOrder, List<DimensionCodeInfo> conditions) throws ApplicationException {
-
         String dimensionID = datasetRepository.getDimensions().get(dimensionOrder);
-        ConditionObservationDto conditionObservationDto = getCoverage().get(dimensionOrder);
+        List<String> coverage = getCoverage().get(dimensionOrder);
         DimensionCodeInfo dimensionCodeInfo = new DimensionCodeInfo(dimensionID, getDsdSdmxInfo().getDimensions().get(dimensionID).getTypeComponentInfo());
 
-        for (CodeDimensionDto codeDimensionDto : conditionObservationDto.getCodesDimension()) {
-            dimensionCodeInfo.addCode(codeDimensionDto.getCodeDimensionId());
+        for (String codeDimension : coverage) {
+            dimensionCodeInfo.addCode(codeDimension);
         }
         conditions.add(dimensionCodeInfo);
     }
 
-    private List<ConditionObservationDto> calculateCoverage(DatasetRepositoriesServiceFacade datasetRepositoriesServiceFacade, DatasetRepositoryDto datasetRepositoryDto) throws ApplicationException {
+    private Map<String, List<String>> calculateCoverage(DatasetRepositoriesServiceFacade datasetRepositoriesServiceFacade, DatasetRepositoryDto datasetRepositoryDto) throws ApplicationException {
         return datasetRepositoriesServiceFacade.findCodeDimensions(datasetRepositoryDto.getDatasetId());
     }
 

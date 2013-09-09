@@ -361,7 +361,7 @@ public class WriterDataCallbackImpl implements WriterDataCallback {
 
         // Attribute
         for (AttributeInstanceBasicDto attributeBasicDto : observation.getAttributes()) {
-            if (!ManipulateDataUtils.DATA_SOURCE_ID.equals(attributeBasicDto.getAttributeId())) {
+            if (!StatisticalResourcesConstants.ATTRIBUTE_DATA_SOURCE_ID.equals(attributeBasicDto.getAttributeId())) {
                 result.addAttribute(new IdValuePair(attributeBasicDto.getAttributeId(), attributeBasicDto.getValue().getLocalisedLabel(StatisticalResourcesConstants.DEFAULT_DATA_REPOSITORY_LOCALE)));
             }
         }

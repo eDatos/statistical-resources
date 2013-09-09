@@ -2,6 +2,7 @@ package org.siemac.metamac.statistical.resources.core.io.serviceimpl.validators;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -138,7 +139,8 @@ public class ValidateDataVersusDsd {
             // The used attribute if correct
             previousExceptionSize = exceptions.size();
             for (AttributeInstanceBasicDto attributeBasicDto : overExtendedDto.getAttributes()) {
-                if (!this.attributeIdsAtObservationLevelSet.contains(attributeBasicDto.getAttributeId()) && !ManipulateDataUtils.DATA_SOURCE_ID.equals(attributeBasicDto.getAttributeId())) {
+                if (!this.attributeIdsAtObservationLevelSet.contains(attributeBasicDto.getAttributeId())
+                        && !StatisticalResourcesConstants.ATTRIBUTE_DATA_SOURCE_ID.equals(attributeBasicDto.getAttributeId())) {
                     exceptions.add(new MetamacExceptionItem(ServiceExceptionType.IMPORTATION_OBSERVATION_ATTR_NOT_MATCH, attributeBasicDto.getAttributeId()));
                 }
             }
@@ -178,7 +180,7 @@ public class ValidateDataVersusDsd {
             // The codes of attributes must be defined in the enumerated representation
             previousExceptionSize = exceptions.size();
             for (AttributeInstanceBasicDto attributeBasicDto : overExtendedDto.getAttributes()) {
-                if (!ManipulateDataUtils.DATA_SOURCE_ID.equals(attributeBasicDto.getAttributeId())) {
+                if (!StatisticalResourcesConstants.ATTRIBUTE_DATA_SOURCE_ID.equals(attributeBasicDto.getAttributeId())) {
 
                     String value = attributeBasicDto.getValue().getLocalisedLabel(StatisticalResourcesConstants.DEFAULT_DATA_REPOSITORY_LOCALE);
 
@@ -344,7 +346,7 @@ public class ValidateDataVersusDsd {
 
     protected void calculatedCacheAttributeInfo(MultiMap enumerationRepresentationsMultimap) throws MetamacException {
         // Attributes
-        Map<String, DsdProcessor.DsdAttribute> attributesProcessorMap = new HashMap<String, DsdProcessor.DsdAttribute>();
+        Map<String, DsdProcessor.DsdAttribute> attributesProcessorMap = new LinkedHashMap<String, DsdProcessor.DsdAttribute>();
         Map<String, ComponentInfo> attributesInfoMap = new HashMap<String, ComponentInfo>();
         List<ComponentInfo> attributesInfoList = new LinkedList<ComponentInfo>();
         Set<String> attributeIdsAtObservationLevelSet = new HashSet<String>();
