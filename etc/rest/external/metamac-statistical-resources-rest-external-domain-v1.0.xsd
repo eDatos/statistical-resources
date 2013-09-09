@@ -56,6 +56,8 @@
         <xs:complexContent>
             <xs:extension base="tns:StatisticalResource">
                 <xs:sequence>
+                    <xs:element name="replacesVersion" type="common:Resource" minOccurs="0" />
+                    <xs:element name="isReplacedByVersion" type="common:Resource" minOccurs="0" />
                     <xs:element name="isRequiredBy" type="common:Resources" />
                     <xs:element name="geographicCoverages" type="common:Resources" />
                     <xs:element name="temporalCoverages" type="common:Items" />
@@ -155,8 +157,6 @@
             <xs:element name="copyrightDate" type="xs:int" minOccurs="0" />
             <xs:element name="license" type="common:InternationalString" />
             <xs:element name="accessRights" type="common:InternationalString" minOccurs="0" />
-            <xs:element name="replacesVersion" type="common:Resource" minOccurs="0" />
-            <xs:element name="isReplacedByVersion" type="common:Resource" minOccurs="0" />
             <xs:element name="maintainer" type="common:Resource" />
             <xs:element name="version" type="xs:string" />
             <xs:element name="versionRationaleTypes" type="tns:VersionRationaleTypes" />
