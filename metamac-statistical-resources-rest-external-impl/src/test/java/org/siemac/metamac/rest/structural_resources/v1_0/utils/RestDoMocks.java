@@ -19,6 +19,7 @@ import org.siemac.metamac.statistical.resources.core.common.domain.International
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResource;
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResourceResult;
 import org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConstants;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.AttributeValue;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.CodeDimension;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.TemporalCode;
@@ -183,6 +184,13 @@ public class RestDoMocks {
         codeDimension.setIdentifier(id);
         codeDimension.setTitle(codeDimension.getIdentifier() + " en Español");
         return codeDimension;
+    }
+
+    public AttributeValue mockAttributeValue(String componentId, String id) {
+        AttributeValue attributeValue = new AttributeValue();
+        attributeValue.setDsdComponentId(componentId);
+        attributeValue.setIdentifier(id);
+        return attributeValue;
     }
 
     public ObservationExtendedDto mockObservation(String valueGeoDimension, String valueTimePeriod, String valueMeasure01, String valueDimension01, int primaryMeasure) {

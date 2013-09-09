@@ -169,8 +169,8 @@ public class DatasetsDo2RestMapperV10Impl implements DatasetsDo2RestMapperV10 {
     }
 
     private Resources toDatasetIsRequiredBy(DatasetVersion source, List<String> selectedLanguages) throws MetamacException {
-        List<RelatedResourceResult> relatedResourceIsRequiredBy = datasetVersionRepository.retrieveLastVersionResourcesThatRequiresDatasetVersion(source); // TODO sustituir por
-                                                                                                                                                           // retrieveLastPublishedVersionResourcesThatRequiresDatasetVersion
+        List<RelatedResourceResult> relatedResourceIsRequiredBy = datasetVersionRepository.retrieveLastVersionResourcesThatRequiresDatasetVersion(source);
+        // TODO sustituir por retrieveLastPublishedVersionResourcesThatRequiresDatasetVersion
         if (CollectionUtils.isEmpty(relatedResourceIsRequiredBy)) {
             return null;
         }

@@ -71,6 +71,7 @@ import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Concept
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructure;
 import org.siemac.metamac.rest.utils.RestUtils;
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResourceResult;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.AttributeValue;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.CodeDimension;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionRepository;
@@ -431,6 +432,31 @@ public abstract class StatisticalResourcesRestExternalFacadeV10BaseTest extends 
         });
     }
 
+    private void mockRetrieveCoverageForDatasetVersionAttribute() throws MetamacException {
+        when(datasetService.retrieveCoverageForDatasetVersionAttribute(any(ServiceContext.class), any(String.class), any(String.class))).thenAnswer(new Answer<List<AttributeValue>>() {
+
+            @Override
+            public List<AttributeValue> answer(InvocationOnMock invocation) throws Throwable {
+                String componentId = (String) invocation.getArguments()[2];
+                List<AttributeValue> attributeValues = new ArrayList<AttributeValue>();
+                if ("at2".equals(componentId)) {
+                    attributeValues.add(restDoMocks.mockAttributeValue(componentId, "A"));
+                    attributeValues.add(restDoMocks.mockAttributeValue(componentId, "C"));
+                } else if ("at6".equals(componentId)) {
+                    attributeValues.add(restDoMocks.mockAttributeValue(componentId, "1"));
+                    attributeValues.add(restDoMocks.mockAttributeValue(componentId, "2"));
+                    attributeValues.add(restDoMocks.mockAttributeValue(componentId, "3"));
+                } else {
+                    // any. They must not be in response, because they are non-enumerated
+                    attributeValues.add(restDoMocks.mockAttributeValue(componentId, "skip-1"));
+                    attributeValues.add(restDoMocks.mockAttributeValue(componentId, "skip-2"));
+                    attributeValues.add(restDoMocks.mockAttributeValue(componentId, "skip-3"));
+                }
+                return attributeValues;
+            };
+        });
+    }
+
     @SuppressWarnings("unchecked")
     private void mockFindObservationsExtendedByDimensions() throws Exception {
         when(datasetRepositoriesServiceFacade.findObservationsExtendedByDimensions(any(String.class), any(List.class))).thenAnswer(new Answer<Map<String, ObservationExtendedDto>>() {
@@ -725,6 +751,7 @@ public abstract class StatisticalResourcesRestExternalFacadeV10BaseTest extends 
         mockFindDatasetsByCondition();
         mockRetrieveDatasetVersionDimensionsIds();
         mockRetrieveCoverageForDatasetVersionDimension();
+        mockRetrieveCoverageForDatasetVersionAttribute();
         mockFindObservationsExtendedByDimensions();
         mockFindAttributesInstancesWithDatasetAttachmentLevel();
         mockFindAttributesInstancesWithDimensionAttachmentLevelDenormalized();
