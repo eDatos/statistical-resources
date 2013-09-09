@@ -27,7 +27,7 @@ public class SaveDatasetAttributeInstanceActionHandler extends SecurityActionHan
     public SaveDatasetAttributeInstanceResult executeSecurityAction(SaveDatasetAttributeInstanceAction action) throws ActionException {
         try {
             DsdAttributeInstanceDto savedAttributeInstace = null;
-            if (action.getDsdAttributeInstanceDto().getUuid() == null) {
+            if (action.getDsdAttributeInstanceDto().getId() == null) {
                 // Create
                 savedAttributeInstace = statisticalResourcesServiceFacade.createAttributeInstance(ServiceContextHolder.getCurrentServiceContext(), action.getDatasetVersionUrn(),
                         action.getDsdAttributeInstanceDto());

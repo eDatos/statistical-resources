@@ -204,16 +204,21 @@ Application DatasetsStatisticalResources {
 				findById;
 				findByCondition;
 				findByCondition(PagingParameter pagingParameter);
-				List<RelatedResourceResult> retrieveLastVersionResourcesThatRequiresDatasetVersion(@DatasetVersion datasetVersion) throws MetamacException;  
-				List<RelatedResourceResult> retrieveLastPublishedVersionResourcesThatRequiresDatasetVersion(@DatasetVersion datasetVersion) throws MetamacException;
-				RelatedResourceResult retrieveResourceThatReplacesDatasetVersion(@DatasetVersion datasetVersion) throws MetamacException;  
-				RelatedResourceResult retrieveLastPublishedVersionResourceThatReplacesDatasetVersion(@DatasetVersion datasetVersion) throws MetamacException;  
 				@DatasetVersion retrieveByUrn(String urn) throws MetamacException;  
 				@DatasetVersion retrieveLastVersion(String datasetUrn) throws MetamacException;
 				@DatasetVersion retrieveLastPublishedVersion(String datasetUrn) throws MetamacException;
 				@DatasetVersion retrieveByVersion(Long statisticalResourceId, String versionLogic) throws MetamacException;
 				boolean isLastVersion(String datasetVersionUrn) throws MetamacException;
 				List<String> retrieveDimensionsIds(@DatasetVersion datasetVersion) throws MetamacException;
+				//Is required by
+				List<RelatedResourceResult> retrieveIsRequiredBy(@DatasetVersion datasetVersion) throws MetamacException;  
+				List<RelatedResourceResult> retrieveIsRequiredByOnlyLastPublished(@DatasetVersion datasetVersion) throws MetamacException;
+				//Is replaced by version
+				RelatedResourceResult retrieveIsReplacedByVersion(@DatasetVersion datasetVersion) throws MetamacException;  
+				RelatedResourceResult retrieveIsReplacedByVersionOnlyLastPublished(@DatasetVersion datasetVersion) throws MetamacException;
+				//Is replaced by
+				RelatedResourceResult retrieveIsReplacedBy(@DatasetVersion datasetVersion) throws MetamacException;  
+				RelatedResourceResult retrieveIsReplacedByOnlyLastPublished(@DatasetVersion datasetVersion) throws MetamacException;  
 			}
 		}
 

@@ -115,8 +115,8 @@ Application BaseStatisticalResources {
 			- @ExternalItem maintainer cascade="all" databaseColumn="MAINTAINER_FK" nullable;
 			
 			Repository LifeCycleStatisticalResourceRepository {
-				RelatedResourceResult retrieveResourceThatReplacesThisResourceVersion(Long currentResourceId, @TypeRelatedResourceEnum type) throws MetamacException;  
-				RelatedResourceResult retrieveLastPublishedVersionResourceThatReplacesThisResourceVersion(Long currentResourceId, @TypeRelatedResourceEnum type) throws MetamacException;
+				RelatedResourceResult retrieveIsReplacedByVersion(Long currentResourceId, @TypeRelatedResourceEnum type) throws MetamacException;  
+				RelatedResourceResult retrieveIsReplacedByVersionOnlyLastPublished(Long currentResourceId, @TypeRelatedResourceEnum type) throws MetamacException;
 			}
 		}
 
@@ -160,7 +160,6 @@ Application BaseStatisticalResources {
 			
 			//RESOURCE RELATIONS DESCRIPTORS
 			- @RelatedResource replaces cascade="all" databaseColumn="REPLACES_FK" nullable;
-			- @RelatedResource isReplacedBy cascade="all" databaseColumn="IS_REPLACED_BY_FK" nullable;
 
 			- Bag<@RelatedResource> hasPart cascade="all-delete-orphan" databaseJoinTable="TB_RR_HAS_PART"  databaseColumn="HAS_PART_FK" databaseJoinColumn="SIEMAC_RESOURCE_FK";
 			- Bag<@RelatedResource> isPartOf cascade="all-delete-orphan" databaseJoinTable="TB_RR_IS_PART_OF" databaseColumn="IS_PART_OF_FK" databaseJoinColumn="SIEMAC_RESOURCE_FK";
@@ -171,6 +170,8 @@ Application BaseStatisticalResources {
 			
 			Repository SiemacMetadataStatisticalResourceRepository {
 				String findLastUsedCodeForResourceType(String operationUrn, @StatisticalResourceTypeEnum resourceType);
+				RelatedResourceResult retrieveIsReplacedBy(Long currentResourceId, @TypeRelatedResourceEnum type) throws MetamacException;  
+				RelatedResourceResult retrieveIsReplacedByOnlyLastPublished(Long currentResourceId, @TypeRelatedResourceEnum type) throws MetamacException;
 			}
 			
 		}

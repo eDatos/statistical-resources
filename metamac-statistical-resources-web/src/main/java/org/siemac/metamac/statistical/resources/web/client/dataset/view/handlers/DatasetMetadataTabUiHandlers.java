@@ -6,6 +6,7 @@ import org.siemac.metamac.statistical.resources.web.client.base.view.handlers.St
 import org.siemac.metamac.statistical.resources.web.client.dataset.utils.DatasetMetadataExternalField;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.DsdWebCriteria;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.ItemSchemeWebCriteria;
+import org.siemac.metamac.statistical.resources.web.shared.criteria.VersionableStatisticalResourceWebCriteria;
 import org.siemac.metamac.web.common.client.view.handlers.BaseUiHandlers;
 import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
 
@@ -37,7 +38,8 @@ public interface DatasetMetadataTabUiHandlers extends BaseUiHandlers, Statistica
     void retrieveTemporalCodesForField(int firstResult, int maxResults, MetamacWebCriteria webCriteria, DatasetMetadataExternalField updateFrequency);
 
     // RELATED DATASETS
-    void retrieveDatasetsForReplaces(int firstResult, int maxResults, MetamacWebCriteria criteria);
+    void retrieveStatisticalOperationsForReplacesSelection();
+    void retrieveDatasetsForReplaces(int firstResult, int maxResults, VersionableStatisticalResourceWebCriteria criteria);
 
     // Concept schemes, concepts
     void retrieveConceptSchemesForStatisticalUnit(int firstResult, int maxResults, MetamacWebCriteria webCriteria);

@@ -13,6 +13,8 @@ import org.siemac.metamac.core.common.util.OptimisticLockingUtils;
 import org.siemac.metamac.statistical.resources.core.base.domain.NameableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.mapper.BaseDto2DoMapperImpl;
+import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResource;
+import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResourceResult;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetRepository;
 import org.siemac.metamac.statistical.resources.core.dto.publication.ChapterDto;
@@ -70,7 +72,7 @@ public class PublicationDto2DoMapperImpl extends BaseDto2DoMapperImpl implements
             }
         }
     }
-    
+
     @Override
     public PublicationVersion publicationVersionDtoToDo(PublicationVersionDto source) throws MetamacException {
         if (source == null) {
@@ -91,15 +93,18 @@ public class PublicationDto2DoMapperImpl extends BaseDto2DoMapperImpl implements
             }
         }
 
-        datasetVersionDtoToDo(source, target);
+        publicationVersionDtoToDo(source, target);
 
         return target;
     }
 
-    private PublicationVersion datasetVersionDtoToDo(PublicationVersionDto source, PublicationVersion target) throws MetamacException {
+    private PublicationVersion publicationVersionDtoToDo(PublicationVersionDto source, PublicationVersion target) throws MetamacException {
         if (target == null) {
             throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.PARAMETER_REQUIRED).withMessageParameters(ServiceExceptionParameters.PUBLICATION_VERSION).build();
         }
+
+        // Check replaces before setting fields
+        checkCanPublicationReplacesOtherPublication(source);
 
         // Hierarchy
         siemacMetadataStatisticalResourceDtoToDo(source, target.getSiemacMetadataStatisticalResource(), ServiceExceptionParameters.PUBLICATION_VERSION__SIEMAC_METADATA_STATISTICAL_RESOURCE);
@@ -108,6 +113,23 @@ public class PublicationDto2DoMapperImpl extends BaseDto2DoMapperImpl implements
         target.setFormatExtentResources(source.getFormatExtentResources());
 
         return target;
+    }
+
+    protected void checkCanPublicationReplacesOtherPublication(PublicationVersionDto source) throws MetamacException {
+        if (source.getReplaces() != null) {
+            String currentUrn = source.getUrn();
+            RelatedResource resourceReplaced = relatedResourceDtoToDo(source.getReplaces(), null, ServiceExceptionParameters.PUBLICATION_VERSION__SIEMAC_METADATA_STATISTICAL_RESOURCE__REPLACES);
+            if (currentUrn.equals(resourceReplaced.getPublicationVersion().getSiemacMetadataStatisticalResource().getUrn())) {
+                throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.PUBLICATION_VERSION_CANT_REPLACE_ITSELF)
+                        .withMessageParameters(currentUrn).build();
+            } else {
+                RelatedResourceResult resourceAlreadyReplacing = publicationVersionRepository.retrieveIsReplacedBy(resourceReplaced.getPublicationVersion());
+                if (resourceAlreadyReplacing != null && !resourceAlreadyReplacing.getUrn().equals(source.getUrn())) {
+                    throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.PUBLICATION_VERSION_ALREADY_BEEN_REPLACED_BY_OTHER_PUBLICATION_VERSION)
+                            .withMessageParameters(currentUrn, source.getReplaces().getUrn()).build();
+                }
+            }
+        }
     }
 
     // --------------------------------------------------------------------------------------
@@ -219,14 +241,14 @@ public class PublicationDto2DoMapperImpl extends BaseDto2DoMapperImpl implements
         } else {
             target.getElementLevel().setParent(null);
         }
-        
+
         if (source.getDatasetUrn() != null) {
             Dataset dataset = datasetRepository.retrieveByUrn(source.getDatasetUrn());
             target.setDataset(dataset);
         } else {
             target.setDataset(null);
         }
-        
+
         if (source.getQueryUrn() != null) {
             Query query = queryRepository.retrieveByUrn(source.getQueryUrn());
             target.setQuery(query);

@@ -162,8 +162,13 @@ public class DatasetDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements Dat
         }
 
         // Hierarchy
+        
         siemacMetadataStatisticalResourceDoToDto(source.getSiemacMetadataStatisticalResource(), target);
 
+        // Siemac metadata that needs to be filled
+        target.setIsReplacedByVersion(relatedResourceResultToDto(datasetVersionRepository.retrieveIsReplacedByVersion(source)));
+        target.setIsReplacedBy(relatedResourceResultToDto(datasetVersionRepository.retrieveIsReplacedBy(source)));
+        
         // Identity
         target.setId(source.getId());
         target.setVersion(source.getVersion());
@@ -190,11 +195,9 @@ public class DatasetDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements Dat
         target.setStatisticOfficiality(statisticOfficialityDo2Dto(source.getStatisticOfficiality()));
         target.setBibliographicCitation(internationalStringDoToDto(source.getBibliographicCitation()));
         
-        List<RelatedResourceResult> isRequiredBy = datasetVersionRepository.retrieveLastVersionResourcesThatRequiresDatasetVersion(source);
+        List<RelatedResourceResult> isRequiredBy = datasetVersionRepository.retrieveIsRequiredBy(source);
         target.getIsRequiredBy().clear();
         target.getIsRequiredBy().addAll(relatedResourceResultCollectionToDtoCollection(isRequiredBy));
-        
-        target.setIsReplacedByVersion(relatedResourceResultToDto(datasetVersionRepository.retrieveResourceThatReplacesDatasetVersion(source)));
         
         target.setIsTaskInBackground(taskService.existImportationTaskInResource(ctx, source.getSiemacMetadataStatisticalResource().getUrn()));
 

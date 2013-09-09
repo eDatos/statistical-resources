@@ -46,6 +46,7 @@ import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalRes
 import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.VersionRationaleTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryTypeEnum;
+import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
 
 import com.arte.statistic.dataset.repository.dto.AttributeInstanceDto;
 
@@ -410,6 +411,12 @@ public class StatisticalResourcesDtoMocks extends MetamacMocks {
     public static RelatedResourceDto mockNotPersistedRelatedResourceDatasetVersionDto(DatasetVersion datasetVersion) {
         RelatedResourceDto resource = new RelatedResourceDto();
         populateNotPersistedRelatedResourceIdentifiable(resource, datasetVersion.getSiemacMetadataStatisticalResource(), TypeRelatedResourceEnum.DATASET_VERSION);
+        return resource;
+    }
+    
+    public static RelatedResourceDto mockNotPersistedRelatedResourcePublicationVersionDto(PublicationVersion publicationVersion) {
+        RelatedResourceDto resource = new RelatedResourceDto();
+        populateNotPersistedRelatedResourceIdentifiable(resource, publicationVersion.getSiemacMetadataStatisticalResource(), TypeRelatedResourceEnum.PUBLICATION_VERSION);
         return resource;
     }
 

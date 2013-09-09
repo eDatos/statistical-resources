@@ -187,15 +187,4 @@ public class LifecycleFillerTest extends StatisticalResourcesBaseTest {
         assertNotNullAutomaticallyFilledMetadataVersioningPreviousResource(resource, previousResource);
     }
 
-    @Test
-    public void testLifeCycleResourceApplyVersioningPreviousResourceActionsErrorUndefinedType() throws Exception {
-        HasLifecycle mockedResource = mockHasLifecycleStatisticalResourceVersioned();
-        HasLifecycle mockedPreviousResource = mockHasLifecycleStatisticalResourcePublished();
-
-        createVersioned(mockedResource);
-        createPublished(mockedPreviousResource);
-
-        lifecycleFiller.applyVersioningPreviousResourceActions(getServiceContextWithoutPrincipal(), mockedResource, mockedPreviousResource, VersionTypeEnum.MAJOR);
-        assertNotNullAutomaticallyFilledMetadataVersioningPreviousResource(mockedResource, mockedPreviousResource);
-    }
 }

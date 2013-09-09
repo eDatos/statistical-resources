@@ -254,6 +254,33 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
     public static final String    DATASET_VERSION_76_V02_FOR_DATASET_12_NAME                                                             = "DATASET_VERSION_76_V02_FOR_DATASET_12";
     private static DatasetVersion DATASET_VERSION_76_V02_FOR_DATASET_12;
 
+    public static final String    DATASET_VERSION_77_NO_PUB_REPLACES_DATASET_78_NAME                                                     = "DATASET_VERSION_77_NO_PUB_REPLACES_DATASET_78";
+    private static DatasetVersion DATASET_VERSION_77_NO_PUB_REPLACES_DATASET_78;
+
+    public static final String    DATASET_VERSION_78_PUB_IS_REPLACED_BY_DATASET_77_NAME                                                  = "DATASET_VERSION_78_PUB_IS_REPLACED_BY_DATASET_77";
+    private static DatasetVersion DATASET_VERSION_78_PUB_IS_REPLACED_BY_DATASET_77;
+
+    public static final String    DATASET_VERSION_79_NO_PUB_REPLACES_DATASET_80_NAME                                                     = "DATASET_VERSION_79_NO_PUB_REPLACES_DATASET_80";
+    private static DatasetVersion DATASET_VERSION_79_NO_PUB_REPLACES_DATASET_80;
+
+    public static final String    DATASET_VERSION_80_NO_PUB_IS_REPLACED_BY_DATASET_79_NAME                                               = "DATASET_VERSION_80_NO_PUB_IS_REPLACED_BY_DATASET_79";
+    private static DatasetVersion DATASET_VERSION_80_NO_PUB_IS_REPLACED_BY_DATASET_79;
+
+    public static final String    DATASET_VERSION_81_PUB_NOT_VISIBLE_REPLACES_DATASET_82_NAME                                            = "DATASET_VERSION_81_PUB_NOT_VISIBLE_REPLACES_DATASET_82";
+    private static DatasetVersion DATASET_VERSION_81_PUB_NOT_VISIBLE_REPLACES_DATASET_82;
+
+    public static final String    DATASET_VERSION_82_PUB_IS_REPLACED_BY_DATASET_81_NAME                                                  = "DATASET_VERSION_82_PUB_IS_REPLACED_BY_DATASET_81";
+    private static DatasetVersion DATASET_VERSION_82_PUB_IS_REPLACED_BY_DATASET_81;
+
+    public static final String    DATASET_VERSION_83_PUB_REPLACES_DATASET_84_NAME                                                        = "DATASET_VERSION_83_PUB_REPLACES_DATASET_84";
+    private static DatasetVersion DATASET_VERSION_83_PUB_REPLACES_DATASET_84;
+
+    public static final String    DATASET_VERSION_84_PUB_IS_REPLACED_BY_DATASET_83_NAME                                                  = "DATASET_VERSION_84_PUB_IS_REPLACED_BY_DATASET_83";
+    private static DatasetVersion DATASET_VERSION_84_PUB_IS_REPLACED_BY_DATASET_83;
+
+    private static final String   INIT_VERSION                                                                                           = "001.000";
+    private static final String   SECOND_VERSION                                                                                         = "002.000";
+
     protected static DatasetVersion getDatasetVersion01Basic() {
         if (DATASET_VERSION_01_BASIC == null) {
             DATASET_VERSION_01_BASIC = createDatasetVersionWithSequence(1);
@@ -1086,6 +1113,89 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
         return DATASET_VERSION_76_V02_FOR_DATASET_12;
     }
 
+    protected static DatasetVersion getDatasetVersion77NoPubReplacesDataset78() {
+        if (DATASET_VERSION_77_NO_PUB_REPLACES_DATASET_78 == null) {
+            DatasetVersion datasetVersion = createDatasetVersionWithSequence(1);
+            DatasetVersion datasetVersionToReplace = createDatasetVersionWithSequence(2);
+            prepareToVersioning(datasetVersionToReplace);
+            datasetVersion.getSiemacMetadataStatisticalResource().setReplaces(StatisticalResourcesPersistedDoMocks.mockDatasetVersionRelated(datasetVersionToReplace));
+            DATASET_VERSION_77_NO_PUB_REPLACES_DATASET_78 = datasetVersion;
+        }
+        return DATASET_VERSION_77_NO_PUB_REPLACES_DATASET_78;
+    }
+
+    protected static DatasetVersion getDatasetVersion78PubIsReplacedByDataset77() {
+        if (DATASET_VERSION_78_PUB_IS_REPLACED_BY_DATASET_77 == null) {
+            DatasetVersion datasetVersionWhichReplaces = getDatasetVersion77NoPubReplacesDataset78();
+            DATASET_VERSION_78_PUB_IS_REPLACED_BY_DATASET_77 = datasetVersionWhichReplaces.getSiemacMetadataStatisticalResource().getReplaces().getDatasetVersion();
+        }
+        return DATASET_VERSION_78_PUB_IS_REPLACED_BY_DATASET_77;
+    }
+
+    protected static DatasetVersion getDatasetVersion79NoPubReplacesDataset80() {
+        if (DATASET_VERSION_79_NO_PUB_REPLACES_DATASET_80 == null) {
+            DatasetVersion datasetVersion = createDatasetVersionWithSequence(1);
+            DatasetVersion datasetVersionToReplace = createDatasetVersionWithSequence(2);
+            datasetVersion.getSiemacMetadataStatisticalResource().setReplaces(StatisticalResourcesPersistedDoMocks.mockDatasetVersionRelated(datasetVersionToReplace));
+            DATASET_VERSION_79_NO_PUB_REPLACES_DATASET_80 = datasetVersion;
+        }
+        return DATASET_VERSION_79_NO_PUB_REPLACES_DATASET_80;
+    }
+
+    protected static DatasetVersion getDatasetVersion80NoPubIsReplacedByDataset79() {
+        if (DATASET_VERSION_80_NO_PUB_IS_REPLACED_BY_DATASET_79 == null) {
+            DatasetVersion datasetVersionWhichReplaces = getDatasetVersion79NoPubReplacesDataset80();
+            DATASET_VERSION_80_NO_PUB_IS_REPLACED_BY_DATASET_79 = datasetVersionWhichReplaces.getSiemacMetadataStatisticalResource().getReplaces().getDatasetVersion();
+        }
+        return DATASET_VERSION_80_NO_PUB_IS_REPLACED_BY_DATASET_79;
+    }
+
+    protected static DatasetVersion getDatasetVersion81PubNotVisibleReplacesDataset82() {
+        if (DATASET_VERSION_81_PUB_NOT_VISIBLE_REPLACES_DATASET_82 == null) {
+            DatasetVersionMock template = new DatasetVersionMock();
+            template.setSequentialId(1);
+            template.setVersionLogic(INIT_VERSION);
+            template.getSiemacMetadataStatisticalResource().setValidFrom(new DateTime().plusDays(1));
+            DatasetVersion datasetVersion = createDatasetVersionFromTemplate(template);
+
+            DatasetVersion datasetVersionToReplace = createDatasetVersionWithSequence(2);
+            prepareToVersioning(datasetVersionToReplace);
+            datasetVersion.getSiemacMetadataStatisticalResource().setReplaces(StatisticalResourcesPersistedDoMocks.mockDatasetVersionRelated(datasetVersionToReplace));
+            DATASET_VERSION_81_PUB_NOT_VISIBLE_REPLACES_DATASET_82 = datasetVersion;
+        }
+        return DATASET_VERSION_81_PUB_NOT_VISIBLE_REPLACES_DATASET_82;
+    }
+
+    protected static DatasetVersion getDatasetVersion82PubIsReplacedByDataset81() {
+        if (DATASET_VERSION_82_PUB_IS_REPLACED_BY_DATASET_81 == null) {
+            DatasetVersion datasetVersionWhichReplaces = getDatasetVersion81PubNotVisibleReplacesDataset82();
+            DATASET_VERSION_82_PUB_IS_REPLACED_BY_DATASET_81 = datasetVersionWhichReplaces.getSiemacMetadataStatisticalResource().getReplaces().getDatasetVersion();
+        }
+        return DATASET_VERSION_82_PUB_IS_REPLACED_BY_DATASET_81;
+    }
+
+    protected static DatasetVersion getDatasetVersion83PubReplacesDataset84() {
+        if (DATASET_VERSION_83_PUB_REPLACES_DATASET_84 == null) {
+            DatasetVersion datasetVersion = createDatasetVersionWithSequence(1);
+            prepareToVersioning(datasetVersion);
+
+            DatasetVersion datasetVersionToReplace = createDatasetVersionWithSequence(2);
+            prepareToVersioning(datasetVersionToReplace);
+
+            datasetVersion.getSiemacMetadataStatisticalResource().setReplaces(StatisticalResourcesPersistedDoMocks.mockDatasetVersionRelated(datasetVersionToReplace));
+            DATASET_VERSION_83_PUB_REPLACES_DATASET_84 = datasetVersion;
+        }
+        return DATASET_VERSION_83_PUB_REPLACES_DATASET_84;
+    }
+
+    protected static DatasetVersion getDatasetVersion84PubIsReplacedByDataset83() {
+        if (DATASET_VERSION_84_PUB_IS_REPLACED_BY_DATASET_83 == null) {
+            DatasetVersion datasetVersionWhichReplaces = getDatasetVersion83PubReplacesDataset84();
+            DATASET_VERSION_84_PUB_IS_REPLACED_BY_DATASET_83 = datasetVersionWhichReplaces.getSiemacMetadataStatisticalResource().getReplaces().getDatasetVersion();
+        }
+        return DATASET_VERSION_84_PUB_IS_REPLACED_BY_DATASET_83;
+    }
+    
     // -----------------------------------------------------------------
     // PRIVATE UTILS
     // -----------------------------------------------------------------

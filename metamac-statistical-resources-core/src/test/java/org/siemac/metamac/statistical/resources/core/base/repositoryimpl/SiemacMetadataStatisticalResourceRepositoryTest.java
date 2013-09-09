@@ -41,6 +41,7 @@ public class SiemacMetadataStatisticalResourceRepositoryTest extends Statistical
     @Autowired
     private PublicationVersionMockFactory                 publicationVersionMockFactory;
 
+    @Override
     @Test
     @MetamacMock({DATASET_VERSION_08_VALID_CODE_000002_NAME, DATASET_VERSION_07_VALID_CODE_000001_NAME})
     public void testFindLastUsedCodeForResourceType() throws Exception {
@@ -88,5 +89,15 @@ public class SiemacMetadataStatisticalResourceRepositoryTest extends Statistical
                 StatisticalResourceTypeEnum.COLLECTION);
         assertNotNull(code);
         assertEquals("000001", code);
+    }
+
+    @Override
+    public void testRetrieveIsReplacedBy() throws Exception {
+        // TESTED somewhere else
+    }
+    
+    @Override
+    public void testRetrieveIsReplacedByOnlyLastPublished() throws Exception {
+        // TESTED somewhere else
     }
 }

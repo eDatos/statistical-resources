@@ -61,6 +61,7 @@ import org.siemac.metamac.statistical.resources.core.publication.domain.Cube;
 import org.siemac.metamac.statistical.resources.core.publication.domain.ElementLevel;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersionProperties;
+import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersionRepository;
 import org.siemac.metamac.statistical.resources.core.query.domain.Query;
 import org.siemac.metamac.statistical.resources.core.utils.asserts.CommonAsserts;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.configuration.MetamacMock;
@@ -91,6 +92,9 @@ public class PublicationServiceTest extends StatisticalResourcesBaseTest impleme
 
     @Autowired
     private PublicationVersionMockFactory           publicationVersionMockFactory;
+
+    @Autowired
+    private PublicationVersionRepository            publicationVersionRepository;
 
     @Autowired
     private DatasetMockFactory                      datasetMockFactory;
@@ -430,7 +434,9 @@ public class PublicationServiceTest extends StatisticalResourcesBaseTest impleme
 
         // Validation
         PublicationVersion publicationVersionV1 = publicationService.retrievePublicationVersionByUrn(getServiceContextWithoutPrincipal(), urnV1);
-        assertNull(publicationVersionV1.getSiemacMetadataStatisticalResource().getIsReplacedBy());
+        
+        //is replaced_by_version null
+        assertNull(publicationVersionRepository.retrieveIsReplacedByVersion(publicationVersionV1));
 
         expectedMetamacException(new MetamacException(ServiceExceptionType.PUBLICATION_VERSION_NOT_FOUND, urnV2));
         publicationService.retrievePublicationVersionByUrn(getServiceContextWithoutPrincipal(), urnV2);

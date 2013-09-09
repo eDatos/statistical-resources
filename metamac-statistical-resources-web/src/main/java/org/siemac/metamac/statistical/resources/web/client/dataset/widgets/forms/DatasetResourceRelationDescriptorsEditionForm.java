@@ -6,11 +6,10 @@ import static org.siemac.metamac.statistical.resources.web.client.widgets.forms.
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.ds.DatasetDS;
 import org.siemac.metamac.statistical.resources.web.client.dataset.view.handlers.DatasetMetadataTabUiHandlers;
-import org.siemac.metamac.statistical.resources.web.client.model.ds.SiemacMetadataDS;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.SiemacMetadataResourceRelationDescriptorsEditionForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.fields.RelatedResourceListItem;
+import org.siemac.metamac.statistical.resources.web.shared.criteria.VersionableStatisticalResourceWebCriteria;
 import org.siemac.metamac.web.common.client.view.handlers.BaseUiHandlers;
-import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
 
 import com.gwtplatform.mvp.client.UiHandlers;
 
@@ -40,8 +39,13 @@ public class DatasetResourceRelationDescriptorsEditionForm extends SiemacMetadat
     }
 
     @Override
-    public void retrieveResourcesForReplaces(int firstResult, int maxResults, MetamacWebCriteria criteria) {
+    public void retrieveResourcesForReplaces(int firstResult, int maxResults, VersionableStatisticalResourceWebCriteria criteria) {
         uiHandlers.retrieveDatasetsForReplaces(firstResult, maxResults, criteria);
+    }
+    
+    @Override
+    public void retrieveStatisticalOperationsForReplacesSelection() {
+        uiHandlers.retrieveStatisticalOperationsForReplacesSelection();
     }
 
     @Override

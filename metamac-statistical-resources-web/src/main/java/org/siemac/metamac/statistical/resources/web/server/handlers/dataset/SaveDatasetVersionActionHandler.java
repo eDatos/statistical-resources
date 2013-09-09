@@ -32,7 +32,7 @@ public class SaveDatasetVersionActionHandler extends SecurityActionHandler<SaveD
     public SaveDatasetVersionResult executeSecurityAction(SaveDatasetVersionAction action) throws ActionException {
         try {
             DatasetVersionDto savedDataset = null;
-            if (action.getDatasetVersion().getUuid() == null) {
+            if (action.getDatasetVersion().getId() == null) {
                 ExternalItemDto statisticalOperation = statisticalOperationsRestInternalFacade.retrieveOperation(action.getStatisticalOperationCode());
                 savedDataset = statisticalResourcesServiceFacade.createDataset(ServiceContextHolder.getCurrentServiceContext(), action.getDatasetVersion(), statisticalOperation);
             } else {

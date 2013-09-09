@@ -21,6 +21,10 @@ public class SearchSingleVersionableStatisticalRelatedResourcePaginatedWindow ex
     public void setStatisticalOperations(List<ExternalItemDto> statisticalOperations) {
         filterForm.setStatisticalOperations(statisticalOperations);
     }
+    
+    public void setSelectedStatisticalOperation(ExternalItemDto statisticalOperation) {
+        filterForm.setSelectedStatisticalOperation(statisticalOperation);
+    }
 
     public VersionableStatisticalResourceWebCriteria getSearchCriteria() {
         return getFilterForm().getSearchCriteria();

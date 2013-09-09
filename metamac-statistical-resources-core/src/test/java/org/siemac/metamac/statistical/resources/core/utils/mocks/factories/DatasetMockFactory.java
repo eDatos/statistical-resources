@@ -60,7 +60,7 @@ public class DatasetMockFactory extends StatisticalResourcesMockFactory<Dataset>
     public static final String  DATASET_12_WITH_TWO_VERSIONS_WITH_QUERIES_IN_DRAFT_NAME                                                                                  = "DATASET_12_WITH_TWO_VERSIONS_WITH_QUERIES_IN_DRAFT";
     private static Dataset      DATASET_12_WITH_TWO_VERSIONS_WITH_QUERIES_IN_DRAFT;
     private static List<Object> dataset12Dependencies                                                                                                                    = new ArrayList<Object>();
-
+    
     protected static Dataset getDataset01Basic() {
         if (DATASET_01_BASIC == null) {
             DATASET_01_BASIC = createDatasetWithGeneratedVersion();

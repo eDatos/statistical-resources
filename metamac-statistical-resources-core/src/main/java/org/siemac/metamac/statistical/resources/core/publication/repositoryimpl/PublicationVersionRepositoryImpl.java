@@ -12,6 +12,7 @@ import org.joda.time.DateTime;
 import org.siemac.metamac.core.common.criteria.utils.CriteriaUtils;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatisticalResourceRepository;
+import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataStatisticalResourceRepository;
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResourceResult;
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
@@ -29,6 +30,9 @@ public class PublicationVersionRepositoryImpl extends PublicationVersionReposito
 
     @Autowired
     private LifeCycleStatisticalResourceRepository lifeCycleStatisticalResourceRepository;
+    
+    @Autowired
+    private SiemacMetadataStatisticalResourceRepository siemacMetadataStatisticalResourceRepository;
     
     public PublicationVersionRepositoryImpl() {
     }
@@ -118,7 +122,17 @@ public class PublicationVersionRepositoryImpl extends PublicationVersionReposito
     }
     
     @Override
-    public RelatedResourceResult retrieveResourceThatReplacesPublicationVersion(PublicationVersion publicationVersion) throws MetamacException {
-        return lifeCycleStatisticalResourceRepository.retrieveResourceThatReplacesThisResourceVersion(publicationVersion.getId(), TypeRelatedResourceEnum.PUBLICATION_VERSION);
+    public RelatedResourceResult retrieveIsReplacedByVersion(PublicationVersion publicationVersion) throws MetamacException {
+        return lifeCycleStatisticalResourceRepository.retrieveIsReplacedByVersion(publicationVersion.getId(), TypeRelatedResourceEnum.PUBLICATION_VERSION);
+    }
+    
+    @Override
+    public RelatedResourceResult retrieveIsReplacedBy(PublicationVersion publicationVersion) throws MetamacException {
+        return siemacMetadataStatisticalResourceRepository.retrieveIsReplacedBy(publicationVersion.getId(), TypeRelatedResourceEnum.PUBLICATION_VERSION);
+    }
+    
+    @Override
+    public RelatedResourceResult retrieveIsReplacedByOnlyLastPublished(PublicationVersion publicationVersion) throws MetamacException {
+        return siemacMetadataStatisticalResourceRepository.retrieveIsReplacedByOnlyLastPublished(publicationVersion.getId(), TypeRelatedResourceEnum.PUBLICATION_VERSION);
     }
 }

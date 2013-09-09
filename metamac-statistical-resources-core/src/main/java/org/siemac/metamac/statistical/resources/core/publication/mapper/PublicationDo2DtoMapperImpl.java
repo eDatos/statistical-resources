@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.base.mapper.BaseDo2DtoMapperImpl;
-import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResourceResult;
 import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.ChapterDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.CubeDto;
@@ -27,7 +26,7 @@ public class PublicationDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements
 
     @Autowired
     private PublicationVersionRepository publicationVersionRepository;
-    
+
     // ---------------------------------------------------------------------------------------------------------
     // PUBLICATIONS
     // ---------------------------------------------------------------------------------------------------------
@@ -69,7 +68,6 @@ public class PublicationDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements
     // PUBLICATION VERSION
     // --------------------------------------------------------------------------------------
 
-    
     @Override
     public PublicationVersionBaseDto publicationVersionDoToBaseDto(PublicationVersion source) throws MetamacException {
         if (source == null) {
@@ -80,7 +78,7 @@ public class PublicationDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements
         publicationVersionDoToBaseDto(source, target);
         return target;
     }
-    
+
     private PublicationVersionBaseDto publicationVersionDoToBaseDto(PublicationVersion source, PublicationVersionBaseDto target) throws MetamacException {
         if (source == null) {
             return null;
@@ -95,7 +93,7 @@ public class PublicationDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements
 
         return target;
     }
-    
+
     @Override
     public PublicationVersionDto publicationVersionDoToDto(PublicationVersion source) throws MetamacException {
         if (source == null) {
@@ -124,10 +122,10 @@ public class PublicationDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements
         // Hierarchy
         siemacMetadataStatisticalResourceDoToDto(source.getSiemacMetadataStatisticalResource(), target);
 
-        // Is replaced by version
-        RelatedResourceResult isReplacedByVersion = publicationVersionRepository.retrieveResourceThatReplacesPublicationVersion(source);
-        target.setIsReplacedByVersion(relatedResourceResultToDto(isReplacedByVersion));
-        
+        // Siemac metadata that needs to be filled
+        target.setIsReplacedByVersion(relatedResourceResultToDto(publicationVersionRepository.retrieveIsReplacedByVersion(source)));
+        target.setIsReplacedBy(relatedResourceResultToDto(publicationVersionRepository.retrieveIsReplacedBy(source)));
+
         // Identity
         target.setId(source.getId());
         target.setVersion(source.getVersion());
@@ -137,7 +135,6 @@ public class PublicationDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements
         return target;
     }
 
-    
     @Override
     public RelatedResourceDto publicationVersionDoToPublicationVersionRelatedResourceDto(PublicationVersion source) {
         if (source == null) {
@@ -170,7 +167,7 @@ public class PublicationDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements
 
         return target;
     }
-    
+
     // --------------------------------------------------------------------------------------
     // PUBLICATION STRUCTURE
     // --------------------------------------------------------------------------------------
@@ -180,14 +177,14 @@ public class PublicationDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements
         if (publicationVersion == null) {
             return null;
         }
-        
+
         PublicationStructureDto publicationStructureDto = new PublicationStructureDto();
         publicationStructureDto.setPublicationVersion(publicationVersionDoToPublicationVersionRelatedResourceDto(publicationVersion));
-        
+
         if (!publicationVersion.getChildrenFirstLevel().isEmpty()) {
             publicationStructureDto.getElements().addAll(elementsLevelDoListToDtoList(publicationVersion.getChildrenFirstLevel()));
         }
-        
+
         return publicationStructureDto;
     }
 

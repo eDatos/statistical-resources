@@ -6,6 +6,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
+import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResource;
+import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResourceResult;
 import org.siemac.metamac.core.common.exception.ExceptionLevelEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionBuilder;
@@ -126,10 +128,13 @@ public class DatasetDto2DoMapperImpl extends BaseDto2DoMapperImpl implements Dat
         if (target == null) {
             throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.PARAMETER_REQUIRED).withMessageParameters(ServiceExceptionParameters.DATASET_VERSION).build();
         }
+        
+        //Check replaces, can't replace a dataset already replaced by other dataset
+        checkCanDatasetReplacesOtherDataset(source);
 
         // Hierarchy
         siemacMetadataStatisticalResourceDtoToDo(source, target.getSiemacMetadataStatisticalResource(), ServiceExceptionParameters.DATASET_VERSION__SIEMAC_METADATA_STATISTICAL_RESOURCE);
-
+        
         // modifiable
         externalItemDtoCollectionToDoList(source.getGeographicGranularities(), target.getGeographicGranularities(), ServiceExceptionParameters.DATASET_VERSION__GEOGRAPHIC_GRANULARITIES);
         externalItemDtoCollectionToDoList(source.getTemporalGranularities(), target.getTemporalGranularities(), ServiceExceptionParameters.DATASET_VERSION__TEMPORAL_GRANULARITIES);
@@ -151,6 +156,21 @@ public class DatasetDto2DoMapperImpl extends BaseDto2DoMapperImpl implements Dat
                 ServiceExceptionParameters.DATASET_VERSION__STATISTIC_OFFICIALITY));
 
         return target;
+    }
+
+    protected void checkCanDatasetReplacesOtherDataset(DatasetVersionDto source) throws MetamacException {
+        if (source.getReplaces() != null) {
+            String currentUrn = source.getUrn();
+            RelatedResource resourceReplaced = relatedResourceDtoToDo(source.getReplaces(), null, ServiceExceptionParameters.DATASET_VERSION__SIEMAC_METADATA_STATISTICAL_RESOURCE__REPLACES);
+            if (currentUrn.equals(resourceReplaced.getDatasetVersion().getSiemacMetadataStatisticalResource().getUrn())) {
+                throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.DATASET_VERSION_CANT_REPLACE_ITSELF).withMessageParameters(currentUrn).build();
+            } else {
+                RelatedResourceResult resourceAlreadyReplacing = datasetVersionRepository.retrieveIsReplacedBy(resourceReplaced.getDatasetVersion());
+                if (resourceAlreadyReplacing != null && !resourceAlreadyReplacing.getUrn().equals(source.getUrn())) {
+                    throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.DATASET_VERSION_ALREADY_BEEN_REPLACED_BY_OTHER_DATASET_VERSION).withMessageParameters(currentUrn, source.getReplaces().getUrn()).build();
+                }
+            }
+        }
     }
 
     private boolean hasDateBeModified(DateTime previous, Date current) {

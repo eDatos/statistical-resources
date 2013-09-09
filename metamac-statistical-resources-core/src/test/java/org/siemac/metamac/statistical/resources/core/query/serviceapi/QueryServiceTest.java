@@ -318,10 +318,10 @@ public class QueryServiceTest extends StatisticalResourcesBaseTest implements Qu
 
         assertEquals(2, queriesPagedResult.getTotalRows());
         int i = 0;
-        assertEquals((queryVersionMockFactory.retrieveMock(QUERY_VERSION_27_V1_PUBLISHED_FOR_QUERY_06_NAME)).getLifeCycleStatisticalResource().getUrn(), queriesPagedResult.getValues().get(i++)
-                .getLifeCycleStatisticalResource().getUrn());
         assertEquals((queryVersionMockFactory.retrieveMock(QUERY_VERSION_28_V2_PUBLISHED_NO_VISIBLE_FOR_QUERY_06_NAME)).getLifeCycleStatisticalResource().getUrn(),
                 queriesPagedResult.getValues().get(i++).getLifeCycleStatisticalResource().getUrn());
+        assertEquals((queryVersionMockFactory.retrieveMock(QUERY_VERSION_27_V1_PUBLISHED_FOR_QUERY_06_NAME)).getLifeCycleStatisticalResource().getUrn(), queriesPagedResult.getValues().get(i++)
+                .getLifeCycleStatisticalResource().getUrn());
     }
 
     @Test

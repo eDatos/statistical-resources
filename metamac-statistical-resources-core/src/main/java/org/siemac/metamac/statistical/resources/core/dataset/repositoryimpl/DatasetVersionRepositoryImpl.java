@@ -2,6 +2,7 @@ package org.siemac.metamac.statistical.resources.core.dataset.repositoryimpl;
 
 import static org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteriaBuilder.criteriaFor;
 import static org.siemac.metamac.statistical.resources.core.base.domain.utils.RelatedResourceResultUtils.getRelatedResourceResultsFromRows;
+import static org.siemac.metamac.statistical.resources.core.base.domain.utils.RepositoryUtils.isLastPublishedVersionConditions;
 
 import java.util.List;
 
@@ -15,6 +16,7 @@ import org.joda.time.DateTime;
 import org.siemac.metamac.core.common.criteria.utils.CriteriaUtils;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatisticalResourceRepository;
+import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataStatisticalResourceRepository;
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResourceResult;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionProperties;
@@ -34,15 +36,9 @@ public class DatasetVersionRepositoryImpl extends DatasetVersionRepositoryBase {
     @Autowired
     private LifeCycleStatisticalResourceRepository lifeCycleStatisticalResourceRepository;
     
-    //@formatter:off
-    private static final String isLastPublishedVersionConditions = 
-        "( " +
-        " lifecycle.proc_status = :publishedProcStatus " +
-        "AND lifecycle.Valid_From <= :now " +
-        "AND (lifecycle.Valid_To > :now or lifecycle.Valid_To is null)" +
-    ")";
-    //@formatter:on
-
+    @Autowired
+    private SiemacMetadataStatisticalResourceRepository siemacMetadataStatisticalResourceRepository;
+    
     public DatasetVersionRepositoryImpl() {
     }
 
@@ -153,25 +149,24 @@ public class DatasetVersionRepositoryImpl extends DatasetVersionRepositoryBase {
 
     @SuppressWarnings("unchecked")
     @Override
-    public List<RelatedResourceResult> retrieveLastPublishedVersionResourcesThatRequiresDatasetVersion(DatasetVersion datasetVersion) throws MetamacException {
+    public List<RelatedResourceResult> retrieveIsRequiredByOnlyLastPublished(DatasetVersion datasetVersion) throws MetamacException {
         //@formatter:off
         Query query = getEntityManager().createNativeQuery(
-                "select lifecycle.code,"+
-                "       lifecycle.urn, " +
+                "select stat.code,"+
+                "       stat.urn, " +
                 "       operItems.code as statOperCode, " +
                 "       operItems.urn as statOperUrn, " +
                 "       maintainerItems.code_nested, " +
-                "       lifecycle.version_logic, " +
+                "       stat.version_logic, " +
                 "       loc.locale, " +
                 "       loc.label " +
                 " from  Tb_External_Items operItems, " +
                 "       Tb_External_Items maintainerItems, " +
-                "       Tb_Queries_Versions query Inner Join Tb_Stat_Resources lifecycle On query.lifecycle_resource_fk = lifecycle.Id, " +
+                "       Tb_Queries_Versions query Inner Join Tb_Stat_Resources stat On query.lifecycle_resource_fk = stat.Id, " +
                 "       Tb_localised_strings loc "+
-                " Where lifecycle.proc_status = :publishedProcStatus " +
-                "   And lifecycle.Stat_Operation_Fk = operItems.Id " +
-                "   And lifecycle.Maintainer_Fk = maintainerItems.Id "+
-                "   And lifecycle.Title_Fk = loc.International_String_Fk " +
+                " Where stat.Stat_Operation_Fk = operItems.Id " +
+                "   And stat.Maintainer_Fk = maintainerItems.Id "+
+                "   And stat.Title_Fk = loc.International_String_Fk " +
                 "   And query.Dataset_Version_Fk = :datasetVersionFk " +
                 "   And  " + isLastPublishedVersionConditions);
 
@@ -187,27 +182,27 @@ public class DatasetVersionRepositoryImpl extends DatasetVersionRepositoryBase {
 
     @SuppressWarnings("unchecked")
     @Override
-    public List<RelatedResourceResult> retrieveLastVersionResourcesThatRequiresDatasetVersion(DatasetVersion datasetVersion) throws MetamacException {
+    public List<RelatedResourceResult> retrieveIsRequiredBy(DatasetVersion datasetVersion) throws MetamacException {
         //     @formatter:off
         Query query = getEntityManager().createNativeQuery(
-                "select lifecycle.code, " +
-                "       lifecycle.urn, " +
+                "select stat.code, " +
+                "       stat.urn, " +
                 "       operItems.code as statOperCode, " +
                 "       operItems.urn as statOperUrn, " +
                 "       maintainerItems.code_nested, " +
-                "       lifecycle.version_logic, " +
+                "       stat.version_logic, " +
                 "       loc.locale, " +
                 "       loc.label  " +
                 "from   Tb_External_Items operItems, " +
                 "       Tb_External_Items maintainerItems, " +
-                "       Tb_Queries_Versions query Inner Join Tb_Stat_Resources lifecycle " +
-                "           On query.lifecycle_resource_fk = lifecycle.Id, " + " Tb_localised_strings loc " +
-        		"Where lifecycle.Stat_Operation_Fk = operItems.Id " +
-        		"     And lifecycle.Maintainer_Fk = maintainerItems.Id " +
-        		"     And lifecycle.Title_Fk = loc.International_String_Fk " +
+                "       Tb_Queries_Versions query Inner Join Tb_Stat_Resources stat " +
+                "           On query.lifecycle_resource_fk = stat.Id, " + " Tb_localised_strings loc " +
+        		"Where stat.Stat_Operation_Fk = operItems.Id " +
+        		"     And stat.Maintainer_Fk = maintainerItems.Id " +
+        		"     And stat.Title_Fk = loc.International_String_Fk " +
         		"     And query.Dataset_Version_Fk = :datasetVersionFk  " +
         		"     And ( " +
-        		"         lifecycle.Last_Version = 1 " +
+        		"         stat.Last_Version = 1 " +
         		"         OR" +
         		"       "+isLastPublishedVersionConditions + ")");
 
@@ -222,13 +217,22 @@ public class DatasetVersionRepositoryImpl extends DatasetVersionRepositoryBase {
     }
 
     @Override
-    public RelatedResourceResult retrieveLastPublishedVersionResourceThatReplacesDatasetVersion(DatasetVersion datasetVersion) throws MetamacException {
-        return lifeCycleStatisticalResourceRepository.retrieveLastPublishedVersionResourceThatReplacesThisResourceVersion(datasetVersion.getId(), TypeRelatedResourceEnum.DATASET_VERSION);
+    public RelatedResourceResult retrieveIsReplacedByVersionOnlyLastPublished(DatasetVersion datasetVersion) throws MetamacException {
+        return lifeCycleStatisticalResourceRepository.retrieveIsReplacedByVersionOnlyLastPublished(datasetVersion.getId(), TypeRelatedResourceEnum.DATASET_VERSION);
     }
 
     @Override
-    public RelatedResourceResult retrieveResourceThatReplacesDatasetVersion(DatasetVersion datasetVersion) throws MetamacException {
-        return lifeCycleStatisticalResourceRepository.retrieveResourceThatReplacesThisResourceVersion(datasetVersion.getId(), TypeRelatedResourceEnum.DATASET_VERSION);
+    public RelatedResourceResult retrieveIsReplacedByVersion(DatasetVersion datasetVersion) throws MetamacException {
+        return lifeCycleStatisticalResourceRepository.retrieveIsReplacedByVersion(datasetVersion.getId(), TypeRelatedResourceEnum.DATASET_VERSION);
     }
 
+    @Override
+    public RelatedResourceResult retrieveIsReplacedBy(DatasetVersion datasetVersion) throws MetamacException {
+        return siemacMetadataStatisticalResourceRepository.retrieveIsReplacedBy(datasetVersion.getId(), TypeRelatedResourceEnum.DATASET_VERSION);
+    }
+    
+    @Override
+    public RelatedResourceResult retrieveIsReplacedByOnlyLastPublished(DatasetVersion datasetVersion) throws MetamacException {
+        return siemacMetadataStatisticalResourceRepository.retrieveIsReplacedByOnlyLastPublished(datasetVersion.getId(), TypeRelatedResourceEnum.DATASET_VERSION);
+    }
 }

@@ -5,6 +5,7 @@ import static org.siemac.metamac.statistical.resources.web.client.StatisticalRes
 import java.util.Date;
 import java.util.List;
 
+import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionDto;
 import org.siemac.metamac.statistical.resources.web.client.base.utils.RequiredFieldUtils;
@@ -511,11 +512,10 @@ public class PublicationMetadataTabViewImpl extends StatisticalResourceMetadataB
         List<RelatedResourceDto> relatedResourceDtos = RelatedResourceUtils.getPublicationVersionBaseDtosAsRelatedResourceDtos(result.getPublicationBaseDtos());
         resourceRelationDescriptorsEditionForm.setRelatedResourcesForReplaces(relatedResourceDtos, result.getFirstResultOut(), relatedResourceDtos.size(), result.getTotalResults());
     }
-
+    
     @Override
-    public void setPublicationsForIsReplacedBy(GetPublicationVersionsResult result) {
-        List<RelatedResourceDto> relatedResourceDtos = RelatedResourceUtils.getPublicationVersionBaseDtosAsRelatedResourceDtos(result.getPublicationBaseDtos());
-        resourceRelationDescriptorsEditionForm.setRelatedResourcesForIsReplacedBy(relatedResourceDtos, result.getFirstResultOut(), relatedResourceDtos.size(), result.getTotalResults());
+    public void setStatisticalOperationsForReplacesSelection(List<ExternalItemDto> results, ExternalItemDto defaultSelected) {
+        resourceRelationDescriptorsEditionForm.setStatisticalOperationsForReplacesSelection(results, defaultSelected);
     }
 
     @Override

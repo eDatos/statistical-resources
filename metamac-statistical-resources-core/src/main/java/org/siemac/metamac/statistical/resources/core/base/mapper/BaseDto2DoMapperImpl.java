@@ -103,7 +103,6 @@ public class BaseDto2DoMapperImpl extends CommonDto2DoMapperImpl implements Base
         target.setNewnessUntilDate(dateDtoToDo(source.getNewnessUntilDate()));
 
         target.setReplaces(relatedResourceDtoToDo(source.getReplaces(), target.getReplaces(), addParameter(metadataName, ServiceExceptionSingleParameters.REPLACES)));
-        target.setIsReplacedBy(relatedResourceDtoToDo(source.getIsReplacedBy(), target.getIsReplacedBy(), addParameter(metadataName, ServiceExceptionSingleParameters.IS_REPLACED_BY)));
 
         target.setCommonMetadata(externalItemDtoToDo(source.getCommonMetadata(), target.getCommonMetadata(), ServiceExceptionSingleParameters.COMMON_METADATA));
         target.setAccessRights(internationalStringDtoToDo(source.getAccessRights(), target.getAccessRights(), addParameter(metadataName, ServiceExceptionSingleParameters.ACCESS_RIGHTS)));

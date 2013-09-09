@@ -2,8 +2,8 @@ package org.siemac.metamac.statistical.resources.web.client.publication.widgets.
 
 import org.siemac.metamac.statistical.resources.web.client.publication.view.handlers.PublicationMetadataTabUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.SiemacMetadataResourceRelationDescriptorsEditionForm;
+import org.siemac.metamac.statistical.resources.web.shared.criteria.VersionableStatisticalResourceWebCriteria;
 import org.siemac.metamac.web.common.client.view.handlers.BaseUiHandlers;
-import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
 
 import com.gwtplatform.mvp.client.UiHandlers;
 
@@ -17,8 +17,13 @@ public class PublicationResourceRelationDescriptorsEditionForm extends SiemacMet
     }
 
     @Override
-    public void retrieveResourcesForReplaces(int firstResult, int maxResults, MetamacWebCriteria criteria) {
+    public void retrieveResourcesForReplaces(int firstResult, int maxResults, VersionableStatisticalResourceWebCriteria criteria) {
         uiHandlers.retrievePublicationsForReplaces(firstResult, maxResults, criteria);
+    }
+
+    @Override
+    public void retrieveStatisticalOperationsForReplacesSelection() {
+        uiHandlers.retrieveStatisticalOperationsForReplacesSelection();
     }
 
     @Override

@@ -26,6 +26,7 @@ import org.siemac.metamac.statistical.resources.web.client.utils.WaitingAsyncCal
 import org.siemac.metamac.statistical.resources.web.shared.criteria.DatasetVersionWebCriteria;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.DsdWebCriteria;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.ItemSchemeWebCriteria;
+import org.siemac.metamac.statistical.resources.web.shared.criteria.VersionableStatisticalResourceWebCriteria;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.DeleteDatasetVersionsAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.DeleteDatasetVersionsResult;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetVersionAction;
@@ -81,7 +82,7 @@ public class DatasetMetadataTabPresenter extends StatisticalResourceMetadataBase
 
         // metadata fill methods
         void setDatasetsForReplaces(GetDatasetVersionsResult result);
-        void setDatasetsForIsReplacedBy(GetDatasetVersionsResult result);
+        void setStatisticalOperationsForReplacesSelection(List<ExternalItemDto> results, ExternalItemDto defaultSelected);
         void setDatasetsMainCoverages(GetDatasetVersionMainCoveragesResult result);
 
         void setStatisticalOperationsForDsdSelection(List<ExternalItemDto> results, ExternalItemDto defaultSelected);
@@ -301,10 +302,11 @@ public class DatasetMetadataTabPresenter extends StatisticalResourceMetadataBase
     }
 
     @Override
-    public void retrieveDatasetsForReplaces(int firstResult, int maxResults, MetamacWebCriteria criteria) {
+    public void retrieveDatasetsForReplaces(int firstResult, int maxResults, VersionableStatisticalResourceWebCriteria criteria) {
 
         DatasetVersionWebCriteria versionableCriteria = new DatasetVersionWebCriteria(criteria.getCriteria());
-        versionableCriteria.setOnlyLastVersion(false);
+        versionableCriteria.setOnlyLastVersion(criteria.isOnlyLastVersion());
+        versionableCriteria.setStatisticalOperationUrn(criteria.getStatisticalOperationUrn());
 
         dispatcher.execute(new GetDatasetVersionsAction(firstResult, maxResults, versionableCriteria), new WaitingAsyncCallbackHandlingError<GetDatasetVersionsResult>(this) {
 
@@ -377,6 +379,17 @@ public class DatasetMetadataTabPresenter extends StatisticalResourceMetadataBase
             @Override
             public void onWaitSuccess(GetStatisticalOperationsPaginatedListResult result) {
                 getView().setStatisticalOperationsForDsdSelection(result.getOperationsList(), StatisticalResourcesDefaults.getSelectedStatisticalOperation());
+            }
+        });
+    }
+    
+    @Override
+    public void retrieveStatisticalOperationsForReplacesSelection() {
+        dispatcher.execute(new GetStatisticalOperationsPaginatedListAction(0, Integer.MAX_VALUE, null), new WaitingAsyncCallbackHandlingError<GetStatisticalOperationsPaginatedListResult>(this) {
+            
+            @Override
+            public void onWaitSuccess(GetStatisticalOperationsPaginatedListResult result) {
+                getView().setStatisticalOperationsForReplacesSelection(result.getOperationsList(), StatisticalResourcesDefaults.getSelectedStatisticalOperation());
             }
         });
     }

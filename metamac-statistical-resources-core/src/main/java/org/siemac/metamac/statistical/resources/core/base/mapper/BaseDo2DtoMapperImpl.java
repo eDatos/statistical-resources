@@ -72,7 +72,7 @@ public class BaseDo2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Base
         target.setNewnessUntilDate(dateDoToDto(source.getNewnessUntilDate()));
 
         target.setReplaces(relatedResourceDoToDto(source.getReplaces()));
-        target.setIsReplacedBy(relatedResourceDoToDto(source.getIsReplacedBy()));
+        //Is replaced_by is filled in higher level resource mapper
 
         target.getHasPart().clear();
         target.getHasPart().addAll(relatedResourceDoCollectionToDtoCollection(source.getHasPart()));

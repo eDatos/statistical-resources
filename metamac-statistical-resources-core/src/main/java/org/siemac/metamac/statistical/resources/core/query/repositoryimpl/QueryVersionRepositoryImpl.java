@@ -98,7 +98,7 @@ public class QueryVersionRepositoryImpl extends QueryVersionRepositoryBase {
     }
 
     @Override
-    public RelatedResourceResult retrieveResourceThatReplacesQueryVersion(QueryVersion queryVersion) throws MetamacException {
-        return lifeCycleStatisticalResourceRepository.retrieveResourceThatReplacesThisResourceVersion(queryVersion.getId(), TypeRelatedResourceEnum.QUERY_VERSION);
+    public RelatedResourceResult retrieveIsReplacedByVersion(QueryVersion queryVersion) throws MetamacException {
+        return lifeCycleStatisticalResourceRepository.retrieveIsReplacedByVersion(queryVersion.getId(), TypeRelatedResourceEnum.QUERY_VERSION);
     }
 }

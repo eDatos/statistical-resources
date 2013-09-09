@@ -1,20 +1,16 @@
 package org.siemac.metamac.statistical.resources.core.utils.mocks.factories;
 
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.getQueryVersion21ForQuery03;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.getQueryVersion22ForQuery03AndLastVersion;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.getQueryVersion23ForQuery04;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.getQueryVersion24V1PublishedForQuery05;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.getQueryVersion25V2PublishedForQuery05;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.getQueryVersion26V3PublishedForQuery05;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.getQueryVersion27V1PublishedForQuery06;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.getQueryVersion28V2PublishedNoVisibleForQuery06;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.getQueryVersion29SimpleForQuery07Dataset56;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.getQueryVersion30SimpleForQuery07Dataset56;
-
+import org.joda.time.DateTime;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
+import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryStatusEnum;
 import org.siemac.metamac.statistical.resources.core.query.domain.Query;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
+import org.siemac.metamac.statistical.resources.core.utils.QueryLifecycleTestUtils;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.QueryMock;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.QueryVersionMock;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesDoMocks;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesNotPersistedDoMocks;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesPersistedDoMocks;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -60,122 +56,205 @@ public class QueryMockFactory extends StatisticalResourcesMockFactory<Query> {
     protected static Query getQuery03With2QueryVersions() {
         if (QUERY_03_BASIC_WITH_2_QUERY_VERSIONS == null) {
             Query query = createQueryWithoutGeneratedVersion();
+
+            DatasetVersion datasetVersion = getStatisticalResourcesPersistedDoMocks().mockDatasetVersion();
+
+            QueryVersion queryV01 = mockQuery03V01(query, datasetVersion);
+            QueryVersion queryV02 = mockQuery03V02(query, datasetVersion);
+
+            queryV02.getLifeCycleStatisticalResource().setReplacesVersion(StatisticalResourcesPersistedDoMocks.mockQueryVersionRelated(queryV01));
+
             QUERY_03_BASIC_WITH_2_QUERY_VERSIONS = query;
-            setQuery03Versions(QUERY_03_BASIC_WITH_2_QUERY_VERSIONS);
         }
         return QUERY_03_BASIC_WITH_2_QUERY_VERSIONS;
     }
 
-    private static void setQuery03Versions(Query query) {
-        QueryVersion dsV1 = getQueryVersion21ForQuery03();
-        QueryVersion dsV2 = getQueryVersion22ForQuery03AndLastVersion();
+    private static QueryVersion mockQuery03V01(Query query, DatasetVersion datasetVersion) {
+        QueryVersionMock mock = buildSimpleMock(query, datasetVersion, INIT_VERSION);
 
-        query.addVersion(dsV1);
-        dsV1.setQuery(query);
+        // not last version
+        mock.getLifeCycleStatisticalResource().setCreationDate(new DateTime().minusDays(2));
+        mock.getLifeCycleStatisticalResource().setValidFrom(new DateTime().minusDays(2));
+        mock.getLifeCycleStatisticalResource().setLastVersion(Boolean.FALSE);
 
-        query.addVersion(dsV2);
-        dsV2.setQuery(query);
+        QueryVersion queryVersion = getStatisticalResourcesPersistedDoMocks().mockQueryVersion(mock);
+        QueryLifecycleTestUtils.prepareToVersioning(queryVersion);
+        return queryVersion;
+    }
 
-        dsV2.getLifeCycleStatisticalResource().setReplacesVersion(StatisticalResourcesNotPersistedDoMocks.mockRelatedResourceLinkedToQueryVersion(dsV1));
+    private static QueryVersion mockQuery03V02(Query query, DatasetVersion datasetVersion) {
+        QueryVersionMock mock = buildSimpleMock(query, datasetVersion, SECOND_VERSION);
+
+        // Is last version
+        mock.getLifeCycleStatisticalResource().setCreationDate(new DateTime().minusDays(1));
+        mock.getLifeCycleStatisticalResource().setLastVersion(Boolean.TRUE);
+
+        return getStatisticalResourcesPersistedDoMocks().mockQueryVersion(mock);
     }
 
     protected static Query getQuery04With1QueryVersions() {
         if (QUERY_04_FULL_FILLED_WITH_1_QUERY_VERSIONS == null) {
             Query query = createQueryWithoutGeneratedVersion();
-            // Query version relation is set in version factory
+
+            mockQuery04V01(query, getStatisticalResourcesPersistedDoMocks().mockDatasetVersion());
+
             QUERY_04_FULL_FILLED_WITH_1_QUERY_VERSIONS = query;
-            setQuery04Versions(query);
         }
         return QUERY_04_FULL_FILLED_WITH_1_QUERY_VERSIONS;
     }
 
-    private static void setQuery04Versions(Query query) {
-        QueryVersion dsV1 = getQueryVersion23ForQuery04();
-
-        query.addVersion(dsV1);
-        dsV1.setQuery(query);
+    private static QueryVersion mockQuery04V01(Query query, DatasetVersion datasetVersion) {
+        QueryVersionMock mock = buildSimpleMock(query, datasetVersion, INIT_VERSION);
+        mock.getLifeCycleStatisticalResource().setCreatedBy(StatisticalResourcesDoMocks.mockString(10));
+        mock.getLifeCycleStatisticalResource().setCreatedDate(StatisticalResourcesDoMocks.mockDateTime());
+        mock.getLifeCycleStatisticalResource().setLastUpdatedBy(StatisticalResourcesDoMocks.mockString(10));
+        mock.getLifeCycleStatisticalResource().setLastUpdated(StatisticalResourcesDoMocks.mockDateTime());
+        return getStatisticalResourcesPersistedDoMocks().mockQueryVersion(mock);
     }
 
     protected static Query getQuery05WithMultiplePublishedVersions() {
         if (QUERY_05_WITH_MULTIPLE_PUBLISHED_VERSIONS == null) {
             Query query = createQueryWithoutGeneratedVersion();
+
+            DatasetVersion dataset = getStatisticalResourcesPersistedDoMocks().mockDatasetVersion();
+
+            QueryVersion queryV01 = mockQuery05V01Published(query, dataset);
+            QueryVersion queryV02 = mockQuery05V02Published(query, dataset);
+            QueryVersion queryV03 = mockQuery05V03Published(query, dataset);
+
+            queryV02.getLifeCycleStatisticalResource().setReplacesVersion(StatisticalResourcesPersistedDoMocks.mockQueryVersionRelated(queryV01));
+            queryV03.getLifeCycleStatisticalResource().setReplacesVersion(StatisticalResourcesPersistedDoMocks.mockQueryVersionRelated(queryV02));
+
             QUERY_05_WITH_MULTIPLE_PUBLISHED_VERSIONS = query;
-            setQuery05Versions(QUERY_05_WITH_MULTIPLE_PUBLISHED_VERSIONS);
         }
         return QUERY_05_WITH_MULTIPLE_PUBLISHED_VERSIONS;
     }
 
-    private static void setQuery05Versions(Query query) {
-        QueryVersion dsV1 = getQueryVersion24V1PublishedForQuery05();
-        QueryVersion dsV2 = getQueryVersion25V2PublishedForQuery05();
-        QueryVersion dsV3 = getQueryVersion26V3PublishedForQuery05();
+    private static QueryVersion mockQuery05V01Published(Query query, DatasetVersion datasetVersion) {
+        QueryVersionMock mock = buildPublishedQueryVersionMock(query, datasetVersion, INIT_VERSION, new DateTime().minusDays(3));
+        mock.getLifeCycleStatisticalResource().setLastVersion(false);
 
-        query.addVersion(dsV1);
-        dsV1.setQuery(query);
+        QueryVersion queryVersion = getStatisticalResourcesPersistedDoMocks().mockQueryVersion(mock);
+        QueryLifecycleTestUtils.prepareToVersioning(queryVersion);
+        return queryVersion;
+    }
 
-        query.addVersion(dsV2);
-        dsV2.setQuery(query);
+    private static QueryVersion mockQuery05V02Published(Query query, DatasetVersion datasetVersion) {
+        QueryVersionMock mock = buildPublishedQueryVersionMock(query, datasetVersion, SECOND_VERSION, new DateTime().minusDays(2));
+        mock.getLifeCycleStatisticalResource().setLastVersion(false);
 
-        query.addVersion(dsV3);
-        dsV3.setQuery(query);
+        QueryVersion queryVersion = getStatisticalResourcesPersistedDoMocks().mockQueryVersion(mock);
+        QueryLifecycleTestUtils.prepareToVersioning(queryVersion);
+        return queryVersion;
+    }
 
-        dsV2.getLifeCycleStatisticalResource().setReplacesVersion(StatisticalResourcesNotPersistedDoMocks.mockRelatedResourceLinkedToQueryVersion(dsV1));
-        dsV3.getLifeCycleStatisticalResource().setReplacesVersion(StatisticalResourcesNotPersistedDoMocks.mockRelatedResourceLinkedToQueryVersion(dsV2));
+    private static QueryVersion mockQuery05V03Published(Query query, DatasetVersion datasetVersion) {
+        QueryVersionMock mock = buildPublishedQueryVersionMock(query, datasetVersion, THIRD_VERSION, new DateTime().minusDays(1));
+        mock.getLifeCycleStatisticalResource().setLastVersion(false);
+
+        QueryVersion queryVersion = getStatisticalResourcesPersistedDoMocks().mockQueryVersion(mock);
+        QueryLifecycleTestUtils.prepareToVersioning(queryVersion);
+        return queryVersion;
     }
 
     protected static Query getQuery06WithMultiplePublishedVersionsAndLatestNoVisible() {
         if (QUERY_06_WITH_MULTIPLE_PUBLISHED_VERSIONS_AND_LATEST_NO_VISIBLE == null) {
             Query query = createQueryWithoutGeneratedVersion();
+
+            DatasetVersion dataset = getStatisticalResourcesPersistedDoMocks().mockDatasetVersion();
+
+            QueryVersion queryV01 = mockQuery06V01(query, dataset);
+
+            QueryVersion queryV02 = mockQuery06V02(query, dataset);
+
+            queryV02.getLifeCycleStatisticalResource().setReplacesVersion(StatisticalResourcesNotPersistedDoMocks.mockRelatedResourceLinkedToQueryVersion(queryV01));
+
             QUERY_06_WITH_MULTIPLE_PUBLISHED_VERSIONS_AND_LATEST_NO_VISIBLE = query;
-            setQuery06Versions(QUERY_06_WITH_MULTIPLE_PUBLISHED_VERSIONS_AND_LATEST_NO_VISIBLE);
         }
         return QUERY_06_WITH_MULTIPLE_PUBLISHED_VERSIONS_AND_LATEST_NO_VISIBLE;
     }
 
-    private static void setQuery06Versions(Query query) {
-        QueryVersion dsV1 = getQueryVersion27V1PublishedForQuery06();
-        QueryVersion dsV2 = getQueryVersion28V2PublishedNoVisibleForQuery06();
+    private static QueryVersion mockQuery06V01(Query query, DatasetVersion datasetVersion) {
+        QueryVersionMock mock = buildPublishedQueryVersionMock(query, datasetVersion, INIT_VERSION, new DateTime().minusDays(1));
+        // last version
+        mock.getLifeCycleStatisticalResource().setLastUpdated(new DateTime().minusHours(22));
+        mock.getLifeCycleStatisticalResource().setLastVersion(false);
 
-        query.addVersion(dsV1);
-        dsV1.setQuery(query);
+        QueryVersion queryVersion = getStatisticalResourcesPersistedDoMocks().mockQueryVersion(mock);
+        QueryLifecycleTestUtils.prepareToVersioning(queryVersion);
+        return queryVersion;
+    }
 
-        query.addVersion(dsV2);
-        dsV2.setQuery(query);
+    private static QueryVersion mockQuery06V02(Query query, DatasetVersion datasetVersion) {
+        QueryVersionMock mock = buildPublishedQueryVersionMock(query, datasetVersion, SECOND_VERSION, new DateTime().plusDays(1));
+        // last version
+        mock.getLifeCycleStatisticalResource().setLastUpdated(new DateTime().minusHours(1));
+        mock.getLifeCycleStatisticalResource().setLastVersion(true);
 
-        dsV2.getLifeCycleStatisticalResource().setReplacesVersion(StatisticalResourcesNotPersistedDoMocks.mockRelatedResourceLinkedToQueryVersion(dsV1));
+        QueryVersion queryVersion = getStatisticalResourcesPersistedDoMocks().mockQueryVersion(mock);
+        QueryLifecycleTestUtils.prepareToVersioning(queryVersion);
+        return queryVersion;
     }
 
     protected static Query getQuery07SimpleMultiVersion() {
         if (QUERY_07_SIMPLE_MULTI_VERSION == null) {
             Query query = createQueryWithoutGeneratedVersion();
+
+            DatasetVersion datasetVersion = DatasetVersionMockFactory.getDatasetVersion56DraftWithDatasourceAndQueries();
+
+            QueryVersion queryV01 = mockQuery07V01(query, datasetVersion);
+            QueryVersion queryV02 = mockQuery07V02(query, datasetVersion);
+
+            queryV02.getLifeCycleStatisticalResource().setReplacesVersion(StatisticalResourcesPersistedDoMocks.mockQueryVersionRelated(queryV01));
+
             QUERY_07_SIMPLE_MULTI_VERSION = query;
-            setQuery07Versions(QUERY_07_SIMPLE_MULTI_VERSION);
         }
         return QUERY_07_SIMPLE_MULTI_VERSION;
     }
 
-    private static void setQuery07Versions(Query query) {
-        QueryVersion dsV1 = getQueryVersion29SimpleForQuery07Dataset56();
-        QueryVersion dsV2 = getQueryVersion30SimpleForQuery07Dataset56();
+    private static QueryVersion mockQuery07V01(Query query, DatasetVersion datasetVersion) {
+        QueryVersionMock mock = buildSimpleMock(query, datasetVersion, INIT_VERSION);
+        mock.setStatus(QueryStatusEnum.ACTIVE);
+        return getStatisticalResourcesPersistedDoMocks().mockQueryVersion(mock);
+    }
 
-        query.addVersion(dsV1);
-        dsV1.setQuery(query);
-
-        query.addVersion(dsV2);
-        dsV2.setQuery(query);
-
-        dsV2.getLifeCycleStatisticalResource().setReplacesVersion(StatisticalResourcesNotPersistedDoMocks.mockRelatedResourceLinkedToQueryVersion(dsV1));
+    private static QueryVersion mockQuery07V02(Query query, DatasetVersion datasetVersion) {
+        QueryVersionMock mock = buildSimpleMock(query, datasetVersion, SECOND_VERSION);
+        mock.setStatus(QueryStatusEnum.ACTIVE);
+        return getStatisticalResourcesPersistedDoMocks().mockQueryVersion(mock);
     }
 
     public static Query generateQueryWithGeneratedVersion() {
         return getStatisticalResourcesPersistedDoMocks().mockQueryWithGeneratedQueryVersion();
     }
-    
+
     private static Query createQueryWithGeneratedVersion() {
         return getStatisticalResourcesPersistedDoMocks().mockQueryWithGeneratedQueryVersion();
     }
 
     private static Query createQueryWithoutGeneratedVersion() {
         return getStatisticalResourcesPersistedDoMocks().mockQuery(new QueryMock());
+    }
+
+    private static QueryVersionMock buildSimpleMock(Query query, DatasetVersion datasetVersion, String versionLogic) {
+        QueryVersionMock mock = new QueryVersionMock();
+        mock.setQuery(query);
+        mock.setDatasetVersion(datasetVersion);
+        mock.setVersionLogic(versionLogic);
+        return mock;
+    }
+
+    private static QueryVersionMock buildPublishedQueryVersionMock(Query query, DatasetVersion datasetVersion, String versionLogic, DateTime validFrom) {
+        QueryVersionMock mock = new QueryVersionMock();
+        mock.setQuery(query);
+        mock.setDatasetVersion(datasetVersion);
+        mock.setVersionLogic(versionLogic);
+        if (validFrom.isAfterNow()) {
+            mock.getLifeCycleStatisticalResource().setCreationDate(new DateTime());
+        } else {
+            mock.getLifeCycleStatisticalResource().setCreationDate(validFrom.minusHours(1));
+        }
+        mock.getLifeCycleStatisticalResource().setValidFrom(validFrom);
+        return mock;
     }
 }

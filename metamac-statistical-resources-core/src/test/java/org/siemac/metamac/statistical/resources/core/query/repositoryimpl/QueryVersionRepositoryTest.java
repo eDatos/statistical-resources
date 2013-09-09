@@ -25,7 +25,6 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 import java.util.Arrays;
 import java.util.List;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.siemac.metamac.core.common.exception.MetamacException;
@@ -274,36 +273,36 @@ public class QueryVersionRepositoryTest extends StatisticalResourcesBaseTest imp
         QueryVersion actual = queryVersionRepository.retrieveLastPublishedVersion(queryUrn);
         assertEqualsQueryVersion(expected, actual);
     }
-    
-    
+
     @Test
     @Override
-    @MetamacMock({QUERY_VERSION_08_BASIC_DISCONTINUED_NAME, QUERY_VERSION_09_BASIC_PENDING_REVIEW_NAME, DATASET_VERSION_03_FOR_DATASET_03_NAME, QUERY_VERSION_02_BASIC_ORDERED_01_NAME, QUERY_VERSION_03_BASIC_ORDERED_02_NAME})
+    @MetamacMock({QUERY_VERSION_08_BASIC_DISCONTINUED_NAME, QUERY_VERSION_09_BASIC_PENDING_REVIEW_NAME, DATASET_VERSION_03_FOR_DATASET_03_NAME, QUERY_VERSION_02_BASIC_ORDERED_01_NAME,
+            QUERY_VERSION_03_BASIC_ORDERED_02_NAME})
     public void testFindLinkedToDatasetVersion() throws Exception {
         DatasetVersion datasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_03_FOR_DATASET_03_NAME);
-        
+
         QueryVersion query01 = queryVersionMockFactory.retrieveMock(QUERY_VERSION_08_BASIC_DISCONTINUED_NAME);
         QueryVersion query02 = queryVersionMockFactory.retrieveMock(QUERY_VERSION_09_BASIC_PENDING_REVIEW_NAME);
-        
+
         List<QueryVersion> queryVersions = queryVersionRepository.findLinkedToDatasetVersion(datasetVersion.getId());
-        
+
         QueryAsserts.assertEqualsQueryVersionCollection(Arrays.asList(query01, query02), queryVersions);
     }
 
     @Test
     @Override
     @MetamacMock(QUERY_06_WITH_MULTIPLE_PUBLISHED_VERSIONS_AND_LATEST_NO_VISIBLE_NAME)
-    public void testRetrieveResourceThatReplacesQueryVersion() throws Exception {
+    public void testRetrieveIsReplacedByVersion() throws Exception {
         QueryVersion firstVersion = queryVersionMockFactory.retrieveMock(QUERY_VERSION_27_V1_PUBLISHED_FOR_QUERY_06_NAME);
         QueryVersion secondVersion = queryVersionMockFactory.retrieveMock(QUERY_VERSION_28_V2_PUBLISHED_NO_VISIBLE_FOR_QUERY_06_NAME);
-        
-        {   
-            RelatedResourceResult resource = queryVersionRepository.retrieveResourceThatReplacesQueryVersion(firstVersion);
+
+        {
+            RelatedResourceResult resource = queryVersionRepository.retrieveIsReplacedByVersion(firstVersion);
             assertNotNull(resource);
             CommonAsserts.assertEqualsRelatedResourceResultQueryVersion(secondVersion, resource);
         }
         {
-            RelatedResourceResult resource = queryVersionRepository.retrieveResourceThatReplacesQueryVersion(secondVersion);
+            RelatedResourceResult resource = queryVersionRepository.retrieveIsReplacedByVersion(secondVersion);
             assertNull(resource);
         }
     }

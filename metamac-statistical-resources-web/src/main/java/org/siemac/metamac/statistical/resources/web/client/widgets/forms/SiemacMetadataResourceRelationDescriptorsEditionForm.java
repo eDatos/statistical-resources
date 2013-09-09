@@ -7,6 +7,8 @@ import static org.siemac.metamac.statistical.resources.web.client.widgets.forms.
 
 import java.util.List;
 
+import org.siemac.metamac.core.common.dto.ExternalItemDto;
+import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.SiemacMetadataStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.web.client.constants.StatisticalResourceWebConstants;
@@ -14,10 +16,9 @@ import org.siemac.metamac.statistical.resources.web.client.model.ds.SiemacMetada
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.fields.RelatedResourceLinkItem;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.fields.RelatedResourceListItem;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.fields.SearchRelatedResourceLinkItem;
-import org.siemac.metamac.statistical.resources.web.client.widgets.windows.search.SearchSingleRelatedResourcePaginatedWindow;
+import org.siemac.metamac.statistical.resources.web.client.widgets.windows.search.SearchSingleVersionableStatisticalRelatedResourcePaginatedWindow;
+import org.siemac.metamac.statistical.resources.web.shared.criteria.VersionableStatisticalResourceWebCriteria;
 import org.siemac.metamac.web.common.client.widgets.actions.search.SearchPaginatedAction;
-import org.siemac.metamac.web.common.shared.RelatedResourceBaseUtils;
-import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
 
 import com.gwtplatform.mvp.client.UiHandlers;
 import com.smartgwt.client.widgets.form.fields.events.ClickHandler;
@@ -26,8 +27,7 @@ import com.smartgwt.client.widgets.form.fields.events.FormItemIconClickEvent;
 
 public abstract class SiemacMetadataResourceRelationDescriptorsEditionForm extends NavigationEnabledDynamicForm {
 
-    private SearchSingleRelatedResourcePaginatedWindow searchReplacesWindow;
-    private SearchSingleRelatedResourcePaginatedWindow searchIsReplacedByWindow;
+    private SearchSingleVersionableStatisticalRelatedResourcePaginatedWindow searchReplacesWindow;
 
     public SiemacMetadataResourceRelationDescriptorsEditionForm() {
         super(getConstants().formResourceRelationDescriptors());
@@ -53,7 +53,7 @@ public abstract class SiemacMetadataResourceRelationDescriptorsEditionForm exten
     }
 
     private void setReplaces(RelatedResourceDto relatedResourceDto) {
-        setValue(SiemacMetadataDS.REPLACES, RelatedResourceBaseUtils.getRelatedResourceName(relatedResourceDto));
+        setRelatedResourceValue(getItem(SiemacMetadataDS.REPLACES), relatedResourceDto);
     }
 
     public void setRelatedResourcesForReplaces(List<RelatedResourceDto> relatedResourceDtos, int firstResult, int elementsInPage, int totalResults) {
@@ -62,11 +62,11 @@ public abstract class SiemacMetadataResourceRelationDescriptorsEditionForm exten
             searchReplacesWindow.refreshSourcePaginationInfo(firstResult, elementsInPage, totalResults);
         }
     }
-
-    public void setRelatedResourcesForIsReplacedBy(List<RelatedResourceDto> relatedResourceDtos, int firstResult, int elementsInPage, int totalResults) {
-        if (searchIsReplacedByWindow != null) {
-            searchIsReplacedByWindow.setResources(relatedResourceDtos);
-            searchIsReplacedByWindow.refreshSourcePaginationInfo(firstResult, elementsInPage, totalResults);
+    
+    public void setStatisticalOperationsForReplacesSelection(List<ExternalItemDto> externalItemsDtos, ExternalItemDto defaultSelected) {
+        if (searchReplacesWindow != null) {
+            searchReplacesWindow.setStatisticalOperations(externalItemsDtos);
+            searchReplacesWindow.setSelectedStatisticalOperation(defaultSelected);
         }
     }
 
@@ -91,19 +91,21 @@ public abstract class SiemacMetadataResourceRelationDescriptorsEditionForm exten
             @Override
             public void onFormItemClick(FormItemIconClickEvent event) {
 
-                searchReplacesWindow = new SearchSingleRelatedResourcePaginatedWindow(getConstants().resourceSelection(), StatisticalResourceWebConstants.FORM_LIST_MAX_RESULTS,
-                        new SearchPaginatedAction<MetamacWebCriteria>() {
+                searchReplacesWindow = new SearchSingleVersionableStatisticalRelatedResourcePaginatedWindow(getConstants().resourceSelection(), StatisticalResourceWebConstants.FORM_LIST_MAX_RESULTS,
+                        new SearchPaginatedAction<VersionableStatisticalResourceWebCriteria>() {
 
                             @Override
-                            public void retrieveResultSet(int firstResult, int maxResults, MetamacWebCriteria webCriteria) {
+                            public void retrieveResultSet(int firstResult, int maxResults, VersionableStatisticalResourceWebCriteria webCriteria) {
                                 retrieveResourcesForReplaces(firstResult, maxResults, webCriteria);
                             }
 
                         });
 
                 // Load resources (to populate the selection window)
-                retrieveResourcesForReplaces(0, StatisticalResourceWebConstants.FORM_LIST_MAX_RESULTS, null);
+                retrieveResourcesForReplaces(0, StatisticalResourceWebConstants.FORM_LIST_MAX_RESULTS, searchReplacesWindow.getSearchCriteria());
 
+                retrieveStatisticalOperationsForReplacesSelection();
+                
                 searchReplacesWindow.setSaveAction(new ClickHandler() {
 
                     @Override
@@ -121,5 +123,6 @@ public abstract class SiemacMetadataResourceRelationDescriptorsEditionForm exten
     }
 
     public abstract void setUiHandlers(UiHandlers uiHandlers);
-    public abstract void retrieveResourcesForReplaces(int firstResult, int maxResults, MetamacWebCriteria criteria);
+    public abstract void retrieveResourcesForReplaces(int firstResult, int maxResults, VersionableStatisticalResourceWebCriteria criteria);
+    public abstract void retrieveStatisticalOperationsForReplacesSelection();
 }

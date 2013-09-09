@@ -3,13 +3,13 @@ package org.siemac.metamac.statistical.resources.core.utils.mocks.factories;
 import static org.siemac.metamac.statistical.resources.core.utils.PublicationLifecycleTestUtils.prepareToDiffusionValidation;
 import static org.siemac.metamac.statistical.resources.core.utils.PublicationLifecycleTestUtils.prepareToProductionValidation;
 import static org.siemac.metamac.statistical.resources.core.utils.PublicationLifecycleTestUtils.prepareToValidationRejected;
+import static org.siemac.metamac.statistical.resources.core.utils.PublicationLifecycleTestUtils.prepareToVersioning;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetMockFactory.getDataset01Basic;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetMockFactory.getDataset03With2DatasetVersions;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryMockFactory.generateQueryWithGeneratedVersion;
 
 import org.joda.time.DateTime;
 import org.siemac.metamac.statistical.resources.core.base.domain.VersionRationaleType;
-import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
 import org.siemac.metamac.statistical.resources.core.enume.domain.NextVersionTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
@@ -17,6 +17,7 @@ import org.siemac.metamac.statistical.resources.core.enume.domain.VersionRationa
 import org.siemac.metamac.statistical.resources.core.publication.domain.ElementLevel;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
 import org.siemac.metamac.statistical.resources.core.query.domain.Query;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.PublicationVersionMock;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesDoMocks;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesPersistedDoMocks;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -147,6 +148,12 @@ public class PublicationVersionMockFactory extends StatisticalResourcesMockFacto
 
     public static final String        PUBLICATION_VERSION_40_PREPARED_TO_PUBLISH_EXTERNAL_ITEM_FULL_NAME                     = "PUBLICATION_VERSION_40_PREPARED_TO_PUBLISH_EXTERNAL_ITEM_FULL";
     private static PublicationVersion PUBLICATION_VERSION_40_PREPARED_TO_PUBLISH_EXTERNAL_ITEM_FULL;
+
+    public static final String        PUBLICATION_VERSION_41_PUB_NOT_VISIBLE_REPLACES_PUB_VERSION_42_NAME                    = "PUBLICATION_VERSION_41_PUB_NOT_VISIBLE_REPLACES_PUB_VERSION_42";
+    private static PublicationVersion PUBLICATION_VERSION_41_PUB_NOT_VISIBLE_REPLACES_PUB_VERSION_42;
+
+    public static final String        PUBLICATION_VERSION_42_PUB_IS_REPLACED_BY_PUB_VERSION_41_NAME                          = "PUBLICATION_VERSION_42_PUB_IS_REPLACED_BY_PUB_VERSION_41";
+    private static PublicationVersion PUBLICATION_VERSION_42_PUB_IS_REPLACED_BY_PUB_VERSION_41;
 
     protected static PublicationVersion getPublicationVersion01Basic() {
         if (PUBLICATION_VERSION_01_BASIC == null) {
@@ -508,20 +515,52 @@ public class PublicationVersionMockFactory extends StatisticalResourcesMockFacto
         return PUBLICATION_VERSION_39_PUBLISHED_WITH_NO_ROOT_MAINTAINER;
     }
 
+    protected static PublicationVersion getPublicationVersion41PubNotVisibleReplacesPubVersion42() {
+        if (PUBLICATION_VERSION_41_PUB_NOT_VISIBLE_REPLACES_PUB_VERSION_42 == null) {
+            PublicationVersionMock template = new PublicationVersionMock();
+            template.setSequentialId(1);
+            template.setSequentialId(1);
+            template.getSiemacMetadataStatisticalResource().setValidFrom(new DateTime().plusDays(1));
+            PublicationVersion publicationVersion = createPublicationVersionFromTemplate(template);
+
+            PublicationVersion publicationToReplace = createPublicationVersionWithSequenceAndVersion(2, INIT_VERSION);
+            prepareToVersioning(publicationToReplace);
+
+            publicationVersion.getSiemacMetadataStatisticalResource().setReplaces(StatisticalResourcesPersistedDoMocks.mockPublicationVersionRelated(publicationToReplace));
+
+            PUBLICATION_VERSION_41_PUB_NOT_VISIBLE_REPLACES_PUB_VERSION_42 = publicationVersion;
+        }
+        return PUBLICATION_VERSION_41_PUB_NOT_VISIBLE_REPLACES_PUB_VERSION_42;
+    }
+
+    protected static PublicationVersion getPublicationVersion42PubIsReplacedByPubVersion41() {
+        if (PUBLICATION_VERSION_42_PUB_IS_REPLACED_BY_PUB_VERSION_41 == null) {
+            PublicationVersion resourceWhichReplaces = getPublicationVersion41PubNotVisibleReplacesPubVersion42();
+            PUBLICATION_VERSION_42_PUB_IS_REPLACED_BY_PUB_VERSION_41 = resourceWhichReplaces.getSiemacMetadataStatisticalResource().getReplaces().getPublicationVersion();
+        }
+        return PUBLICATION_VERSION_42_PUB_IS_REPLACED_BY_PUB_VERSION_41;
+    }
+
     private static PublicationVersion createPublicationVersion() {
         return getStatisticalResourcesPersistedDoMocks().mockPublicationVersion();
     }
 
     private static PublicationVersion createPublicationVersionInOperation(String operationCode, int sequentialId) {
-        ExternalItem operation = StatisticalResourcesPersistedDoMocks.mockStatisticalOperationExternalItem(operationCode);
-        PublicationVersion publicationVersion = getStatisticalResourcesPersistedDoMocks().mockPublicationVersion();
-        publicationVersion.getSiemacMetadataStatisticalResource().setStatisticalOperation(operation);
-        publicationVersion.getSiemacMetadataStatisticalResource().setCode(buildPublicationCode(operationCode, sequentialId));
-        return publicationVersion;
+        PublicationVersionMock template = new PublicationVersionMock();
+        template.setSequentialId(sequentialId);
+        template.setStatisticalOperationCode(operationCode);
+        return createPublicationVersionFromTemplate(template);
     }
 
-    private static String buildPublicationCode(String operationCode, int sequentialId) {
-        return operationCode + "_" + String.format("%06d", sequentialId);
+    private static PublicationVersion createPublicationVersionWithSequenceAndVersion(Integer sequentialId, String version) {
+        PublicationVersionMock template = new PublicationVersionMock();
+        template.setSequentialId(sequentialId);
+        template.setVersionLogic(version);
+        return createPublicationVersionFromTemplate(template);
+    }
+
+    private static PublicationVersion createPublicationVersionFromTemplate(PublicationVersionMock template) {
+        return getStatisticalResourcesPersistedDoMocks().mockPublicationVersion(template);
     }
 
     // -----------------------------------------------------------------

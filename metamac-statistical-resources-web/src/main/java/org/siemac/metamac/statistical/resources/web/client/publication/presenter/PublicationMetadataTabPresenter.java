@@ -6,6 +6,7 @@ import static org.siemac.metamac.statistical.resources.web.client.StatisticalRes
 import java.util.ArrayList;
 import java.util.List;
 
+import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionDto;
@@ -22,8 +23,11 @@ import org.siemac.metamac.statistical.resources.web.client.utils.MetamacPortalWe
 import org.siemac.metamac.statistical.resources.web.client.utils.PlaceRequestUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.WaitingAsyncCallbackHandlingError;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.PublicationVersionWebCriteria;
+import org.siemac.metamac.statistical.resources.web.shared.criteria.VersionableStatisticalResourceWebCriteria;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationAction;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationResult;
+import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationsPaginatedListAction;
+import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationsPaginatedListResult;
 import org.siemac.metamac.statistical.resources.web.shared.publication.DeletePublicationVersionsAction;
 import org.siemac.metamac.statistical.resources.web.shared.publication.DeletePublicationVersionsResult;
 import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublicationVersionAction;
@@ -36,7 +40,6 @@ import org.siemac.metamac.statistical.resources.web.shared.publication.UpdatePub
 import org.siemac.metamac.statistical.resources.web.shared.publication.UpdatePublicationVersionProcStatusAction.Builder;
 import org.siemac.metamac.statistical.resources.web.shared.publication.UpdatePublicationVersionProcStatusResult;
 import org.siemac.metamac.web.common.client.events.ShowMessageEvent;
-import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
 
 import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
@@ -64,7 +67,8 @@ public class PublicationMetadataTabPresenter
         void setPublication(PublicationVersionDto publicationDto);
 
         void setPublicationsForReplaces(GetPublicationVersionsResult result);
-        void setPublicationsForIsReplacedBy(GetPublicationVersionsResult result);
+
+        void setStatisticalOperationsForReplacesSelection(List<ExternalItemDto> operationsList, ExternalItemDto selectedStatisticalOperation);
     }
 
     @ProxyCodeSplit
@@ -265,16 +269,28 @@ public class PublicationMetadataTabPresenter
     //
 
     @Override
-    public void retrievePublicationsForReplaces(int firstResult, int maxResults, MetamacWebCriteria criteria) {
+    public void retrievePublicationsForReplaces(int firstResult, int maxResults, VersionableStatisticalResourceWebCriteria criteria) {
 
         PublicationVersionWebCriteria publicationVersionWebCriteria = new PublicationVersionWebCriteria(criteria.getCriteria());
-        publicationVersionWebCriteria.setOnlyLastVersion(false);
+        publicationVersionWebCriteria.setOnlyLastVersion(criteria.isOnlyLastVersion());
+        publicationVersionWebCriteria.setStatisticalOperationUrn(criteria.getStatisticalOperationUrn());
 
         dispatcher.execute(new GetPublicationVersionsAction(firstResult, maxResults, publicationVersionWebCriteria), new WaitingAsyncCallbackHandlingError<GetPublicationVersionsResult>(this) {
 
             @Override
             public void onWaitSuccess(GetPublicationVersionsResult result) {
                 getView().setPublicationsForReplaces(result);
+            }
+        });
+    }
+    
+    @Override
+    public void retrieveStatisticalOperationsForReplacesSelection() {
+        dispatcher.execute(new GetStatisticalOperationsPaginatedListAction(0, Integer.MAX_VALUE, null), new WaitingAsyncCallbackHandlingError<GetStatisticalOperationsPaginatedListResult>(this) {
+            
+            @Override
+            public void onWaitSuccess(GetStatisticalOperationsPaginatedListResult result) {
+                getView().setStatisticalOperationsForReplacesSelection(result.getOperationsList(), StatisticalResourcesDefaults.getSelectedStatisticalOperation());
             }
         });
     }

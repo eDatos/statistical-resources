@@ -2,6 +2,7 @@ package org.siemac.metamac.statistical.resources.core.dataset.mapper;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts.assertEqualsDatasetVersion;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts.assertEqualsDatasource;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_01_BASIC_NAME;
@@ -13,7 +14,7 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_61_PUBLISHED_INITIAL_VERSION_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_62_DRAFT_NOT_INITIAL_VERSION_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_63_PRODUCTION_VALIDATION_NOT_INITIAL_VERSION_NAME;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_64_DIFFUSION_VALIDATION_NOT_INITIAL_VERSION_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.*;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_65_VALIDATION_REJECTED_NOT_INITIAL_VERSION_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_66_PUBLISHED_NOT_INITIAL_VERSION_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.StatisticOfficialityMockFactory.STATISTIC_OFFICIALITY_01_BASIC_NAME;
@@ -32,7 +33,9 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.StatisticOfficiality;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasourceDto;
+import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.utils.asserts.BaseAsserts;
+import org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.configuration.MetamacMock;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.StatisticOfficialityMockFactory;
@@ -118,6 +121,70 @@ public class DatasetDto2DoMapperTest extends StatisticalResourcesBaseTest {
 
         Assert.assertFalse(entity.getUserModifiedDateNextUpdate());
         BaseAsserts.assertEqualsDate(originalDateNextVersion, entity.getDateNextUpdate());
+    }
+    
+    @Test
+    @MetamacMock({DATASET_VERSION_01_BASIC_NAME, DATASET_VERSION_77_NO_PUB_REPLACES_DATASET_78_NAME, DATASET_VERSION_78_PUB_IS_REPLACED_BY_DATASET_77_NAME})
+    public void testDatasetDtoToDoCanNotReplaceADatasetVersionThatHasBeenReplacedAlready() throws MetamacException {
+        DatasetVersion datasetVersionAlreadyReplaced = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_78_PUB_IS_REPLACED_BY_DATASET_77_NAME);
+        DatasetVersion datasetVersionThatReplaces = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_77_NO_PUB_REPLACES_DATASET_78_NAME);
+        
+        DatasetVersion source = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_01_BASIC_NAME);
+        System.out.println(datasetVersionThatReplaces.getId());
+        System.out.println(source.getId());
+        DatasetVersionDto dto = buildDatasetVersionDtoFromDo(source);
+        
+        dto.setReplaces(StatisticalResourcesDtoMocks.mockNotPersistedRelatedResourceDatasetVersionDto(datasetVersionAlreadyReplaced));
+        
+        expectedMetamacException(new MetamacException(ServiceExceptionType.DATASET_VERSION_ALREADY_BEEN_REPLACED_BY_OTHER_DATASET_VERSION, source.getSiemacMetadataStatisticalResource().getUrn(), datasetVersionAlreadyReplaced.getSiemacMetadataStatisticalResource().getUrn()));
+        
+        datasetDto2DoMapper.datasetVersionDtoToDo(dto);
+    }
+    
+    @Test
+    @MetamacMock({DATASET_VERSION_77_NO_PUB_REPLACES_DATASET_78_NAME, DATASET_VERSION_78_PUB_IS_REPLACED_BY_DATASET_77_NAME})
+    public void testDatasetDtoToDoReplaceADatasetVersionThatHasBeenReplacedAlreadyByThisDataset() throws MetamacException {
+        DatasetVersion datasetVersionAlreadyReplaced = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_78_PUB_IS_REPLACED_BY_DATASET_77_NAME);
+        
+        DatasetVersion source = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_77_NO_PUB_REPLACES_DATASET_78_NAME);
+        DatasetVersionDto dto = buildDatasetVersionDtoFromDo(source);
+        
+        dto.setReplaces(StatisticalResourcesDtoMocks.mockNotPersistedRelatedResourceDatasetVersionDto(datasetVersionAlreadyReplaced));
+        
+        DatasetVersion entity = datasetDto2DoMapper.datasetVersionDtoToDo(dto);
+        assertNotNull(entity.getSiemacMetadataStatisticalResource().getReplaces());
+        DatasetVersion replacedDataset = entity.getSiemacMetadataStatisticalResource().getReplaces().getDatasetVersion();
+        assertEquals(datasetVersionAlreadyReplaced.getSiemacMetadataStatisticalResource().getUrn(), replacedDataset.getSiemacMetadataStatisticalResource().getUrn());
+    }
+    
+    @Test
+    @MetamacMock({DATASET_VERSION_01_BASIC_NAME, DATASET_VERSION_02_BASIC_NAME})
+    public void testDatasetDtoToDoCanReplaceADatasetVersionThatHasNotBeenReplacedYet() throws MetamacException {
+        DatasetVersion datasetVersionNotReplacedYet = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_02_BASIC_NAME);
+        
+        DatasetVersion source = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_01_BASIC_NAME);
+        DatasetVersionDto dto = buildDatasetVersionDtoFromDo(source);
+        
+        dto.setReplaces(StatisticalResourcesDtoMocks.mockNotPersistedRelatedResourceDatasetVersionDto(datasetVersionNotReplacedYet));
+        
+        DatasetVersion entity = datasetDto2DoMapper.datasetVersionDtoToDo(dto);
+        
+        assertNotNull(entity.getSiemacMetadataStatisticalResource().getReplaces());
+        DatasetVersion replacedDataset = entity.getSiemacMetadataStatisticalResource().getReplaces().getDatasetVersion();
+        DatasetsAsserts.assertEqualsDatasetVersion(datasetVersionNotReplacedYet, replacedDataset);
+    }
+    
+    @Test
+    @MetamacMock({DATASET_VERSION_01_BASIC_NAME})
+    public void testDatasetDtoToDoReplacesItself() throws MetamacException {
+        DatasetVersion source = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_01_BASIC_NAME);
+        DatasetVersionDto dto = buildDatasetVersionDtoFromDo(source);
+        
+        dto.setReplaces(StatisticalResourcesDtoMocks.mockNotPersistedRelatedResourceDatasetVersionDto(source));
+        
+        expectedMetamacException(new MetamacException(ServiceExceptionType.DATASET_VERSION_CANT_REPLACE_ITSELF, source.getSiemacMetadataStatisticalResource().getUrn()));
+        
+        datasetDto2DoMapper.datasetVersionDtoToDo(dto);
     }
 
     @Test
@@ -234,6 +301,8 @@ public class DatasetDto2DoMapperTest extends StatisticalResourcesBaseTest {
 
     private DatasetVersionDto buildDatasetVersionDtoFromDo(DatasetVersion datasetVersion) {
         DatasetVersionDto dto = StatisticalResourcesDtoMocks.mockDatasetVersionDto(datasetVersion.getStatisticOfficiality());
+        dto.setCode(datasetVersion.getSiemacMetadataStatisticalResource().getCode());
+        dto.setUrn(datasetVersion.getSiemacMetadataStatisticalResource().getUrn());
         dto.setOptimisticLockingVersion(datasetVersion.getVersion());
         dto.setId(datasetVersion.getId());
         return dto;
