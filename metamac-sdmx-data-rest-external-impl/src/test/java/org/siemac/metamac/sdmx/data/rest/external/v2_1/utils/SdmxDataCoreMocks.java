@@ -363,7 +363,6 @@ public class SdmxDataCoreMocks extends BaseJaxbMocks {
         target.setLastUpdate(new DateTime(2013, 1, 2, 3, 4, 5, 0));
         target.setNewnessUntilDate(new DateTime(2013, 9, 2, 15, 4, 5, 0));
         target.setReplaces(mockDatasetRelatedResource(agencyID, "replace01", "01.000"));
-        target.setIsReplacedBy(mockDatasetRelatedResource(agencyID, "replacedBy01", "02.000"));
         target.addHasPart(mockDatasetRelatedResource(agencyID, "hasPart01", "01.000"));
         target.addHasPart(mockDatasetRelatedResource(agencyID, "hasPart02", "01.000"));
         target.addIsPartOf(mockDatasetRelatedResource(agencyID, "isPartOf01", "01.000"));
