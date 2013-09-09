@@ -55,10 +55,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
-import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
+import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.CodeDimension;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetProperties;
@@ -99,27 +99,27 @@ import com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceF
 public class DatasetServiceTest extends StatisticalResourcesBaseTest implements DatasetServiceTestBase {
 
     @Autowired
-    private DatasetService                          datasetService;
+    private DatasetService                                datasetService;
 
     @Autowired
-    private DatasetVersionMockFactory               datasetVersionMockFactory;
+    private DatasetVersionMockFactory                     datasetVersionMockFactory;
 
     @Autowired
-    private DatasetMockFactory                      datasetMockFactory;
+    private DatasetMockFactory                            datasetMockFactory;
 
     @Autowired
-    private QueryVersionMockFactory                 queryMockFactory;
+    private QueryVersionMockFactory                       queryMockFactory;
 
     @Autowired
-    private DatasetRepositoriesServiceFacade        datasetRepositoriesServiceFacade;
+    private DatasetRepositoriesServiceFacade              datasetRepositoriesServiceFacade;
 
     @Autowired
-    private SrmRestInternalService                  srmRestInternalService;
+    private SrmRestInternalService                        srmRestInternalService;
 
-    private StatisticalResourcesNotPersistedDoMocks persistedMocks = StatisticalResourcesNotPersistedDoMocks.getInstance();
+    private final StatisticalResourcesNotPersistedDoMocks persistedMocks = StatisticalResourcesNotPersistedDoMocks.getInstance();
 
     @Autowired
-    private TaskService                             taskService;
+    private TaskService                                   taskService;
 
     @Before
     public void setUp() throws MetamacException {
@@ -850,14 +850,23 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
     // ------------------------------------------------------------------------
 
     @Override
+    @Test
     public void testCreateAttributeInstance() throws Exception {
-        // TODO Auto-generated method stub
+        // TODO testCreateAttributeInstance
 
     }
 
     @Override
+    @Test
     public void testRetrieveAttributeInstances() throws Exception {
-        // TODO Auto-generated method stub
+        // TODO testRetrieveAttributeInstances
+
+    }
+
+    @Override
+    @Test
+    public void testRetrieveCoverageForDatasetVersionAttribute() throws Exception {
+        // TODO testRetrieveCoverageForDatasetVersionAttribute
 
     }
 

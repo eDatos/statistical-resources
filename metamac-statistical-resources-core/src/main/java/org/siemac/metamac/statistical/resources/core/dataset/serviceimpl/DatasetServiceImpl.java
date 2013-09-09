@@ -46,6 +46,7 @@ import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor.D
 import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor.DsdDimension;
 import org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConstants;
 import org.siemac.metamac.statistical.resources.core.dataset.checks.DatasetMetadataEditionChecks;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.AttributeValue;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.CodeDimension;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
@@ -208,8 +209,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
             localisedStringDto.setLocale(StatisticalResourcesConstants.DEFAULT_DATA_REPOSITORY_LOCALE);
             internationalStringDto.addText(localisedStringDto);
 
-            statisticsDatasetRepositoriesServiceFacade.deleteObservationsByAttributeInstanceValue(datasetId,
-                    StatisticalResourcesConstants.ATTRIBUTE_DATA_SOURCE_ID, internationalStringDto);
+            statisticsDatasetRepositoriesServiceFacade.deleteObservationsByAttributeInstanceValue(datasetId, StatisticalResourcesConstants.ATTRIBUTE_DATA_SOURCE_ID, internationalStringDto);
 
         } catch (ApplicationException e) {
             throw new MetamacException(e, ServiceExceptionType.DATASOURCE_DATA_DELETE_ERROR, datasource.getIdentifiableStatisticalResource().getCode());
@@ -641,6 +641,13 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         } catch (ApplicationException e) {
             throw new MetamacException(e, ServiceExceptionType.UNKNOWN, "Error retrieve attribute instances in datasetRepository " + datasetVersionUrn + ". Details: " + e.getMessage());
         }
+    }
+
+    @Override
+    public List<AttributeValue> retrieveCoverageForDatasetVersionAttribute(ServiceContext ctx, String datasetVersionUrn, String dsdAttributeId) throws MetamacException {
+        datasetServiceInvocationValidator.checkRetrieveCoverageForDatasetVersionAttribute(ctx, datasetVersionUrn, dsdAttributeId);
+        // TODO retrieveCoverageForDatasetVersionAttribute
+        return new ArrayList<AttributeValue>();
     }
 
     // ------------------------------------------------------------------------
