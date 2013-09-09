@@ -79,6 +79,7 @@ import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.DatasetS
 import org.siemac.metamac.statistical.resources.core.invocation.service.SrmRestInternalService;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersionProperties;
+import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersionRepository;
 import org.siemac.metamac.statistical.resources.core.publication.serviceapi.PublicationService;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersionRepository;
@@ -108,6 +109,7 @@ public abstract class StatisticalResourcesRestExternalFacadeV10BaseTest extends 
     private PublicationService                publicationService;
     private DatasetVersionRepository          datasetVersionRepository;
     private QueryVersionRepository            queryVersionRepository;
+    private PublicationVersionRepository      publicationVersionRepository;
     private DatasetService                    datasetService;
     private QueryService                      queryService;
 
@@ -268,9 +270,9 @@ public abstract class StatisticalResourcesRestExternalFacadeV10BaseTest extends 
                         return restDoMocks.mockDatasetVersion(datasetUrnSplited[0], datasetUrnSplited[1], VERSION_1);
                     };
                 });
-        when(datasetVersionRepository.retrieveLastVersionResourcesThatRequiresDatasetVersion(any(DatasetVersion.class))).thenAnswer(new Answer<List<RelatedResourceResult>>() {
+        when(datasetVersionRepository.retrieveIsRequiredBy(any(DatasetVersion.class))).thenAnswer(new Answer<List<RelatedResourceResult>>() {
 
-            // TODO cambiar por retrieveLastPublishedVersionResourcesThatRequiresDatasetVersion
+            // TODO cambiar por retrieveIsRequiredByOnlyPublishedVersion
 
             @Override
             public List<RelatedResourceResult> answer(InvocationOnMock invocation) throws Throwable {
@@ -281,15 +283,38 @@ public abstract class StatisticalResourcesRestExternalFacadeV10BaseTest extends 
             };
         });
 
-        when(datasetVersionRepository.retrieveResourceThatReplacesDatasetVersion(any(DatasetVersion.class))).thenAnswer(new Answer<RelatedResourceResult>() {
+        when(datasetVersionRepository.retrieveIsReplacedByVersion(any(DatasetVersion.class))).thenAnswer(new Answer<RelatedResourceResult>() {
 
-            // TODO retrieveLastPublishedVersionResourcesThatRequiresDatasetVersion
+            // TODO retrieveIsReplacedByVersionOnlyPublishedVersion
 
             @Override
             public RelatedResourceResult answer(InvocationOnMock invocation) throws Throwable {
                 DatasetVersion datasetVersion = (DatasetVersion) invocation.getArguments()[0];
                 return restDoMocks.mockDatasetRelatedResourceResult(datasetVersion.getSiemacMetadataStatisticalResource().getMaintainer().getCodeNested(), datasetVersion
                         .getSiemacMetadataStatisticalResource().getCode(), "02.000");
+            };
+        });
+
+        when(datasetVersionRepository.retrieveIsReplacedBy(any(DatasetVersion.class))).thenAnswer(new Answer<RelatedResourceResult>() {
+
+            // TODO retrieveIsReplacedByOnlyPublishedVersion
+
+            @Override
+            public RelatedResourceResult answer(InvocationOnMock invocation) throws Throwable {
+                return restDoMocks.mockDatasetRelatedResourceResult("agency01", "dataset99", "01.000");
+            };
+        });
+    }
+
+    private void mockPublicationVersionRepository() throws MetamacException {
+
+        when(publicationVersionRepository.retrieveIsReplacedBy(any(PublicationVersion.class))).thenAnswer(new Answer<RelatedResourceResult>() {
+
+            // TODO retrieveIsReplacedByOnlyPublishedVersion
+
+            @Override
+            public RelatedResourceResult answer(InvocationOnMock invocation) throws Throwable {
+                return restDoMocks.mockPublicationRelatedResourceResult("agency01", "dataset99", "01.000");
             };
         });
     }
@@ -735,8 +760,8 @@ public abstract class StatisticalResourcesRestExternalFacadeV10BaseTest extends 
         reset(queryVersionRepository);
         datasetVersionRepository = applicationContext.getBean(DatasetVersionRepository.class);
         reset(datasetVersionRepository);
-        queryVersionRepository = applicationContext.getBean(QueryVersionRepository.class);
-        reset(queryVersionRepository);
+        publicationVersionRepository = applicationContext.getBean(PublicationVersionRepository.class);
+        reset(publicationVersionRepository);
 
         srmRestExternalFacade = applicationContext.getBean(SrmRestExternalFacade.class);
         reset(srmRestExternalFacade);
@@ -756,6 +781,7 @@ public abstract class StatisticalResourcesRestExternalFacadeV10BaseTest extends 
         mockFindAttributesInstancesWithDatasetAttachmentLevel();
         mockFindAttributesInstancesWithDimensionAttachmentLevelDenormalized();
         mockDatasetVersionRepository();
+        mockPublicationVersionRepository();
 
         mockRetrieveDataStructureByUrn();
         mockRetrieveCodelistByUrn();

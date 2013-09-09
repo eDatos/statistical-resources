@@ -198,10 +198,6 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
         target.setPublisherContributors(toResourcesExternalItemsSrm(source.getPublisherContributor(), selectedLanguages));
         target.setMediators(toResourcesExternalItemsSrm(source.getMediator(), selectedLanguages));
         target.setNewnessUntilDate(toDate(source.getNewnessUntilDate()));
-
-        // TODO se eliminará el metadato. Se tendrá que mover al mapper correspondiente, xq será diferente la operación para cada recurso
-        target.setReplaces(toResource(source.getReplaces(), selectedLanguages));
-        target.setIsReplacedBy(toResource(source.getIsReplacedBy(), selectedLanguages));
         target.setHasPart(toResources(source.getHasPart(), selectedLanguages));
         target.setIsPartOf(toResources(source.getIsPartOf(), selectedLanguages));
 

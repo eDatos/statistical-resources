@@ -23,6 +23,10 @@
     <bean id="queryVersionRepository" class="org.mockito.Mockito" factory-method="mock">
         <constructor-arg value="org.siemac.metamac.statistical.resources.core.query.domain.QueryVersionRepository" />
     </bean>
+
+    <bean id="publicationVersionRepository" class="org.mockito.Mockito" factory-method="mock">
+        <constructor-arg value="org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersionRepository" />
+    </bean>
     
     <bean id="datasetRepositoriesServiceFacade" class="org.mockito.Mockito" factory-method="mock">
         <constructor-arg value="com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceFacade" />

@@ -90,7 +90,9 @@ public class RestDoMocks {
         target.setDateNextUpdate(new DateTime(2013, 12, 2, 3, 4, 5, 0));
         target.setUpdateFrequency(StatisticalResourcesDoMocks.mockCodeExternalItem("updateFrequency01"));
         target.setStatisticOfficiality(coreDoMocks.mockStatisticOfficiality("statisticOfficiality01"));
+
         mockSiemacMetadataStatisticalResource(agencyID, resourceID, version, target.getSiemacMetadataStatisticalResource());
+        target.getSiemacMetadataStatisticalResource().setReplaces(mockDatasetRelatedResource(agencyID, "replace01", "01.000"));
         return target;
     }
 
@@ -113,7 +115,24 @@ public class RestDoMocks {
     public PublicationVersion mockPublicationVersion(String agencyID, String resourceID, String version) {
         PublicationVersion target = mockPublicationVersionBasic(agencyID, resourceID, version);
         target.setFormatExtentResources(Integer.valueOf(5));
+        target.getSiemacMetadataStatisticalResource().setReplaces(mockPublicationRelatedResource(agencyID, "replace01", "01.000"));
         return target;
+    }
+
+    public RelatedResource mockPublicationRelatedResource(String agencyID, String resourceID, String version) {
+        PublicationVersion publication = mockPublicationVersionBasic(agencyID, resourceID, version);
+        return StatisticalResourcesDoMocks.mockPublicationVersionRelated(publication);
+    }
+
+    public RelatedResourceResult mockPublicationRelatedResourceResult(String agencyID, String resourceID, String version) {
+        RelatedResourceResult query = new RelatedResourceResult();
+        query.setMaintainerNestedCode(agencyID);
+        query.setCode(resourceID);
+        query.setVersion(version);
+        query.setType(TypeRelatedResourceEnum.PUBLICATION_VERSION);
+        query.setUrn("urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Collection=" + agencyID + ":" + resourceID + "(" + version + ")");
+        query.setTitle(StatisticalResourcesDoMocks.mockInternationalStringAsMap("es", "título " + resourceID, "en", "title " + resourceID));
+        return query;
     }
 
     public QueryVersion mockQueryVersion(String agencyID, String resourceID, String version) {
@@ -274,8 +293,6 @@ public class RestDoMocks {
         target.setResourceCreatedDate(new DateTime(2012, 1, 2, 3, 4, 5, 0));
         target.setLastUpdate(new DateTime(2013, 1, 2, 3, 4, 5, 0));
         target.setNewnessUntilDate(new DateTime(2013, 9, 2, 15, 4, 5, 0));
-        target.setReplaces(mockDatasetRelatedResource(agencyID, "replace01", "01.000"));
-        target.setIsReplacedBy(mockDatasetRelatedResource(agencyID, "replacedBy01", "02.000"));
         target.addHasPart(mockDatasetRelatedResource(agencyID, "hasPart01", "01.000"));
         target.addHasPart(mockDatasetRelatedResource(agencyID, "hasPart02", "01.000"));
         target.addIsPartOf(mockDatasetRelatedResource(agencyID, "isPartOf01", "01.000"));
@@ -307,6 +324,11 @@ public class RestDoMocks {
             }
         }
         return querySelectionItem;
+    }
+
+    public RelatedResource mockQueryRelatedResource(String agencyID, String resourceID, String version) {
+        QueryVersion query = mockQueryVersionBasic(agencyID, resourceID, version);
+        return StatisticalResourcesDoMocks.mockQueryVersionRelated(query);
     }
 
     public RelatedResourceResult mockQueryRelatedResourceResult(String agencyID, String resourceID, String version) {

@@ -162,6 +162,8 @@ public class DatasetsDo2RestMapperV10Impl implements DatasetsDo2RestMapperV10 {
         target.setIsRequiredBy(toDatasetIsRequiredBy(source, selectedLanguages));
         target.setReplacesVersion(toDatasetReplacesVersion(source, selectedLanguages));
         target.setIsReplacedByVersion(toDatasetIsReplacedByVersion(source, selectedLanguages));
+        target.setReplaces(toDatasetReplaces(source, selectedLanguages));
+        target.setIsReplacedBy(toDatasetIsReplacedBy(source, selectedLanguages));
 
         // StatisticalResource and other
         commonDo2RestMapper.toMetadataStatisticalResource(source.getSiemacMetadataStatisticalResource(), target, selectedLanguages);
@@ -169,8 +171,8 @@ public class DatasetsDo2RestMapperV10Impl implements DatasetsDo2RestMapperV10 {
     }
 
     private Resources toDatasetIsRequiredBy(DatasetVersion source, List<String> selectedLanguages) throws MetamacException {
-        List<RelatedResourceResult> relatedResourceIsRequiredBy = datasetVersionRepository.retrieveLastVersionResourcesThatRequiresDatasetVersion(source);
-        // TODO sustituir por retrieveLastPublishedVersionResourcesThatRequiresDatasetVersion
+        // TODO sustituir por retrieveIsRequiredByOnlyPublishedVersion
+        List<RelatedResourceResult> relatedResourceIsRequiredBy = datasetVersionRepository.retrieveIsRequiredBy(source);
         if (CollectionUtils.isEmpty(relatedResourceIsRequiredBy)) {
             return null;
         }
@@ -182,22 +184,28 @@ public class DatasetsDo2RestMapperV10Impl implements DatasetsDo2RestMapperV10 {
         return targets;
     }
 
-    private Resource toDatasetIsReplacedByVersion(DatasetVersion source, List<String> selectedLanguages) throws MetamacException {
-        // TODO sustituir por retrieveLastPublishedVersionResourceThatReplacesDatasetVersion
-        RelatedResourceResult relatedResourceReplaces = datasetVersionRepository.retrieveResourceThatReplacesDatasetVersion(source);
-        if (relatedResourceReplaces == null) {
-            return null;
-        }
-        return toResource(relatedResourceReplaces, selectedLanguages);
-    }
-
     private Resource toDatasetReplacesVersion(DatasetVersion source, List<String> selectedLanguages) throws MetamacException {
         RelatedResource replacesVersion = source.getSiemacMetadataStatisticalResource().getReplacesVersion();
-        if (replacesVersion == null) {
-            return null;
-        }
         // TODO comprobar si puede ser visible en la api (validFrom, publicado...)
         return commonDo2RestMapper.toResource(replacesVersion, selectedLanguages);
+    }
+
+    private Resource toDatasetIsReplacedByVersion(DatasetVersion source, List<String> selectedLanguages) throws MetamacException {
+        // TODO sustituir por retrieveIsReplacedByOnlyPublishedVersion
+        RelatedResourceResult relatedResourceReplacesByVersion = datasetVersionRepository.retrieveIsReplacedByVersion(source);
+        return toResource(relatedResourceReplacesByVersion, selectedLanguages);
+    }
+
+    private Resource toDatasetReplaces(DatasetVersion source, List<String> selectedLanguages) throws MetamacException {
+        RelatedResource replaces = source.getSiemacMetadataStatisticalResource().getReplaces();
+        // TODO comprobar si puede ser visible en la api (validFrom, publicado...)
+        return commonDo2RestMapper.toResource(replaces, selectedLanguages);
+    }
+
+    private Resource toDatasetIsReplacedBy(DatasetVersion source, List<String> selectedLanguages) throws MetamacException {
+        // TODO sustituir por retrieveIsReplacedByOnlyPublishedVersion
+        RelatedResourceResult relatedResourceReplacesBy = datasetVersionRepository.retrieveIsReplacedBy(source);
+        return toResource(relatedResourceReplacesBy, selectedLanguages);
     }
 
     private Items toTemporalCoverages(List<TemporalCode> sources, List<String> selectedLanguages) {
