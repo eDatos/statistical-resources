@@ -278,7 +278,7 @@ public class Mocks {
         dataStructure.setAgencyID("ECB");
         dataStructure.setVersion("1.0");
         dataStructure.setId("ECB_EXR_RG");
-        dataStructure.setUrn("rn:sdmx:org.sdmx.infomodel.datastructure.DataStructure=ECB:ECB_EXR_RG(1.0)");
+        dataStructure.setUrn("urn:sdmx:org.sdmx.infomodel.datastructure.DataStructure=ECB:ECB_EXR_RG(1.0)");
         dataStructure.setName(SrmMockUtils.buildInternationalStringResource("Sample Data Structure Definition for exchange rates, with sibling and rate groups defined.", "en"));
 
         dataStructure.setDataStructureComponents(new DataStructureComponents());

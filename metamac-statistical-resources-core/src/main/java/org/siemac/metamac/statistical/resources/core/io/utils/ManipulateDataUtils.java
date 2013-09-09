@@ -139,7 +139,7 @@ public class ManipulateDataUtils {
                 attributeDto.setAttachmentLevel(AttributeAttachmentLevelEnum.DATASET);
             } else if (dsdAttribute.getAttributeRelationship().getGroup() != null || !dsdAttribute.getAttributeRelationship().getDimensions().isEmpty()) {
                 attributeDto.setAttachmentLevel(AttributeAttachmentLevelEnum.DIMENSION);
-            } else if (dsdAttribute.getAttributeRelationship().getNone() != null) {
+            } else if (dsdAttribute.getAttributeRelationship().getPrimaryMeasure() != null) {
                 attributeDto.setAttachmentLevel(AttributeAttachmentLevelEnum.OBSERVATION);
             }
 
