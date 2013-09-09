@@ -13,6 +13,7 @@ import org.siemac.metamac.statistical.resources.core.constants.StatisticalResour
 import org.siemac.metamac.statistical.resources.core.invocation.service.SrmRestInternalService;
 import org.siemac.metamac.statistical.resources.core.io.mapper.MetamacSdmx2StatRepoMapper;
 import org.siemac.metamac.statistical.resources.core.io.serviceimpl.validators.ValidateDataVersusDsd;
+import org.siemac.metamac.statistical.resources.core.io.utils.ManipulateDataUtils;
 
 import com.arte.statistic.dataset.repository.dto.DatasetRepositoryDto;
 import com.arte.statistic.dataset.repository.dto.ObservationExtendedDto;
@@ -72,8 +73,8 @@ public class ManipulateSdmx21DataCallbackImpl implements ManipulateDataCallback 
             datasetRepositoryDto.getDimensions().add(componentInfo.getCode());
         }
 
-        // Max Attributes in Observation Level
-        datasetRepositoryDto.setMaxAttributesObservation(this.validateDataVersusDsd.getAttributeIdsAtObservationLevelSet().size() + 1); // +1 by Extra Attribute with information about data source
+        // Attributes
+        datasetRepositoryDto.getAttributes().addAll(ManipulateDataUtils.extractDefinitionOfAttributes(this.validateDataVersusDsd.getAttributesProcessorMap().values()));
 
         // In SDMX the attributes aren't localized. For use localised in SDMX must be use a enumerated representation.
         // In this case, in the repo exists the code of enumerated representation, never the i18n of code.

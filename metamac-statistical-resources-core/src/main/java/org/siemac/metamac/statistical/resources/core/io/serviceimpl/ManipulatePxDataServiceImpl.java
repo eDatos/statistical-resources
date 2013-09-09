@@ -16,6 +16,7 @@ import org.siemac.metamac.statistical.resources.core.constants.StatisticalResour
 import org.siemac.metamac.statistical.resources.core.io.mapper.MetamacPx2StatRepoMapper;
 import org.siemac.metamac.statistical.resources.core.io.mapper.MetamacPx2StatRepoMapperImpl;
 import org.siemac.metamac.statistical.resources.core.io.serviceimpl.validators.ValidateDataVersusDsd;
+import org.siemac.metamac.statistical.resources.core.io.utils.ManipulateDataUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -102,8 +103,8 @@ public class ManipulatePxDataServiceImpl implements ManipulatePxDataService {
                 datasetRepositoryDto.getDimensions().add(componentInfo.getCode());
             }
 
-            // Max Attributes in Observation Level
-            datasetRepositoryDto.setMaxAttributesObservation(validateDataVersusDsd.getAttributeIdsAtObservationLevelSet().size() + 1); // +1 by Extra Attribute with information about data source
+            // Attributes
+            datasetRepositoryDto.getAttributes().addAll(ManipulateDataUtils.extractDefinitionOfAttributes(validateDataVersusDsd.getAttributesProcessorMap().values()));
 
             // In SDMX the attributes aren't localized. For use localised in SDMX must be use a enumerated representation.
             // In this case, in the repository exists the code of enumerated representation, never the i18n of code.
