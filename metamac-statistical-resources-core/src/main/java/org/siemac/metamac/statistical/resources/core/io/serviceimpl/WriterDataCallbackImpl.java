@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
+import java.util.Stack;
 import java.util.UUID;
 
 import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
@@ -298,17 +299,19 @@ public class WriterDataCallbackImpl implements WriterDataCallback {
     }
 
     private void extractAttributesForSerie(Serie serie, int numDimProcess, Set<String> addedKeys) {
-        if (numDimProcess == 0) {
 
-        } else {
-            // for () {
+        Stack<List<IdValuePair>> stack = new Stack();
+        while (!stack.isEmpty()) {
+            List<IdValuePair> pop = stack.pop();
+
+            // TODO Procesar POP element, ir quitando uno de los elementos
+            // for (;;) {
             //
+            // stack.push(item);
             // }
         }
 
-        // serie.getSeriesKey()
     }
-
     // public static void main(String[] args) {
     // permutation("", "abcd");
     // }
