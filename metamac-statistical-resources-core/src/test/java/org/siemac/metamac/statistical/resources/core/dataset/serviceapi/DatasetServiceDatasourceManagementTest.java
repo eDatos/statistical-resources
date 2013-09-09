@@ -57,7 +57,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.arte.statistic.dataset.repository.dto.AttributeInstanceObservationDto;
+import com.arte.statistic.dataset.repository.dto.InternationalStringDto;
 import com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceFacade;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -487,7 +487,7 @@ public class DatasetServiceDatasourceManagementTest extends StatisticalResources
         String datasourceUrn = expected.getIdentifiableStatisticalResource().getUrn();
 
         Mockito.doThrow(ApplicationException.class).when(datasetRepositoriesServiceFacade)
-                .deleteObservationsByAttributeInstanceValue(Mockito.anyString(), Mockito.anyInt(), Mockito.any(AttributeInstanceObservationDto.class));
+                .deleteObservationsByAttributeInstanceValue(Mockito.anyString(), Mockito.anyString(), Mockito.any(InternationalStringDto.class));
 
         expectedMetamacException(new MetamacException(ServiceExceptionType.DATASOURCE_DATA_DELETE_ERROR, expected.getIdentifiableStatisticalResource().getCode()));
 

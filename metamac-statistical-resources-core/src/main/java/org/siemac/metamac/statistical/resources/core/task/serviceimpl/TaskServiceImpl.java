@@ -51,7 +51,6 @@ import org.siemac.metamac.statistical.resources.core.io.serviceimpl.ManipulatePx
 import org.siemac.metamac.statistical.resources.core.io.serviceimpl.ManipulateSdmx21DataCallbackImpl;
 import org.siemac.metamac.statistical.resources.core.io.serviceimpl.RecoveryImportDatasetJob;
 import org.siemac.metamac.statistical.resources.core.io.serviceimpl.validators.ValidateDataVersusDsd;
-import org.siemac.metamac.statistical.resources.core.io.utils.ManipulateDataUtils;
 import org.siemac.metamac.statistical.resources.core.task.domain.FileDescriptor;
 import org.siemac.metamac.statistical.resources.core.task.domain.FileDescriptorResult;
 import org.siemac.metamac.statistical.resources.core.task.domain.Task;
@@ -65,7 +64,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.arte.statistic.dataset.repository.dto.AttributeInstanceObservationDto;
 import com.arte.statistic.dataset.repository.dto.DatasetRepositoryDto;
 import com.arte.statistic.dataset.repository.dto.InternationalStringDto;
 import com.arte.statistic.dataset.repository.dto.LocalisedStringDto;
@@ -315,9 +313,8 @@ public class TaskServiceImpl extends TaskServiceImplBase {
                 localisedStringDto.setLocale(StatisticalResourcesConstants.DEFAULT_DATA_REPOSITORY_LOCALE);
                 internationalStringDto.addText(localisedStringDto);
 
-                AttributeInstanceObservationDto attributeInstanceObservationDto = new AttributeInstanceObservationDto(ManipulateDataUtils.DATA_SOURCE_ID, internationalStringDto);
-
-                datasetRepositoriesServiceFacade.deleteObservationsByAttributeInstanceValue(names[0], 0, attributeInstanceObservationDto);
+                datasetRepositoriesServiceFacade.deleteObservationsByAttributeInstanceValue(taskInfoDataset.getDatasetVersionId(), StatisticalResourcesConstants.ATTRIBUTE_DATA_SOURCE_ID,
+                        internationalStringDto);
             }
 
             // Delete failed entry

@@ -58,7 +58,6 @@ import org.siemac.metamac.statistical.resources.core.enume.task.domain.DatasetFi
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.invocation.service.SrmRestInternalService;
 import org.siemac.metamac.statistical.resources.core.invocation.utils.RestMapper;
-import org.siemac.metamac.statistical.resources.core.io.utils.ManipulateDataUtils;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersionRepository;
 import org.siemac.metamac.statistical.resources.core.task.domain.FileDescriptor;
@@ -69,7 +68,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.arte.statistic.dataset.repository.dto.AttributeInstanceDto;
-import com.arte.statistic.dataset.repository.dto.AttributeInstanceObservationDto;
 import com.arte.statistic.dataset.repository.dto.CodeDimensionDto;
 import com.arte.statistic.dataset.repository.dto.ConditionObservationDto;
 import com.arte.statistic.dataset.repository.dto.DatasetRepositoryDto;
@@ -212,9 +210,9 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
             localisedStringDto.setLocale(StatisticalResourcesConstants.DEFAULT_DATA_REPOSITORY_LOCALE);
             internationalStringDto.addText(localisedStringDto);
 
-            AttributeInstanceObservationDto attributeInstanceObservationDto = new AttributeInstanceObservationDto(ManipulateDataUtils.DATA_SOURCE_ID, internationalStringDto);
+            statisticsDatasetRepositoriesServiceFacade.deleteObservationsByAttributeInstanceValue(datasource.getDatasetVersion().getDatasetRepositoryId(),
+                    StatisticalResourcesConstants.ATTRIBUTE_DATA_SOURCE_ID, internationalStringDto);
 
-            statisticsDatasetRepositoriesServiceFacade.deleteObservationsByAttributeInstanceValue(ManipulateDataUtils.DATA_SOURCE_ID, 0, attributeInstanceObservationDto);
         } catch (ApplicationException e) {
             throw new MetamacException(e, ServiceExceptionType.DATASOURCE_DATA_DELETE_ERROR, datasource.getIdentifiableStatisticalResource().getCode());
         }
@@ -919,15 +917,15 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
 
     private List<CodeDimension> filterCodesFromDimension(DatasetVersion resource, String datasetRepositoryId, String dimensionId) throws MetamacException {
         try {
-            List<ConditionObservationDto> conditions = statisticsDatasetRepositoriesServiceFacade.findCodeDimensions(datasetRepositoryId);
 
-            List<CodeDimensionDto> dimCodes = filterCodeDimensionsForDimension(dimensionId, conditions);
+            Map<String, List<String>> codeDimensionsMap = statisticsDatasetRepositoriesServiceFacade.findCodeDimensions(datasetRepositoryId);
+            List<String> dimCodes = codeDimensionsMap.get(dimensionId);
 
             List<CodeDimension> codes = new ArrayList<CodeDimension>();
-            for (CodeDimensionDto code : dimCodes) {
+            for (String code : dimCodes) {
                 CodeDimension codeDimension = new CodeDimension();
-                codeDimension.setIdentifier(code.getCodeDimensionId());
-                codeDimension.setTitle(code.getCodeDimensionId());
+                codeDimension.setIdentifier(code);
+                codeDimension.setTitle(code);
                 codeDimension.setDsdComponentId(dimensionId);
                 codeDimension.setDatasetVersion(resource);
                 codes.add(codeDimension);
