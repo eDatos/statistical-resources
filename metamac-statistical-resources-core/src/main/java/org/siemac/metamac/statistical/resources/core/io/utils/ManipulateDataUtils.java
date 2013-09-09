@@ -2,6 +2,7 @@ package org.siemac.metamac.statistical.resources.core.io.utils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -10,10 +11,13 @@ import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionBuilder;
+import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor.DsdAttribute;
 import org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConstants;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 
+import com.arte.statistic.dataset.repository.domain.AttributeAttachmentLevelEnum;
+import com.arte.statistic.dataset.repository.dto.AttributeDto;
 import com.arte.statistic.dataset.repository.dto.AttributeInstanceBasicDto;
 import com.arte.statistic.dataset.repository.dto.AttributeInstanceDto;
 import com.arte.statistic.dataset.repository.dto.AttributeInstanceObservationDto;
@@ -27,8 +31,7 @@ import com.arte.statistic.parser.sdmx.v2_1.domain.IdValuePair;
 
 public class ManipulateDataUtils {
 
-    public static String DATA_SOURCE_ID = "DATA_SOURCE_ID";
-    public static String DATASET        = "DATASET";
+    public static String DATASET = "DATASET";
 
     /**
      * Create a data source extra identification attribute
@@ -52,7 +55,7 @@ public class ManipulateDataUtils {
         localisedStringDto.setLocale(StatisticalResourcesConstants.DEFAULT_DATA_REPOSITORY_LOCALE);
         internationalStringDto.addText(localisedStringDto);
 
-        AttributeInstanceObservationDto attributeDto = new AttributeInstanceObservationDto(DATA_SOURCE_ID, internationalStringDto);
+        AttributeInstanceObservationDto attributeDto = new AttributeInstanceObservationDto(StatisticalResourcesConstants.ATTRIBUTE_DATA_SOURCE_ID, internationalStringDto);
 
         return attributeDto;
     }
@@ -107,6 +110,43 @@ public class ManipulateDataUtils {
         }
 
         return key.toString();
+    }
+
+    /**
+     * Extract definition of attributes in the DSD to the repository definition
+     * 
+     * @param attributes
+     * @return
+     */
+    public static List<AttributeDto> extractDefinitionOfAttributes(Collection<DsdAttribute> attributes) {
+        List<AttributeDto> result = new ArrayList<AttributeDto>(attributes.size());
+
+        // Attributes
+        AttributeDto attributeDto = new AttributeDto();
+
+        // Extra Attribute with information about data source
+        attributeDto.setAttributeId(StatisticalResourcesConstants.ATTRIBUTE_DATA_SOURCE_ID);
+        attributeDto.setAttachmentLevel(AttributeAttachmentLevelEnum.OBSERVATION);
+
+        result.add(attributeDto);
+
+        // Other attributes
+        for (DsdAttribute dsdAttribute : attributes) {
+            attributeDto = new AttributeDto();
+            attributeDto.setAttributeId(dsdAttribute.getComponentId());
+
+            if (dsdAttribute.getAttributeRelationship().getNone() != null) {
+                attributeDto.setAttachmentLevel(AttributeAttachmentLevelEnum.DATASET);
+            } else if (dsdAttribute.getAttributeRelationship().getGroup() != null || !dsdAttribute.getAttributeRelationship().getDimensions().isEmpty()) {
+                attributeDto.setAttachmentLevel(AttributeAttachmentLevelEnum.DIMENSION);
+            } else if (dsdAttribute.getAttributeRelationship().getNone() != null) {
+                attributeDto.setAttachmentLevel(AttributeAttachmentLevelEnum.OBSERVATION);
+            }
+
+            result.add(attributeDto);
+        }
+
+        return result;
     }
 
     /**
