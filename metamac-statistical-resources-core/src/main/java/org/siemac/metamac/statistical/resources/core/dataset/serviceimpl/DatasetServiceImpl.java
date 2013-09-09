@@ -153,8 +153,6 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         // Update
         Datasource updatedDataSource = getDatasourceRepository().save(datasource);
 
-        // TODO: IF CODE can be changed, attribute in dataset repository must be changed to ensure consistency
-
         return updatedDataSource;
     }
 
@@ -188,7 +186,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
 
         datasetVersion = deleteDatasourceToDataset(datasource);
 
-        deleteDatasourceData(datasource);
+        deleteDatasourceData(datasetVersion.getDatasetRepositoryId(), datasource);
 
         computeDataRelatedMetadata(datasetVersion);
 
@@ -202,7 +200,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         }
     }
 
-    private void deleteDatasourceData(Datasource datasource) throws MetamacException {
+    private void deleteDatasourceData(String datasetId, Datasource datasource) throws MetamacException {
         try {
             InternationalStringDto internationalStringDto = new InternationalStringDto();
             LocalisedStringDto localisedStringDto = new LocalisedStringDto();
@@ -210,7 +208,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
             localisedStringDto.setLocale(StatisticalResourcesConstants.DEFAULT_DATA_REPOSITORY_LOCALE);
             internationalStringDto.addText(localisedStringDto);
 
-            statisticsDatasetRepositoriesServiceFacade.deleteObservationsByAttributeInstanceValue(datasource.getDatasetVersion().getDatasetRepositoryId(),
+            statisticsDatasetRepositoriesServiceFacade.deleteObservationsByAttributeInstanceValue(datasetId,
                     StatisticalResourcesConstants.ATTRIBUTE_DATA_SOURCE_ID, internationalStringDto);
 
         } catch (ApplicationException e) {
