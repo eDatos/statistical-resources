@@ -380,7 +380,6 @@ public class SdmxDataCoreMocks extends BaseJaxbMocks {
     private void mockLifeCycleStatisticalResource(String agencyID, String resourceID, String version, LifeCycleStatisticalResource target) {
         target.setPublicationDate(new DateTime(2013, 1, 1, 3, 4, 13, 0));
         target.setReplacesVersion(mockDatasetRelatedResource(agencyID, version, "00.001"));
-        target.setIsReplacedByVersion(mockDatasetRelatedResource(agencyID, version, "02.000"));
         mockVersionableStatisticalResource(agencyID, resourceID, version, target);
     }
 
