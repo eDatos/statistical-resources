@@ -1128,7 +1128,7 @@
         </stat:dimensions>
         <stat:attributes total="11">
             <stat:attribute id="at1">Value at1</stat:attribute>
-            <stat:attribute id="at2">Value at2</stat:attribute>
+            <stat:attribute id="at2">Value\ | \at2</stat:attribute>
             <stat:attribute id="at3">Value at3-1 |  | Value at3-2 |  |  |  |  |  | Value at3-3 |  |  |  | Value at3-4</stat:attribute>
             <stat:attribute id="at4">Value at4-1 | Value at4-4 |  |  |  |  | Value at4-2 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | Value at4-3 |  |  |  |  |  |  |  |  |  |  |  |  | Value at4-5 | Value at4-6</stat:attribute>
             <stat:attribute id="at5">Value at5-1 | Value at5-2 | Value at5-3 | Value at5-4 |  | Value at5-5 |  |  |  | Value at5-6 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | Value at5-7 | Value at5-8 | Value at5-9 | Value at5-10 | Value at5-11 |  |  | </stat:attribute>

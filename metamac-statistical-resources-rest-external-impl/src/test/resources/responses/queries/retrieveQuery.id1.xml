@@ -533,7 +533,7 @@
         </stat:dimensions>
         <stat:attributes total="11">
             <stat:attribute id="at1">Value at1</stat:attribute>
-            <stat:attribute id="at2">Value at2</stat:attribute>
+            <stat:attribute id="at2">Value\ | \at2</stat:attribute>
             <stat:attribute id="at3">Value at3-1 |  | Value at3-2 |  |  |  |  | </stat:attribute>
             <stat:attribute id="at4">Value at4-1 |  | Value at4-2 |  |  |  |  | </stat:attribute>
             <stat:attribute id="at5">Value at5-1 | Value at5-3 |  |  |  |  |  |  |  |  |  |  |  |  | Value at5-7 | Value at5-9</stat:attribute>

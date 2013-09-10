@@ -19,9 +19,10 @@ import org.slf4j.LoggerFactory;
 
 public class StatisticalResourcesRestExternalUtils {
 
-    private static final Logger  logger           = LoggerFactory.getLogger(StatisticalResourcesRestExternalUtils.class);
-    private static final Pattern patternDimension = Pattern.compile("(\\w+):(([\\w\\|-])+)");
-    private static final Pattern patternCode      = Pattern.compile("([\\w-]+)\\|?");
+    private static final Logger  logger               = LoggerFactory.getLogger(StatisticalResourcesRestExternalUtils.class);
+    private static final Pattern patternDimension     = Pattern.compile("(\\w+):(([\\w\\|-])+)");
+    private static final Pattern patternCode          = Pattern.compile("([\\w-]+)\\|?");
+    private static final Pattern patternDataSeparator = Pattern.compile(" \\| ");
 
     /**
      * Throws response error, logging exception
@@ -67,5 +68,12 @@ public class StatisticalResourcesRestExternalUtils {
             }
         }
         return selectedDimension;
+    }
+
+    public static String escapeValueToData(String value) {
+        if (value == null) {
+            return null;
+        }
+        return patternDataSeparator.matcher(value).replaceAll("\\\\ | \\\\");
     }
 }

@@ -95,6 +95,7 @@ import org.siemac.metamac.statistical_resources.rest.external.StatisticalResourc
 import org.siemac.metamac.statistical_resources.rest.external.exception.RestServiceExceptionType;
 import org.siemac.metamac.statistical_resources.rest.external.invocation.CommonMetadataRestExternalFacade;
 import org.siemac.metamac.statistical_resources.rest.external.invocation.SrmRestExternalFacade;
+import org.siemac.metamac.statistical_resources.rest.external.service.utils.StatisticalResourcesRestExternalUtils;
 import org.siemac.metamac.statistical_resources.rest.external.v1_0.domain.DsdProcessorResult;
 import org.siemac.metamac.statistical_resources.rest.external.v1_0.mapper.collection.CollectionsDo2RestMapperV10;
 import org.siemac.metamac.statistical_resources.rest.external.v1_0.mapper.dataset.DatasetsDo2RestMapperV10;
@@ -1140,7 +1141,7 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
             return null;
         }
         AttributeInstanceDto source = sources.get(0); // must be only one
-        return getAttributeInstanceValueToData(source);
+        return toAttributeInstanceValueToData(source);
     }
 
     private String toDataAttributeWithDimensionAttachmentLevel(String attributeId, List<String> attributeDimensions, List<String> datasetDimensionsOrdered,
@@ -1238,8 +1239,12 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
         return attributeDimensionsOrdered;
     }
 
-    private String getAttributeInstanceValueToData(AttributeInstanceBasicDto attributeDto) {
-        return attributeDto.getValue().getLocalisedLabel(StatisticalResourcesConstants.DEFAULT_DATA_REPOSITORY_LOCALE); // all attributes has only one locale
+    /**
+     * Retrieves attribute instance value in locale of dataset-repository. NOTE: This value will be escaped to not contain separator in DATA
+     */
+    private String toAttributeInstanceValueToData(AttributeInstanceBasicDto attributeDto) {
+        String attributeValue = attributeDto.getValue().getLocalisedLabel(StatisticalResourcesConstants.DEFAULT_DATA_REPOSITORY_LOCALE); // all attributes has only one locale
+        return StatisticalResourcesRestExternalUtils.escapeValueToData(attributeValue);
     }
 
     private Map<String, AttributeInstanceDto> buildMapToAttributesWithDimensionAttachmentLevelDenormalizedByCodeDimensions(List<String> attributeDimensionsOrdered,
@@ -1405,7 +1410,7 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
             String value = null;
             AttributeInstanceDto attributeInstanceDto = (AttributeInstanceDto) list.get(position);
             if (attributeInstanceDto != null) {
-                value = getAttributeInstanceValueToData(attributeInstanceDto);
+                value = toAttributeInstanceValueToData(attributeInstanceDto);
             }
             return value;
         }
@@ -1446,7 +1451,7 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
                 AttributeInstanceObservationDto attributeInstanceObservationDto = observationExtendedDto.getAttributesAsMap().get(attributeId);
                 if (attributeInstanceObservationDto != null) {
                     anyObservationHasAttribute = true;
-                    value = getAttributeInstanceValueToData(attributeInstanceObservationDto);
+                    value = toAttributeInstanceValueToData(attributeInstanceObservationDto);
                 }
             }
             return value;

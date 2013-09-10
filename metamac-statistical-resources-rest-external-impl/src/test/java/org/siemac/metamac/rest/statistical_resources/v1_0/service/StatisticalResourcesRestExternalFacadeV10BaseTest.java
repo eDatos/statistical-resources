@@ -541,9 +541,12 @@ public abstract class StatisticalResourcesRestExternalFacadeV10BaseTest extends 
             @Override
             public List<AttributeInstanceDto> answer(InvocationOnMock invocation) throws Throwable {
                 String attributeId = (String) invocation.getArguments()[1];
-                String value = "Value " + attributeId;
                 List<AttributeInstanceDto> attributes = new ArrayList<AttributeInstanceDto>();
-                if (ATTRIBUTE_1_GLOBAL.equals(attributeId) || ATTRIBUTE_2_GLOBAL.equals(attributeId)) {
+                if (ATTRIBUTE_1_GLOBAL.equals(attributeId)) {
+                    String value = "Value " + attributeId;
+                    attributes.add(restDoMocks.mockAttributeInstanceWithDatasetAttachmentLevel(attributeId, value));
+                } else if (ATTRIBUTE_2_GLOBAL.equals(attributeId)) {
+                    String value = "Value | " + attributeId;
                     attributes.add(restDoMocks.mockAttributeInstanceWithDatasetAttachmentLevel(attributeId, value));
                 } else {
                     fail("Attribute " + attributeId + " unsupported");
