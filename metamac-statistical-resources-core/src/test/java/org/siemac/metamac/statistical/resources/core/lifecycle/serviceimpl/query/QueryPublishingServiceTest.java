@@ -1,12 +1,10 @@
 package org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.query;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import static org.siemac.metamac.statistical.resources.core.utils.asserts.LifecycleAsserts.assertNotNullAutomaticallyFilledMetadataSiemacSendToPublished;
 
-import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.runner.RunWith;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesMockRestBaseTest;
@@ -32,6 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
         "classpath:spring/statistical-resources/include/apis-locator-mockito.xml", "classpath:spring/statistical-resources/applicationContext-test.xml"})
 @TransactionConfiguration(transactionManager = "txManager", defaultRollback = true)
 @Transactional
+@Ignore
 public class QueryPublishingServiceTest extends StatisticalResourcesMockRestBaseTest {
 
     @Autowired
@@ -57,7 +56,6 @@ public class QueryPublishingServiceTest extends StatisticalResourcesMockRestBase
         mockAllTaskInProgressForDatasetVersion(false);
     }
 
-
     private void assertPublishingQueryVersion(QueryVersion current) throws MetamacException {
         LifecycleAsserts.assertNotNullAutomaticallyFilledMetadataLifecycleSendToPublished(current, null);
 
@@ -66,11 +64,9 @@ public class QueryPublishingServiceTest extends StatisticalResourcesMockRestBase
         assertTrue(current.getStatus().equals(QueryStatusEnum.ACTIVE) || current.getStatus().equals(QueryStatusEnum.DISCONTINUED));
     }
 
-    
     // -------------------------------------------------------------------------------------------
     // PRIVATE UTILS
     // -------------------------------------------------------------------------------------------
-
 
     private void mockAllTaskInProgressForDatasetVersion(boolean status) throws MetamacException {
         TaskMockUtils.mockAllTaskInProgressForDatasetVersion(taskService, status);
