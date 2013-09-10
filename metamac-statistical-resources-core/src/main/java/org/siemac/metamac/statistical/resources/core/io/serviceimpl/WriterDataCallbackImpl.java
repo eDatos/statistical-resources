@@ -132,18 +132,16 @@ public class WriterDataCallbackImpl implements WriterDataCallback {
             i++;
         }
 
-        // Attributes
+        // Add serie attributes
         Set<String> addedKeys = new HashSet<String>();
-        // extractAttributesForSerie(serie, addedKeys);
-
-        // serie.addAttribute(attributeElement);
+        serie.getAttributes().addAll(extractAttributesForCurrentLevel(serie.getSeriesKey(), getCurrentDatasetInfo().getAttributeInstances(), addedKeys));
 
         // Observations
         Map<String, ObservationExtendedDto> observationsMap = datasetRepositoriesServiceFacade.findObservationsExtendedByDimensions(getCurrentDatasetInfo().getDatasetVersion()
                 .getDatasetRepositoryId(), metamac2StatRepoMapper.conditionsToRepositoryList(serieConditions));
 
         for (Map.Entry<String, ObservationExtendedDto> entry : observationsMap.entrySet()) {
-            serie.getObs().add(observationRepositoryToGroupedObservationWriter(entry.getValue()));
+            serie.getObs().add(observationRepositoryToGroupedObservationWriter(entry.getValue(), addedKeys));
         }
 
         return serie;
@@ -247,24 +245,24 @@ public class WriterDataCallbackImpl implements WriterDataCallback {
      * 
      * @param instanceGroups
      * @param groupInfo
-     * @param transformedAttributesMap
+     * @param normalizedAttributesMap
      * @param observationkeys
      * @param numDimProcess
      */
-    private void buildGroups(List<Group> instanceGroups, GroupInfo groupInfo, Map<String, List<AttributeInstanceBasicDto>> transformedAttributesMap, List<IdValuePair> observationkeys,
-            int numDimProcess) {
+    private void buildGroups(List<Group> instanceGroups, GroupInfo groupInfo, Map<String, List<AttributeInstanceBasicDto>> normalizedAttributesMap, List<IdValuePair> observationkeys, int numDimProcess) {
 
         // If the key of current group is fully generated
         if (numDimProcess == groupInfo.getDimensionsInfoList().size()) {
             String key = ManipulateDataUtils.generateKeyFromIdValuePairs(observationkeys);
-            if (transformedAttributesMap.containsKey(key)) {
+            if (normalizedAttributesMap.containsKey(key)) {
                 // new instance of group
                 Group group = new Group();
 
                 // Keys
                 group.getGroupKey().addAll(observationkeys);
+
                 // Attributes
-                Iterator<AttributeInstanceBasicDto> itAttributes = transformedAttributesMap.get(key).iterator();
+                Iterator<AttributeInstanceBasicDto> itAttributes = normalizedAttributesMap.get(key).iterator();
                 while (itAttributes.hasNext()) {
                     AttributeInstanceBasicDto attributeBasicDto = itAttributes.next();
 
@@ -274,13 +272,16 @@ public class WriterDataCallbackImpl implements WriterDataCallback {
                         group.addAttribute(new IdValuePair(attributeBasicDto.getAttributeId(), attributeBasicDto.getValue().getLocalisedLabel(
                                 StatisticalResourcesConstants.DEFAULT_DATA_REPOSITORY_LOCALE)));
 
-                        itAttributes.remove(); // Remove this instance of attribute
+                        itAttributes.remove(); // Remove this instance of attribute from map
                     }
                 }
+
                 // Remove is if necessary the map key
-                if (transformedAttributesMap.get(key).isEmpty()) {
-                    transformedAttributesMap.remove(key);
+                if (normalizedAttributesMap.get(key).isEmpty()) {
+                    normalizedAttributesMap.remove(key);
                 }
+
+                instanceGroups.add(group);
             }
         } else {
             // Next dimension to process code
@@ -294,39 +295,51 @@ public class WriterDataCallbackImpl implements WriterDataCallback {
                 List<IdValuePair> newObservationConditions = new ArrayList<IdValuePair>(observationkeys.size() + 1);
                 newObservationConditions.addAll(observationkeys);
                 newObservationConditions.add(idValuePairAux);
+
+                buildGroups(instanceGroups, groupInfo, normalizedAttributesMap, newObservationConditions, numDimProcess + 1);
             }
         }
     }
 
-    private void extractAttributesForSerie(Serie serie, int numDimProcess, Set<String> addedKeys) {
+    private List<IdValuePair> extractAttributesForCurrentLevel(List<IdValuePair> keys, Map<String, List<AttributeInstanceBasicDto>> normalizedAttributesMap, Set<String> addedKeys) {
+        List<IdValuePair> attributes = new LinkedList<IdValuePair>();
 
-        Stack<List<IdValuePair>> stack = new Stack();
+        Stack<List<IdValuePair>> stack = new Stack<List<IdValuePair>>();
+        stack.push(keys);
         while (!stack.isEmpty()) {
             List<IdValuePair> pop = stack.pop();
 
-            // TODO Procesar POP element, ir quitando uno de los elementos
-            // for (;;) {
-            //
-            // stack.push(item);
-            // }
+            // Build partial keys deleting one element
+            for (int i = 0; i < pop.size(); i++) {
+                Iterator<IdValuePair> itPop = pop.iterator();
+                ArrayList<IdValuePair> subList = new ArrayList<IdValuePair>(pop.size() - 1);
+                int j = 0;
+                while (itPop.hasNext()) {
+                    IdValuePair next = itPop.next();
+                    if (i != j) {
+                        subList.add(next);
+                    }
+                    j++;
+                }
+                // Check if exist a attribute that conforms with this key and add
+                if (!subList.isEmpty()) {
+                    String key = ManipulateDataUtils.generateKeyFromIdValuePairs(subList);
+                    if (normalizedAttributesMap.containsKey(key)) {
+                        // Attributes
+                        Iterator<AttributeInstanceBasicDto> itAttributes = normalizedAttributesMap.get(key).iterator();
+                        while (itAttributes.hasNext()) {
+                            IdValuePair attributeIdValuePair = ManipulateDataUtils.attributeInstanceBasicDto2IdValuePair(itAttributes.next());
+                            attributes.add(attributeIdValuePair);
+                            // addedKeys
+                            addedKeys.add(attributeIdValuePair.getCode() + ManipulateDataUtils.PAIR_SEPARATOR + key);
+                        }
+                    }
+                    stack.push(subList); // To next iteration
+                }
+            }
         }
-
+        return attributes;
     }
-    // public static void main(String[] args) {
-    // permutation("", "abcd");
-    // }
-    //
-    // private static void permutation(String prefix, String str) {
-    // int n = str.length();
-    // if (n == 0)
-    // System.out.println(prefix);
-    // else {
-    // for (int i = 0; i < n; i++) {
-    //
-    // }
-    // // permutation(prefix + str.charAt(i), str.substring(0, i) + str.substring(i + 1, n));
-    // }
-    // }
 
     private boolean isValidAttributeForThisGroup(AttributeInfo attributeInfo, String groupId) {
         if (attributeInfo != null) {
@@ -346,7 +359,7 @@ public class WriterDataCallbackImpl implements WriterDataCallback {
         return false;
     }
 
-    private Observation observationRepositoryToGroupedObservationWriter(ObservationExtendedDto observation) throws Exception {
+    private Observation observationRepositoryToGroupedObservationWriter(ObservationExtendedDto observation, Set<String> addedKeys) throws Exception {
         Observation result = new Observation();
 
         // Key
@@ -359,16 +372,15 @@ public class WriterDataCallbackImpl implements WriterDataCallback {
         // Observation Value
         result.setObservationValue(new IdValuePair(MappingConstants.OBS_VALUE, observation.getPrimaryMeasure()));
 
-        // Attribute
+        // Attribute add observation level
         for (AttributeInstanceBasicDto attributeBasicDto : observation.getAttributes()) {
             if (!StatisticalResourcesConstants.ATTRIBUTE_DATA_SOURCE_ID.equals(attributeBasicDto.getAttributeId())) {
                 result.addAttribute(new IdValuePair(attributeBasicDto.getAttributeId(), attributeBasicDto.getValue().getLocalisedLabel(StatisticalResourcesConstants.DEFAULT_DATA_REPOSITORY_LOCALE)));
             }
         }
 
-        // TODO Añadir otros attr que en este mensaje van a nivel de observation List<AttributeInstanceBasicDto> attributes = observation.getAttributes();
-
-        // observation.getCodesDimension()
+        // Other attributes that are in observation in this dataset
+        result.getAttributes().addAll(extractAttributesForCurrentLevel(result.getObservationKey(), getCurrentDatasetInfo().getAttributeInstances(), addedKeys));
 
         return result;
     }

@@ -147,12 +147,9 @@ public class DatasetInfo {
 
     private void addAllCodesConditionForDimension(DatasetRepositoryDto datasetRepository, int dimensionOrder, List<DimensionCodeInfo> conditions) throws ApplicationException {
         String dimensionID = datasetRepository.getDimensions().get(dimensionOrder);
-        List<String> coverage = getCoverage().get(dimensionOrder);
         DimensionCodeInfo dimensionCodeInfo = new DimensionCodeInfo(dimensionID, getDsdSdmxInfo().getDimensions().get(dimensionID).getTypeComponentInfo());
+        dimensionCodeInfo.getCodes().addAll(getCoverage().get(dimensionID));
 
-        for (String codeDimension : coverage) {
-            dimensionCodeInfo.addCode(codeDimension);
-        }
         conditions.add(dimensionCodeInfo);
     }
 
@@ -219,35 +216,23 @@ public class DatasetInfo {
                     continue;
                 }
 
-                List<DimensionCodeInfo> attributeDimensionsOrdered = null;
                 if (AttachmentLevel.DIMENSION.equals(attributeInfo.getAttachmentLevel())) {
-                    attributeDimensionsOrdered = toAttributeDimensionsOrdered(attributeInfo.getDimensionsInfoList());
+                    addDenormalizedAttributesToCurrentNormalizedAttributes(normalizedAttributesMap, attributes, attributeInfo.getDimensionsInfoList());
                 } else {
                     // Group
-                    attributeDimensionsOrdered = toAttributeDimensionsOrdered(attributeInfo.getGroup().getDimensionsInfoList());
+                    addDenormalizedAttributesToCurrentNormalizedAttributes(normalizedAttributesMap, attributes, attributeInfo.getGroup().getDimensionsInfoList());
                 }
-                addDenormalizedAttributesToCurrentNormalizedAttributes(normalizedAttributesMap, attributes, attributeDimensionsOrdered);
             }
         }
         return normalizedAttributesMap;
     }
 
-    private List<DimensionCodeInfo> toAttributeDimensionsOrdered(List<ComponentInfo> attributeDimensions) throws Exception {
-        List<DimensionCodeInfo> attributeDimensionsOrdered = new ArrayList<DimensionCodeInfo>(attributeDimensions.size());
-        for (DimensionCodeInfo datasetDimension : getConditions()) {
-            if (attributeDimensions.contains(datasetDimension)) {
-                attributeDimensionsOrdered.add(datasetDimension);
-            }
-        }
-        return attributeDimensionsOrdered;
-    }
-
     private void addDenormalizedAttributesToCurrentNormalizedAttributes(Map<String, List<AttributeInstanceBasicDto>> normalizedAttributesMap, List<AttributeInstanceDto> attributeInstances,
-            List<DimensionCodeInfo> attributeDimensionsOrdered) {
+            List<ComponentInfo> attributeDimensionsOrdered) {
 
         for (AttributeInstanceDto attributeInstanceDto : attributeInstances) {
             List<IdValuePair> keyList = new ArrayList<IdValuePair>();
-            for (DimensionCodeInfo dimension : attributeDimensionsOrdered) {
+            for (ComponentInfo dimension : attributeDimensionsOrdered) {
                 keyList.add(new IdValuePair(dimension.getCode(), attributeInstanceDto.getCodesByDimension().get(dimension.getCode()).get(0)));
             }
 

@@ -1,5 +1,6 @@
 package org.siemac.metamac.statistical.resources.core.io.domain;
 
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -33,11 +34,11 @@ public class AttributeInfo {
     }
 
     public List<GroupInfo> getAttachmentGroups() {
-        return attachmentGroups;
+        return Collections.unmodifiableList(attachmentGroups);
     }
 
     public List<ComponentInfo> getDimensionsInfoList() {
-        return dimensionsInfoList;
+        return Collections.unmodifiableList(dimensionsInfoList);
     }
 
     public GroupInfo getGroup() {
@@ -51,11 +52,16 @@ public class AttributeInfo {
         attachmentGroups.add(attachmenGroup);
     }
 
-    public void addDimensionInfo(ComponentInfo componentInfo) {
+    /**
+     * Note: the list must be in order respect to the DSD dimensions definitions
+     * 
+     * @param componentInfo
+     */
+    public void addAllDimensionInfo(List<ComponentInfo> componentInfo) {
         if (dimensionsInfoList == null) {
             dimensionsInfoList = new LinkedList<ComponentInfo>();
         }
-        dimensionsInfoList.add(componentInfo);
+        dimensionsInfoList.addAll(componentInfo);
     }
 
     public void setGroup(GroupInfo group) {

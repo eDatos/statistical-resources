@@ -67,11 +67,10 @@ public class DsdSdmxInfo {
         for (GroupType groupType : dsd.getDataStructureComponents().getGroups()) {
             List<ComponentInfo> groupDimensions = new ArrayList<ComponentInfo>(groupType.getGroupDimensions().size());
             for (GroupDimensionType groupDimension : groupType.getGroupDimensions()) {
-                groupDimensions.add(new ComponentInfo(groupDimension.getDimensionReference().getRef().getId(), dimensions.get(groupDimension.getDimensionReference().getRef().getId())
-                        .getTypeComponentInfo()));
+                groupDimensions.add(getDimensions().get(groupDimension.getDimensionReference().getRef().getId()));
             }
 
-            GroupInfo groupInfo = new GroupInfo(groupType.getId(), groupDimensions);
+            GroupInfo groupInfo = new GroupInfo(groupType.getId(), sortDimensionList(groupDimensions));
             groupMap.put(groupType.getId(), groupInfo);
         }
 
@@ -125,14 +124,32 @@ public class DsdSdmxInfo {
             attributeInfo.setGroup(groups.get(attributeRelationship.getGroup().getRef().getId()));
         } else if (attributeRelationship.getDimensions() != null) {
             attributeInfo = new AttributeInfo(attributeId, AttributeInfo.AttachmentLevel.DIMENSION);
+
+            List<ComponentInfo> groupDimensions = new ArrayList<ComponentInfo>(attributeRelationship.getDimensions().size());
             for (LocalDimensionReferenceType dimension : attributeRelationship.getDimensions()) {
-                attributeInfo.addDimensionInfo(dimensions.get(dimension.getRef().getId()));
+                groupDimensions.add(dimensions.get(dimension.getRef().getId()));
             }
+            attributeInfo.addAllDimensionInfo(sortDimensionList(groupDimensions));
+
             for (LocalGroupKeyDescriptorReferenceType group : attributeRelationship.getAttachmentGroups()) {
                 attributeInfo.addAttachmentGroup(groups.get(group.getRef().getId()));
             }
         }
         return attributeInfo;
+    }
+
+    private List<ComponentInfo> sortDimensionList(List<ComponentInfo> groupDimensions) {
+        // Sort groupDimensions
+        List<ComponentInfo> groupDimensionsSorted = new ArrayList<ComponentInfo>(groupDimensions.size());
+        for (ComponentInfo dimension : dimensions.values()) {
+            for (ComponentInfo groupDimension : groupDimensions) {
+                if (dimension.getCode().equals(groupDimension.getCode())) {
+                    groupDimensionsSorted.add(dimension);
+                    break;
+                }
+            }
+        }
+        return groupDimensionsSorted;
     }
 
     public interface DsdSdmxExtractor {

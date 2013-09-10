@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -19,19 +18,17 @@ import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import com.arte.statistic.dataset.repository.domain.AttributeAttachmentLevelEnum;
 import com.arte.statistic.dataset.repository.dto.AttributeDto;
 import com.arte.statistic.dataset.repository.dto.AttributeInstanceBasicDto;
-import com.arte.statistic.dataset.repository.dto.AttributeInstanceDto;
 import com.arte.statistic.dataset.repository.dto.AttributeInstanceObservationDto;
 import com.arte.statistic.dataset.repository.dto.CodeDimensionDto;
 import com.arte.statistic.dataset.repository.dto.InternationalStringDto;
 import com.arte.statistic.dataset.repository.dto.LocalisedStringDto;
-import com.arte.statistic.parser.sdmx.v2_1.domain.ComponentInfo;
-import com.arte.statistic.parser.sdmx.v2_1.domain.ComponentInfoTypeEnum;
-import com.arte.statistic.parser.sdmx.v2_1.domain.DimensionCodeInfo;
 import com.arte.statistic.parser.sdmx.v2_1.domain.IdValuePair;
 
 public class ManipulateDataUtils {
 
-    public static String DATASET = "DATASET";
+    public static String    DATASET           = "DATASET";
+    public static Character PAIR_SEPARATOR    = ':';
+    public static Character ELEMENT_SEPARATOR = ',';
 
     /**
      * Create a data source extra identification attribute
@@ -96,16 +93,16 @@ public class ManipulateDataUtils {
         StringBuilder key = new StringBuilder();
 
         for (Map.Entry<String, List<String>> entry : codesByDimension.entrySet()) {
-            key.append(entry.getKey()).append(':');
+            key.append(entry.getKey()).append(PAIR_SEPARATOR);
             if (entry.getValue() == null || entry.getValue().isEmpty()) {
                 key.append("[*]");
             } else {
                 key.append(entry.getValue());
             }
-            key.append(',');
+            key.append(ELEMENT_SEPARATOR);
         }
 
-        if (key.charAt(key.length() - 1) == ',') {
+        if (key.charAt(key.length() - 1) == ELEMENT_SEPARATOR) {
             key.deleteCharAt(key.length() - 1);
         }
 
@@ -150,134 +147,64 @@ public class ManipulateDataUtils {
     }
 
     /**
-     * Transform all attributes in map indexed by key
+     * Generate a key from a list of CodeDimensionDto
      * 
-     * @param currentTransformedAttributes
-     * @param dimensions
-     * @param attributeInstanceDtos
+     * @param codesDimension
      * @return
      */
-    public static Map<String, List<AttributeInstanceBasicDto>> addTransformAttributesToCurrentTransformedAttributes(Map<String, List<AttributeInstanceBasicDto>> currentTransformedAttributes,
-            List<DimensionCodeInfo> dimensions, List<AttributeInstanceDto> attributeInstanceDtos) {
-
-        for (AttributeInstanceDto attributeInstanceDto : attributeInstanceDtos) {
-            // For current attribute
-            transformAttributes(currentTransformedAttributes, dimensions, 0, new LinkedList<CodeDimensionDto>(), attributeInstanceDto);
-        }
-
-        return currentTransformedAttributes;
-    }
-
-    private static void transformAttributes(Map<String, List<AttributeInstanceBasicDto>> attributesMap, List<DimensionCodeInfo> dimensions, int index, List<CodeDimensionDto> codesDimension,
-            AttributeInstanceDto attributeDto) {
-
-        // If the key of current attribute is fully generated
-        if (index == attributeDto.getCodesByDimension().size()) {
-            String key = generateKeyFromCodesDimensions(codesDimension);
-
-            // Add current attribute to this key in the map
-            if (attributesMap.containsKey(key)) {
-                attributesMap.get(key).add(attributeDto);
-            } else {
-                List<AttributeInstanceBasicDto> attributeDtos = new LinkedList<AttributeInstanceBasicDto>();
-                attributeDtos.add(attributeDto);
-                attributesMap.put(key, attributeDtos);
-            }
-
-            return;
-        }
-
-        // Next dimension to process code
-        ComponentInfo dimension = dimensions.get(index);
-
-        // If the attribute contains the current dimension in his key
-        if (attributeDto.getCodesByDimension() != null && !attributeDto.getCodesByDimension().get(dimension.getCode()).isEmpty()) {
-            List<String> codes = attributeDto.getCodesByDimension().get(dimension.getCode());
-            // Generate all keys with the query codes of the current dimension
-            for (String code : codes) {
-                CodeDimensionDto codeDimensionAuxDto = new CodeDimensionDto(dimension.getCode(), code);
-
-                List<CodeDimensionDto> conditions = new ArrayList<CodeDimensionDto>(codesDimension.size() + 1);
-                conditions.addAll(codesDimension);
-                conditions.add(codeDimensionAuxDto);
-
-                transformAttributes(attributesMap, dimensions, index + 1, conditions, attributeDto);
-            }
-        } else {
-            transformAttributes(attributesMap, dimensions, index + 1, codesDimension, attributeDto);
-        }
-    }
-
     public static String generateKeyFromCodesDimensions(List<CodeDimensionDto> codesDimension) {
         StringBuilder key = new StringBuilder();
 
         for (CodeDimensionDto codeDimensionDto : codesDimension) {
-            key.append(codeDimensionDto.getDimensionId()).append(':').append(codeDimensionDto.getCodeDimensionId()).append(',');
+            key.append(codeDimensionDto.getDimensionId()).append(PAIR_SEPARATOR).append(codeDimensionDto.getCodeDimensionId()).append(ELEMENT_SEPARATOR);
         }
 
-        if (key.charAt(key.length() - 1) == ',') {
+        if (key.charAt(key.length() - 1) == ELEMENT_SEPARATOR) {
             key.deleteCharAt(key.length() - 1);
         }
         return key.toString();
     }
 
+    /**
+     * Generate a key from a list of IdValuePair
+     * 
+     * @param codesDimensions
+     * @return
+     */
     public static String generateKeyFromIdValuePairs(List<IdValuePair> codesDimensions) {
-        StringBuilder key = new StringBuilder();
+        StringBuilder key = new StringBuilder(100);
 
         for (IdValuePair idValuePair : codesDimensions) {
-            key.append(idValuePair.getCode()).append(':').append(idValuePair.getValue()).append(',');
+            key.append(idValuePair.getCode()).append(PAIR_SEPARATOR).append(idValuePair.getValue()).append(ELEMENT_SEPARATOR);
         }
 
-        if (key.charAt(key.length() - 1) == ',') {
+        if (key.charAt(key.length() - 1) == ELEMENT_SEPARATOR) {
             key.deleteCharAt(key.length() - 1);
         }
         return key.toString();
     }
 
-    public static void main(String[] args) {
-
-        Map<String, List<String>> codesByDimension = new HashMap<String, List<String>>();
-
-        codesByDimension.put("FREQ", Arrays.asList("M", "Y", "D"));
-        codesByDimension.put("CURRENCY", Arrays.asList("USD", "GBP"));
-        codesByDimension.put("CURRENCY_DENOM", Arrays.asList("EUR"));
-        codesByDimension.put("EXR_TYPE", Arrays.asList("SP00"));
-        codesByDimension.put("EXR_VAR", Arrays.asList("E", "S", "F"));
-        codesByDimension.put("TIME_PERIOD", Arrays.asList("2010-10", "2011-10", "2012-10"));
-        // codesByDimension.put("KAKA", new ArrayList<String>());
-
-        // System.out.println(generateKeyForAttribute(codesByDimension));
-
-        // AtributeDto
-        AttributeInstanceDto attributeInstanceDto = new AttributeInstanceDto();
-        attributeInstanceDto.setAttributeId("ATTRIBUTE");
-        attributeInstanceDto.setCodesByDimension(codesByDimension);
-        InternationalStringDto internationalStringDto = new InternationalStringDto();
-        LocalisedStringDto localisedStringDto = new LocalisedStringDto();
-        localisedStringDto.setLabel("hola");
-        localisedStringDto.setLocale("es");
-        internationalStringDto.addText(localisedStringDto);
-        attributeInstanceDto.setValue(internationalStringDto);
-
-        // List<ComponentInfo> dimensions,
-        List<DimensionCodeInfo> dimensions = new ArrayList<DimensionCodeInfo>();
-        dimensions.add(new DimensionCodeInfo("FREQ", ComponentInfoTypeEnum.DIMENSION));
-        dimensions.add(new DimensionCodeInfo("CURRENCY", ComponentInfoTypeEnum.DIMENSION));
-        dimensions.add(new DimensionCodeInfo("CURRENCY_DENOM", ComponentInfoTypeEnum.DIMENSION));
-        dimensions.add(new DimensionCodeInfo("EXR_TYPE", ComponentInfoTypeEnum.DIMENSION));
-        dimensions.add(new DimensionCodeInfo("EXR_VAR", ComponentInfoTypeEnum.DIMENSION));
-        dimensions.add(new DimensionCodeInfo("TIME_PERIOD", ComponentInfoTypeEnum.DIMENSION));
-        dimensions.add(new DimensionCodeInfo("KAKA", ComponentInfoTypeEnum.DIMENSION));
-
-        Map<String, List<AttributeInstanceBasicDto>> attributesMap = addTransformAttributesToCurrentTransformedAttributes(new HashMap<String, List<AttributeInstanceBasicDto>>(), dimensions,
-                Arrays.asList(attributeInstanceDto));
-
-        for (Map.Entry<String, List<AttributeInstanceBasicDto>> entry : attributesMap.entrySet()) {
-            System.out.println(entry.getKey());
-            List<AttributeInstanceBasicDto> value = entry.getValue();
-            System.out.println(toStringUnorderedKeyForAttribute(((AttributeInstanceDto) value.iterator().next()).getCodesByDimension()));
-            System.out.println("----------------");
-        }
-
+    /**
+     * Generate a key for attribute adding attribute id to an existing partial key
+     * 
+     * @param attributeId
+     * @param partialKey
+     * @return
+     */
+    public static String generateKeyForAttribute(String attributeId, String partialKey) {
+        StringBuilder key = new StringBuilder(attributeId);
+        key.append(PAIR_SEPARATOR).append(partialKey);
+        return key.toString();
     }
-}
+
+    /**
+     * Instance of repository attribute to writer attribute
+     * 
+     * @param attributeBasicDto
+     * @return
+     */
+    public static IdValuePair attributeInstanceBasicDto2IdValuePair(AttributeInstanceBasicDto attributeBasicDto) {
+        return new IdValuePair(attributeBasicDto.getAttributeId(), attributeBasicDto.getValue().getLocalisedLabel(StatisticalResourcesConstants.DEFAULT_DATA_REPOSITORY_LOCALE));
+    }
+
+};
