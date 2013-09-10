@@ -30,6 +30,7 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_27_V1_PUBLISHED_FOR_QUERY_06_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_28_V2_PUBLISHED_NO_VISIBLE_FOR_QUERY_06_NAME;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
@@ -317,11 +318,9 @@ public class QueryServiceTest extends StatisticalResourcesBaseTest implements Qu
         PagedResult<QueryVersion> queriesPagedResult = queryService.findQueryVersionsByCondition(getServiceContextAdministrador(), null, null);
 
         assertEquals(2, queriesPagedResult.getTotalRows());
-        int i = 0;
-        assertEquals((queryVersionMockFactory.retrieveMock(QUERY_VERSION_28_V2_PUBLISHED_NO_VISIBLE_FOR_QUERY_06_NAME)).getLifeCycleStatisticalResource().getUrn(),
-                queriesPagedResult.getValues().get(i++).getLifeCycleStatisticalResource().getUrn());
-        assertEquals((queryVersionMockFactory.retrieveMock(QUERY_VERSION_27_V1_PUBLISHED_FOR_QUERY_06_NAME)).getLifeCycleStatisticalResource().getUrn(), queriesPagedResult.getValues().get(i++)
-                .getLifeCycleStatisticalResource().getUrn());
+        QueryVersion queryV01 = queryVersionMockFactory.retrieveMock(QUERY_VERSION_28_V2_PUBLISHED_NO_VISIBLE_FOR_QUERY_06_NAME);
+        QueryVersion queryV02 = queryVersionMockFactory.retrieveMock(QUERY_VERSION_27_V1_PUBLISHED_FOR_QUERY_06_NAME);
+        assertEqualsQueryVersionCollection(Arrays.asList(queryV01, queryV02), queriesPagedResult.getValues());
     }
 
     @Test
