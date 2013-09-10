@@ -1,13 +1,14 @@
 package org.siemac.metamac.sdmx.data.rest.external.v2_1.utils;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.joda.time.DateTime;
 import org.sdmx.resources.sdmxml.schemas.v2_1.common.CodelistReferenceType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.common.ConceptReferenceType;
@@ -44,11 +45,13 @@ import org.siemac.metamac.statistical.resources.core.enume.domain.VersionRationa
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesDoMocks;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesPersistedDoMocks;
 
+import com.arte.statistic.dataset.repository.dto.AttributeInstanceDto;
 import com.arte.statistic.dataset.repository.dto.AttributeInstanceObservationDto;
 import com.arte.statistic.dataset.repository.dto.CodeDimensionDto;
 import com.arte.statistic.dataset.repository.dto.InternationalStringDto;
 import com.arte.statistic.dataset.repository.dto.LocalisedStringDto;
 import com.arte.statistic.dataset.repository.dto.ObservationExtendedDto;
+import com.arte.statistic.parser.sdmx.v2_1.domain.IdValuePair;
 
 public class SdmxDataCoreMocks extends BaseJaxbMocks {
 
@@ -105,6 +108,9 @@ public class SdmxDataCoreMocks extends BaseJaxbMocks {
             observationExtendedDto.getCodesDimension().add(new CodeDimensionDto("EXR_TYPE", "SP00"));
             observationExtendedDto.getCodesDimension().add(new CodeDimensionDto("EXR_VAR", "E"));
             observationExtendedDto.getCodesDimension().add(new CodeDimensionDto("TIME_PERIOD", "2010-08"));
+
+            observationExtendedDto.addAttribute(createAttributeInstanceObservationDto("OBS_STATUS", "A"));
+            observationExtendedDto.addAttribute(createAttributeInstanceObservationDto("CONF_STATUS_OBS", "F"));
 
             observationExtendedDto.setPrimaryMeasure("0.82363");
             observationsMap.put(observationExtendedDto.getUniqueKey(), observationExtendedDto);
@@ -265,25 +271,376 @@ public class SdmxDataCoreMocks extends BaseJaxbMocks {
         return observationsMap;
     }
 
-    public static Set<String> mockObservationsKeys() {
-        Set<String> set = new HashSet<String>();
+    public static List<String> mockAttributesIds() {
+        List<String> result = new ArrayList<String>();
+        result.add("COLL_METHOD");
+        result.add("DECIMALS");
+        result.add("UNIT_MEASURE");
+        result.add("UNIT_MULT");
+        result.add("CONF_STATUS_OBS");
+        result.add("OBS_STATUS");
+        result.add("TITLE");
 
-        set.add("M#CHF#EUR#SP00#E#2010-08");
-        set.add("M#JPY#EUR#SP00#E#2010-08");
-        set.add("M#GBP#EUR#SP00#E#2010-08");
-        set.add("M#USD#EUR#SP00#E#2010-08");
+        return result;
+    }
 
-        set.add("M#CHF#EUR#SP00#E#2010-09");
-        set.add("M#GBP#EUR#SP00#E#2010-09");
-        set.add("M#JPY#EUR#SP00#E#2010-09");
-        set.add("M#USD#EUR#SP00#E#2010-09");
+    public static List<Pair<List<IdValuePair>, AttributeInstanceDto>> mockAttributes() {
 
-        set.add("M#CHF#EUR#SP00#E#2010-10");
-        set.add("M#GBP#EUR#SP00#E#2010-10");
-        set.add("M#JPY#EUR#SP00#E#2010-10");
-        set.add("M#USD#EUR#SP00#E#2010-10");
+        List<Pair<List<IdValuePair>, AttributeInstanceDto>> attributesList = new ArrayList<Pair<List<IdValuePair>, AttributeInstanceDto>>();
 
-        return set;
+        // COLL_METHOD:EXR_TYPE:SP00,EXR_VAR:E
+        {
+            AttributeInstanceDto attributeInstanceDto = new AttributeInstanceDto();
+            attributeInstanceDto.setAttributeId("COLL_METHOD");
+            List<IdValuePair> idValuePairs = new ArrayList<IdValuePair>(2);
+            idValuePairs.add(new IdValuePair("EXR_TYPE", "SP00"));
+            idValuePairs.add(new IdValuePair("EXR_VAR", "E"));
+
+            Map<String, List<String>> conditionsMap = new HashMap<String, List<String>>();
+            for (IdValuePair idValuePair : idValuePairs) {
+                conditionsMap.put(idValuePair.getCode(), Arrays.asList(idValuePair.getValue()));
+            }
+            attributeInstanceDto.setCodesByDimension(conditionsMap);
+            attributeInstanceDto.setValue(mockInternationalStringDto("Average of observations through period"));
+
+            Pair pair = new ImmutablePair<List<IdValuePair>, AttributeInstanceDto>(idValuePairs, attributeInstanceDto);
+            attributesList.add(pair);
+        }
+
+        // DECIMALS:CURRENCY:CHF,CURRENCY_DENOM:EUR,EXR_TYPE:SP00
+        {
+            AttributeInstanceDto attributeInstanceDto = new AttributeInstanceDto();
+            attributeInstanceDto.setAttributeId("DECIMALS");
+            List<IdValuePair> idValuePairs = new ArrayList<IdValuePair>(3);
+            idValuePairs.add(new IdValuePair("CURRENCY", "CHF"));
+            idValuePairs.add(new IdValuePair("CURRENCY_DENOM", "EUR"));
+            idValuePairs.add(new IdValuePair("EXR_TYPE", "SP00"));
+
+            Map<String, List<String>> conditionsMap = new HashMap<String, List<String>>();
+            for (IdValuePair idValuePair : idValuePairs) {
+                conditionsMap.put(idValuePair.getCode(), Arrays.asList(idValuePair.getValue()));
+            }
+            attributeInstanceDto.setCodesByDimension(conditionsMap);
+            attributeInstanceDto.setValue(mockInternationalStringDto("4"));
+
+            Pair pair = new ImmutablePair<List<IdValuePair>, AttributeInstanceDto>(idValuePairs, attributeInstanceDto);
+            attributesList.add(pair);
+        }
+
+        // DECIMALS:CURRENCY:GBP,CURRENCY_DENOM:EUR,EXR_TYPE:SP00
+        {
+            AttributeInstanceDto attributeInstanceDto = new AttributeInstanceDto();
+            attributeInstanceDto.setAttributeId("DECIMALS");
+            List<IdValuePair> idValuePairs = new ArrayList<IdValuePair>(3);
+            idValuePairs.add(new IdValuePair("CURRENCY", "GBP"));
+            idValuePairs.add(new IdValuePair("CURRENCY_DENOM", "EUR"));
+            idValuePairs.add(new IdValuePair("EXR_TYPE", "SP00"));
+
+            Map<String, List<String>> conditionsMap = new HashMap<String, List<String>>();
+            for (IdValuePair idValuePair : idValuePairs) {
+                conditionsMap.put(idValuePair.getCode(), Arrays.asList(idValuePair.getValue()));
+            }
+            attributeInstanceDto.setCodesByDimension(conditionsMap);
+            attributeInstanceDto.setValue(mockInternationalStringDto("5"));
+
+            Pair pair = new ImmutablePair<List<IdValuePair>, AttributeInstanceDto>(idValuePairs, attributeInstanceDto);
+            attributesList.add(pair);
+        }
+
+        // DECIMALS:CURRENCY:JPY,CURRENCY_DENOM:EUR,EXR_TYPE:SP00
+        {
+            AttributeInstanceDto attributeInstanceDto = new AttributeInstanceDto();
+            attributeInstanceDto.setAttributeId("DECIMALS");
+            List<IdValuePair> idValuePairs = new ArrayList<IdValuePair>(3);
+            idValuePairs.add(new IdValuePair("CURRENCY", "JPY"));
+            idValuePairs.add(new IdValuePair("CURRENCY_DENOM", "EUR"));
+            idValuePairs.add(new IdValuePair("EXR_TYPE", "SP00"));
+
+            Map<String, List<String>> conditionsMap = new HashMap<String, List<String>>();
+            for (IdValuePair idValuePair : idValuePairs) {
+                conditionsMap.put(idValuePair.getCode(), Arrays.asList(idValuePair.getValue()));
+            }
+            attributeInstanceDto.setCodesByDimension(conditionsMap);
+            attributeInstanceDto.setValue(mockInternationalStringDto("2"));
+
+            Pair pair = new ImmutablePair<List<IdValuePair>, AttributeInstanceDto>(idValuePairs, attributeInstanceDto);
+            attributesList.add(pair);
+        }
+
+        // DECIMALS:CURRENCY:USD,CURRENCY_DENOM:EUR,EXR_TYPE:SP00
+        {
+            AttributeInstanceDto attributeInstanceDto = new AttributeInstanceDto();
+            attributeInstanceDto.setAttributeId("DECIMALS");
+            List<IdValuePair> idValuePairs = new ArrayList<IdValuePair>(3);
+            idValuePairs.add(new IdValuePair("CURRENCY", "USD"));
+            idValuePairs.add(new IdValuePair("CURRENCY_DENOM", "EUR"));
+            idValuePairs.add(new IdValuePair("EXR_TYPE", "SP00"));
+
+            Map<String, List<String>> conditionsMap = new HashMap<String, List<String>>();
+            for (IdValuePair idValuePair : idValuePairs) {
+                conditionsMap.put(idValuePair.getCode(), Arrays.asList(idValuePair.getValue()));
+            }
+            attributeInstanceDto.setCodesByDimension(conditionsMap);
+            attributeInstanceDto.setValue(mockInternationalStringDto("4"));
+
+            Pair pair = new ImmutablePair<List<IdValuePair>, AttributeInstanceDto>(idValuePairs, attributeInstanceDto);
+            attributesList.add(pair);
+        }
+
+        // UNIT_MEASURE:CURRENCY:CHF,CURRENCY_DENOM:EUR,EXR_TYPE:SP00
+        {
+            AttributeInstanceDto attributeInstanceDto = new AttributeInstanceDto();
+            attributeInstanceDto.setAttributeId("UNIT_MEASURE");
+            List<IdValuePair> idValuePairs = new ArrayList<IdValuePair>(3);
+            idValuePairs.add(new IdValuePair("CURRENCY", "CHF"));
+            idValuePairs.add(new IdValuePair("CURRENCY_DENOM", "EUR"));
+            idValuePairs.add(new IdValuePair("EXR_TYPE", "SP00"));
+
+            Map<String, List<String>> conditionsMap = new HashMap<String, List<String>>();
+            for (IdValuePair idValuePair : idValuePairs) {
+                conditionsMap.put(idValuePair.getCode(), Arrays.asList(idValuePair.getValue()));
+            }
+            attributeInstanceDto.setCodesByDimension(conditionsMap);
+            attributeInstanceDto.setValue(mockInternationalStringDto("CHF"));
+
+            Pair pair = new ImmutablePair<List<IdValuePair>, AttributeInstanceDto>(idValuePairs, attributeInstanceDto);
+            attributesList.add(pair);
+        }
+
+        // UNIT_MEASURE:CURRENCY:GBP,CURRENCY_DENOM:EUR,EXR_TYPE:SP00
+        {
+            AttributeInstanceDto attributeInstanceDto = new AttributeInstanceDto();
+            attributeInstanceDto.setAttributeId("UNIT_MEASURE");
+            List<IdValuePair> idValuePairs = new ArrayList<IdValuePair>(3);
+            idValuePairs.add(new IdValuePair("CURRENCY", "GBP"));
+            idValuePairs.add(new IdValuePair("CURRENCY_DENOM", "EUR"));
+            idValuePairs.add(new IdValuePair("EXR_TYPE", "SP00"));
+
+            Map<String, List<String>> conditionsMap = new HashMap<String, List<String>>();
+            for (IdValuePair idValuePair : idValuePairs) {
+                conditionsMap.put(idValuePair.getCode(), Arrays.asList(idValuePair.getValue()));
+            }
+            attributeInstanceDto.setCodesByDimension(conditionsMap);
+            attributeInstanceDto.setValue(mockInternationalStringDto("GBP"));
+
+            Pair pair = new ImmutablePair<List<IdValuePair>, AttributeInstanceDto>(idValuePairs, attributeInstanceDto);
+            attributesList.add(pair);
+        }
+
+        // UNIT_MEASURE:CURRENCY:JPY,CURRENCY_DENOM:EUR,EXR_TYPE:SP00
+        {
+            AttributeInstanceDto attributeInstanceDto = new AttributeInstanceDto();
+            attributeInstanceDto.setAttributeId("UNIT_MEASURE");
+            List<IdValuePair> idValuePairs = new ArrayList<IdValuePair>(3);
+            idValuePairs.add(new IdValuePair("CURRENCY", "JPY"));
+            idValuePairs.add(new IdValuePair("CURRENCY_DENOM", "EUR"));
+            idValuePairs.add(new IdValuePair("EXR_TYPE", "SP00"));
+
+            Map<String, List<String>> conditionsMap = new HashMap<String, List<String>>();
+            for (IdValuePair idValuePair : idValuePairs) {
+                conditionsMap.put(idValuePair.getCode(), Arrays.asList(idValuePair.getValue()));
+            }
+            attributeInstanceDto.setCodesByDimension(conditionsMap);
+            attributeInstanceDto.setValue(mockInternationalStringDto("JPY"));
+
+            Pair pair = new ImmutablePair<List<IdValuePair>, AttributeInstanceDto>(idValuePairs, attributeInstanceDto);
+            attributesList.add(pair);
+        }
+
+        // UNIT_MEASURE:CURRENCY:USD,CURRENCY_DENOM:EUR,EXR_TYPE:SP00
+        {
+            AttributeInstanceDto attributeInstanceDto = new AttributeInstanceDto();
+            attributeInstanceDto.setAttributeId("UNIT_MEASURE");
+            List<IdValuePair> idValuePairs = new ArrayList<IdValuePair>(3);
+            idValuePairs.add(new IdValuePair("CURRENCY", "USD"));
+            idValuePairs.add(new IdValuePair("CURRENCY_DENOM", "EUR"));
+            idValuePairs.add(new IdValuePair("EXR_TYPE", "SP00"));
+
+            Map<String, List<String>> conditionsMap = new HashMap<String, List<String>>();
+            for (IdValuePair idValuePair : idValuePairs) {
+                conditionsMap.put(idValuePair.getCode(), Arrays.asList(idValuePair.getValue()));
+            }
+            attributeInstanceDto.setCodesByDimension(conditionsMap);
+            attributeInstanceDto.setValue(mockInternationalStringDto("USD"));
+
+            Pair pair = new ImmutablePair<List<IdValuePair>, AttributeInstanceDto>(idValuePairs, attributeInstanceDto);
+            attributesList.add(pair);
+        }
+
+        // UNIT_MULT:CURRENCY:CHF,CURRENCY_DENOM:EUR,EXR_TYPE:SP00
+        {
+            AttributeInstanceDto attributeInstanceDto = new AttributeInstanceDto();
+            attributeInstanceDto.setAttributeId("UNIT_MULT");
+            List<IdValuePair> idValuePairs = new ArrayList<IdValuePair>(3);
+            idValuePairs.add(new IdValuePair("CURRENCY", "CHF"));
+            idValuePairs.add(new IdValuePair("CURRENCY_DENOM", "EUR"));
+            idValuePairs.add(new IdValuePair("EXR_TYPE", "SP00"));
+
+            Map<String, List<String>> conditionsMap = new HashMap<String, List<String>>();
+            for (IdValuePair idValuePair : idValuePairs) {
+                conditionsMap.put(idValuePair.getCode(), Arrays.asList(idValuePair.getValue()));
+            }
+            attributeInstanceDto.setCodesByDimension(conditionsMap);
+            attributeInstanceDto.setValue(mockInternationalStringDto("0"));
+
+            Pair pair = new ImmutablePair<List<IdValuePair>, AttributeInstanceDto>(idValuePairs, attributeInstanceDto);
+            attributesList.add(pair);
+        }
+
+        // UNIT_MULT:CURRENCY:GBP,CURRENCY_DENOM:EUR,EXR_TYPE:SP00
+        {
+            AttributeInstanceDto attributeInstanceDto = new AttributeInstanceDto();
+            attributeInstanceDto.setAttributeId("UNIT_MULT");
+            List<IdValuePair> idValuePairs = new ArrayList<IdValuePair>(3);
+            idValuePairs.add(new IdValuePair("CURRENCY", "GBP"));
+            idValuePairs.add(new IdValuePair("CURRENCY_DENOM", "EUR"));
+            idValuePairs.add(new IdValuePair("EXR_TYPE", "SP00"));
+
+            Map<String, List<String>> conditionsMap = new HashMap<String, List<String>>();
+            for (IdValuePair idValuePair : idValuePairs) {
+                conditionsMap.put(idValuePair.getCode(), Arrays.asList(idValuePair.getValue()));
+            }
+            attributeInstanceDto.setCodesByDimension(conditionsMap);
+            attributeInstanceDto.setValue(mockInternationalStringDto("0"));
+
+            Pair pair = new ImmutablePair<List<IdValuePair>, AttributeInstanceDto>(idValuePairs, attributeInstanceDto);
+            attributesList.add(pair);
+        }
+
+        // UNIT_MULT:CURRENCY:JPY,CURRENCY_DENOM:EUR,EXR_TYPE:SP00
+        {
+            AttributeInstanceDto attributeInstanceDto = new AttributeInstanceDto();
+            attributeInstanceDto.setAttributeId("UNIT_MULT");
+            List<IdValuePair> idValuePairs = new ArrayList<IdValuePair>(3);
+            idValuePairs.add(new IdValuePair("CURRENCY", "JPY"));
+            idValuePairs.add(new IdValuePair("CURRENCY_DENOM", "EUR"));
+            idValuePairs.add(new IdValuePair("EXR_TYPE", "SP00"));
+
+            Map<String, List<String>> conditionsMap = new HashMap<String, List<String>>();
+            for (IdValuePair idValuePair : idValuePairs) {
+                conditionsMap.put(idValuePair.getCode(), Arrays.asList(idValuePair.getValue()));
+            }
+            attributeInstanceDto.setCodesByDimension(conditionsMap);
+            attributeInstanceDto.setValue(mockInternationalStringDto("0"));
+
+            Pair pair = new ImmutablePair<List<IdValuePair>, AttributeInstanceDto>(idValuePairs, attributeInstanceDto);
+            attributesList.add(pair);
+        }
+
+        // UNIT_MULT:CURRENCY:USD,CURRENCY_DENOM:EUR,EXR_TYPE:SP00
+        {
+            AttributeInstanceDto attributeInstanceDto = new AttributeInstanceDto();
+            attributeInstanceDto.setAttributeId("UNIT_MULT");
+            List<IdValuePair> idValuePairs = new ArrayList<IdValuePair>(3);
+            idValuePairs.add(new IdValuePair("CURRENCY", "USD"));
+            idValuePairs.add(new IdValuePair("CURRENCY_DENOM", "EUR"));
+            idValuePairs.add(new IdValuePair("EXR_TYPE", "SP00"));
+
+            Map<String, List<String>> conditionsMap = new HashMap<String, List<String>>();
+            for (IdValuePair idValuePair : idValuePairs) {
+                conditionsMap.put(idValuePair.getCode(), Arrays.asList(idValuePair.getValue()));
+            }
+            attributeInstanceDto.setCodesByDimension(conditionsMap);
+            attributeInstanceDto.setValue(mockInternationalStringDto("0"));
+
+            Pair pair = new ImmutablePair<List<IdValuePair>, AttributeInstanceDto>(idValuePairs, attributeInstanceDto);
+            attributesList.add(pair);
+        }
+
+        // TITLE:CURRENCY:CHF,CURRENCY_DENOM:EUR,EXR_TYPE:SP00,EXR_VAR:E
+        {
+            AttributeInstanceDto attributeInstanceDto = new AttributeInstanceDto();
+            attributeInstanceDto.setAttributeId("TITLE");
+            List<IdValuePair> idValuePairs = new ArrayList<IdValuePair>(3);
+            idValuePairs.add(new IdValuePair("CURRENCY", "CHF"));
+            idValuePairs.add(new IdValuePair("CURRENCY_DENOM", "EUR"));
+            idValuePairs.add(new IdValuePair("EXR_TYPE", "SP00"));
+            idValuePairs.add(new IdValuePair("EXR_VAR", "E"));
+
+            Map<String, List<String>> conditionsMap = new HashMap<String, List<String>>();
+            for (IdValuePair idValuePair : idValuePairs) {
+                conditionsMap.put(idValuePair.getCode(), Arrays.asList(idValuePair.getValue()));
+            }
+            attributeInstanceDto.setCodesByDimension(conditionsMap);
+            attributeInstanceDto.setValue(mockInternationalStringDto("ECB reference exchange rate, Swiss franc/Euro"));
+
+            Pair pair = new ImmutablePair<List<IdValuePair>, AttributeInstanceDto>(idValuePairs, attributeInstanceDto);
+            attributesList.add(pair);
+        }
+
+        // TITLE:CURRENCY:GBP,CURRENCY_DENOM:EUR,EXR_TYPE:SP00,EXR_VAR:E
+        {
+            AttributeInstanceDto attributeInstanceDto = new AttributeInstanceDto();
+            attributeInstanceDto.setAttributeId("TITLE");
+            List<IdValuePair> idValuePairs = new ArrayList<IdValuePair>(3);
+            idValuePairs.add(new IdValuePair("CURRENCY", "GBP"));
+            idValuePairs.add(new IdValuePair("CURRENCY_DENOM", "EUR"));
+            idValuePairs.add(new IdValuePair("EXR_TYPE", "SP00"));
+            idValuePairs.add(new IdValuePair("EXR_VAR", "E"));
+
+            Map<String, List<String>> conditionsMap = new HashMap<String, List<String>>();
+            for (IdValuePair idValuePair : idValuePairs) {
+                conditionsMap.put(idValuePair.getCode(), Arrays.asList(idValuePair.getValue()));
+            }
+            attributeInstanceDto.setCodesByDimension(conditionsMap);
+            attributeInstanceDto.setValue(mockInternationalStringDto("ECB reference exchange rate, U.K. Pound sterling /Euro"));
+
+            Pair pair = new ImmutablePair<List<IdValuePair>, AttributeInstanceDto>(idValuePairs, attributeInstanceDto);
+            attributesList.add(pair);
+        }
+
+        // TITLE:CURRENCY:JPY,CURRENCY_DENOM:EUR,EXR_TYPE:SP00,EXR_VAR:E
+        {
+            AttributeInstanceDto attributeInstanceDto = new AttributeInstanceDto();
+            attributeInstanceDto.setAttributeId("TITLE");
+            List<IdValuePair> idValuePairs = new ArrayList<IdValuePair>(3);
+            idValuePairs.add(new IdValuePair("CURRENCY", "JPY"));
+            idValuePairs.add(new IdValuePair("CURRENCY_DENOM", "EUR"));
+            idValuePairs.add(new IdValuePair("EXR_TYPE", "SP00"));
+            idValuePairs.add(new IdValuePair("EXR_VAR", "E"));
+
+            Map<String, List<String>> conditionsMap = new HashMap<String, List<String>>();
+            for (IdValuePair idValuePair : idValuePairs) {
+                conditionsMap.put(idValuePair.getCode(), Arrays.asList(idValuePair.getValue()));
+            }
+            attributeInstanceDto.setCodesByDimension(conditionsMap);
+            attributeInstanceDto.setValue(mockInternationalStringDto("ECB reference exchange rate, Japanese yen/Euro"));
+
+            Pair pair = new ImmutablePair<List<IdValuePair>, AttributeInstanceDto>(idValuePairs, attributeInstanceDto);
+            attributesList.add(pair);
+        }
+
+        // TITLE:CURRENCY:USD,CURRENCY_DENOM:EUR,EXR_TYPE:SP00,EXR_VAR:E
+        {
+            AttributeInstanceDto attributeInstanceDto = new AttributeInstanceDto();
+            attributeInstanceDto.setAttributeId("TITLE");
+            List<IdValuePair> idValuePairs = new ArrayList<IdValuePair>(3);
+            idValuePairs.add(new IdValuePair("CURRENCY", "USD"));
+            idValuePairs.add(new IdValuePair("CURRENCY_DENOM", "EUR"));
+            idValuePairs.add(new IdValuePair("EXR_TYPE", "SP00"));
+            idValuePairs.add(new IdValuePair("EXR_VAR", "E"));
+
+            Map<String, List<String>> conditionsMap = new HashMap<String, List<String>>();
+            for (IdValuePair idValuePair : idValuePairs) {
+                conditionsMap.put(idValuePair.getCode(), Arrays.asList(idValuePair.getValue()));
+            }
+            attributeInstanceDto.setCodesByDimension(conditionsMap);
+            attributeInstanceDto.setValue(mockInternationalStringDto("ECB reference exchange rate, U.S. dollar/Euro"));
+
+            Pair pair = new ImmutablePair<List<IdValuePair>, AttributeInstanceDto>(idValuePairs, attributeInstanceDto);
+            attributesList.add(pair);
+        }
+
+        return attributesList;
+    }
+
+    public static InternationalStringDto mockInternationalStringDto(String value) {
+        InternationalStringDto internationalStringDto = new InternationalStringDto();
+        LocalisedStringDto localisedStringDto = new LocalisedStringDto();
+        localisedStringDto.setLabel(value);
+        localisedStringDto.setLocale(StatisticalResourcesConstants.DEFAULT_DATA_REPOSITORY_LOCALE);
+        internationalStringDto.addText(localisedStringDto);
+        return internationalStringDto;
     }
 
     public static AttributeInstanceObservationDto createAttributeInstanceObservationDto(String attributeId, String value) {

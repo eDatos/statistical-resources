@@ -8,14 +8,20 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.ws.rs.core.Response;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.tuple.Pair;
+import org.apache.cxf.jaxrs.client.ClientConfiguration;
 import org.apache.cxf.jaxrs.client.WebClient;
+import org.apache.cxf.transport.http.HTTPConduit;
+import org.apache.cxf.transports.http.configuration.ConnectionType;
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria.Operator;
 import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
@@ -30,14 +36,15 @@ import org.siemac.metamac.sdmx.data.rest.external.v2_1.utils.SdmxDataCoreMocks;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionProperties;
 import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.DatasetService;
+import org.siemac.metamac.statistical.resources.core.io.utils.ManipulateDataUtils;
 
-import com.arte.statistic.dataset.repository.dto.CodeDimensionDto;
+import com.arte.statistic.dataset.repository.dto.AttributeInstanceDto;
 import com.arte.statistic.dataset.repository.dto.ConditionDimensionDto;
-import com.arte.statistic.dataset.repository.dto.ConditionObservationDto;
 import com.arte.statistic.dataset.repository.dto.DatasetRepositoryDto;
 import com.arte.statistic.dataset.repository.dto.ObservationExtendedDto;
 import com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceFacade;
 import com.arte.statistic.dataset.repository.util.DtoUtils;
+import com.arte.statistic.parser.sdmx.v2_1.domain.IdValuePair;
 import com.arte.statistic.parser.sdmx.v2_1.domain.TypeSDMXDataMessageEnum;
 
 public class SdmxRestExternalFacadeV10DataTest extends SdmxRestExternalFacadeV21BaseTest {
@@ -52,10 +59,17 @@ public class SdmxRestExternalFacadeV10DataTest extends SdmxRestExternalFacadeV21
     @Test
     public void testData() throws Exception {
 
-        {
-            // All data: generic time series with general format
-            WebClient create = WebClient.create(baseApi + "/data/TEST_DATA_STR_ECB_EXR_RG?dimensionAtObservation=TIME_PERIOD");
-            create.accept(TypeSDMXDataMessageEnum.GENERIC_2_1.getValue());
+        { // All data: specific time series with general format
+            WebClient create = WebClient.create(baseApi + "/data/TEST_DATA_STR_ECB_EXR_RG?dimensionAtObservation=CURRENCY");
+            create.accept(TypeSDMXDataMessageEnum.SPECIFIC_2_1.getValue());
+
+            // Timeout
+            ClientConfiguration config = WebClient.getConfig(create);
+            HTTPConduit conduit = config.getHttpConduit();
+            conduit.getClient().setConnectionTimeout(3000000);
+            conduit.getClient().setReceiveTimeout(7000000);
+            conduit.getClient().setConnection(ConnectionType.CLOSE);
+
             Response findData = create.get();
 
             System.out.println("_____________");
@@ -64,13 +78,24 @@ public class SdmxRestExternalFacadeV10DataTest extends SdmxRestExternalFacadeV21
         }
 
         {
-            // All data: generic time series with time series format
-            WebClient create = WebClient.create(baseApi + "/data/TEST_DATA_STR_ECB_EXR_RG?dimensionAtObservation=TIME_PERIOD");
-            create.accept(TypeSDMXDataMessageEnum.GENERIC_TIME_SERIES_2_1.getValue());
-            Response findData = create.get();
+            // // All data: generic time series with general format
+            // WebClient create = WebClient.create(baseApi + "/data/TEST_DATA_STR_ECB_EXR_RG?dimensionAtObservation=TIME_PERIOD");
+            // create.accept(TypeSDMXDataMessageEnum.SPECIFIC_2_1.getValue());
+            // Response findData = create.get();
+            //
+            // System.out.println("_____________");
+            // System.out.println(IOUtils.toString((InputStream) findData.getEntity(), "UTF-8"));
 
-            System.out.println("_____________");
-            System.out.println(IOUtils.toString((InputStream) findData.getEntity(), "UTF-8"));
+        }
+
+        {
+            // All data: generic time series with time series format
+            // WebClient create = WebClient.create(baseApi + "/data/TEST_DATA_STR_ECB_EXR_RG?dimensionAtObservation=TIME_PERIOD");
+            // create.accept(TypeSDMXDataMessageEnum.GENERIC_TIME_SERIES_2_1.getValue());
+            // Response findData = create.get();
+            //
+            // System.out.println("_____________");
+            // System.out.println(IOUtils.toString((InputStream) findData.getEntity(), "UTF-8"));
 
         }
 
@@ -82,7 +107,6 @@ public class SdmxRestExternalFacadeV10DataTest extends SdmxRestExternalFacadeV21
             // System.out.println(IOUtils.toString((InputStream) findData.getEntity(), "UTF-8"));
         }
     }
-
     @Test
     public void testDataKey() throws Exception {
 
@@ -131,6 +155,7 @@ public class SdmxRestExternalFacadeV10DataTest extends SdmxRestExternalFacadeV21
 
         // Dataset Repositories Service Facade
         mockFindObservationsExtendedByDimensions();
+        mockFindAttributesInstancesWithDimensionAttachmentLevelDenormalized();
         mockRetrieveDatasetRepository();
         mockFindCodeDimensions();
 
@@ -166,14 +191,69 @@ public class SdmxRestExternalFacadeV10DataTest extends SdmxRestExternalFacadeV21
 
                 return observationsMap;
             };
-
         });
     }
 
-    // @SuppressWarnings("unchecked")
-    // private void mockFindAttributesWithDimensionAttachmentLevel() throws Exception {
-    // datasetRepositoriesServiceFacade.findAttributesWithDimensionAttachmentLevel();
-    // }
+    @SuppressWarnings("unchecked")
+    private void mockFindAttributesInstancesWithDimensionAttachmentLevelDenormalized() throws Exception {
+        when(datasetRepositoriesServiceFacade.findAttributesInstancesWithDimensionAttachmentLevelDenormalized(any(String.class), any(String.class), any(Map.class))).thenAnswer(
+                new Answer<List<AttributeInstanceDto>>() {
+
+                    @Override
+                    public List<AttributeInstanceDto> answer(InvocationOnMock invocation) throws Throwable {
+                        Object[] args = invocation.getArguments();
+
+                        List<AttributeInstanceDto> result = new ArrayList<AttributeInstanceDto>();
+
+                        // DimensionId, List<Codes>
+                        Map<String, List<String>> conditionsMap = (Map<String, List<String>>) args[2];
+                        String attributeId = (String) args[1];
+
+                        List<ConditionDimensionDto> conditionsDimensionsSorted = new ArrayList<ConditionDimensionDto>(conditionsMap.size());
+                        {
+                            ConditionDimensionDto conditionDimensionDto = new ConditionDimensionDto();
+                            conditionDimensionDto.setDimensionId("FREQ");
+                            conditionDimensionDto.setCodesDimension(conditionsMap.get("FREQ"));
+                            conditionsDimensionsSorted.add(conditionDimensionDto);
+                        }
+                        {
+                            ConditionDimensionDto conditionDimensionDto = new ConditionDimensionDto();
+                            conditionDimensionDto.setDimensionId("CURRENCY");
+                            conditionDimensionDto.setCodesDimension(conditionsMap.get("CURRENCY"));
+                            conditionsDimensionsSorted.add(conditionDimensionDto);
+                        }
+                        {
+                            ConditionDimensionDto conditionDimensionDto = new ConditionDimensionDto();
+                            conditionDimensionDto.setDimensionId("CURRENCY_DENOM");
+                            conditionDimensionDto.setCodesDimension(conditionsMap.get("CURRENCY_DENOM"));
+                            conditionsDimensionsSorted.add(conditionDimensionDto);
+                        }
+                        {
+                            ConditionDimensionDto conditionDimensionDto = new ConditionDimensionDto();
+                            conditionDimensionDto.setDimensionId("EXR_TYPE");
+                            conditionDimensionDto.setCodesDimension(conditionsMap.get("EXR_TYPE"));
+                            conditionsDimensionsSorted.add(conditionDimensionDto);
+                        }
+                        {
+                            ConditionDimensionDto conditionDimensionDto = new ConditionDimensionDto();
+                            conditionDimensionDto.setDimensionId("EXR_VAR");
+                            conditionDimensionDto.setCodesDimension(conditionsMap.get("EXR_VAR"));
+                            conditionsDimensionsSorted.add(conditionDimensionDto);
+                        }
+                        {
+                            ConditionDimensionDto conditionDimensionDto = new ConditionDimensionDto();
+                            conditionDimensionDto.setDimensionId("TIME_PERIOD");
+                            conditionDimensionDto.setCodesDimension(conditionsMap.get("TIME_PERIOD"));
+                            conditionsDimensionsSorted.add(conditionDimensionDto);
+                        }
+
+                        extractAttributes(SdmxDataCoreMocks.mockAttributes(), attributeId, result, conditionsDimensionsSorted, SdmxDataCoreMocks.mockAttributesIds(), 0, new LinkedList<IdValuePair>(),
+                                new HashSet<String>());
+
+                        return result;
+                    };
+                });
+    }
 
     @SuppressWarnings("unchecked")
     private void mockRetrieveDatasetRepository() throws Exception {
@@ -193,57 +273,40 @@ public class SdmxRestExternalFacadeV10DataTest extends SdmxRestExternalFacadeV21
 
     @SuppressWarnings("unchecked")
     private void mockFindCodeDimensions() throws Exception {
-        when(datasetRepositoriesServiceFacade.findCodeDimensions(any(String.class))).thenAnswer(new Answer<List<ConditionObservationDto>>() {
+        when(datasetRepositoriesServiceFacade.findCodeDimensions(any(String.class))).thenAnswer(new Answer<Map<String, List<String>>>() {
 
             @Override
-            public List<ConditionObservationDto> answer(InvocationOnMock invocation) throws Throwable {
-                List<ConditionObservationDto> conditionObservationDtos = new ArrayList<ConditionObservationDto>(6);
+            public Map<String, List<String>> answer(InvocationOnMock invocation) throws Throwable {
+                Map<String, List<String>> conditionObservationDtos = new HashMap<String, List<String>>();
 
                 // FREQ
                 {
-                    ConditionObservationDto conditionObservationDto = new ConditionObservationDto();
-                    conditionObservationDto.addCodesDimension(new CodeDimensionDto("FREQ", "M"));
-                    conditionObservationDtos.add(conditionObservationDto);
+                    conditionObservationDtos.put("FREQ", Arrays.asList("M"));
                 }
 
                 // CURRENCY
                 {
-                    ConditionObservationDto conditionObservationDto = new ConditionObservationDto();
-                    conditionObservationDto.addCodesDimension(new CodeDimensionDto("CURRENCY", "CHF"));
-                    conditionObservationDto.addCodesDimension(new CodeDimensionDto("CURRENCY", "JPY"));
-                    conditionObservationDto.addCodesDimension(new CodeDimensionDto("CURRENCY", "GBP"));
-                    conditionObservationDto.addCodesDimension(new CodeDimensionDto("CURRENCY", "USD"));
-                    conditionObservationDtos.add(conditionObservationDto);
+                    conditionObservationDtos.put("CURRENCY", Arrays.asList("CHF", "JPY", "GBP", "USD"));
                 }
 
                 // CURRENCY_DENOM
                 {
-                    ConditionObservationDto conditionObservationDto = new ConditionObservationDto();
-                    conditionObservationDto.addCodesDimension(new CodeDimensionDto("CURRENCY_DENOM", "EUR"));
-                    conditionObservationDtos.add(conditionObservationDto);
+                    conditionObservationDtos.put("CURRENCY_DENOM", Arrays.asList("EUR"));
                 }
 
                 // EXR_TYPE
                 {
-                    ConditionObservationDto conditionObservationDto = new ConditionObservationDto();
-                    conditionObservationDto.addCodesDimension(new CodeDimensionDto("EXR_TYPE", "SP00"));
-                    conditionObservationDtos.add(conditionObservationDto);
+                    conditionObservationDtos.put("EXR_TYPE", Arrays.asList("SP00"));
                 }
 
                 // EXR_VAR
                 {
-                    ConditionObservationDto conditionObservationDto = new ConditionObservationDto();
-                    conditionObservationDto.addCodesDimension(new CodeDimensionDto("EXR_VAR", "E"));
-                    conditionObservationDtos.add(conditionObservationDto);
+                    conditionObservationDtos.put("EXR_VAR", Arrays.asList("E"));
                 }
 
                 // TIME_PERIOD
                 {
-                    ConditionObservationDto conditionObservationDto = new ConditionObservationDto();
-                    conditionObservationDto.addCodesDimension(new CodeDimensionDto("TIME_PERIOD", "2010-08"));
-                    conditionObservationDto.addCodesDimension(new CodeDimensionDto("TIME_PERIOD", "2010-09"));
-                    conditionObservationDto.addCodesDimension(new CodeDimensionDto("TIME_PERIOD", "2010-10"));
-                    conditionObservationDtos.add(conditionObservationDto);
+                    conditionObservationDtos.put("TIME_PERIOD", Arrays.asList("2010-08", "2010-09", "2010-10"));
                 }
                 return conditionObservationDtos;
             };
@@ -305,6 +368,44 @@ public class SdmxRestExternalFacadeV10DataTest extends SdmxRestExternalFacadeV21
             newCodes.add(code);
 
             extractObservations(allObservationsMap, observationsMap, conditionsDimensions, currentDimension + 1, newCodes);
+        }
+    }
+
+    private void extractAttributes(List<Pair<List<IdValuePair>, AttributeInstanceDto>> allAttributesList, String attributeId, List<AttributeInstanceDto> attributes,
+            List<ConditionDimensionDto> conditionsDimensions, List<String> attributesIds, int currentDimension, List<IdValuePair> codes, Set<String> currentAdded) {
+
+        // FINAL
+        if (conditionsDimensions.size() == currentDimension) {
+            // ADD attribute
+            String key = ManipulateDataUtils.generateKeyFromIdValuePairs(codes);
+            for (Pair<List<IdValuePair>, AttributeInstanceDto> pair : allAttributesList) {
+                if (attributeId != null && !attributeId.equals(pair.getRight().getAttributeId())) {
+                    continue;
+                }
+
+                boolean add = true;
+                for (IdValuePair idValuePair : pair.getLeft()) {
+                    if (!key.contains(ManipulateDataUtils.generateKeyFromIdValuePairs(Arrays.asList(idValuePair)))) {
+                        add = false;
+                        break;
+                    }
+                }
+                String attributeKey = ManipulateDataUtils.generateKeyForAttribute(attributeId, ManipulateDataUtils.generateKeyFromIdValuePairs(pair.getLeft()));
+                if (add && !currentAdded.contains(attributeKey)) {
+                    attributes.add(pair.getRight());
+                    currentAdded.add(attributeKey);
+                }
+            }
+
+            return;
+        }
+
+        for (String code : conditionsDimensions.get(currentDimension).getCodesDimension()) {
+            List<IdValuePair> newCodes = new ArrayList<IdValuePair>(codes.size() + 1);
+            newCodes.addAll(codes);
+            newCodes.add(new IdValuePair(conditionsDimensions.get(currentDimension).getDimensionId(), code));
+
+            extractAttributes(allAttributesList, attributeId, attributes, conditionsDimensions, attributesIds, currentDimension + 1, newCodes, currentAdded);
         }
     }
 
