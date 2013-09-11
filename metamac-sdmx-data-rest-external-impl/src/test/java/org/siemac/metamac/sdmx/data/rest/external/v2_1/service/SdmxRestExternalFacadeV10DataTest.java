@@ -55,10 +55,44 @@ public class SdmxRestExternalFacadeV10DataTest extends SdmxRestExternalFacadeV21
     private static final List<String> DIMENSIONS     = Arrays.asList("FREQ", "CURRENCY", "CURRENCY_DENOM", "EXR_TYPE", "EXR_VAR", "TIME_PERIOD");
 
     @Test
-    public void testDataECB_EXR_RG() throws Exception {
+    public void testDataInSeriesFrom_ECB_EXR_RG() throws Exception {
+
+        { // All data: specific with general format (StructureSpecificData)
+            WebClient create = WebClient.create(baseApi + "/data/ECB_EXR_RG?dimensionAtObservation=CURRENCY");
+            create.accept(TypeSDMXDataMessageEnum.SPECIFIC_2_1.getValue());
+            incrementRequestTimeOut(create); // Timeout
+            Response findData = create.get();
+            System.out.println("_____________");
+            System.out.println(IOUtils.toString((InputStream) findData.getEntity(), "UTF-8"));
+        }
+
+        {
+            // All data: specific time series with general format (StructureSpecificTimeSeriesData)
+            WebClient create = WebClient.create(baseApi + "/data/ECB_EXR_RG?dimensionAtObservation=TIME_PERIOD");
+            // create.accept(TypeSDMXDataMessageEnum.SPECIFIC_2_1.getValue());
+            incrementRequestTimeOut(create); // Timeout
+            Response findData = create.get();
+            System.out.println("_____________");
+            System.out.println(IOUtils.toString((InputStream) findData.getEntity(), "UTF-8"));
+        }
+
+        {
+            // All data: generic time series with time series format (GenericTimeSeriesData)
+            WebClient create = WebClient.create(baseApi + "/data/ECB_EXR_RG?dimensionAtObservation=TIME_PERIOD");
+            create.accept(TypeSDMXDataMessageEnum.GENERIC_TIME_SERIES_2_1.getValue());
+            Response findData = create.get();
+
+            System.out.println("_____________");
+            System.out.println(IOUtils.toString((InputStream) findData.getEntity(), "UTF-8"));
+        }
+
+    }
+
+    @Test
+    public void testDataInSeriesFrom_ECB_EXR_NG() throws Exception {
 
         { // All data: specific time series with general format
-            WebClient create = WebClient.create(baseApi + "/data/ECB_EXR_RG?dimensionAtObservation=CURRENCY");
+            WebClient create = WebClient.create(baseApi + "/data/ECB_EXR_NG?dimensionAtObservation=CURRENCY");
             create.accept(TypeSDMXDataMessageEnum.SPECIFIC_2_1.getValue());
 
             // Timeout
@@ -70,43 +104,13 @@ public class SdmxRestExternalFacadeV10DataTest extends SdmxRestExternalFacadeV21
             System.out.println(IOUtils.toString((InputStream) findData.getEntity(), "UTF-8"));
 
         }
-
-        {
-            // // All data: generic time series with general format
-            // WebClient create = WebClient.create(baseApi + "/data/TEST_DATA_STR_ECB_EXR_RG?dimensionAtObservation=TIME_PERIOD");
-            // create.accept(TypeSDMXDataMessageEnum.SPECIFIC_2_1.getValue());
-            // Response findData = create.get();
-            //
-            // System.out.println("_____________");
-            // System.out.println(IOUtils.toString((InputStream) findData.getEntity(), "UTF-8"));
-
-        }
-
-        {
-            // All data: generic time series with time series format
-            // WebClient create = WebClient.create(baseApi + "/data/TEST_DATA_STR_ECB_EXR_RG?dimensionAtObservation=TIME_PERIOD");
-            // create.accept(TypeSDMXDataMessageEnum.GENERIC_TIME_SERIES_2_1.getValue());
-            // Response findData = create.get();
-            //
-            // System.out.println("_____________");
-            // System.out.println(IOUtils.toString((InputStream) findData.getEntity(), "UTF-8"));
-
-        }
-
-        {
-            // All data, with FREQ as dimensionAtObservation
-            // Response findData = getSdmxDataRestExternalFacadeClientXml().findData(RestExternalConstants.MEDIATYPE_MESSAGE_GENERICDATA_2_1, DATASET_ID, null, "FREQ");
-            //
-            // System.out.println("_____________");
-            // System.out.println(IOUtils.toString((InputStream) findData.getEntity(), "UTF-8"));
-        }
     }
 
     @Test
-    public void testData_ECB_EXR_NG() throws Exception {
+    public void testDataInSeriesFrom_ECB_EXR_SG() throws Exception {
 
         { // All data: specific time series with general format
-            WebClient create = WebClient.create(baseApi + "/data/ECB_EXR_NG?dimensionAtObservation=CURRENCY");
+            WebClient create = WebClient.create(baseApi + "/data/ECB_EXR_SG?dimensionAtObservation=CURRENCY");
             create.accept(TypeSDMXDataMessageEnum.SPECIFIC_2_1.getValue());
 
             // Timeout
@@ -364,6 +368,8 @@ public class SdmxRestExternalFacadeV10DataTest extends SdmxRestExternalFacadeV21
                     result = sdmxDataCoreMocks.mockDsd_ECB_EXR_RG();
                 } else if (dsdUrn.contains("ECB_EXR_NG")) {
                     result = sdmxDataCoreMocks.mockDsd_ECB_EXR_NG();
+                } else if (dsdUrn.contains("ECB_EXR_SG")) {
+                    result = sdmxDataCoreMocks.mockDsd_ECB_EXR_SG();
                 }
 
                 return result;
