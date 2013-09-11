@@ -750,7 +750,7 @@ public class SdmxDataCoreMocks extends BaseJaxbMocks {
     public DataStructureType mockDsd_ECB_EXR_RG() {
         DataStructureType dataStructureType = structureObjectFactory.createDataStructureType();
         dataStructureType.setAgencyID("ECB");
-        dataStructureType.setId("ECB");
+        dataStructureType.setId("ECB_EXR_RG");
         dataStructureType.setVersion("1.0");
 
         // Components
@@ -770,7 +770,7 @@ public class SdmxDataCoreMocks extends BaseJaxbMocks {
                         mockDimensionType("CURRENCY", mockConceptReferenceType("SDMX", "CROSS_DOMAIN_CONCEPTS", "1.0", "CURRENCY"),
                                 mockEnumerationCodelist(mockCodelistReferenceType("urn:sdmx:org.sdmx.infomodel.codelist.Codelist=ISO:CL_CURRENCY(1.0)"))));
 
-                // FREQ
+                // CURRENCY_DENOM
                 dimensionListType.getDimensionsAndMeasureDimensionsAndTimeDimensions().add(
                         mockDimensionType("CURRENCY_DENOM", mockConceptReferenceType("ECB", "ECB_CONCEPTS", "1.0", "CURRENCY_DENOM"), null));
 
@@ -884,6 +884,117 @@ public class SdmxDataCoreMocks extends BaseJaxbMocks {
         return dataStructureType;
     }
 
+    public DataStructureType mockDsd_ECB_EXR_NG() {
+        DataStructureType dataStructureType = structureObjectFactory.createDataStructureType();
+        dataStructureType.setAgencyID("ECB");
+        dataStructureType.setId("ECB_EXR_NG");
+        dataStructureType.setVersion("1.0");
+
+        // Components
+        {
+            DataStructureComponentsType dataStructureComponentsType = structureObjectFactory.createDataStructureComponentsType();
+
+            // DimensionList
+            {
+                DimensionListType dimensionListType = structureObjectFactory.createDimensionListType();
+                dimensionListType.setId("DimensionDescriptor");
+
+                // FREQ
+                dimensionListType.getDimensionsAndMeasureDimensionsAndTimeDimensions().add(mockDimensionType("FREQ", mockConceptReferenceType("SDMX", "CROSS_DOMAIN_CONCEPTS", "1.0", "FREQ"), null));
+
+                // CURRENCY
+                dimensionListType.getDimensionsAndMeasureDimensionsAndTimeDimensions().add(
+                        mockDimensionType("CURRENCY", mockConceptReferenceType("SDMX", "CROSS_DOMAIN_CONCEPTS", "1.0", "CURRENCY"),
+                                mockEnumerationCodelist(mockCodelistReferenceType("urn:sdmx:org.sdmx.infomodel.codelist.Codelist=ISO:CL_CURRENCY(1.0)"))));
+
+                // CURRENCY_DENOM
+                dimensionListType.getDimensionsAndMeasureDimensionsAndTimeDimensions().add(
+                        mockDimensionType("CURRENCY_DENOM", mockConceptReferenceType("ECB", "ECB_CONCEPTS", "1.0", "CURRENCY_DENOM"), null));
+
+                // EXR_TYPE
+                dimensionListType.getDimensionsAndMeasureDimensionsAndTimeDimensions().add(mockDimensionType("EXR_TYPE", mockConceptReferenceType("ECB", "ECB_CONCEPTS", "1.0", "EXR_TYPE"), null));
+
+                // EXR_VAR
+                dimensionListType.getDimensionsAndMeasureDimensionsAndTimeDimensions().add(mockDimensionType("EXR_VAR", mockConceptReferenceType("ECB", "ECB_CONCEPTS", "1.0", "EXR_VAR"), null));
+
+                // TIME_PERIOD
+                dimensionListType.getDimensionsAndMeasureDimensionsAndTimeDimensions().add(
+                        mockTimeDimensionType(mockConceptReferenceType("SDMX", "CROSS_DOMAIN_CONCEPTS", "1.0", "TIME_PERIOD"), TimeDataType.OBSERVATIONAL_TIME_PERIOD));
+
+                dataStructureComponentsType.setDimensionList(dimensionListType);
+            }
+
+            // AttributeList
+            {
+                AttributeListType attributeListType = structureObjectFactory.createAttributeListType();
+                attributeListType.setId("AttributeDescriptor");
+
+                {
+                    // COLL_METHOD
+                    attributeListType.getAttributesAndReportingYearStartDaies().add(
+                            mockAttributeType("COLL_METHOD", mockConceptReferenceType("SDMX", "CROSS_DOMAIN_CONCEPTS", "1.0", "COLL_METHOD"), UsageStatusType.CONDITIONAL,
+                                    mockAttributeRelationshipDimensionType(Arrays.asList("EXR_TYPE", "EXR_VAR"), null), null, (ConceptReferenceType[]) null));
+                }
+
+                {
+                    // DECIMALS
+                    attributeListType.getAttributesAndReportingYearStartDaies().add(
+                            mockAttributeType("DECIMALS", mockConceptReferenceType("SDMX", "CROSS_DOMAIN_CONCEPTS", "1.0", "DECIMALS"), UsageStatusType.MANDATORY,
+                                    mockAttributeRelationshipDimensionType(Arrays.asList("CURRENCY", "CURRENCY_DENOM", "EXR_TYPE"), null), null, (ConceptReferenceType[]) null));
+                }
+
+                {
+                    // UNIT_MEASURE
+                    attributeListType.getAttributesAndReportingYearStartDaies().add(
+                            mockAttributeType("UNIT_MEASURE", mockConceptReferenceType("SDMX", "CROSS_DOMAIN_CONCEPTS", "1.0", "UNIT_MEASURE"), UsageStatusType.MANDATORY,
+                                    mockAttributeRelationshipDimensionType(Arrays.asList("CURRENCY", "CURRENCY_DENOM", "EXR_TYPE"), null),
+                                    mockEnumerationCodelist(mockCodelistReferenceType("urn:sdmx:org.sdmx.infomodel.codelist.Codelist=ISO:CL_CURRENCY(1.0)")), (ConceptReferenceType[]) null));
+                }
+
+                {
+                    // UNIT_MULT
+                    attributeListType.getAttributesAndReportingYearStartDaies().add(
+                            mockAttributeType("UNIT_MULT", mockConceptReferenceType("SDMX", "CROSS_DOMAIN_CONCEPTS", "1.0", "UNIT_MULT"), UsageStatusType.MANDATORY,
+                                    mockAttributeRelationshipDimensionType(Arrays.asList("CURRENCY", "CURRENCY_DENOM", "EXR_TYPE"), null), null, (ConceptReferenceType[]) null));
+                }
+
+                {
+                    // CONF_STATUS_OBS
+                    attributeListType.getAttributesAndReportingYearStartDaies().add(
+                            mockAttributeType("CONF_STATUS_OBS", mockConceptReferenceType("SDMX", "CROSS_DOMAIN_CONCEPTS", "1.0", "CONF_STATUS_OBS"), UsageStatusType.CONDITIONAL,
+                                    mockAttributeRelationshipPrimaryMeasureType(), null, (ConceptReferenceType[]) null));
+                }
+
+                {
+                    // OBS_STATUS
+                    attributeListType.getAttributesAndReportingYearStartDaies().add(
+                            mockAttributeType("OBS_STATUS", mockConceptReferenceType("SDMX", "CROSS_DOMAIN_CONCEPTS", "1.0", "OBS_STATUS"), UsageStatusType.MANDATORY,
+                                    mockAttributeRelationshipPrimaryMeasureType(), null, (ConceptReferenceType[]) null));
+                }
+
+                {
+                    // TITLE
+                    attributeListType.getAttributesAndReportingYearStartDaies().add(
+                            mockAttributeType("TITLE", mockConceptReferenceType("SDMX", "CROSS_DOMAIN_CONCEPTS", "1.0", "TITLE"), UsageStatusType.MANDATORY,
+                                    mockAttributeRelationshipDimensionType(Arrays.asList("CURRENCY", "CURRENCY_DENOM", "EXR_TYPE", "EXR_VAR"), null), null, (ConceptReferenceType[]) null));
+                }
+
+                dataStructureComponentsType.setAttributeList(attributeListType);
+            }
+
+            // MeasureList
+            {
+                MeasureListType measureListType = structureObjectFactory.createMeasureListType();
+                measureListType.setPrimaryMeasure(mockPrimaryMeasureType(mockConceptReferenceType("SDMX", "CROSS_DOMAIN_CONCEPTS", "1.0", "OBS_VALUE"), null));
+                dataStructureComponentsType.setMeasureList(measureListType);
+            }
+
+            dataStructureType.setDataStructureComponents(dataStructureComponentsType);
+        }
+
+        return dataStructureType;
+    }
+
     public static DimensionType mockDimensionType(String code, ConceptReferenceType conceptIdentity, SimpleDataStructureRepresentationType localRepresentation, ConceptReferenceType... roles) {
         DimensionType dimensionType = structureObjectFactory.createDimensionType();
         dimensionType.setId(code);
@@ -975,8 +1086,10 @@ public class SdmxDataCoreMocks extends BaseJaxbMocks {
         }
 
         // Attachments groups
-        for (String attachmentgroupId : attachmentgroupIds) {
-            attributeRelationshipType.getAttachmentGroups().add(mockLocalGroupKeyDescriptorReferenceType(attachmentgroupId));
+        if (attachmentgroupIds != null) {
+            for (String attachmentgroupId : attachmentgroupIds) {
+                attributeRelationshipType.getAttachmentGroups().add(mockLocalGroupKeyDescriptorReferenceType(attachmentgroupId));
+            }
         }
 
         return attributeRelationshipType;

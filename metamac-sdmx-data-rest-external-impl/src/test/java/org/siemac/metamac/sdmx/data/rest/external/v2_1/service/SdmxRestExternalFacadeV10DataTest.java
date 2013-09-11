@@ -18,10 +18,7 @@ import javax.ws.rs.core.Response;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.tuple.Pair;
-import org.apache.cxf.jaxrs.client.ClientConfiguration;
 import org.apache.cxf.jaxrs.client.WebClient;
-import org.apache.cxf.transport.http.HTTPConduit;
-import org.apache.cxf.transports.http.configuration.ConnectionType;
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria.Operator;
 import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
@@ -32,6 +29,7 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.DataStructureType;
 import org.siemac.metamac.common.test.utils.ConditionalCriteriaUtils;
+import org.siemac.metamac.core.common.util.GeneratorUrnUtils;
 import org.siemac.metamac.sdmx.data.rest.external.v2_1.utils.SdmxDataCoreMocks;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionProperties;
@@ -57,18 +55,14 @@ public class SdmxRestExternalFacadeV10DataTest extends SdmxRestExternalFacadeV21
     private static final List<String> DIMENSIONS     = Arrays.asList("FREQ", "CURRENCY", "CURRENCY_DENOM", "EXR_TYPE", "EXR_VAR", "TIME_PERIOD");
 
     @Test
-    public void testData() throws Exception {
+    public void testDataECB_EXR_RG() throws Exception {
 
         { // All data: specific time series with general format
-            WebClient create = WebClient.create(baseApi + "/data/TEST_DATA_STR_ECB_EXR_RG?dimensionAtObservation=CURRENCY");
+            WebClient create = WebClient.create(baseApi + "/data/ECB_EXR_RG?dimensionAtObservation=CURRENCY");
             create.accept(TypeSDMXDataMessageEnum.SPECIFIC_2_1.getValue());
 
             // Timeout
-            ClientConfiguration config = WebClient.getConfig(create);
-            HTTPConduit conduit = config.getHttpConduit();
-            conduit.getClient().setConnectionTimeout(3000000);
-            conduit.getClient().setReceiveTimeout(7000000);
-            conduit.getClient().setConnection(ConnectionType.CLOSE);
+            incrementRequestTimeOut(create);
 
             Response findData = create.get();
 
@@ -107,6 +101,25 @@ public class SdmxRestExternalFacadeV10DataTest extends SdmxRestExternalFacadeV21
             // System.out.println(IOUtils.toString((InputStream) findData.getEntity(), "UTF-8"));
         }
     }
+
+    @Test
+    public void testData_ECB_EXR_NG() throws Exception {
+
+        { // All data: specific time series with general format
+            WebClient create = WebClient.create(baseApi + "/data/ECB_EXR_NG?dimensionAtObservation=CURRENCY");
+            create.accept(TypeSDMXDataMessageEnum.SPECIFIC_2_1.getValue());
+
+            // Timeout
+            incrementRequestTimeOut(create);
+
+            Response findData = create.get();
+
+            System.out.println("_____________");
+            System.out.println(IOUtils.toString((InputStream) findData.getEntity(), "UTF-8"));
+
+        }
+    }
+
     @Test
     public void testDataKey() throws Exception {
 
@@ -329,7 +342,7 @@ public class SdmxRestExternalFacadeV10DataTest extends SdmxRestExternalFacadeV21
 
                 DatasetVersion mockDatasetVersion = sdmxDataCoreMocks.mockDatasetVersion(agencyID, resourceID, version);
                 mockDatasetVersion.setDatasetRepositoryId(DATASET_ID);
-                mockDatasetVersion.getRelatedDsd().setUrn("urn:sdmx:org.sdmx.infomodel.datastructure.DataStructure=ECB:ECB_EXR_RG(1.0)");
+                mockDatasetVersion.getRelatedDsd().setUrn(GeneratorUrnUtils.generateSdmxDatastructureUrn(new String[]{"ECB"}, resourceID, "1.0"));
 
                 datasets.add(mockDatasetVersion);
                 return new PagedResult<DatasetVersion>(datasets, datasets.size(), datasets.size(), datasets.size(), datasets.size() * 10, 0);
@@ -345,7 +358,15 @@ public class SdmxRestExternalFacadeV10DataTest extends SdmxRestExternalFacadeV21
             @Override
             public DataStructureType answer(InvocationOnMock invocation) throws Throwable {
                 String dsdUrn = (String) invocation.getArguments()[0];
-                return sdmxDataCoreMocks.mockDsd_ECB_EXR_RG();
+
+                DataStructureType result = null;
+                if (dsdUrn.contains("ECB_EXR_RG")) {
+                    result = sdmxDataCoreMocks.mockDsd_ECB_EXR_RG();
+                } else if (dsdUrn.contains("ECB_EXR_NG")) {
+                    result = sdmxDataCoreMocks.mockDsd_ECB_EXR_NG();
+                }
+
+                return result;
             }
 
         });

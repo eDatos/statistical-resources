@@ -9,9 +9,12 @@ import javax.ws.rs.core.Response.Status;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.cxf.jaxrs.client.ClientConfiguration;
 import org.apache.cxf.jaxrs.client.JAXRSClientFactory;
 import org.apache.cxf.jaxrs.client.WebClient;
 import org.apache.cxf.jaxrs.provider.JAXBElementProvider;
+import org.apache.cxf.transport.http.HTTPConduit;
+import org.apache.cxf.transports.http.configuration.ConnectionType;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -83,6 +86,14 @@ public abstract class SdmxRestExternalFacadeV21BaseTest extends MetamacRestBaseT
         WebClient.client(sdmxDataRestExternalFacadeClientXml).reset();
         WebClient.client(sdmxDataRestExternalFacadeClientXml).accept(APPLICATION_XML);
         return sdmxDataRestExternalFacadeClientXml;
+    }
+
+    protected void incrementRequestTimeOut(WebClient create) {
+        ClientConfiguration config = WebClient.getConfig(create);
+        HTTPConduit conduit = config.getHttpConduit();
+        conduit.getClient().setConnectionTimeout(3000000);
+        conduit.getClient().setReceiveTimeout(7000000);
+        conduit.getClient().setConnection(ConnectionType.CLOSE);
     }
 
     protected abstract void resetMocks() throws Exception;
