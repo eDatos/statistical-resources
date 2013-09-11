@@ -324,14 +324,18 @@ public class WriterDataCallbackImpl implements WriterDataCallback {
                 // Check if exist a attribute that conforms with this key and add
                 if (!subList.isEmpty()) {
                     String key = ManipulateDataUtils.generateKeyFromIdValuePairs(subList);
+
                     if (normalizedAttributesMap.containsKey(key)) {
                         // Attributes
                         Iterator<AttributeInstanceBasicDto> itAttributes = normalizedAttributesMap.get(key).iterator();
                         while (itAttributes.hasNext()) {
                             IdValuePair attributeIdValuePair = ManipulateDataUtils.attributeInstanceBasicDto2IdValuePair(itAttributes.next());
-                            attributes.add(attributeIdValuePair);
-                            // addedKeys
-                            addedKeys.add(attributeIdValuePair.getCode() + ManipulateDataUtils.PAIR_SEPARATOR + key);
+
+                            String attributeKey = ManipulateDataUtils.generateKeyForAttribute(attributeIdValuePair.getCode(), key);
+                            if (!addedKeys.contains(attributeKey)) {
+                                attributes.add(attributeIdValuePair);
+                                addedKeys.add(attributeKey);
+                            }
                         }
                     }
                     stack.push(subList); // To next iteration
@@ -363,12 +367,15 @@ public class WriterDataCallbackImpl implements WriterDataCallback {
         Observation result = new Observation();
 
         // Key
+        List<IdValuePair> observationKeyFull = new LinkedList<IdValuePair>();
         for (CodeDimensionDto codeDimensionDto : observation.getCodesDimension()) {
+            IdValuePair idValuePair = new IdValuePair(codeDimensionDto.getDimensionId(), codeDimensionDto.getCodeDimensionId());
             if (getDimensionAtObservation().getCode().equals(codeDimensionDto.getDimensionId())) {
-                result.getObservationKey().add(new IdValuePair(codeDimensionDto.getDimensionId(), codeDimensionDto.getCodeDimensionId()));
-                break;
+                result.getObservationKey().add(idValuePair);
             }
+            observationKeyFull.add(idValuePair);
         }
+
         // Observation Value
         result.setObservationValue(new IdValuePair(MappingConstants.OBS_VALUE, observation.getPrimaryMeasure()));
 
@@ -380,7 +387,7 @@ public class WriterDataCallbackImpl implements WriterDataCallback {
         }
 
         // Other attributes that are in observation in this dataset
-        result.getAttributes().addAll(extractAttributesForCurrentLevel(result.getObservationKey(), getCurrentDatasetInfo().getAttributeInstances(), addedKeys));
+        result.getAttributes().addAll(extractAttributesForCurrentLevel(observationKeyFull, getCurrentDatasetInfo().getAttributeInstances(), addedKeys));
 
         return result;
     }
