@@ -14,9 +14,11 @@ import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
 import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.joda.time.DateTime;
+import org.sdmx.resources.sdmxml.rest.schemas.v2_1.types.DataParameterDetailEnum;
 import org.siemac.metamac.core.common.exception.CommonServiceExceptionType;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionBuilder;
+import org.siemac.metamac.core.common.util.SdmxTimeUtils;
 import org.siemac.metamac.sdmx.data.rest.external.conf.DataConfiguration;
 import org.siemac.metamac.sdmx.data.rest.external.v2_1.RestExternalConstants;
 import org.siemac.metamac.sdmx.data.rest.external.v2_1.exception.RestException;
@@ -63,27 +65,10 @@ public class SdmxDataRestExternalFacadeV21Impl implements SdmxDataRestExternalFa
     private final String                     HEADER_PARAM_ACCEPT = "accept";
 
     @Override
-    public Response findData(HttpHeaders headers, String flowRef, String detail, String dimensionAtObservation) {
+    public Response findData(HttpHeaders headers, String flowRef, String detail, String dimensionAtObservation, String startPeriod, String endPeriod) {
         try {
-            WriterResult writerResult = processrequest(flowRef, null, null, createRequestParameters(null, null, null, null, null, dimensionAtObservation, detail), getAcceptHeaderParameter(headers));
-
-            return Response.ok(new FileInputStream(writerResult.getFile())).type(writerResult.getTypeSDMXDataMessageEnum().getValue()).build();
-        } catch (Exception e) {
-            throw manageException(e);
-        }
-    }
-
-    private String getAcceptHeaderParameter(HttpHeaders headers) {
-        if (headers.getRequestHeader(HEADER_PARAM_ACCEPT) != null && !headers.getRequestHeader(HEADER_PARAM_ACCEPT).isEmpty()) {
-            return headers.getRequestHeader(HEADER_PARAM_ACCEPT).get(0);
-        }
-        return null;
-    }
-
-    @Override
-    public Response findData(HttpHeaders headers, String flowRef, String key, String detail, String dimensionAtObservation) {
-        try {
-            WriterResult writerResult = processrequest(flowRef, key, null, createRequestParameters(null, null, null, null, null, dimensionAtObservation, detail), getAcceptHeaderParameter(headers));
+            WriterResult writerResult = processrequest(flowRef, null, null, createRequestParameters(startPeriod, endPeriod, null, null, null, dimensionAtObservation, detail),
+                    getAcceptHeaderParameter(headers));
 
             return Response.ok(new FileInputStream(writerResult.getFile())).type(writerResult.getTypeSDMXDataMessageEnum().getValue()).build();
         } catch (Exception e) {
@@ -92,9 +77,20 @@ public class SdmxDataRestExternalFacadeV21Impl implements SdmxDataRestExternalFa
     }
 
     @Override
-    public Response findData(HttpHeaders headers, String flowRef, String key, String providerRef, String detail, String dimensionAtObservation) {
+    public Response findData(HttpHeaders headers, String flowRef, String key, String detail, String dimensionAtObservation, String startPeriod, String endPeriod) {
         try {
-            WriterResult writerResult = processrequest(flowRef, key, providerRef, createRequestParameters(null, null, null, null, null, dimensionAtObservation, detail),
+            WriterResult writerResult = processrequest(flowRef, key, null, createRequestParameters(startPeriod, endPeriod, null, null, null, dimensionAtObservation, detail),
+                    getAcceptHeaderParameter(headers));
+
+            return Response.ok(new FileInputStream(writerResult.getFile())).type(writerResult.getTypeSDMXDataMessageEnum().getValue()).build();
+        } catch (Exception e) {
+            throw manageException(e);
+        }
+    }
+    @Override
+    public Response findData(HttpHeaders headers, String flowRef, String key, String providerRef, String detail, String dimensionAtObservation, String startPeriod, String endPeriod) {
+        try {
+            WriterResult writerResult = processrequest(flowRef, key, providerRef, createRequestParameters(startPeriod, endPeriod, null, null, null, dimensionAtObservation, detail),
                     getAcceptHeaderParameter(headers));
 
             return Response.ok(new FileInputStream(writerResult.getFile())).type(writerResult.getTypeSDMXDataMessageEnum().getValue()).build();
@@ -118,16 +114,17 @@ public class SdmxDataRestExternalFacadeV21Impl implements SdmxDataRestExternalFa
         }
 
         if (providerRef != null) {
-            if (RestExternalConstants.WildcardIdentifyingEnum.UNKNOWN.equals(RestExternalConstants.WildcardIdentifyingEnum.fromCaseInsensitiveString(providerRef))) {
+            if (RestExternalConstants.WildcardIdentifyingEnum.ALL.equals(RestExternalConstants.WildcardIdentifyingEnum.fromCaseInsensitiveString(providerRef))) {
                 providerRef = null;
             }
         }
 
         WriterDataCallback writerDataCallback = new WriterDataCallbackImpl(datasetRepositoriesServiceFacade, metamac2StatRepoMapper, dsdSdmxExtractor, findDataSetFromDataFlow(flowRef, providerRef),
-                key, requestParameter, dataConfiguration.retrieveOrganisationIDDefault()); // TODO
+                key, requestParameter, dataConfiguration.retrieveOrganisationIDDefault());
 
         return Sdmx21Writer.writerData(writerDataCallback, proposeContentType);
     }
+
     /**
      * FLOWREF = "AGENCY_ID,FLOW_ID,VERSION" with AGENCY_ID or VERSION optional
      * NOTE: Nothing to do with providerRef in this implementation of the API
@@ -208,11 +205,21 @@ public class SdmxDataRestExternalFacadeV21Impl implements SdmxDataRestExternalFa
 
         // START_PERIOD
         if (StringUtils.isNotEmpty(startPeriod)) {
+            if (SdmxTimeUtils.isTimeRange(startPeriod)) {
+                // TODO mensaje de error: SDMX no permite el tipo temporal TimeRange en este parámetro
+                org.sdmx.resources.sdmxml.schemas.v2_1.message.Error error = RestExceptionUtils.getError(RestServiceExceptionType.PARAMETER_UNKNOWN, RestExternalConstants.START_PERIOD, startPeriod);
+                throw new RestException(error, Status.INTERNAL_SERVER_ERROR);
+            }
             requestParameter.setStartPeriod(startPeriod);
         }
 
         // END_PERIOD
         if (StringUtils.isNotEmpty(endPeriod)) {
+            if (SdmxTimeUtils.isTimeRange(endPeriod)) {
+                // TODO mensaje de error: SDMX no permite el tipo temporal TimeRange en este parámetro
+                org.sdmx.resources.sdmxml.schemas.v2_1.message.Error error = RestExceptionUtils.getError(RestServiceExceptionType.PARAMETER_UNKNOWN, RestExternalConstants.START_PERIOD, startPeriod);
+                throw new RestException(error, Status.INTERNAL_SERVER_ERROR);
+            }
             requestParameter.setEndPeriod(endPeriod);
         }
 
@@ -237,11 +244,23 @@ public class SdmxDataRestExternalFacadeV21Impl implements SdmxDataRestExternalFa
         }
 
         // DETAIL
-        if (StringUtils.isNotEmpty(detail) && RestExternalConstants.DETAIL.equals(detail)) {
-            requestParameter.setDetail(detail);
+        if (StringUtils.isNotEmpty(detail)) {
+            DataParameterDetailEnum dataParameterDetail = DataParameterDetailEnum.fromCaseInsensitiveString(detail);
+            if (DataParameterDetailEnum.UNKNOWN.equals(dataParameterDetail)) {
+                org.sdmx.resources.sdmxml.schemas.v2_1.message.Error error = RestExceptionUtils.getError(RestServiceExceptionType.PARAMETER_UNKNOWN, RestExternalConstants.DETAIL, detail);
+                throw new RestException(error, Status.INTERNAL_SERVER_ERROR);
+            }
+            requestParameter.setDetail(dataParameterDetail);
+        } else {
+            requestParameter.setDetail(DataParameterDetailEnum.FULL); // Default
         }
 
         return requestParameter;
     }
-
+    private String getAcceptHeaderParameter(HttpHeaders headers) {
+        if (headers.getRequestHeader(HEADER_PARAM_ACCEPT) != null && !headers.getRequestHeader(HEADER_PARAM_ACCEPT).isEmpty()) {
+            return headers.getRequestHeader(HEADER_PARAM_ACCEPT).get(0);
+        }
+        return null;
+    }
 }

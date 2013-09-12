@@ -159,6 +159,97 @@ public class SdmxRestExternalFacadeV10DataTest extends SdmxRestExternalFacadeV21
         }
     }
 
+    @Test
+    public void testDataPeriodParameters() throws Exception {
+
+        String key = "M..EUR.SP00.E.";
+
+        {
+            // Only observations from 2010-09
+            // All data: generic time series with general format
+            WebClient create = WebClient.create(baseApi + "/data/TEST_DATA_STR_ECB_EXR_RG/" + key + "?dimensionAtObservation=TIME_PERIOD&startPeriod=2010-09");
+            create.accept(TypeSDMXDataMessageEnum.SPECIFIC_2_1.getValue());
+            Response findData = create.get();
+
+            System.out.println("_____________");
+            System.out.println(IOUtils.toString((InputStream) findData.getEntity(), "UTF-8"));
+
+        }
+
+        {
+            // Only observations between 2010-09 and 2010-09
+            // All data: generic time series with general format
+            WebClient create = WebClient.create(baseApi + "/data/TEST_DATA_STR_ECB_EXR_RG/" + key + "?dimensionAtObservation=TIME_PERIOD&startPeriod=2010-09&endPeriod=2010-09");
+            create.accept(TypeSDMXDataMessageEnum.SPECIFIC_2_1.getValue());
+            Response findData = create.get();
+
+            System.out.println("_____________");
+            System.out.println(IOUtils.toString((InputStream) findData.getEntity(), "UTF-8"));
+
+        }
+
+        {
+            // Only observations until 2010-09
+            // All data: generic time series with general format
+            WebClient create = WebClient.create(baseApi + "/data/TEST_DATA_STR_ECB_EXR_RG/" + key + "?dimensionAtObservation=TIME_PERIOD&endPeriod=2010-09");
+            create.accept(TypeSDMXDataMessageEnum.SPECIFIC_2_1.getValue());
+            Response findData = create.get();
+
+            System.out.println("_____________");
+            System.out.println(IOUtils.toString((InputStream) findData.getEntity(), "UTF-8"));
+
+        }
+    }
+
+    @Test
+    public void testDataDetailParameters() throws Exception {
+
+        {
+            // FULL
+            // All data: specific with general format (StructureSpecificData)
+            WebClient create = WebClient.create(baseApi + "/data/ECB_EXR_RG?dimensionAtObservation=CURRENCY&detail=full");
+            create.accept(TypeSDMXDataMessageEnum.SPECIFIC_2_1.getValue());
+            incrementRequestTimeOut(create); // Timeout
+            Response findData = create.get();
+            System.out.println("_____________");
+            System.out.println(IOUtils.toString((InputStream) findData.getEntity(), "UTF-8"));
+        }
+
+        {
+            // DATA ONLY
+            // All data: specific with general format (StructureSpecificData)
+            WebClient create = WebClient.create(baseApi + "/data/ECB_EXR_RG?dimensionAtObservation=CURRENCY&detail=dataonly");
+            create.accept(TypeSDMXDataMessageEnum.SPECIFIC_2_1.getValue());
+            incrementRequestTimeOut(create); // Timeout
+            Response findData = create.get();
+            System.out.println("_____________");
+            System.out.println(IOUtils.toString((InputStream) findData.getEntity(), "UTF-8"));
+        }
+
+        {
+            // SERIES KEY
+            // All data: specific with general format (StructureSpecificData)
+            WebClient create = WebClient.create(baseApi + "/data/ECB_EXR_RG?dimensionAtObservation=CURRENCY&detail=serieskeysonly");
+            create.accept(TypeSDMXDataMessageEnum.SPECIFIC_2_1.getValue());
+            incrementRequestTimeOut(create); // Timeout
+            Response findData = create.get();
+            System.out.println("_____________");
+            System.out.println(IOUtils.toString((InputStream) findData.getEntity(), "UTF-8"));
+        }
+
+        {
+            // NO DATA
+            // All data: specific with general format (StructureSpecificData)
+            WebClient create = WebClient.create(baseApi + "/data/ECB_EXR_RG?dimensionAtObservation=CURRENCY&detail=nodata");
+            create.accept(TypeSDMXDataMessageEnum.SPECIFIC_2_1.getValue());
+            incrementRequestTimeOut(create); // Timeout
+            Response findData = create.get();
+            System.out.println("_____________");
+            System.out.println(IOUtils.toString((InputStream) findData.getEntity(), "UTF-8"));
+        }
+
+    }
+
     @Override
     protected void resetMocks() throws Exception {
         datasetRepositoriesServiceFacade = applicationContext.getBean(DatasetRepositoriesServiceFacade.class);

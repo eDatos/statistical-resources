@@ -1,6 +1,5 @@
 package org.siemac.metamac.sdmx.data.rest.external.v2_1;
 
-
 public class RestExternalConstants {
 
     // Wildcards values for SDMX identifying parameters
