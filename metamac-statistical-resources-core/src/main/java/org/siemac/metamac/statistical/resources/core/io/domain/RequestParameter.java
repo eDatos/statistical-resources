@@ -1,14 +1,16 @@
 package org.siemac.metamac.statistical.resources.core.io.domain;
 
+import org.sdmx.resources.sdmxml.rest.schemas.v2_1.types.DataParameterDetailEnum;
+
 public class RequestParameter {
 
-    public String startPeriod            = null;
-    public String endPeriod              = null;
-    public String updatedAfter           = null;
-    public String firstNObservations     = null;
-    public String lastNObservations      = null;
-    public String dimensionAtObservation = null;
-    public String detail                 = null;
+    public String                  startPeriod            = null;
+    public String                  endPeriod              = null;
+    public String                  updatedAfter           = null;
+    public String                  firstNObservations     = null;
+    public String                  lastNObservations      = null;
+    public String                  dimensionAtObservation = null;
+    public DataParameterDetailEnum detail                 = null;
 
     public String getStartPeriod() {
         return startPeriod;
@@ -58,11 +60,11 @@ public class RequestParameter {
         this.dimensionAtObservation = dimensionAtObservation;
     }
 
-    public String getDetail() {
+    public DataParameterDetailEnum getDetail() {
         return detail;
     }
 
-    public void setDetail(String detail) {
+    public void setDetail(DataParameterDetailEnum detail) {
         this.detail = detail;
     }
 

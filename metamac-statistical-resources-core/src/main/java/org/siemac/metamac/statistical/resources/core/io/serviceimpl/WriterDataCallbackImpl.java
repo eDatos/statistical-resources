@@ -14,6 +14,7 @@ import java.util.UUID;
 
 import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
 import org.joda.time.DateTime;
+import org.sdmx.resources.sdmxml.rest.schemas.v2_1.types.DataParameterDetailEnum;
 import org.siemac.metamac.core.common.util.CoreCommonUtil;
 import org.siemac.metamac.core.common.util.shared.UrnUtils;
 import org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConstants;
@@ -134,14 +135,18 @@ public class WriterDataCallbackImpl implements WriterDataCallback {
 
         // Add serie attributes
         Set<String> addedKeys = new HashSet<String>();
-        serie.getAttributes().addAll(extractAttributesForCurrentLevel(serie.getSeriesKey(), getCurrentDatasetInfo().getAttributeInstances(), addedKeys));
+        if (!isSkipAttributeGeneration()) {
+            serie.getAttributes().addAll(extractAttributesForCurrentLevel(serie.getSeriesKey(), getCurrentDatasetInfo().getAttributeInstances(), addedKeys));
+        }
 
         // Observations
-        Map<String, ObservationExtendedDto> observationsMap = datasetRepositoriesServiceFacade.findObservationsExtendedByDimensions(getCurrentDatasetInfo().getDatasetVersion()
-                .getDatasetRepositoryId(), metamac2StatRepoMapper.conditionsToRepositoryList(serieConditions));
+        if (!isSkipData()) {
+            Map<String, ObservationExtendedDto> observationsMap = datasetRepositoriesServiceFacade.findObservationsExtendedByDimensions(getCurrentDatasetInfo().getDatasetVersion()
+                    .getDatasetRepositoryId(), metamac2StatRepoMapper.conditionsToRepositoryList(serieConditions));
 
-        for (Map.Entry<String, ObservationExtendedDto> entry : observationsMap.entrySet()) {
-            serie.getObs().add(observationRepositoryToGroupedObservationWriter(entry.getValue(), addedKeys));
+            for (Map.Entry<String, ObservationExtendedDto> entry : observationsMap.entrySet()) {
+                serie.getObs().add(observationRepositoryToGroupedObservationWriter(entry.getValue(), addedKeys));
+            }
         }
 
         return serie;
@@ -149,8 +154,11 @@ public class WriterDataCallbackImpl implements WriterDataCallback {
 
     @Override
     public List<Group> fetchAttributesInGroups() throws Exception {
-
         List<Group> groups = new LinkedList<Group>();
+
+        if (isSkipGroupGeneration()) {
+            return groups;
+        }
 
         Map<String, List<AttributeInstanceBasicDto>> normalizedAttributesMap = getCurrentDatasetInfo().getAttributeInstances();
 
@@ -226,7 +234,7 @@ public class WriterDataCallbackImpl implements WriterDataCallback {
         List<DatasetInfo> datasetInfoCache = new ArrayList<DatasetInfo>(datasetsToFetch.getValues().size());
         for (DatasetVersion datasetVersion : datasetsToFetch.getValues()) {
             DatasetInfo datasetInfo = new DatasetInfo(datasetRepositoriesServiceFacade, metamac2StatRepoMapper, queryKey, datasetVersion, dataStructureDefinitionCache.get(datasetVersion
-                    .getRelatedDsd().getUrn()), requestParameter);
+                    .getRelatedDsd().getUrn()), getRequestParameter());
             datasetInfoCache.add(datasetInfo);
 
             if (datasetInfo.getTimeDimension() == null) {
@@ -379,15 +387,18 @@ public class WriterDataCallbackImpl implements WriterDataCallback {
         // Observation Value
         result.setObservationValue(new IdValuePair(MappingConstants.OBS_VALUE, observation.getPrimaryMeasure()));
 
-        // Attribute add observation level
-        for (AttributeInstanceBasicDto attributeBasicDto : observation.getAttributes()) {
-            if (!StatisticalResourcesConstants.ATTRIBUTE_DATA_SOURCE_ID.equals(attributeBasicDto.getAttributeId())) {
-                result.addAttribute(new IdValuePair(attributeBasicDto.getAttributeId(), attributeBasicDto.getValue().getLocalisedLabel(StatisticalResourcesConstants.DEFAULT_DATA_REPOSITORY_LOCALE)));
+        if (!isSkipAttributeGeneration()) {
+            // Attribute add observation level
+            for (AttributeInstanceBasicDto attributeBasicDto : observation.getAttributes()) {
+                if (!StatisticalResourcesConstants.ATTRIBUTE_DATA_SOURCE_ID.equals(attributeBasicDto.getAttributeId())) {
+                    result.addAttribute(new IdValuePair(attributeBasicDto.getAttributeId(), attributeBasicDto.getValue()
+                            .getLocalisedLabel(StatisticalResourcesConstants.DEFAULT_DATA_REPOSITORY_LOCALE)));
+                }
             }
-        }
 
-        // Other attributes that are in observation in this dataset
-        result.getAttributes().addAll(extractAttributesForCurrentLevel(observationKeyFull, getCurrentDatasetInfo().getAttributeInstances(), addedKeys));
+            // Other attributes that are in observation in this dataset
+            result.getAttributes().addAll(extractAttributesForCurrentLevel(observationKeyFull, getCurrentDatasetInfo().getAttributeInstances(), addedKeys));
+        }
 
         return result;
     }
@@ -408,6 +419,37 @@ public class WriterDataCallbackImpl implements WriterDataCallback {
 
     private List<DatasetInfo> getDatasetInfoCache() {
         return datasetInfoCache;
+    }
+
+    private RequestParameter getRequestParameter() {
+        return requestParameter;
+    }
+
+    private boolean isSkipAttributeGeneration() {
+        // Skip attributes for details="dataonly" and details="serieskeyonly""
+        if (DataParameterDetailEnum.DATAONLY.equals(getRequestParameter().getDetail()) || DataParameterDetailEnum.SERIESKEYSONLY.equals(getRequestParameter().getDetail())) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private boolean isSkipGroupGeneration() {
+        // Skip group generation for details="dataonly" and details="serieskeyonly""
+        if (DataParameterDetailEnum.DATAONLY.equals(getRequestParameter().getDetail()) || DataParameterDetailEnum.SERIESKEYSONLY.equals(getRequestParameter().getDetail())) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private boolean isSkipData() {
+        // Skip group generation for details="dataonly" and details="serieskeyonly""
+        if (DataParameterDetailEnum.NODATA.equals(getRequestParameter().getDetail()) || DataParameterDetailEnum.SERIESKEYSONLY.equals(getRequestParameter().getDetail())) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
 }

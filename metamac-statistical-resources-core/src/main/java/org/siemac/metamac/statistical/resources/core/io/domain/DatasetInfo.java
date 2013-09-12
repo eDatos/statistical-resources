@@ -10,6 +10,7 @@ import java.util.Map;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ApplicationException;
+import org.siemac.metamac.core.common.util.SdmxTimeUtils;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.io.domain.AttributeInfo.AttachmentLevel;
 import org.siemac.metamac.statistical.resources.core.io.mapper.MetamacSdmx2StatRepoMapper;
@@ -35,12 +36,14 @@ public class DatasetInfo {
     private Map<String, List<String>>                    conditionsMap          = null; // Input conditions for query transformed into a map
     private Map<String, List<AttributeInstanceBasicDto>> attributeInstances     = null;
     private DsdSdmxInfo                                  dsdSdmxInfo            = null;
+    private RequestParameter                             requestParameter       = null;
 
     public DatasetInfo(DatasetRepositoriesServiceFacade datasetRepositoriesServiceFacade, MetamacSdmx2StatRepoMapper metamac2StatRepoMapper, String queryKey, DatasetVersion datasetVersion,
             DsdSdmxInfo dsdSdmxInfo, RequestParameter requestParameter) throws Exception {
 
         this.datasetVersion = datasetVersion;
         this.dsdSdmxInfo = dsdSdmxInfo;
+        this.requestParameter = requestParameter;
 
         DatasetRepositoryDto datasetRepository = datasetRepositoriesServiceFacade.retrieveDatasetRepository(datasetVersion.getDatasetRepositoryId());
 
@@ -106,6 +109,10 @@ public class DatasetInfo {
         return dsdSdmxInfo;
     }
 
+    public RequestParameter getRequestParameter() {
+        return requestParameter;
+    }
+
     private List<DimensionCodeInfo> calculateConditionsFromQuery(DatasetRepositoryDto datasetRepository, String queryKey) throws ApplicationException {
         // The key are formed by dimension codes splitted by dots
         // Wildcarding is supported by omitting the dimension code for the dimension.
@@ -137,11 +144,11 @@ public class DatasetInfo {
                     for (int j = 0; j < codes.length; j++) {
                         dimensionCodeInfo.addCode(codes[j]);
                     }
-
-                    conditions.add(dimensionCodeInfo);
+                    conditions.add(applyStartPeriodAndEndPeriodParameterFilter(dimensionCodeInfo));
                 }
             }
         }
+
         return conditions;
     }
 
@@ -150,7 +157,22 @@ public class DatasetInfo {
         DimensionCodeInfo dimensionCodeInfo = new DimensionCodeInfo(dimensionID, getDsdSdmxInfo().getDimensions().get(dimensionID).getTypeComponentInfo());
         dimensionCodeInfo.getCodes().addAll(getCoverage().get(dimensionID));
 
-        conditions.add(dimensionCodeInfo);
+        conditions.add(applyStartPeriodAndEndPeriodParameterFilter(dimensionCodeInfo));
+    }
+
+    private DimensionCodeInfo applyStartPeriodAndEndPeriodParameterFilter(DimensionCodeInfo dimensionCodeInfo) {
+        // Add filter startPeriod and endPeriod parameters
+        if (ComponentInfoTypeEnum.TIME_DIMENSION.equals(dimensionCodeInfo.getTypeComponentInfo())) {
+            Iterator<String> itCodes = dimensionCodeInfo.getCodes().iterator();
+            while (itCodes.hasNext()) {
+                String codeTemporal = itCodes.next();
+                // Remove invalid temporal codes for this request
+                if (!SdmxTimeUtils.isValidTimeInInterval(codeTemporal, getRequestParameter().getStartPeriod(), getRequestParameter().getEndPeriod())) {
+                    itCodes.remove();
+                }
+            }
+        }
+        return dimensionCodeInfo;
     }
 
     private Map<String, List<String>> calculateCoverage(DatasetRepositoriesServiceFacade datasetRepositoriesServiceFacade, DatasetRepositoryDto datasetRepositoryDto) throws ApplicationException {
