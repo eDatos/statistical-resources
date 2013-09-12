@@ -23,7 +23,7 @@ public interface SdmxDataRestExternalFacadeV21 {
             "application/vnd.sdmx.generictimeseriesdata+xml;version=2.1", "application/vnd.sdmx.structurespecifictimeseriesdata+xml;version=2.1"})
     @Path("data/{flowRef}")
     Response findData(@Context HttpHeaders headers, @PathParam("flowRef") String flowRef, @DefaultValue("full") @QueryParam("detail") String detail,
-            @QueryParam("dimensionAtObservation") String dimensionAtObservation);
+            @QueryParam("dimensionAtObservation") String dimensionAtObservation, @QueryParam("startPeriod") String startPeriod, @QueryParam("endPeriod") String endPeriod);
 
     /**
      * Find data
@@ -35,7 +35,7 @@ public interface SdmxDataRestExternalFacadeV21 {
             "application/vnd.sdmx.generictimeseriesdata+xml;version=2.1", "application/vnd.sdmx.structurespecifictimeseriesdata+xml;version=2.1"})
     @Path("data/{flowRef}/{key}")
     Response findData(@Context HttpHeaders headers, @PathParam("flowRef") String flowRef, @PathParam("key") String key, @DefaultValue("full") @QueryParam("detail") String detail,
-            @QueryParam("dimensionAtObservation") String dimensionAtObservation);
+            @QueryParam("dimensionAtObservation") String dimensionAtObservation, @QueryParam("startPeriod") String startPeriod, @QueryParam("endPeriod") String endPeriod);
 
     /**
      * Find data
@@ -47,5 +47,6 @@ public interface SdmxDataRestExternalFacadeV21 {
             "application/vnd.sdmx.generictimeseriesdata+xml;version=2.1", "application/vnd.sdmx.structurespecifictimeseriesdata+xml;version=2.1"})
     @Path("data/{flowRef}/{key}/{providerRef}")
     Response findData(@Context HttpHeaders headers, @PathParam("flowRef") String flowRef, @PathParam("key") String key, @PathParam("providerRef") String providerRef,
-            @DefaultValue("full") @QueryParam("detail") String detail, @QueryParam("dimensionAtObservation") String dimensionAtObservation);
+            @DefaultValue("full") @QueryParam("detail") String detail, @QueryParam("dimensionAtObservation") String dimensionAtObservation, @QueryParam("startPeriod") String startPeriod,
+            @QueryParam("endPeriod") String endPeriod);
 }
