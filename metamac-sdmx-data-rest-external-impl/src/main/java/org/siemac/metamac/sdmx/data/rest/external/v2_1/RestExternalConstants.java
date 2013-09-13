@@ -22,6 +22,7 @@ public class RestExternalConstants {
     public static final String LAST_N_OBSERVATIONS      = "lastNObservations";
     public static final String DIMENSION_AT_OBSERVATION = "dimensionAtObservation";
     public static final String DETAIL                   = "detail";
+    public static final String REFERENCES               = "references";
 
     //
     // public static final String MEDIATYPE_MESSAGE_GENERICDATA_2_1 = "application/vnd.sdmx.genericdata+xml;version=2.1";

@@ -17,6 +17,7 @@ import java.util.Set;
 import javax.ws.rs.core.Response;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.cxf.jaxrs.client.WebClient;
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
@@ -250,6 +251,19 @@ public class SdmxRestExternalFacadeV10DataTest extends SdmxRestExternalFacadeV21
 
     }
 
+    @Test
+    public void testDataFlow() throws Exception {
+        {
+            // DATAFLOW
+            WebClient create = WebClient.create(baseApi + "/dataflow");
+            // create.accept(TypeSDMXDataMessageEnum.SPECIFIC_2_1.getValue());
+            incrementRequestTimeOut(create); // Timeout
+            Response findData = create.get();
+            System.out.println("_____________");
+            System.out.println(IOUtils.toString((InputStream) findData.getEntity(), "UTF-8"));
+        }
+    }
+
     @Override
     protected void resetMocks() throws Exception {
         datasetRepositoriesServiceFacade = applicationContext.getBean(DatasetRepositoriesServiceFacade.class);
@@ -433,13 +447,57 @@ public class SdmxRestExternalFacadeV10DataTest extends SdmxRestExternalFacadeV21
                 String resourceID = getResourceIdFromConditionalCriteria(conditions);
                 String version = getVersionFromConditionalCriteria(conditions);
 
+                if (StringUtils.isEmpty(agencyID)) {
+                    agencyID = "ECB";
+                }
+
+                if (StringUtils.isEmpty(version)) {
+                    version = "1.0";
+                }
+
                 List<DatasetVersion> datasets = new ArrayList<DatasetVersion>();
 
-                DatasetVersion mockDatasetVersion = sdmxDataCoreMocks.mockDatasetVersion(agencyID, resourceID, version);
-                mockDatasetVersion.setDatasetRepositoryId(DATASET_ID);
-                mockDatasetVersion.getRelatedDsd().setUrn(GeneratorUrnUtils.generateSdmxDatastructureUrn(new String[]{"ECB"}, resourceID, "1.0"));
+                if (!StringUtils.isEmpty(resourceID)) {
+                    DatasetVersion mockDatasetVersion = sdmxDataCoreMocks.mockDatasetVersion(agencyID, resourceID, version);
+                    mockDatasetVersion.setDatasetRepositoryId(DATASET_ID);
+                    mockDatasetVersion.getSiemacMetadataStatisticalResource().setCode(resourceID);
+                    mockDatasetVersion.getSiemacMetadataStatisticalResource().getMaintainer().setCodeNested(agencyID);
+                    mockDatasetVersion.getSiemacMetadataStatisticalResource().setVersionLogic(version);
+                    mockDatasetVersion.getRelatedDsd().setUrn(GeneratorUrnUtils.generateSdmxDatastructureUrn(new String[]{agencyID}, resourceID, version));
+                    datasets.add(mockDatasetVersion);
+                } else {
+                    {
+                        DatasetVersion mockDatasetVersion = sdmxDataCoreMocks.mockDatasetVersion(agencyID, resourceID, version);
+                        mockDatasetVersion.setDatasetRepositoryId(DATASET_ID);
+                        resourceID = "ECB_EXR_NG";
+                        mockDatasetVersion.getSiemacMetadataStatisticalResource().setCode(resourceID);
+                        mockDatasetVersion.getSiemacMetadataStatisticalResource().getMaintainer().setCodeNested(agencyID);
+                        mockDatasetVersion.getSiemacMetadataStatisticalResource().setVersionLogic(version);
+                        mockDatasetVersion.getRelatedDsd().setUrn(GeneratorUrnUtils.generateSdmxDatastructureUrn(new String[]{agencyID}, resourceID, version));
+                        datasets.add(mockDatasetVersion);
+                    }
+                    {
+                        DatasetVersion mockDatasetVersion = sdmxDataCoreMocks.mockDatasetVersion(agencyID, resourceID, version);
+                        mockDatasetVersion.setDatasetRepositoryId(DATASET_ID);
+                        resourceID = "ECB_EXR_SG";
+                        mockDatasetVersion.getSiemacMetadataStatisticalResource().setCode(resourceID);
+                        mockDatasetVersion.getSiemacMetadataStatisticalResource().getMaintainer().setCodeNested(agencyID);
+                        mockDatasetVersion.getSiemacMetadataStatisticalResource().setVersionLogic(version);
+                        mockDatasetVersion.getRelatedDsd().setUrn(GeneratorUrnUtils.generateSdmxDatastructureUrn(new String[]{agencyID}, resourceID, version));
+                        datasets.add(mockDatasetVersion);
+                    }
+                    {
+                        DatasetVersion mockDatasetVersion = sdmxDataCoreMocks.mockDatasetVersion(agencyID, resourceID, version);
+                        mockDatasetVersion.setDatasetRepositoryId(DATASET_ID);
+                        resourceID = "ECB_EXR_RG";
+                        mockDatasetVersion.getSiemacMetadataStatisticalResource().setCode(resourceID);
+                        mockDatasetVersion.getSiemacMetadataStatisticalResource().getMaintainer().setCodeNested(agencyID);
+                        mockDatasetVersion.getSiemacMetadataStatisticalResource().setVersionLogic(version);
+                        mockDatasetVersion.getRelatedDsd().setUrn(GeneratorUrnUtils.generateSdmxDatastructureUrn(new String[]{agencyID}, resourceID, version));
+                        datasets.add(mockDatasetVersion);
+                    }
+                }
 
-                datasets.add(mockDatasetVersion);
                 return new PagedResult<DatasetVersion>(datasets, datasets.size(), datasets.size(), datasets.size(), datasets.size() * 10, 0);
             }
 
