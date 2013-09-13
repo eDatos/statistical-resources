@@ -44,9 +44,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class QueryVersioningServiceTest extends StatisticalResourcesBaseTest {
 
     @Autowired
-    private QueryVersionMockFactory        queryVersionMockFactory;
-
-    @Autowired
     @Qualifier("queryLifecycleService")
     private LifecycleService<QueryVersion> queryVersionLifecycleService;
 

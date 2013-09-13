@@ -5,14 +5,19 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.siemac.metamac.statistical.resources.core.utils.asserts.CommonAsserts.assertEqualsRelatedResourceResultDatasetVersion;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts.assertEqualsDatasetVersion;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetMockFactory.DATASET_02_BASIC_WITH_GENERATED_VERSION_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetMockFactory.DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetMockFactory.DATASET_05_WITH_MULTIPLE_PUBLISHED_VERSIONS_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetMockFactory.DATASET_06_WITH_MULTIPLE_PUBLISHED_VERSIONS_AND_LATEST_NO_VISIBLE_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetMockFactory.DATASET_10_WITH_TWO_VERSIONS_WITH_QUERIES__FIRST_VERSION_IS_REQUIRED_BY_TWO_QUERY_VERSIONS__SECOND_IS_REQUIRED_BY_ONE_QUERY_VERSION_NAME;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetMockFactory.*;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.*;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetMockFactory.DATASET_11_WITH_TWO_VERSIONS_WITH_3_QUERIES__FIRST_VERSION_IS_PUBLISHED__SECOND_VERSION_IS_NOT_VISIBLE_ALL_QUERIES_COMPATIBLE_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetMockFactory.DATASET_12_WITH_TWO_VERSIONS_WITH_QUERIES_IN_DRAFT_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetMockFactory.DATASET_13_WITH_DRAFT_AND_PUBLISHED__IS_PART_OF_PUBLICATIONS_DIFFERENT_STATUS_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetMockFactory.DATASET_14_WITH_PUBLISHED_AND_NOT_VISIBLE_VERSIONS__IS_PART_OF_PUBLICATIONS_DIFFERENT_STATUS_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetMockFactory.DATASET_15_WITH_TWO_PUBLISHED_VERSIONS__IS_PART_OF_PUBLICATIONS_DIFFERENT_STATUS_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_01_BASIC_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_02_BASIC_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_03_FOR_DATASET_03_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_04_FOR_DATASET_03_AND_LAST_VERSION_NAME;
@@ -21,6 +26,35 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_25_V1_PUBLISHED_FOR_DATASET_06_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_26_V2_PUBLISHED_NO_VISIBLE_FOR_DATASET_06_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_27_WITH_COVERAGE_FILLED_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_73_V01_FOR_DATASET_11_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_74_V02_FOR_DATASET_11_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_75_V01_FOR_DATASET_12_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_76_V02_FOR_DATASET_12_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_77_NO_PUB_REPLACES_DATASET_78_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_78_PUB_IS_REPLACED_BY_DATASET_77_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_79_NO_PUB_REPLACES_DATASET_80_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_80_NO_PUB_IS_REPLACED_BY_DATASET_79_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_81_PUB_NOT_VISIBLE_REPLACES_DATASET_82_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_82_PUB_IS_REPLACED_BY_DATASET_81_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_83_PUB_REPLACES_DATASET_84_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_84_PUB_IS_REPLACED_BY_DATASET_83_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_85_LAST_VERSION_NOT_PUBLISHED__IS_PART_OF_PUBLICATIONS_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_17_WITH_STRUCTURE_FOR_PUBLICATION_VERSION_04_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_43_DRAFT_HAS_PART_DATASET_VERSION_85_FIRST_LEVEL_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_44_DRAFT_HAS_PART_DATASET_VERSION_85_NO_FIRST_LEVEL_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_45_DRAFT_HAS_PART_DATASET_VERSION_85_MULTI_CUBE_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_47_PUBLISHED_V02_FOR_PUBLICATION_07_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_48_PUBLISHED_V01_FOR_PUBLICATION_08_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_49_PUBLISHED_NOT_VISIBLE_V02_FOR_PUBLICATION_08_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_50_DRAFT_V01_FOR_PUBLICATION_09_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_52_PUBLISHED_V02_FOR_PUBLICATION_10_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_53_PUBLISHED_V01_FOR_PUBLICATION_11_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_54_PUBLISHED_NOT_VISIBLE_V02_FOR_PUBLICATION_11_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_55_DRAFT_V01_FOR_PUBLICATION_12_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_57_PUBLISHED_V02_FOR_PUBLICATION_13_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_58_PUBLISHED_V01_FOR_PUBLICATION_14_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_59_PUBLISHED_NOT_VISIBLE_V02_FOR_PUBLICATION_14_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_60_DRAFT_V01_FOR_PUBLICATION_15_NAME;
 
 import java.util.Arrays;
 import java.util.List;
@@ -35,13 +69,11 @@ import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResour
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionRepository;
-import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
+import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
 import org.siemac.metamac.statistical.resources.core.utils.asserts.CommonAsserts;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.configuration.MetamacMock;
-import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetMockFactory;
-import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -55,13 +87,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class DatasetVersionRepositoryTest extends StatisticalResourcesBaseTest implements DatasetVersionRepositoryTestBase {
 
     @Autowired
-    private DatasetVersionRepository  datasetVersionRepository;
-
-    @Autowired
-    private DatasetVersionMockFactory datasetVersionMockFactory;
-
-    @Autowired
-    private DatasetMockFactory        datasetMockFactory;
+    private DatasetVersionRepository datasetVersionRepository;
 
     @Override
     @Test
@@ -327,52 +353,56 @@ public class DatasetVersionRepositoryTest extends StatisticalResourcesBaseTest i
         assertNotNull(resource);
         CommonAsserts.assertEqualsRelatedResourceResultDatasetVersion(secondDatasetVersion, resource);
     }
-    
+
     @Test
     @MetamacMock(DATASET_11_WITH_TWO_VERSIONS_WITH_3_QUERIES__FIRST_VERSION_IS_PUBLISHED__SECOND_VERSION_IS_NOT_VISIBLE_ALL_QUERIES_COMPATIBLE_NAME)
     public void testRetrieveIsReplacedByVersionOnlyLastPublishedSecondVersionNotVisible() throws Exception {
         DatasetVersion firstDatasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_73_V01_FOR_DATASET_11_NAME);
-        
+
         RelatedResourceResult resource = datasetVersionRepository.retrieveIsReplacedByVersionOnlyLastPublished(firstDatasetVersion);
         assertNull(resource);
     }
-    
+
     @Test
     @MetamacMock(DATASET_11_WITH_TWO_VERSIONS_WITH_3_QUERIES__FIRST_VERSION_IS_PUBLISHED__SECOND_VERSION_IS_NOT_VISIBLE_ALL_QUERIES_COMPATIBLE_NAME)
     public void testRetrieveIsReplacedBySecondVersionNotVisible() throws Exception {
         DatasetVersion firstDatasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_73_V01_FOR_DATASET_11_NAME);
         DatasetVersion secondDatasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_74_V02_FOR_DATASET_11_NAME);
-        
+
         RelatedResourceResult resource = datasetVersionRepository.retrieveIsReplacedByVersion(firstDatasetVersion);
         assertNotNull(resource);
         CommonAsserts.assertEqualsRelatedResourceResultDatasetVersion(secondDatasetVersion, resource);
     }
-    
+
     @Test
     @MetamacMock(DATASET_10_WITH_TWO_VERSIONS_WITH_QUERIES__FIRST_VERSION_IS_REQUIRED_BY_TWO_QUERY_VERSIONS__SECOND_IS_REQUIRED_BY_ONE_QUERY_VERSION_NAME)
     public void testRetrieveIsReplacedByVersionOnlyLastPublishedSecondVersionPublishedAndVisible() throws Exception {
-        DatasetVersion firstDatasetVersion = datasetMockFactory.retrieveMock(DATASET_10_WITH_TWO_VERSIONS_WITH_QUERIES__FIRST_VERSION_IS_REQUIRED_BY_TWO_QUERY_VERSIONS__SECOND_IS_REQUIRED_BY_ONE_QUERY_VERSION_NAME).getVersions().get(0);
-        DatasetVersion secondDatasetVersion = datasetMockFactory.retrieveMock(DATASET_10_WITH_TWO_VERSIONS_WITH_QUERIES__FIRST_VERSION_IS_REQUIRED_BY_TWO_QUERY_VERSIONS__SECOND_IS_REQUIRED_BY_ONE_QUERY_VERSION_NAME).getVersions().get(1);
-        
+        DatasetVersion firstDatasetVersion = datasetMockFactory
+                .retrieveMock(DATASET_10_WITH_TWO_VERSIONS_WITH_QUERIES__FIRST_VERSION_IS_REQUIRED_BY_TWO_QUERY_VERSIONS__SECOND_IS_REQUIRED_BY_ONE_QUERY_VERSION_NAME).getVersions().get(0);
+        DatasetVersion secondDatasetVersion = datasetMockFactory
+                .retrieveMock(DATASET_10_WITH_TWO_VERSIONS_WITH_QUERIES__FIRST_VERSION_IS_REQUIRED_BY_TWO_QUERY_VERSIONS__SECOND_IS_REQUIRED_BY_ONE_QUERY_VERSION_NAME).getVersions().get(1);
+
         RelatedResourceResult resource = datasetVersionRepository.retrieveIsReplacedByVersionOnlyLastPublished(firstDatasetVersion);
         assertNotNull(resource);
         CommonAsserts.assertEqualsRelatedResourceResultDatasetVersion(secondDatasetVersion, resource);
     }
-    
+
     @Test
     @MetamacMock(DATASET_10_WITH_TWO_VERSIONS_WITH_QUERIES__FIRST_VERSION_IS_REQUIRED_BY_TWO_QUERY_VERSIONS__SECOND_IS_REQUIRED_BY_ONE_QUERY_VERSION_NAME)
     public void testRetrieveIsReplacedBySecondVersionPublishedAndVisible() throws Exception {
-        DatasetVersion firstDatasetVersion = datasetMockFactory.retrieveMock(DATASET_10_WITH_TWO_VERSIONS_WITH_QUERIES__FIRST_VERSION_IS_REQUIRED_BY_TWO_QUERY_VERSIONS__SECOND_IS_REQUIRED_BY_ONE_QUERY_VERSION_NAME).getVersions().get(0);
-        DatasetVersion secondDatasetVersion = datasetMockFactory.retrieveMock(DATASET_10_WITH_TWO_VERSIONS_WITH_QUERIES__FIRST_VERSION_IS_REQUIRED_BY_TWO_QUERY_VERSIONS__SECOND_IS_REQUIRED_BY_ONE_QUERY_VERSION_NAME).getVersions().get(1);
-        
+        DatasetVersion firstDatasetVersion = datasetMockFactory
+                .retrieveMock(DATASET_10_WITH_TWO_VERSIONS_WITH_QUERIES__FIRST_VERSION_IS_REQUIRED_BY_TWO_QUERY_VERSIONS__SECOND_IS_REQUIRED_BY_ONE_QUERY_VERSION_NAME).getVersions().get(0);
+        DatasetVersion secondDatasetVersion = datasetMockFactory
+                .retrieveMock(DATASET_10_WITH_TWO_VERSIONS_WITH_QUERIES__FIRST_VERSION_IS_REQUIRED_BY_TWO_QUERY_VERSIONS__SECOND_IS_REQUIRED_BY_ONE_QUERY_VERSION_NAME).getVersions().get(1);
+
         RelatedResourceResult resource = datasetVersionRepository.retrieveIsReplacedByVersion(firstDatasetVersion);
         assertNotNull(resource);
         CommonAsserts.assertEqualsRelatedResourceResultDatasetVersion(secondDatasetVersion, resource);
     }
-    
+
     @Override
     @Test
-    @MetamacMock({DATASET_VERSION_77_NO_PUB_REPLACES_DATASET_78_NAME, DATASET_VERSION_78_PUB_IS_REPLACED_BY_DATASET_77_NAME})
+    @MetamacMock({DATASET_VERSION_77_NO_PUB_REPLACES_DATASET_78_NAME})
     public void testRetrieveIsReplacedBy() throws Exception {
         DatasetVersion notPublishedDataset = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_77_NO_PUB_REPLACES_DATASET_78_NAME);
         DatasetVersion publishedDatasetReplaced = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_78_PUB_IS_REPLACED_BY_DATASET_77_NAME);
@@ -381,76 +411,232 @@ public class DatasetVersionRepositoryTest extends StatisticalResourcesBaseTest i
         assertNotNull(resource);
         CommonAsserts.assertEqualsRelatedResourceResultDatasetVersion(notPublishedDataset, resource);
     }
-    
+
     @Override
     @Test
-    @MetamacMock({DATASET_VERSION_77_NO_PUB_REPLACES_DATASET_78_NAME, DATASET_VERSION_78_PUB_IS_REPLACED_BY_DATASET_77_NAME})
+    @MetamacMock({DATASET_VERSION_77_NO_PUB_REPLACES_DATASET_78_NAME})
     public void testRetrieveIsReplacedByOnlyLastPublished() throws Exception {
         DatasetVersion publishedDatasetReplaced = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_78_PUB_IS_REPLACED_BY_DATASET_77_NAME);
-        
+
         RelatedResourceResult resource = datasetVersionRepository.retrieveIsReplacedByOnlyLastPublished(publishedDatasetReplaced);
         assertNull(resource);
     }
-    
+
     @Test
-    @MetamacMock({DATASET_VERSION_79_NO_PUB_REPLACES_DATASET_80_NAME, DATASET_VERSION_80_NO_PUB_IS_REPLACED_BY_DATASET_79_NAME})
+    @MetamacMock({DATASET_VERSION_79_NO_PUB_REPLACES_DATASET_80_NAME})
     public void testRetrieveResourceThatReplacesDatasetBothNotPublished() throws Exception {
         DatasetVersion notPublishedDataset = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_79_NO_PUB_REPLACES_DATASET_80_NAME);
         DatasetVersion notPublishedDatasetReplaced = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_80_NO_PUB_IS_REPLACED_BY_DATASET_79_NAME);
-        
+
         RelatedResourceResult resource = datasetVersionRepository.retrieveIsReplacedBy(notPublishedDatasetReplaced);
         assertNotNull(resource);
         CommonAsserts.assertEqualsRelatedResourceResultDatasetVersion(notPublishedDataset, resource);
     }
-    
+
     @Test
-    @MetamacMock({DATASET_VERSION_79_NO_PUB_REPLACES_DATASET_80_NAME, DATASET_VERSION_80_NO_PUB_IS_REPLACED_BY_DATASET_79_NAME})
+    @MetamacMock({DATASET_VERSION_79_NO_PUB_REPLACES_DATASET_80_NAME})
     public void testRetrieveLastPublishedVersionResourceThatReplacesDatasetBothNotPublished() throws Exception {
         DatasetVersion notPublishedDatasetReplaced = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_80_NO_PUB_IS_REPLACED_BY_DATASET_79_NAME);
-        
+
         RelatedResourceResult resource = datasetVersionRepository.retrieveIsReplacedByOnlyLastPublished(notPublishedDatasetReplaced);
         assertNull(resource);
     }
-    
+
     @Test
-    @MetamacMock({DATASET_VERSION_81_PUB_NOT_VISIBLE_REPLACES_DATASET_82_NAME, DATASET_VERSION_82_PUB_IS_REPLACED_BY_DATASET_81_NAME})
+    @MetamacMock({DATASET_VERSION_81_PUB_NOT_VISIBLE_REPLACES_DATASET_82_NAME})
     public void testRetrieveResourceThatReplacesDatasetWhichReplacesIsNotVisible() throws Exception {
         DatasetVersion notVisibleDataset = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_81_PUB_NOT_VISIBLE_REPLACES_DATASET_82_NAME);
         DatasetVersion publishedDatasetReplaced = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_82_PUB_IS_REPLACED_BY_DATASET_81_NAME);
-        
+
         RelatedResourceResult resource = datasetVersionRepository.retrieveIsReplacedBy(publishedDatasetReplaced);
         assertNotNull(resource);
         CommonAsserts.assertEqualsRelatedResourceResultDatasetVersion(notVisibleDataset, resource);
     }
-    
+
     @Test
-    @MetamacMock({DATASET_VERSION_81_PUB_NOT_VISIBLE_REPLACES_DATASET_82_NAME, DATASET_VERSION_82_PUB_IS_REPLACED_BY_DATASET_81_NAME})
+    @MetamacMock({DATASET_VERSION_81_PUB_NOT_VISIBLE_REPLACES_DATASET_82_NAME})
     public void testRetrieveLastPublishedVersionResourceThatReplacesDatasetWhichReplacesIsNotVisible() throws Exception {
         DatasetVersion publishedDatasetReplaced = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_82_PUB_IS_REPLACED_BY_DATASET_81_NAME);
-        
+
         RelatedResourceResult resource = datasetVersionRepository.retrieveIsReplacedByOnlyLastPublished(publishedDatasetReplaced);
         assertNull(resource);
     }
-    
+
     @Test
-    @MetamacMock({DATASET_VERSION_83_PUB_REPLACES_DATASET_84_NAME, DATASET_VERSION_84_PUB_IS_REPLACED_BY_DATASET_83_NAME})
+    @MetamacMock({DATASET_VERSION_83_PUB_REPLACES_DATASET_84_NAME})
     public void testRetrieveResourceThatReplacesDatasetBothPublished() throws Exception {
         DatasetVersion publishedDataset = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_83_PUB_REPLACES_DATASET_84_NAME);
         DatasetVersion publishedDatasetReplaced = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_84_PUB_IS_REPLACED_BY_DATASET_83_NAME);
-        
+
         RelatedResourceResult resource = datasetVersionRepository.retrieveIsReplacedBy(publishedDatasetReplaced);
         assertNotNull(resource);
         CommonAsserts.assertEqualsRelatedResourceResultDatasetVersion(publishedDataset, resource);
     }
-    
+
     @Test
-    @MetamacMock({DATASET_VERSION_83_PUB_REPLACES_DATASET_84_NAME, DATASET_VERSION_84_PUB_IS_REPLACED_BY_DATASET_83_NAME})
+    @MetamacMock({DATASET_VERSION_83_PUB_REPLACES_DATASET_84_NAME})
     public void testRetrieveLastPublishedVersionResourceThatReplacesDatasetBothPublished() throws Exception {
         DatasetVersion publishedDataset = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_83_PUB_REPLACES_DATASET_84_NAME);
         DatasetVersion publishedDatasetReplaced = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_84_PUB_IS_REPLACED_BY_DATASET_83_NAME);
-        
+
         RelatedResourceResult resource = datasetVersionRepository.retrieveIsReplacedByOnlyLastPublished(publishedDatasetReplaced);
         assertNotNull(resource);
-        CommonAsserts.assertEqualsRelatedResourceResultDatasetVersion(publishedDataset, resource);
+        assertEqualsRelatedResourceResultDatasetVersion(publishedDataset, resource);
     }
+
+    @Override
+    @Test
+    @MetamacMock({DATASET_VERSION_85_LAST_VERSION_NOT_PUBLISHED__IS_PART_OF_PUBLICATIONS_NAME, PUBLICATION_VERSION_17_WITH_STRUCTURE_FOR_PUBLICATION_VERSION_04_NAME})
+    public void testRetrieveIsPartOf() throws Exception {
+        DatasetVersion datasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_85_LAST_VERSION_NOT_PUBLISHED__IS_PART_OF_PUBLICATIONS_NAME);
+        PublicationVersion publicationDraftFirstLevel = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_43_DRAFT_HAS_PART_DATASET_VERSION_85_FIRST_LEVEL_NAME);
+        PublicationVersion publicationDraftNoFirstLevel = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_44_DRAFT_HAS_PART_DATASET_VERSION_85_NO_FIRST_LEVEL_NAME);
+        PublicationVersion publicationDraftMultiCube = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_45_DRAFT_HAS_PART_DATASET_VERSION_85_MULTI_CUBE_NAME);
+
+        List<RelatedResourceResult> resources = datasetVersionRepository.retrieveIsPartOf(datasetVersion);
+        CommonAsserts.assertEqualsRelatedResourceResultCollectionToPublicationVersionCollection(Arrays.asList(publicationDraftFirstLevel, publicationDraftNoFirstLevel, publicationDraftMultiCube),
+                resources);
+    }
+
+    @Test
+    @MetamacMock({DATASET_13_WITH_DRAFT_AND_PUBLISHED__IS_PART_OF_PUBLICATIONS_DIFFERENT_STATUS_NAME, PUBLICATION_VERSION_17_WITH_STRUCTURE_FOR_PUBLICATION_VERSION_04_NAME})
+    public void testRetrieveIsPartOfDraftAndPublishedVersion() throws Exception {
+        Dataset dataset = datasetMockFactory.retrieveMock(DATASET_13_WITH_DRAFT_AND_PUBLISHED__IS_PART_OF_PUBLICATIONS_DIFFERENT_STATUS_NAME);
+        DatasetVersion publishedVersion = dataset.getVersions().get(0);
+        DatasetVersion draftVersion = dataset.getVersions().get(1);
+
+        // last version
+        {
+            List<RelatedResourceResult> resources = datasetVersionRepository.retrieveIsPartOf(draftVersion);
+
+            PublicationVersion publication01 = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_47_PUBLISHED_V02_FOR_PUBLICATION_07_NAME);
+            PublicationVersion publication02 = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_49_PUBLISHED_NOT_VISIBLE_V02_FOR_PUBLICATION_08_NAME);
+            PublicationVersion publication03 = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_50_DRAFT_V01_FOR_PUBLICATION_09_NAME);
+
+            CommonAsserts.assertEqualsRelatedResourceResultCollectionToPublicationVersionCollection(Arrays.asList(publication01, publication02, publication03), resources);
+        }
+        {
+            List<RelatedResourceResult> resources = datasetVersionRepository.retrieveIsPartOf(publishedVersion);
+            assertTrue(resources.isEmpty()); // is not last version, no publication links to it
+        }
+    }
+
+    @Test
+    @MetamacMock({DATASET_14_WITH_PUBLISHED_AND_NOT_VISIBLE_VERSIONS__IS_PART_OF_PUBLICATIONS_DIFFERENT_STATUS_NAME, PUBLICATION_VERSION_17_WITH_STRUCTURE_FOR_PUBLICATION_VERSION_04_NAME})
+    public void testRetrieveIsPartOfPublishedVersionAndNotVisibleVersion() throws Exception {
+        Dataset dataset = datasetMockFactory.retrieveMock(DATASET_14_WITH_PUBLISHED_AND_NOT_VISIBLE_VERSIONS__IS_PART_OF_PUBLICATIONS_DIFFERENT_STATUS_NAME);
+        DatasetVersion publishedVersion = dataset.getVersions().get(0);
+        DatasetVersion publishedNotVisibleVersion = dataset.getVersions().get(1);
+
+        // last version
+        {
+            List<RelatedResourceResult> resources = datasetVersionRepository.retrieveIsPartOf(publishedNotVisibleVersion);
+
+            PublicationVersion publication01 = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_52_PUBLISHED_V02_FOR_PUBLICATION_10_NAME);
+            PublicationVersion publication02 = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_54_PUBLISHED_NOT_VISIBLE_V02_FOR_PUBLICATION_11_NAME);
+            PublicationVersion publication03 = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_55_DRAFT_V01_FOR_PUBLICATION_12_NAME);
+
+            CommonAsserts.assertEqualsRelatedResourceResultCollectionToPublicationVersionCollection(Arrays.asList(publication01, publication02, publication03), resources);
+        }
+        {
+            List<RelatedResourceResult> resources = datasetVersionRepository.retrieveIsPartOf(publishedVersion);
+            assertTrue(resources.isEmpty()); // is not last version, no publication links to it
+        }
+    }
+
+    @Test
+    @MetamacMock({DATASET_15_WITH_TWO_PUBLISHED_VERSIONS__IS_PART_OF_PUBLICATIONS_DIFFERENT_STATUS_NAME, PUBLICATION_VERSION_17_WITH_STRUCTURE_FOR_PUBLICATION_VERSION_04_NAME})
+    public void testRetrieveIsPartOfTwoPublishedVersions() throws Exception {
+        Dataset dataset = datasetMockFactory.retrieveMock(DATASET_15_WITH_TWO_PUBLISHED_VERSIONS__IS_PART_OF_PUBLICATIONS_DIFFERENT_STATUS_NAME);
+        DatasetVersion publishedVersion = dataset.getVersions().get(0);
+        DatasetVersion publishedLastVersion = dataset.getVersions().get(1);
+
+        // last version
+        {
+            List<RelatedResourceResult> resources = datasetVersionRepository.retrieveIsPartOf(publishedLastVersion);
+
+            PublicationVersion publication01 = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_57_PUBLISHED_V02_FOR_PUBLICATION_13_NAME);
+            PublicationVersion publication02 = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_59_PUBLISHED_NOT_VISIBLE_V02_FOR_PUBLICATION_14_NAME);
+            PublicationVersion publication03 = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_60_DRAFT_V01_FOR_PUBLICATION_15_NAME);
+
+            CommonAsserts.assertEqualsRelatedResourceResultCollectionToPublicationVersionCollection(Arrays.asList(publication01, publication02, publication03), resources);
+        }
+        {
+            List<RelatedResourceResult> resources = datasetVersionRepository.retrieveIsPartOf(publishedVersion);
+            assertTrue(resources.isEmpty()); // is not last version, no publication links to it
+        }
+    }
+
+    @Override
+    @Test
+    @MetamacMock({DATASET_13_WITH_DRAFT_AND_PUBLISHED__IS_PART_OF_PUBLICATIONS_DIFFERENT_STATUS_NAME, PUBLICATION_VERSION_17_WITH_STRUCTURE_FOR_PUBLICATION_VERSION_04_NAME})
+    public void testRetrieveIsPartOfOnlyLastPublished() throws Exception {
+        Dataset dataset = datasetMockFactory.retrieveMock(DATASET_13_WITH_DRAFT_AND_PUBLISHED__IS_PART_OF_PUBLICATIONS_DIFFERENT_STATUS_NAME);
+        DatasetVersion publishedVersion = dataset.getVersions().get(0);
+        DatasetVersion draftVersion = dataset.getVersions().get(1);
+
+        // last version
+        {
+            List<RelatedResourceResult> resources = datasetVersionRepository.retrieveIsPartOfOnlyLastPublished(draftVersion);
+            assertTrue(resources.isEmpty()); // is not last version, no publication links to it
+        }
+
+        {
+            List<RelatedResourceResult> resources = datasetVersionRepository.retrieveIsPartOfOnlyLastPublished(publishedVersion);
+
+            PublicationVersion publication01 = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_47_PUBLISHED_V02_FOR_PUBLICATION_07_NAME);
+            PublicationVersion publication02 = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_48_PUBLISHED_V01_FOR_PUBLICATION_08_NAME);
+
+            CommonAsserts.assertEqualsRelatedResourceResultCollectionToPublicationVersionCollection(Arrays.asList(publication01, publication02), resources);
+        }
+
+    }
+
+    @Test
+    @MetamacMock({DATASET_14_WITH_PUBLISHED_AND_NOT_VISIBLE_VERSIONS__IS_PART_OF_PUBLICATIONS_DIFFERENT_STATUS_NAME, PUBLICATION_VERSION_17_WITH_STRUCTURE_FOR_PUBLICATION_VERSION_04_NAME})
+    public void testRetrieveIsPartOfOnlyLastPublishedPublishedVersionAndNotVisibleVersion() throws Exception {
+        Dataset dataset = datasetMockFactory.retrieveMock(DATASET_14_WITH_PUBLISHED_AND_NOT_VISIBLE_VERSIONS__IS_PART_OF_PUBLICATIONS_DIFFERENT_STATUS_NAME);
+        DatasetVersion publishedVersion = dataset.getVersions().get(0);
+        DatasetVersion notVisibleVersion = dataset.getVersions().get(1);
+
+        // last version
+        {
+            List<RelatedResourceResult> resources = datasetVersionRepository.retrieveIsPartOfOnlyLastPublished(notVisibleVersion);
+            assertTrue(resources.isEmpty()); // is not last version, no publication links to it
+        }
+
+        {
+            List<RelatedResourceResult> resources = datasetVersionRepository.retrieveIsPartOfOnlyLastPublished(publishedVersion);
+
+            PublicationVersion publication01 = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_52_PUBLISHED_V02_FOR_PUBLICATION_10_NAME);
+            PublicationVersion publication02 = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_53_PUBLISHED_V01_FOR_PUBLICATION_11_NAME);
+
+            CommonAsserts.assertEqualsRelatedResourceResultCollectionToPublicationVersionCollection(Arrays.asList(publication01, publication02), resources);
+        }
+
+    }
+
+    @Test
+    @MetamacMock({DATASET_15_WITH_TWO_PUBLISHED_VERSIONS__IS_PART_OF_PUBLICATIONS_DIFFERENT_STATUS_NAME, PUBLICATION_VERSION_17_WITH_STRUCTURE_FOR_PUBLICATION_VERSION_04_NAME})
+    public void testRetrieveIsPartOfOnlyLastPublishedTwoPublishedVersions() throws Exception {
+        Dataset dataset = datasetMockFactory.retrieveMock(DATASET_15_WITH_TWO_PUBLISHED_VERSIONS__IS_PART_OF_PUBLICATIONS_DIFFERENT_STATUS_NAME);
+        DatasetVersion publishedVersion = dataset.getVersions().get(0);
+        DatasetVersion publishedLastVersion = dataset.getVersions().get(1);
+
+        // last version
+        {
+            List<RelatedResourceResult> resources = datasetVersionRepository.retrieveIsPartOfOnlyLastPublished(publishedLastVersion);
+
+            PublicationVersion publication01 = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_57_PUBLISHED_V02_FOR_PUBLICATION_13_NAME);
+            PublicationVersion publication02 = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_58_PUBLISHED_V01_FOR_PUBLICATION_14_NAME);
+            CommonAsserts.assertEqualsRelatedResourceResultCollectionToPublicationVersionCollection(Arrays.asList(publication01, publication02), resources);
+        }
+
+        {
+            List<RelatedResourceResult> resources = datasetVersionRepository.retrieveIsPartOfOnlyLastPublished(publishedVersion);
+            assertTrue(resources.isEmpty()); // all links point to last version
+        }
+
+    }
+
 }

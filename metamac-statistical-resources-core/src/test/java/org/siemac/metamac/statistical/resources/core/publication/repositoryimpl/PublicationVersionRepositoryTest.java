@@ -43,13 +43,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class PublicationVersionRepositoryTest extends StatisticalResourcesBaseTest implements PublicationVersionRepositoryTestBase {
 
     @Autowired
-    private PublicationMockFactory        publicationMockFactory;
-
-    @Autowired
-    private PublicationVersionMockFactory publicationVersionMockFactory;
-
-    @Autowired
-    private PublicationVersionRepository  publicationVersionRepository;
+    private PublicationVersionRepository publicationVersionRepository;
 
     @Override
     @Test

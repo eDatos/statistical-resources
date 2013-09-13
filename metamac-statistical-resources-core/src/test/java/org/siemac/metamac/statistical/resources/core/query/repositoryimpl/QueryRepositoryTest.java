@@ -26,9 +26,6 @@ public class QueryRepositoryTest extends StatisticalResourcesBaseTest implements
 
     @Autowired
     protected QueryRepository queryRepository;
-    
-    @Autowired
-    protected QueryMockFactory queryMockFactory;
 
     @Override
     @Test
@@ -38,7 +35,7 @@ public class QueryRepositoryTest extends StatisticalResourcesBaseTest implements
         Query actual = queryRepository.retrieveByUrn(expected.getIdentifiableStatisticalResource().getUrn());
         assertEqualsQuery(expected, actual);
     }
-    
+
     @Test
     public void testRetrieveByUrnNotFound() throws MetamacException {
         expectedMetamacException(new MetamacException(ServiceExceptionType.QUERY_NOT_FOUND, URN_NOT_EXISTS));

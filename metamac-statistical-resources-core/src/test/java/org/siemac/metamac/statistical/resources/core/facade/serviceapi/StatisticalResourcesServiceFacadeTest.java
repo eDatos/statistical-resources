@@ -207,36 +207,6 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
     private StatisticalResourcesServiceFacade statisticalResourcesServiceFacade;
 
     @Autowired
-    private QueryVersionMockFactory           queryVersionMockFactory;
-
-    @Autowired
-    private QueryMockFactory                  queryMockFactory;
-
-    @Autowired
-    private DatasourceMockFactory             datasourceMockFactory;
-
-    @Autowired
-    private StatisticOfficialityMockFactory   statisticOfficialityMockFactory;
-
-    @Autowired
-    private DatasetVersionMockFactory         datasetVersionMockFactory;
-
-    @Autowired
-    private PublicationVersionMockFactory     publicationVersionMockFactory;
-
-    @Autowired
-    private ChapterMockFactory                chapterMockFactory;
-
-    @Autowired
-    private CubeMockFactory                   cubeMockFactory;
-
-    @Autowired
-    private DatasetMockFactory                datasetMockFactory;
-
-    @Autowired
-    private PublicationMockFactory            publicationMockFactory;
-
-    @Autowired
     private QuerySelectionItemRepository      querySelectionItemRepository;
 
     @Autowired

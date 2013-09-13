@@ -33,9 +33,6 @@ public class DatasetRepositoryTest extends StatisticalResourcesBaseTest implemen
 
     @Autowired
     private DatasetRepository datasetRepository;
-    
-    @Autowired
-    private DatasetMockFactory datasetMockFactory; 
 
     @Override
     @Test
@@ -45,13 +42,13 @@ public class DatasetRepositoryTest extends StatisticalResourcesBaseTest implemen
         Dataset actual = datasetRepository.retrieveByUrn(expected.getIdentifiableStatisticalResource().getUrn());
         assertEqualsDataset(expected, actual);
     }
-    
+
     @Test
     public void testRetrieveByUrnNotFound() throws Exception {
         expectedMetamacException(new MetamacException(ServiceExceptionType.DATASET_VERSION_NOT_FOUND, URN_NOT_EXISTS));
         datasetRepository.retrieveByUrn(URN_NOT_EXISTS);
     }
-    
+
     @Override
     @Test
     @MetamacMock(DATASET_07_WITH_SINGLE_VERSION_AND_SINGLE_DATASOURCE_LINKED_TO_FILE_NAME)
@@ -59,7 +56,7 @@ public class DatasetRepositoryTest extends StatisticalResourcesBaseTest implemen
         Dataset dataset = datasetMockFactory.retrieveMock(DATASET_07_WITH_SINGLE_VERSION_AND_SINGLE_DATASOURCE_LINKED_TO_FILE_NAME);
         checkDatasetDatasourcesFiles(dataset);
     }
-    
+
     @Test
     @MetamacMock(DATASET_07_WITH_SINGLE_VERSION_AND_SINGLE_DATASOURCE_LINKED_TO_FILE_NAME)
     public void testFindDatasetsUrnsLinkedToDatasourceNotFound() throws Exception {
@@ -67,43 +64,43 @@ public class DatasetRepositoryTest extends StatisticalResourcesBaseTest implemen
         String urn = datasetRepository.findDatasetUrnLinkedToDatasourceFile(filename);
         assertNull(urn);
     }
-    
+
     @Test
     public void testFindDatasetsUrnsLinkedToDatasourceNoDatasets() throws Exception {
         String filename = StatisticalResourcesPersistedDoMocks.mockString(10);
         String urn = datasetRepository.findDatasetUrnLinkedToDatasourceFile(filename);
         assertNull(urn);
     }
-    
+
     @Test
     @MetamacMock(DATASET_08_WITH_SINGLE_VERSION_AND_MULTIPLE_DATASOURCES_LINKED_TO_FILE_NAME)
     public void testFindDatasetsUrnsLinkedToDatasourceFileMultipleDatasources() throws Exception {
         Dataset dataset = datasetMockFactory.retrieveMock(DATASET_08_WITH_SINGLE_VERSION_AND_MULTIPLE_DATASOURCES_LINKED_TO_FILE_NAME);
         checkDatasetDatasourcesFiles(dataset);
     }
-    
+
     @Test
     @MetamacMock(DATASET_09_WITH_SINGLE_VERSION_AND_SINGLE_DATASOURCE_LINKED_TO_FILE_WITH_UNDERSCORE_NAME)
     public void testFindDatasetsUrnsLinkedToDatasourceFileWithUnderscore() throws Exception {
         Dataset dataset = datasetMockFactory.retrieveMock(DATASET_09_WITH_SINGLE_VERSION_AND_SINGLE_DATASOURCE_LINKED_TO_FILE_WITH_UNDERSCORE_NAME);
         checkDatasetDatasourcesFiles(dataset);
-        
-        //filename is datasource_underscore.px_(date), we'll try to hack looking for "datasource" is the part before first underscore
+
+        // filename is datasource_underscore.px_(date), we'll try to hack looking for "datasource" is the part before first underscore
         String urn = datasetRepository.findDatasetUrnLinkedToDatasourceFile("datasource");
         assertNull(urn);
     }
-    
+
     @Test
     @MetamacMock({DATASET_07_WITH_SINGLE_VERSION_AND_SINGLE_DATASOURCE_LINKED_TO_FILE_NAME, DATASET_08_WITH_SINGLE_VERSION_AND_MULTIPLE_DATASOURCES_LINKED_TO_FILE_NAME})
     public void testFindDatasetsUrnsLinkedToDatasourceFileMultipleDatasets() throws Exception {
         Dataset dataset07 = datasetMockFactory.retrieveMock(DATASET_07_WITH_SINGLE_VERSION_AND_SINGLE_DATASOURCE_LINKED_TO_FILE_NAME);
         checkDatasetDatasourcesFiles(dataset07);
-        
+
         Dataset dataset08 = datasetMockFactory.retrieveMock(DATASET_08_WITH_SINGLE_VERSION_AND_MULTIPLE_DATASOURCES_LINKED_TO_FILE_NAME);
         checkDatasetDatasourcesFiles(dataset08);
-            
+
     }
-    
+
     private void checkDatasetDatasourcesFiles(Dataset dataset) {
         List<String> filenames = getDatasourcesLinkedFilesInDataset(dataset);
         for (String filename : filenames) {
@@ -111,9 +108,7 @@ public class DatasetRepositoryTest extends StatisticalResourcesBaseTest implemen
             assertEquals(dataset.getIdentifiableStatisticalResource().getUrn(), urn);
         }
     }
-    
 
-    
     private List<String> getDatasourcesLinkedFilesInDataset(Dataset dataset) {
         List<String> result = new ArrayList<String>();
         for (DatasetVersion version : dataset.getVersions()) {
@@ -123,5 +118,5 @@ public class DatasetRepositoryTest extends StatisticalResourcesBaseTest implemen
         }
         return result;
     }
-    
+
 }

@@ -67,6 +67,8 @@ public class PublicationsAsserts extends BaseAsserts {
         assertEqualsRelaxedElementLevelCollection(expected.getChildrenFirstLevel(), actual.getChildrenAllLevels());
         assertEqualsRelaxedElementLevelCollection(expected.getChildrenAllLevels(), actual.getChildrenAllLevels());
 
+        assertEqualsRelatedResourceCollection(expected.getHasPart(), actual.getHasPart());
+
         if (!publicationChecked) {
             assertEqualsPublication(expected.getPublication(), actual.getPublication());
         }
@@ -286,9 +288,11 @@ public class PublicationsAsserts extends BaseAsserts {
 
             assertNotNull(entity.getVersion());
             assertEquals(entity.getVersion(), dto.getVersion());
+
+            assertEqualsRelatedResourceCollectionMapper(entity.getHasPart(), dto.getHasPart());
         }
     }
-    
+
     public static void assertEqualsPublicationVersionBase(PublicationVersion entity, PublicationVersionBaseDto dto) throws MetamacException {
         assertEqualsPublicationVersionBase(dto, entity, MapperEnum.DO2DTO);
     }
@@ -296,7 +300,7 @@ public class PublicationsAsserts extends BaseAsserts {
     public static void assertEqualsPublicationVersionBase(PublicationVersionBaseDto dto, PublicationVersion entity) throws MetamacException {
         assertEqualsPublicationVersionBase(dto, entity, MapperEnum.DTO2DO);
     }
-    
+
     private static void assertEqualsPublicationVersionBase(PublicationVersionBaseDto dto, PublicationVersion entity, MapperEnum mapperEnum) throws MetamacException {
         assertEqualsSiemacMetadataStatisticalResourceBase(entity.getSiemacMetadataStatisticalResource(), dto, mapperEnum);
 

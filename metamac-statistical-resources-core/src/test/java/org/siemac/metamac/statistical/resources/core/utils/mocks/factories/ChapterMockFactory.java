@@ -1,49 +1,46 @@
 package org.siemac.metamac.statistical.resources.core.utils.mocks.factories;
 
 import org.siemac.metamac.statistical.resources.core.publication.domain.Chapter;
-import org.springframework.stereotype.Component;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.configuration.MockProvider;
 
-@Component
+@SuppressWarnings("unused")
+@MockProvider
 public class ChapterMockFactory extends StatisticalResourcesMockFactory<Chapter> {
 
-    public static final String CHAPTER_01_BASIC_NAME       = "CHAPTER_01_BASIC";
-    private static Chapter     CHAPTER_01_BASIC;
+    public static final String        CHAPTER_01_BASIC_NAME       = "CHAPTER_01_BASIC";
 
-    public static final String CHAPTER_02_BASIC_NAME       = "CHAPTER_02_BASIC";
-    private static Chapter     CHAPTER_02_BASIC;
+    public static final String        CHAPTER_02_BASIC_NAME       = "CHAPTER_02_BASIC";
 
-    public static final String CHAPTER_03_BASIC_NAME       = "CHAPTER_03_BASIC";
-    private static Chapter     CHAPTER_03_BASIC;
+    public static final String        CHAPTER_03_BASIC_NAME       = "CHAPTER_03_BASIC";
 
-    public static final String CHAPTER_04_WITH_PARENT_NAME = "CHAPTER_04_WITH_PARENT";
-    private static Chapter     CHAPTER_04_WITH_PARENT;
+    public static final String        CHAPTER_04_WITH_PARENT_NAME = "CHAPTER_04_WITH_PARENT";
 
-    protected static Chapter getChapter01Basic() {
-        if (CHAPTER_01_BASIC == null) {
-            CHAPTER_01_BASIC = createChapter();
-        }
-        return CHAPTER_01_BASIC;
+    private static ChapterMockFactory instance                    = null;
+
+    private ChapterMockFactory() {
     }
 
-    protected static Chapter getChapter02Basic() {
-        if (CHAPTER_02_BASIC == null) {
-            CHAPTER_02_BASIC = createChapter();
+    public static ChapterMockFactory getInstance() {
+        if (instance == null) {
+            instance = new ChapterMockFactory();
         }
-        return CHAPTER_02_BASIC;
+        return instance;
     }
 
-    protected static Chapter getChapter03Basic() {
-        if (CHAPTER_03_BASIC == null) {
-            CHAPTER_03_BASIC = createChapter();
-        }
-        return CHAPTER_03_BASIC;
+    private static Chapter getChapter01Basic() {
+        return createChapter();
     }
 
-    protected static Chapter getChapter04WithParent() {
-        if (CHAPTER_04_WITH_PARENT == null) {
-            CHAPTER_04_WITH_PARENT = createChapterWithParent();
-        }
-        return CHAPTER_04_WITH_PARENT;
+    private static Chapter getChapter02Basic() {
+        return createChapter();
+    }
+
+    private static Chapter getChapter03Basic() {
+        return createChapter();
+    }
+
+    private static Chapter getChapter04WithParent() {
+        return createChapterWithParent();
     }
 
     private static Chapter createChapter() {

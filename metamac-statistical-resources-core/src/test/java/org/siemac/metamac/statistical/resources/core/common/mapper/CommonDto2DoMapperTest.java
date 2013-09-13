@@ -29,13 +29,13 @@ import org.siemac.metamac.core.common.conf.ConfigurationService;
 import org.siemac.metamac.core.common.constants.CoreCommonConstants;
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.dto.InternationalStringDto;
+import org.siemac.metamac.core.common.enume.domain.TypeExternalArtefactsEnum;
+import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
 import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
 import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItemRepository;
 import org.siemac.metamac.statistical.resources.core.common.domain.InternationalString;
 import org.siemac.metamac.statistical.resources.core.common.domain.InternationalStringRepository;
-import org.siemac.metamac.core.common.enume.domain.TypeExternalArtefactsEnum;
-import org.siemac.metamac.core.common.exception.MetamacException;
-import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResource;
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResourceRepository;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
@@ -46,7 +46,6 @@ import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersionRepository;
 import org.siemac.metamac.statistical.resources.core.utils.asserts.BaseAsserts;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesDtoMocks;
-import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesNotPersistedDoMocks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -59,23 +58,21 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class CommonDto2DoMapperTest extends StatisticalResourcesBaseTest {
 
-    private static final String                     CODE_01                       = "mock01";
-    private static final String                     CODE_02                       = "mock02";
-    private static final String                     URN_01                        = "lorem:ipsum:externalItem:mock01:01";
-    private static final String                     URN_02                        = "lorem:ipsum:externalItem:mock02:02";
-    private static final String                     METADATA_NAME                 = "LOREM_IPSUM";
+    private static final String                 CODE_01                       = "mock01";
+    private static final String                 CODE_02                       = "mock02";
+    private static final String                 URN_01                        = "lorem:ipsum:externalItem:mock01:01";
+    private static final String                 URN_02                        = "lorem:ipsum:externalItem:mock02:02";
+    private static final String                 METADATA_NAME                 = "LOREM_IPSUM";
 
-    protected ConfigurationService                  configurationService          = new ConfigurationServiceMockImpl();
-    private final ExternalItemRepository            externalItemRepository        = Mockito.mock(ExternalItemRepository.class);
-    private final InternationalStringRepository     internationalStringRepository = Mockito.mock(InternationalStringRepository.class);
-    private final RelatedResourceRepository         relatedResourceRepository     = Mockito.mock(RelatedResourceRepository.class);
-    private final DatasetVersionRepository          datasetVersionRepository      = Mockito.mock(DatasetVersionRepository.class);
-    private final PublicationVersionRepository      publicationVersionRepository  = Mockito.mock(PublicationVersionRepository.class);
-
-    private StatisticalResourcesNotPersistedDoMocks statisticalResourcesNotPersistedDoMocks = StatisticalResourcesNotPersistedDoMocks.getInstance();
+    protected ConfigurationService              configurationService          = new ConfigurationServiceMockImpl();
+    private final ExternalItemRepository        externalItemRepository        = Mockito.mock(ExternalItemRepository.class);
+    private final InternationalStringRepository internationalStringRepository = Mockito.mock(InternationalStringRepository.class);
+    private final RelatedResourceRepository     relatedResourceRepository     = Mockito.mock(RelatedResourceRepository.class);
+    private final DatasetVersionRepository      datasetVersionRepository      = Mockito.mock(DatasetVersionRepository.class);
+    private final PublicationVersionRepository  publicationVersionRepository  = Mockito.mock(PublicationVersionRepository.class);
 
     @Autowired
-    private CommonDto2DoMapper                      commonDto2DoMapper;
+    private CommonDto2DoMapper                  commonDto2DoMapper;
 
     @Before
     public void setRepositoriesToMapper() throws Exception {
@@ -549,7 +546,7 @@ public class CommonDto2DoMapperTest extends StatisticalResourcesBaseTest {
     }
 
     private RelatedResource createRelatedResourceLinkedToMockedDatasetVersion(String datasetVersionUrn) throws MetamacException {
-        RelatedResource resource = statisticalResourcesNotPersistedDoMocks.mockRelatedResourceLinkedToMockedDatasetVersion(datasetVersionUrn);
+        RelatedResource resource = notPersistedDoMocks.mockRelatedResourceLinkedToMockedDatasetVersion(datasetVersionUrn);
 
         DatasetVersion datasetVersion = resource.getDatasetVersion();
         Mockito.when(datasetVersionRepository.retrieveByUrn(datasetVersionUrn)).thenReturn(datasetVersion);

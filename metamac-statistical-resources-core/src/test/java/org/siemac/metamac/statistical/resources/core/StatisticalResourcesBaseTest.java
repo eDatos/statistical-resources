@@ -16,24 +16,53 @@ import org.siemac.metamac.statistical.resources.core.constants.StatisticalResour
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourcesRoleEnum;
 import org.siemac.metamac.statistical.resources.core.task.serviceimpl.TaskServiceImpl;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.configuration.MockAnnotationRule;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.ChapterMockFactory;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.CubeMockFactory;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetMockFactory;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasourceMockFactory;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationMockFactory;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryMockFactory;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.StatisticOfficialityMockFactory;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesNotPersistedDoMocks;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesPersistedDoMocks;
 import org.springframework.beans.factory.annotation.Value;
 
 public abstract class StatisticalResourcesBaseTest extends MetamacBaseTest {
 
-    protected static String   EMPTY           = StringUtils.EMPTY;
+    protected static String                                 EMPTY                           = StringUtils.EMPTY;
 
-    protected static Long     ID_NOT_EXISTS   = Long.valueOf(-1);
-    protected static String   URN_NOT_EXISTS  = "not_exists";
-    protected static String   CODE_NOT_EXISTS = "NOT_EXISTS";
+    protected static Long                                   ID_NOT_EXISTS                   = Long.valueOf(-1);
+    protected static String                                 URN_NOT_EXISTS                  = "not_exists";
+    protected static String                                 CODE_NOT_EXISTS                 = "NOT_EXISTS";
+
+    protected QueryMockFactory                              queryMockFactory                = QueryMockFactory.getInstance();
+    protected QueryVersionMockFactory                       queryVersionMockFactory         = QueryVersionMockFactory.getInstance();
+
+    protected PublicationMockFactory                        publicationMockFactory          = PublicationMockFactory.getInstance();
+    protected PublicationVersionMockFactory                 publicationVersionMockFactory   = PublicationVersionMockFactory.getInstance();
+    protected ChapterMockFactory                            chapterMockFactory              = ChapterMockFactory.getInstance();
+    protected CubeMockFactory                               cubeMockFactory                 = CubeMockFactory.getInstance();
+
+    protected DatasetMockFactory                            datasetMockFactory              = DatasetMockFactory.getInstance();
+    protected DatasetVersionMockFactory                     datasetVersionMockFactory       = DatasetVersionMockFactory.getInstance();
+    protected DatasourceMockFactory                         datasourceMockFactory           = DatasourceMockFactory.getInstance();
+
+    protected final StatisticalResourcesNotPersistedDoMocks notPersistedDoMocks             = StatisticalResourcesNotPersistedDoMocks.getInstance();
+    protected StatisticalResourcesPersistedDoMocks          persistedDoMocks                = StatisticalResourcesPersistedDoMocks.getInstance();
+
+    protected StatisticOfficialityMockFactory               statisticOfficialityMockFactory = StatisticOfficialityMockFactory.getInstance();
 
     @Value("${metamac.statistical_resources.db.provider}")
-    private String            databaseProvider;
+    private String                                          databaseProvider;
 
     @Rule
-    public MockAnnotationRule mockRule        = new MockAnnotationRule();
+    public MockAnnotationRule                               mockRule                        = new MockAnnotationRule();
 
     @Rule
-    public ExpectedException  thrown          = ExpectedException.none();
+    public ExpectedException                                thrown                          = ExpectedException.none();
 
     protected ServiceContext getServiceContextWithoutPrincipal() {
         return mockServiceContextWithoutPrincipal();

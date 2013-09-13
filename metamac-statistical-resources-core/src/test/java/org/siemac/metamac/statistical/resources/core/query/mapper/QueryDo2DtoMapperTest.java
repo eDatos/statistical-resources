@@ -38,10 +38,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class QueryDo2DtoMapperTest extends StatisticalResourcesBaseTest {
 
     @Autowired
-    private QueryDo2DtoMapper       queryDo2DtoMapper;
-
-    @Autowired
-    private QueryVersionMockFactory queryVersionMockFactory;
+    private QueryDo2DtoMapper queryDo2DtoMapper;
 
     @Test
     @MetamacMock(QUERY_VERSION_01_WITH_SELECTION_NAME)

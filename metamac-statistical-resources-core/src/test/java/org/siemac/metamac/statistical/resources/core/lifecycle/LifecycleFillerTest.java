@@ -33,9 +33,7 @@ import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.Stati
 
 public class LifecycleFillerTest extends StatisticalResourcesBaseTest {
 
-    private final LifecycleFiller                         lifecycleFiller                         = new LifecycleFiller();
-
-    private final StatisticalResourcesNotPersistedDoMocks statisticalResourcesNotPersistedDoMocks = StatisticalResourcesNotPersistedDoMocks.getInstance();
+    private final LifecycleFiller lifecycleFiller = new LifecycleFiller();
 
     @Before
     public void setUp() {
@@ -85,7 +83,7 @@ public class LifecycleFillerTest extends StatisticalResourcesBaseTest {
 
     @Test
     public void testLifeCycleResourceApplySendToPublishedActionsDatasetVersionWithoutPreviousVersion() throws Exception {
-        DatasetVersion resource = statisticalResourcesNotPersistedDoMocks.mockDatasetVersion();
+        DatasetVersion resource = persistedDoMocks.mockDatasetVersion();
         prepareToPublished(resource);
         resource.getSiemacMetadataStatisticalResource().setVersionLogic(StatisticalResourcesVersionUtils.INITIAL_VERSION);
 
@@ -95,7 +93,7 @@ public class LifecycleFillerTest extends StatisticalResourcesBaseTest {
 
     @Test
     public void testLifeCycleResourceApplySendToPublishedActionsPublicationVersionWithoutPreviousVersion() throws Exception {
-        PublicationVersion resource = statisticalResourcesNotPersistedDoMocks.mockPublicationVersion();
+        PublicationVersion resource = persistedDoMocks.mockPublicationVersion();
         prepareToPublished(resource);
         resource.getSiemacMetadataStatisticalResource().setVersionLogic(StatisticalResourcesVersionUtils.INITIAL_VERSION);
 
@@ -107,7 +105,7 @@ public class LifecycleFillerTest extends StatisticalResourcesBaseTest {
     public void testLifeCycleResourceApplySendToPublishedActionsDatasetVersionWithPreviousVersionErrorParameterRequired() throws Exception {
         expectedMetamacException(new MetamacException(ServiceExceptionType.PARAMETER_REQUIRED, ServiceExceptionParameters.PREVIOUS_VERSION));
 
-        DatasetVersion resource = statisticalResourcesNotPersistedDoMocks.mockDatasetVersion();
+        DatasetVersion resource = persistedDoMocks.mockDatasetVersion();
         prepareToPublished(resource);
         resource.getSiemacMetadataStatisticalResource().setVersionLogic("002.000");
 
@@ -119,7 +117,7 @@ public class LifecycleFillerTest extends StatisticalResourcesBaseTest {
     public void testLifeCycleResourceApplySendToPublishedActionsPublicationVersionWithPreviousVersionErrorParameterRequired() throws Exception {
         expectedMetamacException(new MetamacException(ServiceExceptionType.PARAMETER_REQUIRED, ServiceExceptionParameters.PREVIOUS_VERSION));
 
-        PublicationVersion resource = statisticalResourcesNotPersistedDoMocks.mockPublicationVersion();
+        PublicationVersion resource = persistedDoMocks.mockPublicationVersion();
         prepareToPublished(resource);
         resource.getSiemacMetadataStatisticalResource().setVersionLogic("002.000");
 
@@ -129,8 +127,8 @@ public class LifecycleFillerTest extends StatisticalResourcesBaseTest {
 
     @Test
     public void testLifeCycleResourceApplySendToPublishedCurrentResourceActionsDatasetVersionWithPreviousVersion() throws Exception {
-        DatasetVersion resource = statisticalResourcesNotPersistedDoMocks.mockDatasetVersion();
-        DatasetVersion previousResource = statisticalResourcesNotPersistedDoMocks.mockDatasetVersion();
+        DatasetVersion resource = persistedDoMocks.mockDatasetVersion();
+        DatasetVersion previousResource = persistedDoMocks.mockDatasetVersion();
 
         prepareToPublished(resource);
         createPublished(previousResource);
@@ -155,8 +153,8 @@ public class LifecycleFillerTest extends StatisticalResourcesBaseTest {
 
     @Test
     public void testLifeCycleResourceApplyVersioningNewResourceActions() throws Exception {
-        PublicationVersion resource = statisticalResourcesNotPersistedDoMocks.mockPublicationVersion();
-        PublicationVersion previousResource = statisticalResourcesNotPersistedDoMocks.mockPublicationVersion();
+        PublicationVersion resource = persistedDoMocks.mockPublicationVersion();
+        PublicationVersion previousResource = persistedDoMocks.mockPublicationVersion();
 
         createVersioned(resource);
         createPublished(previousResource);
@@ -176,8 +174,8 @@ public class LifecycleFillerTest extends StatisticalResourcesBaseTest {
 
     @Test
     public void testLifeCycleResourceApplyVersioningPreviousResourceActions() throws Exception {
-        PublicationVersion resource = statisticalResourcesNotPersistedDoMocks.mockPublicationVersion();
-        PublicationVersion previousResource = statisticalResourcesNotPersistedDoMocks.mockPublicationVersion();
+        PublicationVersion resource = persistedDoMocks.mockPublicationVersion();
+        PublicationVersion previousResource = persistedDoMocks.mockPublicationVersion();
 
         createVersioned(resource);
         createPublished(previousResource);

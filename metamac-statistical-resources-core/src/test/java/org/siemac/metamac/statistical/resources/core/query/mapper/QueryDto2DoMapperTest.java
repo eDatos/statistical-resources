@@ -26,9 +26,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class QueryDto2DoMapperTest extends StatisticalResourcesBaseTest {
 
     @Autowired
-    private DatasetVersionMockFactory datasetVersionMockFactory;
-    
-    @Autowired
     private QueryDto2DoMapper queryDto2DoMapper;
 
     @Test

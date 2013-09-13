@@ -14,8 +14,6 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.template
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.templates.HasSiemacMetadataMocks.mockHasSiemacMetadataPrepareToValidationRejected;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.templates.HasSiemacMetadataMocks.mockHasSiemacMetadataPublished;
 
-import java.lang.reflect.Field;
-
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.junit.After;
 import org.junit.Before;
@@ -33,9 +31,6 @@ import org.siemac.metamac.statistical.resources.core.base.domain.HasLifecycle;
 import org.siemac.metamac.statistical.resources.core.base.domain.HasSiemacMetadata;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
-import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesNotPersistedDoMocks;
-import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesPersistedDoMocks;
-import org.springframework.util.ReflectionUtils;
 
 /*
  * No spring context, we set the SUT (Software under test) dependencies with mocked objects. Unit testing style ;)
@@ -43,13 +38,11 @@ import org.springframework.util.ReflectionUtils;
 @RunWith(MockitoJUnitRunner.class)
 public class SiemacLifecycleFillerTest extends StatisticalResourcesBaseTest {
 
-    private StatisticalResourcesNotPersistedDoMocks statisticalResourcesNotPersistedDoMocks = StatisticalResourcesNotPersistedDoMocks.getInstance();
-
     @InjectMocks
-    private SiemacLifecycleFiller                   siemacLifecycleFiller                   = new SiemacLifecycleFiller();
+    private SiemacLifecycleFiller siemacLifecycleFiller = new SiemacLifecycleFiller();
 
     @Mock(answer = Answers.CALLS_REAL_METHODS)
-    private LifecycleFiller                         lifecycleFiller;
+    private LifecycleFiller       lifecycleFiller;
 
     @Before
     public void setUp() {
@@ -134,8 +127,8 @@ public class SiemacLifecycleFillerTest extends StatisticalResourcesBaseTest {
 
     @Test
     public void testSiemacResourceApplyVersioningActions() throws Exception {
-        PublicationVersion resource = statisticalResourcesNotPersistedDoMocks.mockPublicationVersion();
-        PublicationVersion previousResource = statisticalResourcesNotPersistedDoMocks.mockPublicationVersion();
+        PublicationVersion resource = notPersistedDoMocks.mockPublicationVersion();
+        PublicationVersion previousResource = notPersistedDoMocks.mockPublicationVersion();
 
         createVersioned(resource);
         createPublished(previousResource);

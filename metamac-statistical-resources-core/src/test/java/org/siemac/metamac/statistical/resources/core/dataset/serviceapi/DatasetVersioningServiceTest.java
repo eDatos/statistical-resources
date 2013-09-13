@@ -60,9 +60,6 @@ public class DatasetVersioningServiceTest extends StatisticalResourcesBaseTest {
     private static final String              TEMPORAL_CODE_COMPARE_FIELD = "identifier";
 
     @Autowired
-    private DatasetVersionMockFactory        datasetVersionMockFactory;
-
-    @Autowired
     @Qualifier("datasetLifecycleService")
     private LifecycleService<DatasetVersion> datasetVersionLifecycleService;
 

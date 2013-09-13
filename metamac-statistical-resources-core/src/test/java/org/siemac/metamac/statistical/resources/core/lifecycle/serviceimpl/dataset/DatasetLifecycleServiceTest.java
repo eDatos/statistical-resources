@@ -81,8 +81,6 @@ public class DatasetLifecycleServiceTest extends StatisticalResourcesBaseTest im
     @Mock
     private DatasetVersionRepository         datasetVersionRepository;
 
-    protected DatasetVersionMockFactory      datasetVersionMockFactory;
-
     protected DatasetService                 datasetService;
 
     @Mock
@@ -96,7 +94,6 @@ public class DatasetLifecycleServiceTest extends StatisticalResourcesBaseTest im
 
     @Before
     public void setUp() {
-        datasetVersionMockFactory = new DatasetVersionMockFactory();
         MockitoAnnotations.initMocks(this);
     }
 

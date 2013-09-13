@@ -20,8 +20,7 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_56_DRAFT_WITH_DATASOURCE_AND_QUERIES_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasourceMockFactory.DATASOURCE_01_BASIC_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasourceMockFactory.DATASOURCE_02_BASIC_NAME;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_29_SIMPLE_FOR_QUERY_07_DATASET_56_NAME;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_30_SIMPLE_FOR_QUERY_07_DATASET_56_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryMockFactory.QUERY_07_SIMPLE_MULTI_VERSION_NAME;
 
 import java.util.List;
 
@@ -47,10 +46,6 @@ import org.siemac.metamac.statistical.resources.core.utils.DataMockUtils;
 import org.siemac.metamac.statistical.resources.core.utils.TaskMockUtils;
 import org.siemac.metamac.statistical.resources.core.utils.asserts.BaseAsserts;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.configuration.MetamacMock;
-import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetMockFactory;
-import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory;
-import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasourceMockFactory;
-import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesNotPersistedDoMocks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -68,27 +63,16 @@ import com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceF
 public class DatasetServiceDatasourceManagementTest extends StatisticalResourcesBaseTest {
 
     @Autowired
-    private DatasetService                                datasetService;
+    private DatasetService                   datasetService;
 
     @Autowired
-    private DatasetVersionMockFactory                     datasetVersionMockFactory;
+    private DatasetRepositoriesServiceFacade datasetRepositoriesServiceFacade;
 
     @Autowired
-    private DatasetMockFactory                            datasetMockFactory;
+    private SrmRestInternalService           srmRestInternalService;
 
     @Autowired
-    private DatasourceMockFactory                         datasourceMockFactory;
-
-    @Autowired
-    private DatasetRepositoriesServiceFacade              datasetRepositoriesServiceFacade;
-
-    @Autowired
-    private SrmRestInternalService                        srmRestInternalService;
-
-    private final StatisticalResourcesNotPersistedDoMocks statisticalResourcesNotPersistedDoMocks = StatisticalResourcesNotPersistedDoMocks.getInstance();
-
-    @Autowired
-    private TaskService                                   taskService;
+    private TaskService                      taskService;
 
     @Before
     public void setUp() throws MetamacException {
@@ -113,7 +97,7 @@ public class DatasetServiceDatasourceManagementTest extends StatisticalResources
 
         mockDsdAndDataRepositorySimpleDimensions();
 
-        Datasource expected = statisticalResourcesNotPersistedDoMocks.mockDatasourceForPersist();
+        Datasource expected = notPersistedDoMocks.mockDatasourceForPersist();
         Datasource actual = datasetService.createDatasource(getServiceContextWithoutPrincipal(), datasetVersionUrn, expected);
         expected.setDatasetVersion(expectedDatasetVersion);
 
@@ -160,7 +144,7 @@ public class DatasetServiceDatasourceManagementTest extends StatisticalResources
         DatasetVersion expectedDatasetVersion = datasetVersionMockFactory.retrieveMock(datasetVersionMockName);
         String datasetVersionUrn = expectedDatasetVersion.getSiemacMetadataStatisticalResource().getUrn();
 
-        Datasource expected = statisticalResourcesNotPersistedDoMocks.mockDatasourceForPersist();
+        Datasource expected = notPersistedDoMocks.mockDatasourceForPersist();
 
         expectedMetamacException(new MetamacException(ServiceExceptionType.DATASET_VERSION_CANT_ALTER_DATASOURCES, datasetVersionUrn));
 
@@ -172,7 +156,7 @@ public class DatasetServiceDatasourceManagementTest extends StatisticalResources
         DatasetVersion expectedDatasetVersion = datasetVersionMockFactory.retrieveMock(datasetVersionMockName);
         String datasetVersionUrn = expectedDatasetVersion.getSiemacMetadataStatisticalResource().getUrn();
 
-        Datasource expected = statisticalResourcesNotPersistedDoMocks.mockDatasourceForPersist();
+        Datasource expected = notPersistedDoMocks.mockDatasourceForPersist();
 
         Datasource actual = datasetService.createDatasource(getServiceContextWithoutPrincipal(), datasetVersionUrn, expected);
         assertNotNull(actual);
@@ -187,7 +171,7 @@ public class DatasetServiceDatasourceManagementTest extends StatisticalResources
         mockDsdAndDataRepositorySimpleDimensions();
 
         DateTime newNextUpdate = new DateTime().plusWeeks(1);
-        Datasource expected = statisticalResourcesNotPersistedDoMocks.mockDatasourceForPersist();
+        Datasource expected = notPersistedDoMocks.mockDatasourceForPersist();
         expected.setDateNextUpdate(newNextUpdate);
 
         datasetService.createDatasource(getServiceContextWithoutPrincipal(), datasetVersionUrn, expected);
@@ -207,7 +191,7 @@ public class DatasetServiceDatasourceManagementTest extends StatisticalResources
 
         DateTime oldNextUpdate = expectedDatasetVersion.getDateNextUpdate();
         DateTime newNextUpdate = new DateTime().plusYears(1);
-        Datasource expected = statisticalResourcesNotPersistedDoMocks.mockDatasourceForPersist();
+        Datasource expected = notPersistedDoMocks.mockDatasourceForPersist();
         expected.setDateNextUpdate(newNextUpdate);
 
         datasetService.createDatasource(getServiceContextWithoutPrincipal(), datasetVersionUrn, expected);
@@ -227,7 +211,7 @@ public class DatasetServiceDatasourceManagementTest extends StatisticalResources
 
         DateTime oldNextUpdate = expectedDatasetVersion.getDateNextUpdate();
         DateTime newNextUpdate = new DateTime().minusMonths(1);
-        Datasource expected = statisticalResourcesNotPersistedDoMocks.mockDatasourceForPersist();
+        Datasource expected = notPersistedDoMocks.mockDatasourceForPersist();
         expected.setDateNextUpdate(newNextUpdate);
 
         datasetService.createDatasource(getServiceContextWithoutPrincipal(), datasetVersionUrn, expected);
@@ -247,7 +231,7 @@ public class DatasetServiceDatasourceManagementTest extends StatisticalResources
 
         DateTime oldNextUpdate = expectedDatasetVersion.getDateNextUpdate();
         DateTime nextUpdate = new DateTime().plusWeeks(1);
-        Datasource expected = statisticalResourcesNotPersistedDoMocks.mockDatasourceForPersist();
+        Datasource expected = notPersistedDoMocks.mockDatasourceForPersist();
         expected.setDateNextUpdate(nextUpdate);
 
         datasetService.createDatasource(getServiceContextWithoutPrincipal(), datasetVersionUrn, expected);
@@ -266,7 +250,7 @@ public class DatasetServiceDatasourceManagementTest extends StatisticalResources
 
         expectedMetamacException(new MetamacException(ServiceExceptionType.METADATA_REQUIRED, ServiceExceptionParameters.DATASOURCE__IDENTIFIABLE_STATISTICAL_RESOURCE));
 
-        Datasource expected = statisticalResourcesNotPersistedDoMocks.mockDatasourceWithIdentifiableAndDatasetVersionNull(expectedDatasetVersion);
+        Datasource expected = notPersistedDoMocks.mockDatasourceWithIdentifiableAndDatasetVersionNull(expectedDatasetVersion);
         datasetService.createDatasource(getServiceContextWithoutPrincipal(), datasetVersionUrn, expected);
     }
 
@@ -280,7 +264,7 @@ public class DatasetServiceDatasourceManagementTest extends StatisticalResources
 
         Datasource template = new Datasource();
         template.setDatasetVersion(expectedDatasetVersion);
-        Datasource expected = statisticalResourcesNotPersistedDoMocks.mockDatasource(template);
+        Datasource expected = notPersistedDoMocks.mockDatasource(template);
         datasetService.createDatasource(getServiceContextWithoutPrincipal(), datasetVersionUrn, expected);
     }
 
@@ -407,7 +391,7 @@ public class DatasetServiceDatasourceManagementTest extends StatisticalResources
     // ------------------------------------------------------------------------
 
     @Test
-    @MetamacMock({DATASET_VERSION_56_DRAFT_WITH_DATASOURCE_AND_QUERIES_NAME, QUERY_VERSION_29_SIMPLE_FOR_QUERY_07_DATASET_56_NAME, QUERY_VERSION_30_SIMPLE_FOR_QUERY_07_DATASET_56_NAME})
+    @MetamacMock(QUERY_07_SIMPLE_MULTI_VERSION_NAME)
     public void testDeleteDatasourceInDatasetVersionWithQueries() throws Exception {
         DatasetVersion datasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_56_DRAFT_WITH_DATASOURCE_AND_QUERIES_NAME);
 

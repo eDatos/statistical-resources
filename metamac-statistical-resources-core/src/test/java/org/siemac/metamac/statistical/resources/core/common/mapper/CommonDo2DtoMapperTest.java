@@ -21,15 +21,14 @@ import org.mockito.Mockito;
 import org.siemac.metamac.common.test.utils.MetamacAsserts.MapperEnum;
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.dto.InternationalStringDto;
-import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
-import org.siemac.metamac.statistical.resources.core.common.domain.InternationalString;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
+import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
+import org.siemac.metamac.statistical.resources.core.common.domain.InternationalString;
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResource;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionRepository;
 import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
-import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesNotPersistedDoMocks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -42,15 +41,13 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class CommonDo2DtoMapperTest extends StatisticalResourcesBaseTest {
 
-    private static final String           URN_01                        = "lorem:ipsum:externalItem:mock:01";
-    private static final String           URN_02                        = "lorem:ipsum:externalItem:mock:02";
-    
+    private static final String      URN_01                   = "lorem:ipsum:externalItem:mock:01";
+    private static final String      URN_02                   = "lorem:ipsum:externalItem:mock:02";
+
     @Autowired
-    private CommonDo2DtoMapper  commonDo2DtoMapper;
-    
-    private DatasetVersionRepository      datasetVersionRepository      = Mockito.mock(DatasetVersionRepository.class);
-    
-    private StatisticalResourcesNotPersistedDoMocks statisticalResourcesNotPersistedDoMocks = StatisticalResourcesNotPersistedDoMocks.getInstance();
+    private CommonDo2DtoMapper       commonDo2DtoMapper;
+
+    private DatasetVersionRepository datasetVersionRepository = Mockito.mock(DatasetVersionRepository.class);
 
     // ------------------------------------------------------------
     // INTERNATIONAL STRINGS
@@ -145,7 +142,7 @@ public class CommonDo2DtoMapperTest extends StatisticalResourcesBaseTest {
         List<RelatedResource> resources = new ArrayList<RelatedResource>();
         resources.add(createRelatedResourceLinkedToMockedDatasetVersion(URN_01));
         resources.add(createRelatedResourceLinkedToMockedDatasetVersion(URN_02));
-        
+
         testRelatedResourceDoCollectionToDtoCollection(resources);
     }
 
@@ -159,9 +156,9 @@ public class CommonDo2DtoMapperTest extends StatisticalResourcesBaseTest {
         assertEqualsRelatedResourceCollectionMapper(entities, result);
 
     }
-    
+
     private RelatedResource createRelatedResourceLinkedToMockedDatasetVersion(String datasetVersionUrn) throws MetamacException {
-        RelatedResource resource = statisticalResourcesNotPersistedDoMocks.mockRelatedResourceLinkedToMockedDatasetVersion(datasetVersionUrn);
+        RelatedResource resource = notPersistedDoMocks.mockRelatedResourceLinkedToMockedDatasetVersion(datasetVersionUrn);
         DatasetVersion datasetVersion = resource.getDatasetVersion();
         Mockito.when(datasetVersionRepository.retrieveByUrn(datasetVersionUrn)).thenReturn(datasetVersion);
         return resource;

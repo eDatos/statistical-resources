@@ -34,9 +34,6 @@ public class CodeDimensionRepositoryTest extends StatisticalResourcesBaseTest im
     @Autowired
     protected CodeDimensionRepository codeDimensionRepository;
 
-    @Autowired
-    private DatasetVersionMockFactory datasetVersionMockFactory;
-
     @Override
     @Test
     @MetamacMock(DATASET_VERSION_27_WITH_COVERAGE_FILLED_NAME)

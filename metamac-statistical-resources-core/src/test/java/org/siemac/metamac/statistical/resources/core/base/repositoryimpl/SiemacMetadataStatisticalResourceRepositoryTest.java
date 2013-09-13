@@ -35,12 +35,6 @@ public class SiemacMetadataStatisticalResourceRepositoryTest extends Statistical
     @Autowired
     protected SiemacMetadataStatisticalResourceRepository siemacMetadataStatisticalResourceRepository;
 
-    @Autowired
-    private DatasetVersionMockFactory                     datasetVersionMockFactory;
-
-    @Autowired
-    private PublicationVersionMockFactory                 publicationVersionMockFactory;
-
     @Override
     @Test
     @MetamacMock({DATASET_VERSION_08_VALID_CODE_000002_NAME, DATASET_VERSION_07_VALID_CODE_000001_NAME})
@@ -95,7 +89,7 @@ public class SiemacMetadataStatisticalResourceRepositoryTest extends Statistical
     public void testRetrieveIsReplacedBy() throws Exception {
         // TESTED somewhere else
     }
-    
+
     @Override
     public void testRetrieveIsReplacedByOnlyLastPublished() throws Exception {
         // TESTED somewhere else

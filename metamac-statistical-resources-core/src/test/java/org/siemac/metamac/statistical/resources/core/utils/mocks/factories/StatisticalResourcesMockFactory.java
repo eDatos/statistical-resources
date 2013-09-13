@@ -1,13 +1,18 @@
 package org.siemac.metamac.statistical.resources.core.utils.mocks.factories;
 
-import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
+import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
+import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
+import org.siemac.metamac.statistical.resources.core.query.domain.Query;
+import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.configuration.MockDescriptor;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.configuration.MockFactory;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesPersistedDoMocks;
-
-import com.arte.libs.lang.ObjectUtils;
 
 public abstract class StatisticalResourcesMockFactory<EntityMock> extends MockFactory<EntityMock> {
 
@@ -23,25 +28,64 @@ public abstract class StatisticalResourcesMockFactory<EntityMock> extends MockFa
         return StatisticalResourcesPersistedDoMocks.getInstance();
     }
 
-    @SuppressWarnings({"rawtypes", "unchecked"})
-    public EntityMock retrieveMock(String mockName) {
-        EntityMock templateInstance;
-        try {
-            // This is the only way to know what is the real class of the parameter EntityMock
-            // For more information http://stackoverflow.com/a/75345/1259208
-            templateInstance = (EntityMock) ((Class) ((ParameterizedType) this.getClass().getGenericSuperclass()).getActualTypeArguments()[0]).newInstance();
-        } catch (Exception e) {
-            throw new RuntimeException("Error getting instance from generic", e);
-        }
-        EntityMock mock = getMock(mockName);
-        return ObjectUtils.deepCopyInParent(mock, templateInstance);
+    protected static Dataset getDatasetMock(String id) {
+        return DatasetMockFactory.getInstance().getMock(id);
     }
 
-    public List<EntityMock> retrieveMocks(String... names) {
-        List<EntityMock> list = new ArrayList<EntityMock>();
-        for (String name : names) {
-            list.add(retrieveMock(name));
-        }
-        return list;
+    protected static Query getQueryMock(String id) {
+        return QueryMockFactory.getInstance().getMock(id);
     }
+
+    protected static MockDescriptor getDatasetMockDescriptor(String id) {
+        return DatasetMockFactory.getInstance().getMockWithDependencies(id);
+    }
+
+    protected static MockDescriptor getPublicationMockDescriptor(String id) {
+        return PublicationMockFactory.getInstance().getMockWithDependencies(id);
+    }
+
+    protected static MockDescriptor getQueryMockDescriptor(String id) {
+        return QueryMockFactory.getInstance().getMockWithDependencies(id);
+    }
+
+    protected static DatasetVersion getDatasetVersionMock(String id) {
+        return DatasetVersionMockFactory.getInstance().getMock(id);
+    }
+
+    protected static QueryVersion getQueryVersionMock(String id) {
+        return QueryVersionMockFactory.getInstance().getMock(id);
+    }
+
+    protected static Datasource getDatasourceMock(String id) {
+        return DatasourceMockFactory.getInstance().getMock(id);
+    }
+
+    protected static PublicationVersion getPublicationVersionMock(String id) {
+        return PublicationVersionMockFactory.getInstance().getMock(id);
+    }
+
+    protected static void registerDatasetMock(String id, Dataset dataset) {
+        DatasetMockFactory.getInstance().registerMock(id, dataset);
+    }
+
+    protected static void registerQueryMock(String id, Query query) {
+        QueryMockFactory.getInstance().registerMock(id, query);
+    }
+
+    protected static void registerDatasetVersionMock(String id, DatasetVersion datasetVersion) {
+        DatasetVersionMockFactory.getInstance().registerMock(id, datasetVersion);
+    }
+
+    protected static void registerQueryVersionMock(String id, QueryVersion queryVersion) {
+        QueryVersionMockFactory.getInstance().registerMock(id, queryVersion);
+    }
+
+    protected static void registerPublicationVersionMock(String id, PublicationVersion publicationVersion) {
+        PublicationVersionMockFactory.getInstance().registerMock(id, publicationVersion);
+    }
+
+    protected static List<Object> buildObjectList(Object... objs) {
+        return new ArrayList<Object>(Arrays.asList(objs));
+    }
+
 }

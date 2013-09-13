@@ -28,9 +28,8 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_56_DRAFT_WITH_DATASOURCE_AND_QUERIES_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_67_WITH_DATASOURCES_AND_COMPUTED_FIELDS_FILLED_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_68_WITH_DATASOURCES_AND_COMPUTED_FIELDS_FILLED_AND_USER_MODIFIED_DATE_NEXT_UPDATE_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryMockFactory.QUERY_07_SIMPLE_MULTI_VERSION_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_01_WITH_SELECTION_NAME;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_29_SIMPLE_FOR_QUERY_07_DATASET_56_NAME;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_30_SIMPLE_FOR_QUERY_07_DATASET_56_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.StatisticOfficialityMockFactory.STATISTIC_OFFICIALITY_01_BASIC_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.StatisticOfficialityMockFactory.STATISTIC_OFFICIALITY_02_BASIC_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesDoMocks.mockCodeDimensionsWithIdentifiers;
@@ -80,9 +79,6 @@ import org.siemac.metamac.statistical.resources.core.utils.TaskMockUtils;
 import org.siemac.metamac.statistical.resources.core.utils.asserts.BaseAsserts;
 import org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.configuration.MetamacMock;
-import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetMockFactory;
-import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory;
-import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesDoMocks;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesNotPersistedDoMocks;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -102,30 +98,19 @@ import com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceF
 public class DatasetServiceTest extends StatisticalResourcesBaseTest implements DatasetServiceTestBase {
 
     @Autowired
-    private DatasetService                                datasetService;
+    private DatasetService                   datasetService;
 
     @Autowired
-    private DatasetVersionMockFactory                     datasetVersionMockFactory;
+    private DatasetVersionRepository         datasetVersionRepository;
 
     @Autowired
-    private DatasetVersionRepository                      datasetVersionRepository;
+    private DatasetRepositoriesServiceFacade datasetRepositoriesServiceFacade;
 
     @Autowired
-    private DatasetMockFactory                            datasetMockFactory;
+    private SrmRestInternalService           srmRestInternalService;
 
     @Autowired
-    private QueryVersionMockFactory                       queryMockFactory;
-
-    @Autowired
-    private DatasetRepositoriesServiceFacade              datasetRepositoriesServiceFacade;
-
-    @Autowired
-    private SrmRestInternalService                        srmRestInternalService;
-
-    private final StatisticalResourcesNotPersistedDoMocks persistedMocks = StatisticalResourcesNotPersistedDoMocks.getInstance();
-
-    @Autowired
-    private TaskService                                   taskService;
+    private TaskService                      taskService;
 
     @Before
     public void setUp() throws MetamacException {
@@ -175,7 +160,7 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
     @Override
     @Test
     public void testCreateDatasetVersion() throws Exception {
-        DatasetVersion expected = persistedMocks.mockDatasetVersion();
+        DatasetVersion expected = notPersistedDoMocks.mockDatasetVersion();
         ExternalItem statisticalOperation = StatisticalResourcesNotPersistedDoMocks.mockStatisticalOperationExternalItem();
 
         DatasetVersion actual = datasetService.createDatasetVersion(getServiceContextWithoutPrincipal(), expected, statisticalOperation);
@@ -198,7 +183,7 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
         String operationCode = datasetVersionOper1.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode();
 
         ExternalItem statisticalOperation = StatisticalResourcesNotPersistedDoMocks.mockStatisticalOperationExternalItem(operationCode);
-        DatasetVersion expected = persistedMocks.mockDatasetVersion();
+        DatasetVersion expected = notPersistedDoMocks.mockDatasetVersion();
 
         DatasetVersion actual = datasetService.createDatasetVersion(getServiceContextWithoutPrincipal(), expected, statisticalOperation);
         assertEquals("001.000", actual.getSiemacMetadataStatisticalResource().getVersionLogic());
@@ -216,7 +201,7 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
         String operationCode = datasetVersionOper1.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode();
         {
             ExternalItem statisticalOperation = StatisticalResourcesNotPersistedDoMocks.mockStatisticalOperationExternalItem(operationCode);
-            DatasetVersion expected = persistedMocks.mockDatasetVersion();
+            DatasetVersion expected = notPersistedDoMocks.mockDatasetVersion();
             DatasetVersion actual = datasetService.createDatasetVersion(getServiceContextWithoutPrincipal(), expected, statisticalOperation);
             assertEquals("001.000", actual.getSiemacMetadataStatisticalResource().getVersionLogic());
             assertEquals(operationCode + "_000004", actual.getSiemacMetadataStatisticalResource().getCode());
@@ -226,7 +211,7 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
         }
         {
             ExternalItem statisticalOperation = StatisticalResourcesNotPersistedDoMocks.mockStatisticalOperationExternalItem(operationCode);
-            DatasetVersion expected = persistedMocks.mockDatasetVersion();
+            DatasetVersion expected = notPersistedDoMocks.mockDatasetVersion();
             DatasetVersion actual = datasetService.createDatasetVersion(getServiceContextWithoutPrincipal(), expected, statisticalOperation);
             assertEquals("001.000", actual.getSiemacMetadataStatisticalResource().getVersionLogic());
             assertEquals(operationCode + "_000005", actual.getSiemacMetadataStatisticalResource().getCode());
@@ -245,7 +230,7 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
 
         String operationCode = datasetVersionOper1.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode();
         ExternalItem statisticalOperation = StatisticalResourcesNotPersistedDoMocks.mockStatisticalOperationExternalItem(operationCode);
-        datasetService.createDatasetVersion(getServiceContextWithoutPrincipal(), persistedMocks.mockDatasetVersion(), statisticalOperation);
+        datasetService.createDatasetVersion(getServiceContextWithoutPrincipal(), notPersistedDoMocks.mockDatasetVersion(), statisticalOperation);
     }
 
     @Test
@@ -260,7 +245,7 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
     public void testCreateDatasetVersionErrorParameterStatisticalOperationRequired() throws Exception {
         expectedMetamacException(new MetamacException(ServiceExceptionType.PARAMETER_REQUIRED, ServiceExceptionParameters.STATISTICAL_OPERATION));
 
-        DatasetVersion expected = persistedMocks.mockDatasetVersion();
+        DatasetVersion expected = notPersistedDoMocks.mockDatasetVersion();
         datasetService.createDatasetVersion(getServiceContextWithoutPrincipal(), expected, null);
     }
 
@@ -268,7 +253,7 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
     public void testCreateDatasetVersionErrorMetadataSiemacStatisticalResourceRequired() throws Exception {
         expectedMetamacException(new MetamacException(ServiceExceptionType.METADATA_REQUIRED, ServiceExceptionParameters.DATASET_VERSION__SIEMAC_METADATA_STATISTICAL_RESOURCE));
 
-        DatasetVersion expected = persistedMocks.mockDatasetVersionWithNullableSiemacStatisticalResource();
+        DatasetVersion expected = notPersistedDoMocks.mockDatasetVersionWithNullableSiemacStatisticalResource();
         ExternalItem statisticalOperation = StatisticalResourcesNotPersistedDoMocks.mockStatisticalOperationExternalItem();
 
         datasetService.createDatasetVersion(getServiceContextWithoutPrincipal(), expected, statisticalOperation);
@@ -281,15 +266,15 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
     public void testUpdateDatasetVersion() throws Exception {
         DatasetVersion expected = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_01_BASIC_NAME);
 
-        expected.getSiemacMetadataStatisticalResource().setTitle(persistedMocks.mockInternationalString());
-        expected.getSiemacMetadataStatisticalResource().setDescription(persistedMocks.mockInternationalString());
+        expected.getSiemacMetadataStatisticalResource().setTitle(notPersistedDoMocks.mockInternationalString());
+        expected.getSiemacMetadataStatisticalResource().setDescription(notPersistedDoMocks.mockInternationalString());
 
         DatasetVersion actual = datasetService.updateDatasetVersion(getServiceContextWithoutPrincipal(), expected);
         assertEqualsDatasetVersion(expected, actual);
     }
 
     @Test
-    @MetamacMock({DATASET_VERSION_56_DRAFT_WITH_DATASOURCE_AND_QUERIES_NAME, QUERY_VERSION_29_SIMPLE_FOR_QUERY_07_DATASET_56_NAME, QUERY_VERSION_30_SIMPLE_FOR_QUERY_07_DATASET_56_NAME})
+    @MetamacMock(QUERY_07_SIMPLE_MULTI_VERSION_NAME)
     public void testUpdateDatasetVersionChangeDsdWithQueriesError() throws Exception {
         DatasetVersion updatedDataset = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_56_DRAFT_WITH_DATASOURCE_AND_QUERIES_NAME);
         updatedDataset.setRelatedDsdChanged(true);
@@ -308,8 +293,8 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
 
         mockTaskInProgressForResource(datasetVersionUrn, true);
 
-        expected.getSiemacMetadataStatisticalResource().setTitle(persistedMocks.mockInternationalString());
-        expected.getSiemacMetadataStatisticalResource().setDescription(persistedMocks.mockInternationalString());
+        expected.getSiemacMetadataStatisticalResource().setTitle(notPersistedDoMocks.mockInternationalString());
+        expected.getSiemacMetadataStatisticalResource().setDescription(notPersistedDoMocks.mockInternationalString());
 
         expectedMetamacException(new MetamacException(ServiceExceptionType.TASKS_IN_PROGRESS, datasetVersionUrn));
 
@@ -586,7 +571,7 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
     public void testDeleteDatasetVersionErrorQueryRelated() throws Exception {
         thrown.expect(PersistenceException.class);
 
-        String urnDatasetVersion = queryMockFactory.retrieveMock(QUERY_VERSION_01_WITH_SELECTION_NAME).getDatasetVersion().getSiemacMetadataStatisticalResource().getUrn();
+        String urnDatasetVersion = queryVersionMockFactory.retrieveMock(QUERY_VERSION_01_WITH_SELECTION_NAME).getDatasetVersion().getSiemacMetadataStatisticalResource().getUrn();
         datasetService.deleteDatasetVersion(getServiceContextWithoutPrincipal(), urnDatasetVersion);
     }
 

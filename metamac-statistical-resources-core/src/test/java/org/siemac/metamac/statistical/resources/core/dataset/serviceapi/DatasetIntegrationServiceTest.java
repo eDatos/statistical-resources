@@ -7,15 +7,14 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
+import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
 import org.siemac.metamac.statistical.resources.core.invocation.service.SrmRestInternalService;
 import org.siemac.metamac.statistical.resources.core.utils.DataMockUtils;
 import org.siemac.metamac.statistical.resources.core.utils.asserts.CommonAsserts;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.configuration.MetamacMock;
-import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesNotPersistedDoMocks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -26,24 +25,20 @@ import org.springframework.transaction.annotation.Transactional;
 import com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceFacade;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"classpath:spring/statistical-resources/include/dataset-repository-mockito.xml", "classpath:spring/statistical-resources/include/rest-services-mockito.xml", "classpath:spring/statistical-resources/applicationContext-test.xml"})
+@ContextConfiguration(locations = {"classpath:spring/statistical-resources/include/dataset-repository-mockito.xml", "classpath:spring/statistical-resources/include/rest-services-mockito.xml",
+        "classpath:spring/statistical-resources/applicationContext-test.xml"})
 @TransactionConfiguration(transactionManager = "txManager", defaultRollback = true)
 @Transactional
 public class DatasetIntegrationServiceTest extends StatisticalResourcesBaseTest {
 
     @Autowired
-    private DatasetService                          datasetService;
+    private DatasetService                   datasetService;
 
     @Autowired
-    private DatasetVersionMockFactory               datasetVersionMockFactory;
-
-    private StatisticalResourcesNotPersistedDoMocks statisticalResourcesNotPersistedDoMocks = StatisticalResourcesNotPersistedDoMocks.getInstance();
+    private DatasetRepositoriesServiceFacade datasetRepositoriesServiceFacade;
 
     @Autowired
-    private DatasetRepositoriesServiceFacade        datasetRepositoriesServiceFacade;
-
-    @Autowired
-    private SrmRestInternalService                  srmRestInternalService;
+    private SrmRestInternalService           srmRestInternalService;
 
     // ------------------------------------------------------------------------
     // DATASOURCES
@@ -54,7 +49,7 @@ public class DatasetIntegrationServiceTest extends StatisticalResourcesBaseTest 
     public void testCreateAndUpdateDatasourceMustHaveFilledStatisticalOperation() throws Exception {
         mockDsdAndDataRepositorySimpleDimensions();
 
-        Datasource datasourceBeforeCreate = statisticalResourcesNotPersistedDoMocks.mockDatasourceForPersist();
+        Datasource datasourceBeforeCreate = notPersistedDoMocks.mockDatasourceForPersist();
         assertNull(datasourceBeforeCreate.getIdentifiableStatisticalResource().getStatisticalOperation());
 
         Datasource datasourceAfterCreate = datasetService.createDatasource(getServiceContextWithoutPrincipal(), datasetVersionMockFactory.retrieveMock(DATASET_VERSION_01_BASIC_NAME)
@@ -77,7 +72,7 @@ public class DatasetIntegrationServiceTest extends StatisticalResourcesBaseTest 
     public void testCreateAndUpdateDatasetMustHaveFilledStatisticalOperation() throws Exception {
         ExternalItem statisticalOperation = StatisticalResourcesNotPersistedDoMocks.mockStatisticalOperationExternalItem();
 
-        DatasetVersion datasetBeforeCreate = statisticalResourcesNotPersistedDoMocks.mockDatasetVersion();
+        DatasetVersion datasetBeforeCreate = notPersistedDoMocks.mockDatasetVersion();
         assertNull(datasetBeforeCreate.getDataset());
 
         DatasetVersion datasetAfterCreate = datasetService.createDatasetVersion(getServiceContextWithoutPrincipal(), datasetBeforeCreate, statisticalOperation);
@@ -98,7 +93,7 @@ public class DatasetIntegrationServiceTest extends StatisticalResourcesBaseTest 
     public void testCreateAndUpdateDatasetVersionMustHaveFilledStatisticalOperation() throws Exception {
         ExternalItem statisticalOperation = StatisticalResourcesNotPersistedDoMocks.mockStatisticalOperationExternalItem();
 
-        DatasetVersion datasetBeforeCreate = statisticalResourcesNotPersistedDoMocks.mockDatasetVersion();
+        DatasetVersion datasetBeforeCreate = notPersistedDoMocks.mockDatasetVersion();
         assertNull(datasetBeforeCreate.getSiemacMetadataStatisticalResource().getStatisticalOperation());
 
         DatasetVersion datasetAfterCreate = datasetService.createDatasetVersion(getServiceContextWithoutPrincipal(), datasetBeforeCreate, statisticalOperation);

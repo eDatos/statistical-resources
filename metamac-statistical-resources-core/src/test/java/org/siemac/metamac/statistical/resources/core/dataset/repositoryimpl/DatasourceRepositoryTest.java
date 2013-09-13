@@ -26,10 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class DatasourceRepositoryTest extends StatisticalResourcesBaseTest implements DatasourceRepositoryTestBase {
 
     @Autowired
-    private DatasourceRepository  datasourceRepository;
-
-    @Autowired
-    private DatasourceMockFactory datasourceMockFactory;
+    private DatasourceRepository datasourceRepository;
 
     @Override
     @Test

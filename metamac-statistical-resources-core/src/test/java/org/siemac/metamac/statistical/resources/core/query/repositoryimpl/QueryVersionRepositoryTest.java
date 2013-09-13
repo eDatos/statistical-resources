@@ -42,10 +42,6 @@ import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersionRe
 import org.siemac.metamac.statistical.resources.core.utils.asserts.CommonAsserts;
 import org.siemac.metamac.statistical.resources.core.utils.asserts.QueryAsserts;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.configuration.MetamacMock;
-import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory;
-import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryMockFactory;
-import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory;
-import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesNotPersistedDoMocks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate3.HibernateSystemException;
 import org.springframework.test.annotation.Rollback;
@@ -61,18 +57,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class QueryVersionRepositoryTest extends StatisticalResourcesBaseTest implements QueryVersionRepositoryTestBase {
 
     @Autowired
-    protected QueryVersionRepository                queryVersionRepository;
-
-    @Autowired
-    private QueryVersionMockFactory                 queryVersionMockFactory;
-
-    @Autowired
-    private QueryMockFactory                        queryMockFactory;
-
-    private StatisticalResourcesNotPersistedDoMocks statisticalResourcesNotPersistedDoMocks = StatisticalResourcesNotPersistedDoMocks.getInstance();
-
-    @Autowired
-    private DatasetVersionMockFactory               datasetVersionMockFactory;
+    protected QueryVersionRepository queryVersionRepository;
 
     @Override
     @Test
@@ -97,7 +82,7 @@ public class QueryVersionRepositoryTest extends StatisticalResourcesBaseTest imp
         thrown.expect(HibernateSystemException.class);
 
         Query query = queryMockFactory.retrieveMock(QUERY_01_SIMPLE_NAME);
-        QueryVersion queryVersion = statisticalResourcesNotPersistedDoMocks.mockQueryVersionWithDatasetVersion(datasetVersionMockFactory.retrieveMock(DATASET_VERSION_06_FOR_QUERIES_NAME), true);
+        QueryVersion queryVersion = notPersistedDoMocks.mockQueryVersionWithDatasetVersion(datasetVersionMockFactory.retrieveMock(DATASET_VERSION_06_FOR_QUERIES_NAME), true);
 
         // Set attributes that normally sets THE service and can not be null in database
         queryVersion.setStatus(QueryStatusEnum.ACTIVE);
@@ -156,7 +141,7 @@ public class QueryVersionRepositoryTest extends StatisticalResourcesBaseTest imp
         thrown.expect(HibernateSystemException.class);
 
         Query query = queryMockFactory.retrieveMock(QUERY_01_SIMPLE_NAME);
-        QueryVersion queryVersion = statisticalResourcesNotPersistedDoMocks.mockQueryVersionWithDatasetVersion(datasetVersionMockFactory.retrieveMock(DATASET_VERSION_06_FOR_QUERIES_NAME), true);
+        QueryVersion queryVersion = notPersistedDoMocks.mockQueryVersionWithDatasetVersion(datasetVersionMockFactory.retrieveMock(DATASET_VERSION_06_FOR_QUERIES_NAME), true);
 
         // Set attributes that normally sets de service and can not be null in database
         queryVersion.setStatus(QueryStatusEnum.ACTIVE);
@@ -305,5 +290,18 @@ public class QueryVersionRepositoryTest extends StatisticalResourcesBaseTest imp
             RelatedResourceResult resource = queryVersionRepository.retrieveIsReplacedByVersion(secondVersion);
             assertNull(resource);
         }
+    }
+
+    @Override
+    // Query in Draft
+    public void testRetrieveIsPartOf() throws Exception {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void testRetrieveIsPartOfOnlyLastPublished() throws Exception {
+        // TODO Auto-generated method stub
+
     }
 }

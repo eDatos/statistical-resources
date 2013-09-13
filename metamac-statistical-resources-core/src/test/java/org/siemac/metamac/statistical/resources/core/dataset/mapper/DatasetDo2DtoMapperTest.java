@@ -46,16 +46,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class DatasetDo2DtoMapperTest extends StatisticalResourcesBaseTest {
 
     @Autowired
-    private DatasetDo2DtoMapper             datasetDo2DtoMapper;
-
-    @Autowired
-    private DatasetVersionMockFactory       datasetVersionMockFactory;
-
-    @Autowired
-    private DatasourceMockFactory           datasourceMockFactory;
-
-    @Autowired
-    private StatisticOfficialityMockFactory statisticOfficialityMockFactory;
+    private DatasetDo2DtoMapper datasetDo2DtoMapper;
 
     @Test
     @MetamacMock(DATASOURCE_01_BASIC_NAME)

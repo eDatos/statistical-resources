@@ -58,16 +58,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class PublicationDo2DtoMapperTest extends StatisticalResourcesBaseTest {
 
     @Autowired
-    private PublicationDo2DtoMapper       publicationDo2DtoMapper;
-
-    @Autowired
-    private PublicationVersionMockFactory publicationVersionMockFactory;
-
-    @Autowired
-    private ChapterMockFactory            chapterMockFactory;
-
-    @Autowired
-    private CubeMockFactory               cubeMockFactory;
+    private PublicationDo2DtoMapper publicationDo2DtoMapper;
 
     @Test
     @MetamacMock({PUBLICATION_VERSION_03_FOR_PUBLICATION_03_NAME})

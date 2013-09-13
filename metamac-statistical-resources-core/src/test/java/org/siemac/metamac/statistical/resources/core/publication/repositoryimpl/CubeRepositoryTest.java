@@ -7,12 +7,12 @@ import static org.siemac.metamac.statistical.resources.core.utils.asserts.Public
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.CubeMockFactory.CUBE_01_BASIC_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.CubeMockFactory.CUBE_02_BASIC_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.CubeMockFactory.CUBE_03_BASIC_NAME;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetMockFactory.DATASET_01_BASIC_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetMockFactory.*;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetMockFactory.DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationMockFactory.PUBLICATION_04_STRUCTURED_WITH_2_PUBLICATION_VERSIONS_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_17_WITH_STRUCTURE_FOR_PUBLICATION_VERSION_04_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_18_WITH_STRUCTURE_FOR_PUBLICATION_VERSION_04_AND_LAST_VERSION_NAME;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryMockFactory.QUERY_01_SIMPLE_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryMockFactory.*;
 
 import java.util.List;
 
@@ -42,22 +42,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class CubeRepositoryTest extends StatisticalResourcesBaseTest implements CubeRepositoryTestBase {
 
     @Autowired
-    private CubeRepository                cubeRepository;
-
-    @Autowired
-    private CubeMockFactory               cubeMockFactory;
-
-    @Autowired
-    private PublicationMockFactory        publicationMockFactory;
-
-    @Autowired
-    private PublicationVersionMockFactory publicationVersionMockFactory;
-
-    @Autowired
-    private DatasetMockFactory            datasetMockFactory;
-
-    @Autowired
-    private QueryMockFactory              queryMockFactory;
+    private CubeRepository cubeRepository;
 
     @Override
     @Test
@@ -99,8 +84,8 @@ public class CubeRepositoryTest extends StatisticalResourcesBaseTest implements 
         List<String> result = cubeRepository.findDatasetsLinkedWithPublicationVersion(publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_17_WITH_STRUCTURE_FOR_PUBLICATION_VERSION_04_NAME)
                 .getSiemacMetadataStatisticalResource().getUrn());
         assertEquals(2, result.size());
-        assertTrue(result.contains(datasetMockFactory.retrieveMock(DATASET_01_BASIC_NAME).getIdentifiableStatisticalResource().getUrn()));
-        assertTrue(result.contains(datasetMockFactory.retrieveMock(DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME).getIdentifiableStatisticalResource().getUrn()));
+        assertTrue(result.contains(datasetMockFactory.retrieveMock(DATASET_17_SIMPLE_LINKED_TO_PUB_VERSION_17_NAME).getIdentifiableStatisticalResource().getUrn()));
+        assertTrue(result.contains(datasetMockFactory.retrieveMock(DATASET_16_SIMPLE_LINKED_TO_PUB_VERSION_17_NAME).getIdentifiableStatisticalResource().getUrn()));
     }
 
     @Test
@@ -118,7 +103,7 @@ public class CubeRepositoryTest extends StatisticalResourcesBaseTest implements 
         List<String> result = cubeRepository.findQueriesLinkedWithPublicationVersion(publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_17_WITH_STRUCTURE_FOR_PUBLICATION_VERSION_04_NAME)
                 .getSiemacMetadataStatisticalResource().getUrn());
         assertEquals(1, result.size());
-        assertTrue(result.contains(queryMockFactory.retrieveMock(QUERY_01_SIMPLE_NAME).getIdentifiableStatisticalResource().getUrn()));
+        assertTrue(result.contains(queryMockFactory.retrieveMock(QUERY_09_SINGLE_VERSION_USED_IN_PUB_VERSION_17_NAME).getIdentifiableStatisticalResource().getUrn()));
     }
 
     @Test

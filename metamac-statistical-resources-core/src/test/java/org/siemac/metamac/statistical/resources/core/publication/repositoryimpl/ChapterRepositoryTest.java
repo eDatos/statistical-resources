@@ -27,9 +27,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class ChapterRepositoryTest extends StatisticalResourcesBaseTest implements ChapterRepositoryTestBase {
 
     @Autowired
-    private ChapterMockFactory chapterMockFactory;
-    
-    @Autowired
     private ChapterRepository chapterRepository;
 
     @Override
@@ -40,7 +37,7 @@ public class ChapterRepositoryTest extends StatisticalResourcesBaseTest implemen
         Chapter actual = chapterRepository.retrieveChapterByUrn(expected.getNameableStatisticalResource().getUrn());
         assertRelaxedEqualsChapter(expected, actual);
     }
-    
+
     @Test
     @MetamacMock({CHAPTER_01_BASIC_NAME, CHAPTER_02_BASIC_NAME, CHAPTER_03_BASIC_NAME})
     public void testRetrieveChapterByUrnErrorNotFound() throws Exception {

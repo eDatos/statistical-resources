@@ -334,8 +334,6 @@ public class StatisticalResourcesDtoMocks extends MetamacMocks {
         // TODO: mock Related resources
         siemacMetadataStatisticalResourceDto.setReplacesVersion(null);
         siemacMetadataStatisticalResourceDto.setIsReplacedByVersion(null);
-        siemacMetadataStatisticalResourceDto.addHasPart(null);
-        siemacMetadataStatisticalResourceDto.addIsPartOf(null);
 
         siemacMetadataStatisticalResourceDto.setCommonMetadata(mockCommonMetadataExternalItemDto());
         siemacMetadataStatisticalResourceDto.setCopyrightedDate(mockDate().getYear());
@@ -413,7 +411,7 @@ public class StatisticalResourcesDtoMocks extends MetamacMocks {
         populateNotPersistedRelatedResourceIdentifiable(resource, datasetVersion.getSiemacMetadataStatisticalResource(), TypeRelatedResourceEnum.DATASET_VERSION);
         return resource;
     }
-    
+
     public static RelatedResourceDto mockNotPersistedRelatedResourcePublicationVersionDto(PublicationVersion publicationVersion) {
         RelatedResourceDto resource = new RelatedResourceDto();
         populateNotPersistedRelatedResourceIdentifiable(resource, publicationVersion.getSiemacMetadataStatisticalResource(), TypeRelatedResourceEnum.PUBLICATION_VERSION);

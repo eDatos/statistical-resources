@@ -18,7 +18,7 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasourceMockFactory.DATASOURCE_01_BASIC_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_01_BASIC_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_30_V1_PUBLISHED_FOR_PUBLICATION_06_NAME;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_33_DRAFT_READY_FOR_PRODUCTION_VALIDATION_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.*;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_37_PRODUCTION_VALIDATION_READY_FOR_DIFFUSION_VALIDATION_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_39_PUBLISHED_WITH_NO_ROOT_MAINTAINER_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_01_WITH_SELECTION_NAME;
@@ -82,24 +82,6 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
 
     @Autowired
     private StatisticalResourcesServiceFacade statisticalResourcesServiceFacade;
-
-    @Autowired
-    private QueryVersionMockFactory           queryVersionMockFactory;
-
-    @Autowired
-    private DatasourceMockFactory             datasourceMockFactory;
-
-    @Autowired
-    private DatasetVersionMockFactory         datasetVersionMockFactory;
-
-    @Autowired
-    private PublicationVersionMockFactory     publicationVersionMockFactory;
-
-    @Autowired
-    private CubeMockFactory                   cubeMockFactory;
-
-    @Autowired
-    private ChapterMockFactory                chapterMockFactory;
 
     @Autowired
     private SrmRestInternalService            srmRestInternalService;
@@ -877,16 +859,16 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
 
     @Override
     @Test
-    @MetamacMock(PUBLICATION_VERSION_30_V1_PUBLISHED_FOR_PUBLICATION_06_NAME)
+    @MetamacMock(PUBLICATION_VERSION_29_V3_PUBLISHED_FOR_PUBLICATION_05_NAME)
     public void testVersioningPublicationVersion() throws Exception {
         // Retrieve publication - session 1
         PublicationVersionDto publicationVersionDtoSession01 = statisticalResourcesServiceFacade.retrievePublicationVersionByUrn(getServiceContextAdministrador(), publicationVersionMockFactory
-                .retrieveMock(PUBLICATION_VERSION_30_V1_PUBLISHED_FOR_PUBLICATION_06_NAME).getSiemacMetadataStatisticalResource().getUrn());
+                .retrieveMock(PUBLICATION_VERSION_29_V3_PUBLISHED_FOR_PUBLICATION_05_NAME).getSiemacMetadataStatisticalResource().getUrn());
         assertEquals(Long.valueOf(0), publicationVersionDtoSession01.getOptimisticLockingVersion());
 
         // Retrieve publication - session 2
         PublicationVersionDto publicationVersionDtoSession02 = statisticalResourcesServiceFacade.retrievePublicationVersionByUrn(getServiceContextAdministrador(), publicationVersionMockFactory
-                .retrieveMock(PUBLICATION_VERSION_30_V1_PUBLISHED_FOR_PUBLICATION_06_NAME).getSiemacMetadataStatisticalResource().getUrn());
+                .retrieveMock(PUBLICATION_VERSION_29_V3_PUBLISHED_FOR_PUBLICATION_05_NAME).getSiemacMetadataStatisticalResource().getUrn());
         assertEquals(Long.valueOf(0), publicationVersionDtoSession02.getOptimisticLockingVersion());
 
         // Versioning - session 1 --> OK
@@ -894,7 +876,7 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
                 publicationVersionDtoSession01, VersionTypeEnum.MAJOR);
 
         PublicationVersionDto publicationVersionDtoSession1AfterUpdate01 = statisticalResourcesServiceFacade.retrievePublicationVersionByUrn(getServiceContextAdministrador(),
-                publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_30_V1_PUBLISHED_FOR_PUBLICATION_06_NAME).getSiemacMetadataStatisticalResource().getUrn());
+                publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_29_V3_PUBLISHED_FOR_PUBLICATION_05_NAME).getSiemacMetadataStatisticalResource().getUrn());
 
         assertEquals(Long.valueOf(0), publicationVersionDtoSession1NewVersion.getOptimisticLockingVersion());
         assertTrue(publicationVersionDtoSession1AfterUpdate01.getOptimisticLockingVersion() > publicationVersionDtoSession01.getOptimisticLockingVersion());

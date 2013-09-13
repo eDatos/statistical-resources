@@ -43,9 +43,6 @@ public class DatasetPublishingServiceTest extends StatisticalResourcesMockRestBa
     private static final String              BIBLIOGRAPHIC_CITATION_TEMPLATE = "#AUTHOR_CODE# (#PUB_DATE#) #TITLE# (v#VERSION#) [dataset]. #PUBLISHER_NAME# (#URI#)";
 
     @Autowired
-    private DatasetVersionMockFactory        datasetVersionMockFactory;
-
-    @Autowired
     private DatasetVersionRepository         datasetVersionRepository;
 
     @Autowired

@@ -46,18 +46,6 @@ public class PublicationDto2DoMapperTest extends StatisticalResourcesBaseTest {
     @Autowired
     private PublicationDto2DoMapper publicationDto2DoMapper;
 
-    @Autowired
-    private DatasetMockFactory      datasetMockFactory;
-
-    @Autowired
-    private QueryMockFactory        queryMockFactory;
-
-    @Autowired
-    private ChapterMockFactory      chapterMockFactory;
-    
-    @Autowired
-    private PublicationVersionMockFactory publicationVersionMockFactory;
-
     @Test
     public void testPublicationDtoToDo() throws MetamacException {
         PublicationVersionDto dto = StatisticalResourcesDtoMocks.mockPublicationVersionDto();
@@ -89,7 +77,7 @@ public class PublicationDto2DoMapperTest extends StatisticalResourcesBaseTest {
         Cube entity = publicationDto2DoMapper.cubeDtoToDo(dto);
         assertEqualsCube(dto, entity);
     }
-    
+
     @Test
     @MetamacMock({DATASET_01_BASIC_NAME, CHAPTER_01_BASIC_NAME})
     public void datasetCubeDtoToDoWithParent() throws MetamacException {
@@ -99,7 +87,7 @@ public class PublicationDto2DoMapperTest extends StatisticalResourcesBaseTest {
         Cube entity = publicationDto2DoMapper.cubeDtoToDo(dto);
         assertEqualsCube(dto, entity);
     }
-    
+
     @Test
     @MetamacMock(QUERY_01_SIMPLE_NAME)
     public void queryCubeDtoToDo() throws MetamacException {
@@ -108,7 +96,7 @@ public class PublicationDto2DoMapperTest extends StatisticalResourcesBaseTest {
         Cube entity = publicationDto2DoMapper.cubeDtoToDo(dto);
         assertEqualsCube(dto, entity);
     }
-    
+
     @Test
     @MetamacMock({QUERY_01_SIMPLE_NAME, CHAPTER_01_BASIC_NAME})
     public void queryCubeDtoToDoWithParent() throws MetamacException {
@@ -118,68 +106,69 @@ public class PublicationDto2DoMapperTest extends StatisticalResourcesBaseTest {
         Cube entity = publicationDto2DoMapper.cubeDtoToDo(dto);
         assertEqualsCube(dto, entity);
     }
-    
+
     @Test
     @MetamacMock({PUBLICATION_VERSION_01_BASIC_NAME, PUBLICATION_VERSION_41_PUB_NOT_VISIBLE_REPLACES_PUB_VERSION_42_NAME, PUBLICATION_VERSION_42_PUB_IS_REPLACED_BY_PUB_VERSION_41_NAME})
     public void testPublicationDtoToDoCanNotReplaceAPublicationVersionThatHasBeenReplacedAlready() throws MetamacException {
         PublicationVersion resourceAlreadyReplaced = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_42_PUB_IS_REPLACED_BY_PUB_VERSION_41_NAME);
-        
+
         PublicationVersion source = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_01_BASIC_NAME);
         PublicationVersionDto dto = buildPublicationVersionDtoFromDo(source);
-        
+
         dto.setReplaces(StatisticalResourcesDtoMocks.mockNotPersistedRelatedResourcePublicationVersionDto(resourceAlreadyReplaced));
-        
-        expectedMetamacException(new MetamacException(ServiceExceptionType.PUBLICATION_VERSION_ALREADY_BEEN_REPLACED_BY_OTHER_PUBLICATION_VERSION, source.getSiemacMetadataStatisticalResource().getUrn(), resourceAlreadyReplaced.getSiemacMetadataStatisticalResource().getUrn()));
-        
+
+        expectedMetamacException(new MetamacException(ServiceExceptionType.PUBLICATION_VERSION_ALREADY_BEEN_REPLACED_BY_OTHER_PUBLICATION_VERSION, source.getSiemacMetadataStatisticalResource()
+                .getUrn(), resourceAlreadyReplaced.getSiemacMetadataStatisticalResource().getUrn()));
+
         publicationDto2DoMapper.publicationVersionDtoToDo(dto);
     }
-    
+
     @Test
     @MetamacMock({PUBLICATION_VERSION_41_PUB_NOT_VISIBLE_REPLACES_PUB_VERSION_42_NAME, PUBLICATION_VERSION_42_PUB_IS_REPLACED_BY_PUB_VERSION_41_NAME})
     public void testPublicationDtoToDoReplaceAPublicationVersionThatHasBeenReplacedAlreadyByThisPublication() throws MetamacException {
         PublicationVersion resourceAlreadyReplaced = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_42_PUB_IS_REPLACED_BY_PUB_VERSION_41_NAME);
-        
+
         PublicationVersion source = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_41_PUB_NOT_VISIBLE_REPLACES_PUB_VERSION_42_NAME);
         PublicationVersionDto dto = buildPublicationVersionDtoFromDo(source);
-        
+
         dto.setReplaces(StatisticalResourcesDtoMocks.mockNotPersistedRelatedResourcePublicationVersionDto(resourceAlreadyReplaced));
-        
+
         PublicationVersion entity = publicationDto2DoMapper.publicationVersionDtoToDo(dto);
         assertNotNull(entity.getSiemacMetadataStatisticalResource().getReplaces());
         PublicationVersion replacedPublication = entity.getSiemacMetadataStatisticalResource().getReplaces().getPublicationVersion();
         assertEquals(resourceAlreadyReplaced.getSiemacMetadataStatisticalResource().getUrn(), replacedPublication.getSiemacMetadataStatisticalResource().getUrn());
     }
-    
+
     @Test
     @MetamacMock({PUBLICATION_VERSION_01_BASIC_NAME, PUBLICATION_VERSION_02_BASIC_NAME})
     public void testPublicationDtoToDoCanReplaceAPublicationVersionThatHasNotBeenReplacedYet() throws MetamacException {
         PublicationVersion resourceAlreadyReplaced = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_02_BASIC_NAME);
-        
+
         PublicationVersion source = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_01_BASIC_NAME);
         PublicationVersionDto dto = buildPublicationVersionDtoFromDo(source);
-        
+
         dto.setReplaces(StatisticalResourcesDtoMocks.mockNotPersistedRelatedResourcePublicationVersionDto(resourceAlreadyReplaced));
-        
+
         PublicationVersion entity = publicationDto2DoMapper.publicationVersionDtoToDo(dto);
-        
+
         assertNotNull(entity.getSiemacMetadataStatisticalResource().getReplaces());
         PublicationVersion replacedPublication = entity.getSiemacMetadataStatisticalResource().getReplaces().getPublicationVersion();
         PublicationsAsserts.assertEqualsPublicationVersion(resourceAlreadyReplaced, replacedPublication);
     }
-    
+
     @Test
     @MetamacMock({PUBLICATION_VERSION_01_BASIC_NAME, PUBLICATION_VERSION_02_BASIC_NAME})
     public void testPublicationDtoToDoReplaceItself() throws MetamacException {
         PublicationVersion source = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_01_BASIC_NAME);
         PublicationVersionDto dto = buildPublicationVersionDtoFromDo(source);
-        
+
         dto.setReplaces(StatisticalResourcesDtoMocks.mockNotPersistedRelatedResourcePublicationVersionDto(source));
-        
+
         expectedMetamacException(new MetamacException(ServiceExceptionType.PUBLICATION_VERSION_CANT_REPLACE_ITSELF, source.getSiemacMetadataStatisticalResource().getUrn()));
-        
+
         publicationDto2DoMapper.publicationVersionDtoToDo(dto);
     }
-    
+
     private PublicationVersionDto buildPublicationVersionDtoFromDo(PublicationVersion publicationVersion) {
         PublicationVersionDto dto = StatisticalResourcesDtoMocks.mockPublicationVersionDto();
         dto.setCode(publicationVersion.getSiemacMetadataStatisticalResource().getCode());

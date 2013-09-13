@@ -26,10 +26,8 @@ public class PublicationRepositoryTest extends StatisticalResourcesBaseTest impl
 
     @Autowired
     protected PublicationRepository publicationRepository;
-    
-    @Autowired
-    private PublicationMockFactory publicationMockFactory;
 
+    @Override
     @Test
     @MetamacMock(PUBLICATION_02_BASIC_WITH_GENERATED_VERSION_NAME)
     public void testRetrieveByUrn() throws Exception {
@@ -37,7 +35,7 @@ public class PublicationRepositoryTest extends StatisticalResourcesBaseTest impl
         Publication actual = publicationRepository.retrieveByUrn(expected.getIdentifiableStatisticalResource().getUrn());
         assertEqualsPublication(expected, actual);
     }
-    
+
     @Test
     public void testRetrieveByUrnNotFound() throws Exception {
         expectedMetamacException(new MetamacException(ServiceExceptionType.PUBLICATION_VERSION_NOT_FOUND, URN_NOT_EXISTS));

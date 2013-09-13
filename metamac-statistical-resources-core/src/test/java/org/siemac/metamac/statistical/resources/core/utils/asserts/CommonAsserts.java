@@ -23,6 +23,7 @@ import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.dto.InternationalStringDto;
 import org.siemac.metamac.core.common.enume.utils.TypeExternalArtefactsEnumUtils;
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.statistical.resources.core.base.domain.HasLifecycle;
 import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.NameableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
@@ -124,19 +125,70 @@ public class CommonAsserts extends MetamacAsserts {
         }
     }
 
+    public static void assertEqualsRelatedResourceCollectionResultLifecycleResource(Collection<? extends HasLifecycle> expected, Collection<RelatedResourceResult> actual, TypeRelatedResourceEnum type)
+            throws MetamacException {
+
+        assertEqualsNullability(expected, actual);
+        if (expected == null) {
+            return;
+        }
+
+        assertEquals(expected.size(), actual.size());
+
+        for (HasLifecycle expect : expected) {
+            boolean found = false;
+            for (RelatedResourceResult current : actual) {
+                try {
+                    assertEqualsRelatedResourceResultLifecycleResource(expect.getLifeCycleStatisticalResource(), current, type);
+                    found = true;
+                } catch (AssertionError e) {
+                }
+            }
+            if (!found) {
+                Assert.fail("Found element in expected collection which is not contained in actual collection " + expect.getLifeCycleStatisticalResource().getUrn());
+            }
+        }
+
+        for (RelatedResourceResult current : actual) {
+            boolean found = false;
+            for (HasLifecycle expect : expected) {
+                try {
+                    assertEqualsRelatedResourceResultLifecycleResource(expect.getLifeCycleStatisticalResource(), current, type);
+                    found = true;
+                } catch (AssertionError e) {
+                }
+            }
+            if (!found) {
+                Assert.fail("Found element in actual collection which is not contained in expected collection " + current.getUrn());
+            }
+        }
+    }
+
     public static void assertEqualsRelatedResourceResultDatasetVersion(DatasetVersion expected, RelatedResourceResult actual) throws MetamacException {
         assertEqualsRelatedResourceResultLifecycleResource(expected.getSiemacMetadataStatisticalResource(), actual, TypeRelatedResourceEnum.DATASET_VERSION);
+    }
+
+    public static void assertEqualsRelatedResourceResultCollectionToDatasetVersionCollection(Collection<DatasetVersion> expected, Collection<RelatedResourceResult> actual) throws MetamacException {
+        assertEqualsRelatedResourceCollectionResultLifecycleResource(expected, actual, TypeRelatedResourceEnum.DATASET_VERSION);
     }
 
     public static void assertEqualsRelatedResourceResultQueryVersion(QueryVersion expected, RelatedResourceResult actual) throws MetamacException {
         assertEqualsRelatedResourceResultLifecycleResource(expected.getLifeCycleStatisticalResource(), actual, TypeRelatedResourceEnum.QUERY_VERSION);
     }
 
+    public static void assertEqualsRelatedResourceResultCollectionToQueryVersionCollection(Collection<QueryVersion> expected, Collection<RelatedResourceResult> actual) throws MetamacException {
+        assertEqualsRelatedResourceCollectionResultLifecycleResource(expected, actual, TypeRelatedResourceEnum.QUERY_VERSION);
+    }
+
     public static void assertEqualsRelatedResourceResultPublicationVersion(PublicationVersion expected, RelatedResourceResult actual) throws MetamacException {
         assertEqualsRelatedResourceResultLifecycleResource(expected.getSiemacMetadataStatisticalResource(), actual, TypeRelatedResourceEnum.PUBLICATION_VERSION);
     }
 
-    // -----------------------------------------------------------------
+    public static void assertEqualsRelatedResourceResultCollectionToPublicationVersionCollection(Collection<PublicationVersion> expected, Collection<RelatedResourceResult> actual)
+            throws MetamacException {
+        assertEqualsRelatedResourceCollectionResultLifecycleResource(expected, actual, TypeRelatedResourceEnum.PUBLICATION_VERSION);
+    }
+
     // RELATED RESOURCE: DO & DO
     // -----------------------------------------------------------------
 

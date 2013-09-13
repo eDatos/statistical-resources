@@ -46,8 +46,6 @@ public class BaseAsserts extends CommonAsserts {
         // Not inherited
         assertNull(next.getNewnessUntilDate());
         assertNull(next.getReplaces());
-        assertEquals(0, next.getHasPart().size());
-        assertEquals(0, next.getIsPartOf().size());
         assertNull(next.getCopyrightedDate());
 
         // Inherited
@@ -171,8 +169,6 @@ public class BaseAsserts extends CommonAsserts {
 
         assertEqualsRelatedResource(expected.getReplaces(), actual.getReplaces());
         assertEqualsRelatedResource(expected.getReplacesVersion(), actual.getReplacesVersion());
-        assertEqualsRelatedResourceCollection(expected.getHasPart(), actual.getHasPart());
-        assertEqualsRelatedResourceCollection(expected.getIsPartOf(), actual.getIsPartOf());
 
         assertEquals(expected.getCopyrightedDate(), actual.getCopyrightedDate());
         assertEqualsInternationalString(expected.getAccessRights(), actual.getAccessRights());
@@ -274,8 +270,6 @@ public class BaseAsserts extends CommonAsserts {
 
                 assertEqualsRelatedResource(entity.getReplaces(), dto.getReplaces());
                 assertEqualsRelatedResource(entity.getReplacesVersion(), dto.getReplacesVersion());
-                assertEqualsRelatedResourceCollectionMapper(entity.getHasPart(), dto.getHasPart());
-                assertEqualsRelatedResourceCollectionMapper(entity.getIsPartOf(), dto.getIsPartOf());
 
                 assertEqualsExternalItem(entity.getCommonMetadata(), dto.getCommonMetadata(), mapperEnum);
                 assertEquals(entity.getCopyrightedDate(), dto.getCopyrightedDate());

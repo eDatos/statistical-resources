@@ -44,9 +44,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class PublicationVersioningServiceTest extends StatisticalResourcesBaseTest {
 
     @Autowired
-    private PublicationVersionMockFactory        publicationVersionMockFactory;
-
-    @Autowired
     private PublicationService                   publicationService;
 
     @Autowired
