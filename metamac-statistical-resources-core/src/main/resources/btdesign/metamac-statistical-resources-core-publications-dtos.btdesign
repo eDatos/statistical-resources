@@ -14,6 +14,7 @@ Application PublicationsStatisticalResourcesDto {
 
 		DataTransferObject PublicationVersionDto extends @SiemacMetadataStatisticalResourceDto {
 			Integer formatExtentResources;
+			- Bag<@RelatedResourceDto> hasPart;
 		}
 
 		"Dto for structure of publication"

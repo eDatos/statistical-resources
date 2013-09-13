@@ -115,10 +115,6 @@ public class SiemacLifecycleChecker {
         // Is required by
         // API checks if it's published
 
-        // Has part
-        relatedResourceChecker.checkRelatedResourcesExternallyPublished(resource.getHasPart(), resource.getValidFrom(), addParameter(metadataName, ServiceExceptionSingleParameters.HAS_PART),
-                exceptionItems);
-
         // Is part of
         // API checks if it's published
     }

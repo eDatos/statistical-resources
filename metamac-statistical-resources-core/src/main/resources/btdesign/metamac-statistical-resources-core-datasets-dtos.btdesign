@@ -44,6 +44,7 @@ Application DatasetsStatisticalResourcesDto {
 			
 			//relation descriptors
 			- Bag<@RelatedResourceDto> isRequiredBy;
+			- Bag<@RelatedResourceDto> isPartOf;
 
 			//public date of next update
 			JAVADATE dateNextUpdate;

@@ -115,8 +115,6 @@ Application StatisticalResourcesDto {
 			//RESOURCE RELATIONS DESCRIPTORS
 			- @RelatedResourceDto replaces;
 			- @RelatedResourceDto isReplacedBy;
-			- Bag<@RelatedResourceDto> hasPart;
-			- Bag<@RelatedResourceDto> isPartOf;
 			
 			//INTELLECTUAL PROPERTY DESCRIPTORS
 			Integer copyrightedDate;

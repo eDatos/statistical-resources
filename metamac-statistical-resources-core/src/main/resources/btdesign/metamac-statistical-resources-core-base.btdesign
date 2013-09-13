@@ -161,9 +161,6 @@ Application BaseStatisticalResources {
 			//RESOURCE RELATIONS DESCRIPTORS
 			- @RelatedResource replaces cascade="all" databaseColumn="REPLACES_FK" nullable;
 
-			- Bag<@RelatedResource> hasPart cascade="all-delete-orphan" databaseJoinTable="TB_RR_HAS_PART"  databaseColumn="HAS_PART_FK" databaseJoinColumn="SIEMAC_RESOURCE_FK";
-			- Bag<@RelatedResource> isPartOf cascade="all-delete-orphan" databaseJoinTable="TB_RR_IS_PART_OF" databaseColumn="IS_PART_OF_FK" databaseJoinColumn="SIEMAC_RESOURCE_FK";
-			
 			//INTELLECTUAL PROPERTY DESCRIPTORS
 			Integer copyrightedDate	nullable;
 			- @InternationalString accessRights cascade="all" databaseColumn="ACCESS_RIGHTS_FK" nullable;

@@ -221,6 +221,9 @@ Application DatasetsStatisticalResources {
 				//Is replaced by
 				RelatedResourceResult retrieveIsReplacedBy(@DatasetVersion datasetVersion) throws MetamacException;  
 				RelatedResourceResult retrieveIsReplacedByOnlyLastPublished(@DatasetVersion datasetVersion) throws MetamacException;  
+				//Is part of
+				List<RelatedResourceResult> retrieveIsPartOf(@DatasetVersion datasetVersion) throws MetamacException;  
+				List<RelatedResourceResult> retrieveIsPartOfOnlyLastPublished(@DatasetVersion datasetVersion) throws MetamacException;  
 			}
 		}
 

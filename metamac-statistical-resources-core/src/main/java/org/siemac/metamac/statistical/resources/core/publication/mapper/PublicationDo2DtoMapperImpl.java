@@ -126,6 +126,9 @@ public class PublicationDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements
         target.setIsReplacedByVersion(relatedResourceResultToDto(publicationVersionRepository.retrieveIsReplacedByVersion(source)));
         target.setIsReplacedBy(relatedResourceResultToDto(publicationVersionRepository.retrieveIsReplacedBy(source)));
 
+        target.getHasPart().clear();
+        target.getHasPart().addAll(relatedResourceDoCollectionToDtoCollection(source.getHasPart()));
+
         // Identity
         target.setId(source.getId());
         target.setVersion(source.getVersion());

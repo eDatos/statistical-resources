@@ -1,5 +1,7 @@
 package org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.publication;
 
+import static org.siemac.metamac.statistical.resources.core.error.utils.ServiceExceptionParametersUtils.addParameter;
+
 import java.util.List;
 
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
@@ -7,6 +9,7 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.core.common.util.GeneratorUrnUtils;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
+import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionSingleParameters;
 import org.siemac.metamac.statistical.resources.core.lifecycle.LifecycleCommonMetadataChecker;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.LifecycleTemplateService;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
@@ -83,12 +86,12 @@ public class PublicationLifecycleServiceImpl extends LifecycleTemplateService<Pu
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Not implemented");
     }
-    
+
     @Override
     protected void applySendToPublishedPreviousResource(ServiceContext ctx, PublicationVersion resource) throws MetamacException {
         // TODO:
         // - cumplimentar format_extent_resources
-        
+
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Not implemented");
     }
@@ -97,6 +100,11 @@ public class PublicationLifecycleServiceImpl extends LifecycleTemplateService<Pu
     protected void checkSendToPublishedResource(PublicationVersion resource, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
         // FIXME
         // TODO Auto-generated method stub
+
+        // Has part
+        // relatedResourceChecker.checkRelatedResourcesExternallyPublished(resource.getHasPart(), resource.getValidFrom(), addParameter(metadataName, ServiceExceptionSingleParameters.HAS_PART),
+        // exceptionItems);
+
         throw new UnsupportedOperationException("Not implemented");
     }
 
