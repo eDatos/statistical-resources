@@ -52,6 +52,8 @@ Application DatasetsStatisticalResources {
     		importDatasourcesInDatasetVersion(String datasetVersionUrn, List<URL> fileUrls) throws MetamacException; 
     		importDatasourcesInStatisticalOperation(String statisticalOperationUrn, List<URL> fileUrls) throws MetamacException; 
     		
+    		checkAttributesInstancesWithDatasetAndDimensionAttachment(@DatasetVersion datasetVersion) throws MetamacException;
+    		
     		// Datasets
     		"Finds datasets by criteria"
     		PagedResult<@Dataset> findDatasetsByCondition(List<ConditionalCriteria> conditions, PagingParameter pagingParameter)  throws MetamacException;

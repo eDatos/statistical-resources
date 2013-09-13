@@ -236,4 +236,8 @@ public class DatasetServiceInvocationValidatorImpl extends BaseInvocationValidat
         StatisticalResourcesValidationUtils.checkParameterRequired(fileUrls, ServiceExceptionParameters.FILE_URLS, exceptions);
     }
 
+    public static void checkCheckAttributesInstancesWithDatasetAndDimensionAttachment(DatasetVersion datasetVersion, List<MetamacExceptionItem> exceptions) {
+        checkExistingDatasetVersion(datasetVersion, ServiceExceptionParameters.DATASET_VERSION, exceptions);
+    }
+
 }

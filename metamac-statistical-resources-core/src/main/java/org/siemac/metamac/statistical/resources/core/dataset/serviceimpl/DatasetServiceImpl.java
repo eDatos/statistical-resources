@@ -59,6 +59,7 @@ import org.siemac.metamac.statistical.resources.core.enume.task.domain.DatasetFi
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.invocation.service.SrmRestInternalService;
 import org.siemac.metamac.statistical.resources.core.invocation.utils.RestMapper;
+import org.siemac.metamac.statistical.resources.core.io.serviceimpl.validators.ValidateDataVersusDsd;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersionRepository;
 import org.siemac.metamac.statistical.resources.core.task.domain.FileDescriptor;
@@ -521,6 +522,26 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
             throw MetamacExceptionBuilder.builder().withExceptionItems(exceptionItems).build();
         }
         return datasetVersionsForFiles;
+    }
+
+    @Override
+    public void checkAttributesInstancesWithDatasetAndDimensionAttachment(ServiceContext ctx, DatasetVersion datasetVersion) throws MetamacException {
+        try {
+            List<AttributeInstanceDto> attributesInstances = statisticsDatasetRepositoriesServiceFacade.findAttributesInstances(datasetVersion.getDatasetRepositoryId());
+
+            if (attributesInstances != null && !attributesInstances.isEmpty()) {
+                // Data structure definition
+                DataStructure dataStructure = srmRestInternalService.retrieveDsdByUrn(datasetVersion.getRelatedDsd().getUrn());
+
+                // Validate
+                ValidateDataVersusDsd validateDataVersusDsd = new ValidateDataVersusDsd(dataStructure, srmRestInternalService);
+
+                // Check
+                validateDataVersusDsd.checkAttributesInstances(attributesInstances);
+            }
+        } catch (ApplicationException e) {
+            throw new MetamacException(e, ServiceExceptionType.UNKNOWN, "Error retrieving datasetRepository " + datasetVersion.getDatasetRepositoryId() + ". Details: " + e.getMessage());
+        }
     }
 
     @Override
