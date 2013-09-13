@@ -16,6 +16,7 @@ import org.siemac.metamac.statistical.resources.web.client.publication.widgets.P
 import org.siemac.metamac.statistical.resources.web.client.publication.widgets.forms.PublicationClassDescriptorsEditionForm;
 import org.siemac.metamac.statistical.resources.web.client.publication.widgets.forms.PublicationClassDescriptorsForm;
 import org.siemac.metamac.statistical.resources.web.client.publication.widgets.forms.PublicationResourceRelationDescriptorsEditionForm;
+import org.siemac.metamac.statistical.resources.web.client.publication.widgets.forms.PublicationResourceRelationDescriptorsForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.ProgramPublicationWindow;
 import org.siemac.metamac.statistical.resources.web.client.widgets.VersionWindow;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.LifeCycleResourceLifeCycleForm;
@@ -35,7 +36,6 @@ import org.siemac.metamac.statistical.resources.web.client.widgets.forms.SiemacM
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.SiemacMetadataProductionDescriptorsForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.SiemacMetadataPublicationDescriptorsEditionForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.SiemacMetadataPublicationDescriptorsForm;
-import org.siemac.metamac.statistical.resources.web.client.widgets.forms.SiemacMetadataResourceRelationDescriptorsForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.SiemacMetadataThematicContentClassifiersEditionForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.SiemacMetadataThematicContentClassifiersForm;
 import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublicationVersionsResult;
@@ -60,7 +60,7 @@ public class PublicationMetadataTabViewImpl extends StatisticalResourceMetadataB
     private SiemacMetadataLanguageForm                               languageForm;
     private SiemacMetadataProductionDescriptorsForm                  productionDescriptorsForm;
     private PublicationClassDescriptorsForm                          classDescriptorsForm;
-    private SiemacMetadataResourceRelationDescriptorsForm            resourceRelationDescriptorsForm;
+    private PublicationResourceRelationDescriptorsForm               resourceRelationDescriptorsForm;
     private SiemacMetadataPublicationDescriptorsForm                 publicationDescriptorsForm;
     private LifeCycleResourceLifeCycleForm                           lifeCycleForm;
     private LifeCycleResourceVersionForm                             versionForm;
@@ -298,7 +298,7 @@ public class PublicationMetadataTabViewImpl extends StatisticalResourceMetadataB
         mainFormLayout.addViewCanvas(classDescriptorsForm);
 
         // Resource relation descriptors
-        resourceRelationDescriptorsForm = new SiemacMetadataResourceRelationDescriptorsForm();
+        resourceRelationDescriptorsForm = new PublicationResourceRelationDescriptorsForm();
         mainFormLayout.addViewCanvas(resourceRelationDescriptorsForm);
 
         // Publication descriptors
@@ -388,7 +388,7 @@ public class PublicationMetadataTabViewImpl extends StatisticalResourceMetadataB
         classDescriptorsForm.setPublicationDto(publicationDto);
 
         // Resource relation descriptors
-        resourceRelationDescriptorsForm.setSiemacMetadataStatisticalResourceDto(publicationDto);
+        resourceRelationDescriptorsForm.setPublicationVersionDto(publicationDto);
 
         // Production descriptors
         productionDescriptorsForm.setSiemacMetadataStatisticalResourceDto(publicationDto);
@@ -512,7 +512,7 @@ public class PublicationMetadataTabViewImpl extends StatisticalResourceMetadataB
         List<RelatedResourceDto> relatedResourceDtos = RelatedResourceUtils.getPublicationVersionBaseDtosAsRelatedResourceDtos(result.getPublicationBaseDtos());
         resourceRelationDescriptorsEditionForm.setRelatedResourcesForReplaces(relatedResourceDtos, result.getFirstResultOut(), relatedResourceDtos.size(), result.getTotalResults());
     }
-    
+
     @Override
     public void setStatisticalOperationsForReplacesSelection(List<ExternalItemDto> results, ExternalItemDto defaultSelected) {
         resourceRelationDescriptorsEditionForm.setStatisticalOperationsForReplacesSelection(results, defaultSelected);

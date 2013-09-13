@@ -17,22 +17,24 @@ public class DatasetResourceRelationDescriptorsEditionForm extends SiemacMetadat
 
     private DatasetMetadataTabUiHandlers uiHandlers;
 
-    
     public DatasetResourceRelationDescriptorsEditionForm() {
         super();
-        
+
         RelatedResourceListItem isRequiredBy = new RelatedResourceListItem(DatasetDS.IS_REQUIRED_BY, getConstants().siemacMetadataStatisticalResourceIsRequiredBy(), false,
                 getRecordNavigationHandler());
-        
-        addFields(isRequiredBy);
+
+        RelatedResourceListItem isPartOf = new RelatedResourceListItem(DatasetDS.IS_PART_OF, getConstants().siemacMetadataStatisticalResourceIsPartOf(), false, getRecordNavigationHandler());
+
+        addFields(isPartOf, isRequiredBy);
     }
-    
+
     public void setDatasetVersionDto(DatasetVersionDto dto) {
         setSiemacMetadataStatisticalResourceDto(dto);
-        
+
         setRelatedResourcesValue(getItem(DatasetDS.IS_REQUIRED_BY), dto.getIsRequiredBy());
+        setRelatedResourcesValue(getItem(DatasetDS.IS_PART_OF), dto.getIsPartOf());
     }
-    
+
     @Override
     public void setUiHandlers(UiHandlers uiHandlers) {
         this.uiHandlers = (DatasetMetadataTabUiHandlers) uiHandlers;
@@ -42,7 +44,7 @@ public class DatasetResourceRelationDescriptorsEditionForm extends SiemacMetadat
     public void retrieveResourcesForReplaces(int firstResult, int maxResults, VersionableStatisticalResourceWebCriteria criteria) {
         uiHandlers.retrieveDatasetsForReplaces(firstResult, maxResults, criteria);
     }
-    
+
     @Override
     public void retrieveStatisticalOperationsForReplacesSelection() {
         uiHandlers.retrieveStatisticalOperationsForReplacesSelection();

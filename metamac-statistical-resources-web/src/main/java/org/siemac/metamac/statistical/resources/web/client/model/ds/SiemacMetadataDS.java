@@ -27,8 +27,6 @@ public class SiemacMetadataDS extends LifeCycleResourceDS {
     public static final String SOURCE                         = "siemac-source";
     public static final String REPLACES                       = "siemac-replaces";
     public static final String IS_REPLACED_BY                 = "siemac-is-rep-by";
-    public static final String HAS_PART                       = "siemac-has-part";
-    public static final String IS_PART_OF                     = "siemac-is-part-of";
     public static final String IS_REFERENCE_BY                = "siemac-is-ref-by";
     public static final String REFERENCES                     = "siemac-references";
     public static final String IS_FORMAT_OF                   = "siemac-is-format-of";

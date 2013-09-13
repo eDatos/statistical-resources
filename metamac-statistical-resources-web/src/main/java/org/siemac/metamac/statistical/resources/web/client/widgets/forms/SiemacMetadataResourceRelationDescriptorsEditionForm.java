@@ -3,18 +3,15 @@ package org.siemac.metamac.statistical.resources.web.client.widgets.forms;
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
 import static org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourcesFormUtils.getRelatedResourceValue;
 import static org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourcesFormUtils.setRelatedResourceValue;
-import static org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourcesFormUtils.setRelatedResourcesValue;
 
 import java.util.List;
 
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
-import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.SiemacMetadataStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.web.client.constants.StatisticalResourceWebConstants;
 import org.siemac.metamac.statistical.resources.web.client.model.ds.SiemacMetadataDS;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.fields.RelatedResourceLinkItem;
-import org.siemac.metamac.statistical.resources.web.client.widgets.forms.fields.RelatedResourceListItem;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.fields.SearchRelatedResourceLinkItem;
 import org.siemac.metamac.statistical.resources.web.client.widgets.windows.search.SearchSingleVersionableStatisticalRelatedResourcePaginatedWindow;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.VersionableStatisticalResourceWebCriteria;
@@ -35,10 +32,8 @@ public abstract class SiemacMetadataResourceRelationDescriptorsEditionForm exten
         SearchRelatedResourceLinkItem replaces = createReplacesItem(SiemacMetadataDS.REPLACES, getConstants().siemacMetadataStatisticalResourceReplaces());
         RelatedResourceLinkItem isReplacedBy = new RelatedResourceLinkItem(SiemacMetadataDS.IS_REPLACED_BY, getConstants().siemacMetadataStatisticalResourceIsReplacedBy(),
                 getCustomLinkItemNavigationClickHandler());
-        RelatedResourceListItem hasPart = new RelatedResourceListItem(SiemacMetadataDS.HAS_PART, getConstants().siemacMetadataStatisticalResourceHasPart(), false, getRecordNavigationHandler());
-        RelatedResourceListItem isPartOf = new RelatedResourceListItem(SiemacMetadataDS.IS_PART_OF, getConstants().siemacMetadataStatisticalResourceIsPartOf(), false, getRecordNavigationHandler());
 
-        setFields(replaces, isReplacedBy, hasPart, isPartOf);
+        setFields(replaces, isReplacedBy);
     }
 
     //
@@ -48,8 +43,6 @@ public abstract class SiemacMetadataResourceRelationDescriptorsEditionForm exten
     public void setSiemacMetadataStatisticalResourceDto(SiemacMetadataStatisticalResourceDto dto) {
         setRelatedResourceValue(getItem(SiemacMetadataDS.REPLACES), dto.getReplaces());
         setRelatedResourceValue(getItem(SiemacMetadataDS.IS_REPLACED_BY), dto.getIsReplacedBy());
-        setRelatedResourcesValue(getItem(SiemacMetadataDS.HAS_PART), dto.getHasPart());
-        setRelatedResourcesValue(getItem(SiemacMetadataDS.IS_PART_OF), dto.getIsPartOf());
     }
 
     private void setReplaces(RelatedResourceDto relatedResourceDto) {
@@ -62,7 +55,7 @@ public abstract class SiemacMetadataResourceRelationDescriptorsEditionForm exten
             searchReplacesWindow.refreshSourcePaginationInfo(firstResult, elementsInPage, totalResults);
         }
     }
-    
+
     public void setStatisticalOperationsForReplacesSelection(List<ExternalItemDto> externalItemsDtos, ExternalItemDto defaultSelected) {
         if (searchReplacesWindow != null) {
             searchReplacesWindow.setStatisticalOperations(externalItemsDtos);
@@ -105,7 +98,7 @@ public abstract class SiemacMetadataResourceRelationDescriptorsEditionForm exten
                 retrieveResourcesForReplaces(0, StatisticalResourceWebConstants.FORM_LIST_MAX_RESULTS, searchReplacesWindow.getSearchCriteria());
 
                 retrieveStatisticalOperationsForReplacesSelection();
-                
+
                 searchReplacesWindow.setSaveAction(new ClickHandler() {
 
                     @Override

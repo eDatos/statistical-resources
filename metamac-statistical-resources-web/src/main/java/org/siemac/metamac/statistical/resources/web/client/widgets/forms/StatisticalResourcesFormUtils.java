@@ -23,10 +23,12 @@ public class StatisticalResourcesFormUtils {
         ((ExternalItemLinkItem) item).setExternalItem(externalItem);
     }
 
+    @SuppressWarnings("unchecked")
     public static void setRelatedResourceValue(FormItem item, RelatedResourceDto value) {
         ((RelatedResourceBaseLinkItem<RelatedResourceDto>) item).setRelatedResource(value);
     }
 
+    @SuppressWarnings("unchecked")
     public static void setRelatedResourcesValue(FormItem item, List<RelatedResourceDto> values) {
         ((RelatedResourceBaseListItem<RelatedResourceDto>) item).setRelatedResources(values);
     }
@@ -39,10 +41,12 @@ public class StatisticalResourcesFormUtils {
         return ((ExternalItemLinkItem) item).getExternalItemDto();
     }
 
+    @SuppressWarnings("unchecked")
     public static List<RelatedResourceDto> getRelatedResourcesValue(FormItem item) {
         return ((RelatedResourceBaseListItem<RelatedResourceDto>) item).getRelatedResourceDtos();
     }
 
+    @SuppressWarnings("unchecked")
     public static RelatedResourceDto getRelatedResourceValue(FormItem item) {
         return ((RelatedResourceBaseLinkItem<RelatedResourceDto>) item).getRelatedResourceDto();
     }

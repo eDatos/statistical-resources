@@ -8,22 +8,22 @@ import org.siemac.metamac.statistical.resources.web.client.dataset.model.ds.Data
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.SiemacMetadataResourceRelationDescriptorsForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.fields.RelatedResourceListItem;
 
-
 public class DatasetResourceRelationDescriptorsForm extends SiemacMetadataResourceRelationDescriptorsForm {
 
-    
     public DatasetResourceRelationDescriptorsForm() {
         super();
-        
+
         RelatedResourceListItem isRequiredBy = new RelatedResourceListItem(DatasetDS.IS_REQUIRED_BY, getConstants().siemacMetadataStatisticalResourceIsRequiredBy(), false,
                 getRecordNavigationHandler());
-        
-        addFields(isRequiredBy);
+        RelatedResourceListItem isPartOf = new RelatedResourceListItem(DatasetDS.IS_PART_OF, getConstants().siemacMetadataStatisticalResourceIsPartOf(), false, getRecordNavigationHandler());
+
+        addFields(isPartOf, isRequiredBy);
     }
-    
+
     public void setDatasetVersionDto(DatasetVersionDto dto) {
         setSiemacMetadataStatisticalResourceDto(dto);
 
         setRelatedResourcesValue(getItem(DatasetDS.IS_REQUIRED_BY), dto.getIsRequiredBy());
+        setRelatedResourcesValue(getItem(DatasetDS.IS_PART_OF), dto.getIsPartOf());
     }
 }
