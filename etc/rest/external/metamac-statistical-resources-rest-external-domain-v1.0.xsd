@@ -115,6 +115,7 @@
             <xs:element name="type" type="tns:QueryType" />
             <xs:element name="latestDataNumber" type="xs:int" minOccurs="0" />
             <xs:element name="requires" type="common:Resource" />
+            <xs:element name="isPartOf" type="common:Resources" />
             <xs:element name="statisticalOperation" type="common:Resource" />
             <xs:element name="maintainer" type="common:Resource" />
             <xs:element name="validFrom" type="xs:dateTime" />
