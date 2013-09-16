@@ -24,6 +24,7 @@ import com.arte.statistic.parser.sdmx.v2_1.domain.ComponentInfo;
 import com.arte.statistic.parser.sdmx.v2_1.domain.ComponentInfoTypeEnum;
 import com.arte.statistic.parser.sdmx.v2_1.domain.DimensionCodeInfo;
 import com.arte.statistic.parser.sdmx.v2_1.domain.IdValuePair;
+import com.arte.statistic.parser.sdmx.v2_1.mapper.DataSetDo2JaxbDomainMapper;
 
 public class DatasetInfo {
 
@@ -199,12 +200,15 @@ public class DatasetInfo {
 
     private DimensionCodeInfo calculateDimensionAtObservation(RequestParameter requestParameter) throws Exception {
         if (StringUtils.isNotBlank(requestParameter.getDimensionAtObservation())) {
+            if (DataSetDo2JaxbDomainMapper.ALL_DIMENSIONS.toLowerCase().equals(requestParameter.getDimensionAtObservation().toLowerCase())) {
+                return null; // All dimensions
+            }
             for (DimensionCodeInfo dimensionCodeInfo : getConditions()) {
                 if (dimensionCodeInfo.getCode().equals(requestParameter.getDimensionAtObservation())) {
                     return dimensionCodeInfo;
                 }
             }
-            throw new Exception("Impossible to determinate the dimension at observation level");
+            return null; // All dimensions
         } else {
             DimensionCodeInfo timeDimension = getTimeDimension();
             if (timeDimension != null) {

@@ -12,6 +12,8 @@ import java.util.Set;
 import java.util.Stack;
 import java.util.UUID;
 
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
 import org.joda.time.DateTime;
 import org.sdmx.resources.sdmxml.rest.schemas.v2_1.types.DataParameterDetailEnum;
@@ -31,7 +33,6 @@ import org.siemac.metamac.statistical.resources.core.io.utils.ManipulateDataUtil
 
 import com.arte.statistic.dataset.repository.dto.AttributeInstanceBasicDto;
 import com.arte.statistic.dataset.repository.dto.AttributeInstanceDto;
-import com.arte.statistic.dataset.repository.dto.CodeDimensionDto;
 import com.arte.statistic.dataset.repository.dto.ObservationExtendedDto;
 import com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceFacade;
 import com.arte.statistic.parser.sdmx.v2_1.WriterDataCallback;
@@ -88,7 +89,8 @@ public class WriterDataCallbackImpl implements WriterDataCallback {
         // Structures
         for (DatasetInfo datasetInfo : getDatasetInfoCache()) {
             PayloadStructure payloadStructure = new PayloadStructure();
-            payloadStructure.setDimensionAtObservation(datasetInfo.getDimensionAtObservation().getCode());
+
+            payloadStructure.setDimensionAtObservation((datasetInfo.getDimensionAtObservation() == null) ? null : datasetInfo.getDimensionAtObservation().getCode());
             payloadStructure.setStructureID(datasetInfo.getDatasetVersion().getDatasetRepositoryId());
 
             String[] splitItemScheme = UrnUtils.splitUrnWithoutPrefixItemScheme(datasetInfo.getDatasetVersion().getSiemacMetadataStatisticalResource().getMaintainer().getUrn());
@@ -123,15 +125,11 @@ public class WriterDataCallbackImpl implements WriterDataCallback {
     public Serie fecthSerie(List<DimensionCodeInfo> serieConditions) throws Exception {
         Serie serie = new Serie();
 
-        // key
+        // Key
+        Pair<List<IdValuePair>, IdValuePair> keyParts = generateKeyPartsFromConditions(serieConditions);
+
         // The last element in list is the key of dimension at observation level, the other elements have only one key
-        int i = 0;
-        Iterator<DimensionCodeInfo> itSerieCondition = serieConditions.iterator();
-        while (i < serieConditions.size() - 1) {
-            DimensionCodeInfo keyCondition = itSerieCondition.next();
-            serie.getSeriesKey().add(new IdValuePair(keyCondition.getCode(), keyCondition.getCodes().iterator().next()));
-            i++;
-        }
+        serie.getSeriesKey().addAll(keyParts.getLeft());
 
         // Add serie attributes
         Set<String> addedKeys = new HashSet<String>();
@@ -145,11 +143,31 @@ public class WriterDataCallbackImpl implements WriterDataCallback {
                     .getDatasetRepositoryId(), metamac2StatRepoMapper.conditionsToRepositoryList(serieConditions));
 
             for (Map.Entry<String, ObservationExtendedDto> entry : observationsMap.entrySet()) {
-                serie.getObs().add(observationRepositoryToGroupedObservationWriter(entry.getValue(), addedKeys));
+                serie.getObs().add(observationRepositoryToGroupedObservationWriter(entry.getValue(), addedKeys, serie.getSeriesKey(), keyParts.getRight(), true));
             }
         }
 
         return serie;
+    }
+
+    @Override
+    public List<Observation> fetchUngroupedObservations(List<DimensionCodeInfo> serieConditions) throws Exception {
+        List<Observation> observations = new LinkedList<Observation>();
+
+        // Key
+        Pair<List<IdValuePair>, IdValuePair> keyParts = generateKeyPartsFromConditions(serieConditions);
+
+        // Observations
+        if (!isSkipData()) {
+            Map<String, ObservationExtendedDto> observationsMap = datasetRepositoriesServiceFacade.findObservationsExtendedByDimensions(getCurrentDatasetInfo().getDatasetVersion()
+                    .getDatasetRepositoryId(), metamac2StatRepoMapper.conditionsToRepositoryList(serieConditions));
+
+            for (Map.Entry<String, ObservationExtendedDto> entry : observationsMap.entrySet()) {
+                observations.add(observationRepositoryToGroupedObservationWriter(entry.getValue(), new HashSet<String>(), keyParts.getLeft(), keyParts.getRight(), false));
+            }
+        }
+
+        return observations;
     }
 
     @Override
@@ -371,17 +389,18 @@ public class WriterDataCallbackImpl implements WriterDataCallback {
         return false;
     }
 
-    private Observation observationRepositoryToGroupedObservationWriter(ObservationExtendedDto observation, Set<String> addedKeys) throws Exception {
+    private Observation observationRepositoryToGroupedObservationWriter(ObservationExtendedDto observation, Set<String> addedKeys, List<IdValuePair> observationPartialKey,
+            IdValuePair dimensionAtObservationKey, boolean isGroupedObservation) throws Exception {
         Observation result = new Observation();
 
-        // Key
+        // Calculate Key
         List<IdValuePair> observationKeyFull = new LinkedList<IdValuePair>();
-        for (CodeDimensionDto codeDimensionDto : observation.getCodesDimension()) {
-            IdValuePair idValuePair = new IdValuePair(codeDimensionDto.getDimensionId(), codeDimensionDto.getCodeDimensionId());
-            if (getDimensionAtObservation().getCode().equals(codeDimensionDto.getDimensionId())) {
-                result.getObservationKey().add(idValuePair);
-            }
-            observationKeyFull.add(idValuePair);
+        observationKeyFull.addAll(observationPartialKey);
+        observationKeyFull.add(dimensionAtObservationKey);
+        if (isGroupedObservation) {
+            result.getObservationKey().add(dimensionAtObservationKey);
+        } else {
+            result.getObservationKey().addAll(observationKeyFull);
         }
 
         // Observation Value
@@ -450,6 +469,21 @@ public class WriterDataCallbackImpl implements WriterDataCallback {
         } else {
             return false;
         }
+    }
+
+    private Pair<List<IdValuePair>, IdValuePair> generateKeyPartsFromConditions(List<DimensionCodeInfo> serieConditions) {
+        int i = 0;
+        List<IdValuePair> observationPartialKey = new LinkedList<IdValuePair>();
+        Iterator<DimensionCodeInfo> itSerieCondition = serieConditions.iterator();
+        while (i < serieConditions.size() - 1) {
+            DimensionCodeInfo keyCondition = itSerieCondition.next();
+            observationPartialKey.add(new IdValuePair(keyCondition.getCode(), keyCondition.getCodes().iterator().next()));
+            i++;
+        }
+        DimensionCodeInfo keyCondition = itSerieCondition.next();
+        IdValuePair dimensionAtObservationKey = new IdValuePair(keyCondition.getCode(), keyCondition.getCodes().iterator().next());
+
+        return new ImmutablePair<List<IdValuePair>, IdValuePair>(observationPartialKey, dimensionAtObservationKey);
     }
 
 }
