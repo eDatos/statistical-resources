@@ -204,7 +204,7 @@ public abstract class StatisticalResourcesRestExternalFacadeV10BaseTest extends 
         return apiEndpointv10;
     }
 
-    private void mockRetrieveQueryLastPublishedVersion() throws MetamacException {
+    private void mockQueryVersionRepository() throws MetamacException {
         when(queryVersionRepository.retrieveLastVersion(any(String.class))).thenAnswer(new Answer<QueryVersion>() { // TODO retrieveLastPublishedVersion
 
                     @Override
@@ -217,6 +217,19 @@ public abstract class StatisticalResourcesRestExternalFacadeV10BaseTest extends 
                         return restDoMocks.mockQueryVersion(queryUrnSplited[0], queryUrnSplited[1], VERSION_1);
                     };
                 });
+        when(queryVersionRepository.retrieveIsPartOf(any(QueryVersion.class))).thenAnswer(new Answer<List<RelatedResourceResult>>() {
+
+            // TODO cambiar por retrieveIsPartOfOnlyPublishedVersion
+
+            @Override
+            public List<RelatedResourceResult> answer(InvocationOnMock invocation) throws Throwable {
+                List<RelatedResourceResult> queries = new ArrayList<RelatedResourceResult>();
+                queries.add(restDoMocks.mockPublicationRelatedResourceResult("agency01", "isPartOf01", "01.000"));
+                queries.add(restDoMocks.mockPublicationRelatedResourceResult("agency01", "isPartOf02", "01.000"));
+                return queries;
+            };
+        });
+
     }
 
     @SuppressWarnings("unchecked")
@@ -304,6 +317,20 @@ public abstract class StatisticalResourcesRestExternalFacadeV10BaseTest extends 
                 return restDoMocks.mockDatasetRelatedResourceResult("agency01", "dataset99", "01.000");
             };
         });
+
+        when(datasetVersionRepository.retrieveIsPartOf(any(DatasetVersion.class))).thenAnswer(new Answer<List<RelatedResourceResult>>() {
+
+            // TODO cambiar por retrieveIsPartOfOnlyPublishedVersion
+
+            @Override
+            public List<RelatedResourceResult> answer(InvocationOnMock invocation) throws Throwable {
+                List<RelatedResourceResult> queries = new ArrayList<RelatedResourceResult>();
+                queries.add(restDoMocks.mockPublicationRelatedResourceResult("agency01", "isPartOf01", "01.000"));
+                queries.add(restDoMocks.mockPublicationRelatedResourceResult("agency01", "isPartOf02", "01.000"));
+                return queries;
+            };
+        });
+
     }
 
     private void mockPublicationVersionRepository() throws MetamacException {
@@ -795,7 +822,7 @@ public abstract class StatisticalResourcesRestExternalFacadeV10BaseTest extends 
         mockFindCollectionsByCondition();
 
         mockFindQueriesByCondition();
-        mockRetrieveQueryLastPublishedVersion();
+        mockQueryVersionRepository();
 
         mockRetrieveConfigurationById();
     }

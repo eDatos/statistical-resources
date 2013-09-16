@@ -162,6 +162,32 @@
                 <cdomain:text xml:lang="es">título dataset99</cdomain:text>
             </cdomain:name>
         </stat:isReplacedBy>
+        <stat:hasPart total="3">
+            <cdomain:resource kind="statisticalResources#dataset">
+                <cdomain:id>hasPart01</cdomain:id>
+                <cdomain:urn>urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Dataset=agency1:hasPart01(01.000)</cdomain:urn>
+                <cdomain:selfLink kind="statisticalResources#dataset" href="http://data.istac.es/apis/statistical-resources/v1.0/datasets/agency1/hasPart01/01.000"/>
+                <cdomain:name>
+                    <cdomain:text xml:lang="es">title-hasPart01 en Espanol</cdomain:text>
+                </cdomain:name>
+            </cdomain:resource>
+            <cdomain:resource kind="statisticalResources#dataset">
+                <cdomain:id>hasPart02</cdomain:id>
+                <cdomain:urn>urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Dataset=agency1:hasPart02(01.000)</cdomain:urn>
+                <cdomain:selfLink kind="statisticalResources#dataset" href="http://data.istac.es/apis/statistical-resources/v1.0/datasets/agency1/hasPart02/01.000"/>
+                <cdomain:name>
+                    <cdomain:text xml:lang="es">title-hasPart02 en Espanol</cdomain:text>
+                </cdomain:name>
+            </cdomain:resource>
+            <cdomain:resource kind="statisticalResources#query">
+                <cdomain:id>hasPart03</cdomain:id>
+                <cdomain:urn>urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Query=agency1:hasPart03(01.000)</cdomain:urn>
+                <cdomain:selfLink kind="statisticalResources#query" href="http://data.istac.es/apis/statistical-resources/v1.0/queries/agency1/hasPart03"/>
+                <cdomain:name>
+                    <cdomain:text xml:lang="es">title-hasPart03 en Espanol</cdomain:text>
+                </cdomain:name>
+            </cdomain:resource>
+        </stat:hasPart>
         <stat:rightsHolder kind="structuralResources#organisation">
             <cdomain:id>contact</cdomain:id>
             <cdomain:name>

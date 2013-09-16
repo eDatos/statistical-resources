@@ -181,39 +181,21 @@
                 <cdomain:text xml:lang="es">título dataset99</cdomain:text>
             </cdomain:name>
         </stat:isReplacedBy>
-        <stat:hasPart total="2">
-            <cdomain:resource kind="statisticalResources#dataset">
-                <cdomain:id>hasPart01</cdomain:id>
-                <cdomain:urn>urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Dataset=agency1:hasPart01(01.000)</cdomain:urn>
-                <cdomain:selfLink kind="statisticalResources#dataset" href="http://data.istac.es/apis/statistical-resources/v1.0/datasets/agency1/hasPart01/01.000"/>
-                <cdomain:name>
-                    <cdomain:text xml:lang="es">title-hasPart01 en Espanol</cdomain:text>
-                </cdomain:name>
-            </cdomain:resource>
-            <cdomain:resource kind="statisticalResources#dataset">
-                <cdomain:id>hasPart02</cdomain:id>
-                <cdomain:urn>urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Dataset=agency1:hasPart02(01.000)</cdomain:urn>
-                <cdomain:selfLink kind="statisticalResources#dataset" href="http://data.istac.es/apis/statistical-resources/v1.0/datasets/agency1/hasPart02/01.000"/>
-                <cdomain:name>
-                    <cdomain:text xml:lang="es">title-hasPart02 en Espanol</cdomain:text>
-                </cdomain:name>
-            </cdomain:resource>
-        </stat:hasPart>
         <stat:isPartOf total="2">
-            <cdomain:resource kind="statisticalResources#dataset">
+            <cdomain:resource kind="statisticalResources#collection">
                 <cdomain:id>isPartOf01</cdomain:id>
-                <cdomain:urn>urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Dataset=agency1:isPartOf01(01.000)</cdomain:urn>
-                <cdomain:selfLink kind="statisticalResources#dataset" href="http://data.istac.es/apis/statistical-resources/v1.0/datasets/agency1/isPartOf01/01.000"/>
+                <cdomain:urn>urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Collection=agency01:isPartOf01(01.000)</cdomain:urn>
+                <cdomain:selfLink kind="statisticalResources#collection" href="http://data.istac.es/apis/statistical-resources/v1.0/collections/agency01/isPartOf01/01.000"/>
                 <cdomain:name>
-                    <cdomain:text xml:lang="es">title-isPartOf01 en Espanol</cdomain:text>
+                    <cdomain:text xml:lang="es">título isPartOf01</cdomain:text>
                 </cdomain:name>
             </cdomain:resource>
-            <cdomain:resource kind="statisticalResources#dataset">
+            <cdomain:resource kind="statisticalResources#collection">
                 <cdomain:id>isPartOf02</cdomain:id>
-                <cdomain:urn>urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Dataset=agency1:isPartOf02(01.000)</cdomain:urn>
-                <cdomain:selfLink kind="statisticalResources#dataset" href="http://data.istac.es/apis/statistical-resources/v1.0/datasets/agency1/isPartOf02/01.000"/>
+                <cdomain:urn>urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Collection=agency01:isPartOf02(01.000)</cdomain:urn>
+                <cdomain:selfLink kind="statisticalResources#collection" href="http://data.istac.es/apis/statistical-resources/v1.0/collections/agency01/isPartOf02/01.000"/>
                 <cdomain:name>
-                    <cdomain:text xml:lang="es">title-isPartOf02 en Espanol</cdomain:text>
+                    <cdomain:text xml:lang="es">título isPartOf02</cdomain:text>
                 </cdomain:name>
             </cdomain:resource>
         </stat:isPartOf>

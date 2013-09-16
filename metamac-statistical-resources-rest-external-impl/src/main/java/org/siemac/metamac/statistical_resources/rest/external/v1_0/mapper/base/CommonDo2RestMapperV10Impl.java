@@ -199,8 +199,7 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
         target.setPublisherContributors(toResourcesExternalItemsSrm(source.getPublisherContributor(), selectedLanguages));
         target.setMediators(toResourcesExternalItemsSrm(source.getMediator(), selectedLanguages));
         target.setNewnessUntilDate(toDate(source.getNewnessUntilDate()));
-        target.setHasPart(toResources(source.getHasPart(), selectedLanguages));
-        target.setIsPartOf(toResources(source.getIsPartOf(), selectedLanguages));
+        // note: hasPart, isPartOf: in concrete mappers
 
         toCommonMetadata(source, target, selectedLanguages);
 
@@ -575,6 +574,8 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
                 return datasetsDo2RestMapper.toResource(source, selectedLanguages);
             case QUERY_VERSION:
                 return queriesDo2RestMapper.toResource(source, selectedLanguages);
+            case PUBLICATION_VERSION:
+                return collectionsDo2RestMapper.toResource(source, selectedLanguages);
             default:
                 logger.error("RelatedResource unsupported: " + source.getType());
                 org.siemac.metamac.rest.common.v1_0.domain.Exception exception = RestExceptionUtils.getException(RestServiceExceptionType.UNKNOWN);

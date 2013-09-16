@@ -10,6 +10,7 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.rest.common.v1_0.domain.ChildLinks;
 import org.siemac.metamac.rest.common.v1_0.domain.Resource;
 import org.siemac.metamac.rest.common.v1_0.domain.ResourceLink;
+import org.siemac.metamac.rest.common.v1_0.domain.Resources;
 import org.siemac.metamac.rest.exception.RestException;
 import org.siemac.metamac.rest.exception.utils.RestExceptionUtils;
 import org.siemac.metamac.rest.search.criteria.mapper.SculptorCriteria2RestCriteria;
@@ -149,6 +150,7 @@ public class CollectionsDo2RestMapperV10Impl implements CollectionsDo2RestMapper
         target.setFormatExtentResources(source.getFormatExtentResources());
         target.setReplaces(toCollectionReplaces(source, selectedLanguages));
         target.setIsReplacedBy(toCollectionIsReplacedBy(source, selectedLanguages));
+        target.setHasPart(toCollectionHasPart(source, selectedLanguages));
         commonDo2RestMapper.toMetadataStatisticalResource(source.getSiemacMetadataStatisticalResource(), target, selectedLanguages);
         return target;
     }
@@ -163,6 +165,11 @@ public class CollectionsDo2RestMapperV10Impl implements CollectionsDo2RestMapper
         // TODO sustituir por retrieveIsReplacedByOnlyPublishedVersion
         RelatedResourceResult relatedResourceReplacesBy = publicationVersionRepository.retrieveIsReplacedBy(source);
         return toResource(relatedResourceReplacesBy, selectedLanguages);
+    }
+
+    private Resources toCollectionHasPart(PublicationVersion source, List<String> selectedLanguages) throws MetamacException {
+        // TODO comprobar si puede ser visible en la api (validFrom, publicado...)
+        return commonDo2RestMapper.toResources(source.getHasPart(), selectedLanguages);
     }
 
     private CollectionData toCollectionData(PublicationVersion source, List<String> selectedLanguages) throws MetamacException {
@@ -256,7 +263,7 @@ public class CollectionsDo2RestMapperV10Impl implements CollectionsDo2RestMapper
     private String toCollectionLink(PublicationVersion source) {
         String agencyID = source.getLifeCycleStatisticalResource().getMaintainer().getCodeNested();
         String resourceID = source.getLifeCycleStatisticalResource().getCode();
-        String version = source.getLifeCycleStatisticalResource().getVersionLogic();
+        String version = source.getLifeCycleStatisticalResource().getVersionLogic(); // TODO con versión?
         return toCollectionLink(agencyID, resourceID, version);
     }
 

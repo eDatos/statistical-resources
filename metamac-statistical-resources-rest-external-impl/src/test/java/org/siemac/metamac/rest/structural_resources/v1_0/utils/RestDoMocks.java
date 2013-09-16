@@ -116,6 +116,9 @@ public class RestDoMocks {
         PublicationVersion target = mockPublicationVersionBasic(agencyID, resourceID, version);
         target.setFormatExtentResources(Integer.valueOf(5));
         target.getSiemacMetadataStatisticalResource().setReplaces(mockPublicationRelatedResource(agencyID, "replace01", "01.000"));
+        target.addHasPart(mockDatasetRelatedResource(agencyID, "hasPart01", "01.000"));
+        target.addHasPart(mockDatasetRelatedResource(agencyID, "hasPart02", "01.000"));
+        target.addHasPart(mockQueryRelatedResource(agencyID, "hasPart03", "01.000"));
         return target;
     }
 
@@ -293,10 +296,6 @@ public class RestDoMocks {
         target.setResourceCreatedDate(new DateTime(2012, 1, 2, 3, 4, 5, 0));
         target.setLastUpdate(new DateTime(2013, 1, 2, 3, 4, 5, 0));
         target.setNewnessUntilDate(new DateTime(2013, 9, 2, 15, 4, 5, 0));
-        target.addHasPart(mockDatasetRelatedResource(agencyID, "hasPart01", "01.000"));
-        target.addHasPart(mockDatasetRelatedResource(agencyID, "hasPart02", "01.000"));
-        target.addIsPartOf(mockDatasetRelatedResource(agencyID, "isPartOf01", "01.000"));
-        target.addIsPartOf(mockDatasetRelatedResource(agencyID, "isPartOf02", "01.000"));
         target.setCopyrightedDate(2014);
         mockLifeCycleStatisticalResource(agencyID, resourceID, version, target);
     }

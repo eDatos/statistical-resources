@@ -164,6 +164,7 @@ public class DatasetsDo2RestMapperV10Impl implements DatasetsDo2RestMapperV10 {
         target.setIsReplacedByVersion(toDatasetIsReplacedByVersion(source, selectedLanguages));
         target.setReplaces(toDatasetReplaces(source, selectedLanguages));
         target.setIsReplacedBy(toDatasetIsReplacedBy(source, selectedLanguages));
+        target.setIsPartOf(toDatasetIsPartOf(source, selectedLanguages));
 
         // StatisticalResource and other
         commonDo2RestMapper.toMetadataStatisticalResource(source.getSiemacMetadataStatisticalResource(), target, selectedLanguages);
@@ -206,6 +207,20 @@ public class DatasetsDo2RestMapperV10Impl implements DatasetsDo2RestMapperV10 {
         // TODO sustituir por retrieveIsReplacedByOnlyPublishedVersion
         RelatedResourceResult relatedResourceReplacesBy = datasetVersionRepository.retrieveIsReplacedBy(source);
         return toResource(relatedResourceReplacesBy, selectedLanguages);
+    }
+
+    private Resources toDatasetIsPartOf(DatasetVersion source, List<String> selectedLanguages) throws MetamacException {
+        // TODO sustituir por retrieveIsPartOfOnlyPublishedVersion
+        List<RelatedResourceResult> relatedResourceIsPartOf = datasetVersionRepository.retrieveIsPartOf(source);
+        if (CollectionUtils.isEmpty(relatedResourceIsPartOf)) {
+            return null;
+        }
+        Resources targets = new Resources();
+        for (RelatedResourceResult relatedResourceResult : relatedResourceIsPartOf) {
+            targets.getResources().add(commonDo2RestMapper.toResource(relatedResourceResult, selectedLanguages));
+        }
+        targets.setTotal(BigInteger.valueOf(targets.getResources().size()));
+        return targets;
     }
 
     private Items toTemporalCoverages(List<TemporalCode> sources, List<String> selectedLanguages) {

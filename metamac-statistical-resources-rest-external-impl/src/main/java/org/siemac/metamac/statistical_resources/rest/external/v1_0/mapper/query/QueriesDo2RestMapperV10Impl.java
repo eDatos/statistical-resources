@@ -1,15 +1,18 @@
 package org.siemac.metamac.statistical_resources.rest.external.v1_0.mapper.query;
 
+import java.math.BigInteger;
 import java.util.List;
 import java.util.Map;
 
 import javax.ws.rs.core.Response.Status;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.rest.common.v1_0.domain.ChildLinks;
 import org.siemac.metamac.rest.common.v1_0.domain.Resource;
 import org.siemac.metamac.rest.common.v1_0.domain.ResourceLink;
+import org.siemac.metamac.rest.common.v1_0.domain.Resources;
 import org.siemac.metamac.rest.exception.RestException;
 import org.siemac.metamac.rest.exception.utils.RestExceptionUtils;
 import org.siemac.metamac.rest.search.criteria.mapper.SculptorCriteria2RestCriteria;
@@ -22,6 +25,7 @@ import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedRes
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryTypeEnum;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
+import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersionRepository;
 import org.siemac.metamac.statistical_resources.rest.external.StatisticalResourcesRestExternalConstants;
 import org.siemac.metamac.statistical_resources.rest.external.exception.RestServiceExceptionType;
 import org.siemac.metamac.statistical_resources.rest.external.v1_0.domain.DsdProcessorResult;
@@ -40,6 +44,9 @@ public class QueriesDo2RestMapperV10Impl implements QueriesDo2RestMapperV10 {
 
     @Autowired
     private DatasetsDo2RestMapperV10 datasetsDo2RestMapper;
+
+    @Autowired
+    private QueryVersionRepository   queryVersionRepository;
 
     private static final Logger      logger = LoggerFactory.getLogger(QueriesDo2RestMapperV10Impl.class);
 
@@ -144,7 +151,22 @@ public class QueriesDo2RestMapperV10Impl implements QueriesDo2RestMapperV10 {
         target.setValidFrom(commonDo2RestMapper.toDate(source.getLifeCycleStatisticalResource().getValidFrom()));
         target.setValidTo(commonDo2RestMapper.toDate(source.getLifeCycleStatisticalResource().getValidTo()));
         target.setRequires(datasetsDo2RestMapper.toResource(source.getDatasetVersion(), selectedLanguages));
+        target.setIsPartOf(toQueryIsPartOf(source, selectedLanguages));
         return target;
+    }
+
+    private Resources toQueryIsPartOf(QueryVersion source, List<String> selectedLanguages) throws MetamacException {
+        // TODO sustituir por retrieveIsPartOfOnlyPublishedVersion
+        List<RelatedResourceResult> relatedResourceIsPartOf = queryVersionRepository.retrieveIsPartOf(source);
+        if (CollectionUtils.isEmpty(relatedResourceIsPartOf)) {
+            return null;
+        }
+        Resources targets = new Resources();
+        for (RelatedResourceResult relatedResourceResult : relatedResourceIsPartOf) {
+            targets.getResources().add(commonDo2RestMapper.toResource(relatedResourceResult, selectedLanguages));
+        }
+        targets.setTotal(BigInteger.valueOf(targets.getResources().size()));
+        return targets;
     }
 
     private Data toQueryData(QueryVersion source, DsdProcessorResult dsdProcessorResult, List<String> selectedLanguages) throws Exception {
