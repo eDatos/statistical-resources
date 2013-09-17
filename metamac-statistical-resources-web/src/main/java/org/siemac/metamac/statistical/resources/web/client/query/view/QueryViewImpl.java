@@ -19,6 +19,7 @@ import org.siemac.metamac.statistical.resources.web.client.query.view.widgets.Qu
 import org.siemac.metamac.statistical.resources.web.client.query.view.widgets.forms.QueryIdentifiersCreationForm;
 import org.siemac.metamac.statistical.resources.web.client.query.view.widgets.forms.QueryProductionDescriptorsEditionForm;
 import org.siemac.metamac.statistical.resources.web.client.query.view.widgets.forms.QueryProductionDescriptorsForm;
+import org.siemac.metamac.statistical.resources.web.client.query.view.widgets.forms.QueryResourceRelationDescriptorsForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.ProgramPublicationWindow;
 import org.siemac.metamac.statistical.resources.web.client.widgets.VersionWindow;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.LifeCycleResourceContentDescriptorsEditionForm;
@@ -81,6 +82,9 @@ public class QueryViewImpl extends ViewWithUiHandlers<QueryUiHandlers> implement
         super.setUiHandlers(uiHandlers);
         queryFormPanel.productionDescriptorsEditionForm.setUiHandlers(uiHandlers);
         queryFormPanel.productionDescriptorsForm.setUiHandlers(uiHandlers);
+
+        queryFormPanel.resourceRelationDescriptorsEditionForm.setUiHandlers(uiHandlers);
+        queryFormPanel.resourceRelationDescriptorsForm.setUiHandlers(uiHandlers);
     }
 
     @Override
@@ -154,6 +158,7 @@ public class QueryViewImpl extends ViewWithUiHandlers<QueryUiHandlers> implement
         private LifeCycleResourceContentDescriptorsForm                  contentDescriptorsForm;
         private StatisticalResourceThematicContentClassifiersForm        thematicContentClassifiersForm;
         private QueryProductionDescriptorsForm                           productionDescriptorsForm;
+        private QueryResourceRelationDescriptorsForm                     resourceRelationDescriptorsForm;
         private LifeCycleResourceLifeCycleForm                           lifeCycleForm;
         private LifeCycleResourceVersionForm                             versionForm;
 
@@ -165,6 +170,7 @@ public class QueryViewImpl extends ViewWithUiHandlers<QueryUiHandlers> implement
         private LifeCycleResourceContentDescriptorsEditionForm           contentDescriptorsEditionForm;
         private StatisticalResourceThematicContentClassifiersEditionForm thematicContentClassifiersEditionForm;
         private QueryProductionDescriptorsEditionForm                    productionDescriptorsEditionForm;
+        private QueryResourceRelationDescriptorsForm                     resourceRelationDescriptorsEditionForm;
         private LifeCycleResourceLifeCycleForm                           lifeCycleEditionForm;
         private LifeCycleResourceVersionEditionForm                      versionEditionForm;
 
@@ -203,6 +209,9 @@ public class QueryViewImpl extends ViewWithUiHandlers<QueryUiHandlers> implement
 
                     productionDescriptorsForm.setTranslationsShowed(translationsShowed);
                     productionDescriptorsEditionForm.setTranslationsShowed(translationsShowed);
+
+                    resourceRelationDescriptorsForm.setTranslationsShowed(translationsShowed);
+                    resourceRelationDescriptorsEditionForm.setTranslationsShowed(translationsShowed);
 
                     lifeCycleForm.setTranslationsShowed(translationsShowed);
                     lifeCycleEditionForm.setTranslationsShowed(translationsShowed);
@@ -336,12 +345,14 @@ public class QueryViewImpl extends ViewWithUiHandlers<QueryUiHandlers> implement
             thematicContentClassifiersForm = new StatisticalResourceThematicContentClassifiersForm();
             contentDescriptorsForm = new LifeCycleResourceContentDescriptorsForm();
             productionDescriptorsForm = new QueryProductionDescriptorsForm();
+            resourceRelationDescriptorsForm = new QueryResourceRelationDescriptorsForm();
             lifeCycleForm = new LifeCycleResourceLifeCycleForm();
             versionForm = new LifeCycleResourceVersionForm();
             mainFormLayout.addViewCanvas(identifiersForm);
             mainFormLayout.addViewCanvas(contentDescriptorsForm);
             mainFormLayout.addViewCanvas(thematicContentClassifiersForm);
             mainFormLayout.addViewCanvas(productionDescriptorsForm);
+            mainFormLayout.addViewCanvas(resourceRelationDescriptorsForm);
             mainFormLayout.addViewCanvas(lifeCycleForm);
             mainFormLayout.addViewCanvas(versionForm);
         }
@@ -352,6 +363,7 @@ public class QueryViewImpl extends ViewWithUiHandlers<QueryUiHandlers> implement
             contentDescriptorsEditionForm = new LifeCycleResourceContentDescriptorsEditionForm();
             thematicContentClassifiersEditionForm = new StatisticalResourceThematicContentClassifiersEditionForm();
             productionDescriptorsEditionForm = new QueryProductionDescriptorsEditionForm();
+            resourceRelationDescriptorsEditionForm = new QueryResourceRelationDescriptorsForm();
             lifeCycleEditionForm = new LifeCycleResourceLifeCycleForm();
             versionEditionForm = new LifeCycleResourceVersionEditionForm();
 
@@ -360,6 +372,7 @@ public class QueryViewImpl extends ViewWithUiHandlers<QueryUiHandlers> implement
             mainFormLayout.addEditionCanvas(contentDescriptorsEditionForm);
             mainFormLayout.addEditionCanvas(thematicContentClassifiersEditionForm);
             mainFormLayout.addEditionCanvas(productionDescriptorsEditionForm);
+            mainFormLayout.addEditionCanvas(resourceRelationDescriptorsEditionForm);
             mainFormLayout.addEditionCanvas(lifeCycleEditionForm);
             mainFormLayout.addEditionCanvas(versionEditionForm);
         }
@@ -394,6 +407,7 @@ public class QueryViewImpl extends ViewWithUiHandlers<QueryUiHandlers> implement
             contentDescriptorsForm.setLifeCycleResource(queryDto);
             thematicContentClassifiersForm.setStatisticalResourceDto(queryDto);
             productionDescriptorsForm.setQueryDto(queryDto);
+            resourceRelationDescriptorsForm.setQueryDto(queryDto);
             lifeCycleForm.setLifeCycleStatisticalResourceDto(queryDto);
             versionForm.setLifeCycleStatisticalResourceDto(queryDto);
         }
@@ -421,8 +435,10 @@ public class QueryViewImpl extends ViewWithUiHandlers<QueryUiHandlers> implement
             productionDescriptorsEditionForm.setQueryDto(queryVersionDto);
             productionDescriptorsEditionForm.setRequiredTitleSuffix(requiredFieldsToNextProcStatus);
             mainFormLayout.addEditionCanvas(productionDescriptorsEditionForm, 4);
-
             // WORKAROUND
+
+            resourceRelationDescriptorsEditionForm.setQueryDto(queryVersionDto);
+            resourceRelationDescriptorsEditionForm.setRequiredTitleSuffix(requiredFieldsToNextProcStatus);
 
             lifeCycleEditionForm.setLifeCycleStatisticalResourceDto(queryVersionDto);
             lifeCycleEditionForm.setRequiredTitleSuffix(requiredFieldsToNextProcStatus);

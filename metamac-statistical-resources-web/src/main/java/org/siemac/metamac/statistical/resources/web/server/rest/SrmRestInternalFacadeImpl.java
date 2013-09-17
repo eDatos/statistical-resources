@@ -107,8 +107,10 @@ public class SrmRestInternalFacadeImpl implements SrmRestInternalFacade {
             Groups groups = structure.getDataStructureComponents().getGroups();
 
             Map<String, List<String>> groupDimensionIds = new HashMap<String, List<String>>();
-            for (Group group : groups.getGroups()) {
-                groupDimensionIds.put(group.getId(), group.getDimensions().getDimensions());
+            if (groups != null) {
+                for (Group group : groups.getGroups()) {
+                    groupDimensionIds.put(group.getId(), group.getDimensions().getDimensions());
+                }
             }
             return groupDimensionIds;
         } catch (MetamacException e) {
