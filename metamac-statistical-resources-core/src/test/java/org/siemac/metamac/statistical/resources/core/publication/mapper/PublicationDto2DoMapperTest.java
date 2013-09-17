@@ -108,7 +108,7 @@ public class PublicationDto2DoMapperTest extends StatisticalResourcesBaseTest {
     }
 
     @Test
-    @MetamacMock({PUBLICATION_VERSION_01_BASIC_NAME, PUBLICATION_VERSION_41_PUB_NOT_VISIBLE_REPLACES_PUB_VERSION_42_NAME, PUBLICATION_VERSION_42_PUB_IS_REPLACED_BY_PUB_VERSION_41_NAME})
+    @MetamacMock({PUBLICATION_VERSION_01_BASIC_NAME, PUBLICATION_VERSION_41_PUB_NOT_VISIBLE_REPLACES_PUB_VERSION_42_NAME})
     public void testPublicationDtoToDoCanNotReplaceAPublicationVersionThatHasBeenReplacedAlready() throws MetamacException {
         PublicationVersion resourceAlreadyReplaced = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_42_PUB_IS_REPLACED_BY_PUB_VERSION_41_NAME);
 
@@ -124,7 +124,7 @@ public class PublicationDto2DoMapperTest extends StatisticalResourcesBaseTest {
     }
 
     @Test
-    @MetamacMock({PUBLICATION_VERSION_41_PUB_NOT_VISIBLE_REPLACES_PUB_VERSION_42_NAME, PUBLICATION_VERSION_42_PUB_IS_REPLACED_BY_PUB_VERSION_41_NAME})
+    @MetamacMock({PUBLICATION_VERSION_41_PUB_NOT_VISIBLE_REPLACES_PUB_VERSION_42_NAME})
     public void testPublicationDtoToDoReplaceAPublicationVersionThatHasBeenReplacedAlreadyByThisPublication() throws MetamacException {
         PublicationVersion resourceAlreadyReplaced = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_42_PUB_IS_REPLACED_BY_PUB_VERSION_41_NAME);
 

@@ -2,53 +2,49 @@ package org.siemac.metamac.statistical.resources.core.utils.mocks.templates;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.siemac.metamac.statistical.resources.core.utils.LifecycleTestUtils.createPublished;
-import static org.siemac.metamac.statistical.resources.core.utils.LifecycleTestUtils.prepareToDiffusionValidation;
-import static org.siemac.metamac.statistical.resources.core.utils.LifecycleTestUtils.prepareToProductionValidation;
-import static org.siemac.metamac.statistical.resources.core.utils.LifecycleTestUtils.prepareToPublished;
-import static org.siemac.metamac.statistical.resources.core.utils.LifecycleTestUtils.prepareToValidationRejected;
+import static org.siemac.metamac.statistical.resources.core.utils.LifecycleTestUtils.*;
 
 import org.siemac.metamac.statistical.resources.core.base.domain.HasSiemacMetadata;
 import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataStatisticalResource;
 
 public class HasSiemacMetadataMocks {
-    
+
     // PREPARE TO PRODUCTION VALIDATION
     public static HasSiemacMetadata mockHasSiemacMetadataPrepareToProductionValidation() {
         HasSiemacMetadata mockedResource = mockHasSiemacMetadata();
-        prepareToProductionValidation(mockedResource);
+        prepareToProductionValidationSiemac(mockedResource);
         return mockedResource;
     }
-    
+
     // PREPARE TO DIFFUSION VALIDATION
     public static HasSiemacMetadata mockHasSiemacMetadataPrepareToDiffusionValidation() {
         HasSiemacMetadata mockedResource = mockHasSiemacMetadata();
-        prepareToDiffusionValidation(mockedResource);
+        prepareToDiffusionValidationSiemac(mockedResource);
         return mockedResource;
     }
-    
+
     // PREPARE TO VALIDATION REJECTED
     public static HasSiemacMetadata mockHasSiemacMetadataPrepareToValidationRejected() {
         HasSiemacMetadata mockedResource = mockHasSiemacMetadata();
-        prepareToValidationRejected(mockedResource);
+        prepareToValidationRejectedFromProductionValidationSiemac(mockedResource);
         return mockedResource;
     }
-    
+
     // PREPARE TO PUBLISHED
     public static HasSiemacMetadata mockHasSiemacMetadataPrepareToPublished() {
         HasSiemacMetadata mockedResource = mockHasSiemacMetadata();
-        prepareToPublished(mockedResource);
+        prepareToPublishingSiemac(mockedResource);
         return mockedResource;
     }
-    
+
     // PUBLISHED
     public static HasSiemacMetadata mockHasSiemacMetadataPublished() {
         HasSiemacMetadata mockedResource = mockHasSiemacMetadata();
-        createPublished(mockedResource);
+        fillAsPublishedSiemac(mockedResource);
         return mockedResource;
     }
-    
+
     private static HasSiemacMetadata mockHasSiemacMetadata() {
         HasSiemacMetadata mockedResource = mock(HasSiemacMetadata.class);
         when(mockedResource.getLifeCycleStatisticalResource()).thenReturn(new LifeCycleStatisticalResource());

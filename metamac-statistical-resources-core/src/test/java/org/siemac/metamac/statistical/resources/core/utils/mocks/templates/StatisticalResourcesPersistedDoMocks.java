@@ -334,6 +334,7 @@ public class StatisticalResourcesPersistedDoMocks extends StatisticalResourcesDo
         PublicationVersionMock template = new PublicationVersionMock();
         template.setPublication(publication);
         template.setMaintainerCode(publication.getMaintainerCode());
+        template.getSiemacMetadataStatisticalResource().setLastVersion(true);
         PublicationVersion publicationVersion = mockPublicationVersion(template);
 
         return publicationVersion.getPublication();

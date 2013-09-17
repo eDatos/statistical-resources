@@ -11,6 +11,7 @@ import org.siemac.metamac.statistical.resources.core.enume.query.domain.QuerySta
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryTypeEnum;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
 import org.siemac.metamac.statistical.resources.core.utils.LifecycleTestUtils;
+import org.siemac.metamac.statistical.resources.core.utils.QueryLifecycleTestUtils;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.QueryVersionMock;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.configuration.MockDescriptor;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.configuration.MockProvider;
@@ -211,19 +212,15 @@ public class QueryVersionMockFactory extends StatisticalResourcesMockFactory<Que
     // -----------------------------------------------------------------
 
     private static void prepareToProductionValidation(QueryVersion queryVersion) {
-        LifecycleTestUtils.prepareToProductionValidation(queryVersion);
-        queryVersion.setType(QueryTypeEnum.FIXED);
-        queryVersion.setStatus(QueryStatusEnum.ACTIVE);
+        QueryLifecycleTestUtils.prepareToProductionValidation(queryVersion);
     }
 
     private static void prepareToDiffusionValidation(QueryVersion queryVersion) {
-        prepareToProductionValidation(queryVersion);
-        LifecycleTestUtils.prepareToDiffusionValidation(queryVersion);
+        QueryLifecycleTestUtils.prepareToDiffusionValidation(queryVersion);
     }
 
     private static void prepareToValidationRejected(QueryVersion queryVersion) {
-        prepareToProductionValidation(queryVersion);
-        LifecycleTestUtils.prepareToValidationRejected(queryVersion);
+        QueryLifecycleTestUtils.prepareToValidationRejected(queryVersion);
     }
 
 }

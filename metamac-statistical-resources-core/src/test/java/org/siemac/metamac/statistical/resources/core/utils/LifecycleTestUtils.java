@@ -14,65 +14,114 @@ import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.Stati
 
 public class LifecycleTestUtils {
 
+    private static final String USER_MOCK = "mocked_user";
+
     // ------------------------------------------------------------------------------------------------------
     // >> PRODUCTION VALIDATION
     // ------------------------------------------------------------------------------------------------------
 
-    public static void prepareToProductionValidation(HasSiemacMetadata resource) {
-        prepareToProductionValidation((HasLifecycle) resource);
-
+    public static void prepareToProductionValidationSiemac(HasSiemacMetadata resource) {
+        prepareToLifecycleCommonLifeCycleResource(resource);
         prepareToLifecycleCommonSiemacResource(resource);
+        prepareToProductionValidation(resource);
     }
 
-    public static void prepareToProductionValidation(HasLifecycle resource) {
-        resource.getLifeCycleStatisticalResource().setProcStatus(ProcStatusEnum.DRAFT);
-
+    public static void prepareToProductionValidationLifecycle(HasLifecycle resource) {
         prepareToLifecycleCommonLifeCycleResource(resource);
+        prepareToProductionValidation(resource);
+    }
+
+    private static void prepareToProductionValidation(HasLifecycle resource) {
+        resource.getLifeCycleStatisticalResource().setProcStatus(ProcStatusEnum.DRAFT);
+    }
+
+    public static void fillAsProductionValidationSiemac(HasSiemacMetadata resource) {
+        prepareToProductionValidationSiemac(resource);
+        fillAsProductionValidation(resource);
+    }
+
+    public static void fillAsProductionValidationLifecycle(HasLifecycle resource) {
+        prepareToProductionValidationLifecycle(resource);
+        fillAsProductionValidation(resource);
+    }
+
+    private static void fillAsProductionValidation(HasLifecycle resource) {
+        LifeCycleStatisticalResource lifecycleResource = resource.getLifeCycleStatisticalResource();
+
+        lifecycleResource.setProcStatus(ProcStatusEnum.PRODUCTION_VALIDATION);
+        if (lifecycleResource.getProductionValidationDate() == null) {
+            lifecycleResource.setProductionValidationDate(new DateTime());
+        }
+        if (lifecycleResource.getProductionValidationUser() == null) {
+            lifecycleResource.setProductionValidationUser("PRODUCTION_VALIDATION_USER");
+        }
     }
 
     // ------------------------------------------------------------------------------------------------------
     // >> DIFFUSION VALIDATION
     // ------------------------------------------------------------------------------------------------------
 
-    public static void prepareToDiffusionValidation(HasSiemacMetadata resource) {
-        prepareToProductionValidation(resource);
-        prepareToDiffusionValidation((HasLifecycle) resource);
+    public static void prepareToDiffusionValidationSiemac(HasSiemacMetadata resource) {
+        fillAsProductionValidationSiemac(resource);
     }
 
-    public static void prepareToDiffusionValidation(HasLifecycle resource) {
-        prepareToProductionValidation(resource);
+    public static void prepareToDiffusionValidationLifecycle(HasLifecycle resource) {
+        fillAsProductionValidationLifecycle(resource);
+    }
 
-        LifeCycleStatisticalResource lifeCycleStatisticalResource = resource.getLifeCycleStatisticalResource();
+    public static void fillAsDiffusionValidationSiemac(HasSiemacMetadata resource) {
+        prepareToDiffusionValidationSiemac(resource);
+        fillAsDiffusionValidation(resource);
+    }
 
-        lifeCycleStatisticalResource.setProcStatus(ProcStatusEnum.PRODUCTION_VALIDATION);
-        if (lifeCycleStatisticalResource.getProductionValidationDate() == null) {
-            lifeCycleStatisticalResource.setProductionValidationDate(new DateTime());
+    public static void fillAsDiffusionValidationLifecycle(HasLifecycle resource) {
+        prepareToDiffusionValidationLifecycle(resource);
+        fillAsDiffusionValidation(resource);
+    }
+
+    private static void fillAsDiffusionValidation(HasLifecycle resource) {
+        LifeCycleStatisticalResource lifecycleResource = resource.getLifeCycleStatisticalResource();
+
+        lifecycleResource.setProcStatus(ProcStatusEnum.DIFFUSION_VALIDATION);
+        if (lifecycleResource.getDiffusionValidationDate() == null) {
+            lifecycleResource.setDiffusionValidationDate(new DateTime());
         }
-        if (lifeCycleStatisticalResource.getProductionValidationUser() == null) {
-            lifeCycleStatisticalResource.setProductionValidationUser("PRODUCTION_VALIDATION_USER");
+        if (lifecycleResource.getDiffusionValidationUser() == null) {
+            lifecycleResource.setDiffusionValidationUser("DIFFUSION_VALIDATION_USER");
         }
     }
 
     // ------------------------------------------------------------------------------------------------------
-    // >> VALIDATION REJECTED
+    // >> VALIDATION REJECTED being in Production Validation
     // ------------------------------------------------------------------------------------------------------
 
-    public static void prepareToValidationRejected(HasSiemacMetadata resource) {
-        prepareToProductionValidation(resource);
-        prepareToValidationRejected((HasLifecycle) resource);
+    public static void prepareToValidationRejectedFromProductionValidationSiemac(HasSiemacMetadata resource) {
+        fillAsProductionValidationSiemac(resource);
     }
 
-    public static void prepareToValidationRejected(HasLifecycle resource) {
-        prepareToProductionValidation(resource);
+    public static void prepareToValidationRejectedFromProductionValidationLifecycle(HasLifecycle resource) {
+        fillAsProductionValidationLifecycle(resource);
+    }
 
-        LifeCycleStatisticalResource lifeCycleStatisticalResource = resource.getLifeCycleStatisticalResource();
+    public static void fillAsValidationRejectedFromProductionValidationSiemac(HasSiemacMetadata resource) {
+        prepareToDiffusionValidationSiemac(resource);
+        fillAsValidationRejectedFromProductionValidation(resource);
+    }
 
-        lifeCycleStatisticalResource.setProcStatus(ProcStatusEnum.PRODUCTION_VALIDATION);
-        if (lifeCycleStatisticalResource.getProductionValidationDate() == null) {
-            lifeCycleStatisticalResource.setProductionValidationDate(new DateTime());
+    public static void fillAsValidationRejectedFromProductionValidationLifecycle(HasLifecycle resource) {
+        prepareToDiffusionValidationLifecycle(resource);
+        fillAsValidationRejectedFromProductionValidation(resource);
+    }
+
+    private static void fillAsValidationRejectedFromProductionValidation(HasLifecycle resource) {
+        LifeCycleStatisticalResource lifecycleResource = resource.getLifeCycleStatisticalResource();
+
+        lifecycleResource.setProcStatus(ProcStatusEnum.VALIDATION_REJECTED);
+        if (lifecycleResource.getRejectValidationDate() == null) {
+            lifecycleResource.setRejectValidationDate(new DateTime());
         }
-        if (lifeCycleStatisticalResource.getProductionValidationUser() == null) {
-            lifeCycleStatisticalResource.setProductionValidationUser("PRODUCTION_VALIDATION_USER");
+        if (lifecycleResource.getRejectValidationUser() == null) {
+            lifecycleResource.setRejectValidationUser("VALIDATION_REJECTED_USER");
         }
     }
 
@@ -80,38 +129,34 @@ public class LifecycleTestUtils {
     // >> PUBLISHED
     // ------------------------------------------------------------------------------------------------------
 
-    public static void prepareToPublished(HasSiemacMetadata resource) {
-        prepareToDiffusionValidation(resource);
-
-        prepareToPublished((HasLifecycle) resource);
+    public static void prepareToPublishingSiemac(HasSiemacMetadata resource) {
+        fillAsDiffusionValidationSiemac(resource);
+        prepareToPublishing(resource);
     }
 
-    public static void prepareToPublished(HasLifecycle resource) {
-        prepareToDiffusionValidation(resource);
+    public static void prepareToPublishingLifecycle(HasLifecycle resource) {
+        fillAsDiffusionValidationLifecycle(resource);
+        prepareToPublishing(resource);
+    }
 
+    private static void prepareToPublishing(HasLifecycle resource) {
         LifeCycleStatisticalResource lifeCycleStatisticalResource = resource.getLifeCycleStatisticalResource();
-
-        lifeCycleStatisticalResource.setProcStatus(ProcStatusEnum.DIFFUSION_VALIDATION);
-
-        if (lifeCycleStatisticalResource.getDiffusionValidationDate() == null) {
-            lifeCycleStatisticalResource.setDiffusionValidationDate(new DateTime());
-        }
-        if (lifeCycleStatisticalResource.getDiffusionValidationUser() == null) {
-            lifeCycleStatisticalResource.setDiffusionValidationUser("DIFFUSION_VALIDATION_USER");
-        }
         if (lifeCycleStatisticalResource.getValidFrom() == null) {
             lifeCycleStatisticalResource.setValidFrom(new DateTime());
         }
     }
 
-    public static void createPublished(HasSiemacMetadata resource) {
-        prepareToPublished(resource);
-        createPublished((HasLifecycle) resource);
+    public static void fillAsPublishedSiemac(HasSiemacMetadata resource) {
+        prepareToPublishingSiemac(resource);
+        fillAsPublished(resource);
     }
 
-    public static void createPublished(HasLifecycle resource) {
-        prepareToPublished(resource);
+    public static void fillAsPublishedLifecycle(HasLifecycle resource) {
+        prepareToPublishingLifecycle(resource);
+        fillAsPublished(resource);
+    }
 
+    private static void fillAsPublished(HasLifecycle resource) {
         LifeCycleStatisticalResource lifeCycleStatisticalResource = resource.getLifeCycleStatisticalResource();
 
         lifeCycleStatisticalResource.setProcStatus(ProcStatusEnum.PUBLISHED);
@@ -124,7 +169,7 @@ public class LifecycleTestUtils {
             lifeCycleStatisticalResource.setValidFrom(new DateTime());
         }
         if (lifeCycleStatisticalResource.getPublicationUser() == null) {
-            lifeCycleStatisticalResource.setPublicationUser("PUBLICATION_VALIDATION_USER");
+            lifeCycleStatisticalResource.setPublicationUser("PUBLISHING_USER");
         }
     }
 
@@ -132,11 +177,25 @@ public class LifecycleTestUtils {
     // >> VERSIONING
     // ------------------------------------------------------------------------------------------------------
 
-    public static void createVersioned(HasSiemacMetadata resource) {
-        createVersioned((HasLifecycle) resource);
+    public static void prepareToVersioningSiemac(HasSiemacMetadata resource) {
+        fillAsPublishedSiemac(resource);
     }
 
-    public static void createVersioned(HasLifecycle resource) {
+    public static void prepareToVersioningLifecycle(HasLifecycle resource) {
+        fillAsPublishedLifecycle(resource);
+    }
+
+    public static void fillAsVersionedSiemac(HasSiemacMetadata resource) {
+        prepareToVersioningSiemac(resource);
+        fillAsVersioned(resource);
+    }
+
+    public static void fillAsVersionedLifecycle(HasLifecycle resource) {
+        prepareToVersioningLifecycle(resource);
+        fillAsVersioned(resource);
+    }
+
+    private static void fillAsVersioned(HasLifecycle resource) {
         LifeCycleStatisticalResource lifeCycleStatisticalResource = resource.getLifeCycleStatisticalResource();
 
         if (lifeCycleStatisticalResource.getStatisticalOperation() == null) {

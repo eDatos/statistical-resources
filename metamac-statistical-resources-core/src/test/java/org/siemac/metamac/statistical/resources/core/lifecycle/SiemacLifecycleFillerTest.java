@@ -6,8 +6,6 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.validateMockitoUsage;
 import static org.mockito.Mockito.verify;
-import static org.siemac.metamac.statistical.resources.core.utils.LifecycleTestUtils.createPublished;
-import static org.siemac.metamac.statistical.resources.core.utils.LifecycleTestUtils.createVersioned;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.templates.HasSiemacMetadataMocks.mockHasSiemacMetadataPrepareToDiffusionValidation;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.templates.HasSiemacMetadataMocks.mockHasSiemacMetadataPrepareToProductionValidation;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.templates.HasSiemacMetadataMocks.mockHasSiemacMetadataPrepareToPublished;
@@ -31,6 +29,7 @@ import org.siemac.metamac.statistical.resources.core.base.domain.HasLifecycle;
 import org.siemac.metamac.statistical.resources.core.base.domain.HasSiemacMetadata;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
+import org.siemac.metamac.statistical.resources.core.utils.PublicationLifecycleTestUtils;
 
 /*
  * No spring context, we set the SUT (Software under test) dependencies with mocked objects. Unit testing style ;)
@@ -130,8 +129,8 @@ public class SiemacLifecycleFillerTest extends StatisticalResourcesBaseTest {
         PublicationVersion resource = notPersistedDoMocks.mockPublicationVersion();
         PublicationVersion previousResource = notPersistedDoMocks.mockPublicationVersion();
 
-        createVersioned(resource);
-        createPublished(previousResource);
+        PublicationLifecycleTestUtils.fillAsVersioned(resource);
+        PublicationLifecycleTestUtils.fillAsPublished(previousResource);
 
         siemacLifecycleFiller.applyVersioningNewResourceActions(getServiceContextAdministrador(), resource, previousResource, VersionTypeEnum.MAJOR);
 

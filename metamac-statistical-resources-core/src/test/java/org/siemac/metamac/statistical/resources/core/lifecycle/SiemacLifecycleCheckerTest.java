@@ -9,7 +9,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.validateMockitoUsage;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.siemac.metamac.statistical.resources.core.utils.LifecycleTestUtils.prepareToValidationRejected;
+import static org.siemac.metamac.statistical.resources.core.utils.LifecycleTestUtils.prepareToValidationRejectedFromProductionValidationSiemac;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +34,7 @@ import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionSingleParameters;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.checker.ExternalItemChecker;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.checker.RelatedResourceChecker;
+import org.siemac.metamac.statistical.resources.core.utils.LifecycleTestUtils;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesDoMocks;
 
 /*
@@ -120,7 +121,7 @@ public class SiemacLifecycleCheckerTest extends StatisticalResourcesBaseTest {
         when(mockedResource.getLifeCycleStatisticalResource()).thenReturn(new LifeCycleStatisticalResource());
         when(mockedResource.getSiemacMetadataStatisticalResource()).thenReturn(new SiemacMetadataStatisticalResource());
 
-        prepareToValidationRejected(mockedResource);
+        prepareToValidationRejectedFromProductionValidationSiemac(mockedResource);
 
         siemacLifecycleServiceImpl.checkSendToValidationRejected(mockedResource, baseMetadata, exceptionItems);
 

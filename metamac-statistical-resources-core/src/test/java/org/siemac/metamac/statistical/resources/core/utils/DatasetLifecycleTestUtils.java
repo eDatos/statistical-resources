@@ -6,38 +6,58 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.CodeDimensio
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.StatisticOfficiality;
+import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasourceMockFactory;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesDoMocks;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesPersistedDoMocks;
 
-
 public class DatasetLifecycleTestUtils {
-    
+
     private static StatisticalResourcesPersistedDoMocks persistedMocks = StatisticalResourcesPersistedDoMocks.getInstance();
-    
+
     public static void prepareToProductionValidation(DatasetVersion datasetVersion) {
-        LifecycleTestUtils.prepareToProductionValidation(datasetVersion);
+        LifecycleTestUtils.prepareToProductionValidationSiemac(datasetVersion);
         prepareToLifecycleCommonDatasetVersion(datasetVersion);
+    }
+
+    public static void fillAsProductionValidation(DatasetVersion datasetVersion) {
+        LifecycleTestUtils.fillAsProductionValidationSiemac(datasetVersion);
     }
 
     public static void prepareToDiffusionValidation(DatasetVersion datasetVersion) {
         prepareToProductionValidation(datasetVersion);
-        LifecycleTestUtils.prepareToDiffusionValidation(datasetVersion);
+        LifecycleTestUtils.prepareToDiffusionValidationSiemac(datasetVersion);
+    }
+
+    public static void fillAsDiffusionValidation(DatasetVersion datasetVersion) {
+        LifecycleTestUtils.fillAsDiffusionValidationSiemac(datasetVersion);
     }
 
     public static void prepareToPublished(DatasetVersion datasetVersion) {
         prepareToDiffusionValidation(datasetVersion);
-        LifecycleTestUtils.prepareToPublished(datasetVersion);
+        LifecycleTestUtils.prepareToPublishingSiemac(datasetVersion);
+    }
+
+    public static void fillAsPublished(DatasetVersion datasetVersion) {
+        LifecycleTestUtils.fillAsPublishedSiemac(datasetVersion);
     }
 
     public static void prepareToVersioning(DatasetVersion datasetVersion) {
         prepareToPublished(datasetVersion);
-        LifecycleTestUtils.createPublished(datasetVersion);
+        LifecycleTestUtils.prepareToVersioningSiemac(datasetVersion);
+    }
+
+    public static void fillAsVersioned(DatasetVersion datasetVersion) {
+        LifecycleTestUtils.fillAsVersionedSiemac(datasetVersion);
     }
 
     public static void prepareToValidationRejected(DatasetVersion datasetVersion) {
         prepareToProductionValidation(datasetVersion);
-        LifecycleTestUtils.prepareToValidationRejected(datasetVersion);
+        LifecycleTestUtils.prepareToValidationRejectedFromProductionValidationSiemac(datasetVersion);
+    }
+
+    public static void fillAsValidationRejected(DatasetVersion datasetVersion) {
+        LifecycleTestUtils.fillAsValidationRejectedFromProductionValidationSiemac(datasetVersion);
     }
 
     public static void prepareToLifecycleCommonDatasetVersion(DatasetVersion datasetVersion) {

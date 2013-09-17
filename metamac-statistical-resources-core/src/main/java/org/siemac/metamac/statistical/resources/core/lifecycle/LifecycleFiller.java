@@ -8,6 +8,7 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.serviceimpl.utils.ValidationUtils;
 import org.siemac.metamac.core.common.util.shared.VersionUtil;
 import org.siemac.metamac.statistical.resources.core.base.domain.HasLifecycle;
+import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResource;
 import org.siemac.metamac.statistical.resources.core.common.utils.RelatedResourceUtils;
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
@@ -81,14 +82,26 @@ public class LifecycleFiller {
         }
         RelatedResource previousVersionRelatedResource = RelatedResourceUtils.createRelatedResourceForHasLifecycleResource(previousVersion);
 
+        LifeCycleStatisticalResource lifeCycleResource = resource.getLifeCycleStatisticalResource();
+
         // Set metadata for actual version
-        resource.getLifeCycleStatisticalResource().setReplacesVersion(previousVersionRelatedResource);
-        resource.getLifeCycleStatisticalResource().setProcStatus(ProcStatusEnum.DRAFT);
-        resource.getLifeCycleStatisticalResource().setCreationDate(new DateTime());
-        resource.getLifeCycleStatisticalResource().setCreationUser(ctx.getUserId());
-        resource.getLifeCycleStatisticalResource().setLastVersion(true);
-        resource.getLifeCycleStatisticalResource().setVersionLogic(
-                VersionUtil.createNextVersion(previousVersion.getLifeCycleStatisticalResource().getVersionLogic(), VersionPatternEnum.XXX_YYY, versionType));
+        lifeCycleResource.setReplacesVersion(previousVersionRelatedResource);
+        lifeCycleResource.setProcStatus(ProcStatusEnum.DRAFT);
+        lifeCycleResource.setCreationDate(new DateTime());
+        lifeCycleResource.setCreationUser(ctx.getUserId());
+        lifeCycleResource.setLastVersion(true);
+        lifeCycleResource.setVersionLogic(VersionUtil.createNextVersion(previousVersion.getLifeCycleStatisticalResource().getVersionLogic(), VersionPatternEnum.XXX_YYY, versionType));
+
+        // Empty metadata
+        lifeCycleResource.setProductionValidationDate(null);
+        lifeCycleResource.setProductionValidationUser(null);
+        lifeCycleResource.setDiffusionValidationDate(null);
+        lifeCycleResource.setDiffusionValidationUser(null);
+        lifeCycleResource.setRejectValidationDate(null);
+        lifeCycleResource.setRejectValidationUser(null);
+        lifeCycleResource.setPublicationDate(null);
+        lifeCycleResource.setPublicationUser(null);
+        lifeCycleResource.setValidFrom(null);
     }
 
     public void applyVersioningPreviousResourceActions(ServiceContext ctx, HasLifecycle resource, HasLifecycle previousVersion, VersionTypeEnum versionType) throws MetamacException {

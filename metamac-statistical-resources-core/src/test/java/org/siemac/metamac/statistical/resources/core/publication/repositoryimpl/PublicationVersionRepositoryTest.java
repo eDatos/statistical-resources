@@ -155,7 +155,7 @@ public class PublicationVersionRepositoryTest extends StatisticalResourcesBaseTe
 
     @Test
     @Override
-    @MetamacMock({PUBLICATION_VERSION_41_PUB_NOT_VISIBLE_REPLACES_PUB_VERSION_42_NAME, PUBLICATION_VERSION_42_PUB_IS_REPLACED_BY_PUB_VERSION_41_NAME})
+    @MetamacMock({PUBLICATION_VERSION_41_PUB_NOT_VISIBLE_REPLACES_PUB_VERSION_42_NAME})
     public void testRetrieveIsReplacedBy() throws Exception {
         PublicationVersion notVisiblePublication = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_41_PUB_NOT_VISIBLE_REPLACES_PUB_VERSION_42_NAME);
         PublicationVersion publishedPublication = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_42_PUB_IS_REPLACED_BY_PUB_VERSION_41_NAME);
@@ -167,7 +167,7 @@ public class PublicationVersionRepositoryTest extends StatisticalResourcesBaseTe
 
     @Test
     @Override
-    @MetamacMock({PUBLICATION_VERSION_41_PUB_NOT_VISIBLE_REPLACES_PUB_VERSION_42_NAME, PUBLICATION_VERSION_42_PUB_IS_REPLACED_BY_PUB_VERSION_41_NAME})
+    @MetamacMock({PUBLICATION_VERSION_41_PUB_NOT_VISIBLE_REPLACES_PUB_VERSION_42_NAME})
     public void testRetrieveIsReplacedByOnlyLastPublished() throws Exception {
         PublicationVersion publishedPublication = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_42_PUB_IS_REPLACED_BY_PUB_VERSION_41_NAME);
 

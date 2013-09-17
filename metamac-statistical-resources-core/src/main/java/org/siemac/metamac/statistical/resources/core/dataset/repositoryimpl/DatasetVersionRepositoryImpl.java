@@ -264,12 +264,15 @@ public class DatasetVersionRepositoryImpl extends DatasetVersionRepositoryBase {
             "    AND     stat_dataset.last_version = 1 " +
             "    AND     elem.publication_version_all_fk = pub.ID " +
             "    AND     stat.title_fk = loc.international_string_fk " +
-            "    AND     stat.last_version = 1 " +
+            "    AND     (stat.last_version = 1 " +
+            "           OR "+isLastPublishedVersionConditions+") " +    
             "    AND     operation.ID = stat.stat_operation_fk " +
             "    AND     maintainer.id = stat.maintainer_fk");
 
         //     @formatter:on
         query.setParameter("datasetVersionFk", datasetVersion.getId());
+        query.setParameter("publishedProcStatus", ProcStatusEnum.PUBLISHED.name());
+        query.setParameter("now", new DateTime().toDate());
 
         List<Object> rows = query.getResultList();
         List<RelatedResourceResult> resources = getRelatedResourceResultsFromRows(rows, TypeRelatedResourceEnum.PUBLICATION_VERSION);
@@ -301,20 +304,19 @@ public class DatasetVersionRepositoryImpl extends DatasetVersionRepositoryBase {
                 "WHERE      cubes.dataset_fk = dataset.ID " + 
                 "   AND     dataset_version.dataset_fk = dataset.ID " + 
                 "   AND     dataset_version.ID = :datasetVersionFk " +
-                "   AND     stat_dataset.proc_status = :publishedStatus " +
+                "   AND     stat_dataset.proc_status = :publishedProcStatus " +
                 "   AND     stat_dataset.valid_from <= :now " +
                 "   AND     (stat_dataset.valid_to > :now or stat_dataset.valid_to is null) " +
                 "   AND     elem.publication_version_all_fk = pub.ID  "  +
                 "   AND     stat.title_fk = loc.international_string_fk  " +
-                "   AND     stat.proc_status = :publishedStatus " +
-                "   AND     stat.valid_from <= :now " +
-                "   AND     (stat.valid_to > :now or stat.valid_to is null) " +
+                "   AND     stat.proc_status = :publishedProcStatus " +
+                "   AND     "+ isLastPublishedVersionConditions +
                 "   AND     operation.ID = stat.stat_operation_fk " +
                 "   AND     maintainer.id = stat.maintainer_fk ");
         
         //     @formatter:on
         query.setParameter("datasetVersionFk", datasetVersion.getId());
-        query.setParameter("publishedStatus", ProcStatusEnum.PUBLISHED.name());
+        query.setParameter("publishedProcStatus", ProcStatusEnum.PUBLISHED.name());
         query.setParameter("now", new DateTime().toDate());
 
         List<Object> rows = query.getResultList();

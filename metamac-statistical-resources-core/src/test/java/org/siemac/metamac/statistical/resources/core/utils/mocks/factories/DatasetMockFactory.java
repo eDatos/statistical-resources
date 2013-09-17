@@ -17,7 +17,9 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersi
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryStatusEnum;
+import org.siemac.metamac.statistical.resources.core.publication.domain.ElementLevel;
 import org.siemac.metamac.statistical.resources.core.publication.domain.Publication;
+import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
 import org.siemac.metamac.statistical.resources.core.query.domain.Query;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
 import org.siemac.metamac.statistical.resources.core.utils.DatasetLifecycleTestUtils;
@@ -382,15 +384,15 @@ public class DatasetMockFactory extends StatisticalResourcesMockFactory<Dataset>
 
         datasetVersionLatestVersion.getSiemacMetadataStatisticalResource().setReplacesVersion(StatisticalResourcesPersistedDoMocks.mockDatasetVersionRelated(datasetVersion));
 
-        Publication pub01 = PublicationMockFactory.buildPublicationWithTwoVersionsPublishedLinkedToDataset(dataset);
+        Publication pub01 = createPublicationWithTwoVersionsPublishedBothLinkedToDataset(1, dataset);
         registerPublicationVersionMock(PublicationVersionMockFactory.PUBLICATION_VERSION_46_PUBLISHED_V01_FOR_PUBLICATION_07_NAME, pub01.getVersions().get(0));
         registerPublicationVersionMock(PublicationVersionMockFactory.PUBLICATION_VERSION_47_PUBLISHED_V02_FOR_PUBLICATION_07_NAME, pub01.getVersions().get(1));
 
-        Publication pub02 = PublicationMockFactory.buildPublicationWithTwoVersionsPublishedOneNotVisibleLinkedToDataset(dataset);
+        Publication pub02 = createPublicationWithTwoVersionsOnePublishedLastNotVisibleBothLinkedToDataset(2, dataset);
         registerPublicationVersionMock(PublicationVersionMockFactory.PUBLICATION_VERSION_48_PUBLISHED_V01_FOR_PUBLICATION_08_NAME, pub02.getVersions().get(0));
         registerPublicationVersionMock(PublicationVersionMockFactory.PUBLICATION_VERSION_49_PUBLISHED_NOT_VISIBLE_V02_FOR_PUBLICATION_08_NAME, pub02.getVersions().get(1));
 
-        Publication pub03 = PublicationMockFactory.buildPublicationWithDraftVersionLinkedToDataset(dataset);
+        Publication pub03 = createPublicationWithSingleVersionDraftLinkedToDataset(3, dataset);
         registerPublicationVersionMock(PublicationVersionMockFactory.PUBLICATION_VERSION_50_DRAFT_V01_FOR_PUBLICATION_09_NAME, pub03.getVersions().get(0));
 
         return new MockDescriptor(dataset, pub01, pub02, pub03);
@@ -407,15 +409,15 @@ public class DatasetMockFactory extends StatisticalResourcesMockFactory<Dataset>
 
         datasetVersionLatestVersion.getSiemacMetadataStatisticalResource().setReplacesVersion(StatisticalResourcesPersistedDoMocks.mockDatasetVersionRelated(datasetVersion));
 
-        Publication pub01 = PublicationMockFactory.buildPublicationWithTwoVersionsPublishedLinkedToDataset(dataset);
+        Publication pub01 = createPublicationWithTwoVersionsPublishedBothLinkedToDataset(1, dataset);
         registerPublicationVersionMock(PublicationVersionMockFactory.PUBLICATION_VERSION_51_PUBLISHED_V01_FOR_PUBLICATION_10_NAME, pub01.getVersions().get(0));
         registerPublicationVersionMock(PublicationVersionMockFactory.PUBLICATION_VERSION_52_PUBLISHED_V02_FOR_PUBLICATION_10_NAME, pub01.getVersions().get(1));
 
-        Publication pub02 = PublicationMockFactory.buildPublicationWithTwoVersionsPublishedOneNotVisibleLinkedToDataset(dataset);
+        Publication pub02 = createPublicationWithTwoVersionsOnePublishedLastNotVisibleBothLinkedToDataset(2, dataset);
         registerPublicationVersionMock(PublicationVersionMockFactory.PUBLICATION_VERSION_53_PUBLISHED_V01_FOR_PUBLICATION_11_NAME, pub02.getVersions().get(0));
         registerPublicationVersionMock(PublicationVersionMockFactory.PUBLICATION_VERSION_54_PUBLISHED_NOT_VISIBLE_V02_FOR_PUBLICATION_11_NAME, pub02.getVersions().get(1));
 
-        Publication pub03 = PublicationMockFactory.buildPublicationWithDraftVersionLinkedToDataset(dataset);
+        Publication pub03 = createPublicationWithSingleVersionDraftLinkedToDataset(3, dataset);
         registerPublicationVersionMock(PublicationVersionMockFactory.PUBLICATION_VERSION_55_DRAFT_V01_FOR_PUBLICATION_12_NAME, pub03.getVersions().get(0));
 
         return new MockDescriptor(dataset, pub01, pub02, pub03);
@@ -431,18 +433,43 @@ public class DatasetMockFactory extends StatisticalResourcesMockFactory<Dataset>
 
         datasetVersionLatestVersion.getSiemacMetadataStatisticalResource().setReplacesVersion(StatisticalResourcesPersistedDoMocks.mockDatasetVersionRelated(datasetVersion));
 
-        Publication pub01 = PublicationMockFactory.buildPublicationWithTwoVersionsPublishedLinkedToDataset(dataset);
+        Publication pub01 = createPublicationWithTwoVersionsPublishedBothLinkedToDataset(1, dataset);
         registerPublicationVersionMock(PublicationVersionMockFactory.PUBLICATION_VERSION_56_PUBLISHED_V01_FOR_PUBLICATION_13_NAME, pub01.getVersions().get(0));
         registerPublicationVersionMock(PublicationVersionMockFactory.PUBLICATION_VERSION_57_PUBLISHED_V02_FOR_PUBLICATION_13_NAME, pub01.getVersions().get(1));
 
-        Publication pub02 = PublicationMockFactory.buildPublicationWithTwoVersionsPublishedOneNotVisibleLinkedToDataset(dataset);
+        Publication pub02 = createPublicationWithTwoVersionsOnePublishedLastNotVisibleBothLinkedToDataset(2, dataset);
         registerPublicationVersionMock(PublicationVersionMockFactory.PUBLICATION_VERSION_58_PUBLISHED_V01_FOR_PUBLICATION_14_NAME, pub02.getVersions().get(0));
         registerPublicationVersionMock(PublicationVersionMockFactory.PUBLICATION_VERSION_59_PUBLISHED_NOT_VISIBLE_V02_FOR_PUBLICATION_14_NAME, pub02.getVersions().get(1));
 
-        Publication pub03 = PublicationMockFactory.buildPublicationWithDraftVersionLinkedToDataset(dataset);
+        Publication pub03 = createPublicationWithSingleVersionDraftLinkedToDataset(3, dataset);
         registerPublicationVersionMock(PublicationVersionMockFactory.PUBLICATION_VERSION_60_DRAFT_V01_FOR_PUBLICATION_15_NAME, pub03.getVersions().get(0));
 
         return new MockDescriptor(dataset, pub01, pub02, pub03);
+    }
+
+    private static Publication createPublicationWithTwoVersionsPublishedBothLinkedToDataset(int sequentialId, Dataset dataset) {
+        Publication pub = PublicationMockFactory.buildPublicationWithTwoVersionsPublished(sequentialId);
+        linkDatasetInPublicationVersionFirstLevel(dataset, pub.getVersions().get(0));
+        linkDatasetInPublicationVersionFirstLevel(dataset, pub.getVersions().get(1));
+        return pub;
+    }
+
+    private static Publication createPublicationWithTwoVersionsOnePublishedLastNotVisibleBothLinkedToDataset(int sequentialId, Dataset dataset) {
+        Publication pub = PublicationMockFactory.buildPublicationWithTwoVersionsOnePublishedLastNotVisible(sequentialId);
+        linkDatasetInPublicationVersionFirstLevel(dataset, pub.getVersions().get(0));
+        linkDatasetInPublicationVersionFirstLevel(dataset, pub.getVersions().get(1));
+        return pub;
+    }
+
+    private static Publication createPublicationWithSingleVersionDraftLinkedToDataset(int sequentialId, Dataset dataset) {
+        Publication pub = PublicationMockFactory.buildPublicationWithSingleVersionDraft(sequentialId);
+        linkDatasetInPublicationVersionFirstLevel(dataset, pub.getVersions().get(0));
+        return pub;
+    }
+
+    private static void linkDatasetInPublicationVersionFirstLevel(Dataset dataset, PublicationVersion publicationVersion) {
+        ElementLevel elementLevelV01 = PublicationVersionMockFactory.createDatasetCubeElementLevel(publicationVersion, dataset);
+        elementLevelV01.setOrderInLevel(Long.valueOf(publicationVersion.getChildrenFirstLevel().size() + 1));
     }
 
     private static DatasetVersion mockDatasetVersionPublished(Dataset dataset, String version, DateTime validFrom, DateTime validTo) {

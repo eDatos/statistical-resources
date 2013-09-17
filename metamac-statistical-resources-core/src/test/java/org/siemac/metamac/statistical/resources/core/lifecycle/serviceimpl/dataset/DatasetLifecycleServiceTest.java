@@ -6,8 +6,6 @@ import static org.mockito.Matchers.anyListOf;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.siemac.metamac.statistical.resources.core.utils.LifecycleTestUtils.createPublished;
-import static org.siemac.metamac.statistical.resources.core.utils.LifecycleTestUtils.createVersioned;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.CommonAsserts.assertEmptyMethod;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_14_OPER_03_CODE_01_PUBLISHED_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_15_DRAFT_NOT_READY_NAME;
@@ -48,8 +46,8 @@ import org.siemac.metamac.statistical.resources.core.lifecycle.serviceapi.Lifecy
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceapi.LifecycleServiceBaseTest;
 import org.siemac.metamac.statistical.resources.core.task.serviceapi.TaskService;
 import org.siemac.metamac.statistical.resources.core.utils.DataMockUtils;
+import org.siemac.metamac.statistical.resources.core.utils.DatasetLifecycleTestUtils;
 import org.siemac.metamac.statistical.resources.core.utils.TaskMockUtils;
-import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory;
 
 import com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceFacade;
 
@@ -349,7 +347,7 @@ public class DatasetLifecycleServiceTest extends StatisticalResourcesBaseTest im
     @Test
     public void testApplyVersioningNewResource() throws Exception {
         DatasetVersion datasetVersion = mockDatasetVersionInRepoFromMockFactory(DATASET_VERSION_14_OPER_03_CODE_01_PUBLISHED_NAME);
-        createVersioned(datasetVersion);
+        DatasetLifecycleTestUtils.fillAsVersioned(datasetVersion);
 
         datasetLifecycleService.applyVersioningNewResource(getServiceContextAdministrador(), datasetVersion);
     }
@@ -358,7 +356,7 @@ public class DatasetLifecycleServiceTest extends StatisticalResourcesBaseTest im
     @Test
     public void testApplyVersioningPreviousResource() throws Exception {
         DatasetVersion datasetVersion = mockDatasetVersionInRepoFromMockFactory(DATASET_VERSION_14_OPER_03_CODE_01_PUBLISHED_NAME);
-        createPublished(datasetVersion);
+        DatasetLifecycleTestUtils.fillAsPublished(datasetVersion);
 
         datasetLifecycleService.applyVersioningNewResource(getServiceContextAdministrador(), datasetVersion);
     }

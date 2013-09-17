@@ -510,10 +510,11 @@ public class DatasetVersionRepositoryTest extends StatisticalResourcesBaseTest i
             List<RelatedResourceResult> resources = datasetVersionRepository.retrieveIsPartOf(draftVersion);
 
             PublicationVersion publication01 = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_47_PUBLISHED_V02_FOR_PUBLICATION_07_NAME);
-            PublicationVersion publication02 = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_49_PUBLISHED_NOT_VISIBLE_V02_FOR_PUBLICATION_08_NAME);
-            PublicationVersion publication03 = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_50_DRAFT_V01_FOR_PUBLICATION_09_NAME);
+            PublicationVersion publication02 = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_48_PUBLISHED_V01_FOR_PUBLICATION_08_NAME);
+            PublicationVersion publication03 = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_49_PUBLISHED_NOT_VISIBLE_V02_FOR_PUBLICATION_08_NAME);
+            PublicationVersion publication04 = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_50_DRAFT_V01_FOR_PUBLICATION_09_NAME);
 
-            CommonAsserts.assertEqualsRelatedResourceResultCollectionToPublicationVersionCollection(Arrays.asList(publication01, publication02, publication03), resources);
+            CommonAsserts.assertEqualsRelatedResourceResultCollectionToPublicationVersionCollection(Arrays.asList(publication01, publication02, publication03, publication04), resources);
         }
         {
             List<RelatedResourceResult> resources = datasetVersionRepository.retrieveIsPartOf(publishedVersion);
@@ -533,10 +534,11 @@ public class DatasetVersionRepositoryTest extends StatisticalResourcesBaseTest i
             List<RelatedResourceResult> resources = datasetVersionRepository.retrieveIsPartOf(publishedNotVisibleVersion);
 
             PublicationVersion publication01 = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_52_PUBLISHED_V02_FOR_PUBLICATION_10_NAME);
-            PublicationVersion publication02 = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_54_PUBLISHED_NOT_VISIBLE_V02_FOR_PUBLICATION_11_NAME);
-            PublicationVersion publication03 = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_55_DRAFT_V01_FOR_PUBLICATION_12_NAME);
+            PublicationVersion publication02 = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_53_PUBLISHED_V01_FOR_PUBLICATION_11_NAME);
+            PublicationVersion publication03 = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_54_PUBLISHED_NOT_VISIBLE_V02_FOR_PUBLICATION_11_NAME);
+            PublicationVersion publication04 = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_55_DRAFT_V01_FOR_PUBLICATION_12_NAME);
 
-            CommonAsserts.assertEqualsRelatedResourceResultCollectionToPublicationVersionCollection(Arrays.asList(publication01, publication02, publication03), resources);
+            CommonAsserts.assertEqualsRelatedResourceResultCollectionToPublicationVersionCollection(Arrays.asList(publication01, publication02, publication03, publication04), resources);
         }
         {
             List<RelatedResourceResult> resources = datasetVersionRepository.retrieveIsPartOf(publishedVersion);
@@ -556,10 +558,11 @@ public class DatasetVersionRepositoryTest extends StatisticalResourcesBaseTest i
             List<RelatedResourceResult> resources = datasetVersionRepository.retrieveIsPartOf(publishedLastVersion);
 
             PublicationVersion publication01 = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_57_PUBLISHED_V02_FOR_PUBLICATION_13_NAME);
-            PublicationVersion publication02 = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_59_PUBLISHED_NOT_VISIBLE_V02_FOR_PUBLICATION_14_NAME);
-            PublicationVersion publication03 = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_60_DRAFT_V01_FOR_PUBLICATION_15_NAME);
+            PublicationVersion publication02 = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_58_PUBLISHED_V01_FOR_PUBLICATION_14_NAME);
+            PublicationVersion publication03 = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_59_PUBLISHED_NOT_VISIBLE_V02_FOR_PUBLICATION_14_NAME);
+            PublicationVersion publication04 = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_60_DRAFT_V01_FOR_PUBLICATION_15_NAME);
 
-            CommonAsserts.assertEqualsRelatedResourceResultCollectionToPublicationVersionCollection(Arrays.asList(publication01, publication02, publication03), resources);
+            CommonAsserts.assertEqualsRelatedResourceResultCollectionToPublicationVersionCollection(Arrays.asList(publication01, publication02, publication03, publication04), resources);
         }
         {
             List<RelatedResourceResult> resources = datasetVersionRepository.retrieveIsPartOf(publishedVersion);

@@ -5,6 +5,8 @@ import static org.siemac.metamac.statistical.resources.core.utils.PublicationLif
 import static org.siemac.metamac.statistical.resources.core.utils.PublicationLifecycleTestUtils.prepareToValidationRejected;
 import static org.siemac.metamac.statistical.resources.core.utils.PublicationLifecycleTestUtils.prepareToVersioning;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationMockFactory.PUBLICATION_04_STRUCTURED_WITH_2_PUBLICATION_VERSIONS_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationMockFactory.PUBLICATION_05_WITH_MULTIPLE_PUBLISHED_VERSIONS_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationMockFactory.PUBLICATION_06_WITH_MULTIPLE_PUBLISHED_VERSIONS_AND_LATEST_NO_VISIBLE_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryMockFactory.generateQueryWithGeneratedVersion;
 
 import org.joda.time.DateTime;
@@ -21,177 +23,165 @@ import org.siemac.metamac.statistical.resources.core.utils.mocks.configuration.M
 import org.siemac.metamac.statistical.resources.core.utils.mocks.configuration.MockProvider;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesDoMocks;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesPersistedDoMocks;
-import org.springframework.beans.factory.annotation.Autowired;
 
 @MockProvider
+@SuppressWarnings("unused")
 public class PublicationVersionMockFactory extends StatisticalResourcesMockFactory<PublicationVersion> {
 
-    @Autowired
-    PublicationMockFactory                       publicationMockFactory;
+    public static final String                   PUBLICATION_VERSION_01_BASIC_NAME                                                                                  = "PUBLICATION_VERSION_01_BASIC";
 
-    public static final String                   PUBLICATION_VERSION_01_BASIC_NAME                                                      = "PUBLICATION_VERSION_01_BASIC";
-    private static PublicationVersion            PUBLICATION_VERSION_01_BASIC;
+    public static final String                   PUBLICATION_VERSION_02_BASIC_NAME                                                                                  = "PUBLICATION_VERSION_02_BASIC";
 
-    public static final String                   PUBLICATION_VERSION_02_BASIC_NAME                                                      = "PUBLICATION_VERSION_02_BASIC";
-    private static PublicationVersion            PUBLICATION_VERSION_02_BASIC;
+    public static final String                   PUBLICATION_VERSION_03_FOR_PUBLICATION_03_NAME                                                                     = "PUBLICATION_VERSION_03_FOR_PUBLICATION_03";
 
-    public static final String                   PUBLICATION_VERSION_03_FOR_PUBLICATION_03_NAME                                         = "PUBLICATION_VERSION_03_FOR_PUBLICATION_03";
-    private static PublicationVersion            PUBLICATION_VERSION_03_FOR_PUBLICATION_03;
+    public static final String                   PUBLICATION_VERSION_04_FOR_PUBLICATION_03_AND_LAST_VERSION_NAME                                                    = "PUBLICATION_VERSION_04_FOR_PUBLICATION_03_AND_LAST_VERSION";
 
-    public static final String                   PUBLICATION_VERSION_04_FOR_PUBLICATION_03_AND_LAST_VERSION_NAME                        = "PUBLICATION_VERSION_04_FOR_PUBLICATION_03_AND_LAST_VERSION";
-    private static PublicationVersion            PUBLICATION_VERSION_04_FOR_PUBLICATION_03_AND_LAST_VERSION;
+    public static final String                   PUBLICATION_VERSION_05_OPERATION_0001_CODE_000001_NAME                                                             = "PUBLICATION_VERSION_05_OPERATION_0001_CODE_000001";
 
-    public static final String                   PUBLICATION_VERSION_05_OPERATION_0001_CODE_000001_NAME                                 = "PUBLICATION_VERSION_05_OPERATION_0001_CODE_000001";
-    private static PublicationVersion            PUBLICATION_VERSION_05_OPERATION_0001_CODE_000001;
+    public static final String                   PUBLICATION_VERSION_06_OPERATION_0001_CODE_000002_NAME                                                             = "PUBLICATION_VERSION_06_OPERATION_0001_CODE_000002";
 
-    public static final String                   PUBLICATION_VERSION_06_OPERATION_0001_CODE_000002_NAME                                 = "PUBLICATION_VERSION_06_OPERATION_0001_CODE_000002";
-    private static PublicationVersion            PUBLICATION_VERSION_06_OPERATION_0001_CODE_000002;
+    public static final String                   PUBLICATION_VERSION_07_OPERATION_0001_CODE_000003_NAME                                                             = "PUBLICATION_VERSION_07_OPERATION_0001_CODE_000003";
 
-    public static final String                   PUBLICATION_VERSION_07_OPERATION_0001_CODE_000003_NAME                                 = "PUBLICATION_VERSION_07_OPERATION_0001_CODE_000003";
-    private static PublicationVersion            PUBLICATION_VERSION_07_OPERATION_0001_CODE_000003;
+    public static final String                   PUBLICATION_VERSION_08_OPERATION_0002_CODE_000001_NAME                                                             = "PUBLICATION_VERSION_08_OPERATION_0002_CODE_000001";
 
-    public static final String                   PUBLICATION_VERSION_08_OPERATION_0002_CODE_000001_NAME                                 = "PUBLICATION_VERSION_08_OPERATION_0002_CODE_000001";
-    private static PublicationVersion            PUBLICATION_VERSION_08_OPERATION_0002_CODE_000001;
+    public static final String                   PUBLICATION_VERSION_09_OPERATION_0002_CODE_000002_NAME                                                             = "PUBLICATION_VERSION_09_OPERATION_0002_CODE_000002";
 
-    public static final String                   PUBLICATION_VERSION_09_OPERATION_0002_CODE_000002_NAME                                 = "PUBLICATION_VERSION_09_OPERATION_0002_CODE_000002";
-    private static PublicationVersion            PUBLICATION_VERSION_09_OPERATION_0002_CODE_0002;
+    public static final String                   PUBLICATION_VERSION_10_OPERATION_0002_CODE_000003_NAME                                                             = "PUBLICATION_VERSION_10_OPERATION_0002_CODE_000003";
 
-    public static final String                   PUBLICATION_VERSION_10_OPERATION_0002_CODE_000003_NAME                                 = "PUBLICATION_VERSION_10_OPERATION_0002_CODE_000003";
-    private static PublicationVersion            PUBLICATION_VERSION_10_OPERATION_0002_CODE_000003;
+    public static final String                   PUBLICATION_VERSION_11_OPERATION_0002_CODE_MAX_NAME                                                                = "PUBLICATION_VERSION_11_OPERATION_0002_CODE_MAX";
 
-    public static final String                   PUBLICATION_VERSION_11_OPERATION_0002_CODE_MAX_NAME                                    = "PUBLICATION_VERSION_11_OPERATION_0002_CODE_MAX";
-    private static PublicationVersion            PUBLICATION_VERSION_11_OPERATION_0002_CODE_MAX;
+    public static final String                   PUBLICATION_VERSION_12_DRAFT_NAME                                                                                  = "PUBLICATION_VERSION_12_DRAFT";
 
-    public static final String                   PUBLICATION_VERSION_12_DRAFT_NAME                                                      = "PUBLICATION_VERSION_12_DRAFT";
-    private static PublicationVersion            PUBLICATION_VERSION_12_DRAFT;
+    public static final String                   PUBLICATION_VERSION_13_PRODUCTION_VALIDATION_NAME                                                                  = "PUBLICATION_VERSION_13_PRODUCTION_VALIDATION";
 
-    public static final String                   PUBLICATION_VERSION_13_PRODUCTION_VALIDATION_NAME                                      = "PUBLICATION_VERSION_13_PRODUCTION_VALIDATION";
-    private static PublicationVersion            PUBLICATION_VERSION_13_PRODUCTION_VALIDATION;
+    public static final String                   PUBLICATION_VERSION_14_DIFFUSION_VALIDATION_NAME                                                                   = "PUBLICATION_VERSION_14_DIFFUSION_VALIDATION";
 
-    public static final String                   PUBLICATION_VERSION_14_DIFFUSION_VALIDATION_NAME                                       = "PUBLICATION_VERSION_14_DIFFUSION_VALIDATION";
-    private static PublicationVersion            PUBLICATION_VERSION_14_DIFFUSION_VALIDATION;
+    public static final String                   PUBLICATION_VERSION_15_VALIDATION_REJECTED_NAME                                                                    = "PUBLICATION_VERSION_15_VALIDATION_REJECTED";
 
-    public static final String                   PUBLICATION_VERSION_15_VALIDATION_REJECTED_NAME                                        = "PUBLICATION_VERSION_15_VALIDATION_REJECTED";
-    private static PublicationVersion            PUBLICATION_VERSION_15_VALIDATION_REJECTED;
+    public static final String                   PUBLICATION_VERSION_16_PUBLISHED_NAME                                                                              = "PUBLICATION_VERSION_16_PUBLISHED";
 
-    public static final String                   PUBLICATION_VERSION_16_PUBLISHED_NAME                                                  = "PUBLICATION_VERSION_16_PUBLISHED";
-    private static PublicationVersion            PUBLICATION_VERSION_16_PUBLISHED;
+    public static final String                   PUBLICATION_VERSION_17_WITH_STRUCTURE_FOR_PUBLICATION_VERSION_04_NAME                                              = "PUBLICATION_VERSION_17_WITH_STRUCTURE_FOR_PUBLICATION_VERSION_04";
 
-    public static final String                   PUBLICATION_VERSION_17_WITH_STRUCTURE_FOR_PUBLICATION_VERSION_04_NAME                  = "PUBLICATION_VERSION_17_WITH_STRUCTURE_FOR_PUBLICATION_VERSION_04";
-    private static PublicationVersion            PUBLICATION_VERSION_17_WITH_STRUCTURE_FOR_PUBLICATION_VERSION_04;
+    public static final String                   PUBLICATION_VERSION_18_WITH_STRUCTURE_FOR_PUBLICATION_VERSION_04_AND_LAST_VERSION_NAME                             = "PUBLICATION_VERSION_18_WITH_STRUCTURE_FOR_PUBLICATION_VERSION_04_AND_LAST_VERSION";
 
-    public static final String                   PUBLICATION_VERSION_18_WITH_STRUCTURE_FOR_PUBLICATION_VERSION_04_AND_LAST_VERSION_NAME = "PUBLICATION_VERSION_18_WITH_STRUCTURE_FOR_PUBLICATION_VERSION_04_AND_LAST_VERSION";
-    private static PublicationVersion            PUBLICATION_VERSION_18_WITH_STRUCTURE_FOR_PUBLICATION_VERSION_04_AND_LAST_VERSION;
+    public static final String                   PUBLICATION_VERSION_19_WITH_STRUCTURE_PRODUCTION_VALIDATION_NAME                                                   = "PUBLICATION_VERSION_19_WITH_STRUCTURE_PRODUCTION_VALIDATION";
 
-    public static final String                   PUBLICATION_VERSION_19_WITH_STRUCTURE_PRODUCTION_VALIDATION_NAME                       = "PUBLICATION_VERSION_19_WITH_STRUCTURE_PRODUCTION_VALIDATION";
-    private static PublicationVersion            PUBLICATION_VERSION_19_WITH_STRUCTURE_PRODUCTION_VALIDATION;
+    public static final String                   PUBLICATION_VERSION_20_WITH_STRUCTURE_DIFFUSION_VALIDATION_NAME                                                    = "PUBLICATION_VERSION_20_WITH_STRUCTURE_DIFFUSION_VALIDATION";
 
-    public static final String                   PUBLICATION_VERSION_20_WITH_STRUCTURE_DIFFUSION_VALIDATION_NAME                        = "PUBLICATION_VERSION_20_WITH_STRUCTURE_DIFFUSION_VALIDATION";
-    private static PublicationVersion            PUBLICATION_VERSION_20_WITH_STRUCTURE_DIFFUSION_VALIDATION;
+    public static final String                   PUBLICATION_VERSION_21_WITH_STRUCTURE_VALIDATION_REJECTED_NAME                                                     = "PUBLICATION_VERSION_21_WITH_STRUCTURE_VALIDATION_REJECTED";
 
-    public static final String                   PUBLICATION_VERSION_21_WITH_STRUCTURE_VALIDATION_REJECTED_NAME                         = "PUBLICATION_VERSION_21_WITH_STRUCTURE_VALIDATION_REJECTED";
-    private static PublicationVersion            PUBLICATION_VERSION_21_WITH_STRUCTURE_VALIDATION_REJECTED;
+    public static final String                   PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME                                                           = "PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT";
 
-    public static final String                   PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME                               = "PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT";
-    private static PublicationVersion            PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT;
+    public static final String                   PUBLICATION_VERSION_23_WITH_COMPLEX_STRUCTURE_PRODUCTION_VALIDATION_NAME                                           = "PUBLICATION_VERSION_23_WITH_COMPLEX_STRUCTURE_PRODUCTION_VALIDATION";
 
-    public static final String                   PUBLICATION_VERSION_23_WITH_COMPLEX_STRUCTURE_PRODUCTION_VALIDATION_NAME               = "PUBLICATION_VERSION_23_WITH_COMPLEX_STRUCTURE_PRODUCTION_VALIDATION";
-    private static PublicationVersion            PUBLICATION_VERSION_23_WITH_COMPLEX_STRUCTURE_PRODUCTION_VALIDATION;
+    public static final String                   PUBLICATION_VERSION_24_WITH_COMPLEX_STRUCTURE_DIFFUSION_VALIDATION_NAME                                            = "PUBLICATION_VERSION_24_WITH_COMPLEX_STRUCTURE_DIFFUSION_VALIDATION";
 
-    public static final String                   PUBLICATION_VERSION_24_WITH_COMPLEX_STRUCTURE_DIFFUSION_VALIDATION_NAME                = "PUBLICATION_VERSION_24_WITH_COMPLEX_STRUCTURE_DIFFUSION_VALIDATION";
-    private static PublicationVersion            PUBLICATION_VERSION_24_WITH_COMPLEX_STRUCTURE_DIFFUSION_VALIDATION;
+    public static final String                   PUBLICATION_VERSION_25_WITH_COMPLEX_STRUCTURE_VALIDATION_REJECTED_NAME                                             = "PUBLICATION_VERSION_25_WITH_COMPLEX_STRUCTURE_VALIDATION_REJECTED";
 
-    public static final String                   PUBLICATION_VERSION_25_WITH_COMPLEX_STRUCTURE_VALIDATION_REJECTED_NAME                 = "PUBLICATION_VERSION_25_WITH_COMPLEX_STRUCTURE_VALIDATION_REJECTED";
-    private static PublicationVersion            PUBLICATION_VERSION_25_WITH_COMPLEX_STRUCTURE_VALIDATION_REJECTED;
+    public static final String                   PUBLICATION_VERSION_26_WITH_COMPLEX_STRUCTURE_PUBLISHED_NAME                                                       = "PUBLICATION_VERSION_26_WITH_COMPLEX_STRUCTURE_PUBLISHED";
 
-    public static final String                   PUBLICATION_VERSION_26_WITH_COMPLEX_STRUCTURE_PUBLISHED_NAME                           = "PUBLICATION_VERSION_26_WITH_COMPLEX_STRUCTURE_PUBLISHED";
-    private static PublicationVersion            PUBLICATION_VERSION_26_WITH_COMPLEX_STRUCTURE_PUBLISHED;
+    public static final String                   PUBLICATION_VERSION_27_V1_PUBLISHED_FOR_PUBLICATION_05_NAME                                                        = "PUBLICATION_VERSION_27_V1_PUBLISHED_FOR_PUBLICATION_05";
 
-    public static final String                   PUBLICATION_VERSION_27_V1_PUBLISHED_FOR_PUBLICATION_05_NAME                            = "PUBLICATION_VERSION_27_V1_PUBLISHED_FOR_PUBLICATION_05";
-    private static PublicationVersion            PUBLICATION_VERSION_27_V1_PUBLISHED_FOR_PUBLICATION_05;
+    public static final String                   PUBLICATION_VERSION_28_V2_PUBLISHED_FOR_PUBLICATION_05_NAME                                                        = "PUBLICATION_VERSION_28_V2_PUBLISHED_FOR_PUBLICATION_05";
 
-    public static final String                   PUBLICATION_VERSION_28_V2_PUBLISHED_FOR_PUBLICATION_05_NAME                            = "PUBLICATION_VERSION_28_V2_PUBLISHED_FOR_PUBLICATION_05";
-    private static PublicationVersion            PUBLICATION_VERSION_28_V2_PUBLISHED_FOR_PUBLICATION_05;
+    public static final String                   PUBLICATION_VERSION_29_V3_PUBLISHED_FOR_PUBLICATION_05_NAME                                                        = "PUBLICATION_VERSION_29_V3_PUBLISHED_FOR_PUBLICATION_05";
 
-    public static final String                   PUBLICATION_VERSION_29_V3_PUBLISHED_FOR_PUBLICATION_05_NAME                            = "PUBLICATION_VERSION_29_V3_PUBLISHED_FOR_PUBLICATION_05";
-    private static PublicationVersion            PUBLICATION_VERSION_29_V3_PUBLISHED_FOR_PUBLICATION_05;
+    public static final String                   PUBLICATION_VERSION_30_V1_PUBLISHED_FOR_PUBLICATION_06_NAME                                                        = "PUBLICATION_VERSION_30_V1_PUBLISHED_FOR_PUBLICATION_06";
 
-    public static final String                   PUBLICATION_VERSION_30_V1_PUBLISHED_FOR_PUBLICATION_06_NAME                            = "PUBLICATION_VERSION_30_V1_PUBLISHED_FOR_PUBLICATION_06";
-    private static PublicationVersion            PUBLICATION_VERSION_30_V1_PUBLISHED_FOR_PUBLICATION_06;
+    public static final String                   PUBLICATION_VERSION_31_V2_PUBLISHED_NO_VISIBLE_FOR_PUBLICATION_06_NAME                                             = "PUBLICATION_VERSION_31_V2_PUBLISHED_NO_VISIBLE_FOR_PUBLICATION_06";
 
-    public static final String                   PUBLICATION_VERSION_31_V2_PUBLISHED_NO_VISIBLE_FOR_PUBLICATION_06_NAME                 = "PUBLICATION_VERSION_31_V2_PUBLISHED_NO_VISIBLE_FOR_PUBLICATION_06";
-    private static PublicationVersion            PUBLICATION_VERSION_31_V2_PUBLISHED_NO_VISIBLE_FOR_PUBLICATION_06;
+    public static final String                   PUBLICATION_VERSION_32_DRAFT_NOT_READY_NAME                                                                        = "PUBLICATION_VERSION_32_DRAFT_NOT_READY";
 
-    public static final String                   PUBLICATION_VERSION_32_DRAFT_NOT_READY_NAME                                            = "PUBLICATION_VERSION_32_DRAFT_NOT_READY";
-    private static PublicationVersion            PUBLICATION_VERSION_32_DRAFT_NOT_READY;
+    public static final String                   PUBLICATION_VERSION_33_DRAFT_READY_FOR_PRODUCTION_VALIDATION_NAME                                                  = "PUBLICATION_VERSION_33_DRAFT_READY_FOR_PRODUCTION_VALIDATION";
 
-    public static final String                   PUBLICATION_VERSION_33_DRAFT_READY_FOR_PRODUCTION_VALIDATION_NAME                      = "PUBLICATION_VERSION_33_DRAFT_READY_FOR_PRODUCTION_VALIDATION";
-    private static PublicationVersion            PUBLICATION_VERSION_33_DRAFT_READY_FOR_PRODUCTION_VALIDATION;
+    public static final String                   PUBLICATION_VERSION_34_VERSION_RATIONALE_TYPE_MINOR_ERRATA_NAME                                                    = "PUBLICATION_VERSION_34_VERSION_RATIONALE_TYPE_MINOR_ERRATA";
 
-    public static final String                   PUBLICATION_VERSION_34_VERSION_RATIONALE_TYPE_MINOR_ERRATA_NAME                        = "PUBLICATION_VERSION_34_VERSION_RATIONALE_TYPE_MINOR_ERRATA";
-    private static PublicationVersion            PUBLICATION_VERSION_34_VERSION_RATIONALE_TYPE_MINOR_ERRATA;
+    public static final String                   PUBLICATION_VERSION_35_NEXT_VERSION_NOT_SCHEDULED_DATE_FILLED_NAME                                                 = "PUBLICATION_VERSION_35_NEXT_VERSION_NOT_SCHEDULED_DATE_FILLED";
 
-    public static final String                   PUBLICATION_VERSION_35_NEXT_VERSION_NOT_SCHEDULED_DATE_FILLED_NAME                     = "PUBLICATION_VERSION_35_NEXT_VERSION_NOT_SCHEDULED_DATE_FILLED";
-    private static PublicationVersion            PUBLICATION_VERSION_35_NEXT_VERSION_NOT_SCHEDULED_DATE_FILLED;
+    public static final String                   PUBLICATION_VERSION_36_PRODUCTION_VALIDATION_NOT_READY_NAME                                                        = "PUBLICATION_VERSION_36_PRODUCTION_VALIDATION_NOT_READY";
 
-    public static final String                   PUBLICATION_VERSION_36_PRODUCTION_VALIDATION_NOT_READY_NAME                            = "PUBLICATION_VERSION_36_PRODUCTION_VALIDATION_NOT_READY";
-    private static PublicationVersion            PUBLICATION_VERSION_36_PRODUCTION_VALIDATION_NOT_READY;
+    public static final String                   PUBLICATION_VERSION_37_PRODUCTION_VALIDATION_READY_FOR_DIFFUSION_VALIDATION_NAME                                   = "PUBLICATION_VERSION_37_PRODUCTION_VALIDATION_READY_FOR_DIFFUSION_VALIDATION";
 
-    public static final String                   PUBLICATION_VERSION_37_PRODUCTION_VALIDATION_READY_FOR_DIFFUSION_VALIDATION_NAME       = "PUBLICATION_VERSION_37_PRODUCTION_VALIDATION_READY_FOR_DIFFUSION_VALIDATION";
-    private static PublicationVersion            PUBLICATION_VERSION_37_PRODUCTION_VALIDATION_READY_FOR_DIFFUSION_VALIDATION;
+    public static final String                   PUBLICATION_VERSION_38_PRODUCTION_VALIDATION_READY_FOR_VALIDATION_REJECTED_NAME                                    = "PUBLICATION_VERSION_38_PRODUCTION_VALIDATION_READY_FOR_VALIDATION_REJECTED";
 
-    public static final String                   PUBLICATION_VERSION_38_PRODUCTION_VALIDATION_READY_FOR_VALIDATION_REJECTED_NAME        = "PUBLICATION_VERSION_38_PRODUCTION_VALIDATION_READY_FOR_VALIDATION_REJECTED";
-    private static PublicationVersion            PUBLICATION_VERSION_38_PRODUCTION_VALIDATION_READY_FOR_VALIDATION_REJECTED;
+    public static final String                   PUBLICATION_VERSION_39_PUBLISHED_WITH_NO_ROOT_MAINTAINER_NAME                                                      = "PUBLICATION_VERSION_39_PUBLISHED_WITH_NO_ROOT_MAINTAINER";
 
-    public static final String                   PUBLICATION_VERSION_39_PUBLISHED_WITH_NO_ROOT_MAINTAINER_NAME                          = "PUBLICATION_VERSION_39_PUBLISHED_WITH_NO_ROOT_MAINTAINER";
-    private static PublicationVersion            PUBLICATION_VERSION_39_PUBLISHED_WITH_NO_ROOT_MAINTAINER;
+    public static final String                   PUBLICATION_VERSION_40_PREPARED_TO_PUBLISH_EXTERNAL_ITEM_FULL_NAME                                                 = "PUBLICATION_VERSION_40_PREPARED_TO_PUBLISH_EXTERNAL_ITEM_FULL";
 
-    public static final String                   PUBLICATION_VERSION_40_PREPARED_TO_PUBLISH_EXTERNAL_ITEM_FULL_NAME                     = "PUBLICATION_VERSION_40_PREPARED_TO_PUBLISH_EXTERNAL_ITEM_FULL";
-    private static PublicationVersion            PUBLICATION_VERSION_40_PREPARED_TO_PUBLISH_EXTERNAL_ITEM_FULL;
+    public static final String                   PUBLICATION_VERSION_41_PUB_NOT_VISIBLE_REPLACES_PUB_VERSION_42_NAME                                                = "PUBLICATION_VERSION_41_PUB_NOT_VISIBLE_REPLACES_PUB_VERSION_42";
 
-    public static final String                   PUBLICATION_VERSION_41_PUB_NOT_VISIBLE_REPLACES_PUB_VERSION_42_NAME                    = "PUBLICATION_VERSION_41_PUB_NOT_VISIBLE_REPLACES_PUB_VERSION_42";
-    private static PublicationVersion            PUBLICATION_VERSION_41_PUB_NOT_VISIBLE_REPLACES_PUB_VERSION_42;
+    public static final String                   PUBLICATION_VERSION_42_PUB_IS_REPLACED_BY_PUB_VERSION_41_NAME                                                      = "PUBLICATION_VERSION_42_PUB_IS_REPLACED_BY_PUB_VERSION_41";
 
-    public static final String                   PUBLICATION_VERSION_42_PUB_IS_REPLACED_BY_PUB_VERSION_41_NAME                          = "PUBLICATION_VERSION_42_PUB_IS_REPLACED_BY_PUB_VERSION_41";
-    private static PublicationVersion            PUBLICATION_VERSION_42_PUB_IS_REPLACED_BY_PUB_VERSION_41;
+    public static final String                   PUBLICATION_VERSION_43_DRAFT_HAS_PART_DATASET_VERSION_85_FIRST_LEVEL_NAME                                          = "PUBLICATION_VERSION_43_DRAFT_HAS_PART_DATASET_VERSION_85_FIRST_LEVEL";
 
-    public static final String                   PUBLICATION_VERSION_43_DRAFT_HAS_PART_DATASET_VERSION_85_FIRST_LEVEL_NAME              = "PUBLICATION_VERSION_43_DRAFT_HAS_PART_DATASET_VERSION_85_FIRST_LEVEL";
+    public static final String                   PUBLICATION_VERSION_44_DRAFT_HAS_PART_DATASET_VERSION_85_NO_FIRST_LEVEL_NAME                                       = "PUBLICATION_VERSION_44_DRAFT_HAS_PART_DATASET_VERSION_85_NO_FIRST_LEVEL";
 
-    public static final String                   PUBLICATION_VERSION_44_DRAFT_HAS_PART_DATASET_VERSION_85_NO_FIRST_LEVEL_NAME           = "PUBLICATION_VERSION_44_DRAFT_HAS_PART_DATASET_VERSION_85_NO_FIRST_LEVEL";
+    public static final String                   PUBLICATION_VERSION_45_DRAFT_HAS_PART_DATASET_VERSION_85_MULTI_CUBE_NAME                                           = "PUBLICATION_VERSION_45_DRAFT_HAS_PART_DATASET_VERSION_85_MULTI_CUBE";
 
-    public static final String                   PUBLICATION_VERSION_45_DRAFT_HAS_PART_DATASET_VERSION_85_MULTI_CUBE_NAME               = "PUBLICATION_VERSION_45_DRAFT_HAS_PART_DATASET_VERSION_85_MULTI_CUBE";
+    public static final String                   PUBLICATION_VERSION_46_PUBLISHED_V01_FOR_PUBLICATION_07_NAME                                                       = "PUBLICATION_VERSION_46_PUBLISHED_V01_FOR_PUBLICATION_07";
 
-    public static final String                   PUBLICATION_VERSION_46_PUBLISHED_V01_FOR_PUBLICATION_07_NAME                           = "PUBLICATION_VERSION_46_PUBLISHED_V01_FOR_PUBLICATION_07";
+    public static final String                   PUBLICATION_VERSION_47_PUBLISHED_V02_FOR_PUBLICATION_07_NAME                                                       = "PUBLICATION_VERSION_47_PUBLISHED_V02_FOR_PUBLICATION_07";
 
-    public static final String                   PUBLICATION_VERSION_47_PUBLISHED_V02_FOR_PUBLICATION_07_NAME                           = "PUBLICATION_VERSION_47_PUBLISHED_V02_FOR_PUBLICATION_07";
+    public static final String                   PUBLICATION_VERSION_48_PUBLISHED_V01_FOR_PUBLICATION_08_NAME                                                       = "PUBLICATION_VERSION_48_PUBLISHED_V01_FOR_PUBLICATION_08";
 
-    public static final String                   PUBLICATION_VERSION_48_PUBLISHED_V01_FOR_PUBLICATION_08_NAME                           = "PUBLICATION_VERSION_48_PUBLISHED_V01_FOR_PUBLICATION_08";
+    public static final String                   PUBLICATION_VERSION_49_PUBLISHED_NOT_VISIBLE_V02_FOR_PUBLICATION_08_NAME                                           = "PUBLICATION_VERSION_49_PUBLISHED_NOT_VISIBLE_V02_FOR_PUBLICATION_08";
 
-    public static final String                   PUBLICATION_VERSION_49_PUBLISHED_NOT_VISIBLE_V02_FOR_PUBLICATION_08_NAME               = "PUBLICATION_VERSION_49_PUBLISHED_NOT_VISIBLE_V02_FOR_PUBLICATION_08";
+    public static final String                   PUBLICATION_VERSION_50_DRAFT_V01_FOR_PUBLICATION_09_NAME                                                           = "PUBLICATION_VERSION_50_DRAFT_V01_FOR_PUBLICATION_09";
 
-    public static final String                   PUBLICATION_VERSION_50_DRAFT_V01_FOR_PUBLICATION_09_NAME                               = "PUBLICATION_VERSION_50_DRAFT_V01_FOR_PUBLICATION_09";
+    public static final String                   PUBLICATION_VERSION_51_PUBLISHED_V01_FOR_PUBLICATION_10_NAME                                                       = "PUBLICATION_VERSION_51_PUBLISHED_V01_FOR_PUBLICATION_10";
 
-    public static final String                   PUBLICATION_VERSION_51_PUBLISHED_V01_FOR_PUBLICATION_10_NAME                           = "PUBLICATION_VERSION_51_PUBLISHED_V01_FOR_PUBLICATION_10";
+    public static final String                   PUBLICATION_VERSION_52_PUBLISHED_V02_FOR_PUBLICATION_10_NAME                                                       = "PUBLICATION_VERSION_52_PUBLISHED_V02_FOR_PUBLICATION_10";
 
-    public static final String                   PUBLICATION_VERSION_52_PUBLISHED_V02_FOR_PUBLICATION_10_NAME                           = "PUBLICATION_VERSION_52_PUBLISHED_V02_FOR_PUBLICATION_10";
+    public static final String                   PUBLICATION_VERSION_53_PUBLISHED_V01_FOR_PUBLICATION_11_NAME                                                       = "PUBLICATION_VERSION_53_PUBLISHED_V01_FOR_PUBLICATION_11";
 
-    public static final String                   PUBLICATION_VERSION_53_PUBLISHED_V01_FOR_PUBLICATION_11_NAME                           = "PUBLICATION_VERSION_53_PUBLISHED_V01_FOR_PUBLICATION_11";
+    public static final String                   PUBLICATION_VERSION_54_PUBLISHED_NOT_VISIBLE_V02_FOR_PUBLICATION_11_NAME                                           = "PUBLICATION_VERSION_54_PUBLISHED_NOT_VISIBLE_V02_FOR_PUBLICATION_11";
 
-    public static final String                   PUBLICATION_VERSION_54_PUBLISHED_NOT_VISIBLE_V02_FOR_PUBLICATION_11_NAME               = "PUBLICATION_VERSION_54_PUBLISHED_NOT_VISIBLE_V02_FOR_PUBLICATION_11";
+    public static final String                   PUBLICATION_VERSION_55_DRAFT_V01_FOR_PUBLICATION_12_NAME                                                           = "PUBLICATION_VERSION_55_DRAFT_V01_FOR_PUBLICATION_12";
 
-    public static final String                   PUBLICATION_VERSION_55_DRAFT_V01_FOR_PUBLICATION_12_NAME                               = "PUBLICATION_VERSION_55_DRAFT_V01_FOR_PUBLICATION_12";
+    public static final String                   PUBLICATION_VERSION_56_PUBLISHED_V01_FOR_PUBLICATION_13_NAME                                                       = "PUBLICATION_VERSION_56_PUBLISHED_V01_FOR_PUBLICATION_13";
 
-    public static final String                   PUBLICATION_VERSION_56_PUBLISHED_V01_FOR_PUBLICATION_13_NAME                           = "PUBLICATION_VERSION_56_PUBLISHED_V01_FOR_PUBLICATION_13";
+    public static final String                   PUBLICATION_VERSION_57_PUBLISHED_V02_FOR_PUBLICATION_13_NAME                                                       = "PUBLICATION_VERSION_57_PUBLISHED_V02_FOR_PUBLICATION_13";
 
-    public static final String                   PUBLICATION_VERSION_57_PUBLISHED_V02_FOR_PUBLICATION_13_NAME                           = "PUBLICATION_VERSION_57_PUBLISHED_V02_FOR_PUBLICATION_13";
+    public static final String                   PUBLICATION_VERSION_58_PUBLISHED_V01_FOR_PUBLICATION_14_NAME                                                       = "PUBLICATION_VERSION_58_PUBLISHED_V01_FOR_PUBLICATION_14";
 
-    public static final String                   PUBLICATION_VERSION_58_PUBLISHED_V01_FOR_PUBLICATION_14_NAME                           = "PUBLICATION_VERSION_58_PUBLISHED_V01_FOR_PUBLICATION_14";
+    public static final String                   PUBLICATION_VERSION_59_PUBLISHED_NOT_VISIBLE_V02_FOR_PUBLICATION_14_NAME                                           = "PUBLICATION_VERSION_59_PUBLISHED_NOT_VISIBLE_V02_FOR_PUBLICATION_14";
 
-    public static final String                   PUBLICATION_VERSION_59_PUBLISHED_NOT_VISIBLE_V02_FOR_PUBLICATION_14_NAME               = "PUBLICATION_VERSION_59_PUBLISHED_NOT_VISIBLE_V02_FOR_PUBLICATION_14";
+    public static final String                   PUBLICATION_VERSION_60_DRAFT_V01_FOR_PUBLICATION_15_NAME                                                           = "PUBLICATION_VERSION_60_DRAFT_V01_FOR_PUBLICATION_15";
 
-    public static final String                   PUBLICATION_VERSION_60_DRAFT_V01_FOR_PUBLICATION_15_NAME                               = "PUBLICATION_VERSION_60_DRAFT_V01_FOR_PUBLICATION_15";
+    public static final String                   PUBLICATION_VERSION_61_DRAFT_WITH_PREVIOUS_VERSION__LINKED_TO_QUERY_10_NAME                                        = "PUBLICATION_VERSION_61_DRAFT_WITH_PREVIOUS_VERSION__LINKED_TO_QUERY_10";
 
-    private static PublicationVersionMockFactory instance                                                                               = null;
+    public static final String                   PUBLICATION_VERSION_62_DRAFT_SINGLE_VERSION__LINKED_TO_QUERY_10_NAME                                               = "PUBLICATION_VERSION_62_DRAFT_SINGLE_VERSION__LINKED_TO_QUERY_10";
+
+    public static final String                   PUBLICATION_VERSION_63_DRAFT_WITH_PREVIOUS_VERSION__LINKED_TO_QUERY_11_NAME                                        = "PUBLICATION_VERSION_63_DRAFT_WITH_PREVIOUS_VERSION__LINKED_TO_QUERY_11";
+
+    public static final String                   PUBLICATION_VERSION_64_DRAFT_SINGLE_VERSION__LINKED_TO_QUERY_11_NAME                                               = "PUBLICATION_VERSION_64_DRAFT_SINGLE_VERSION__LINKED_TO_QUERY_11";
+
+    public static final String                   PUBLICATION_VERSION_65_PUBLISHED_NOT_VISIBLE_SINGLE_VERSION__LINKED_TO_QUERY_11_NAME                               = "PUBLICATION_VERSION_65_PUBLISHED_NOT_VISIBLE_SINGLE_VERSION__LINKED_TO_QUERY_11";
+
+    public static final String                   PUBLICATION_VERSION_66_PUBLISHED_MULTI_VERSION_V01__LINKED_TO_QUERY_11_NAME                                        = "PUBLICATION_VERSION_66_PUBLISHED_MULTI_VERSION_V01__LINKED_TO_QUERY_11";
+
+    public static final String                   PUBLICATION_VERSION_67_PUBLISHED_NOT_VISIBLE_MULTI_VERSION_V02__LINKED_TO_QUERY_11_NAME                            = "PUBLICATION_VERSION_67_PUBLISHED_NOT_VISIBLE_MULTI_VERSION_V02__LINKED_TO_QUERY_11";
+
+    public static final String                   PUBLICATION_VERSION_68_DRAFT_SINGLE_VERSION_LINKED_TO_QUERY_12_NAME                                                = "PUBLICATION_VERSION_68_DRAFT_SINGLE_VERSION_LINKED_TO_QUERY_12";
+    public static final String                   PUBLICATION_VERSION_69_PUBLISHED_NOT_VISIBLE_SINGLE_VERSION_LINKED_TO_QUERY_12_NAME                                = "PUBLICATION_VERSION_69_PUBLISHED_NOT_VISIBLE_SINGLE_VERSION_LINKED_TO_QUERY_12";
+    public static final String                   PUBLICATION_VERSION_70_PUBLISHED_SINGLE_VERSION_LINKED_TO_QUERY_12_NAME                                            = "PUBLICATION_VERSION_70_PUBLISHED_SINGLE_VERSION_LINKED_TO_QUERY_12";
+
+    public static final String                   PUBLICATION_VERSION_71_DRAFT_V02_IN_PUB_WITH_PUBLISHED_AND_DRAFT__ONLY_DRAFT_LINKED_TO_QUERY_13_NAME               = "PUBLICATION_VERSION_71_DRAFT_V02_IN_PUB_WITH_PUBLISHED_AND_DRAFT__ONLY_DRAFT_LINKED_TO_QUERY_13";
+    public static final String                   PUBLICATION_VERSION_72_PUBLISHED_V01_IN_PUB_WITH_PUBLISHED_AND_DRAFT__ONLY_PUBLISHED_LINKED_TO_QUERY_14_NAME       = "PUBLICATION_VERSION_72_PUBLISHED_V01_IN_PUB_WITH_PUBLISHED_AND_DRAFT__ONLY_PUBLISHED_LINKED_TO_QUERY_14";
+    public static final String                   PUBLICATION_VERSION_73_PUBLISHED_V01_IN_PUB_WITH_PUBLISHED_AND_DRAFT__BOTH_LINKED_TO_QUERY_15_NAME                 = "PUBLICATION_VERSION_73_PUBLISHED_V01_IN_PUB_WITH_PUBLISHED_AND_DRAFT__BOTH_LINKED_TO_QUERY_15";
+    public static final String                   PUBLICATION_VERSION_74_DRAFT_V02_IN_PUB_WITH_PUBLISHED_AND_DRAFT__BOTH_LINKED_TO_QUERY_15_NAME                     = "PUBLICATION_VERSION_74_DRAFT_V02_IN_PUB_WITH_PUBLISHED_AND_DRAFT__BOTH_LINKED_TO_QUERY_15";
+
+    public static final String                   PUBLICATION_VERSION_75_NOT_VISIBLE_V02_IN_PUB_WITH_PUBLISHED_AND_NOT_VISIBLE__ONLY_LAST_LINKED_TO_QUERY_13_NAME    = "PUBLICATION_VERSION_75_NOT_VISIBLE_V02_IN_PUB_WITH_PUBLISHED_AND_NOT_VISIBLE__ONLY_LAST_LINKED_TO_QUERY_13";
+    public static final String                   PUBLICATION_VERSION_76_PUBLISHED_V01_IN_PUB_WITH_PUBLISHED_AND_NOT_VISIBLE__ONLY_PUBLISHED_LINKED_TO_QUERY_14_NAME = "PUBLICATION_VERSION_76_PUBLISHED_V01_IN_PUB_WITH_PUBLISHED_AND_NOT_VISIBLE__ONLY_PUBLISHED_LINKED_TO_QUERY_14";
+    public static final String                   PUBLICATION_VERSION_77_PUBLISHED_V01_IN_PUB_WITH_PUBLISHED_AND_NOT_VISIBLE__BOTH_LINKED_TO_QUERY_15_NAME           = "PUBLICATION_VERSION_77_PUBLISHED_V01_IN_PUB_WITH_PUBLISHED_AND_NOT_VISIBLE__BOTH_LINKED_TO_QUERY_15";
+    public static final String                   PUBLICATION_VERSION_78_NOT_VISIBLE_V02_IN_PUB_WITH_PUBLISHED_AND_NOT_VISIBLE__BOTH_LINKED_TO_QUERY_15_NAME         = "PUBLICATION_VERSION_78_NOT_VISIBLE_V02_IN_PUB_WITH_PUBLISHED_AND_NOT_VISIBLE__BOTH_LINKED_TO_QUERY_15";
+
+    public static final String                   PUBLICATION_VERSION_79_LAST_VERSION_V02_IN_PUB_WITH_TWO_PUBLISHED__ONLY_LAST_LINKED_TO_QUERY_13_NAME               = "PUBLICATION_VERSION_79_LAST_VERSION_V02_IN_PUB_WITH_TWO_PUBLISHED__ONLY_LAST_LINKED_TO_QUERY_13";
+    public static final String                   PUBLICATION_VERSION_80_PREVIOUS_VERSION_V01_IN_PUB_WITH_TWO_PUBLISHED__ONLY_PREVIOUS_LINKED_TO_QUERY_14_NAME       = "PUBLICATION_VERSION_80_PREVIOUS_VERSION_V01_IN_PUB_WITH_TWO_PUBLISHED__ONLY_PREVIOUS_LINKED_TO_QUERY_14";
+    public static final String                   PUBLICATION_VERSION_81_PREVIOUS_VERSION_V01_IN_PUB_WITH_TWO_PUBLISHED__BOTH_LINKED_TO_QUERY_15_NAME                = "PUBLICATION_VERSION_81_PREVIOUS_VERSION_V01_IN_PUB_WITH_TWO_PUBLISHED__BOTH_LINKED_TO_QUERY_15";
+    public static final String                   PUBLICATION_VERSION_82_LAST_VERSION_V02_IN_PUB_WITH_TWO_PUBLISHED__BOTH_LINKED_TO_QUERY_15_NAME                    = "PUBLICATION_VERSION_82_LAST_VERSION_V02_IN_PUB_WITH_TWO_PUBLISHED__BOTH_LINKED_TO_QUERY_15";
+
+    private static PublicationVersionMockFactory instance                                                                                                           = null;
 
     private PublicationVersionMockFactory() {
     }
@@ -203,392 +193,278 @@ public class PublicationVersionMockFactory extends StatisticalResourcesMockFacto
         return instance;
     }
 
-    protected static PublicationVersion getPublicationVersion01Basic() {
-        if (PUBLICATION_VERSION_01_BASIC == null) {
-            PUBLICATION_VERSION_01_BASIC = createPublicationVersion();
-        }
-        return PUBLICATION_VERSION_01_BASIC;
+    private static PublicationVersion getPublicationVersion01Basic() {
+        return createPublicationVersion();
     }
 
-    protected static PublicationVersion getPublicationVersion02Basic() {
-        if (PUBLICATION_VERSION_02_BASIC == null) {
-            PUBLICATION_VERSION_02_BASIC = createPublicationVersion();
-        }
-        return PUBLICATION_VERSION_02_BASIC;
+    private static PublicationVersion getPublicationVersion02Basic() {
+        return createPublicationVersion();
     }
 
-    protected static PublicationVersion getPublicationVersion03ForPublication03() {
-        if (PUBLICATION_VERSION_03_FOR_PUBLICATION_03 == null) {
-            PUBLICATION_VERSION_03_FOR_PUBLICATION_03 = PublicationMockFactory.getPublication03BasicWith2PublicationVersions().getVersions().get(0);
-        }
-        return PUBLICATION_VERSION_03_FOR_PUBLICATION_03;
+    private static MockDescriptor getPublicationVersion03ForPublication03() {
+        MockDescriptor pubMockDesc = getPublicationMockDescriptor(PublicationMockFactory.PUBLICATION_03_BASIC_WITH_2_PUBLICATION_VERSIONS_NAME);
+        return new MockDescriptor(getPublicationVersionMock(PUBLICATION_VERSION_03_FOR_PUBLICATION_03_NAME), pubMockDesc);
     }
 
-    protected static PublicationVersion getPublicationVersion04ForPublication03AndLastVersion() {
-        if (PUBLICATION_VERSION_04_FOR_PUBLICATION_03_AND_LAST_VERSION == null) {
-            PUBLICATION_VERSION_04_FOR_PUBLICATION_03_AND_LAST_VERSION = PublicationMockFactory.getPublication03BasicWith2PublicationVersions().getVersions().get(1);
-        }
-        return PUBLICATION_VERSION_04_FOR_PUBLICATION_03_AND_LAST_VERSION;
+    private static MockDescriptor getPublicationVersion04ForPublication03AndLastVersion() {
+        MockDescriptor pubMockDesc = getPublicationMockDescriptor(PublicationMockFactory.PUBLICATION_03_BASIC_WITH_2_PUBLICATION_VERSIONS_NAME);
+        return new MockDescriptor(getPublicationVersionMock(PUBLICATION_VERSION_04_FOR_PUBLICATION_03_AND_LAST_VERSION_NAME), pubMockDesc);
     }
 
-    protected static PublicationVersion getPublicationVersion05Operation0001Code000001() {
-        if (PUBLICATION_VERSION_05_OPERATION_0001_CODE_000001 == null) {
-            PUBLICATION_VERSION_05_OPERATION_0001_CODE_000001 = createPublicationVersionInOperation(OPERATION_01_CODE, 1);
-        }
-        return PUBLICATION_VERSION_05_OPERATION_0001_CODE_000001;
+    private static PublicationVersion getPublicationVersion05Operation0001Code000001() {
+        return createPublicationVersionInOperation(OPERATION_01_CODE, 1);
     }
 
-    protected static PublicationVersion getPublicationVersion06Operation0001Code000002() {
-        if (PUBLICATION_VERSION_06_OPERATION_0001_CODE_000002 == null) {
-            PUBLICATION_VERSION_06_OPERATION_0001_CODE_000002 = createPublicationVersionInOperation(OPERATION_01_CODE, 2);
-        }
-        return PUBLICATION_VERSION_06_OPERATION_0001_CODE_000002;
+    private static PublicationVersion getPublicationVersion06Operation0001Code000002() {
+        return createPublicationVersionInOperation(OPERATION_01_CODE, 2);
     }
 
-    protected static PublicationVersion getPublicationVersion07Operation0001Code000003() {
-        if (PUBLICATION_VERSION_07_OPERATION_0001_CODE_000003 == null) {
-            PUBLICATION_VERSION_07_OPERATION_0001_CODE_000003 = createPublicationVersionInOperation(OPERATION_01_CODE, 3);
-        }
-        return PUBLICATION_VERSION_07_OPERATION_0001_CODE_000003;
+    private static PublicationVersion getPublicationVersion07Operation0001Code000003() {
+        return createPublicationVersionInOperation(OPERATION_01_CODE, 3);
     }
 
-    protected static PublicationVersion getPublicationVersion08Operation0002Code000001() {
-        if (PUBLICATION_VERSION_08_OPERATION_0002_CODE_000001 == null) {
-            PUBLICATION_VERSION_08_OPERATION_0002_CODE_000001 = createPublicationVersionInOperation(OPERATION_02_CODE, 1);
-        }
-        return PUBLICATION_VERSION_08_OPERATION_0002_CODE_000001;
+    private static PublicationVersion getPublicationVersion08Operation0002Code000001() {
+        return createPublicationVersionInOperation(OPERATION_02_CODE, 1);
     }
 
-    protected static PublicationVersion getPublicationVersion09Operation0002Code000002() {
-        if (PUBLICATION_VERSION_09_OPERATION_0002_CODE_0002 == null) {
-            PUBLICATION_VERSION_09_OPERATION_0002_CODE_0002 = createPublicationVersionInOperation(OPERATION_02_CODE, 2);
-        }
-        return PUBLICATION_VERSION_09_OPERATION_0002_CODE_0002;
+    private static PublicationVersion getPublicationVersion09Operation0002Code000002() {
+        return createPublicationVersionInOperation(OPERATION_02_CODE, 2);
     }
 
-    protected static PublicationVersion getPublicationVersion10Operation0002Code000003() {
-        if (PUBLICATION_VERSION_10_OPERATION_0002_CODE_000003 == null) {
-            PUBLICATION_VERSION_10_OPERATION_0002_CODE_000003 = createPublicationVersionInOperation(OPERATION_02_CODE, 3);
-        }
-        return PUBLICATION_VERSION_10_OPERATION_0002_CODE_000003;
+    private static PublicationVersion getPublicationVersion10Operation0002Code000003() {
+        return createPublicationVersionInOperation(OPERATION_02_CODE, 3);
     }
 
-    protected static PublicationVersion getPublicationVersion11Operation0002CodeMax() {
-        if (PUBLICATION_VERSION_11_OPERATION_0002_CODE_MAX == null) {
-            PUBLICATION_VERSION_11_OPERATION_0002_CODE_MAX = createPublicationVersionInOperation(OPERATION_01_CODE, 999999);
-        }
-        return PUBLICATION_VERSION_11_OPERATION_0002_CODE_MAX;
+    private static PublicationVersion getPublicationVersion11Operation0002CodeMax() {
+        return createPublicationVersionInOperation(OPERATION_01_CODE, 999999);
     }
 
-    protected static PublicationVersion getPublicationVersion12Draft() {
-        if (PUBLICATION_VERSION_12_DRAFT == null) {
-            PUBLICATION_VERSION_12_DRAFT = createPublicationVersion();
-            PUBLICATION_VERSION_12_DRAFT.getSiemacMetadataStatisticalResource().setProcStatus(ProcStatusEnum.DRAFT);
-        }
-        return PUBLICATION_VERSION_12_DRAFT;
+    private static PublicationVersion getPublicationVersion12Draft() {
+        PublicationVersion publicationVersion = createPublicationVersion();
+        publicationVersion.getSiemacMetadataStatisticalResource().setProcStatus(ProcStatusEnum.DRAFT);
+        return publicationVersion;
     }
 
-    protected static PublicationVersion getPublicationVersion13ProductionValidation() {
-        if (PUBLICATION_VERSION_13_PRODUCTION_VALIDATION == null) {
-            PUBLICATION_VERSION_13_PRODUCTION_VALIDATION = createPublicationVersion();
-            PUBLICATION_VERSION_13_PRODUCTION_VALIDATION.getSiemacMetadataStatisticalResource().setProcStatus(ProcStatusEnum.PRODUCTION_VALIDATION);
-        }
-        return PUBLICATION_VERSION_13_PRODUCTION_VALIDATION;
+    private static PublicationVersion getPublicationVersion13ProductionValidation() {
+        PublicationVersion publicationVersion = createPublicationVersion();
+        publicationVersion.getSiemacMetadataStatisticalResource().setProcStatus(ProcStatusEnum.PRODUCTION_VALIDATION);
+        return publicationVersion;
     }
 
-    protected static PublicationVersion getPublicationVersion14DiffusionValidation() {
-        if (PUBLICATION_VERSION_14_DIFFUSION_VALIDATION == null) {
-            PUBLICATION_VERSION_14_DIFFUSION_VALIDATION = createPublicationVersion();
-            PUBLICATION_VERSION_14_DIFFUSION_VALIDATION.getSiemacMetadataStatisticalResource().setProcStatus(ProcStatusEnum.DIFFUSION_VALIDATION);
-        }
-        return PUBLICATION_VERSION_14_DIFFUSION_VALIDATION;
+    private static PublicationVersion getPublicationVersion14DiffusionValidation() {
+        PublicationVersion publicationVersion = createPublicationVersion();
+        publicationVersion.getSiemacMetadataStatisticalResource().setProcStatus(ProcStatusEnum.DIFFUSION_VALIDATION);
+        return publicationVersion;
     }
 
-    protected static PublicationVersion getPublicationVersion15ValidationRejected() {
-        if (PUBLICATION_VERSION_15_VALIDATION_REJECTED == null) {
-            PUBLICATION_VERSION_15_VALIDATION_REJECTED = createPublicationVersion();
-            PUBLICATION_VERSION_15_VALIDATION_REJECTED.getSiemacMetadataStatisticalResource().setProcStatus(ProcStatusEnum.VALIDATION_REJECTED);
-        }
-        return PUBLICATION_VERSION_15_VALIDATION_REJECTED;
+    private static PublicationVersion getPublicationVersion15ValidationRejected() {
+        PublicationVersion publicationVersion = createPublicationVersion();
+        publicationVersion.getSiemacMetadataStatisticalResource().setProcStatus(ProcStatusEnum.VALIDATION_REJECTED);
+        return publicationVersion;
     }
 
-    protected static PublicationVersion getPublicationVersion16Published() {
-        if (PUBLICATION_VERSION_16_PUBLISHED == null) {
-            PUBLICATION_VERSION_16_PUBLISHED = createPublicationVersion();
-            PUBLICATION_VERSION_16_PUBLISHED.getSiemacMetadataStatisticalResource().setProcStatus(ProcStatusEnum.PUBLISHED);
-            PUBLICATION_VERSION_16_PUBLISHED.getSiemacMetadataStatisticalResource().setValidFrom(new DateTime().minusDays(2));
-        }
-        return PUBLICATION_VERSION_16_PUBLISHED;
+    private static PublicationVersion getPublicationVersion16Published() {
+        PublicationVersion publicationVersion = createPublicationVersion();
+        publicationVersion.getSiemacMetadataStatisticalResource().setProcStatus(ProcStatusEnum.PUBLISHED);
+        publicationVersion.getSiemacMetadataStatisticalResource().setValidFrom(new DateTime().minusDays(2));
+        return publicationVersion;
     }
 
-    protected static MockDescriptor getPublicationVersion17WithStructureForPublicationVersion04() {
-        if (PUBLICATION_VERSION_17_WITH_STRUCTURE_FOR_PUBLICATION_VERSION_04 == null) {
-            MockDescriptor publication = getPublicationMockDescriptor(PUBLICATION_04_STRUCTURED_WITH_2_PUBLICATION_VERSIONS_NAME);
-            return new MockDescriptor(getPublicationVersionMock(PUBLICATION_VERSION_17_WITH_STRUCTURE_FOR_PUBLICATION_VERSION_04_NAME), publication);
-        }
-        return null;
+    private static MockDescriptor getPublicationVersion17WithStructureForPublicationVersion04() {
+        MockDescriptor publication = getPublicationMockDescriptor(PUBLICATION_04_STRUCTURED_WITH_2_PUBLICATION_VERSIONS_NAME);
+        return new MockDescriptor(getPublicationVersionMock(PUBLICATION_VERSION_17_WITH_STRUCTURE_FOR_PUBLICATION_VERSION_04_NAME), publication);
     }
 
-    protected static MockDescriptor getPublicationVersion18WithStructureForPublicationVersion04AndLastVersion() {
-        if (PUBLICATION_VERSION_18_WITH_STRUCTURE_FOR_PUBLICATION_VERSION_04_AND_LAST_VERSION == null) {
-            MockDescriptor publication = getPublicationMockDescriptor(PUBLICATION_04_STRUCTURED_WITH_2_PUBLICATION_VERSIONS_NAME);
-            return new MockDescriptor(getPublicationVersionMock(PUBLICATION_VERSION_18_WITH_STRUCTURE_FOR_PUBLICATION_VERSION_04_AND_LAST_VERSION_NAME), publication);
-        }
-        return null;
+    private static MockDescriptor getPublicationVersion18WithStructureForPublicationVersion04AndLastVersion() {
+        MockDescriptor publication = getPublicationMockDescriptor(PUBLICATION_04_STRUCTURED_WITH_2_PUBLICATION_VERSIONS_NAME);
+        return new MockDescriptor(getPublicationVersionMock(PUBLICATION_VERSION_18_WITH_STRUCTURE_FOR_PUBLICATION_VERSION_04_AND_LAST_VERSION_NAME), publication);
     }
 
-    protected static PublicationVersion getPublicationVersion19WithStructureProductionValidation() {
-        if (PUBLICATION_VERSION_19_WITH_STRUCTURE_PRODUCTION_VALIDATION == null) {
-            // General metadata
-            PublicationVersion publicationVersion = createPublicationVersion();
-            publicationVersion.getSiemacMetadataStatisticalResource().setVersionLogic(INIT_VERSION);
-            publicationVersion.getSiemacMetadataStatisticalResource().setCreationDate(new DateTime().minusDays(1));
-            publicationVersion.getSiemacMetadataStatisticalResource().setProcStatus(ProcStatusEnum.PRODUCTION_VALIDATION);
+    private static PublicationVersion getPublicationVersion19WithStructureProductionValidation() {
+        // General metadata
+        PublicationVersion publicationVersion = createPublicationVersion();
+        publicationVersion.getSiemacMetadataStatisticalResource().setVersionLogic(INIT_VERSION);
+        publicationVersion.getSiemacMetadataStatisticalResource().setCreationDate(new DateTime().minusDays(1));
+        publicationVersion.getSiemacMetadataStatisticalResource().setProcStatus(ProcStatusEnum.PRODUCTION_VALIDATION);
 
-            // Structure
-            // Chapter 01
-            ElementLevel elementLevel01 = createChapterElementLevel(publicationVersion);
-            elementLevel01.setOrderInLevel(Long.valueOf(1));
-            // Chapter 02
-            ElementLevel elementLevel02 = createChapterElementLevel(publicationVersion);
-            elementLevel02.setOrderInLevel(Long.valueOf(2));
-            // --> Chapter 02.01
-            ElementLevel elementLevel02_01 = createChapterElementLevel(publicationVersion, elementLevel02);
-            elementLevel02_01.setOrderInLevel(Long.valueOf(1));
+        // Structure
+        // Chapter 01
+        ElementLevel elementLevel01 = createChapterElementLevel(publicationVersion);
+        elementLevel01.setOrderInLevel(Long.valueOf(1));
+        // Chapter 02
+        ElementLevel elementLevel02 = createChapterElementLevel(publicationVersion);
+        elementLevel02.setOrderInLevel(Long.valueOf(2));
+        // --> Chapter 02.01
+        ElementLevel elementLevel02_01 = createChapterElementLevel(publicationVersion, elementLevel02);
+        elementLevel02_01.setOrderInLevel(Long.valueOf(1));
 
-            PUBLICATION_VERSION_19_WITH_STRUCTURE_PRODUCTION_VALIDATION = publicationVersion;
-        }
-
-        return PUBLICATION_VERSION_19_WITH_STRUCTURE_PRODUCTION_VALIDATION;
+        return publicationVersion;
     }
 
-    protected static PublicationVersion getPublicationVersion20WithStructureDiffusionValidation() {
-        if (PUBLICATION_VERSION_20_WITH_STRUCTURE_DIFFUSION_VALIDATION == null) {
-            // General metadata
-            PublicationVersion publicationVersion = createPublicationVersion();
-            publicationVersion.getSiemacMetadataStatisticalResource().setVersionLogic(INIT_VERSION);
-            publicationVersion.getSiemacMetadataStatisticalResource().setCreationDate(new DateTime().minusDays(1));
-            publicationVersion.getSiemacMetadataStatisticalResource().setProcStatus(ProcStatusEnum.DIFFUSION_VALIDATION);
+    private static PublicationVersion getPublicationVersion20WithStructureDiffusionValidation() {
+        // General metadata
+        PublicationVersion publicationVersion = createPublicationVersion();
+        publicationVersion.getSiemacMetadataStatisticalResource().setVersionLogic(INIT_VERSION);
+        publicationVersion.getSiemacMetadataStatisticalResource().setCreationDate(new DateTime().minusDays(1));
+        publicationVersion.getSiemacMetadataStatisticalResource().setProcStatus(ProcStatusEnum.DIFFUSION_VALIDATION);
 
-            // Structure
-            // Chapter 01
-            ElementLevel elementLevel01 = createChapterElementLevel(publicationVersion);
-            elementLevel01.setOrderInLevel(Long.valueOf(1));
-            // Chapter 02
-            ElementLevel elementLevel02 = createChapterElementLevel(publicationVersion);
-            elementLevel02.setOrderInLevel(Long.valueOf(2));
-            // --> Chapter 02.01
-            ElementLevel elementLevel02_01 = createChapterElementLevel(publicationVersion, elementLevel02);
-            elementLevel02_01.setOrderInLevel(Long.valueOf(1));
+        // Structure
+        // Chapter 01
+        ElementLevel elementLevel01 = createChapterElementLevel(publicationVersion);
+        elementLevel01.setOrderInLevel(Long.valueOf(1));
+        // Chapter 02
+        ElementLevel elementLevel02 = createChapterElementLevel(publicationVersion);
+        elementLevel02.setOrderInLevel(Long.valueOf(2));
+        // --> Chapter 02.01
+        ElementLevel elementLevel02_01 = createChapterElementLevel(publicationVersion, elementLevel02);
+        elementLevel02_01.setOrderInLevel(Long.valueOf(1));
 
-            PUBLICATION_VERSION_20_WITH_STRUCTURE_DIFFUSION_VALIDATION = publicationVersion;
-        }
-
-        return PUBLICATION_VERSION_20_WITH_STRUCTURE_DIFFUSION_VALIDATION;
+        return publicationVersion;
     }
 
-    protected static PublicationVersion getPublicationVersion21WithStructureValidationRejected() {
-        if (PUBLICATION_VERSION_21_WITH_STRUCTURE_VALIDATION_REJECTED == null) {
-            // General metadata
-            PublicationVersion publicationVersion = createPublicationVersion();
-            publicationVersion.getSiemacMetadataStatisticalResource().setVersionLogic(INIT_VERSION);
-            publicationVersion.getSiemacMetadataStatisticalResource().setCreationDate(new DateTime().minusDays(1));
-            publicationVersion.getSiemacMetadataStatisticalResource().setProcStatus(ProcStatusEnum.VALIDATION_REJECTED);
+    private static PublicationVersion getPublicationVersion21WithStructureValidationRejected() {
+        // General metadata
+        PublicationVersion publicationVersion = createPublicationVersion();
+        publicationVersion.getSiemacMetadataStatisticalResource().setVersionLogic(INIT_VERSION);
+        publicationVersion.getSiemacMetadataStatisticalResource().setCreationDate(new DateTime().minusDays(1));
+        publicationVersion.getSiemacMetadataStatisticalResource().setProcStatus(ProcStatusEnum.VALIDATION_REJECTED);
 
-            // Structure
-            // Chapter 01
-            ElementLevel elementLevel01 = createChapterElementLevel(publicationVersion);
-            elementLevel01.setOrderInLevel(Long.valueOf(1));
-            // Chapter 02
-            ElementLevel elementLevel02 = createChapterElementLevel(publicationVersion);
-            elementLevel02.setOrderInLevel(Long.valueOf(2));
-            // --> Chapter 02.01
-            ElementLevel elementLevel02_01 = createChapterElementLevel(publicationVersion, elementLevel02);
-            elementLevel02_01.setOrderInLevel(Long.valueOf(1));
+        // Structure
+        // Chapter 01
+        ElementLevel elementLevel01 = createChapterElementLevel(publicationVersion);
+        elementLevel01.setOrderInLevel(Long.valueOf(1));
+        // Chapter 02
+        ElementLevel elementLevel02 = createChapterElementLevel(publicationVersion);
+        elementLevel02.setOrderInLevel(Long.valueOf(2));
+        // --> Chapter 02.01
+        ElementLevel elementLevel02_01 = createChapterElementLevel(publicationVersion, elementLevel02);
+        elementLevel02_01.setOrderInLevel(Long.valueOf(1));
 
-            PUBLICATION_VERSION_21_WITH_STRUCTURE_VALIDATION_REJECTED = publicationVersion;
-        }
-
-        return PUBLICATION_VERSION_21_WITH_STRUCTURE_VALIDATION_REJECTED;
+        return publicationVersion;
     }
 
-    protected static PublicationVersion getPublicationVersion22WithComplexStructureDraft() {
-        if (PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT == null) {
-            PublicationVersion publicationVersion = createComplexStructure();
-            publicationVersion.getSiemacMetadataStatisticalResource().setProcStatus(ProcStatusEnum.DRAFT);
-            PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT = publicationVersion;
-        }
-        return PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT;
+    private static PublicationVersion getPublicationVersion22WithComplexStructureDraft() {
+        PublicationVersion publicationVersion = createComplexStructure();
+        publicationVersion.getSiemacMetadataStatisticalResource().setProcStatus(ProcStatusEnum.DRAFT);
+        return publicationVersion;
     }
 
-    protected static PublicationVersion getPublicationVersion23WithComplexStructureProductionValidation() {
-        if (PUBLICATION_VERSION_23_WITH_COMPLEX_STRUCTURE_PRODUCTION_VALIDATION == null) {
-            PublicationVersion publicationVersion = createComplexStructure();
-            publicationVersion.getSiemacMetadataStatisticalResource().setProcStatus(ProcStatusEnum.PRODUCTION_VALIDATION);
-            PUBLICATION_VERSION_23_WITH_COMPLEX_STRUCTURE_PRODUCTION_VALIDATION = publicationVersion;
-        }
-        return PUBLICATION_VERSION_23_WITH_COMPLEX_STRUCTURE_PRODUCTION_VALIDATION;
+    private static PublicationVersion getPublicationVersion23WithComplexStructureProductionValidation() {
+        PublicationVersion publicationVersion = createComplexStructure();
+        publicationVersion.getSiemacMetadataStatisticalResource().setProcStatus(ProcStatusEnum.PRODUCTION_VALIDATION);
+        return publicationVersion;
     }
 
-    protected static PublicationVersion getPublicationVersion24WithComplexStructureDiffusionValidation() {
-        if (PUBLICATION_VERSION_24_WITH_COMPLEX_STRUCTURE_DIFFUSION_VALIDATION == null) {
-            PublicationVersion publicationVersion = createComplexStructure();
-            publicationVersion.getSiemacMetadataStatisticalResource().setProcStatus(ProcStatusEnum.DIFFUSION_VALIDATION);
-            PUBLICATION_VERSION_24_WITH_COMPLEX_STRUCTURE_DIFFUSION_VALIDATION = publicationVersion;
-        }
-        return PUBLICATION_VERSION_24_WITH_COMPLEX_STRUCTURE_DIFFUSION_VALIDATION;
+    private static PublicationVersion getPublicationVersion24WithComplexStructureDiffusionValidation() {
+        PublicationVersion publicationVersion = createComplexStructure();
+        publicationVersion.getSiemacMetadataStatisticalResource().setProcStatus(ProcStatusEnum.DIFFUSION_VALIDATION);
+        return publicationVersion;
     }
 
-    protected static PublicationVersion getPublicationVersion25WithComplexStructureValidationRejected() {
-        if (PUBLICATION_VERSION_25_WITH_COMPLEX_STRUCTURE_VALIDATION_REJECTED == null) {
-            PublicationVersion publicationVersion = createComplexStructure();
-            publicationVersion.getSiemacMetadataStatisticalResource().setProcStatus(ProcStatusEnum.VALIDATION_REJECTED);
-            PUBLICATION_VERSION_25_WITH_COMPLEX_STRUCTURE_VALIDATION_REJECTED = publicationVersion;
-        }
-        return PUBLICATION_VERSION_25_WITH_COMPLEX_STRUCTURE_VALIDATION_REJECTED;
+    private static PublicationVersion getPublicationVersion25WithComplexStructureValidationRejected() {
+        PublicationVersion publicationVersion = createComplexStructure();
+        publicationVersion.getSiemacMetadataStatisticalResource().setProcStatus(ProcStatusEnum.VALIDATION_REJECTED);
+        return publicationVersion;
     }
 
-    protected static PublicationVersion getPublicationVersion26WithComplexStructurePublished() {
-        if (PUBLICATION_VERSION_26_WITH_COMPLEX_STRUCTURE_PUBLISHED == null) {
-            PublicationVersion publicationVersion = createComplexStructure();
-            publicationVersion.getSiemacMetadataStatisticalResource().setProcStatus(ProcStatusEnum.PUBLISHED);
-            publicationVersion.getSiemacMetadataStatisticalResource().setValidFrom(new DateTime().minusDays(2));
-            PUBLICATION_VERSION_26_WITH_COMPLEX_STRUCTURE_PUBLISHED = publicationVersion;
-        }
-        return PUBLICATION_VERSION_26_WITH_COMPLEX_STRUCTURE_PUBLISHED;
+    private static PublicationVersion getPublicationVersion26WithComplexStructurePublished() {
+        PublicationVersion publicationVersion = createComplexStructure();
+        publicationVersion.getSiemacMetadataStatisticalResource().setProcStatus(ProcStatusEnum.PUBLISHED);
+        publicationVersion.getSiemacMetadataStatisticalResource().setValidFrom(new DateTime().minusDays(2));
+        return publicationVersion;
     }
 
-    protected static PublicationVersion getPublicationVersion27V1PublishedForPublication05() {
-        if (PUBLICATION_VERSION_27_V1_PUBLISHED_FOR_PUBLICATION_05 == null) {
-            PUBLICATION_VERSION_27_V1_PUBLISHED_FOR_PUBLICATION_05 = PublicationMockFactory.getPublication05WithMultiplePublishedVersions().getVersions().get(0);
-        }
-        return PUBLICATION_VERSION_27_V1_PUBLISHED_FOR_PUBLICATION_05;
+    private static MockDescriptor getPublicationVersion27V1PublishedForPublication05() {
+        MockDescriptor publication = getPublicationMockDescriptor(PublicationMockFactory.PUBLICATION_05_WITH_MULTIPLE_PUBLISHED_VERSIONS_NAME);
+        return new MockDescriptor(getPublicationVersionMock(PUBLICATION_VERSION_27_V1_PUBLISHED_FOR_PUBLICATION_05_NAME), publication);
     }
 
-    protected static PublicationVersion getPublicationVersion28V2PublishedForPublication05() {
-        if (PUBLICATION_VERSION_28_V2_PUBLISHED_FOR_PUBLICATION_05 == null) {
-            PUBLICATION_VERSION_28_V2_PUBLISHED_FOR_PUBLICATION_05 = PublicationMockFactory.getPublication05WithMultiplePublishedVersions().getVersions().get(1);
-        }
-        return PUBLICATION_VERSION_28_V2_PUBLISHED_FOR_PUBLICATION_05;
+    private static MockDescriptor getPublicationVersion28V2PublishedForPublication05() {
+        MockDescriptor publication = getPublicationMockDescriptor(PUBLICATION_05_WITH_MULTIPLE_PUBLISHED_VERSIONS_NAME);
+        return new MockDescriptor(getPublicationVersionMock(PUBLICATION_VERSION_28_V2_PUBLISHED_FOR_PUBLICATION_05_NAME), publication);
     }
 
-    protected static PublicationVersion getPublicationVersion29V3PublishedForPublication05() {
-        if (PUBLICATION_VERSION_29_V3_PUBLISHED_FOR_PUBLICATION_05 == null) {
-            PUBLICATION_VERSION_29_V3_PUBLISHED_FOR_PUBLICATION_05 = PublicationMockFactory.getPublication05WithMultiplePublishedVersions().getVersions().get(2);
-        }
-        return PUBLICATION_VERSION_29_V3_PUBLISHED_FOR_PUBLICATION_05;
+    private static MockDescriptor getPublicationVersion29V3PublishedForPublication05() {
+        MockDescriptor publication = getPublicationMockDescriptor(PUBLICATION_05_WITH_MULTIPLE_PUBLISHED_VERSIONS_NAME);
+        return new MockDescriptor(getPublicationVersionMock(PUBLICATION_VERSION_29_V3_PUBLISHED_FOR_PUBLICATION_05_NAME), publication);
     }
 
-    protected static PublicationVersion getPublicationVersion30V1PublishedForPublication06() {
-        if (PUBLICATION_VERSION_30_V1_PUBLISHED_FOR_PUBLICATION_06 == null) {
-            PUBLICATION_VERSION_30_V1_PUBLISHED_FOR_PUBLICATION_06 = PublicationMockFactory.getPublication06WithMultiplePublishedVersionsAndLatestNoVisible().getVersions().get(0);
-        }
-        return PUBLICATION_VERSION_30_V1_PUBLISHED_FOR_PUBLICATION_06;
+    private static MockDescriptor getPublicationVersion30V1PublishedForPublication06() {
+        MockDescriptor publication = getPublicationMockDescriptor(PUBLICATION_06_WITH_MULTIPLE_PUBLISHED_VERSIONS_AND_LATEST_NO_VISIBLE_NAME);
+        return new MockDescriptor(getPublicationVersionMock(PUBLICATION_VERSION_30_V1_PUBLISHED_FOR_PUBLICATION_06_NAME), publication);
     }
 
-    protected static PublicationVersion getPublicationVersion31V2PublishedNoVisibleForPublication06() {
-        if (PUBLICATION_VERSION_31_V2_PUBLISHED_NO_VISIBLE_FOR_PUBLICATION_06 == null) {
-            PUBLICATION_VERSION_31_V2_PUBLISHED_NO_VISIBLE_FOR_PUBLICATION_06 = PublicationMockFactory.getPublication06WithMultiplePublishedVersionsAndLatestNoVisible().getVersions().get(1);
-        }
-        return PUBLICATION_VERSION_31_V2_PUBLISHED_NO_VISIBLE_FOR_PUBLICATION_06;
+    private static MockDescriptor getPublicationVersion31V2PublishedNoVisibleForPublication06() {
+        MockDescriptor publication = getPublicationMockDescriptor(PUBLICATION_06_WITH_MULTIPLE_PUBLISHED_VERSIONS_AND_LATEST_NO_VISIBLE_NAME);
+        return new MockDescriptor(getPublicationVersionMock(PUBLICATION_VERSION_31_V2_PUBLISHED_NO_VISIBLE_FOR_PUBLICATION_06_NAME), publication);
     }
 
-    protected static PublicationVersion getPublicationVersion32DraftNotReady() {
-        if (PUBLICATION_VERSION_32_DRAFT_NOT_READY == null) {
-            PUBLICATION_VERSION_32_DRAFT_NOT_READY = createPublicationVersion();
-            PUBLICATION_VERSION_32_DRAFT_NOT_READY.getSiemacMetadataStatisticalResource().setProcStatus(ProcStatusEnum.DRAFT);
-        }
-        return PUBLICATION_VERSION_32_DRAFT_NOT_READY;
+    private static PublicationVersion getPublicationVersion32DraftNotReady() {
+        PublicationVersion publicationVersion = createPublicationVersion();
+        publicationVersion.getSiemacMetadataStatisticalResource().setProcStatus(ProcStatusEnum.DRAFT);
+        return publicationVersion;
     }
 
-    protected static PublicationVersion getPublicationVersion33DraftReadyForProductionValidation() {
-        if (PUBLICATION_VERSION_33_DRAFT_READY_FOR_PRODUCTION_VALIDATION == null) {
-            PUBLICATION_VERSION_33_DRAFT_READY_FOR_PRODUCTION_VALIDATION = createPublicationVersion();
-            prepareToProductionValidation(PUBLICATION_VERSION_33_DRAFT_READY_FOR_PRODUCTION_VALIDATION);
-        }
-        return PUBLICATION_VERSION_33_DRAFT_READY_FOR_PRODUCTION_VALIDATION;
+    private static PublicationVersion getPublicationVersion33DraftReadyForProductionValidation() {
+        PublicationVersion publicationVersion = createPublicationVersion();
+        prepareToProductionValidation(publicationVersion);
+        return publicationVersion;
     }
 
-    protected static PublicationVersion getPublicationVersion34VersionRationaleTypeMinorErrata() {
-        if (PUBLICATION_VERSION_34_VERSION_RATIONALE_TYPE_MINOR_ERRATA == null) {
-            PublicationVersion publicationVersion = createPublicationVersion();
-            PUBLICATION_VERSION_34_VERSION_RATIONALE_TYPE_MINOR_ERRATA = publicationVersion;
-            prepareToProductionValidation(publicationVersion);
-            publicationVersion.getSiemacMetadataStatisticalResource().getVersionRationaleTypes().add(new VersionRationaleType(VersionRationaleTypeEnum.MINOR_ERRATA));
-        }
-        return PUBLICATION_VERSION_34_VERSION_RATIONALE_TYPE_MINOR_ERRATA;
+    private static PublicationVersion getPublicationVersion34VersionRationaleTypeMinorErrata() {
+        PublicationVersion publicationVersion = createPublicationVersion();
+        prepareToProductionValidation(publicationVersion);
+        publicationVersion.getSiemacMetadataStatisticalResource().getVersionRationaleTypes().add(new VersionRationaleType(VersionRationaleTypeEnum.MINOR_ERRATA));
+        return publicationVersion;
     }
 
-    protected static PublicationVersion getPublicationVersion35NextVersionNotScheduledDateFilled() {
-        if (PUBLICATION_VERSION_35_NEXT_VERSION_NOT_SCHEDULED_DATE_FILLED == null) {
-            PublicationVersion publicationVersion = createPublicationVersion();
-            PUBLICATION_VERSION_35_NEXT_VERSION_NOT_SCHEDULED_DATE_FILLED = publicationVersion;
-            prepareToProductionValidation(publicationVersion);
-            publicationVersion.getSiemacMetadataStatisticalResource().setNextVersion(NextVersionTypeEnum.NON_SCHEDULED_UPDATE);
-            publicationVersion.getSiemacMetadataStatisticalResource().setNextVersionDate(new DateTime().plusDays(10));
-        }
-        return PUBLICATION_VERSION_35_NEXT_VERSION_NOT_SCHEDULED_DATE_FILLED;
+    private static PublicationVersion getPublicationVersion35NextVersionNotScheduledDateFilled() {
+        PublicationVersion publicationVersion = createPublicationVersion();
+        prepareToProductionValidation(publicationVersion);
+        publicationVersion.getSiemacMetadataStatisticalResource().setNextVersion(NextVersionTypeEnum.NON_SCHEDULED_UPDATE);
+        publicationVersion.getSiemacMetadataStatisticalResource().setNextVersionDate(new DateTime().plusDays(10));
+        return publicationVersion;
     }
 
-    protected static PublicationVersion getPublicationVersion36ProductionValidationNotReady() {
-        if (PUBLICATION_VERSION_36_PRODUCTION_VALIDATION_NOT_READY == null) {
-            PUBLICATION_VERSION_36_PRODUCTION_VALIDATION_NOT_READY = createPublicationVersion();
-            prepareToDiffusionValidation(PUBLICATION_VERSION_36_PRODUCTION_VALIDATION_NOT_READY);
-        }
-        return PUBLICATION_VERSION_36_PRODUCTION_VALIDATION_NOT_READY;
+    private static PublicationVersion getPublicationVersion36ProductionValidationNotReady() {
+        PublicationVersion publicationVersion = createPublicationVersion();
+        prepareToDiffusionValidation(publicationVersion);
+        return publicationVersion;
     }
 
-    protected static PublicationVersion getPublicationVersion37ProductionValidationReadyForDiffusionValidation() {
-        if (PUBLICATION_VERSION_37_PRODUCTION_VALIDATION_READY_FOR_DIFFUSION_VALIDATION == null) {
-            PUBLICATION_VERSION_37_PRODUCTION_VALIDATION_READY_FOR_DIFFUSION_VALIDATION = createPublicationVersion();
-            prepareToDiffusionValidation(PUBLICATION_VERSION_37_PRODUCTION_VALIDATION_READY_FOR_DIFFUSION_VALIDATION);
-        }
-        return PUBLICATION_VERSION_37_PRODUCTION_VALIDATION_READY_FOR_DIFFUSION_VALIDATION;
+    private static PublicationVersion getPublicationVersion37ProductionValidationReadyForDiffusionValidation() {
+        PublicationVersion publicationVersion = createPublicationVersion();
+        prepareToDiffusionValidation(publicationVersion);
+        return publicationVersion;
     }
 
-    protected static PublicationVersion getPublicationVersion38ProductionValidationReadyForValidationRejected() {
-        if (PUBLICATION_VERSION_38_PRODUCTION_VALIDATION_READY_FOR_VALIDATION_REJECTED == null) {
-            PUBLICATION_VERSION_38_PRODUCTION_VALIDATION_READY_FOR_VALIDATION_REJECTED = createPublicationVersion();
-            prepareToValidationRejected(PUBLICATION_VERSION_38_PRODUCTION_VALIDATION_READY_FOR_VALIDATION_REJECTED);
-        }
-        return PUBLICATION_VERSION_38_PRODUCTION_VALIDATION_READY_FOR_VALIDATION_REJECTED;
+    private static PublicationVersion getPublicationVersion38ProductionValidationReadyForValidationRejected() {
+        PublicationVersion publicationVersion = createPublicationVersion();
+        prepareToValidationRejected(publicationVersion);
+        return publicationVersion;
     }
 
-    protected static PublicationVersion getPublicationVersion39PublishedWithNoRootMaintainer() {
-        if (PUBLICATION_VERSION_39_PUBLISHED_WITH_NO_ROOT_MAINTAINER == null) {
-            PUBLICATION_VERSION_39_PUBLISHED_WITH_NO_ROOT_MAINTAINER = createPublicationVersion();
-            PUBLICATION_VERSION_39_PUBLISHED_WITH_NO_ROOT_MAINTAINER.getSiemacMetadataStatisticalResource().setMaintainer(
-                    StatisticalResourcesDoMocks.mockAgencyExternalItem("agency01", "ISTAC.agency01"));
-            PUBLICATION_VERSION_39_PUBLISHED_WITH_NO_ROOT_MAINTAINER.getSiemacMetadataStatisticalResource().setProcStatus(ProcStatusEnum.PUBLISHED);
-            PUBLICATION_VERSION_39_PUBLISHED_WITH_NO_ROOT_MAINTAINER.getSiemacMetadataStatisticalResource().setValidFrom(new DateTime().minusDays(2));
-        }
-        return PUBLICATION_VERSION_39_PUBLISHED_WITH_NO_ROOT_MAINTAINER;
+    private static PublicationVersion getPublicationVersion39PublishedWithNoRootMaintainer() {
+        PublicationVersion publicationVersion = createPublicationVersion();
+        publicationVersion.getSiemacMetadataStatisticalResource().setMaintainer(StatisticalResourcesDoMocks.mockAgencyExternalItem("agency01", "ISTAC.agency01"));
+        publicationVersion.getSiemacMetadataStatisticalResource().setProcStatus(ProcStatusEnum.PUBLISHED);
+        publicationVersion.getSiemacMetadataStatisticalResource().setValidFrom(new DateTime().minusDays(2));
+        return publicationVersion;
     }
 
-    protected static PublicationVersion getPublicationVersion41PubNotVisibleReplacesPubVersion42() {
-        if (PUBLICATION_VERSION_41_PUB_NOT_VISIBLE_REPLACES_PUB_VERSION_42 == null) {
-            PublicationVersionMock template = new PublicationVersionMock();
-            template.setSequentialId(1);
-            template.setSequentialId(1);
-            template.getSiemacMetadataStatisticalResource().setValidFrom(new DateTime().plusDays(1));
-            PublicationVersion publicationVersion = createPublicationVersionFromTemplate(template);
+    private static PublicationVersion getPublicationVersion41PubNotVisibleReplacesPubVersion42() {
+        PublicationVersionMock template = new PublicationVersionMock();
+        template.setSequentialId(1);
+        template.setSequentialId(1);
+        template.getSiemacMetadataStatisticalResource().setValidFrom(new DateTime().plusDays(1));
+        PublicationVersion publicationVersion = createPublicationVersionFromTemplate(template);
 
-            PublicationVersion publicationToReplace = createPublicationVersionWithSequenceAndVersion(2, INIT_VERSION);
-            prepareToVersioning(publicationToReplace);
+        PublicationVersion publicationToReplace = createPublicationVersionWithSequenceAndVersion(2, INIT_VERSION);
+        prepareToVersioning(publicationToReplace);
+        registerPublicationVersionMock(PUBLICATION_VERSION_42_PUB_IS_REPLACED_BY_PUB_VERSION_41_NAME, publicationToReplace);
 
-            publicationVersion.getSiemacMetadataStatisticalResource().setReplaces(StatisticalResourcesPersistedDoMocks.mockPublicationVersionRelated(publicationToReplace));
-
-            PUBLICATION_VERSION_41_PUB_NOT_VISIBLE_REPLACES_PUB_VERSION_42 = publicationVersion;
-        }
-        return PUBLICATION_VERSION_41_PUB_NOT_VISIBLE_REPLACES_PUB_VERSION_42;
-    }
-
-    protected static PublicationVersion getPublicationVersion42PubIsReplacedByPubVersion41() {
-        if (PUBLICATION_VERSION_42_PUB_IS_REPLACED_BY_PUB_VERSION_41 == null) {
-            PublicationVersion resourceWhichReplaces = getPublicationVersion41PubNotVisibleReplacesPubVersion42();
-            PUBLICATION_VERSION_42_PUB_IS_REPLACED_BY_PUB_VERSION_41 = resourceWhichReplaces.getSiemacMetadataStatisticalResource().getReplaces().getPublicationVersion();
-        }
-        return PUBLICATION_VERSION_42_PUB_IS_REPLACED_BY_PUB_VERSION_41;
+        publicationVersion.getSiemacMetadataStatisticalResource().setReplaces(StatisticalResourcesPersistedDoMocks.mockPublicationVersionRelated(publicationToReplace));
+        return publicationVersion;
     }
 
     // builders

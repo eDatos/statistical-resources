@@ -2,6 +2,23 @@ package org.siemac.metamac.statistical.resources.core.utils.mocks.factories;
 
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_56_DRAFT_WITH_DATASOURCE_AND_QUERIES_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.generateDatasetVersionInStatusWithGeneratedDatasource;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_63_DRAFT_WITH_PREVIOUS_VERSION__LINKED_TO_QUERY_11_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_64_DRAFT_SINGLE_VERSION__LINKED_TO_QUERY_11_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_65_PUBLISHED_NOT_VISIBLE_SINGLE_VERSION__LINKED_TO_QUERY_11_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_66_PUBLISHED_MULTI_VERSION_V01__LINKED_TO_QUERY_11_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_68_DRAFT_SINGLE_VERSION_LINKED_TO_QUERY_12_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_69_PUBLISHED_NOT_VISIBLE_SINGLE_VERSION_LINKED_TO_QUERY_12_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_70_PUBLISHED_SINGLE_VERSION_LINKED_TO_QUERY_12_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_71_DRAFT_V02_IN_PUB_WITH_PUBLISHED_AND_DRAFT__ONLY_DRAFT_LINKED_TO_QUERY_13_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_72_PUBLISHED_V01_IN_PUB_WITH_PUBLISHED_AND_DRAFT__ONLY_PUBLISHED_LINKED_TO_QUERY_14_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_73_PUBLISHED_V01_IN_PUB_WITH_PUBLISHED_AND_DRAFT__BOTH_LINKED_TO_QUERY_15_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_74_DRAFT_V02_IN_PUB_WITH_PUBLISHED_AND_DRAFT__BOTH_LINKED_TO_QUERY_15_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_75_NOT_VISIBLE_V02_IN_PUB_WITH_PUBLISHED_AND_NOT_VISIBLE__ONLY_LAST_LINKED_TO_QUERY_13_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_76_PUBLISHED_V01_IN_PUB_WITH_PUBLISHED_AND_NOT_VISIBLE__ONLY_PUBLISHED_LINKED_TO_QUERY_14_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_77_PUBLISHED_V01_IN_PUB_WITH_PUBLISHED_AND_NOT_VISIBLE__BOTH_LINKED_TO_QUERY_15_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_78_NOT_VISIBLE_V02_IN_PUB_WITH_PUBLISHED_AND_NOT_VISIBLE__BOTH_LINKED_TO_QUERY_15_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_79_LAST_VERSION_V02_IN_PUB_WITH_TWO_PUBLISHED__ONLY_LAST_LINKED_TO_QUERY_13_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_80_PREVIOUS_VERSION_V01_IN_PUB_WITH_TWO_PUBLISHED__ONLY_PREVIOUS_LINKED_TO_QUERY_14_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_21_FOR_QUERY_03_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_22_FOR_QUERY_03_AND_LAST_VERSION_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_26_V3_PUBLISHED_FOR_QUERY_05_NAME;
@@ -9,14 +26,21 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_28_V2_PUBLISHED_NO_VISIBLE_FOR_QUERY_06_NAME;
 
 import org.joda.time.DateTime;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryStatusEnum;
+import org.siemac.metamac.statistical.resources.core.publication.domain.ElementLevel;
+import org.siemac.metamac.statistical.resources.core.publication.domain.Publication;
+import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
 import org.siemac.metamac.statistical.resources.core.query.domain.Query;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
+import org.siemac.metamac.statistical.resources.core.utils.PublicationLifecycleTestUtils;
 import org.siemac.metamac.statistical.resources.core.utils.QueryLifecycleTestUtils;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.PublicationVersionMock;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.QueryMock;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.QueryVersionMock;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.configuration.MockDescriptor;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.configuration.MockProvider;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesDoMocks;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesNotPersistedDoMocks;
@@ -26,25 +50,36 @@ import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.Stati
 @SuppressWarnings("unused")
 public class QueryMockFactory extends StatisticalResourcesMockFactory<Query> {
 
-    public static final String      QUERY_01_SIMPLE_NAME                                                 = "QUERY_01_SIMPLE";
+    public static final String      QUERY_01_SIMPLE_NAME                                                                    = "QUERY_01_SIMPLE";
 
-    public static final String      QUERY_02_BASIC_WITH_GENERATED_VERSION_NAME                           = "QUERY_02_BASIC_WITH_GENERATED_VERSION";
+    public static final String      QUERY_02_BASIC_WITH_GENERATED_VERSION_NAME                                              = "QUERY_02_BASIC_WITH_GENERATED_VERSION";
 
-    public static final String      QUERY_03_BASIC_WITH_2_QUERY_VERSIONS_NAME                            = "QUERY_03_WITH_2_QUERY_VERSIONS";
+    public static final String      QUERY_03_BASIC_WITH_2_QUERY_VERSIONS_NAME                                               = "QUERY_03_WITH_2_QUERY_VERSIONS";
 
-    public static final String      QUERY_04_FULL_FILLED_WITH_1_QUERY_VERSIONS_NAME                      = "QUERY_04_FULL_FILLED_WITH_1_QUERY_VERSIONS_NAME";
+    public static final String      QUERY_04_FULL_FILLED_WITH_1_QUERY_VERSIONS_NAME                                         = "QUERY_04_FULL_FILLED_WITH_1_QUERY_VERSIONS_NAME";
 
-    public static final String      QUERY_05_WITH_MULTIPLE_PUBLISHED_VERSIONS_NAME                       = "QUERY_05_WITH_MULTIPLE_PUBLISHED_VERSIONS";
+    public static final String      QUERY_05_WITH_MULTIPLE_PUBLISHED_VERSIONS_NAME                                          = "QUERY_05_WITH_MULTIPLE_PUBLISHED_VERSIONS";
 
-    public static final String      QUERY_06_WITH_MULTIPLE_PUBLISHED_VERSIONS_AND_LATEST_NO_VISIBLE_NAME = "QUERY_06_WITH_MULTIPLE_PUBLISHED_VERSIONS_AND_LATEST_NO_VISIBLE";
+    public static final String      QUERY_06_WITH_MULTIPLE_PUBLISHED_VERSIONS_AND_LATEST_NO_VISIBLE_NAME                    = "QUERY_06_WITH_MULTIPLE_PUBLISHED_VERSIONS_AND_LATEST_NO_VISIBLE";
 
-    public static final String      QUERY_07_SIMPLE_MULTI_VERSION_NAME                                   = "QUERY_07_SIMPLE_MULTI_VERSION";
+    public static final String      QUERY_07_SIMPLE_MULTI_VERSION_NAME                                                      = "QUERY_07_SIMPLE_MULTI_VERSION";
 
-    public static final String      QUERY_08_SINGLE_VERSION_USED_IN_MULTIPLE_PUBLICATIONS_NAME           = "QUERY_08_SINGLE_VERSION_USED_IN_MULTIPLE_PUBLICATIONS";
+    public static final String      QUERY_08_SINGLE_VERSION_USED_IN_MULTIPLE_PUBLICATIONS_NAME                              = "QUERY_08_SINGLE_VERSION_USED_IN_MULTIPLE_PUBLICATIONS";
 
-    public static final String      QUERY_09_SINGLE_VERSION_USED_IN_PUB_VERSION_17_NAME                  = "QUERY_09_SINGLE_VERSION_USED_IN_PUB_17";
+    public static final String      QUERY_09_SINGLE_VERSION_USED_IN_PUB_VERSION_17_NAME                                     = "QUERY_09_SINGLE_VERSION_USED_IN_PUB_17";
 
-    private static QueryMockFactory instance                                                             = null;
+    public static final String      QUERY_10_SINGLE_VERSION_DRAFT_USED_IN_PUBLICATIONS_NAME                                 = "QUERY_10_SINGLE_VERSION_DRAFT_USED_IN_PUBLICATIONS";
+
+    public static final String      QUERY_11_SINGLE_VERSION_NOT_VISIBLE_USED_IN_PUBLICATIONS_NAME                           = "QUERY_11_SINGLE_VERSION_NOT_VISIBLE_USED_IN_PUBLICATIONS";
+
+    public static final String      QUERY_12_SINGLE_VERSION_PUBLISHED_USED_IN_PUBLICATIONS_WITH_SINGLE_VERSIONS_NAME        = "QUERY_12_SINGLE_VERSION_PUBLISHED_USED_IN_PUBLICATIONS_WITH_SINGLE_VERSIONS";
+
+    public static final String      QUERY_13_SINGLE_VERSION_PUBLISHED_USED_IN_PUBLICATIONS_LINK_ONLY_LAST_VERSIONS_NAME     = "QUERY_13_SINGLE_VERSION_PUBLISHED_USED_IN_PUBLICATIONS_LINK_ONLY_LAST_VERSIONS";
+
+    public static final String      QUERY_14_SINGLE_VERSION_PUBLISHED_USED_IN_PUBLICATIONS_LINK_ONLY_PREVIOUS_VERSIONS_NAME = "QUERY_14_SINGLE_VERSION_PUBLISHED_USED_IN_PUBLICATIONS_LINK_ONLY_PREVIOUS_VERSIONS";
+    public static final String      QUERY_15_SINGLE_VERSION_PUBLISHED_USED_IN_PUBLICATIONS_LINK_BOTH_VERSIONS_NAME          = "QUERY_15_SINGLE_VERSION_PUBLISHED_USED_IN_PUBLICATIONS_LINK_BOTH_VERSIONS";
+
+    private static QueryMockFactory instance                                                                                = null;
 
     private QueryMockFactory() {
     }
@@ -216,7 +251,6 @@ public class QueryMockFactory extends StatisticalResourcesMockFactory<Query> {
 
     private static QueryVersion mockQueryVersionSimple(Query query, DatasetVersion datasetVersion, String version) {
         QueryVersionMock mock = buildSimpleMock(query, datasetVersion, version);
-        mock.setStatus(QueryStatusEnum.ACTIVE);
         return getStatisticalResourcesPersistedDoMocks().mockQueryVersion(mock);
     }
 
@@ -231,6 +265,230 @@ public class QueryMockFactory extends StatisticalResourcesMockFactory<Query> {
         queryV02.getLifeCycleStatisticalResource().setReplacesVersion(StatisticalResourcesPersistedDoMocks.mockQueryVersionRelated(queryV01));
 
         return query;
+    }
+
+    public static MockDescriptor getQuery10SingleVersionDraftUsedInPublications() {
+        Query query = createQueryWithoutGeneratedVersion();
+
+        DatasetVersion datasetVersion = DatasetMockFactory.generateDatasetWithGeneratedVersion().getVersions().get(0);
+
+        QueryVersion queryV01 = mockQueryVersionSimple(query, datasetVersion, INIT_VERSION);
+
+        Publication publication01 = createPublicationWithTwoVersionsOnePublishedLastDraftLinkedToQueries(1, null, query);
+        registerPublicationVersionMock(PublicationVersionMockFactory.PUBLICATION_VERSION_61_DRAFT_WITH_PREVIOUS_VERSION__LINKED_TO_QUERY_10_NAME, publication01.getVersions().get(1));
+
+        Publication publication02 = createPublicationWithSingleVersionDraftLinkedToQuery(1, query);
+        registerPublicationVersionMock(PublicationVersionMockFactory.PUBLICATION_VERSION_62_DRAFT_SINGLE_VERSION__LINKED_TO_QUERY_10_NAME, publication02.getVersions().get(0));
+
+        return new MockDescriptor(query, publication01, publication02);
+    }
+
+    public static MockDescriptor getQuery11SingleVersionNotVisibleUsedInPublications() {
+        Query query = createQueryWithoutGeneratedVersion();
+
+        DatasetVersion datasetVersion = DatasetMockFactory.generateDatasetWithGeneratedVersion().getVersions().get(0);
+
+        QueryVersionMock queryVersionMock = buildSimpleMock(query, datasetVersion, INIT_VERSION);
+        queryVersionMock.getLifeCycleStatisticalResource().setValidFrom(new DateTime().plusHours(1));
+        QueryVersion queryV01 = createQueryVersionInStatus(queryVersionMock, ProcStatusEnum.PUBLISHED);
+
+        Publication publication01 = createPublicationWithTwoVersionsOnePublishedLastDraftLinkedToQueries(1, null, query);
+        registerPublicationVersionMock(PUBLICATION_VERSION_63_DRAFT_WITH_PREVIOUS_VERSION__LINKED_TO_QUERY_11_NAME, publication01.getVersions().get(1));
+
+        Publication publication02 = createPublicationWithSingleVersionDraftLinkedToQuery(2, query);
+        registerPublicationVersionMock(PUBLICATION_VERSION_64_DRAFT_SINGLE_VERSION__LINKED_TO_QUERY_11_NAME, publication02.getVersions().get(0));
+
+        Publication publication03 = createPublicationWithSingleVersionPublishedNotVisibleLinkedToQuery(3, query);
+        registerPublicationVersionMock(PUBLICATION_VERSION_65_PUBLISHED_NOT_VISIBLE_SINGLE_VERSION__LINKED_TO_QUERY_11_NAME, publication03.getVersions().get(0));
+
+        Publication publication04 = createPublicationWithTwoVersionsOnePublishedLastNotVisibleLinkedToQueries(3, null, query);
+        registerPublicationVersionMock(PUBLICATION_VERSION_66_PUBLISHED_MULTI_VERSION_V01__LINKED_TO_QUERY_11_NAME, publication04.getVersions().get(1));
+
+        return new MockDescriptor(query, publication01, publication02, publication03, publication04);
+    }
+
+    public static MockDescriptor getQuery12SingleVersionPublishedUsedInPublicationsWithSingleVersions() {
+        Query query = createQueryWithoutGeneratedVersion();
+
+        DatasetVersion datasetVersion = DatasetMockFactory.generateDatasetWithGeneratedVersion().getVersions().get(0);
+
+        QueryVersionMock queryVersionMock = buildSimpleMock(query, datasetVersion, INIT_VERSION);
+        QueryVersion queryV01 = createQueryVersionInStatus(queryVersionMock, ProcStatusEnum.PUBLISHED);
+
+        // Single versions
+        Publication publicationSingleDraft = createPublicationWithSingleVersionDraftLinkedToQuery(1, query);
+        registerPublicationVersionMock(PUBLICATION_VERSION_68_DRAFT_SINGLE_VERSION_LINKED_TO_QUERY_12_NAME, publicationSingleDraft.getVersions().get(0));
+
+        Publication publicationSinglePublishedNotVisible = createPublicationWithSingleVersionPublishedNotVisibleLinkedToQuery(2, query);
+        registerPublicationVersionMock(PUBLICATION_VERSION_69_PUBLISHED_NOT_VISIBLE_SINGLE_VERSION_LINKED_TO_QUERY_12_NAME, publicationSinglePublishedNotVisible.getVersions().get(0));
+
+        Publication publicationSinglePublished = createPublicationWithSingleVersionPublishedLinkedToQuery(3, query);
+        registerPublicationVersionMock(PUBLICATION_VERSION_70_PUBLISHED_SINGLE_VERSION_LINKED_TO_QUERY_12_NAME, publicationSinglePublished.getVersions().get(0));
+
+        return new MockDescriptor(query, publicationSingleDraft, publicationSinglePublishedNotVisible, publicationSinglePublished);
+    }
+
+    public static MockDescriptor getQuery13SingleVersionPublishedUsedInPublicationsLinkOnlyLastVersions() {
+        Query query = createQueryWithoutGeneratedVersion();
+
+        DatasetVersion datasetVersion = DatasetMockFactory.generateDatasetWithGeneratedVersion().getVersions().get(0);
+
+        QueryVersionMock queryVersionMock = buildSimpleMock(query, datasetVersion, INIT_VERSION);
+        QueryVersion queryV01 = createQueryVersionInStatus(queryVersionMock, ProcStatusEnum.PUBLISHED);
+
+        // PUBLISHED + DRAFT
+        Publication publicationMultiDraft = createPublicationWithTwoVersionsOnePublishedLastDraftLinkedToQueries(1, null, query);
+        registerPublicationVersionMock(PUBLICATION_VERSION_71_DRAFT_V02_IN_PUB_WITH_PUBLISHED_AND_DRAFT__ONLY_DRAFT_LINKED_TO_QUERY_13_NAME, publicationMultiDraft.getVersions().get(1));
+
+        // PUBLISHED + NOT VISIBLE
+        Publication publicationMultiNotVisible = createPublicationWithTwoVersionsOnePublishedLastNotVisibleLinkedToQueries(7, null, query);
+        registerPublicationVersionMock(PUBLICATION_VERSION_75_NOT_VISIBLE_V02_IN_PUB_WITH_PUBLISHED_AND_NOT_VISIBLE__ONLY_LAST_LINKED_TO_QUERY_13_NAME, publicationMultiNotVisible.getVersions().get(1));
+
+        // PUBLISHED + PUBLISHED
+        Publication publicationMultiLastPublished = createPublicationWithTwoVersionsPublishedLinkedToQueries(10, null, query);
+        registerPublicationVersionMock(PUBLICATION_VERSION_79_LAST_VERSION_V02_IN_PUB_WITH_TWO_PUBLISHED__ONLY_LAST_LINKED_TO_QUERY_13_NAME, publicationMultiLastPublished.getVersions().get(1));
+
+        return new MockDescriptor(query, publicationMultiDraft, publicationMultiNotVisible, publicationMultiLastPublished);
+    }
+
+    public static MockDescriptor getQuery14SingleVersionPublishedUsedInPublicationsLinkOnlyPreviousVersions() {
+        Query query = createQueryWithoutGeneratedVersion();
+
+        DatasetVersion datasetVersion = DatasetMockFactory.generateDatasetWithGeneratedVersion().getVersions().get(0);
+
+        QueryVersionMock queryVersionMock = buildSimpleMock(query, datasetVersion, INIT_VERSION);
+        QueryVersion queryV01 = createQueryVersionInStatus(queryVersionMock, ProcStatusEnum.PUBLISHED);
+
+        // PUBLISHED + DRAFT
+        Publication publication01 = createPublicationWithTwoVersionsOnePublishedLastDraftLinkedToQueries(5, query, null);
+        registerPublicationVersionMock(PUBLICATION_VERSION_72_PUBLISHED_V01_IN_PUB_WITH_PUBLISHED_AND_DRAFT__ONLY_PUBLISHED_LINKED_TO_QUERY_14_NAME, publication01.getVersions().get(0));
+
+        // PUBLISHED + NOT VISIBLE
+        Publication publication02 = createPublicationWithTwoVersionsOnePublishedLastNotVisibleLinkedToQueries(8, query, null);
+        registerPublicationVersionMock(PUBLICATION_VERSION_76_PUBLISHED_V01_IN_PUB_WITH_PUBLISHED_AND_NOT_VISIBLE__ONLY_PUBLISHED_LINKED_TO_QUERY_14_NAME, publication02.getVersions().get(0));
+
+        // PUBLISHED + PUBLISHED
+        Publication publication03 = createPublicationWithTwoVersionsPublishedLinkedToQueries(10, query, null);
+        registerPublicationVersionMock(PUBLICATION_VERSION_80_PREVIOUS_VERSION_V01_IN_PUB_WITH_TWO_PUBLISHED__ONLY_PREVIOUS_LINKED_TO_QUERY_14_NAME, publication03.getVersions().get(0));
+
+        return new MockDescriptor(query, publication01, publication02, publication03);
+    }
+
+    public static MockDescriptor getQuery15SingleVersionPublishedUsedInPublicationsLinkBothVersions() {
+        Query query = createQueryWithoutGeneratedVersion();
+
+        DatasetVersion datasetVersion = DatasetMockFactory.generateDatasetWithGeneratedVersion().getVersions().get(0);
+
+        QueryVersionMock queryVersionMock = buildSimpleMock(query, datasetVersion, INIT_VERSION);
+        QueryVersion queryV01 = createQueryVersionInStatus(queryVersionMock, ProcStatusEnum.PUBLISHED);
+
+        // PUBLISHED + DRAFT
+        Publication publicationLastDraft = createPublicationWithTwoVersionsOnePublishedLastDraftLinkedToQueries(6, query, query);
+        registerPublicationVersionMock(PUBLICATION_VERSION_73_PUBLISHED_V01_IN_PUB_WITH_PUBLISHED_AND_DRAFT__BOTH_LINKED_TO_QUERY_15_NAME, publicationLastDraft.getVersions().get(0));
+        registerPublicationVersionMock(PUBLICATION_VERSION_74_DRAFT_V02_IN_PUB_WITH_PUBLISHED_AND_DRAFT__BOTH_LINKED_TO_QUERY_15_NAME, publicationLastDraft.getVersions().get(1));
+
+        // PUBLISHED + NOT VISIBLE
+        Publication publicationLastNotVisible = createPublicationWithTwoVersionsOnePublishedLastNotVisibleLinkedToQueries(9, query, query);
+        registerPublicationVersionMock(PUBLICATION_VERSION_77_PUBLISHED_V01_IN_PUB_WITH_PUBLISHED_AND_NOT_VISIBLE__BOTH_LINKED_TO_QUERY_15_NAME, publicationLastNotVisible.getVersions().get(0));
+        registerPublicationVersionMock(PUBLICATION_VERSION_78_NOT_VISIBLE_V02_IN_PUB_WITH_PUBLISHED_AND_NOT_VISIBLE__BOTH_LINKED_TO_QUERY_15_NAME, publicationLastNotVisible.getVersions().get(1));
+
+        // PUBLISHED + PUBLISHED
+
+        Publication publicationLastPublished = createPublicationWithTwoVersionsPublishedLinkedToQueries(12, query, query);
+        registerPublicationVersionMock(PublicationVersionMockFactory.PUBLICATION_VERSION_81_PREVIOUS_VERSION_V01_IN_PUB_WITH_TWO_PUBLISHED__BOTH_LINKED_TO_QUERY_15_NAME, publicationLastPublished
+                .getVersions().get(0));
+        registerPublicationVersionMock(PublicationVersionMockFactory.PUBLICATION_VERSION_82_LAST_VERSION_V02_IN_PUB_WITH_TWO_PUBLISHED__BOTH_LINKED_TO_QUERY_15_NAME, publicationLastPublished
+                .getVersions().get(1));
+        return new MockDescriptor(query, publicationLastDraft, publicationLastNotVisible, publicationLastPublished);
+    }
+
+    private static Publication createPublicationWithTwoVersionsPublishedLinkedToQueries(int sequentialId, Query queryForV01, Query queryForV02) {
+        Publication pub = PublicationMockFactory.buildPublicationWithTwoVersionsPublished(sequentialId);
+        if (queryForV01 != null) {
+            linkQueryInPublicationVersionFirstLevel(queryForV01, pub.getVersions().get(0));
+        }
+        if (queryForV02 != null) {
+            linkQueryInPublicationVersionFirstLevel(queryForV02, pub.getVersions().get(1));
+        }
+        return pub;
+    }
+
+    private static Publication createPublicationWithTwoVersionsOnePublishedLastDraftLinkedToQueries(int sequentialId, Query queryForV01, Query queryForV02) {
+        Publication pub = PublicationMockFactory.buildPublicationWithTwoVersionsOnePublishedLastDraft(sequentialId);
+        if (queryForV01 != null) {
+            linkQueryInPublicationVersionFirstLevel(queryForV01, pub.getVersions().get(0));
+        }
+        if (queryForV02 != null) {
+            linkQueryInPublicationVersionFirstLevel(queryForV02, pub.getVersions().get(1));
+        }
+        return pub;
+    }
+
+    private static Publication createPublicationWithTwoVersionsOnePublishedLastNotVisibleLinkedToQueries(int sequentialId, Query queryForV01, Query queryForV02) {
+        Publication pub = PublicationMockFactory.buildPublicationWithTwoVersionsOnePublishedLastNotVisible(sequentialId);
+        if (queryForV01 != null) {
+            linkQueryInPublicationVersionFirstLevel(queryForV01, pub.getVersions().get(0));
+        }
+        if (queryForV02 != null) {
+            linkQueryInPublicationVersionFirstLevel(queryForV02, pub.getVersions().get(1));
+        }
+        return pub;
+    }
+
+    private static Publication createPublicationWithSingleVersionDraftLinkedToQuery(int sequentialId, Query query) {
+        Publication pub = PublicationMockFactory.buildPublicationWithSingleVersionDraft(sequentialId);
+        if (query != null) {
+            linkQueryInPublicationVersionFirstLevel(query, pub.getVersions().get(0));
+        }
+        return pub;
+    }
+
+    private static Publication createPublicationWithSingleVersionPublishedNotVisibleLinkedToQuery(int sequentialId, Query query) {
+        Publication pub = PublicationMockFactory.buildPublicationWithSingleVersionPublishedNotVisible(sequentialId);
+        if (query != null) {
+            linkQueryInPublicationVersionFirstLevel(query, pub.getVersions().get(0));
+        }
+        return pub;
+    }
+
+    private static Publication createPublicationWithSingleVersionPublishedLinkedToQuery(int sequentialId, Query query) {
+        Publication pub = PublicationMockFactory.buildPublicationWithSingleVersionPublished(sequentialId);
+        if (query != null) {
+            linkQueryInPublicationVersionFirstLevel(query, pub.getVersions().get(0));
+        }
+        return pub;
+    }
+
+    private static void linkQueryInPublicationVersionFirstLevel(Query query, PublicationVersion publicationVersion) {
+        ElementLevel elementLevelV01 = PublicationVersionMockFactory.createQueryCubeElementLevel(publicationVersion, query);
+        elementLevelV01.setOrderInLevel(Long.valueOf(publicationVersion.getChildrenFirstLevel().size() + 1));
+    }
+
+    // BUILDERS
+    private static QueryVersion createQueryVersionInStatus(QueryVersionMock queryVersionMock, ProcStatusEnum status) {
+        QueryVersion queryVersion = getStatisticalResourcesPersistedDoMocks().mockQueryVersion(queryVersionMock);
+
+        switch (status) {
+            case PRODUCTION_VALIDATION:
+                QueryLifecycleTestUtils.fillAsProductionValidation(queryVersion);
+                break;
+            case DIFFUSION_VALIDATION:
+                QueryLifecycleTestUtils.fillAsDiffusionValidation(queryVersion);
+                break;
+            case VALIDATION_REJECTED:
+                QueryLifecycleTestUtils.fillAsValidationRejected(queryVersion);
+                break;
+            case PUBLISHED:
+                QueryLifecycleTestUtils.fillAsPublished(queryVersion);
+                break;
+            case PUBLISHED_NOT_VISIBLE:
+                throw new IllegalArgumentException("Unsupported status not visible, set first the ValidFrom to the future and use status PUBLISHED");
+            case DRAFT:
+                break;
+            default:
+                throw new IllegalArgumentException("Unsupported status " + status);
+        }
+        return queryVersion;
     }
 
     public static Query generateQueryWithGeneratedVersion() {
@@ -250,6 +508,7 @@ public class QueryMockFactory extends StatisticalResourcesMockFactory<Query> {
         mock.setQuery(query);
         mock.setDatasetVersion(datasetVersion);
         mock.setVersionLogic(versionLogic);
+        mock.setStatus(QueryStatusEnum.ACTIVE);
         return mock;
     }
 
