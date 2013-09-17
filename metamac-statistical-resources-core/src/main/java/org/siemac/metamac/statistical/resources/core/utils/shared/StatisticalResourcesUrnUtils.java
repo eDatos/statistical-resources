@@ -41,6 +41,14 @@ public class StatisticalResourcesUrnUtils extends org.siemac.metamac.core.common
     }
 
     /**
+     * Splits a publication URN in agency and resourceId
+     */
+    public static String[] splitUrnPublicationGlobal(String urn) {
+        String identifierSplited = removePrefix(urn);
+        return splitUrnWithoutVersionWithoutPrefix(identifierSplited);
+    }
+
+    /**
      * Splits an URN without prefix from a Query
      * 
      * @param urnWithoutPrefix

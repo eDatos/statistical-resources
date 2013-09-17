@@ -106,15 +106,9 @@ public class StatisticalResourcesRestExternalFacadeV10Impl implements Statistica
     }
 
     @Override
-    public Collections findCollections(String agencyID, String resourceID, String query, String orderBy, String limit, String offset, List<String> lang) {
-        checkParameterNotWildcardAll(StatisticalResourcesRestExternalConstants.PARAMETER_RESOURCE_ID, resourceID);
-        return findCollectionsCommon(agencyID, resourceID, null, query, orderBy, limit, offset, lang);
-    }
-
-    @Override
-    public Collection retrieveCollection(String agencyID, String resourceID, String version, List<String> lang, String fields) {
+    public Collection retrieveCollection(String agencyID, String resourceID, List<String> lang, String fields) {
         try {
-            PublicationVersion publicationVersion = commonService.retrievePublicationVersion(agencyID, resourceID, version);
+            PublicationVersion publicationVersion = commonService.retrievePublicationVersion(agencyID, resourceID);
 
             boolean includeMetadata = !hasField(fields, StatisticalResourcesRestExternalConstants.FIELD_EXCLUDE_METADATA);
             boolean includeData = !hasField(fields, StatisticalResourcesRestExternalConstants.FIELD_EXCLUDE_DATA);
@@ -172,8 +166,7 @@ public class StatisticalResourcesRestExternalFacadeV10Impl implements Statistica
             SculptorCriteria sculptorCriteria = collectionsRest2DoMapper.getCollectionCriteriaMapper().restCriteriaToSculptorCriteria(query, orderBy, limit, offset);
 
             // Find
-            PagedResult<PublicationVersion> entitiesPagedResult = commonService.findPublicationVersions(agencyID, resourceID, version, sculptorCriteria.getConditions(),
-                    sculptorCriteria.getPagingParameter());
+            PagedResult<PublicationVersion> entitiesPagedResult = commonService.findPublicationVersions(agencyID, sculptorCriteria.getConditions(), sculptorCriteria.getPagingParameter());
 
             // Transform
             List<String> selectedLanguages = languagesRequestedToEffectiveLanguages(lang);

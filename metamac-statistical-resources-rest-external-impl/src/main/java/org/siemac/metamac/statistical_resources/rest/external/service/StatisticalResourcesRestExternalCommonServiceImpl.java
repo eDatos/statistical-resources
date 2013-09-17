@@ -29,6 +29,7 @@ import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.DatasetS
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersionProperties;
+import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersionRepository;
 import org.siemac.metamac.statistical.resources.core.publication.serviceapi.PublicationService;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersionProperties;
@@ -42,19 +43,22 @@ import org.springframework.stereotype.Service;
 @Service("statisticalResourcesRestExternalCommonService")
 public class StatisticalResourcesRestExternalCommonServiceImpl implements StatisticalResourcesRestExternalCommonService {
 
-    private final PagingParameter  pagingParameterOneResult = PagingParameter.pageAccess(1, 1, false);
+    private final PagingParameter        pagingParameterOneResult = PagingParameter.pageAccess(1, 1, false);
 
     @Autowired
-    private DatasetService         datasetService;
+    private DatasetService               datasetService;
 
     @Autowired
-    private PublicationService     publicationService;
+    private PublicationService           publicationService;
 
     @Autowired
-    private QueryService           queryService;
+    private QueryService                 queryService;
 
     @Autowired
-    private QueryVersionRepository queryVersionRepository;
+    private QueryVersionRepository       queryVersionRepository;
+
+    @Autowired
+    private PublicationVersionRepository publicationVersionRepository;
 
     @Override
     public DatasetVersion retrieveDatasetVersion(String agencyID, String resourceID, String version) {
@@ -87,20 +91,29 @@ public class StatisticalResourcesRestExternalCommonServiceImpl implements Statis
     }
 
     @Override
-    public PublicationVersion retrievePublicationVersion(String agencyID, String resourceID, String version) {
+    public PublicationVersion retrievePublicationVersion(String agencyID, String resourceID) {
         try {
             // Validations
             checkParameterNotWildcardAll(StatisticalResourcesRestExternalConstants.PARAMETER_AGENCY_ID, agencyID);
             checkParameterNotWildcardAll(StatisticalResourcesRestExternalConstants.PARAMETER_RESOURCE_ID, resourceID);
-            checkParameterNotWildcardAll(StatisticalResourcesRestExternalConstants.PARAMETER_VERSION, version);
 
-            // Retrieve
-            PagedResult<PublicationVersion> entitiesPagedResult = findPublicationVersionsCommon(agencyID, resourceID, version, null, pagingParameterOneResult);
-            if (entitiesPagedResult.getValues().size() != 1) {
-                org.siemac.metamac.rest.common.v1_0.domain.Exception exception = RestExceptionUtils.getException(RestServiceExceptionType.COLLECTION_NOT_FOUND, resourceID, version, agencyID);
+            // Retrieve last version published
+            String[] maintainerCodes = StringUtils.splitPreserveAllTokens(agencyID, UrnConstants.DOT);
+            String publicationUrn = GeneratorUrnUtils.generateSiemacStatisticalResourceCollectionUrn(maintainerCodes, resourceID);
+            PublicationVersion publicationVersion = null;
+            try {
+                publicationVersion = publicationVersionRepository.retrieveLastVersion(publicationUrn); // TODO retrieveLastPublishedVersion, y revisar tipo de excepción en catch
+            } catch (MetamacException e) {
+                if (e.getExceptionItems().size() == 1 && ServiceExceptionType.PUBLICATION_LAST_VERSION_NOT_FOUND.getCode().equals(e.getExceptionItems().get(0).getCode())) {
+                    publicationVersion = null;
+                } else {
+                    throw e;
+                }
+            }
+            if (publicationVersion == null) {
+                org.siemac.metamac.rest.common.v1_0.domain.Exception exception = RestExceptionUtils.getException(RestServiceExceptionType.COLLECTION_NOT_FOUND, resourceID, agencyID);
                 throw new RestException(exception, Status.NOT_FOUND);
             }
-            PublicationVersion publicationVersion = entitiesPagedResult.getValues().get(0);
             return publicationVersion;
         } catch (Exception e) {
             throw manageException(e);
@@ -108,9 +121,9 @@ public class StatisticalResourcesRestExternalCommonServiceImpl implements Statis
     }
 
     @Override
-    public PagedResult<PublicationVersion> findPublicationVersions(String agencyID, String resourceID, String version, List<ConditionalCriteria> conditionalCriteria, PagingParameter pagingParameter) {
+    public PagedResult<PublicationVersion> findPublicationVersions(String agencyID, List<ConditionalCriteria> conditionalCriteria, PagingParameter pagingParameter) {
         try {
-            return findPublicationVersionsCommon(agencyID, resourceID, version, conditionalCriteria, pagingParameter);
+            return findPublicationVersionsCommon(agencyID, null, null, conditionalCriteria, pagingParameter);
         } catch (Exception e) {
             throw manageException(e);
         }
@@ -128,7 +141,7 @@ public class StatisticalResourcesRestExternalCommonServiceImpl implements Statis
             String queryUrn = GeneratorUrnUtils.generateSiemacStatisticalResourceQueryUrn(maintainerCodes, resourceID);
             QueryVersion queryVersion = null;
             try {
-                queryVersion = queryVersionRepository.retrieveLastVersion(queryUrn); // TODO retrieveLastPublishedVersion
+                queryVersion = queryVersionRepository.retrieveLastVersion(queryUrn);// TODO retrieveLastPublishedVersion, y revisar tipo de excepción en catch
             } catch (MetamacException e) {
                 if (e.getExceptionItems().size() == 1 && ServiceExceptionType.QUERY_LAST_VERSION_NOT_FOUND.getCode().equals(e.getExceptionItems().get(0).getCode())) {
                     queryVersion = null;

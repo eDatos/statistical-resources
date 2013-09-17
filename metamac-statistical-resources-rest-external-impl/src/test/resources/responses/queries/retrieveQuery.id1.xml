@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <stat:query xmlns:stat="http://www.siemac.org/metamac/rest/statistical-resources/v1.0/domain" xmlns:cdomain="http://www.siemac.org/metamac/rest/common/v1.0/domain" kind="statisticalResources#query">
     <stat:id>query1</stat:id>
-    <stat:urn>urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Query=agency1:query1(01.000)</stat:urn>
+    <stat:urn>urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Query=agency1:query1</stat:urn>
     <stat:selfLink kind="statisticalResources#query" href="http://data.istac.es/apis/statistical-resources/v1.0/queries/agency1/query1"/>
     <stat:parentLink kind="statisticalResources#queries" href="http://data.istac.es/apis/statistical-resources/v1.0/queries"/>
     <stat:name>
@@ -477,16 +477,16 @@
         <stat:isPartOf total="2">
             <cdomain:resource kind="statisticalResources#collection">
                 <cdomain:id>isPartOf01</cdomain:id>
-                <cdomain:urn>urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Collection=agency01:isPartOf01(01.000)</cdomain:urn>
-                <cdomain:selfLink kind="statisticalResources#collection" href="http://data.istac.es/apis/statistical-resources/v1.0/collections/agency01/isPartOf01/01.000"/>
+                <cdomain:urn>urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Collection=agency01:isPartOf01</cdomain:urn>
+                <cdomain:selfLink kind="statisticalResources#collection" href="http://data.istac.es/apis/statistical-resources/v1.0/collections/agency01/isPartOf01"/>
                 <cdomain:name>
                     <cdomain:text xml:lang="es">título isPartOf01</cdomain:text>
                 </cdomain:name>
             </cdomain:resource>
             <cdomain:resource kind="statisticalResources#collection">
                 <cdomain:id>isPartOf02</cdomain:id>
-                <cdomain:urn>urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Collection=agency01:isPartOf02(01.000)</cdomain:urn>
-                <cdomain:selfLink kind="statisticalResources#collection" href="http://data.istac.es/apis/statistical-resources/v1.0/collections/agency01/isPartOf02/01.000"/>
+                <cdomain:urn>urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Collection=agency01:isPartOf02</cdomain:urn>
+                <cdomain:selfLink kind="statisticalResources#collection" href="http://data.istac.es/apis/statistical-resources/v1.0/collections/agency01/isPartOf02"/>
                 <cdomain:name>
                     <cdomain:text xml:lang="es">título isPartOf02</cdomain:text>
                 </cdomain:name>

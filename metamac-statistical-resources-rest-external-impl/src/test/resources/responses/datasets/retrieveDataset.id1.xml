@@ -184,16 +184,16 @@
         <stat:isPartOf total="2">
             <cdomain:resource kind="statisticalResources#collection">
                 <cdomain:id>isPartOf01</cdomain:id>
-                <cdomain:urn>urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Collection=agency01:isPartOf01(01.000)</cdomain:urn>
-                <cdomain:selfLink kind="statisticalResources#collection" href="http://data.istac.es/apis/statistical-resources/v1.0/collections/agency01/isPartOf01/01.000"/>
+                <cdomain:urn>urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Collection=agency01:isPartOf01</cdomain:urn>
+                <cdomain:selfLink kind="statisticalResources#collection" href="http://data.istac.es/apis/statistical-resources/v1.0/collections/agency01/isPartOf01"/>
                 <cdomain:name>
                     <cdomain:text xml:lang="es">título isPartOf01</cdomain:text>
                 </cdomain:name>
             </cdomain:resource>
             <cdomain:resource kind="statisticalResources#collection">
                 <cdomain:id>isPartOf02</cdomain:id>
-                <cdomain:urn>urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Collection=agency01:isPartOf02(01.000)</cdomain:urn>
-                <cdomain:selfLink kind="statisticalResources#collection" href="http://data.istac.es/apis/statistical-resources/v1.0/collections/agency01/isPartOf02/01.000"/>
+                <cdomain:urn>urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Collection=agency01:isPartOf02</cdomain:urn>
+                <cdomain:selfLink kind="statisticalResources#collection" href="http://data.istac.es/apis/statistical-resources/v1.0/collections/agency01/isPartOf02"/>
                 <cdomain:name>
                     <cdomain:text xml:lang="es">título isPartOf02</cdomain:text>
                 </cdomain:name>
@@ -250,7 +250,7 @@
         <stat:isRequiredBy total="2">
             <cdomain:resource kind="statisticalResources#query">
                 <cdomain:id>isRequiredBy01</cdomain:id>
-                <cdomain:urn>urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Query=agency01:isRequiredBy01(01.000)</cdomain:urn>
+                <cdomain:urn>urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Query=agency01:isRequiredBy01</cdomain:urn>
                 <cdomain:selfLink kind="statisticalResources#query" href="http://data.istac.es/apis/statistical-resources/v1.0/queries/agency01/isRequiredBy01"/>
                 <cdomain:name>
                     <cdomain:text xml:lang="es">título isRequiredBy01</cdomain:text>
@@ -258,7 +258,7 @@
             </cdomain:resource>
             <cdomain:resource kind="statisticalResources#query">
                 <cdomain:id>isRequiredBy02</cdomain:id>
-                <cdomain:urn>urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Query=agency02:isRequiredBy02(01.000)</cdomain:urn>
+                <cdomain:urn>urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Query=agency02:isRequiredBy02</cdomain:urn>
                 <cdomain:selfLink kind="statisticalResources#query" href="http://data.istac.es/apis/statistical-resources/v1.0/queries/agency02/isRequiredBy02"/>
                 <cdomain:name>
                     <cdomain:text xml:lang="es">título isRequiredBy02</cdomain:text>

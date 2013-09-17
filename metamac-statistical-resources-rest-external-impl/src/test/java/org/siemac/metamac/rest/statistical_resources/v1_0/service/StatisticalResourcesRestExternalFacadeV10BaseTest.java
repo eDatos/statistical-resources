@@ -217,6 +217,7 @@ public abstract class StatisticalResourcesRestExternalFacadeV10BaseTest extends 
                         return restDoMocks.mockQueryVersion(queryUrnSplited[0], queryUrnSplited[1], VERSION_1);
                     };
                 });
+
         when(queryVersionRepository.retrieveIsPartOf(any(QueryVersion.class))).thenAnswer(new Answer<List<RelatedResourceResult>>() {
 
             // TODO cambiar por retrieveIsPartOfOnlyPublishedVersion
@@ -334,6 +335,18 @@ public abstract class StatisticalResourcesRestExternalFacadeV10BaseTest extends 
     }
 
     private void mockPublicationVersionRepository() throws MetamacException {
+        when(publicationVersionRepository.retrieveLastVersion(any(String.class))).thenAnswer(new Answer<PublicationVersion>() { // TODO retrieveLastPublishedVersion
+
+                    @Override
+                    public PublicationVersion answer(InvocationOnMock invocation) throws Throwable {
+                        String publicationUrn = (String) invocation.getArguments()[0];
+                        if (StringUtils.isBlank(publicationUrn)) {
+                            return null;
+                        }
+                        String[] publicationUrnSplited = StatisticalResourcesUrnUtils.splitUrnPublicationGlobal(publicationUrn);
+                        return restDoMocks.mockPublicationVersion(publicationUrnSplited[0], publicationUrnSplited[1], VERSION_1);
+                    };
+                });
 
         when(publicationVersionRepository.retrieveIsReplacedBy(any(PublicationVersion.class))).thenAnswer(new Answer<RelatedResourceResult>() {
 
@@ -341,7 +354,7 @@ public abstract class StatisticalResourcesRestExternalFacadeV10BaseTest extends 
 
             @Override
             public RelatedResourceResult answer(InvocationOnMock invocation) throws Throwable {
-                return restDoMocks.mockPublicationRelatedResourceResult("agency01", "dataset99", "01.000");
+                return restDoMocks.mockPublicationRelatedResourceResult("agency01", "collection99", "01.000");
             };
         });
     }

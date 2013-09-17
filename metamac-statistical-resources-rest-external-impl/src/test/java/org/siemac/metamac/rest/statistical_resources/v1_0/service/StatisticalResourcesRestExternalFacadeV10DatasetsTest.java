@@ -42,7 +42,7 @@ public class StatisticalResourcesRestExternalFacadeV10DatasetsTest extends Stati
         assertEquals(DATASET_1_CODE, dataset.getId());
         assertEquals("urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Dataset=agency1:dataset1(01.000)", dataset.getUrn());
         assertEquals(StatisticalResourcesRestExternalConstants.KIND_DATASET, dataset.getKind());
-
+        assertEquals("http://data.istac.es/apis/statistical-resources/v1.0/datasets/agency1/dataset1/01.000", dataset.getSelfLink().getHref());
         MetamacRestAsserts.assertEqualsInternationalString("es", "title-dataset1 en Espanol", null, null, dataset.getName());
     }
 

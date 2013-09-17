@@ -1,5 +1,7 @@
 package org.siemac.metamac.statistical_resources.rest.external.v1_0.mapper.query;
 
+import static org.siemac.metamac.core.common.util.GeneratorUrnUtils.generateSiemacStatisticalResourceQueryUrn;
+
 import java.math.BigInteger;
 import java.util.List;
 import java.util.Map;
@@ -76,7 +78,7 @@ public class QueriesDo2RestMapperV10Impl implements QueriesDo2RestMapperV10 {
         Query target = new Query();
         target.setKind(StatisticalResourcesRestExternalConstants.KIND_QUERY);
         target.setId(source.getLifeCycleStatisticalResource().getCode());
-        target.setUrn(source.getLifeCycleStatisticalResource().getUrn());
+        target.setUrn(toQueryUrn(source));
         target.setSelfLink(toQuerySelfLink(source));
         target.setName(commonDo2RestMapper.toInternationalString(source.getLifeCycleStatisticalResource().getTitle(), selectedLanguages));
         target.setDescription(commonDo2RestMapper.toInternationalString(source.getLifeCycleStatisticalResource().getDescription(), selectedLanguages));
@@ -103,7 +105,7 @@ public class QueriesDo2RestMapperV10Impl implements QueriesDo2RestMapperV10 {
         }
         Resource target = new Resource();
         target.setId(source.getLifeCycleStatisticalResource().getCode());
-        target.setUrn(source.getLifeCycleStatisticalResource().getUrn());
+        target.setUrn(toQueryUrn(source));
         target.setKind(StatisticalResourcesRestExternalConstants.KIND_QUERY);
         target.setSelfLink(toQuerySelfLink(source));
         target.setName(commonDo2RestMapper.toInternationalString(source.getLifeCycleStatisticalResource().getTitle(), selectedLanguages));
@@ -123,7 +125,7 @@ public class QueriesDo2RestMapperV10Impl implements QueriesDo2RestMapperV10 {
 
         Resource target = new Resource();
         target.setId(source.getCode());
-        target.setUrn(source.getUrn());
+        target.setUrn(toQueryUrn(source.getMaintainerNestedCode(), source.getCode()));
         target.setKind(StatisticalResourcesRestExternalConstants.KIND_QUERY);
         target.setSelfLink(toQuerySelfLink(source));
         target.setName(commonDo2RestMapper.toInternationalString(source.getTitle(), selectedLanguages));
@@ -219,6 +221,16 @@ public class QueriesDo2RestMapperV10Impl implements QueriesDo2RestMapperV10 {
         String resourceSubpath = StatisticalResourcesRestExternalConstants.LINK_SUBPATH_QUERIES;
         String version = null; // no devolver versión
         return commonDo2RestMapper.toResourceLink(resourceSubpath, agencyID, resourceID, version);
+    }
+
+    /**
+     * Retrieve urn to API, without version
+     */
+    private String toQueryUrn(QueryVersion source) {
+        return toQueryUrn(source.getLifeCycleStatisticalResource().getMaintainer().getCodeNested(), source.getLifeCycleStatisticalResource().getCode());
+    }
+    private String toQueryUrn(String maintainerNestedCode, String code) {
+        return generateSiemacStatisticalResourceQueryUrn(new String[]{maintainerNestedCode}, code); // global urn without version
     }
 
     private org.siemac.metamac.rest.statistical_resources.v1_0.domain.QueryStatus toQueryStatus(QueryStatusEnum source) {

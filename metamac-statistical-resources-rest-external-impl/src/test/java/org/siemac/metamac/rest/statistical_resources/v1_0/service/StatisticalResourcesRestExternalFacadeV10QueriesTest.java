@@ -48,9 +48,9 @@ public class StatisticalResourcesRestExternalFacadeV10QueriesTest extends Statis
         Query query = statisticalResourcesRestExternalFacadeClientXml.retrieveQuery(AGENCY_1, QUERY_1_CODE, defaultLanguages, null);
 
         assertEquals(QUERY_1_CODE, query.getId());
-        assertEquals("urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Query=agency1:query1(01.000)", query.getUrn());
+        assertEquals("urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Query=agency1:query1", query.getUrn());
         assertEquals(StatisticalResourcesRestExternalConstants.KIND_QUERY, query.getKind());
-
+        assertEquals("http://data.istac.es/apis/statistical-resources/v1.0/queries/agency1/query1", query.getSelfLink().getHref());
         MetamacRestAsserts.assertEqualsInternationalString("es", "title-query1 en Espanol", null, null, query.getName());
     }
 

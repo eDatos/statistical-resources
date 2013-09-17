@@ -1,5 +1,7 @@
 package org.siemac.metamac.statistical_resources.rest.external.v1_0.mapper.collection;
 
+import static org.siemac.metamac.core.common.util.GeneratorUrnUtils.generateSiemacStatisticalResourceCollectionUrn;
+
 import java.util.List;
 
 import javax.ws.rs.core.Response.Status;
@@ -73,7 +75,7 @@ public class CollectionsDo2RestMapperV10Impl implements CollectionsDo2RestMapper
         targets.setKind(StatisticalResourcesRestExternalConstants.KIND_COLLECTIONS);
 
         // Pagination
-        String baseLink = toCollectionsLink(agencyID, resourceID, null);
+        String baseLink = toCollectionsLink(agencyID);
         SculptorCriteria2RestCriteria.toPagedResult(sources, targets, query, orderBy, limit, baseLink);
 
         // Values
@@ -92,7 +94,7 @@ public class CollectionsDo2RestMapperV10Impl implements CollectionsDo2RestMapper
         Collection target = new Collection();
         target.setKind(StatisticalResourcesRestExternalConstants.KIND_COLLECTION);
         target.setId(source.getSiemacMetadataStatisticalResource().getCode());
-        target.setUrn(source.getSiemacMetadataStatisticalResource().getUrn());
+        target.setUrn(toCollectionUrn(source));
         target.setSelfLink(toCollectionSelfLink(source));
         target.setName(commonDo2RestMapper.toInternationalString(source.getSiemacMetadataStatisticalResource().getTitle(), selectedLanguages));
         target.setDescription(commonDo2RestMapper.toInternationalString(source.getSiemacMetadataStatisticalResource().getDescription(), selectedLanguages));
@@ -115,7 +117,7 @@ public class CollectionsDo2RestMapperV10Impl implements CollectionsDo2RestMapper
         }
         Resource target = new Resource();
         target.setId(source.getSiemacMetadataStatisticalResource().getCode());
-        target.setUrn(source.getSiemacMetadataStatisticalResource().getUrn());
+        target.setUrn(toCollectionUrn(source));
         target.setKind(StatisticalResourcesRestExternalConstants.KIND_COLLECTION);
         target.setSelfLink(toCollectionSelfLink(source));
         target.setName(commonDo2RestMapper.toInternationalString(source.getSiemacMetadataStatisticalResource().getTitle(), selectedLanguages));
@@ -135,7 +137,7 @@ public class CollectionsDo2RestMapperV10Impl implements CollectionsDo2RestMapper
 
         Resource target = new Resource();
         target.setId(source.getCode());
-        target.setUrn(source.getUrn());
+        target.setUrn(toCollectionUrn(source.getMaintainerNestedCode(), source.getCode()));
         target.setKind(StatisticalResourcesRestExternalConstants.KIND_COLLECTION);
         target.setSelfLink(toCollectionSelfLink(source));
         target.setName(commonDo2RestMapper.toInternationalString(source.getTitle(), selectedLanguages));
@@ -218,7 +220,7 @@ public class CollectionsDo2RestMapperV10Impl implements CollectionsDo2RestMapper
             target.setDataset(datasetsDo2RestMapper.toResource(dataset, selectedLanguages)); // TODO devolver latest en selfLink
         } else if (source.getQueryUrn() != null) {
             QueryVersion query = queryVersionRepository.retrieveLastVersion(source.getQueryUrn()); // TODO retrieveLastPublishedVersion
-            target.setQuery(queriesDo2RestMapper.toResource(query, selectedLanguages)); // TODO devolver latest en selfLink si se devuelve versión
+            target.setQuery(queriesDo2RestMapper.toResource(query, selectedLanguages));
         }
         return target;
     }
@@ -235,7 +237,7 @@ public class CollectionsDo2RestMapperV10Impl implements CollectionsDo2RestMapper
     }
 
     private ResourceLink toCollectionParentLink(PublicationVersion source) {
-        return toCollectionsSelfLink(null, null, null);
+        return toCollectionsSelfLink(null);
     }
 
     private ChildLinks toCollectionChildLinks(PublicationVersion source) {
@@ -243,13 +245,13 @@ public class CollectionsDo2RestMapperV10Impl implements CollectionsDo2RestMapper
         return null;
     }
 
-    private ResourceLink toCollectionsSelfLink(String agencyID, String resourceID, String version) {
-        return commonDo2RestMapper.toResourceLink(StatisticalResourcesRestExternalConstants.KIND_COLLECTIONS, toCollectionsLink(agencyID, resourceID, version));
+    private ResourceLink toCollectionsSelfLink(String agencyID) {
+        return commonDo2RestMapper.toResourceLink(StatisticalResourcesRestExternalConstants.KIND_COLLECTIONS, toCollectionsLink(agencyID));
     }
 
-    private String toCollectionsLink(String agencyID, String resourceID, String version) {
+    private String toCollectionsLink(String agencyID) {
         String resourceSubpath = StatisticalResourcesRestExternalConstants.LINK_SUBPATH_COLLECTIONS;
-        return commonDo2RestMapper.toResourceLink(resourceSubpath, agencyID, resourceID, version);
+        return commonDo2RestMapper.toResourceLink(resourceSubpath, agencyID, null, null);
     }
 
     private ResourceLink toCollectionSelfLink(PublicationVersion source) {
@@ -263,20 +265,28 @@ public class CollectionsDo2RestMapperV10Impl implements CollectionsDo2RestMapper
     private String toCollectionLink(PublicationVersion source) {
         String agencyID = source.getLifeCycleStatisticalResource().getMaintainer().getCodeNested();
         String resourceID = source.getLifeCycleStatisticalResource().getCode();
-        String version = source.getLifeCycleStatisticalResource().getVersionLogic(); // TODO con versión?
-        return toCollectionLink(agencyID, resourceID, version);
+        return toCollectionLink(agencyID, resourceID);
     }
 
     private String toCollectionLink(RelatedResourceResult source) {
         String agencyID = source.getMaintainerNestedCode();
         String resourceID = source.getCode();
-        String version = source.getVersion();
-        return toCollectionLink(agencyID, resourceID, version);
+        return toCollectionLink(agencyID, resourceID);
     }
 
-    private String toCollectionLink(String agencyID, String resourceID, String version) {
-        // TODO devolver versión?
+    private String toCollectionLink(String agencyID, String resourceID) {
         String resourceSubpath = StatisticalResourcesRestExternalConstants.LINK_SUBPATH_COLLECTIONS;
-        return commonDo2RestMapper.toResourceLink(resourceSubpath, agencyID, resourceID, version);
+        return commonDo2RestMapper.toResourceLink(resourceSubpath, agencyID, resourceID, null);
     }
+
+    /**
+     * Retrieve urn to API, without version
+     */
+    private String toCollectionUrn(PublicationVersion source) {
+        return toCollectionUrn(source.getLifeCycleStatisticalResource().getMaintainer().getCodeNested(), source.getLifeCycleStatisticalResource().getCode());
+    }
+    private String toCollectionUrn(String maintainerNestedCode, String code) {
+        return generateSiemacStatisticalResourceCollectionUrn(new String[]{maintainerNestedCode}, code); // global urn without version
+    }
+
 }

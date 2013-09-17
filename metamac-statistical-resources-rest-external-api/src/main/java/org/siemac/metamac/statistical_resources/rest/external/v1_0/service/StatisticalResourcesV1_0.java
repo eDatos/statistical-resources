@@ -58,14 +58,7 @@ public interface StatisticalResourcesV1_0 {
     @GET
     @Produces({"application/xml", "application/json"})
     @Path("collections/{agencyID}/{resourceID}")
-    Collections findCollections(@PathParam("agencyID") String agencyID, @PathParam("resourceID") String resourceID, @QueryParam("query") String query, @QueryParam("orderBy") String orderBy,
-            @QueryParam("limit") String limit, @QueryParam("offset") String offset, @QueryParam("lang") List<String> lang);
-
-    @GET
-    @Produces({"application/xml", "application/json"})
-    @Path("collections/{agencyID}/{resourceID}/{version}")
-    Collection retrieveCollection(@PathParam("agencyID") String agencyID, @PathParam("resourceID") String resourceID, @PathParam("version") String version, @QueryParam("lang") List<String> lang,
-            @QueryParam("fields") String fields);
+    Collection retrieveCollection(@PathParam("agencyID") String agencyID, @PathParam("resourceID") String resourceID, @QueryParam("lang") List<String> lang, @QueryParam("fields") String fields);
 
     @GET
     @Produces({"application/xml", "application/json"})
