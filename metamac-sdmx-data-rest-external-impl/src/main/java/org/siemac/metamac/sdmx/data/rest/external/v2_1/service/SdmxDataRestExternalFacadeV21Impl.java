@@ -1,6 +1,5 @@
 package org.siemac.metamac.sdmx.data.rest.external.v2_1.service;
 
-import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,6 +24,7 @@ import org.sdmx.resources.sdmxml.schemas.v2_1.structure.Structures;
 import org.siemac.metamac.core.common.exception.CommonServiceExceptionType;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionBuilder;
+import org.siemac.metamac.core.common.io.DeleteOnCloseFileInputStream;
 import org.siemac.metamac.core.common.util.CoreCommonUtil;
 import org.siemac.metamac.core.common.util.SdmxTimeUtils;
 import org.siemac.metamac.sdmx.data.rest.external.conf.DataConfiguration;
@@ -79,10 +79,11 @@ public class SdmxDataRestExternalFacadeV21Impl implements SdmxDataRestExternalFa
     @Override
     public Response findData(HttpHeaders headers, String flowRef, String detail, String dimensionAtObservation, String startPeriod, String endPeriod) {
         try {
-            WriterResult writerResult = processDataRequest(flowRef, null, null, createRequestParameters(startPeriod, endPeriod, null, null, null, dimensionAtObservation, detail),
-                    getAcceptHeaderParameter(headers));
+            WriterResult writerResult = processDataRequest(flowRef, null, null,
+                    createRequestParameters(startPeriod, endPeriod, null, null, null, dimensionAtObservation, detail, getAcceptHeaderParameter(headers)));
 
-            return Response.ok(new FileInputStream(writerResult.getFile())).type(writerResult.getTypeSDMXDataMessageEnum().getValue()).build();
+            return Response.ok(new DeleteOnCloseFileInputStream(writerResult.getFile())).type(writerResult.getTypeSDMXDataMessageEnum().getValue())
+                    .header("Content-Disposition", "attachment; filename=" + "kaka").build();
         } catch (Exception e) {
             throw manageException(e);
         }
@@ -91,10 +92,10 @@ public class SdmxDataRestExternalFacadeV21Impl implements SdmxDataRestExternalFa
     @Override
     public Response findData(HttpHeaders headers, String flowRef, String key, String detail, String dimensionAtObservation, String startPeriod, String endPeriod) {
         try {
-            WriterResult writerResult = processDataRequest(flowRef, key, null, createRequestParameters(startPeriod, endPeriod, null, null, null, dimensionAtObservation, detail),
-                    getAcceptHeaderParameter(headers));
+            WriterResult writerResult = processDataRequest(flowRef, key, null,
+                    createRequestParameters(startPeriod, endPeriod, null, null, null, dimensionAtObservation, detail, getAcceptHeaderParameter(headers)));
 
-            return Response.ok(new FileInputStream(writerResult.getFile())).type(writerResult.getTypeSDMXDataMessageEnum().getValue()).build();
+            return Response.ok(new DeleteOnCloseFileInputStream(writerResult.getFile())).type(writerResult.getTypeSDMXDataMessageEnum().getValue()).build();
         } catch (Exception e) {
             throw manageException(e);
         }
@@ -103,10 +104,10 @@ public class SdmxDataRestExternalFacadeV21Impl implements SdmxDataRestExternalFa
     @Override
     public Response findData(HttpHeaders headers, String flowRef, String key, String providerRef, String detail, String dimensionAtObservation, String startPeriod, String endPeriod) {
         try {
-            WriterResult writerResult = processDataRequest(flowRef, key, providerRef, createRequestParameters(startPeriod, endPeriod, null, null, null, dimensionAtObservation, detail),
-                    getAcceptHeaderParameter(headers));
+            WriterResult writerResult = processDataRequest(flowRef, key, providerRef,
+                    createRequestParameters(startPeriod, endPeriod, null, null, null, dimensionAtObservation, detail, getAcceptHeaderParameter(headers)));
 
-            return Response.ok(new FileInputStream(writerResult.getFile())).type(writerResult.getTypeSDMXDataMessageEnum().getValue()).build();
+            return Response.ok(new DeleteOnCloseFileInputStream(writerResult.getFile())).type(writerResult.getTypeSDMXDataMessageEnum().getValue()).build();
         } catch (Exception e) {
             throw manageException(e);
         }
@@ -127,7 +128,7 @@ public class SdmxDataRestExternalFacadeV21Impl implements SdmxDataRestExternalFa
     /***************************************************************
      * DATA PRIVATE
      ***************************************************************/
-    private WriterResult processDataRequest(String flowRef, String key, String providerRef, RequestParameter requestParameter, String proposeContentType) throws Exception {
+    private WriterResult processDataRequest(String flowRef, String key, String providerRef, RequestParameter requestParameter) throws Exception {
         // flowRef: Always required
         // key: nullable, then is the same that SAME wildcard
         // key: providerRef, then is the same that SAME wildcard
@@ -147,7 +148,7 @@ public class SdmxDataRestExternalFacadeV21Impl implements SdmxDataRestExternalFa
         WriterDataCallback writerDataCallback = new WriterDataCallbackImpl(datasetRepositoriesServiceFacade, metamac2StatRepoMapper, dsdSdmxExtractor, findDataSetFromDataFlow(flowRef, providerRef),
                 key, requestParameter, dataConfiguration.retrieveOrganisationIDDefault());
 
-        return Sdmx21Writer.writerData(writerDataCallback, proposeContentType);
+        return Sdmx21Writer.writerData(writerDataCallback);
     }
 
     /**
@@ -280,7 +281,7 @@ public class SdmxDataRestExternalFacadeV21Impl implements SdmxDataRestExternalFa
     }
 
     private RequestParameter createRequestParameters(String startPeriod, String endPeriod, String updatedAfter, String firstNObservations, String lastNObservations, String dimensionAtObservation,
-            String detail) {
+            String detail, String proposeContentType) {
         RequestParameter requestParameter = new RequestParameter();
 
         // START_PERIOD
@@ -333,6 +334,11 @@ public class SdmxDataRestExternalFacadeV21Impl implements SdmxDataRestExternalFa
             requestParameter.setDetail(dataParameterDetail);
         } else {
             requestParameter.setDetail(DataParameterDetailEnum.FULL); // Default
+        }
+
+        // Content type
+        if (StringUtils.isNotEmpty(proposeContentType)) {
+            requestParameter.setProposeContentTypeString(proposeContentType);
         }
 
         return requestParameter;
