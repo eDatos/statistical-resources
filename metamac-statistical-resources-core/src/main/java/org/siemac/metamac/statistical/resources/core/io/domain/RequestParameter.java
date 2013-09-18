@@ -4,13 +4,15 @@ import org.sdmx.resources.sdmxml.rest.schemas.v2_1.types.DataParameterDetailEnum
 
 public class RequestParameter {
 
-    public String                  startPeriod            = null;
-    public String                  endPeriod              = null;
-    public String                  updatedAfter           = null;
-    public String                  firstNObservations     = null;
-    public String                  lastNObservations      = null;
-    public String                  dimensionAtObservation = null;
-    public DataParameterDetailEnum detail                 = null;
+    public String                  startPeriod              = null;
+    public String                  endPeriod                = null;
+    public String                  updatedAfter             = null;
+    public String                  firstNObservations       = null;
+    public String                  lastNObservations        = null;
+    public String                  dimensionAtObservation   = null;
+    public DataParameterDetailEnum detail                   = null;
+
+    public String                  proposeContentTypeString = null;
 
     public String getStartPeriod() {
         return startPeriod;
@@ -68,4 +70,11 @@ public class RequestParameter {
         this.detail = detail;
     }
 
+    public String getProposeContentTypeString() {
+        return proposeContentTypeString;
+    }
+
+    public void setProposeContentTypeString(String proposeContentTypeString) {
+        this.proposeContentTypeString = proposeContentTypeString;
+    }
 }
