@@ -34,11 +34,11 @@ public class AttributeInfo {
     }
 
     public List<GroupInfo> getAttachmentGroups() {
-        return Collections.unmodifiableList(attachmentGroups);
+        return (attachmentGroups == null) ? new LinkedList<GroupInfo>() : Collections.unmodifiableList(attachmentGroups);
     }
 
     public List<ComponentInfo> getDimensionsInfoList() {
-        return Collections.unmodifiableList(dimensionsInfoList);
+        return (dimensionsInfoList == null) ? new LinkedList<ComponentInfo>() : Collections.unmodifiableList(dimensionsInfoList);
     }
 
     public GroupInfo getGroup() {
