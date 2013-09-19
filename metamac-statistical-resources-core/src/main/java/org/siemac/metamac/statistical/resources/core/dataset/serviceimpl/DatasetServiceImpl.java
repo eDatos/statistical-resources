@@ -696,6 +696,11 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
 
     private void processStartEndDates(DatasetVersion resource) {
         List<TemporalCode> temporalCoverage = resource.getTemporalCoverage();
+        if (temporalCoverage.isEmpty()) {
+            resource.setDateStart(null);
+            resource.setDateEnd(null);
+            return;
+        }
         TemporalCode start = temporalCoverage.get(temporalCoverage.size() - 1);
         TemporalCode end = temporalCoverage.get(0);
 
