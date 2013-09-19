@@ -72,7 +72,11 @@
 
 «REM»Skip unique constraint in InternationalString and LocalisedString this will be for "id", and primary key restriction already exists for this attribute «ENDREM»
 «AROUND templates::db::OracleDDL::uniqueConstraint FOR DomainObject»
-	«IF name != "InternationalString" && name != "LocalisedString" && name != "ExternalItem" && name != "RelatedResource" && name != "Translation" -»
+	«IF name != "InternationalString" && name != "LocalisedString" && name != "ExternalItem" && name != "RelatedResource" && name != "Translation" && name != "VersionRationaleType"
+	&& name != "StatisticalResource" && name != "RelatedResource" && name != "Datasource" && name != "Dataset" && name != "DatasetVersion" && name != "StatisticOfficiality" && name != "CodeDimension" && name != "AttributeValue" 
+	&& name != "TemporalCode" && name != "Publication" && name != "PublicationVersion" && name != "ElementLevel" && name != "Chapter" && name != "Cube" && name != "CodeItem"  
+	&& name != "QuerySelectionItem" && name != "Query" && name != "QueryVersion"
+	-»
 		«targetDef.proceed() -»
 	«ENDIF -»
 «ENDAROUND»
