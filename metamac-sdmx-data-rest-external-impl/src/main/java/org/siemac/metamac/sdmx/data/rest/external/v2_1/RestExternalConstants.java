@@ -4,7 +4,7 @@ public class RestExternalConstants {
 
     // Wildcards values for SDMX identifying parameters
     public enum WildcardIdentifyingEnum {
-        ALL, UNKNOWN;
+        ALL, UNKNOWN, LATEST;
 
         public static WildcardIdentifyingEnum fromCaseInsensitiveString(String s) {
             try {
