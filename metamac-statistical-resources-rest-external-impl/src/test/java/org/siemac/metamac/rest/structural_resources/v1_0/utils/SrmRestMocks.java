@@ -19,6 +19,7 @@ import java.util.List;
 import org.siemac.metamac.rest.common.v1_0.domain.ResourceLink;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Attribute;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.AttributeBase;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.AttributeQualifierType;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.AttributeRelationship;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Attributes;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.CodeResourceInternal;
@@ -79,12 +80,12 @@ public class SrmRestMocks {
         components.setAttributes(new Attributes());
         components.getAttributes().getAttributes().add(mockAttributeDataset(ATTRIBUTE_1_GLOBAL, null, null));
         components.getAttributes().getAttributes().add(mockAttributeDataset(ATTRIBUTE_2_GLOBAL, mockCodelistResource("agency01", "abc", "01.000"), null));
-        components.getAttributes().getAttributes().add(mockAttributeDimension(ATTRIBUTE_3_DIMENSION, Arrays.asList("GEO_DIM"), null, null));
-        components.getAttributes().getAttributes().add(mockAttributeDimension(ATTRIBUTE_4_DIMENSION, Arrays.asList("GEO_DIM", "dim01"), null, null));
-        components.getAttributes().getAttributes().add(mockAttributeDimension(ATTRIBUTE_5_DIMENSION, Arrays.asList("GEO_DIM", "TIME_PERIOD"), null, null));
+        components.getAttributes().getAttributes().add(mockAttributeDimension(ATTRIBUTE_3_DIMENSION, null, Arrays.asList("GEO_DIM"), null, null));
+        components.getAttributes().getAttributes().add(mockAttributeDimension(ATTRIBUTE_4_DIMENSION, null, Arrays.asList("GEO_DIM", "dim01"), null, null));
+        components.getAttributes().getAttributes().add(mockAttributeDimension(ATTRIBUTE_5_DIMENSION, AttributeQualifierType.TIME, Arrays.asList("GEO_DIM", "TIME_PERIOD"), null, null));
         components.getAttributes().getAttributes()
-                .add(mockAttributeDimension(ATTRIBUTE_6_DIMENSION, Arrays.asList("GEO_DIM", "TIME_PERIOD", "measure01"), null, mockConceptSchemeResource("agency01", "123", "01.000")));
-        components.getAttributes().getAttributes().add(mockAttributeDimension(ATTRIBUTE_7_DIMENSION, Arrays.asList("GEO_DIM", "dim01", "measure01", "TIME_PERIOD"), null, null));
+                .add(mockAttributeDimension(ATTRIBUTE_6_DIMENSION, null, Arrays.asList("GEO_DIM", "TIME_PERIOD", "measure01"), null, mockConceptSchemeResource("agency01", "123", "01.000")));
+        components.getAttributes().getAttributes().add(mockAttributeDimension(ATTRIBUTE_7_DIMENSION, null, Arrays.asList("GEO_DIM", "dim01", "measure01", "TIME_PERIOD"), null, null));
         components.getAttributes().getAttributes().add(mockAttributeGroup(ATTRIBUTE_8_DIMENSION, "group01", null, null));
         components.getAttributes().getAttributes().add(mockAttributeGroup(ATTRIBUTE_9_DIMENSION, "group02", null, null));
         components.getAttributes().getAttributes().add(mockAttributePrimaryMeasure(ATTRIBUTE_10_OBSERVATION, null, null));
@@ -335,11 +336,12 @@ public class SrmRestMocks {
         return attribute;
     }
 
-    private static AttributeBase mockAttributeDimension(String id, List<String> dimensions, ResourceInternal enumeratedCodelist, ResourceInternal enumeratedConceptScheme) {
+    private static AttributeBase mockAttributeDimension(String id, AttributeQualifierType type, List<String> dimensions, ResourceInternal enumeratedCodelist, ResourceInternal enumeratedConceptScheme) {
         Attribute attribute = new Attribute();
         mockAttributeBase(id, attribute, enumeratedCodelist, enumeratedConceptScheme);
         attribute.setAttributeRelationship(new AttributeRelationship());
         attribute.getAttributeRelationship().getDimensions().addAll(dimensions);
+        attribute.setType(type);
         return attribute;
     }
 

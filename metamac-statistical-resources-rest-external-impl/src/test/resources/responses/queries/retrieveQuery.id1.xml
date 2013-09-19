@@ -8,7 +8,7 @@
         <cdomain:text xml:lang="es">title-query1 en Espanol</cdomain:text>
     </stat:name>
     <stat:description>
-        <cdomain:text xml:lang="es">description-resource-YQR9DY7kT5 en Espanol</cdomain:text>
+        <cdomain:text xml:lang="es">description-resource-pnMwsrhKJR en Espanol</cdomain:text>
     </stat:description>
     <stat:selectedLanguages total="1">
         <stat:language>es</stat:language>
@@ -210,13 +210,13 @@
                     <stat:value>
                         <stat:id>2011</stat:id>
                         <stat:name>
-                            <cdomain:text xml:lang="es">2011 en Español</cdomain:text>
+                            <cdomain:text xml:lang="es">2011</cdomain:text>
                         </stat:name>
                     </stat:value>
                     <stat:value>
                         <stat:id>2013</stat:id>
                         <stat:name>
-                            <cdomain:text xml:lang="es">2013 en Español</cdomain:text>
+                            <cdomain:text xml:lang="es">2013</cdomain:text>
                         </stat:name>
                     </stat:value>
                 </stat:dimensionValues>
@@ -290,18 +290,6 @@
                     <cdomain:text xml:lang="es">at2-concept01 en Español</cdomain:text>
                 </stat:name>
                 <stat:attachmentLevel>DATASET</stat:attachmentLevel>
-            </stat:attribute>
-            <stat:attribute>
-                <stat:id>at3</stat:id>
-                <stat:name>
-                    <cdomain:text xml:lang="es">at3-concept01 en Español</cdomain:text>
-                </stat:name>
-                <stat:attachmentLevel>DIMENSION</stat:attachmentLevel>
-                <stat:dimensions total="1">
-                    <stat:dimension>
-                        <stat:dimensionId>GEO_DIM</stat:dimensionId>
-                    </stat:dimension>
-                </stat:dimensions>
                 <stat:attributeValues xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="stat:EnumeratedAttributeValues" total="2">
                     <stat:value kind="structuralResources#code">
                         <cdomain:id>A</cdomain:id>
@@ -319,7 +307,19 @@
                             <cdomain:text xml:lang="es">C en Español</cdomain:text>
                         </cdomain:name>
                     </stat:value>
-                </stat:attributeValues>                
+                </stat:attributeValues>
+            </stat:attribute>
+            <stat:attribute>
+                <stat:id>at3</stat:id>
+                <stat:name>
+                    <cdomain:text xml:lang="es">at3-concept01 en Español</cdomain:text>
+                </stat:name>
+                <stat:attachmentLevel>DIMENSION</stat:attachmentLevel>
+                <stat:dimensions total="1">
+                    <stat:dimension>
+                        <stat:dimensionId>GEO_DIM</stat:dimensionId>
+                    </stat:dimension>
+                </stat:dimensions>
             </stat:attribute>
             <stat:attribute>
                 <stat:id>at4</stat:id>
@@ -350,6 +350,26 @@
                         <stat:dimensionId>TIME_PERIOD</stat:dimensionId>
                     </stat:dimension>
                 </stat:dimensions>
+                <stat:attributeValues xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="stat:NonEnumeratedAttributeValues" total="3">
+                    <stat:value>
+                        <stat:id>2013Q1</stat:id>
+                        <stat:name>
+                            <cdomain:text xml:lang="es">2013 Primer cuatrimestre</cdomain:text>
+                        </stat:name>
+                    </stat:value>
+                    <stat:value>
+                        <stat:id>2013Q2</stat:id>
+                        <stat:name>
+                            <cdomain:text xml:lang="es">2013 Segundo cuatrimestre</cdomain:text>
+                        </stat:name>
+                    </stat:value>
+                    <stat:value>
+                        <stat:id>2013Q3</stat:id>
+                        <stat:name>
+                            <cdomain:text xml:lang="es">2013 Tercer cuatrimestre</cdomain:text>
+                        </stat:name>
+                    </stat:value>
+                </stat:attributeValues>
             </stat:attribute>
             <stat:attribute>
                 <stat:id>at6</stat:id>
@@ -393,7 +413,7 @@
                             <cdomain:text xml:lang="es">3 en Español</cdomain:text>
                         </cdomain:name>
                     </stat:value>
-                </stat:attributeValues>                
+                </stat:attributeValues>
             </stat:attribute>
             <stat:attribute>
                 <stat:id>at7</stat:id>
@@ -493,20 +513,20 @@
             </cdomain:resource>
         </stat:isPartOf>
         <stat:statisticalOperation kind="statisticalOperations#operation">
-            <cdomain:id>IurOoylhU4</cdomain:id>
-            <cdomain:urn>urn:siemac:org.siemac.metamac.infomodel.statisticaloperations.Operation=IurOoylhU4</cdomain:urn>
-            <cdomain:selfLink kind="statisticalOperations#operation" href="http://data.istac.es/apis/operations/latest/IurOoylhU4"/>
+            <cdomain:id>5kLUD3LYaN</cdomain:id>
+            <cdomain:urn>urn:siemac:org.siemac.metamac.infomodel.statisticaloperations.Operation=5kLUD3LYaN</cdomain:urn>
+            <cdomain:selfLink kind="statisticalOperations#operation" href="http://data.istac.es/apis/operations/latest/5kLUD3LYaN"/>
             <cdomain:name>
-                <cdomain:text xml:lang="es">title-IurOoylhU4 en Espanol</cdomain:text>
+                <cdomain:text xml:lang="es">title-5kLUD3LYaN en Espanol</cdomain:text>
             </cdomain:name>
         </stat:statisticalOperation>
         <stat:maintainer kind="structuralResources#agency">
-            <cdomain:id>aXVGbNE8mW</cdomain:id>
+            <cdomain:id>L3rdaGYygI</cdomain:id>
             <cdomain:nestedId>agency1</cdomain:nestedId>
-            <cdomain:urn>urn:sdmx:org.sdmx.infomodel.base.Agency=MaintainerMock:AgencySchemeMock(1.0).aXVGbNE8mW</cdomain:urn>
-            <cdomain:selfLink kind="structuralResources#agency" href="http://data.istac.es/apis/srm/latest/aXVGbNE8mW"/>
+            <cdomain:urn>urn:sdmx:org.sdmx.infomodel.base.Agency=MaintainerMock:AgencySchemeMock(1.0).L3rdaGYygI</cdomain:urn>
+            <cdomain:selfLink kind="structuralResources#agency" href="http://data.istac.es/apis/srm/latest/L3rdaGYygI"/>
             <cdomain:name>
-                <cdomain:text xml:lang="es">title-aXVGbNE8mW en Espanol</cdomain:text>
+                <cdomain:text xml:lang="es">title-L3rdaGYygI en Espanol</cdomain:text>
             </cdomain:name>
         </stat:maintainer>
         <stat:validFrom>2013-01-01T03:04:12Z</stat:validFrom>
@@ -554,7 +574,7 @@
             <stat:attribute id="at2">Value\ | \at2</stat:attribute>
             <stat:attribute id="at3">Value at3-1 |  | Value at3-2 |  |  |  |  | </stat:attribute>
             <stat:attribute id="at4">Value at4-1 |  | Value at4-2 |  |  |  |  | </stat:attribute>
-            <stat:attribute id="at5">Value at5-1 | Value at5-3 |  |  |  |  |  |  |  |  |  |  |  |  | Value at5-7 | Value at5-9</stat:attribute>
+            <stat:attribute id="at5">2013Q1 | 2013Q3 |  |  |  |  |  |  |  |  |  |  |  |  | 2013Q1 | 2013Q3</stat:attribute>
             <stat:attribute id="at6">Value at6-1 |  |  |  |  |  |  |  |  |  |  |  | Value at6-2 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | </stat:attribute>
             <stat:attribute id="at7">Value at7-1 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | </stat:attribute>
             <stat:attribute id="at8">Value at8-1 |  |  |  |  |  |  |  |  |  |  |  |  |  |  | </stat:attribute>

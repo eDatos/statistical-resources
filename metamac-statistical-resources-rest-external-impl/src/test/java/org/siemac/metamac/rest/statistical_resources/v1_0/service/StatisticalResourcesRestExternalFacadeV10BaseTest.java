@@ -71,6 +71,7 @@ import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Concept
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructure;
 import org.siemac.metamac.rest.utils.RestUtils;
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResourceResult;
+import org.siemac.metamac.statistical.resources.core.common.serviceapi.TranslationService;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.AttributeValue;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.CodeDimension;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
@@ -106,12 +107,13 @@ public abstract class StatisticalResourcesRestExternalFacadeV10BaseTest extends 
 
     protected static RestDoMocks              restDoMocks;
 
+    private DatasetService                    datasetService;
+    private QueryService                      queryService;
     private PublicationService                publicationService;
+    private TranslationService                translationService;
     private DatasetVersionRepository          datasetVersionRepository;
     private QueryVersionRepository            queryVersionRepository;
     private PublicationVersionRepository      publicationVersionRepository;
-    private DatasetService                    datasetService;
-    private QueryService                      queryService;
 
     // TODO habrá que cambiar el mock cuando se consuma a la api externa
     private SrmRestInternalService            srmRestInternalService;
@@ -507,6 +509,10 @@ public abstract class StatisticalResourcesRestExternalFacadeV10BaseTest extends 
                 if ("at2".equals(componentId)) {
                     attributeValues.add(restDoMocks.mockAttributeValue(componentId, "A"));
                     attributeValues.add(restDoMocks.mockAttributeValue(componentId, "C"));
+                } else if ("at5".equals(componentId)) {
+                    attributeValues.add(restDoMocks.mockAttributeValue(componentId, "2013Q1"));
+                    attributeValues.add(restDoMocks.mockAttributeValue(componentId, "2013Q2"));
+                    attributeValues.add(restDoMocks.mockAttributeValue(componentId, "2013Q3"));
                 } else if ("at6".equals(componentId)) {
                     attributeValues.add(restDoMocks.mockAttributeValue(componentId, "1"));
                     attributeValues.add(restDoMocks.mockAttributeValue(componentId, "2"));
@@ -630,28 +636,28 @@ public abstract class StatisticalResourcesRestExternalFacadeV10BaseTest extends 
                             attributes.add(restDoMocks.mockAttributeInstanceWithDimensionAttachmentLevelDenormalized(attributeId, value + "-" + i++, "GEO_DIM", "lanzarote", "dim01",
                                     "dim01-codelist01-code04", null, null, null, null));
                         } else if (ATTRIBUTE_5_DIMENSION.equals(attributeId)) {
-                            attributes.add(restDoMocks.mockAttributeInstanceWithDimensionAttachmentLevelDenormalized(attributeId, value + "-" + i++, "GEO_DIM", "santa-cruz-tenerife", "TIME_PERIOD",
-                                    "2011", null, null, null, null));
-                            attributes.add(restDoMocks.mockAttributeInstanceWithDimensionAttachmentLevelDenormalized(attributeId, value + "-" + i++, "GEO_DIM", "santa-cruz-tenerife", "TIME_PERIOD",
-                                    "2012", null, null, null, null));
-                            attributes.add(restDoMocks.mockAttributeInstanceWithDimensionAttachmentLevelDenormalized(attributeId, value + "-" + i++, "GEO_DIM", "santa-cruz-tenerife", "TIME_PERIOD",
-                                    "2013", null, null, null, null));
-                            attributes.add(restDoMocks.mockAttributeInstanceWithDimensionAttachmentLevelDenormalized(attributeId, value + "-" + i++, "GEO_DIM", "santa-cruz-tenerife", "TIME_PERIOD",
-                                    "2014", null, null, null, null));
-                            attributes.add(restDoMocks.mockAttributeInstanceWithDimensionAttachmentLevelDenormalized(attributeId, value + "-" + i++, "GEO_DIM", "tenerife", "TIME_PERIOD", "2012",
+                            attributes.add(restDoMocks.mockAttributeInstanceWithDimensionAttachmentLevelDenormalized(attributeId, "2013Q1", "GEO_DIM", "santa-cruz-tenerife", "TIME_PERIOD", "2011",
                                     null, null, null, null));
-                            attributes.add(restDoMocks.mockAttributeInstanceWithDimensionAttachmentLevelDenormalized(attributeId, value + "-" + i++, "GEO_DIM", "la-laguna", "TIME_PERIOD", "2012",
+                            attributes.add(restDoMocks.mockAttributeInstanceWithDimensionAttachmentLevelDenormalized(attributeId, "2013Q2", "GEO_DIM", "santa-cruz-tenerife", "TIME_PERIOD", "2012",
                                     null, null, null, null));
-                            attributes.add(restDoMocks.mockAttributeInstanceWithDimensionAttachmentLevelDenormalized(attributeId, value + "-" + i++, "GEO_DIM", "fuerteventura", "TIME_PERIOD", "2011",
+                            attributes.add(restDoMocks.mockAttributeInstanceWithDimensionAttachmentLevelDenormalized(attributeId, "2013Q3", "GEO_DIM", "santa-cruz-tenerife", "TIME_PERIOD", "2013",
                                     null, null, null, null));
-                            attributes.add(restDoMocks.mockAttributeInstanceWithDimensionAttachmentLevelDenormalized(attributeId, value + "-" + i++, "GEO_DIM", "fuerteventura", "TIME_PERIOD", "2012",
+                            attributes.add(restDoMocks.mockAttributeInstanceWithDimensionAttachmentLevelDenormalized(attributeId, "2013Q1", "GEO_DIM", "santa-cruz-tenerife", "TIME_PERIOD", "2014",
                                     null, null, null, null));
-                            attributes.add(restDoMocks.mockAttributeInstanceWithDimensionAttachmentLevelDenormalized(attributeId, value + "-" + i++, "GEO_DIM", "fuerteventura", "TIME_PERIOD", "2013",
-                                    null, null, null, null));
-                            attributes.add(restDoMocks.mockAttributeInstanceWithDimensionAttachmentLevelDenormalized(attributeId, value + "-" + i++, "GEO_DIM", "fuerteventura", "TIME_PERIOD", "2014",
-                                    null, null, null, null));
-                            attributes.add(restDoMocks.mockAttributeInstanceWithDimensionAttachmentLevelDenormalized(attributeId, value + "-" + i++, "GEO_DIM", "lanzarote", "TIME_PERIOD", "2011",
-                                    null, null, null, null));
+                            attributes.add(restDoMocks.mockAttributeInstanceWithDimensionAttachmentLevelDenormalized(attributeId, "2013Q2", "GEO_DIM", "tenerife", "TIME_PERIOD", "2012", null, null,
+                                    null, null));
+                            attributes.add(restDoMocks.mockAttributeInstanceWithDimensionAttachmentLevelDenormalized(attributeId, "2013Q3", "GEO_DIM", "la-laguna", "TIME_PERIOD", "2012", null, null,
+                                    null, null));
+                            attributes.add(restDoMocks.mockAttributeInstanceWithDimensionAttachmentLevelDenormalized(attributeId, "2013Q1", "GEO_DIM", "fuerteventura", "TIME_PERIOD", "2011", null,
+                                    null, null, null));
+                            attributes.add(restDoMocks.mockAttributeInstanceWithDimensionAttachmentLevelDenormalized(attributeId, "2013Q2", "GEO_DIM", "fuerteventura", "TIME_PERIOD", "2012", null,
+                                    null, null, null));
+                            attributes.add(restDoMocks.mockAttributeInstanceWithDimensionAttachmentLevelDenormalized(attributeId, "2013Q3", "GEO_DIM", "fuerteventura", "TIME_PERIOD", "2013", null,
+                                    null, null, null));
+                            attributes.add(restDoMocks.mockAttributeInstanceWithDimensionAttachmentLevelDenormalized(attributeId, "2013Q1", "GEO_DIM", "fuerteventura", "TIME_PERIOD", "2014", null,
+                                    null, null, null));
+                            attributes.add(restDoMocks.mockAttributeInstanceWithDimensionAttachmentLevelDenormalized(attributeId, "2013Q2", "GEO_DIM", "lanzarote", "TIME_PERIOD", "2011", null, null,
+                                    null, null));
                         } else if (ATTRIBUTE_6_DIMENSION.equals(attributeId)) {
                             attributes.add(restDoMocks.mockAttributeInstanceWithDimensionAttachmentLevelDenormalized(attributeId, value + "-" + i++, "GEO_DIM", "santa-cruz-tenerife", "TIME_PERIOD",
                                     "2011", "measure01", "measure01-conceptScheme01-concept01", null, null));
@@ -770,6 +776,34 @@ public abstract class StatisticalResourcesRestExternalFacadeV10BaseTest extends 
         });
     }
 
+    private void mockTranslationService() throws MetamacException {
+        when(translationService.translateTime(any(ServiceContext.class), any(String.class))).thenAnswer(new Answer<Map<String, String>>() {
+
+            @Override
+            public Map<String, String> answer(InvocationOnMock invocation) throws Throwable {
+                String time = (String) invocation.getArguments()[1];
+                Map<String, String> title = new HashMap<String, String>();
+                String labelEs = null;
+                String labelEn = null;
+                if ("2013Q1".equals(time)) {
+                    labelEs = "2013 Primer cuatrimestre";
+                    labelEn = "2013 First quarter";
+                } else if ("2013Q2".equals(time)) {
+                    labelEs = "2013 Segundo cuatrimestre";
+                    labelEn = "2013 Second quarter";
+                } else if ("2013Q3".equals(time)) {
+                    labelEs = "2013 Tercer cuatrimestre";
+                    labelEn = "2013 Third quarter";
+                } else {
+                    labelEs = time;
+                    labelEn = time;
+                }
+                title.put("es", labelEs);
+                title.put("ns", labelEn);
+                return title;
+            };
+        });
+    }
     private String getAgencyIdFromConditionalCriteria(List<ConditionalCriteria> conditions) {
         // can use PublicationVersionProperties or DatasetVersionProperties...
         ConditionalCriteria conditionalCriteria = ConditionalCriteriaUtils.getConditionalCriteriaByPropertyName(conditions, Operator.Equal, PublicationVersionProperties
@@ -798,6 +832,8 @@ public abstract class StatisticalResourcesRestExternalFacadeV10BaseTest extends 
         reset(publicationService);
         queryService = applicationContext.getBean(QueryService.class);
         reset(queryService);
+        translationService = applicationContext.getBean(TranslationService.class);
+        reset(translationService);
 
         queryVersionRepository = applicationContext.getBean(QueryVersionRepository.class);
         reset(queryVersionRepository);
@@ -836,6 +872,8 @@ public abstract class StatisticalResourcesRestExternalFacadeV10BaseTest extends 
 
         mockFindQueriesByCondition();
         mockQueryVersionRepository();
+
+        mockTranslationService();
 
         mockRetrieveConfigurationById();
     }

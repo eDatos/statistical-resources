@@ -53,6 +53,8 @@ import org.siemac.metamac.rest.statistical_resources.v1_0.domain.EnumeratedAttri
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.EnumeratedAttributeValues;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.EnumeratedDimensionValue;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.EnumeratedDimensionValues;
+import org.siemac.metamac.rest.statistical_resources.v1_0.domain.NonEnumeratedAttributeValue;
+import org.siemac.metamac.rest.statistical_resources.v1_0.domain.NonEnumeratedAttributeValues;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.NonEnumeratedDimensionValue;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.NonEnumeratedDimensionValues;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.SelectedLanguages;
@@ -75,6 +77,7 @@ import org.siemac.metamac.statistical.resources.core.base.domain.VersionRational
 import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResource;
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResourceResult;
+import org.siemac.metamac.statistical.resources.core.common.serviceapi.TranslationService;
 import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor;
 import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor.DsdAttribute;
 import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor.DsdComponentType;
@@ -122,6 +125,9 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
 
     @Autowired
     private DatasetService                   datasetService;
+
+    @Autowired
+    private TranslationService               translationService;
 
     @Autowired
     private DatasetRepositoriesServiceFacade datasetRepositoriesServiceFacade;
@@ -635,7 +641,7 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
             targets = toEnumeratedDimensionValuesFromConceptScheme(coveragesById, dataStructure, dimension.getType(), dimension.getConceptSchemeRepresentationUrn(), effectiveDimensionValuesToData,
                     selectedLanguages);
         } else if (dimension.getTextFormatRepresentation() != null) {
-            targets = toNonEnumeratedDimensionValuesFromTextFormatType(coverages, dimension.getTextFormatRepresentation(), effectiveDimensionValuesToData, selectedLanguages);
+            targets = toNonEnumeratedDimensionValuesFromTextFormatType(coverages, dimension.getTextFormatRepresentation(), dimension.getType(), effectiveDimensionValuesToData, selectedLanguages);
         } else {
             logger.error("Dimension definition unsupported for dimension: " + dimension.getComponentId());
             org.siemac.metamac.rest.common.v1_0.domain.Exception exception = RestExceptionUtils.getException(RestServiceExceptionType.UNKNOWN);
@@ -729,19 +735,18 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
         return targets;
     }
 
-    private NonEnumeratedDimensionValues toNonEnumeratedDimensionValuesFromTextFormatType(List<CodeDimension> coverages, TextFormat timeTextFormatType, List<String> effectiveDimensionValuesToData,
-            List<String> selectedLanguages) throws MetamacException {
-        if (timeTextFormatType == null) {
+    private NonEnumeratedDimensionValues toNonEnumeratedDimensionValuesFromTextFormatType(List<CodeDimension> coverages, TextFormat textFormatType, DsdComponentType dimensionType,
+            List<String> effectiveDimensionValuesToData, List<String> selectedLanguages) throws MetamacException {
+        if (textFormatType == null) {
             return null;
         }
-        // note: timeTextFormatType definition is not necessary to define dimension values
         NonEnumeratedDimensionValues targets = new NonEnumeratedDimensionValues();
         for (CodeDimension coverage : coverages) {
             if (effectiveDimensionValuesToData != null && !effectiveDimensionValuesToData.contains(coverage.getIdentifier())) {
                 // skip to include only values in query
                 continue;
             }
-            targets.getValues().add(toNonEnumeratedDimensionValue(coverage, selectedLanguages));
+            targets.getValues().add(toNonEnumeratedDimensionValue(coverage, dimensionType, selectedLanguages));
         }
         targets.setTotal(BigInteger.valueOf(targets.getValues().size()));
         return targets;
@@ -786,13 +791,18 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
         return target;
     }
 
-    private NonEnumeratedDimensionValue toNonEnumeratedDimensionValue(CodeDimension source, List<String> selectedLanguages) throws MetamacException {
+    private NonEnumeratedDimensionValue toNonEnumeratedDimensionValue(CodeDimension source, DsdComponentType dimensionType, List<String> selectedLanguages) throws MetamacException {
         if (source == null) {
             return null;
         }
         NonEnumeratedDimensionValue target = new NonEnumeratedDimensionValue();
         target.setId(source.getIdentifier());
-        target.setName(toInternationalString(source.getTitle(), selectedLanguages));
+        if (DsdComponentType.TEMPORAL.equals(dimensionType)) {
+            Map<String, String> title = translationService.translateTime(SERVICE_CONTEXT, source.getIdentifier());
+            target.setName(toInternationalString(title, selectedLanguages));
+        } else {
+            target.setName(toInternationalString(source.getTitle(), selectedLanguages));
+        }
         return target;
     }
 
@@ -868,9 +878,8 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
         if (attribute == null) {
             return null;
         }
-        if (attribute.getEnumeratedRepresentationUrn() == null) {
-            // Translate only for representation
-            // TODO translate temporal values?
+        if (attribute.getEnumeratedRepresentationUrn() == null && !DsdComponentType.TEMPORAL.equals(attribute.getType())) {
+            // Translate only representations or time attributes
             return null;
         }
         List<AttributeValue> coverages = datasetService.retrieveCoverageForDatasetVersionAttribute(SERVICE_CONTEXT, datasetVersionUrn, attribute.getComponentId());
@@ -887,6 +896,8 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
             targets = toEnumeratedAttributeValuesFromCodelist(coveragesById, attribute.getCodelistRepresentationUrn(), selectedLanguages);
         } else if (attribute.getConceptSchemeRepresentationUrn() != null) {
             targets = toEnumeratedAttributeValuesFromConceptScheme(coveragesById, attribute.getConceptSchemeRepresentationUrn(), selectedLanguages);
+        } else if (DsdComponentType.TEMPORAL.equals(attribute.getType())) {
+            targets = toNonEnumeratedAttributeValuesFromTextFormatType(coverages, attribute.getTextFormatRepresentation(), attribute.getType(), selectedLanguages);
         } else {
             logger.error("Attribute definition unsupported for attribute: " + attribute.getComponentId());
             org.siemac.metamac.rest.common.v1_0.domain.Exception exception = RestExceptionUtils.getException(RestServiceExceptionType.UNKNOWN);
@@ -938,6 +949,36 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
         }
         EnumeratedAttributeValue target = new EnumeratedAttributeValue();
         toResource(source, target, selectedLanguages);
+        return target;
+    }
+
+    private NonEnumeratedAttributeValues toNonEnumeratedAttributeValuesFromTextFormatType(List<AttributeValue> coverages, TextFormat textFormatType, DsdComponentType attributeType,
+            List<String> selectedLanguages) throws MetamacException {
+        if (textFormatType == null) {
+            return null;
+        }
+        NonEnumeratedAttributeValues targets = new NonEnumeratedAttributeValues();
+        for (AttributeValue coverage : coverages) {
+            targets.getValues().add(toNonEnumeratedAttributeValue(coverage, attributeType, selectedLanguages));
+        }
+        targets.setTotal(BigInteger.valueOf(targets.getValues().size()));
+        return targets;
+    }
+
+    private NonEnumeratedAttributeValue toNonEnumeratedAttributeValue(AttributeValue source, DsdComponentType attributeType, List<String> selectedLanguages) throws MetamacException {
+        if (source == null) {
+            return null;
+        }
+        NonEnumeratedAttributeValue target = new NonEnumeratedAttributeValue();
+        target.setId(source.getIdentifier());
+        if (DsdComponentType.TEMPORAL.equals(attributeType)) {
+            Map<String, String> title = translationService.translateTime(SERVICE_CONTEXT, source.getIdentifier());
+            target.setName(toInternationalString(title, selectedLanguages));
+        } else {
+            logger.error("Attribute must be time to add values in metadata: " + source.getDsdComponentId());
+            org.siemac.metamac.rest.common.v1_0.domain.Exception exception = RestExceptionUtils.getException(RestServiceExceptionType.UNKNOWN);
+            throw new RestException(exception, Status.INTERNAL_SERVER_ERROR);
+        }
         return target;
     }
 

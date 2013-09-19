@@ -15,6 +15,10 @@
     <bean id="queryService" class="org.mockito.Mockito" factory-method="mock">
         <constructor-arg value="org.siemac.metamac.statistical.resources.core.query.serviceapi.QueryService" />
     </bean>
+
+    <bean id="translationService" class="org.mockito.Mockito" factory-method="mock">
+        <constructor-arg value="org.siemac.metamac.statistical.resources.core.common.serviceapi.TranslationService" />
+    </bean>
     
     <bean id="datasetVersionRepository" class="org.mockito.Mockito" factory-method="mock">
         <constructor-arg value="org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionRepository" />

@@ -386,6 +386,24 @@
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
+    
+    <xs:complexType name="NonEnumeratedAttributeValues">
+        <xs:complexContent>
+            <xs:extension base="tns:AttributeValues">
+                <xs:sequence>
+                    <xs:element name="value" type="tns:NonEnumeratedAttributeValue" minOccurs="1" maxOccurs="unbounded" />
+                </xs:sequence>
+                <xs:attribute name="total" type="xs:unsignedLong" use="required" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="NonEnumeratedAttributeValue">
+        <xs:sequence>
+            <xs:element name="id" type="xs:string" />
+            <xs:element name="name" type="common:InternationalString" />
+        </xs:sequence>
+    </xs:complexType>    
 
     <!-- Lists -->
     <xs:complexType name="Datasets">

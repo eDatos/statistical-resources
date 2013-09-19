@@ -243,6 +243,8 @@ public class DsdProcessor {
                 type = DsdComponentType.SPATIAL;
             } else if (AttributeQualifierType.MEASURE.equals(attr.getType())) {
                 type = DsdComponentType.MEASURE;
+            } else if (AttributeQualifierType.TIME.equals(attr.getType())) {
+                type = DsdComponentType.TEMPORAL;
             } else {
                 type = DsdComponentType.OTHER;
             }
