@@ -64,6 +64,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.arte.statistic.dataset.repository.domain.DatasetRepositoryExceptionCodeEnum;
 import com.arte.statistic.dataset.repository.dto.DatasetRepositoryDto;
 import com.arte.statistic.dataset.repository.dto.InternationalStringDto;
 import com.arte.statistic.dataset.repository.dto.LocalisedStringDto;
@@ -298,9 +299,9 @@ public class TaskServiceImpl extends TaskServiceImplBase {
 
     @Override
     public void processRollbackImportationTask(ServiceContext ctx, String recoveryJobKey, TaskInfoDataset taskInfoDataset) {
-
+        Task task = null;
         try {
-            Task task = retrieveTaskByJob(ctx, createJobKeyForImportationResource(taskInfoDataset.getDatasetVersionId()).getName());
+            task = retrieveTaskByJob(ctx, createJobKeyForImportationResource(taskInfoDataset.getDatasetVersionId()).getName());
 
             String fileNames = task.getExtensionPoint();
             String[] names = fileNames.split("\\" + JobUtil.SERIALIZATION_SEPARATOR);
@@ -319,6 +320,10 @@ public class TaskServiceImpl extends TaskServiceImplBase {
 
             // Delete failed entry
             getTaskRepository().delete(task);
+        } catch (ApplicationException e) {
+            if (task != null && DatasetRepositoryExceptionCodeEnum.DATASET_NOT_EXISTS.name().equals(e.getErrorCode())) {
+                getTaskRepository().delete(task);
+            }
         } catch (Exception e) {
             logger.error("Error while perform a recovery in dataset", e);
         }
