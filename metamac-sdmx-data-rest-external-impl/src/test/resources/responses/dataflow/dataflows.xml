@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<structure:Dataflows xmlns:registry="http://www.sdmx.org/resources/sdmxml/schemas/v2_1/registry" xmlns:structure="http://www.sdmx.org/resources/sdmxml/schemas/v2_1/structure" xmlns:datastructurespecific="http://www.sdmx.org/resources/sdmxml/schemas/v2_1/data/structurespecific" xmlns:metadatageneric="http://www.sdmx.org/resources/sdmxml/schemas/v2_1/metadata/generic" xmlns:common="http://www.sdmx.org/resources/sdmxml/schemas/v2_1/common" xmlns:query="http://www.sdmx.org/resources/sdmxml/schemas/v2_1/query" xmlns:datageneric="http://www.sdmx.org/resources/sdmxml/schemas/v2_1/data/generic" xmlns:metadatastructurespecific="http://www.sdmx.org/resources/sdmxml/schemas/v2_1/metadata/structurespecific" xmlns:messagefooter="http://www.sdmx.org/resources/sdmxml/schemas/v2_1/message/footer">
+  <structure:Dataflow id="ECB_EXR_NG" urn="urn:sdmx:org.sdmx.infomodel.datastructure.Dataflow=ECB:ECB_EXR_NG(1.0)" version="1.0" agencyID="ECB">
+    <common:Name xml:lang="es">title en Espanol</common:Name>
+    <common:Name xml:lang="en">title in English</common:Name>
+    <common:Description xml:lang="en">description-nEn648Q7bo_000001 in English</common:Description>
+    <common:Description xml:lang="es">description-nEn648Q7bo_000001 en Espanol</common:Description>
+    <structure:Structure>
+      <Ref agencyID="ECB" id="ECB_EXR_NG" version="1.0"/>
+    </structure:Structure>
+  </structure:Dataflow>
+  <structure:Dataflow id="ECB_EXR_SG" urn="urn:sdmx:org.sdmx.infomodel.datastructure.Dataflow=ECB:ECB_EXR_SG(1.0)" version="1.0" agencyID="ECB">
+    <common:Name xml:lang="es">title-ECB_EXR_NG en Espanol</common:Name>
+    <common:Name xml:lang="en">title-ECB_EXR_NG in English</common:Name>
+    <common:Description xml:lang="en">description-7GkmmlZ8px_000001 in English</common:Description>
+    <common:Description xml:lang="es">description-7GkmmlZ8px_000001 en Espanol</common:Description>
+    <structure:Structure>
+      <Ref agencyID="ECB" id="ECB_EXR_SG" version="1.0"/>
+    </structure:Structure>
+  </structure:Dataflow>
+  <structure:Dataflow id="ECB_EXR_RG" urn="urn:sdmx:org.sdmx.infomodel.datastructure.Dataflow=ECB:ECB_EXR_RG(1.0)" version="1.0" agencyID="ECB">
+    <common:Name xml:lang="es">title-ECB_EXR_SG en Espanol</common:Name>
+    <common:Name xml:lang="en">title-ECB_EXR_SG in English</common:Name>
+    <common:Description xml:lang="en">description-3r01faopt3_000001 in English</common:Description>
+    <common:Description xml:lang="es">description-3r01faopt3_000001 en Espanol</common:Description>
+    <structure:Structure>
+      <Ref agencyID="ECB" id="ECB_EXR_RG" version="1.0"/>
+    </structure:Structure>
+  </structure:Dataflow>
+</structure:Dataflows>

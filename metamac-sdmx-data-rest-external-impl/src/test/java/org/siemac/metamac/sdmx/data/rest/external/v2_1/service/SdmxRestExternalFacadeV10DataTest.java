@@ -2,6 +2,7 @@ package org.siemac.metamac.sdmx.data.rest.external.v2_1.service;
 
 import static org.mockito.Mockito.reset;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -10,6 +11,7 @@ import javax.ws.rs.core.Response;
 import org.apache.commons.io.IOUtils;
 import org.apache.cxf.jaxrs.client.WebClient;
 import org.junit.Test;
+import org.siemac.metamac.rest.common.test.utils.MetamacRestAsserts;
 import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.DatasetService;
 
 import com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceFacade;
@@ -30,9 +32,9 @@ public class SdmxRestExternalFacadeV10DataTest extends SdmxRestExternalFacadeV21
             incrementRequestTimeOut(create); // Timeout
             Response findData = create.get();
 
-            InputStream responseExpected = SdmxRestExternalFacadeV10DataTest.class.getResourceAsStream("/responses/data/structured/ecb_exr_rg_flat.xml");
+            InputStream responseExpected = SdmxRestExternalFacadeV10DataTest.class.getResourceAsStream("/responses/data/structured/FLAT_ECB_EXR_RG.xml");
             assertEquals(200, findData.getStatus());
-            assertInputStream(findData, responseExpected);
+            assertInputStream(responseExpected, (InputStream) findData.getEntity(), false);
         }
     }
 
@@ -44,8 +46,10 @@ public class SdmxRestExternalFacadeV10DataTest extends SdmxRestExternalFacadeV21
             create.accept(TypeSDMXDataMessageEnum.SPECIFIC_2_1.getValue());
             incrementRequestTimeOut(create); // Timeout
             Response findData = create.get();
-            System.out.println("_____________");
-            System.out.println(IOUtils.toString((InputStream) findData.getEntity(), "UTF-8"));
+
+            InputStream responseExpected = null; // SdmxRestExternalFacadeV10DataTest.class.getResourceAsStream("/responses/data/structured/FLAT_ECB_EXR_RG.xml");
+            assertEquals(200, findData.getStatus());
+            assertInputStream(responseExpected, (InputStream) findData.getEntity(), true);
         }
     }
 
@@ -58,8 +62,10 @@ public class SdmxRestExternalFacadeV10DataTest extends SdmxRestExternalFacadeV21
             create.accept(TypeSDMXDataMessageEnum.SPECIFIC_TIME_SERIES_2_1.getValue());
             incrementRequestTimeOut(create); // Timeout
             Response findData = create.get();
-            System.out.println("_____________");
-            System.out.println(IOUtils.toString((InputStream) findData.getEntity(), "UTF-8"));
+
+            InputStream responseExpected = null; // SdmxRestExternalFacadeV10DataTest.class.getResourceAsStream("/responses/data/structured/FLAT_ECB_EXR_RG.xml");
+            assertEquals(200, findData.getStatus());
+            assertInputStream(responseExpected, (InputStream) findData.getEntity(), true);
         }
     }
 
@@ -72,8 +78,10 @@ public class SdmxRestExternalFacadeV10DataTest extends SdmxRestExternalFacadeV21
             create.accept(TypeSDMXDataMessageEnum.SPECIFIC_2_1.getValue());
             incrementRequestTimeOut(create); // Timeout
             Response findData = create.get();
-            System.out.println("_____________");
-            System.out.println(IOUtils.toString((InputStream) findData.getEntity(), "UTF-8"));
+
+            InputStream responseExpected = null; // SdmxRestExternalFacadeV10DataTest.class.getResourceAsStream("/responses/data/structured/FLAT_ECB_EXR_RG.xml");
+            assertEquals(200, findData.getStatus());
+            assertInputStream(responseExpected, (InputStream) findData.getEntity(), true);
         }
     }
 
@@ -85,8 +93,10 @@ public class SdmxRestExternalFacadeV10DataTest extends SdmxRestExternalFacadeV21
             create.accept(TypeSDMXDataMessageEnum.GENERIC_2_1.getValue());
             incrementRequestTimeOut(create); // Timeout
             Response findData = create.get();
-            System.out.println("_____________");
-            System.out.println(IOUtils.toString((InputStream) findData.getEntity(), "UTF-8"));
+
+            InputStream responseExpected = null; // SdmxRestExternalFacadeV10DataTest.class.getResourceAsStream("/responses/data/structured/FLAT_ECB_EXR_RG.xml");
+            assertEquals(200, findData.getStatus());
+            assertInputStream(responseExpected, (InputStream) findData.getEntity(), true);
         }
     }
 
@@ -98,8 +108,10 @@ public class SdmxRestExternalFacadeV10DataTest extends SdmxRestExternalFacadeV21
             create.accept(TypeSDMXDataMessageEnum.GENERIC_2_1.getValue());
             incrementRequestTimeOut(create); // Timeout
             Response findData = create.get();
-            System.out.println("_____________");
-            System.out.println(IOUtils.toString((InputStream) findData.getEntity(), "UTF-8"));
+
+            InputStream responseExpected = null; // SdmxRestExternalFacadeV10DataTest.class.getResourceAsStream("/responses/data/structured/FLAT_ECB_EXR_RG.xml");
+            assertEquals(200, findData.getStatus());
+            assertInputStream(responseExpected, (InputStream) findData.getEntity(), true);
         }
     }
 
@@ -112,8 +124,10 @@ public class SdmxRestExternalFacadeV10DataTest extends SdmxRestExternalFacadeV21
             create.accept(TypeSDMXDataMessageEnum.GENERIC_TIME_SERIES_2_1.getValue());
             incrementRequestTimeOut(create); // Timeout
             Response findData = create.get();
-            System.out.println("_____________");
-            System.out.println(IOUtils.toString((InputStream) findData.getEntity(), "UTF-8"));
+
+            InputStream responseExpected = null; // SdmxRestExternalFacadeV10DataTest.class.getResourceAsStream("/responses/data/structured/FLAT_ECB_EXR_RG.xml");
+            assertEquals(200, findData.getStatus());
+            assertInputStream(responseExpected, (InputStream) findData.getEntity(), true);
         }
     }
 
@@ -126,8 +140,10 @@ public class SdmxRestExternalFacadeV10DataTest extends SdmxRestExternalFacadeV21
             create.accept(TypeSDMXDataMessageEnum.GENERIC_TIME_SERIES_2_1.getValue());
             incrementRequestTimeOut(create); // Timeout
             Response findData = create.get();
-            System.out.println("_____________");
-            System.out.println(IOUtils.toString((InputStream) findData.getEntity(), "UTF-8"));
+
+            InputStream responseExpected = null; // SdmxRestExternalFacadeV10DataTest.class.getResourceAsStream("/responses/data/structured/FLAT_ECB_EXR_RG.xml");
+            assertEquals(200, findData.getStatus());
+            assertInputStream(responseExpected, (InputStream) findData.getEntity(), true);
         }
     }
 
@@ -143,9 +159,9 @@ public class SdmxRestExternalFacadeV10DataTest extends SdmxRestExternalFacadeV21
 
             Response findData = create.get();
 
-            System.out.println("_____________");
-            System.out.println(IOUtils.toString((InputStream) findData.getEntity(), "UTF-8"));
-
+            InputStream responseExpected = null; // SdmxRestExternalFacadeV10DataTest.class.getResourceAsStream("/responses/data/structured/FLAT_ECB_EXR_RG.xml");
+            assertEquals(200, findData.getStatus());
+            assertInputStream(responseExpected, (InputStream) findData.getEntity(), true);
         }
     }
 
@@ -161,9 +177,9 @@ public class SdmxRestExternalFacadeV10DataTest extends SdmxRestExternalFacadeV21
 
             Response findData = create.get();
 
-            System.out.println("_____________");
-            System.out.println(IOUtils.toString((InputStream) findData.getEntity(), "UTF-8"));
-
+            InputStream responseExpected = null; // SdmxRestExternalFacadeV10DataTest.class.getResourceAsStream("/responses/data/structured/FLAT_ECB_EXR_RG.xml");
+            assertEquals(200, findData.getStatus());
+            assertInputStream(responseExpected, (InputStream) findData.getEntity(), true);
         }
     }
 
@@ -179,9 +195,9 @@ public class SdmxRestExternalFacadeV10DataTest extends SdmxRestExternalFacadeV21
 
             Response findData = create.get();
 
-            System.out.println("_____________");
-            System.out.println(IOUtils.toString((InputStream) findData.getEntity(), "UTF-8"));
-
+            InputStream responseExpected = null; // SdmxRestExternalFacadeV10DataTest.class.getResourceAsStream("/responses/data/structured/FLAT_ECB_EXR_RG.xml");
+            assertEquals(200, findData.getStatus());
+            assertInputStream(responseExpected, (InputStream) findData.getEntity(), true);
         }
     }
 
@@ -197,9 +213,9 @@ public class SdmxRestExternalFacadeV10DataTest extends SdmxRestExternalFacadeV21
 
             Response findData = create.get();
 
-            System.out.println("_____________");
-            System.out.println(IOUtils.toString((InputStream) findData.getEntity(), "UTF-8"));
-
+            InputStream responseExpected = null; // SdmxRestExternalFacadeV10DataTest.class.getResourceAsStream("/responses/data/structured/FLAT_ECB_EXR_RG.xml");
+            assertEquals(200, findData.getStatus());
+            assertInputStream(responseExpected, (InputStream) findData.getEntity(), true);
         }
     }
 
@@ -214,9 +230,9 @@ public class SdmxRestExternalFacadeV10DataTest extends SdmxRestExternalFacadeV21
             create.accept(TypeSDMXDataMessageEnum.GENERIC_2_1.getValue());
             Response findData = create.get();
 
-            System.out.println("_____________");
-            System.out.println(IOUtils.toString((InputStream) findData.getEntity(), "UTF-8"));
-
+            InputStream responseExpected = null; // SdmxRestExternalFacadeV10DataTest.class.getResourceAsStream("/responses/data/structured/FLAT_ECB_EXR_RG.xml");
+            assertEquals(200, findData.getStatus());
+            assertInputStream(responseExpected, (InputStream) findData.getEntity(), true);
         }
 
     }
@@ -232,9 +248,9 @@ public class SdmxRestExternalFacadeV10DataTest extends SdmxRestExternalFacadeV21
             create.accept(TypeSDMXDataMessageEnum.GENERIC_2_1.getValue());
             Response findData = create.get();
 
-            System.out.println("_____________");
-            System.out.println(IOUtils.toString((InputStream) findData.getEntity(), "UTF-8"));
-
+            InputStream responseExpected = null; // SdmxRestExternalFacadeV10DataTest.class.getResourceAsStream("/responses/data/structured/FLAT_ECB_EXR_RG.xml");
+            assertEquals(200, findData.getStatus());
+            assertInputStream(responseExpected, (InputStream) findData.getEntity(), true);
         }
     }
 
@@ -250,8 +266,9 @@ public class SdmxRestExternalFacadeV10DataTest extends SdmxRestExternalFacadeV21
             create.accept(TypeSDMXDataMessageEnum.SPECIFIC_2_1.getValue());
             Response findData = create.get();
 
-            System.out.println("_____________");
-            System.out.println(IOUtils.toString((InputStream) findData.getEntity(), "UTF-8"));
+            InputStream responseExpected = null; // SdmxRestExternalFacadeV10DataTest.class.getResourceAsStream("/responses/data/structured/FLAT_ECB_EXR_RG.xml");
+            assertEquals(200, findData.getStatus());
+            assertInputStream(responseExpected, (InputStream) findData.getEntity(), true);
 
         }
 
@@ -262,8 +279,9 @@ public class SdmxRestExternalFacadeV10DataTest extends SdmxRestExternalFacadeV21
             create.accept(TypeSDMXDataMessageEnum.SPECIFIC_2_1.getValue());
             Response findData = create.get();
 
-            System.out.println("_____________");
-            System.out.println(IOUtils.toString((InputStream) findData.getEntity(), "UTF-8"));
+            InputStream responseExpected = null; // SdmxRestExternalFacadeV10DataTest.class.getResourceAsStream("/responses/data/structured/FLAT_ECB_EXR_RG.xml");
+            assertEquals(200, findData.getStatus());
+            assertInputStream(responseExpected, (InputStream) findData.getEntity(), true);
 
         }
 
@@ -274,9 +292,9 @@ public class SdmxRestExternalFacadeV10DataTest extends SdmxRestExternalFacadeV21
             create.accept(TypeSDMXDataMessageEnum.SPECIFIC_2_1.getValue());
             Response findData = create.get();
 
-            System.out.println("_____________");
-            System.out.println(IOUtils.toString((InputStream) findData.getEntity(), "UTF-8"));
-
+            InputStream responseExpected = null; // SdmxRestExternalFacadeV10DataTest.class.getResourceAsStream("/responses/data/structured/FLAT_ECB_EXR_RG.xml");
+            assertEquals(200, findData.getStatus());
+            assertInputStream(responseExpected, (InputStream) findData.getEntity(), true);
         }
     }
 
@@ -290,8 +308,10 @@ public class SdmxRestExternalFacadeV10DataTest extends SdmxRestExternalFacadeV21
             create.accept(TypeSDMXDataMessageEnum.SPECIFIC_2_1.getValue());
             incrementRequestTimeOut(create); // Timeout
             Response findData = create.get();
-            System.out.println("_____________");
-            System.out.println(IOUtils.toString((InputStream) findData.getEntity(), "UTF-8"));
+
+            InputStream responseExpected = null; // SdmxRestExternalFacadeV10DataTest.class.getResourceAsStream("/responses/data/structured/FLAT_ECB_EXR_RG.xml");
+            assertEquals(200, findData.getStatus());
+            assertInputStream(responseExpected, (InputStream) findData.getEntity(), true);
         }
 
         {
@@ -301,8 +321,10 @@ public class SdmxRestExternalFacadeV10DataTest extends SdmxRestExternalFacadeV21
             create.accept(TypeSDMXDataMessageEnum.SPECIFIC_2_1.getValue());
             incrementRequestTimeOut(create); // Timeout
             Response findData = create.get();
-            System.out.println("_____________");
-            System.out.println(IOUtils.toString((InputStream) findData.getEntity(), "UTF-8"));
+
+            InputStream responseExpected = null; // SdmxRestExternalFacadeV10DataTest.class.getResourceAsStream("/responses/data/structured/FLAT_ECB_EXR_RG.xml");
+            assertEquals(200, findData.getStatus());
+            assertInputStream(responseExpected, (InputStream) findData.getEntity(), true);
         }
 
         {
@@ -312,8 +334,10 @@ public class SdmxRestExternalFacadeV10DataTest extends SdmxRestExternalFacadeV21
             create.accept(TypeSDMXDataMessageEnum.SPECIFIC_2_1.getValue());
             incrementRequestTimeOut(create); // Timeout
             Response findData = create.get();
-            System.out.println("_____________");
-            System.out.println(IOUtils.toString((InputStream) findData.getEntity(), "UTF-8"));
+
+            InputStream responseExpected = null; // SdmxRestExternalFacadeV10DataTest.class.getResourceAsStream("/responses/data/structured/FLAT_ECB_EXR_RG.xml");
+            assertEquals(200, findData.getStatus());
+            assertInputStream(responseExpected, (InputStream) findData.getEntity(), true);
         }
 
         {
@@ -323,32 +347,37 @@ public class SdmxRestExternalFacadeV10DataTest extends SdmxRestExternalFacadeV21
             create.accept(TypeSDMXDataMessageEnum.SPECIFIC_2_1.getValue());
             incrementRequestTimeOut(create); // Timeout
             Response findData = create.get();
-            System.out.println("_____________");
-            System.out.println(IOUtils.toString((InputStream) findData.getEntity(), "UTF-8"));
+
+            InputStream responseExpected = null; // SdmxRestExternalFacadeV10DataTest.class.getResourceAsStream("/responses/data/structured/FLAT_ECB_EXR_RG.xml");
+            assertEquals(200, findData.getStatus());
+            assertInputStream(responseExpected, (InputStream) findData.getEntity(), true);
         }
 
     }
 
     @Test
-    public void testDataFlow() throws Exception {
+    public void testDataFlow_ALL() throws Exception {
         {
             // DATAFLOW
             WebClient create = WebClient.create(baseApi + "/dataflow");
             // create.accept(TypeSDMXDataMessageEnum.SPECIFIC_2_1.getValue());
             incrementRequestTimeOut(create); // Timeout
             Response findData = create.get();
-            System.out.println("_____________");
-            System.out.println(IOUtils.toString((InputStream) findData.getEntity(), "UTF-8"));
+
+            InputStream responseExpected = SdmxRestExternalFacadeV10DataTest.class.getResourceAsStream("/responses/dataflow/dataflows.xml");
+            assertEquals(200, findData.getStatus());
+            assertInputStream(responseExpected, (InputStream) findData.getEntity(), false);
         }
     }
 
-    protected void assertInputStream(Response findData, InputStream responseExpected) {
-        // MetamacRestAsserts.assertEqualsResponse(responseExpected, (InputStream) findData.getEntity());
-        try {
-            System.out.println("_____________");
-            System.out.println(IOUtils.toString((InputStream) findData.getEntity(), "UTF-8"));
-        } catch (IOException e) {
-            e.printStackTrace();
+    protected void assertInputStream(InputStream expected, InputStream actual, boolean onlyPrint) throws IOException {
+        byte[] byteArray = IOUtils.toByteArray(actual);
+        System.out.println("-------------------");
+        System.out.println(IOUtils.toString(new ByteArrayInputStream(byteArray)));
+        System.out.println("-------------------");
+
+        if (!onlyPrint) {
+            MetamacRestAsserts.assertEqualsResponse(expected, new ByteArrayInputStream(byteArray));
         }
     }
 

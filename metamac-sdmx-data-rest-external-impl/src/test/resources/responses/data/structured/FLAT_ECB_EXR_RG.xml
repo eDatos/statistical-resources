@@ -1,0 +1,32 @@
+<message:StructureSpecificData xmlns:message="http://www.sdmx.org/resources/sdmxml/schemas/v2_1/message" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:common="http://www.sdmx.org/resources/sdmxml/schemas/v2_1/common" xmlns:datastructurespecific="http://www.sdmx.org/resources/sdmxml/schemas/v2_1/data/structurespecific">
+    <message:Header>
+        <message:ID>DATA_SDMX01_099b8766-16c9-4d94-90a2-80f941d7d6b4</message:ID>
+        <message:Test>false</message:Test>
+        <message:Prepared>2013-09-18T15:01:18.428+01:00</message:Prepared>
+        <message:Sender id="SDMX01"/>
+        <message:Structure namespace="urn:sdmx:org.sdmx.infomodel.datastructure.DataStructure=ECB:ECB_EXR_RG(1.0):ObsLevelDim:AllDimensions" dimensionAtObservation="AllDimensions" structureID="STR1">
+            <common:Structure>
+                <Ref agencyID="ECB" id="ECB_EXR_RG" version="1.0"/>
+            </common:Structure>
+        </message:Structure>
+    </message:Header>
+    <message:DataSet datastructurespecific:structureRef="STR1" datastructurespecific:dataScope="DataStructure" xsi:type="DataSetType">
+        <datastructurespecific:Group EXR_VAR="E" UNIT_MULT="0" DECIMALS="4" CURRENCY="CHF" EXR_TYPE="SP00" CURRENCY_DENOM="EUR" UNIT_MEASURE="CHF" TITLE="ECB reference exchange rate, Swiss franc/Euro"/>
+        <datastructurespecific:Group EXR_VAR="E" UNIT_MULT="0" DECIMALS="2" CURRENCY="JPY" EXR_TYPE="SP00" CURRENCY_DENOM="EUR" UNIT_MEASURE="JPY" TITLE="ECB reference exchange rate, Japanese yen/Euro"/>
+        <datastructurespecific:Group EXR_VAR="E" UNIT_MULT="0" DECIMALS="5" CURRENCY="GBP" EXR_TYPE="SP00" CURRENCY_DENOM="EUR" UNIT_MEASURE="GBP" TITLE="ECB reference exchange rate, U.K. Pound sterling /Euro"/>
+        <datastructurespecific:Group EXR_VAR="E" UNIT_MULT="0" DECIMALS="4" CURRENCY="USD" EXR_TYPE="SP00" CURRENCY_DENOM="EUR" UNIT_MEASURE="USD" TITLE="ECB reference exchange rate, U.S. dollar/Euro"/>
+        <datastructurespecific:Group EXR_VAR="E" EXR_TYPE="SP00" COLL_METHOD="Average of observations through period"/>
+        <datastructurespecific:Obs TIME_PERIOD="2010-08" OBS_VALUE="110.04" OBS_STATUS="A" EXR_VAR="E" CURRENCY="CHF" FREQ="M" EXR_TYPE="SP00" CURRENCY_DENOM="EUR" CONF_STATUS_OBS="F"/>
+        <datastructurespecific:Obs TIME_PERIOD="2010-08" OBS_VALUE="0.82363" OBS_STATUS="A" EXR_VAR="E" CURRENCY="CHF" FREQ="M" EXR_TYPE="SP00" CURRENCY_DENOM="EUR" CONF_STATUS_OBS="F"/>
+        <datastructurespecific:Obs TIME_PERIOD="2010-08" OBS_VALUE="1.3413" OBS_STATUS="A" EXR_VAR="E" CURRENCY="CHF" FREQ="M" EXR_TYPE="SP00" CURRENCY_DENOM="EUR" CONF_STATUS_OBS="F"/>
+        <datastructurespecific:Obs TIME_PERIOD="2010-08" OBS_VALUE="1.2894" OBS_STATUS="A" EXR_VAR="E" CURRENCY="CHF" FREQ="M" EXR_TYPE="SP00" CURRENCY_DENOM="EUR" CONF_STATUS_OBS="F"/>
+        <datastructurespecific:Obs TIME_PERIOD="2010-09" OBS_VALUE="110.26" OBS_STATUS="A" EXR_VAR="E" CURRENCY="CHF" FREQ="M" EXR_TYPE="SP00" CURRENCY_DENOM="EUR" CONF_STATUS_OBS="F"/>
+        <datastructurespecific:Obs TIME_PERIOD="2010-09" OBS_VALUE="0.83987" OBS_STATUS="A" EXR_VAR="E" CURRENCY="CHF" FREQ="M" EXR_TYPE="SP00" CURRENCY_DENOM="EUR" CONF_STATUS_OBS="F"/>
+        <datastructurespecific:Obs TIME_PERIOD="2010-09" OBS_VALUE="1.3089" OBS_STATUS="A" EXR_VAR="E" CURRENCY="CHF" FREQ="M" EXR_TYPE="SP00" CURRENCY_DENOM="EUR" CONF_STATUS_OBS="F"/>
+        <datastructurespecific:Obs TIME_PERIOD="2010-09" OBS_VALUE="1.3067" OBS_STATUS="A" EXR_VAR="E" CURRENCY="CHF" FREQ="M" EXR_TYPE="SP00" CURRENCY_DENOM="EUR" CONF_STATUS_OBS="F"/>
+        <datastructurespecific:Obs TIME_PERIOD="2010-10" OBS_VALUE="113.67" OBS_STATUS="A" EXR_VAR="E" CURRENCY="CHF" FREQ="M" EXR_TYPE="SP00" CURRENCY_DENOM="EUR" CONF_STATUS_OBS="F"/>
+        <datastructurespecific:Obs TIME_PERIOD="2010-10" OBS_VALUE="1.3452" OBS_STATUS="A" EXR_VAR="E" CURRENCY="CHF" FREQ="M" EXR_TYPE="SP00" CURRENCY_DENOM="EUR" CONF_STATUS_OBS="F"/>
+        <datastructurespecific:Obs TIME_PERIOD="2010-10" OBS_VALUE="0.87637" OBS_STATUS="A" EXR_VAR="E" CURRENCY="CHF" FREQ="M" EXR_TYPE="SP00" CURRENCY_DENOM="EUR" CONF_STATUS_OBS="F"/>
+        <datastructurespecific:Obs TIME_PERIOD="2010-10" OBS_VALUE="1.3898" OBS_STATUS="A" EXR_VAR="E" CURRENCY="CHF" FREQ="M" EXR_TYPE="SP00" CURRENCY_DENOM="EUR" CONF_STATUS_OBS="F"/>
+    </message:DataSet>
+</message:StructureSpecificData>

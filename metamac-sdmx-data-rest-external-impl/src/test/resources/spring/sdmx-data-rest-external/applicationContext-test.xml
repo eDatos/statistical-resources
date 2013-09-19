@@ -8,6 +8,9 @@
 
     <!-- Mockito -->
     <import resource="classpath:/spring/sdmx-data-rest-external/core-mockito.xml" />
+    
+    <!-- Client Rest -->
+    <import resource="classpath:/spring/sdmx-data-rest-external/client-providers.xml" />
 
     <!-- activates annotation-based bean configuration -->
     <context:annotation-config />

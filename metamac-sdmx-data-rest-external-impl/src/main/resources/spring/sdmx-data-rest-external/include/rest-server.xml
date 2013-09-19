@@ -32,21 +32,21 @@
         
         <jaxrs:providers>
 <!--             <ref bean="jaxbProvider" /> -->
-<!--             <ref bean="indentingResponse"/> -->
+            <ref bean="indentingResponse"/>
         </jaxrs:providers>
         
     </jaxrs:server>
 
-    <bean id="jaxbProvider" class="org.apache.cxf.jaxrs.provider.JAXBElementProvider">
-        <property name="marshallerProperties" ref="marshallerProperties" />
+<!--     <bean id="jaxbProvider" class="org.apache.cxf.jaxrs.provider.JAXBElementProvider"> -->
+<!--         <property name="marshallerProperties" ref="marshallerProperties" /> -->
 <!--         <property name="schemaLocations" ref="theSchemas"/> -->
-    </bean>
+<!--     </bean> -->
 
-    <util:map id="marshallerProperties">
-        <entry key="jaxb.formatted.output">
-            <value type="java.lang.Boolean">true</value>
-        </entry>
-    </util:map>
+<!--     <util:map id="marshallerProperties"> -->
+<!--         <entry key="jaxb.formatted.output"> -->
+<!--             <value type="java.lang.Boolean">true</value> -->
+<!--         </entry> -->
+<!--     </util:map> -->
     
 <!--     This is API for only lecture access, for better performance the validation against XSD is disabled. -->
 <!--     <util:list id="theSchemas"> -->
