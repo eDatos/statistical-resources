@@ -10,6 +10,17 @@ Application CommonStatisticalResources {
 	Module core_common {
 		basePackage=org.siemac.metamac.statistical.resources.core.common
 
+		// ----------------------------------------------------------------
+		// 							SERVICES
+		// ----------------------------------------------------------------
+		
+		Service TranslationService {
+			> @TranslationRepository
+			
+	    	"Translate a SDMX time"
+			Map<String,String> translateTime(String timeSdmx) throws MetamacException;
+		}
+		
 		"Entity for store information about RelatedResources."	
     	Entity RelatedResource {
     		gap
@@ -106,4 +117,25 @@ Application CommonStatisticalResources {
 				findAll;
 			}
     	}
+    	
+        "Translations by code"
+		Entity Translation {
+			databaseTable="TB_TRANSLATIONS"
+			hint="idSequence=TRANSLATIONS"
+			not auditable
+			not optimisticLocking
+			
+			"Id. Added explicitly to avoid that Sculptor generate UUID"
+			Long id not nullable key;
+			"Code"
+			String code not nullable;
+       		"Title"
+       		- @InternationalString title cascade="all" not nullable databaseColumn="TITLE_FK";
+			
+			Repository TranslationRepository {
+            	findByCondition;
+            	@Translation findTranslationByCode(String code);
+			}
+		} 
+	}    	
 }

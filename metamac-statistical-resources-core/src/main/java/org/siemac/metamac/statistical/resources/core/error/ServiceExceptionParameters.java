@@ -57,4 +57,7 @@ public class ServiceExceptionParameters extends ServiceExceptionBaseParameters {
     public static final Serializable CATEGORY_SCHEME_URN                      = "parameter.resources.rest.categorySchemeUrn";
     public static final Serializable ORGANISATION_SCHEME_URN                  = "parameter.resources.rest.organisationSchemeUrn";
 
+    // Misc
+    public static final String       TIME                                     = "parameter.resources.time";
+
 }

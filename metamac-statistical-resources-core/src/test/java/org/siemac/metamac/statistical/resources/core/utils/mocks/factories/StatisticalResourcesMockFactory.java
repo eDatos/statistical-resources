@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.siemac.metamac.statistical.resources.core.common.domain.Translation;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
@@ -66,6 +67,10 @@ public abstract class StatisticalResourcesMockFactory<EntityMock> extends MockFa
 
     protected static void registerDatasetMock(String id, Dataset dataset) {
         DatasetMockFactory.getInstance().registerMock(id, dataset);
+    }
+
+    protected static void registerTranslationMock(String id, Translation translation) {
+        TranslationMockFactory.getInstance().registerMock(id, translation);
     }
 
     protected static void registerQueryMock(String id, Query query) {
