@@ -434,10 +434,16 @@
                         </goals>
                         <configuration>
                             <target>
-                                <!-- Delete spring configuration files -->
                                 <copy toDir="${metamac-statistical-resources.etcDir}/db/01-create">
                                     <fileset dir="${basedir}/src/generated/resources/dbschema/01-create" />
                                 </copy>
+                                <rename src="${metamac-statistical-resources.etcDir}/db/01-create/01-StatisticalResources-create.sql" dest="${metamac-statistical-resources.etcDir}/db/01-create/01-statistical-resources-schema-create.sql"/>
+                                <copy toDir="${metamac-statistical-resources.etcDir}/db/02-drop">
+                                    <fileset dir="${basedir}/src/generated/resources/dbschema/02-drop" />
+                                </copy>
+                                <rename src="${metamac-statistical-resources.etcDir}/db/02-drop/01-StatisticalResources-drop.sql" dest="${metamac-statistical-resources.etcDir}/db/02-drop/01-statistical-resources-schema-drop.sql"/>
+
+                                <!-- Delete spring configuration files -->
                                 <delete file="${basedir}/src/main/resources/spring.properties" />
                                 <delete file="${basedir}/src/main/resources/more.xml" />
 
