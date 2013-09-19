@@ -36,10 +36,36 @@
         </dependency>
         <dependency>
             <groupId>org.siemac.metamac</groupId>
-            <artifactId>metamac-common-test</artifactId>
-            <version>${metamac-common-test.version}</version>
+            <artifactId>metamac-core-common</artifactId>
+            <version>${metamac-core-common.version}</version>
+            <type>test-jar</type>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.dbunit</groupId>
+            <artifactId>dbunit</artifactId>
+            <version>${dbunit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <version>${spring.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>${mockito-version}</version>
+            <scope>test</scope>
+        </dependency>
+
         <dependency>
             <groupId>org.siemac.metamac.metamac-srm</groupId>
             <artifactId>metamac-srm-rest-internal-api</artifactId>
