@@ -110,12 +110,13 @@ public class SdmxDataRestExternalFacadeV21Impl implements SdmxDataRestExternalFa
     }
 
     @Override
-    public Response findDataFlowsInternal() {
+    public JAXBElement<DataflowsType> findDataFlowsInternal() {
         try {
             // Retrieve
             List<DatasetVersion> findDataFlows = findDataFlowsCore(null, null, null);
 
-            return Response.ok(transformDataflowQueryToMessageReponse(findDataFlows)).build();
+            return transformDataflowQueryToMessageReponse(findDataFlows);
+            // return Response.ok(transformDataflowQueryToMessageReponse(findDataFlows)).build();
         } catch (Exception e) {
             throw manageException(e);
         }

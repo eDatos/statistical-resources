@@ -7,10 +7,12 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import javax.ws.rs.core.Response;
+import javax.xml.bind.JAXBElement;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.cxf.jaxrs.client.WebClient;
 import org.junit.Test;
+import org.sdmx.resources.sdmxml.schemas.v2_1.structure.DataflowsType;
 import org.siemac.metamac.rest.common.test.utils.MetamacRestAsserts;
 import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.DatasetService;
 
@@ -367,6 +369,15 @@ public class SdmxRestExternalFacadeV10DataTest extends SdmxRestExternalFacadeV21
             InputStream responseExpected = SdmxRestExternalFacadeV10DataTest.class.getResourceAsStream("/responses/dataflow/dataflows.xml");
             assertEquals(200, findData.getStatus());
             assertInputStream(responseExpected, (InputStream) findData.getEntity(), false);
+        }
+    }
+
+    @Test
+    public void testDataFlow_ALL_Entity() throws Exception {
+        {
+            // DATAFLOW
+            JAXBElement<DataflowsType> findDataFlowsInternal = getSdmxDataRestExternalFacadeClientXml().findDataFlowsInternal();
+            assertNotNull(findDataFlowsInternal.getValue());
         }
     }
 
