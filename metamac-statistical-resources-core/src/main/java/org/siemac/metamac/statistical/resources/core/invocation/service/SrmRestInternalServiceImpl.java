@@ -46,7 +46,7 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
     @Override
     public DataStructure retrieveDsdByUrn(String urn) throws MetamacException {
         try {
-            String[] dataStructureComponents = GeneratorUrnUtils.extractSdmxDatastructurUrnComponents(urn);
+            String[] dataStructureComponents = GeneratorUrnUtils.extractVersionableArtefactParts(urn);
             String agencyId = dataStructureComponents[0];
             String dsdId = dataStructureComponents[1];
             String version = dataStructureComponents[2];
