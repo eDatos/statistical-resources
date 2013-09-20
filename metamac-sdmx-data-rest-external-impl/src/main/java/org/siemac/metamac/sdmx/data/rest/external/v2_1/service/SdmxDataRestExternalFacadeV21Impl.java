@@ -116,43 +116,42 @@ public class SdmxDataRestExternalFacadeV21Impl implements SdmxDataRestExternalFa
             List<DatasetVersion> findDataFlows = findDataFlowsCore(null, null, null);
 
             return transformDataflowQueryToMessageReponse(findDataFlows);
-            // return Response.ok(transformDataflowQueryToMessageReponse(findDataFlows)).build();
         } catch (Exception e) {
             throw manageException(e);
         }
     }
 
     @Override
-    public Response findDataFlowsInternal(String agencyID) {
+    public JAXBElement<DataflowsType> findDataFlowsInternal(String agencyID) {
         try {
             // Retrieve
             List<DatasetVersion> findDataFlows = findDataFlowsCore(agencyID, null, null);
 
-            return Response.ok(transformDataflowQueryToMessageReponse(findDataFlows)).build();
+            return transformDataflowQueryToMessageReponse(findDataFlows);
         } catch (Exception e) {
             throw manageException(e);
         }
     }
 
     @Override
-    public Response findDataFlowsInternal(String agencyID, String resourceID) {
+    public JAXBElement<DataflowsType> findDataFlowsInternal(String agencyID, String resourceID) {
         try {
             // Retrieve
             List<DatasetVersion> findDataFlows = findDataFlowsCore(agencyID, resourceID, null);
 
-            return Response.ok(transformDataflowQueryToMessageReponse(findDataFlows)).build();
+            return transformDataflowQueryToMessageReponse(findDataFlows);
         } catch (Exception e) {
             throw manageException(e);
         }
     }
 
     @Override
-    public Response findDataFlowsInternal(String agencyID, String resourceID, String version) {
+    public JAXBElement<DataflowsType> findDataFlowsInternal(String agencyID, String resourceID, String version) {
         try {
             // Retrieve
             List<DatasetVersion> findDataFlows = findDataFlowsCore(agencyID, resourceID, version);
 
-            return Response.ok(transformDataflowQueryToMessageReponse(findDataFlows)).build();
+            return transformDataflowQueryToMessageReponse(findDataFlows);
         } catch (Exception e) {
             throw manageException(e);
         }
