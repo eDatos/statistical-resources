@@ -9,6 +9,9 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
+import javax.xml.bind.JAXBElement;
+
+import org.sdmx.resources.sdmxml.schemas.v2_1.structure.DataflowsType;
 
 @Path("v2.1")
 public interface SdmxDataRestExternalFacadeV21 {
@@ -59,7 +62,7 @@ public interface SdmxDataRestExternalFacadeV21 {
     @GET
     @Produces("application/xml")
     @Path("dataflow")
-    Response findDataFlowsInternal();
+    JAXBElement<DataflowsType> findDataFlowsInternal();
 
     @GET
     @Produces("application/xml")
