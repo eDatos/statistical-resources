@@ -217,7 +217,7 @@ public class CollectionsDo2RestMapperV10Impl implements CollectionsDo2RestMapper
         target.setDescription(commonDo2RestMapper.toInternationalString(source.getNameableStatisticalResource().getDescription(), selectedLanguages));
         if (source.getDataset() != null) {
             DatasetVersion dataset = datasetVersionRepository.retrieveLastVersion(source.getDatasetUrn()); // TODO retrieveLastPublishedVersion
-            target.setDataset(datasetsDo2RestMapper.toResource(dataset, selectedLanguages)); // TODO devolver latest en selfLink
+            target.setDataset(datasetsDo2RestMapper.toResourceAsLatest(dataset, selectedLanguages));
         } else if (source.getQuery() != null) {
             QueryVersion query = queryVersionRepository.retrieveLastVersion(source.getQueryUrn()); // TODO retrieveLastPublishedVersion
             target.setQuery(queriesDo2RestMapper.toResource(query, selectedLanguages));
@@ -255,28 +255,26 @@ public class CollectionsDo2RestMapperV10Impl implements CollectionsDo2RestMapper
     }
 
     private ResourceLink toCollectionSelfLink(PublicationVersion source) {
-        return commonDo2RestMapper.toResourceLink(StatisticalResourcesRestExternalConstants.KIND_COLLECTION, toCollectionLink(source));
+        String agencyID = source.getLifeCycleStatisticalResource().getMaintainer().getCodeNested();
+        String resourceID = source.getLifeCycleStatisticalResource().getCode();
+        return toCollectionSelfLink(agencyID, resourceID);
     }
 
     private ResourceLink toCollectionSelfLink(RelatedResourceResult source) {
-        return commonDo2RestMapper.toResourceLink(StatisticalResourcesRestExternalConstants.KIND_COLLECTION, toCollectionLink(source));
-    }
-
-    private String toCollectionLink(PublicationVersion source) {
-        String agencyID = source.getLifeCycleStatisticalResource().getMaintainer().getCodeNested();
-        String resourceID = source.getLifeCycleStatisticalResource().getCode();
-        return toCollectionLink(agencyID, resourceID);
-    }
-
-    private String toCollectionLink(RelatedResourceResult source) {
         String agencyID = source.getMaintainerNestedCode();
         String resourceID = source.getCode();
-        return toCollectionLink(agencyID, resourceID);
+        return toCollectionSelfLink(agencyID, resourceID);
+    }
+
+    private ResourceLink toCollectionSelfLink(String agencyID, String resourceID) {
+        String link = toCollectionLink(agencyID, resourceID);
+        return commonDo2RestMapper.toResourceLink(StatisticalResourcesRestExternalConstants.KIND_COLLECTION, link);
     }
 
     private String toCollectionLink(String agencyID, String resourceID) {
         String resourceSubpath = StatisticalResourcesRestExternalConstants.LINK_SUBPATH_COLLECTIONS;
-        return commonDo2RestMapper.toResourceLink(resourceSubpath, agencyID, resourceID, null);
+        String version = null; // do not return version
+        return commonDo2RestMapper.toResourceLink(resourceSubpath, agencyID, resourceID, version);
     }
 
     /**

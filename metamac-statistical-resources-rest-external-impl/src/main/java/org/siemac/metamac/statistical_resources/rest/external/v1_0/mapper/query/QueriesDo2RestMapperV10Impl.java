@@ -198,28 +198,25 @@ public class QueriesDo2RestMapperV10Impl implements QueriesDo2RestMapperV10 {
     }
 
     private ResourceLink toQuerySelfLink(QueryVersion source) {
-        return commonDo2RestMapper.toResourceLink(StatisticalResourcesRestExternalConstants.KIND_QUERY, toQueryLink(source));
+        String agencyID = source.getLifeCycleStatisticalResource().getMaintainer().getCodeNested();
+        String resourceID = source.getLifeCycleStatisticalResource().getCode();
+        return toQuerySelfLink(agencyID, resourceID);
     }
 
     private ResourceLink toQuerySelfLink(RelatedResourceResult source) {
-        return commonDo2RestMapper.toResourceLink(StatisticalResourcesRestExternalConstants.KIND_QUERY, toQueryLink(source));
-    }
-
-    private String toQueryLink(QueryVersion source) {
-        String agencyID = source.getLifeCycleStatisticalResource().getMaintainer().getCodeNested();
-        String resourceID = source.getLifeCycleStatisticalResource().getCode();
-        return toQueryLink(agencyID, resourceID);
-    }
-
-    private String toQueryLink(RelatedResourceResult source) {
         String agencyID = source.getMaintainerNestedCode();
         String resourceID = source.getCode();
-        return toQueryLink(agencyID, resourceID);
+        return toQuerySelfLink(agencyID, resourceID);
+    }
+
+    private ResourceLink toQuerySelfLink(String agencyID, String resourceID) {
+        String link = toQueryLink(agencyID, resourceID);
+        return commonDo2RestMapper.toResourceLink(StatisticalResourcesRestExternalConstants.KIND_QUERY, link);
     }
 
     private String toQueryLink(String agencyID, String resourceID) {
         String resourceSubpath = StatisticalResourcesRestExternalConstants.LINK_SUBPATH_QUERIES;
-        String version = null; // no devolver versión
+        String version = null; // do not return version
         return commonDo2RestMapper.toResourceLink(resourceSubpath, agencyID, resourceID, version);
     }
 

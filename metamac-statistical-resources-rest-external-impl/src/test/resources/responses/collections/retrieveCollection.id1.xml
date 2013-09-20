@@ -241,7 +241,7 @@
                                 <stat:dataset kind="statisticalResources#dataset">
                                     <cdomain:id>Aq9EJBxyi3_000001</cdomain:id>
                                     <cdomain:urn>urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Dataset=X4COaWrPiG:Aq9EJBxyi3_000001(01.000)</cdomain:urn>
-                                    <cdomain:selfLink kind="statisticalResources#dataset" href="http://data.istac.es/apis/statistical-resources/v1.0/datasets/X4COaWrPiG/Aq9EJBxyi3_000001/01.000" />
+                                    <cdomain:selfLink kind="statisticalResources#dataset" href="http://data.istac.es/apis/statistical-resources/v1.0/datasets/X4COaWrPiG/Aq9EJBxyi3_000001/~latest" />
                                     <cdomain:name>
                                         <cdomain:text xml:lang="es">title-Aq9EJBxyi3_000001 en Espanol</cdomain:text>
                                     </cdomain:name>
@@ -285,7 +285,7 @@
                         <stat:dataset kind="statisticalResources#dataset">
                             <cdomain:id>HMFVLe4PU3_000001</cdomain:id>
                             <cdomain:urn>urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Dataset=Y0lEoi4XfS:HMFVLe4PU3_000001(01.000)</cdomain:urn>
-                            <cdomain:selfLink kind="statisticalResources#dataset" href="http://data.istac.es/apis/statistical-resources/v1.0/datasets/Y0lEoi4XfS/HMFVLe4PU3_000001/01.000" />
+                            <cdomain:selfLink kind="statisticalResources#dataset" href="http://data.istac.es/apis/statistical-resources/v1.0/datasets/Y0lEoi4XfS/HMFVLe4PU3_000001/~latest" />
                             <cdomain:name>
                                 <cdomain:text xml:lang="es">title-HMFVLe4PU3_000001 en Espanol</cdomain:text>
                             </cdomain:name>

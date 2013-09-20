@@ -83,7 +83,7 @@ public class DatasetsDo2RestMapperV10Impl implements DatasetsDo2RestMapperV10 {
         target.setKind(StatisticalResourcesRestExternalConstants.KIND_DATASET);
         target.setId(source.getSiemacMetadataStatisticalResource().getCode());
         target.setUrn(source.getSiemacMetadataStatisticalResource().getUrn());
-        target.setSelfLink(toDatasetSelfLink(source));
+        target.setSelfLink(toDatasetSelfLink(source, false));
         target.setName(commonDo2RestMapper.toInternationalString(source.getSiemacMetadataStatisticalResource().getTitle(), selectedLanguages));
         target.setDescription(commonDo2RestMapper.toInternationalString(source.getSiemacMetadataStatisticalResource().getDescription(), selectedLanguages));
         target.setParentLink(toDatasetParentLink(source));
@@ -105,16 +105,12 @@ public class DatasetsDo2RestMapperV10Impl implements DatasetsDo2RestMapperV10 {
 
     @Override
     public Resource toResource(DatasetVersion source, List<String> selectedLanguages) {
-        if (source == null) {
-            return null;
-        }
-        Resource target = new Resource();
-        target.setId(source.getSiemacMetadataStatisticalResource().getCode());
-        target.setUrn(source.getSiemacMetadataStatisticalResource().getUrn());
-        target.setKind(StatisticalResourcesRestExternalConstants.KIND_DATASET);
-        target.setSelfLink(toDatasetSelfLink(source));
-        target.setName(commonDo2RestMapper.toInternationalString(source.getSiemacMetadataStatisticalResource().getTitle(), selectedLanguages));
-        return target;
+        return toResource(source, false, selectedLanguages);
+    }
+
+    @Override
+    public Resource toResourceAsLatest(DatasetVersion source, List<String> selectedLanguages) {
+        return toResource(source, true, selectedLanguages);
     }
 
     @Override
@@ -134,6 +130,19 @@ public class DatasetsDo2RestMapperV10Impl implements DatasetsDo2RestMapperV10 {
         target.setKind(StatisticalResourcesRestExternalConstants.KIND_DATASET);
         target.setSelfLink(toDatasetSelfLink(source));
         target.setName(commonDo2RestMapper.toInternationalString(source.getTitle(), selectedLanguages));
+        return target;
+    }
+
+    private Resource toResource(DatasetVersion source, boolean asLatest, List<String> selectedLanguages) {
+        if (source == null) {
+            return null;
+        }
+        Resource target = new Resource();
+        target.setId(source.getSiemacMetadataStatisticalResource().getCode());
+        target.setUrn(source.getSiemacMetadataStatisticalResource().getUrn());
+        target.setKind(StatisticalResourcesRestExternalConstants.KIND_DATASET);
+        target.setSelfLink(toDatasetSelfLink(source, asLatest));
+        target.setName(commonDo2RestMapper.toInternationalString(source.getSiemacMetadataStatisticalResource().getTitle(), selectedLanguages));
         return target;
     }
 
@@ -273,26 +282,28 @@ public class DatasetsDo2RestMapperV10Impl implements DatasetsDo2RestMapperV10 {
         return commonDo2RestMapper.toResourceLink(resourceSubpath, agencyID, resourceID, version);
     }
 
-    private ResourceLink toDatasetSelfLink(DatasetVersion source) {
-        return commonDo2RestMapper.toResourceLink(StatisticalResourcesRestExternalConstants.KIND_DATASET, toDatasetLink(source));
+    private ResourceLink toDatasetSelfLink(DatasetVersion source, boolean asLatest) {
+        String agencyID = source.getLifeCycleStatisticalResource().getMaintainer().getCodeNested();
+        String resourceID = source.getLifeCycleStatisticalResource().getCode();
+        String version = null;
+        if (asLatest) {
+            version = StatisticalResourcesRestExternalConstants.WILDCARD_LATEST;
+        } else {
+            version = source.getLifeCycleStatisticalResource().getVersionLogic();
+        }
+        return toDatasetSelfLink(agencyID, resourceID, version);
     }
 
     private ResourceLink toDatasetSelfLink(RelatedResourceResult source) {
-        return commonDo2RestMapper.toResourceLink(StatisticalResourcesRestExternalConstants.KIND_DATASET, toDatasetLink(source));
-    }
-
-    private String toDatasetLink(DatasetVersion source) {
-        String agencyID = source.getLifeCycleStatisticalResource().getMaintainer().getCodeNested();
-        String resourceID = source.getLifeCycleStatisticalResource().getCode();
-        String version = source.getLifeCycleStatisticalResource().getVersionLogic();
-        return toDatasetLink(agencyID, resourceID, version);
-    }
-
-    private String toDatasetLink(RelatedResourceResult source) {
         String agencyID = source.getMaintainerNestedCode();
         String resourceID = source.getCode();
         String version = source.getVersion();
-        return toDatasetLink(agencyID, resourceID, version);
+        return toDatasetSelfLink(agencyID, resourceID, version);
+    }
+
+    private ResourceLink toDatasetSelfLink(String agencyID, String resourceID, String version) {
+        String link = toDatasetLink(agencyID, resourceID, version);
+        return commonDo2RestMapper.toResourceLink(StatisticalResourcesRestExternalConstants.KIND_DATASET, link);
     }
 
     private String toDatasetLink(String agencyID, String resourceID, String version) {
