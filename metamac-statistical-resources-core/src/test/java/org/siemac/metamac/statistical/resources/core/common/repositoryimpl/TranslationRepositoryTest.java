@@ -29,7 +29,7 @@ public class TranslationRepositoryTest extends StatisticalResourcesBaseTest impl
     @Test
     @MetamacMock(TRANSLATIONS)
     public void testFindTranslationByCode() throws Exception {
-        String code = StatisticalResourcesConstants.TRANSLATION_TIME_SDMX_SEMESTER_PREFIX + "S1";
+        String code = StatisticalResourcesConstants.TRANSLATION_TIME_SDMX_SEMESTER_PREFIX + ".S1";
         Translation translation = translationRepository.findTranslationByCode(code);
 
         assertEquals(code, translation.getCode());
