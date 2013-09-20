@@ -20,7 +20,7 @@
 		<dependency>
         	<groupId>org.siemac.metamac.metamac-statistical-resources</groupId>
             <artifactId>metamac-sdmx-data-rest-external-api</artifactId>
-			<version>${project.version}</version>
+			<version>${statistic-metamac-sdmx-data-rest-external-api.version}</version>
 		</dependency>
         <dependency>
             <groupId>org.siemac.metamac.metamac-statistical-resources</groupId>
@@ -28,12 +28,6 @@
             <classifier>client</classifier>
             <version>${project.version}</version>
         </dependency>
-<!--         <dependency> -->
-<!--             <groupId>com.arte.statistic.statistic-sdmx-srm</groupId> -->
-<!--             <artifactId>statistic-sdmx-srm-core</artifactId> -->
-<!--             <classifier>client</classifier> -->
-<!--             <version>${statistic-sdmx-srm-core.version}</version> -->
-<!--         </dependency> -->
         <dependency>
             <groupId>org.siemac.metamac</groupId>
             <artifactId>metamac-rest-common</artifactId>
