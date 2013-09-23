@@ -2,18 +2,14 @@ package org.siemac.metamac.sdmx.data.rest.external.v2_1.service;
 
 import static org.mockito.Mockito.reset;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 
 import javax.ws.rs.core.Response;
 import javax.xml.bind.JAXBElement;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.cxf.jaxrs.client.WebClient;
 import org.junit.Test;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.DataflowsType;
-import org.siemac.metamac.rest.common.test.utils.MetamacRestAsserts;
 import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.DatasetService;
 
 import com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceFacade;
@@ -26,7 +22,7 @@ public class SdmxRestExternalFacadeV10DataTest extends SdmxRestExternalFacadeV21
      **************************************************************************/
 
     @Test
-    public void testData_Specific_FLAT_ECB_EXR_RG() throws Exception {
+    public void testData_Specific_FLAT_ECB_EXR_RG1() throws Exception {
 
         { // All data: specific with general format (StructureSpecificData)
             WebClient create = WebClient.create(baseApi + "/data/ECB_EXR_RG?dimensionAtObservation=AllDimensions");
@@ -378,17 +374,6 @@ public class SdmxRestExternalFacadeV10DataTest extends SdmxRestExternalFacadeV21
             // DATAFLOW
             JAXBElement<DataflowsType> findDataFlowsInternal = getSdmxDataRestExternalFacadeClientXml().findDataFlowsInternal();
             assertNotNull(findDataFlowsInternal.getValue());
-        }
-    }
-
-    protected void assertInputStream(InputStream expected, InputStream actual, boolean onlyPrint) throws IOException {
-        byte[] byteArray = IOUtils.toByteArray(actual);
-        System.out.println("-------------------");
-        System.out.println(IOUtils.toString(new ByteArrayInputStream(byteArray)));
-        System.out.println("-------------------");
-
-        if (!onlyPrint) {
-            MetamacRestAsserts.assertEqualsResponse(expected, new ByteArrayInputStream(byteArray));
         }
     }
 

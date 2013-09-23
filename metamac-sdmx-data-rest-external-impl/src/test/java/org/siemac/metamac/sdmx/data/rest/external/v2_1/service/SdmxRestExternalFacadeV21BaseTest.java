@@ -3,6 +3,8 @@ package org.siemac.metamac.sdmx.data.rest.external.v2_1.service;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -42,12 +44,15 @@ import org.siemac.metamac.core.common.util.ApplicationContextProvider;
 import org.siemac.metamac.core.common.util.GeneratorUrnUtils;
 import org.siemac.metamac.rest.common.test.MetamacRestBaseTest;
 import org.siemac.metamac.rest.common.test.ServerResource;
+import org.siemac.metamac.rest.common.test.utils.MetamacRestAsserts;
 import org.siemac.metamac.sdmx.data.rest.external.v2_1.utils.SdmxDataCoreMocks;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionProperties;
 import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.DatasetService;
 import org.siemac.metamac.statistical.resources.core.io.utils.ManipulateDataUtils;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesPersistedDoMocks;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 
 import com.arte.statistic.dataset.repository.dto.AttributeInstanceDto;
@@ -59,6 +64,8 @@ import com.arte.statistic.dataset.repository.util.DtoUtils;
 import com.arte.statistic.parser.sdmx.v2_1.domain.IdValuePair;
 
 public abstract class SdmxRestExternalFacadeV21BaseTest extends MetamacRestBaseTest {
+
+    protected static Logger                        logger             = LoggerFactory.getLogger(SdmxRestExternalFacadeV21BaseTest.class);
 
     private static String                          jaxrsServerAddress = "http://localhost:" + ServerResource.PORT + "/apis/registry";
     protected String                               baseApi            = jaxrsServerAddress + "/v2.1";
@@ -450,5 +457,17 @@ public abstract class SdmxRestExternalFacadeV21BaseTest extends MetamacRestBaseT
         ConditionalCriteria conditionalCriteria = ConditionalCriteriaUtils.getConditionalCriteriaByPropertyName(conditions, Operator.Equal, DatasetVersionProperties
                 .siemacMetadataStatisticalResource().versionLogic());
         return conditionalCriteria != null ? (String) conditionalCriteria.getFirstOperant() : null;
+    }
+
+    protected void assertInputStream(InputStream expected, InputStream actual, boolean onlyPrint) throws IOException {
+        byte[] byteArray = IOUtils.toByteArray(actual);
+        if (logger.isDebugEnabled()) {
+            System.out.println("-------------------");
+            System.out.println(IOUtils.toString(new ByteArrayInputStream(byteArray)));
+            System.out.println("-------------------");
+        }
+        if (!onlyPrint) {
+            MetamacRestAsserts.assertEqualsResponse(expected, new ByteArrayInputStream(byteArray));
+        }
     }
 }
