@@ -9,6 +9,8 @@ import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatis
 import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.StatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.VersionableStatisticalResource;
+import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.Categorisation;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
@@ -23,6 +25,7 @@ import org.siemac.metamac.statistical.resources.core.publication.domain.Publicat
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
 import org.siemac.metamac.statistical.resources.core.query.domain.Query;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
+import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesVersionUtils;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.DatasetMock;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.DatasetVersionMock;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.PublicationMock;
@@ -285,6 +288,25 @@ public class StatisticalResourcesPersistedDoMocks extends StatisticalResourcesDo
 
     private static String buildSequentialResourceCode(String operationCode, int sequentialId) {
         return operationCode + "_" + String.format("%06d", sequentialId);
+    }
+
+    // -----------------------------------------------------------------
+    // CATEGORISATION
+    // -----------------------------------------------------------------
+    public Categorisation mockCategorisationWithGeneratedCategory(DatasetVersion datasetVersion, ExternalItem maintainer, String categoryCode, String categorisationCode) {
+        return mockCategorisationWithDatasetVersionAndCategory(datasetVersion, maintainer, mockCategoryExternalItem(categoryCode), categorisationCode);
+    }
+
+    public Categorisation mockCategorisationWithDatasetVersionAndCategory(DatasetVersion datasetVersion, ExternalItem maintainer, ExternalItem category, String categorisationCode) {
+        Categorisation categorisation = new Categorisation();
+        categorisation.setVersionableStatisticalResource(new VersionableStatisticalResource());
+        categorisation.getVersionableStatisticalResource().setCode(categorisationCode);
+        categorisation.getVersionableStatisticalResource().setUrn(
+                GeneratorUrnUtils.generateSdmxCategorisationUrn(new String[]{maintainer.getCodeNested()}, categorisationCode, StatisticalResourcesVersionUtils.INITIAL_VERSION));
+        categorisation.setDatasetVersion(datasetVersion);
+        categorisation.setCategory(category);
+        categorisation.setMaintainer(maintainer);
+        return mockCategorisation(categorisation);
     }
 
     // -----------------------------------------------------------------

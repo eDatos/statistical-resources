@@ -6,9 +6,17 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyString;
+import static org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts.assertEqualsCategorisation;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts.assertEqualsDatasetVersion;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts.assertEqualsDatasetVersionCollection;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts.assertEqualsDatasetVersionNotChecksDataset;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.CategorisationMockFactory.CATEGORISATION_01_DATASET_VERSION_01_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.CategorisationMockFactory.CATEGORISATION_01_DATASET_VERSION_02_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.CategorisationMockFactory.CATEGORISATION_02_DATASET_VERSION_01_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.CategorisationMockFactory.CATEGORISATION_02_DATASET_VERSION_02_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.CategorisationMockFactory.CATEGORISATION_03_DATASET_VERSION_02_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.CategorisationMockFactory.CATEGORISATION_MAINTAINER_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.CategorisationMockFactory.CATEGORISATION_SEQUENCE_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetMockFactory.DATASET_01_BASIC_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetMockFactory.DATASET_02_BASIC_WITH_GENERATED_VERSION_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetMockFactory.DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME;
@@ -18,6 +26,7 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_04_FOR_DATASET_03_AND_LAST_VERSION_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_09_OPER_0001_CODE_000003_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_12_OPER_0002_MAX_CODE_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_22_V1_PUBLISHED_FOR_DATASET_05_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_27_WITH_COVERAGE_FILLED_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_28_WITHOUT_DATASOURCES_IMPORTING_DATA_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_29_WITHOUT_DATASOURCES_NAME;
@@ -55,10 +64,15 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
+import org.siemac.metamac.common.test.utils.MetamacAsserts;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
+import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataStatisticalResource;
+import org.siemac.metamac.statistical.resources.core.base.domain.VersionableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.Categorisation;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.CategorisationProperties;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.CodeDimension;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetProperties;
@@ -877,12 +891,206 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
     }
 
     // ------------------------------------------------------------------------
+    // CATEGORISATIONS
+    // ------------------------------------------------------------------------
+    @Override
+    public void testCreateCategorisation() throws Exception {
+        // Tested in other testCreateCategorisation* methods
+    }
+
+    @Test
+    @MetamacMock({DATASET_VERSION_01_BASIC_NAME, CATEGORISATION_SEQUENCE_NAME, CATEGORISATION_MAINTAINER_NAME})
+    public void testCreateCategorisationDatasetNotPublished() throws Exception {
+
+        DatasetVersion datasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_01_BASIC_NAME);
+        String categoryCode = "category01";
+        String maintainerCode = "agency01"; // nested = ISTAC.agency01
+        Categorisation expected = notPersistedDoMocks.mockCategorisation(datasetVersion, maintainerCode, categoryCode);
+
+        Categorisation actual = datasetService.createCategorisation(getServiceContextAdministrador(), expected);
+
+        // Validate
+        assertEqualsCategorisation(expected, actual);
+        assertEquals("001.000", actual.getVersionableStatisticalResource().getVersionLogic());
+        assertEquals("cat_data_101", actual.getVersionableStatisticalResource().getCode());
+        assertEquals(buildCategorisationUrn(expected.getMaintainer().getCodeNested(), "cat_data_101", "001.000"), actual.getVersionableStatisticalResource().getUrn());
+        assertEquals("Categoría cat_data_101", actual.getVersionableStatisticalResource().getTitle().getLocalisedLabel("es"));
+        assertEquals("Category cat_data_101", actual.getVersionableStatisticalResource().getTitle().getLocalisedLabel("en"));
+        assertEquals("Categoria cat_data_101", actual.getVersionableStatisticalResource().getTitle().getLocalisedLabel("pt"));
+        assertNotNull(actual.getVersionableStatisticalResource().getCreatedDate());
+        assertNotNull(actual.getVersionableStatisticalResource().getCreatedBy());
+        assertNull(actual.getVersionableStatisticalResource().getValidFrom());
+        assertNull(actual.getVersionableStatisticalResource().getValidTo());
+        assertNull(actual.getValidFromEffective());
+        assertNull(actual.getValidToEffective());
+    }
+
+    @Test
+    @MetamacMock({DATASET_VERSION_22_V1_PUBLISHED_FOR_DATASET_05_NAME, CATEGORISATION_SEQUENCE_NAME, CATEGORISATION_MAINTAINER_NAME})
+    public void testCreateCategorisationDatasetAlreadyPublished() throws Exception {
+
+        DatasetVersion datasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_22_V1_PUBLISHED_FOR_DATASET_05_NAME);
+        String categoryCode = "category01";
+        String maintainerCode = "agency01"; // nested = ISTAC.agency01
+        Categorisation expected = notPersistedDoMocks.mockCategorisation(datasetVersion, maintainerCode, categoryCode);
+
+        Categorisation actual = datasetService.createCategorisation(getServiceContextAdministrador(), expected);
+
+        // Validate
+        assertEqualsCategorisation(expected, actual);
+        MetamacAsserts.assertEqualsDay(new DateTime(), actual.getVersionableStatisticalResource().getValidFrom());
+        assertNull(actual.getVersionableStatisticalResource().getValidTo());
+        assertFalse(datasetVersion.getSiemacMetadataStatisticalResource().getValidFrom().equals(actual.getValidFromEffective()));
+    }
+
+    @Test
+    public void testCheckCategorisationValidFromEffective() throws Exception {
+        DatasetVersion datasetVersion = new DatasetVersion();
+        datasetVersion.setSiemacMetadataStatisticalResource(new SiemacMetadataStatisticalResource());
+
+        Categorisation categorisation = new Categorisation();
+        categorisation.setVersionableStatisticalResource(new VersionableStatisticalResource());
+        categorisation.setDatasetVersion(datasetVersion);
+
+        assertNull(datasetVersion.getSiemacMetadataStatisticalResource().getValidFrom());
+        assertNull(datasetVersion.getSiemacMetadataStatisticalResource().getValidTo());
+        assertNull(categorisation.getVersionableStatisticalResource().getValidFrom());
+        assertNull(categorisation.getVersionableStatisticalResource().getValidTo());
+        assertNull(categorisation.getValidFromEffective());
+        assertNull(categorisation.getValidToEffective());
+
+        datasetVersion.getSiemacMetadataStatisticalResource().setValidFrom(new DateTime());
+        MetamacAsserts.assertEqualsDay(new DateTime(), datasetVersion.getSiemacMetadataStatisticalResource().getValidFrom());
+        assertNull(datasetVersion.getSiemacMetadataStatisticalResource().getValidTo());
+        assertNull(categorisation.getVersionableStatisticalResource().getValidFrom()); // inherited from dataset
+        assertNull(categorisation.getVersionableStatisticalResource().getValidTo());
+        MetamacAsserts.assertEqualsDay(new DateTime(), categorisation.getValidFromEffective());
+        assertNull(categorisation.getValidToEffective());
+    }
+
+    @Override
+    @Test
+    @MetamacMock({CATEGORISATION_01_DATASET_VERSION_01_NAME})
+    public void testRetrieveCategorisationByUrn() throws Exception {
+        Categorisation expected = categorisationMockFactory.retrieveMock(CATEGORISATION_01_DATASET_VERSION_01_NAME);
+        String urn = expected.getVersionableStatisticalResource().getUrn();
+        Categorisation actual = datasetService.retrieveCategorisationByUrn(getServiceContextWithoutPrincipal(), urn);
+
+        assertEqualsCategorisation(expected, actual);
+    }
+
+    @Override
+    @Test
+    @MetamacMock({DATASET_VERSION_01_BASIC_NAME, DATASET_VERSION_02_BASIC_NAME, CATEGORISATION_01_DATASET_VERSION_01_NAME, CATEGORISATION_02_DATASET_VERSION_01_NAME,
+            CATEGORISATION_01_DATASET_VERSION_02_NAME, CATEGORISATION_02_DATASET_VERSION_02_NAME, CATEGORISATION_03_DATASET_VERSION_02_NAME})
+    public void testRetrieveCategorisationsByDataset() throws Exception {
+        DatasetVersion datasetVersion1 = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_01_BASIC_NAME);
+        DatasetVersion datasetVersion2 = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_02_BASIC_NAME);
+        Categorisation categorisation1Dataset1 = categorisationMockFactory.retrieveMock(CATEGORISATION_01_DATASET_VERSION_01_NAME);
+        Categorisation categorisation2Dataset1 = categorisationMockFactory.retrieveMock(CATEGORISATION_02_DATASET_VERSION_01_NAME);
+        Categorisation categorisation1Dataset2 = categorisationMockFactory.retrieveMock(CATEGORISATION_01_DATASET_VERSION_02_NAME);
+        Categorisation categorisation2Dataset2 = categorisationMockFactory.retrieveMock(CATEGORISATION_02_DATASET_VERSION_02_NAME);
+        Categorisation categorisation3Dataset2 = categorisationMockFactory.retrieveMock(CATEGORISATION_03_DATASET_VERSION_02_NAME);
+
+        {
+            List<Categorisation> categorisations = datasetService
+                    .retrieveCategorisationsByDataset(getServiceContextWithoutPrincipal(), datasetVersion1.getSiemacMetadataStatisticalResource().getUrn());
+            assertEquals(2, categorisations.size());
+            assertEquals(categorisation1Dataset1.getVersionableStatisticalResource().getUrn(), categorisations.get(0).getVersionableStatisticalResource().getUrn());
+            assertEquals(categorisation2Dataset1.getVersionableStatisticalResource().getUrn(), categorisations.get(1).getVersionableStatisticalResource().getUrn());
+        }
+        {
+            List<Categorisation> categorisations = datasetService
+                    .retrieveCategorisationsByDataset(getServiceContextWithoutPrincipal(), datasetVersion2.getSiemacMetadataStatisticalResource().getUrn());
+            assertEquals(3, categorisations.size());
+            assertEquals(categorisation1Dataset2.getVersionableStatisticalResource().getUrn(), categorisations.get(0).getVersionableStatisticalResource().getUrn());
+            assertEquals(categorisation2Dataset2.getVersionableStatisticalResource().getUrn(), categorisations.get(1).getVersionableStatisticalResource().getUrn());
+            assertEquals(categorisation3Dataset2.getVersionableStatisticalResource().getUrn(), categorisations.get(2).getVersionableStatisticalResource().getUrn());
+        }
+    }
+
+    @Override
+    @Test
+    @MetamacMock({DATASET_VERSION_01_BASIC_NAME, DATASET_VERSION_02_BASIC_NAME, CATEGORISATION_01_DATASET_VERSION_01_NAME, CATEGORISATION_02_DATASET_VERSION_01_NAME,
+            CATEGORISATION_01_DATASET_VERSION_02_NAME, CATEGORISATION_02_DATASET_VERSION_02_NAME, CATEGORISATION_03_DATASET_VERSION_02_NAME})
+    public void testFindCategorisationsByCondition() throws Exception {
+        DatasetVersion datasetVersion1 = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_01_BASIC_NAME);
+        Categorisation categorisation1Dataset1 = categorisationMockFactory.retrieveMock(CATEGORISATION_01_DATASET_VERSION_01_NAME);
+        Categorisation categorisation2Dataset1 = categorisationMockFactory.retrieveMock(CATEGORISATION_02_DATASET_VERSION_01_NAME);
+        Categorisation categorisation1Dataset2 = categorisationMockFactory.retrieveMock(CATEGORISATION_01_DATASET_VERSION_02_NAME);
+        Categorisation categorisation2Dataset2 = categorisationMockFactory.retrieveMock(CATEGORISATION_02_DATASET_VERSION_02_NAME);
+        Categorisation categorisation3Dataset2 = categorisationMockFactory.retrieveMock(CATEGORISATION_03_DATASET_VERSION_02_NAME);
+
+        {
+            // Find all
+            List<ConditionalCriteria> conditions = ConditionalCriteriaBuilder.criteriaFor(Categorisation.class).orderBy(CategorisationProperties.id()).ascending().distinctRoot().build();
+            PagingParameter pagingParameter = null;
+            PagedResult<Categorisation> categorisationPagedResult = datasetService.findCategorisationsByCondition(getServiceContextWithoutPrincipal(), conditions, pagingParameter);
+            assertEquals(5, categorisationPagedResult.getTotalRows());
+            assertEquals(categorisation1Dataset1.getVersionableStatisticalResource().getUrn(), categorisationPagedResult.getValues().get(0).getVersionableStatisticalResource().getUrn());
+            assertEquals(categorisation2Dataset1.getVersionableStatisticalResource().getUrn(), categorisationPagedResult.getValues().get(1).getVersionableStatisticalResource().getUrn());
+            assertEquals(categorisation1Dataset2.getVersionableStatisticalResource().getUrn(), categorisationPagedResult.getValues().get(2).getVersionableStatisticalResource().getUrn());
+            assertEquals(categorisation2Dataset2.getVersionableStatisticalResource().getUrn(), categorisationPagedResult.getValues().get(3).getVersionableStatisticalResource().getUrn());
+            assertEquals(categorisation3Dataset2.getVersionableStatisticalResource().getUrn(), categorisationPagedResult.getValues().get(4).getVersionableStatisticalResource().getUrn());
+        }
+        {
+            // Find by dataset
+
+            List<ConditionalCriteria> conditions = ConditionalCriteriaBuilder.criteriaFor(Categorisation.class)
+                    .withProperty(CategorisationProperties.datasetVersion().siemacMetadataStatisticalResource().urn()).eq(datasetVersion1.getSiemacMetadataStatisticalResource().getUrn())
+                    .orderBy(CategorisationProperties.id()).ascending().distinctRoot().build();
+            PagingParameter pagingParameter = PagingParameter.rowAccess(0, Integer.MAX_VALUE, true);
+            PagedResult<Categorisation> categorisationPagedResult = datasetService.findCategorisationsByCondition(getServiceContextWithoutPrincipal(), conditions, pagingParameter);
+            assertEquals(2, categorisationPagedResult.getTotalRows());
+            assertEquals(categorisation1Dataset1.getVersionableStatisticalResource().getUrn(), categorisationPagedResult.getValues().get(0).getVersionableStatisticalResource().getUrn());
+            assertEquals(categorisation2Dataset1.getVersionableStatisticalResource().getUrn(), categorisationPagedResult.getValues().get(1).getVersionableStatisticalResource().getUrn());
+        }
+        {
+            // Find by category
+
+            List<ConditionalCriteria> conditions = ConditionalCriteriaBuilder.criteriaFor(Categorisation.class).withProperty(CategorisationProperties.category().code()).eq("category01")
+                    .orderBy(CategorisationProperties.id()).ascending().distinctRoot().build();
+            PagingParameter pagingParameter = PagingParameter.rowAccess(0, Integer.MAX_VALUE, true);
+            PagedResult<Categorisation> categorisationPagedResult = datasetService.findCategorisationsByCondition(getServiceContextWithoutPrincipal(), conditions, pagingParameter);
+            assertEquals(2, categorisationPagedResult.getTotalRows());
+            assertEquals(categorisation1Dataset1.getVersionableStatisticalResource().getUrn(), categorisationPagedResult.getValues().get(0).getVersionableStatisticalResource().getUrn());
+            assertEquals(categorisation1Dataset2.getVersionableStatisticalResource().getUrn(), categorisationPagedResult.getValues().get(1).getVersionableStatisticalResource().getUrn());
+        }
+    }
+
+    @Override
+    @Test
+    public void testDeleteCategorisation() throws Exception {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Test
+    public void testDeleteCategorisationErrorDatasetPublished() throws Exception {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    @Test
+    public void testEndCategorisationValidity() throws Exception {
+        // TODO Auto-generated method stub
+
+    }
+
+    // ------------------------------------------------------------------------
     // PRIVATE UTILS
     // ------------------------------------------------------------------------
 
     private static String buildDatasetUrn(String maintainerCode, String operationCode, int datasetSequentialId, String versionNumber) {
         StringBuilder strBuilder = new StringBuilder("urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Dataset=");
         strBuilder.append(maintainerCode).append(":").append(operationCode).append("_").append(String.format("%06d", datasetSequentialId)).append("(").append(versionNumber).append(")");
+        return strBuilder.toString();
+    }
+
+    private static String buildCategorisationUrn(String maintainerCode, String code, String versionNumber) {
+        StringBuilder strBuilder = new StringBuilder("urn:sdmx:org.sdmx.infomodel.categoryscheme.Categorisation=");
+        strBuilder.append(maintainerCode).append(":").append(code).append("(").append(versionNumber).append(")");
         return strBuilder.toString();
     }
 

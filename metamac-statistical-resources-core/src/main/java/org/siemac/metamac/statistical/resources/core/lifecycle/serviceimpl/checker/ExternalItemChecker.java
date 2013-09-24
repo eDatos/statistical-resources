@@ -49,7 +49,9 @@ public class ExternalItemChecker {
     private CommonMetadataRestExternalService        commonMetadataRestExternalService;
 
     public void checkExternalItemsExternallyPublished(ExternalItem externalItem, String metadataName, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
-        checkExternalItemsExternallyPublished(Arrays.asList(externalItem), metadataName, exceptionItems);
+        if (externalItem != null) {
+            checkExternalItemsExternallyPublished(Arrays.asList(externalItem), metadataName, exceptionItems);
+        }
     }
 
     public void checkExternalItemsExternallyPublished(Set<ExternalItem> externalItems, String metadataName, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
@@ -58,15 +60,16 @@ public class ExternalItemChecker {
             checkExternalItemsExternallyPublished(externalItems, metadataName, externalItemType, exceptionItems);
         }
     }
-    
+
     public void checkExternalItemsExternallyPublished(List<ExternalItem> externalItems, String metadataName, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
         if (!externalItems.isEmpty()) {
             TypeExternalArtefactsEnum externalItemType = externalItems.get(0).getType(); // we know that all the externalItems of a collection have same type
             checkExternalItemsExternallyPublished(externalItems, metadataName, externalItemType, exceptionItems);
         }
     }
-    
-    private void checkExternalItemsExternallyPublished(Collection<ExternalItem> externalItems, String metadataName, TypeExternalArtefactsEnum typeExternalItem, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
+
+    private void checkExternalItemsExternallyPublished(Collection<ExternalItem> externalItems, String metadataName, TypeExternalArtefactsEnum typeExternalItem,
+            List<MetamacExceptionItem> exceptionItems) throws MetamacException {
         String query = null;
         Collection<String> result = null;
 

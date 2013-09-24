@@ -963,6 +963,10 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
         datasetVersion.getStatisticalUnit().clear();
         datasetVersion.addStatisticalUnit(StatisticalResourcesPersistedDoMocks.mockConceptExternalItem());
         datasetVersion.addStatisticalUnit(StatisticalResourcesPersistedDoMocks.mockConceptExternalItem());
+
+        datasetVersion.addCategorisation(CategorisationMockFactory.createCategorisation("cat_data_1", "category01", datasetVersion));
+        datasetVersion.addCategorisation(CategorisationMockFactory.createCategorisation("cat_data_2", "category02", datasetVersion));
+        datasetVersion.addCategorisation(CategorisationMockFactory.createCategorisation("cat_data_3", "category03", datasetVersion));
     }
 
 }

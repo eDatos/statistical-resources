@@ -38,6 +38,8 @@ import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableSta
 import org.siemac.metamac.statistical.resources.core.base.utils.FillMetadataForCreateResourceUtils;
 import org.siemac.metamac.statistical.resources.core.base.validators.ProcStatusValidator;
 import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
+import org.siemac.metamac.statistical.resources.core.common.domain.InternationalString;
+import org.siemac.metamac.statistical.resources.core.common.domain.LocalisedString;
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResource;
 import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor;
 import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor.DsdAttribute;
@@ -47,6 +49,7 @@ import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor.D
 import org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConstants;
 import org.siemac.metamac.statistical.resources.core.dataset.checks.DatasetMetadataEditionChecks;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.AttributeValue;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.Categorisation;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.CodeDimension;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
@@ -66,6 +69,7 @@ import org.siemac.metamac.statistical.resources.core.task.domain.FileDescriptor;
 import org.siemac.metamac.statistical.resources.core.task.domain.FileDescriptorResult;
 import org.siemac.metamac.statistical.resources.core.task.domain.TaskInfoDataset;
 import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesCollectionUtils;
+import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesVersionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -672,6 +676,89 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
     }
 
     // ------------------------------------------------------------------------
+    // CATEGORISATIONS
+    // ------------------------------------------------------------------------
+
+    @Override
+    public Categorisation createCategorisation(ServiceContext ctx, Categorisation categorisation) throws MetamacException {
+
+        // Validation
+        datasetServiceInvocationValidator.checkCreateCategorisation(ctx, categorisation);
+        checkNotTasksInProgress(ctx, categorisation.getDatasetVersion().getSiemacMetadataStatisticalResource().getUrn());
+
+        // Fill metadata
+        fillMetadataForCreateCategorisation(ctx, categorisation);
+
+        // Save categorisation
+        categorisation = assignCodeAndSaveCategorisation(categorisation);
+        return categorisation;
+    }
+
+    @Override
+    public Categorisation retrieveCategorisationByUrn(ServiceContext ctx, String urn) throws MetamacException {
+        // Validation
+        datasetServiceInvocationValidator.checkRetrieveCategorisationByUrn(ctx, urn);
+
+        // Retrieve
+        Categorisation categorisation = getCategorisationRepository().retrieveByUrn(urn);
+        return categorisation;
+    }
+
+    @Override
+    public List<Categorisation> retrieveCategorisationsByDataset(ServiceContext ctx, String datasetVersionUrn) throws MetamacException {
+        // Validation
+        datasetServiceInvocationValidator.checkRetrieveCategorisationsByDataset(ctx, datasetVersionUrn);
+
+        // Retrieve
+        List<Categorisation> categorisations = getCategorisationRepository().retrieveCategorisationsByDatasetVersionUrn(datasetVersionUrn);
+        return categorisations;
+    }
+
+    @Override
+    public void deleteCategorisation(ServiceContext ctx, String urn) throws MetamacException {
+
+        // Validation
+        datasetServiceInvocationValidator.checkDeleteCategorisation(ctx, urn);
+
+        // Retrieve
+        Categorisation categorisation = getCategorisationRepository().retrieveByUrn(urn);
+        DatasetVersion datasetVersion = categorisation.getDatasetVersion();
+
+        // Check is not final
+        checkNotTasksInProgress(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getUrn());
+        ProcStatusValidator.checkStatisticalResourceCanBeEdited(datasetVersion);
+
+        // Delete
+        getCategorisationRepository().delete(categorisation);
+    }
+
+    @Override
+    public Categorisation endCategorisationValidity(ServiceContext ctx, String urn, DateTime validTo) throws MetamacException {
+        // Validation
+        datasetServiceInvocationValidator.checkEndCategorisationValidity(ctx, urn, validTo);
+
+        // Retrieve
+        Categorisation categorisation = getCategorisationRepository().retrieveByUrn(urn);
+        if (validTo == null) {
+            validTo = new DateTime();
+        }
+        categorisation.getVersionableStatisticalResource().setValidTo(validTo);
+        return getCategorisationRepository().save(categorisation);
+    }
+
+    @Override
+    public PagedResult<Categorisation> findCategorisationsByCondition(ServiceContext ctx, List<ConditionalCriteria> conditions, PagingParameter pagingParameter) throws MetamacException {
+        // Validation
+        datasetServiceInvocationValidator.checkFindCategorisationsByCondition(ctx, conditions, pagingParameter);
+
+        // Find
+        conditions = CriteriaUtils.initConditions(conditions, Categorisation.class);
+        pagingParameter = CriteriaUtils.initPagingParameter(pagingParameter);
+        PagedResult<Categorisation> pagedResult = getCategorisationRepository().findByCondition(conditions, pagingParameter);
+        return pagedResult;
+    }
+
+    // ------------------------------------------------------------------------
     // PRIVATE METHODS
     // ------------------------------------------------------------------------
 
@@ -1045,4 +1132,36 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         dataset.addVersion(datasetVersion);
         return getDatasetRepository().save(datasetVersion.getDataset());
     }
+
+    private void fillMetadataForCreateCategorisation(ServiceContext ctx, Categorisation categorisation) throws MetamacException {
+        if (categorisation.getDatasetVersion().getLifeCycleStatisticalResource().isPublishedVisible()) {
+            categorisation.getVersionableStatisticalResource().setValidFrom(new DateTime());
+        } else {
+            // NOTE: validFrom will be inherited from dataset when it was published
+            categorisation.getVersionableStatisticalResource().setValidFrom(null);
+        }
+        categorisation.getVersionableStatisticalResource().setValidTo(null);
+    }
+
+    private synchronized Categorisation assignCodeAndSaveCategorisation(Categorisation categorisation) throws MetamacException {
+        // Generate code and urn
+        String code = siemacStatisticalResourceGeneratedCode.fillGeneratedCodeForCreateCategorisation(categorisation);
+        String[] maintainerCodes = new String[]{categorisation.getMaintainer().getCodeNested()};
+        categorisation.getVersionableStatisticalResource().setVersionLogic(StatisticalResourcesVersionUtils.INITIAL_VERSION);
+        categorisation.getVersionableStatisticalResource().setCode(code);
+        categorisation.getVersionableStatisticalResource().setUrn(
+                GeneratorUrnUtils.generateSdmxCategorisationUrn(maintainerCodes, categorisation.getVersionableStatisticalResource().getCode(), categorisation.getVersionableStatisticalResource()
+                        .getVersionLogic()));
+        identifiableStatisticalResourceRepository.checkDuplicatedUrn(categorisation.getVersionableStatisticalResource());
+
+        // Title
+        InternationalString title = new InternationalString();
+        title.addText(new LocalisedString("es", "Categoría " + code));
+        title.addText(new LocalisedString("en", "Category " + code));
+        title.addText(new LocalisedString("pt", "Categoria " + code));
+        categorisation.getVersionableStatisticalResource().setTitle(title);
+
+        return getCategorisationRepository().save(categorisation);
+    }
+
 }

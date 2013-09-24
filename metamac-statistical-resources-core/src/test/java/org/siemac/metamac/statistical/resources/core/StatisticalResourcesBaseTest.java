@@ -16,6 +16,7 @@ import org.siemac.metamac.statistical.resources.core.constants.StatisticalResour
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourcesRoleEnum;
 import org.siemac.metamac.statistical.resources.core.task.serviceimpl.TaskServiceImpl;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.configuration.MockAnnotationRule;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.CategorisationMockFactory;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.ChapterMockFactory;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.CubeMockFactory;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetMockFactory;
@@ -49,6 +50,7 @@ public abstract class StatisticalResourcesBaseTest extends MetamacBaseTest {
     protected DatasetMockFactory                            datasetMockFactory              = DatasetMockFactory.getInstance();
     protected DatasetVersionMockFactory                     datasetVersionMockFactory       = DatasetVersionMockFactory.getInstance();
     protected DatasourceMockFactory                         datasourceMockFactory           = DatasourceMockFactory.getInstance();
+    protected CategorisationMockFactory                     categorisationMockFactory       = CategorisationMockFactory.getInstance();
 
     protected final StatisticalResourcesNotPersistedDoMocks notPersistedDoMocks             = StatisticalResourcesNotPersistedDoMocks.getInstance();
     protected StatisticalResourcesPersistedDoMocks          persistedDoMocks                = StatisticalResourcesPersistedDoMocks.getInstance();

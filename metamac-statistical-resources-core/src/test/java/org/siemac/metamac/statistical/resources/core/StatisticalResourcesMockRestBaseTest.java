@@ -93,6 +93,9 @@ public class StatisticalResourcesMockRestBaseTest extends StatisticalResourcesBa
                 case CONCEPT:
                     mockFindPublishedConcepts(allItems, publishedItems);
                     break;
+                case CATEGORY:
+                    mockFindPublishedCategories(allItems, publishedItems);
+                    break;
                 case DATASTRUCTURE:
                     mockFindPublishedDsd(allItems, publishedItems);
                     break;
@@ -136,6 +139,15 @@ public class StatisticalResourcesMockRestBaseTest extends StatisticalResourcesBa
                 srmRestInternalFacadeV10.findConcepts(Mockito.eq(RestApiConstants.WILDCARD_ALL), Mockito.eq(RestApiConstants.WILDCARD_ALL), Mockito.eq(RestApiConstants.WILDCARD_ALL),
                         Mockito.eq(SrmRestInternalFacadeV10MockUtils.mockQueryFindPublishedConceptsUrnsAsList(urns)), Mockito.isNull(String.class), Mockito.anyString(), Mockito.anyString()))
                 .thenReturn(SrmRestInternalFacadeV10MockUtils.mockConceptsWithOnlyUrns(publishedUrns));
+    }
+
+    protected void mockFindPublishedCategories(Collection<ExternalItem> allItems, Collection<ExternalItem> publishedItems) {
+        List<String> urns = getUrnsFromExternalItems(allItems);
+        List<String> publishedUrns = getUrnsFromExternalItems(publishedItems);
+        Mockito.when(
+                srmRestInternalFacadeV10.findCategories(Mockito.eq(RestApiConstants.WILDCARD_ALL), Mockito.eq(RestApiConstants.WILDCARD_ALL), Mockito.eq(RestApiConstants.WILDCARD_ALL),
+                        Mockito.eq(SrmRestInternalFacadeV10MockUtils.mockQueryFindPublishedCategoriesUrnsAsList(urns)), Mockito.isNull(String.class), Mockito.anyString(), Mockito.anyString()))
+                .thenReturn(SrmRestInternalFacadeV10MockUtils.mockCategoriesWithOnlyUrns(publishedUrns));
     }
 
     protected void mockFindPublishedDsd(Collection<ExternalItem> allItems, Collection<ExternalItem> publishedItems) {

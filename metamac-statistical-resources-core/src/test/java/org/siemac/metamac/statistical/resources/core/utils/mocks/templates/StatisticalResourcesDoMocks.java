@@ -24,6 +24,8 @@ import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
 import org.siemac.metamac.statistical.resources.core.common.domain.InternationalString;
 import org.siemac.metamac.statistical.resources.core.common.domain.LocalisedString;
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResource;
+import org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConstants;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.Categorisation;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.CodeDimension;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
@@ -110,6 +112,23 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
     // -----------------------------------------------------------------
 
     public abstract DatasetVersion mockDatasetVersion();
+
+    // -----------------------------------------------------------------
+    // CATEGORISATION
+    // -----------------------------------------------------------------
+    public Categorisation mockCategorisation(Categorisation categorisation) {
+        if (categorisation.getVersionableStatisticalResource() == null) {
+            categorisation.setVersionableStatisticalResource(new VersionableStatisticalResource());
+        }
+
+        if (categorisation.getVersionableStatisticalResource().getCode() == null) {
+            categorisation.getVersionableStatisticalResource().setCode(StatisticalResourcesConstants.CATEGORISATION_CODE_PREFIX + new DateTime().toString());
+        }
+
+        categorisation.setVersionableStatisticalResource(mockVersionableStatisticalResource(categorisation.getVersionableStatisticalResource(), TypeRelatedResourceEnum.CATEGORISATION));
+
+        return categorisation;
+    }
 
     // -----------------------------------------------------------------
     // PUBLICATION VERSION
@@ -602,6 +621,10 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
 
     public static ExternalItem mockCodeExternalItem(String code, String title) {
         return mockExternalItem(code, mockCodeUrn(code), TypeExternalArtefactsEnum.CODE);
+    }
+
+    public static ExternalItem mockCategoryExternalItem(String code) {
+        return mockExternalItem(code, mockCategoryUrn(code), TypeExternalArtefactsEnum.CATEGORY);
     }
 
     public static ExternalItem mockDsdExternalItem() {

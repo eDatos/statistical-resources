@@ -27,4 +27,8 @@ public class LifeCycleStatisticalResource extends LifeCycleStatisticalResourceBa
             return this.getProcStatus();
         }
     }
+
+    public boolean isPublishedVisible() {
+        return ProcStatusEnum.PUBLISHED.equals(getEffectiveProcStatus());
+    }
 }

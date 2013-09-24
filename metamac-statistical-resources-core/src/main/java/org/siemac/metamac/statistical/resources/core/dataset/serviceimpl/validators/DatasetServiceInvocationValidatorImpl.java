@@ -7,11 +7,13 @@ import java.util.List;
 
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
 import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
+import org.joda.time.DateTime;
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.statistical.resources.core.base.validators.BaseInvocationValidator;
 import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.Categorisation;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
 import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
@@ -238,6 +240,39 @@ public class DatasetServiceInvocationValidatorImpl extends BaseInvocationValidat
 
     public static void checkCheckAttributesInstancesWithDatasetAndDimensionAttachment(DatasetVersion datasetVersion, List<MetamacExceptionItem> exceptions) {
         checkExistingDatasetVersion(datasetVersion, ServiceExceptionParameters.DATASET_VERSION, exceptions);
+    }
+
+    // CATEGORISATION
+    // ----------------
+
+    public static void checkCreateCategorisation(Categorisation categorisation, List<MetamacExceptionItem> exceptions) {
+        StatisticalResourcesValidationUtils.checkParameterRequired(categorisation, ServiceExceptionParameters.CATEGORISATION, exceptions);
+        if (categorisation == null) {
+            return;
+        }
+        StatisticalResourcesValidationUtils.checkMetadataRequired(categorisation.getDatasetVersion(), ServiceExceptionParameters.CATEGORISATION__DATASET_VERSION, exceptions);
+        StatisticalResourcesValidationUtils.checkMetadataRequired(categorisation.getCategory(), ServiceExceptionParameters.CATEGORISATION__CATEGORY, exceptions);
+        StatisticalResourcesValidationUtils.checkMetadataRequired(categorisation.getMaintainer(), ServiceExceptionParameters.CATEGORISATION__MAINTAINER, exceptions);
+    }
+
+    public static void checkRetrieveCategorisationByUrn(String urn, List<MetamacExceptionItem> exceptions) {
+        StatisticalResourcesValidationUtils.checkParameterRequired(urn, ServiceExceptionSingleParameters.URN, exceptions);
+    }
+
+    public static void checkRetrieveCategorisationsByDataset(String datasetVersionUrn, List<MetamacExceptionItem> exceptions) {
+        StatisticalResourcesValidationUtils.checkParameterRequired(datasetVersionUrn, ServiceExceptionSingleParameters.URN, exceptions);
+    }
+
+    public static void checkFindCategorisationsByCondition(List<ConditionalCriteria> conditions, PagingParameter pagingParameter, List<MetamacExceptionItem> exceptions) {
+        // NOTHING
+    }
+
+    public static void checkDeleteCategorisation(String urn, List<MetamacExceptionItem> exceptions) {
+        StatisticalResourcesValidationUtils.checkParameterRequired(urn, ServiceExceptionSingleParameters.URN, exceptions);
+    }
+
+    public static void checkEndCategorisationValidity(String urn, DateTime validTo, List<MetamacExceptionItem> exceptions) {
+        StatisticalResourcesValidationUtils.checkParameterRequired(urn, ServiceExceptionSingleParameters.URN, exceptions);
     }
 
 }

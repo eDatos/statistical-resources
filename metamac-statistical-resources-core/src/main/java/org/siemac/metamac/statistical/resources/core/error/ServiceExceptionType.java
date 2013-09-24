@@ -24,6 +24,9 @@ public class ServiceExceptionType extends CommonServiceExceptionType {
     public static final CommonServiceExceptionType DATASOURCE_DATA_DELETE_ERROR                                           = create("exception.resources.datasource.data.delete_error");
     public static final CommonServiceExceptionType DATASOURCE_IN_DATASET_VERSION_WITH_QUERIES_DELETE_ERROR                = create("exception.resources.datasource.data.datasetversion_with_queries_delete_error");
 
+    // Categorisation
+    public static final CommonServiceExceptionType CATEGORISATION_NOT_FOUND                                               = create("exception.resources.categorisation.not_found");
+
     // Publication
     public static final CommonServiceExceptionType PUBLICATION_NOT_FOUND                                                  = create("exception.resources.publication.not_found");
     public static final CommonServiceExceptionType PUBLICATION_VERSION_NOT_FOUND                                          = create("exception.resources.publication.version_not_found");

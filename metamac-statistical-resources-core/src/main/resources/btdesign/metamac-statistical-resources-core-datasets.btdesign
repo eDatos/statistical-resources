@@ -22,6 +22,8 @@ Application DatasetsStatisticalResources {
 			> @CodeDimensionRepository
 			> @StatisticOfficialityRepository
 			> @TaskService
+ 			> @CategorisationRepository
+ 			> @CategorisationSequenceRepository
 			
 			// Datasources
 			@Datasource createDatasource(String datasetVersionUrn, @Datasource datasource) throws MetamacException;
@@ -75,6 +77,20 @@ Application DatasetsStatisticalResources {
     		
     		// Statistic officialities
     		List<@StatisticOfficiality> findStatisticOfficialities() throws MetamacException;
+    		
+    		// Categorisations
+    		"Creates categorisation"
+    		@Categorisation createCategorisation(@Categorisation categorisation) throws MetamacException;
+    		"Retrieves categorisation by urn"
+    		@Categorisation retrieveCategorisationByUrn(String urn) throws MetamacException;
+    		"Deletes categorisation"
+    		deleteCategorisation(String urn) throws MetamacException;
+    		"Ends the validity of a categorisation. ValidTo date is optional"
+    		@Categorisation endCategorisationValidity(String urn, DateTimeTZ validTo) throws MetamacException;
+    		"Retrieves all categorisations by dataset"
+    		List<@Categorisation> retrieveCategorisationsByDataset(String datasetVersionUrn) throws MetamacException;
+			"Finds categorisations by criteria"
+    		PagedResult<@Categorisation> findCategorisationsByCondition(List<ConditionalCriteria> conditions, PagingParameter pagingParameter)  throws MetamacException;
 		}  
 
 		// ----------------------------------------------------------------
@@ -198,6 +214,8 @@ Application DatasetsStatisticalResources {
 			- @Dataset dataset not nullable cascade="none" databaseColumn="DATASET_FK" <-> versions;
 			"Data sources"
 			- Bag<@Datasource> datasources cascade="all-delete-orphan" fetch="lazy" inverse orderby="id asc" <-> datasetVersion;
+			"Categorisations"
+			- Bag<@Categorisation> categorisations cascade="all-delete-orphan" fetch="lazy" inverse <-> datasetVersion;
 
 			Repository DatasetVersionRepository {
 				save;
@@ -295,5 +313,52 @@ Application DatasetsStatisticalResources {
     		String identifier;
     		String title length="4000";
     	}
+    	
+    	"Associates an Dataset with a Category"
+		Entity Categorisation {
+			databaseTable = "TB_CATEGORISATIONS"
+			hint = "idSequence=CATEGORISATIONS"
+			gap
+			
+			Long id key;
+			- @ExternalItem category not nullable cascade="all" databaseColumn="CATEGORY_FK";
+			- @DatasetVersion datasetVersion not nullable cascade="none" databaseColumn="DATASET_VERSION_FK" <-> categorisations;
+			- @VersionableStatisticalResource versionableStatisticalResource databaseColumn="VERSIONABLE_RESOURCE_FK" not nullable cascade="all";
+			- @ExternalItem maintainer cascade="all" databaseColumn="MAINTAINER_FK" not nullable;
+			
+			"Calculate valid from of categorisation. If categorisation was created after dataset publication, validFrom will be equals to categorisation creation date. Otherwise, it will be validFrom of dataset"
+			DateTimeTZ validFromEffective nullable transient;
+			"Calculate valid to of categorisation. If categorisation validity was finished, validTo will be this date. Otherwise, it will be validTo of dataset"
+			DateTimeTZ validToEffective nullable transient;
+			
+			Repository CategorisationRepository {
+				save;
+				delete;			
+				findByCondition;
+				findByCondition(PagingParameter pagingParameter);
+				findByQuery(String query, Map<String, Object> parameters);
+				findByQuery(String query, Map<String, Object> parameters, int maxResult);
+				@Categorisation retrieveByUrn(String urn) throws MetamacException;
+				List<@Categorisation> retrieveCategorisationsByDatasetVersionUrn(String urn) throws MetamacException;
+			}
+		}
+		
+		"Sequences to generate unique identifiers to categorisations"
+		Entity CategorisationSequence {
+			databaseTable = "TB_CATEGORISATION_SEQUENCES"
+			hint = "idSequence=CATEGORISATION_SEQUENCES"
+			!auditable
+			!optimisticLocking
+			
+			Long id not nullable key;
+			String maintainerUrn not nullable;
+			Long actualSequence not nullable;
+			
+			Repository CategorisationSequenceRepository {
+				save;
+				Long generateNextSequence(String maintainerUrn);
+				findByQuery(String query, Map<String, Object> parameters, int maxResult);
+			}
+		}
 	}
 }

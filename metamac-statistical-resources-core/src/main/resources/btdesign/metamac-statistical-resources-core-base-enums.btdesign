@@ -69,7 +69,8 @@ Application StatisticalResourcesEnums {
     		PUBLICATION,
     		CHAPTER,
     		CUBE,
-    		DATASOURCE
+    		DATASOURCE,
+    		CATEGORISATION
     	}
     }
 }

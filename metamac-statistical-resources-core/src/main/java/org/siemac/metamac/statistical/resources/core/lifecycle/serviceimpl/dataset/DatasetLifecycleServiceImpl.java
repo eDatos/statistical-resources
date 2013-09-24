@@ -12,6 +12,7 @@ import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
 import org.siemac.metamac.statistical.resources.core.common.domain.InternationalString;
 import org.siemac.metamac.statistical.resources.core.common.domain.LocalisedString;
 import org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConstants;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.Categorisation;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionRepository;
 import org.siemac.metamac.statistical.resources.core.dataset.utils.DatasetVersioningCopyUtils;
@@ -110,18 +111,22 @@ public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<Datase
         externalItemChecker.checkExternalItemsExternallyPublished(resource.getRelatedDsd(), addParameter(metadataName, ServiceExceptionSingleParameters.RELATED_DSD), exceptionItems);
 
         externalItemChecker.checkExternalItemsExternallyPublished(resource.getUpdateFrequency(), addParameter(metadataName, ServiceExceptionSingleParameters.UPDATE_FREQUENCY), exceptionItems);
+
+        for (Categorisation categorisation : resource.getCategorisations()) {
+            externalItemChecker.checkExternalItemsExternallyPublished(categorisation.getCategory(), addParameter(metadataName, ServiceExceptionSingleParameters.CATEGORISATIONS), exceptionItems);
+        }
     }
 
     @Override
     protected void applySendToPublishedCurrentResource(ServiceContext ctx, DatasetVersion resource) throws MetamacException {
         resource.setBibliographicCitation(buildBibliographicCitation(resource));
     }
-    
+
     @Override
     protected void applySendToPublishedPreviousResource(ServiceContext ctx, DatasetVersion resource) throws MetamacException {
-        
+
     }
-    
+
     private InternationalString buildBibliographicCitation(DatasetVersion resource) {
         ExternalItem rightsHolder = resource.getSiemacMetadataStatisticalResource().getCreator();
         String version = resource.getSiemacMetadataStatisticalResource().getVersionLogic();
@@ -150,7 +155,6 @@ public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<Datase
             return internationaString.getLocalisedLabel(locale);
         }
     }
-
 
     // ------------------------------------------------------------------------------------------------------
     // >> VERSIONING

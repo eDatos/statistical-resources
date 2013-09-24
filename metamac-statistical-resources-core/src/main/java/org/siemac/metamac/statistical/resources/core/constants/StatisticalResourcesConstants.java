@@ -7,6 +7,7 @@ public class StatisticalResourcesConstants {
     public static String       ATTRIBUTE_DATA_SOURCE_ID                  = "DATA_SOURCE_ID";
     public static final String BIBLIOGRAPHIC_CITATION_URI_TOKEN          = "#URI#";
     public static final String TEMPORAL_DIMENSION_ID                     = "TIME_PERIOD";
+    public static final String CATEGORISATION_CODE_PREFIX                = "cat_data_";
 
     public static final String PX_EXTENSION                              = ".px";
     public static final String SDMX_EXTENSION                            = ".xml";

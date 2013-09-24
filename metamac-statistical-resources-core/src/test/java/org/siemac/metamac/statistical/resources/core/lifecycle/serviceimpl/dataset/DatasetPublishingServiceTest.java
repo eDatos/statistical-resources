@@ -18,6 +18,7 @@ import org.siemac.metamac.statistical.resources.core.StatisticalResourcesMockRes
 import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.common.domain.InternationalString;
 import org.siemac.metamac.statistical.resources.core.common.domain.LocalisedString;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.Categorisation;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionRepository;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceapi.LifecycleService;
@@ -25,7 +26,6 @@ import org.siemac.metamac.statistical.resources.core.task.serviceapi.TaskService
 import org.siemac.metamac.statistical.resources.core.utils.TaskMockUtils;
 import org.siemac.metamac.statistical.resources.core.utils.asserts.BaseAsserts;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.configuration.MetamacMock;
-import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.context.ContextConfiguration;
@@ -154,6 +154,9 @@ public class DatasetPublishingServiceTest extends StatisticalResourcesMockRestBa
         exceptionItems.addAll(buildExternalItemsNotPublishedExceptions(datasetVersion.getStatisticalUnit(), prefix, "statisticalUnit"));
         exceptionItems.add(buildExternalItemNotPublishedException(datasetVersion.getRelatedDsd(), prefix, "relatedDsd"));
         exceptionItems.add(buildExternalItemNotPublishedException(datasetVersion.getUpdateFrequency(), prefix, "updateFrequency"));
+        for (Categorisation categorisation : datasetVersion.getCategorisations()) {
+            exceptionItems.add(buildExternalItemNotPublishedException(categorisation.getCategory(), prefix, "categorisations"));
+        }
         return exceptionItems;
     }
 
@@ -192,6 +195,9 @@ public class DatasetPublishingServiceTest extends StatisticalResourcesMockRestBa
         mockExternalItemsNotPublished(datasetVersion.getStatisticalUnit());
         mockExternalItemNotPublished(datasetVersion.getRelatedDsd());
         mockExternalItemNotPublished(datasetVersion.getUpdateFrequency());
+        for (Categorisation categorisation : datasetVersion.getCategorisations()) {
+            mockExternalItemNotPublished(categorisation.getCategory());
+        }
     }
 
     private void mockDatasetVersionExternalItemsPublished(DatasetVersion datasetVersion) {
@@ -202,6 +208,9 @@ public class DatasetPublishingServiceTest extends StatisticalResourcesMockRestBa
         mockExternalItemsPublished(datasetVersion.getStatisticalUnit());
         mockExternalItemPublished(datasetVersion.getRelatedDsd());
         mockExternalItemPublished(datasetVersion.getUpdateFrequency());
+        for (Categorisation categorisation : datasetVersion.getCategorisations()) {
+            mockExternalItemPublished(categorisation.getCategory());
+        }
     }
 
     private void mockAllTaskInProgressForDatasetVersion(boolean status) throws MetamacException {

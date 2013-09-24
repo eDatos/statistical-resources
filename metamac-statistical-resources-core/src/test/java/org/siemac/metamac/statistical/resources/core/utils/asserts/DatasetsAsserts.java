@@ -16,6 +16,7 @@ import org.apache.commons.lang.StringUtils;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
 import org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConstants;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.Categorisation;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.CodeDimension;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
@@ -403,4 +404,20 @@ public class DatasetsAsserts extends BaseAsserts {
             assertTrue(stringSet.contains(codeItemDto.getCode()));
         }
     }
+
+    // -----------------------------------------------------------------
+    // CATEGORISATION: DO & DO
+    // -----------------------------------------------------------------
+
+    public static void assertEqualsCategorisation(Categorisation expected, Categorisation actual) throws MetamacException {
+        assertEqualsNullability(expected, actual);
+        if (expected == null) {
+            return;
+        }
+        assertEqualsVersionableStatisticalResource(expected.getVersionableStatisticalResource(), actual.getVersionableStatisticalResource());
+        assertEqualsDatasetVersion(expected.getDatasetVersion(), actual.getDatasetVersion());
+        assertEqualsExternalItem(expected.getCategory(), actual.getCategory());
+        assertEqualsExternalItem(expected.getMaintainer(), actual.getMaintainer());
+    }
+
 }

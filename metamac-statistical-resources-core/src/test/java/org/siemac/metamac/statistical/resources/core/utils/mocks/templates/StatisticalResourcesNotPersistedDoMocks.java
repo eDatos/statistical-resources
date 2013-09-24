@@ -7,6 +7,7 @@ import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataS
 import org.siemac.metamac.statistical.resources.core.base.domain.StatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.VersionableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResource;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.Categorisation;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.StatisticOfficiality;
@@ -139,7 +140,6 @@ public class StatisticalResourcesNotPersistedDoMocks extends StatisticalResource
         DatasetVersion datasetVersion = new DatasetVersion();
         datasetVersion.setDataset(null);
         datasetVersion.setSiemacMetadataStatisticalResource(mockSiemacMetadataStatisticalResource(new SiemacMetadataStatisticalResource(), TypeRelatedResourceEnum.DATASET_VERSION));
-
         return datasetVersion;
     }
 
@@ -147,6 +147,18 @@ public class StatisticalResourcesNotPersistedDoMocks extends StatisticalResource
         DatasetVersion datasetVersion = mockDatasetVersion();
         datasetVersion.setSiemacMetadataStatisticalResource(null);
         return datasetVersion;
+    }
+
+    // -----------------------------------------------------------------
+    // CATEGORISATION
+    // -----------------------------------------------------------------
+    public Categorisation mockCategorisation(DatasetVersion datasetVersion, String maintainerCode, String categoryCode) {
+        Categorisation categorisation = new Categorisation();
+        categorisation.setDatasetVersion(datasetVersion);
+        categorisation.setCategory(StatisticalResourcesDoMocks.mockCategoryExternalItem(categoryCode));
+        categorisation.setVersionableStatisticalResource(mockVersionableStatisticalResource(new VersionableStatisticalResource(), TypeRelatedResourceEnum.CATEGORISATION));
+        categorisation.setMaintainer(StatisticalResourcesDoMocks.mockAgencyExternalItem(maintainerCode, "ISTAC." + maintainerCode));
+        return categorisation;
     }
 
     // -----------------------------------------------------------------
