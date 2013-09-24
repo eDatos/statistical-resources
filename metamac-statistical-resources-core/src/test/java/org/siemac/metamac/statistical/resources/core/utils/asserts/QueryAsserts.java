@@ -11,6 +11,7 @@ import java.util.Map;
 
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.common.domain.InternationalString;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.CodeItemDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionBaseDto;
@@ -50,7 +51,8 @@ public class QueryAsserts extends BaseAsserts {
 
     private static void assertEqualsQueryVersion(QueryVersion expected, QueryVersion actual, boolean queryChecked) throws MetamacException {
         assertEqualsLifeCycleStatisticalResource(expected.getLifeCycleStatisticalResource(), actual.getLifeCycleStatisticalResource());
-        DatasetsAsserts.assertEqualsDatasetVersion(expected.getDatasetVersion(), actual.getDatasetVersion());
+        DatasetsAsserts.assertEqualsDatasetVersion(expected.getFixedDatasetVersion(), actual.getFixedDatasetVersion());
+        DatasetsAsserts.assertEqualsDataset(expected.getDataset(), actual.getDataset());
         assertEquals(expected.getType(), actual.getType());
         assertEquals(expected.getLatestDataNumber(), actual.getLatestDataNumber());
         assertEquals(expected.getLatestTemporalCodeInCreation(), actual.getLatestTemporalCodeInCreation());
@@ -72,6 +74,7 @@ public class QueryAsserts extends BaseAsserts {
                     try {
                         assertEqualsQueryVersionSelectionItem(expectedSelectionItem, actualSelectionItem);
                         found = true;
+                        break;
                     } catch (AssertionError e) {
                         found = false;
                     }
@@ -297,20 +300,17 @@ public class QueryAsserts extends BaseAsserts {
     // DATASET VERSION: QUERY AND DATASETVERSION URN
     // -----------------------------------------------------------------
     private static void assertEqualsRelatedDatasetVersionInQueryVersion(QueryVersion entity, RelatedResourceDto relatedDataset) {
-        String datasetVersionEntityUrn = null;
-        String datasetVersionEntityCode = null;
-        InternationalString datasetVersionEntityTitle = null;
-
-        if (entity.getDatasetVersion() != null && entity.getDatasetVersion().getSiemacMetadataStatisticalResource() != null) {
-            datasetVersionEntityUrn = entity.getDatasetVersion().getSiemacMetadataStatisticalResource().getUrn();
-            datasetVersionEntityTitle = entity.getDatasetVersion().getSiemacMetadataStatisticalResource().getTitle();
-            datasetVersionEntityCode = entity.getDatasetVersion().getSiemacMetadataStatisticalResource().getCode();
+        DatasetVersion datasetLinkedToQuery = null;
+        if (entity.getDataset() != null) {
+            datasetLinkedToQuery = entity.getDataset().getVersions().get(entity.getDataset().getVersions().size() - 1);
+        } else if (entity.getFixedDatasetVersion() != null) {
+            datasetLinkedToQuery = entity.getFixedDatasetVersion();
         }
 
-        assertEquals(datasetVersionEntityUrn, relatedDataset.getUrn());
+        assertEquals(datasetLinkedToQuery.getSiemacMetadataStatisticalResource().getUrn(), relatedDataset.getUrn());
         assertEquals(TypeRelatedResourceEnum.DATASET_VERSION, relatedDataset.getType());
-        assertEquals(datasetVersionEntityCode, relatedDataset.getCode());
-        assertEqualsInternationalString(datasetVersionEntityTitle, relatedDataset.getTitle());
+        assertEquals(datasetLinkedToQuery.getSiemacMetadataStatisticalResource().getCode(), relatedDataset.getCode());
+        assertEqualsInternationalString(datasetLinkedToQuery.getSiemacMetadataStatisticalResource().getTitle(), relatedDataset.getTitle());
 
     }
 }

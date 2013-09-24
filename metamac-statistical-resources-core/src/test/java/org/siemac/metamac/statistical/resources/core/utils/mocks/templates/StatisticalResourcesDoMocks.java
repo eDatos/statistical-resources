@@ -42,6 +42,7 @@ import org.siemac.metamac.statistical.resources.core.query.domain.CodeItem;
 import org.siemac.metamac.statistical.resources.core.query.domain.Query;
 import org.siemac.metamac.statistical.resources.core.query.domain.QuerySelectionItem;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.DatasetVersionMock;
 
 public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
 
@@ -53,8 +54,16 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
     // -----------------------------------------------------------------
     public abstract QueryVersion mockQueryVersion(DatasetVersion datasetVersion, boolean isDatasetLastVersion);
 
+    public abstract QueryVersion mockQueryVersion(Dataset dataset);
+
     public QueryVersion mockQueryVersionWithGeneratedDatasetVersion() {
-        DatasetVersion datasetVersion = mockDatasetVersion();
+        DatasetVersionMock template = new DatasetVersionMock();
+        template.addDimensionsCoverage(new CodeDimension("DIM01", "CODE01"));
+        template.addDimensionsCoverage(new CodeDimension("DIM01", "CODE02"));
+        template.addDimensionsCoverage(new CodeDimension("DIM02", "CODE01"));
+        template.addDimensionsCoverage(new CodeDimension("DIM02", "CODE02"));
+
+        DatasetVersion datasetVersion = mockDatasetVersion(template);
         QueryVersion query = mockQueryVersion(datasetVersion, true);
         return query;
     }
@@ -63,18 +72,35 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
         return mockQueryVersion(datasetVersion, isDatasetLastVersion);
     }
 
-    protected QuerySelectionItem mockQuerySelectionItem() {
-        QuerySelectionItem querySelectionItem = new QuerySelectionItem();
-        querySelectionItem.setDimension("SEX");
-        querySelectionItem.addCode(mockCodeItem());
-        return querySelectionItem;
-    }
-
     private static CodeItem mockCodeItem() {
         CodeItem code = new CodeItem();
         code.setCode(mockString(6));
         code.setTitle(mockString(6));
         return code;
+    }
+
+    protected void mockQuerySelectionFromDatasetVersion(QueryVersion queryVersion, DatasetVersion datasetVersion) {
+        List<CodeDimension> codes = datasetVersion.getDimensionsCoverage();
+
+        if (codes.isEmpty()) {
+            throw new IllegalArgumentException("Can't create a query linked to a dataset with no coverages");
+        }
+
+        Map<String, QuerySelectionItem> selections = new HashMap<String, QuerySelectionItem>();
+        for (CodeDimension code : codes) {
+            String dimensionId = code.getDsdComponentId();
+            QuerySelectionItem selectionItem = selections.get(dimensionId);
+            if (selectionItem == null) {
+                selectionItem = new QuerySelectionItem();
+                selectionItem.setDimension(dimensionId);
+                selections.put(dimensionId, selectionItem);
+            }
+            selectionItem.addCode(new CodeItem(code.getIdentifier()));
+        }
+        queryVersion.getSelection().clear();
+        for (String dimensionId : selections.keySet()) {
+            queryVersion.addSelection(selections.get(dimensionId));
+        }
     }
 
     // -----------------------------------------------------------------
@@ -112,6 +138,8 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
     // -----------------------------------------------------------------
 
     public abstract DatasetVersion mockDatasetVersion();
+
+    public abstract DatasetVersion mockDatasetVersion(DatasetVersionMock datasetVersion);
 
     // -----------------------------------------------------------------
     // CATEGORISATION
@@ -733,5 +761,17 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
         code.setIdentifier(identifier);
         code.setTitle(title);
         return code;
+    }
+
+    // -----------------------------------------------------------------
+    // UTILS
+    // -----------------------------------------------------------------
+    public static DatasetVersion getDatasetVersionInQueryVersion(QueryVersion queryVersion) {
+        if (queryVersion.getFixedDatasetVersion() != null) {
+            return queryVersion.getFixedDatasetVersion();
+        } else if (queryVersion.getDataset() != null) {
+            return queryVersion.getDataset().getVersions().get(queryVersion.getDataset().getVersions().size() - 1);
+        }
+        return null;
     }
 }

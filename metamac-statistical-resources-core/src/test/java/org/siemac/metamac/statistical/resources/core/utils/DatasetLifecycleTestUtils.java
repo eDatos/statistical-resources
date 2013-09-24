@@ -2,11 +2,11 @@ package org.siemac.metamac.statistical.resources.core.utils;
 
 import org.joda.time.DateTime;
 import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
+import org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConstants;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.CodeDimension;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.StatisticOfficiality;
-import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasourceMockFactory;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesDoMocks;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesPersistedDoMocks;
@@ -15,52 +15,81 @@ public class DatasetLifecycleTestUtils {
 
     private static StatisticalResourcesPersistedDoMocks persistedMocks = StatisticalResourcesPersistedDoMocks.getInstance();
 
+    // *****************************************************
+    // PRODUCTION VALIDATION
+    // *****************************************************
+
     public static void prepareToProductionValidation(DatasetVersion datasetVersion) {
         LifecycleTestUtils.prepareToProductionValidationSiemac(datasetVersion);
         prepareToLifecycleCommonDatasetVersion(datasetVersion);
     }
 
     public static void fillAsProductionValidation(DatasetVersion datasetVersion) {
+        prepareToProductionValidation(datasetVersion);
         LifecycleTestUtils.fillAsProductionValidationSiemac(datasetVersion);
     }
 
+    // *****************************************************
+    // DIFFUSION VALIDATION
+    // *****************************************************
+
     public static void prepareToDiffusionValidation(DatasetVersion datasetVersion) {
-        prepareToProductionValidation(datasetVersion);
+        fillAsProductionValidation(datasetVersion);
         LifecycleTestUtils.prepareToDiffusionValidationSiemac(datasetVersion);
     }
 
     public static void fillAsDiffusionValidation(DatasetVersion datasetVersion) {
+        prepareToDiffusionValidation(datasetVersion);
         LifecycleTestUtils.fillAsDiffusionValidationSiemac(datasetVersion);
     }
 
-    public static void prepareToPublished(DatasetVersion datasetVersion) {
-        prepareToDiffusionValidation(datasetVersion);
-        LifecycleTestUtils.prepareToPublishingSiemac(datasetVersion);
-    }
-
-    public static void fillAsPublished(DatasetVersion datasetVersion) {
-        LifecycleTestUtils.fillAsPublishedSiemac(datasetVersion);
-    }
-
-    public static void prepareToVersioning(DatasetVersion datasetVersion) {
-        prepareToPublished(datasetVersion);
-        LifecycleTestUtils.prepareToVersioningSiemac(datasetVersion);
-    }
-
-    public static void fillAsVersioned(DatasetVersion datasetVersion) {
-        LifecycleTestUtils.fillAsVersionedSiemac(datasetVersion);
-    }
+    // *****************************************************
+    // VALIDATON REJECTED
+    // *****************************************************
 
     public static void prepareToValidationRejected(DatasetVersion datasetVersion) {
-        prepareToProductionValidation(datasetVersion);
+        fillAsProductionValidation(datasetVersion);
         LifecycleTestUtils.prepareToValidationRejectedFromProductionValidationSiemac(datasetVersion);
     }
 
     public static void fillAsValidationRejected(DatasetVersion datasetVersion) {
+        prepareToValidationRejected(datasetVersion);
         LifecycleTestUtils.fillAsValidationRejectedFromProductionValidationSiemac(datasetVersion);
     }
 
-    public static void prepareToLifecycleCommonDatasetVersion(DatasetVersion datasetVersion) {
+    // *****************************************************
+    // PUBLISHING
+    // *****************************************************
+
+    public static void prepareToPublished(DatasetVersion datasetVersion) {
+        fillAsDiffusionValidation(datasetVersion);
+        LifecycleTestUtils.prepareToPublishingSiemac(datasetVersion);
+    }
+
+    public static void fillAsPublished(DatasetVersion datasetVersion) {
+        prepareToPublished(datasetVersion);
+        LifecycleTestUtils.fillAsPublishedSiemac(datasetVersion);
+    }
+
+    // *****************************************************
+    // VERSIONING
+    // *****************************************************
+
+    public static void prepareToVersioning(DatasetVersion datasetVersion) {
+        fillAsPublished(datasetVersion);
+        LifecycleTestUtils.prepareToVersioningSiemac(datasetVersion);
+    }
+
+    public static void fillAsVersioned(DatasetVersion datasetVersion) {
+        prepareToVersioning(datasetVersion);
+        LifecycleTestUtils.fillAsVersionedSiemac(datasetVersion);
+    }
+
+    // *****************************************************
+    // UTILS
+    // *****************************************************
+
+    private static void prepareToLifecycleCommonDatasetVersion(DatasetVersion datasetVersion) {
         ExternalItem geoGranularity = StatisticalResourcesPersistedDoMocks.mockCodeExternalItem();
         datasetVersion.addGeographicGranularity(geoGranularity);
 
@@ -89,33 +118,19 @@ public class DatasetLifecycleTestUtils {
     }
 
     private static void fillDimensionCoverages(DatasetVersion datasetVersion) {
-        datasetVersion.addDimensionsCoverage(new CodeDimension("TIME_PERIOD", "2012", "2012"));
-        datasetVersion.addDimensionsCoverage(new CodeDimension("TIME_PERIOD", "2011", "2011"));
-        datasetVersion.addDimensionsCoverage(new CodeDimension("TIME_PERIOD", "2010", "2010"));
-        datasetVersion.addDimensionsCoverage(new CodeDimension("GEO_DIM", "ES", "España"));
-        datasetVersion.addDimensionsCoverage(new CodeDimension("GEO_DIM", "ES61", "Andalucia"));
-        datasetVersion.addDimensionsCoverage(new CodeDimension("GEO_DIM", "ES70", "Canarias"));
-        datasetVersion.addDimensionsCoverage(new CodeDimension("GEO_DIM", "ES45", "Cataluña"));
-        datasetVersion.addDimensionsCoverage(new CodeDimension("MEAS_DIM", "C01", "Concept 01"));
-        datasetVersion.addDimensionsCoverage(new CodeDimension("MEAS_DIM", "C02", "Concept 02"));
-        datasetVersion.addDimensionsCoverage(new CodeDimension("MEAS_DIM", "C03", "Concept 03"));
-
-        datasetVersion.addTemporalCoverage(StatisticalResourcesDoMocks.mockTemporalCode("2012", "2012"));
-        datasetVersion.addTemporalCoverage(StatisticalResourcesDoMocks.mockTemporalCode("2011", "2011"));
-        datasetVersion.addTemporalCoverage(StatisticalResourcesDoMocks.mockTemporalCode("2010", "2010"));
-
-        datasetVersion.addGeographicCoverage(StatisticalResourcesDoMocks.mockCodeExternalItem("ES"));
-        datasetVersion.addGeographicCoverage(StatisticalResourcesDoMocks.mockCodeExternalItem("ES61"));
-        datasetVersion.addGeographicCoverage(StatisticalResourcesDoMocks.mockCodeExternalItem("ES70"));
-        datasetVersion.addGeographicCoverage(StatisticalResourcesDoMocks.mockCodeExternalItem("ES45"));
-
-        datasetVersion.addMeasureCoverage(StatisticalResourcesDoMocks.mockConceptExternalItem("C01"));
-        datasetVersion.addMeasureCoverage(StatisticalResourcesDoMocks.mockConceptExternalItem("C02"));
-        datasetVersion.addMeasureCoverage(StatisticalResourcesDoMocks.mockConceptExternalItem("C03"));
-
-        // Relations
-        for (CodeDimension code : datasetVersion.getDimensionsCoverage()) {
-            code.setDatasetVersion(datasetVersion);
+        if (datasetVersion.getDimensionsCoverage().isEmpty()) {
+            datasetVersion.addDimensionsCoverage(new CodeDimension("TIME_PERIOD", "2012", "2012"));
+            datasetVersion.addDimensionsCoverage(new CodeDimension("TIME_PERIOD", "2011", "2011"));
+            datasetVersion.addDimensionsCoverage(new CodeDimension("TIME_PERIOD", "2010", "2010"));
+            datasetVersion.addDimensionsCoverage(new CodeDimension("GEO_DIM", "ES", "España"));
+            datasetVersion.addDimensionsCoverage(new CodeDimension("GEO_DIM", "ES61", "Andalucia"));
+            datasetVersion.addDimensionsCoverage(new CodeDimension("GEO_DIM", "ES70", "Canarias"));
+            datasetVersion.addDimensionsCoverage(new CodeDimension("GEO_DIM", "ES45", "Cataluña"));
+            datasetVersion.addDimensionsCoverage(new CodeDimension("MEAS_DIM", "C01", "Concept 01"));
+            datasetVersion.addDimensionsCoverage(new CodeDimension("MEAS_DIM", "C02", "Concept 02"));
+            datasetVersion.addDimensionsCoverage(new CodeDimension("MEAS_DIM", "C03", "Concept 03"));
         }
+
+        StatisticalResourcesPersistedDoMocks.computeCoverageRelatedMetadata(datasetVersion);
     }
 }

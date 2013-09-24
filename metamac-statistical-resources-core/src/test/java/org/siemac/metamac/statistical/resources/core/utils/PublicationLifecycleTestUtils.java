@@ -4,73 +4,80 @@ import org.siemac.metamac.statistical.resources.core.publication.domain.Publicat
 
 public class PublicationLifecycleTestUtils {
 
+    // *****************************************************
+    // PRODUCTION VALIDATION
+    // *****************************************************
+
     public static void prepareToProductionValidation(PublicationVersion publicationVersion) {
         LifecycleTestUtils.prepareToProductionValidationSiemac(publicationVersion);
         prepareToLifecycleCommonPublicationVersion(publicationVersion);
     }
 
     public static void fillAsProductionValidation(PublicationVersion publicationVersion) {
+        prepareToProductionValidation(publicationVersion);
         LifecycleTestUtils.fillAsProductionValidationSiemac(publicationVersion);
     }
 
+    // *****************************************************
+    // DIFFUSION VALIDATION
+    // *****************************************************
+
     public static void prepareToDiffusionValidation(PublicationVersion publicationVersion) {
-        prepareToProductionValidation(publicationVersion);
+        fillAsProductionValidation(publicationVersion);
         LifecycleTestUtils.prepareToDiffusionValidationSiemac(publicationVersion);
     }
 
     public static void fillAsDiffusionValidation(PublicationVersion publicationVersion) {
+        prepareToDiffusionValidation(publicationVersion);
         LifecycleTestUtils.fillAsDiffusionValidationSiemac(publicationVersion);
     }
 
+    // *****************************************************
+    // VALIDATION REJECTED
+    // *****************************************************
+
     public static void prepareToValidationRejected(PublicationVersion publicationVersion) {
-        prepareToProductionValidation(publicationVersion);
+        fillAsProductionValidation(publicationVersion);
         LifecycleTestUtils.prepareToValidationRejectedFromProductionValidationSiemac(publicationVersion);
     }
 
     public static void fillAsValidationRejected(PublicationVersion publicationVersion) {
+        prepareToValidationRejected(publicationVersion);
         LifecycleTestUtils.fillAsValidationRejectedFromProductionValidationSiemac(publicationVersion);
     }
 
+    // *****************************************************
+    // PUBLISHING
+    // *****************************************************
+
     public static void prepareToPublished(PublicationVersion publicationVersion) {
-        prepareToDiffusionValidation(publicationVersion);
+        fillAsDiffusionValidation(publicationVersion);
         LifecycleTestUtils.prepareToPublishingSiemac(publicationVersion);
     }
 
     public static void fillAsPublished(PublicationVersion publicationVersion) {
+        prepareToPublished(publicationVersion);
         LifecycleTestUtils.fillAsPublishedSiemac(publicationVersion);
     }
 
+    // *****************************************************
+    // VERSIONING
+    // *****************************************************
+
     public static void prepareToVersioning(PublicationVersion publicationVersion) {
-        prepareToPublished(publicationVersion);
+        fillAsPublished(publicationVersion);
         LifecycleTestUtils.prepareToVersioningSiemac(publicationVersion);
     }
 
     public static void fillAsVersioned(PublicationVersion publicationVersion) {
+        prepareToVersioning(publicationVersion);
         LifecycleTestUtils.fillAsVersionedSiemac(publicationVersion);
     }
 
-    public static void prepareToLifecycleCommonPublicationVersion(PublicationVersion publicationVersion) {
+    private static void prepareToLifecycleCommonPublicationVersion(PublicationVersion publicationVersion) {
         // Inherited fields that need customization based on Resource's type
-        /*
-         * String code = buildPublicationCode(publicationVersion.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode(), 1);
-         * publicationVersion.getSiemacMetadataStatisticalResource().setCode(code);
-         * publicationVersion.getSiemacMetadataStatisticalResource().setUrn(buildPublicationVersionUrn(code, publicationVersion.getSiemacMetadataStatisticalResource().getVersionLogic()));
-         * publicationVersion.getSiemacMetadataStatisticalResource().setType(StatisticalResourceTypeEnum.COLLECTION);
-         */
 
         // FIXME: structure?
-    }
-
-    public static void prepareAsProductionValidation(PublicationVersion publicationVersion) {
-        prepareToDiffusionValidation(publicationVersion);
-    }
-
-    public static void prepareAsDiffusionValidation(PublicationVersion publicationVersion) {
-        prepareToPublished(publicationVersion);
-    }
-
-    public static void prepareAsValidationRejected(PublicationVersion publicationVersion) {
-        prepareToPublished(publicationVersion);
     }
 
 }

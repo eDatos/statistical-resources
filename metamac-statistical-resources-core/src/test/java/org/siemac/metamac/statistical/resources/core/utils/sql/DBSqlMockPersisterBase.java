@@ -25,14 +25,14 @@ import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 import org.springframework.transaction.support.TransactionTemplate;
 
-public class DBSqlMockPersister extends DBMockPersisterBase {
+public abstract class DBSqlMockPersisterBase extends DBMockPersisterBase {
 
-    private static Logger       logger             = LoggerFactory.getLogger(DBSqlMockPersister.class);
+    private static Logger       logger             = LoggerFactory.getLogger(DBSqlMockPersisterBase.class);
     private static List<String> tableOrder;
     private static List<String> sequences;
     private static boolean      sequencesRestarted = false;
 
-    private JdbcTemplate        jdbcTemplate;
+    protected JdbcTemplate      jdbcTemplate;
     private TransactionTemplate transactionTemplate;
 
     @Autowired
@@ -67,7 +67,7 @@ public class DBSqlMockPersister extends DBMockPersisterBase {
                     cleanDatabase();
                     long timeAfterClean = System.currentTimeMillis();
                     logger.info("Cleaning database time: " + (timeAfterClean - timeInit));
-                    populateDatabase(tableMetadatas);
+                    populateDatabaseBatch(tableMetadatas);
                     long timeAfterPopulate = System.currentTimeMillis();
                     logger.info("Populate database time: " + (timeAfterPopulate - timeAfterClean));
                 } catch (Exception e) {
@@ -90,6 +90,7 @@ public class DBSqlMockPersister extends DBMockPersisterBase {
         });
         logger.info("Mocks persisted in " + tableMetadatas.size() + " rows");
     }
+
     private List<TableMetadata> transformEntityToTableMetadata(List<EntityMetadata> mocksMetadata) {
         List<TableMetadata> transformList = new ArrayList<TableMetadata>();
         for (EntityMetadata entity : mocksMetadata) {
@@ -98,7 +99,7 @@ public class DBSqlMockPersister extends DBMockPersisterBase {
         return transformList;
     }
 
-    private void cleanDatabase() {
+    protected void cleanDatabase() {
         List<String> tables = getTableOrder();
         String[] statements = new String[tables.size()];
         int i = 0;
@@ -136,21 +137,7 @@ public class DBSqlMockPersister extends DBMockPersisterBase {
 
     }
 
-    private void restartSequences() {
-        if (!sequencesRestarted) {
-            List<String> sequences = getSequencesToRestart();
-            if (sequences != null && sequences.size() > 0) {
-                String[] statements = new String[sequences.size() * 2];
-                int i = 0;
-                for (String sequence : sequences) {
-                    statements[i++] = "drop sequence " + sequence;
-                    statements[i++] = "create sequence " + sequence + " START WITH 10000000";
-                }
-                jdbcTemplate.batchUpdate(statements);
-            }
-            sequencesRestarted = true;
-        }
-    }
+    protected abstract void restartSequences();
 
     private void populateDatabaseBatch(List<TableMetadata> tableMetadatas) {
         List<String> statements = new ArrayList<String>();
@@ -185,58 +172,9 @@ public class DBSqlMockPersister extends DBMockPersisterBase {
         }
     }
 
-    private void disableReferentialConstraints() {
-        // _disableAll();
-        jdbcTemplate.execute("SET CONSTRAINTS ALL DEFERRED");
-    }
+    protected abstract void disableReferentialConstraints();
 
-    private void _disableAll() {
-        List<String> statements = jdbcTemplate.query("SELECT 'alter table '|| table_name || ' disable constraints ' || constraint_name FROM user_constraints where constraint_type = 'R'",
-                new RowMapper<String>() {
-
-                    @Override
-                    public String mapRow(ResultSet rs, int rowNum) throws SQLException {
-                        return rs.getString(1);
-                    }
-                });
-        for (String statement : statements) {
-            jdbcTemplate.execute(statement);
-        }
-    }
-
-    private void enableReferentialConstraints() throws DataAccessException {
-        // _enableAll();
-        jdbcTemplate.execute("SET CONSTRAINTS ALL IMMEDIATE");
-    }
-
-    private void _enableAll() {
-        List<String> statements = jdbcTemplate.query("SELECT 'alter table '|| table_name || ' enable constraints ' || constraint_name FROM user_constraints where constraint_type = 'R'",
-                new RowMapper<String>() {
-
-                    @Override
-                    public String mapRow(ResultSet rs, int rowNum) throws SQLException {
-                        return rs.getString(1);
-                    }
-                });
-        for (String statement : statements) {
-            jdbcTemplate.execute(statement);
-        }
-    }
-
-    private List<String> queryIndexesNames() {
-        //@formatter:off
-        return jdbcTemplate.query(
-                "SELECT   distinct index_name " + 
-                "FROM     user_ind_columns", 
-                new RowMapper<String>() {
-        //@formatter:on
-
-            @Override
-            public String mapRow(ResultSet rs, int rowNum) throws SQLException {
-                return rs.getString(1);
-            }
-        });
-    }
+    protected abstract void enableReferentialConstraints() throws DataAccessException;
 
     private String buildSqlStatement(TableMetadata metadata) {
         StringBuilder builder = new StringBuilder();
@@ -266,21 +204,6 @@ public class DBSqlMockPersister extends DBMockPersisterBase {
             }
         }
         return tableOrder;
-    }
-
-    protected List<String> getSequencesToRestart() {
-        if (sequences == null) {
-            try {
-                URL url = this.getClass().getResource("/dbunit/oracle.properties");
-                Properties prop = new Properties();
-                prop.load(new FileInputStream(url.getFile()));
-                String sequencesStr = prop.getProperty("sequences");
-                sequences = Arrays.asList(sequencesStr.split(","));
-            } catch (Exception e) {
-                throw new IllegalStateException("Error loading properties which all sequences are specified", e);
-            }
-        }
-        return sequences;
     }
 
 }

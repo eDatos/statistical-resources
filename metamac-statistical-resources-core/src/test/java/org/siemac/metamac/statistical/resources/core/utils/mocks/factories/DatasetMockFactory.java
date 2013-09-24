@@ -11,18 +11,24 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_75_V01_FOR_DATASET_12_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_76_V02_FOR_DATASET_12_NAME;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import org.joda.time.DateTime;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryStatusEnum;
+import org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.query.QueryLifecycleServiceTest;
 import org.siemac.metamac.statistical.resources.core.publication.domain.ElementLevel;
 import org.siemac.metamac.statistical.resources.core.publication.domain.Publication;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
 import org.siemac.metamac.statistical.resources.core.query.domain.Query;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
 import org.siemac.metamac.statistical.resources.core.utils.DatasetLifecycleTestUtils;
+import org.siemac.metamac.statistical.resources.core.utils.QueryLifecycleTestUtils;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.DatasetMock;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.DatasetVersionMock;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.QueryVersionMock;
@@ -36,40 +42,53 @@ import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.Stati
 @SuppressWarnings("unused")
 public class DatasetMockFactory extends StatisticalResourcesMockFactory<Dataset> {
 
-    public static final String        DATASET_01_BASIC_NAME                                                                                                                    = "DATASET_01_BASIC";
+    public static final String        DATASET_01_BASIC_NAME                                                                                                                                                                = "DATASET_01_BASIC";
 
-    public static final String        DATASET_02_BASIC_WITH_GENERATED_VERSION_NAME                                                                                             = "DATASET_02_BASIC_WITH_GENERATED_VERSION";
+    public static final String        DATASET_02_BASIC_WITH_GENERATED_VERSION_NAME                                                                                                                                         = "DATASET_02_BASIC_WITH_GENERATED_VERSION";
 
-    public static final String        DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME                                                                                            = "DATASET_03_WITH_2_DATASET_VERSIONS";
+    public static final String        DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME                                                                                                                                        = "DATASET_03_WITH_2_DATASET_VERSIONS";
 
-    public static final String        DATASET_04_FULL_FILLED_WITH_1_DATASET_VERSIONS_NAME                                                                                      = "DATASET_04_FULL_FILLED_WITH_1_DATASET_VERSIONS";
+    public static final String        DATASET_04_FULL_FILLED_WITH_1_DATASET_VERSIONS_NAME                                                                                                                                  = "DATASET_04_FULL_FILLED_WITH_1_DATASET_VERSIONS";
 
-    public static final String        DATASET_05_WITH_MULTIPLE_PUBLISHED_VERSIONS_NAME                                                                                         = "DATASET_05_WITH_MULTIPLE_PUBLISHED_VERSIONS";
+    public static final String        DATASET_05_WITH_MULTIPLE_PUBLISHED_VERSIONS_NAME                                                                                                                                     = "DATASET_05_WITH_MULTIPLE_PUBLISHED_VERSIONS";
 
-    public static final String        DATASET_06_WITH_MULTIPLE_PUBLISHED_VERSIONS_AND_LATEST_NO_VISIBLE_NAME                                                                   = "DATASET_06_WITH_MULTIPLE_PUBLISHED_VERSIONS_AND_LATEST_NO_VISIBLE";
+    public static final String        DATASET_06_WITH_MULTIPLE_PUBLISHED_VERSIONS_AND_LATEST_NO_VISIBLE_NAME                                                                                                               = "DATASET_06_WITH_MULTIPLE_PUBLISHED_VERSIONS_AND_LATEST_NO_VISIBLE";
 
-    public static final String        DATASET_07_WITH_SINGLE_VERSION_AND_SINGLE_DATASOURCE_LINKED_TO_FILE_NAME                                                                 = "DATASET_07_WITH_SINGLE_VERSION_AND_SINGLE_DATASOURCE_LINKED_TO_FILE";
+    public static final String        DATASET_07_WITH_SINGLE_VERSION_AND_SINGLE_DATASOURCE_LINKED_TO_FILE_NAME                                                                                                             = "DATASET_07_WITH_SINGLE_VERSION_AND_SINGLE_DATASOURCE_LINKED_TO_FILE";
 
-    public static final String        DATASET_08_WITH_SINGLE_VERSION_AND_MULTIPLE_DATASOURCES_LINKED_TO_FILE_NAME                                                              = "DATASET_08_WITH_SINGLE_VERSION_AND_MULTIPLE_DATASOURCES_LINKED_TO_FILE";
+    public static final String        DATASET_08_WITH_SINGLE_VERSION_AND_MULTIPLE_DATASOURCES_LINKED_TO_FILE_NAME                                                                                                          = "DATASET_08_WITH_SINGLE_VERSION_AND_MULTIPLE_DATASOURCES_LINKED_TO_FILE";
 
-    public static final String        DATASET_09_WITH_SINGLE_VERSION_AND_SINGLE_DATASOURCE_LINKED_TO_FILE_WITH_UNDERSCORE_NAME                                                 = "DATASET_09_WITH_SINGLE_VERSION_AND_SINGLE_DATASOURCE_LINKED_TO_FILE_WITH_UNDERSCORE";
+    public static final String        DATASET_09_WITH_SINGLE_VERSION_AND_SINGLE_DATASOURCE_LINKED_TO_FILE_WITH_UNDERSCORE_NAME                                                                                             = "DATASET_09_WITH_SINGLE_VERSION_AND_SINGLE_DATASOURCE_LINKED_TO_FILE_WITH_UNDERSCORE";
 
-    public static final String        DATASET_10_WITH_TWO_VERSIONS_WITH_QUERIES__FIRST_VERSION_IS_REQUIRED_BY_TWO_QUERY_VERSIONS__SECOND_IS_REQUIRED_BY_ONE_QUERY_VERSION_NAME = "DATASET_10_WITH_TWO_VERSIONS_WITH_QUERIES__FIRST_VERSION_IS_REQUIRED_BY_TWO_QUERY_VERSIONS__SECOND_IS_REQUIRED_BY_ONE_QUERY_VERSION";
+    public static final String        DATASET_10_WITH_DRAFT_VERSION__WITH_ONE_QUERY_LINKED_TO_DATASET_NAME                                                                                                                 = "DATASET_10_WITH_DRAFT_VERSION__WITH_ONE_QUERY_LINKED_TO_DATASET";
 
-    public static final String        DATASET_11_WITH_TWO_VERSIONS_WITH_3_QUERIES__FIRST_VERSION_IS_PUBLISHED__SECOND_VERSION_IS_NOT_VISIBLE_ALL_QUERIES_COMPATIBLE_NAME       = "DATASET_11_WITH_TWO_VERSIONS_WITH_3_QUERIES__FIRST_VERSION_IS_PUBLISHED__SECOND_VERSION_IS_NOT_VISIBLE_ALL_QUERIES_COMPATIBLE";
+    public static final String        DATASET_11_WITH_NOT_VISIBLE_VERSION_WITH_TWO_QUERIES_DRAFT_AND_NOT_VISIBLE_LINKED_TO_DATASET_NAME                                                                                    = "DATASET_11_WITH_NOT_VISIBLE_VERSION_WITH_TWO_QUERIES_DRAFT_AND_NOT_VISIBLE_LINKED_TO_DATASET";
 
-    public static final String        DATASET_12_WITH_TWO_VERSIONS_WITH_QUERIES_IN_DRAFT_NAME                                                                                  = "DATASET_12_WITH_TWO_VERSIONS_WITH_QUERIES_IN_DRAFT";
+    public static final String        DATASET_12_WITH_PUBLISHED_VERSION_WITH_THREE_QUERIES_DRAFT_NOT_VISIBLE_AND_PUBLISHED_LINKED_TO_DATASET_NAME                                                                          = "DATASET_12_WITH_PUBLISHED_VERSION_WITH_THREE_QUERIES_DRAFT_NOT_VISIBLE_AND_PUBLISHED_LINKED_TO_DATASET";
 
-    public static final String        DATASET_13_WITH_DRAFT_AND_PUBLISHED__IS_PART_OF_PUBLICATIONS_DIFFERENT_STATUS_NAME                                                       = "DATASET_13_WITH_DRAFT_AND_PUBLISHED__IS_PART_OF_PUBLICATIONS_DIFFERENT_STATUS";
+    public static final String        DATASET_13_WITH_PUBLISHED_AND_DRAFT_VERSIONS_WITH_THREE_QUERIES_DRAFT_NOT_VISIBLE_AND_PUBLISHED_LINKED_TO_DATASET_NAME                                                               = "DATASET_13_WITH_PUBLISHED_AND_DRAFT_VERSIONS_WITH_THREE_QUERIES_DRAFT_NOT_VISIBLE_AND_PUBLISHED_LINKED_TO_DATASET";
 
-    public static final String        DATASET_14_WITH_PUBLISHED_AND_NOT_VISIBLE_VERSIONS__IS_PART_OF_PUBLICATIONS_DIFFERENT_STATUS_NAME                                        = "DATASET_14_WITH_PUBLISHED_AND_NOT_VISIBLE_VERSIONS__IS_PART_OF_PUBLICATIONS_DIFFERENT_STATUS";
+    public static final String        DATASET_14_WITH_PUBLISHED_AND_NOT_VISIBLE_VERSIONS_WITH_THREE_QUERIES_DRAFT_NOT_VISIBLE_AND_PUBLISHED_LINKED_TO_DATASET_NAME                                                         = "DATASET_14_WITH_PUBLISHED_AND_NOT_VISIBLE_VERSIONS_WITH_THREE_QUERIES_DRAFT_NOT_VISIBLE_AND_PUBLISHED_LINKED_TO_DATASET";
 
-    public static final String        DATASET_15_WITH_TWO_PUBLISHED_VERSIONS__IS_PART_OF_PUBLICATIONS_DIFFERENT_STATUS_NAME                                                    = "DATASET_15_WITH_TWO_PUBLISHED_VERSIONS__IS_PART_OF_PUBLICATIONS_DIFFERENT_STATUS";
+    public static final String        DATASET_15_WITH_TWO_PUBLISHED_VERSIONS_WITH_THREE_QUERIES_DRAFT_NOT_VISIBLE_AND_PUBLISHED_LINKED_TO_DATASET_NAME                                                                     = "DATASET_15_WITH_TWO_PUBLISHED_VERSIONS_WITH_THREE_QUERIES_DRAFT_NOT_VISIBLE_AND_PUBLISHED_LINKED_TO_DATASET";
 
-    public static final String        DATASET_16_SIMPLE_LINKED_TO_PUB_VERSION_17_NAME                                                                                          = "DATASET_16_SIMPLE_LINKED_TO_PUB_VERSION_17";
-    public static final String        DATASET_17_SIMPLE_LINKED_TO_PUB_VERSION_17_NAME                                                                                          = "DATASET_17_SIMPLE_LINKED_TO_PUB_VERSION_17";
+    public static final String        DATASET_16_WITH_PUBLISHED_AND_DRAFT_VERSIONS_WITH_THREE_QUERIES_DRAFT_NOT_VISIBLE_AND_PUBLISHED_LINKED_TO_DATASET_AND_ONE_QUERY_DRAFT_LINKED_TO_VERSION_NAME                         = "DATASET_16_WITH_PUBLISHED_AND_DRAFT_VERSIONS_WITH_THREE_QUERIES_DRAFT_NOT_VISIBLE_AND_PUBLISHED_LINKED_TO_DATASET_AND_ONE_QUERY_DRAFT_LINKED_TO_VERSION";
 
-    private static DatasetMockFactory instance                                                                                                                                 = null;
+    public static final String        DATASET_17_WITH_PUBLISHED_AND_NOT_VISIBLE_VERSIONS_WITH_THREE_QUERIES_DRAFT_NOT_VISIBLE_AND_PUBLISHED_LINKED_TO_DATASET_AND_TWO_QUERIES_DRAFT_NOT_VISIBLE_LINKED_TO_VERSION_NAME     = "DATASET_17_WITH_PUBLISHED_AND_NOT_VISIBLE_VERSIONS_WITH_THREE_QUERIES_DRAFT_NOT_VISIBLE_AND_PUBLISHED_LINKED_TO_DATASET_AND_TWO_QUERIES_DRAFT_NOT_VISIBLE_LINKED_TO_VERSION";
+
+    public static final String        DATASET_18_WITH_TWO_PUBLISHED_VERSIONS_WITH_THREE_QUERIES_DRAFT_NOT_VISIBLE_AND_PUBLISHED_LINKED_TO_DATASET_AND_THREE_QUERIES_DRAFT_NOT_VISIBLE_AND_PUBLISHED_LINKED_TO_VERSION_NAME = "DATASET_18_WITH_TWO_PUBLISHED_VERSIONS_WITH_THREE_QUERIES_DRAFT_NOT_VISIBLE_AND_PUBLISHED_LINKED_TO_DATASET_AND_THREE_QUERIES_DRAFT_NOT_VISIBLE_AND_PUBLISHED_LINKED_TO_VERSION";
+
+    public static final String        DATASET_19_WITH_DRAFT_AND_PUBLISHED__IS_PART_OF_PUBLICATIONS_DIFFERENT_STATUS_NAME                                                                                                   = "DATASET_19_WITH_DRAFT_AND_PUBLISHED__IS_PART_OF_PUBLICATIONS_DIFFERENT_STATUS";
+
+    public static final String        DATASET_20_WITH_PUBLISHED_AND_NOT_VISIBLE_VERSIONS__IS_PART_OF_PUBLICATIONS_DIFFERENT_STATUS_NAME                                                                                    = "DATASET_20_WITH_PUBLISHED_AND_NOT_VISIBLE_VERSIONS__IS_PART_OF_PUBLICATIONS_DIFFERENT_STATUS";
+
+    public static final String        DATASET_21_WITH_TWO_PUBLISHED_VERSIONS__IS_PART_OF_PUBLICATIONS_DIFFERENT_STATUS_NAME                                                                                                = "DATASET_21_WITH_TWO_PUBLISHED_VERSIONS__IS_PART_OF_PUBLICATIONS_DIFFERENT_STATUS";
+
+    public static final String        DATASET_22_SIMPLE_LINKED_TO_PUB_VERSION_17_NAME                                                                                                                                      = "DATASET_22_SIMPLE_LINKED_TO_PUB_VERSION_17";
+    public static final String        DATASET_23_SIMPLE_LINKED_TO_PUB_VERSION_17_NAME                                                                                                                                      = "DATASET_23_SIMPLE_LINKED_TO_PUB_VERSION_17";
+    public static final String        DATASET_24_SIMPLE_WITH_TWO_VERSIONS_WITH_QUERY_LINKED_TO_DATASET_NAME                                                                                                                = "DATASET_24_SIMPLE_WITH_TWO_VERSIONS_WITH_QUERY_LINKED_TO_DATASET";
+
+    private static DatasetMockFactory instance                                                                                                                                                                             = null;
 
     private DatasetMockFactory() {
     }
@@ -90,31 +109,27 @@ public class DatasetMockFactory extends StatisticalResourcesMockFactory<Dataset>
     }
 
     private static Dataset getDataset03With2DatasetVersions() {
-        DatasetMock dataset = new DatasetMock();
-        dataset.setSequentialId(1);
+        DatasetMock dataset = buildDatasetSimpleMock(1);
         getStatisticalResourcesPersistedDoMocks().mockDataset(dataset);
 
-        DatasetVersionMock templateV1 = new DatasetVersionMock();
-        templateV1.setDataset(dataset);
-        templateV1.setVersionLogic(INIT_VERSION);
-
+        DatasetVersionMock templateV1 = DatasetVersionMockFactory.buildSimpleVersion(dataset, INIT_VERSION);
         // not last version
         templateV1.getSiemacMetadataStatisticalResource().setCreationDate(new DateTime().minusDays(4));
         templateV1.getSiemacMetadataStatisticalResource().setValidFrom(new DateTime().minusDays(3));
         templateV1.getSiemacMetadataStatisticalResource().setLastVersion(false);
+
         // datasources
         templateV1.addDatasource(DatasourceMockFactory.generateSimpleDatasource());
         templateV1.addDatasource(DatasourceMockFactory.generateSimpleDatasource());
         templateV1.addDatasource(DatasourceMockFactory.generateSimpleDatasource());
 
+        StatisticalResourcesPersistedDoMocks.mockDatasetVersionCoveragesAndRelated(templateV1);
         DatasetVersion datasetVersionV1 = getStatisticalResourcesPersistedDoMocks().mockDatasetVersion(templateV1);
         registerDatasetVersionMock(DATASET_VERSION_03_FOR_DATASET_03_NAME, datasetVersionV1);
 
         DatasetLifecycleTestUtils.prepareToVersioning(datasetVersionV1);
 
-        DatasetVersionMock templateV2 = new DatasetVersionMock();
-        templateV2.setDataset(dataset);
-        templateV2.setVersionLogic(SECOND_VERSION);
+        DatasetVersionMock templateV2 = DatasetVersionMockFactory.buildSimpleVersion(dataset, SECOND_VERSION);
 
         // last version
         templateV2.getSiemacMetadataStatisticalResource().setCreationDate(new DateTime().minusDays(1));
@@ -122,6 +137,7 @@ public class DatasetMockFactory extends StatisticalResourcesMockFactory<Dataset>
 
         // datasources
         templateV2.addDatasource(DatasourceMockFactory.generateSimpleDatasource());
+        StatisticalResourcesPersistedDoMocks.mockDatasetVersionCoveragesWithTemporalAndRelated(templateV2);
         DatasetVersion datasetVersionV2 = getStatisticalResourcesPersistedDoMocks().mockDatasetVersion(templateV2);
         registerDatasetVersionMock(DATASET_VERSION_04_FOR_DATASET_03_AND_LAST_VERSION_NAME, datasetVersionV2);
 
@@ -131,11 +147,8 @@ public class DatasetMockFactory extends StatisticalResourcesMockFactory<Dataset>
     }
 
     private static Dataset getDataset04FullFilledWith1DatasetVersions() {
-        DatasetVersionMock template = new DatasetVersionMock();
-        template.setSequentialId(1);
-        template.setVersionLogic(INIT_VERSION);
+        DatasetVersionMock template = DatasetVersionMockFactory.buildVersion("statOper02", 1, INIT_VERSION);
         template.getSiemacMetadataStatisticalResource().setLastVersion(true);
-        template.setStatisticalOperationCode("statOper02");
 
         template.addGeographicCoverage(StatisticalResourcesDoMocks.mockCodeExternalItem());
 
@@ -171,15 +184,11 @@ public class DatasetMockFactory extends StatisticalResourcesMockFactory<Dataset>
     }
 
     private static Dataset getDataset05WithMultiplePublishedVersions() {
-        DatasetMock dataset = new DatasetMock();
-        dataset.setStatisticalOperationCode("oper01");
-        dataset.setSequentialId(1);
+        DatasetMock dataset = buildDatasetSimpleMock("oper01", 1);
         getStatisticalResourcesPersistedDoMocks().mockDataset(dataset);
 
         // v1
-        DatasetVersionMock datasetVersionv1 = new DatasetVersionMock();
-        datasetVersionv1.setDataset(dataset);
-        datasetVersionv1.setVersionLogic(INIT_VERSION);
+        DatasetVersionMock datasetVersionv1 = DatasetVersionMockFactory.buildSimpleVersion(dataset, INIT_VERSION);
         // not last version
         datasetVersionv1.getSiemacMetadataStatisticalResource().setCreationDate(new DateTime().minusDays(3));
         datasetVersionv1.getSiemacMetadataStatisticalResource().setValidFrom(new DateTime().minusDays(3));
@@ -189,9 +198,7 @@ public class DatasetMockFactory extends StatisticalResourcesMockFactory<Dataset>
         registerDatasetVersionMock(DATASET_VERSION_22_V1_PUBLISHED_FOR_DATASET_05_NAME, datasetVersionv1);
 
         // v2
-        DatasetVersionMock datasetVersionv2 = new DatasetVersionMock();
-        datasetVersionv2.setDataset(dataset);
-        datasetVersionv2.setVersionLogic(SECOND_VERSION);
+        DatasetVersionMock datasetVersionv2 = DatasetVersionMockFactory.buildSimpleVersion(dataset, SECOND_VERSION);
         // not last version
         datasetVersionv2.getSiemacMetadataStatisticalResource().setCreationDate(new DateTime().minusDays(2));
         datasetVersionv2.getSiemacMetadataStatisticalResource().setValidFrom(new DateTime().minusDays(2));
@@ -201,9 +208,7 @@ public class DatasetMockFactory extends StatisticalResourcesMockFactory<Dataset>
         registerDatasetVersionMock(DATASET_VERSION_23_V2_PUBLISHED_FOR_DATASET_05_NAME, datasetVersionv2);
 
         // v3
-        DatasetVersionMock datasetVersionv3 = new DatasetVersionMock();
-        datasetVersionv3.setDataset(dataset);
-        datasetVersionv3.setVersionLogic(THIRD_VERSION);
+        DatasetVersionMock datasetVersionv3 = DatasetVersionMockFactory.buildSimpleVersion(dataset, THIRD_VERSION);
         // last version
         datasetVersionv3.getSiemacMetadataStatisticalResource().setCreationDate(new DateTime().minusDays(1));
         datasetVersionv3.getSiemacMetadataStatisticalResource().setValidFrom(new DateTime().minusDays(1));
@@ -220,15 +225,11 @@ public class DatasetMockFactory extends StatisticalResourcesMockFactory<Dataset>
     }
 
     private static Dataset getDataset06WithMultiplePublishedVersionsAndLatestNoVisible() {
-        DatasetMock dataset = new DatasetMock();
-        dataset.setStatisticalOperationCode("oper01");
-        dataset.setSequentialId(1);
+        DatasetMock dataset = buildDatasetSimpleMock("oper01", 1);
         getStatisticalResourcesPersistedDoMocks().mockDataset(dataset);
 
         // v1
-        DatasetVersionMock datasetVersionv1 = new DatasetVersionMock();
-        datasetVersionv1.setDataset(dataset);
-        datasetVersionv1.setVersionLogic(INIT_VERSION);
+        DatasetVersionMock datasetVersionv1 = DatasetVersionMockFactory.buildSimpleVersion(dataset, INIT_VERSION);
         // last version
         datasetVersionv1.getSiemacMetadataStatisticalResource().setCreationDate(new DateTime().minusDays(1));
         datasetVersionv1.getSiemacMetadataStatisticalResource().setValidFrom(new DateTime().minusDays(1));
@@ -238,9 +239,7 @@ public class DatasetMockFactory extends StatisticalResourcesMockFactory<Dataset>
         registerDatasetVersionMock(DATASET_VERSION_25_V1_PUBLISHED_FOR_DATASET_06_NAME, datasetVersionv1);
 
         // v2
-        DatasetVersionMock datasetVersionv2 = new DatasetVersionMock();
-        datasetVersionv2.setDataset(dataset);
-        datasetVersionv2.setVersionLogic(SECOND_VERSION);
+        DatasetVersionMock datasetVersionv2 = DatasetVersionMockFactory.buildSimpleVersion(dataset, SECOND_VERSION);
         // last version
         datasetVersionv2.getSiemacMetadataStatisticalResource().setCreationDate(new DateTime());
         datasetVersionv2.getSiemacMetadataStatisticalResource().setValidFrom(new DateTime().plusDays(1));
@@ -255,7 +254,6 @@ public class DatasetMockFactory extends StatisticalResourcesMockFactory<Dataset>
     }
 
     private static Dataset getDataset07WithSingleVersionAndSingleDatasourceLinkedToFile() {
-
         DatasetVersionMock datasetVersionMock = new DatasetVersionMock();
         datasetVersionMock.addDatasource(DatasourceMockFactory.generateSimpleDatasource());
         DatasetVersion datasetVersion = getStatisticalResourcesPersistedDoMocks().mockDatasetVersion(datasetVersionMock);
@@ -284,94 +282,159 @@ public class DatasetMockFactory extends StatisticalResourcesMockFactory<Dataset>
         return datasetVersion.getDataset();
     }
 
-    private static MockDescriptor getDataset10WithTwoVersionsWithQueriesFirstVersionIsRequiredByTwoQueryVersionsSecondIsRequiredByOneQueryVersion() {
-        DatasetVersionMock previousTemplate = new DatasetVersionMock();
-        previousTemplate.setVersionLogic(INIT_VERSION);
-        previousTemplate.getSiemacMetadataStatisticalResource().setLastVersion(false);
-        previousTemplate.getSiemacMetadataStatisticalResource().setValidFrom(new DateTime().minusDays(5));
-        DatasetVersion datasetVersion = getStatisticalResourcesPersistedDoMocks().mockDatasetVersion(previousTemplate);
-        DatasetLifecycleTestUtils.prepareToVersioning(datasetVersion);
+    private static MockDescriptor getDataset10WithDraftVersionWithOneQueryLinkedToDataset() {
+        DatasetVersion datasetVersion = generateDatasetWithGeneratedVersion().getVersions().get(0);
+        StatisticalResourcesPersistedDoMocks.mockDatasetVersionCoveragesAndRelated(datasetVersion);
 
-        DatasetVersionMock template = new DatasetVersionMock();
-        template.setDataset(datasetVersion.getDataset());
-        template.setVersionLogic(SECOND_VERSION);
-        template.getSiemacMetadataStatisticalResource().setLastVersion(true);
-        template.getSiemacMetadataStatisticalResource().setReplacesVersion(StatisticalResourcesPersistedDoMocks.mockDatasetVersionRelated(datasetVersion));
-        template.getSiemacMetadataStatisticalResource().setValidFrom(new DateTime().minusDays(2));
-        DatasetVersion datasetVersionLatestPublished = getStatisticalResourcesPersistedDoMocks().mockDatasetVersion(template);
-        DatasetLifecycleTestUtils.prepareToVersioning(datasetVersionLatestPublished);
+        QueryVersion query01 = buildQueryLinkedToDataset("Q01", datasetVersion.getDataset());
 
-        Query query01 = createQueryWithTwoVersionsLinkedEachOneToADifferentDatasetVersion("Q01", datasetVersion, datasetVersionLatestPublished);
-        Query query02 = createQueryWithOneVersionDiscontinued("Q02", datasetVersion);
-        Query query03 = createQueryWithOneVersionDiscontinued("Q03", datasetVersion);
-
-        return new MockDescriptor(datasetVersion.getDataset(), query01, query02, query03);
+        return new MockDescriptor(datasetVersion.getDataset(), query01.getQuery());
     }
 
-    private static MockDescriptor getDataset11WithTwoVersionsWith3QueriesFirstVersionIsPublishedSecondVersionIsNotVisibleAllQueriesCompatible() {
+    private static MockDescriptor getDataset11WithNotVisibleVersionWithTwoQueriesDraftAndNotVisibleLinkedToDataset() {
+        DatasetMock dataset = buildDatasetSimpleMock(1);
         DateTime publishingTimeV2 = new DateTime().plusDays(2);
-        DatasetVersionMock previousTemplate = new DatasetVersionMock();
-        previousTemplate.setVersionLogic(INIT_VERSION);
-        previousTemplate.getSiemacMetadataStatisticalResource().setLastVersion(false);
-        previousTemplate.getSiemacMetadataStatisticalResource().setValidFrom(new DateTime().minusDays(5));
-        previousTemplate.getSiemacMetadataStatisticalResource().setValidTo(publishingTimeV2);
-        DatasetVersion datasetVersion = getStatisticalResourcesPersistedDoMocks().mockDatasetVersion(previousTemplate);
-        DatasetLifecycleTestUtils.prepareToVersioning(datasetVersion);
-        registerDatasetVersionMock(DATASET_VERSION_73_V01_FOR_DATASET_11_NAME, datasetVersion);
 
-        DatasetVersionMock template = new DatasetVersionMock();
-        template.setDataset(datasetVersion.getDataset());
-        template.setVersionLogic(SECOND_VERSION);
+        DatasetVersionMock template = DatasetVersionMockFactory.buildSimpleVersion(dataset, INIT_VERSION);
         template.getSiemacMetadataStatisticalResource().setLastVersion(true);
-        template.getSiemacMetadataStatisticalResource().setReplacesVersion(StatisticalResourcesPersistedDoMocks.mockDatasetVersionRelated(datasetVersion));
-        template.getSiemacMetadataStatisticalResource().setValidFrom(publishingTimeV2);
+        template.getSiemacMetadataStatisticalResource().setValidFrom(new DateTime().plusDays(2));
         DatasetVersion datasetVersionLatestPublished = getStatisticalResourcesPersistedDoMocks().mockDatasetVersion(template);
-        DatasetLifecycleTestUtils.prepareToVersioning(datasetVersionLatestPublished);
+        DatasetLifecycleTestUtils.fillAsPublished(datasetVersionLatestPublished);
         registerDatasetVersionMock(DATASET_VERSION_74_V02_FOR_DATASET_11_NAME, datasetVersionLatestPublished);
 
-        Query query01 = createQueryWithTwoVersionsLinkedEachOneToADifferentDatasetVersion("Q01", datasetVersion, datasetVersionLatestPublished);
-        Query query02 = createQueryWithTwoVersionsLinkedEachOneToADifferentDatasetVersion("Q02", datasetVersion, datasetVersionLatestPublished);
-        Query query03 = createQueryWithTwoVersionsLinkedEachOneToADifferentDatasetVersion("Q03", datasetVersion, datasetVersionLatestPublished);
+        QueryVersion query01 = buildQueryLinkedToDataset("Q01", dataset);
 
-        return new MockDescriptor(datasetVersion.getDataset(), query01, query02, query03);
+        QueryVersion query02 = buildQueryLinkedToDataset("Q02", dataset);
+        query02.getLifeCycleStatisticalResource().setValidFrom(new DateTime().plusDays(3));
+        QueryLifecycleTestUtils.fillAsPublished(query02);
+
+        return new MockDescriptor(dataset, query01, query02);
     }
 
-    private static MockDescriptor getDataset12WithTwoVersionsWithQueriesInDraft() {
-        DatasetVersionMock previousTemplate = new DatasetVersionMock();
-        previousTemplate.setVersionLogic(INIT_VERSION);
-        previousTemplate.getSiemacMetadataStatisticalResource().setLastVersion(false);
-        previousTemplate.getSiemacMetadataStatisticalResource().setValidFrom(new DateTime().minusDays(5));
-        DatasetVersion datasetVersion = getStatisticalResourcesPersistedDoMocks().mockDatasetVersion(previousTemplate);
-        DatasetLifecycleTestUtils.prepareToVersioning(datasetVersion);
-        registerDatasetVersionMock(DATASET_VERSION_75_V01_FOR_DATASET_12_NAME, datasetVersion);
+    private static MockDescriptor getDataset12WithPublishedVersionWithThreeQueriesDraftNotVisibleAndPublishedLinkedToDataset() {
+        DatasetMock dataset = buildDatasetSimpleMock(1);
 
-        DatasetVersionMock template = new DatasetVersionMock();
-        template.setDataset(datasetVersion.getDataset());
-        template.setVersionLogic(SECOND_VERSION);
+        DatasetVersionMock template = DatasetVersionMockFactory.buildSimpleVersion(dataset, INIT_VERSION);
         template.getSiemacMetadataStatisticalResource().setLastVersion(true);
-        template.getSiemacMetadataStatisticalResource().setReplacesVersion(StatisticalResourcesPersistedDoMocks.mockDatasetVersionRelated(datasetVersion));
         DatasetVersion datasetVersionLatestVersion = getStatisticalResourcesPersistedDoMocks().mockDatasetVersion(template);
-        DatasetLifecycleTestUtils.prepareToPublished(datasetVersionLatestVersion);
+        DatasetLifecycleTestUtils.fillAsPublished(datasetVersionLatestVersion);
         registerDatasetVersionMock(DATASET_VERSION_76_V02_FOR_DATASET_12_NAME, datasetVersionLatestVersion);
 
-        // Query 1
-        QueryVersionMock queryV1Template = new QueryVersionMock();
-        queryV1Template.getLifeCycleStatisticalResource().setCode("Q01");
-        queryV1Template.setMaintainerCode("agency01");
-        queryV1Template.setStatisticalOperationCode("OPER01");
-        queryV1Template.setStatus(QueryStatusEnum.ACTIVE);
-        queryV1Template.setDatasetVersion(datasetVersion);
-        queryV1Template.setLastVersion(true);
-        queryV1Template.setVersionLogic(INIT_VERSION);
-        queryV1Template.getLifeCycleStatisticalResource().setProcStatus(ProcStatusEnum.DRAFT);
-        QueryVersion query01 = getStatisticalResourcesPersistedDoMocks().mockQueryVersion(queryV1Template);
+        List<QueryVersion> queries = buildQueriesDraftNotVisibleAndPublishedLinkedToDataset(dataset);
 
-        QueryVersion query02 = createQueryWithOneVersionInDraft("Q02", datasetVersionLatestVersion);
-
-        return new MockDescriptor(datasetVersion.getDataset(), query01, query02);
+        return new MockDescriptor(dataset, queries);
     }
 
-    private static MockDescriptor getDataset13WithDraftAndPublishedIsPartOfPublicationsDifferentStatus() {
+    private static MockDescriptor getDataset13WithPublishedAndDraftVersionsWithThreeQueriesDraftNotVisibleAndPublishedLinkedToDataset() {
+        DatasetMock dataset = buildDatasetSimpleMock(1);
+
+        dataset = buildPublishedAndDraftVersionsForDataset(dataset);
+
+        List<QueryVersion> queries = buildQueriesDraftNotVisibleAndPublishedLinkedToDataset(dataset);
+
+        return new MockDescriptor(dataset, queries);
+    }
+
+    private static MockDescriptor getDataset14WithPublishedAndNotVisibleVersionsWithThreeQueriesDraftNotVisibleAndPublishedLinkedToDataset() {
+        DatasetMock dataset = buildDatasetSimpleMock(1);
+
+        dataset = buildPublishedAndNotVisibleVersionsForDataset(dataset);
+
+        List<QueryVersion> queries = buildQueriesDraftNotVisibleAndPublishedLinkedToDataset(dataset);
+
+        return new MockDescriptor(dataset, queries);
+    }
+
+    private static MockDescriptor getDataset15WithTwoPublishedVersionsWithThreeQueriesDraftNotVisibleAndPublishedLinkedToDataset() {
+        DatasetMock dataset = buildDatasetSimpleMock(1);
+
+        dataset = buildTwoPublishedVersionsForDataset(dataset);
+
+        List<QueryVersion> queries = buildQueriesDraftNotVisibleAndPublishedLinkedToDataset(dataset);
+
+        return new MockDescriptor(dataset, queries);
+    }
+
+    private static MockDescriptor getDataset16WithPublishedAndDraftVersionsWithThreeQueriesDraftNotVisibleAndPublishedLinkedToDatasetAndOneQueryDraftLinkedToVersion() {
+        DatasetMock dataset = buildDatasetSimpleMock(1);
+
+        dataset = buildPublishedAndDraftVersionsForDataset(dataset);
+
+        DatasetVersion datasetVersionPublished = dataset.getVersions().get(0);
+
+        List<QueryVersion> queries = new ArrayList<QueryVersion>();
+
+        queries.addAll(buildQueriesDraftNotVisibleAndPublishedLinkedToDataset(dataset));
+
+        queries.add(buildQueryLinkedToDatasetVersion("Q04", datasetVersionPublished));
+
+        return new MockDescriptor(dataset, queries);
+    }
+
+    private static MockDescriptor getDataset17WithPublishedAndNotVisibleVersionsWithThreeQueriesDraftNotVisibleAndPublishedLinkedToDatasetAndTwoQueriesDraftNotVisibleLinkedToVersion() {
+        DatasetMock dataset = buildDatasetSimpleMock(1);
+
+        dataset = buildPublishedAndNotVisibleVersionsForDataset(dataset);
+
+        DatasetVersion datasetVersionPublished = dataset.getVersions().get(0);
+
+        List<QueryVersion> queries = new ArrayList<QueryVersion>();
+
+        queries.addAll(buildQueriesDraftNotVisibleAndPublishedLinkedToDataset(dataset));
+
+        queries.add(buildQueryLinkedToDatasetVersion("Q04", datasetVersionPublished));
+
+        QueryVersion query05 = buildQueryLinkedToDatasetVersion("Q05", datasetVersionPublished);
+        query05.getLifeCycleStatisticalResource().setValidFrom(datasetVersionPublished.getSiemacMetadataStatisticalResource().getValidFrom().plusDays(1));
+        QueryLifecycleTestUtils.fillAsPublished(query05);
+
+        queries.add(query05);
+
+        return new MockDescriptor(dataset, queries);
+    }
+
+    private static MockDescriptor getDataset18WithTwoPublishedVersionsWithThreeQueriesDraftNotVisibleAndPublishedLinkedToDatasetAndThreeQueriesDraftNotVisibleAndPublishedLinkedToVersion() {
+        DatasetMock dataset = buildDatasetSimpleMock(1);
+
+        dataset = buildTwoPublishedVersionsForDataset(dataset);
+
+        DatasetVersion datasetVersionPublished = dataset.getVersions().get(0);
+
+        List<QueryVersion> queries = new ArrayList<QueryVersion>();
+
+        queries.addAll(buildQueriesDraftNotVisibleAndPublishedLinkedToDataset(dataset));
+
+        queries.add(buildQueryLinkedToDatasetVersion("Q04", datasetVersionPublished));
+
+        QueryVersion query05 = buildQueryLinkedToDatasetVersion("Q05", datasetVersionPublished);
+        query05.getLifeCycleStatisticalResource().setValidFrom(new DateTime().plusDays(1));
+        QueryLifecycleTestUtils.fillAsPublished(query05);
+        queries.add(query05);
+
+        QueryVersion query06 = buildQueryLinkedToDatasetVersion("Q06", datasetVersionPublished);
+        QueryLifecycleTestUtils.fillAsPublished(query06);
+        queries.add(query06);
+
+        return new MockDescriptor(dataset, queries);
+    }
+
+    private static List<QueryVersion> buildQueriesDraftNotVisibleAndPublishedLinkedToDataset(Dataset dataset) {
+        // draft
+        QueryVersion query01 = buildQueryLinkedToDataset("Q01", dataset);
+
+        // not visible
+        QueryVersion query02 = buildQueryLinkedToDataset("Q02", dataset);
+        query02.getLifeCycleStatisticalResource().setValidFrom(new DateTime().plusDays(3));
+        QueryLifecycleTestUtils.fillAsPublished(query02);
+
+        // published
+        QueryVersion query03 = buildQueryLinkedToDataset("Q03", dataset);
+        QueryLifecycleTestUtils.fillAsPublished(query03);
+
+        return Arrays.asList(query01, query02, query03);
+    }
+
+    private static MockDescriptor getDataset19WithDraftAndPublishedIsPartOfPublicationsDifferentStatus() {
         DatasetVersion datasetVersion = mockDatasetVersionPublished(null, INIT_VERSION, new DateTime().minusDays(5), null);
 
         Dataset dataset = datasetVersion.getDataset();
@@ -398,7 +461,7 @@ public class DatasetMockFactory extends StatisticalResourcesMockFactory<Dataset>
         return new MockDescriptor(dataset, pub01, pub02, pub03);
     }
 
-    private static MockDescriptor getDataset14WithPublishedAndNotVisibleVersionsIsPartOfPublicationsDifferentStatus() {
+    private static MockDescriptor getDataset20WithPublishedAndNotVisibleVersionsIsPartOfPublicationsDifferentStatus() {
         DateTime secondVersionValidFrom = new DateTime().plusDays(1);
 
         DatasetVersion datasetVersion = mockDatasetVersionPublished(null, INIT_VERSION, new DateTime().minusDays(5), secondVersionValidFrom);
@@ -423,7 +486,7 @@ public class DatasetMockFactory extends StatisticalResourcesMockFactory<Dataset>
         return new MockDescriptor(dataset, pub01, pub02, pub03);
     }
 
-    private static MockDescriptor getDataset15WithTwoPublishedVersionsIsPartOfPublicationsDifferentStatus() {
+    private static MockDescriptor getDataset21WithTwoPublishedVersionsIsPartOfPublicationsDifferentStatus() {
         DateTime secondVersionValidFrom = new DateTime().minusDays(1);
 
         DatasetVersion datasetVersion = mockDatasetVersionPublished(null, INIT_VERSION, new DateTime().minusDays(5), secondVersionValidFrom);
@@ -445,6 +508,40 @@ public class DatasetMockFactory extends StatisticalResourcesMockFactory<Dataset>
         registerPublicationVersionMock(PublicationVersionMockFactory.PUBLICATION_VERSION_60_DRAFT_V01_FOR_PUBLICATION_15_NAME, pub03.getVersions().get(0));
 
         return new MockDescriptor(dataset, pub01, pub02, pub03);
+    }
+
+    public static MockDescriptor getDataset24SimpleWithTwoVersionsWithQueryLinkedToDataset() {
+        DatasetVersionMock previousTemplate = new DatasetVersionMock();
+        previousTemplate.setVersionLogic(INIT_VERSION);
+        previousTemplate.getSiemacMetadataStatisticalResource().setLastVersion(false);
+        previousTemplate.getSiemacMetadataStatisticalResource().setValidFrom(new DateTime().minusDays(5));
+        DatasetVersion datasetVersion = getStatisticalResourcesPersistedDoMocks().mockDatasetVersion(previousTemplate);
+        DatasetLifecycleTestUtils.prepareToVersioning(datasetVersion);
+        registerDatasetVersionMock(DATASET_VERSION_75_V01_FOR_DATASET_12_NAME, datasetVersion);
+
+        DatasetVersionMock template = new DatasetVersionMock();
+        template.setDataset(datasetVersion.getDataset());
+        template.setVersionLogic(SECOND_VERSION);
+        template.getSiemacMetadataStatisticalResource().setLastVersion(true);
+        template.getSiemacMetadataStatisticalResource().setReplacesVersion(StatisticalResourcesPersistedDoMocks.mockDatasetVersionRelated(datasetVersion));
+        DatasetVersion datasetVersionLatestVersion = getStatisticalResourcesPersistedDoMocks().mockDatasetVersion(template);
+        DatasetLifecycleTestUtils.prepareToPublished(datasetVersionLatestVersion);
+        registerDatasetVersionMock(DATASET_VERSION_76_V02_FOR_DATASET_12_NAME, datasetVersionLatestVersion);
+
+        // Query 1
+        QueryVersionMock queryV1Template = new QueryVersionMock();
+        queryV1Template.getLifeCycleStatisticalResource().setCode("Q01");
+        queryV1Template.setMaintainerCode("agency01");
+        queryV1Template.setStatisticalOperationCode("OPER01");
+        queryV1Template.setStatus(QueryStatusEnum.ACTIVE);
+        queryV1Template.setDataset(datasetVersion.getDataset());
+        queryV1Template.setLastVersion(true);
+        queryV1Template.setVersionLogic(INIT_VERSION);
+        queryV1Template.getLifeCycleStatisticalResource().setProcStatus(ProcStatusEnum.DRAFT);
+        QueryVersion query01 = getStatisticalResourcesPersistedDoMocks().mockQueryVersion(queryV1Template);
+        registerQueryVersionMock(QueryVersionMockFactory.QUERY_VERSION_36_LINKED_TO_DATASET_NAME, query01);
+
+        return new MockDescriptor(datasetVersion.getDataset(), query01);
     }
 
     private static Publication createPublicationWithTwoVersionsPublishedBothLinkedToDataset(int sequentialId, Dataset dataset) {
@@ -497,7 +594,7 @@ public class DatasetMockFactory extends StatisticalResourcesMockFactory<Dataset>
         QueryVersionMock queryV1Template = new QueryVersionMock();
         queryV1Template.getLifeCycleStatisticalResource().setCode(identifier);
         queryV1Template.setStatus(QueryStatusEnum.DISCONTINUED);
-        queryV1Template.setDatasetVersion(datasetVersion);
+        queryV1Template.setFixedDatasetVersion(datasetVersion);
         queryV1Template.setLastVersion(true);
         queryV1Template.setVersionLogic(INIT_VERSION);
         queryV1Template.getLifeCycleStatisticalResource().setProcStatus(ProcStatusEnum.PUBLISHED);
@@ -507,11 +604,10 @@ public class DatasetMockFactory extends StatisticalResourcesMockFactory<Dataset>
     }
 
     protected static QueryVersion createQueryWithOneVersionInDraft(String identifier, DatasetVersion datasetVersion) {
-
         QueryVersionMock queryV1Template = new QueryVersionMock();
         queryV1Template.getLifeCycleStatisticalResource().setCode(identifier);
         queryV1Template.setStatus(QueryStatusEnum.ACTIVE);
-        queryV1Template.setDatasetVersion(datasetVersion);
+        queryV1Template.setDataset(datasetVersion.getDataset());
         queryV1Template.setLastVersion(true);
         queryV1Template.setVersionLogic(INIT_VERSION);
         queryV1Template.getLifeCycleStatisticalResource().setProcStatus(ProcStatusEnum.DRAFT);
@@ -519,11 +615,33 @@ public class DatasetMockFactory extends StatisticalResourcesMockFactory<Dataset>
         return query02Discontinued;
     }
 
+    private static QueryVersion buildQueryLinkedToDatasetVersion(String identifier, DatasetVersion datasetVersion) {
+        QueryVersionMock queryV1Template = new QueryVersionMock();
+        queryV1Template.getLifeCycleStatisticalResource().setCode(identifier);
+        queryV1Template.setStatus(QueryStatusEnum.DISCONTINUED);
+        queryV1Template.setFixedDatasetVersion(datasetVersion);
+        queryV1Template.setLastVersion(true);
+        queryV1Template.setVersionLogic(INIT_VERSION);
+        QueryVersion query02Discontinued = getStatisticalResourcesPersistedDoMocks().mockQueryVersion(queryV1Template);
+        return query02Discontinued;
+    }
+
+    private static QueryVersion buildQueryLinkedToDataset(String identifier, Dataset dataset) {
+        QueryVersionMock queryV1Template = new QueryVersionMock();
+        queryV1Template.getLifeCycleStatisticalResource().setCode(identifier);
+        queryV1Template.setStatus(QueryStatusEnum.ACTIVE);
+        queryV1Template.setDataset(dataset);
+        queryV1Template.setLastVersion(true);
+        queryV1Template.setVersionLogic(INIT_VERSION);
+        QueryVersion query02Discontinued = getStatisticalResourcesPersistedDoMocks().mockQueryVersion(queryV1Template);
+        return query02Discontinued;
+    }
+
     protected static Query createQueryWithTwoVersionsLinkedEachOneToADifferentDatasetVersion(String identifier, DatasetVersion datasetVersion, DatasetVersion datasetVersionLatestPublished) {
         DateTime latestQueryVersionPublishingTime = datasetVersionLatestPublished.getSiemacMetadataStatisticalResource().getValidFrom();
         QueryVersionMock queryV1Template = new QueryVersionMock();
-        queryV1Template.setStatus(QueryStatusEnum.ACTIVE);
-        queryV1Template.setDatasetVersion(datasetVersion);
+        queryV1Template.setStatus(QueryStatusEnum.DISCONTINUED);
+        queryV1Template.setFixedDatasetVersion(datasetVersion);
         queryV1Template.setLastVersion(false);
         queryV1Template.setVersionLogic(INIT_VERSION);
         queryV1Template.getLifeCycleStatisticalResource().setCode(identifier);
@@ -535,7 +653,7 @@ public class DatasetMockFactory extends StatisticalResourcesMockFactory<Dataset>
         QueryVersionMock queryV2Template = new QueryVersionMock();
         queryV2Template.setQuery(query01V1.getQuery());
         queryV2Template.setStatus(QueryStatusEnum.ACTIVE);
-        queryV2Template.setDatasetVersion(datasetVersionLatestPublished);
+        queryV2Template.setDataset(datasetVersionLatestPublished.getDataset());
         queryV2Template.setLastVersion(true);
         queryV2Template.setVersionLogic(SECOND_VERSION);
         queryV2Template.getLifeCycleStatisticalResource().setCode(identifier);
@@ -543,6 +661,83 @@ public class DatasetMockFactory extends StatisticalResourcesMockFactory<Dataset>
         queryV2Template.getLifeCycleStatisticalResource().setValidFrom(datasetVersionLatestPublished.getSiemacMetadataStatisticalResource().getValidFrom());
         QueryVersion query01V2 = getStatisticalResourcesPersistedDoMocks().mockQueryVersion(queryV2Template);
         return query01V1.getQuery();
+    }
+
+    private static DatasetMock buildDatasetSimpleMock(String statOper, int sequentialId) {
+        DatasetMock datasetMock = buildDatasetSimpleMock(sequentialId);
+        datasetMock.setStatisticalOperationCode(statOper);
+        return datasetMock;
+    }
+
+    public static DatasetMock buildDatasetSimpleMock(int sequentialId) {
+        DatasetMock datasetMock = new DatasetMock();
+        datasetMock.setSequentialId(sequentialId);
+        return datasetMock;
+    }
+
+    public static DatasetMock buildPublishedAndDraftVersionsForDataset(DatasetMock dataset) {
+        // V01
+        DatasetVersionMock template = DatasetVersionMockFactory.buildSimpleVersion(dataset, INIT_VERSION);
+        template.getSiemacMetadataStatisticalResource().setLastVersion(false);
+        template.getSiemacMetadataStatisticalResource().setValidFrom(new DateTime());
+        DatasetVersion datasetVersionPublished = getStatisticalResourcesPersistedDoMocks().mockDatasetVersion(template);
+        DatasetLifecycleTestUtils.fillAsPublished(datasetVersionPublished);
+
+        // V02
+        DatasetVersionMock templateLatest = DatasetVersionMockFactory.buildSimpleVersion(dataset, SECOND_VERSION);
+        templateLatest.getSiemacMetadataStatisticalResource().setLastVersion(true);
+        StatisticalResourcesPersistedDoMocks.mockDatasetVersionCoveragesAndRelated(templateLatest);
+        DatasetVersion datasetVersionLatest = getStatisticalResourcesPersistedDoMocks().mockDatasetVersion(templateLatest);
+
+        datasetVersionLatest.getSiemacMetadataStatisticalResource().setReplacesVersion(StatisticalResourcesNotPersistedDoMocks.mockRelatedResourceLinkedToDatasetVersion(datasetVersionPublished));
+
+        return dataset;
+    }
+
+    private static DatasetMock buildPublishedAndNotVisibleVersionsForDataset(DatasetMock dataset) {
+        DateTime secondPublishedTime = new DateTime().plusDays(2);
+
+        // V01
+        DatasetVersionMock template = DatasetVersionMockFactory.buildSimpleVersion(dataset, INIT_VERSION);
+        template.getSiemacMetadataStatisticalResource().setLastVersion(false);
+        template.getSiemacMetadataStatisticalResource().setValidTo(secondPublishedTime);
+        DatasetVersion datasetVersionPublished = getStatisticalResourcesPersistedDoMocks().mockDatasetVersion(template);
+        DatasetLifecycleTestUtils.fillAsPublished(datasetVersionPublished);
+
+        // V02
+        DatasetVersionMock templateLatest = DatasetVersionMockFactory.buildSimpleVersion(dataset, SECOND_VERSION);
+        templateLatest.getSiemacMetadataStatisticalResource().setLastVersion(true);
+        templateLatest.getSiemacMetadataStatisticalResource().setValidFrom(secondPublishedTime);
+        DatasetVersion datasetVersionLatest = getStatisticalResourcesPersistedDoMocks().mockDatasetVersion(templateLatest);
+        DatasetLifecycleTestUtils.fillAsPublished(datasetVersionLatest);
+
+        datasetVersionLatest.getSiemacMetadataStatisticalResource().setReplacesVersion(StatisticalResourcesNotPersistedDoMocks.mockRelatedResourceLinkedToDatasetVersion(datasetVersionPublished));
+
+        return dataset;
+    }
+
+    private static DatasetMock buildTwoPublishedVersionsForDataset(DatasetMock dataset) {
+        DateTime firstPublishedTime = new DateTime();
+        DateTime secondPublishedTime = new DateTime();
+
+        // V01
+        DatasetVersionMock template = DatasetVersionMockFactory.buildSimpleVersion(dataset, INIT_VERSION);
+        template.getSiemacMetadataStatisticalResource().setLastVersion(false);
+        template.getSiemacMetadataStatisticalResource().setValidFrom(firstPublishedTime);
+        template.getSiemacMetadataStatisticalResource().setValidTo(secondPublishedTime);
+        DatasetVersion datasetVersionPublished = getStatisticalResourcesPersistedDoMocks().mockDatasetVersion(template);
+        DatasetLifecycleTestUtils.fillAsPublished(datasetVersionPublished);
+
+        // V02
+        DatasetVersionMock templateLatest = DatasetVersionMockFactory.buildSimpleVersion(dataset, SECOND_VERSION);
+        templateLatest.getSiemacMetadataStatisticalResource().setLastVersion(true);
+        templateLatest.getSiemacMetadataStatisticalResource().setValidFrom(secondPublishedTime);
+        DatasetVersion datasetVersionLatest = getStatisticalResourcesPersistedDoMocks().mockDatasetVersion(templateLatest);
+        DatasetLifecycleTestUtils.fillAsPublished(datasetVersionLatest);
+
+        datasetVersionLatest.getSiemacMetadataStatisticalResource().setReplacesVersion(StatisticalResourcesNotPersistedDoMocks.mockRelatedResourceLinkedToDatasetVersion(datasetVersionPublished));
+
+        return dataset;
     }
 
     protected static Dataset generateDatasetWithGeneratedVersion() {

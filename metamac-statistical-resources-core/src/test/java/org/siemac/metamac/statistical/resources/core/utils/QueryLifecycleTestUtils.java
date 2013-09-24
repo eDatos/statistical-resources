@@ -1,12 +1,17 @@
 package org.siemac.metamac.statistical.resources.core.utils;
 
+import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryTypeEnum;
-import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesDoMocks;
 
 public class QueryLifecycleTestUtils {
+
+    // *****************************************************
+    // PRODUCTION VALIDATION
+    // *****************************************************
 
     public static void prepareToProductionValidation(QueryVersion queryVersion) {
         LifecycleTestUtils.prepareToProductionValidationLifecycle(queryVersion);
@@ -14,56 +19,102 @@ public class QueryLifecycleTestUtils {
     }
 
     public static void fillAsProductionValidation(QueryVersion queryVersion) {
+        prepareToProductionValidation(queryVersion);
         LifecycleTestUtils.fillAsProductionValidationLifecycle(queryVersion);
     }
 
+    // *****************************************************
+    // DIFFUSION VALIDATION
+    // *****************************************************
+
     public static void prepareToDiffusionValidation(QueryVersion queryVersion) {
-        prepareToProductionValidation(queryVersion);
+        fillAsProductionValidation(queryVersion);
         LifecycleTestUtils.prepareToDiffusionValidationLifecycle(queryVersion);
     }
 
     public static void fillAsDiffusionValidation(QueryVersion queryVersion) {
+        prepareToDiffusionValidation(queryVersion);
         LifecycleTestUtils.fillAsDiffusionValidationLifecycle(queryVersion);
     }
 
+    // *****************************************************
+    // VALIDATION REJECTED
+    // *****************************************************
+
     public static void prepareToValidationRejected(QueryVersion queryVersion) {
-        prepareToProductionValidation(queryVersion);
+        fillAsProductionValidation(queryVersion);
         LifecycleTestUtils.prepareToValidationRejectedFromProductionValidationLifecycle(queryVersion);
     }
 
     public static void fillAsValidationRejected(QueryVersion queryVersion) {
+        prepareToProductionValidation(queryVersion);
         LifecycleTestUtils.fillAsValidationRejectedFromProductionValidationLifecycle(queryVersion);
     }
 
+    // *****************************************************
+    // PUBLISHING
+    // *****************************************************
+
     public static void prepareToPublished(QueryVersion queryVersion) {
-        prepareToDiffusionValidation(queryVersion);
+        fillAsDiffusionValidation(queryVersion);
         LifecycleTestUtils.prepareToPublishingLifecycle(queryVersion);
+        prepareQueryToPublished(queryVersion);
 
     }
+
+    private static void prepareQueryToPublished(QueryVersion queryVersion) {
+        boolean datasetPublished = false;
+        if (queryVersion.getDataset() != null) {
+            for (DatasetVersion datasetVersion : queryVersion.getDataset().getVersions()) {
+                if (isDatasetVersionPublishedVisibleBeforeQuery(datasetVersion, queryVersion)) {
+                    datasetPublished = true;
+                }
+            }
+        } else {
+            datasetPublished = isDatasetVersionPublishedVisibleBeforeQuery(queryVersion.getFixedDatasetVersion(), queryVersion);
+        }
+        if (!datasetPublished) {
+            throw new RuntimeException("The dataset/version linked to query won't be published and visible before query");
+        }
+    }
+
+    private static boolean isDatasetVersionPublishedVisibleBeforeQuery(DatasetVersion datasetVersion, QueryVersion queryVersion) {
+        if (ProcStatusEnum.PUBLISHED.equals(datasetVersion.getSiemacMetadataStatisticalResource().getProcStatus())) {
+            System.out.println("Compare query time " + queryVersion.getLifeCycleStatisticalResource().getValidFrom() + " with DV :"
+                    + datasetVersion.getSiemacMetadataStatisticalResource().getValidFrom());
+            if (!datasetVersion.getSiemacMetadataStatisticalResource().getValidFrom().isAfter(queryVersion.getLifeCycleStatisticalResource().getValidFrom())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public static void fillAsPublished(QueryVersion queryVersion) {
+        prepareToPublished(queryVersion);
         LifecycleTestUtils.fillAsPublishedLifecycle(queryVersion);
     }
 
+    // *****************************************************
+    // VERSIONING
+    // *****************************************************
+
     public static void prepareToVersioning(QueryVersion queryVersion) {
-        prepareToPublished(queryVersion);
-        if (!ProcStatusEnum.PUBLISHED.equals(queryVersion.getDatasetVersion().getSiemacMetadataStatisticalResource().getProcStatus())) {
-            DatasetLifecycleTestUtils.prepareToVersioning(queryVersion.getDatasetVersion());
-        }
+        fillAsPublished(queryVersion);
         LifecycleTestUtils.prepareToVersioningLifecycle(queryVersion);
     }
 
     public static void fillAsVersioned(QueryVersion queryVersion) {
+        prepareToVersioning(queryVersion);
         LifecycleTestUtils.fillAsVersionedLifecycle(queryVersion);
     }
 
-    public static void prepareToLifecycleCommonQueryVersion(QueryVersion queryVersion) {
+    private static void prepareToLifecycleCommonQueryVersion(QueryVersion queryVersion) {
         if (queryVersion.getType() == null) {
             queryVersion.setType(QueryTypeEnum.FIXED);
         }
         if (queryVersion.getStatus() == null) {
             queryVersion.setStatus(QueryStatusEnum.ACTIVE);
         }
-        // TODO: structure?
     }
 
 }

@@ -10,7 +10,9 @@ import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataS
 import org.siemac.metamac.statistical.resources.core.base.domain.StatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.VersionableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
+import org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConstants;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Categorisation;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.CodeDimension;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
@@ -81,7 +83,9 @@ public class StatisticalResourcesPersistedDoMocks extends StatisticalResourcesDo
         queryVersionTemplate.setQuery(query);
         queryVersionTemplate.getLifeCycleStatisticalResource().setCode(query.getIdentifiableStatisticalResource().getCode());
         queryVersionTemplate.getLifeCycleStatisticalResource().setMaintainer(mockAgencyExternalItem(maintainerId, maintainerId));
-        queryVersionTemplate.setDatasetVersion(mockDatasetVersion());
+        DatasetVersion datasetVersion = mockDatasetVersion();
+        StatisticalResourcesPersistedDoMocks.mockDatasetVersionCoveragesAndRelated(datasetVersion);
+        queryVersionTemplate.setDataset(datasetVersion.getDataset());
         queryVersionTemplate.setStatus(QueryStatusEnum.ACTIVE);
 
         mockQueryVersion(queryVersionTemplate);
@@ -101,11 +105,24 @@ public class StatisticalResourcesPersistedDoMocks extends StatisticalResourcesDo
         return mockQueryVersion(null, datasetVersion, isDatasetLastVersion);
     }
 
+    @Override
+    public QueryVersion mockQueryVersion(Dataset dataset) {
+        return mockQueryVersion(null, dataset);
+    }
+
     public QueryVersion mockQueryVersion(Query query, DatasetVersion datasetVersion, boolean isDatasetLastVersion) {
         QueryVersion template = new QueryVersion();
         template.setQuery(query);
-        template.setDatasetVersion(datasetVersion);
+        template.setFixedDatasetVersion(datasetVersion);
         template.setStatus(isDatasetLastVersion ? QueryStatusEnum.ACTIVE : QueryStatusEnum.DISCONTINUED);
+        return mockQueryVersion(template);
+    }
+
+    public QueryVersion mockQueryVersion(Query query, Dataset dataset) {
+        QueryVersion template = new QueryVersion();
+        template.setQuery(query);
+        template.setDataset(dataset);
+        template.setStatus(QueryStatusEnum.ACTIVE);
         return mockQueryVersion(template);
     }
 
@@ -132,8 +149,8 @@ public class StatisticalResourcesPersistedDoMocks extends StatisticalResourcesDo
             queryVersion.getQuery().addVersion(queryVersion);
         }
 
-        if (queryVersion.getDatasetVersion() == null) {
-            throw new IllegalArgumentException("Can not create a Query with no datasetversion linked");
+        if (queryVersion.getFixedDatasetVersion() == null && queryVersion.getDataset() == null) {
+            throw new IllegalArgumentException("Can not create a Query with no datasetversion or dataset linked");
         }
 
         if (queryVersion.getStatus() == null) {
@@ -141,7 +158,7 @@ public class StatisticalResourcesPersistedDoMocks extends StatisticalResourcesDo
         }
 
         if (queryVersion.getSelection().isEmpty()) {
-            queryVersion.addSelection(mockQuerySelectionItem());
+            mockQuerySelectionFromDatasetVersion(queryVersion, getDatasetVersionInQueryVersion(queryVersion));
         }
 
         if (queryVersion.getType() == null) {
@@ -227,6 +244,7 @@ public class StatisticalResourcesPersistedDoMocks extends StatisticalResourcesDo
         return mockDatasetVersion(null);
     }
 
+    @Override
     public DatasetVersion mockDatasetVersion(DatasetVersionMock datasetVersion) {
         if (datasetVersion == null) {
             datasetVersion = new DatasetVersionMock();
@@ -273,7 +291,56 @@ public class StatisticalResourcesPersistedDoMocks extends StatisticalResourcesDo
             }
         }
 
+        computeCoverageRelatedMetadata(datasetVersion);
+
         return datasetVersion;
+    }
+
+    public static void mockDatasetVersionCoveragesAndRelated(DatasetVersion datasetVersion) {
+        datasetVersion.getDimensionsCoverage().clear();
+
+        datasetVersion.addDimensionsCoverage(new CodeDimension("DIM01", "C01"));
+        datasetVersion.addDimensionsCoverage(new CodeDimension("DIM01", "C02"));
+        datasetVersion.addDimensionsCoverage(new CodeDimension("DIM01", "C03"));
+        datasetVersion.addDimensionsCoverage(new CodeDimension("DIM02", "C01"));
+        datasetVersion.addDimensionsCoverage(new CodeDimension("DIM02", "C02"));
+    }
+
+    public static void mockDatasetVersionCoveragesWithTemporalAndRelated(DatasetVersion datasetVersion) {
+        datasetVersion.getDimensionsCoverage().clear();
+
+        datasetVersion.addDimensionsCoverage(new CodeDimension("DIM01", "C01"));
+        datasetVersion.addDimensionsCoverage(new CodeDimension("DIM01", "C02"));
+        datasetVersion.addDimensionsCoverage(new CodeDimension("DIM01", "C03"));
+        datasetVersion.addDimensionsCoverage(new CodeDimension("TIME_PERIOD", "2010"));
+        datasetVersion.addDimensionsCoverage(new CodeDimension("TIME_PERIOD", "2011"));
+        datasetVersion.addDimensionsCoverage(new CodeDimension("TIME_PERIOD", "2012"));
+    }
+
+    public static void computeCoverageRelatedMetadata(DatasetVersion datasetVersion) {
+        if (datasetVersion.getTemporalCoverage().isEmpty()) {
+            for (CodeDimension codeDim : datasetVersion.getDimensionsCoverage()) {
+                if (codeDim.getDsdComponentId().equals(StatisticalResourcesConstants.TEMPORAL_DIMENSION_ID)) {
+                    datasetVersion.addTemporalCoverage(StatisticalResourcesDoMocks.mockTemporalCode(codeDim.getIdentifier(), codeDim.getIdentifier()));
+                }
+            }
+        }
+
+        if (datasetVersion.getGeographicCoverage().isEmpty()) {
+            for (CodeDimension codeDim : datasetVersion.getDimensionsCoverage()) {
+                if (codeDim.getDsdComponentId().equals("GEO_DIM")) {
+                    datasetVersion.addGeographicCoverage(StatisticalResourcesDoMocks.mockCodeExternalItem(codeDim.getIdentifier()));
+                }
+            }
+        }
+
+        if (datasetVersion.getMeasureCoverage().isEmpty()) {
+            for (CodeDimension codeDim : datasetVersion.getDimensionsCoverage()) {
+                if (codeDim.getDsdComponentId().equals("MEAS_DIM")) {
+                    datasetVersion.addMeasureCoverage(StatisticalResourcesDoMocks.mockConceptExternalItem(codeDim.getIdentifier()));
+                }
+            }
+        }
     }
 
     private void fillNeededMetadataToGenerateDatasetVersionCode(DatasetVersionMock datasetVersion) {

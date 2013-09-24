@@ -12,7 +12,18 @@ public class RepositoryUtils {
             "AND (stat.Valid_To > :now or stat.Valid_To is null)" +
         ")";
     //@formatter:on
-    
+
+    public static String buildLastPublishedVersionCondition(String statisticalResourceName) {
+        // @formatter:off
+        return "( " +
+        " "+statisticalResourceName+".proc_status = :publishedProcStatus " +
+        "AND "+statisticalResourceName+".Valid_From <= :now " +
+        "AND ("+statisticalResourceName+".Valid_To > :now or "+statisticalResourceName+".Valid_To is null)" +
+        ")";
+        //@formatter:on
+
+    }
+
     public static String buildRelatedResourceForeignKeyBasedOnType(TypeRelatedResourceEnum type) {
         switch (type) {
             case DATASET_VERSION:

@@ -586,7 +586,7 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
     public void testDeleteDatasetVersionErrorQueryRelated() throws Exception {
         thrown.expect(PersistenceException.class);
 
-        String urnDatasetVersion = queryVersionMockFactory.retrieveMock(QUERY_VERSION_01_WITH_SELECTION_NAME).getDatasetVersion().getSiemacMetadataStatisticalResource().getUrn();
+        String urnDatasetVersion = queryVersionMockFactory.retrieveMock(QUERY_VERSION_01_WITH_SELECTION_NAME).getFixedDatasetVersion().getSiemacMetadataStatisticalResource().getUrn();
         datasetService.deleteDatasetVersion(getServiceContextWithoutPrincipal(), urnDatasetVersion);
     }
 

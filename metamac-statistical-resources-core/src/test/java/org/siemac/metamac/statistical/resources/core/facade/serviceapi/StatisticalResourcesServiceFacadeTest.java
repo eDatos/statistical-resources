@@ -108,6 +108,7 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.StatisticOfficialityMockFactory.STATISTIC_OFFICIALITY_01_BASIC_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.StatisticOfficialityMockFactory.STATISTIC_OFFICIALITY_02_BASIC_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesDtoMocks.mockCodeItemDtosWithIdentifiers;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesDtoMocks.mockQueryVersionDto;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -432,8 +433,12 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
     public void testCreateQuery() throws Exception {
         ExternalItemDto statisticalOperation = StatisticalResourcesDtoMocks.mockStatisticalOperationExternalItemDto();
 
-        QueryVersionDto persistedQuery = statisticalResourcesServiceFacade.createQuery(getServiceContextAdministrador(),
-                StatisticalResourcesDtoMocks.mockQueryVersionDto(datasetVersionMockFactory.retrieveMock(DATASET_VERSION_06_FOR_QUERIES_NAME)), statisticalOperation);
+        QueryVersionDto queryToPersist = mockQueryVersionDto(datasetVersionMockFactory.retrieveMock(DATASET_VERSION_06_FOR_QUERIES_NAME));
+        queryToPersist.getSelection().clear();
+        queryToPersist.getSelection().put("DIM_01", Arrays.asList(new CodeItemDto("CODE_01", "code 01")));
+        queryToPersist.getSelection().put("DIM_02", Arrays.asList(new CodeItemDto("CODE_11", "code 11")));
+
+        QueryVersionDto persistedQuery = statisticalResourcesServiceFacade.createQuery(getServiceContextAdministrador(), queryToPersist, statisticalOperation);
         assertNotNull(persistedQuery);
         assertNotNull(persistedQuery.getUrn());
     }
@@ -446,6 +451,9 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         QueryVersionDto queryVersionDto = StatisticalResourcesDtoMocks.mockQueryVersionDto(datasetVersionMockFactory.retrieveMock(DATASET_VERSION_06_FOR_QUERIES_NAME));
         queryVersionDto.setCode("ULTIMOS_DATOS_ALOJAMIENTO");
         queryVersionDto.setMaintainer(maintainer);
+        queryVersionDto.getSelection().clear();
+        queryVersionDto.getSelection().put("DIM_01", Arrays.asList(new CodeItemDto("CODE_01", "code 01")));
+        queryVersionDto.getSelection().put("DIM_02", Arrays.asList(new CodeItemDto("CODE_11", "code 11")));
 
         String persistedQueryUrn = statisticalResourcesServiceFacade.createQuery(getServiceContextAdministrador(), queryVersionDto, statisticalOperation).getUrn();
         assertEquals("urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Query=SIEMAC:ULTIMOS_DATOS_ALOJAMIENTO(001.000)", persistedQueryUrn);
@@ -494,9 +502,9 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         QueryVersionDto expectedQuery = statisticalResourcesServiceFacade.retrieveQueryVersionByUrn(getServiceContextAdministrador(),
                 queryVersionMockFactory.retrieveMock(QUERY_VERSION_01_WITH_SELECTION_NAME).getLifeCycleStatisticalResource().getUrn());
 
-        expectedQuery.getSelection().remove("SEX");
-        expectedQuery.getSelection().put("DIM1", Arrays.asList(new CodeItemDto("A", "A"), new CodeItemDto("B", "B"), new CodeItemDto("C", "C")));
-        expectedQuery.getSelection().put("DIM2", Arrays.asList(new CodeItemDto("D", "D"), new CodeItemDto("E", "E")));
+        expectedQuery.getSelection().clear();
+        expectedQuery.getSelection().put("DIM01", Arrays.asList(new CodeItemDto("CODE02", "CODE02")));
+        expectedQuery.getSelection().put("DIM02", Arrays.asList(new CodeItemDto("CODE01", "CODE01"), new CodeItemDto("CODE02", "CODE02")));
 
         // Service operation
         QueryVersionDto actualQuery = statisticalResourcesServiceFacade.updateQueryVersion(getServiceContextAdministrador(), expectedQuery);
@@ -505,8 +513,8 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         int querySelectionItemsAfter = querySelectionItemRepository.findAll().size();
         int codeItemsAfter = codeItemRepository.findAll().size();
 
-        assertEquals(querySelectionItemsBefore - 1 + 2, querySelectionItemsAfter);
-        assertEquals(codeItemsBefore - 1 + 5, codeItemsAfter);
+        assertEquals(2, querySelectionItemsAfter);
+        assertEquals(3, codeItemsAfter);
         assertNotNull(actualQuery);
         assertEqualsQuerySelection(expectedQuery.getSelection(), actualQuery.getSelection());
     }

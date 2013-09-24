@@ -8,6 +8,8 @@ import java.util.Map;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.base.mapper.BaseDo2DtoMapperImpl;
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResourceResult;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionRepository;
 import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.CodeItemDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionBaseDto;
@@ -23,8 +25,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class QueryDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements QueryDo2DtoMapper {
 
     @Autowired
-    private QueryVersionRepository queryVersionRepository;
-    
+    private QueryVersionRepository   queryVersionRepository;
+
+    @Autowired
+    private DatasetVersionRepository datasetVersionRepository;
+
     // ---------------------------------------------------------------------------------------------------------
     // QUERY VERSION
     // ---------------------------------------------------------------------------------------------------------
@@ -38,7 +43,7 @@ public class QueryDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements Query
         queryVersionDoToQueryRelatedResourceDto(source, target);
         return target;
     }
-    
+
     private RelatedResourceDto queryVersionDoToQueryRelatedResourceDto(QueryVersion source, RelatedResourceDto target) {
         if (source == null) {
             return null;
@@ -50,7 +55,7 @@ public class QueryDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements Query
 
         // Type
         target.setType(TypeRelatedResourceEnum.QUERY);
-        
+
         // Identifiable Fields
         target.setCode(source.getQuery().getIdentifiableStatisticalResource().getCode());
         target.setCodeNested(null);
@@ -58,10 +63,10 @@ public class QueryDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements Query
 
         // Nameable Fields
         target.setTitle(internationalStringDoToDto(source.getLifeCycleStatisticalResource().getTitle()));
-        
+
         return target;
     }
-    
+
     @Override
     public QueryVersionDto queryVersionDoToDto(QueryVersion source) throws MetamacException {
         if (source == null) {
@@ -71,7 +76,7 @@ public class QueryDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements Query
         queryVersionDoToDto(source, target);
         return target;
     }
-    
+
     @Override
     public List<QueryVersionBaseDto> queryVersionDoListToDtoList(List<QueryVersion> sources) throws MetamacException {
         List<QueryVersionBaseDto> targets = new ArrayList<QueryVersionBaseDto>();
@@ -80,7 +85,7 @@ public class QueryDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements Query
         }
         return targets;
     }
-    
+
     @Override
     public QueryVersionBaseDto queryVersionDoToBaseDto(QueryVersion source) throws MetamacException {
         if (source == null) {
@@ -100,9 +105,9 @@ public class QueryDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements Query
         lifeCycleStatisticalResourceDoToBaseDto(source.getLifeCycleStatisticalResource(), target);
 
         // DatasetVersion
-        if (source.getDatasetVersion() != null) {
-            target.setRelatedDatasetVersion(lifecycleStatisticalResourceDoToRelatedResourceDto(source.getDatasetVersion().getSiemacMetadataStatisticalResource(),
-                    TypeRelatedResourceEnum.DATASET_VERSION));
+        DatasetVersion datasetVersion = getCurrentDatasetVersionInQuery(source);
+        if (datasetVersion != null) {
+            target.setRelatedDatasetVersion(lifecycleStatisticalResourceDoToRelatedResourceDto(datasetVersion.getSiemacMetadataStatisticalResource(), TypeRelatedResourceEnum.DATASET_VERSION));
         }
 
         // Status
@@ -117,8 +122,6 @@ public class QueryDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements Query
 
         return target;
     }
-    
-    
     private QueryVersionDto queryVersionDoToDto(QueryVersion source, QueryVersionDto target) throws MetamacException {
         if (source == null) {
             return null;
@@ -128,9 +131,9 @@ public class QueryDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements Query
         lifeCycleStatisticalResourceDoToDto(source.getLifeCycleStatisticalResource(), target);
 
         // DatasetVersion
-        if (source.getDatasetVersion() != null) {
-            target.setRelatedDatasetVersion(lifecycleStatisticalResourceDoToRelatedResourceDto(source.getDatasetVersion().getSiemacMetadataStatisticalResource(),
-                    TypeRelatedResourceEnum.DATASET_VERSION));
+        DatasetVersion datasetVersion = getCurrentDatasetVersionInQuery(source);
+        if (datasetVersion != null) {
+            target.setRelatedDatasetVersion(lifecycleStatisticalResourceDoToRelatedResourceDto(datasetVersion.getSiemacMetadataStatisticalResource(), TypeRelatedResourceEnum.DATASET_VERSION));
         }
 
         // Status
@@ -148,9 +151,13 @@ public class QueryDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements Query
         // Identity
         target.setId(source.getId());
         target.setVersion(source.getVersion());
-        
+
         RelatedResourceResult isReplacedByVersion = queryVersionRepository.retrieveIsReplacedByVersion(source);
         target.setIsReplacedByVersion(relatedResourceResultToDto(isReplacedByVersion));
+
+        List<RelatedResourceResult> isPartOf = queryVersionRepository.retrieveIsPartOf(source);
+        target.getIsPartOf().clear();
+        target.getIsPartOf().addAll(relatedResourceResultCollectionToDtoCollection(isPartOf));
 
         return target;
     }
@@ -158,7 +165,7 @@ public class QueryDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements Query
     // ---------------------------------------------------------------------------------------------------------
     // SELECTION
     // ---------------------------------------------------------------------------------------------------------
-    
+
     private Map<String, List<CodeItemDto>> selectionDo2Dto(List<QuerySelectionItem> source, QueryVersionDto target) {
         Map<String, List<CodeItemDto>> result = new HashMap<String, List<CodeItemDto>>();
         for (QuerySelectionItem querySelectionItem : source) {
@@ -174,5 +181,14 @@ public class QueryDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements Query
 
     private CodeItemDto codeItemDo2Dto(CodeItem source) {
         return new CodeItemDto(source.getCode(), source.getTitle());
+    }
+
+    private DatasetVersion getCurrentDatasetVersionInQuery(QueryVersion queryVersion) throws MetamacException {
+        if (queryVersion.getFixedDatasetVersion() != null) {
+            return queryVersion.getFixedDatasetVersion();
+        } else if (queryVersion.getDataset() != null) {
+            return datasetVersionRepository.retrieveLastVersion(queryVersion.getDataset().getIdentifiableStatisticalResource().getUrn());
+        }
+        return null;
     }
 }

@@ -76,7 +76,7 @@ public class PublicationLifecycleServiceImpl extends LifecycleTemplateService<Pu
     // ------------------------------------------------------------------------------------------------------
 
     @Override
-    protected void applySendToPublishedCurrentResource(ServiceContext ctx, PublicationVersion resource) throws MetamacException {
+    protected void applySendToPublishedCurrentResource(ServiceContext ctx, PublicationVersion resource, PublicationVersion previousResource) throws MetamacException {
         // TODO:
         // - cumplimentar format_extent_resources
 

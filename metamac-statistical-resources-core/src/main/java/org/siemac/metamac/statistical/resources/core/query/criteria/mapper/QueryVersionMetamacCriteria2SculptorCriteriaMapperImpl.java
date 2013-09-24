@@ -10,7 +10,8 @@ import org.siemac.metamac.core.common.criteria.MetamacCriteriaPropertyRestrictio
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaPropertyRestriction.OperationType;
 import org.siemac.metamac.core.common.criteria.SculptorPropertyCriteria;
 import org.siemac.metamac.core.common.criteria.SculptorPropertyCriteriaBase;
-import org.siemac.metamac.core.common.criteria.SculptorPropertyCriteriaConjunction;
+import org.siemac.metamac.core.common.criteria.SculptorCriteriaConjunction;
+import org.siemac.metamac.core.common.criteria.SculptorCriteriaDisjunction;
 import org.siemac.metamac.core.common.criteria.mapper.MetamacCriteria2SculptorCriteria;
 import org.siemac.metamac.core.common.criteria.mapper.MetamacCriteria2SculptorCriteria.CriteriaCallback;
 import org.siemac.metamac.core.common.criteria.utils.CriteriaUtils;
@@ -21,6 +22,7 @@ import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersionProperties;
+import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesCriteriaUtils;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -57,45 +59,59 @@ public class QueryVersionMetamacCriteria2SculptorCriteriaMapperImpl implements Q
             StatisticalResourcesCriteriaPropertyEnum propertyEnum = StatisticalResourcesCriteriaPropertyEnum.fromValue(propertyRestriction.getPropertyName());
             switch (propertyEnum) {
                 case STATISTICAL_OPERATION_URN:
-                    return new SculptorPropertyCriteria(QueryVersionProperties.lifeCycleStatisticalResource().statisticalOperation().urn(), propertyRestriction.getStringValue());
+                    return new SculptorPropertyCriteria(QueryVersionProperties.lifeCycleStatisticalResource().statisticalOperation().urn(), propertyRestriction.getStringValue(),
+                            propertyRestriction.getOperationType());
                 case CODE:
-                    return new SculptorPropertyCriteria(QueryVersionProperties.lifeCycleStatisticalResource().code(), propertyRestriction.getStringValue());
+                    return new SculptorPropertyCriteria(QueryVersionProperties.lifeCycleStatisticalResource().code(), propertyRestriction.getStringValue(), propertyRestriction.getOperationType());
                 case URN:
-                    return new SculptorPropertyCriteria(QueryVersionProperties.lifeCycleStatisticalResource().urn(), propertyRestriction.getStringValue());
+                    return new SculptorPropertyCriteria(QueryVersionProperties.lifeCycleStatisticalResource().urn(), propertyRestriction.getStringValue(), propertyRestriction.getOperationType());
                 case TITLE:
-                    return new SculptorPropertyCriteria(QueryVersionProperties.lifeCycleStatisticalResource().title().texts().label(), propertyRestriction.getStringValue());
+                    return new SculptorPropertyCriteria(QueryVersionProperties.lifeCycleStatisticalResource().title().texts().label(), propertyRestriction.getStringValue(),
+                            propertyRestriction.getOperationType());
                 case DESCRIPTION:
-                    return new SculptorPropertyCriteria(QueryVersionProperties.lifeCycleStatisticalResource().description().texts().label(), propertyRestriction.getStringValue());
+                    return new SculptorPropertyCriteria(QueryVersionProperties.lifeCycleStatisticalResource().description().texts().label(), propertyRestriction.getStringValue(),
+                            propertyRestriction.getOperationType());
                 case VERSION_RATIONALE_TYPE:
-                    return new SculptorPropertyCriteria(QueryVersionProperties.lifeCycleStatisticalResource().versionRationaleTypes().value(), propertyRestriction.getEnumValue());
+                    return new SculptorPropertyCriteria(QueryVersionProperties.lifeCycleStatisticalResource().versionRationaleTypes().value(), propertyRestriction.getEnumValue(),
+                            propertyRestriction.getOperationType());
                 case NEXT_VERSION:
-                    return new SculptorPropertyCriteria(QueryVersionProperties.lifeCycleStatisticalResource().nextVersion(), propertyRestriction.getEnumValue());
+                    return new SculptorPropertyCriteria(QueryVersionProperties.lifeCycleStatisticalResource().nextVersion(), propertyRestriction.getEnumValue(), propertyRestriction.getOperationType());
                 case NEXT_VERSION_DATE:
                     return new SculptorPropertyCriteria(CriteriaUtils.getDatetimeLeafPropertyEmbedded(QueryVersionProperties.lifeCycleStatisticalResource().nextVersionDate(), QueryVersion.class),
-                            propertyRestriction.getDateValue());
+                            propertyRestriction.getDateValue(), propertyRestriction.getOperationType());
                 case PROC_STATUS:
                     if (ProcStatusEnum.PUBLISHED.equals(propertyRestriction.getEnumValue())) {
-                        return new SculptorPropertyCriteriaConjunction(QueryVersionProperties.lifeCycleStatisticalResource().procStatus(), ProcStatusEnum.PUBLISHED, OperationType.EQ,
-                                CriteriaUtils.getDatetimeLeafPropertyEmbedded(QueryVersionProperties.lifeCycleStatisticalResource().validFrom(), QueryVersion.class), new Date(), OperationType.LE);
+                        return StatisticalResourcesCriteriaUtils.buildPublishedVisibleCondition(QueryVersionProperties.lifeCycleStatisticalResource().procStatus(), QueryVersionProperties
+                                .lifeCycleStatisticalResource().validFrom(), QueryVersion.class);
                     } else if (ProcStatusEnum.PUBLISHED_NOT_VISIBLE.equals(propertyRestriction.getEnumValue())) {
-                        return new SculptorPropertyCriteriaConjunction(QueryVersionProperties.lifeCycleStatisticalResource().procStatus(), ProcStatusEnum.PUBLISHED, OperationType.EQ,
-                                CriteriaUtils.getDatetimeLeafPropertyEmbedded(QueryVersionProperties.lifeCycleStatisticalResource().validFrom(), QueryVersion.class), new Date(), OperationType.GT);
+                        return StatisticalResourcesCriteriaUtils.buildPublishedNotVisibleCondition(QueryVersionProperties.lifeCycleStatisticalResource().procStatus(), QueryVersionProperties
+                                .lifeCycleStatisticalResource().validFrom(), QueryVersion.class);
                     } else {
-                        return new SculptorPropertyCriteria(QueryVersionProperties.lifeCycleStatisticalResource().procStatus(), propertyRestriction.getEnumValue());
+                        return new SculptorPropertyCriteria(QueryVersionProperties.lifeCycleStatisticalResource().procStatus(), propertyRestriction.getEnumValue(),
+                                propertyRestriction.getOperationType());
                     }
                 case QUERY_STATUS:
-                    return new SculptorPropertyCriteria(QueryVersionProperties.status(), propertyRestriction.getEnumValue());
+                    return new SculptorPropertyCriteria(QueryVersionProperties.status(), propertyRestriction.getEnumValue(), propertyRestriction.getOperationType());
                 case QUERY_TYPE:
-                    return new SculptorPropertyCriteria(QueryVersionProperties.type(), propertyRestriction.getEnumValue());
+                    return new SculptorPropertyCriteria(QueryVersionProperties.type(), propertyRestriction.getEnumValue(), propertyRestriction.getOperationType());
                 case QUERY_RELATED_DATASET_URN:
-                    return new SculptorPropertyCriteria(QueryVersionProperties.datasetVersion().siemacMetadataStatisticalResource().urn(), propertyRestriction.getStringValue());
+                    Property<QueryVersion> fixedDatasetVersionUrn = QueryVersionProperties.fixedDatasetVersion().siemacMetadataStatisticalResource().urn();
+                    Property<QueryVersion> urnOfAnyVersionInDataset = QueryVersionProperties.dataset().versions().siemacMetadataStatisticalResource().urn();
+                    Property<QueryVersion> lastVersionInDataset = QueryVersionProperties.dataset().versions().siemacMetadataStatisticalResource().lastVersion();
+
+                    SculptorPropertyCriteria criteriaDatasetVersionUrn = new SculptorPropertyCriteria(fixedDatasetVersionUrn, propertyRestriction.getStringValue(), OperationType.EQ);
+                    SculptorPropertyCriteria criteriaDatasetUrn = new SculptorPropertyCriteria(urnOfAnyVersionInDataset, propertyRestriction.getStringValue(), OperationType.EQ);
+                    SculptorPropertyCriteria criteriaDatasetLastVersion = new SculptorPropertyCriteria(lastVersionInDataset, propertyRestriction.getStringValue(), OperationType.EQ);
+
+                    SculptorCriteriaConjunction criteriaDatasetVersionInDatasetAndLastVersion = new SculptorCriteriaConjunction(criteriaDatasetUrn, criteriaDatasetLastVersion);
+                    return new SculptorCriteriaDisjunction(criteriaDatasetVersionUrn, criteriaDatasetVersionInDatasetAndLastVersion);
                 case LAST_VERSION:
-                    return new SculptorPropertyCriteria(QueryVersionProperties.lifeCycleStatisticalResource().lastVersion(), propertyRestriction.getBooleanValue());
+                    return new SculptorPropertyCriteria(QueryVersionProperties.lifeCycleStatisticalResource().lastVersion(), propertyRestriction.getBooleanValue(),
+                            propertyRestriction.getOperationType());
                 default:
                     throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, propertyRestriction.getPropertyName());
             }
         }
-
         @Override
         public Property<QueryVersion> retrievePropertyOrder(MetamacCriteriaOrder order) throws MetamacException {
             StatisticalResourcesCriteriaOrderEnum propertyOrderEnum = StatisticalResourcesCriteriaOrderEnum.fromValue(order.getPropertyName());

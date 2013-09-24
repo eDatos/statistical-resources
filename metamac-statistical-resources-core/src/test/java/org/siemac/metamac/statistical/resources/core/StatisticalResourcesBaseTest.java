@@ -102,4 +102,8 @@ public abstract class StatisticalResourcesBaseTest extends MetamacBaseTest {
             Thread.sleep(1 * 1000);
         }
     }
+
+    protected String buildCommaSeparatedString(String... items) {
+        return StringUtils.join(items, ", ");
+    }
 }

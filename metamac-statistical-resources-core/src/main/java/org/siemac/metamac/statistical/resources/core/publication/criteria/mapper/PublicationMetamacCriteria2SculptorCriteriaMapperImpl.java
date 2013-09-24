@@ -1,17 +1,12 @@
 package org.siemac.metamac.statistical.resources.core.publication.criteria.mapper;
 
-import java.util.Date;
-
 import org.fornax.cartridges.sculptor.framework.domain.Property;
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaOrder;
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaPropertyRestriction;
-import org.siemac.metamac.core.common.criteria.MetamacCriteriaPropertyRestriction.OperationType;
 import org.siemac.metamac.core.common.criteria.SculptorPropertyCriteria;
 import org.siemac.metamac.core.common.criteria.SculptorPropertyCriteriaBase;
-import org.siemac.metamac.core.common.criteria.SculptorPropertyCriteriaConjunction;
 import org.siemac.metamac.core.common.criteria.mapper.MetamacCriteria2SculptorCriteria;
 import org.siemac.metamac.core.common.criteria.mapper.MetamacCriteria2SculptorCriteria.CriteriaCallback;
-import org.siemac.metamac.core.common.criteria.utils.CriteriaUtils;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.common.criteria.enums.StatisticalResourcesCriteriaOrderEnum;
 import org.siemac.metamac.statistical.resources.core.common.criteria.enums.StatisticalResourcesCriteriaPropertyEnum;
@@ -19,7 +14,7 @@ import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersionProperties;
-import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
+import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesCriteriaUtils;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -57,28 +52,32 @@ public class PublicationMetamacCriteria2SculptorCriteriaMapperImpl implements Pu
             switch (propertyEnum) {
                 // From Publication
                 case CODE:
-                    return new SculptorPropertyCriteria(PublicationVersionProperties.publication().identifiableStatisticalResource().code(), propertyRestriction.getStringValue());
+                    return new SculptorPropertyCriteria(PublicationVersionProperties.publication().identifiableStatisticalResource().code(), propertyRestriction.getStringValue(),
+                            propertyRestriction.getOperationType());
                 case URN:
-                    return new SculptorPropertyCriteria(PublicationVersionProperties.publication().identifiableStatisticalResource().urn(), propertyRestriction.getStringValue());
+                    return new SculptorPropertyCriteria(PublicationVersionProperties.publication().identifiableStatisticalResource().urn(), propertyRestriction.getStringValue(),
+                            propertyRestriction.getOperationType());
                 case STATISTICAL_OPERATION_URN:
-                    return new SculptorPropertyCriteria(PublicationVersionProperties.publication().identifiableStatisticalResource().statisticalOperation().urn(), propertyRestriction.getStringValue());
+                    return new SculptorPropertyCriteria(PublicationVersionProperties.publication().identifiableStatisticalResource().statisticalOperation().urn(),
+                            propertyRestriction.getStringValue(), propertyRestriction.getOperationType());
 
                     // From Publication Version
                 case TITLE:
-                    return new SculptorPropertyCriteria(PublicationVersionProperties.siemacMetadataStatisticalResource().title().texts().label(), propertyRestriction.getStringValue());
+                    return new SculptorPropertyCriteria(PublicationVersionProperties.siemacMetadataStatisticalResource().title().texts().label(), propertyRestriction.getStringValue(),
+                            propertyRestriction.getOperationType());
                 case DESCRIPTION:
-                    return new SculptorPropertyCriteria(PublicationVersionProperties.siemacMetadataStatisticalResource().description().texts().label(), propertyRestriction.getStringValue());
+                    return new SculptorPropertyCriteria(PublicationVersionProperties.siemacMetadataStatisticalResource().description().texts().label(), propertyRestriction.getStringValue(),
+                            propertyRestriction.getOperationType());
                 case PROC_STATUS:
                     if (ProcStatusEnum.PUBLISHED.equals(propertyRestriction.getEnumValue())) {
-                        return new SculptorPropertyCriteriaConjunction(PublicationVersionProperties.siemacMetadataStatisticalResource().procStatus(), ProcStatusEnum.PUBLISHED, OperationType.EQ,
-                                CriteriaUtils.getDatetimeLeafPropertyEmbedded(PublicationVersionProperties.siemacMetadataStatisticalResource().validFrom(), QueryVersion.class), new Date(),
-                                OperationType.LE);
+                        return StatisticalResourcesCriteriaUtils.buildPublishedVisibleCondition(PublicationVersionProperties.siemacMetadataStatisticalResource().procStatus(),
+                                PublicationVersionProperties.siemacMetadataStatisticalResource().validFrom(), PublicationVersion.class);
                     } else if (ProcStatusEnum.PUBLISHED_NOT_VISIBLE.equals(propertyRestriction.getEnumValue())) {
-                        return new SculptorPropertyCriteriaConjunction(PublicationVersionProperties.siemacMetadataStatisticalResource().procStatus(), ProcStatusEnum.PUBLISHED, OperationType.EQ,
-                                CriteriaUtils.getDatetimeLeafPropertyEmbedded(PublicationVersionProperties.siemacMetadataStatisticalResource().validFrom(), QueryVersion.class), new Date(),
-                                OperationType.GT);
+                        return StatisticalResourcesCriteriaUtils.buildPublishedNotVisibleCondition(PublicationVersionProperties.siemacMetadataStatisticalResource().procStatus(),
+                                PublicationVersionProperties.siemacMetadataStatisticalResource().validFrom(), PublicationVersion.class);
                     } else {
-                        return new SculptorPropertyCriteria(PublicationVersionProperties.siemacMetadataStatisticalResource().procStatus(), propertyRestriction.getEnumValue());
+                        return new SculptorPropertyCriteria(PublicationVersionProperties.siemacMetadataStatisticalResource().procStatus(), propertyRestriction.getEnumValue(),
+                                propertyRestriction.getOperationType());
                     }
                 default:
                     // LAST_VERSION

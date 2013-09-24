@@ -28,20 +28,21 @@ public class QueryVersioningCopyUtils {
     public static void copyQueryVersion(QueryVersion source, QueryVersion target) {
         target.setLifeCycleStatisticalResource(copyLifeCycleStatisticalResource(source.getLifeCycleStatisticalResource(), target.getLifeCycleStatisticalResource()));
 
-        target.setDatasetVersion(source.getDatasetVersion());
-        
+        target.setFixedDatasetVersion(source.getFixedDatasetVersion());
+        target.setDataset(source.getDataset());
+
         target.setQuery(source.getQuery());
-        
+
         target.setStatus(source.getStatus());
         target.setType(source.getType());
-        
+
         target.setLatestDataNumber(source.getLatestDataNumber());
         target.setLatestTemporalCodeInCreation(source.getLatestTemporalCodeInCreation());
-        
+
         target.getSelection().clear();
         target.getSelection().addAll(copyListQuerySelectionItem(source.getSelection()));
     }
-    
+
     private static List<QuerySelectionItem> copyListQuerySelectionItem(List<QuerySelectionItem> source) {
         if (source.isEmpty()) {
             return new ArrayList<QuerySelectionItem>();
@@ -53,19 +54,18 @@ public class QueryVersioningCopyUtils {
         }
         return target;
     }
-    
 
     private static QuerySelectionItem copyQuerySelectionItem(QuerySelectionItem source) {
         if (source == null) {
             return null;
         }
         QuerySelectionItem target = new QuerySelectionItem();
-        
+
         target.setDimension(source.getDimension());
-        
+
         target.getCodes().clear();
         target.getCodes().addAll(copyListCodeItem(source.getCodes()));
-        
+
         return target;
     }
 
@@ -85,11 +85,11 @@ public class QueryVersioningCopyUtils {
         if (source == null) {
             return null;
         }
-        
+
         CodeItem target = new CodeItem();
         target.setCode(source.getCode());
         target.setTitle(source.getTitle());
-        
+
         return target;
     }
 }

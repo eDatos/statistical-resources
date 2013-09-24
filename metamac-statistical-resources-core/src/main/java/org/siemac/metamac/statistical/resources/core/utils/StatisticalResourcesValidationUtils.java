@@ -23,7 +23,6 @@ import org.siemac.metamac.statistical.resources.core.query.domain.QuerySelection
 
 public class StatisticalResourcesValidationUtils extends ValidationUtils {
 
-    
     /**
      * Check for a required metadata and add an exception for a failed validation.
      * 
@@ -33,12 +32,12 @@ public class StatisticalResourcesValidationUtils extends ValidationUtils {
      */
     public static void checkMetadataRequired(ElementLevel parameter, String parameterName, List<MetamacExceptionItem> exceptions) {
         isEmpty(parameter, parameterName, exceptions);
-        
+
         if (parameter.getOrderInLevel() != null && parameter.getOrderInLevel() < 0) {
             exceptions.add(new MetamacExceptionItem(ServiceExceptionType.METADATA_INCORRECT, addParameter(parameterName, ServiceExceptionParameters.ORDER_IN_LEVEL)));
         }
     }
-    
+
     /**
      * Check for a required metadata and add an exception for a failed validation.
      * 
@@ -79,7 +78,7 @@ public class StatisticalResourcesValidationUtils extends ValidationUtils {
             checkUrnExternalItemRequired(parameter, parameterName, exceptions);
         }
     }
-    
+
     /**
      * Check for a required metadata and add an exception for a failed validation.
      * 
@@ -258,7 +257,7 @@ public class StatisticalResourcesValidationUtils extends ValidationUtils {
         if (parameter == null || parameter.getType() == null) {
             return Boolean.TRUE;
         }
-        
+
         switch (parameter.getType()) {
             case DATASET:
                 if (parameter.getDataset() == null) {
@@ -293,10 +292,10 @@ public class StatisticalResourcesValidationUtils extends ValidationUtils {
             default:
                 return true;
         }
-        
+
         return false;
     }
-    
+
     /**
      * Check if a Set<QuerySelectionItem> is empty
      * 
@@ -330,7 +329,7 @@ public class StatisticalResourcesValidationUtils extends ValidationUtils {
 
         return Boolean.FALSE;
     }
-    
+
     /**
      * Check if a ElementLevel is empty
      * 
@@ -341,9 +340,10 @@ public class StatisticalResourcesValidationUtils extends ValidationUtils {
         if (isEmpty(parameter.getPublicationVersion())) {
             exceptions.add(new MetamacExceptionItem(ServiceExceptionType.METADATA_REQUIRED, addParameter(parameterName, ServiceExceptionSingleParameters.PUBLICATION_VERSION)));
         }
-        
+
         if (isEmpty(parameter.getOrderInLevel())) {
             exceptions.add(new MetamacExceptionItem(ServiceExceptionType.METADATA_REQUIRED, addParameter(parameterName, ServiceExceptionSingleParameters.ORDER_IN_LEVEL)));
         }
     }
+
 }

@@ -101,7 +101,7 @@ public class PublicationMockFactory extends StatisticalResourcesMockFactory<Publ
         // ----> Cube 01.01.01
 
         Dataset dataset01 = DatasetMockFactory.generateDatasetWithGeneratedVersion();
-        registerDatasetMock(DatasetMockFactory.DATASET_16_SIMPLE_LINKED_TO_PUB_VERSION_17_NAME, dataset01);
+        registerDatasetMock(DatasetMockFactory.DATASET_22_SIMPLE_LINKED_TO_PUB_VERSION_17_NAME, dataset01);
 
         ElementLevel elementLevel01_01_01 = createDatasetCubeElementLevel(publicationVersion, dataset01, elementLevel01_01);
         elementLevel01_01_01.setOrderInLevel(Long.valueOf(1));
@@ -114,7 +114,7 @@ public class PublicationMockFactory extends StatisticalResourcesMockFactory<Publ
         // --> Cube 01.03
 
         Dataset dataset02 = DatasetMockFactory.generateDatasetWithGeneratedVersion();
-        registerDatasetMock(DatasetMockFactory.DATASET_17_SIMPLE_LINKED_TO_PUB_VERSION_17_NAME, dataset02);
+        registerDatasetMock(DatasetMockFactory.DATASET_23_SIMPLE_LINKED_TO_PUB_VERSION_17_NAME, dataset02);
         ElementLevel elementLevel01_03 = createDatasetCubeElementLevel(publicationVersion, dataset02, elementLevel01);
         elementLevel01_03.setOrderInLevel(Long.valueOf(3));
         // Chapter 02

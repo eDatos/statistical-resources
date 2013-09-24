@@ -1,7 +1,12 @@
 package org.siemac.metamac.statistical.resources.core.query.serviceimpl;
 
+import static org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesCollectionUtils.find;
+
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
 import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
@@ -17,15 +22,25 @@ import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableSta
 import org.siemac.metamac.statistical.resources.core.base.utils.FillMetadataForCreateResourceUtils;
 import org.siemac.metamac.statistical.resources.core.base.validators.ProcStatusValidator;
 import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
+import org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConstants;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.CodeDimension;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.CodeDimensionRepository;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionRepository;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.TemporalCode;
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryTypeEnum;
+import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.query.domain.Query;
+import org.siemac.metamac.statistical.resources.core.query.domain.QuerySelectionItem;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
 import org.siemac.metamac.statistical.resources.core.query.serviceapi.validators.QueryServiceInvocationValidator;
 import org.siemac.metamac.statistical.resources.core.query.serviceimpl.validators.QueryConstraintValidator;
 import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesCollectionUtils;
+import org.siemac.metamac.statistical.resources.core.utils.predicates.ObjectEqualsStringFieldPredicate;
+import org.siemac.metamac.statistical.resources.core.utils.transformers.CodeDimensionToCodeStringTransformer;
+import org.siemac.metamac.statistical.resources.core.utils.transformers.CodeItemToCodeStringTransformer;
+import org.siemac.metamac.statistical.resources.core.utils.transformers.MetamacTransformer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -40,6 +55,9 @@ public class QueryServiceImpl extends QueryServiceImplBase {
 
     @Autowired
     private QueryServiceInvocationValidator           queryServiceInvocationValidator;
+
+    @Autowired
+    private CodeDimensionRepository                   codeDimensionRepository;
 
     @Autowired
     private DatasetVersionRepository                  datasetVersionRepository;
@@ -97,11 +115,7 @@ public class QueryServiceImpl extends QueryServiceImplBase {
         identifiableStatisticalResourceRepository.checkDuplicatedUrn(queryVersion.getLifeCycleStatisticalResource());
         identifiableStatisticalResourceRepository.checkDuplicatedUrn(query.getIdentifiableStatisticalResource());
 
-        // Checks
-        // TODO: Comprobar si hay que hacer alguno más
-        // TODO: Comprobar si pueden ser comunes al resto de artefactos
-
-        // TODO: Check compatibility with dataset version
+        checkQueryCompatibility(ctx, queryVersion);
 
         // Save query
         query = getQueryRepository().save(query);
@@ -110,7 +124,6 @@ public class QueryServiceImpl extends QueryServiceImplBase {
         queryVersion = getQueryVersionRepository().save(queryVersion);
         return queryVersion;
     }
-
     @Override
     public QueryVersion updateQueryVersion(ServiceContext ctx, QueryVersion queryVersion) throws MetamacException {
         // Validations
@@ -123,13 +136,22 @@ public class QueryServiceImpl extends QueryServiceImplBase {
         fillMetadataForUpdateQueryVersion(queryVersion);
 
         // Check that could be update
-        // TODO: Comprobar si hay que hacer alguno más
+
         // Check URN duplicated. We have to do it right now because later the fillMetadata method change the hibernate cache
         identifiableStatisticalResourceRepository.checkDuplicatedUrn(queryVersion.getLifeCycleStatisticalResource());
+
+        checkQueryCompatibility(ctx, queryVersion);
 
         // Repository operation
         return getQueryVersionRepository().save(queryVersion);
 
+    }
+
+    private void checkQueryCompatibility(ServiceContext ctx, QueryVersion queryVersion) throws MetamacException {
+        DatasetVersion datasetVersion = getCurrentDatasetVersionInQuery(queryVersion);
+        if (!checkQueryCompatibility(ctx, queryVersion, datasetVersion)) {
+            throw new MetamacException(ServiceExceptionType.QUERY_VERSION_NOT_COMPATIBLE_WITH_DATASET, datasetVersion.getSiemacMetadataStatisticalResource().getUrn());
+        }
     }
 
     @Override
@@ -202,16 +224,18 @@ public class QueryServiceImpl extends QueryServiceImplBase {
     }
 
     private QueryStatusEnum determineQueryStatus(QueryVersion queryVersion) throws MetamacException {
-        if (datasetVersionRepository.isLastVersion(queryVersion.getDatasetVersion().getSiemacMetadataStatisticalResource().getUrn())) {
+        DatasetVersion datasetVersion = getCurrentDatasetVersionInQuery(queryVersion);
+        if (datasetVersionRepository.isLastVersion(datasetVersion.getSiemacMetadataStatisticalResource().getUrn())) {
             return QueryStatusEnum.ACTIVE;
         } else {
             return QueryStatusEnum.DISCONTINUED;
         }
     }
 
-    private String determineLatestTemporalCodeInCreation(QueryVersion queryVersion) {
+    private String determineLatestTemporalCodeInCreation(QueryVersion queryVersion) throws MetamacException {
         if (QueryTypeEnum.AUTOINCREMENTAL.equals(queryVersion.getType())) {
-            List<TemporalCode> temporalCodes = queryVersion.getDatasetVersion().getTemporalCoverage();
+            DatasetVersion datasetVersion = getCurrentDatasetVersionInQuery(queryVersion);
+            List<TemporalCode> temporalCodes = datasetVersion.getTemporalCoverage();
             List<String> timeCodes = new ArrayList<String>();
             StatisticalResourcesCollectionUtils.temporalCodesToTimeCodes(temporalCodes, timeCodes);
             List<String> sortedCodes = SdmxTimeUtils.sortTimeList(timeCodes);
@@ -239,4 +263,102 @@ public class QueryServiceImpl extends QueryServiceImplBase {
         QueryVersion queryVersion = getQueryVersionRepository().retrieveLastPublishedVersion(queryUrn);
         return queryVersion;
     }
+
+    @Override
+    public boolean checkQueryCompatibility(ServiceContext ctx, QueryVersion queryVersion, DatasetVersion datasetVersion) throws MetamacException {
+        queryServiceInvocationValidator.checkCheckQueryCompatibility(ctx, queryVersion, datasetVersion);
+
+        List<String> dimensionIds = datasetVersionRepository.retrieveDimensionsIds(datasetVersion);
+
+        boolean hasTemporal = dimensionIds.contains(StatisticalResourcesConstants.TEMPORAL_DIMENSION_ID);
+
+        boolean compatible = true;
+
+        compatible = compatible && checkQueryType(queryVersion, dimensionIds);
+
+        compatible = compatible && checkQuerySelection(queryVersion, datasetVersion, dimensionIds);
+
+        if (hasTemporal && QueryTypeEnum.AUTOINCREMENTAL.equals(queryVersion.getType())) {
+            compatible = compatible && checkQueryAutoincremental(queryVersion, datasetVersion);
+        }
+
+        return compatible;
+    }
+
+    private boolean checkQueryAutoincremental(QueryVersion queryVersion, DatasetVersion datasetVersion) throws MetamacException {
+        List<CodeDimension> codes = codeDimensionRepository.findCodesForDatasetVersionByDimensionId(datasetVersion.getId(), StatisticalResourcesConstants.TEMPORAL_DIMENSION_ID, null);
+        List<String> codesIdentifiers = getCodesIdsInCodesDimension(codes);
+        return codesIdentifiers.contains(queryVersion.getLatestTemporalCodeInCreation());
+    }
+
+    private boolean checkQuerySelection(QueryVersion queryVersion, DatasetVersion datasetVersion, List<String> dimensionIds) throws MetamacException {
+        Collection<String> selectedDimensions = getDimensionsIdsInQuerySelection(queryVersion);
+        if (selectedDimensions.size() != dimensionIds.size()) {
+            return false;
+        }
+
+        boolean compatible = true;
+        for (String dimensionId : dimensionIds) {
+            QuerySelectionItem item = find(queryVersion.getSelection(), new ObjectEqualsStringFieldPredicate("dimension", dimensionId));
+            if (item != null) {
+                compatible = compatible && checkQuerySelectionCodesForDimension(dimensionId, getCodesIdsInQuerySelection(item), datasetVersion);
+            } else {
+                return false;
+            }
+        }
+
+        return compatible;
+    }
+
+    private boolean checkQuerySelectionCodesForDimension(String dimensionId, List<String> codesIdsInQuerySelection, DatasetVersion datasetVersion) throws MetamacException {
+        List<CodeDimension> codes = codeDimensionRepository.findCodesForDatasetVersionByDimensionId(datasetVersion.getId(), dimensionId, null);
+        List<String> codesIdentifiers = getCodesIdsInCodesDimension(codes);
+        for (String codeInSelection : codesIdsInQuerySelection) {
+            if (!codesIdentifiers.contains(codeInSelection)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private Collection<String> getDimensionsIdsInQuerySelection(QueryVersion queryVersion) {
+        Set<String> selectedDimensionIds = new HashSet<String>();
+        StatisticalResourcesCollectionUtils.mapCollection(queryVersion.getSelection(), selectedDimensionIds, new MetamacTransformer<QuerySelectionItem, String>() {
+
+            @Override
+            public String transformItem(QuerySelectionItem item) {
+                return item.getDimension();
+            }
+        });
+        return selectedDimensionIds;
+    }
+
+    private List<String> getCodesIdsInQuerySelection(QuerySelectionItem selection) {
+        List<String> selectedCodesIds = new ArrayList<String>();
+        StatisticalResourcesCollectionUtils.mapCollection(selection.getCodes(), selectedCodesIds, new CodeItemToCodeStringTransformer());
+        return selectedCodesIds;
+    }
+
+    private List<String> getCodesIdsInCodesDimension(List<CodeDimension> codesDimension) {
+        List<String> codesIds = new ArrayList<String>();
+        StatisticalResourcesCollectionUtils.mapCollection(codesDimension, codesIds, new CodeDimensionToCodeStringTransformer());
+        return codesIds;
+    }
+
+    protected boolean checkQueryType(QueryVersion queryVersion, List<String> dimensionIds) {
+        if (!dimensionIds.contains(StatisticalResourcesConstants.TEMPORAL_DIMENSION_ID)) {
+            if (!QueryTypeEnum.FIXED.equals(queryVersion.getType())) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private DatasetVersion getCurrentDatasetVersionInQuery(QueryVersion queryVersion) throws MetamacException {
+        if (queryVersion.getFixedDatasetVersion() != null) {
+            return queryVersion.getFixedDatasetVersion();
+        }
+        return datasetVersionRepository.retrieveLastVersion(queryVersion.getDataset().getIdentifiableStatisticalResource().getUrn());
+    }
+
 }

@@ -3,6 +3,7 @@ package org.siemac.metamac.statistical.resources.core.query.repositoryimpl;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.QueryAsserts.assertEqualsQueryVersion;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetMockFactory.DATASET_24_SIMPLE_WITH_TWO_VERSIONS_WITH_QUERY_LINKED_TO_DATASET_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_03_FOR_DATASET_03_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_06_FOR_QUERIES_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_61_DRAFT_WITH_PREVIOUS_VERSION__LINKED_TO_QUERY_10_NAME;
@@ -28,12 +29,15 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 import java.util.Arrays;
 import java.util.List;
 
+import javax.naming.OperationNotSupportedException;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResourceResult;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryTypeEnum;
@@ -47,6 +51,8 @@ import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersionRe
 import org.siemac.metamac.statistical.resources.core.utils.asserts.CommonAsserts;
 import org.siemac.metamac.statistical.resources.core.utils.asserts.QueryAsserts;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.configuration.MetamacMock;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetMockFactory;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate3.HibernateSystemException;
 import org.springframework.test.annotation.Rollback;
@@ -268,15 +274,29 @@ public class QueryVersionRepositoryTest extends StatisticalResourcesBaseTest imp
     @Override
     @MetamacMock({QUERY_VERSION_08_BASIC_DISCONTINUED_NAME, QUERY_VERSION_09_BASIC_PENDING_REVIEW_NAME, DATASET_VERSION_03_FOR_DATASET_03_NAME, QUERY_VERSION_02_BASIC_ORDERED_01_NAME,
             QUERY_VERSION_03_BASIC_ORDERED_02_NAME})
-    public void testFindLinkedToDatasetVersion() throws Exception {
+    public void testFindLinkedToFixedDatasetVersion() throws Exception {
         DatasetVersion datasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_03_FOR_DATASET_03_NAME);
 
         QueryVersion query01 = queryVersionMockFactory.retrieveMock(QUERY_VERSION_08_BASIC_DISCONTINUED_NAME);
         QueryVersion query02 = queryVersionMockFactory.retrieveMock(QUERY_VERSION_09_BASIC_PENDING_REVIEW_NAME);
 
-        List<QueryVersion> queryVersions = queryVersionRepository.findLinkedToDatasetVersion(datasetVersion.getId());
+        List<QueryVersion> queryVersions = queryVersionRepository.findLinkedToFixedDatasetVersion(datasetVersion.getId());
 
         QueryAsserts.assertEqualsQueryVersionCollection(Arrays.asList(query01, query02), queryVersions);
+    }
+
+    @Test
+    @Override
+    @MetamacMock({DATASET_24_SIMPLE_WITH_TWO_VERSIONS_WITH_QUERY_LINKED_TO_DATASET_NAME, QUERY_VERSION_08_BASIC_DISCONTINUED_NAME, QUERY_VERSION_09_BASIC_PENDING_REVIEW_NAME,
+            DATASET_VERSION_03_FOR_DATASET_03_NAME, QUERY_VERSION_02_BASIC_ORDERED_01_NAME, QUERY_VERSION_03_BASIC_ORDERED_02_NAME})
+    public void testFindLinkedToDataset() throws Exception {
+        Dataset dataset = datasetMockFactory.retrieveMock(DATASET_24_SIMPLE_WITH_TWO_VERSIONS_WITH_QUERY_LINKED_TO_DATASET_NAME);
+
+        QueryVersion query01 = queryVersionMockFactory.retrieveMock(QueryVersionMockFactory.QUERY_VERSION_36_LINKED_TO_DATASET_NAME);
+
+        List<QueryVersion> queryVersions = queryVersionRepository.findLinkedToDataset(dataset.getId());
+
+        QueryAsserts.assertEqualsQueryVersionCollection(Arrays.asList(query01), queryVersions);
     }
 
     @Test

@@ -9,6 +9,7 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.statistical.resources.core.base.validators.BaseInvocationValidator;
 import org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConstants;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryTypeEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
@@ -100,7 +101,8 @@ public class QueryServiceInvocationValidatorImpl extends BaseInvocationValidator
     }
 
     private static void checkQueryVersion(QueryVersion queryVersion, List<MetamacExceptionItem> exceptions) {
-        StatisticalResourcesValidationUtils.checkMetadataRequired(queryVersion.getDatasetVersion(), ServiceExceptionParameters.QUERY_VERSION__DATASET_VERSION, exceptions);
+        StatisticalResourcesValidationUtils.checkMetadataRequiredIncompatible(queryVersion.getDataset(), ServiceExceptionParameters.QUERY_VERSION__DATASET, queryVersion.getFixedDatasetVersion(),
+                ServiceExceptionParameters.QUERY_VERSION__FIXED_DATASET_VERSION, exceptions);
         StatisticalResourcesValidationUtils.checkMetadataRequired(queryVersion.getType(), ServiceExceptionParameters.QUERY_VERSION__TYPE, exceptions);
 
         if (QueryTypeEnum.LATEST_DATA.equals(queryVersion.getType())) {
@@ -128,6 +130,11 @@ public class QueryServiceInvocationValidatorImpl extends BaseInvocationValidator
                 }
             }
         }
+    }
+
+    public static void checkCheckQueryCompatibility(QueryVersion queryVersion, DatasetVersion dataset, List<MetamacExceptionItem> exceptions) {
+        StatisticalResourcesValidationUtils.checkParameterRequired(queryVersion, ServiceExceptionParameters.QUERY_VERSION, exceptions);
+        StatisticalResourcesValidationUtils.checkParameterRequired(dataset, ServiceExceptionParameters.DATASET_VERSION, exceptions);
     }
 
 }

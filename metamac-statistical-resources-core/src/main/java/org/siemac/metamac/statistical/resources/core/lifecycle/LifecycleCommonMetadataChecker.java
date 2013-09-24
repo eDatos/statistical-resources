@@ -22,6 +22,7 @@ import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionSingl
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
+import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesValidationUtils;
 import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesVersionUtils;
 import org.springframework.stereotype.Component;
 
@@ -116,7 +117,8 @@ public class LifecycleCommonMetadataChecker {
     }
 
     public void checkQueryVersionCommonMetadata(QueryVersion resource, String metadataName, List<MetamacExceptionItem> exceptionItems) {
-        checkMetadataRequired(resource.getDatasetVersion(), addParameter(metadataName, ServiceExceptionSingleParameters.DATASET_VERSION), exceptionItems);
+        StatisticalResourcesValidationUtils.checkMetadataRequiredIncompatible(resource.getFixedDatasetVersion(), addParameter(metadataName, ServiceExceptionSingleParameters.FIXED_DATASET_VERSION),
+                resource.getDataset(), addParameter(metadataName, ServiceExceptionSingleParameters.DATASET), exceptionItems);
         checkMetadataRequired(resource.getStatus(), addParameter(metadataName, ServiceExceptionSingleParameters.STATUS), exceptionItems);
         checkMetadataRequired(resource.getType(), addParameter(metadataName, ServiceExceptionSingleParameters.TYPE), exceptionItems);
         checkMetadataRequired(resource.getSelection(), addParameter(metadataName, ServiceExceptionSingleParameters.SELECTION), exceptionItems);

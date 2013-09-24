@@ -35,7 +35,7 @@ public class StatisticalResourcesCollectionUtils extends MetamacCollectionUtils 
             for (Object expectedItem : expected) {
                 String nameFieldValue = (String) MetamacReflectionUtils.getComplexFieldValue(expectedItem, expectedFieldName);
 
-                if (!find(actual, new ObjectEqualsStringFieldPredicate(actualFieldName, nameFieldValue))) {
+                if (!isInCollection(actual, new ObjectEqualsStringFieldPredicate(actualFieldName, nameFieldValue))) {
                     return false;
                 }
             }
@@ -44,8 +44,13 @@ public class StatisticalResourcesCollectionUtils extends MetamacCollectionUtils 
     }
 
     @SuppressWarnings("unchecked")
-    public static <T> boolean find(Collection<T> collection, ObjectEqualsStringFieldPredicate predicate) {
+    public static <T> boolean isInCollection(Collection<T> collection, ObjectEqualsStringFieldPredicate predicate) {
         return (T) CollectionUtils.find(collection, predicate) != null;
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T> T find(Collection<T> collection, ObjectEqualsStringFieldPredicate predicate) {
+        return (T) CollectionUtils.find(collection, predicate);
     }
 
     public static <T, R> void mapCollection(Collection<T> collection, final Collection<R> outputCollection, MetamacTransformer<T, R> transformer) {

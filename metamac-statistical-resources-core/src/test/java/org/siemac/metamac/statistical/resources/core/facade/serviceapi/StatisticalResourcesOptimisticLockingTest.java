@@ -146,7 +146,8 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
         Map<String, List<CodeItemDto>> selection = new HashMap<String, List<CodeItemDto>>() {
 
             {
-                put("DIM_SESSION1", Arrays.asList(new CodeItemDto("A", "A"), new CodeItemDto("B", "B")));
+                put("DIM01", Arrays.asList(new CodeItemDto("CODE01", "CODE01")));
+                put("DIM02", Arrays.asList(new CodeItemDto("CODE01", "CODE01")));
             }
         };
         queryVersionDtoSession01.setSelection(selection);
@@ -158,15 +159,17 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
         selection = new HashMap<String, List<CodeItemDto>>() {
 
             {
-                put("DIM_SESSION2", Arrays.asList(new CodeItemDto("C", "C"), new CodeItemDto("D", "D")));
+                put("DIM01", Arrays.asList(new CodeItemDto("CODE02", "CODE02")));
+                put("DIM02", Arrays.asList(new CodeItemDto("CODE02", "CODE02")));
             }
         };
         queryVersionDtoSession02.setSelection(selection);
 
         // Update query - session 1 --> OK
         QueryVersionDto queryVersionDtoSession1AfterUpdate01 = statisticalResourcesServiceFacade.updateQueryVersion(getServiceContextAdministrador(), queryVersionDtoSession01);
-        assertEquals(1, queryVersionDtoSession01.getSelection().size());
-        assertEqualsCodeItemDtoCollection(Arrays.asList(new CodeItemDto("A", "A"), new CodeItemDto("B", "B")), queryVersionDtoSession1AfterUpdate01.getSelection().get("DIM_SESSION1"));
+        assertEquals(2, queryVersionDtoSession01.getSelection().size());
+        assertEqualsCodeItemDtoCollection(Arrays.asList(new CodeItemDto("CODE01", "CODE01")), queryVersionDtoSession1AfterUpdate01.getSelection().get("DIM01"));
+        assertEqualsCodeItemDtoCollection(Arrays.asList(new CodeItemDto("CODE01", "CODE01")), queryVersionDtoSession1AfterUpdate01.getSelection().get("DIM02"));
         assertTrue(queryVersionDtoSession1AfterUpdate01.getOptimisticLockingVersion() > queryVersionDtoSession01.getOptimisticLockingVersion());
 
         // Update query - session 2 --> FAIL
@@ -193,6 +196,10 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
 
         DatasetVersion datasetVersion06 = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_06_FOR_QUERIES_NAME);
         queryVersionDtoSession01.setRelatedDatasetVersion(StatisticalResourcesDtoMocks.mockPersistedRelatedResourceDatasetVersionDto(datasetVersion06));
+        // update selection because of dataset change
+        queryVersionDtoSession01.getSelection().clear();
+        queryVersionDtoSession01.getSelection().put("DIM_01", Arrays.asList(new CodeItemDto("CODE_01", "CODE_01")));
+        queryVersionDtoSession01.getSelection().put("DIM_02", Arrays.asList(new CodeItemDto("CODE_11", "CODE_11")));
 
         // Retrieve query - session 2
         QueryVersionDto queryVersionDtoSession02 = statisticalResourcesServiceFacade.retrieveQueryVersionByUrn(getServiceContextAdministrador(),

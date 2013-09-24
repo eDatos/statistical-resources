@@ -84,8 +84,8 @@ public class CubeRepositoryTest extends StatisticalResourcesBaseTest implements 
         List<String> result = cubeRepository.findDatasetsLinkedWithPublicationVersion(publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_17_WITH_STRUCTURE_FOR_PUBLICATION_VERSION_04_NAME)
                 .getSiemacMetadataStatisticalResource().getUrn());
         assertEquals(2, result.size());
-        assertTrue(result.contains(datasetMockFactory.retrieveMock(DATASET_17_SIMPLE_LINKED_TO_PUB_VERSION_17_NAME).getIdentifiableStatisticalResource().getUrn()));
-        assertTrue(result.contains(datasetMockFactory.retrieveMock(DATASET_16_SIMPLE_LINKED_TO_PUB_VERSION_17_NAME).getIdentifiableStatisticalResource().getUrn()));
+        assertTrue(result.contains(datasetMockFactory.retrieveMock(DATASET_23_SIMPLE_LINKED_TO_PUB_VERSION_17_NAME).getIdentifiableStatisticalResource().getUrn()));
+        assertTrue(result.contains(datasetMockFactory.retrieveMock(DATASET_22_SIMPLE_LINKED_TO_PUB_VERSION_17_NAME).getIdentifiableStatisticalResource().getUrn()));
     }
 
     @Test

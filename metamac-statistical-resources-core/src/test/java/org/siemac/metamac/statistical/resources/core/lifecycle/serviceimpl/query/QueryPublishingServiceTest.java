@@ -59,7 +59,7 @@ public class QueryPublishingServiceTest extends StatisticalResourcesMockRestBase
     private void assertPublishingQueryVersion(QueryVersion current) throws MetamacException {
         LifecycleAsserts.assertNotNullAutomaticallyFilledMetadataLifecycleSendToPublished(current, null);
 
-        assertNotNull(current.getDatasetVersion());
+        assertTrue(current.getFixedDatasetVersion() != null || current.getDataset() != null);
         assertNotNull(current.getStatus());
         assertTrue(current.getStatus().equals(QueryStatusEnum.ACTIVE) || current.getStatus().equals(QueryStatusEnum.DISCONTINUED));
     }

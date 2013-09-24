@@ -201,8 +201,9 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
     }
 
     private void checkDatasetVersionForDatasourceHasNoQueries(Datasource datasource) throws MetamacException {
-        List<QueryVersion> queries = queryVersionRepository.findLinkedToDatasetVersion(datasource.getDatasetVersion().getId());
-        if (!queries.isEmpty()) {
+        List<QueryVersion> queries = queryVersionRepository.findLinkedToFixedDatasetVersion(datasource.getDatasetVersion().getId());
+        List<QueryVersion> queriesDataset = queryVersionRepository.findLinkedToDataset(datasource.getDatasetVersion().getDataset().getId());
+        if (!queries.isEmpty() || !queriesDataset.isEmpty()) {
             throw new MetamacException(ServiceExceptionType.DATASOURCE_IN_DATASET_VERSION_WITH_QUERIES_DELETE_ERROR, datasource.getIdentifiableStatisticalResource().getUrn());
         }
     }
@@ -284,8 +285,9 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
 
     private void checkDsdChanges(DatasetVersion datasetVersion) throws MetamacException {
         if (datasetVersion.isRelatedDsdChanged()) {
-            List<QueryVersion> queriesLinkedToDataset = queryVersionRepository.findLinkedToDatasetVersion(datasetVersion.getId());
-            if (!queriesLinkedToDataset.isEmpty()) {
+            List<QueryVersion> queriesLinkedToDatasetVersion = queryVersionRepository.findLinkedToFixedDatasetVersion(datasetVersion.getId());
+            List<QueryVersion> queriesLinkedToDataset = queryVersionRepository.findLinkedToDataset(datasetVersion.getDataset().getId());
+            if (!queriesLinkedToDataset.isEmpty() || !queriesLinkedToDatasetVersion.isEmpty()) {
                 throw new MetamacException(ServiceExceptionType.DATASET_VERSION_CANT_CHANGE_DSD_SOME_QUERIES_EXIST, datasetVersion.getSiemacMetadataStatisticalResource().getUrn());
             }
         }

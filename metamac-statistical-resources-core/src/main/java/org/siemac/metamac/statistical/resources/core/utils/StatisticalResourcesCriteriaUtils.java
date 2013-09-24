@@ -1,11 +1,21 @@
 package org.siemac.metamac.statistical.resources.core.utils;
 
+import java.util.Date;
+
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteriaBuilder;
+import org.fornax.cartridges.sculptor.framework.domain.Property;
 import org.joda.time.DateTime;
+import org.siemac.metamac.core.common.criteria.SculptorCriteriaConjunction;
+import org.siemac.metamac.core.common.criteria.SculptorPropertyCriteria;
+import org.siemac.metamac.core.common.criteria.SculptorPropertyCriteriaBase;
+import org.siemac.metamac.core.common.criteria.MetamacCriteriaPropertyRestriction.OperationType;
+import org.siemac.metamac.core.common.criteria.utils.CriteriaUtils;
 import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatisticalResourceProperties.LifeCycleStatisticalResourceProperty;
 import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataStatisticalResourceProperties.SiemacMetadataStatisticalResourceProperty;
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
+import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
+import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersionProperties;
 
 public class StatisticalResourcesCriteriaUtils {
 
@@ -41,5 +51,17 @@ public class StatisticalResourcesCriteriaUtils {
                     withProperty(lifeCycleStatisticalResourceProperty.validTo()).greaterThan(now).
                 rbrace().distinctRoot().buildSingle();
         //@formatter:on
+    }
+
+    public static SculptorPropertyCriteriaBase buildPublishedVisibleCondition(Property procStatusProperty, Property validFromProperty, Class entityClazz) {
+        SculptorPropertyCriteria statusPublished = new SculptorPropertyCriteria(procStatusProperty, ProcStatusEnum.PUBLISHED, OperationType.EQ);
+        SculptorPropertyCriteria validFromBeforeNow = new SculptorPropertyCriteria(CriteriaUtils.getDatetimeLeafPropertyEmbedded(validFromProperty, entityClazz), new Date(), OperationType.LE);
+        return new SculptorCriteriaConjunction(statusPublished, validFromBeforeNow);
+    }
+
+    public static SculptorPropertyCriteriaBase buildPublishedNotVisibleCondition(Property procStatusProperty, Property validFromProperty, Class entityClazz) {
+        SculptorPropertyCriteria statusPublished = new SculptorPropertyCriteria(procStatusProperty, ProcStatusEnum.PUBLISHED, OperationType.EQ);
+        SculptorPropertyCriteria validFromBeforeNow = new SculptorPropertyCriteria(CriteriaUtils.getDatetimeLeafPropertyEmbedded(validFromProperty, entityClazz), new Date(), OperationType.GT);
+        return new SculptorCriteriaConjunction(statusPublished, validFromBeforeNow);
     }
 }

@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConstants.METHOD_NOT_IMPLEMENT_IN_THIS_VERSION;
+import static org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts.assertEqualsDataset;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts.assertEqualsDatasetVersion;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.QueryAsserts.assertEqualsQuery;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.QueryAsserts.assertEqualsSelection;
@@ -27,6 +28,7 @@ import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceapi.LifecycleService;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
 import org.siemac.metamac.statistical.resources.core.utils.asserts.BaseAsserts;
+import org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.configuration.MetamacMock;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -199,7 +201,11 @@ public class QueryVersioningServiceTest extends StatisticalResourcesBaseTest {
         // Inherited
         assertEquals(previous.getLatestDataNumber(), next.getLatestDataNumber());
         assertEquals(previous.getLatestTemporalCodeInCreation(), next.getLatestTemporalCodeInCreation());
-        assertEqualsDatasetVersion(previous.getDatasetVersion(), next.getDatasetVersion());
+        if (previous.getFixedDatasetVersion() != null) {
+            assertEqualsDatasetVersion(previous.getFixedDatasetVersion(), next.getFixedDatasetVersion());
+        } else if (previous.getDataset() != null) {
+            assertEqualsDataset(previous.getDataset(), next.getDataset());
+        }
         assertEqualsQuery(previous.getQuery(), next.getQuery());
         assertEquals(previous.getStatus(), next.getStatus());
         assertEquals(previous.getType(), next.getType());

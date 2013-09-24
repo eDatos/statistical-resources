@@ -78,7 +78,7 @@ public class QueryLifecycleServiceImpl extends LifecycleTemplateService<QueryVer
     // ------------------------------------------------------------------------------------------------------
 
     @Override
-    protected void applySendToPublishedCurrentResource(ServiceContext ctx, QueryVersion resource) throws MetamacException {
+    protected void applySendToPublishedCurrentResource(ServiceContext ctx, QueryVersion resource, QueryVersion previousResource) throws MetamacException {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Not implemented");
     }

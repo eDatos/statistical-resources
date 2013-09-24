@@ -16,14 +16,14 @@ import org.siemac.metamac.core.common.utils.EntityMetadata;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.configuration.MockPersisterBase;
 import org.springframework.util.ReflectionUtils;
 
-
 public abstract class DBMockPersisterBase extends MockPersisterBase {
+
     private static final String   SERIALIZE_METHOD_NAME = "serializeDbXml";
     protected static final String URI_MOCK_PREFIX       = "lorem/ipsum/dolor/sit/amet/";
     protected static final String URN_MOCK_PREFIX       = "urn:lorem.ipsum.dolor.infomodel.package.Resource=";
-    
+
     private long                  nextId                = 1L;
-    
+
     protected List<EntityMetadata> getMocksMetadata(List<Object> mocks) throws Exception {
         MapIdenticalKey metadataMatching = new MapIdenticalKey();
         for (Object mock : mocks) {
@@ -65,11 +65,10 @@ public abstract class DBMockPersisterBase extends MockPersisterBase {
                 } else {
                     metadataMatching.addUnMatchedEntityMetadata(metadata);
                 }
-                
+
                 resolveDirectDependencies(mock, metadata, metadataMatching);
 
                 resolveJoinTableDependencies(mock, metadata, metadataMatching);
-
 
                 resolveReverseDependencies(mock, metadata, metadataMatching);
             }
@@ -77,7 +76,7 @@ public abstract class DBMockPersisterBase extends MockPersisterBase {
             return metadataRepresentingMock;
         }
     }
-    
+
     public static String getUriMock() {
         return URI_MOCK_PREFIX + MetamacMocks.mockString(5);
     }
@@ -86,7 +85,6 @@ public abstract class DBMockPersisterBase extends MockPersisterBase {
         return URN_MOCK_PREFIX + MetamacMocks.mockString(10);
     }
 
-    
     private Object fillIdentiyAndAuditMetadata(Object mock) {
         fillField(mock, "uuid", UUID.randomUUID().toString());
         fillField(mock, "version", Long.valueOf(0));
@@ -99,7 +97,7 @@ public abstract class DBMockPersisterBase extends MockPersisterBase {
 
         return mock;
     }
-    
+
     private Object fillField(Object mock, String fieldName, Object value) {
         try {
             Field field = ReflectionUtils.findField(mock.getClass(), fieldName);
@@ -117,7 +115,7 @@ public abstract class DBMockPersisterBase extends MockPersisterBase {
             throw new RuntimeException("Error setting " + fieldName + " on mock object ", e);
         }
     }
-    
+
     private Object fillFieldIfNull(Object mock, String fieldName, Object value) {
         try {
             Field field = ReflectionUtils.findField(mock.getClass(), fieldName);
@@ -265,11 +263,7 @@ public abstract class DBMockPersisterBase extends MockPersisterBase {
             throw new IllegalArgumentException("Error calling " + SERIALIZE_METHOD_NAME + " for mock class " + mock.getClass(), e);
         }
     }
-    
 
-    
-   
-    
     private class MapIdenticalKey {
 
         private List<Object>         mocks;

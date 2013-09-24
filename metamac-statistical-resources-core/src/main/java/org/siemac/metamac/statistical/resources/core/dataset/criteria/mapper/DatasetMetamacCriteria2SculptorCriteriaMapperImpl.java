@@ -8,7 +8,7 @@ import org.siemac.metamac.core.common.criteria.MetamacCriteriaPropertyRestrictio
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaPropertyRestriction.OperationType;
 import org.siemac.metamac.core.common.criteria.SculptorPropertyCriteria;
 import org.siemac.metamac.core.common.criteria.SculptorPropertyCriteriaBase;
-import org.siemac.metamac.core.common.criteria.SculptorPropertyCriteriaConjunction;
+import org.siemac.metamac.core.common.criteria.SculptorCriteriaConjunction;
 import org.siemac.metamac.core.common.criteria.mapper.MetamacCriteria2SculptorCriteria;
 import org.siemac.metamac.core.common.criteria.mapper.MetamacCriteria2SculptorCriteria.CriteriaCallback;
 import org.siemac.metamac.core.common.criteria.utils.CriteriaUtils;
@@ -20,6 +20,7 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersi
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
+import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesCriteriaUtils;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -57,28 +58,32 @@ public class DatasetMetamacCriteria2SculptorCriteriaMapperImpl implements Datase
             switch (propertyEnum) {
                 // From dataset
                 case CODE:
-                    return new SculptorPropertyCriteria(DatasetVersionProperties.dataset().identifiableStatisticalResource().code(), propertyRestriction.getStringValue());
+                    return new SculptorPropertyCriteria(DatasetVersionProperties.dataset().identifiableStatisticalResource().code(), propertyRestriction.getStringValue(),
+                            propertyRestriction.getOperationType());
                 case URN:
-                    return new SculptorPropertyCriteria(DatasetVersionProperties.dataset().identifiableStatisticalResource().urn(), propertyRestriction.getStringValue());
+                    return new SculptorPropertyCriteria(DatasetVersionProperties.dataset().identifiableStatisticalResource().urn(), propertyRestriction.getStringValue(),
+                            propertyRestriction.getOperationType());
                 case STATISTICAL_OPERATION_URN:
-                    return new SculptorPropertyCriteria(DatasetVersionProperties.dataset().identifiableStatisticalResource().statisticalOperation().urn(), propertyRestriction.getStringValue());
+                    return new SculptorPropertyCriteria(DatasetVersionProperties.dataset().identifiableStatisticalResource().statisticalOperation().urn(), propertyRestriction.getStringValue(),
+                            propertyRestriction.getOperationType());
 
                     // From datasetVersion
                 case TITLE:
-                    return new SculptorPropertyCriteria(DatasetVersionProperties.siemacMetadataStatisticalResource().title().texts().label(), propertyRestriction.getStringValue());
+                    return new SculptorPropertyCriteria(DatasetVersionProperties.siemacMetadataStatisticalResource().title().texts().label(), propertyRestriction.getStringValue(),
+                            propertyRestriction.getOperationType());
                 case DESCRIPTION:
-                    return new SculptorPropertyCriteria(DatasetVersionProperties.siemacMetadataStatisticalResource().description().texts().label(), propertyRestriction.getStringValue());
+                    return new SculptorPropertyCriteria(DatasetVersionProperties.siemacMetadataStatisticalResource().description().texts().label(), propertyRestriction.getStringValue(),
+                            propertyRestriction.getOperationType());
                 case PROC_STATUS:
                     if (ProcStatusEnum.PUBLISHED.equals(propertyRestriction.getEnumValue())) {
-                        return new SculptorPropertyCriteriaConjunction(DatasetVersionProperties.siemacMetadataStatisticalResource().procStatus(), ProcStatusEnum.PUBLISHED, OperationType.EQ,
-                                CriteriaUtils.getDatetimeLeafPropertyEmbedded(DatasetVersionProperties.siemacMetadataStatisticalResource().validFrom(), QueryVersion.class), new Date(),
-                                OperationType.LE);
+                        return StatisticalResourcesCriteriaUtils.buildPublishedVisibleCondition(DatasetVersionProperties.siemacMetadataStatisticalResource().procStatus(), DatasetVersionProperties
+                                .siemacMetadataStatisticalResource().validFrom(), DatasetVersion.class);
                     } else if (ProcStatusEnum.PUBLISHED_NOT_VISIBLE.equals(propertyRestriction.getEnumValue())) {
-                        return new SculptorPropertyCriteriaConjunction(DatasetVersionProperties.siemacMetadataStatisticalResource().procStatus(), ProcStatusEnum.PUBLISHED, OperationType.EQ,
-                                CriteriaUtils.getDatetimeLeafPropertyEmbedded(DatasetVersionProperties.siemacMetadataStatisticalResource().validFrom(), QueryVersion.class), new Date(),
-                                OperationType.GT);
+                        return StatisticalResourcesCriteriaUtils.buildPublishedNotVisibleCondition(DatasetVersionProperties.siemacMetadataStatisticalResource().procStatus(), DatasetVersionProperties
+                                .siemacMetadataStatisticalResource().validFrom(), DatasetVersion.class);
                     } else {
-                        return new SculptorPropertyCriteria(DatasetVersionProperties.siemacMetadataStatisticalResource().procStatus(), propertyRestriction.getEnumValue());
+                        return new SculptorPropertyCriteria(DatasetVersionProperties.siemacMetadataStatisticalResource().procStatus(), propertyRestriction.getEnumValue(),
+                                propertyRestriction.getOperationType());
                     }
                 default:
                     // LAST_VERSION

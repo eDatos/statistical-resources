@@ -261,7 +261,7 @@ public abstract class LifecycleTemplateService<E extends Object> implements Life
 
     protected void applySendToPublishedCurrentVersion(ServiceContext ctx, E resource, E previousResource) throws MetamacException {
         applySendToPublishedCurrentLinkedStatisticalResource(ctx, resource, previousResource);
-        applySendToPublishedCurrentResource(ctx, resource);
+        applySendToPublishedCurrentResource(ctx, resource, previousResource);
     }
 
     protected void applySendToPublishedPreviousVersion(ServiceContext ctx, E resource, E previousResource) throws MetamacException {
@@ -303,7 +303,7 @@ public abstract class LifecycleTemplateService<E extends Object> implements Life
 
     protected abstract void checkSendToPublishedResource(E resource, List<MetamacExceptionItem> exceptionItems) throws MetamacException;
 
-    protected abstract void applySendToPublishedCurrentResource(ServiceContext ctx, E resource) throws MetamacException;
+    protected abstract void applySendToPublishedCurrentResource(ServiceContext ctx, E resource, E previousResource) throws MetamacException;
 
     protected abstract void applySendToPublishedPreviousResource(ServiceContext ctx, E previousResource) throws MetamacException;
 

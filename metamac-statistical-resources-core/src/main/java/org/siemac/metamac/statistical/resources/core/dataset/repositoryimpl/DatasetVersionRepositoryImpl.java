@@ -17,6 +17,7 @@ import org.siemac.metamac.core.common.criteria.utils.CriteriaUtils;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatisticalResourceRepository;
 import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataStatisticalResourceRepository;
+import org.siemac.metamac.statistical.resources.core.base.domain.utils.RepositoryUtils;
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResourceResult;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionProperties;
@@ -150,6 +151,13 @@ public class DatasetVersionRepositoryImpl extends DatasetVersionRepositoryBase {
     @Override
     public List<RelatedResourceResult> retrieveIsRequiredByOnlyLastPublished(DatasetVersion datasetVersion) throws MetamacException {
         //@formatter:off
+        String queryLinkedDirectlyToDatasetVersion = 
+            "         (query.Dataset_Version_Fk = :datasetVersionFk) ";
+
+        String queryLinkedToDatasetAndDatasetVersionLastPublishedVersion = 
+            "         (query.dataset_fk = dataset_version.dataset_fk" + 
+            "           And " + RepositoryUtils.buildLastPublishedVersionCondition("stat_dataset") + ") ";
+        
         Query query = getEntityManager().createNativeQuery(
                 "select stat.code,"+
                 "       stat.urn, " +
@@ -162,11 +170,18 @@ public class DatasetVersionRepositoryImpl extends DatasetVersionRepositoryBase {
                 " from  Tb_External_Items operItems, " +
                 "       Tb_External_Items maintainerItems, " +
                 "       Tb_Queries_Versions query Inner Join Tb_Stat_Resources stat On query.lifecycle_resource_fk = stat.Id, " +
-                "       Tb_localised_strings loc "+
+                "       Tb_localised_strings loc, "+
+                "       Tb_datasets_versions dataset_version inner join tb_stat_resources stat_dataset "+
+                "           on dataset_version.siemac_resource_fk = stat_dataset.id " +
                 " Where stat.Stat_Operation_Fk = operItems.Id " +
                 "   And stat.Maintainer_Fk = maintainerItems.Id "+
                 "   And stat.Title_Fk = loc.International_String_Fk " +
-                "   And query.Dataset_Version_Fk = :datasetVersionFk " +
+                "   And dataset_version.id = :datasetVersionFk " +
+                "   And ( " +
+                "           "+queryLinkedDirectlyToDatasetVersion+" "+
+                "       OR "+
+                "           "+queryLinkedToDatasetAndDatasetVersionLastPublishedVersion+" "+
+                "       ) " +
                 "   And  " + isLastPublishedVersionConditions);
 
         //     @formatter:on
@@ -183,6 +198,17 @@ public class DatasetVersionRepositoryImpl extends DatasetVersionRepositoryBase {
     @Override
     public List<RelatedResourceResult> retrieveIsRequiredBy(DatasetVersion datasetVersion) throws MetamacException {
         //     @formatter:off
+        String queryLinkedDirectlyToDatasetVersion =              
+            "         (query.Dataset_Version_Fk = :datasetVersionFk) ";
+        
+        String queryLinkedToDatasetAndDatasetVersionIsLastVersion = 
+            "         (query.dataset_fk = dataset_version.dataset_fk" +
+            "           And stat_dataset.Last_Version = 1) ";
+        
+        String queryLinkedToDatasetAndDatasetVersionLastPublishedVersion = 
+            "         (query.dataset_fk = dataset_version.dataset_fk" +
+            "           And "+RepositoryUtils.buildLastPublishedVersionCondition("stat_dataset")+ ") ";
+        
         Query query = getEntityManager().createNativeQuery(
                 "select stat.code, " +
                 "       stat.urn, " +
@@ -195,26 +221,31 @@ public class DatasetVersionRepositoryImpl extends DatasetVersionRepositoryBase {
                 "from   Tb_External_Items operItems, " +
                 "       Tb_External_Items maintainerItems, " +
                 "       Tb_Queries_Versions query Inner Join Tb_Stat_Resources stat " +
-                "           On query.lifecycle_resource_fk = stat.Id, " + " Tb_localised_strings loc " +
+                "           On query.lifecycle_resource_fk = stat.Id, " + 
+                "       Tb_localised_strings loc, " +
+                "       Tb_datasets_versions dataset_version inner join tb_stat_resources stat_dataset "+
+                "           on dataset_version.siemac_resource_fk = stat_dataset.id " +
         		"Where stat.Stat_Operation_Fk = operItems.Id " +
         		"     And stat.Maintainer_Fk = maintainerItems.Id " +
         		"     And stat.Title_Fk = loc.International_String_Fk " +
-        		"     And query.Dataset_Version_Fk = :datasetVersionFk  " +
-        		"     And ( " +
-        		"         stat.Last_Version = 1 " +
-        		"         OR" +
-        		"       "+isLastPublishedVersionConditions + ")");
+        		"     And dataset_version.id = :datasetVersionFk " +
+        		"     And ( "+
+        		            queryLinkedDirectlyToDatasetVersion +
+        		"         OR "+
+        		            queryLinkedToDatasetAndDatasetVersionIsLastVersion +
+	            "         OR "+
+        		            queryLinkedToDatasetAndDatasetVersionLastPublishedVersion +
+	            "          ) ");
 
         //     @formatter:on
         query.setParameter("publishedProcStatus", ProcStatusEnum.PUBLISHED.name());
-        query.setParameter("datasetVersionFk", datasetVersion.getId());
         query.setParameter("now", new DateTime().toDate());
+        query.setParameter("datasetVersionFk", datasetVersion.getId());
 
         List<Object> rows = query.getResultList();
         List<RelatedResourceResult> resources = getRelatedResourceResultsFromRows(rows, TypeRelatedResourceEnum.QUERY_VERSION);
         return resources;
     }
-
     @Override
     public RelatedResourceResult retrieveIsReplacedByVersionOnlyLastPublished(DatasetVersion datasetVersion) throws MetamacException {
         return lifeCycleStatisticalResourceRepository.retrieveIsReplacedByVersionOnlyLastPublished(datasetVersion.getId(), TypeRelatedResourceEnum.DATASET_VERSION);

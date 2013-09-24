@@ -9,6 +9,10 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetMockFactory.DATASET_04_FULL_FILLED_WITH_1_DATASET_VERSIONS_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetMockFactory.DATASET_05_WITH_MULTIPLE_PUBLISHED_VERSIONS_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetMockFactory.DATASET_06_WITH_MULTIPLE_PUBLISHED_VERSIONS_AND_LATEST_NO_VISIBLE_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.*;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.buildQueryVersionMockSimple;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.buildSelectionItemWithDimensionAndCodes;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.createQueryVersionFromTemplate;
 
 import org.joda.time.DateTime;
 import org.siemac.metamac.statistical.resources.core.base.domain.VersionRationaleType;
@@ -18,16 +22,24 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersi
 import org.siemac.metamac.statistical.resources.core.enume.domain.NextVersionTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.VersionRationaleTypeEnum;
+import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryTypeEnum;
 import org.siemac.metamac.statistical.resources.core.publication.domain.ElementLevel;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
+import org.siemac.metamac.statistical.resources.core.query.domain.CodeItem;
+import org.siemac.metamac.statistical.resources.core.query.domain.QuerySelectionItem;
+import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
 import org.siemac.metamac.statistical.resources.core.utils.DatasetLifecycleTestUtils;
 import org.siemac.metamac.statistical.resources.core.utils.LifecycleTestUtils;
 import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesVersionUtils;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.DatasetMock;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.DatasetVersionMock;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.QueryVersionMock;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.configuration.MockDescriptor;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.configuration.MockProvider;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesDoMocks;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesPersistedDoMocks;
+
+import antlr.CppCodeGenerator;
 
 @MockProvider
 @SuppressWarnings("unused")
@@ -203,6 +215,10 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
 
     public static final String               DATASET_VERSION_85_LAST_VERSION_NOT_PUBLISHED__IS_PART_OF_PUBLICATIONS_NAME                            = "DATASET_VERSION_85_LAST_VERSION_NOT_PUBLISHED__IS_PART_OF_PUBLICATIONS";
 
+    public static final String               DATASET_VERSION_86_WITH_TEMPORAL_DIMENSION_NAME                                                        = "DATASET_VERSION_86_WITH_TEMPORAL_DIMENSION";
+
+    public static final String               DATASET_VERSION_87_WITH_NO_TEMPORAL_DIMENSION_NAME                                                     = "DATASET_VERSION_87_WITH_NO_TEMPORAL_DIMENSION";
+
     private static final String              INIT_VERSION                                                                                           = "001.000";
     private static final String              SECOND_VERSION                                                                                         = "002.000";
 
@@ -241,7 +257,11 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
     }
 
     private static DatasetVersion getDatasetVersion06ForQueries() {
-        return createDatasetVersionWithSequence(2);
+        DatasetVersion datasetVersion = createDatasetVersionWithSequence(2);
+        datasetVersion.getDimensionsCoverage().clear();
+        addCodesToDimensionCoverage(datasetVersion, "DIM_01", "CODE_01", "CODE_02");
+        addCodesToDimensionCoverage(datasetVersion, "DIM_02", "CODE_11", "CODE_12");
+        return datasetVersion;
     }
 
     private static DatasetVersion getDatasetVersion07ValidCode000001() {
@@ -505,13 +525,20 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
     }
 
     private static DatasetVersion getDatasetVersion48WithTemporalCoverageFilled() {
-        DatasetVersion datasetVersion = createDatasetVersionWithSequence(1);
+        DatasetVersionMock template = buildDatasetVersionWithSequenceAndVersion(1, INIT_VERSION);
+        template.addDimensionsCoverage(new CodeDimension("TIME_PERIOD", "2012", "2012"));
+        template.addDimensionsCoverage(new CodeDimension("TIME_PERIOD", "2011", "2011"));
+        template.addDimensionsCoverage(new CodeDimension("TIME_PERIOD", "2010", "2010"));
+        template.addDimensionsCoverage(new CodeDimension("GEO_DIM", "ES", "España"));
+        template.addDimensionsCoverage(new CodeDimension("GEO_DIM", "ES61", "Andalucia"));
+        template.addDimensionsCoverage(new CodeDimension("GEO_DIM", "ES70", "Canarias"));
+        template.addDimensionsCoverage(new CodeDimension("GEO_DIM", "ES45", "Cataluña"));
+        DatasetVersion datasetVersion = createDatasetVersionFromTemplate(template);
 
         prepareToProductionValidation(datasetVersion);
 
         return datasetVersion;
     }
-
     private static DatasetVersion getDatasetVersion49WithDatasourceFromPxWithNextUpdateInOneMonth() {
         DatasetVersion datasetVersion = createDatasetVersionWithSequence(1);
 
@@ -850,6 +877,103 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
         return new MockDescriptor(datasetVersion, pub01, pub02, pub03);
     }
 
+    private static MockDescriptor getDatasetVersion86WithTemporalDimension() {
+        DatasetVersionMock datasetVersionMock = new DatasetVersionMock();
+        addCodesToDimensionCoverage(datasetVersionMock, "DIM_01", "D1_C01", "D1_C02", "D1_C03");
+        addCodesToDimensionCoverage(datasetVersionMock, "DIM_02", "D2_C01", "D2_C02", "D2_C03");
+        addCodesToDimensionCoverage(datasetVersionMock, "TIME_PERIOD", "2010", "2011");
+        DatasetVersion datasetVersion = createDatasetVersionFromTemplate(datasetVersionMock);
+
+        // OK
+        QueryVersion queryOk = null;
+        {
+            QueryVersionMock queryMock = buildQueryVersionMockSimple("QUERY_01");
+            queryMock.addSelection(buildSelectionItemWithDimensionAndCodes("DIM_01", "D1_C01"));
+            queryMock.addSelection(buildSelectionItemWithDimensionAndCodes("DIM_02", "D2_C01"));
+            queryMock.addSelection(buildSelectionItemWithDimensionAndCodes("TIME_PERIOD", "2010", "2011"));
+            queryOk = createQueryVersionFromTemplate(queryMock);
+            registerQueryVersionMock(QUERY_VERSION_29_CHECK_COMPAT_DATASET_86_OK_NAME, queryOk);
+        }
+
+        // Less dimensions than Dataset
+        QueryVersion queryLessDimensions = null;
+        {
+            QueryVersionMock queryMock = buildQueryVersionMockSimple("QUERY_01");
+            queryMock.addSelection(buildSelectionItemWithDimensionAndCodes("DIM_01", "D1_C01"));
+            queryMock.addSelection(buildSelectionItemWithDimensionAndCodes("TIME_PERIOD", "2010", "2011"));
+            queryLessDimensions = createQueryVersionFromTemplate(queryMock);
+            registerQueryVersionMock(QUERY_VERSION_30_CHECK_COMPAT_DATASET_86_LESS_DIMENSIONS_NAME, queryLessDimensions);
+        }
+
+        // More dimensions in query
+        QueryVersion queryMoreDimensions = null;
+        {
+            QueryVersionMock queryMock = buildQueryVersionMockSimple("QUERY_02");
+            queryMock.addSelection(buildSelectionItemWithDimensionAndCodes("DIM_01", "D1_C01"));
+            queryMock.addSelection(buildSelectionItemWithDimensionAndCodes("DIM_02", "D1_C02"));
+            queryMock.addSelection(buildSelectionItemWithDimensionAndCodes("DIM_NOT_IN_DATASET", "CODE"));
+            queryMock.addSelection(buildSelectionItemWithDimensionAndCodes("TIME_PERIOD", "2010", "2011"));
+            queryMoreDimensions = createQueryVersionFromTemplate(queryMock);
+            registerQueryVersionMock(QUERY_VERSION_31_CHECK_COMPAT_DATASET_86_MORE_DIMENSIONS_NAME, queryMoreDimensions);
+        }
+
+        // NOT EXISTANT CODES
+        QueryVersion queryMoreCodes = null;
+        {
+            QueryVersionMock queryMock = buildQueryVersionMockSimple("QUERY_03");
+            queryMock.addSelection(buildSelectionItemWithDimensionAndCodes("DIM_01", "D1_C01", "MADE_UP_CODE"));
+            queryMock.addSelection(buildSelectionItemWithDimensionAndCodes("DIM_02", "D1_C02"));
+            queryMock.addSelection(buildSelectionItemWithDimensionAndCodes("TIME_PERIOD", "2010", "2011"));
+            queryMoreCodes = createQueryVersionFromTemplate(queryMock);
+            registerQueryVersionMock(QUERY_VERSION_32_CHECK_COMPAT_DATASET_86_MORE_CODES_NAME, queryMoreCodes);
+        }
+
+        // LATEST TEMPORAL CODE DOES NOT EXIST
+        QueryVersion queryInvalidLatestTemporalCode = null;
+        {
+            QueryVersionMock queryMock = buildQueryVersionMockSimple("QUERY_04");
+            queryMock.setType(QueryTypeEnum.AUTOINCREMENTAL);
+            queryMock.setLatestTemporalCodeInCreation("2012"); // Not exists 2012 in dataset
+            queryMock.addSelection(buildSelectionItemWithDimensionAndCodes("DIM_01", "D1_C01"));
+            queryMock.addSelection(buildSelectionItemWithDimensionAndCodes("DIM_02", "D2_C02"));
+            queryMock.addSelection(buildSelectionItemWithDimensionAndCodes("TIME_PERIOD", "2010", "2011"));
+            queryInvalidLatestTemporalCode = createQueryVersionFromTemplate(queryMock);
+            registerQueryVersionMock(QUERY_VERSION_33_CHECK_COMPAT_DATASET_86_INVALID_LATEST_TEMPORAL_CODE_NAME, queryInvalidLatestTemporalCode);
+        }
+
+        return new MockDescriptor(datasetVersion, queryLessDimensions, queryMoreDimensions, queryMoreCodes, queryInvalidLatestTemporalCode);
+    }
+    private static MockDescriptor getDatasetVersion87WithNoTemporalDimension() {
+        DatasetVersionMock datasetVersionMock = new DatasetVersionMock();
+        addCodesToDimensionCoverage(datasetVersionMock, "DIM_01", "D1_C01", "D1_C02", "D1_C03");
+        addCodesToDimensionCoverage(datasetVersionMock, "DIM_02", "D2_C01", "D2_C02", "D2_C03");
+        DatasetVersion datasetVersion = createDatasetVersionFromTemplate(datasetVersionMock);
+
+        QueryVersion queryMoreDimensionsAutoInc = null;
+        {
+            QueryVersionMock queryMock = buildQueryVersionMockSimple("QUERY_01");
+            queryMock.setType(QueryTypeEnum.AUTOINCREMENTAL);
+            queryMock.setLatestTemporalCodeInCreation("2012");
+            queryMock.addSelection(buildSelectionItemWithDimensionAndCodes("DIM_01", "D1_C01"));
+            queryMock.addSelection(buildSelectionItemWithDimensionAndCodes("DIM_02", "D2_C01"));
+            queryMock.addSelection(buildSelectionItemWithDimensionAndCodes("TIME_PERIOD", "2010", "2011"));
+            queryMoreDimensionsAutoInc = createQueryVersionFromTemplate(queryMock);
+            registerQueryVersionMock(QUERY_VERSION_34_CHECK_COMPAT_DATASET_87_INVALID_QUERY_TYPE_AUTOINC_NAME, queryMoreDimensionsAutoInc);
+        }
+
+        QueryVersion queryLatestData = null;
+        {
+            QueryVersionMock queryMock = buildQueryVersionMockSimple("QUERY_02");
+            queryMock.setType(QueryTypeEnum.LATEST_DATA);
+            queryMock.setLatestDataNumber(5);
+            queryMock.addSelection(buildSelectionItemWithDimensionAndCodes("DIM_01", "D1_C01"));
+            queryMock.addSelection(buildSelectionItemWithDimensionAndCodes("DIM_02", "D2_C01"));
+            queryLatestData = createQueryVersionFromTemplate(queryMock);
+            registerQueryVersionMock(QUERY_VERSION_35_CHECK_COMPAT_DATASET_87_INVALID_QUERY_TYPE_LATEST_DATA_NAME, queryLatestData);
+        }
+
+        return new MockDescriptor(datasetVersion, queryMoreDimensionsAutoInc, queryLatestData);
+    }
     private static PublicationVersion buildDraftPublicationWithDatasetInFirstLevel(Integer sequentialId, Dataset dataset) {
         PublicationVersion publicationVersion = PublicationVersionMockFactory.buildPublicationVersionDraft(sequentialId);
 
@@ -899,10 +1023,14 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
     }
 
     private static DatasetVersion createDatasetVersionWithSequenceAndVersion(Integer sequentialId, String version) {
+        return createDatasetVersionFromTemplate(buildDatasetVersionWithSequenceAndVersion(sequentialId, version));
+    }
+
+    private static DatasetVersionMock buildDatasetVersionWithSequenceAndVersion(Integer sequentialId, String version) {
         DatasetVersionMock template = new DatasetVersionMock();
         template.setSequentialId(sequentialId);
         template.setVersionLogic(version);
-        return createDatasetVersionFromTemplate(template);
+        return template;
     }
 
     private static DatasetVersion createDatasetVersionEmpty() {
@@ -919,6 +1047,15 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
 
     private static DatasetVersion createDatasetVersionFromTemplate(DatasetVersionMock template) {
         return getStatisticalResourcesPersistedDoMocks().mockDatasetVersion(template);
+    }
+
+    // -----------------------------------------------------------------
+    // UTILS
+    // -----------------------------------------------------------------
+    private static void addCodesToDimensionCoverage(DatasetVersion datasetVersion, String dimensionId, String... codes) {
+        for (String code : codes) {
+            datasetVersion.addDimensionsCoverage(new CodeDimension(dimensionId, code));
+        }
     }
 
     // -----------------------------------------------------------------
@@ -967,6 +1104,21 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
         datasetVersion.addCategorisation(CategorisationMockFactory.createCategorisation("cat_data_1", "category01", datasetVersion));
         datasetVersion.addCategorisation(CategorisationMockFactory.createCategorisation("cat_data_2", "category02", datasetVersion));
         datasetVersion.addCategorisation(CategorisationMockFactory.createCategorisation("cat_data_3", "category03", datasetVersion));
+    }
+
+    public static DatasetVersionMock buildSimpleVersion(DatasetMock dataset, String initVersion) {
+        DatasetVersionMock datasetVersionMock = new DatasetVersionMock();
+        datasetVersionMock.setDataset(dataset);
+        datasetVersionMock.setVersionLogic(initVersion);
+        return datasetVersionMock;
+    }
+
+    public static DatasetVersionMock buildVersion(String statOper, int sequentialId, String initVersion) {
+        DatasetVersionMock datasetVersionMock = new DatasetVersionMock();
+        datasetVersionMock.setStatisticalOperationCode(statOper);
+        datasetVersionMock.setSequentialId(sequentialId);
+        datasetVersionMock.setVersionLogic(initVersion);
+        return datasetVersionMock;
     }
 
 }

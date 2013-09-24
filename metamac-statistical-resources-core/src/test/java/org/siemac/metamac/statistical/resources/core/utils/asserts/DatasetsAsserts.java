@@ -42,14 +42,18 @@ public class DatasetsAsserts extends BaseAsserts {
     // -----------------------------------------------------------------
 
     public static void assertEqualsDataset(Dataset expected, Dataset actual) {
-        assertEqualsIdentifiableStatisticalResource(expected.getIdentifiableStatisticalResource(), actual.getIdentifiableStatisticalResource());
+        assertEqualsNullability(expected, actual);
 
-        if (expected.getVersions() != null) {
-            assertNotNull(actual.getVersions());
-            assertEquals(expected.getVersions().size(), actual.getVersions().size());
-            assertEqualsDatasetVersionCollection(expected.getVersions(), actual.getVersions());
-        } else {
-            assertEquals(null, actual);
+        if (expected != null) {
+            assertEqualsIdentifiableStatisticalResource(expected.getIdentifiableStatisticalResource(), actual.getIdentifiableStatisticalResource());
+
+            if (expected.getVersions() != null) {
+                assertNotNull(actual.getVersions());
+                assertEquals(expected.getVersions().size(), actual.getVersions().size());
+                assertEqualsDatasetVersionCollection(expected.getVersions(), actual.getVersions());
+            } else {
+                assertEquals(null, actual);
+            }
         }
     }
 
