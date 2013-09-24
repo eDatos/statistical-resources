@@ -318,7 +318,7 @@ public abstract class LifecycleTemplateService<E extends Object> implements Life
         E previousResource = retrieveResourceByUrn(urn);
 
         checkVersioning(ctx, previousResource);
-        E resource = copyResourceForVersioning(previousResource);
+        E resource = copyResourceForVersioning(ctx, previousResource);
 
         applyVersioningNewResource(ctx, resource, previousResource, versionType);
         resource = saveResource(resource);
@@ -388,7 +388,7 @@ public abstract class LifecycleTemplateService<E extends Object> implements Life
 
     protected abstract void checkVersioningResource(E resource, List<MetamacExceptionItem> exceptionItems) throws MetamacException;
 
-    protected abstract E copyResourceForVersioning(E previousResource) throws MetamacException;
+    protected abstract E copyResourceForVersioning(ServiceContext ctx, E previousResource) throws MetamacException;
 
     protected abstract void applyVersioningNewResource(ServiceContext ctx, E resource) throws MetamacException;
 

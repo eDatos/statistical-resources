@@ -59,6 +59,7 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.TemporalCode
 import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.validators.DatasetServiceInvocationValidator;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.task.domain.DatasetFileFormatEnum;
+import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.invocation.service.SrmRestInternalService;
 import org.siemac.metamac.statistical.resources.core.invocation.utils.RestMapper;
@@ -690,8 +691,29 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         fillMetadataForCreateCategorisation(ctx, categorisation);
 
         // Save categorisation
-        categorisation = assignCodeAndSaveCategorisation(categorisation);
-        return categorisation;
+        return getCategorisationRepository().save(categorisation);
+    }
+
+    @Override
+    public void initializeCategorisationMetadataForCreation(ServiceContext ctx, Categorisation categorisation) throws MetamacException {
+        if (categorisation.getVersionableStatisticalResource().getCode() != null) {
+            throw new MetamacException(ServiceExceptionType.METADATA_UNEXPECTED, ServiceExceptionParameters.CATEGORISATION__VERSIONABLE_STATISTICAL_RESOURCE__CODE);
+        }
+        String code = siemacStatisticalResourceGeneratedCode.fillGeneratedCodeForCreateCategorisation(categorisation);
+        String[] maintainerCodes = new String[]{categorisation.getMaintainer().getCodeNested()};
+        categorisation.getVersionableStatisticalResource().setVersionLogic(StatisticalResourcesVersionUtils.INITIAL_VERSION);
+        categorisation.getVersionableStatisticalResource().setCode(code);
+        categorisation.getVersionableStatisticalResource().setUrn(
+                GeneratorUrnUtils.generateSdmxCategorisationUrn(maintainerCodes, categorisation.getVersionableStatisticalResource().getCode(), categorisation.getVersionableStatisticalResource()
+                        .getVersionLogic()));
+        identifiableStatisticalResourceRepository.checkDuplicatedUrn(categorisation.getVersionableStatisticalResource());
+
+        // Title
+        InternationalString title = new InternationalString();
+        title.addText(new LocalisedString("es", "Categoría " + code));
+        title.addText(new LocalisedString("en", "Category " + code));
+        title.addText(new LocalisedString("pt", "Categoria " + code));
+        categorisation.getVersionableStatisticalResource().setTitle(title);
     }
 
     @Override
@@ -1137,6 +1159,9 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
     }
 
     private void fillMetadataForCreateCategorisation(ServiceContext ctx, Categorisation categorisation) throws MetamacException {
+        // Fill code, urn...
+        initializeCategorisationMetadataForCreation(ctx, categorisation);
+
         if (categorisation.getDatasetVersion().getLifeCycleStatisticalResource().isPublishedVisible()) {
             categorisation.getVersionableStatisticalResource().setValidFrom(new DateTime());
         } else {
@@ -1144,27 +1169,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
             categorisation.getVersionableStatisticalResource().setValidFrom(null);
         }
         categorisation.getVersionableStatisticalResource().setValidTo(null);
-    }
 
-    private synchronized Categorisation assignCodeAndSaveCategorisation(Categorisation categorisation) throws MetamacException {
-        // Generate code and urn
-        String code = siemacStatisticalResourceGeneratedCode.fillGeneratedCodeForCreateCategorisation(categorisation);
-        String[] maintainerCodes = new String[]{categorisation.getMaintainer().getCodeNested()};
-        categorisation.getVersionableStatisticalResource().setVersionLogic(StatisticalResourcesVersionUtils.INITIAL_VERSION);
-        categorisation.getVersionableStatisticalResource().setCode(code);
-        categorisation.getVersionableStatisticalResource().setUrn(
-                GeneratorUrnUtils.generateSdmxCategorisationUrn(maintainerCodes, categorisation.getVersionableStatisticalResource().getCode(), categorisation.getVersionableStatisticalResource()
-                        .getVersionLogic()));
-        identifiableStatisticalResourceRepository.checkDuplicatedUrn(categorisation.getVersionableStatisticalResource());
-
-        // Title
-        InternationalString title = new InternationalString();
-        title.addText(new LocalisedString("es", "Categoría " + code));
-        title.addText(new LocalisedString("en", "Category " + code));
-        title.addText(new LocalisedString("pt", "Categoria " + code));
-        categorisation.getVersionableStatisticalResource().setTitle(title);
-
-        return getCategorisationRepository().save(categorisation);
     }
 
 }

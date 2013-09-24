@@ -894,6 +894,32 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
     // ------------------------------------------------------------------------
     // CATEGORISATIONS
     // ------------------------------------------------------------------------
+
+    @Override
+    @Test
+    @MetamacMock({DATASET_VERSION_01_BASIC_NAME, CATEGORISATION_SEQUENCE_NAME, CATEGORISATION_MAINTAINER_NAME})
+    public void testInitializeCategorisationMetadataForCreation() throws Exception {
+        DatasetVersion datasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_01_BASIC_NAME);
+        String categoryCode = "category01";
+        String maintainerCode = "agency01"; // nested = ISTAC.agency01
+        Categorisation categorisation = notPersistedDoMocks.mockCategorisation(datasetVersion, maintainerCode, categoryCode);
+
+        assertNull(categorisation.getVersionableStatisticalResource().getCode());
+        assertNull(categorisation.getVersionableStatisticalResource().getVersionLogic());
+        assertNull(categorisation.getVersionableStatisticalResource().getUrn());
+        assertNull(categorisation.getVersionableStatisticalResource().getTitle());
+
+        datasetService.initializeCategorisationMetadataForCreation(getServiceContextAdministrador(), categorisation);
+
+        // Validation
+        assertEquals("cat_data_101", categorisation.getVersionableStatisticalResource().getCode());
+        assertEquals("001.000", categorisation.getVersionableStatisticalResource().getVersionLogic());
+        assertEquals(buildCategorisationUrn(categorisation.getMaintainer().getCodeNested(), "cat_data_101", "001.000"), categorisation.getVersionableStatisticalResource().getUrn());
+        assertEquals("Categoría cat_data_101", categorisation.getVersionableStatisticalResource().getTitle().getLocalisedLabel("es"));
+        assertEquals("Category cat_data_101", categorisation.getVersionableStatisticalResource().getTitle().getLocalisedLabel("en"));
+        assertEquals("Categoria cat_data_101", categorisation.getVersionableStatisticalResource().getTitle().getLocalisedLabel("pt"));
+    }
+
     @Override
     public void testCreateCategorisation() throws Exception {
         // Tested in other testCreateCategorisation* methods
@@ -916,8 +942,6 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
         assertEquals("cat_data_101", actual.getVersionableStatisticalResource().getCode());
         assertEquals(buildCategorisationUrn(expected.getMaintainer().getCodeNested(), "cat_data_101", "001.000"), actual.getVersionableStatisticalResource().getUrn());
         assertEquals("Categoría cat_data_101", actual.getVersionableStatisticalResource().getTitle().getLocalisedLabel("es"));
-        assertEquals("Category cat_data_101", actual.getVersionableStatisticalResource().getTitle().getLocalisedLabel("en"));
-        assertEquals("Categoria cat_data_101", actual.getVersionableStatisticalResource().getTitle().getLocalisedLabel("pt"));
         assertNotNull(actual.getVersionableStatisticalResource().getCreatedDate());
         assertNotNull(actual.getVersionableStatisticalResource().getCreatedBy());
         assertNull(actual.getVersionableStatisticalResource().getValidFrom());

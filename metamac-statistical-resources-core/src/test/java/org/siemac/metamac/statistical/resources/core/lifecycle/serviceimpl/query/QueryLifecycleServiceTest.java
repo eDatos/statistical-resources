@@ -12,10 +12,10 @@ import org.siemac.metamac.statistical.resources.core.lifecycle.serviceapi.Lifecy
 
 public class QueryLifecycleServiceTest extends StatisticalResourcesBaseTest implements LifecycleServiceBaseTest {
 
-    private static final String TESTING_CLASS = "org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.query.QueryLifecycleServiceImpl";
-    
+    private static final String         TESTING_CLASS         = "org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.query.QueryLifecycleServiceImpl";
+
     @InjectMocks
-    protected QueryLifecycleServiceImpl    queryLifecycleService = new QueryLifecycleServiceImpl();
+    protected QueryLifecycleServiceImpl queryLifecycleService = new QueryLifecycleServiceImpl();
 
     // ------------------------------------------------------------------------------------------------------
     // >> PRODUCTION VALIDATION
@@ -96,10 +96,9 @@ public class QueryLifecycleServiceTest extends StatisticalResourcesBaseTest impl
     public void testCheckVersioningResource() throws Exception {
         thrown.expect(UnsupportedOperationException.class);
         thrown.expectMessage(METHOD_NOT_IMPLEMENT_IN_THIS_VERSION);
-        
+
         queryLifecycleService.checkVersioningResource(null, null);
-        
-        
+
     }
 
     @Override
@@ -107,7 +106,7 @@ public class QueryLifecycleServiceTest extends StatisticalResourcesBaseTest impl
     public void testApplyVersioningNewResource() throws Exception {
         thrown.expect(UnsupportedOperationException.class);
         thrown.expectMessage(METHOD_NOT_IMPLEMENT_IN_THIS_VERSION);
-        
+
         queryLifecycleService.applyVersioningNewResource(null, null);
     }
 
@@ -116,7 +115,13 @@ public class QueryLifecycleServiceTest extends StatisticalResourcesBaseTest impl
     public void testApplyVersioningPreviousResource() throws Exception {
         thrown.expect(UnsupportedOperationException.class);
         thrown.expectMessage(METHOD_NOT_IMPLEMENT_IN_THIS_VERSION);
-        
+
         queryLifecycleService.applyVersioningPreviousResource(null, null);
+    }
+
+    @Override
+    @Test
+    public void testCopyResourceForVersioning() throws Exception {
+        // TODO testCopyResourceForVersioning
     }
 }

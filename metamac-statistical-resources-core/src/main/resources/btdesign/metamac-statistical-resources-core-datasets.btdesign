@@ -81,6 +81,8 @@ Application DatasetsStatisticalResources {
     		// Categorisations
     		"Creates categorisation"
     		@Categorisation createCategorisation(@Categorisation categorisation) throws MetamacException;
+    		"Initialize identifiable metadata of categorisation (code, urn...)"
+    		initializeCategorisationMetadataForCreation(@Categorisation categorisation) throws MetamacException;
     		"Retrieves categorisation by urn"
     		@Categorisation retrieveCategorisationByUrn(String urn) throws MetamacException;
     		"Deletes categorisation"

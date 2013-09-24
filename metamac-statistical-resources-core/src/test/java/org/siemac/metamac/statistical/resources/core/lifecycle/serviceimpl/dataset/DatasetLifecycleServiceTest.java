@@ -1,5 +1,6 @@
 package org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.dataset;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyListOf;
@@ -13,6 +14,7 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_19_PRODUCTION_VALIDATION_NOT_READY_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_20_PRODUCTION_VALIDATION_READY_FOR_DIFFUSION_VALIDATION_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_21_PRODUCTION_VALIDATION_READY_FOR_VALIDATION_REJECTED_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_70_PREPARED_TO_PUBLISH_EXTERNAL_ITEM_FULL_NAME;
 
 import org.junit.After;
 import org.junit.Before;
@@ -33,6 +35,7 @@ import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ItemRes
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
 import org.siemac.metamac.statistical.resources.core.base.domain.HasSiemacMetadata;
 import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.Categorisation;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionRepository;
 import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.DatasetService;
@@ -48,6 +51,7 @@ import org.siemac.metamac.statistical.resources.core.task.serviceapi.TaskService
 import org.siemac.metamac.statistical.resources.core.utils.DataMockUtils;
 import org.siemac.metamac.statistical.resources.core.utils.DatasetLifecycleTestUtils;
 import org.siemac.metamac.statistical.resources.core.utils.TaskMockUtils;
+import org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts;
 
 import com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceFacade;
 
@@ -79,6 +83,7 @@ public class DatasetLifecycleServiceTest extends StatisticalResourcesBaseTest im
     @Mock
     private DatasetVersionRepository         datasetVersionRepository;
 
+    @Mock
     protected DatasetService                 datasetService;
 
     @Mock
@@ -359,6 +364,24 @@ public class DatasetLifecycleServiceTest extends StatisticalResourcesBaseTest im
         DatasetLifecycleTestUtils.fillAsPublished(datasetVersion);
 
         datasetLifecycleService.applyVersioningNewResource(getServiceContextAdministrador(), datasetVersion);
+    }
+
+    @Override
+    @Test
+    public void testCopyResourceForVersioning() throws Exception {
+        // TODO testCopyResourceForVersioning. Test all metadata
+
+        DatasetVersion source = mockDatasetVersionInRepoFromMockFactory(DATASET_VERSION_70_PREPARED_TO_PUBLISH_EXTERNAL_ITEM_FULL_NAME);
+        DatasetVersion target = datasetLifecycleService.copyResourceForVersioning(getServiceContextAdministrador(), source);
+
+        // Categorisations
+        assertEquals(source.getCategorisations().size(), target.getCategorisations().size());
+        for (int i = 0; i < source.getCategorisations().size(); i++) {
+            Categorisation expected = source.getCategorisations().get(i);
+            Categorisation actual = target.getCategorisations().get(i);
+            DatasetsAsserts.assertEqualsExternalItem(expected.getCategory(), actual.getCategory());
+            DatasetsAsserts.assertEqualsExternalItem(expected.getMaintainer(), actual.getMaintainer());
+        }
     }
 
     // ------------------------------------------------------------------------------------------------------

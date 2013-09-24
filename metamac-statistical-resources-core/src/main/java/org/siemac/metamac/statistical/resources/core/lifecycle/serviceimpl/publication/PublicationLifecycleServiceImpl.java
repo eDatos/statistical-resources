@@ -1,7 +1,5 @@
 package org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.publication;
 
-import static org.siemac.metamac.statistical.resources.core.error.utils.ServiceExceptionParametersUtils.addParameter;
-
 import java.util.List;
 
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
@@ -9,7 +7,6 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.core.common.util.GeneratorUrnUtils;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
-import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionSingleParameters;
 import org.siemac.metamac.statistical.resources.core.lifecycle.LifecycleCommonMetadataChecker;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.LifecycleTemplateService;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
@@ -118,7 +115,7 @@ public class PublicationLifecycleServiceImpl extends LifecycleTemplateService<Pu
     }
 
     @Override
-    protected PublicationVersion copyResourceForVersioning(PublicationVersion previousResource) throws MetamacException {
+    protected PublicationVersion copyResourceForVersioning(ServiceContext ctx, PublicationVersion previousResource) throws MetamacException {
         return PublicationVersioningCopyUtils.copyPublicationVersion(previousResource);
     }
 

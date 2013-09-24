@@ -8,9 +8,6 @@ import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.core.common.util.GeneratorUrnUtils;
-import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResource;
-import org.siemac.metamac.statistical.resources.core.common.utils.RelatedResourceUtils;
-import org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConstants;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
 import org.siemac.metamac.statistical.resources.core.lifecycle.LifecycleCommonMetadataChecker;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.LifecycleTemplateService;
@@ -85,7 +82,7 @@ public class QueryLifecycleServiceImpl extends LifecycleTemplateService<QueryVer
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Not implemented");
     }
-    
+
     @Override
     protected void applySendToPublishedPreviousResource(ServiceContext ctx, QueryVersion resource) throws MetamacException {
         // TODO Auto-generated method stub
@@ -107,29 +104,27 @@ public class QueryLifecycleServiceImpl extends LifecycleTemplateService<QueryVer
         throw new UnsupportedOperationException(METHOD_NOT_IMPLEMENT_IN_THIS_VERSION);
     }
 
-
     @Override
-    protected QueryVersion copyResourceForVersioning(QueryVersion previousResource) throws MetamacException {
+    protected QueryVersion copyResourceForVersioning(ServiceContext ctx, QueryVersion previousResource) throws MetamacException {
         return QueryVersioningCopyUtils.copyQueryVersion(previousResource);
     }
-    
+
     @Override
     protected void applyVersioningNewResource(ServiceContext ctx, QueryVersion resource) throws MetamacException {
         throw new UnsupportedOperationException(METHOD_NOT_IMPLEMENT_IN_THIS_VERSION);
     }
-    
 
     @Override
     protected void applyVersioningPreviousResource(ServiceContext ctx, QueryVersion resource) throws MetamacException {
         throw new UnsupportedOperationException(METHOD_NOT_IMPLEMENT_IN_THIS_VERSION);
     }
-    
+
     @Override
     protected QueryVersion updateResourceUrn(QueryVersion resource) throws MetamacException {
         String[] creator = new String[]{resource.getLifeCycleStatisticalResource().getMaintainer().getCodeNested()};
         resource.getLifeCycleStatisticalResource().setUrn(
-                GeneratorUrnUtils.generateSiemacStatisticalResourceQueryVersionUrn(creator, resource.getLifeCycleStatisticalResource().getCode(), resource
-                        .getLifeCycleStatisticalResource().getVersionLogic()));
+                GeneratorUrnUtils.generateSiemacStatisticalResourceQueryVersionUrn(creator, resource.getLifeCycleStatisticalResource().getCode(), resource.getLifeCycleStatisticalResource()
+                        .getVersionLogic()));
         return resource;
     }
 
@@ -147,12 +142,11 @@ public class QueryLifecycleServiceImpl extends LifecycleTemplateService<QueryVer
         return queryVersionRepository.retrieveByUrn(urn);
     }
 
-
     @Override
     protected QueryVersion retrieveResourceByResource(QueryVersion resource) throws MetamacException {
         return queryVersionRepository.retrieveByUrn(resource.getLifeCycleStatisticalResource().getUrn());
     }
-    
+
     @Override
     protected QueryVersion retrievePreviousPublishedResourceByResource(QueryVersion resource) throws MetamacException {
         return queryVersionRepository.retrieveLastPublishedVersion(resource.getQuery().getIdentifiableStatisticalResource().getUrn());

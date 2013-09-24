@@ -7,7 +7,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.siemac.metamac.statistical.resources.core.base.domain.VersionableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.common.utils.CommonVersioningCopyUtils;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.Categorisation;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.CodeDimension;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
@@ -31,10 +33,11 @@ public class DatasetVersioningCopyUtils extends CommonVersioningCopyUtils {
         // Metadata
         copyMetadata(source, target);
         copyCoverages(source, target);
-        
+
         // Relations
         target.setDataset(source.getDataset());
         copyDatasources(source, target);
+        copyCategorisations(source, target);
     }
 
     private static void copyDatasources(DatasetVersion source, DatasetVersion target) {
@@ -45,7 +48,16 @@ public class DatasetVersioningCopyUtils extends CommonVersioningCopyUtils {
             target.addDatasource(newDatasource);
         }
     }
-    
+
+    private static void copyCategorisations(DatasetVersion source, DatasetVersion target) {
+        target.getCategorisations().clear();
+        for (Categorisation categorisation : source.getCategorisations()) {
+            Categorisation newCategorisation = new Categorisation();
+            copyCategorisation(categorisation, newCategorisation);
+            target.addCategorisation(newCategorisation);
+        }
+    }
+
     private static void copyCoverages(DatasetVersion source, DatasetVersion target) {
         target.getDimensionsCoverage().clear();
         for (CodeDimension codeDimension : source.getDimensionsCoverage()) {
@@ -57,40 +69,40 @@ public class DatasetVersioningCopyUtils extends CommonVersioningCopyUtils {
 
     private static void copyMetadata(DatasetVersion source, DatasetVersion target) {
         target.setSiemacMetadataStatisticalResource(copySiemacMetadataStatisticalResource(source.getSiemacMetadataStatisticalResource(), target.getSiemacMetadataStatisticalResource()));
-               
+
         target.getGeographicCoverage().clear();
         target.getGeographicCoverage().addAll(copyCollectionExternalItem(source.getGeographicCoverage()));
-        
+
         target.getTemporalCoverage().clear();
         target.getTemporalCoverage().addAll(copyListTemporalCode(source.getTemporalCoverage()));
-        
+
         target.getMeasureCoverage().clear();
         target.getMeasureCoverage().addAll(copyCollectionExternalItem(source.getMeasureCoverage()));
-        
+
         target.getGeographicGranularities().clear();
         target.getGeographicGranularities().addAll(copyCollectionExternalItem(source.getGeographicGranularities()));
-        
+
         target.getTemporalGranularities().clear();
         target.getTemporalGranularities().addAll(copyCollectionExternalItem(source.getTemporalGranularities()));
-        
+
         target.setDateStart(source.getDateStart());
-        
+
         target.setDateEnd(source.getDateEnd());
-        
+
         target.getStatisticalUnit().clear();
         target.getStatisticalUnit().addAll(copyCollectionExternalItem(source.getStatisticalUnit()));
-        
+
         target.setRelatedDsd(copyExternalItem(source.getRelatedDsd()));
-        
+
         target.setFormatExtentObservations(source.getFormatExtentObservations());
-        
+
         target.setFormatExtentDimensions(source.getFormatExtentDimensions());
-        
+
         target.setUpdateFrequency(copyExternalItem(source.getUpdateFrequency()));
-        
+
         target.setStatisticOfficiality(source.getStatisticOfficiality());
     }
-    
+
     private static Collection<TemporalCode> copyListTemporalCode(List<TemporalCode> source) {
         if (source.isEmpty()) {
             return new ArrayList<TemporalCode>();
@@ -102,7 +114,7 @@ public class DatasetVersioningCopyUtils extends CommonVersioningCopyUtils {
         }
         return target;
     }
-    
+
     public static TemporalCode copyTemporalCode(TemporalCode source) {
         if (source == null) {
             return null;
@@ -118,12 +130,18 @@ public class DatasetVersioningCopyUtils extends CommonVersioningCopyUtils {
         target.setFilename(source.getFilename());
         target.setDateNextUpdate(source.getDateNextUpdate());
     }
-    
+
     public static CodeDimension copyCodeDimension(CodeDimension source, CodeDimension target) {
         target.setIdentifier(source.getIdentifier());
         target.setTitle(source.getTitle());
         target.setDsdComponentId(source.getDsdComponentId());
         return target;
+    }
+
+    private static void copyCategorisation(Categorisation source, Categorisation target) {
+        target.setCategory(copyExternalItem(source.getCategory()));
+        target.setMaintainer(copyExternalItem(source.getMaintainer()));
+        target.setVersionableStatisticalResource(new VersionableStatisticalResource()); // all metadata will be autogenerated (code, title...)
     }
 
 }

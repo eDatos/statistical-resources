@@ -82,10 +82,9 @@ public class PublicationLifecycleServiceTest extends StatisticalResourcesBaseTes
     public void testApplySendToPublishedResource() throws Exception {
         // TODO:
         // - cumplimentar format_extent_resources
-        
+
         fail("not implemented");
     }
-
 
     // ------------------------------------------------------------------------------------------------------
     // >> VERSIONING
@@ -102,10 +101,16 @@ public class PublicationLifecycleServiceTest extends StatisticalResourcesBaseTes
     public void testApplyVersioningNewResource() throws Exception {
         assertEmptyMethod(TESTING_CLASS, "applyVersioningNewResource");
     }
-    
+
     @Override
     @Test
     public void testApplyVersioningPreviousResource() throws Exception {
         assertEmptyMethod(TESTING_CLASS, "applyVersioningPreviousResource");
+    }
+
+    @Override
+    @Test
+    public void testCopyResourceForVersioning() throws Exception {
+        // TODO testCopyResourceForVersioning
     }
 }

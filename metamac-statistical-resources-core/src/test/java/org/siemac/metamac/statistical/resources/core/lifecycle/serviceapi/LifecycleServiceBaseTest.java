@@ -42,6 +42,8 @@ public interface LifecycleServiceBaseTest {
     public void testCheckVersioningResource() throws Exception;
 
     public void testApplyVersioningNewResource() throws Exception;
-    
+
     public void testApplyVersioningPreviousResource() throws Exception;
+
+    public void testCopyResourceForVersioning() throws Exception;
 }

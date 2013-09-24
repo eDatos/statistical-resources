@@ -15,6 +15,7 @@ import org.siemac.metamac.statistical.resources.core.constants.StatisticalResour
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Categorisation;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionRepository;
+import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.DatasetService;
 import org.siemac.metamac.statistical.resources.core.dataset.utils.DatasetVersioningCopyUtils;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionSingleParameters;
@@ -32,6 +33,9 @@ public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<Datase
 
     @Autowired
     private ExternalItemChecker            externalItemChecker;
+
+    @Autowired
+    private DatasetService                 datasetService;
 
     @Autowired
     private DatasetVersionRepository       datasetVersionRepository;
@@ -166,8 +170,12 @@ public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<Datase
     }
 
     @Override
-    protected DatasetVersion copyResourceForVersioning(DatasetVersion previousResource) throws MetamacException {
-        return DatasetVersioningCopyUtils.copyDatasetVersion(previousResource);
+    protected DatasetVersion copyResourceForVersioning(ServiceContext ctx, DatasetVersion previousResource) throws MetamacException {
+        DatasetVersion newVersion = DatasetVersioningCopyUtils.copyDatasetVersion(previousResource);
+        for (Categorisation categorisation : newVersion.getCategorisations()) {
+            datasetService.initializeCategorisationMetadataForCreation(ctx, categorisation);
+        }
+        return newVersion;
     }
 
     @Override
