@@ -1,6 +1,7 @@
 package org.siemac.metamac.statistical.resources.web.client.query.view.handlers;
 
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionDto;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.DatasetVersionWebCriteria;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.ItemSchemeWebCriteria;
@@ -23,6 +24,8 @@ public interface QueryUiHandlers extends BaseUiHandlers {
 
     void retrieveAgencySchemes(int firstResult, int maxResults, MetamacWebCriteria webCriteria);
     void retrieveAgencies(int firstResult, int maxResults, ItemSchemeWebCriteria webCriteria);
+
+    void previewData(QueryVersionDto queryVersionDto);
 
     // Life cycle
 

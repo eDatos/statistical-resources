@@ -18,6 +18,7 @@ import org.siemac.metamac.statistical.resources.web.client.enums.LifeCycleAction
 import org.siemac.metamac.statistical.resources.web.client.operation.presenter.OperationPresenter;
 import org.siemac.metamac.statistical.resources.web.client.query.view.handlers.QueryUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
+import org.siemac.metamac.statistical.resources.web.client.utils.MetamacPortalWebUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.PlaceRequestUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.WaitingAsyncCallbackHandlingError;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.DatasetVersionWebCriteria;
@@ -49,6 +50,7 @@ import org.siemac.metamac.web.common.client.events.ShowMessageEvent;
 import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
 
 import com.google.gwt.event.shared.GwtEvent.Type;
+import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.dispatch.shared.DispatchAsync;
@@ -337,7 +339,6 @@ public class QueryPresenter extends Presenter<QueryPresenter.QueryView, QueryPre
     @Override
     public void cancelProgrammedPublication(QueryVersionDto query) {
         // TODO Auto-generated method stub
-
     }
 
     @Override
@@ -352,6 +353,12 @@ public class QueryPresenter extends Presenter<QueryPresenter.QueryView, QueryPre
                 getView().setQueryDto(result.getQueryVersionDto());
             }
         });
+    }
+
+    @Override
+    public void previewData(QueryVersionDto queryVersionDto) {
+        String url = MetamacPortalWebUtils.buildQueryVersionUrl(queryVersionDto);
+        Window.open(url, "_blank", "");
     }
 
     //

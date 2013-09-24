@@ -19,9 +19,7 @@ public class QueryMainFormLayout extends LifecycleMainFormLayout {
 
     public void setQueryVersion(QueryVersionDto queryVersionDto) {
         this.queryVersionDto = queryVersionDto;
-
         setTitleLabelContents(InternationalStringUtils.getLocalisedString(queryVersionDto.getTitle()));
-
         setCanEdit(QueryClientSecurityUtils.canUpdatePublicationVersion(queryVersionDto));
         setCanDelete(QueryClientSecurityUtils.canDeletePublicationVersion(queryVersionDto));
         updatePublishSection(queryVersionDto.getProcStatus());
@@ -72,6 +70,6 @@ public class QueryMainFormLayout extends LifecycleMainFormLayout {
     @Override
     protected boolean canPreviewData() {
         // Do not show the query preview button
-        return false;
+        return true;
     }
 }

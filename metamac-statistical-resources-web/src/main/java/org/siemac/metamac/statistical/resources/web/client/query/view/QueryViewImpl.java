@@ -338,6 +338,15 @@ public class QueryViewImpl extends ViewWithUiHandlers<QueryUiHandlers> implement
                     });
                 }
             });
+
+            // Preview data
+            mainFormLayout.getPreviewButton().addClickHandler(new ClickHandler() {
+
+                @Override
+                public void onClick(ClickEvent event) {
+                    getUiHandlers().previewData(queryVersionDto);
+                }
+            });
         }
 
         private void createViewForm() {
