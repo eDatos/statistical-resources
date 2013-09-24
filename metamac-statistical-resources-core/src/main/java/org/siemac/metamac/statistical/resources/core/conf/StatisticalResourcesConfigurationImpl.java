@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.siemac.metamac.core.common.conf.ConfigurationServiceImpl;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionBuilder;
@@ -42,13 +41,5 @@ public class StatisticalResourcesConfigurationImpl extends ConfigurationServiceI
         }
 
         return dotCodeMappingMap;
-    }
-
-    private List<Object> retrievePropertyList(String propertyName, Boolean required) throws MetamacException {
-        List<Object> propertyValue = getConfig().getList(propertyName);
-        if (required && CollectionUtils.isEmpty(propertyValue)) {
-            throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.CONFIGURATION_PROPERTY_NOT_FOUND).withMessageParameters(propertyName).build();
-        }
-        return propertyValue;
     }
 }
