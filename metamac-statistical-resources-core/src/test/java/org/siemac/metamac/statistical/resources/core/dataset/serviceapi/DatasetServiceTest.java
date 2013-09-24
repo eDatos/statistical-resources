@@ -959,6 +959,7 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
         Categorisation expected = notPersistedDoMocks.mockCategorisation(datasetVersion, maintainerCode, categoryCode);
 
         mockFindPublishedCategory(expected.getCategory().getUrn());
+        mockFindPublishedAgency(expected.getMaintainer().getUrn());
         Categorisation actual = datasetService.createCategorisation(getServiceContextAdministrador(), expected);
 
         // Validate
@@ -973,13 +974,27 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
     public void testCreateCategorisationDatasetAlreadyPublishedErrorCategoryNotPublished() throws Exception {
 
         DatasetVersion datasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_22_V1_PUBLISHED_FOR_DATASET_05_NAME);
-        String categoryCode = "category01";
-        String maintainerCode = "agency01"; // nested = ISTAC.agency01
-        Categorisation categorisation = notPersistedDoMocks.mockCategorisation(datasetVersion, maintainerCode, categoryCode);
+        Categorisation categorisation = notPersistedDoMocks.mockCategorisation(datasetVersion, "agency01", "category01");
 
         mockFindNotPublishedCategory(categorisation.getCategory().getUrn());
+        mockFindPublishedAgency(categorisation.getMaintainer().getUrn());
 
         expectedMetamacException(new MetamacException(ServiceExceptionType.EXTERNAL_ITEM_NOT_PUBLISHED, ServiceExceptionParameters.DATASET_VERSION__CATEGORISATIONS, categorisation.getCategory()
+                .getUrn()));
+        datasetService.createCategorisation(getServiceContextAdministrador(), categorisation);
+    }
+
+    @Test
+    @MetamacMock({DATASET_VERSION_22_V1_PUBLISHED_FOR_DATASET_05_NAME, CATEGORISATION_SEQUENCE_NAME, CATEGORISATION_MAINTAINER_NAME})
+    public void testCreateCategorisationDatasetAlreadyPublishedErrorMaintainerNotPublished() throws Exception {
+
+        DatasetVersion datasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_22_V1_PUBLISHED_FOR_DATASET_05_NAME);
+        Categorisation categorisation = notPersistedDoMocks.mockCategorisation(datasetVersion, "agency01", "category01");
+
+        mockFindPublishedCategory(categorisation.getCategory().getUrn());
+        mockFindNotPublishedAgency(categorisation.getMaintainer().getUrn());
+
+        expectedMetamacException(new MetamacException(ServiceExceptionType.EXTERNAL_ITEM_NOT_PUBLISHED, ServiceExceptionParameters.DATASET_VERSION__CATEGORISATIONS, categorisation.getMaintainer()
                 .getUrn()));
         datasetService.createCategorisation(getServiceContextAdministrador(), categorisation);
     }
@@ -1020,11 +1035,17 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
         assertEqualsCategorisation(expected, actual);
     }
 
+    @Test
+    public void testRetrieveCategorisationByUrnErrorNotFound() throws Exception {
+        expectedMetamacException(new MetamacException(ServiceExceptionType.CATEGORISATION_NOT_FOUND, URN_NOT_EXISTS));
+        datasetService.retrieveCategorisationByUrn(getServiceContextWithoutPrincipal(), URN_NOT_EXISTS);
+    }
+
     @Override
     @Test
     @MetamacMock({DATASET_VERSION_01_BASIC_NAME, DATASET_VERSION_02_BASIC_NAME, CATEGORISATION_01_DATASET_VERSION_01_NAME, CATEGORISATION_02_DATASET_VERSION_01_NAME,
             CATEGORISATION_01_DATASET_VERSION_02_NAME, CATEGORISATION_02_DATASET_VERSION_02_NAME, CATEGORISATION_03_DATASET_VERSION_02_NAME})
-    public void testRetrieveCategorisationsByDataset() throws Exception {
+    public void testRetrieveCategorisationsByDatasetVersion() throws Exception {
         DatasetVersion datasetVersion1 = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_01_BASIC_NAME);
         DatasetVersion datasetVersion2 = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_02_BASIC_NAME);
         Categorisation categorisation1Dataset1 = categorisationMockFactory.retrieveMock(CATEGORISATION_01_DATASET_VERSION_01_NAME);
@@ -1034,15 +1055,15 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
         Categorisation categorisation3Dataset2 = categorisationMockFactory.retrieveMock(CATEGORISATION_03_DATASET_VERSION_02_NAME);
 
         {
-            List<Categorisation> categorisations = datasetService
-                    .retrieveCategorisationsByDataset(getServiceContextWithoutPrincipal(), datasetVersion1.getSiemacMetadataStatisticalResource().getUrn());
+            List<Categorisation> categorisations = datasetService.retrieveCategorisationsByDatasetVersion(getServiceContextWithoutPrincipal(), datasetVersion1.getSiemacMetadataStatisticalResource()
+                    .getUrn());
             assertEquals(2, categorisations.size());
             assertEquals(categorisation1Dataset1.getVersionableStatisticalResource().getUrn(), categorisations.get(0).getVersionableStatisticalResource().getUrn());
             assertEquals(categorisation2Dataset1.getVersionableStatisticalResource().getUrn(), categorisations.get(1).getVersionableStatisticalResource().getUrn());
         }
         {
-            List<Categorisation> categorisations = datasetService
-                    .retrieveCategorisationsByDataset(getServiceContextWithoutPrincipal(), datasetVersion2.getSiemacMetadataStatisticalResource().getUrn());
+            List<Categorisation> categorisations = datasetService.retrieveCategorisationsByDatasetVersion(getServiceContextWithoutPrincipal(), datasetVersion2.getSiemacMetadataStatisticalResource()
+                    .getUrn());
             assertEquals(3, categorisations.size());
             assertEquals(categorisation1Dataset2.getVersionableStatisticalResource().getUrn(), categorisations.get(0).getVersionableStatisticalResource().getUrn());
             assertEquals(categorisation2Dataset2.getVersionableStatisticalResource().getUrn(), categorisations.get(1).getVersionableStatisticalResource().getUrn());
@@ -1124,7 +1145,7 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
     }
 
     @Test
-    public void testCategorisationErrorNotExists() throws Exception {
+    public void testDeleteCategorisationErrorNotFound() throws Exception {
         expectedMetamacException(new MetamacException(ServiceExceptionType.CATEGORISATION_NOT_FOUND, URN_NOT_EXISTS));
         datasetService.deleteCategorisation(getServiceContextWithoutPrincipal(), URN_NOT_EXISTS);
     }
@@ -1140,6 +1161,20 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
 
         Categorisation actual = datasetService.endCategorisationValidity(getServiceContextWithoutPrincipal(), urn, null);
         assertNotNull(actual.getVersionableStatisticalResource().getValidTo());
+        assertEquals(actual.getVersionableStatisticalResource().getValidTo(), actual.getValidToEffective());
+    }
+
+    @Test
+    @MetamacMock({CATEGORISATION_01_DATASET_VERSION_03_PUBLISHED_NAME})
+    public void testEndCategorisationValidityWithValidTo() throws Exception {
+        Categorisation expected = categorisationMockFactory.retrieveMock(CATEGORISATION_01_DATASET_VERSION_03_PUBLISHED_NAME);
+        String urn = expected.getVersionableStatisticalResource().getUrn();
+        assertNull(expected.getVersionableStatisticalResource().getValidTo());
+        assertNull(expected.getValidToEffective());
+
+        DateTime validTo = new DateTime(2011, 1, 2, 3, 4, 5, 6);
+        Categorisation actual = datasetService.endCategorisationValidity(getServiceContextWithoutPrincipal(), urn, validTo);
+        MetamacAsserts.assertEqualsDate(validTo, actual.getVersionableStatisticalResource().getValidTo());
         assertEquals(actual.getVersionableStatisticalResource().getValidTo(), actual.getValidToEffective());
     }
 
@@ -1198,6 +1233,14 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
 
     private void mockFindNotPublishedCategory(String urn) throws MetamacException {
         Mockito.when(srmRestInternalService.findCategoriesAsUrnsList(anyString())).thenReturn(new ArrayList<String>());
+    }
+
+    private void mockFindPublishedAgency(String urn) throws MetamacException {
+        Mockito.when(srmRestInternalService.findOrganisationsAsUrnsList(anyString())).thenReturn(Arrays.asList(urn));
+    }
+
+    private void mockFindNotPublishedAgency(String urn) throws MetamacException {
+        Mockito.when(srmRestInternalService.findOrganisationsAsUrnsList(anyString())).thenReturn(new ArrayList<String>());
     }
 
 }

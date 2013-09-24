@@ -90,7 +90,7 @@ Application DatasetsStatisticalResources {
     		"Ends the validity of a categorisation. ValidTo date is optional"
     		@Categorisation endCategorisationValidity(String urn, DateTimeTZ validTo) throws MetamacException;
     		"Retrieves all categorisations by dataset"
-    		List<@Categorisation> retrieveCategorisationsByDataset(String datasetVersionUrn) throws MetamacException;
+    		List<@Categorisation> retrieveCategorisationsByDatasetVersion(String datasetVersionUrn) throws MetamacException;
 			"Finds categorisations by criteria"
     		PagedResult<@Categorisation> findCategorisationsByCondition(List<ConditionalCriteria> conditions, PagingParameter pagingParameter)  throws MetamacException;
 		}  
@@ -336,6 +336,7 @@ Application DatasetsStatisticalResources {
 			Repository CategorisationRepository {
 				save;
 				delete;			
+				findById;
 				findByCondition;
 				findByCondition(PagingParameter pagingParameter);
 				findByQuery(String query, Map<String, Object> parameters);

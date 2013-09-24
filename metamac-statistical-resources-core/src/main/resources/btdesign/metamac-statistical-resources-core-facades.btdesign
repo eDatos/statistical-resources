@@ -134,6 +134,18 @@ Application FacadeStatisticalResources {
     		// Statistic officialities
     		List<@StatisticOfficialityDto> findStatisticOfficialities() throws MetamacException;
 
+			// CATEGORISATIONS
+    		"Creates categorisation"
+    		@CategorisationDto createCategorisation(@CategorisationDto categorisationDto) throws MetamacException;
+    		"Retrieves categorisation by urn"
+    		@CategorisationDto retrieveCategorisationByUrn(String urn) throws MetamacException;
+    		"Deletes categorisation"
+    		deleteCategorisation(String urn) throws MetamacException;
+    		"Retrieves all categorisations by dataset"
+    		List<@CategorisationDto> retrieveCategorisationsByDatasetVersion(String datasetVersionUrn) throws MetamacException;
+    		"Ends the validity of a categorisation. ValidTo date is optional"
+    		@CategorisationDto endCategorisationValidity(String urn, JAVADATE validTo) throws MetamacException;
+			
     		// PUBLICATIONS
 	   		"Find all publications"
 	   		MetamacCriteriaResult<@RelatedResourceDto> findPublicationsByCondition(MetamacCriteria criteria) throws MetamacException; 

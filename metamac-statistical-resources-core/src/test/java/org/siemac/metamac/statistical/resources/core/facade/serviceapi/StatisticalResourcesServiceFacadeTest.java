@@ -2,12 +2,14 @@ package org.siemac.metamac.statistical.resources.core.facade.serviceapi;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.siemac.metamac.common.test.utils.MetamacAsserts.assertEqualsDate;
 import static org.siemac.metamac.common.test.utils.MetamacAsserts.assertEqualsDay;
 import static org.siemac.metamac.common.test.utils.MetamacAsserts.assertEqualsInternationalStringDto;
 import static org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConstants.METHOD_NOT_IMPLEMENT_IN_THIS_VERSION;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.CommonAsserts.assertEqualsCollectionByField;
+import static org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts.assertEqualsCategorisation;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts.assertEqualsDataset;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts.assertEqualsDatasetVersion;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts.assertEqualsDatasetVersionBase;
@@ -23,6 +25,11 @@ import static org.siemac.metamac.statistical.resources.core.utils.asserts.QueryA
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.QueryAsserts.assertEqualsQuerySelection;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.QueryAsserts.assertEqualsQueryVersion;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.QueryAsserts.assertEqualsQueryVersionDoAndDtoCollection;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.CategorisationMockFactory.CATEGORISATION_01_DATASET_VERSION_01_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.CategorisationMockFactory.CATEGORISATION_01_DATASET_VERSION_03_PUBLISHED_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.CategorisationMockFactory.CATEGORISATION_02_DATASET_VERSION_01_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.CategorisationMockFactory.CATEGORISATION_MAINTAINER_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.CategorisationMockFactory.CATEGORISATION_SEQUENCE_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.ChapterMockFactory.CHAPTER_01_BASIC_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.CubeMockFactory.CUBE_01_BASIC_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.CubeMockFactory.CUBE_02_BASIC_NAME;
@@ -60,6 +67,7 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_53_IN_DIFFUSION_VALIDATION_WITH_DATASOURCE_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_54_IN_VALIDATION_REJECTED_WITH_DATASOURCE_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_55_PUBLISHED_WITH_DATASOURCE_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_88_PUBLISHED_WITH_CATEGORISATIONS_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasourceMockFactory.DATASOURCE_01_BASIC_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationMockFactory.PUBLICATION_02_BASIC_WITH_GENERATED_VERSION_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationMockFactory.PUBLICATION_03_BASIC_WITH_2_PUBLICATION_VERSIONS_NAME;
@@ -123,6 +131,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
+import org.siemac.metamac.common.test.utils.MetamacAsserts;
 import org.siemac.metamac.core.common.criteria.MetamacCriteria;
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaConjunctionRestriction;
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaDisjunctionRestriction;
@@ -140,10 +149,12 @@ import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStr
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
 import org.siemac.metamac.statistical.resources.core.common.criteria.enums.StatisticalResourcesCriteriaOrderEnum;
 import org.siemac.metamac.statistical.resources.core.common.criteria.enums.StatisticalResourcesCriteriaPropertyEnum;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.Categorisation;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.StatisticOfficiality;
 import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.CategorisationDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionBaseDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionMainCoveragesDto;
@@ -172,16 +183,7 @@ import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
 import org.siemac.metamac.statistical.resources.core.utils.DataMockUtils;
 import org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.configuration.MetamacMock;
-import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.ChapterMockFactory;
-import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.CubeMockFactory;
-import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetMockFactory;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory;
-import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasourceMockFactory;
-import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationMockFactory;
-import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory;
-import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryMockFactory;
-import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory;
-import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.StatisticOfficialityMockFactory;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.StatisticalResourcesMockFactory;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesDoMocks;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesDtoMocks;
@@ -1982,6 +1984,31 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         assertNotNull(newVersion);
     }
 
+    @Test
+    @MetamacMock(DATASET_VERSION_88_PUBLISHED_WITH_CATEGORISATIONS_NAME)
+    public void testVersioningDatasetVersionCheckCategorisationsAutogeneratedMetadata() throws Exception {
+        String datasetVersionUrn = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_88_PUBLISHED_WITH_CATEGORISATIONS_NAME).getSiemacMetadataStatisticalResource().getUrn();
+        DatasetVersionDto datasetVersionDto = statisticalResourcesServiceFacade.retrieveDatasetVersionByUrn(getServiceContextAdministrador(), datasetVersionUrn);
+        List<CategorisationDto> categorisations = statisticalResourcesServiceFacade.retrieveCategorisationsByDatasetVersion(getServiceContextAdministrador(), datasetVersionUrn);
+
+        DatasetVersionDto newVersion = statisticalResourcesServiceFacade.versioningDatasetVersion(getServiceContextAdministrador(), datasetVersionDto, VersionTypeEnum.MINOR);
+        assertNotNull(newVersion);
+        List<CategorisationDto> categorisationsNewVersion = statisticalResourcesServiceFacade.retrieveCategorisationsByDatasetVersion(getServiceContextAdministrador(), newVersion.getUrn());
+        assertEquals(categorisations.size(), categorisationsNewVersion.size());
+        assertEquals("urn:sdmx:org.sdmx.infomodel.categoryscheme.Categorisation=ISTAC.agency01:cat_data_1(001.000)", categorisationsNewVersion.get(0).getUrn());
+        assertEquals("urn:sdmx:org.sdmx.infomodel.categoryscheme.Categorisation=ISTAC.agency01:cat_data_2(001.000)", categorisationsNewVersion.get(1).getUrn());
+        assertEquals("urn:sdmx:org.sdmx.infomodel.categoryscheme.Categorisation=ISTAC.agency01:cat_data_3(001.000)", categorisationsNewVersion.get(2).getUrn());
+        for (int i = 0; i < categorisations.size(); i++) {
+            CategorisationDto categorisationExpected = categorisations.get(i);
+            CategorisationDto categorisationActual = categorisationsNewVersion.get(i);
+            assertEquals(datasetVersionDto.getUrn(), categorisationExpected.getDatasetVersion().getUrn());
+            assertEquals(newVersion.getUrn(), categorisationActual.getDatasetVersion().getUrn());
+            assertEquals(categorisationActual.getCategory().getUrn(), categorisationExpected.getCategory().getUrn());
+            assertEquals(categorisationActual.getMaintainer().getUrn(), categorisationExpected.getMaintainer().getUrn());
+            assertEquals("Categoría " + categorisationActual.getCode(), categorisationActual.getTitle().getLocalisedLabel("es"));
+        }
+    }
+
     @Override
     @Test
     @MetamacMock(DATASET_VERSION_16_DRAFT_READY_FOR_PRODUCTION_VALIDATION_NAME)
@@ -2107,14 +2134,83 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
 
     @Override
     public void testCreateAttributeInstance() throws Exception {
-        // TODO Auto-generated method stub
+        // TODO testCreateAttributeInstance
 
     }
 
     @Override
     public void testRetrieveAttributeInstances() throws Exception {
-        // TODO Auto-generated method stub
+        // TODO testRetrieveAttributeInstances
 
+    }
+
+    // ------------------------------------------------------------------------
+    // CATEGORISATIONS
+    // ------------------------------------------------------------------------
+
+    @Override
+    @Test
+    @MetamacMock({DATASET_VERSION_01_BASIC_NAME, CATEGORISATION_SEQUENCE_NAME, CATEGORISATION_MAINTAINER_NAME})
+    public void testCreateCategorisation() throws Exception {
+        DatasetVersion datasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_01_BASIC_NAME);
+        CategorisationDto dto = StatisticalResourcesDtoMocks.mockCategorisationDto(datasetVersion.getSiemacMetadataStatisticalResource().getUrn());
+
+        CategorisationDto persisted = statisticalResourcesServiceFacade.createCategorisation(getServiceContextAdministrador(), dto);
+        assertNotNull(persisted);
+        assertNotNull(persisted.getUrn());
+    }
+
+    @Override
+    @Test
+    @MetamacMock({CATEGORISATION_01_DATASET_VERSION_01_NAME})
+    public void testRetrieveCategorisationByUrn() throws Exception {
+        Categorisation expected = categorisationMockFactory.retrieveMock(CATEGORISATION_01_DATASET_VERSION_01_NAME);
+        CategorisationDto actual = statisticalResourcesServiceFacade.retrieveCategorisationByUrn(getServiceContextAdministrador(), expected.getVersionableStatisticalResource().getUrn());
+        assertEqualsCategorisation(expected, actual);
+    }
+
+    @Override
+    @Test
+    @MetamacMock({CATEGORISATION_01_DATASET_VERSION_01_NAME})
+    public void testDeleteCategorisation() throws Exception {
+        Categorisation expected = categorisationMockFactory.retrieveMock(CATEGORISATION_01_DATASET_VERSION_01_NAME);
+        String urn = expected.getVersionableStatisticalResource().getUrn();
+
+        // Delete
+        statisticalResourcesServiceFacade.deleteCategorisation(getServiceContextAdministrador(), urn);
+
+        expectedMetamacException(new MetamacException(ServiceExceptionType.CATEGORISATION_NOT_FOUND, urn));
+        statisticalResourcesServiceFacade.retrieveCategorisationByUrn(getServiceContextAdministrador(), urn);
+    }
+
+    @Override
+    @Test
+    @MetamacMock({CATEGORISATION_01_DATASET_VERSION_03_PUBLISHED_NAME})
+    public void testEndCategorisationValidity() throws Exception {
+        Categorisation expected = categorisationMockFactory.retrieveMock(CATEGORISATION_01_DATASET_VERSION_03_PUBLISHED_NAME);
+        String urn = expected.getVersionableStatisticalResource().getUrn();
+        assertNull(expected.getVersionableStatisticalResource().getValidTo());
+        assertNull(expected.getValidToEffective());
+
+        DateTime validTo = new DateTime(2011, 1, 2, 3, 4, 5, 6);
+        CategorisationDto actual = statisticalResourcesServiceFacade.endCategorisationValidity(getServiceContextAdministrador(), urn, validTo.toDate());
+        MetamacAsserts.assertEqualsDate(validTo, actual.getValidTo());
+        assertNull(expected.getDatasetVersion().getSiemacMetadataStatisticalResource().getValidTo());
+    }
+
+    @Override
+    @Test
+    @MetamacMock({DATASET_VERSION_01_BASIC_NAME, CATEGORISATION_01_DATASET_VERSION_01_NAME, CATEGORISATION_02_DATASET_VERSION_01_NAME})
+    public void testRetrieveCategorisationsByDatasetVersion() throws Exception {
+        DatasetVersion datasetVersion1 = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_01_BASIC_NAME);
+        Categorisation categorisation1Dataset1 = categorisationMockFactory.retrieveMock(CATEGORISATION_01_DATASET_VERSION_01_NAME);
+        Categorisation categorisation2Dataset1 = categorisationMockFactory.retrieveMock(CATEGORISATION_02_DATASET_VERSION_01_NAME);
+
+        List<CategorisationDto> categorisations = statisticalResourcesServiceFacade.retrieveCategorisationsByDatasetVersion(getServiceContextAdministrador(), datasetVersion1
+                .getSiemacMetadataStatisticalResource().getUrn());
+        assertEquals(2, categorisations.size());
+        assertEquals(categorisation1Dataset1.getVersionableStatisticalResource().getUrn(), categorisations.get(0).getUrn());
+        assertEquals(categorisation2Dataset1.getVersionableStatisticalResource().getUrn(), categorisations.get(1).getUrn());
     }
 
     // ------------------------------------------------------------------------

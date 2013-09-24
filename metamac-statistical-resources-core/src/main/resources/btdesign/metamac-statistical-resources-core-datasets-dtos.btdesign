@@ -110,5 +110,11 @@ Application DatasetsStatisticalResourcesDto {
         	- @ExternalItemDto externalItemValue;
         	String stringValue;
         }
+        
+        DataTransferObject CategorisationDto extends @VersionableStatisticalResourceDto  {
+        	- @ExternalItemDto category not nullable;
+        	- @ExternalItemDto maintainer not nullable;
+        	- @RelatedResourceDto datasetVersion not nullable;
+        }
 	}
 }

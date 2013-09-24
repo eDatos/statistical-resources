@@ -7,12 +7,14 @@ import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.base.mapper.BaseDo2DtoMapperImpl;
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResourceResult;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.Categorisation;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.CodeDimension;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionRepository;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.StatisticOfficiality;
 import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.CategorisationDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionBaseDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasourceDto;
@@ -260,5 +262,52 @@ public class DatasetDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements Dat
             targets.add(codeDimensionDoToCodeItemDto(source));
         }
         return targets;
+    }
+
+    // ---------------------------------------------------------------------------------------------------------
+    // CATEGORISATIONS
+    // ---------------------------------------------------------------------------------------------------------
+
+    @Override
+    public CategorisationDto categorisationDoToDto(Categorisation source) throws MetamacException {
+        if (source == null) {
+            return null;
+        }
+        CategorisationDto target = new CategorisationDto();
+        categorisationDoToDto(source, target);
+        return target;
+    }
+
+    @Override
+    public List<CategorisationDto> categorisationDoListToDtoList(List<Categorisation> sources) throws MetamacException {
+        List<CategorisationDto> targets = new ArrayList<CategorisationDto>();
+        for (Categorisation source : sources) {
+            targets.add(categorisationDoToDto(source));
+        }
+        return targets;
+    }
+
+    private CategorisationDto categorisationDoToDto(Categorisation source, CategorisationDto target) throws MetamacException {
+        if (source == null) {
+            return null;
+        }
+
+        // Hierarchy
+        versionableStatisticalResourceDoToDto(source.getVersionableStatisticalResource(), target);
+
+        // Following metadata can be overrided by categorisation. Otherwise, they are copied from dataset
+        target.setValidFrom(dateDoToDto(source.getValidFromEffective()));
+        target.setValidTo(dateDoToDto(source.getValidToEffective()));
+
+        // Identity
+        target.setId(source.getId());
+        target.setVersion(source.getVersion());
+
+        // Other
+        target.setDatasetVersion(lifecycleStatisticalResourceDoToRelatedResourceDto(source.getDatasetVersion().getSiemacMetadataStatisticalResource(), TypeRelatedResourceEnum.DATASET_VERSION));
+        target.setCategory(externalItemDoToDto(source.getCategory()));
+        target.setMaintainer(externalItemDoToDto(source.getMaintainer()));
+
+        return target;
     }
 }

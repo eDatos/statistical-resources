@@ -259,7 +259,7 @@ public class DatasetServiceInvocationValidatorImpl extends BaseInvocationValidat
         StatisticalResourcesValidationUtils.checkParameterRequired(urn, ServiceExceptionSingleParameters.URN, exceptions);
     }
 
-    public static void checkRetrieveCategorisationsByDataset(String datasetVersionUrn, List<MetamacExceptionItem> exceptions) {
+    public static void checkRetrieveCategorisationsByDatasetVersion(String datasetVersionUrn, List<MetamacExceptionItem> exceptions) {
         StatisticalResourcesValidationUtils.checkParameterRequired(datasetVersionUrn, ServiceExceptionSingleParameters.URN, exceptions);
     }
 

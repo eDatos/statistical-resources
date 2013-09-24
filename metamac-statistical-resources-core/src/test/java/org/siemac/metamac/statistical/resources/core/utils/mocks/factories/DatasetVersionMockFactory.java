@@ -9,7 +9,13 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetMockFactory.DATASET_04_FULL_FILLED_WITH_1_DATASET_VERSIONS_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetMockFactory.DATASET_05_WITH_MULTIPLE_PUBLISHED_VERSIONS_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetMockFactory.DATASET_06_WITH_MULTIPLE_PUBLISHED_VERSIONS_AND_LATEST_NO_VISIBLE_NAME;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.*;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_29_CHECK_COMPAT_DATASET_86_OK_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_30_CHECK_COMPAT_DATASET_86_LESS_DIMENSIONS_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_31_CHECK_COMPAT_DATASET_86_MORE_DIMENSIONS_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_32_CHECK_COMPAT_DATASET_86_MORE_CODES_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_33_CHECK_COMPAT_DATASET_86_INVALID_LATEST_TEMPORAL_CODE_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_34_CHECK_COMPAT_DATASET_87_INVALID_QUERY_TYPE_AUTOINC_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_35_CHECK_COMPAT_DATASET_87_INVALID_QUERY_TYPE_LATEST_DATA_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.buildQueryVersionMockSimple;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.buildSelectionItemWithDimensionAndCodes;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.createQueryVersionFromTemplate;
@@ -25,8 +31,6 @@ import org.siemac.metamac.statistical.resources.core.enume.domain.VersionRationa
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryTypeEnum;
 import org.siemac.metamac.statistical.resources.core.publication.domain.ElementLevel;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
-import org.siemac.metamac.statistical.resources.core.query.domain.CodeItem;
-import org.siemac.metamac.statistical.resources.core.query.domain.QuerySelectionItem;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
 import org.siemac.metamac.statistical.resources.core.utils.DatasetLifecycleTestUtils;
 import org.siemac.metamac.statistical.resources.core.utils.LifecycleTestUtils;
@@ -38,8 +42,6 @@ import org.siemac.metamac.statistical.resources.core.utils.mocks.configuration.M
 import org.siemac.metamac.statistical.resources.core.utils.mocks.configuration.MockProvider;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesDoMocks;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesPersistedDoMocks;
-
-import antlr.CppCodeGenerator;
 
 @MockProvider
 @SuppressWarnings("unused")
@@ -218,6 +220,8 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
     public static final String               DATASET_VERSION_86_WITH_TEMPORAL_DIMENSION_NAME                                                        = "DATASET_VERSION_86_WITH_TEMPORAL_DIMENSION";
 
     public static final String               DATASET_VERSION_87_WITH_NO_TEMPORAL_DIMENSION_NAME                                                     = "DATASET_VERSION_87_WITH_NO_TEMPORAL_DIMENSION";
+
+    public static final String               DATASET_VERSION_88_PUBLISHED_WITH_CATEGORISATIONS_NAME                                                 = "DATASET_VERSION_88_PUBLISHED_WITH_CATEGORISATIONS";
 
     private static final String              INIT_VERSION                                                                                           = "001.000";
     private static final String              SECOND_VERSION                                                                                         = "002.000";
@@ -974,6 +978,15 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
 
         return new MockDescriptor(datasetVersion, queryMoreDimensionsAutoInc, queryLatestData);
     }
+
+    private static DatasetVersion getDatasetVersion88PublishedWithCategorisations() {
+        DatasetVersion datasetVersion = generateDatasetVersionInStatusWithGeneratedDatasource(ProcStatusEnum.PUBLISHED);
+        datasetVersion.addCategorisation(CategorisationMockFactory.createCategorisation("cat_data_1001", "category01", datasetVersion));
+        datasetVersion.addCategorisation(CategorisationMockFactory.createCategorisation("cat_data_1002", "category02", datasetVersion));
+        datasetVersion.addCategorisation(CategorisationMockFactory.createCategorisation("cat_data_1003", "category03", datasetVersion));
+        return datasetVersion;
+    }
+
     private static PublicationVersion buildDraftPublicationWithDatasetInFirstLevel(Integer sequentialId, Dataset dataset) {
         PublicationVersion publicationVersion = PublicationVersionMockFactory.buildPublicationVersionDraft(sequentialId);
 

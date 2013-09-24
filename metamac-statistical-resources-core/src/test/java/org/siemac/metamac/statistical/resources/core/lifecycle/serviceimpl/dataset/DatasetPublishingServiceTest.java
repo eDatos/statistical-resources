@@ -156,6 +156,7 @@ public class DatasetPublishingServiceTest extends StatisticalResourcesMockRestBa
         exceptionItems.add(buildExternalItemNotPublishedException(datasetVersion.getUpdateFrequency(), prefix, "updateFrequency"));
         for (Categorisation categorisation : datasetVersion.getCategorisations()) {
             exceptionItems.add(buildExternalItemNotPublishedException(categorisation.getCategory(), prefix, "categorisations"));
+            exceptionItems.add(buildExternalItemNotPublishedException(categorisation.getMaintainer(), prefix, "categorisations"));
         }
         return exceptionItems;
     }
@@ -197,6 +198,7 @@ public class DatasetPublishingServiceTest extends StatisticalResourcesMockRestBa
         mockExternalItemNotPublished(datasetVersion.getUpdateFrequency());
         for (Categorisation categorisation : datasetVersion.getCategorisations()) {
             mockExternalItemNotPublished(categorisation.getCategory());
+            mockExternalItemNotPublished(categorisation.getMaintainer());
         }
     }
 
@@ -210,6 +212,7 @@ public class DatasetPublishingServiceTest extends StatisticalResourcesMockRestBa
         mockExternalItemPublished(datasetVersion.getUpdateFrequency());
         for (Categorisation categorisation : datasetVersion.getCategorisations()) {
             mockExternalItemPublished(categorisation.getCategory());
+            mockExternalItemPublished(categorisation.getMaintainer());
         }
     }
 

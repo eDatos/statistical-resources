@@ -181,4 +181,39 @@ public class DatasetsSecurityUtils extends SecurityUtils {
             throwExceptionIfOperationNotAllowed(ctx);
         }
     }
+
+    // ------------------------------------------------------------------------
+    // CATEGORISATIONS
+    // ------------------------------------------------------------------------
+
+    public static void canCreateCategorisation(ServiceContext ctx) throws MetamacException {
+        if (!SharedDatasetsSecurityUtils.canCreateCategorisation(getMetamacPrincipal(ctx))) {
+            throwExceptionIfOperationNotAllowed(ctx);
+        }
+    }
+
+    public static void canRetrieveCategorisationByUrn(ServiceContext ctx) throws MetamacException {
+        if (!SharedDatasetsSecurityUtils.canRetrieveCategorisationByUrn(getMetamacPrincipal(ctx))) {
+            throwExceptionIfOperationNotAllowed(ctx);
+        }
+    }
+
+    public static void canDeleteCategorisation(ServiceContext ctx) throws MetamacException {
+        if (!SharedDatasetsSecurityUtils.canDeleteCategorisation(getMetamacPrincipal(ctx))) {
+            throwExceptionIfOperationNotAllowed(ctx);
+        }
+    }
+
+    public static void canRetrieveCategorisationsByDatasetVersion(ServiceContext ctx) throws MetamacException {
+        if (!SharedDatasetsSecurityUtils.canRetrieveCategorisationsByDatasetVersion(getMetamacPrincipal(ctx))) {
+            throwExceptionIfOperationNotAllowed(ctx);
+        }
+    }
+
+    public static void canEndCategorisationValidity(ServiceContext ctx) throws MetamacException {
+        if (!SharedDatasetsSecurityUtils.canEndCategorisationValidity(getMetamacPrincipal(ctx))) {
+            throwExceptionIfOperationNotAllowed(ctx);
+        }
+    }
+
 }

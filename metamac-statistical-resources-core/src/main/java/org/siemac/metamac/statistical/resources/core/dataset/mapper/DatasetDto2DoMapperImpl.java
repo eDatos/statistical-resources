@@ -5,9 +5,6 @@ import java.util.Date;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
-import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
-import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResource;
-import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResourceResult;
 import org.siemac.metamac.core.common.exception.ExceptionLevelEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionBuilder;
@@ -15,8 +12,13 @@ import org.siemac.metamac.core.common.util.OptimisticLockingUtils;
 import org.siemac.metamac.core.common.util.shared.UrnUtils;
 import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataStatisticalResource;
+import org.siemac.metamac.statistical.resources.core.base.domain.VersionableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.mapper.BaseDto2DoMapperImpl;
+import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
+import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResource;
+import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResourceResult;
 import org.siemac.metamac.statistical.resources.core.dataset.checks.DatasetMetadataEditionChecks;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.Categorisation;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionRepository;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
@@ -26,6 +28,7 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.StatisticOff
 import org.siemac.metamac.statistical.resources.core.dataset.exception.DatasetVersionNotFoundException;
 import org.siemac.metamac.statistical.resources.core.dataset.exception.DatasourceNotFoundException;
 import org.siemac.metamac.statistical.resources.core.dataset.exception.StatisticOfficialityNotFoundException;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.CategorisationDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionBaseDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasourceDto;
@@ -128,13 +131,13 @@ public class DatasetDto2DoMapperImpl extends BaseDto2DoMapperImpl implements Dat
         if (target == null) {
             throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.PARAMETER_REQUIRED).withMessageParameters(ServiceExceptionParameters.DATASET_VERSION).build();
         }
-        
-        //Check replaces, can't replace a dataset already replaced by other dataset
+
+        // Check replaces, can't replace a dataset already replaced by other dataset
         checkCanDatasetReplacesOtherDataset(source);
 
         // Hierarchy
         siemacMetadataStatisticalResourceDtoToDo(source, target.getSiemacMetadataStatisticalResource(), ServiceExceptionParameters.DATASET_VERSION__SIEMAC_METADATA_STATISTICAL_RESOURCE);
-        
+
         // modifiable
         externalItemDtoCollectionToDoList(source.getGeographicGranularities(), target.getGeographicGranularities(), ServiceExceptionParameters.DATASET_VERSION__GEOGRAPHIC_GRANULARITIES);
         externalItemDtoCollectionToDoList(source.getTemporalGranularities(), target.getTemporalGranularities(), ServiceExceptionParameters.DATASET_VERSION__TEMPORAL_GRANULARITIES);
@@ -167,7 +170,8 @@ public class DatasetDto2DoMapperImpl extends BaseDto2DoMapperImpl implements Dat
             } else {
                 RelatedResourceResult resourceAlreadyReplacing = datasetVersionRepository.retrieveIsReplacedBy(resourceReplaced.getDatasetVersion());
                 if (resourceAlreadyReplacing != null && !resourceAlreadyReplacing.getUrn().equals(source.getUrn())) {
-                    throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.DATASET_VERSION_ALREADY_BEEN_REPLACED_BY_OTHER_DATASET_VERSION).withMessageParameters(currentUrn, source.getReplaces().getUrn()).build();
+                    throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.DATASET_VERSION_ALREADY_BEEN_REPLACED_BY_OTHER_DATASET_VERSION)
+                            .withMessageParameters(currentUrn, source.getReplaces().getUrn()).build();
                 }
             }
         }
@@ -243,6 +247,26 @@ public class DatasetDto2DoMapperImpl extends BaseDto2DoMapperImpl implements Dat
             }
         }
 
+        return target;
+    }
+
+    @Override
+    public Categorisation categorisationDtoToDo(CategorisationDto source) throws MetamacException {
+        if (source == null) {
+            return null;
+        }
+        Categorisation target = null;
+        if (source.getId() != null || source.getUrn() != null) {
+            throw new MetamacException(ServiceExceptionType.UNKNOWN, "Categorisation can not be updated");
+        }
+        target = new Categorisation();
+        target.setVersionableStatisticalResource(new VersionableStatisticalResource());
+        target.setMaintainer(externalItemDtoToDo(source.getMaintainer(), target.getMaintainer(), ServiceExceptionParameters.CATEGORISATION__MAINTAINER));
+        target.setCategory(externalItemDtoToDo(source.getCategory(), target.getCategory(), ServiceExceptionParameters.CATEGORISATION__CATEGORY));
+        if (source.getDatasetVersion() != null) {
+            DatasetVersion datasetVersion = datasetVersionRepository.retrieveByUrn(source.getDatasetVersion().getUrn());
+            target.setDatasetVersion(datasetVersion);
+        }
         return target;
     }
 }

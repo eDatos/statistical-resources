@@ -24,6 +24,7 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.TemporalCode;
 import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.AttributeValueDto;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.CategorisationDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionBaseDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionMainCoveragesDto;
@@ -424,4 +425,57 @@ public class DatasetsAsserts extends BaseAsserts {
         assertEqualsExternalItem(expected.getMaintainer(), actual.getMaintainer());
     }
 
+    public static void assertEqualsCategorisation(Categorisation entity, CategorisationDto dto) {
+        assertEqualsCategorisation(dto, entity, MapperEnum.DO2DTO);
+    }
+
+    public static void assertEqualsCategorisation(CategorisationDto dto, Categorisation entity) {
+        assertEqualsCategorisation(dto, entity, MapperEnum.DTO2DO);
+    }
+
+    public static void assertEqualsCategorisationDoAndDtoCollection(List<Categorisation> expected, List<CategorisationDto> actual) {
+        assertEqualsCategorisationCollection(actual, expected, MapperEnum.DO2DTO);
+    }
+
+    public static void assertEqualsCategorisationDtoAndDoCollection(List<CategorisationDto> expected, List<Categorisation> actual) {
+        assertEqualsCategorisationCollection(expected, actual, MapperEnum.DTO2DO);
+    }
+
+    private static void assertEqualsCategorisation(CategorisationDto dto, Categorisation entity, MapperEnum mapperEnum) {
+        assertEqualsVersionableStatisticalResource(entity.getVersionableStatisticalResource(), dto, mapperEnum);
+
+        if (MapperEnum.DO2DTO.equals(mapperEnum)) {
+            assertEquals(entity.getId(), dto.getId());
+
+            assertNotNull(entity.getVersion());
+            assertEquals(entity.getVersion(), dto.getVersion());
+        }
+        assertEquals(entity.getDatasetVersion().getSiemacMetadataStatisticalResource().getUrn(), dto.getDatasetVersion().getUrn());
+        assertEqualsExternalItem(entity.getCategory(), dto.getCategory(), mapperEnum);
+        assertEqualsExternalItem(entity.getMaintainer(), dto.getMaintainer(), mapperEnum);
+    }
+
+    private static void assertEqualsCategorisationCollection(List<CategorisationDto> dtos, List<Categorisation> entities, MapperEnum mapperEnum) {
+        if (dtos != null) {
+            assertNotNull(entities);
+            assertEquals(dtos.size(), entities.size());
+            for (CategorisationDto expectedItem : dtos) {
+                boolean match = false;
+                for (Categorisation actualItem : entities) {
+                    try {
+                        assertEqualsCategorisation(expectedItem, actualItem, mapperEnum);
+                        match = true;
+                    } catch (AssertionError e) {
+                        continue;
+                    }
+                }
+
+                if (!match) {
+                    fail("Found elements in expected collection, which are not contained in actual collection");
+                }
+            }
+        } else {
+            assertNull(entities);
+        }
+    }
 }

@@ -2,6 +2,7 @@ package org.siemac.metamac.statistical.resources.core.facade.serviceimpl;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
@@ -14,12 +15,14 @@ import org.siemac.metamac.core.common.criteria.SculptorCriteria;
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.core.common.util.CoreCommonUtil;
 import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
 import org.siemac.metamac.statistical.resources.core.common.mapper.CommonDo2DtoMapper;
 import org.siemac.metamac.statistical.resources.core.dataset.criteria.mapper.DatasetMetamacCriteria2SculptorCriteriaMapper;
 import org.siemac.metamac.statistical.resources.core.dataset.criteria.mapper.DatasetSculptorCriteria2MetamacCriteriaMapper;
 import org.siemac.metamac.statistical.resources.core.dataset.criteria.mapper.DatasetVersionMetamacCriteria2SculptorCriteriaMapper;
 import org.siemac.metamac.statistical.resources.core.dataset.criteria.mapper.DatasetVersionSculptorCriteria2MetamacCriteriaMapper;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.Categorisation;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.CodeDimension;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionProperties;
@@ -30,6 +33,7 @@ import org.siemac.metamac.statistical.resources.core.dataset.mapper.DatasetDto2D
 import org.siemac.metamac.statistical.resources.core.dataset.mapper.StatRepoDto2StatisticalResourcesDtoMapper;
 import org.siemac.metamac.statistical.resources.core.dataset.mapper.StatisticalResourcesDto2StatRepoDtoMapper;
 import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.CategorisationDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionBaseDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionMainCoveragesDto;
@@ -905,6 +909,71 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         List<AttributeInstanceDto> attributes = getDatasetService().retrieveAttributeInstances(ctx, datasetVersionUrn, attributeId);
 
         return statRepoDto2StatisticalResourcesDtoMapper.attributeDtosToDsdAttributeInstanceDtos(attributes);
+    }
+
+    @Override
+    public CategorisationDto createCategorisation(ServiceContext ctx, CategorisationDto categorisationDto) throws MetamacException {
+
+        // Security
+        DatasetsSecurityUtils.canCreateCategorisation(ctx);
+
+        // Transform
+        Categorisation categorisation = datasetDto2DoMapper.categorisationDtoToDo(categorisationDto);
+
+        // Create
+        categorisation = getDatasetService().createCategorisation(ctx, categorisation);
+
+        // Transform
+        return datasetDo2DtoMapper.categorisationDoToDto(categorisation);
+    }
+
+    @Override
+    public CategorisationDto retrieveCategorisationByUrn(ServiceContext ctx, String urn) throws MetamacException {
+        // Security
+        DatasetsSecurityUtils.canRetrieveCategorisationByUrn(ctx);
+
+        // Retrieve
+        Categorisation categorisation = getDatasetService().retrieveCategorisationByUrn(ctx, urn);
+
+        // Transform
+        CategorisationDto categorisationDto = datasetDo2DtoMapper.categorisationDoToDto(categorisation);
+        return categorisationDto;
+    }
+
+    @Override
+    public void deleteCategorisation(ServiceContext ctx, String urn) throws MetamacException {
+        // Security
+        DatasetsSecurityUtils.canDeleteCategorisation(ctx);
+
+        // Delete
+        getDatasetService().deleteCategorisation(ctx, urn);
+    }
+
+    @Override
+    public List<CategorisationDto> retrieveCategorisationsByDatasetVersion(ServiceContext ctx, String datasetVersionUrn) throws MetamacException {
+
+        // Security
+        DatasetsSecurityUtils.canRetrieveCategorisationsByDatasetVersion(ctx);
+
+        // Retrieve
+        List<Categorisation> categorisations = getDatasetService().retrieveCategorisationsByDatasetVersion(ctx, datasetVersionUrn);
+
+        // Transform
+        List<CategorisationDto> categorisationsDto = datasetDo2DtoMapper.categorisationDoListToDtoList(categorisations);
+        return categorisationsDto;
+    }
+
+    @Override
+    public CategorisationDto endCategorisationValidity(ServiceContext ctx, String urn, Date validTo) throws MetamacException {
+        // Security
+        DatasetsSecurityUtils.canEndCategorisationValidity(ctx);
+
+        // Delete
+        Categorisation categorisation = getDatasetService().endCategorisationValidity(ctx, urn, CoreCommonUtil.transformDateToDateTime(validTo));
+
+        // Transform
+        CategorisationDto categorisationDto = datasetDo2DtoMapper.categorisationDoToDto(categorisation);
+        return categorisationDto;
     }
 
     // ------------------------------------------------------------------------

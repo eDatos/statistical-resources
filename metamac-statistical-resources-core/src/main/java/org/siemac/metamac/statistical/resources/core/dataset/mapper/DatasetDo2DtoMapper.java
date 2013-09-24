@@ -5,11 +5,13 @@ import java.util.List;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.base.mapper.BaseDo2DtoMapper;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.Categorisation;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.CodeDimension;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.StatisticOfficiality;
 import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.CategorisationDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionBaseDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasourceDto;
@@ -28,12 +30,16 @@ public interface DatasetDo2DtoMapper extends BaseDo2DtoMapper {
 
     // Dataset
     public RelatedResourceDto datasetVersionDoToDatasetRelatedResourceDto(DatasetVersion source) throws MetamacException;
-    
+
     // Dataset version
     public DatasetVersionDto datasetVersionDoToDto(ServiceContext ctx, DatasetVersion source) throws MetamacException;
     public DatasetVersionBaseDto datasetVersionDoToBaseDto(ServiceContext ctx, DatasetVersion source) throws MetamacException;
-    
-    //Code dimension
+
+    // Code dimension
     public CodeItemDto codeDimensionDoToCodeItemDto(CodeDimension codeDimension) throws MetamacException;
     public List<CodeItemDto> codeDimensionDoListToCodeItemDtoList(List<CodeDimension> codeDimensions) throws MetamacException;
+
+    // Categorisation
+    public CategorisationDto categorisationDoToDto(Categorisation source) throws MetamacException;
+    public List<CategorisationDto> categorisationDoListToDtoList(List<Categorisation> sources) throws MetamacException;
 }

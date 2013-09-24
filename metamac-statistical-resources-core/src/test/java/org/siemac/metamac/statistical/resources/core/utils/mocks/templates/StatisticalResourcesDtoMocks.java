@@ -32,6 +32,7 @@ import org.siemac.metamac.statistical.resources.core.dto.StatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.VersionRationaleTypeDto;
 import org.siemac.metamac.statistical.resources.core.dto.VersionableStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.AttributeValueDto;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.CategorisationDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdAttributeInstanceDto;
@@ -231,6 +232,20 @@ public class StatisticalResourcesDtoMocks extends MetamacMocks {
         mockSiemacMetadataStatisticalResource(datasetVersionDto, StatisticalResourceTypeEnum.DATASET);
 
         return datasetVersionDto;
+    }
+
+    // -----------------------------------------------------------------
+    // CATEGORISATIONS
+    // -----------------------------------------------------------------
+
+    public static CategorisationDto mockCategorisationDto(String datasetVersionUrn) {
+        CategorisationDto categorisationDto = new CategorisationDto();
+        categorisationDto.setDatasetVersion(new RelatedResourceDto());
+        categorisationDto.getDatasetVersion().setType(TypeRelatedResourceEnum.DATASET_VERSION);
+        categorisationDto.getDatasetVersion().setUrn(datasetVersionUrn);
+        categorisationDto.setMaintainer(mockAgencyExternalItemDto());
+        categorisationDto.setCategory(mockCategoryExternalItemDto());
+        return categorisationDto;
     }
 
     // -----------------------------------------------------------------

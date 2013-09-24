@@ -131,6 +131,7 @@ public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<Datase
 
         for (Categorisation categorisation : resource.getCategorisations()) {
             externalItemChecker.checkExternalItemsExternallyPublished(categorisation.getCategory(), addParameter(metadataName, ServiceExceptionSingleParameters.CATEGORISATIONS), exceptionItems);
+            externalItemChecker.checkExternalItemsExternallyPublished(categorisation.getMaintainer(), addParameter(metadataName, ServiceExceptionSingleParameters.CATEGORISATIONS), exceptionItems);
         }
     }
 
