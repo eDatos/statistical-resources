@@ -739,6 +739,9 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
 
         // Retrieve
         Categorisation categorisation = getCategorisationRepository().retrieveByUrn(urn);
+        if (categorisation.getValidFromEffective() == null) {
+            throw new MetamacException(ServiceExceptionType.CATEGORISATION_CANT_END_VALIDITY_WITHOUT_VALIDITY_STARTED, urn);
+        }
         if (validTo == null) {
             validTo = new DateTime();
         }

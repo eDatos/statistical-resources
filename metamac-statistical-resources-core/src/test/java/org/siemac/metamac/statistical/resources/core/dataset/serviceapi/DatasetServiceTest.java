@@ -12,6 +12,7 @@ import static org.siemac.metamac.statistical.resources.core.utils.asserts.Datase
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts.assertEqualsDatasetVersionNotChecksDataset;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.CategorisationMockFactory.CATEGORISATION_01_DATASET_VERSION_01_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.CategorisationMockFactory.CATEGORISATION_01_DATASET_VERSION_02_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.CategorisationMockFactory.CATEGORISATION_01_DATASET_VERSION_03_PUBLISHED_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.CategorisationMockFactory.CATEGORISATION_02_DATASET_VERSION_01_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.CategorisationMockFactory.CATEGORISATION_02_DATASET_VERSION_02_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.CategorisationMockFactory.CATEGORISATION_03_DATASET_VERSION_02_NAME;
@@ -1060,22 +1061,55 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
 
     @Override
     @Test
+    @MetamacMock({CATEGORISATION_01_DATASET_VERSION_01_NAME})
     public void testDeleteCategorisation() throws Exception {
-        // TODO Auto-generated method stub
+        Categorisation expected = categorisationMockFactory.retrieveMock(CATEGORISATION_01_DATASET_VERSION_01_NAME);
+        String urn = expected.getVersionableStatisticalResource().getUrn();
 
+        // Delete
+        datasetService.deleteCategorisation(getServiceContextWithoutPrincipal(), urn);
+
+        expectedMetamacException(new MetamacException(ServiceExceptionType.CATEGORISATION_NOT_FOUND, urn));
+        datasetService.retrieveCategorisationByUrn(getServiceContextWithoutPrincipal(), urn);
     }
 
     @Test
+    @MetamacMock({CATEGORISATION_01_DATASET_VERSION_03_PUBLISHED_NAME})
     public void testDeleteCategorisationErrorDatasetPublished() throws Exception {
-        // TODO Auto-generated method stub
+        Categorisation expected = categorisationMockFactory.retrieveMock(CATEGORISATION_01_DATASET_VERSION_03_PUBLISHED_NAME);
+        String urn = expected.getVersionableStatisticalResource().getUrn();
+        expectedMetamacException(new MetamacException(ServiceExceptionType.LIFE_CYCLE_WRONG_PROC_STATUS, expected.getDatasetVersion().getSiemacMetadataStatisticalResource().getUrn(),
+                "DRAFT, VALIDATION_REJECTED, PRODUCTION_VALIDATION, DIFFUSION_VALIDATION"));
+        datasetService.deleteCategorisation(getServiceContextWithoutPrincipal(), urn);
+    }
 
+    @Test
+    public void testCategorisationErrorNotExists() throws Exception {
+        expectedMetamacException(new MetamacException(ServiceExceptionType.CATEGORISATION_NOT_FOUND, URN_NOT_EXISTS));
+        datasetService.deleteCategorisation(getServiceContextWithoutPrincipal(), URN_NOT_EXISTS);
     }
 
     @Override
     @Test
+    @MetamacMock({CATEGORISATION_01_DATASET_VERSION_03_PUBLISHED_NAME})
     public void testEndCategorisationValidity() throws Exception {
-        // TODO Auto-generated method stub
+        Categorisation expected = categorisationMockFactory.retrieveMock(CATEGORISATION_01_DATASET_VERSION_03_PUBLISHED_NAME);
+        String urn = expected.getVersionableStatisticalResource().getUrn();
+        assertNull(expected.getVersionableStatisticalResource().getValidTo());
+        assertNull(expected.getValidToEffective());
 
+        Categorisation actual = datasetService.endCategorisationValidity(getServiceContextWithoutPrincipal(), urn, null);
+        assertNotNull(actual.getVersionableStatisticalResource().getValidTo());
+        assertEquals(actual.getVersionableStatisticalResource().getValidTo(), actual.getValidToEffective());
+    }
+
+    @Test
+    @MetamacMock({CATEGORISATION_01_DATASET_VERSION_01_NAME})
+    public void testEndCategorisationValidityErrorValidityNotStarted() throws Exception {
+        Categorisation expected = categorisationMockFactory.retrieveMock(CATEGORISATION_01_DATASET_VERSION_01_NAME);
+        String urn = expected.getVersionableStatisticalResource().getUrn();
+        expectedMetamacException(new MetamacException(ServiceExceptionType.CATEGORISATION_CANT_END_VALIDITY_WITHOUT_VALIDITY_STARTED, urn));
+        datasetService.endCategorisationValidity(getServiceContextWithoutPrincipal(), urn, null);
     }
 
     // ------------------------------------------------------------------------
