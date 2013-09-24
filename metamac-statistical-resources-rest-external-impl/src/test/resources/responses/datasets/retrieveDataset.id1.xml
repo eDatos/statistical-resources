@@ -479,6 +479,26 @@
                 </cdomain:name>
             </cdomain:resource>
         </stat:statisticalUnit>
+        <stat:subjectAreas total="2">
+            <cdomain:resource kind="structuralResources#category">
+                <cdomain:id>category01</cdomain:id>
+                <cdomain:nestedId>category01</cdomain:nestedId>
+                <cdomain:urn>urn:sdmx:org.sdmx.infomodel.categoryscheme.Category=MaintainerMock:CategorySchemeMock(1.0).category01</cdomain:urn>
+                <cdomain:selfLink kind="structuralResources#category" href="http://data.istac.es/apis/srm/latest/category01"/>
+                <cdomain:name>
+                    <cdomain:text xml:lang="es">title-category01 en Espanol</cdomain:text>
+                </cdomain:name>
+            </cdomain:resource>
+            <cdomain:resource kind="structuralResources#category">
+                <cdomain:id>category02</cdomain:id>
+                <cdomain:nestedId>category02</cdomain:nestedId>
+                <cdomain:urn>urn:sdmx:org.sdmx.infomodel.categoryscheme.Category=MaintainerMock:CategorySchemeMock(1.0).category02</cdomain:urn>
+                <cdomain:selfLink kind="structuralResources#category" href="http://data.istac.es/apis/srm/latest/category02"/>
+                <cdomain:name>
+                    <cdomain:text xml:lang="es">title-category02 en Espanol</cdomain:text>
+                </cdomain:name>
+            </cdomain:resource>
+        </stat:subjectAreas>
         <stat:relatedDsd kind="structuralResources#dataStructure">
             <cdomain:id>DSD01</cdomain:id>
             <cdomain:urn>urn:sdmx:org.sdmx.infomodel.datastructure.DataStructure=MaintainerMock:DSD01(1.0)</cdomain:urn>

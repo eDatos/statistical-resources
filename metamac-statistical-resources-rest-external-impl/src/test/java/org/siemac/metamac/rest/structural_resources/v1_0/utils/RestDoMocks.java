@@ -16,6 +16,7 @@ import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatis
 import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.VersionRationaleType;
 import org.siemac.metamac.statistical.resources.core.base.domain.VersionableStatisticalResource;
+import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
 import org.siemac.metamac.statistical.resources.core.common.domain.InternationalString;
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResource;
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResourceResult;
@@ -98,6 +99,10 @@ public class RestDoMocks {
         target.setDateNextUpdate(new DateTime(2013, 12, 2, 3, 4, 5, 0));
         target.setUpdateFrequency(StatisticalResourcesDoMocks.mockCodeExternalItem("updateFrequency01"));
         target.setStatisticOfficiality(coreDoMocks.mockStatisticOfficiality("statisticOfficiality01"));
+
+        ExternalItem maintainerCategorisation = StatisticalResourcesDoMocks.mockAgencyExternalItem(agencyID);
+        target.addCategorisation(coreDoMocks.mockCategorisationWithGeneratedCategory(target, maintainerCategorisation, "category01", "cat_data_01"));
+        target.addCategorisation(coreDoMocks.mockCategorisationWithGeneratedCategory(target, maintainerCategorisation, "category02", "cat_data_02"));
 
         mockSiemacMetadataStatisticalResource(agencyID, resourceID, version, target.getSiemacMetadataStatisticalResource());
         target.getSiemacMetadataStatisticalResource().setReplaces(mockDatasetRelatedResource(agencyID, "replace01", "01.000"));

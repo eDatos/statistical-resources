@@ -28,6 +28,7 @@ import org.siemac.metamac.rest.utils.RestUtils;
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResource;
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResourceResult;
 import org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConstants;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.Categorisation;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionRepository;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.StatisticOfficiality;
@@ -162,6 +163,7 @@ public class DatasetsDo2RestMapperV10Impl implements DatasetsDo2RestMapperV10 {
         target.setDateStart(commonDo2RestMapper.toDate(source.getDateStart()));
         target.setDateEnd(commonDo2RestMapper.toDate(source.getDateEnd()));
         target.setStatisticalUnit(commonDo2RestMapper.toResourcesExternalItemsSrm(source.getStatisticalUnit(), selectedLanguages));
+        target.setSubjectAreas(toDatasetSubjectAreas(source, selectedLanguages));
         target.setFormatExtentObservations(source.getFormatExtentObservations());
         target.setFormatExtentDimensions(source.getFormatExtentDimensions());
         target.setDateNextUpdate(commonDo2RestMapper.toDate(source.getDateNextUpdate()));
@@ -252,6 +254,18 @@ public class DatasetsDo2RestMapperV10Impl implements DatasetsDo2RestMapperV10 {
         target.setId(source.getIdentifier());
         target.setName(commonDo2RestMapper.toInternationalString(source.getTitle(), selectedLanguages));
         return target;
+    }
+
+    private Resources toDatasetSubjectAreas(DatasetVersion source, List<String> selectedLanguages) throws MetamacException {
+        if (CollectionUtils.isEmpty(source.getCategorisations())) {
+            return null;
+        }
+        Resources targets = new Resources();
+        for (Categorisation categorisation : source.getCategorisations()) {
+            targets.getResources().add(commonDo2RestMapper.toResourceExternalItemSrm(categorisation.getCategory(), selectedLanguages));
+        }
+        targets.setTotal(BigInteger.valueOf(targets.getResources().size()));
+        return targets;
     }
 
     private Item toStatisticOfficiality(StatisticOfficiality source, List<String> selectedLanguages) {
