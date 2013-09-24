@@ -3,6 +3,8 @@ package org.siemac.metamac.statistical_resources.rest.external.v1_0.mapper.query
 import static org.siemac.metamac.core.common.util.GeneratorUrnUtils.generateSiemacStatisticalResourceQueryUrn;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -23,9 +25,14 @@ import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Queries;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Query;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.QueryMetadata;
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResourceResult;
+import org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConstants;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionRepository;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.TemporalCode;
 import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryTypeEnum;
+import org.siemac.metamac.statistical.resources.core.query.domain.QuerySelectionItem;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersionRepository;
 import org.siemac.metamac.statistical_resources.rest.external.StatisticalResourcesRestExternalConstants;
@@ -49,6 +56,9 @@ public class QueriesDo2RestMapperV10Impl implements QueriesDo2RestMapperV10 {
 
     @Autowired
     private QueryVersionRepository   queryVersionRepository;
+
+    @Autowired
+    private DatasetVersionRepository datasetVersionRepository;
 
     private static final Logger      logger = LoggerFactory.getLogger(QueriesDo2RestMapperV10Impl.class);
 
@@ -86,16 +96,27 @@ public class QueriesDo2RestMapperV10Impl implements QueriesDo2RestMapperV10 {
         target.setChildLinks(toQueryChildLinks(source));
         target.setSelectedLanguages(commonDo2RestMapper.toLanguages(selectedLanguages));
         DsdProcessorResult dsdProcessorResult = null;
+        DatasetVersion relatedDatasetEffective = null;
         if (includeMetadata || includeData) {
-            dsdProcessorResult = commonDo2RestMapper.processDataStructure(source.getDatasetVersion().getRelatedDsd().getUrn());
+            relatedDatasetEffective = getQueryRelatedDatasetVersionEffective(source);
+            dsdProcessorResult = commonDo2RestMapper.processDataStructure(relatedDatasetEffective.getRelatedDsd().getUrn());
         }
         if (includeMetadata) {
-            target.setMetadata(toQueryMetadata(source, dsdProcessorResult, selectedLanguages));
+            target.setMetadata(toQueryMetadata(source, relatedDatasetEffective, dsdProcessorResult, selectedLanguages));
         }
         if (includeData) {
-            target.setData(toQueryData(source, dsdProcessorResult, selectedLanguages));
+            target.setData(toQueryData(source, relatedDatasetEffective, dsdProcessorResult, selectedLanguages));
         }
         return target;
+    }
+
+    private DatasetVersion getQueryRelatedDatasetVersionEffective(QueryVersion source) throws MetamacException {
+        if (source.getFixedDatasetVersion() != null) {
+            return source.getFixedDatasetVersion();
+        } else {
+            // TODO cambiar por LastPublished
+            return datasetVersionRepository.retrieveLastVersion(source.getDataset().getIdentifiableStatisticalResource().getUrn());
+        }
     }
 
     @Override
@@ -132,19 +153,26 @@ public class QueriesDo2RestMapperV10Impl implements QueriesDo2RestMapperV10 {
         return target;
     }
 
-    private QueryMetadata toQueryMetadata(QueryVersion source, DsdProcessorResult dsdProcessorResult, List<String> selectedLanguages) throws MetamacException {
+    private QueryMetadata toQueryMetadata(QueryVersion source, DatasetVersion datasetVersion, DsdProcessorResult dsdProcessorResult, List<String> selectedLanguages) throws MetamacException {
         if (source == null) {
             return null;
         }
         QueryMetadata target = new QueryMetadata();
 
-        Map<String, List<String>> effectiveDimensionValuesToDataByDimension = commonDo2RestMapper.calculateEffectiveDimensionValuesToQuery(source);
+        Map<String, List<String>> effectiveDimensionValuesToDataByDimension = calculateEffectiveDimensionValuesToQuery(source, datasetVersion);
 
-        target.setRelatedDsd(commonDo2RestMapper.toDataStructureDefinition(source.getDatasetVersion().getRelatedDsd(), dsdProcessorResult.getDataStructure(), selectedLanguages));
-        target.setDimensions(commonDo2RestMapper.toDimensions(source.getDatasetVersion().getSiemacMetadataStatisticalResource().getUrn(), dsdProcessorResult,
-                effectiveDimensionValuesToDataByDimension, selectedLanguages));
-        target.setAttributes(commonDo2RestMapper.toAttributes(source.getDatasetVersion().getSiemacMetadataStatisticalResource().getUrn(), dsdProcessorResult, selectedLanguages));
-        target.setRelatedDataset(datasetsDo2RestMapper.toResource(source.getDatasetVersion(), selectedLanguages));
+        target.setRelatedDsd(commonDo2RestMapper.toDataStructureDefinition(datasetVersion.getRelatedDsd(), dsdProcessorResult.getDataStructure(), selectedLanguages));
+        target.setDimensions(commonDo2RestMapper.toDimensions(datasetVersion.getSiemacMetadataStatisticalResource().getUrn(), dsdProcessorResult, effectiveDimensionValuesToDataByDimension,
+                selectedLanguages));
+        target.setAttributes(commonDo2RestMapper.toAttributes(datasetVersion.getSiemacMetadataStatisticalResource().getUrn(), dsdProcessorResult, selectedLanguages));
+
+        Resource relatedDataset = null;
+        if (source.getDataset() != null) {
+            relatedDataset = datasetsDo2RestMapper.toResourceAsLatest(datasetVersion, selectedLanguages);
+        } else {
+            relatedDataset = datasetsDo2RestMapper.toResource(datasetVersion, selectedLanguages);
+        }
+        target.setRelatedDataset(relatedDataset);
         target.setStatus(toQueryStatus(source.getStatus()));
         target.setType(toQueryType(source.getType()));
         target.setLatestDataNumber(source.getLatestDataNumber());
@@ -152,7 +180,7 @@ public class QueriesDo2RestMapperV10Impl implements QueriesDo2RestMapperV10 {
         target.setMaintainer(commonDo2RestMapper.toResourceExternalItemSrm(source.getLifeCycleStatisticalResource().getMaintainer(), selectedLanguages));
         target.setValidFrom(commonDo2RestMapper.toDate(source.getLifeCycleStatisticalResource().getValidFrom()));
         target.setValidTo(commonDo2RestMapper.toDate(source.getLifeCycleStatisticalResource().getValidTo()));
-        target.setRequires(datasetsDo2RestMapper.toResource(source.getDatasetVersion(), selectedLanguages));
+        target.setRequires(datasetsDo2RestMapper.toResource(datasetVersion, selectedLanguages));
         target.setIsPartOf(toQueryIsPartOf(source, selectedLanguages));
         return target;
     }
@@ -171,12 +199,12 @@ public class QueriesDo2RestMapperV10Impl implements QueriesDo2RestMapperV10 {
         return targets;
     }
 
-    private Data toQueryData(QueryVersion source, DsdProcessorResult dsdProcessorResult, List<String> selectedLanguages) throws Exception {
+    private Data toQueryData(QueryVersion source, DatasetVersion datasetVersion, DsdProcessorResult dsdProcessorResult, List<String> selectedLanguages) throws Exception {
         if (source == null) {
             return null;
         }
-        Map<String, List<String>> effectiveDimensionValuesToDataByDimension = commonDo2RestMapper.calculateEffectiveDimensionValuesToQuery(source);
-        return commonDo2RestMapper.toData(source.getDatasetVersion(), dsdProcessorResult, effectiveDimensionValuesToDataByDimension, selectedLanguages);
+        Map<String, List<String>> effectiveDimensionValuesToDataByDimension = calculateEffectiveDimensionValuesToQuery(source, datasetVersion);
+        return commonDo2RestMapper.toData(datasetVersion, dsdProcessorResult, effectiveDimensionValuesToDataByDimension, selectedLanguages);
     }
 
     private ResourceLink toQueryParentLink(QueryVersion source) {
@@ -264,6 +292,68 @@ public class QueriesDo2RestMapperV10Impl implements QueriesDo2RestMapperV10 {
                 org.siemac.metamac.rest.common.v1_0.domain.Exception exception = RestExceptionUtils.getException(RestServiceExceptionType.UNKNOWN);
                 throw new RestException(exception, Status.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    public Map<String, List<String>> calculateEffectiveDimensionValuesToQuery(QueryVersion source, DatasetVersion datasetVersion) {
+        Map<String, List<String>> dimensionValuesSelected = new HashMap<String, List<String>>(source.getSelection().size());
+        for (QuerySelectionItem selection : source.getSelection()) {
+            List<String> dimensionValues = calculateEffectiveDimensionValuesToQuery(source, datasetVersion, selection);
+            dimensionValuesSelected.put(selection.getDimension(), dimensionValues);
+        }
+        return dimensionValuesSelected;
+    }
+
+    private List<String> calculateEffectiveDimensionValuesToQuery(QueryVersion source, DatasetVersion datasetVersion, QuerySelectionItem selection) {
+        QueryTypeEnum type = source.getType();
+        String dimensionId = selection.getDimension();
+        List<String> selectionCodes = commonDo2RestMapper.codeItemToString(selection.getCodes());
+
+        if (QueryTypeEnum.FIXED.equals(type)) {
+            // return exactly
+            return selectionCodes;
+        } else if (QueryTypeEnum.AUTOINCREMENTAL.equals(type)) {
+            if (isTemporalDimension(dimensionId)) {
+                List<String> effectiveDimensionValues = new ArrayList<String>();
+                List<String> temporalCoverageCodes = commonDo2RestMapper.temporalCoverageToString(datasetVersion.getTemporalCoverage());
+                int indexLatestTemporalCodeInCreation = temporalCoverageCodes.indexOf(source.getLatestTemporalCodeInCreation());
+                if (indexLatestTemporalCodeInCreation != 0) {
+                    // add codes added after query creation
+                    List<TemporalCode> temporalCodesAddedAfterQueryCreation = datasetVersion.getTemporalCoverage().subList(0, indexLatestTemporalCodeInCreation);
+                    List<String> temporalCodesAddedAfterQueryCreationString = commonDo2RestMapper.temporalCoverageToString(temporalCodesAddedAfterQueryCreation);
+                    for (String code : temporalCodesAddedAfterQueryCreationString) {
+                        effectiveDimensionValues.add(code);
+                    }
+                }
+                effectiveDimensionValues.addAll(selectionCodes);
+                return effectiveDimensionValues;
+            } else {
+                // return exactly
+                return selectionCodes;
+            }
+        } else if (QueryTypeEnum.LATEST_DATA.equals(type)) {
+            if (isTemporalDimension(dimensionId)) {
+                // return N data
+                int codeLastIndexToReturn = -1;
+                if (datasetVersion.getTemporalCoverage().size() < source.getLatestDataNumber()) {
+                    codeLastIndexToReturn = datasetVersion.getTemporalCoverage().size(); // there is not N data, so return all
+                } else {
+                    codeLastIndexToReturn = source.getLatestDataNumber();
+                }
+                List<TemporalCode> temporalCodesLatestDataNumber = datasetVersion.getTemporalCoverage().subList(0, codeLastIndexToReturn);
+                return commonDo2RestMapper.temporalCoverageToString(temporalCodesLatestDataNumber);
+            } else {
+                // return exactly
+                return selectionCodes;
+            }
+        } else {
+            logger.error("QueryTypeEnum unsupported: " + source);
+            org.siemac.metamac.rest.common.v1_0.domain.Exception exception = RestExceptionUtils.getException(RestServiceExceptionType.UNKNOWN);
+            throw new RestException(exception, Status.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    private boolean isTemporalDimension(String dimensionId) {
+        return StatisticalResourcesConstants.TEMPORAL_DIMENSION_ID.equals(dimensionId);
     }
 
 }

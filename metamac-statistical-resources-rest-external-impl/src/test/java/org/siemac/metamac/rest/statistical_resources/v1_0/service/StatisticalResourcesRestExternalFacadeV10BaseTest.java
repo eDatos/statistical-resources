@@ -216,7 +216,15 @@ public abstract class StatisticalResourcesRestExternalFacadeV10BaseTest extends 
                             return null;
                         }
                         String[] queryUrnSplited = StatisticalResourcesUrnUtils.splitUrnQueryGlobal(queryUrn);
-                        return restDoMocks.mockQueryVersion(queryUrnSplited[0], queryUrnSplited[1], VERSION_1);
+
+                        String agencyID = queryUrnSplited[0];
+                        String resourceID = queryUrnSplited[1];
+                        String version = VERSION_1;
+                        if (QUERY_2_CODE.equals(resourceID)) {
+                            return restDoMocks.mockQueryVersionGlobalDataset(agencyID, resourceID, version);
+                        } else {
+                            return restDoMocks.mockQueryVersion(agencyID, resourceID, version);
+                        }
                     };
                 });
 

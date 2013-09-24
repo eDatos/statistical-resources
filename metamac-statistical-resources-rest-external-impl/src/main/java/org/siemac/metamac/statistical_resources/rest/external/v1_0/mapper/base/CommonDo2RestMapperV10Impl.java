@@ -90,10 +90,7 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.TemporalCode
 import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.DatasetService;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.VersionRationaleTypeEnum;
-import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryTypeEnum;
 import org.siemac.metamac.statistical.resources.core.query.domain.CodeItem;
-import org.siemac.metamac.statistical.resources.core.query.domain.QuerySelectionItem;
-import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
 import org.siemac.metamac.statistical_resources.rest.external.StatisticalResourcesRestExternalConstants;
 import org.siemac.metamac.statistical_resources.rest.external.exception.RestServiceExceptionType;
 import org.siemac.metamac.statistical_resources.rest.external.invocation.CommonMetadataRestExternalFacade;
@@ -346,16 +343,6 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
             targets.add(source.getIdentifier());
         }
         return targets;
-    }
-
-    @Override
-    public Map<String, List<String>> calculateEffectiveDimensionValuesToQuery(QueryVersion source) {
-        Map<String, List<String>> dimensionValuesSelected = new HashMap<String, List<String>>(source.getSelection().size());
-        for (QuerySelectionItem selection : source.getSelection()) {
-            List<String> dimensionValues = calculateEffectiveDimensionValuesToQuery(source, selection);
-            dimensionValuesSelected.put(selection.getDimension(), dimensionValues);
-        }
-        return dimensionValuesSelected;
     }
 
     @Override
@@ -1222,10 +1209,6 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
         return conditionDimensionDtos;
     }
 
-    private boolean isTemporalDimension(String dimensionId) {
-        return StatisticalResourcesConstants.TEMPORAL_DIMENSION_ID.equals(dimensionId);
-    }
-
     private DimensionsId toDimensionsId(org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DimensionReferences sources) {
         if (sources == null) {
             return null;
@@ -1501,56 +1484,6 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
 
         public boolean isAnyObservationHasAttribute() {
             return anyObservationHasAttribute;
-        }
-    }
-
-    private List<String> calculateEffectiveDimensionValuesToQuery(QueryVersion source, QuerySelectionItem selection) {
-        DatasetVersion datasetVersion = source.getDatasetVersion();
-        QueryTypeEnum type = source.getType();
-        String dimensionId = selection.getDimension();
-        List<String> selectionCodes = codeItemToString(selection.getCodes());
-
-        if (QueryTypeEnum.FIXED.equals(type)) {
-            // return exactly
-            return selectionCodes;
-        } else if (QueryTypeEnum.AUTOINCREMENTAL.equals(type)) {
-            if (isTemporalDimension(dimensionId)) {
-                List<String> effectiveDimensionValues = new ArrayList<String>();
-                List<String> temporalCoverageCodes = temporalCoverageToString(datasetVersion.getTemporalCoverage());
-                int indexLatestTemporalCodeInCreation = temporalCoverageCodes.indexOf(source.getLatestTemporalCodeInCreation());
-                if (indexLatestTemporalCodeInCreation != 0) {
-                    // add codes added after query creation
-                    List<TemporalCode> temporalCodesAddedAfterQueryCreation = datasetVersion.getTemporalCoverage().subList(0, indexLatestTemporalCodeInCreation);
-                    List<String> temporalCodesAddedAfterQueryCreationString = temporalCoverageToString(temporalCodesAddedAfterQueryCreation);
-                    for (String code : temporalCodesAddedAfterQueryCreationString) {
-                        effectiveDimensionValues.add(code);
-                    }
-                }
-                effectiveDimensionValues.addAll(selectionCodes);
-                return effectiveDimensionValues;
-            } else {
-                // return exactly
-                return selectionCodes;
-            }
-        } else if (QueryTypeEnum.LATEST_DATA.equals(type)) {
-            if (isTemporalDimension(dimensionId)) {
-                // return N data
-                int codeLastIndexToReturn = -1;
-                if (datasetVersion.getTemporalCoverage().size() < source.getLatestDataNumber()) {
-                    codeLastIndexToReturn = datasetVersion.getTemporalCoverage().size(); // there is not N data, so return all
-                } else {
-                    codeLastIndexToReturn = source.getLatestDataNumber();
-                }
-                List<TemporalCode> temporalCodesLatestDataNumber = datasetVersion.getTemporalCoverage().subList(0, codeLastIndexToReturn);
-                return temporalCoverageToString(temporalCodesLatestDataNumber);
-            } else {
-                // return exactly
-                return selectionCodes;
-            }
-        } else {
-            logger.error("QueryTypeEnum unsupported: " + source);
-            org.siemac.metamac.rest.common.v1_0.domain.Exception exception = RestExceptionUtils.getException(RestServiceExceptionType.UNKNOWN);
-            throw new RestException(exception, Status.INTERNAL_SERVER_ERROR);
         }
     }
 

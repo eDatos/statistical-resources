@@ -52,6 +52,16 @@ public class StatisticalResourcesRestExternalFacadeV10QueriesTest extends Statis
         assertEquals(StatisticalResourcesRestExternalConstants.KIND_QUERY, query.getKind());
         assertEquals("http://data.istac.es/apis/statistical-resources/v1.0/queries/agency1/query1", query.getSelfLink().getHref());
         MetamacRestAsserts.assertEqualsInternationalString("es", "title-query1 en Espanol", null, null, query.getName());
+        assertEquals("http://data.istac.es/apis/statistical-resources/v1.0/datasets/agency1/dataset01/01.000", query.getMetadata().getRelatedDataset().getSelfLink().getHref());
+    }
+
+    @Test
+    public void testRetrieveQueryWithDatasetGlobal() throws Exception {
+        Query query = statisticalResourcesRestExternalFacadeClientXml.retrieveQuery(AGENCY_1, QUERY_2_CODE, defaultLanguages, null);
+
+        assertEquals(QUERY_2_CODE, query.getId());
+        assertEquals("urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Query=agency1:query2", query.getUrn());
+        assertEquals("http://data.istac.es/apis/statistical-resources/v1.0/datasets/agency1/dataset01/~latest", query.getMetadata().getRelatedDataset().getSelfLink().getHref());
     }
 
     @Test

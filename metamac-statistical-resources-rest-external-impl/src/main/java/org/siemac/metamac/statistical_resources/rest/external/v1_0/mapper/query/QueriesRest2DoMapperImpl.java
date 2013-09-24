@@ -42,7 +42,8 @@ public class QueriesRest2DoMapperImpl extends BaseRest2DoMapperV10Impl implement
                 case DESCRIPTION:
                     return buildSculptorPropertyCriteria(QueryVersionProperties.lifeCycleStatisticalResource().description().texts().label(), PropertyTypeEnum.STRING, propertyRestriction);
                 case RELATED_DATASET_URN:
-                    return buildSculptorPropertyCriteria(QueryVersionProperties.datasetVersion().siemacMetadataStatisticalResource().urn(), PropertyTypeEnum.STRING, propertyRestriction);
+                    // TODO revisar criteria RELATED_DATASET_URN. Falta búsqueda cuando está asignado a global. PTE ROBERT
+                    return buildSculptorPropertyCriteria(QueryVersionProperties.fixedDatasetVersion().siemacMetadataStatisticalResource().urn(), PropertyTypeEnum.STRING, propertyRestriction);
                 case TYPE:
                     return buildSculptorPropertyCriteria(QueryVersionProperties.type(), PropertyTypeEnum.QUERY_TYPE, propertyRestriction);
                 case STATUS:

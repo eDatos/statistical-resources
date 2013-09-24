@@ -11,6 +11,7 @@ import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.joda.time.DateTime;
+import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.VersionRationaleType;
@@ -21,6 +22,7 @@ import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResour
 import org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConstants;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.AttributeValue;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.CodeDimension;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.TemporalCode;
 import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
@@ -52,6 +54,12 @@ public class RestDoMocks {
 
     public DatasetVersion mockDatasetVersion(String agencyID, String resourceID, String version) {
         DatasetVersion target = mockDatasetVersionBasic(agencyID, resourceID, version);
+
+        target.setDataset(new Dataset());
+        target.getDataset().setIdentifiableStatisticalResource(new IdentifiableStatisticalResource());
+        target.getDataset().getIdentifiableStatisticalResource().setCode(resourceID);
+        target.getDataset().getIdentifiableStatisticalResource().setUrn("urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Dataset=" + agencyID + ":" + resourceID);
+
         target.setBibliographicCitation(new InternationalString("es", "bibliographicCitation. More info: #URI#"));
         target.setDatasetRepositoryId("datasetRepository01");
 
@@ -141,7 +149,7 @@ public class RestDoMocks {
     public QueryVersion mockQueryVersion(String agencyID, String resourceID, String version) {
         QueryVersion target = mockQueryVersionBasic(agencyID, resourceID, version);
         mockLifeCycleStatisticalResource(agencyID, resourceID, version, target.getLifeCycleStatisticalResource());
-        target.setDatasetVersion(mockDatasetVersion(agencyID, "dataset01", "01.000"));
+        target.setFixedDatasetVersion(mockDatasetVersion(agencyID, "dataset01", "01.000"));
         target.getSelection().clear();
 
         target.setStatus(QueryStatusEnum.ACTIVE);
@@ -158,6 +166,13 @@ public class RestDoMocks {
             mockQueryVersionFixed(target);
         }
 
+        return target;
+    }
+
+    public QueryVersion mockQueryVersionGlobalDataset(String agencyID, String resourceID, String version) {
+        QueryVersion target = mockQueryVersion(agencyID, resourceID, version);
+        target.setDataset(mockDatasetVersion(agencyID, "dataset01", "01.000").getDataset());
+        target.setFixedDatasetVersion(null);
         return target;
     }
 

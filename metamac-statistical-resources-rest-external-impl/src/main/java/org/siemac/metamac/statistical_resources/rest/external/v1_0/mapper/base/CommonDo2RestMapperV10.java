@@ -25,7 +25,6 @@ import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResour
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.TemporalCode;
 import org.siemac.metamac.statistical.resources.core.query.domain.CodeItem;
-import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
 import org.siemac.metamac.statistical_resources.rest.external.v1_0.domain.DsdProcessorResult;
 
 public interface CommonDo2RestMapperV10 {
@@ -58,7 +57,6 @@ public interface CommonDo2RestMapperV10 {
 
     public List<String> codeItemToString(List<CodeItem> sources);
     public List<String> temporalCoverageToString(List<TemporalCode> sources);
-    public Map<String, List<String>> calculateEffectiveDimensionValuesToQuery(QueryVersion source);
 
     public Resources toResourcesExternalItemsSrm(Collection<ExternalItem> sources, List<String> selectedLanguages);
     public Resource toResourceExternalItemSrm(ExternalItem source, List<String> selectedLanguages);
