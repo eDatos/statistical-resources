@@ -140,7 +140,7 @@ Application DatasetsStatisticalResources {
 			"Root dataset will be identifiable to be referenced instead of referencing specific versions"
 			- @IdentifiableStatisticalResource identifiableStatisticalResource databaseColumn="IDENTIFIABLE_RESOURCE_FK" not nullable cascade="all";
 			"All versions"
-			- Bag<@DatasetVersion> versions cascade="all-delete-orphan" fetch="lazy" inverse <-> dataset orderby="id asc";
+			- Bag<@DatasetVersion> versions cascade="all-delete-orphan" fetch="lazy" inverse <-> dataset;
 
 			Repository DatasetRepository {
 				findByCondition;

@@ -94,17 +94,27 @@ public class QueryVersionMetamacCriteria2SculptorCriteriaMapperImpl implements Q
                     return new SculptorPropertyCriteria(QueryVersionProperties.status(), propertyRestriction.getEnumValue(), propertyRestriction.getOperationType());
                 case QUERY_TYPE:
                     return new SculptorPropertyCriteria(QueryVersionProperties.type(), propertyRestriction.getEnumValue(), propertyRestriction.getOperationType());
-                case QUERY_RELATED_DATASET_URN:
+                case QUERY_RELATED_DATASET_URN: {
                     Property<QueryVersion> fixedDatasetVersionUrn = QueryVersionProperties.fixedDatasetVersion().siemacMetadataStatisticalResource().urn();
                     Property<QueryVersion> urnOfAnyVersionInDataset = QueryVersionProperties.dataset().versions().siemacMetadataStatisticalResource().urn();
                     Property<QueryVersion> lastVersionInDataset = QueryVersionProperties.dataset().versions().siemacMetadataStatisticalResource().lastVersion();
+                    Property<QueryVersion> datasetVersionProcStatus = QueryVersionProperties.dataset().versions().siemacMetadataStatisticalResource().procStatus();
+                    Property<QueryVersion> datasetVersionValidFrom = QueryVersionProperties.dataset().versions().siemacMetadataStatisticalResource().validFrom();
 
-                    SculptorPropertyCriteria criteriaDatasetVersionUrn = new SculptorPropertyCriteria(fixedDatasetVersionUrn, propertyRestriction.getStringValue(), OperationType.EQ);
-                    SculptorPropertyCriteria criteriaDatasetUrn = new SculptorPropertyCriteria(urnOfAnyVersionInDataset, propertyRestriction.getStringValue(), OperationType.EQ);
-                    SculptorPropertyCriteria criteriaDatasetLastVersion = new SculptorPropertyCriteria(lastVersionInDataset, propertyRestriction.getStringValue(), OperationType.EQ);
+                    SculptorPropertyCriteria datasetVersionUrnCriteria = new SculptorPropertyCriteria(fixedDatasetVersionUrn, propertyRestriction.getStringValue(), OperationType.EQ);
+                    SculptorPropertyCriteria isVersionOfLinkedDatasetCriteria = new SculptorPropertyCriteria(urnOfAnyVersionInDataset, propertyRestriction.getStringValue(), OperationType.EQ);
 
-                    SculptorCriteriaConjunction criteriaDatasetVersionInDatasetAndLastVersion = new SculptorCriteriaConjunction(criteriaDatasetUrn, criteriaDatasetLastVersion);
-                    return new SculptorCriteriaDisjunction(criteriaDatasetVersionUrn, criteriaDatasetVersionInDatasetAndLastVersion);
+                    SculptorPropertyCriteria isLastVersionOfDatasetCriteria = new SculptorPropertyCriteria(lastVersionInDataset, Boolean.TRUE, OperationType.EQ);
+                    SculptorPropertyCriteriaBase isLastPublishedVersionCriteria = StatisticalResourcesCriteriaUtils.buildPublishedVisibleCondition(datasetVersionProcStatus, datasetVersionValidFrom,
+                            QueryVersion.class);
+
+                    SculptorCriteriaDisjunction datasetLastVersionOrLastPublishedInDatasetCriteria = new SculptorCriteriaDisjunction(isLastVersionOfDatasetCriteria, isLastPublishedVersionCriteria);
+
+                    SculptorCriteriaConjunction correspondingVersionInDatasetLinkedCriteria = new SculptorCriteriaConjunction(isVersionOfLinkedDatasetCriteria,
+                            datasetLastVersionOrLastPublishedInDatasetCriteria);
+
+                    return new SculptorCriteriaDisjunction(datasetVersionUrnCriteria, correspondingVersionInDatasetLinkedCriteria);
+                }
                 case LAST_VERSION:
                     return new SculptorPropertyCriteria(QueryVersionProperties.lifeCycleStatisticalResource().lastVersion(), propertyRestriction.getBooleanValue(),
                             propertyRestriction.getOperationType());

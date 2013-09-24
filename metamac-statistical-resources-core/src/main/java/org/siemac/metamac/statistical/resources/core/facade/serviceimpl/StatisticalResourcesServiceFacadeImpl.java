@@ -71,6 +71,7 @@ import org.siemac.metamac.statistical.resources.core.query.mapper.QueryDto2DoMap
 import org.siemac.metamac.statistical.resources.core.security.DatasetsSecurityUtils;
 import org.siemac.metamac.statistical.resources.core.security.PublicationsSecurityUtils;
 import org.siemac.metamac.statistical.resources.core.security.QueriesSecurityUtils;
+import org.siemac.metamac.statistical.resources.core.task.domain.Task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -96,7 +96,6 @@ public class QueryServiceImpl extends QueryServiceImplBase {
 
         PagedResult<QueryVersion> queryPagedResult = getQueryVersionRepository().findByCondition(conditions, pagingParameter);
         return queryPagedResult;
-
     }
 
     @Override
