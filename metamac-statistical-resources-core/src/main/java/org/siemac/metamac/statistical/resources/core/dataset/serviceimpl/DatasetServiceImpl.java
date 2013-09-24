@@ -22,6 +22,7 @@ import org.siemac.metamac.core.common.criteria.utils.CriteriaUtils;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionBuilder;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
+import org.siemac.metamac.core.common.exception.utils.ExceptionUtils;
 import org.siemac.metamac.core.common.time.TimeSdmx;
 import org.siemac.metamac.core.common.util.GeneratorUrnUtils;
 import org.siemac.metamac.core.common.util.SdmxTimeUtils;
@@ -57,13 +58,17 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.StatisticOfficiality;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.TemporalCode;
 import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.validators.DatasetServiceInvocationValidator;
+import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.task.domain.DatasetFileFormatEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
+import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionSingleParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
+import org.siemac.metamac.statistical.resources.core.error.utils.ServiceExceptionParametersUtils;
 import org.siemac.metamac.statistical.resources.core.invocation.service.SrmRestInternalService;
 import org.siemac.metamac.statistical.resources.core.invocation.utils.RestMapper;
 import org.siemac.metamac.statistical.resources.core.io.serviceimpl.validators.ValidateDataVersusDsd;
+import org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.checker.ExternalItemChecker;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersionRepository;
 import org.siemac.metamac.statistical.resources.core.task.domain.FileDescriptor;
@@ -108,6 +113,9 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
 
     @Autowired
     private RestMapper                                restMapper;
+
+    @Autowired
+    private ExternalItemChecker                       externalItemChecker;
 
     // ------------------------------------------------------------------------
     // DATASOURCES
@@ -688,6 +696,13 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         // Validation
         datasetServiceInvocationValidator.checkCreateCategorisation(ctx, categorisation);
         checkNotTasksInProgress(ctx, categorisation.getDatasetVersion().getSiemacMetadataStatisticalResource().getUrn());
+        if (ProcStatusEnum.PUBLISHED.equals(categorisation.getDatasetVersion().getLifeCycleStatisticalResource().getProcStatus())) {
+            // Check category externally published
+            List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
+            externalItemChecker.checkExternalItemsExternallyPublished(categorisation.getCategory(),
+                    ServiceExceptionParametersUtils.addParameter(ServiceExceptionSingleParameters.DATASET_VERSION, ServiceExceptionSingleParameters.CATEGORISATIONS), exceptionItems);
+            ExceptionUtils.throwIfException(exceptionItems);
+        }
 
         // Fill metadata
         fillMetadataForCreateCategorisation(ctx, categorisation);
