@@ -46,6 +46,7 @@ import org.siemac.metamac.rest.common.test.MetamacRestBaseTest;
 import org.siemac.metamac.rest.common.test.ServerResource;
 import org.siemac.metamac.rest.common.test.utils.MetamacRestAsserts;
 import org.siemac.metamac.sdmx.data.rest.external.v2_1.utils.SdmxDataCoreMocks;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.Categorisation;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionProperties;
 import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.DatasetService;
@@ -352,6 +353,79 @@ public abstract class SdmxRestExternalFacadeV21BaseTest extends MetamacRestBaseT
                 }
 
                 return new PagedResult<DatasetVersion>(datasets, datasets.size(), datasets.size(), datasets.size(), datasets.size() * 10, 0);
+            }
+
+        });
+    }
+
+    @SuppressWarnings("unchecked")
+    protected void mockFindCategorisationsByCondition() throws Exception {
+        when(datasetService.findCategorisationsByCondition(any(ServiceContext.class), any(List.class), any(PagingParameter.class))).thenAnswer(new Answer<PagedResult<Categorisation>>() {
+
+            @Override
+            public PagedResult<Categorisation> answer(InvocationOnMock invocation) throws Throwable {
+                List<ConditionalCriteria> conditions = (List<ConditionalCriteria>) invocation.getArguments()[1];
+
+                String agencyID = getAgencyIdFromConditionalCriteria(conditions);
+                String resourceID = getResourceIdFromConditionalCriteria(conditions);
+                String version = getVersionFromConditionalCriteria(conditions);
+
+                if (StringUtils.isEmpty(agencyID)) {
+                    agencyID = "ECB";
+                }
+
+                if (StringUtils.isEmpty(version)) {
+                    version = "1.0";
+                }
+
+                List<Categorisation> categorisations = new ArrayList<Categorisation>();
+
+                if (!StringUtils.isEmpty(resourceID)) {
+                    DatasetVersion mockDatasetVersion = sdmxDataCoreMocks.mockDatasetVersion(agencyID, resourceID, version);
+                    mockDatasetVersion.setDatasetRepositoryId(DATASET_ID);
+                    mockDatasetVersion.getSiemacMetadataStatisticalResource().setCode(resourceID);
+                    mockDatasetVersion.getSiemacMetadataStatisticalResource().getMaintainer().setCodeNested(agencyID);
+                    mockDatasetVersion.getSiemacMetadataStatisticalResource().setVersionLogic(version);
+                    mockDatasetVersion.getRelatedDsd().setUrn(GeneratorUrnUtils.generateSdmxDatastructureUrn(new String[]{agencyID}, resourceID, version));
+                    Categorisation categorisation = sdmxDataCoreMocks.mockCategorisation(mockDatasetVersion, "ECB", resourceID);
+                    categorisations.add(categorisation);
+                } else {
+                    {
+                        DatasetVersion mockDatasetVersion = sdmxDataCoreMocks.mockDatasetVersion(agencyID, resourceID, version);
+                        mockDatasetVersion.setDatasetRepositoryId(DATASET_ID);
+                        resourceID = "ECB_EXR_NG";
+                        mockDatasetVersion.getSiemacMetadataStatisticalResource().setCode(resourceID);
+                        mockDatasetVersion.getSiemacMetadataStatisticalResource().getMaintainer().setCodeNested(agencyID);
+                        mockDatasetVersion.getSiemacMetadataStatisticalResource().setVersionLogic(version);
+                        mockDatasetVersion.getRelatedDsd().setUrn(GeneratorUrnUtils.generateSdmxDatastructureUrn(new String[]{agencyID}, resourceID, version));
+                        Categorisation categorisation = sdmxDataCoreMocks.mockCategorisation(mockDatasetVersion, "ECB", resourceID);
+                        categorisations.add(categorisation);
+                    }
+                    {
+                        DatasetVersion mockDatasetVersion = sdmxDataCoreMocks.mockDatasetVersion(agencyID, resourceID, version);
+                        mockDatasetVersion.setDatasetRepositoryId(DATASET_ID);
+                        resourceID = "ECB_EXR_SG";
+                        mockDatasetVersion.getSiemacMetadataStatisticalResource().setCode(resourceID);
+                        mockDatasetVersion.getSiemacMetadataStatisticalResource().getMaintainer().setCodeNested(agencyID);
+                        mockDatasetVersion.getSiemacMetadataStatisticalResource().setVersionLogic(version);
+                        mockDatasetVersion.getRelatedDsd().setUrn(GeneratorUrnUtils.generateSdmxDatastructureUrn(new String[]{agencyID}, resourceID, version));
+                        Categorisation categorisation = sdmxDataCoreMocks.mockCategorisation(mockDatasetVersion, "ECB", resourceID);
+                        categorisations.add(categorisation);
+                    }
+                    {
+                        DatasetVersion mockDatasetVersion = sdmxDataCoreMocks.mockDatasetVersion(agencyID, resourceID, version);
+                        mockDatasetVersion.setDatasetRepositoryId(DATASET_ID);
+                        resourceID = "ECB_EXR_RG";
+                        mockDatasetVersion.getSiemacMetadataStatisticalResource().setCode(resourceID);
+                        mockDatasetVersion.getSiemacMetadataStatisticalResource().getMaintainer().setCodeNested(agencyID);
+                        mockDatasetVersion.getSiemacMetadataStatisticalResource().setVersionLogic(version);
+                        mockDatasetVersion.getRelatedDsd().setUrn(GeneratorUrnUtils.generateSdmxDatastructureUrn(new String[]{agencyID}, resourceID, version));
+                        Categorisation categorisation = sdmxDataCoreMocks.mockCategorisation(mockDatasetVersion, "ECB", resourceID);
+                        categorisations.add(categorisation);
+                    }
+                }
+
+                return new PagedResult<Categorisation>(categorisations, categorisations.size(), categorisations.size(), categorisations.size(), categorisations.size() * 10, 0);
             }
 
         });

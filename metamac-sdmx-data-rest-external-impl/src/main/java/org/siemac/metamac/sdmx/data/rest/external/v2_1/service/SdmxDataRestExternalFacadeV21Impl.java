@@ -17,6 +17,7 @@ import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.joda.time.DateTime;
 import org.sdmx.resources.sdmxml.rest.schemas.v2_1.types.DataParameterDetailEnum;
+import org.sdmx.resources.sdmxml.schemas.v2_1.structure.CategorisationsType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.DataflowsType;
 import org.siemac.metamac.core.common.exception.CommonServiceExceptionType;
 import org.siemac.metamac.core.common.exception.MetamacException;
@@ -25,10 +26,13 @@ import org.siemac.metamac.core.common.io.DeleteOnCloseFileInputStream;
 import org.siemac.metamac.core.common.util.SdmxTimeUtils;
 import org.siemac.metamac.sdmx.data.rest.external.conf.DataConfiguration;
 import org.siemac.metamac.sdmx.data.rest.external.v2_1.RestExternalConstants;
+import org.siemac.metamac.sdmx.data.rest.external.v2_1.categorisation.mapper.CategorisationsDo2JaxbMapper;
 import org.siemac.metamac.sdmx.data.rest.external.v2_1.dataflow.mapper.DataFlow2JaxbMapper;
 import org.siemac.metamac.sdmx.data.rest.external.v2_1.exception.RestException;
 import org.siemac.metamac.sdmx.data.rest.external.v2_1.exception.RestServiceExceptionType;
 import org.siemac.metamac.sdmx.data.rest.external.v2_1.exception.utils.RestExceptionUtils;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.Categorisation;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.CategorisationProperties;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionProperties;
 import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.DatasetService;
@@ -37,6 +41,8 @@ import org.siemac.metamac.statistical.resources.core.io.domain.DsdSdmxInfo.DsdSd
 import org.siemac.metamac.statistical.resources.core.io.domain.RequestParameter;
 import org.siemac.metamac.statistical.resources.core.io.mapper.MetamacSdmx2StatRepoMapper;
 import org.siemac.metamac.statistical.resources.core.io.serviceimpl.WriterDataCallbackImpl;
+import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesCriteriaUtils;
+import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesVersionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,6 +73,9 @@ public class SdmxDataRestExternalFacadeV21Impl implements SdmxDataRestExternalFa
 
     @Autowired
     private DataFlow2JaxbMapper              dataFlow2JaxbMapper;
+
+    @Autowired
+    private CategorisationsDo2JaxbMapper     categorisationsDo2JaxbMapper;
 
     private final ServiceContext             ctx                 = new ServiceContext("restExternal", "restExternal", "restExternal");
     private final Logger                     logger              = LoggerFactory.getLogger(SdmxDataRestExternalFacadeV21Impl.class);
@@ -157,6 +166,54 @@ public class SdmxDataRestExternalFacadeV21Impl implements SdmxDataRestExternalFa
         }
     }
 
+    @Override
+    public JAXBElement<CategorisationsType> findCategorisationsInternal() {
+        try {
+            // Retrieve
+            List<Categorisation> findCategorisations = findCategorisationsCore(null, null, null);
+
+            return transformCategorisationQueryToMessageReponse(findCategorisations);
+        } catch (Exception e) {
+            throw manageException(e);
+        }
+    }
+
+    @Override
+    public JAXBElement<CategorisationsType> findCategorisationsInternal(String agencyID) {
+        try {
+            // Retrieve
+            List<Categorisation> findCategorisations = findCategorisationsCore(agencyID, null, null);
+
+            return transformCategorisationQueryToMessageReponse(findCategorisations);
+        } catch (Exception e) {
+            throw manageException(e);
+        }
+    }
+
+    @Override
+    public JAXBElement<CategorisationsType> findCategorisationsInternal(String agencyID, String resourceID) {
+        try {
+            // Retrieve
+            List<Categorisation> findCategorisations = findCategorisationsCore(agencyID, resourceID, null);
+
+            return transformCategorisationQueryToMessageReponse(findCategorisations);
+        } catch (Exception e) {
+            throw manageException(e);
+        }
+    }
+
+    @Override
+    public JAXBElement<CategorisationsType> findCategorisationsInternal(String agencyID, String resourceID, String version) {
+        try {
+            // Retrieve
+            List<Categorisation> findCategorisations = findCategorisationsCore(agencyID, resourceID, version);
+
+            return transformCategorisationQueryToMessageReponse(findCategorisations);
+        } catch (Exception e) {
+            throw manageException(e);
+        }
+    }
+
     /***************************************************************
      * DATA PRIVATE
      ***************************************************************/
@@ -222,6 +279,31 @@ public class SdmxDataRestExternalFacadeV21Impl implements SdmxDataRestExternalFa
         return datasetVersions;
     }
 
+    protected List<ConditionalCriteria> createCategorisationsConditions(String agencyId, String resourceId, String version) {
+        List<ConditionalCriteria> conditions = new ArrayList<ConditionalCriteria>();
+
+        // Add flow ID
+        if (!StringUtils.isEmpty(resourceId) && RestExternalConstants.WildcardIdentifyingEnum.UNKNOWN.equals(RestExternalConstants.WildcardIdentifyingEnum.fromCaseInsensitiveString(resourceId))) {
+            conditions.add(ConditionalCriteriaBuilder.criteriaFor(DatasetVersion.class).withProperty(DatasetVersionProperties.siemacMetadataStatisticalResource().code()).eq(resourceId).buildSingle());
+        }
+
+        // Add agency query
+        if (!StringUtils.isEmpty(agencyId) && RestExternalConstants.WildcardIdentifyingEnum.UNKNOWN.equals(RestExternalConstants.WildcardIdentifyingEnum.fromCaseInsensitiveString(agencyId))) {
+            conditions.add(ConditionalCriteriaBuilder.criteriaFor(DatasetVersion.class).withProperty(DatasetVersionProperties.siemacMetadataStatisticalResource().maintainer().codeNested())
+                    .eq(agencyId).buildSingle());
+        }
+
+        // Add version query
+        if (version == null) {
+            version = StatisticalResourcesVersionUtils.INITIAL_VERSION;
+        }
+
+        conditions.add(ConditionalCriteriaBuilder.criteriaFor(Categorisation.class).withProperty(CategorisationProperties.versionableStatisticalResource().versionLogic()).eq(version)
+                .withProperty(CategorisationProperties.datasetVersion().siemacMetadataStatisticalResource().procStatus()).eq(ProcStatusEnum.PUBLISHED).and()
+                .withProperty(CategorisationProperties.datasetVersion().siemacMetadataStatisticalResource().validFrom()).lessThanOrEqual(new DateTime()).buildSingle());
+        return conditions;
+    }
+
     protected List<ConditionalCriteria> createDatasetVersionsConditions(String agencyId, String flowID, String version) {
         List<ConditionalCriteria> conditions = new ArrayList<ConditionalCriteria>();
 
@@ -250,15 +332,17 @@ public class SdmxDataRestExternalFacadeV21Impl implements SdmxDataRestExternalFa
                     .withProperty(DatasetVersionProperties.siemacMetadataStatisticalResource().validFrom()).lessThanOrEqual(new DateTime()).buildSingle());
         } else if (RestExternalConstants.WildcardIdentifyingEnum.LATEST.equals(versionWildcard)) {
             DateTime now = new DateTime();
-            conditions.add(ConditionalCriteriaBuilder.criteriaFor(DatasetVersion.class).withProperty(DatasetVersionProperties.siemacMetadataStatisticalResource().procStatus())
-                    .eq(ProcStatusEnum.PUBLISHED).and().withProperty(DatasetVersionProperties.siemacMetadataStatisticalResource().validFrom()).lessThanOrEqual(now).and().lbrace()
-                    .withProperty(DatasetVersionProperties.siemacMetadataStatisticalResource().validTo()).greaterThan(now).or()
-                    .withProperty(DatasetVersionProperties.siemacMetadataStatisticalResource().validTo()).isNull().rbrace().buildSingle());
+            conditions.add(StatisticalResourcesCriteriaUtils.buildLastPublishedVersionCriteria(DatasetVersion.class, DatasetVersionProperties.siemacMetadataStatisticalResource()));
+
+            // conditions.add(ConditionalCriteriaBuilder.criteriaFor(DatasetVersion.class).withProperty(DatasetVersionProperties.siemacMetadataStatisticalResource().procStatus())
+            // .eq(ProcStatusEnum.PUBLISHED).and().withProperty(DatasetVersionProperties.siemacMetadataStatisticalResource().validFrom()).lessThanOrEqual(now).and().lbrace()
+            // .withProperty(DatasetVersionProperties.siemacMetadataStatisticalResource().validTo()).greaterThan(now).or()
+            // .withProperty(DatasetVersionProperties.siemacMetadataStatisticalResource().validTo()).isNull().rbrace().buildSingle());
+            conditions.add(ConditionalCriteriaBuilder.criteriaFor(DatasetVersion.class).distinctRoot().buildSingle());
         }
 
         return conditions;
     }
-
     private List<DatasetVersion> findDataFlowsCore(String agencyID, String resourceID, String version) throws Exception {
         // Find
         List<ConditionalCriteria> conditions = createDatasetVersionsConditions(agencyID, null, version);
@@ -266,9 +350,23 @@ public class SdmxDataRestExternalFacadeV21Impl implements SdmxDataRestExternalFa
         return datasetsVersionsResult.getValues();
     }
 
+    private List<Categorisation> findCategorisationsCore(String agencyID, String resourceID, String version) throws Exception {
+        // Find
+        List<ConditionalCriteria> conditions = createCategorisationsConditions(agencyID, resourceID, version);
+
+        PagedResult<Categorisation> categorisations = datasetService.findCategorisationsByCondition(ctx, conditions, PagingParameter.noLimits());
+        return categorisations.getValues();
+    }
+
     protected JAXBElement<DataflowsType> transformDataflowQueryToMessageReponse(List<DatasetVersion> datasetVersions) throws MetamacException {
         DataflowsType dataflowsDo2Jaxb = dataFlow2JaxbMapper.dataflowsDo2Jaxb(datasetVersions, false);
         return new JAXBElement<DataflowsType>(new QName("structure:Dataflows"), DataflowsType.class, dataflowsDo2Jaxb);
+    }
+
+    protected JAXBElement<CategorisationsType> transformCategorisationQueryToMessageReponse(List<Categorisation> categorisations) throws MetamacException {
+
+        CategorisationsType categorisationDoToJaxb = categorisationsDo2JaxbMapper.categorisationDoToJaxb(categorisations, false);
+        return new JAXBElement<CategorisationsType>(new QName("structure:Categorisations"), CategorisationsType.class, categorisationDoToJaxb);
     }
 
     /**

@@ -9,6 +9,7 @@ import javax.xml.bind.JAXBElement;
 
 import org.apache.cxf.jaxrs.client.WebClient;
 import org.junit.Test;
+import org.sdmx.resources.sdmxml.schemas.v2_1.structure.CategorisationsType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.DataflowsType;
 import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.DatasetService;
 
@@ -377,6 +378,30 @@ public class SdmxRestExternalFacadeV10DataTest extends SdmxRestExternalFacadeV21
         }
     }
 
+    @Test
+    public void testCategorisations_ALL() throws Exception {
+        {
+            // CATEGORISATIONS
+            WebClient create = WebClient.create(baseApi + "/categorisation");
+            // create.accept(TypeSDMXDataMessageEnum.SPECIFIC_2_1.getValue());
+            incrementRequestTimeOut(create); // Timeout
+            Response findData = create.get();
+
+            InputStream responseExpected = SdmxRestExternalFacadeV10DataTest.class.getResourceAsStream("/responses/categorisation/categorisations.xml");
+            assertEquals(200, findData.getStatus());
+            assertInputStream(responseExpected, (InputStream) findData.getEntity(), false);
+        }
+    }
+
+    @Test
+    public void testCategorisations_ALL_Entity() throws Exception {
+        {
+            // DATAFLOW
+            JAXBElement<CategorisationsType> findCategorisationsInternal = getSdmxDataRestExternalFacadeClientXml().findCategorisationsInternal();
+            assertNotNull(findCategorisationsInternal.getValue());
+        }
+    }
+
     @Override
     protected void resetMocks() throws Exception {
         datasetRepositoriesServiceFacade = applicationContext.getBean(DatasetRepositoriesServiceFacade.class);
@@ -394,8 +419,11 @@ public class SdmxRestExternalFacadeV10DataTest extends SdmxRestExternalFacadeV21
         mockRetrieveDatasetRepository();
         mockFindCodeDimensions();
 
-        // Dataset Service
+        // Dataset
         mockFindDatasetVersionsByCondition();
+
+        // Categorisation
+        mockFindCategorisationsByCondition();
 
         // Apis Locator
         mockApisLocator();

@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<structure:Categorisations xmlns:registry="http://www.sdmx.org/resources/sdmxml/schemas/v2_1/registry" xmlns:structure="http://www.sdmx.org/resources/sdmxml/schemas/v2_1/structure" xmlns:datastructurespecific="http://www.sdmx.org/resources/sdmxml/schemas/v2_1/data/structurespecific" xmlns:metadatageneric="http://www.sdmx.org/resources/sdmxml/schemas/v2_1/metadata/generic" xmlns:common="http://www.sdmx.org/resources/sdmxml/schemas/v2_1/common" xmlns:query="http://www.sdmx.org/resources/sdmxml/schemas/v2_1/query" xmlns:datageneric="http://www.sdmx.org/resources/sdmxml/schemas/v2_1/data/generic" xmlns:metadatastructurespecific="http://www.sdmx.org/resources/sdmxml/schemas/v2_1/metadata/structurespecific" xmlns:messagefooter="http://www.sdmx.org/resources/sdmxml/schemas/v2_1/message/footer">
+  <structure:Categorisation agencyID="ISTAC.ECB" isFinal="true" validFrom="2013-01-01T03:04:12Z" validTo="2013-02-16T14:04:12Z">
+    <structure:Source>
+      <Ref agencyID="ECB" id="ECB_EXR_NG" version="1.0"/>
+      <URN>urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Dataset=ECB:null(1.0)</URN>
+    </structure:Source>
+    <structure:Target>
+      <Ref maintainableParentID="CategorySchemeMock" maintainableParentVersion="1.0" agencyID="MaintainerMock" id="ECB_EXR_NG"/>
+      <URN>urn:sdmx:org.sdmx.infomodel.categoryscheme.Category=MaintainerMock:CategorySchemeMock(1.0).ECB_EXR_NG:provider</URN>
+    </structure:Target>
+  </structure:Categorisation>
+  <structure:Categorisation agencyID="ISTAC.ECB" isFinal="true" validFrom="2013-01-01T03:04:12Z" validTo="2013-02-16T14:04:12Z">
+    <structure:Source>
+      <Ref agencyID="ECB" id="ECB_EXR_SG" version="1.0"/>
+      <URN>urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Dataset=ECB:ECB_EXR_NG(1.0)</URN>
+    </structure:Source>
+    <structure:Target>
+      <Ref maintainableParentID="CategorySchemeMock" maintainableParentVersion="1.0" agencyID="MaintainerMock" id="ECB_EXR_SG"/>
+      <URN>urn:sdmx:org.sdmx.infomodel.categoryscheme.Category=MaintainerMock:CategorySchemeMock(1.0).ECB_EXR_SG:provider</URN>
+    </structure:Target>
+  </structure:Categorisation>
+  <structure:Categorisation agencyID="ISTAC.ECB" isFinal="true" validFrom="2013-01-01T03:04:12Z" validTo="2013-02-16T14:04:12Z">
+    <structure:Source>
+      <Ref agencyID="ECB" id="ECB_EXR_RG" version="1.0"/>
+      <URN>urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Dataset=ECB:ECB_EXR_SG(1.0)</URN>
+    </structure:Source>
+    <structure:Target>
+      <Ref maintainableParentID="CategorySchemeMock" maintainableParentVersion="1.0" agencyID="MaintainerMock" id="ECB_EXR_RG"/>
+      <URN>urn:sdmx:org.sdmx.infomodel.categoryscheme.Category=MaintainerMock:CategorySchemeMock(1.0).ECB_EXR_RG:provider</URN>
+    </structure:Target>
+  </structure:Categorisation>
+</structure:Categorisations>
