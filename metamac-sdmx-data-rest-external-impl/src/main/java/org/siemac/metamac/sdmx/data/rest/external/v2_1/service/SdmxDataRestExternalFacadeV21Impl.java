@@ -301,6 +301,8 @@ public class SdmxDataRestExternalFacadeV21Impl implements SdmxDataRestExternalFa
         conditions.add(ConditionalCriteriaBuilder.criteriaFor(Categorisation.class).withProperty(CategorisationProperties.versionableStatisticalResource().versionLogic()).eq(version)
                 .withProperty(CategorisationProperties.datasetVersion().siemacMetadataStatisticalResource().procStatus()).eq(ProcStatusEnum.PUBLISHED).and()
                 .withProperty(CategorisationProperties.datasetVersion().siemacMetadataStatisticalResource().validFrom()).lessThanOrEqual(new DateTime()).buildSingle());
+
+        conditions.add(ConditionalCriteriaBuilder.criteriaFor(Categorisation.class).distinctRoot().buildSingle());
         return conditions;
     }
 
@@ -332,9 +334,8 @@ public class SdmxDataRestExternalFacadeV21Impl implements SdmxDataRestExternalFa
                     .withProperty(DatasetVersionProperties.siemacMetadataStatisticalResource().validFrom()).lessThanOrEqual(new DateTime()).buildSingle());
         } else if (RestExternalConstants.WildcardIdentifyingEnum.LATEST.equals(versionWildcard)) {
             conditions.add(StatisticalResourcesCriteriaUtils.buildLastPublishedVersionCriteria(DatasetVersion.class, DatasetVersionProperties.siemacMetadataStatisticalResource()));
-            conditions.add(ConditionalCriteriaBuilder.criteriaFor(DatasetVersion.class).distinctRoot().buildSingle());
         }
-
+        conditions.add(ConditionalCriteriaBuilder.criteriaFor(DatasetVersion.class).distinctRoot().buildSingle());
         return conditions;
     }
     private List<DatasetVersion> findDataFlowsCore(String agencyID, String resourceID, String version) throws Exception {
