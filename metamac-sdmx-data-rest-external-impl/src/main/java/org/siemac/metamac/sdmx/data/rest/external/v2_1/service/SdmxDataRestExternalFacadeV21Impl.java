@@ -331,7 +331,6 @@ public class SdmxDataRestExternalFacadeV21Impl implements SdmxDataRestExternalFa
                     .withProperty(DatasetVersionProperties.siemacMetadataStatisticalResource().procStatus()).eq(ProcStatusEnum.PUBLISHED).and()
                     .withProperty(DatasetVersionProperties.siemacMetadataStatisticalResource().validFrom()).lessThanOrEqual(new DateTime()).buildSingle());
         } else if (RestExternalConstants.WildcardIdentifyingEnum.LATEST.equals(versionWildcard)) {
-            DateTime now = new DateTime();
             conditions.add(StatisticalResourcesCriteriaUtils.buildLastPublishedVersionCriteria(DatasetVersion.class, DatasetVersionProperties.siemacMetadataStatisticalResource()));
             conditions.add(ConditionalCriteriaBuilder.criteriaFor(DatasetVersion.class).distinctRoot().buildSingle());
         }
