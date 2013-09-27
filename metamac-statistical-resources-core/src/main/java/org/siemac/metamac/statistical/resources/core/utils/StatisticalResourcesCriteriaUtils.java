@@ -6,16 +6,14 @@ import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteriaBuilder;
 import org.fornax.cartridges.sculptor.framework.domain.Property;
 import org.joda.time.DateTime;
+import org.siemac.metamac.core.common.criteria.MetamacCriteriaPropertyRestriction.OperationType;
 import org.siemac.metamac.core.common.criteria.SculptorCriteriaConjunction;
 import org.siemac.metamac.core.common.criteria.SculptorPropertyCriteria;
 import org.siemac.metamac.core.common.criteria.SculptorPropertyCriteriaBase;
-import org.siemac.metamac.core.common.criteria.MetamacCriteriaPropertyRestriction.OperationType;
 import org.siemac.metamac.core.common.criteria.utils.CriteriaUtils;
 import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatisticalResourceProperties.LifeCycleStatisticalResourceProperty;
 import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataStatisticalResourceProperties.SiemacMetadataStatisticalResourceProperty;
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
-import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
-import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersionProperties;
 
 public class StatisticalResourcesCriteriaUtils {
 
@@ -32,7 +30,7 @@ public class StatisticalResourcesCriteriaUtils {
                         withProperty(siemacMetadataStatisticalResourceProperty.validTo()).isNull().
                         or().
                         withProperty(siemacMetadataStatisticalResourceProperty.validTo()).greaterThan(now).
-                    rbrace().distinctRoot().buildSingle();
+                    rbrace().buildSingle();
         //@formatter:on
     }
 
