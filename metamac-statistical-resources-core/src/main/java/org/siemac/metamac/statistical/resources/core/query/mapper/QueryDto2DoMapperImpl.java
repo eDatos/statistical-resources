@@ -16,9 +16,11 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersi
 import org.siemac.metamac.statistical.resources.core.dto.query.CodeItemDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionBaseDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionDto;
+import org.siemac.metamac.statistical.resources.core.dto.query.SelectionItemDto;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.query.domain.CodeItem;
+import org.siemac.metamac.statistical.resources.core.query.domain.CodeItemRepository;
 import org.siemac.metamac.statistical.resources.core.query.domain.QuerySelectionItem;
 import org.siemac.metamac.statistical.resources.core.query.domain.QuerySelectionItemRepository;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
@@ -37,6 +39,9 @@ public class QueryDto2DoMapperImpl extends BaseDto2DoMapperImpl implements Query
 
     @Autowired
     private QuerySelectionItemRepository querySelectionItemRepository;
+
+    @Autowired
+    private CodeItemRepository           codeItemRepository;
 
     @Override
     public void checkOptimisticLocking(QueryVersionBaseDto source) throws MetamacException {
@@ -110,8 +115,12 @@ public class QueryDto2DoMapperImpl extends BaseDto2DoMapperImpl implements Query
         target.setLatestDataNumber(source.getLatestDataNumber());
 
         // Selection
-        target.getSelection().addAll(querySelectionDto2Do(source.getSelection(), target.getSelection(), target, ServiceExceptionParameters.QUERY_VERSION__SELECTION));
-
+        List<QuerySelectionItem> targetItems = new ArrayList<QuerySelectionItem>(target.getSelection());
+        targetItems = querySelectionDto2Do(source.getSelection(), targetItems, target, ServiceExceptionParameters.QUERY_VERSION__SELECTION);
+        target.getSelection().clear();
+        for (QuerySelectionItem item : targetItems) {
+            target.addSelection(item);
+        }
         return target;
     }
 
@@ -169,22 +178,18 @@ public class QueryDto2DoMapperImpl extends BaseDto2DoMapperImpl implements Query
 
         // Set codes
         List<CodeItem> codeItemsBefore = targetItem.getCodes();
+
+        // Clear codes add new ones
+        for (CodeItem codeItem : codeItemsBefore) {
+            codeItemRepository.delete(codeItem);
+        }
+
         targetItem.getCodes().clear();
 
         for (CodeItemDto value : sourceItem.getValue()) {
-            boolean existsBefore = false;
-            for (CodeItem codeItem : codeItemsBefore) {
-                if (value.equals(codeItem.getCode())) {
-                    targetItem.addCode(codeItemDto2Do(value, codeItem, targetItem));
-                    existsBefore = true;
-                    break;
-                }
-            }
-
-            if (!existsBefore) {
-                targetItem.addCode(codeItemDto2Do(value, targetItem));
-            }
+            targetItem.addCode(codeItemDto2Do(value, targetItem));
         }
+
         return targetItem;
     }
 

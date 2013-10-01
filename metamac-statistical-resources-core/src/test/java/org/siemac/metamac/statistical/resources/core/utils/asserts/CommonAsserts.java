@@ -24,6 +24,7 @@ import org.siemac.metamac.core.common.dto.InternationalStringDto;
 import org.siemac.metamac.core.common.enume.utils.TypeExternalArtefactsEnumUtils;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.base.domain.HasLifecycle;
+import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.NameableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
@@ -218,9 +219,9 @@ public class CommonAsserts extends MetamacAsserts {
             boolean found = false;
             for (RelatedResource actualRes : actual) {
                 if (actualRes.getType().equals(expec.getType())) {
-                    NameableStatisticalResource nameableResourceActual = RelatedResourceUtils.retrieveNameableResourceLinkedToRelatedResource(actualRes);
-                    NameableStatisticalResource nameableResourceExpec = RelatedResourceUtils.retrieveNameableResourceLinkedToRelatedResource(expec);
-                    if (nameableResourceExpec.getUrn().equals(nameableResourceActual.getUrn())) {
+                    IdentifiableStatisticalResource identifiableResourceActual = RelatedResourceUtils.retrieveIdentifiableResourceLinkedToRelatedResource(actualRes);
+                    IdentifiableStatisticalResource identifiableResourceActualResourceExpec = RelatedResourceUtils.retrieveIdentifiableResourceLinkedToRelatedResource(expec);
+                    if (identifiableResourceActual.getUrn().equals(identifiableResourceActualResourceExpec.getUrn())) {
                         found = true;
                     }
                 }

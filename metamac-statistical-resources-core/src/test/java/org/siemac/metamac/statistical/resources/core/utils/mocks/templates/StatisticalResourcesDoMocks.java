@@ -729,8 +729,14 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
 
     public static RelatedResource mockDatasetVersionRelated(DatasetVersion datasetVersion) {
         RelatedResource resource = new RelatedResource(TypeRelatedResourceEnum.DATASET_VERSION);
-        resource.setType(TypeRelatedResourceEnum.DATASET_VERSION);
         resource.setDatasetVersion(datasetVersion);
+        resource.setVersion(Long.valueOf(0));
+        return resource;
+    }
+
+    public static RelatedResource mockDatasetRelated(Dataset dataset) {
+        RelatedResource resource = new RelatedResource(TypeRelatedResourceEnum.DATASET);
+        resource.setDataset(dataset);
         resource.setVersion(Long.valueOf(0));
         return resource;
     }
@@ -745,6 +751,13 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
     public static RelatedResource mockQueryVersionRelated(QueryVersion queryVersion) {
         RelatedResource resource = new RelatedResource(TypeRelatedResourceEnum.QUERY_VERSION);
         resource.setQueryVersion(queryVersion);
+        resource.setVersion(Long.valueOf(0));
+        return resource;
+    }
+
+    public static RelatedResource mockQueryRelated(Query query) {
+        RelatedResource resource = new RelatedResource(TypeRelatedResourceEnum.QUERY);
+        resource.setQuery(query);
         resource.setVersion(Long.valueOf(0));
         return resource;
     }

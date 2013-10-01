@@ -60,10 +60,14 @@ public class QueryVersionRepositoryImpl extends QueryVersionRepositoryBase {
     @Override
     public QueryVersion retrieveLastVersion(String queryUrn) throws MetamacException {
         // Prepare criteria
-        List<ConditionalCriteria> conditions = ConditionalCriteriaBuilder.criteriaFor(QueryVersion.class).withProperty(QueryVersionProperties.query().identifiableStatisticalResource().urn())
-                .eq(queryUrn).orderBy(CriteriaUtils.getDatetimedLeafProperty(QueryVersionProperties.lifeCycleStatisticalResource().creationDate(), QueryVersion.class)).descending().distinctRoot()
-                .build();
+        //@formatter:off
+        List<ConditionalCriteria> conditions = ConditionalCriteriaBuilder.criteriaFor(QueryVersion.class).
+                withProperty(QueryVersionProperties.query().identifiableStatisticalResource().urn()).eq(queryUrn)
+                .and()
+                .withProperty(QueryVersionProperties.lifeCycleStatisticalResource().lastVersion()).eq(Boolean.TRUE)
+                .distinctRoot().build();
 
+        //@formatter:on
         PagingParameter paging = PagingParameter.rowAccess(0, 1);
         // Find
         PagedResult<QueryVersion> result = findByCondition(conditions, paging);

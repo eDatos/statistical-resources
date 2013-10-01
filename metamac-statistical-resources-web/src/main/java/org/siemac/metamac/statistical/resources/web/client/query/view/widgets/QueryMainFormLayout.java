@@ -1,9 +1,13 @@
 package org.siemac.metamac.statistical.resources.web.client.query.view.widgets;
 
+import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
+
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionDto;
 import org.siemac.metamac.statistical.resources.web.client.base.widgets.LifecycleMainFormLayout;
 import org.siemac.metamac.statistical.resources.web.client.query.utils.QueryClientSecurityUtils;
+import org.siemac.metamac.statistical.resources.web.client.resources.GlobalResources;
 import org.siemac.metamac.web.common.client.utils.InternationalStringUtils;
+import org.siemac.metamac.web.common.client.widgets.MainFormLayoutButton;
 
 public class QueryMainFormLayout extends LifecycleMainFormLayout {
 

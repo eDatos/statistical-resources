@@ -60,6 +60,7 @@ Application QueriesStatisticalResources {
 			
 			Repository CodeItemRepository {
 				findAll;
+				delete;
 			}
 		}
 

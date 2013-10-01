@@ -25,9 +25,9 @@ import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 import org.springframework.transaction.support.TransactionTemplate;
 
-public class DBHsqlDBSqlMockPersister extends DBSqlMockPersisterBase {
+public class DBH2SqlMockPersister extends DBSqlMockPersisterBase {
 
-    private static Logger       logger             = LoggerFactory.getLogger(DBHsqlDBSqlMockPersister.class);
+    private static Logger       logger             = LoggerFactory.getLogger(DBH2SqlMockPersister.class);
     private static List<String> tableOrder;
     private static List<String> sequences;
     private static boolean      sequencesRestarted = false;
@@ -38,24 +38,21 @@ public class DBHsqlDBSqlMockPersister extends DBSqlMockPersisterBase {
 
     @Override
     protected void disableReferentialConstraints() {
-
-        jdbcTemplate.execute("SET DATABASE REFERENTIAL INTEGRITY FALSE");
+        for (String tableName : getTableOrder()) {
+            jdbcTemplate.execute("ALTER TABLE " + tableName + " set referential_integrity false");
+        }
     }
 
     @Override
     protected void enableReferentialConstraints() throws DataAccessException {
-        jdbcTemplate.execute("SET DATABASE REFERENTIAL INTEGRITY TRUE");
+        for (String tableName : getTableOrder()) {
+            jdbcTemplate.execute("ALTER TABLE " + tableName + " set referential_integrity true check");
+        }
     }
 
     @Override
     protected TableMetadata transformEntityToTableMetadata(EntityMetadata entity) {
-        // FIXME: build TableMetadata
-        return null;
-    }
-
-    @Override
-    protected void cleanDatabase() {
-        // NOTHING
+        return new H2SqlTableMetadata(entity);
     }
 
 }

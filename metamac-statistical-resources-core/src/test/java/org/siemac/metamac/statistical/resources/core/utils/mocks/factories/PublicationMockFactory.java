@@ -1,6 +1,10 @@
 package org.siemac.metamac.statistical.resources.core.utils.mocks.factories;
 
-import static org.siemac.metamac.statistical.resources.core.utils.PublicationLifecycleTestUtils.prepareToVersioning;
+import static org.siemac.metamac.statistical.resources.core.utils.PublicationLifecycleTestUtils.prepareToPublished;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetMockFactory.createDatasetVersionPublishedLastVersion;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetMockFactory.createPublishedAndDraftVersionsForDataset;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetMockFactory.createPublishedAndNotVisibleVersionsForDataset;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetMockFactory.createTwoPublishedVersionsForDataset;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_03_FOR_PUBLICATION_03_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_04_FOR_PUBLICATION_03_AND_LAST_VERSION_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_17_WITH_STRUCTURE_FOR_PUBLICATION_VERSION_04_NAME;
@@ -9,23 +13,32 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_28_V2_PUBLISHED_FOR_PUBLICATION_05_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_29_V3_PUBLISHED_FOR_PUBLICATION_05_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_30_V1_PUBLISHED_FOR_PUBLICATION_06_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_84_PUBLISHED_FOR_PUBLICATION_07_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_85_PREPARED_TO_PUBLISH_WITH_PREVIOUS_VERSION_EXTERNAL_ITEM_FULL_FOR_PUBLICATION_07_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.createChapterElementLevel;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.createDatasetCubeElementLevel;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.createPublicationVersionInStatus;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.createPublicationVersionPublishedLastVersion;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.createPublicationVersionPublishedPreviousVersion;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.createPublicationVersionSimple;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.createQueryCubeElementLevel;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryMockFactory.createPublishedQueryLinkedToDataset;
+
+import java.util.Arrays;
+import java.util.List;
 
 import org.joda.time.DateTime;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.publication.domain.ElementLevel;
 import org.siemac.metamac.statistical.resources.core.publication.domain.Publication;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
 import org.siemac.metamac.statistical.resources.core.query.domain.Query;
-import org.siemac.metamac.statistical.resources.core.utils.PublicationLifecycleTestUtils;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.PublicationMock;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.PublicationVersionMock;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.configuration.MockProvider;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesPersistedDoMocks;
-import org.springframework.stereotype.Component;
 
 @MockProvider
 @SuppressWarnings("unused")
@@ -40,6 +53,8 @@ public class PublicationMockFactory extends StatisticalResourcesMockFactory<Publ
     public static final String            PUBLICATION_05_WITH_MULTIPLE_PUBLISHED_VERSIONS_NAME                       = "PUBLICATION_05_WITH_MULTIPLE_PUBLISHED_VERSIONS";
 
     public static final String            PUBLICATION_06_WITH_MULTIPLE_PUBLISHED_VERSIONS_AND_LATEST_NO_VISIBLE_NAME = "PUBLICATION_06_WITH_MULTIPLE_PUBLISHED_VERSIONS_AND_LATEST_NO_VISIBLE";
+
+    public static final String            PUBLICATION_07_WITH_TWO_VERSIONS_LAST_ONE_READY_TO_PUBLISHED_NAME          = "PUBLICATION_07_WITH_TWO_VERSIONS_LAST_ONE_READY_TO_PUBLISHED";
 
     private static PublicationMockFactory instance                                                                   = null;
 
@@ -86,7 +101,7 @@ public class PublicationMockFactory extends StatisticalResourcesMockFactory<Publ
     }
 
     private static PublicationVersion createPublication04Version01(PublicationMock publication, DateTime validFrom) {
-        PublicationVersion publicationVersion = createPublicationVersionPublishedPreviousVersion(publication, INIT_VERSION, validFrom, null);
+        PublicationVersionMock publicationVersion = PublicationVersionMockFactory.buildPublishedReadyPublicationVersion(publication, INIT_VERSION, validFrom, null, false);
 
         Query query01 = QueryMockFactory.generateQueryWithGeneratedVersion();
         registerQueryMock(QueryMockFactory.QUERY_09_SINGLE_VERSION_USED_IN_PUB_VERSION_17_NAME, query01);
@@ -126,6 +141,8 @@ public class PublicationMockFactory extends StatisticalResourcesMockFactory<Publ
         // Cube 03
         ElementLevel elementLevel03 = createQueryCubeElementLevel(publicationVersion, query01);
         elementLevel03.setOrderInLevel(Long.valueOf(3));
+
+        PublicationVersionMockFactory.createPublicationVersionInStatus(publicationVersion, ProcStatusEnum.PUBLISHED);
 
         return publicationVersion;
     }
@@ -184,9 +201,50 @@ public class PublicationMockFactory extends StatisticalResourcesMockFactory<Publ
         return publication;
     }
 
+    private static Publication getPublication07WithTwoVersionsLastOneReadyToPublished() {
+        PublicationMock publication = createPublicationToAddVersions(1);
+
+        DateTime secondVersionPublishTime = new DateTime().plusDays(1);
+
+        PublicationVersion publicationVersion01 = createPublicationVersionPublishedPreviousVersion(publication, INIT_VERSION, new DateTime().minusDays(1), secondVersionPublishTime);
+        registerPublicationVersionMock(PUBLICATION_VERSION_84_PUBLISHED_FOR_PUBLICATION_07_NAME, publicationVersion01);
+
+        PublicationVersionMock publicationVersion02 = PublicationVersionMockFactory.buildPublicationVersionSimpleLastVersion(publication, SECOND_VERSION);
+
+        PublicationVersionMockFactory.fillOptionalExternalItems(publicationVersion02);
+
+        // datasets
+        Dataset datasetSingleVersionPublished = createDatasetVersionPublishedLastVersion(1, INIT_VERSION, new DateTime().minusDays(3)).getDataset();
+        Dataset datasetWithPublishedAndDraft = createPublishedAndDraftVersionsForDataset(2);
+        Dataset datasetWithPublishedAndNotVisible = createPublishedAndNotVisibleVersionsForDataset(3, new DateTime().plusDays(3));
+        Dataset datasetWithTwoPublishedVersions = createTwoPublishedVersionsForDataset(4);
+
+        List<Dataset> datasets = Arrays.asList(datasetSingleVersionPublished, datasetWithPublishedAndNotVisible, datasetWithTwoPublishedVersions);
+
+        // queries
+        Query queryPublishedLinkedToDataset = createPublishedQueryLinkedToDataset("Q01", datasetSingleVersionPublished, datasetSingleVersionPublished.getVersions().get(0)
+                .getSiemacMetadataStatisticalResource().getValidFrom());
+
+        DatasetVersion datasetVersionLinkedToQuery = createDatasetVersionPublishedLastVersion(5, INIT_VERSION, new DateTime().minusDays(3));
+        Query queryPublishedLinekdToDatasetVersion = QueryMockFactory.createPublishedQueryLinkedToDatasetVersion("Q02", datasetVersionLinkedToQuery, datasetVersionLinkedToQuery
+                .getSiemacMetadataStatisticalResource().getValidFrom());
+
+        List<Query> queries = Arrays.asList(queryPublishedLinkedToDataset, queryPublishedLinekdToDatasetVersion);
+
+        PublicationVersionMockFactory.populatePublicationWithStructureWithCubesOnChapters(publicationVersion02, datasets, queries);
+
+        getStatisticalResourcesPersistedDoMocks().mockPublicationVersion(publicationVersion02);
+        prepareToPublished(publicationVersion02);
+        registerPublicationVersionMock(PUBLICATION_VERSION_85_PREPARED_TO_PUBLISH_WITH_PREVIOUS_VERSION_EXTERNAL_ITEM_FULL_FOR_PUBLICATION_07_NAME, publicationVersion02);
+
+        publicationVersion02.getSiemacMetadataStatisticalResource().setReplacesVersion(StatisticalResourcesPersistedDoMocks.mockPublicationVersionRelated(publicationVersion01));
+
+        return publicationVersion02.getPublication();
+    }
+
     // Public builders
 
-    public static Publication buildPublicationWithTwoVersionsPublished(int sequentialId) {
+    public static Publication createPublicationWithTwoVersionsPublished(int sequentialId) {
         PublicationMock publication = createPublicationToAddVersions(sequentialId);
 
         DateTime secondVersionPublishTime = new DateTime().minusDays(1);
@@ -200,7 +258,7 @@ public class PublicationMockFactory extends StatisticalResourcesMockFactory<Publ
         return publication;
     }
 
-    public static Publication buildPublicationWithTwoVersionsOnePublishedLastNotVisible(int sequentialId) {
+    public static Publication createPublicationWithTwoVersionsOnePublishedLastNotVisible(int sequentialId) {
         PublicationMock publication = createPublicationToAddVersions(sequentialId);
 
         DateTime secondVersionPublishTime = new DateTime().plusDays(1);
@@ -214,7 +272,7 @@ public class PublicationMockFactory extends StatisticalResourcesMockFactory<Publ
         return publication;
     }
 
-    public static Publication buildPublicationWithTwoVersionsOnePublishedLastDraft(int sequentialId) {
+    public static Publication createPublicationWithTwoVersionsOnePublishedLastDraft(int sequentialId) {
         PublicationMock publication = createPublicationToAddVersions(sequentialId);
 
         PublicationVersion publicationVersion01 = createPublicationVersionPublishedPreviousVersion(publication, INIT_VERSION, new DateTime().minusDays(2), null);
@@ -226,7 +284,7 @@ public class PublicationMockFactory extends StatisticalResourcesMockFactory<Publ
         return publication;
     }
 
-    public static Publication buildPublicationWithSingleVersionPublished(int sequentialId) {
+    public static Publication createPublicationWithSingleVersionPublished(int sequentialId) {
         PublicationMock publication = createPublicationToAddVersions(sequentialId);
 
         PublicationVersion publicationVersion01 = createPublicationVersionPublishedLastVersion(publication, INIT_VERSION, new DateTime().minusDays(2));
@@ -234,7 +292,7 @@ public class PublicationMockFactory extends StatisticalResourcesMockFactory<Publ
         return publication;
     }
 
-    public static Publication buildPublicationWithSingleVersionPublishedNotVisible(int sequentialId) {
+    public static Publication createPublicationWithSingleVersionPublishedNotVisible(int sequentialId) {
         PublicationMock publication = createPublicationToAddVersions(sequentialId);
 
         PublicationVersion publicationVersion01 = createPublicationVersionPublishedLastVersion(publication, INIT_VERSION, new DateTime().plusDays(2));
@@ -242,7 +300,7 @@ public class PublicationMockFactory extends StatisticalResourcesMockFactory<Publ
         return publication;
     }
 
-    public static Publication buildPublicationWithSingleVersionDraft(int sequentialId) {
+    public static Publication createPublicationWithSingleVersionDraft(int sequentialId) {
         PublicationMock publication = createPublicationToAddVersions(sequentialId);
 
         PublicationVersion publicationVersion01 = createPublicationVersionLastVersionInStatus(publication, INIT_VERSION, ProcStatusEnum.DRAFT);
@@ -253,70 +311,8 @@ public class PublicationMockFactory extends StatisticalResourcesMockFactory<Publ
     // INTERNAL BUILDERS
 
     private static PublicationVersion createPublicationVersionLastVersionInStatus(Publication publication, String version, ProcStatusEnum status) {
-        PublicationVersionMock publicationVersionMock = buildPublicationVersionSimple(publication, version, true);
+        PublicationVersionMock publicationVersionMock = createPublicationVersionSimple(publication, version, true);
         return createPublicationVersionInStatus(publicationVersionMock, status);
-    }
-
-    private static PublicationVersionMock buildPublicationVersionSimple(Publication publication, String version, boolean isLastVersion) {
-        PublicationVersionMock publicationVersion = new PublicationVersionMock();
-        publicationVersion.setPublication(publication);
-        publicationVersion.setVersionLogic(version);
-        publicationVersion.getSiemacMetadataStatisticalResource().setLastVersion(isLastVersion);
-        getStatisticalResourcesPersistedDoMocks().mockPublicationVersion(publicationVersion);
-        return publicationVersion;
-    }
-
-    private static PublicationVersion createPublicationVersionPublishedPreviousVersion(PublicationMock publication, String version, DateTime validFrom, DateTime validTo) {
-        PublicationVersionMock publicationVersion = buildPublishedReadyPublicationVersion(publication, version, validFrom, validTo, false);
-        return createPublicationVersionInStatus(publicationVersion, ProcStatusEnum.PUBLISHED);
-    }
-
-    private static PublicationVersion createPublicationVersionPublishedLastVersion(PublicationMock publication, String version, DateTime validFrom) {
-        PublicationVersionMock publicationVersion = buildPublishedReadyPublicationVersion(publication, version, validFrom, null, true);
-        return createPublicationVersionInStatus(publicationVersion, ProcStatusEnum.PUBLISHED);
-    }
-
-    private static PublicationVersionMock buildPublishedReadyPublicationVersion(PublicationMock publication, String version, DateTime validFrom, DateTime validTo, boolean lastVersion) {
-        PublicationVersionMock publicationVersion = new PublicationVersionMock();
-        publicationVersion.setPublication(publication);
-        publicationVersion.setVersionLogic(version);
-        publicationVersion.getSiemacMetadataStatisticalResource().setLastVersion(lastVersion);
-
-        if (validFrom.isAfterNow()) {
-            publicationVersion.getSiemacMetadataStatisticalResource().setCreationDate(new DateTime());
-        } else {
-            publicationVersion.getSiemacMetadataStatisticalResource().setCreationDate(validFrom.minusHours(1));
-        }
-        publicationVersion.getSiemacMetadataStatisticalResource().setValidFrom(validFrom);
-        publicationVersion.getSiemacMetadataStatisticalResource().setValidTo(validTo);
-
-        return publicationVersion;
-    }
-
-    private static PublicationVersion createPublicationVersionInStatus(PublicationVersionMock publicationVersionMock, ProcStatusEnum status) {
-        PublicationVersion publicationVersion = getStatisticalResourcesPersistedDoMocks().mockPublicationVersion(publicationVersionMock);
-
-        switch (status) {
-            case PRODUCTION_VALIDATION:
-                PublicationLifecycleTestUtils.fillAsProductionValidation(publicationVersion);
-                break;
-            case DIFFUSION_VALIDATION:
-                PublicationLifecycleTestUtils.fillAsDiffusionValidation(publicationVersion);
-                break;
-            case VALIDATION_REJECTED:
-                PublicationLifecycleTestUtils.fillAsValidationRejected(publicationVersion);
-                break;
-            case PUBLISHED:
-                PublicationLifecycleTestUtils.fillAsPublished(publicationVersion);
-                break;
-            case PUBLISHED_NOT_VISIBLE:
-                throw new IllegalArgumentException("Unsupported status not visible, set first the ValidFrom to the future and use status PUBLISHED");
-            case DRAFT:
-                break;
-            default:
-                throw new IllegalArgumentException("Unsupported status " + status);
-        }
-        return publicationVersion;
     }
 
     // Creations
@@ -324,7 +320,7 @@ public class PublicationMockFactory extends StatisticalResourcesMockFactory<Publ
         return getStatisticalResourcesPersistedDoMocks().mockPublicationWithGeneratedPublicationVersion();
     }
 
-    protected static PublicationMock createPublicationToAddVersions(Integer sequential) {
+    public static PublicationMock createPublicationToAddVersions(Integer sequential) {
         PublicationMock publication = new PublicationMock();
         publication.setSequentialId(sequential);
         getStatisticalResourcesPersistedDoMocks().mockPublication(publication);

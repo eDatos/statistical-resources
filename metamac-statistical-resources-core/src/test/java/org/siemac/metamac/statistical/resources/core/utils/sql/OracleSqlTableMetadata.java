@@ -7,9 +7,9 @@ import org.siemac.metamac.core.common.utils.EntityMetadata;
 import org.siemac.metamac.core.common.utils.TableMetadata;
 import org.springframework.util.ReflectionUtils;
 
-public class SqlTableMetadata extends TableMetadata {
+public class OracleSqlTableMetadata extends TableMetadata {
 
-    public SqlTableMetadata(EntityMetadata entityMetadata) {
+    public OracleSqlTableMetadata(EntityMetadata entityMetadata) {
         super(entityMetadata);
     }
 

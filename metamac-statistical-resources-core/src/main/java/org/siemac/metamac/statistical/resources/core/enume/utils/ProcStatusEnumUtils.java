@@ -16,4 +16,8 @@ public class ProcStatusEnumUtils extends BaseEnumUtils {
                     .withMessageParameters(resource.getLifeCycleStatisticalResource().getUrn(), procStatusString).build();
         }
     }
+
+    public static boolean isInAnyProcStatus(HasLifecycle resource, ProcStatusEnum... possibleProcStatus) {
+        return ArrayUtils.contains(possibleProcStatus, resource.getLifeCycleStatisticalResource().getEffectiveProcStatus());
+    }
 }

@@ -1,6 +1,15 @@
 package org.siemac.metamac.statistical.resources.core.utils;
 
+import org.joda.time.DateTime;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
+import org.siemac.metamac.statistical.resources.core.publication.domain.ElementLevel;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
+import org.siemac.metamac.statistical.resources.core.query.domain.Query;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetMockFactory;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryMockFactory;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesPersistedDoMocks;
 
 public class PublicationLifecycleTestUtils {
 
@@ -53,6 +62,7 @@ public class PublicationLifecycleTestUtils {
     public static void prepareToPublished(PublicationVersion publicationVersion) {
         fillAsDiffusionValidation(publicationVersion);
         LifecycleTestUtils.prepareToPublishingSiemac(publicationVersion);
+        fillStructure(publicationVersion);
     }
 
     public static void fillAsPublished(PublicationVersion publicationVersion) {
@@ -77,7 +87,18 @@ public class PublicationLifecycleTestUtils {
     private static void prepareToLifecycleCommonPublicationVersion(PublicationVersion publicationVersion) {
         // Inherited fields that need customization based on Resource's type
 
-        // FIXME: structure?
+    }
+
+    private static void fillStructure(PublicationVersion publicationVersion) {
+        if (publicationVersion.getChildrenAllLevels().isEmpty()) {
+            Dataset dataset = DatasetMockFactory.createTwoPublishedVersionsForDataset(50);
+            ElementLevel level01 = PublicationVersionMockFactory.createDatasetCubeElementLevel(publicationVersion, dataset);
+            level01.setOrderInLevel(1L);
+
+            Query query = QueryMockFactory.createPublishedQueryLinkedToDataset(StatisticalResourcesPersistedDoMocks.mockString(10), dataset, new DateTime());
+            ElementLevel level02 = PublicationVersionMockFactory.createQueryCubeElementLevel(publicationVersion, query);
+            level02.setOrderInLevel(2L);
+        }
     }
 
 }

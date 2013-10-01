@@ -8,6 +8,8 @@ import org.siemac.metamac.statistical.resources.core.common.domain.Translation;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
+import org.siemac.metamac.statistical.resources.core.publication.domain.Chapter;
+import org.siemac.metamac.statistical.resources.core.publication.domain.Cube;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
 import org.siemac.metamac.statistical.resources.core.query.domain.Query;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
@@ -67,6 +69,14 @@ public abstract class StatisticalResourcesMockFactory<EntityMock> extends MockFa
 
     protected static void registerDatasetMock(String id, Dataset dataset) {
         DatasetMockFactory.getInstance().registerMock(id, dataset);
+    }
+
+    protected static void registerChapterMock(String id, Chapter chapter) {
+        ChapterMockFactory.getInstance().registerMock(id, chapter);
+    }
+
+    protected static void registerCubeMock(String id, Cube cube) {
+        CubeMockFactory.getInstance().registerMock(id, cube);
     }
 
     protected static void registerTranslationMock(String id, Translation translation) {

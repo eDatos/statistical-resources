@@ -61,7 +61,7 @@ public class DatasetPublishingServiceTest extends StatisticalResourcesMockRestBa
 
     @Test
     @MetamacMock(DATASET_VERSION_70_PREPARED_TO_PUBLISH_EXTERNAL_ITEM_FULL_NAME)
-    public void testPublishDatasetVersion() throws Exception {
+    public void testPublishDatasetVersionFirstVersion() throws Exception {
         DatasetVersion datasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_70_PREPARED_TO_PUBLISH_EXTERNAL_ITEM_FULL_NAME);
         SiemacMetadataStatisticalResource siemacResource = datasetVersion.getSiemacMetadataStatisticalResource();
         String datasetVersionUrn = siemacResource.getUrn();

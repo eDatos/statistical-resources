@@ -50,6 +50,11 @@ public class DBOracleSqlMockPersister extends DBSqlMockPersisterBase {
     }
 
     @Override
+    protected TableMetadata transformEntityToTableMetadata(EntityMetadata entity) {
+        return new OracleSqlTableMetadata(entity);
+    }
+
+    @Override
     protected void disableReferentialConstraints() {
         jdbcTemplate.execute("SET CONSTRAINTS ALL DEFERRED");
     }

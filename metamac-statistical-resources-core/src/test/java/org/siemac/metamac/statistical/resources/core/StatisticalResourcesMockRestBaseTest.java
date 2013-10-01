@@ -275,4 +275,35 @@ public class StatisticalResourcesMockRestBaseTest extends StatisticalResourcesBa
         mockExternalItemPublished(siemacResource.getCommonMetadata());
     }
 
+    protected String getChapterMockUrn(String mockId) {
+        return chapterMockFactory.retrieveMock(mockId).getNameableStatisticalResource().getUrn();
+    }
+
+    protected String getCubeMockUrn(String mockId) {
+        return cubeMockFactory.retrieveMock(mockId).getNameableStatisticalResource().getUrn();
+    }
+
+    protected String getDatasetMockUrn(String mockId) {
+        return datasetMockFactory.retrieveMock(mockId).getIdentifiableStatisticalResource().getUrn();
+    }
+
+    protected List<String> getDatasetsMocksUrns(String... mockIds) {
+        List<String> urns = new ArrayList<String>();
+        for (String mockId : mockIds) {
+            urns.add(getDatasetMockUrn(mockId));
+        }
+        return urns;
+    }
+
+    protected String getQueryMockUrn(String mockId) {
+        return queryMockFactory.retrieveMock(mockId).getIdentifiableStatisticalResource().getUrn();
+    }
+
+    protected List<String> getQueryMocksUrns(String... mockIds) {
+        List<String> urns = new ArrayList<String>();
+        for (String mockId : mockIds) {
+            urns.add(getQueryMockUrn(mockId));
+        }
+        return urns;
+    }
 }

@@ -1,7 +1,6 @@
 package org.siemac.metamac.statistical.resources.core.utils.mocks.factories;
 
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_56_DRAFT_WITH_DATASOURCE_AND_QUERIES_NAME;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.generateDatasetVersionInStatusWithGeneratedDatasource;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_63_DRAFT_WITH_PREVIOUS_VERSION__LINKED_TO_QUERY_11_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_64_DRAFT_SINGLE_VERSION__LINKED_TO_QUERY_11_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_65_PUBLISHED_NOT_VISIBLE_SINGLE_VERSION__LINKED_TO_QUERY_11_NAME;
@@ -81,6 +80,12 @@ public class QueryMockFactory extends StatisticalResourcesMockFactory<Query> {
     public static final String      QUERY_14_SINGLE_VERSION_PUBLISHED_USED_IN_PUBLICATIONS_LINK_ONLY_PREVIOUS_VERSIONS_NAME = "QUERY_14_SINGLE_VERSION_PUBLISHED_USED_IN_PUBLICATIONS_LINK_ONLY_PREVIOUS_VERSIONS";
     public static final String      QUERY_15_SINGLE_VERSION_PUBLISHED_USED_IN_PUBLICATIONS_LINK_BOTH_VERSIONS_NAME          = "QUERY_15_SINGLE_VERSION_PUBLISHED_USED_IN_PUBLICATIONS_LINK_BOTH_VERSIONS";
 
+    public static final String      QUERY_16_DRAFT_USED_IN_PUBLICATION_VERSION_86_NAME                                      = "QUERY_16_DRAFT_USED_IN_PUBLICATION_VERSION_86_NAME";
+    public static final String      QUERY_17_PRODUCTION_VALIDATION_USED_IN_PUBLICATION_VERSION_86_NAME                      = "QUERY_17_PRODUCTION_VALIDATION_USED_IN_PUBLICATION_VERSION_86_NAME";
+    public static final String      QUERY_18_DIFFUSION_VALIDATION_USED_IN_PUBLICATION_VERSION_86_NAME                       = "QUERY_18_DIFFUSION_VALIDATION_USED_IN_PUBLICATION_VERSION_86_NAME";
+    public static final String      QUERY_19_VALIDATION_REJECTED_USED_IN_PUBLICATION_VERSION_86_NAME                        = "QUERY_19_VALIDATION_REJECTED_USED_IN_PUBLICATION_VERSION_86_NAME";
+    public static final String      QUERY_20_PUBLISHED_NOT_VISIBLE_USED_IN_PUBLICATION_VERSION_86_NAME                      = "QUERY_20_PUBLISHED_NOT_VISIBLE_USED_IN_PUBLICATION_VERSION_86_NAME";
+
     private static QueryMockFactory instance                                                                                = null;
 
     private QueryMockFactory() {
@@ -106,9 +111,7 @@ public class QueryMockFactory extends StatisticalResourcesMockFactory<Query> {
     private static Query getQuery03With2QueryVersions() {
         Query query = createQueryWithoutGeneratedVersion();
 
-        DatasetMock dataset = DatasetMockFactory.buildDatasetSimpleMock(1);
-
-        dataset = DatasetMockFactory.buildPublishedAndDraftVersionsForDataset(dataset);
+        Dataset dataset = DatasetMockFactory.createPublishedAndDraftVersionsForDataset(1);
 
         DatasetVersion publishedDatasetVersion = dataset.getVersions().get(0);
         DatasetVersion draftDatasetVersion = dataset.getVersions().get(1);
@@ -257,7 +260,7 @@ public class QueryMockFactory extends StatisticalResourcesMockFactory<Query> {
     private static Query getQuery07SimpleMultiVersion() {
         Query query = createQueryWithoutGeneratedVersion();
 
-        DatasetVersion datasetVersion = generateDatasetVersionInStatusWithGeneratedDatasource(ProcStatusEnum.DRAFT);
+        DatasetVersion datasetVersion = DatasetVersionMockFactory.createDatasetVersionInStatusWithGeneratedDatasource(1, ProcStatusEnum.DRAFT);
         registerDatasetVersionMock(DATASET_VERSION_56_DRAFT_WITH_DATASOURCE_AND_QUERIES_NAME, datasetVersion);
 
         QueryVersion queryV01 = mockQueryVersionSimple(query, datasetVersion, INIT_VERSION);
@@ -426,8 +429,12 @@ public class QueryMockFactory extends StatisticalResourcesMockFactory<Query> {
         return new MockDescriptor(query, publicationLastDraft, publicationLastNotVisible, publicationLastPublished);
     }
 
+    // -----------------------------------------------------------------
+    // PRIVATE UTILS
+    // -----------------------------------------------------------------
+
     private static Publication createPublicationWithTwoVersionsPublishedLinkedToQueries(int sequentialId, Query queryForV01, Query queryForV02) {
-        Publication pub = PublicationMockFactory.buildPublicationWithTwoVersionsPublished(sequentialId);
+        Publication pub = PublicationMockFactory.createPublicationWithTwoVersionsPublished(sequentialId);
         if (queryForV01 != null) {
             linkQueryInPublicationVersionFirstLevel(queryForV01, pub.getVersions().get(0));
         }
@@ -438,7 +445,7 @@ public class QueryMockFactory extends StatisticalResourcesMockFactory<Query> {
     }
 
     private static Publication createPublicationWithTwoVersionsOnePublishedLastDraftLinkedToQueries(int sequentialId, Query queryForV01, Query queryForV02) {
-        Publication pub = PublicationMockFactory.buildPublicationWithTwoVersionsOnePublishedLastDraft(sequentialId);
+        Publication pub = PublicationMockFactory.createPublicationWithTwoVersionsOnePublishedLastDraft(sequentialId);
         if (queryForV01 != null) {
             linkQueryInPublicationVersionFirstLevel(queryForV01, pub.getVersions().get(0));
         }
@@ -449,7 +456,7 @@ public class QueryMockFactory extends StatisticalResourcesMockFactory<Query> {
     }
 
     private static Publication createPublicationWithTwoVersionsOnePublishedLastNotVisibleLinkedToQueries(int sequentialId, Query queryForV01, Query queryForV02) {
-        Publication pub = PublicationMockFactory.buildPublicationWithTwoVersionsOnePublishedLastNotVisible(sequentialId);
+        Publication pub = PublicationMockFactory.createPublicationWithTwoVersionsOnePublishedLastNotVisible(sequentialId);
         if (queryForV01 != null) {
             linkQueryInPublicationVersionFirstLevel(queryForV01, pub.getVersions().get(0));
         }
@@ -460,7 +467,7 @@ public class QueryMockFactory extends StatisticalResourcesMockFactory<Query> {
     }
 
     private static Publication createPublicationWithSingleVersionDraftLinkedToQuery(int sequentialId, Query query) {
-        Publication pub = PublicationMockFactory.buildPublicationWithSingleVersionDraft(sequentialId);
+        Publication pub = PublicationMockFactory.createPublicationWithSingleVersionDraft(sequentialId);
         if (query != null) {
             linkQueryInPublicationVersionFirstLevel(query, pub.getVersions().get(0));
         }
@@ -468,7 +475,7 @@ public class QueryMockFactory extends StatisticalResourcesMockFactory<Query> {
     }
 
     private static Publication createPublicationWithSingleVersionPublishedNotVisibleLinkedToQuery(int sequentialId, Query query) {
-        Publication pub = PublicationMockFactory.buildPublicationWithSingleVersionPublishedNotVisible(sequentialId);
+        Publication pub = PublicationMockFactory.createPublicationWithSingleVersionPublishedNotVisible(sequentialId);
         if (query != null) {
             linkQueryInPublicationVersionFirstLevel(query, pub.getVersions().get(0));
         }
@@ -476,7 +483,7 @@ public class QueryMockFactory extends StatisticalResourcesMockFactory<Query> {
     }
 
     private static Publication createPublicationWithSingleVersionPublishedLinkedToQuery(int sequentialId, Query query) {
-        Publication pub = PublicationMockFactory.buildPublicationWithSingleVersionPublished(sequentialId);
+        Publication pub = PublicationMockFactory.createPublicationWithSingleVersionPublished(sequentialId);
         if (query != null) {
             linkQueryInPublicationVersionFirstLevel(query, pub.getVersions().get(0));
         }
@@ -494,7 +501,10 @@ public class QueryMockFactory extends StatisticalResourcesMockFactory<Query> {
         return datasetVersion;
     }
 
+    // -----------------------------------------------------------------
     // BUILDERS
+    // -----------------------------------------------------------------
+
     private static QueryVersion createQueryVersionInStatus(QueryVersionMock queryVersionMock, ProcStatusEnum status) {
         QueryVersion queryVersion = getStatisticalResourcesPersistedDoMocks().mockQueryVersion(queryVersionMock);
 
@@ -533,6 +543,12 @@ public class QueryMockFactory extends StatisticalResourcesMockFactory<Query> {
         return getStatisticalResourcesPersistedDoMocks().mockQuery(new QueryMock());
     }
 
+    private static QueryVersionMock buildSimpleMock(String identifier, DatasetVersion datasetVersion, String versionLogic) {
+        QueryMock query = new QueryMock();
+        query.getIdentifiableStatisticalResource().setCode(identifier);
+        return buildSimpleMock(query, datasetVersion, versionLogic);
+    }
+
     private static QueryVersionMock buildSimpleMock(Query query, DatasetVersion datasetVersion, String versionLogic) {
         QueryVersionMock mock = new QueryVersionMock();
         mock.setQuery(query);
@@ -551,6 +567,15 @@ public class QueryMockFactory extends StatisticalResourcesMockFactory<Query> {
         return mock;
     }
 
+    public static Query createPublishedQueryLinkedToDatasetVersion(String code, DatasetVersion datasetVersion, DateTime validFrom) {
+        QueryMock query = new QueryMock();
+        query.getIdentifiableStatisticalResource().setCode(code);
+        QueryVersionMock queryVersion = buildPublishedQueryVersionMockLinkedToDatasetVersion(query, datasetVersion, INIT_VERSION, validFrom);
+        getStatisticalResourcesPersistedDoMocks().mockQueryVersion(queryVersion);
+        QueryLifecycleTestUtils.fillAsPublished(queryVersion);
+        return queryVersion.getQuery();
+    }
+
     private static QueryVersionMock buildPublishedQueryVersionMockLinkedToDatasetVersion(Query query, DatasetVersion datasetVersion, String versionLogic, DateTime validFrom) {
         QueryVersionMock mock = new QueryVersionMock();
         mock.setQuery(query);
@@ -564,6 +589,15 @@ public class QueryMockFactory extends StatisticalResourcesMockFactory<Query> {
         }
         mock.getLifeCycleStatisticalResource().setValidFrom(validFrom);
         return mock;
+    }
+
+    public static Query createPublishedQueryLinkedToDataset(String code, Dataset dataset, DateTime validFrom) {
+        QueryMock query = new QueryMock();
+        query.getIdentifiableStatisticalResource().setCode(code);
+        QueryVersionMock queryVersion = buildPublishedQueryVersionMockLinkedToDataset(query, dataset, INIT_VERSION, validFrom);
+        getStatisticalResourcesPersistedDoMocks().mockQueryVersion(queryVersion);
+        QueryLifecycleTestUtils.fillAsPublished(queryVersion);
+        return queryVersion.getQuery();
     }
 
     private static QueryVersionMock buildPublishedQueryVersionMockLinkedToDataset(Query query, Dataset dataset, String versionLogic, DateTime validFrom) {

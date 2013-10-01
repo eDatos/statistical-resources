@@ -9,11 +9,14 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersi
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryTypeEnum;
+import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
 import org.siemac.metamac.statistical.resources.core.query.domain.CodeItem;
 import org.siemac.metamac.statistical.resources.core.query.domain.QuerySelectionItem;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
 import org.siemac.metamac.statistical.resources.core.utils.LifecycleTestUtils;
+import org.siemac.metamac.statistical.resources.core.utils.PublicationLifecycleTestUtils;
 import org.siemac.metamac.statistical.resources.core.utils.QueryLifecycleTestUtils;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.PublicationVersionMock;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.QueryVersionMock;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.configuration.MockDescriptor;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.configuration.MockProvider;
@@ -208,7 +211,9 @@ public class QueryVersionMockFactory extends StatisticalResourcesMockFactory<Que
     public static QueryVersionMock buildQueryVersionMockSimple(String code) {
         QueryVersionMock template = new QueryVersionMock();
         template.getLifeCycleStatisticalResource().setCode(code);
-        template.setFixedDatasetVersion(getStatisticalResourcesPersistedDoMocks().mockDatasetVersion());
+        DatasetVersion datasetVersion = getStatisticalResourcesPersistedDoMocks().mockDatasetVersion();
+        StatisticalResourcesPersistedDoMocks.mockDatasetVersionCoveragesAndRelated(datasetVersion);
+        template.setFixedDatasetVersion(datasetVersion);
         template.setStatus(QueryStatusEnum.ACTIVE);
         return template;
     }
@@ -256,6 +261,31 @@ public class QueryVersionMockFactory extends StatisticalResourcesMockFactory<Que
         return getStatisticalResourcesPersistedDoMocks().mockQueryVersion(template);
     }
 
+    public static QueryVersion createQueryVersionInStatus(QueryVersion queryVersion, ProcStatusEnum status) {
+        queryVersion = getStatisticalResourcesPersistedDoMocks().mockQueryVersion(queryVersion);
+
+        switch (status) {
+            case PRODUCTION_VALIDATION:
+                QueryLifecycleTestUtils.fillAsProductionValidation(queryVersion);
+                break;
+            case DIFFUSION_VALIDATION:
+                QueryLifecycleTestUtils.fillAsDiffusionValidation(queryVersion);
+                break;
+            case VALIDATION_REJECTED:
+                QueryLifecycleTestUtils.fillAsValidationRejected(queryVersion);
+                break;
+            case PUBLISHED:
+                QueryLifecycleTestUtils.fillAsPublished(queryVersion);
+                break;
+            case PUBLISHED_NOT_VISIBLE:
+                throw new IllegalArgumentException("Unsupported status not visible, set first the ValidFrom to the future and use status PUBLISHED");
+            case DRAFT:
+                break;
+            default:
+                throw new IllegalArgumentException("Unsupported status " + status);
+        }
+        return queryVersion;
+    }
     // -----------------------------------------------------------------
     // LIFE CYCLE PREPARATIONS
     // -----------------------------------------------------------------

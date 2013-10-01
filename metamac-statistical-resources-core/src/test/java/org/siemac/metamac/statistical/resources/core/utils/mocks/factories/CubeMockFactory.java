@@ -7,21 +7,23 @@ import org.siemac.metamac.statistical.resources.core.utils.mocks.configuration.M
 @MockProvider
 public class CubeMockFactory extends StatisticalResourcesMockFactory<Cube> {
 
-    public static final String     CUBE_01_BASIC_NAME               = "CUBE_01_BASIC";
+    public static final String     CUBE_01_BASIC_NAME                           = "CUBE_01_BASIC";
 
-    public static final String     CUBE_02_BASIC_NAME               = "CUBE_02_BASIC";
+    public static final String     CUBE_02_BASIC_NAME                           = "CUBE_02_BASIC";
 
-    public static final String     CUBE_03_BASIC_NAME               = "CUBE_03_BASIC";
+    public static final String     CUBE_03_BASIC_NAME                           = "CUBE_03_BASIC";
 
-    public static final String     CUBE_04_DATASET_NAME             = "CUBE_04_DATASET";
+    public static final String     CUBE_04_DATASET_NAME                         = "CUBE_04_DATASET";
 
-    public static final String     CUBE_05_QUERY_NAME               = "CUBE_05_QUERY";
+    public static final String     CUBE_05_QUERY_NAME                           = "CUBE_05_QUERY";
 
-    public static final String     CUBE_06_DATASET_WITH_PARENT_NAME = "CUBE_06_DATASET_WITH_PARENT";
+    public static final String     CUBE_06_DATASET_WITH_PARENT_NAME             = "CUBE_06_DATASET_WITH_PARENT";
 
-    public static final String     CUBE_07_QUERY_WITH_PARENT_NAME   = "CUBE_07_QUERY_WITH_PARENT";
+    public static final String     CUBE_07_QUERY_WITH_PARENT_NAME               = "CUBE_07_QUERY_WITH_PARENT";
 
-    private static CubeMockFactory instance                         = null;
+    public static final String     CUBE_08_EMPTY_IN_PUBLICATION_VERSION_90_NAME = "CUBE_08_EMPTY_IN_PUBLICATION_VERSION_90";
+
+    private static CubeMockFactory instance                                     = null;
 
     private CubeMockFactory() {
     }

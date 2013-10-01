@@ -35,6 +35,11 @@ public class ServiceExceptionType extends CommonServiceExceptionType {
     public static final CommonServiceExceptionType PUBLICATION_MAX_REACHED_IN_OPERATION                                   = create("exception.resources.publication.max_reached_in_operation");
     public static final CommonServiceExceptionType PUBLICATION_VERSION_ALREADY_BEEN_REPLACED_BY_OTHER_PUBLICATION_VERSION = create("exception.resources.publication_version_already_been_replaced_by_other_publication_version");
     public static final CommonServiceExceptionType PUBLICATION_VERSION_CANT_REPLACE_ITSELF                                = create("exception.resources.publication_version_cant_replace_itself");
+    public static final CommonServiceExceptionType PUBLICATION_VERSION_MUST_HAVE_AT_LEAST_ONE_CUBE                        = create("exception.resources.publication_version_must_have_at_least_one_cube");
+    public static final CommonServiceExceptionType PUBLICATION_VERSION_CHAPTER_MUST_HAVE_AT_LEAST_ONE_CUBE                = create("exception.resources.publication_version.chapter_must_have_at_least_one_cube");
+    public static final CommonServiceExceptionType PUBLICATION_VERSION_CUBE_MUST_LINK_TO_DATASET_OR_QUERY                 = create("exception.resources.publication_version.cube_must_link_to_dataset_or_query");
+    public static final CommonServiceExceptionType PUBLICATION_VERSION_LINKED_TO_NOT_PUBLISHED_DATASET                    = create("exception.resources.publication_version_linked_to_dataset_with_no_published_version");
+    public static final CommonServiceExceptionType PUBLICATION_VERSION_LINKED_TO_NOT_PUBLISHED_QUERY                      = create("exception.resources.publication_version_linked_to_query_not_published");
 
     // Chapter
     public static final CommonServiceExceptionType CHAPTER_NOT_FOUND                                                      = create("exception.resources.chapter.not_found");

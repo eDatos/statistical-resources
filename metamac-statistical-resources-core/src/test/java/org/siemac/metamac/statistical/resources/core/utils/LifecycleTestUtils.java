@@ -161,13 +161,18 @@ public class LifecycleTestUtils {
 
         lifeCycleStatisticalResource.setProcStatus(ProcStatusEnum.PUBLISHED);
 
-        if (lifeCycleStatisticalResource.getPublicationDate() == null) {
-            lifeCycleStatisticalResource.setPublicationDate(new DateTime());
-        }
-
         if (lifeCycleStatisticalResource.getValidFrom() == null) {
             lifeCycleStatisticalResource.setValidFrom(new DateTime());
         }
+
+        if (lifeCycleStatisticalResource.getPublicationDate() == null) {
+            if (!lifeCycleStatisticalResource.getValidFrom().isAfterNow()) {
+                lifeCycleStatisticalResource.setPublicationDate(lifeCycleStatisticalResource.getValidFrom());
+            } else {
+                lifeCycleStatisticalResource.setPublicationDate(new DateTime());
+            }
+        }
+
         if (lifeCycleStatisticalResource.getPublicationUser() == null) {
             lifeCycleStatisticalResource.setPublicationUser("PUBLISHING_USER");
         }

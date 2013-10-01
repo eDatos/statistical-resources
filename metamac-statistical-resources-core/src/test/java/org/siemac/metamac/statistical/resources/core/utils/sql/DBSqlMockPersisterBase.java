@@ -2,8 +2,6 @@ package org.siemac.metamac.statistical.resources.core.utils.sql;
 
 import java.io.FileInputStream;
 import java.net.URL;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -19,7 +17,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.TransactionCallbackWithoutResult;
@@ -48,7 +45,7 @@ public abstract class DBSqlMockPersisterBase extends DBMockPersisterBase {
         logger.info("Transforming mocks ... " + mocks.size());
         List<EntityMetadata> mocksMetadata = getMocksMetadata(mocks);
 
-        final List<TableMetadata> tableMetadatas = transformEntityToTableMetadata(mocksMetadata);
+        final List<TableMetadata> tableMetadatas = transformEntitiesToTableMetadatas(mocksMetadata);
 
         restartSequences();
 
@@ -67,7 +64,7 @@ public abstract class DBSqlMockPersisterBase extends DBMockPersisterBase {
                     cleanDatabase();
                     long timeAfterClean = System.currentTimeMillis();
                     logger.info("Cleaning database time: " + (timeAfterClean - timeInit));
-                    populateDatabaseBatch(tableMetadatas);
+                    populateDatabase(tableMetadatas);
                     long timeAfterPopulate = System.currentTimeMillis();
                     logger.info("Populate database time: " + (timeAfterPopulate - timeAfterClean));
                 } catch (Exception e) {
@@ -91,13 +88,15 @@ public abstract class DBSqlMockPersisterBase extends DBMockPersisterBase {
         logger.info("Mocks persisted in " + tableMetadatas.size() + " rows");
     }
 
-    private List<TableMetadata> transformEntityToTableMetadata(List<EntityMetadata> mocksMetadata) {
+    private List<TableMetadata> transformEntitiesToTableMetadatas(List<EntityMetadata> mocksMetadata) {
         List<TableMetadata> transformList = new ArrayList<TableMetadata>();
         for (EntityMetadata entity : mocksMetadata) {
-            transformList.add(new SqlTableMetadata(entity));
+            transformList.add(transformEntityToTableMetadata(entity));
         }
         return transformList;
     }
+
+    protected abstract TableMetadata transformEntityToTableMetadata(EntityMetadata entity);
 
     protected void cleanDatabase() {
         List<String> tables = getTableOrder();
@@ -191,7 +190,7 @@ public abstract class DBSqlMockPersisterBase extends DBMockPersisterBase {
         return null;
     }
 
-    private List<String> getTableOrder() {
+    protected List<String> getTableOrder() {
         if (tableOrder == null) {
             try {
                 URL url = this.getClass().getResource("/dbunit/oracle.properties");
