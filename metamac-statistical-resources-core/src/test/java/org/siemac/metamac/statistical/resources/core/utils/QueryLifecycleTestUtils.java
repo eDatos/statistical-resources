@@ -80,8 +80,6 @@ public class QueryLifecycleTestUtils {
 
     private static boolean isDatasetVersionPublishedVisibleBeforeQuery(DatasetVersion datasetVersion, QueryVersion queryVersion) {
         if (ProcStatusEnum.PUBLISHED.equals(datasetVersion.getSiemacMetadataStatisticalResource().getProcStatus())) {
-            System.out.println("Compare query time " + queryVersion.getLifeCycleStatisticalResource().getValidFrom() + " with DV :"
-                    + datasetVersion.getSiemacMetadataStatisticalResource().getValidFrom());
             if (!datasetVersion.getSiemacMetadataStatisticalResource().getValidFrom().isAfter(queryVersion.getLifeCycleStatisticalResource().getValidFrom())) {
                 return true;
             }
