@@ -1,6 +1,9 @@
 package org.siemac.metamac.statistical.resources.core.error;
 
+import java.util.List;
+
 import org.siemac.metamac.core.common.exception.CommonServiceExceptionType;
+import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 
 public class ServiceExceptionType extends CommonServiceExceptionType {
 
@@ -52,6 +55,11 @@ public class ServiceExceptionType extends CommonServiceExceptionType {
     public static final CommonServiceExceptionType QUERY_NOT_FOUND                                                        = create("exception.resources.query.not_found");
     public static final CommonServiceExceptionType QUERY_LAST_VERSION_NOT_FOUND                                           = create("exception.resources.query.last_version_not_found");
     public static final CommonServiceExceptionType QUERY_VERSION_NOT_COMPATIBLE_WITH_DATASET                              = create("exception.resources.query_version.not_compatible");
+    public static final CommonServiceExceptionType QUERY_VERSION_NOT_COMPATIBLE_WITH_LAST_PUBLISHED_DATASET_VERSION       = create("exception.resources.query_version.not_compatible_last_published_dataset_version");
+    public static final CommonServiceExceptionType QUERY_VERSION_DATASET_VERSION_MUST_BE_PUBLISHED                        = create("exception.resources.query_version.dataset_version_must_be_published");
+    public static final CommonServiceExceptionType QUERY_VERSION_DATASET_WITH_NO_PUBLISHED_VERSION                        = create("exception.resources.query_version.dataset_with_no_published_version");
+    public static final CommonServiceExceptionType QUERY_VERSION_PUBLISH_INVALID_STATUS                                   = create("exception.resources.query_version.publish_invalid_status");
+    public static final CommonServiceExceptionType QUERY_VERSION_PUBLISH_MUST_LINK_TO_DATASET                             = create("exception.resources.query_version.publish_must_link_to_dataset");
 
     // Identifiable Statistical Resource
     public static final CommonServiceExceptionType IDENTIFIABLE_STATISTICAL_RESOURCE_NOT_FOUND                            = create("exception.resources.identifiable_statistical_resource.not_found");

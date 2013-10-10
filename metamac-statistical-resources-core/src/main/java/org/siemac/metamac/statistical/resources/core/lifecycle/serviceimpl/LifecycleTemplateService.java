@@ -1,5 +1,7 @@
 package org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl;
 
+import static org.siemac.metamac.statistical.resources.core.error.utils.ServiceExceptionParametersUtils.addParameter;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,6 +14,7 @@ import org.siemac.metamac.statistical.resources.core.base.domain.HasLifecycle;
 import org.siemac.metamac.statistical.resources.core.base.domain.HasSiemacMetadata;
 import org.siemac.metamac.statistical.resources.core.base.validators.ProcStatusValidator;
 import org.siemac.metamac.statistical.resources.core.common.utils.RelatedResourceUtils;
+import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionSingleParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.lifecycle.LifecycleChecker;
 import org.siemac.metamac.statistical.resources.core.lifecycle.LifecycleFiller;
@@ -254,7 +257,7 @@ public abstract class LifecycleTemplateService<E extends Object> implements Life
         checkSendToPublishedLinkedStatisticalResource(resource, previousResource, exceptions);
 
         checkResourceMetadataAllActions(ctx, resource, exceptions);
-        checkSendToPublishedResource(resource, exceptions);
+        checkSendToPublishedResource(ctx, resource, exceptions);
 
         ExceptionUtils.throwIfException(exceptions);
     }
@@ -273,7 +276,8 @@ public abstract class LifecycleTemplateService<E extends Object> implements Life
         if (resource instanceof HasSiemacMetadata) {
             siemacLifecycleChecker.checkSendToPublished((HasSiemacMetadata) resource, (HasSiemacMetadata) previousResource, getResourceMetadataName(), exceptionItems);
         } else if (resource instanceof HasLifecycle) {
-            lifecycleChecker.checkSendToPublished((HasLifecycle) resource, (HasSiemacMetadata) previousResource, getResourceMetadataName(), exceptionItems);
+            lifecycleChecker.checkSendToPublished((HasLifecycle) resource, (HasLifecycle) previousResource,
+                    addParameter(getResourceMetadataName(), ServiceExceptionSingleParameters.LIFE_CYCLE_STATISTICAL_RESOURCE), exceptionItems);
         } else {
             throw new MetamacException(ServiceExceptionType.UNKNOWN, "Found an unknown resource type sending to published");
         }
@@ -301,7 +305,7 @@ public abstract class LifecycleTemplateService<E extends Object> implements Life
         }
     }
 
-    protected abstract void checkSendToPublishedResource(E resource, List<MetamacExceptionItem> exceptionItems) throws MetamacException;
+    protected abstract void checkSendToPublishedResource(ServiceContext ctx, E resource, List<MetamacExceptionItem> exceptionItems) throws MetamacException;
 
     protected abstract void applySendToPublishedCurrentResource(ServiceContext ctx, E resource, E previousResource) throws MetamacException;
 

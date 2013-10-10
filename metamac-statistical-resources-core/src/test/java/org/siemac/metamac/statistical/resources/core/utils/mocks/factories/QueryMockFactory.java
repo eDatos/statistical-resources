@@ -109,7 +109,7 @@ public class QueryMockFactory extends StatisticalResourcesMockFactory<Query> {
     }
 
     private static Query getQuery03With2QueryVersions() {
-        Query query = createQueryWithoutGeneratedVersion();
+        Query query = generateQueryWithoutGeneratedVersion();
 
         Dataset dataset = DatasetMockFactory.createPublishedAndDraftVersionsForDataset(1);
 
@@ -150,7 +150,7 @@ public class QueryMockFactory extends StatisticalResourcesMockFactory<Query> {
     }
 
     private static Query getQuery04With1QueryVersions() {
-        Query query = createQueryWithoutGeneratedVersion();
+        Query query = generateQueryWithoutGeneratedVersion();
         QueryVersion queryVersion = mockQuery04V01(query, getStatisticalResourcesPersistedDoMocks().mockDatasetVersion());
         return query;
     }
@@ -165,11 +165,11 @@ public class QueryMockFactory extends StatisticalResourcesMockFactory<Query> {
     }
 
     private static Query getQuery05WithMultiplePublishedVersions() {
-        Query query = createQueryWithoutGeneratedVersion();
+        Query query = generateQueryWithoutGeneratedVersion();
 
         DatasetVersion datasetVersion = getStatisticalResourcesPersistedDoMocks().mockDatasetVersion();
         datasetVersion.getSiemacMetadataStatisticalResource().setValidFrom(new DateTime().minusDays(1));
-        StatisticalResourcesPersistedDoMocks.mockDatasetVersionCoveragesAndRelated(datasetVersion);
+        StatisticalResourcesPersistedDoMocks.mockDatasetVersionCoverages(datasetVersion);
         DatasetLifecycleTestUtils.fillAsPublished(datasetVersion);
 
         Dataset dataset = datasetVersion.getDataset();
@@ -216,10 +216,10 @@ public class QueryMockFactory extends StatisticalResourcesMockFactory<Query> {
     }
 
     private static Query getQuery06WithMultiplePublishedVersionsAndLatestNoVisible() {
-        Query query = createQueryWithoutGeneratedVersion();
+        Query query = generateQueryWithoutGeneratedVersion();
 
         DatasetVersion datasetVersion = getStatisticalResourcesPersistedDoMocks().mockDatasetVersion();
-        StatisticalResourcesPersistedDoMocks.mockDatasetVersionCoveragesAndRelated(datasetVersion);
+        StatisticalResourcesPersistedDoMocks.mockDatasetVersionCoverages(datasetVersion);
         DatasetLifecycleTestUtils.fillAsPublished(datasetVersion);
 
         QueryVersion queryV01 = mockQuery06V01(query, datasetVersion.getDataset(), datasetVersion.getSiemacMetadataStatisticalResource().getValidFrom());
@@ -258,7 +258,7 @@ public class QueryMockFactory extends StatisticalResourcesMockFactory<Query> {
     }
 
     private static Query getQuery07SimpleMultiVersion() {
-        Query query = createQueryWithoutGeneratedVersion();
+        Query query = generateQueryWithoutGeneratedVersion();
 
         DatasetVersion datasetVersion = DatasetVersionMockFactory.createDatasetVersionInStatusWithGeneratedDatasource(1, ProcStatusEnum.DRAFT);
         registerDatasetVersionMock(DATASET_VERSION_56_DRAFT_WITH_DATASOURCE_AND_QUERIES_NAME, datasetVersion);
@@ -277,7 +277,7 @@ public class QueryMockFactory extends StatisticalResourcesMockFactory<Query> {
     }
 
     private static Query getQuery08SingleVersionUsedInMultiplePublications() {
-        Query query = createQueryWithoutGeneratedVersion();
+        Query query = generateQueryWithoutGeneratedVersion();
 
         DatasetVersion datasetVersion = generateDatasetVersionWithCoverages();
 
@@ -290,7 +290,7 @@ public class QueryMockFactory extends StatisticalResourcesMockFactory<Query> {
     }
 
     public static MockDescriptor getQuery10SingleVersionDraftUsedInPublications() {
-        Query query = createQueryWithoutGeneratedVersion();
+        Query query = generateQueryWithoutGeneratedVersion();
 
         DatasetVersion datasetVersion = generateDatasetVersionWithCoverages();
 
@@ -306,7 +306,7 @@ public class QueryMockFactory extends StatisticalResourcesMockFactory<Query> {
     }
 
     public static MockDescriptor getQuery11SingleVersionNotVisibleUsedInPublications() {
-        Query query = createQueryWithoutGeneratedVersion();
+        Query query = generateQueryWithoutGeneratedVersion();
 
         DatasetVersion datasetVersion = generateDatasetVersionWithCoverages();
         DatasetLifecycleTestUtils.fillAsPublished(datasetVersion);
@@ -331,7 +331,7 @@ public class QueryMockFactory extends StatisticalResourcesMockFactory<Query> {
     }
 
     public static MockDescriptor getQuery12SingleVersionPublishedUsedInPublicationsWithSingleVersions() {
-        Query query = createQueryWithoutGeneratedVersion();
+        Query query = generateQueryWithoutGeneratedVersion();
 
         DatasetVersion datasetVersion = generateDatasetVersionWithCoverages();
         DatasetLifecycleTestUtils.fillAsPublished(datasetVersion);
@@ -353,7 +353,7 @@ public class QueryMockFactory extends StatisticalResourcesMockFactory<Query> {
     }
 
     public static MockDescriptor getQuery13SingleVersionPublishedUsedInPublicationsLinkOnlyLastVersions() {
-        Query query = createQueryWithoutGeneratedVersion();
+        Query query = generateQueryWithoutGeneratedVersion();
 
         DatasetVersion datasetVersion = generateDatasetVersionWithCoverages();
         DatasetLifecycleTestUtils.fillAsPublished(datasetVersion);
@@ -377,7 +377,7 @@ public class QueryMockFactory extends StatisticalResourcesMockFactory<Query> {
     }
 
     public static MockDescriptor getQuery14SingleVersionPublishedUsedInPublicationsLinkOnlyPreviousVersions() {
-        Query query = createQueryWithoutGeneratedVersion();
+        Query query = generateQueryWithoutGeneratedVersion();
 
         DatasetVersion datasetVersion = generateDatasetVersionWithCoverages();
         DatasetLifecycleTestUtils.fillAsPublished(datasetVersion);
@@ -401,7 +401,7 @@ public class QueryMockFactory extends StatisticalResourcesMockFactory<Query> {
     }
 
     public static MockDescriptor getQuery15SingleVersionPublishedUsedInPublicationsLinkBothVersions() {
-        Query query = createQueryWithoutGeneratedVersion();
+        Query query = generateQueryWithoutGeneratedVersion();
 
         DatasetVersion datasetVersion = generateDatasetVersionWithCoverages();
         DatasetLifecycleTestUtils.fillAsPublished(datasetVersion);
@@ -497,7 +497,7 @@ public class QueryMockFactory extends StatisticalResourcesMockFactory<Query> {
 
     private static DatasetVersion generateDatasetVersionWithCoverages() {
         DatasetVersion datasetVersion = DatasetMockFactory.generateDatasetWithGeneratedVersion().getVersions().get(0);
-        StatisticalResourcesPersistedDoMocks.mockDatasetVersionCoveragesAndRelated(datasetVersion);
+        StatisticalResourcesPersistedDoMocks.mockDatasetVersionCoverages(datasetVersion);
         return datasetVersion;
     }
 
@@ -539,7 +539,7 @@ public class QueryMockFactory extends StatisticalResourcesMockFactory<Query> {
         return getStatisticalResourcesPersistedDoMocks().mockQueryWithGeneratedQueryVersion();
     }
 
-    private static Query createQueryWithoutGeneratedVersion() {
+    public static Query generateQueryWithoutGeneratedVersion() {
         return getStatisticalResourcesPersistedDoMocks().mockQuery(new QueryMock());
     }
 

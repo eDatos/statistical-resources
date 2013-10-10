@@ -128,7 +128,7 @@ public class DatasetMockFactory extends StatisticalResourcesMockFactory<Dataset>
         templateV1.addDatasource(DatasourceMockFactory.generateSimpleDatasource());
         templateV1.addDatasource(DatasourceMockFactory.generateSimpleDatasource());
 
-        StatisticalResourcesPersistedDoMocks.mockDatasetVersionCoveragesAndRelated(templateV1);
+        StatisticalResourcesPersistedDoMocks.mockDatasetVersionCoverages(templateV1);
         DatasetVersion datasetVersionV1 = getStatisticalResourcesPersistedDoMocks().mockDatasetVersion(templateV1);
         DatasetLifecycleTestUtils.prepareToVersioning(datasetVersionV1);
         registerDatasetVersionMock(DATASET_VERSION_03_FOR_DATASET_03_NAME, datasetVersionV1);
@@ -287,7 +287,7 @@ public class DatasetMockFactory extends StatisticalResourcesMockFactory<Dataset>
 
     private static MockDescriptor getDataset10WithDraftVersionWithOneQueryLinkedToDataset() {
         DatasetVersion datasetVersion = generateDatasetWithGeneratedVersion().getVersions().get(0);
-        StatisticalResourcesPersistedDoMocks.mockDatasetVersionCoveragesAndRelated(datasetVersion);
+        StatisticalResourcesPersistedDoMocks.mockDatasetVersionCoverages(datasetVersion);
 
         QueryVersion query01 = buildQueryLinkedToDataset("Q01", datasetVersion.getDataset());
 
@@ -564,7 +564,7 @@ public class DatasetMockFactory extends StatisticalResourcesMockFactory<Dataset>
         // V02
         DatasetVersionMock templateLatest = DatasetVersionMockFactory.buildSimpleVersion(dataset, SECOND_VERSION);
         templateLatest.getSiemacMetadataStatisticalResource().setLastVersion(true);
-        StatisticalResourcesPersistedDoMocks.mockDatasetVersionCoveragesAndRelated(templateLatest);
+        StatisticalResourcesPersistedDoMocks.mockDatasetVersionCoverages(templateLatest);
         DatasetVersion datasetVersionLatest = getStatisticalResourcesPersistedDoMocks().mockDatasetVersion(templateLatest);
 
         datasetVersionLatest.getSiemacMetadataStatisticalResource().setReplacesVersion(StatisticalResourcesNotPersistedDoMocks.mockRelatedResourceLinkedToDatasetVersion(datasetVersionPublished));

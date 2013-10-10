@@ -17,7 +17,7 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_33_CHECK_COMPAT_DATASET_86_INVALID_LATEST_TEMPORAL_CODE_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_34_CHECK_COMPAT_DATASET_87_INVALID_QUERY_TYPE_AUTOINC_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_35_CHECK_COMPAT_DATASET_87_INVALID_QUERY_TYPE_LATEST_DATA_NAME;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.buildQueryVersionMockSimple;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.buildQueryVersionMockSimpleWithFixedDatasetVersion;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.buildSelectionItemWithDimensionAndCodes;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.createQueryVersionFromTemplate;
 
@@ -862,7 +862,7 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
         // OK
         QueryVersion queryOk = null;
         {
-            QueryVersionMock queryMock = buildQueryVersionMockSimple("QUERY_01");
+            QueryVersionMock queryMock = buildQueryVersionMockSimpleWithFixedDatasetVersion("QUERY_01");
             queryMock.addSelection(buildSelectionItemWithDimensionAndCodes("DIM_01", "D1_C01"));
             queryMock.addSelection(buildSelectionItemWithDimensionAndCodes("DIM_02", "D2_C01"));
             queryMock.addSelection(buildSelectionItemWithDimensionAndCodes("TIME_PERIOD", "2010", "2011"));
@@ -873,7 +873,7 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
         // Less dimensions than Dataset
         QueryVersion queryLessDimensions = null;
         {
-            QueryVersionMock queryMock = buildQueryVersionMockSimple("QUERY_01");
+            QueryVersionMock queryMock = buildQueryVersionMockSimpleWithFixedDatasetVersion("QUERY_01");
             queryMock.addSelection(buildSelectionItemWithDimensionAndCodes("DIM_01", "D1_C01"));
             queryMock.addSelection(buildSelectionItemWithDimensionAndCodes("TIME_PERIOD", "2010", "2011"));
             queryLessDimensions = createQueryVersionFromTemplate(queryMock);
@@ -883,7 +883,7 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
         // More dimensions in query
         QueryVersion queryMoreDimensions = null;
         {
-            QueryVersionMock queryMock = buildQueryVersionMockSimple("QUERY_02");
+            QueryVersionMock queryMock = buildQueryVersionMockSimpleWithFixedDatasetVersion("QUERY_02");
             queryMock.addSelection(buildSelectionItemWithDimensionAndCodes("DIM_01", "D1_C01"));
             queryMock.addSelection(buildSelectionItemWithDimensionAndCodes("DIM_02", "D1_C02"));
             queryMock.addSelection(buildSelectionItemWithDimensionAndCodes("DIM_NOT_IN_DATASET", "CODE"));
@@ -895,7 +895,7 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
         // NOT EXISTANT CODES
         QueryVersion queryMoreCodes = null;
         {
-            QueryVersionMock queryMock = buildQueryVersionMockSimple("QUERY_03");
+            QueryVersionMock queryMock = buildQueryVersionMockSimpleWithFixedDatasetVersion("QUERY_03");
             queryMock.addSelection(buildSelectionItemWithDimensionAndCodes("DIM_01", "D1_C01", "MADE_UP_CODE"));
             queryMock.addSelection(buildSelectionItemWithDimensionAndCodes("DIM_02", "D1_C02"));
             queryMock.addSelection(buildSelectionItemWithDimensionAndCodes("TIME_PERIOD", "2010", "2011"));
@@ -906,7 +906,7 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
         // LATEST TEMPORAL CODE DOES NOT EXIST
         QueryVersion queryInvalidLatestTemporalCode = null;
         {
-            QueryVersionMock queryMock = buildQueryVersionMockSimple("QUERY_04");
+            QueryVersionMock queryMock = buildQueryVersionMockSimpleWithFixedDatasetVersion("QUERY_04");
             queryMock.setType(QueryTypeEnum.AUTOINCREMENTAL);
             queryMock.setLatestTemporalCodeInCreation("2012"); // Not exists 2012 in dataset
             queryMock.addSelection(buildSelectionItemWithDimensionAndCodes("DIM_01", "D1_C01"));
@@ -927,7 +927,7 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
 
         QueryVersion queryMoreDimensionsAutoInc = null;
         {
-            QueryVersionMock queryMock = buildQueryVersionMockSimple("QUERY_01");
+            QueryVersionMock queryMock = buildQueryVersionMockSimpleWithFixedDatasetVersion("QUERY_01");
             queryMock.setType(QueryTypeEnum.AUTOINCREMENTAL);
             queryMock.setLatestTemporalCodeInCreation("2012");
             queryMock.addSelection(buildSelectionItemWithDimensionAndCodes("DIM_01", "D1_C01"));
@@ -939,7 +939,7 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
 
         QueryVersion queryLatestData = null;
         {
-            QueryVersionMock queryMock = buildQueryVersionMockSimple("QUERY_02");
+            QueryVersionMock queryMock = buildQueryVersionMockSimpleWithFixedDatasetVersion("QUERY_02");
             queryMock.setType(QueryTypeEnum.LATEST_DATA);
             queryMock.setLatestDataNumber(5);
             queryMock.addSelection(buildSelectionItemWithDimensionAndCodes("DIM_01", "D1_C01"));

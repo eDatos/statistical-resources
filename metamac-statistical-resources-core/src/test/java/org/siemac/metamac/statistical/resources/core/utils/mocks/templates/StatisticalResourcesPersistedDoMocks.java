@@ -84,7 +84,7 @@ public class StatisticalResourcesPersistedDoMocks extends StatisticalResourcesDo
         queryVersionTemplate.getLifeCycleStatisticalResource().setCode(query.getIdentifiableStatisticalResource().getCode());
         queryVersionTemplate.getLifeCycleStatisticalResource().setMaintainer(mockAgencyExternalItem(maintainerId, maintainerId));
         DatasetVersion datasetVersion = mockDatasetVersion();
-        StatisticalResourcesPersistedDoMocks.mockDatasetVersionCoveragesAndRelated(datasetVersion);
+        StatisticalResourcesPersistedDoMocks.mockDatasetVersionCoverages(datasetVersion);
         queryVersionTemplate.setDataset(datasetVersion.getDataset());
         queryVersionTemplate.setStatus(QueryStatusEnum.ACTIVE);
 
@@ -296,7 +296,7 @@ public class StatisticalResourcesPersistedDoMocks extends StatisticalResourcesDo
         return datasetVersion;
     }
 
-    public static void mockDatasetVersionCoveragesAndRelated(DatasetVersion datasetVersion) {
+    public static void mockDatasetVersionCoverages(DatasetVersion datasetVersion) {
         datasetVersion.getDimensionsCoverage().clear();
 
         datasetVersion.addDimensionsCoverage(new CodeDimension("DIM01", "C01"));

@@ -5,14 +5,22 @@ import static org.siemac.metamac.statistical.resources.core.constants.Statistica
 import java.util.List;
 
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
+import org.joda.time.DateTime;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.core.common.util.GeneratorUrnUtils;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionRepository;
+import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
+import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryStatusEnum;
+import org.siemac.metamac.statistical.resources.core.enume.utils.ProcStatusEnumUtils;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
+import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.lifecycle.LifecycleCommonMetadataChecker;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.LifecycleTemplateService;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersionRepository;
+import org.siemac.metamac.statistical.resources.core.query.serviceapi.QueryService;
 import org.siemac.metamac.statistical.resources.core.query.utils.QueryVersioningCopyUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,6 +33,12 @@ public class QueryLifecycleServiceImpl extends LifecycleTemplateService<QueryVer
 
     @Autowired
     private QueryVersionRepository         queryVersionRepository;
+
+    @Autowired
+    private QueryService                   queryService;
+
+    @Autowired
+    private DatasetVersionRepository       datasetVersionRepository;
 
     @Override
     protected String getResourceMetadataName() throws MetamacException {
@@ -79,22 +93,60 @@ public class QueryLifecycleServiceImpl extends LifecycleTemplateService<QueryVer
 
     @Override
     protected void applySendToPublishedCurrentResource(ServiceContext ctx, QueryVersion resource, QueryVersion previousResource) throws MetamacException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Not implemented");
+        // nothing to do
     }
 
     @Override
     protected void applySendToPublishedPreviousResource(ServiceContext ctx, QueryVersion resource) throws MetamacException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Not implemented");
+        throw new UnsupportedOperationException("Can not publish a query with previous published version");
     }
 
     @Override
-    protected void checkSendToPublishedResource(QueryVersion resource, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Not implemented");
+    protected void checkSendToPublishedResource(ServiceContext ctx, QueryVersion resource, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
+        if (!QueryStatusEnum.ACTIVE.equals(resource.getStatus()) && !QueryStatusEnum.DISCONTINUED.equals(resource.getStatus())) {
+            exceptionItems.add(new MetamacExceptionItem(ServiceExceptionType.QUERY_VERSION_PUBLISH_INVALID_STATUS, resource.getLifeCycleStatisticalResource().getUrn()));
+        }
+        if (resource.getDataset() != null) {
+            checkLinkedDatasetPublishedOrVisibleBeforeQuery(ctx, resource, exceptionItems);
+        } else if (resource.getFixedDatasetVersion() != null) {
+            checkLinkedDatasetVersionPublishedOrVisibleBeforeQuery(resource, exceptionItems);
+        } else {
+            exceptionItems.add(new MetamacExceptionItem(ServiceExceptionType.QUERY_VERSION_PUBLISH_MUST_LINK_TO_DATASET, resource.getLifeCycleStatisticalResource().getUrn()));
+        }
     }
 
+    private void checkLinkedDatasetPublishedOrVisibleBeforeQuery(ServiceContext ctx, QueryVersion resource, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
+        String datasetUrn = resource.getDataset().getIdentifiableStatisticalResource().getUrn();
+        DatasetVersion lastVersion = datasetVersionRepository.retrieveLastVersion(datasetUrn);
+
+        if (!isDatasetVersionPublishedAndVisibleBeforeOrEqualDate(lastVersion, resource.getLifeCycleStatisticalResource().getValidFrom())) {
+            DatasetVersion lastPublishedVersion = datasetVersionRepository.retrieveLastPublishedVersion(datasetUrn);
+            if (lastPublishedVersion != null) {
+                if (!queryService.checkQueryCompatibility(ctx, resource, lastPublishedVersion)) {
+                    exceptionItems.add(new MetamacExceptionItem(ServiceExceptionType.QUERY_VERSION_NOT_COMPATIBLE_WITH_LAST_PUBLISHED_DATASET_VERSION, datasetUrn));
+                }
+            } else {
+                exceptionItems.add(new MetamacExceptionItem(ServiceExceptionType.QUERY_VERSION_DATASET_WITH_NO_PUBLISHED_VERSION, datasetUrn));
+            }
+        }
+    }
+
+    private void checkLinkedDatasetVersionPublishedOrVisibleBeforeQuery(QueryVersion resource, List<MetamacExceptionItem> exceptionItems) {
+        String datasetVersionUrn = resource.getFixedDatasetVersion().getSiemacMetadataStatisticalResource().getUrn();
+        if (!isDatasetVersionPublishedAndVisibleBeforeOrEqualDate(resource.getFixedDatasetVersion(), resource.getLifeCycleStatisticalResource().getValidFrom())) {
+            exceptionItems.add(new MetamacExceptionItem(ServiceExceptionType.QUERY_VERSION_DATASET_VERSION_MUST_BE_PUBLISHED, datasetVersionUrn));
+        }
+    }
+
+    private boolean isDatasetVersionPublishedAndVisibleBeforeOrEqualDate(DatasetVersion datasetVersion, DateTime date) {
+        if (ProcStatusEnumUtils.isInAnyProcStatus(datasetVersion, ProcStatusEnum.PUBLISHED, ProcStatusEnum.PUBLISHED_NOT_VISIBLE)) {
+            if (!datasetVersion.getSiemacMetadataStatisticalResource().getValidFrom().isAfter(date)) {
+                System.out.println("Dataset date " + datasetVersion.getSiemacMetadataStatisticalResource().getValidFrom() + " query date " + date);
+                return true;
+            }
+        }
+        return false;
+    }
     // ------------------------------------------------------------------------------------------------------
     // >> VERSIONING
     // ------------------------------------------------------------------------------------------------------

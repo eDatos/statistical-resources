@@ -66,8 +66,7 @@ public class DatasetVersionRepositoryImpl extends DatasetVersionRepositoryBase {
     public DatasetVersion retrieveLastVersion(String datasetUrn) throws MetamacException {
         // Prepare criteria
         List<ConditionalCriteria> conditions = ConditionalCriteriaBuilder.criteriaFor(DatasetVersion.class).withProperty(DatasetVersionProperties.dataset().identifiableStatisticalResource().urn())
-                .eq(datasetUrn).orderBy(CriteriaUtils.getDatetimedLeafProperty(DatasetVersionProperties.siemacMetadataStatisticalResource().creationDate(), DatasetVersion.class)).descending()
-                .distinctRoot().build();
+                .eq(datasetUrn).and().withProperty(DatasetVersionProperties.siemacMetadataStatisticalResource().lastVersion()).eq(Boolean.TRUE).distinctRoot().build();
 
         PagingParameter paging = PagingParameter.rowAccess(0, 1);
         // Find

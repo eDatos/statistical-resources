@@ -26,7 +26,7 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryMockFactory.QUERY_20_PUBLISHED_NOT_VISIBLE_USED_IN_PUBLICATION_VERSION_86_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryMockFactory.createPublishedQueryLinkedToDataset;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryMockFactory.generateQueryWithGeneratedVersion;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.buildQueryVersionMockSimple;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.buildQueryVersionMockSimpleWithFixedDatasetVersion;
 
 import java.util.Arrays;
 import java.util.List;
@@ -566,16 +566,16 @@ public class PublicationVersionMockFactory extends StatisticalResourcesMockFacto
 
         // queries
 
-        Query queryDraft = QueryVersionMockFactory.createQueryVersionInStatus(buildQueryVersionMockSimple("Q01"), ProcStatusEnum.DRAFT).getQuery();
+        Query queryDraft = QueryVersionMockFactory.createQueryVersionInStatus(buildQueryVersionMockSimpleWithFixedDatasetVersion("Q01"), ProcStatusEnum.DRAFT).getQuery();
         registerQueryMock(QUERY_16_DRAFT_USED_IN_PUBLICATION_VERSION_86_NAME, queryDraft);
 
-        Query queryProductionValidation = QueryVersionMockFactory.createQueryVersionInStatus(buildQueryVersionMockSimple("Q02"), ProcStatusEnum.PRODUCTION_VALIDATION).getQuery();
+        Query queryProductionValidation = QueryVersionMockFactory.createQueryVersionInStatus(buildQueryVersionMockSimpleWithFixedDatasetVersion("Q02"), ProcStatusEnum.PRODUCTION_VALIDATION).getQuery();
         registerQueryMock(QUERY_17_PRODUCTION_VALIDATION_USED_IN_PUBLICATION_VERSION_86_NAME, queryProductionValidation);
 
-        Query queryDiffusionValidation = QueryVersionMockFactory.createQueryVersionInStatus(buildQueryVersionMockSimple("Q03"), ProcStatusEnum.DIFFUSION_VALIDATION).getQuery();
+        Query queryDiffusionValidation = QueryVersionMockFactory.createQueryVersionInStatus(buildQueryVersionMockSimpleWithFixedDatasetVersion("Q03"), ProcStatusEnum.DIFFUSION_VALIDATION).getQuery();
         registerQueryMock(QUERY_18_DIFFUSION_VALIDATION_USED_IN_PUBLICATION_VERSION_86_NAME, queryDiffusionValidation);
 
-        Query queryValidationRejected = QueryVersionMockFactory.createQueryVersionInStatus(buildQueryVersionMockSimple("Q04"), ProcStatusEnum.VALIDATION_REJECTED).getQuery();
+        Query queryValidationRejected = QueryVersionMockFactory.createQueryVersionInStatus(buildQueryVersionMockSimpleWithFixedDatasetVersion("Q04"), ProcStatusEnum.VALIDATION_REJECTED).getQuery();
         registerQueryMock(QUERY_19_VALIDATION_REJECTED_USED_IN_PUBLICATION_VERSION_86_NAME, queryValidationRejected);
 
         DatasetVersion datasetVersionLinkedToQuery = createDatasetVersionPublishedLastVersion(5, INIT_VERSION, new DateTime().minusDays(3));

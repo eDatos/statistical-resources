@@ -42,6 +42,7 @@ import org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.datas
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.publication.PublicationLifecycleServiceTest;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.publication.PublicationPublishingServiceTest;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.query.QueryLifecycleServiceTest;
+import org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.query.QueryPublishingServiceTest;
 import org.siemac.metamac.statistical.resources.core.publication.mapper.PublicationDo2DtoMapperTest;
 import org.siemac.metamac.statistical.resources.core.publication.mapper.PublicationDto2DoMapperTest;
 import org.siemac.metamac.statistical.resources.core.publication.repositoryimpl.ChapterRepositoryTest;
@@ -115,6 +116,7 @@ import org.siemac.metamac.statistical.resources.core.query.serviceapi.QueryVersi
                      DatasetVersioningServiceTest.class,
                      PublicationPublishingServiceTest.class,
                      PublicationVersioningServiceTest.class,
+                     QueryPublishingServiceTest.class,
                      QueryVersioningServiceTest.class,
                      DataManipulateTest.class})
 // @formatter:on

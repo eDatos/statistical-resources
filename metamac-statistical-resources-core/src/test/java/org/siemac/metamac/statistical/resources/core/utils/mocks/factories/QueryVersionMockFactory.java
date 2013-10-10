@@ -3,91 +3,107 @@ package org.siemac.metamac.statistical.resources.core.utils.mocks.factories;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_03_FOR_DATASET_03_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_04_FOR_DATASET_03_AND_LAST_VERSION_NAME;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.joda.time.DateTime;
-import org.siemac.metamac.core.common.util.GeneratorUrnUtils;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.CodeDimension;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryTypeEnum;
-import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
 import org.siemac.metamac.statistical.resources.core.query.domain.CodeItem;
 import org.siemac.metamac.statistical.resources.core.query.domain.QuerySelectionItem;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
-import org.siemac.metamac.statistical.resources.core.utils.LifecycleTestUtils;
-import org.siemac.metamac.statistical.resources.core.utils.PublicationLifecycleTestUtils;
+import org.siemac.metamac.statistical.resources.core.utils.DatasetLifecycleTestUtils;
 import org.siemac.metamac.statistical.resources.core.utils.QueryLifecycleTestUtils;
-import org.siemac.metamac.statistical.resources.core.utils.mocks.PublicationVersionMock;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.DatasetMock;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.DatasetVersionMock;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.QueryVersionMock;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.configuration.MockDescriptor;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.configuration.MockProvider;
-import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesDoMocks;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesNotPersistedDoMocks;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesPersistedDoMocks;
 
 @MockProvider
 @SuppressWarnings("unused")
 public class QueryVersionMockFactory extends StatisticalResourcesMockFactory<QueryVersion> {
 
-    public static final String             QUERY_VERSION_01_WITH_SELECTION_NAME                                         = "QUERY_VERSION_01_WITH_SELECTION";
+    public static final String             QUERY_VERSION_01_WITH_SELECTION_NAME                                                                                       = "QUERY_VERSION_01_WITH_SELECTION";
 
-    public static final String             QUERY_VERSION_02_BASIC_ORDERED_01_NAME                                       = "QUERY_VERSION_02_BASIC_ORDERED_01";
+    public static final String             QUERY_VERSION_02_BASIC_ORDERED_01_NAME                                                                                     = "QUERY_VERSION_02_BASIC_ORDERED_01";
 
-    public static final String             QUERY_VERSION_03_BASIC_ORDERED_02_NAME                                       = "QUERY_VERSION_03_BASIC_ORDERED_02";
+    public static final String             QUERY_VERSION_03_BASIC_ORDERED_02_NAME                                                                                     = "QUERY_VERSION_03_BASIC_ORDERED_02";
 
-    public static final String             QUERY_VERSION_04_BASIC_ORDERED_03_NAME                                       = "QUERY_VERSION_04_BASIC_ORDERED_03";
+    public static final String             QUERY_VERSION_04_BASIC_ORDERED_03_NAME                                                                                     = "QUERY_VERSION_04_BASIC_ORDERED_03";
 
-    public static final String             QUERY_VERSION_05_BASIC_NAME                                                  = "QUERY_VERSION_05_BASIC";
+    public static final String             QUERY_VERSION_05_BASIC_NAME                                                                                                = "QUERY_VERSION_05_BASIC";
 
-    public static final String             QUERY_VERSION_06_BASIC_ACTIVE_NAME                                           = "QUERY_VERSION_06_BASIC_ACTIVE";
+    public static final String             QUERY_VERSION_06_BASIC_ACTIVE_NAME                                                                                         = "QUERY_VERSION_06_BASIC_ACTIVE";
 
-    public static final String             QUERY_VERSION_07_BASIC_ACTIVE_NAME                                           = "QUERY_VERSION_07_BASIC_ACTIVE";
+    public static final String             QUERY_VERSION_07_BASIC_ACTIVE_NAME                                                                                         = "QUERY_VERSION_07_BASIC_ACTIVE";
 
-    public static final String             QUERY_VERSION_08_BASIC_DISCONTINUED_NAME                                     = "QUERY_VERSION_08_BASIC_DISCONTINUED";
+    public static final String             QUERY_VERSION_08_BASIC_DISCONTINUED_NAME                                                                                   = "QUERY_VERSION_08_BASIC_DISCONTINUED";
 
-    public static final String             QUERY_VERSION_09_BASIC_PENDING_REVIEW_NAME                                   = "QUERY_VERSION_09_BASIC_PENDING_REVIEW";
+    public static final String             QUERY_VERSION_09_BASIC_PENDING_REVIEW_NAME                                                                                 = "QUERY_VERSION_09_BASIC_PENDING_REVIEW";
 
-    public static final String             QUERY_VERSION_10_ACTIVE_LATEST_DATA_5_NAME                                   = "QUERY_VERSION_10_ACTIVE_LATEST_DATA_5";
+    public static final String             QUERY_VERSION_10_ACTIVE_LATEST_DATA_5_NAME                                                                                 = "QUERY_VERSION_10_ACTIVE_LATEST_DATA_5";
 
-    public static final String             QUERY_VERSION_11_DRAFT_NAME                                                  = "QUERY_VERSION_11_DRAFT";
+    public static final String             QUERY_VERSION_11_DRAFT_NAME                                                                                                = "QUERY_VERSION_11_DRAFT";
 
-    public static final String             QUERY_VERSION_12_PRODUCTION_VALIDATION_NAME                                  = "QUERY_VERSION_12_PRODUCTION_VALIDATION";
+    public static final String             QUERY_VERSION_12_PRODUCTION_VALIDATION_NAME                                                                                = "QUERY_VERSION_12_PRODUCTION_VALIDATION";
 
-    public static final String             QUERY_VERSION_13_DIFFUSION_VALIDATION_NAME                                   = "QUERY_VERSION_13_DIFFUSION_VALIDATION";
+    public static final String             QUERY_VERSION_13_DIFFUSION_VALIDATION_NAME                                                                                 = "QUERY_VERSION_13_DIFFUSION_VALIDATION";
 
-    public static final String             QUERY_VERSION_14_VALIDATION_REJECTED_NAME                                    = "QUERY_VERSION_14_VALIDATION_REJECTED";
+    public static final String             QUERY_VERSION_14_VALIDATION_REJECTED_NAME                                                                                  = "QUERY_VERSION_14_VALIDATION_REJECTED";
 
-    public static final String             QUERY_VERSION_15_PUBLISHED_NAME                                              = "QUERY_VERSION_15_PUBLISHED";
+    public static final String             QUERY_VERSION_15_PUBLISHED_NAME                                                                                            = "QUERY_VERSION_15_PUBLISHED";
 
-    public static final String             QUERY_VERSION_19_WITH_CODE_AND_URN_QUERY01_NAME                              = "QUERY_VERSION_19_WITH_CODE_AND_URN_QUERY01";
+    public static final String             QUERY_VERSION_19_WITH_CODE_AND_URN_QUERY01_NAME                                                                            = "QUERY_VERSION_19_WITH_CODE_AND_URN_QUERY01";
 
-    public static final String             QUERY_VERSION_20_WITH_CODE_AND_URN_QUERY02_NAME                              = "QUERY_VERSION_20_WITH_CODE_AND_URN_QUERY02";
+    public static final String             QUERY_VERSION_20_WITH_CODE_AND_URN_QUERY02_NAME                                                                            = "QUERY_VERSION_20_WITH_CODE_AND_URN_QUERY02";
 
-    public static final String             QUERY_VERSION_21_FOR_QUERY_03_NAME                                           = "QUERY_VERSION_21_FOR_QUERY_03";
+    public static final String             QUERY_VERSION_21_FOR_QUERY_03_NAME                                                                                         = "QUERY_VERSION_21_FOR_QUERY_03";
 
-    public static final String             QUERY_VERSION_22_FOR_QUERY_03_AND_LAST_VERSION_NAME                          = "QUERY_VERSION_22_FOR_QUERY_03_AND_LAST_VERSION";
+    public static final String             QUERY_VERSION_22_FOR_QUERY_03_AND_LAST_VERSION_NAME                                                                        = "QUERY_VERSION_22_FOR_QUERY_03_AND_LAST_VERSION";
 
-    public static final String             QUERY_VERSION_26_V3_PUBLISHED_FOR_QUERY_05_NAME                              = "QUERY_VERSION_26_V3_PUBLISHED_FOR_QUERY_05";
+    public static final String             QUERY_VERSION_26_V3_PUBLISHED_FOR_QUERY_05_NAME                                                                            = "QUERY_VERSION_26_V3_PUBLISHED_FOR_QUERY_05";
 
-    public static final String             QUERY_VERSION_27_V1_PUBLISHED_FOR_QUERY_06_NAME                              = "QUERY_VERSION_27_V1_PUBLISHED_FOR_QUERY_06";
+    public static final String             QUERY_VERSION_27_V1_PUBLISHED_FOR_QUERY_06_NAME                                                                            = "QUERY_VERSION_27_V1_PUBLISHED_FOR_QUERY_06";
 
-    public static final String             QUERY_VERSION_28_V2_PUBLISHED_NO_VISIBLE_FOR_QUERY_06_NAME                   = "QUERY_VERSION_28_V2_PUBLISHED_NO_VISIBLE_FOR_QUERY_06";
+    public static final String             QUERY_VERSION_28_V2_PUBLISHED_NO_VISIBLE_FOR_QUERY_06_NAME                                                                 = "QUERY_VERSION_28_V2_PUBLISHED_NO_VISIBLE_FOR_QUERY_06";
 
-    public static final String             QUERY_VERSION_29_CHECK_COMPAT_DATASET_86_OK_NAME                             = "QUERY_VERSION_29_CHECK_COMPAT_DATASET_86_OK";
+    public static final String             QUERY_VERSION_29_CHECK_COMPAT_DATASET_86_OK_NAME                                                                           = "QUERY_VERSION_29_CHECK_COMPAT_DATASET_86_OK";
 
-    public static final String             QUERY_VERSION_30_CHECK_COMPAT_DATASET_86_LESS_DIMENSIONS_NAME                = "QUERY_VERSION_30_CHECK_COMPAT_DATASET_86_LESS_DIMENSIONS";
+    public static final String             QUERY_VERSION_30_CHECK_COMPAT_DATASET_86_LESS_DIMENSIONS_NAME                                                              = "QUERY_VERSION_30_CHECK_COMPAT_DATASET_86_LESS_DIMENSIONS";
 
-    public static final String             QUERY_VERSION_31_CHECK_COMPAT_DATASET_86_MORE_DIMENSIONS_NAME                = "QUERY_VERSION_31_CHECK_COMPAT_DATASET_86_MORE_DIMENSIONS";
+    public static final String             QUERY_VERSION_31_CHECK_COMPAT_DATASET_86_MORE_DIMENSIONS_NAME                                                              = "QUERY_VERSION_31_CHECK_COMPAT_DATASET_86_MORE_DIMENSIONS";
 
-    public static final String             QUERY_VERSION_32_CHECK_COMPAT_DATASET_86_MORE_CODES_NAME                     = "QUERY_VERSION_32_CHECK_COMPAT_DATASET_86_MORE_CODES";
+    public static final String             QUERY_VERSION_32_CHECK_COMPAT_DATASET_86_MORE_CODES_NAME                                                                   = "QUERY_VERSION_32_CHECK_COMPAT_DATASET_86_MORE_CODES";
 
-    public static final String             QUERY_VERSION_33_CHECK_COMPAT_DATASET_86_INVALID_LATEST_TEMPORAL_CODE_NAME   = "QUERY_VERSION_33_CHECK_COMPAT_DATASET_86_INVALID_LATEST_TEMPORAL_CODE";
+    public static final String             QUERY_VERSION_33_CHECK_COMPAT_DATASET_86_INVALID_LATEST_TEMPORAL_CODE_NAME                                                 = "QUERY_VERSION_33_CHECK_COMPAT_DATASET_86_INVALID_LATEST_TEMPORAL_CODE";
 
-    public static final String             QUERY_VERSION_34_CHECK_COMPAT_DATASET_87_INVALID_QUERY_TYPE_AUTOINC_NAME     = "QUERY_VERSION_34_CHECK_COMPAT_DATASET_87_INVALID_QUERY_TYPE_AUTOINC";
+    public static final String             QUERY_VERSION_34_CHECK_COMPAT_DATASET_87_INVALID_QUERY_TYPE_AUTOINC_NAME                                                   = "QUERY_VERSION_34_CHECK_COMPAT_DATASET_87_INVALID_QUERY_TYPE_AUTOINC";
 
-    public static final String             QUERY_VERSION_35_CHECK_COMPAT_DATASET_87_INVALID_QUERY_TYPE_LATEST_DATA_NAME = "QUERY_VERSION_35_CHECK_COMPAT_DATASET_87_INVALID_QUERY_TYPE_LATEST_DATA";
+    public static final String             QUERY_VERSION_35_CHECK_COMPAT_DATASET_87_INVALID_QUERY_TYPE_LATEST_DATA_NAME                                               = "QUERY_VERSION_35_CHECK_COMPAT_DATASET_87_INVALID_QUERY_TYPE_LATEST_DATA";
 
-    public static final String             QUERY_VERSION_36_LINKED_TO_DATASET_NAME                                      = "QUERY_VERSION_36_LINKED_TO_DATASET";
+    public static final String             QUERY_VERSION_36_LINKED_TO_DATASET_NAME                                                                                    = "QUERY_VERSION_36_LINKED_TO_DATASET";
 
-    private static QueryVersionMockFactory instance                                                                     = null;
+    public static final String             QUERY_VERSION_37_PREPARED_TO_PUBLISH_NAME                                                                                  = "QUERY_VERSION_37_PREPARED_TO_PUBLISH";
+
+    public static final String             QUERY_VERSION_38_TO_PUBLISH_WITH_FUTURE_DATE_WITH_DATASET_VERSION_VISIBLE_BEFORE_NAME                                      = "QUERY_VERSION_38_TO_PUBLISH_WITH_FUTURE_DATE_WITH_DATASET_VERSION_VISIBLE_BEFORE";
+    public static final String             QUERY_VERSION_39_TO_PUBLISH_WITH_FUTURE_DATE_WITH_DATASET_VERSION_VISIBLE_AFTER_NAME                                       = "QUERY_VERSION_39_TO_PUBLISH_WITH_FUTURE_DATE_WITH_DATASET_VERSION_VISIBLE_AFTER";
+    public static final String             QUERY_VERSION_40_TO_PUBLISH_WITH_DATASET_VERSION_NOT_PUBLISHED_NAME                                                        = "QUERY_VERSION_40_TO_PUBLISH_WITH_DATASET_VERSION_NOT_PUBLISHED";
+    public static final String             QUERY_VERSION_41_TO_PUBLISH_WITH_DATASET_WITH_NO_PUBLISHED_VERSION_NAME                                                    = "QUERY_VERSION_41_TO_PUBLISH_WITH_DATASET_WITH_NO_PUBLISHED_VERSION";
+    public static final String             QUERY_VERSION_42_TO_PUBLISH_WITH_DATASET_WITH_LAST_VERSION_NOT_PUBLISHED_PREVIOUS_COMPATIBLE_NAME                          = "QUERY_VERSION_42_TO_PUBLISH_WITH_DATASET_WITH_LAST_VERSION_NOT_PUBLISHED_PREVIOUS_COMPATIBLE";
+    public static final String             QUERY_VERSION_43_TO_PUBLISH_WITH_DATASET_WITH_LAST_VERSION_NOT_PUBLISHED_PREVIOUS_INCOMPATIBLE_NAME                        = "QUERY_VERSION_43_TO_PUBLISH_WITH_DATASET_WITH_LAST_VERSION_NOT_PUBLISHED_PREVIOUS_INCOMPATIBLE";
+    public static final String             QUERY_VERSION_44_TO_PUBLISH_WITH_FUTURE_DATE_WITH_DATASET_WITH_LAST_VERSION_VISIBLE_BEFORE_QUERY_NAME                      = "QUERY_VERSION_44_TO_PUBLISH_WITH_FUTURE_DATE_WITH_DATASET_WITH_LAST_VERSION_VISIBLE_BEFORE_QUERY";
+    public static final String             QUERY_VERSION_45_TO_PUBLISH_WITH_FUTURE_DATE_WITH_DATASET_WITH_LAST_VERSION_VISIBLE_AFTER_QUERY_NO_PREVIOUS_NAME           = "QUERY_VERSION_45_TO_PUBLISH_WITH_FUTURE_DATE_WITH_DATASET_WITH_LAST_VERSION_VISIBLE_AFTER_QUERY_NO_PREVIOUS";
+    public static final String             QUERY_VERSION_46_TO_PUBLISH_WITH_FUTURE_DATE_WITH_DATASET_WITH_LAST_VERSION_VISIBLE_AFTER_QUERY_PREVIOUS_COMPATIBLE_NAME   = "QUERY_VERSION_46_TO_PUBLISH_WITH_FUTURE_DATE_WITH_DATASET_WITH_LAST_VERSION_VISIBLE_AFTER_QUERY_PREVIOUS_COMPATIBLE";
+    public static final String             QUERY_VERSION_47_TO_PUBLISH_WITH_FUTURE_DATE_WITH_DATASET_WITH_LAST_VERSION_VISIBLE_AFTER_QUERY_PREVIOUS_INCOMPATIBLE_NAME = "QUERY_VERSION_47_TO_PUBLISH_WITH_FUTURE_DATE_WITH_DATASET_WITH_LAST_VERSION_VISIBLE_AFTER_QUERY_PREVIOUS_INCOMPATIBLE";
+
+    private static QueryVersionMockFactory instance                                                                                                                   = null;
 
     private QueryVersionMockFactory() {
     }
@@ -207,13 +223,233 @@ public class QueryVersionMockFactory extends StatisticalResourcesMockFactory<Que
 
     }
 
+    private static QueryVersion getQueryVersion37PreparedToPublish() {
+        QueryVersionMock queryMock = buildQueryVersionMockSimpleWithFixedDatasetVersion("Q01");
+        queryMock.setQuery(QueryMockFactory.generateQueryWithoutGeneratedVersion());
+
+        DatasetVersion datasetVersion = queryMock.getFixedDatasetVersion();
+        DatasetLifecycleTestUtils.fillAsPublished(datasetVersion);
+
+        setQuerySelectionBasedOnDatasetVersion(queryMock, datasetVersion);
+
+        QueryLifecycleTestUtils.prepareToPublished(queryMock);
+        return queryMock;
+    }
+
+    private static QueryVersion getQueryVersion38ToPublishWithFutureDateWithDatasetVersionVisibleBefore() {
+        QueryVersionMock queryMock = buildQueryVersionMockSimpleWithFixedDatasetVersion("Q01");
+        queryMock.getLifeCycleStatisticalResource().setValidFrom(new DateTime().plusDays(2));
+        queryMock.setQuery(QueryMockFactory.generateQueryWithoutGeneratedVersion());
+
+        DatasetVersion datasetVersion = queryMock.getFixedDatasetVersion();
+        datasetVersion.getSiemacMetadataStatisticalResource().setValidFrom(new DateTime().plusDays(1));
+        DatasetLifecycleTestUtils.fillAsPublished(datasetVersion);
+
+        setQuerySelectionBasedOnDatasetVersion(queryMock, datasetVersion);
+
+        QueryLifecycleTestUtils.prepareToPublished(queryMock);
+        return queryMock;
+    }
+
+    private static QueryVersion getQueryVersion39ToPublishWithFutureDateWithDatasetVersionVisibleAfter() {
+        QueryVersionMock queryMock = buildQueryVersionMockSimpleWithFixedDatasetVersion("Q01");
+        queryMock.getLifeCycleStatisticalResource().setValidFrom(new DateTime().plusDays(2));
+        queryMock.setQuery(QueryMockFactory.generateQueryWithoutGeneratedVersion());
+
+        DatasetVersion datasetVersion = queryMock.getFixedDatasetVersion();
+        datasetVersion.getSiemacMetadataStatisticalResource().setValidFrom(new DateTime().plusDays(3));
+        DatasetLifecycleTestUtils.fillAsPublished(datasetVersion);
+
+        setQuerySelectionBasedOnDatasetVersion(queryMock, datasetVersion);
+
+        QueryLifecycleTestUtils.prepareToPublished(queryMock);
+
+        return queryMock;
+    }
+
+    private static QueryVersion getQueryVersion40ToPublishWithDatasetVersionNotPublished() {
+        QueryVersionMock queryMock = buildQueryVersionMockSimpleWithFixedDatasetVersion("Q01");
+        queryMock.setQuery(QueryMockFactory.generateQueryWithoutGeneratedVersion());
+
+        DatasetVersion datasetVersion = queryMock.getFixedDatasetVersion();
+
+        setQuerySelectionBasedOnDatasetVersion(queryMock, datasetVersion);
+
+        QueryLifecycleTestUtils.prepareToPublished(queryMock);
+        return queryMock;
+    }
+
+    public static QueryVersion getQueryVersion41ToPublishWithDatasetWithNoPublishedVersion() {
+        QueryVersionMock queryMock = buildQueryVersionMockSimple("Q01");
+        queryMock.setQuery(QueryMockFactory.generateQueryWithoutGeneratedVersion());
+
+        Dataset dataset = DatasetMockFactory.generateDatasetWithGeneratedVersion();
+        queryMock.setDataset(dataset);
+
+        DatasetVersion lastDatasetVersion = dataset.getVersions().get(0);
+        StatisticalResourcesPersistedDoMocks.mockDatasetVersionCoverages(lastDatasetVersion);
+
+        setQuerySelectionBasedOnDatasetVersion(queryMock, lastDatasetVersion);
+
+        QueryLifecycleTestUtils.prepareToPublished(queryMock);
+        return queryMock;
+    }
+
+    public static QueryVersion getQueryVersion42ToPublishWithDatasetWithLastVersionNotPublishedPreviousCompatible() {
+        QueryVersionMock queryMock = buildQueryVersionMockSimple("Q01");
+        queryMock.setQuery(QueryMockFactory.generateQueryWithoutGeneratedVersion());
+
+        Dataset dataset = DatasetMockFactory.createPublishedAndDraftVersionsForDataset(1);
+        queryMock.setDataset(dataset);
+
+        DatasetVersion publishedVersion = dataset.getVersions().get(0);
+        StatisticalResourcesPersistedDoMocks.mockDatasetVersionCoverages(publishedVersion);
+        StatisticalResourcesPersistedDoMocks.computeCoverageRelatedMetadata(publishedVersion);
+
+        DatasetVersion lastVersion = dataset.getVersions().get(1);
+        StatisticalResourcesPersistedDoMocks.mockDatasetVersionCoverages(lastVersion);
+        StatisticalResourcesPersistedDoMocks.computeCoverageRelatedMetadata(lastVersion);
+
+        setQuerySelectionBasedOnDatasetVersion(queryMock, lastVersion);
+
+        QueryLifecycleTestUtils.prepareToPublished(queryMock);
+        return queryMock;
+    }
+
+    public static QueryVersion getQueryVersion43ToPublishWithDatasetWithLastVersionNotPublishedPreviousIncompatible() {
+        QueryVersionMock queryMock = buildQueryVersionMockSimple("Q01");
+        queryMock.setQuery(QueryMockFactory.generateQueryWithoutGeneratedVersion());
+
+        Dataset dataset = createPublishedAndDraftVersionsForDatasetIncompatibleVersions(1);
+        queryMock.setDataset(dataset);
+
+        DatasetVersion lastVersion = dataset.getVersions().get(1);
+
+        setQuerySelectionBasedOnDatasetVersion(queryMock, lastVersion);
+
+        QueryLifecycleTestUtils.prepareToPublished(queryMock);
+        return queryMock;
+    }
+
+    public static QueryVersion getQueryVersion44ToPublishWithFutureDateWithDatasetWithLastVersionVisibleBeforeQuery() {
+        QueryVersionMock queryMock = buildQueryVersionMockSimple("Q01");
+        queryMock.getLifeCycleStatisticalResource().setValidFrom(new DateTime().plusDays(2));
+        queryMock.setQuery(QueryMockFactory.generateQueryWithoutGeneratedVersion());
+
+        Dataset dataset = DatasetMockFactory.createPublishedAndNotVisibleVersionsForDataset(1, new DateTime().plusDays(3));
+        queryMock.setDataset(dataset);
+
+        DatasetVersion publishedVersion = dataset.getVersions().get(0);
+        StatisticalResourcesPersistedDoMocks.mockDatasetVersionCoverages(publishedVersion);
+        StatisticalResourcesPersistedDoMocks.computeCoverageRelatedMetadata(publishedVersion);
+
+        DatasetVersion lastVersion = dataset.getVersions().get(1);
+        StatisticalResourcesPersistedDoMocks.mockDatasetVersionCoverages(lastVersion);
+        StatisticalResourcesPersistedDoMocks.computeCoverageRelatedMetadata(lastVersion);
+
+        setQuerySelectionBasedOnDatasetVersion(queryMock, lastVersion);
+
+        QueryLifecycleTestUtils.prepareToPublished(queryMock);
+        return queryMock;
+    }
+
+    public static QueryVersion getQueryVersion45ToPublishWithFutureDateWithDatasetWithLastVersionVisibleAfterQueryNoPrevious() {
+        QueryVersionMock queryMock = buildQueryVersionMockSimple("Q01");
+        queryMock.getLifeCycleStatisticalResource().setValidFrom(new DateTime().plusDays(2));
+        queryMock.setQuery(QueryMockFactory.generateQueryWithoutGeneratedVersion());
+
+        DatasetVersion datasetVersion = DatasetMockFactory.createDatasetVersionPublishedLastVersion(1, INIT_VERSION, new DateTime().plusDays(3));
+        queryMock.setDataset(datasetVersion.getDataset());
+
+        StatisticalResourcesPersistedDoMocks.mockDatasetVersionCoverages(datasetVersion);
+        StatisticalResourcesPersistedDoMocks.computeCoverageRelatedMetadata(datasetVersion);
+
+        setQuerySelectionBasedOnDatasetVersion(queryMock, datasetVersion);
+
+        QueryLifecycleTestUtils.prepareToPublished(queryMock);
+        return queryMock;
+    }
+
+    public static QueryVersion getQueryVersion46ToPublishWithFutureDateWithDatasetWithLastVersionVisibleAfterQueryPreviousCompatible() {
+        QueryVersionMock queryMock = buildQueryVersionMockSimple("Q01");
+        queryMock.getLifeCycleStatisticalResource().setValidFrom(new DateTime().plusDays(2));
+        queryMock.setQuery(QueryMockFactory.generateQueryWithoutGeneratedVersion());
+
+        Dataset dataset = DatasetMockFactory.createPublishedAndNotVisibleVersionsForDataset(1, new DateTime().plusDays(3));
+        queryMock.setDataset(dataset);
+
+        DatasetVersion publishedVersion = dataset.getVersions().get(0);
+        StatisticalResourcesPersistedDoMocks.mockDatasetVersionCoverages(publishedVersion);
+        StatisticalResourcesPersistedDoMocks.computeCoverageRelatedMetadata(publishedVersion);
+
+        DatasetVersion lastVersion = dataset.getVersions().get(1);
+        StatisticalResourcesPersistedDoMocks.mockDatasetVersionCoverages(lastVersion);
+        StatisticalResourcesPersistedDoMocks.computeCoverageRelatedMetadata(publishedVersion);
+
+        setQuerySelectionBasedOnDatasetVersion(queryMock, lastVersion);
+
+        QueryLifecycleTestUtils.prepareToPublished(queryMock);
+        return queryMock;
+    }
+
+    public static QueryVersion getQueryVersion47ToPublishWithFutureDateWithDatasetWithLastVersionVisibleAfterQueryPreviousIncompatible() {
+        QueryVersionMock queryMock = buildQueryVersionMockSimple("Q01");
+        queryMock.getLifeCycleStatisticalResource().setValidFrom(new DateTime().plusDays(2));
+        queryMock.setQuery(QueryMockFactory.generateQueryWithoutGeneratedVersion());
+
+        Dataset dataset = DatasetMockFactory.createPublishedAndNotVisibleVersionsForDataset(1, new DateTime().plusDays(3));
+        queryMock.setDataset(dataset);
+
+        DatasetVersion publishedVersion = dataset.getVersions().get(0);
+        StatisticalResourcesPersistedDoMocks.mockDatasetVersionCoverages(publishedVersion);
+        // new dimension to make it incompatible
+        publishedVersion.addDimensionsCoverage(new CodeDimension("DIM_NEW", "CODE01"));
+        StatisticalResourcesPersistedDoMocks.computeCoverageRelatedMetadata(publishedVersion);
+
+        DatasetVersion lastVersion = dataset.getVersions().get(1);
+        StatisticalResourcesPersistedDoMocks.mockDatasetVersionCoverages(lastVersion);
+        StatisticalResourcesPersistedDoMocks.computeCoverageRelatedMetadata(publishedVersion);
+
+        setQuerySelectionBasedOnDatasetVersion(queryMock, lastVersion);
+
+        QueryLifecycleTestUtils.prepareToPublished(queryMock);
+        return queryMock;
+    }
+
+    private static void setQuerySelectionBasedOnDatasetVersion(QueryVersionMock queryMock, DatasetVersion datasetVersion) {
+        Map<String, QuerySelectionItem> selectionItems = new HashMap<String, QuerySelectionItem>();
+        for (CodeDimension codeDim : datasetVersion.getDimensionsCoverage()) {
+            QuerySelectionItem item = selectionItems.get(codeDim.getDsdComponentId());
+            if (item == null) {
+                item = new QuerySelectionItem();
+                item.setDimension(codeDim.getDsdComponentId());
+                selectionItems.put(codeDim.getDsdComponentId(), item);
+            }
+            CodeItem codeItem = new CodeItem();
+            codeItem.setCode(codeDim.getIdentifier());
+            codeItem.setTitle(codeDim.getTitle());
+            item.addCode(codeItem);
+        }
+        for (String dimensionId : selectionItems.keySet()) {
+            queryMock.addSelection(selectionItems.get(dimensionId));
+        }
+        queryMock.setType(QueryTypeEnum.FIXED);
+    }
+
     // Public builders
-    public static QueryVersionMock buildQueryVersionMockSimple(String code) {
+    public static QueryVersionMock buildQueryVersionMockSimpleWithFixedDatasetVersion(String code) {
         QueryVersionMock template = new QueryVersionMock();
         template.getLifeCycleStatisticalResource().setCode(code);
         DatasetVersion datasetVersion = getStatisticalResourcesPersistedDoMocks().mockDatasetVersion();
-        StatisticalResourcesPersistedDoMocks.mockDatasetVersionCoveragesAndRelated(datasetVersion);
+        StatisticalResourcesPersistedDoMocks.mockDatasetVersionCoverages(datasetVersion);
         template.setFixedDatasetVersion(datasetVersion);
+        template.setStatus(QueryStatusEnum.ACTIVE);
+        return template;
+    }
+
+    public static QueryVersionMock buildQueryVersionMockSimple(String code) {
+        QueryVersionMock template = new QueryVersionMock();
+        template.getLifeCycleStatisticalResource().setCode(code);
         template.setStatus(QueryStatusEnum.ACTIVE);
         return template;
     }
@@ -240,7 +476,7 @@ public class QueryVersionMockFactory extends StatisticalResourcesMockFactory<Que
 
     private static QueryVersion createQueryWithGeneratedDatasetVersion(String code) {
         DatasetVersion datasetVersion = getStatisticalResourcesPersistedDoMocks().mockDatasetVersion();
-        StatisticalResourcesPersistedDoMocks.mockDatasetVersionCoveragesAndRelated(datasetVersion);
+        StatisticalResourcesPersistedDoMocks.mockDatasetVersionCoverages(datasetVersion);
 
         QueryVersionMock template = new QueryVersionMock();
         template.setFixedDatasetVersion(datasetVersion);
@@ -251,7 +487,7 @@ public class QueryVersionMockFactory extends StatisticalResourcesMockFactory<Que
 
     private static QueryVersion createQueryWithGeneratedDatasetVersion(QueryVersionMock template) {
         DatasetVersion datasetVersion = getStatisticalResourcesPersistedDoMocks().mockDatasetVersion();
-        StatisticalResourcesPersistedDoMocks.mockDatasetVersionCoveragesAndRelated(datasetVersion);
+        StatisticalResourcesPersistedDoMocks.mockDatasetVersionCoverages(datasetVersion);
         template.setFixedDatasetVersion(datasetVersion);
         template.setStatus(QueryStatusEnum.ACTIVE);
         return createQueryVersionFromTemplate(template);
@@ -300,6 +536,35 @@ public class QueryVersionMockFactory extends StatisticalResourcesMockFactory<Que
 
     private static void prepareToValidationRejected(QueryVersion queryVersion) {
         QueryLifecycleTestUtils.prepareToValidationRejected(queryVersion);
+    }
+
+    // -----------------------------------------------------------------
+    // UTILS
+    // -----------------------------------------------------------------
+
+    private static DatasetMock createPublishedAndDraftVersionsForDatasetIncompatibleVersions(int sequentialId) {
+        DatasetMock dataset = new DatasetMock();
+        dataset.setSequentialId(sequentialId);
+
+        // V01
+        DatasetVersionMock template = DatasetVersionMockFactory.buildSimpleVersion(dataset, INIT_VERSION);
+        template.getSiemacMetadataStatisticalResource().setLastVersion(false);
+        template.getSiemacMetadataStatisticalResource().setValidFrom(new DateTime());
+        StatisticalResourcesPersistedDoMocks.mockDatasetVersionCoverages(template);
+        template.addDimensionsCoverage(new CodeDimension("DIM_NEW", "CODE_NEW"));
+        StatisticalResourcesPersistedDoMocks.computeCoverageRelatedMetadata(template);
+        DatasetVersion datasetVersionPublished = getStatisticalResourcesPersistedDoMocks().mockDatasetVersion(template);
+        DatasetLifecycleTestUtils.fillAsPublished(datasetVersionPublished);
+
+        // V02
+        DatasetVersionMock templateLatest = DatasetVersionMockFactory.buildSimpleVersion(dataset, SECOND_VERSION);
+        templateLatest.getSiemacMetadataStatisticalResource().setLastVersion(true);
+        StatisticalResourcesPersistedDoMocks.mockDatasetVersionCoverages(templateLatest);
+        DatasetVersion datasetVersionLatest = getStatisticalResourcesPersistedDoMocks().mockDatasetVersion(templateLatest);
+
+        datasetVersionLatest.getSiemacMetadataStatisticalResource().setReplacesVersion(StatisticalResourcesNotPersistedDoMocks.mockRelatedResourceLinkedToDatasetVersion(datasetVersionPublished));
+
+        return dataset;
     }
 
 }

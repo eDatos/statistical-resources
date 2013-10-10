@@ -21,6 +21,7 @@ import org.siemac.metamac.statistical.resources.core.common.domain.LocalisedStri
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Categorisation;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionRepository;
+import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceapi.LifecycleService;
 import org.siemac.metamac.statistical.resources.core.task.serviceapi.TaskService;
 import org.siemac.metamac.statistical.resources.core.utils.TaskMockUtils;
@@ -75,6 +76,24 @@ public class DatasetPublishingServiceTest extends StatisticalResourcesMockRestBa
         datasetVersion = datasetVersionRepository.retrieveByUrn(datasetVersionUrn);
 
         assertPublishingDatasetVersion(datasetVersion, null);
+    }
+
+    @Test
+    @MetamacMock(DATASET_VERSION_70_PREPARED_TO_PUBLISH_EXTERNAL_ITEM_FULL_NAME)
+    public void testPublishDatasetVersionTaskInProgress() throws Exception {
+        mockAllTaskInProgressForDatasetVersion(true);
+
+        DatasetVersion datasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_70_PREPARED_TO_PUBLISH_EXTERNAL_ITEM_FULL_NAME);
+        SiemacMetadataStatisticalResource siemacResource = datasetVersion.getSiemacMetadataStatisticalResource();
+        String datasetVersionUrn = siemacResource.getUrn();
+
+        mockSiemacExternalItemsPublished(siemacResource);
+
+        mockDatasetVersionExternalItemsPublished(datasetVersion);
+
+        expectedMetamacException(new MetamacException(ServiceExceptionType.TASKS_IN_PROGRESS, datasetVersionUrn));
+
+        datasetVersionLifecycleService.sendToPublished(getServiceContextAdministrador(), datasetVersionUrn);
     }
 
     @Test

@@ -6,8 +6,12 @@ import org.siemac.metamac.statistical.resources.core.enume.query.domain.QuerySta
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryTypeEnum;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesDoMocks;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class QueryLifecycleTestUtils {
+
+    private static final Logger LOG = LoggerFactory.getLogger(QueryLifecycleTestUtils.class);
 
     // *****************************************************
     // PRODUCTION VALIDATION
@@ -74,7 +78,7 @@ public class QueryLifecycleTestUtils {
             datasetPublished = isDatasetVersionPublishedVisibleBeforeQuery(queryVersion.getFixedDatasetVersion(), queryVersion);
         }
         if (!datasetPublished) {
-            throw new RuntimeException("The dataset/version linked to query won't be published and visible before query");
+            LOG.warn("The dataset/version linked to query won't be published and visible before query");
         }
     }
 

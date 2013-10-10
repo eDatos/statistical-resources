@@ -134,7 +134,7 @@ public class PublicationLifecycleServiceImpl extends LifecycleTemplateService<Pu
     }
 
     @Override
-    protected void checkSendToPublishedResource(PublicationVersion resource, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
+    protected void checkSendToPublishedResource(ServiceContext ctx, PublicationVersion resource, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
         checkStructure(resource, exceptionItems);
     }
 

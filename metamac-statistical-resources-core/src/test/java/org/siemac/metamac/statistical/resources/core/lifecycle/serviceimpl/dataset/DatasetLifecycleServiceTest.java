@@ -308,18 +308,7 @@ public class DatasetLifecycleServiceTest extends StatisticalResourcesBaseTest im
     @Test
     @Ignore
     public void testSendToPublished() throws Exception {
-        // FIXME: Do test in testCheckSendToPublishedResource and testApplySendToPublishedResource
-        thrown.expect(UnsupportedOperationException.class);
-        // FIXME: take in consideration importation task in progress
-        DatasetVersion datasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_15_DRAFT_NOT_READY_NAME);
-        datasetLifecycleService.sendToPublished(getServiceContextAdministrador(), datasetVersion.getSiemacMetadataStatisticalResource().getUrn());
-    }
-
-    @Test
-    @Ignore
-    public void testSendToPublishedImportationTaskInProgress() throws Exception {
-
-        // FIXME: take in consideration importation task in progress
+        // GO TO DatasetPublishingServiceTest
     }
 
     @Ignore

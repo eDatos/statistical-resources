@@ -18,6 +18,7 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.rest.api.constants.RestApiConstants;
 import org.siemac.metamac.srm.rest.internal.v1_0.service.SrmRestInternalFacadeV10;
+import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.NameableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
@@ -201,11 +202,24 @@ public class StatisticalResourcesMockRestBaseTest extends StatisticalResourcesBa
         return exceptionItems;
     }
 
+    protected List<MetamacExceptionItem> getExceptionItemsForExternalItemNotPublishedLifecycle(LifeCycleStatisticalResource lifecycleResource, String baseField, boolean fromSiemac) {
+        String prefix = baseField;
+        if (!fromSiemac) {
+            prefix = buildField(baseField, "lifeCycleStatisticalResource");
+        }
+        List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
+        exceptionItems.add(buildExternalItemNotPublishedException(lifecycleResource.getStatisticalOperation(), prefix, "statisticalOperation"));
+        exceptionItems.add(buildExternalItemNotPublishedException(lifecycleResource.getMaintainer(), prefix, "maintainer"));
+
+        return exceptionItems;
+    }
+
     protected List<MetamacExceptionItem> getExceptionItemsForExternalItemNotPublishedSiemac(SiemacMetadataStatisticalResource siemacResource, String baseField) {
         String prefix = buildField(baseField, "siemacMetadataStatisticalResource");
+
         List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
-        exceptionItems.add(buildExternalItemNotPublishedException(siemacResource.getStatisticalOperation(), prefix, "statisticalOperation"));
-        exceptionItems.add(buildExternalItemNotPublishedException(siemacResource.getMaintainer(), prefix, "maintainer"));
+
+        exceptionItems.addAll(getExceptionItemsForExternalItemNotPublishedLifecycle(siemacResource, prefix, true));
         exceptionItems.add(buildExternalItemNotPublishedException(siemacResource.getLanguage(), prefix, "language"));
         exceptionItems.addAll(buildExternalItemsNotPublishedExceptions(siemacResource.getLanguages(), prefix, "languages"));
         exceptionItems.addAll(buildExternalItemsNotPublishedExceptions(siemacResource.getStatisticalOperationInstances(), prefix, "statisticalOperationInstances"));
@@ -241,10 +255,14 @@ public class StatisticalResourcesMockRestBaseTest extends StatisticalResourcesBa
         return StringUtils.join(fields, ".");
     }
 
+    protected void mockLifecycleExternalItemsNotPublished(LifeCycleStatisticalResource lifecycleResource) {
+        mockExternalItemNotPublished(lifecycleResource.getStatisticalOperation());
+        mockExternalItemNotPublished(lifecycleResource.getMaintainer());
+    }
+
     protected void mockSiemacExternalItemsNotPublished(SiemacMetadataStatisticalResource siemacResource) {
         // Lifecycle
-        mockExternalItemNotPublished(siemacResource.getStatisticalOperation());
-        mockExternalItemNotPublished(siemacResource.getMaintainer());
+        mockLifecycleExternalItemsNotPublished(siemacResource);
 
         // Siemac
         mockExternalItemNotPublished(siemacResource.getLanguage());
@@ -258,10 +276,14 @@ public class StatisticalResourcesMockRestBaseTest extends StatisticalResourcesBa
         mockExternalItemNotPublished(siemacResource.getCommonMetadata());
     }
 
+    protected void mockLifecycleExternalItemsPublished(LifeCycleStatisticalResource lifecycleResource) {
+        mockExternalItemPublished(lifecycleResource.getStatisticalOperation());
+        mockExternalItemPublished(lifecycleResource.getMaintainer());
+    }
+
     protected void mockSiemacExternalItemsPublished(SiemacMetadataStatisticalResource siemacResource) {
         // Lifecycle
-        mockExternalItemPublished(siemacResource.getStatisticalOperation());
-        mockExternalItemPublished(siemacResource.getMaintainer());
+        mockLifecycleExternalItemsPublished(siemacResource);
 
         // Siemac
         mockExternalItemPublished(siemacResource.getLanguage());

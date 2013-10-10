@@ -105,7 +105,7 @@ public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<Datase
     // ------------------------------------------------------------------------------------------------------
 
     @Override
-    protected void checkSendToPublishedResource(DatasetVersion resource, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
+    protected void checkSendToPublishedResource(ServiceContext ctx, DatasetVersion resource, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
         checkExternalItemsPreviouslyPublished(resource, ServiceExceptionSingleParameters.DATASET_VERSION, exceptionItems);
 
         // No related resources to check
