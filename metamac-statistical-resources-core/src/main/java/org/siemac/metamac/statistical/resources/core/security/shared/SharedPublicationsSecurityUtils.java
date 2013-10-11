@@ -82,6 +82,11 @@ public class SharedPublicationsSecurityUtils extends SharedSecurityUtils {
         return isAnyResourcesRole(metamacPrincipal);
     }
 
+    public static boolean canPublishPublicationVersion(MetamacPrincipal metamacPrincipal) {
+        // TODO: Poner los roles correctos
+        return isAnyResourcesRole(metamacPrincipal);
+    }
+
     // ------------------------------------------------------------------------
     // CHAPTERS
     // ------------------------------------------------------------------------
@@ -143,4 +148,5 @@ public class SharedPublicationsSecurityUtils extends SharedSecurityUtils {
         // TODO: Poner los roles correctos
         return isAnyResourcesRole(metamacPrincipal);
     }
+
 }

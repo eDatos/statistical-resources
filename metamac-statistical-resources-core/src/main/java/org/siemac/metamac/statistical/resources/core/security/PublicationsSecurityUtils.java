@@ -10,13 +10,13 @@ public class PublicationsSecurityUtils extends SecurityUtils {
     // ------------------------------------------------------------------------
     // PUBLICATIONS
     // ------------------------------------------------------------------------
-    
+
     public static void canFindPublicationsByCondition(ServiceContext ctx) throws MetamacException {
         if (!SharedPublicationsSecurityUtils.canFindPublications(getMetamacPrincipal(ctx))) {
             throwExceptionIfOperationNotAllowed(ctx);
         }
     }
-    
+
     // ------------------------------------------------------------------------
     // PUBLICATIONS VERSIONS
     // ------------------------------------------------------------------------
@@ -50,7 +50,7 @@ public class PublicationsSecurityUtils extends SecurityUtils {
             throwExceptionIfOperationNotAllowed(ctx);
         }
     }
-    
+
     public static void canRetrieveLatestPublicationVersion(ServiceContext ctx) throws MetamacException {
         if (!SharedPublicationsSecurityUtils.canRetrieveLatestPublicationVersion(getMetamacPrincipal(ctx))) {
             throwExceptionIfOperationNotAllowed(ctx);
@@ -80,7 +80,7 @@ public class PublicationsSecurityUtils extends SecurityUtils {
             throwExceptionIfOperationNotAllowed(ctx);
         }
     }
-    
+
     public static void canSendPublicationVersionToProductionValidation(ServiceContext ctx) throws MetamacException {
         if (!SharedPublicationsSecurityUtils.canSendPublicationVersionToProductionValidation(getMetamacPrincipal(ctx))) {
             throwExceptionIfOperationNotAllowed(ctx);
@@ -98,11 +98,16 @@ public class PublicationsSecurityUtils extends SecurityUtils {
             throwExceptionIfOperationNotAllowed(ctx);
         }
     }
-    
+    public static void canPublishPublicationVersion(ServiceContext ctx) throws MetamacException {
+        if (!SharedPublicationsSecurityUtils.canPublishPublicationVersion(getMetamacPrincipal(ctx))) {
+            throwExceptionIfOperationNotAllowed(ctx);
+        }
+    }
+
     // ------------------------------------------------------------------------
     // CHAPTERS
     // ------------------------------------------------------------------------
-    
+
     public static void canCreateChapter(ServiceContext ctx) throws MetamacException {
         if (!SharedPublicationsSecurityUtils.canCreateChapter(getMetamacPrincipal(ctx))) {
             throwExceptionIfOperationNotAllowed(ctx);
@@ -136,7 +141,7 @@ public class PublicationsSecurityUtils extends SecurityUtils {
     // ------------------------------------------------------------------------
     // CUBES
     // ------------------------------------------------------------------------
-    
+
     public static void canCreateCube(ServiceContext ctx) throws MetamacException {
         if (!SharedPublicationsSecurityUtils.canCreateCube(getMetamacPrincipal(ctx))) {
             throwExceptionIfOperationNotAllowed(ctx);

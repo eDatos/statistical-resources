@@ -224,6 +224,9 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
 
     public static final String               DATASET_VERSION_88_PUBLISHED_WITH_CATEGORISATIONS_NAME                                                 = "DATASET_VERSION_88_PUBLISHED_WITH_CATEGORISATIONS";
 
+    public static final String               DATASET_VERSION_89_WITH_ONE_DATASOURCE_NAME                                                            = "DATASET_VERSION_89_WITH_ONE_DATASOURCE";
+    public static final String               DATASET_VERSION_90_WITH_TWO_DATASOURCES_NAME                                                           = "DATASET_VERSION_90_WITH_TWO_DATASOURCES";
+
     private static final String              INIT_VERSION                                                                                           = "001.000";
     private static final String              SECOND_VERSION                                                                                         = "002.000";
 
@@ -956,6 +959,21 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
         datasetVersion.addCategorisation(CategorisationMockFactory.createCategorisation("cat_data_1001", "category01", datasetVersion));
         datasetVersion.addCategorisation(CategorisationMockFactory.createCategorisation("cat_data_1002", "category02", datasetVersion));
         datasetVersion.addCategorisation(CategorisationMockFactory.createCategorisation("cat_data_1003", "category03", datasetVersion));
+        return datasetVersion;
+    }
+
+    public static DatasetVersion getDatasetVersion89WithOneDatasource() {
+        DatasetVersion datasetVersion = createDatasetVersionInStatusWithGeneratedDatasource(1, ProcStatusEnum.DRAFT);
+        return datasetVersion;
+    }
+
+    public static DatasetVersion getDatasetVersion90WithTwoDatasources() {
+        DatasetVersion datasetVersion = createDatasetVersionWithSequence(2);
+        datasetVersion.setDatasetRepositoryId(StatisticalResourcesPersistedDoMocks.mockString(10));
+        datasetVersion.getSiemacMetadataStatisticalResource().setProcStatus(ProcStatusEnum.DRAFT);
+        datasetVersion.addDatasource(DatasourceMockFactory.generateSimpleDatasource());
+        datasetVersion.addDatasource(DatasourceMockFactory.generateSimpleDatasource());
+
         return datasetVersion;
     }
 

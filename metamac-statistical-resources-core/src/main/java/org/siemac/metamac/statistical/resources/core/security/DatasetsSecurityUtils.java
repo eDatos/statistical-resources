@@ -92,6 +92,12 @@ public class DatasetsSecurityUtils extends SecurityUtils {
         }
     }
 
+    public static void canPublishDatasetVersion(ServiceContext ctx) throws MetamacException {
+        if (!SharedDatasetsSecurityUtils.canPublishDataset(getMetamacPrincipal(ctx))) {
+            throwExceptionIfOperationNotAllowed(ctx);
+        }
+    }
+
     public static void canVersionDataset(ServiceContext ctx) throws MetamacException {
         if (!SharedDatasetsSecurityUtils.canVersionDataset(getMetamacPrincipal(ctx))) {
             throwExceptionIfOperationNotAllowed(ctx);

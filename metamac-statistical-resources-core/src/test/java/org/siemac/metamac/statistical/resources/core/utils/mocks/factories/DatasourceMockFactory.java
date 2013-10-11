@@ -2,9 +2,9 @@ package org.siemac.metamac.statistical.resources.core.utils.mocks.factories;
 
 import org.joda.time.DateTime;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesPersistedDoMocks;
 import org.springframework.stereotype.Component;
 
-@Component
 @SuppressWarnings("unused")
 public class DatasourceMockFactory extends StatisticalResourcesMockFactory<Datasource> {
 
@@ -25,7 +25,9 @@ public class DatasourceMockFactory extends StatisticalResourcesMockFactory<Datas
     }
 
     private static Datasource getDatasource01Basic() {
-        return createDatasource();
+        Datasource datasource = createDatasource();
+        datasource.getDatasetVersion().setDatasetRepositoryId(StatisticalResourcesPersistedDoMocks.mockString(10));
+        return datasource;
     }
 
     private static Datasource getDatasource02Basic() {

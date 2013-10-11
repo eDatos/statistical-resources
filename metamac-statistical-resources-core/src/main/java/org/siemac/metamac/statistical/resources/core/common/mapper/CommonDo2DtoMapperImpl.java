@@ -12,20 +12,24 @@ import org.joda.time.DateTime;
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.dto.InternationalStringDto;
 import org.siemac.metamac.core.common.dto.LocalisedStringDto;
-import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
-import org.siemac.metamac.statistical.resources.core.common.domain.InternationalString;
-import org.siemac.metamac.statistical.resources.core.common.domain.LocalisedString;
-import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResourceResult;
 import org.siemac.metamac.core.common.enume.utils.TypeExternalArtefactsEnumUtils;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.mapper.BaseDo2DtoMapperImpl;
 import org.siemac.metamac.statistical.resources.core.base.domain.NameableStatisticalResource;
+import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
+import org.siemac.metamac.statistical.resources.core.common.domain.InternationalString;
+import org.siemac.metamac.statistical.resources.core.common.domain.LocalisedString;
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResource;
+import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResourceResult;
 import org.siemac.metamac.statistical.resources.core.common.utils.RelatedResourceUtils;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionRepository;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.TemporalCode;
 import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.TemporalCodeDto;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
+import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersionRepository;
+import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersionRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @org.springframework.stereotype.Component("commonDo2DtoMapper")
 public class CommonDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements CommonDo2DtoMapper {
@@ -33,6 +37,15 @@ public class CommonDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements Comm
     // ------------------------------------------------------------
     // TEMPORAL CODE
     // ------------------------------------------------------------
+
+    @Autowired
+    private DatasetVersionRepository     datasetVersionRepository;
+
+    @Autowired
+    private PublicationVersionRepository publicationVersionRepository;
+
+    @Autowired
+    private QueryVersionRepository       queryVersionRepository;
 
     @Override
     public Collection<TemporalCodeDto> temporalCodeDoCollectionToDtoCollection(Collection<TemporalCode> source) throws MetamacException {
@@ -45,11 +58,11 @@ public class CommonDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements Comm
         }
         return result;
     }
-    
+
     @Override
     public List<TemporalCodeDto> temporalCodeDoCollectionToDtoList(Collection<TemporalCode> source) throws MetamacException {
         List<TemporalCodeDto> result = new ArrayList<TemporalCodeDto>();
-        
+
         if (source != null) {
             for (TemporalCode temporalCode : source) {
                 result.add(temporalCodeDoToDto(temporalCode));
@@ -82,11 +95,11 @@ public class CommonDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements Comm
         }
         return result;
     }
-    
+
     @Override
     public List<ExternalItemDto> externalItemDoCollectionToDtoList(Collection<ExternalItem> source) throws MetamacException {
         List<ExternalItemDto> result = new ArrayList<ExternalItemDto>();
-        
+
         if (source != null) {
             for (ExternalItem externalItem : source) {
                 result.add(externalItemDoToDto(externalItem));
@@ -158,7 +171,7 @@ public class CommonDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements Comm
         }
         return result;
     }
-    
+
     @Override
     public Collection<RelatedResourceDto> relatedResourceDoCollectionToDtoCollection(Collection<RelatedResource> source) throws MetamacException {
         HashSet<RelatedResourceDto> result = new HashSet<RelatedResourceDto>();
@@ -183,7 +196,7 @@ public class CommonDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements Comm
         target.setStatisticalOperationUrn(source.getStatisticalOperationUrn());
         return target;
     }
-    
+
     private InternationalStringDto buildInternationalStrinFromLocalesMap(Map<String, String> localisedTexts) {
         if (localisedTexts.isEmpty()) {
             return null;
@@ -203,7 +216,22 @@ public class CommonDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements Comm
         if (source == null) {
             return null;
         }
-        NameableStatisticalResource nameableResource = RelatedResourceUtils.retrieveNameableResourceLinkedToRelatedResource(source);
+
+        NameableStatisticalResource nameableResource = null;
+        switch (source.getType()) {
+            case DATASET:
+                nameableResource = datasetVersionRepository.retrieveLastVersion(source.getDataset().getIdentifiableStatisticalResource().getUrn()).getSiemacMetadataStatisticalResource();
+                break;
+            case PUBLICATION:
+                nameableResource = publicationVersionRepository.retrieveLastVersion(source.getPublication().getIdentifiableStatisticalResource().getUrn()).getSiemacMetadataStatisticalResource();
+                break;
+            case QUERY:
+                nameableResource = queryVersionRepository.retrieveLastVersion(source.getQuery().getIdentifiableStatisticalResource().getUrn()).getLifeCycleStatisticalResource();
+                break;
+            default:
+                nameableResource = RelatedResourceUtils.retrieveNameableResourceLinkedToRelatedResource(source);
+        }
+
         RelatedResourceDto target = new RelatedResourceDto();
         target.setCode(nameableResource.getCode());
         target.setTitle(internationalStringDoToDto(nameableResource.getTitle()));

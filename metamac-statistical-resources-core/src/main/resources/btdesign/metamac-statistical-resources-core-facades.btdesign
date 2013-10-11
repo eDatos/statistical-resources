@@ -61,6 +61,9 @@ Application FacadeStatisticalResources {
     		"Send to validation rejected"
     		@QueryVersionDto sendQueryVersionToValidationRejected(@QueryVersionDto queryVersionDto) throws MetamacException;
     		@QueryVersionBaseDto sendQueryVersionToValidationRejected(@QueryVersionBaseDto queryVersionDto) throws MetamacException;
+    		"Publishes a new version of a query version"
+    		@QueryVersionDto publishQueryVersion(@QueryVersionDto queryVersionDto) throws MetamacException;
+    		@QueryVersionBaseDto publishQueryVersion(@QueryVersionBaseDto queryVersionDto) throws MetamacException;
     		"Creates a new version of a query version, copying metadata from version with provided urn"
     		@QueryVersionDto versioningQueryVersion(@QueryVersionDto queryVersionDto, @VersionTypeEnum versionType) throws MetamacException;
     		@QueryVersionBaseDto versioningQueryVersion(@QueryVersionBaseDto queryVersionDto, @VersionTypeEnum versionType) throws MetamacException;
@@ -113,6 +116,9 @@ Application FacadeStatisticalResources {
     		"Send to validation rejected"
     		@DatasetVersionDto sendDatasetVersionToValidationRejected(@DatasetVersionDto datasetVersionDto) throws MetamacException;
     		@DatasetVersionBaseDto sendDatasetVersionToValidationRejected(@DatasetVersionBaseDto datasetVersionDto) throws MetamacException;
+    		"Published a new version of a dataset"
+    		@DatasetVersionDto publishDatasetVersion(@DatasetVersionDto datasetVersionDto) throws MetamacException;
+    		@DatasetVersionBaseDto publishDatasetVersion(@DatasetVersionBaseDto datasetVersionDto) throws MetamacException;
     		"Creates a new version of a dataset, copying metadata from version with provided urn"
     		@DatasetVersionDto versioningDatasetVersion(@DatasetVersionDto datasetVersionDto, @VersionTypeEnum versionType) throws MetamacException;
     		@DatasetVersionBaseDto versioningDatasetVersion(@DatasetVersionBaseDto datasetVersionDto, @VersionTypeEnum versionType) throws MetamacException;
@@ -178,6 +184,9 @@ Application FacadeStatisticalResources {
     		"Send to validation rejected"
     		@PublicationVersionDto sendPublicationVersionToValidationRejected(@PublicationVersionDto publicationVersionDto) throws MetamacException;
     		@PublicationVersionBaseDto sendPublicationVersionToValidationRejected(@PublicationVersionBaseDto publicationVersionDto) throws MetamacException;
+    		"Publishes a new version of a publication"
+    		@PublicationVersionDto publishPublicationVersion(@PublicationVersionDto publicationVersionDto) throws MetamacException;
+    		@PublicationVersionBaseDto publishPublicationVersion(@PublicationVersionBaseDto publicationVersionDto) throws MetamacException;
     		"Creates a new version of a publication, copying metadata from version with provided urn"
     		@PublicationVersionDto versioningPublicationVersion(@PublicationVersionDto publicationVersionDto, @VersionTypeEnum versionType) throws MetamacException;
     		@PublicationVersionBaseDto versioningPublicationVersion(@PublicationVersionBaseDto publicationVersionDto, @VersionTypeEnum versionType) throws MetamacException;

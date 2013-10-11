@@ -88,6 +88,19 @@ public class DataMockUtils {
         datasetVersion.setDateEnd(new DateTime(2012, 12, 31, 23, 59, 59, 999));
     }
 
+    public static void fillDatasetVersionWithEmptyCalculatedMetadataFromData(DatasetVersion datasetVersion) {
+        datasetVersion.getGeographicCoverage().clear();
+        datasetVersion.getTemporalCoverage().clear();
+        datasetVersion.getMeasureCoverage().clear();
+        datasetVersion.getDimensionsCoverage().clear();
+
+        datasetVersion.setFormatExtentDimensions(0);
+        datasetVersion.setFormatExtentObservations(0L);
+
+        datasetVersion.setDateStart(null);
+        datasetVersion.setDateEnd(null);
+    }
+
     private static TemporalCode buildTemporalCode(String identifier) {
         TemporalCode code = new TemporalCode();
         code.setIdentifier(identifier);

@@ -505,6 +505,12 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
     }
 
     @Override
+    public void testPublishQueryVersion() throws Exception {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
     @Test
     @MetamacMock(QUERY_VERSION_15_PUBLISHED_NAME)
     public void testVersioningQueryVersion() throws Exception {
@@ -859,6 +865,12 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
     }
 
     @Override
+    public void testPublishPublicationVersion() throws Exception {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
     @Test
     @MetamacMock(PUBLICATION_VERSION_29_V3_PUBLISHED_FOR_PUBLICATION_05_NAME)
     public void testVersioningPublicationVersion() throws Exception {
@@ -1172,6 +1184,12 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
         } catch (MetamacException e) {
             assertEqualsMetamacExceptionItem(ServiceExceptionType.OPTIMISTIC_LOCKING, 0, null, e.getExceptionItems().get(0));
         }
+    }
+
+    @Override
+    public void testPublishDatasetVersion() throws Exception {
+        // TODO Auto-generated method stub
+
     }
 
     @Override

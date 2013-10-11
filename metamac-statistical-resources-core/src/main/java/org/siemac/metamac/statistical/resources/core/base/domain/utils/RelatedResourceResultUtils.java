@@ -8,7 +8,6 @@ import java.util.Map;
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResourceResult;
 import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
 
-
 public class RelatedResourceResultUtils {
 
     public static List<RelatedResourceResult> getRelatedResourceResultsFromRows(List<Object> rows, TypeRelatedResourceEnum type) {
@@ -25,6 +24,14 @@ public class RelatedResourceResultUtils {
         }
         List<RelatedResourceResult> resources = new ArrayList<RelatedResourceResult>(resourcesByUrn.values());
         return resources;
+    }
+
+    public static List<String> getUrnsFromRelatedResourceResults(List<RelatedResourceResult> resources) {
+        List<String> urns = new ArrayList<String>();
+        for (RelatedResourceResult relatedResourceResult : resources) {
+            urns.add(relatedResourceResult.getUrn());
+        }
+        return urns;
     }
 
     private static void populateResultWithRow(RelatedResourceResult resource, Object[] cols, TypeRelatedResourceEnum type) {
