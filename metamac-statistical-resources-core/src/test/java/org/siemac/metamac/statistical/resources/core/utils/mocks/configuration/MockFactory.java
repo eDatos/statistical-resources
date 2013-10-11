@@ -4,15 +4,9 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-
-import org.siemac.metamac.statistical.resources.core.utils.MetamacReflectionUtils;
 
 import com.arte.libs.lang.ObjectUtils;
 
@@ -30,7 +24,7 @@ public abstract class MockFactory<EntityMock> {
 
     private static Map<String, MockDescriptor> mocks             = new HashMap<String, MockDescriptor>();
 
-    @SuppressWarnings({"rawtypes", "unchecked"})
+    @SuppressWarnings("unchecked")
     public EntityMock retrieveMock(String mockName) {
         EntityMock templateInstance;
         try {
@@ -62,7 +56,6 @@ public abstract class MockFactory<EntityMock> {
         return null;
     }
 
-    @SuppressWarnings("unchecked")
     protected MockDescriptor getMockWithDependencies(String id) {
         if (mocks.get(id) == null) {
             MockDescriptor mockDesc = getMocksInMethod(id);
@@ -73,36 +66,9 @@ public abstract class MockFactory<EntityMock> {
         return mocks.get(id);
     }
 
-    private EntityMock getMockInField(String id) {
-        try {
-            Field field = getClass().getDeclaredField(id);
-            field.setAccessible(true);
-            Object obj = field.get(this);
-            return (EntityMock) obj;
-        } catch (NoSuchFieldException e) {
-            return null;
-        } catch (Exception e) {
-            throw new RuntimeException("Error creating mock " + id + " accesing to field " + id, e);
-        }
-    }
-
     public void registerMock(String id, Object mock) {
         mocks.put(id, new MockDescriptor(mock));
     }
-
-    // private EntityMock getMockInMethod(String id) {
-    // String methodName = getMethodNameFromId(id);
-    // try {
-    // Method method = getClass().getDeclaredMethod(methodName);
-    // method.setAccessible(true);
-    // Object obj = method.invoke(this);
-    // return (EntityMock) obj;
-    // } catch (NoSuchMethodException e) {
-    // return null;
-    // } catch (Exception e) {
-    // throw new RuntimeException("Error creating mock " + id + " accesing to method " + methodName, e);
-    // }
-    // }
 
     private MockDescriptor getMocksInMethod(String id) {
         String methodName = getMethodNameFromId(id);

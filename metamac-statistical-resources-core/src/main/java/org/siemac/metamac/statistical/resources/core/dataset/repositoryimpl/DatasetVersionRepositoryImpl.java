@@ -62,7 +62,6 @@ public class DatasetVersionRepositoryImpl extends DatasetVersionRepositoryBase {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public DatasetVersion retrieveLastVersion(String datasetUrn) throws MetamacException {
         // Prepare criteria
         List<ConditionalCriteria> conditions = ConditionalCriteriaBuilder.criteriaFor(DatasetVersion.class).withProperty(DatasetVersionProperties.dataset().identifiableStatisticalResource().urn())
