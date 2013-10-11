@@ -12,6 +12,7 @@ import org.siemac.metamac.common.test.dbunit.MetamacDBUnitBaseTests.DataBaseProv
 import org.siemac.metamac.sso.client.MetamacPrincipal;
 import org.siemac.metamac.sso.client.MetamacPrincipalAccess;
 import org.siemac.metamac.sso.client.SsoClientConstants;
+import org.siemac.metamac.statistical.resources.core.base.domain.HasLifecycle;
 import org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConstants;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourcesRoleEnum;
 import org.siemac.metamac.statistical.resources.core.task.serviceimpl.TaskServiceImpl;
@@ -105,5 +106,9 @@ public abstract class StatisticalResourcesBaseTest extends MetamacBaseTest {
 
     protected String buildCommaSeparatedString(String... items) {
         return StringUtils.join(items, ", ");
+    }
+
+    protected String getResourceUrn(HasLifecycle hasLifecycle) {
+        return hasLifecycle.getLifeCycleStatisticalResource().getUrn();
     }
 }

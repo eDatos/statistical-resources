@@ -419,7 +419,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         // Check can be deleted
         ProcStatusValidator.checkStatisticalResourceCanBeDeleted(datasetVersion);
 
-        // TODO: Determinar si hay algunas comprobaciones que impiden el borrado
+        checkCanDatasetVersionBeDeleted(datasetVersion);
 
         // TODO: Comprobar si hay que eliminar relaciones a otros recursos
 
@@ -437,6 +437,37 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
             Dataset dataset = datasetVersion.getDataset();
             dataset.getVersions().remove(datasetVersion);
             getDatasetVersionRepository().delete(datasetVersion);
+        }
+    }
+
+    private void checkCanDatasetVersionBeDeleted(DatasetVersion datasetVersion) throws MetamacException {
+        List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
+
+        List<RelatedResourceResult> resourcesIsPartOf = datasetVersionRepository.retrieveIsPartOf(datasetVersion);
+        if (!resourcesIsPartOf.isEmpty()) {
+            List<String> urns = getUrnsFromRelatedResourceResults(resourcesIsPartOf);
+            Collections.sort(urns);
+            String parameter = StringUtils.join(urns, ", ");
+            exceptionItems.add(new MetamacExceptionItem(ServiceExceptionType.DATASET_VERSION_IS_PART_OF_OTHER_RESOURCES, parameter));
+        }
+
+        RelatedResourceResult resourceIsReplacedBy = datasetVersionRepository.retrieveIsReplacedBy(datasetVersion);
+        if (resourceIsReplacedBy != null) {
+            exceptionItems.add(new MetamacExceptionItem(ServiceExceptionType.DATASET_VERSION_IS_REPLACED_BY_OTHER_RESOURCE, resourceIsReplacedBy.getUrn()));
+        }
+
+        List<RelatedResourceResult> resourcesIsRequiredBy = datasetVersionRepository.retrieveIsRequiredBy(datasetVersion);
+        if (!resourcesIsRequiredBy.isEmpty()) {
+            List<String> urns = getUrnsFromRelatedResourceResults(resourcesIsRequiredBy);
+            Collections.sort(urns);
+            String parameter = StringUtils.join(urns, ", ");
+            exceptionItems.add(new MetamacExceptionItem(ServiceExceptionType.DATASET_VERSION_IS_REQUIRED_BY_OTHER_RESOURCES, parameter));
+        }
+
+        if (exceptionItems.size() > 0) {
+            MetamacExceptionItem item = new MetamacExceptionItem(ServiceExceptionType.DATASET_VERSION_CANT_BE_DELETED, datasetVersion.getSiemacMetadataStatisticalResource().getUrn());
+            item.setExceptionItems(exceptionItems);
+            throw new MetamacException(Arrays.asList(item));
         }
     }
 

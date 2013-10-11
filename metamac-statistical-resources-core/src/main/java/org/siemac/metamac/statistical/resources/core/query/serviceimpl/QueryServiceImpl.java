@@ -1,27 +1,34 @@
 package org.siemac.metamac.statistical.resources.core.query.serviceimpl;
 
+import static org.siemac.metamac.statistical.resources.core.base.domain.utils.RelatedResourceResultUtils.getUrnsFromRelatedResourceResults;
 import static org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesCollectionUtils.find;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
 import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
 import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.siemac.metamac.core.common.criteria.utils.CriteriaUtils;
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.core.common.util.GeneratorUrnUtils;
 import org.siemac.metamac.core.common.util.SdmxTimeUtils;
 import org.siemac.metamac.core.common.util.shared.VersionUtil;
 import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableStatisticalResourceRepository;
+import org.siemac.metamac.statistical.resources.core.base.domain.utils.RelatedResourceResultUtils;
 import org.siemac.metamac.statistical.resources.core.base.utils.FillMetadataForCreateResourceUtils;
 import org.siemac.metamac.statistical.resources.core.base.validators.ProcStatusValidator;
 import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
+import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResourceResult;
 import org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConstants;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.CodeDimension;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.CodeDimensionRepository;
@@ -34,6 +41,7 @@ import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.query.domain.Query;
 import org.siemac.metamac.statistical.resources.core.query.domain.QuerySelectionItem;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
+import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersionRepository;
 import org.siemac.metamac.statistical.resources.core.query.serviceapi.validators.QueryServiceInvocationValidator;
 import org.siemac.metamac.statistical.resources.core.query.serviceimpl.validators.QueryConstraintValidator;
 import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesCollectionUtils;
@@ -61,6 +69,9 @@ public class QueryServiceImpl extends QueryServiceImplBase {
 
     @Autowired
     private DatasetVersionRepository                  datasetVersionRepository;
+
+    @Autowired
+    private QueryVersionRepository                    queryVersionRepository;
 
     public QueryServiceImpl() {
     }
@@ -181,12 +192,32 @@ public class QueryServiceImpl extends QueryServiceImplBase {
         // Check that query is with a correct procStatus
         ProcStatusValidator.checkStatisticalResourceCanBeDeleted(queryVersion);
 
+        checkCanQueryVersionBeDeleted(queryVersion);
+
         if (VersionUtil.isInitialVersion(queryVersion.getLifeCycleStatisticalResource().getVersionLogic())) {
             Query query = queryVersion.getQuery();
             getQueryRepository().delete(query);
         } else {
             // Delete
             getQueryVersionRepository().delete(queryVersion);
+        }
+    }
+
+    private void checkCanQueryVersionBeDeleted(QueryVersion queryVersion) throws MetamacException {
+        List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
+
+        List<RelatedResourceResult> resourcesIsPartOf = queryVersionRepository.retrieveIsPartOf(queryVersion);
+        if (!resourcesIsPartOf.isEmpty()) {
+            List<String> urns = getUrnsFromRelatedResourceResults(resourcesIsPartOf);
+            Collections.sort(urns);
+            String parameter = StringUtils.join(urns, ", ");
+            exceptionItems.add(new MetamacExceptionItem(ServiceExceptionType.QUERY_VERSION_IS_PART_OF_OTHER_RESOURCES, parameter));
+        }
+
+        if (exceptionItems.size() > 0) {
+            MetamacExceptionItem item = new MetamacExceptionItem(ServiceExceptionType.QUERY_VERSION_CANT_BE_DELETED, queryVersion.getLifeCycleStatisticalResource().getUrn());
+            item.setExceptionItems(exceptionItems);
+            throw new MetamacException(Arrays.asList(item));
         }
     }
 

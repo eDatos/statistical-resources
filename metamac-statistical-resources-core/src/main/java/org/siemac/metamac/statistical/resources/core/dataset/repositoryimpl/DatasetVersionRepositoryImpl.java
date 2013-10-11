@@ -281,7 +281,6 @@ public class DatasetVersionRepositoryImpl extends DatasetVersionRepositoryBase {
             "            on cubes.ID = elem.table_fk, " +
             "        tb_publications_versions pub INNER JOIN tb_stat_resources stat " +
             "            ON pub.siemac_resource_fk = stat.ID, " +
-            "        tb_related_resources related, " +
             "        tb_external_items operation, " +
             "        tb_external_items maintainer, " +
             "        tb_datasets dataset, " +

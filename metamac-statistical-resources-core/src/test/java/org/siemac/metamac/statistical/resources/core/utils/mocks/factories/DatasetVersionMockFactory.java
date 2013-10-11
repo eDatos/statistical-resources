@@ -841,6 +841,7 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
 
     private static MockDescriptor getDatasetVersion85LastVersionNotPublishedIsPartOfPublications() {
         DatasetVersion datasetVersion = createDatasetVersionWithSequence(1);
+        datasetVersion.getSiemacMetadataStatisticalResource().setLastVersion(true);
 
         // Publication created in PublicationVersionMockFactory
         PublicationVersion pub01 = buildDraftPublicationWithDatasetInFirstLevel(1, datasetVersion.getDataset());

@@ -11,8 +11,11 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_06_FOR_QUERIES_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_48_WITH_TEMPORAL_COVERAGE_FILLED_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_86_WITH_TEMPORAL_DIMENSION_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_61_DRAFT_WITH_PREVIOUS_VERSION__LINKED_TO_QUERY_10_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_62_DRAFT_SINGLE_VERSION__LINKED_TO_QUERY_10_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryMockFactory.QUERY_03_BASIC_WITH_2_QUERY_VERSIONS_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryMockFactory.QUERY_06_WITH_MULTIPLE_PUBLISHED_VERSIONS_AND_LATEST_NO_VISIBLE_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryMockFactory.QUERY_10_SINGLE_VERSION_DRAFT_USED_IN_PUBLICATIONS_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_01_WITH_SELECTION_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_02_BASIC_ORDERED_01_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_03_BASIC_ORDERED_02_NAME;
@@ -35,6 +38,7 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_28_V2_PUBLISHED_NO_VISIBLE_FOR_QUERY_06_NAME;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -46,6 +50,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.core.common.util.GeneratorUrnUtils;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
 import org.siemac.metamac.statistical.resources.core.base.constants.ProcStatusForActionsConstants;
@@ -60,6 +65,7 @@ import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryTyp
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionSingleParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
+import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryRepository;
 import org.siemac.metamac.statistical.resources.core.query.domain.QuerySelectionItem;
 import org.siemac.metamac.statistical.resources.core.query.domain.QuerySelectionItemRepository;
@@ -68,6 +74,7 @@ import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersionPr
 import org.siemac.metamac.statistical.resources.core.utils.asserts.QueryAsserts;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.configuration.MetamacMock;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetMockFactory;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesDoMocks;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesNotPersistedDoMocks;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -860,6 +867,28 @@ public class QueryServiceTest extends StatisticalResourcesBaseTest implements Qu
 
         queryService.deleteQueryVersion(getServiceContextWithoutPrincipal(), urn);
         queryService.retrieveQueryVersionByUrn(getServiceContextWithoutPrincipal(), urn);
+    }
+
+    @Test
+    @MetamacMock({QUERY_10_SINGLE_VERSION_DRAFT_USED_IN_PUBLICATIONS_NAME})
+    public void testDeleteQueryVersionIsPartOf() throws Exception {
+        QueryVersion queryVersion = queryMockFactory.retrieveMock(QUERY_10_SINGLE_VERSION_DRAFT_USED_IN_PUBLICATIONS_NAME).getVersions().get(0);
+        String urn = queryVersion.getLifeCycleStatisticalResource().getUrn();
+
+        String pubVersion01Urn = getResourceUrn(publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_61_DRAFT_WITH_PREVIOUS_VERSION__LINKED_TO_QUERY_10_NAME));
+        String pubVersion02Urn = getResourceUrn(publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_62_DRAFT_SINGLE_VERSION__LINKED_TO_QUERY_10_NAME));
+
+        List<String> pubUrns = Arrays.asList(pubVersion01Urn, pubVersion02Urn);
+        Collections.sort(pubUrns);
+
+        MetamacExceptionItem itemRoot = new MetamacExceptionItem(ServiceExceptionType.QUERY_VERSION_CANT_BE_DELETED, urn);
+        MetamacExceptionItem item = new MetamacExceptionItem(ServiceExceptionType.QUERY_VERSION_IS_PART_OF_OTHER_RESOURCES, StringUtils.join(pubUrns, ", "));
+        itemRoot.setExceptionItems(Arrays.asList(item));
+
+        expectedMetamacException(new MetamacException(Arrays.asList(itemRoot)));
+
+        queryService.deleteQueryVersion(getServiceContextWithoutPrincipal(), urn);
+
     }
 
     @Test

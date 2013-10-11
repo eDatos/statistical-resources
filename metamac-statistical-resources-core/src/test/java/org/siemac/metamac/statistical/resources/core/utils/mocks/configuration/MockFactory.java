@@ -39,7 +39,10 @@ public abstract class MockFactory<EntityMock> {
             throw new RuntimeException("Error getting instance from generic", e);
         }
         EntityMock mock = getMock(mockName);
-        return ObjectUtils.deepCopyInParent(mock, templateInstance);
+        if (mock != null) {
+            return ObjectUtils.deepCopyInParent(mock, templateInstance);
+        }
+        return null;
     }
 
     public List<EntityMock> retrieveMocks(String... names) {

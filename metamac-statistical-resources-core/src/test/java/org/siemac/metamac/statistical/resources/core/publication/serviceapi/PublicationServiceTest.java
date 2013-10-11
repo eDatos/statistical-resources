@@ -39,10 +39,14 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_24_WITH_COMPLEX_STRUCTURE_DIFFUSION_VALIDATION_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_25_WITH_COMPLEX_STRUCTURE_VALIDATION_REJECTED_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_26_WITH_COMPLEX_STRUCTURE_PUBLISHED_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_91_REPLACES_PUBLICATION_92_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_92_IS_REPLACED_BY_PUBLICATION_91_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryMockFactory.QUERY_01_SIMPLE_NAME;
 
+import java.util.Arrays;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteriaBuilder;
 import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
@@ -51,6 +55,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.siemac.metamac.common.test.utils.MetamacAsserts;
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
 import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
@@ -65,6 +70,7 @@ import org.siemac.metamac.statistical.resources.core.publication.domain.Publicat
 import org.siemac.metamac.statistical.resources.core.query.domain.Query;
 import org.siemac.metamac.statistical.resources.core.utils.asserts.CommonAsserts;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.configuration.MetamacMock;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesNotPersistedDoMocks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -403,6 +409,22 @@ public class PublicationServiceTest extends StatisticalResourcesBaseTest impleme
 
         // Validation
         publicationService.retrievePublicationVersionByUrn(getServiceContextWithoutPrincipal(), urn);
+    }
+
+    @Test
+    @MetamacMock(PUBLICATION_VERSION_92_IS_REPLACED_BY_PUBLICATION_91_NAME)
+    public void testDeletePublicationVersionIsReplacedBy() throws Exception {
+        String urnReplaces = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_91_REPLACES_PUBLICATION_92_NAME).getSiemacMetadataStatisticalResource().getUrn();
+        String urn = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_92_IS_REPLACED_BY_PUBLICATION_91_NAME).getSiemacMetadataStatisticalResource().getUrn();
+
+        MetamacExceptionItem itemRoot = new MetamacExceptionItem(ServiceExceptionType.PUBLICATION_VERSION_CANT_BE_DELETED, urn);
+        MetamacExceptionItem item = new MetamacExceptionItem(ServiceExceptionType.PUBLICATION_VERSION_IS_REPLACED_BY_OTHER_RESOURCE, urnReplaces);
+        itemRoot.setExceptionItems(Arrays.asList(item));
+
+        expectedMetamacException(new MetamacException(Arrays.asList(itemRoot)));
+
+        // Delete publication version
+        publicationService.deletePublicationVersion(getServiceContextWithoutPrincipal(), urn);
     }
 
     @Test

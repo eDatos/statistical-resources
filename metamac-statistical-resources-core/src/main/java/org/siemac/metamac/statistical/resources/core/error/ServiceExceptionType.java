@@ -19,8 +19,12 @@ public class ServiceExceptionType extends CommonServiceExceptionType {
     public static final CommonServiceExceptionType DATASET_NO_DATA                                                        = create("exception.resources.dataset.empty_data");
     public static final CommonServiceExceptionType DATASET_VERSION_CANT_ALTER_DATASOURCES                                 = create("exception.resources.dataset_version.cant_alter_datasources");
     public static final CommonServiceExceptionType DATASET_VERSION_CANT_CHANGE_DSD_SOME_QUERIES_EXIST                     = create("exception.resources.dataset_version.cant_change_dsd_some_queries_exist");
-    public static final CommonServiceExceptionType DATASET_VERSION_ALREADY_BEEN_REPLACED_BY_OTHER_DATASET_VERSION         = create("exception.resources.dataset_version_already_been_replaced_by_other_dataset_version");
-    public static final CommonServiceExceptionType DATASET_VERSION_CANT_REPLACE_ITSELF                                    = create("exception.resources.dataset_version_cant_replace_itself");
+    public static final CommonServiceExceptionType DATASET_VERSION_ALREADY_BEEN_REPLACED_BY_OTHER_DATASET_VERSION         = create("exception.resources.dataset_version.already_been_replaced_by_other_dataset_version");
+    public static final CommonServiceExceptionType DATASET_VERSION_CANT_REPLACE_ITSELF                                    = create("exception.resources.dataset_version.cant_replace_itself");
+    public static final CommonServiceExceptionType DATASET_VERSION_CANT_BE_DELETED                                        = create("exception.resources.dataset_version.cant_be_deleted");
+    public static final CommonServiceExceptionType DATASET_VERSION_IS_PART_OF_OTHER_RESOURCES                             = create("exception.resources.dataset_version.is_part_of_publications");
+    public static final CommonServiceExceptionType DATASET_VERSION_IS_REPLACED_BY_OTHER_RESOURCE                          = create("exception.resources.dataset_version.is_replaced_by_other_datasets");
+    public static final CommonServiceExceptionType DATASET_VERSION_IS_REQUIRED_BY_OTHER_RESOURCES                         = create("exception.resources.dataset_version.is_required_by_queries");
 
     // Datasource
     public static final CommonServiceExceptionType DATASOURCE_NOT_FOUND                                                   = create("exception.resources.datasource.not_found");
@@ -36,13 +40,15 @@ public class ServiceExceptionType extends CommonServiceExceptionType {
     public static final CommonServiceExceptionType PUBLICATION_VERSION_NOT_FOUND                                          = create("exception.resources.publication.version_not_found");
     public static final CommonServiceExceptionType PUBLICATION_LAST_VERSION_NOT_FOUND                                     = create("exception.resources.publication.last_version_not_found");
     public static final CommonServiceExceptionType PUBLICATION_MAX_REACHED_IN_OPERATION                                   = create("exception.resources.publication.max_reached_in_operation");
-    public static final CommonServiceExceptionType PUBLICATION_VERSION_ALREADY_BEEN_REPLACED_BY_OTHER_PUBLICATION_VERSION = create("exception.resources.publication_version_already_been_replaced_by_other_publication_version");
-    public static final CommonServiceExceptionType PUBLICATION_VERSION_CANT_REPLACE_ITSELF                                = create("exception.resources.publication_version_cant_replace_itself");
-    public static final CommonServiceExceptionType PUBLICATION_VERSION_MUST_HAVE_AT_LEAST_ONE_CUBE                        = create("exception.resources.publication_version_must_have_at_least_one_cube");
+    public static final CommonServiceExceptionType PUBLICATION_VERSION_ALREADY_BEEN_REPLACED_BY_OTHER_PUBLICATION_VERSION = create("exception.resources.publication_version.already_been_replaced_by_other_publication_version");
+    public static final CommonServiceExceptionType PUBLICATION_VERSION_CANT_REPLACE_ITSELF                                = create("exception.resources.publication_version.cant_replace_itself");
+    public static final CommonServiceExceptionType PUBLICATION_VERSION_MUST_HAVE_AT_LEAST_ONE_CUBE                        = create("exception.resources.publication_version.must_have_at_least_one_cube");
     public static final CommonServiceExceptionType PUBLICATION_VERSION_CHAPTER_MUST_HAVE_AT_LEAST_ONE_CUBE                = create("exception.resources.publication_version.chapter_must_have_at_least_one_cube");
     public static final CommonServiceExceptionType PUBLICATION_VERSION_CUBE_MUST_LINK_TO_DATASET_OR_QUERY                 = create("exception.resources.publication_version.cube_must_link_to_dataset_or_query");
-    public static final CommonServiceExceptionType PUBLICATION_VERSION_LINKED_TO_NOT_PUBLISHED_DATASET                    = create("exception.resources.publication_version_linked_to_dataset_with_no_published_version");
-    public static final CommonServiceExceptionType PUBLICATION_VERSION_LINKED_TO_NOT_PUBLISHED_QUERY                      = create("exception.resources.publication_version_linked_to_query_not_published");
+    public static final CommonServiceExceptionType PUBLICATION_VERSION_LINKED_TO_NOT_PUBLISHED_DATASET                    = create("exception.resources.publication_version.linked_to_dataset_with_no_published_version");
+    public static final CommonServiceExceptionType PUBLICATION_VERSION_LINKED_TO_NOT_PUBLISHED_QUERY                      = create("exception.resources.publication_version.linked_to_query_not_published");
+    public static final CommonServiceExceptionType PUBLICATION_VERSION_CANT_BE_DELETED                                    = create("exception.resources.publication_version.cant_be_deleted");
+    public static final CommonServiceExceptionType PUBLICATION_VERSION_IS_REPLACED_BY_OTHER_RESOURCE                      = create("exception.resources.publication_version.is_replaced_by_other_publication");
 
     // Chapter
     public static final CommonServiceExceptionType CHAPTER_NOT_FOUND                                                      = create("exception.resources.chapter.not_found");
@@ -60,6 +66,8 @@ public class ServiceExceptionType extends CommonServiceExceptionType {
     public static final CommonServiceExceptionType QUERY_VERSION_DATASET_WITH_NO_PUBLISHED_VERSION                        = create("exception.resources.query_version.dataset_with_no_published_version");
     public static final CommonServiceExceptionType QUERY_VERSION_PUBLISH_INVALID_STATUS                                   = create("exception.resources.query_version.publish_invalid_status");
     public static final CommonServiceExceptionType QUERY_VERSION_PUBLISH_MUST_LINK_TO_DATASET                             = create("exception.resources.query_version.publish_must_link_to_dataset");
+    public static final CommonServiceExceptionType QUERY_VERSION_CANT_BE_DELETED                                          = create("exception.resources.query_version.cant_be_deleted");
+    public static final CommonServiceExceptionType QUERY_VERSION_IS_PART_OF_OTHER_RESOURCES                               = create("exception.resources.query_version.is_part_of_publications");
 
     // Identifiable Statistical Resource
     public static final CommonServiceExceptionType IDENTIFIABLE_STATISTICAL_RESOURCE_NOT_FOUND                            = create("exception.resources.identifiable_statistical_resource.not_found");

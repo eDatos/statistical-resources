@@ -1,10 +1,15 @@
 package org.siemac.metamac.statistical.resources.core.publication.serviceimpl;
 
+import static org.siemac.metamac.statistical.resources.core.base.domain.utils.RelatedResourceResultUtils.getUrnsFromRelatedResourceResults;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.lang.RandomStringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
 import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
 import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
@@ -12,6 +17,7 @@ import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.joda.time.DateTime;
 import org.siemac.metamac.core.common.criteria.utils.CriteriaUtils;
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.core.common.util.GeneratorUrnUtils;
 import org.siemac.metamac.core.common.util.shared.VersionUtil;
 import org.siemac.metamac.statistical.resources.core.base.components.SiemacStatisticalResourceGeneratedCode;
@@ -20,6 +26,7 @@ import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableSta
 import org.siemac.metamac.statistical.resources.core.base.utils.FillMetadataForCreateResourceUtils;
 import org.siemac.metamac.statistical.resources.core.base.validators.ProcStatusValidator;
 import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
+import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResourceResult;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
@@ -28,7 +35,9 @@ import org.siemac.metamac.statistical.resources.core.publication.domain.Cube;
 import org.siemac.metamac.statistical.resources.core.publication.domain.ElementLevel;
 import org.siemac.metamac.statistical.resources.core.publication.domain.Publication;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
+import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersionRepository;
 import org.siemac.metamac.statistical.resources.core.publication.serviceapi.validators.PublicationServiceInvocationValidator;
+import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -39,15 +48,18 @@ import org.springframework.stereotype.Service;
 public class PublicationServiceImpl extends PublicationServiceImplBase {
 
     @Autowired
-    IdentifiableStatisticalResourceRepository identifiableStatisticalResourceRepository;
+    private IdentifiableStatisticalResourceRepository identifiableStatisticalResourceRepository;
 
     @Autowired
-    SiemacStatisticalResourceGeneratedCode    siemacStatisticalResourceGeneratedCode;
+    private SiemacStatisticalResourceGeneratedCode    siemacStatisticalResourceGeneratedCode;
 
     @Autowired
-    PublicationServiceInvocationValidator     publicationServiceInvocationValidator;
+    private PublicationServiceInvocationValidator     publicationServiceInvocationValidator;
 
-    private static int                        CODE_MAX_LENGTH = 10;
+    @Autowired
+    private PublicationVersionRepository              publicationVersionRepository;
+
+    private static int                                CODE_MAX_LENGTH = 10;
 
     public PublicationServiceImpl() {
     }
@@ -155,7 +167,7 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
         // Check can be deleted
         ProcStatusValidator.checkStatisticalResourceCanBeDeleted(publicationVersion);
 
-        // TODO: Determinar si hay algunas comprobaciones que impiden el borrado
+        checkCanPublicationVersionBeDeleted(publicationVersion);
 
         // TODO RI: Comprobar si hay que eliminar relaciones a otros recursos
 
@@ -167,6 +179,21 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
             Publication publication = publicationVersion.getPublication();
             publication.getVersions().remove(publicationVersion);
             getPublicationVersionRepository().delete(publicationVersion);
+        }
+    }
+
+    private void checkCanPublicationVersionBeDeleted(PublicationVersion publicationVersion) throws MetamacException {
+        List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
+
+        RelatedResourceResult resourcesIsReplacedBy = publicationVersionRepository.retrieveIsReplacedBy(publicationVersion);
+        if (resourcesIsReplacedBy != null) {
+            exceptionItems.add(new MetamacExceptionItem(ServiceExceptionType.PUBLICATION_VERSION_IS_REPLACED_BY_OTHER_RESOURCE, resourcesIsReplacedBy.getUrn()));
+        }
+
+        if (exceptionItems.size() > 0) {
+            MetamacExceptionItem item = new MetamacExceptionItem(ServiceExceptionType.PUBLICATION_VERSION_CANT_BE_DELETED, publicationVersion.getSiemacMetadataStatisticalResource().getUrn());
+            item.setExceptionItems(exceptionItems);
+            throw new MetamacException(Arrays.asList(item));
         }
     }
 

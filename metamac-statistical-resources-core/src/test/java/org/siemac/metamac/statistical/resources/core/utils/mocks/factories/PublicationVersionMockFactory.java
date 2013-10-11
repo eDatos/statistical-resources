@@ -221,6 +221,9 @@ public class PublicationVersionMockFactory extends StatisticalResourcesMockFacto
     public static final String                   PUBLICATION_VERSION_89_WITH_EMPTY_CHAPTER_NAME                                                                     = "PUBLICATION_VERSION_89_WITH_EMPTY_CHAPTER";
     public static final String                   PUBLICATION_VERSION_90_WITH_EMPTY_CUBE_NAME                                                                        = "PUBLICATION_VERSION_90_WITH_EMPTY_CUBE";
 
+    public static final String                   PUBLICATION_VERSION_91_REPLACES_PUBLICATION_92_NAME                                                                = "PUBLICATION_VERSION_91_REPLACES_PUBLICATION_92";
+    public static final String                   PUBLICATION_VERSION_92_IS_REPLACED_BY_PUBLICATION_91_NAME                                                          = "PUBLICATION_VERSION_92_IS_REPLACED_BY_PUBLICATION_91";
+
     private static PublicationVersionMockFactory instance                                                                                                           = null;
 
     private PublicationVersionMockFactory() {
@@ -569,7 +572,8 @@ public class PublicationVersionMockFactory extends StatisticalResourcesMockFacto
         Query queryDraft = QueryVersionMockFactory.createQueryVersionInStatus(buildQueryVersionMockSimpleWithFixedDatasetVersion("Q01"), ProcStatusEnum.DRAFT).getQuery();
         registerQueryMock(QUERY_16_DRAFT_USED_IN_PUBLICATION_VERSION_86_NAME, queryDraft);
 
-        Query queryProductionValidation = QueryVersionMockFactory.createQueryVersionInStatus(buildQueryVersionMockSimpleWithFixedDatasetVersion("Q02"), ProcStatusEnum.PRODUCTION_VALIDATION).getQuery();
+        Query queryProductionValidation = QueryVersionMockFactory.createQueryVersionInStatus(buildQueryVersionMockSimpleWithFixedDatasetVersion("Q02"), ProcStatusEnum.PRODUCTION_VALIDATION)
+                .getQuery();
         registerQueryMock(QUERY_17_PRODUCTION_VALIDATION_USED_IN_PUBLICATION_VERSION_86_NAME, queryProductionValidation);
 
         Query queryDiffusionValidation = QueryVersionMockFactory.createQueryVersionInStatus(buildQueryVersionMockSimpleWithFixedDatasetVersion("Q03"), ProcStatusEnum.DIFFUSION_VALIDATION).getQuery();
@@ -645,6 +649,20 @@ public class PublicationVersionMockFactory extends StatisticalResourcesMockFacto
         prepareToPublished(publicationVersion);
 
         return publicationVersion;
+    }
+
+    private static MockDescriptor getPublicationVersion92IsReplacedByPublication91() {
+        PublicationVersionMock template = new PublicationVersionMock();
+        template.setSequentialId(1);
+        template.getSiemacMetadataStatisticalResource().setValidFrom(new DateTime().plusDays(1));
+        PublicationVersion publicationVersionReplaces = createPublicationVersionFromTemplate(template);
+
+        PublicationVersion publicationReplaced = createPublicationVersionWithSequenceAndVersion(2, INIT_VERSION);
+        registerPublicationVersionMock(PUBLICATION_VERSION_91_REPLACES_PUBLICATION_92_NAME, publicationVersionReplaces);
+
+        publicationVersionReplaces.getSiemacMetadataStatisticalResource().setReplaces(StatisticalResourcesPersistedDoMocks.mockPublicationVersionRelated(publicationReplaced));
+
+        return new MockDescriptor(publicationReplaced, publicationVersionReplaces);
     }
 
     // -----------------------------------------------------------------
