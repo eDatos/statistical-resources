@@ -422,6 +422,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
 
         // TODO: Comprobar si hay que eliminar relaciones a otros recursos
 
+        String datasetRepositoryId = datasetVersion.getDatasetRepositoryId();
         if (VersionUtil.isInitialVersion(datasetVersion.getSiemacMetadataStatisticalResource().getVersionLogic())) {
             Dataset dataset = datasetVersion.getDataset();
             getDatasetRepository().delete(dataset);
@@ -437,6 +438,8 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
             dataset.getVersions().remove(datasetVersion);
             getDatasetVersionRepository().delete(datasetVersion);
         }
+
+        tryToDeleteDatasetRepository(datasetRepositoryId);
     }
 
     private void checkCanDatasetVersionBeDeleted(DatasetVersion datasetVersion) throws MetamacException {

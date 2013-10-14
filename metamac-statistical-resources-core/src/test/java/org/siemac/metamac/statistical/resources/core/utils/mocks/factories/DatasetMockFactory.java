@@ -1,5 +1,6 @@
 package org.siemac.metamac.statistical.resources.core.utils.mocks.factories;
 
+import static org.siemac.metamac.statistical.resources.core.utils.DatasetLifecycleTestUtils.fillAsPublished;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.*;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_04_FOR_DATASET_03_AND_LAST_VERSION_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_05_FOR_DATASET_04_NAME;
@@ -127,10 +128,11 @@ public class DatasetMockFactory extends StatisticalResourcesMockFactory<Dataset>
         templateV1.addDatasource(DatasourceMockFactory.generateSimpleDatasource());
         templateV1.addDatasource(DatasourceMockFactory.generateSimpleDatasource());
         templateV1.addDatasource(DatasourceMockFactory.generateSimpleDatasource());
+        templateV1.setDatasetRepositoryId(StatisticalResourcesPersistedDoMocks.mockString(10));
 
         StatisticalResourcesPersistedDoMocks.mockDatasetVersionCoverages(templateV1);
         DatasetVersion datasetVersionV1 = getStatisticalResourcesPersistedDoMocks().mockDatasetVersion(templateV1);
-        DatasetLifecycleTestUtils.prepareToVersioning(datasetVersionV1);
+        fillAsPublished(datasetVersionV1);
         registerDatasetVersionMock(DATASET_VERSION_03_FOR_DATASET_03_NAME, datasetVersionV1);
 
         DatasetVersionMock templateV2 = DatasetVersionMockFactory.buildSimpleVersion(dataset, SECOND_VERSION);
@@ -139,6 +141,7 @@ public class DatasetMockFactory extends StatisticalResourcesMockFactory<Dataset>
         templateV2.getSiemacMetadataStatisticalResource().setLastVersion(true);
         // datasources
         templateV2.addDatasource(DatasourceMockFactory.generateSimpleDatasource());
+        templateV2.setDatasetRepositoryId(StatisticalResourcesPersistedDoMocks.mockString(10));
 
         StatisticalResourcesPersistedDoMocks.mockDatasetVersionCoveragesWithTemporalAndRelated(templateV2);
         DatasetVersion datasetVersionV2 = getStatisticalResourcesPersistedDoMocks().mockDatasetVersion(templateV2);
@@ -179,6 +182,8 @@ public class DatasetMockFactory extends StatisticalResourcesMockFactory<Dataset>
         template.getSiemacMetadataStatisticalResource().setCreatedDate(StatisticalResourcesDoMocks.mockDateTime());
         template.getSiemacMetadataStatisticalResource().setLastUpdatedBy(StatisticalResourcesDoMocks.mockString(10));
         template.getSiemacMetadataStatisticalResource().setLastUpdated(StatisticalResourcesDoMocks.mockDateTime());
+
+        template.setDatasetRepositoryId(StatisticalResourcesPersistedDoMocks.mockString(10));
 
         DatasetVersion datasetVersion = getStatisticalResourcesPersistedDoMocks().mockDatasetVersion(template);
         registerDatasetVersionMock(DATASET_VERSION_05_FOR_DATASET_04_NAME, datasetVersion);
