@@ -59,11 +59,8 @@ import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionBaseD
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionDto;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.invocation.service.SrmRestInternalService;
-import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
 import org.siemac.metamac.statistical.resources.core.utils.DataMockUtils;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.configuration.MetamacMock;
-import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory;
-import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesDtoMocks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -1358,6 +1355,16 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
 
     @Override
     public void testCreateAttributeInstance() throws Exception {
+        // no optimistic locking in this operation
+    }
+
+    @Override
+    public void testUpdateAttributeInstance() throws Exception {
+        // no optimistic locking in this operation
+    }
+
+    @Override
+    public void testDeleteAttributeInstance() throws Exception {
         // no optimistic locking in this operation
     }
 

@@ -29,6 +29,7 @@ public class StatisticalResourcesDto2StatRepoDtoMapperImpl implements Statistica
         target.setAttributeId(source.getAttributeId());
         target.setValue(attributeValueDtoToInternationalStringValue(source.getValue()));
         target.setCodesByDimension(codeItemMapToStringMap(source.getCodeDimensions()));
+        target.setUuid(source.getUuid());
         return target;
     }
 
@@ -36,16 +37,22 @@ public class StatisticalResourcesDto2StatRepoDtoMapperImpl implements Statistica
         if (attributeValueDto == null) {
             return null;
         }
-        LocalisedStringDto localisedValue = new LocalisedStringDto();
-        localisedValue.setLocale(StatisticalResourcesConstants.DEFAULT_DATA_REPOSITORY_LOCALE);
+        String valueStr = null;
+
         if (StringUtils.isNotBlank(attributeValueDto.getStringValue())) {
-            localisedValue.setLabel(attributeValueDto.getStringValue());
+            valueStr = attributeValueDto.getStringValue();
         } else {
-            localisedValue.setLabel(attributeValueDto.getExternalItemValue() != null ? attributeValueDto.getExternalItemValue().getCode() : null);
+            valueStr = attributeValueDto.getExternalItemValue() != null ? attributeValueDto.getExternalItemValue().getCode() : null;
         }
-        InternationalStringDto internationalStringDto = new InternationalStringDto();
-        internationalStringDto.addText(localisedValue);
-        return internationalStringDto;
+        if (valueStr != null) {
+            InternationalStringDto internationalStringDto = new InternationalStringDto();
+            LocalisedStringDto localisedValue = new LocalisedStringDto();
+            localisedValue.setLocale(StatisticalResourcesConstants.DEFAULT_DATA_REPOSITORY_LOCALE);
+            localisedValue.setLabel(valueStr);
+            internationalStringDto.addText(localisedValue);
+            return internationalStringDto;
+        }
+        return null;
     }
 
     private Map<String, List<String>> codeItemMapToStringMap(Map<String, List<CodeItemDto>> codeItemMap) {

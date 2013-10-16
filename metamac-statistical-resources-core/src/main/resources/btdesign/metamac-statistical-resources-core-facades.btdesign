@@ -134,6 +134,10 @@ Application FacadeStatisticalResources {
     		importDatasourcesInStatisticalOperation(String statisticalOperationUrn, List<URL> fileUrls) throws MetamacException;
     		"Create an attribute instance"
     		@DsdAttributeInstanceDto createAttributeInstance(String datasetVersionUrn, @DsdAttributeInstanceDto dsdAttributeInstanceDto) throws MetamacException;
+    		"Update an attribute instance"
+    		@DsdAttributeInstanceDto updateAttributeInstance(String datasetVersionUrn, @DsdAttributeInstanceDto dsdAttributeInstanceDto) throws MetamacException;
+    		"Delete an attribute instance"
+    		deleteAttributeInstance(String datasetVersionUrn, String uuid) throws MetamacException;
     		"Retrieve attribute instances given the dataset version URN and the attribute Id"
     		List<@DsdAttributeInstanceDto> retrieveAttributeInstances(String datasetVersionUrn, String attributeId) throws MetamacException;
 

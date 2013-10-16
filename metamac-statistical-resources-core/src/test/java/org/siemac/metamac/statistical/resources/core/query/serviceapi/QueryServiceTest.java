@@ -2,6 +2,7 @@ package org.siemac.metamac.statistical.resources.core.query.serviceapi;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.QueryAsserts.assertEqualsQueryVersion;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.QueryAsserts.assertEqualsQueryVersionCollection;
@@ -866,6 +867,22 @@ public class QueryServiceTest extends StatisticalResourcesBaseTest implements Qu
         expectedMetamacException(new MetamacException(ServiceExceptionType.QUERY_NOT_FOUND, urn));
 
         queryService.deleteQueryVersion(getServiceContextWithoutPrincipal(), urn);
+        queryService.retrieveQueryVersionByUrn(getServiceContextWithoutPrincipal(), urn);
+    }
+
+    @Test
+    @MetamacMock(QUERY_VERSION_11_DRAFT_NAME)
+    public void testDeleteQueryVersionWithDatasetVersion() throws Exception {
+        QueryVersion queryVersion = queryVersionMockFactory.retrieveMock(QUERY_VERSION_11_DRAFT_NAME);
+        String urn = queryVersion.getLifeCycleStatisticalResource().getUrn();
+
+        String datasetVersionUrn = queryVersion.getFixedDatasetVersion().getSiemacMetadataStatisticalResource().getUrn();
+
+        queryService.deleteQueryVersion(getServiceContextWithoutPrincipal(), urn);
+
+        assertNotNull(datasetService.retrieveDatasetVersionByUrn(getServiceContextAdministrador(), datasetVersionUrn));
+
+        expectedMetamacException(new MetamacException(ServiceExceptionType.QUERY_NOT_FOUND, urn));
         queryService.retrieveQueryVersionByUrn(getServiceContextWithoutPrincipal(), urn);
     }
 

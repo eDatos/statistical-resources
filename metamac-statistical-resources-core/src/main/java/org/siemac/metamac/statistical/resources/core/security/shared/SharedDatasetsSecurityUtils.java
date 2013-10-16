@@ -151,6 +151,16 @@ public class SharedDatasetsSecurityUtils extends SharedSecurityUtils {
         return isAnyResourcesRole(metamacPrincipal);
     }
 
+    public static boolean canUpdateAttributeInstance(MetamacPrincipal metamacPrincipal) {
+        // TODO: Poner los roles correctos
+        return isAnyResourcesRole(metamacPrincipal);
+    }
+
+    public static boolean canDeleteAttributeInstance(MetamacPrincipal metamacPrincipal) {
+        // TODO: Poner los roles correctos
+        return isAnyResourcesRole(metamacPrincipal);
+    }
+
     public static boolean canRetrieveAttributeInstances(MetamacPrincipal metamacPrincipal) {
         // TODO: Poner los roles correctos
         return isAnyResourcesRole(metamacPrincipal);

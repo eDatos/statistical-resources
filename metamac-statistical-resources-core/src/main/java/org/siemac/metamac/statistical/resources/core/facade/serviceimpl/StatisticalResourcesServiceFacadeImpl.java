@@ -16,8 +16,11 @@ import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.util.CoreCommonUtil;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructure;
 import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
 import org.siemac.metamac.statistical.resources.core.common.mapper.CommonDo2DtoMapper;
+import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor;
+import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor.DsdAttribute;
 import org.siemac.metamac.statistical.resources.core.dataset.criteria.mapper.DatasetMetamacCriteria2SculptorCriteriaMapper;
 import org.siemac.metamac.statistical.resources.core.dataset.criteria.mapper.DatasetSculptorCriteria2MetamacCriteriaMapper;
 import org.siemac.metamac.statistical.resources.core.dataset.criteria.mapper.DatasetVersionMetamacCriteria2SculptorCriteriaMapper;
@@ -49,6 +52,7 @@ import org.siemac.metamac.statistical.resources.core.dto.query.CodeItemDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionBaseDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionDto;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionSingleParameters;
+import org.siemac.metamac.statistical.resources.core.invocation.service.SrmRestInternalService;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceapi.LifecycleService;
 import org.siemac.metamac.statistical.resources.core.publication.criteria.mapper.PublicationMetamacCriteria2SculptorCriteriaMapper;
 import org.siemac.metamac.statistical.resources.core.publication.criteria.mapper.PublicationSculptorCriteria2MetamacCriteriaMapper;
@@ -153,6 +157,9 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
 
     @Autowired
     private StatRepoDto2StatisticalResourcesDtoMapper                statRepoDto2StatisticalResourcesDtoMapper;
+
+    @Autowired
+    private SrmRestInternalService                                   srmRestInternalService;
 
     public StatisticalResourcesServiceFacadeImpl() {
     }
@@ -963,7 +970,38 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         // Create attribute
         AttributeInstanceDto attributeInstanceCreated = getDatasetService().createAttributeInstance(ctx, datasetVersionUrn, attributeInstanceDto);
 
-        return statRepoDto2StatisticalResourcesDtoMapper.attributeDtoToDsdAttributeInstanceDto(attributeInstanceCreated);
+        DsdAttribute dsdAttribute = getDatasetVersionAttribute(ctx, datasetVersionUrn, attributeInstanceCreated.getAttributeId());
+
+        return statRepoDto2StatisticalResourcesDtoMapper.attributeDtoToDsdAttributeInstanceDto(dsdAttribute, attributeInstanceCreated);
+    }
+
+    @Override
+    public DsdAttributeInstanceDto updateAttributeInstance(ServiceContext ctx, String datasetVersionUrn, DsdAttributeInstanceDto dsdAttributeInstanceDto) throws MetamacException {
+        // Security
+        DatasetsSecurityUtils.canUpdateAttributeInstance(ctx);
+
+        // Transform
+        AttributeInstanceDto attributeInstanceDto = statisticalResourcesDto2StatRepoDtoMapper.dsdAttributeInstanceDtoToAttributeInstanceDto(dsdAttributeInstanceDto);
+
+        // Update attribute
+        AttributeInstanceDto attributeInstanceUpdated = getDatasetService().updateAttributeInstance(ctx, datasetVersionUrn, attributeInstanceDto);
+
+        if (attributeInstanceUpdated != null) {
+            DsdAttribute dsdAttribute = getDatasetVersionAttribute(ctx, datasetVersionUrn, attributeInstanceUpdated.getAttributeId());
+
+            return statRepoDto2StatisticalResourcesDtoMapper.attributeDtoToDsdAttributeInstanceDto(dsdAttribute, attributeInstanceUpdated);
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    public void deleteAttributeInstance(ServiceContext ctx, String datasetVersionUrn, String uuid) throws MetamacException {
+        // Security
+        DatasetsSecurityUtils.canDeleteAttributeInstance(ctx);
+
+        // Delete attribute
+        getDatasetService().deleteAttributeInstance(ctx, datasetVersionUrn, uuid);
     }
 
     @Override
@@ -972,9 +1010,19 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         DatasetsSecurityUtils.canRetrieveAttributeInstances(ctx);
 
         // Retrieve
-        List<AttributeInstanceDto> attributes = getDatasetService().retrieveAttributeInstances(ctx, datasetVersionUrn, attributeId);
+        List<AttributeInstanceDto> instances = getDatasetService().retrieveAttributeInstances(ctx, datasetVersionUrn, attributeId);
 
-        return statRepoDto2StatisticalResourcesDtoMapper.attributeDtosToDsdAttributeInstanceDtos(attributes);
+        DsdAttribute dsdAttribute = getDatasetVersionAttribute(ctx, datasetVersionUrn, attributeId);
+
+        return statRepoDto2StatisticalResourcesDtoMapper.attributeDtosToDsdAttributeInstanceDtos(dsdAttribute, instances);
+    }
+
+    private DsdAttribute getDatasetVersionAttribute(ServiceContext ctx, String datasetVersionUrn, String attributeId) throws MetamacException {
+        DatasetVersion datasetVersion = getDatasetService().retrieveDatasetVersionByUrn(ctx, datasetVersionUrn);
+
+        DataStructure dsd = srmRestInternalService.retrieveDsdByUrn(datasetVersion.getRelatedDsd().getUrn());
+
+        return DsdProcessor.getAttribute(dsd, attributeId);
     }
 
     @Override

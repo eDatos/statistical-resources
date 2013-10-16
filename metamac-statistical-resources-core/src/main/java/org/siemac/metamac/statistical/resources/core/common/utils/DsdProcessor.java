@@ -79,6 +79,20 @@ public class DsdProcessor {
         return attributes;
     }
 
+    public static DsdAttribute getAttribute(DataStructure dsd, String attributeId) throws MetamacException {
+        DataStructureComponents components = dsd.getDataStructureComponents();
+
+        if (components != null && components.getAttributes() != null) {
+            Attributes attributeList = components.getAttributes();
+            for (AttributeBase attrObj : attributeList.getAttributes()) {
+                if (attrObj instanceof Attribute && attributeId.equals(attrObj.getId())) {
+                    return new DsdAttribute((Attribute) attrObj);
+                }
+            }
+        }
+        return null;
+    }
+
     /**
      * Gets groups as a map indexed by groupId and list of dimensions id as value
      */
@@ -280,6 +294,19 @@ public class DsdProcessor {
         public boolean isMandatory() {
             return isMandatory;
         }
+
+        public boolean isDatasetAttribute() {
+            return getAttributeRelationship().getNone() != null;
+        }
+
+        public boolean isDimensionAttribute() {
+            return (!isDatasetAttribute() && (getAttributeRelationship().getGroup() != null || !getAttributeRelationship().getDimensions().isEmpty()));
+        }
+
+        public boolean isObservationAttribute() {
+            return (!isDatasetAttribute() && !isDimensionAttribute() && getAttributeRelationship().getPrimaryMeasure() != null);
+        }
+
     }
 
     public static class DsdPrimaryMeasure extends DsdComponent {

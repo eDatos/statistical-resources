@@ -711,6 +711,33 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
     }
 
     @Override
+    public AttributeInstanceDto updateAttributeInstance(ServiceContext ctx, String datasetVersionUrn, AttributeInstanceDto attributeInstanceDto) throws MetamacException {
+
+        // Validations
+        datasetServiceInvocationValidator.checkUpdateAttributeInstance(ctx, datasetVersionUrn, attributeInstanceDto);
+
+        // Update attribute
+        try {
+            return statisticsDatasetRepositoriesServiceFacade.updateAttributeInstance(attributeInstanceDto);
+        } catch (ApplicationException e) {
+            throw new MetamacException(e, ServiceExceptionType.UNKNOWN, "Error updating attribute instance in datasetRepository " + attributeInstanceDto.getUuid() + ".");
+        }
+    }
+
+    @Override
+    public void deleteAttributeInstance(ServiceContext ctx, String datasetVersionUrn, String attributeInstanceUuid) throws MetamacException {
+        // Validations
+        datasetServiceInvocationValidator.checkDeleteAttributeInstance(ctx, datasetVersionUrn, attributeInstanceUuid);
+
+        // Delete attribute
+        try {
+            statisticsDatasetRepositoriesServiceFacade.deleteAttributeInstance(attributeInstanceUuid);
+        } catch (ApplicationException e) {
+            throw new MetamacException(e, ServiceExceptionType.UNKNOWN, "Error updating attribute instance in datasetRepository " + attributeInstanceUuid + ".");
+        }
+    }
+
+    @Override
     public List<AttributeInstanceDto> retrieveAttributeInstances(ServiceContext ctx, String datasetVersionUrn, String attributeId) throws MetamacException {
 
         // Validations

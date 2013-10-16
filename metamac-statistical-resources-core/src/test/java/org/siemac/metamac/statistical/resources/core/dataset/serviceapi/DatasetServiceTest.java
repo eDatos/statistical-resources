@@ -48,6 +48,7 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_45_DRAFT_HAS_PART_DATASET_VERSION_85_MULTI_CUBE_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryMockFactory.QUERY_07_SIMPLE_MULTI_VERSION_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_40_TO_PUBLISH_WITH_DATASET_VERSION_NOT_PUBLISHED_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_41_TO_PUBLISH_WITH_DATASET_WITH_NO_PUBLISHED_VERSION_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.StatisticOfficialityMockFactory.STATISTIC_OFFICIALITY_01_BASIC_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.StatisticOfficialityMockFactory.STATISTIC_OFFICIALITY_02_BASIC_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesDoMocks.mockCodeDimensionsWithIdentifiers;
@@ -105,6 +106,7 @@ import org.siemac.metamac.statistical.resources.core.utils.asserts.BaseAsserts;
 import org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.configuration.MetamacMock;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetMockFactory;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesDoMocks;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesNotPersistedDoMocks;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -635,6 +637,25 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
     }
 
     @Test
+    @MetamacMock({QUERY_VERSION_41_TO_PUBLISH_WITH_DATASET_WITH_NO_PUBLISHED_VERSION_NAME})
+    public void testDeleteDatasetVersionIsRequiredByQueryLinkedToDataset() throws Exception {
+        QueryVersion queryVersion01 = queryVersionMockFactory.retrieveMock(QUERY_VERSION_41_TO_PUBLISH_WITH_DATASET_WITH_NO_PUBLISHED_VERSION_NAME);
+
+        String urn = queryVersion01.getDataset().getVersions().get(0).getSiemacMetadataStatisticalResource().getUrn();
+
+        MetamacExceptionItem itemRoot = new MetamacExceptionItem(ServiceExceptionType.DATASET_VERSION_CANT_BE_DELETED, urn);
+        MetamacExceptionItem item = new MetamacExceptionItem(ServiceExceptionType.DATASET_VERSION_IS_REQUIRED_BY_OTHER_RESOURCES, StringUtils.join(
+                Arrays.asList(queryVersion01.getLifeCycleStatisticalResource().getUrn()), ", "));
+        itemRoot.setExceptionItems(Arrays.asList(item));
+
+        expectedMetamacException(new MetamacException(Arrays.asList(itemRoot)));
+
+        // Delete dataset version
+        datasetService.deleteDatasetVersion(getServiceContextWithoutPrincipal(), urn);
+
+    }
+
+    @Test
     @MetamacMock({DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME, DATASET_01_BASIC_NAME, DATASET_VERSION_01_BASIC_NAME})
     public void testDeleteDatasetVersionImportationTaskInProgress() throws Exception {
         String urn = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_01_BASIC_NAME).getSiemacMetadataStatisticalResource().getUrn();
@@ -967,6 +988,20 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
     @Test
     public void testCreateAttributeInstance() throws Exception {
         // TODO testCreateAttributeInstance
+
+    }
+
+    @Override
+    @Test
+    public void testUpdateAttributeInstance() throws Exception {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    @Test
+    public void testDeleteAttributeInstance() throws Exception {
+        // TODO Auto-generated method stub
 
     }
 

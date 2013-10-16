@@ -182,6 +182,18 @@ public class DatasetsSecurityUtils extends SecurityUtils {
         }
     }
 
+    public static void canUpdateAttributeInstance(ServiceContext ctx) throws MetamacException {
+        if (!SharedDatasetsSecurityUtils.canUpdateAttributeInstance(getMetamacPrincipal(ctx))) {
+            throwExceptionIfOperationNotAllowed(ctx);
+        }
+    }
+
+    public static void canDeleteAttributeInstance(ServiceContext ctx) throws MetamacException {
+        if (!SharedDatasetsSecurityUtils.canDeleteAttributeInstance(getMetamacPrincipal(ctx))) {
+            throwExceptionIfOperationNotAllowed(ctx);
+        }
+    }
+
     public static void canRetrieveAttributeInstances(ServiceContext ctx) throws MetamacException {
         if (!SharedDatasetsSecurityUtils.canRetrieveAttributeInstances(getMetamacPrincipal(ctx))) {
             throwExceptionIfOperationNotAllowed(ctx);

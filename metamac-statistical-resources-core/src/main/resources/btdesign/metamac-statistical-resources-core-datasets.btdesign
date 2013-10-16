@@ -70,6 +70,10 @@ Application DatasetsStatisticalResources {
     		
     		"Create attribute instances"
     		AttributeInstanceDto createAttributeInstance(String datasetVersionUrn, AttributeInstanceDto attributeInstanceDto) throws MetamacException;
+    		"Update attribute instances"
+    		AttributeInstanceDto updateAttributeInstance(String datasetVersionUrn, AttributeInstanceDto attributeInstanceDto) throws MetamacException;
+    		"Delete attribute instances"
+    		deleteAttributeInstance(String datasetVersionUrn, String uuid) throws MetamacException;
     		"Retrieve attrubibute instances"
     		List<AttributeInstanceDto> retrieveAttributeInstances(String datasetVersionUrn, String attributeId) throws MetamacException;
     		"Retrieve the coverage for a given attribute"
