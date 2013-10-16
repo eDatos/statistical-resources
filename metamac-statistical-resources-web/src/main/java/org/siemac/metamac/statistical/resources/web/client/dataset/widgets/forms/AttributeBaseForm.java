@@ -23,7 +23,7 @@ public abstract class AttributeBaseForm extends GroupDynamicForm {
         if (CommonUtils.hasEnumeratedRepresentation(dsdAttributeDto)) {
             buildEnumeratedRepresentationForm(dsdAttributeDto, dsdAttributeInstanceDto);
         } else if (CommonUtils.hasNonEnumeratedRepresentation(dsdAttributeDto)) {
-            buildNonEnumeratedRepresentationForm(dsdAttributeInstanceDto);
+            buildNonEnumeratedRepresentationForm(dsdAttributeDto, dsdAttributeInstanceDto);
         }
     }
 
@@ -46,5 +46,5 @@ public abstract class AttributeBaseForm extends GroupDynamicForm {
     }
 
     protected abstract void buildEnumeratedRepresentationForm(DsdAttributeDto dsdAttributeDto, DsdAttributeInstanceDto dsdAttributeInstanceDto);
-    protected abstract void buildNonEnumeratedRepresentationForm(DsdAttributeInstanceDto dsdAttributeInstanceDto);
+    protected abstract void buildNonEnumeratedRepresentationForm(DsdAttributeDto dsdAttributeDto, DsdAttributeInstanceDto dsdAttributeInstanceDto);
 }

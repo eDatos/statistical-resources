@@ -56,7 +56,6 @@ public class SiemacMetadataLanguageEditionForm extends GroupDynamicForm {
     public SiemacMetadataStatisticalResourceDto getSiemacMetadataStatisticalResourceDto(SiemacMetadataStatisticalResourceDto dto) {
         dto.getLanguages().clear();
         dto.getLanguages().addAll(getExternalItemsValue(getItem(SiemacMetadataDS.LANGUAGES)));
-        // FIXME: always include language in languages
         return dto;
     }
 

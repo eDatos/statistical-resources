@@ -2,6 +2,7 @@ package org.siemac.metamac.statistical.resources.web.client.dataset.presenter;
 
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
@@ -10,6 +11,7 @@ import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdAttributeDt
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdAttributeInstanceDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.RepresentationDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.CodeItemDto;
+import org.siemac.metamac.statistical.resources.core.enume.dataset.domain.AttributeRelationshipTypeEnum;
 import org.siemac.metamac.statistical.resources.web.client.LoggedInGatekeeper;
 import org.siemac.metamac.statistical.resources.web.client.NameTokens;
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesDefaults;
@@ -22,6 +24,8 @@ import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.PlaceRequestUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.WaitingAsyncCallbackHandlingError;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.ItemSchemeWebCriteria;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.DeleteDatasetAttributeInstancesAction;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.DeleteDatasetAttributeInstancesResult;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetAttributeInstancesAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetAttributeInstancesResult;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetAttributesAction;
@@ -174,13 +178,35 @@ public class DatasetAttributesTabPresenter extends Presenter<DatasetAttributesTa
     }
 
     @Override
-    public void saveAttributeInstance(DsdAttributeInstanceDto dsdAttributeInstanceDto) {
+    public void saveAttributeInstance(final DsdAttributeDto dsdAttributeDto, DsdAttributeInstanceDto dsdAttributeInstanceDto) {
         dispatcher.execute(new SaveDatasetAttributeInstanceAction(datasetVersionUrn, dsdAttributeInstanceDto), new WaitingAsyncCallbackHandlingError<SaveDatasetAttributeInstanceResult>(this) {
 
             @Override
             public void onWaitSuccess(SaveDatasetAttributeInstanceResult result) {
-                // TODO Auto-generated method stub
+                retrieveAttributeInstances(dsdAttributeDto);
+            }
+        });
+    }
 
+    @Override
+    public void deleteAttributeInstance(final DsdAttributeDto dsdAttributeDto, DsdAttributeInstanceDto dsdAttributeInstanceDto) {
+        List<String> uuids = Arrays.asList(dsdAttributeInstanceDto.getUuid());
+        dispatcher.execute(new DeleteDatasetAttributeInstancesAction(dsdAttributeDto, datasetVersionUrn, uuids), new WaitingAsyncCallbackHandlingError<DeleteDatasetAttributeInstancesResult>(this) {
+
+            @Override
+            public void onWaitSuccess(DeleteDatasetAttributeInstancesResult result) {
+                retrieveAttributeInstances(dsdAttributeDto);
+            }
+        });
+    }
+
+    @Override
+    public void deleteAttributeInstances(final DsdAttributeDto dsdAttributeDto, List<String> uuids) {
+        dispatcher.execute(new DeleteDatasetAttributeInstancesAction(dsdAttributeDto, datasetVersionUrn, uuids), new WaitingAsyncCallbackHandlingError<DeleteDatasetAttributeInstancesResult>(this) {
+
+            @Override
+            public void onWaitSuccess(DeleteDatasetAttributeInstancesResult result) {
+                retrieveAttributeInstances(dsdAttributeDto);
             }
         });
     }

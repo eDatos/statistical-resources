@@ -14,7 +14,7 @@ import org.siemac.metamac.rest.statistical_operations_internal.v1_0.domain.Opera
 import org.siemac.metamac.rest.statistical_operations_internal.v1_0.domain.Operations;
 import org.siemac.metamac.rest.statistical_operations_internal.v1_0.domain.ResourceInternal;
 import org.siemac.metamac.statistical.resources.core.invocation.service.StatisticalOperationsRestInternalService;
-import org.siemac.metamac.statistical.resources.web.server.utils.ExternalItemUtils;
+import org.siemac.metamac.statistical.resources.web.server.utils.ExternalItemWebUtils;
 import org.siemac.metamac.web.common.server.utils.DtoUtils;
 import org.siemac.metamac.web.common.server.utils.WebExceptionUtils;
 import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
@@ -48,7 +48,7 @@ public class StatisticalOperationsRestInternalFacadeImpl implements StatisticalO
 
             List<ExternalItemDto> externalItemDtos = buildExternalItemDtosFromResources(findOperationsResult.getOperations(), TypeExternalArtefactsEnum.STATISTICAL_OPERATION);
 
-            ExternalItemsResult result = ExternalItemUtils.createExternalItemsResultFromListBase(findOperationsResult, externalItemDtos);
+            ExternalItemsResult result = ExternalItemWebUtils.createExternalItemsResultFromListBase(findOperationsResult, externalItemDtos);
             return result;
         } catch (MetamacException e) {
             throw WebExceptionUtils.createMetamacWebException(e);
@@ -64,7 +64,7 @@ public class StatisticalOperationsRestInternalFacadeImpl implements StatisticalO
 
             List<ExternalItemDto> externalItemDtos = buildExternalItemDtosFromResources(instances.getInstances(), TypeExternalArtefactsEnum.STATISTICAL_OPERATION_INSTANCE);
 
-            ExternalItemsResult result = ExternalItemUtils.createExternalItemsResultFromListBase(instances, externalItemDtos);
+            ExternalItemsResult result = ExternalItemWebUtils.createExternalItemsResultFromListBase(instances, externalItemDtos);
             return result;
         } catch (MetamacException e) {
             throw WebExceptionUtils.createMetamacWebException(e);

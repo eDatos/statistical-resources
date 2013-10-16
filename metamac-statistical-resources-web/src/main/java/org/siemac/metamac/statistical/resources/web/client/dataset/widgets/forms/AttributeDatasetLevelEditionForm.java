@@ -17,20 +17,24 @@ import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
 public class AttributeDatasetLevelEditionForm extends AttributeBaseForm {
 
     private DsdAttributeInstanceDto dsdAttributeInstanceDto;
+    private DsdAttributeDto         dsdAttributeDto;
 
     @Override
     protected void buildEnumeratedRepresentationForm(DsdAttributeDto dsdAttributeDto, DsdAttributeInstanceDto dsdAttributeInstanceDto) {
         this.dsdAttributeInstanceDto = dsdAttributeInstanceDto;
+        this.dsdAttributeDto = dsdAttributeDto;
         SearchExternalItemSimpleItem value = createEnumeratedValueItem(DsdAttributeInstanceDS.VALUE, getConstants().datasetAttributeValue());
         if (dsdAttributeInstanceDto.getValue() != null) {
             value.setExternalItem(dsdAttributeInstanceDto.getValue().getExternalItemValue());
         }
+        value.setRequired(true);
         setFields(value);
     }
 
     @Override
-    protected void buildNonEnumeratedRepresentationForm(DsdAttributeInstanceDto dsdAttributeInstanceDto) {
+    protected void buildNonEnumeratedRepresentationForm(DsdAttributeDto dsdAttributeDto, DsdAttributeInstanceDto dsdAttributeInstanceDto) {
         this.dsdAttributeInstanceDto = dsdAttributeInstanceDto;
+        this.dsdAttributeDto = dsdAttributeDto;
         CustomTextItem value = new CustomTextItem(DsdAttributeInstanceDS.VALUE, getConstants().datasetAttributeValue());
         if (dsdAttributeInstanceDto.getValue() != null) {
             value.setValue(dsdAttributeInstanceDto.getValue().getStringValue());
@@ -52,6 +56,9 @@ public class AttributeDatasetLevelEditionForm extends AttributeBaseForm {
         return dsdAttributeInstanceDto;
     }
 
+    public DsdAttributeDto getDsdAttributeDto() {
+        return dsdAttributeDto;
+    }
     //
     // RELATED RESOURCES
     //

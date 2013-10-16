@@ -122,8 +122,54 @@ public class DimensionCoverageValuesSelectionItem extends CustomCanvasItem {
     public void setDimensionCoverageValues(String dimensionId, List<CodeItemDto> codeItemDtos) {
         if (dimensionsForm.getItem(dimensionId) != null) {
             CodeItemRecord[] records = StatisticalResourcesRecordUtils.getCodeItemRecords(codeItemDtos);
-            ((DimensionsListGridItem) dimensionsForm.getItem(dimensionId)).getListGrid().setData(records);
+            DimensionsListGridItem listGridItem = ((DimensionsListGridItem) dimensionsForm.getItem(dimensionId));
+            listGridItem.getListGrid().setData(records);
         }
+    }
+
+    public void selectDimensionCodes(String dimensionId, List<CodeItemDto> selected) {
+        if (dimensionsForm.getItem(dimensionId) != null) {
+            DimensionsListGridItem listGridItem = ((DimensionsListGridItem) dimensionsForm.getItem(dimensionId));
+            ListGridRecord[] records = listGridItem.getListGrid().getRecords();
+            for (CodeItemDto selectedItem : selected) {
+                for (ListGridRecord record : records) {
+                    if (((CodeItemRecord) record).getCode().equals(selectedItem.getCode())) {
+                        listGridItem.getListGrid().selectRecord(record);
+                        if (!editionMode) { // no selection handler, must add it manually
+                            CodeItemRecord selectionRecord = StatisticalResourcesRecordUtils.getCodeItemRecord(dimensionId, selectedItem);
+                            selectedDimensionValuesListGrid.addData(selectionRecord);
+                        }
+                    }
+                }
+            }
+
+        }
+    }
+
+    // public void setSelectedDimensionValuesDirectly(String dimensionId, List<CodeItemDto> codeItems) {
+    // if (selectedDimensionValuesListGrid != null) {
+    // CodeItemRecord[] records = buildCodeItemRecords(dimensionId, codeItems);
+    // for (Record record : records) {
+    // selectedDimensionValuesListGrid.addData(record);
+    // }
+    // }
+    // }
+    //
+    // public void setSelectedDimensionValuesDirectly(Map<String, List<CodeItemDto>> codeItemsByDimension) {
+    // if (selectedDimensionValuesListGrid != null) {
+    // selectedDimensionValuesListGrid.setData((Record[]) null);
+    // for (String dimensionId : codeItemsByDimension.keySet()) {
+    // setSelectedDimensionValuesDirectly(dimensionId, codeItemsByDimension.get(dimensionId));
+    // }
+    // }
+    // }
+
+    private CodeItemRecord[] buildCodeItemRecords(String dimensionId, List<CodeItemDto> codeItems) {
+        List<CodeItemRecord> records = new ArrayList<CodeItemRecord>();
+        for (CodeItemDto codeItem : codeItems) {
+            records.add(StatisticalResourcesRecordUtils.getCodeItemRecord(dimensionId, codeItem));
+        }
+        return records.toArray(new CodeItemRecord[records.size()]);
     }
 
     private class DimensionsListGridItem extends CustomCanvasItem {

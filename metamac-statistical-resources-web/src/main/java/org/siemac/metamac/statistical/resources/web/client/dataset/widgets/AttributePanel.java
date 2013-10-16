@@ -36,7 +36,7 @@ public class AttributePanel extends VLayout {
 
             @Override
             public void onRecordClick(RecordClickEvent event) {
-                if (event.getRecord() instanceof DsdAttributeInstanceRecord) {
+                if (event.getFieldNum() > 0 && event.getRecord() instanceof DsdAttributeInstanceRecord) {
                     DsdAttributeInstanceDto dsdAttributeInstanceDto = ((DsdAttributeInstanceRecord) event.getRecord()).getDsdAttributeInstanceDto();
                     mainFormLayout.showInstance(dsdAttributeDto, dsdAttributeInstanceDto);
                 }
@@ -50,19 +50,21 @@ public class AttributePanel extends VLayout {
                 if (CommonUtils.hasDimensionRelationshipType(dsdAttributeDto)) {
                     DsdAttributeInstanceDto dsdAttributeInstanceDto = createNewAttributeInstance(dsdAttributeDto.getAttributeRelationship().getDimensions());
                     mainFormLayout.showInstance(dsdAttributeDto, dsdAttributeInstanceDto);
+                    mainFormLayout.setEditionMode();
                 } else if (CommonUtils.hasGroupRelationshipType(dsdAttributeDto)) {
                     DsdAttributeInstanceDto dsdAttributeInstanceDto = createNewAttributeInstance(dsdAttributeDto.getAttributeRelationship().getGroupDimensions());
                     mainFormLayout.showInstance(dsdAttributeDto, dsdAttributeInstanceDto);
+                    mainFormLayout.setEditionMode();
                 }
             }
         });
 
-        instancesSectionStack.getDeleteInstanceButton().addClickHandler(new ClickHandler() {
+        instancesSectionStack.getConfirmDeleteButton().addClickHandler(new ClickHandler() {
 
             @Override
             public void onClick(ClickEvent event) {
-                // TODO Auto-generated method stub
-
+                List<String> uuids = instancesSectionStack.getSelectedAttributeInstancesUuids();
+                getUiHandlers().deleteAttributeInstances(dsdAttributeDto, uuids);
             }
         });
 
@@ -71,9 +73,29 @@ public class AttributePanel extends VLayout {
         // Main form layout
 
         mainFormLayout = new AttributeMainFormLayout();
+
+        mainFormLayout.getCancelToolStripButton().addClickHandler(new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                if (mainFormLayout.isCreateMode()) {
+                    mainFormLayout.hide();
+                }
+            }
+        });
+
+        mainFormLayout.getDeleteConfirmationWindow().getYesButton().addClickHandler(new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                if (mainFormLayout.getDsdAttributeInstanceDto() != null) {
+                    getUiHandlers().deleteAttributeInstance(dsdAttributeDto, mainFormLayout.getDsdAttributeInstanceDto());
+                }
+            }
+        });
+
         addMember(mainFormLayout);
     }
-
     public void showAttributeInstances(DsdAttributeDto dsdAttributeDto, List<DsdAttributeInstanceDto> dsdAttributeInstanceDtos) {
 
         this.dsdAttributeDto = dsdAttributeDto;
@@ -126,6 +148,7 @@ public class AttributePanel extends VLayout {
     }
 
     public void setUiHandlers(DatasetAttributesTabUiHandlers uiHandlers) {
+        this.uiHandlers = uiHandlers;
         mainFormLayout.setUiHandlers(uiHandlers);
     }
 

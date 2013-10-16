@@ -344,6 +344,7 @@ public class StatisticalResourcesRecordUtils extends RecordUtils {
             }
         }
         record.setDsdAttributeInstaceDto(dsdAttributeInstanceDto);
+        record.setUuid(dsdAttributeInstanceDto.getUuid());
         return record;
     }
 

@@ -17,15 +17,22 @@ import org.siemac.metamac.web.common.client.widgets.CustomListGrid;
 import org.siemac.metamac.web.common.client.widgets.CustomListGridField;
 import org.siemac.metamac.web.common.client.widgets.CustomListGridSectionStack;
 import org.siemac.metamac.web.common.client.widgets.CustomToolStripButton;
+import org.siemac.metamac.web.common.client.widgets.DeleteConfirmationWindow;
 
+import com.smartgwt.client.widgets.events.ClickEvent;
+import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.events.HasClickHandlers;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
+import com.smartgwt.client.widgets.grid.events.SelectionUpdatedEvent;
+import com.smartgwt.client.widgets.grid.events.SelectionUpdatedHandler;
 import com.smartgwt.client.widgets.toolbar.ToolStrip;
 
 public class AttributeInstancesSectionStack extends CustomListGridSectionStack {
 
-    private CustomToolStripButton newInstanceButton;
-    private CustomToolStripButton deleteInstanceButton;
+    private CustomToolStripButton    newInstanceButton;
+    private CustomToolStripButton    deleteInstanceButton;
+
+    private DeleteConfirmationWindow deleteConfirmationWindow;
 
     public AttributeInstancesSectionStack() {
         super(new CustomListGrid(), getConstants().datasetAttributeInstances(), "versionSectionStackStyle");
@@ -39,18 +46,42 @@ public class AttributeInstancesSectionStack extends CustomListGridSectionStack {
         toolStrip.addButton(newInstanceButton);
         toolStrip.addButton(deleteInstanceButton);
 
+        deleteInstanceButton.addClickHandler(new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                deleteConfirmationWindow.show();
+            }
+        });
+
         // ListGrid
 
         CustomListGridField valueField = new CustomListGridField(DsdAttributeInstanceDS.VALUE, getConstants().datasetAttributeValue());
         listGrid.setFields(valueField);
 
+        listGrid.addSelectionUpdatedHandler(new SelectionUpdatedHandler() {
+
+            @Override
+            public void onSelectionUpdated(SelectionUpdatedEvent event) {
+                if (listGrid.getSelectedRecords() != null && listGrid.getSelectedRecords().length > 0) {
+                    deleteInstanceButton.setVisible(true);
+                } else {
+                    deleteInstanceButton.setVisible(false);
+                }
+            }
+        });
+
         // Add listGrid to sectionStack
         defaultSection.setItems(toolStrip, listGrid);
+
+        deleteConfirmationWindow = new DeleteConfirmationWindow(MetamacWebCommon.getConstants().deleteConfirmationTitle(), MetamacWebCommon.getConstants().deleteConfirmationMessage());
+        deleteConfirmationWindow.setVisible(false);
     }
 
     public void showInstances(DsdAttributeDto dsdAttributeDto, List<DsdAttributeInstanceDto> dsdAttributeInstanceDtos) {
         setSectionTitle(getMessages().datasetAttributeIntances(dsdAttributeDto.getIdentifier()));
         listGrid.setData(StatisticalResourcesRecordUtils.getDsdAttributeInstanceRecords(dsdAttributeInstanceDtos));
+        deleteInstanceButton.setVisible(false);
         show();
     }
 
@@ -69,8 +100,8 @@ public class AttributeInstancesSectionStack extends CustomListGridSectionStack {
         return newInstanceButton;
     }
 
-    public HasClickHandlers getDeleteInstanceButton() {
-        return deleteInstanceButton;
+    public HasClickHandlers getConfirmDeleteButton() {
+        return deleteConfirmationWindow.getYesButton();
     }
 
     private void setSectionTitle(String title) {

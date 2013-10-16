@@ -27,13 +27,12 @@ public class SaveDatasetAttributeInstanceActionHandler extends SecurityActionHan
     public SaveDatasetAttributeInstanceResult executeSecurityAction(SaveDatasetAttributeInstanceAction action) throws ActionException {
         try {
             DsdAttributeInstanceDto savedAttributeInstace = null;
-            if (action.getDsdAttributeInstanceDto().getId() == null) {
-                // Create
+            if (action.getDsdAttributeInstanceDto().getUuid() == null) {
                 savedAttributeInstace = statisticalResourcesServiceFacade.createAttributeInstance(ServiceContextHolder.getCurrentServiceContext(), action.getDatasetVersionUrn(),
                         action.getDsdAttributeInstanceDto());
             } else {
-                // Save
-                // TODO
+                savedAttributeInstace = statisticalResourcesServiceFacade.updateAttributeInstance(ServiceContextHolder.getCurrentServiceContext(), action.getDatasetVersionUrn(),
+                        action.getDsdAttributeInstanceDto());
             }
             return new SaveDatasetAttributeInstanceResult(savedAttributeInstace);
         } catch (MetamacException e) {

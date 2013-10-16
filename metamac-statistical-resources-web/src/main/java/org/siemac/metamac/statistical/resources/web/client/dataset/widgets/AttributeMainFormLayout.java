@@ -2,6 +2,7 @@ package org.siemac.metamac.statistical.resources.web.client.dataset.widgets;
 
 import java.util.List;
 
+import org.fornax.cartridges.sculptor.framework.event.CamelEventBusImpl;
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdAttributeDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdAttributeInstanceDto;
@@ -26,7 +27,11 @@ public class AttributeMainFormLayout extends MainFormLayout {
     private AttributeDimensionOrGroupLevelForm        attributeDimensionOrGroupLevelForm;
     private AttributeDimensionOrGroupLevelEditionForm attributeDimensionOrGroupLevelEditionForm;
 
+    private boolean                                   createMode;
+    private DsdAttributeInstanceDto                   dsdAttributeInstanceDto;
+
     public AttributeMainFormLayout() {
+        setCanEdit(true);
 
         // DATASET LEVEL FORMS
 
@@ -52,19 +57,26 @@ public class AttributeMainFormLayout extends MainFormLayout {
             public void onClick(ClickEvent event) {
                 if (attributeDatasetLevelEditionForm.isVisible()) {
                     if (attributeDatasetLevelEditionForm.validate(false)) {
-                        getUiHandlers().saveAttributeInstance(attributeDatasetLevelEditionForm.getDsdAttributeInstanceDto());
+                        getUiHandlers().saveAttributeInstance(attributeDatasetLevelEditionForm.getDsdAttributeDto(), attributeDatasetLevelEditionForm.getDsdAttributeInstanceDto());
                     }
                 } else if (attributeDimensionOrGroupLevelEditionForm.isVisible()) {
                     if (attributeDimensionOrGroupLevelEditionForm.validate(false)) {
-                        getUiHandlers().saveAttributeInstance(attributeDimensionOrGroupLevelEditionForm.getDsdAttributeInstanceDto());
+                        getUiHandlers().saveAttributeInstance(attributeDimensionOrGroupLevelEditionForm.getDsdAttributeDto(), attributeDimensionOrGroupLevelEditionForm.getDsdAttributeInstanceDto());
                     }
                 }
             }
         });
     }
 
+    public boolean isCreateMode() {
+        return createMode;
+    }
+
     public void showInstance(DsdAttributeDto dsdAttributeDto, DsdAttributeInstanceDto dsdAttributeInstanceDto) {
         hideAllForms();
+        this.dsdAttributeInstanceDto = dsdAttributeInstanceDto;
+        createMode = dsdAttributeInstanceDto.getUuid() == null;
+        setCanDelete(!createMode);
         switch (dsdAttributeDto.getAttributeRelationship().getRelationshipType()) {
             case NO_SPECIFIED_RELATIONSHIP:
                 showDatasetLevelForm(dsdAttributeDto, dsdAttributeInstanceDto);
@@ -77,6 +89,9 @@ public class AttributeMainFormLayout extends MainFormLayout {
                 break;
             default:
                 break;
+        }
+        if (!createMode) {
+            this.setViewMode();
         }
     }
 
@@ -108,9 +123,15 @@ public class AttributeMainFormLayout extends MainFormLayout {
         hide();
     }
 
+    public DsdAttributeInstanceDto getDsdAttributeInstanceDto() {
+        return dsdAttributeInstanceDto;
+    }
+
     public void setUiHandlers(DatasetAttributesTabUiHandlers uiHandlers) {
         this.uiHandlers = uiHandlers;
+        attributeDatasetLevelForm.setUiHandlers(uiHandlers);
         attributeDatasetLevelEditionForm.setUiHandlers(uiHandlers);
+        attributeDimensionOrGroupLevelForm.setUiHandlers(uiHandlers);
         attributeDimensionOrGroupLevelEditionForm.setUiHandlers(uiHandlers);
     }
 

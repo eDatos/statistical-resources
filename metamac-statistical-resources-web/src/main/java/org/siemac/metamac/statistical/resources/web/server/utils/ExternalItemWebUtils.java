@@ -11,7 +11,7 @@ import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Resourc
 import org.siemac.metamac.web.common.server.utils.DtoUtils;
 import org.siemac.metamac.web.common.shared.domain.ExternalItemsResult;
 
-public class ExternalItemUtils extends org.siemac.metamac.web.common.client.utils.ExternalItemUtils {
+public class ExternalItemWebUtils extends org.siemac.metamac.web.common.client.utils.ExternalItemUtils {
 
     public static ExternalItemsResult createExternalItemsResultFromListBase(ListBase listBase, List<ExternalItemDto> dtos) {
         ExternalItemsResult result = new ExternalItemsResult();

@@ -1,5 +1,7 @@
 package org.siemac.metamac.statistical.resources.web.client.dataset.view.handlers;
 
+import java.util.List;
+
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdAttributeDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdAttributeInstanceDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.RepresentationDto;
@@ -9,7 +11,9 @@ import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
 public interface DatasetAttributesTabUiHandlers extends BaseUiHandlers {
 
     void retrieveAttributeInstances(DsdAttributeDto dsdAttributeDto);
-    void saveAttributeInstance(DsdAttributeInstanceDto dsdAttributeInstanceDto);
+    void saveAttributeInstance(DsdAttributeDto dsdAttributeDto, DsdAttributeInstanceDto dsdAttributeInstanceDto);
+    void deleteAttributeInstance(DsdAttributeDto dsdAttributeDto, DsdAttributeInstanceDto dsdAttributeInstanceDto);
+    void deleteAttributeInstances(DsdAttributeDto dsdAttributeDto, List<String> uuid);
 
     void retrieveDimensionCoverage(String dimensionId, MetamacWebCriteria metamacWebCriteria);
 

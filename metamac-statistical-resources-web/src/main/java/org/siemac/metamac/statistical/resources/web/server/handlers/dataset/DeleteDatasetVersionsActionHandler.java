@@ -1,6 +1,10 @@
 package org.siemac.metamac.statistical.resources.web.server.handlers.dataset;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.statistical.resources.core.facade.serviceapi.StatisticalResourcesServiceFacade;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.DeleteDatasetVersionsAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.DeleteDatasetVersionsResult;
@@ -24,13 +28,18 @@ public class DeleteDatasetVersionsActionHandler extends SecurityActionHandler<De
 
     @Override
     public DeleteDatasetVersionsResult executeSecurityAction(DeleteDatasetVersionsAction action) throws ActionException {
-        try {
-            for (String urn : action.getUrns()) {
+        List<MetamacExceptionItem> items = new ArrayList<MetamacExceptionItem>();
+        for (String urn : action.getUrns()) {
+            try {
                 statisticalResourcesServiceFacade.deleteDatasetVersion(ServiceContextHolder.getCurrentServiceContext(), urn);
+            } catch (MetamacException e) {
+                items.addAll(e.getExceptionItems());
             }
+        }
+        if (items.isEmpty()) {
             return new DeleteDatasetVersionsResult();
-        } catch (MetamacException e) {
-            throw WebExceptionUtils.createMetamacWebException(e);
+        } else {
+            throw WebExceptionUtils.createMetamacWebException(new MetamacException(items));
         }
     }
 }

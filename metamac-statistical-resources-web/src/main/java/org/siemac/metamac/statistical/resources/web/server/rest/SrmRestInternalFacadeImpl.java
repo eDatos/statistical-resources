@@ -36,7 +36,7 @@ import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor;
 import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor.DsdAttribute;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdAttributeDto;
 import org.siemac.metamac.statistical.resources.core.invocation.service.SrmRestInternalService;
-import org.siemac.metamac.statistical.resources.web.server.utils.ExternalItemUtils;
+import org.siemac.metamac.statistical.resources.web.server.utils.ExternalItemWebUtils;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.DsdWebCriteria;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.ItemSchemeWebCriteria;
 import org.siemac.metamac.web.common.server.utils.WebExceptionUtils;
@@ -66,9 +66,9 @@ public class SrmRestInternalFacadeImpl implements SrmRestInternalFacade {
 
             List<ExternalItemDto> dsdsExternalItems = new ArrayList<ExternalItemDto>();
             for (ResourceInternal resource : structures.getDataStructures()) {
-                dsdsExternalItems.add(ExternalItemUtils.buildExternalItemDtoFromResource(resource, TypeExternalArtefactsEnum.DATASTRUCTURE));
+                dsdsExternalItems.add(ExternalItemWebUtils.buildExternalItemDtoFromResource(resource, TypeExternalArtefactsEnum.DATASTRUCTURE));
             }
-            return ExternalItemUtils.createExternalItemsResultFromListBase(structures, dsdsExternalItems);
+            return ExternalItemWebUtils.createExternalItemsResultFromListBase(structures, dsdsExternalItems);
         } catch (MetamacException e) {
             throw WebExceptionUtils.createMetamacWebException(e);
         }
@@ -142,9 +142,9 @@ public class SrmRestInternalFacadeImpl implements SrmRestInternalFacade {
 
             List<ExternalItemDto> codesExternalItems = new ArrayList<ExternalItemDto>();
             for (ResourceInternal resource : codes.getCodes()) {
-                codesExternalItems.add(ExternalItemUtils.buildExternalItemDtoFromResource(resource, TypeExternalArtefactsEnum.CODE));
+                codesExternalItems.add(ExternalItemWebUtils.buildExternalItemDtoFromResource(resource, TypeExternalArtefactsEnum.CODE));
             }
-            return ExternalItemUtils.createExternalItemsResultFromListBase(codes, codesExternalItems);
+            return ExternalItemWebUtils.createExternalItemsResultFromListBase(codes, codesExternalItems);
         } catch (MetamacException e) {
             throw WebExceptionUtils.createMetamacWebException(e);
         }
@@ -154,7 +154,7 @@ public class SrmRestInternalFacadeImpl implements SrmRestInternalFacade {
     public ExternalItemDto retrieveCodeByUrn(String urn) throws MetamacWebException {
         try {
             Code code = srmRestInternalService.retrieveCodeByUrn(urn);
-            return ExternalItemUtils.buildExternalItemDtoFromCode(code);
+            return ExternalItemWebUtils.buildExternalItemDtoFromCode(code);
         } catch (MetamacException e) {
             throw WebExceptionUtils.createMetamacWebException(e);
         }
@@ -173,9 +173,9 @@ public class SrmRestInternalFacadeImpl implements SrmRestInternalFacade {
 
             List<ExternalItemDto> codesExternalItems = new ArrayList<ExternalItemDto>();
             for (ResourceInternal resource : codes.getCodes()) {
-                codesExternalItems.add(ExternalItemUtils.buildExternalItemDtoFromResource(resource, TypeExternalArtefactsEnum.CODE));
+                codesExternalItems.add(ExternalItemWebUtils.buildExternalItemDtoFromResource(resource, TypeExternalArtefactsEnum.CODE));
             }
-            return ExternalItemUtils.createExternalItemsResultFromListBase(codes, codesExternalItems);
+            return ExternalItemWebUtils.createExternalItemsResultFromListBase(codes, codesExternalItems);
         } catch (MetamacException e) {
             throw WebExceptionUtils.createMetamacWebException(e);
         }
@@ -192,9 +192,9 @@ public class SrmRestInternalFacadeImpl implements SrmRestInternalFacade {
 
             List<ExternalItemDto> conceptSchemesExternalItems = new ArrayList<ExternalItemDto>();
             for (ResourceInternal resource : conceptSchemes.getConceptSchemes()) {
-                conceptSchemesExternalItems.add(ExternalItemUtils.buildExternalItemDtoFromResource(resource, TypeExternalArtefactsEnum.CONCEPT_SCHEME));
+                conceptSchemesExternalItems.add(ExternalItemWebUtils.buildExternalItemDtoFromResource(resource, TypeExternalArtefactsEnum.CONCEPT_SCHEME));
             }
-            return ExternalItemUtils.createExternalItemsResultFromListBase(conceptSchemes, conceptSchemesExternalItems);
+            return ExternalItemWebUtils.createExternalItemsResultFromListBase(conceptSchemes, conceptSchemesExternalItems);
         } catch (MetamacException e) {
             throw WebExceptionUtils.createMetamacWebException(e);
         }
@@ -213,9 +213,9 @@ public class SrmRestInternalFacadeImpl implements SrmRestInternalFacade {
 
             List<ExternalItemDto> conceptsExternalItems = new ArrayList<ExternalItemDto>();
             for (ResourceInternal resource : concepts.getConcepts()) {
-                conceptsExternalItems.add(ExternalItemUtils.buildExternalItemDtoFromResource(resource, TypeExternalArtefactsEnum.CONCEPT));
+                conceptsExternalItems.add(ExternalItemWebUtils.buildExternalItemDtoFromResource(resource, TypeExternalArtefactsEnum.CONCEPT));
             }
-            return ExternalItemUtils.createExternalItemsResultFromListBase(concepts, conceptsExternalItems);
+            return ExternalItemWebUtils.createExternalItemsResultFromListBase(concepts, conceptsExternalItems);
         } catch (MetamacException e) {
             throw WebExceptionUtils.createMetamacWebException(e);
         }
@@ -232,9 +232,9 @@ public class SrmRestInternalFacadeImpl implements SrmRestInternalFacade {
 
             List<ExternalItemDto> items = new ArrayList<ExternalItemDto>();
             for (ResourceInternal resource : schemes.getOrganisationSchemes()) {
-                items.add(ExternalItemUtils.buildExternalItemDtoFromResource(resource, type));
+                items.add(ExternalItemWebUtils.buildExternalItemDtoFromResource(resource, type));
             }
-            return ExternalItemUtils.createExternalItemsResultFromListBase(schemes, items);
+            return ExternalItemWebUtils.createExternalItemsResultFromListBase(schemes, items);
         } catch (MetamacException e) {
             throw WebExceptionUtils.createMetamacWebException(e);
         }
@@ -249,9 +249,9 @@ public class SrmRestInternalFacadeImpl implements SrmRestInternalFacade {
 
             List<ExternalItemDto> items = new ArrayList<ExternalItemDto>();
             for (ResourceInternal resource : organizations.getOrganisations()) {
-                items.add(ExternalItemUtils.buildExternalItemDtoFromResource(resource, type));
+                items.add(ExternalItemWebUtils.buildExternalItemDtoFromResource(resource, type));
             }
-            return ExternalItemUtils.createExternalItemsResultFromListBase(organizations, items);
+            return ExternalItemWebUtils.createExternalItemsResultFromListBase(organizations, items);
         } catch (MetamacException e) {
             throw WebExceptionUtils.createMetamacWebException(e);
         }
@@ -261,7 +261,7 @@ public class SrmRestInternalFacadeImpl implements SrmRestInternalFacade {
     public ExternalItemDto retrieveAgencyByUrn(String agencyUrn) throws MetamacWebException {
         try {
             Agency agency = srmRestInternalService.retrieveAgencyByUrn(agencyUrn);
-            return ExternalItemUtils.buildExternalItemDtoFromAgency(agency);
+            return ExternalItemWebUtils.buildExternalItemDtoFromAgency(agency);
         } catch (MetamacException e) {
             throw WebExceptionUtils.createMetamacWebException(e);
         }

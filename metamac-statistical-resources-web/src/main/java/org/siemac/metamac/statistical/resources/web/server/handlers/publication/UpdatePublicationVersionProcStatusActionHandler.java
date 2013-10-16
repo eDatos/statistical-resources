@@ -50,7 +50,8 @@ public class UpdatePublicationVersionProcStatusActionHandler extends UpdateResou
                     break;
 
                 case PUBLISH:
-                    // TODO
+                    publicationVersionDto = statisticalResourcesServiceFacade.publishPublicationVersion(ServiceContextHolder.getCurrentServiceContext(),
+                            action.getPublicationVersionToUpdateProcStatus());
                     break;
 
                 case VERSION:
