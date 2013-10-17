@@ -94,11 +94,10 @@ public class MetamacWebCriteriaUtils {
     }
 
     public static MetamacCriteriaRestriction buildMetamacCriteriaDatasetWithData(HasDataCriteria criteria) {
-        String param = null;
         if (BooleanUtils.isTrue(criteria.getHasData())) {
-            return new MetamacCriteriaPropertyRestriction(StatisticalResourcesCriteriaPropertyEnum.DATA.name(), param, OperationType.IS_NOT_NULL);
+            return new MetamacCriteriaPropertyRestriction(StatisticalResourcesCriteriaPropertyEnum.DATA.name(), Boolean.TRUE, OperationType.EQ);
         } else if (BooleanUtils.isFalse(criteria.getHasData())) {
-            return new MetamacCriteriaPropertyRestriction(StatisticalResourcesCriteriaPropertyEnum.DATA.name(), param, OperationType.IS_NULL);
+            return new MetamacCriteriaPropertyRestriction(StatisticalResourcesCriteriaPropertyEnum.DATA.name(), Boolean.FALSE, OperationType.EQ);
         }
         return null;
     }
