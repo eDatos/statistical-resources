@@ -37,7 +37,7 @@ public class SiemacStatisticalResourceGeneratedCode {
                 seqCode++;
             } catch (NumberFormatException e) {
                 log.error("Error parsing last sequential code in statistical operation " + statisticalOperation.getCode() + " (" + seqCodeStr + ")");
-                throw new MetamacException(CommonServiceExceptionType.UNKNOWN, e.getMessage());
+                throw new MetamacException(e, CommonServiceExceptionType.UNKNOWN, "Error parsing code");
             }
         }
         if (seqCode >= 999999) {
