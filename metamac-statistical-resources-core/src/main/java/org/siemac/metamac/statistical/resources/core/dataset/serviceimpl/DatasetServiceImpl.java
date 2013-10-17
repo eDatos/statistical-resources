@@ -73,6 +73,7 @@ import org.siemac.metamac.statistical.resources.core.error.utils.ServiceExceptio
 import org.siemac.metamac.statistical.resources.core.invocation.service.SrmRestInternalService;
 import org.siemac.metamac.statistical.resources.core.invocation.utils.RestMapper;
 import org.siemac.metamac.statistical.resources.core.io.serviceimpl.validators.ValidateDataVersusDsd;
+import org.siemac.metamac.statistical.resources.core.io.utils.ManipulateDataUtils;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.checker.ExternalItemChecker;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersionRepository;
@@ -213,15 +214,37 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
 
         datasetVersion = deleteDatasourceToDataset(datasource);
 
-        if (!StringUtils.isEmpty(datasetVersion.getDatasetRepositoryId())) {
-            deleteDatasourceData(datasetVersion.getDatasetRepositoryId(), datasource);
-        }
+        deleteDatasourceData(datasetVersion.getDatasetRepositoryId(), datasource);
+
+        deleteAttributeInstancesLowerThanDatasetLevel(datasetVersion);
 
         computeDataRelatedMetadata(datasetVersion);
 
         getDatasetVersionRepository().save(datasetVersion);
     }
 
+    private void deleteAttributeInstancesLowerThanDatasetLevel(DatasetVersion datasetVersion) throws MetamacException {
+        DataStructure dsd = srmRestInternalService.retrieveDsdByUrn(datasetVersion.getRelatedDsd().getUrn());
+
+        List<DsdAttribute> attributes = DsdProcessor.getAttributes(dsd);
+        for (DsdAttribute attribute : attributes) {
+            if (attribute.isDimensionAttribute()) {
+                deleteAllAttributeInstances(datasetVersion, attribute);
+            }
+        }
+    }
+
+    private void deleteAllAttributeInstances(DatasetVersion datasetVersion, DsdAttribute attribute) throws MetamacException {
+        try {
+            List<AttributeInstanceDto> attributeInstances = statisticsDatasetRepositoriesServiceFacade.findAttributesInstances(datasetVersion.getDatasetRepositoryId(), attribute.getComponentId());
+            for (AttributeInstanceDto instance : attributeInstances) {
+                statisticsDatasetRepositoriesServiceFacade.deleteAttributeInstance(instance.getUuid());
+            }
+        } catch (ApplicationException e) {
+            throw new MetamacException(e, ServiceExceptionType.UNKNOWN, "Error finding and deleting attribute instances in dataset repository: " + datasetVersion.getDatasetRepositoryId()
+                    + " for attribute " + attribute.getComponentId());
+        }
+    }
     private void checkDatasetVersionForDatasourceHasNoQueries(Datasource datasource) throws MetamacException {
         List<QueryVersion> queries = queryVersionRepository.findLinkedToFixedDatasetVersion(datasource.getDatasetVersion().getId());
         List<QueryVersion> queriesDataset = queryVersionRepository.findLinkedToDataset(datasource.getDatasetVersion().getDataset().getId());
@@ -278,9 +301,36 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         datasetVersion.setDataset(dataset);
 
         assignCodeAndSaveDataset(dataset, datasetVersion);
-        datasetVersion = getDatasetVersionRepository().retrieveByUrn(datasetVersion.getSiemacMetadataStatisticalResource().getUrn());
 
-        return datasetVersion;
+        datasetVersion = getDatasetVersionRepository().retrieveByUrn(datasetVersion.getSiemacMetadataStatisticalResource().getUrn());
+        DatasetRepositoryDto datasetRepositoryDto = createDatasetRepository(datasetVersion);
+        datasetVersion.setDatasetRepositoryId(datasetRepositoryDto.getDatasetId());
+
+        return getDatasetVersionRepository().save(datasetVersion);
+    }
+
+    private DatasetRepositoryDto createDatasetRepository(DatasetVersion datasetVersion) throws MetamacException {
+        try {
+            DatasetRepositoryDto datasetRepositoryDto = new DatasetRepositoryDto();
+            datasetRepositoryDto.setDatasetId(datasetVersion.getSiemacMetadataStatisticalResource().getUrn());
+
+            DataStructure dsd = srmRestInternalService.retrieveDsdByUrn(datasetVersion.getRelatedDsd().getUrn());
+
+            List<DsdDimension> dimensions = DsdProcessor.getDimensions(dsd);
+            for (DsdDimension dimension : dimensions) {
+                datasetRepositoryDto.getDimensions().add(dimension.getComponentId());
+            }
+
+            // Attributes
+            List<DsdAttribute> attributes = DsdProcessor.getAttributes(dsd);
+            datasetRepositoryDto.getAttributes().addAll(ManipulateDataUtils.extractDefinitionOfAttributes(attributes));
+
+            datasetRepositoryDto.setLanguages(Arrays.asList(StatisticalResourcesConstants.DEFAULT_DATA_REPOSITORY_LOCALE));
+
+            return statisticsDatasetRepositoriesServiceFacade.createDatasetRepository(datasetRepositoryDto);
+        } catch (ApplicationException e) {
+            throw new MetamacException(e, ServiceExceptionType.UNKNOWN, "Error in creation of datasetRepository for dataset version" + datasetVersion.getSiemacMetadataStatisticalResource().getUrn());
+        }
     }
 
     @Override
@@ -349,6 +399,9 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         } catch (ApplicationException e) {
             throw new MetamacException(e, ServiceExceptionType.UNKNOWN, "Error removing datasetRepository " + resource.getDatasetRepositoryId());
         }
+
+        DatasetRepositoryDto datasetRepository = createDatasetRepository(resource);
+        resource.setDatasetRepositoryId(datasetRepository.getDatasetId());
     }
 
     @Override
@@ -951,18 +1004,13 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
     }
 
     private void processDataRelatedMetadata(DatasetVersion resource) throws MetamacException {
-        if (!StringUtils.isEmpty(resource.getDatasetRepositoryId())) {
-            try {
-                DatasetRepositoryDto datasetRepository = statisticsDatasetRepositoriesServiceFacade.retrieveDatasetRepository(resource.getDatasetRepositoryId());
-                resource.setFormatExtentDimensions(datasetRepository.getDimensions().size());
-                long num = statisticsDatasetRepositoriesServiceFacade.countObservations(resource.getDatasetRepositoryId());
-                resource.setFormatExtentObservations(num);
-            } catch (ApplicationException e) {
-                throw new MetamacException(e, ServiceExceptionType.UNKNOWN, "Error retrieving datasetRepository " + resource.getDatasetRepositoryId() + ". Details: " + e.getMessage());
-            }
-        } else {
-            resource.setFormatExtentDimensions(0);
-            resource.setFormatExtentObservations(0L);
+        try {
+            DatasetRepositoryDto datasetRepository = statisticsDatasetRepositoriesServiceFacade.retrieveDatasetRepository(resource.getDatasetRepositoryId());
+            resource.setFormatExtentDimensions(datasetRepository.getDimensions().size());
+            long num = statisticsDatasetRepositoriesServiceFacade.countObservations(resource.getDatasetRepositoryId());
+            resource.setFormatExtentObservations(num);
+        } catch (ApplicationException e) {
+            throw new MetamacException(e, ServiceExceptionType.UNKNOWN, "Error retrieving datasetRepository " + resource.getDatasetRepositoryId() + ". Details: " + e.getMessage());
         }
     }
 
@@ -973,51 +1021,49 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         resource.getTemporalCoverage().clear();
         resource.getMeasureCoverage().clear();
 
-        if (!StringUtils.isEmpty(resource.getDatasetRepositoryId())) {
-            List<DsdDimension> dimensions = DsdProcessor.getDimensions(dataStructure);
-            for (DsdDimension dimension : dimensions) {
-                List<CodeDimension> codes = getCodesFromDsdComponent(resource, dimension);
-                List<ExternalItem> items = buildExternalItemsBasedOnCodeDimensions(codes, dimension);
-                if (items != null) {
-                    addTranslationsToCodesFromExternalItems(codes, items);
-                }
+        List<DsdDimension> dimensions = DsdProcessor.getDimensions(dataStructure);
+        for (DsdDimension dimension : dimensions) {
+            List<CodeDimension> codes = getCodesFromDsdComponent(resource, dimension);
+            List<ExternalItem> items = buildExternalItemsBasedOnCodeDimensions(codes, dimension);
+            if (items != null) {
+                addTranslationsToCodesFromExternalItems(codes, items);
+            }
 
-                if (DsdComponentType.TEMPORAL.equals(dimension.getType())) {
-                    sortTemporalCodeDimensions(codes);
-                }
+            if (DsdComponentType.TEMPORAL.equals(dimension.getType())) {
+                sortTemporalCodeDimensions(codes);
+            }
 
-                resource.getDimensionsCoverage().addAll(codes);
-                switch (dimension.getType()) {
-                    case SPATIAL:
-                        for (ExternalItem item : items) {
-                            if (!StatisticalResourcesCollectionUtils.isExternalItemInCollection(resource.getGeographicCoverage(), item)) {
-                                resource.getGeographicCoverage().add(item);
-                            }
+            resource.getDimensionsCoverage().addAll(codes);
+            switch (dimension.getType()) {
+                case SPATIAL:
+                    for (ExternalItem item : items) {
+                        if (!StatisticalResourcesCollectionUtils.isExternalItemInCollection(resource.getGeographicCoverage(), item)) {
+                            resource.getGeographicCoverage().add(item);
                         }
-                        break;
-                    case MEASURE:
-                        resource.getMeasureCoverage().addAll(items);
-                        break;
-                    case TEMPORAL:
-                        List<TemporalCode> temporalCodes = buildTemporalCodeFromCodeDimensions(codes);
-                        resource.getTemporalCoverage().addAll(temporalCodes);
-                        break;
-                }
+                    }
+                    break;
+                case MEASURE:
+                    resource.getMeasureCoverage().addAll(items);
+                    break;
+                case TEMPORAL:
+                    List<TemporalCode> temporalCodes = buildTemporalCodeFromCodeDimensions(codes);
+                    resource.getTemporalCoverage().addAll(temporalCodes);
+                    break;
             }
+        }
 
-            // Try to fill specific coverages from attributes
-            if (resource.getGeographicCoverage().isEmpty()) {
-                List<ExternalItem> codeItems = processExternalItemsCodeFromAttributeByType(resource, dataStructure, DsdComponentType.SPATIAL);
-                resource.getGeographicCoverage().addAll(codeItems);
-            }
-            if (resource.getTemporalCoverage().isEmpty()) {
-                List<CodeDimension> codeItems = processCodeFromAttributeByType(resource, dataStructure, DsdComponentType.TEMPORAL);
-                resource.getTemporalCoverage().addAll(buildTemporalCodeFromCodeDimensions(codeItems));
-            }
-            if (resource.getMeasureCoverage().isEmpty()) {
-                List<ExternalItem> codeItems = processExternalItemsCodeFromAttributeByType(resource, dataStructure, DsdComponentType.MEASURE);
-                resource.getMeasureCoverage().addAll(codeItems);
-            }
+        // Try to fill specific coverages from attributes
+        if (resource.getGeographicCoverage().isEmpty()) {
+            List<ExternalItem> codeItems = processExternalItemsCodeFromAttributeByType(resource, dataStructure, DsdComponentType.SPATIAL);
+            resource.getGeographicCoverage().addAll(codeItems);
+        }
+        if (resource.getTemporalCoverage().isEmpty()) {
+            List<CodeDimension> codeItems = processCodeFromAttributeByType(resource, dataStructure, DsdComponentType.TEMPORAL);
+            resource.getTemporalCoverage().addAll(buildTemporalCodeFromCodeDimensions(codeItems));
+        }
+        if (resource.getMeasureCoverage().isEmpty()) {
+            List<ExternalItem> codeItems = processExternalItemsCodeFromAttributeByType(resource, dataStructure, DsdComponentType.MEASURE);
+            resource.getMeasureCoverage().addAll(codeItems);
         }
     }
 
@@ -1224,15 +1270,8 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
     private DatasetVersion deleteDatasourceToDataset(Datasource datasource) {
         DatasetVersion parent = datasource.getDatasetVersion();
         parent.removeDatasource(datasource);
-        boolean deleteRepo = parent.getDatasources().isEmpty();
         parent.getSiemacMetadataStatisticalResource().setLastUpdate(new DateTime());
-        DatasetVersion updatedDatasetVersion = getDatasetVersionRepository().save(parent);
-        if (deleteRepo) {
-            tryToDeleteDatasetRepository(updatedDatasetVersion.getDatasetRepositoryId());
-            updatedDatasetVersion.setDatasetRepositoryId(null);
-            return getDatasetVersionRepository().save(parent);
-        }
-        return updatedDatasetVersion;
+        return getDatasetVersionRepository().save(parent);
     }
 
     private void tryToDeleteDatasetRepository(String datasetRepositoryId) {

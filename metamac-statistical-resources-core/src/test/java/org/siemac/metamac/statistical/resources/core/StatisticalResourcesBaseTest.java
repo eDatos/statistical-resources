@@ -111,4 +111,11 @@ public abstract class StatisticalResourcesBaseTest extends MetamacBaseTest {
     protected String getResourceUrn(HasLifecycle hasLifecycle) {
         return hasLifecycle.getLifeCycleStatisticalResource().getUrn();
     }
+
+    protected String buildDatasetUrn(String maintainerCode, String operationCode, int datasetSequentialId, String versionNumber) {
+        StringBuilder strBuilder = new StringBuilder("urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Dataset=");
+        strBuilder.append(maintainerCode).append(":").append(operationCode).append("_").append(String.format("%06d", datasetSequentialId)).append("(").append(versionNumber).append(")");
+        return strBuilder.toString();
+    }
+
 }

@@ -1020,25 +1020,23 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
 
         switch (procStatus) {
             case DRAFT:
-                prepareToProductionValidation(datasetVersion);
+                DatasetLifecycleTestUtils.prepareToProductionValidation(datasetVersion);
                 break;
             case PRODUCTION_VALIDATION:
-                prepareToDiffusionValidation(datasetVersion);
+                DatasetLifecycleTestUtils.fillAsProductionValidation(datasetVersion);
                 break;
             case DIFFUSION_VALIDATION:
-                prepareToPublished(datasetVersion);
+                DatasetLifecycleTestUtils.fillAsDiffusionValidation(datasetVersion);
                 break;
             case VALIDATION_REJECTED:
-                prepareToDiffusionValidation(datasetVersion);
-                datasetVersion.getSiemacMetadataStatisticalResource().setProcStatus(procStatus);
+                DatasetLifecycleTestUtils.fillAsValidationRejected(datasetVersion);
                 break;
             case PUBLISHED:
-                datasetVersion.getSiemacMetadataStatisticalResource().setValidFrom(new DateTime().minusDays(2));
-                prepareToVersioning(datasetVersion);
+                DatasetLifecycleTestUtils.fillAsPublished(datasetVersion);
                 break;
             case PUBLISHED_NOT_VISIBLE:
                 datasetVersion.getSiemacMetadataStatisticalResource().setValidFrom(new DateTime().plusDays(2));
-                prepareToVersioning(datasetVersion);
+                DatasetLifecycleTestUtils.fillAsPublished(datasetVersion);
                 break;
             default:
                 break;

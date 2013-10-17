@@ -1,5 +1,6 @@
 package org.siemac.metamac.statistical.resources.core.utils;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -43,7 +44,30 @@ public class DataMockUtils {
         Mockito.when(datasetRepositoriesServiceFacade.countObservations(Mockito.anyString())).thenReturn(27L);
 
         // Mock codelist and concept Scheme
+        mockDsdAndRelated(srmRestInternalService);
+    }
 
+    public static void mockDsdAndDataRepositoryEmpty(DatasetRepositoriesServiceFacade datasetRepositoriesServiceFacade, SrmRestInternalService srmRestInternalService) throws Exception {
+        Mockito.reset(datasetRepositoriesServiceFacade);
+        Mockito.reset(srmRestInternalService);
+
+        Map<String, List<String>> coverageMap = new HashMap<String, List<String>>();
+        coverageMap.put("GEO_DIM", new ArrayList<String>());
+        coverageMap.put("TIME_PERIOD", new ArrayList<String>());
+        coverageMap.put("MEAS_DIM", new ArrayList<String>());
+
+        Mockito.when(datasetRepositoriesServiceFacade.findCodeDimensions(Mockito.anyString())).thenReturn(coverageMap);
+
+        DatasetRepositoryDto datasetRepoDto = DsRepositoryMockUtils.mockDatasetRepository("dsrepo-01", "GEO_DIM", "TIME_PERIOD", "MEAS_DIM");
+        Mockito.when(datasetRepositoriesServiceFacade.retrieveDatasetRepository(Mockito.anyString())).thenReturn(datasetRepoDto);
+
+        Mockito.when(datasetRepositoriesServiceFacade.countObservations(Mockito.anyString())).thenReturn(0L);
+
+        // Mock codelist and concept Scheme
+        mockDsdAndRelated(srmRestInternalService);
+    }
+
+    public static void mockDsdAndRelated(SrmRestInternalService srmRestInternalService) throws Exception {
         ResourceInternal codelistReference = SrmMockUtils.buildCodelistRef(GEOCODELIST_TEST_URN);
         Codes codes = SrmMockUtils.buildCodes(3);
         Mockito.when(srmRestInternalService.retrieveCodesOfCodelistEfficiently(codelistReference.getUrn())).thenReturn(codes);
@@ -58,6 +82,15 @@ public class DataMockUtils {
                 "MEAS_DIM", conceptSchemeReference, codelistReference);
         Mockito.when(srmRestInternalService.retrieveDsdByUrn(Mockito.anyString())).thenReturn(dsd);
     }
+
+    public static void mockDsdAndCreateDatasetRepository(DatasetRepositoriesServiceFacade datasetRepositoriesServiceFacade, SrmRestInternalService srmRestInternalService, String datasetRepositoryId)
+            throws Exception {
+        mockDsdAndRelated(srmRestInternalService);
+        DatasetRepositoryDto datasetRepositoryDto = new DatasetRepositoryDto();
+        datasetRepositoryDto.setDatasetId(datasetRepositoryId);
+        Mockito.when(datasetRepositoriesServiceFacade.createDatasetRepository(Mockito.any(DatasetRepositoryDto.class))).thenReturn(datasetRepositoryDto);
+    }
+
     public static void fillDatasetVersionWithCalculatedMetadataFromData(DatasetVersion datasetVersion) {
         datasetVersion.addGeographicCoverage(buildExternalItem("code-01", TypeExternalArtefactsEnum.CODE));
         datasetVersion.addGeographicCoverage(buildExternalItem("code-02", TypeExternalArtefactsEnum.CODE));
@@ -94,7 +127,7 @@ public class DataMockUtils {
         datasetVersion.getMeasureCoverage().clear();
         datasetVersion.getDimensionsCoverage().clear();
 
-        datasetVersion.setFormatExtentDimensions(0);
+        datasetVersion.setFormatExtentDimensions(3);
         datasetVersion.setFormatExtentObservations(0L);
 
         datasetVersion.setDateStart(null);

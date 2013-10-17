@@ -156,6 +156,7 @@ public class StatisticalResourcesNotPersistedDoMocks extends StatisticalResource
     @Override
     public DatasetVersion mockDatasetVersion(DatasetVersionMock datasetVersion) {
         datasetVersion.setDataset(null);
+        datasetVersion.setRelatedDsd(mockDsdExternalItem());
         datasetVersion.setSiemacMetadataStatisticalResource(mockSiemacMetadataStatisticalResource(datasetVersion.getSiemacMetadataStatisticalResource(), TypeRelatedResourceEnum.DATASET_VERSION));
         return datasetVersion;
     }

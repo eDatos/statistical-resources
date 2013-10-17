@@ -41,9 +41,6 @@ public class ManipulateCsvDataServiceImpl implements ManipulateCsvDataService {
     public void importCsv(ServiceContext ctx, File csvFile, DataStructure dataStructure, String datasetID, String dataSourceID, ValidateDataVersusDsd validateDataVersusDsd) throws Exception {
         InputStream is = null;
         try {
-            // Create or Update DatasetRepository
-            createDatasetRepository(datasetID, validateDataVersusDsd);
-
             // Parse Csv
             String charsetName = FileUtils.guessCharset(csvFile);
             is = new FileInputStream(csvFile);
@@ -74,33 +71,6 @@ public class ManipulateCsvDataServiceImpl implements ManipulateCsvDataService {
         } finally {
             IOUtils.closeQuietly(is);
         }
-    }
-
-    private DatasetRepositoryDto createDatasetRepository(String datasetID, ValidateDataVersusDsd validateDataVersusDsd) throws Exception {
-
-        DatasetRepositoryDto datasetRepositoryDto = datasetRepositoriesServiceFacade.findDatasetRepository(datasetID);
-
-        if (datasetRepositoryDto == null) {
-            // Create DatasetRepository
-            datasetRepositoryDto = new DatasetRepositoryDto();
-            datasetRepositoryDto.setDatasetId(datasetID);
-
-            // Dimensions
-            for (ComponentInfo componentInfo : validateDataVersusDsd.retrieveDimensionsInfo()) {
-                datasetRepositoryDto.getDimensions().add(componentInfo.getCode());
-            }
-
-            // Attributes
-            datasetRepositoryDto.getAttributes().addAll(ManipulateDataUtils.extractDefinitionOfAttributes(validateDataVersusDsd.getAttributesProcessorMap().values()));
-
-            // In SDMX the attributes aren't localized. For use localised in SDMX must be use a enumerated representation.
-            // In this case, in the repo exists the code of enumerated representation, never the i18n of code.
-            datasetRepositoryDto.setLanguages(Arrays.asList(StatisticalResourcesConstants.DEFAULT_DATA_REPOSITORY_LOCALE));
-
-            datasetRepositoryDto = datasetRepositoriesServiceFacade.createDatasetRepository(datasetRepositoryDto);
-        }
-
-        return datasetRepositoryDto;
     }
 
     private void insertDataAndAttributes(String datasetID, List<ObservationExtendedDto> dataDtos, ValidateDataVersusDsd validateDataVersusDsd) throws Exception {

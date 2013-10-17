@@ -5,6 +5,7 @@ import static org.junit.Assert.assertNull;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_01_BASIC_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_02_BASIC_NAME;
 
+import org.fornax.cartridges.sculptor.framework.errorhandling.ApplicationException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
@@ -71,9 +72,10 @@ public class DatasetIntegrationServiceTest extends StatisticalResourcesBaseTest 
     @Test
     public void testCreateAndUpdateDatasetMustHaveFilledStatisticalOperation() throws Exception {
         ExternalItem statisticalOperation = StatisticalResourcesNotPersistedDoMocks.mockStatisticalOperationExternalItem();
-
         DatasetVersion datasetBeforeCreate = notPersistedDoMocks.mockDatasetVersion();
         assertNull(datasetBeforeCreate.getDataset());
+
+        mockDsdAndCreateDatasetRepository(datasetBeforeCreate, statisticalOperation);
 
         DatasetVersion datasetAfterCreate = datasetService.createDatasetVersion(getServiceContextWithoutPrincipal(), datasetBeforeCreate, statisticalOperation);
         assertNotNull(datasetAfterCreate.getDataset().getIdentifiableStatisticalResource().getStatisticalOperation());
@@ -96,6 +98,8 @@ public class DatasetIntegrationServiceTest extends StatisticalResourcesBaseTest 
         DatasetVersion datasetBeforeCreate = notPersistedDoMocks.mockDatasetVersion();
         assertNull(datasetBeforeCreate.getSiemacMetadataStatisticalResource().getStatisticalOperation());
 
+        mockDsdAndCreateDatasetRepository(datasetBeforeCreate, statisticalOperation);
+
         DatasetVersion datasetAfterCreate = datasetService.createDatasetVersion(getServiceContextWithoutPrincipal(), datasetBeforeCreate, statisticalOperation);
         assertNotNull(datasetAfterCreate.getSiemacMetadataStatisticalResource().getStatisticalOperation());
 
@@ -109,4 +113,10 @@ public class DatasetIntegrationServiceTest extends StatisticalResourcesBaseTest 
     private void mockDsdAndDataRepositorySimpleDimensions() throws Exception {
         DataMockUtils.mockDsdAndDataRepositorySimpleDimensions(datasetRepositoriesServiceFacade, srmRestInternalService);
     }
+
+    private void mockDsdAndCreateDatasetRepository(DatasetVersion expected, ExternalItem statisticalOperation) throws Exception, ApplicationException {
+        String urn = buildDatasetUrn(expected.getSiemacMetadataStatisticalResource().getMaintainer().getCodeNested(), statisticalOperation.getCode(), 1, "001.000");
+        DataMockUtils.mockDsdAndCreateDatasetRepository(datasetRepositoriesServiceFacade, srmRestInternalService, urn);
+    }
+
 }

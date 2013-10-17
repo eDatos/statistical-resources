@@ -67,6 +67,7 @@ import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteriaBuilder;
 import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
 import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
+import org.fornax.cartridges.sculptor.framework.errorhandling.ApplicationException;
 import org.joda.time.DateTime;
 import org.junit.After;
 import org.junit.Assert;
@@ -105,8 +106,6 @@ import org.siemac.metamac.statistical.resources.core.utils.TaskMockUtils;
 import org.siemac.metamac.statistical.resources.core.utils.asserts.BaseAsserts;
 import org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.configuration.MetamacMock;
-import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetMockFactory;
-import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesDoMocks;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesNotPersistedDoMocks;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -189,8 +188,11 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
     @Override
     @Test
     public void testCreateDatasetVersion() throws Exception {
+
         DatasetVersion expected = notPersistedDoMocks.mockDatasetVersion();
         ExternalItem statisticalOperation = StatisticalResourcesNotPersistedDoMocks.mockStatisticalOperationExternalItem();
+
+        mockDsdAndCreateDatasetRepository(expected, statisticalOperation);
 
         DatasetVersion actual = datasetService.createDatasetVersion(getServiceContextWithoutPrincipal(), expected, statisticalOperation);
         String operationCode = actual.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode();
@@ -203,6 +205,7 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
         assertNotNull(actual.getSiemacMetadataStatisticalResource().getCreatedBy());
         assertTrue(actual.getSiemacMetadataStatisticalResource().getCreatedDate().equals(actual.getSiemacMetadataStatisticalResource().getCreationDate()));
         assertTrue(actual.getSiemacMetadataStatisticalResource().getCreatedBy().equals(actual.getSiemacMetadataStatisticalResource().getCreationUser()));
+        assertNotNull(actual.getDatasetRepositoryId());
     }
 
     @Test
@@ -213,6 +216,8 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
 
         ExternalItem statisticalOperation = StatisticalResourcesNotPersistedDoMocks.mockStatisticalOperationExternalItem(operationCode);
         DatasetVersion expected = notPersistedDoMocks.mockDatasetVersion();
+
+        mockDsdAndCreateDatasetRepository(expected, statisticalOperation);
 
         DatasetVersion actual = datasetService.createDatasetVersion(getServiceContextWithoutPrincipal(), expected, statisticalOperation);
         assertEquals("001.000", actual.getSiemacMetadataStatisticalResource().getVersionLogic());
@@ -228,9 +233,11 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
     public void testCreateDatasetVersionSameOperationExistingDatasetConsecutiveCode() throws Exception {
         DatasetVersion datasetVersionOper1 = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_09_OPER_0001_CODE_000003_NAME);
         String operationCode = datasetVersionOper1.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode();
+
         {
             ExternalItem statisticalOperation = StatisticalResourcesNotPersistedDoMocks.mockStatisticalOperationExternalItem(operationCode);
             DatasetVersion expected = notPersistedDoMocks.mockDatasetVersion();
+            mockDsdAndCreateDatasetRepository(expected, statisticalOperation);
             DatasetVersion actual = datasetService.createDatasetVersion(getServiceContextWithoutPrincipal(), expected, statisticalOperation);
             assertEquals("001.000", actual.getSiemacMetadataStatisticalResource().getVersionLogic());
             assertEquals(operationCode + "_000004", actual.getSiemacMetadataStatisticalResource().getCode());
@@ -241,6 +248,7 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
         {
             ExternalItem statisticalOperation = StatisticalResourcesNotPersistedDoMocks.mockStatisticalOperationExternalItem(operationCode);
             DatasetVersion expected = notPersistedDoMocks.mockDatasetVersion();
+            mockDsdAndCreateDatasetRepository(expected, statisticalOperation);
             DatasetVersion actual = datasetService.createDatasetVersion(getServiceContextWithoutPrincipal(), expected, statisticalOperation);
             assertEquals("001.000", actual.getSiemacMetadataStatisticalResource().getVersionLogic());
             assertEquals(operationCode + "_000005", actual.getSiemacMetadataStatisticalResource().getCode());
@@ -286,6 +294,11 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
         ExternalItem statisticalOperation = StatisticalResourcesNotPersistedDoMocks.mockStatisticalOperationExternalItem();
 
         datasetService.createDatasetVersion(getServiceContextWithoutPrincipal(), expected, statisticalOperation);
+    }
+
+    private void mockDsdAndCreateDatasetRepository(DatasetVersion expected, ExternalItem statisticalOperation) throws Exception, ApplicationException {
+        String urn = buildDatasetUrn(expected.getSiemacMetadataStatisticalResource().getMaintainer().getCodeNested(), statisticalOperation.getCode(), 1, "001.000");
+        DataMockUtils.mockDsdAndCreateDatasetRepository(datasetRepositoriesServiceFacade, srmRestInternalService, urn);
     }
 
     @Override
@@ -360,6 +373,7 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
         ExternalItem newDsd = StatisticalResourcesDoMocks.mockDsdExternalItem();
         dataset.setRelatedDsd(newDsd);
         dataset.setRelatedDsdChanged(true);
+        mockDsdAndCreateDatasetRepository(dataset, dataset.getSiemacMetadataStatisticalResource().getStatisticalOperation());
 
         DateTime oldLastUpdate = dataset.getSiemacMetadataStatisticalResource().getLastUpdate();
 
@@ -379,7 +393,7 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
         assertNull(updatedDataset.getFormatExtentObservations());
         assertTrue(BooleanUtils.isNotTrue(updatedDataset.getUserModifiedDateNextUpdate()));
         assertNull(updatedDataset.getDateNextUpdate());
-        assertNull(updatedDataset.getDatasetRepositoryId());
+        assertNotNull(updatedDataset.getDatasetRepositoryId());
     }
 
     @Test
@@ -419,6 +433,7 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
         ExternalItem newDsd = StatisticalResourcesDoMocks.mockDsdExternalItem();
         dataset.setRelatedDsd(newDsd);
         dataset.setRelatedDsdChanged(true);
+        mockDsdAndCreateDatasetRepository(dataset, dataset.getSiemacMetadataStatisticalResource().getStatisticalOperation());
 
         DateTime oldLastUpdate = dataset.getSiemacMetadataStatisticalResource().getLastUpdate();
         DateTime oldNextDateUpdate = dataset.getDateNextUpdate();
@@ -439,7 +454,7 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
         assertNull(updatedDataset.getFormatExtentObservations());
         assertTrue(BooleanUtils.isTrue(updatedDataset.getUserModifiedDateNextUpdate()));
         BaseAsserts.assertEqualsDate(oldNextDateUpdate, updatedDataset.getDateNextUpdate());
-        assertNull(updatedDataset.getDatasetRepositoryId());
+        assertNotNull(updatedDataset.getDatasetRepositoryId());
     }
 
     @Override
@@ -1318,12 +1333,6 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
     // ------------------------------------------------------------------------
     // PRIVATE UTILS
     // ------------------------------------------------------------------------
-
-    private static String buildDatasetUrn(String maintainerCode, String operationCode, int datasetSequentialId, String versionNumber) {
-        StringBuilder strBuilder = new StringBuilder("urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Dataset=");
-        strBuilder.append(maintainerCode).append(":").append(operationCode).append("_").append(String.format("%06d", datasetSequentialId)).append("(").append(versionNumber).append(")");
-        return strBuilder.toString();
-    }
 
     private static String buildCategorisationUrn(String maintainerCode, String code, String versionNumber) {
         StringBuilder strBuilder = new StringBuilder("urn:sdmx:org.sdmx.infomodel.categoryscheme.Categorisation=");

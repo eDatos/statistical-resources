@@ -1,17 +1,15 @@
 package org.siemac.metamac.statistical.resources.core.dataset.criteria.mapper;
 
-import java.util.Date;
-
+import org.apache.commons.lang.BooleanUtils;
 import org.fornax.cartridges.sculptor.framework.domain.LeafProperty;
 import org.fornax.cartridges.sculptor.framework.domain.Property;
 import org.siemac.metamac.core.common.constants.CoreCommonConstants;
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaOrder;
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaPropertyRestriction;
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaPropertyRestriction.OperationType;
+import org.siemac.metamac.core.common.criteria.SculptorCriteriaDisjunction;
 import org.siemac.metamac.core.common.criteria.SculptorPropertyCriteria;
 import org.siemac.metamac.core.common.criteria.SculptorPropertyCriteriaBase;
-import org.siemac.metamac.core.common.criteria.SculptorCriteriaConjunction;
-import org.siemac.metamac.core.common.criteria.SculptorCriteriaDisjunction;
 import org.siemac.metamac.core.common.criteria.mapper.MetamacCriteria2SculptorCriteria;
 import org.siemac.metamac.core.common.criteria.mapper.MetamacCriteria2SculptorCriteria.CriteriaCallback;
 import org.siemac.metamac.core.common.criteria.utils.CriteriaUtils;
@@ -22,7 +20,6 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersi
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionProperties;
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
-import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
 import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesCriteriaUtils;
 import org.springframework.stereotype.Component;
 
@@ -132,12 +129,24 @@ public class DatasetVersionMetamacCriteria2SculptorCriteriaMapperImpl implements
                 case DATASET_STATISTIC_OFFICIALITY_IDENTIFIER:
                     return new SculptorPropertyCriteria(DatasetVersionProperties.statisticOfficiality().identifier(), propertyRestriction.getStringValue(), propertyRestriction.getOperationType());
                 case DATA:
-                    return new SculptorPropertyCriteria(DatasetVersionProperties.datasetRepositoryId(), propertyRestriction.getStringValue(), propertyRestriction.getOperationType());
+                    return buildDataCriteria(propertyRestriction);
                 case LAST_VERSION:
                     return new SculptorPropertyCriteria(DatasetVersionProperties.siemacMetadataStatisticalResource().lastVersion(), propertyRestriction.getBooleanValue(),
                             propertyRestriction.getOperationType());
                 default:
                     throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, propertyRestriction.getPropertyName());
+            }
+        }
+
+        private SculptorPropertyCriteriaBase buildDataCriteria(MetamacCriteriaPropertyRestriction propertyRestriction) throws MetamacException {
+            if (BooleanUtils.isTrue(propertyRestriction.getBooleanValue())) {
+                return new SculptorPropertyCriteria(DatasetVersionProperties.formatExtentObservations(), 0L, OperationType.GT);
+            } else if (BooleanUtils.isFalse(propertyRestriction.getBooleanValue())) {
+                SculptorPropertyCriteria numericCriteria = new SculptorPropertyCriteria(DatasetVersionProperties.formatExtentObservations(), 0L, OperationType.EQ);
+                SculptorPropertyCriteria nullabilityCriteria = new SculptorPropertyCriteria(DatasetVersionProperties.formatExtentObservations(), null, OperationType.IS_NULL);
+                return new SculptorCriteriaDisjunction(numericCriteria, nullabilityCriteria);
+            } else {
+                throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, propertyRestriction.getPropertyName());
             }
         }
         @Override

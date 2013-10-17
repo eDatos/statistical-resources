@@ -55,32 +55,7 @@ public class ManipulateSdmx21DataCallbackImpl implements ManipulateDataCallback 
             datasetRepositoryDto = datasetRepositoriesServiceFacade.findDatasetRepository(this.datasetVersionId);
         }
 
-        // If is a new Dataset
-        if (datasetRepositoryDto == null) {
-            datasetRepositoryDto = createDatasetRepository();
-        }
-
         this.datasetRepositoryDto = datasetRepositoryDto;
-    }
-
-    protected DatasetRepositoryDto createDatasetRepository() throws Exception {
-        // Create DatasetRepository
-        DatasetRepositoryDto datasetRepositoryDto = new DatasetRepositoryDto();
-        datasetRepositoryDto.setDatasetId(this.datasetVersionId);
-
-        // Dimensions
-        for (ComponentInfo componentInfo : retrieveDimensionsInfo()) {
-            datasetRepositoryDto.getDimensions().add(componentInfo.getCode());
-        }
-
-        // Attributes
-        datasetRepositoryDto.getAttributes().addAll(ManipulateDataUtils.extractDefinitionOfAttributes(this.validateDataVersusDsd.getAttributesProcessorMap().values()));
-
-        // In SDMX the attributes aren't localized. For use localised in SDMX must be use a enumerated representation.
-        // In this case, in the repo exists the code of enumerated representation, never the i18n of code.
-        datasetRepositoryDto.setLanguages(Arrays.asList(StatisticalResourcesConstants.DEFAULT_DATA_REPOSITORY_LOCALE));
-
-        return datasetRepositoriesServiceFacade.createDatasetRepository(datasetRepositoryDto);
     }
 
     @Override

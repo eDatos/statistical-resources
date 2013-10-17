@@ -431,10 +431,10 @@ public class DatasetServiceDatasourceManagementTest extends StatisticalResources
 
     @Test
     @MetamacMock(DATASET_VERSION_89_WITH_ONE_DATASOURCE_NAME)
-    public void testDeleteDatasourceClearDatasetRepository() throws Exception {
+    public void testDeleteDatasourceKeepDatasetRepository() throws Exception {
         DatasetVersion datasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_89_WITH_ONE_DATASOURCE_NAME);
 
-        mockDsdAndDataRepositorySimpleDimensions();
+        mockDsdAndDataRepositoryEmpty();
 
         String datasourceUrn = datasetVersion.getDatasources().get(0).getIdentifiableStatisticalResource().getUrn();
 
@@ -444,8 +444,9 @@ public class DatasetServiceDatasourceManagementTest extends StatisticalResources
         datasetService.deleteDatasource(getServiceContextWithoutPrincipal(), datasourceUrn);
 
         datasetVersion = datasetService.retrieveDatasetVersionByUrn(getServiceContextAdministrador(), datasetVersion.getSiemacMetadataStatisticalResource().getUrn());
-        assertNull(datasetVersion.getDatasetRepositoryId());
+        assertNotNull(datasetVersion.getDatasetRepositoryId());
         assertEquals(0, datasetVersion.getDatasources().size());
+        assertEquals(0L, datasetVersion.getFormatExtentObservations().longValue());
 
         expectedMetamacException(new MetamacException(ServiceExceptionType.DATASOURCE_NOT_FOUND, datasourceUrn));
         datasetService.retrieveDatasourceByUrn(getServiceContextWithoutPrincipal(), datasourceUrn);
@@ -534,13 +535,14 @@ public class DatasetServiceDatasourceManagementTest extends StatisticalResources
         DatasetVersion expectedDatasetVersion = expected.getDatasetVersion();
         String datasetVersionUrn = expectedDatasetVersion.getSiemacMetadataStatisticalResource().getUrn();
 
-        mockDsdAndDataRepositorySimpleDimensions();
+        mockDsdAndDataRepositoryEmpty();
 
         String datasourceUrn = expected.getIdentifiableStatisticalResource().getUrn();
 
         datasetService.deleteDatasource(getServiceContextWithoutPrincipal(), datasourceUrn);
 
         DatasetVersion actualDatasetVersion = datasetService.retrieveDatasetVersionByUrn(getServiceContextWithoutPrincipal(), datasetVersionUrn);
+        assertEquals(0, actualDatasetVersion.getDatasources().size());
 
         DataMockUtils.fillDatasetVersionWithEmptyCalculatedMetadataFromData(expectedDatasetVersion);
 
@@ -614,6 +616,10 @@ public class DatasetServiceDatasourceManagementTest extends StatisticalResources
 
     private void mockDsdAndDataRepositorySimpleDimensions() throws Exception {
         DataMockUtils.mockDsdAndDataRepositorySimpleDimensions(datasetRepositoriesServiceFacade, srmRestInternalService);
+    }
+
+    private void mockDsdAndDataRepositoryEmpty() throws Exception {
+        DataMockUtils.mockDsdAndDataRepositoryEmpty(datasetRepositoriesServiceFacade, srmRestInternalService);
     }
 
     private void mockTaskInProgressForResource(String datasetVersionUrn, boolean status) throws MetamacException {

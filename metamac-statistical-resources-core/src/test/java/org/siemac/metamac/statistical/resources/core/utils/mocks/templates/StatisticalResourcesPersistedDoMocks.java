@@ -1,7 +1,15 @@
 package org.siemac.metamac.statistical.resources.core.utils.mocks.templates;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import org.joda.time.DateTime;
 import org.siemac.metamac.core.common.util.GeneratorUrnUtils;
+import org.siemac.metamac.core.common.util.SdmxTimeUtils;
 import org.siemac.metamac.core.common.util.shared.VersionUtil;
 import org.siemac.metamac.statistical.resources.core.base.domain.HasLifecycle;
 import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableStatisticalResource;
@@ -27,6 +35,7 @@ import org.siemac.metamac.statistical.resources.core.publication.domain.Publicat
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
 import org.siemac.metamac.statistical.resources.core.query.domain.Query;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
+import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesCollectionUtils;
 import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesVersionUtils;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.DatasetMock;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.DatasetVersionMock;
@@ -34,6 +43,7 @@ import org.siemac.metamac.statistical.resources.core.utils.mocks.PublicationMock
 import org.siemac.metamac.statistical.resources.core.utils.mocks.PublicationVersionMock;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.QueryMock;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.QueryVersionMock;
+import org.siemac.metamac.statistical.resources.core.utils.transformers.CodeDimensionToCodeStringTransformer;
 
 public class StatisticalResourcesPersistedDoMocks extends StatisticalResourcesDoMocks {
 
@@ -318,29 +328,64 @@ public class StatisticalResourcesPersistedDoMocks extends StatisticalResourcesDo
     }
 
     public static void computeCoverageRelatedMetadata(DatasetVersion datasetVersion) {
+        Map<String, List<CodeDimension>> codesMap = buildCodeDimensionsMap(datasetVersion.getDimensionsCoverage());
+
         if (datasetVersion.getTemporalCoverage().isEmpty()) {
-            for (CodeDimension codeDim : datasetVersion.getDimensionsCoverage()) {
-                if (codeDim.getDsdComponentId().equals(StatisticalResourcesConstants.TEMPORAL_DIMENSION_ID)) {
+            List<CodeDimension> temporalCodes = codesMap.get(StatisticalResourcesConstants.TEMPORAL_DIMENSION_ID);
+            if (temporalCodes != null) {
+                for (CodeDimension codeDim : temporalCodes) {
                     datasetVersion.addTemporalCoverage(StatisticalResourcesDoMocks.mockTemporalCode(codeDim.getIdentifier(), codeDim.getIdentifier()));
                 }
+                List<String> sortedTempCodes = new ArrayList<String>();
+                StatisticalResourcesCollectionUtils.mapCollection(temporalCodes, sortedTempCodes, new CodeDimensionToCodeStringTransformer());
+                sortedTempCodes = SdmxTimeUtils.sortTimeList(sortedTempCodes);
+                datasetVersion.setDateStart(SdmxTimeUtils.calculateDateTimes(sortedTempCodes.get(0))[0]);
+                datasetVersion.setDateEnd(SdmxTimeUtils.calculateDateTimes(sortedTempCodes.get(sortedTempCodes.size() - 1))[0]);
             }
         }
 
         if (datasetVersion.getGeographicCoverage().isEmpty()) {
-            for (CodeDimension codeDim : datasetVersion.getDimensionsCoverage()) {
-                if (codeDim.getDsdComponentId().equals("GEO_DIM")) {
+            List<CodeDimension> geoCodes = codesMap.get("GEO_DIM");
+            if (geoCodes != null) {
+                for (CodeDimension codeDim : geoCodes) {
                     datasetVersion.addGeographicCoverage(StatisticalResourcesDoMocks.mockCodeExternalItem(codeDim.getIdentifier()));
                 }
             }
         }
 
         if (datasetVersion.getMeasureCoverage().isEmpty()) {
-            for (CodeDimension codeDim : datasetVersion.getDimensionsCoverage()) {
-                if (codeDim.getDsdComponentId().equals("MEAS_DIM")) {
+            List<CodeDimension> measureCodes = codesMap.get("MEAS_DIM");
+            if (measureCodes != null) {
+                for (CodeDimension codeDim : measureCodes) {
                     datasetVersion.addMeasureCoverage(StatisticalResourcesDoMocks.mockConceptExternalItem(codeDim.getIdentifier()));
                 }
             }
         }
+
+        // FORMAT EXTENTS
+        if (codesMap.size() > 0) {
+            datasetVersion.setFormatExtentDimensions(codesMap.size());
+
+            long observations = 1;
+            for (String dimension : codesMap.keySet()) {
+                observations *= codesMap.get(dimension).size();
+            }
+
+            datasetVersion.setFormatExtentObservations(observations);
+        }
+    }
+
+    private static Map<String, List<CodeDimension>> buildCodeDimensionsMap(List<CodeDimension> codeDimensions) {
+        Map<String, List<CodeDimension>> map = new HashMap<String, List<CodeDimension>>();
+        for (CodeDimension codeDimension : codeDimensions) {
+            List<CodeDimension> codes = map.get(codeDimension.getDsdComponentId());
+            if (codes == null) {
+                codes = new ArrayList<CodeDimension>();
+                map.put(codeDimension.getDsdComponentId(), codes);
+            }
+            codes.add(codeDimension);
+        }
+        return map;
     }
 
     private void fillNeededMetadataToGenerateDatasetVersionCode(DatasetVersionMock datasetVersion) {

@@ -127,6 +127,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import org.fornax.cartridges.sculptor.framework.errorhandling.ApplicationException;
 import org.joda.time.DateTime;
 import org.junit.Assert;
 import org.junit.Before;
@@ -152,6 +153,7 @@ import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStr
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
 import org.siemac.metamac.statistical.resources.core.common.criteria.enums.StatisticalResourcesCriteriaOrderEnum;
 import org.siemac.metamac.statistical.resources.core.common.criteria.enums.StatisticalResourcesCriteriaPropertyEnum;
+import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Categorisation;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
@@ -1307,6 +1309,8 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         DatasetVersionDto datasetVersionDto = StatisticalResourcesDtoMocks.mockDatasetVersionDto(officiality);
         ExternalItemDto statisticalOperation = StatisticalResourcesDtoMocks.mockStatisticalOperationExternalItemDto();
 
+        mockDsdAndCreateDatasetRepository(datasetVersionDto, statisticalOperation);
+
         DatasetVersionDto newDatasetVersionDto = statisticalResourcesServiceFacade.createDataset(getServiceContextAdministrador(), datasetVersionDto, statisticalOperation);
         assertNotNull(newDatasetVersionDto);
         assertNotNull(newDatasetVersionDto.getUrn());
@@ -1321,6 +1325,8 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         StatisticOfficiality officiality = statisticOfficialityMockFactory.retrieveMock(STATISTIC_OFFICIALITY_01_BASIC_NAME);
         DatasetVersionDto datasetVersionDto = StatisticalResourcesDtoMocks.mockDatasetVersionDto(officiality);
         datasetVersionDto.setMaintainer(maintainer);
+
+        mockDsdAndCreateDatasetRepository(datasetVersionDto, statisticalOperation);
 
         String persistedDatasetVersionUrn = statisticalResourcesServiceFacade.createDataset(getServiceContextAdministrador(), datasetVersionDto, statisticalOperation).getUrn();
         assertEquals("urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Dataset=SIEMAC:C00025A_000001(001.000)", persistedDatasetVersionUrn);
@@ -1607,6 +1613,35 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
             MetamacCriteriaResult<DatasetVersionBaseDto> pagedResults = statisticalResourcesServiceFacade.findDatasetsVersionsByCondition(getServiceContextAdministrador(), metamacCriteria);
             assertEquals(1, pagedResults.getPaginatorResult().getTotalResults().intValue());
             assertEqualsCollectionByField(Arrays.asList(dsOper2Code3ProdVal), pagedResults.getResults(), SIEMAC_METADATA_URN_FIELD, URN_FIELD);
+        }
+    }
+
+    @Test
+    @MetamacMock({DATASET_VERSION_01_BASIC_NAME, DATASET_VERSION_55_PUBLISHED_WITH_DATASOURCE_NAME})
+    public void testFindDatasetsVersionsByConditionByData() throws Exception {
+        DatasetVersion datasetWithNoData = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_01_BASIC_NAME);
+        DatasetVersion datasetWithData = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_55_PUBLISHED_WITH_DATASOURCE_NAME);
+
+        // Find no data
+        {
+            MetamacCriteria metamacCriteria = new MetamacCriteria();
+            addOrderToCriteria(metamacCriteria, StatisticalResourcesCriteriaOrderEnum.CODE, OrderTypeEnum.ASC);
+            setCriteriaPaginator(metamacCriteria, 0, Integer.MAX_VALUE, Boolean.TRUE);
+            setCriteriaBooleanPropertyRestriction(metamacCriteria, StatisticalResourcesCriteriaPropertyEnum.DATA, OperationType.EQ, Boolean.FALSE);
+
+            MetamacCriteriaResult<DatasetVersionBaseDto> pagedResults = statisticalResourcesServiceFacade.findDatasetsVersionsByCondition(getServiceContextAdministrador(), metamacCriteria);
+            assertEquals(1, pagedResults.getPaginatorResult().getTotalResults().intValue());
+            assertEqualsCollectionByField(Arrays.asList(datasetWithNoData), pagedResults.getResults(), SIEMAC_METADATA_URN_FIELD, URN_FIELD);
+        }
+        // Find data
+        {
+            MetamacCriteria metamacCriteria = new MetamacCriteria();
+            setCriteriaPaginator(metamacCriteria, 0, Integer.MAX_VALUE, Boolean.TRUE);
+            setCriteriaBooleanPropertyRestriction(metamacCriteria, StatisticalResourcesCriteriaPropertyEnum.DATA, OperationType.EQ, Boolean.TRUE);
+
+            MetamacCriteriaResult<DatasetVersionBaseDto> pagedResults = statisticalResourcesServiceFacade.findDatasetsVersionsByCondition(getServiceContextAdministrador(), metamacCriteria);
+            assertEquals(1, pagedResults.getPaginatorResult().getTotalResults().intValue());
+            assertEqualsCollectionByField(Arrays.asList(datasetWithData), pagedResults.getResults(), SIEMAC_METADATA_URN_FIELD, URN_FIELD);
         }
     }
 
@@ -3266,6 +3301,15 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
     }
 
     @SuppressWarnings("rawtypes")
+    private void setCriteriaBooleanPropertyRestriction(MetamacCriteria metamacCriteria, Enum property, OperationType operationType, Boolean booleanValue) {
+        MetamacCriteriaPropertyRestriction propertyRestriction = new MetamacCriteriaPropertyRestriction();
+        propertyRestriction.setPropertyName(property.name());
+        propertyRestriction.setOperationType(operationType);
+        propertyRestriction.setBooleanValue(booleanValue);
+        metamacCriteria.setRestriction(propertyRestriction);
+    }
+
+    @SuppressWarnings("rawtypes")
     private void setCriteriaDatePropertyRestriction(MetamacCriteria metamacCriteria, Enum property, OperationType operationType, Date date) {
         MetamacCriteriaPropertyRestriction propertyRestriction = new MetamacCriteriaPropertyRestriction();
         propertyRestriction.setPropertyName(property.name());
@@ -3276,5 +3320,10 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
 
     private void mockDsdAndDataRepositorySimpleDimensions() throws Exception {
         DataMockUtils.mockDsdAndDataRepositorySimpleDimensions(datasetRepositoriesServiceFacade, srmRestInternalService);
+    }
+
+    private void mockDsdAndCreateDatasetRepository(DatasetVersionDto expected, ExternalItemDto statisticalOperation) throws Exception, ApplicationException {
+        String urn = buildDatasetUrn(expected.getMaintainer().getCodeNested(), statisticalOperation.getCode(), 1, "001.000");
+        DataMockUtils.mockDsdAndCreateDatasetRepository(datasetRepositoriesServiceFacade, srmRestInternalService, urn);
     }
 }
