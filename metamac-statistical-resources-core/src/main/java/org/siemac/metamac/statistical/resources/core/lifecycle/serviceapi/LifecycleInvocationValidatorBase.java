@@ -19,9 +19,7 @@ public class LifecycleInvocationValidatorBase {
     // ------------------------------------------------------------------------------------------------------
 
     public void checkSendToProductionValidation(ServiceContext ctx, String urn) throws MetamacException {
-        List<MetamacExceptionItem> exceptions = new ArrayList<MetamacExceptionItem>();
-        StatisticalResourcesValidationUtils.checkParameterRequired(urn, ServiceExceptionParameters.URN, exceptions);
-        ExceptionUtils.throwIfException(exceptions);
+        onlyUrnRequired(urn);
     }
 
     // ------------------------------------------------------------------------------------------------------
@@ -29,9 +27,7 @@ public class LifecycleInvocationValidatorBase {
     // ------------------------------------------------------------------------------------------------------
 
     public void checkSendToDiffusionValidation(ServiceContext ctx, String urn) throws MetamacException {
-        List<MetamacExceptionItem> exceptions = new ArrayList<MetamacExceptionItem>();
-        StatisticalResourcesValidationUtils.checkParameterRequired(urn, ServiceExceptionParameters.URN, exceptions);
-        ExceptionUtils.throwIfException(exceptions);
+        onlyUrnRequired(urn);
     }
 
     // ------------------------------------------------------------------------------------------------------
@@ -39,9 +35,7 @@ public class LifecycleInvocationValidatorBase {
     // ------------------------------------------------------------------------------------------------------
 
     public void checkSendToValidationRejected(ServiceContext ctx, String urn) throws MetamacException {
-        List<MetamacExceptionItem> exceptions = new ArrayList<MetamacExceptionItem>();
-        StatisticalResourcesValidationUtils.checkParameterRequired(urn, ServiceExceptionParameters.URN, exceptions);
-        ExceptionUtils.throwIfException(exceptions);
+        onlyUrnRequired(urn);
     }
 
     // ------------------------------------------------------------------------------------------------------
@@ -49,9 +43,15 @@ public class LifecycleInvocationValidatorBase {
     // ------------------------------------------------------------------------------------------------------
 
     public void checkSendToPublished(ServiceContext ctx, String urn) throws MetamacException {
-        List<MetamacExceptionItem> exceptions = new ArrayList<MetamacExceptionItem>();
-        StatisticalResourcesValidationUtils.checkParameterRequired(urn, ServiceExceptionParameters.URN, exceptions);
-        ExceptionUtils.throwIfException(exceptions);
+        onlyUrnRequired(urn);
+    }
+
+    // ------------------------------------------------------------------------------------------------------
+    // >> CANCEL PUBLICATION
+    // ------------------------------------------------------------------------------------------------------
+
+    public void checkCancelPublication(ServiceContext ctx, String urn) throws MetamacException {
+        onlyUrnRequired(urn);
     }
 
     // ------------------------------------------------------------------------------------------------------
@@ -59,6 +59,10 @@ public class LifecycleInvocationValidatorBase {
     // ------------------------------------------------------------------------------------------------------
 
     public void checkVersioning(ServiceContext ctx, String urn) throws MetamacException {
+        onlyUrnRequired(urn);
+    }
+
+    protected void onlyUrnRequired(String urn) throws MetamacException {
         List<MetamacExceptionItem> exceptions = new ArrayList<MetamacExceptionItem>();
         StatisticalResourcesValidationUtils.checkParameterRequired(urn, ServiceExceptionParameters.URN, exceptions);
         ExceptionUtils.throwIfException(exceptions);

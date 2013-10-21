@@ -9,6 +9,7 @@ import org.joda.time.DateTime;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.core.common.util.GeneratorUrnUtils;
+import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResourceResult;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionRepository;
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
@@ -18,6 +19,8 @@ import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParam
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.lifecycle.LifecycleCommonMetadataChecker;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.LifecycleTemplateService;
+import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
+import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersionRepository;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersionRepository;
 import org.siemac.metamac.statistical.resources.core.query.serviceapi.QueryService;
@@ -33,6 +36,9 @@ public class QueryLifecycleServiceImpl extends LifecycleTemplateService<QueryVer
 
     @Autowired
     private QueryVersionRepository         queryVersionRepository;
+
+    @Autowired
+    private PublicationVersionRepository   publicationVersionRepository;
 
     @Autowired
     private QueryService                   queryService;
@@ -147,6 +153,38 @@ public class QueryLifecycleServiceImpl extends LifecycleTemplateService<QueryVer
         }
         return false;
     }
+
+    // ------------------------------------------------------------------------------------------------------
+    // >> CANCEL PUBLICATION
+    // ------------------------------------------------------------------------------------------------------
+    @Override
+    protected void checkCancelPublicationResource(ServiceContext ctx, QueryVersion resource, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
+        checkPublicationsThatHasPart(ctx, resource, exceptionItems);
+    }
+
+    private void checkPublicationsThatHasPart(ServiceContext ctx, QueryVersion resource, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
+        List<RelatedResourceResult> publications = queryVersionRepository.retrieveIsPartOf(resource);
+        if (!publications.isEmpty()) {
+            for (RelatedResourceResult publicationResult : publications) {
+                PublicationVersion publicationVersion = publicationVersionRepository.retrieveByUrn(publicationResult.getUrn());
+                if (ProcStatusEnum.PUBLISHED_NOT_VISIBLE.equals(publicationVersion.getSiemacMetadataStatisticalResource().getEffectiveProcStatus())) {
+                    exceptionItems.add(new MetamacExceptionItem(ServiceExceptionType.QUERY_VERSION_IS_PART_OF_NOT_VISIBLE_PUBLICATION, publicationVersion.getSiemacMetadataStatisticalResource()
+                            .getUrn()));
+                }
+            }
+        }
+    }
+
+    @Override
+    protected void applyCancelPublicationCurrentResource(ServiceContext ctx, QueryVersion resource, QueryVersion previousResource) throws MetamacException {
+        // Nothing
+    }
+
+    @Override
+    protected void applyCancelPublicationPreviousResource(ServiceContext ctx, QueryVersion previousResource) throws MetamacException {
+        // nothing
+    }
+
     // ------------------------------------------------------------------------------------------------------
     // >> VERSIONING
     // ------------------------------------------------------------------------------------------------------

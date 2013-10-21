@@ -50,14 +50,28 @@ public class SiemacLifecycleFiller {
 
         // TODO: Metadatos de relaciones entre recursos
     }
-    
-    public void applySendToPublishedPreviousResourceActions(ServiceContext ctx, HasSiemacMetadata resource, HasSiemacMetadata previousResource, RelatedResource currentAsRelatedResource) throws MetamacException {
+
+    public void applySendToPublishedPreviousResourceActions(ServiceContext ctx, HasSiemacMetadata resource, HasSiemacMetadata previousResource, RelatedResource currentAsRelatedResource)
+            throws MetamacException {
         lifecycleFiller.applySendToPublishedPreviousResourceActions(ctx, resource, previousResource, currentAsRelatedResource);
-        
 
         // TODO: Metadatos de relaciones entre recursos
     }
-    
+
+    // ------------------------------------------------------------------------------------------------------
+    // >> CANCEL PUBLICATION
+    // ------------------------------------------------------------------------------------------------------
+
+    public void applyCancelPublicationCurrentResourceActions(ServiceContext ctx, HasSiemacMetadata resource, HasSiemacMetadata previousResource) throws MetamacException {
+        lifecycleFiller.applyCancelPublicationCurrentResourceActions(ctx, resource, previousResource);
+        resource.getSiemacMetadataStatisticalResource().setCopyrightedDate(null);
+    }
+
+    public void applyCancelPublicationPreviousResourceActions(ServiceContext ctx, HasSiemacMetadata resource, HasSiemacMetadata previousResource, RelatedResource currentAsRelatedResource)
+            throws MetamacException {
+        lifecycleFiller.applyCancelPublicationPreviousResourceActions(ctx, resource, previousResource, currentAsRelatedResource);
+    }
+
     // ------------------------------------------------------------------------------------------------------
     // >> VERSIONING
     // ------------------------------------------------------------------------------------------------------
@@ -66,7 +80,7 @@ public class SiemacLifecycleFiller {
         lifecycleFiller.applyVersioningNewResourceActions(ctx, resource, previousResource, versionType);
         resource.getSiemacMetadataStatisticalResource().setLastUpdate(resource.getSiemacMetadataStatisticalResource().getCreationDate());
     }
-    
+
     public void applyVersioningPreviousResourceActions(ServiceContext ctx, HasSiemacMetadata resource, HasSiemacMetadata previousResource, VersionTypeEnum versionType) throws MetamacException {
         lifecycleFiller.applyVersioningPreviousResourceActions(ctx, resource, previousResource, versionType);
     }

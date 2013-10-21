@@ -64,12 +64,30 @@ public class LifecycleFiller {
         resource.getLifeCycleStatisticalResource().setPublicationDate(pubDate);
         resource.getLifeCycleStatisticalResource().setPublicationUser(ctx.getUserId());
         resource.getLifeCycleStatisticalResource().setProcStatus(ProcStatusEnum.PUBLISHED);
-
-        // TODO: Metadatos de relaciones entre recursos
     }
+
     public void applySendToPublishedPreviousResourceActions(ServiceContext ctx, HasLifecycle resource, HasLifecycle previousVersion, RelatedResource currentAsRelatedResource) throws MetamacException {
         DateTime publicationDate = resource.getLifeCycleStatisticalResource().getValidFrom();
         previousVersion.getLifeCycleStatisticalResource().setValidTo(publicationDate);
+    }
+
+    // ------------------------------------------------------------------------------------------------------
+    // CANCEL PUBLICATION
+    // ------------------------------------------------------------------------------------------------------
+
+    public void applyCancelPublicationCurrentResourceActions(ServiceContext ctx, HasLifecycle resource, HasLifecycle previousVersion) throws MetamacException {
+        if (!StatisticalResourcesVersionUtils.isInitialVersion(resource) && ValidationUtils.isEmpty(previousVersion)) {
+            throw new MetamacException(ServiceExceptionType.PARAMETER_REQUIRED, ServiceExceptionParameters.PREVIOUS_VERSION);
+        }
+
+        resource.getLifeCycleStatisticalResource().setPublicationDate(null);
+        resource.getLifeCycleStatisticalResource().setPublicationUser(null);
+        resource.getLifeCycleStatisticalResource().setProcStatus(ProcStatusEnum.DIFFUSION_VALIDATION);
+    }
+
+    public void applyCancelPublicationPreviousResourceActions(ServiceContext ctx, HasLifecycle resource, HasLifecycle previousVersion, RelatedResource currentAsRelatedResource)
+            throws MetamacException {
+        previousVersion.getLifeCycleStatisticalResource().setValidTo(null);
     }
 
     // ------------------------------------------------------------------------------------------------------

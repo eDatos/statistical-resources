@@ -19,6 +19,7 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationMockFactory.PUBLICATION_04_STRUCTURED_WITH_2_PUBLICATION_VERSIONS_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationMockFactory.PUBLICATION_05_WITH_MULTIPLE_PUBLISHED_VERSIONS_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationMockFactory.PUBLICATION_06_WITH_MULTIPLE_PUBLISHED_VERSIONS_AND_LATEST_NO_VISIBLE_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_96_NOT_VISIBLE_REPLACES_PUBLICATION_VERSION_95_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryMockFactory.QUERY_16_DRAFT_USED_IN_PUBLICATION_VERSION_86_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryMockFactory.QUERY_17_PRODUCTION_VALIDATION_USED_IN_PUBLICATION_VERSION_86_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryMockFactory.QUERY_18_DIFFUSION_VALIDATION_USED_IN_PUBLICATION_VERSION_86_NAME;
@@ -223,6 +224,14 @@ public class PublicationVersionMockFactory extends StatisticalResourcesMockFacto
 
     public static final String                   PUBLICATION_VERSION_91_REPLACES_PUBLICATION_92_NAME                                                                = "PUBLICATION_VERSION_91_REPLACES_PUBLICATION_92";
     public static final String                   PUBLICATION_VERSION_92_IS_REPLACED_BY_PUBLICATION_91_NAME                                                          = "PUBLICATION_VERSION_92_IS_REPLACED_BY_PUBLICATION_91";
+
+    public static final String                   PUBLICATION_VERSION_93_NOT_VISIBLE_HAS_PART_NOT_VISIBLE_DATASET_VERSION_NAME                                       = "PUBLICATION_VERSION_93_NOT_VISIBLE_HAS_PART_NOT_VISIBLE_DATASET_VERSION";
+
+    public static final String                   PUBLICATION_VERSION_94_NOT_VISIBLE_NAME                                                                            = "PUBLICATION_VERSION_94_NOT_VISIBLE";
+    public static final String                   PUBLICATION_VERSION_95_NOT_VISIBLE_IS_REPLACED_BY_PUBLICATION_VERSION_96_NAME                                      = "PUBLICATION_VERSION_95_NOT_VISIBLE_IS_REPLACED_BY_PUBLICATION_VERSION_96";
+    public static final String                   PUBLICATION_VERSION_96_NOT_VISIBLE_REPLACES_PUBLICATION_VERSION_95_NAME                                            = "PUBLICATION_VERSION_96_NOT_VISIBLE_REPLACES_PUBLICATION_VERSION_95";
+
+    public static final String                   PUBLICATION_VERSION_97_NOT_VISIBLE_HAS_PART_NOT_VISIBLE_QUERY_NAME                                                 = "PUBLICATION_VERSION_97_NOT_VISIBLE_HAS_PART_NOT_VISIBLE_QUERY";
 
     private static PublicationVersionMockFactory instance                                                                                                           = null;
 
@@ -661,6 +670,31 @@ public class PublicationVersionMockFactory extends StatisticalResourcesMockFacto
         registerPublicationVersionMock(PUBLICATION_VERSION_91_REPLACES_PUBLICATION_92_NAME, publicationVersionReplaces);
 
         publicationVersionReplaces.getSiemacMetadataStatisticalResource().setReplaces(StatisticalResourcesPersistedDoMocks.mockPublicationVersionRelated(publicationReplaced));
+
+        return new MockDescriptor(publicationReplaced, publicationVersionReplaces);
+    }
+
+    private static PublicationVersion getPublicationVersion94NotVisible() {
+        PublicationVersionMock template = new PublicationVersionMock();
+        template.setSequentialId(1);
+        template.getSiemacMetadataStatisticalResource().setValidFrom(new DateTime().plusDays(1));
+        PublicationVersion publicationVersion = createPublicationVersionInStatus(template, ProcStatusEnum.PUBLISHED);
+        return publicationVersion;
+    }
+
+    private static MockDescriptor getPublicationVersion95NotVisibleIsReplacedByPublicationVersion96() {
+        PublicationVersionMock template = new PublicationVersionMock();
+        template.setSequentialId(1);
+        template.getSiemacMetadataStatisticalResource().setValidFrom(new DateTime().plusDays(1));
+        PublicationVersion publicationReplaced = createPublicationVersionInStatus(template, ProcStatusEnum.PUBLISHED);
+
+        PublicationVersionMock templateReplaces = new PublicationVersionMock();
+        templateReplaces.setSequentialId(2);
+        templateReplaces.getSiemacMetadataStatisticalResource().setValidFrom(new DateTime().plusDays(2));
+        templateReplaces.getSiemacMetadataStatisticalResource().setReplaces(StatisticalResourcesPersistedDoMocks.mockPublicationVersionRelated(publicationReplaced));
+        PublicationVersion publicationVersionReplaces = createPublicationVersionInStatus(templateReplaces, ProcStatusEnum.PUBLISHED);
+
+        registerPublicationVersionMock(PUBLICATION_VERSION_96_NOT_VISIBLE_REPLACES_PUBLICATION_VERSION_95_NAME, publicationVersionReplaces);
 
         return new MockDescriptor(publicationReplaced, publicationVersionReplaces);
     }

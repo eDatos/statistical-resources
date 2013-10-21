@@ -14,6 +14,8 @@ public interface LifecycleService<E extends Object> {
 
     public E sendToPublished(ServiceContext ctx, String urn) throws MetamacException;
 
+    public E cancelPublication(ServiceContext ctx, String urn) throws MetamacException;
+
     public E versioning(ServiceContext ctx, String urn, VersionTypeEnum versionType) throws MetamacException;
 
 }

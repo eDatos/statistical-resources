@@ -11,18 +11,23 @@ import org.siemac.metamac.core.common.util.GeneratorUrnUtils;
 import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
 import org.siemac.metamac.statistical.resources.core.common.domain.InternationalString;
 import org.siemac.metamac.statistical.resources.core.common.domain.LocalisedString;
+import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResourceResult;
 import org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConstants;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Categorisation;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionRepository;
 import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.DatasetService;
 import org.siemac.metamac.statistical.resources.core.dataset.utils.DatasetVersioningCopyUtils;
+import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionSingleParameters;
+import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.lifecycle.LifecycleCommonMetadataChecker;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceapi.LifecycleService;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.LifecycleTemplateService;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.checker.ExternalItemChecker;
+import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
+import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersionRepository;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersionRepository;
 import org.siemac.metamac.statistical.resources.core.query.serviceapi.QueryService;
@@ -46,6 +51,9 @@ public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<Datase
 
     @Autowired
     private QueryVersionRepository         queryVersionRepository;
+
+    @Autowired
+    private PublicationVersionRepository   publicationVersionRepository;
 
     @Autowired
     private LifecycleService<QueryVersion> queryLifecycleService;
@@ -138,7 +146,6 @@ public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<Datase
     @Override
     protected void applySendToPublishedCurrentResource(ServiceContext ctx, DatasetVersion resource, DatasetVersion previousResource) throws MetamacException {
         resource.setBibliographicCitation(buildBibliographicCitation(resource));
-        // cHANGE QUERIES
     }
 
     @Override
@@ -172,6 +179,83 @@ public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<Datase
         } else {
             return internationaString.getLocalisedLabel(locale);
         }
+    }
+
+    // ------------------------------------------------------------------------------------------------------
+    // >> CANCEL PUBLICATION
+    // ------------------------------------------------------------------------------------------------------
+    @Override
+    protected void checkCancelPublicationResource(ServiceContext ctx, DatasetVersion resource, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
+        checkDatasetThatReplaces(resource, exceptionItems);
+
+        checkQueriesThatRequires(ctx, resource, exceptionItems);
+
+        checkPublicationsThatHasPart(ctx, resource, exceptionItems);
+    }
+
+    private void checkPublicationsThatHasPart(ServiceContext ctx, DatasetVersion resource, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
+        List<RelatedResourceResult> publications = datasetVersionRepository.retrieveIsPartOf(resource);
+        if (!publications.isEmpty()) {
+            for (RelatedResourceResult publicationResult : publications) {
+                PublicationVersion publicationVersion = publicationVersionRepository.retrieveByUrn(publicationResult.getUrn());
+                if (ProcStatusEnum.PUBLISHED_NOT_VISIBLE.equals(publicationVersion.getSiemacMetadataStatisticalResource().getEffectiveProcStatus())) {
+                    checkPublicationCanStaryNotVisibleAfterCancelDataset(ctx, resource, publicationVersion, exceptionItems);
+                }
+            }
+        }
+    }
+
+    private void checkQueriesThatRequires(ServiceContext ctx, DatasetVersion resource, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
+        List<RelatedResourceResult> queries = datasetVersionRepository.retrieveIsRequiredBy(resource);
+        if (!queries.isEmpty()) {
+            for (RelatedResourceResult queryResult : queries) {
+                QueryVersion queryVersion = queryVersionRepository.retrieveByUrn(queryResult.getUrn());
+                if (ProcStatusEnum.PUBLISHED_NOT_VISIBLE.equals(queryVersion.getLifeCycleStatisticalResource().getEffectiveProcStatus())) {
+                    checkQueryCanStaryNotVisibleAfterCancelDataset(ctx, resource, queryVersion, exceptionItems);
+                }
+            }
+        }
+    }
+
+    private void checkQueryCanStaryNotVisibleAfterCancelDataset(ServiceContext ctx, DatasetVersion resource, QueryVersion queryVersion, List<MetamacExceptionItem> exceptionItems)
+            throws MetamacException {
+        if (queryVersion.getFixedDatasetVersion() != null) {
+            exceptionItems.add(new MetamacExceptionItem(ServiceExceptionType.DATASET_VERSION_IS_REQUIRED_BY_NOT_VISIBLE_QUERY, queryVersion.getLifeCycleStatisticalResource().getUrn()));
+        } else {
+            DatasetVersion lastPublishedVersion = datasetVersionRepository.retrieveLastPublishedVersion(resource.getDataset().getIdentifiableStatisticalResource().getUrn());
+            boolean canStayNotVisible = false;
+            if (lastPublishedVersion != null) {
+                canStayNotVisible = queryService.checkQueryCompatibility(ctx, queryVersion, lastPublishedVersion);
+            }
+            if (!canStayNotVisible) {
+                exceptionItems.add(new MetamacExceptionItem(ServiceExceptionType.DATASET_VERSION_IS_REQUIRED_BY_NOT_VISIBLE_QUERY, queryVersion.getLifeCycleStatisticalResource().getUrn()));
+            }
+        }
+    }
+
+    private void checkPublicationCanStaryNotVisibleAfterCancelDataset(ServiceContext ctx, DatasetVersion resource, PublicationVersion publicationVersion, List<MetamacExceptionItem> exceptionItems)
+            throws MetamacException {
+        DatasetVersion lastPublishedVersion = datasetVersionRepository.retrieveLastPublishedVersion(resource.getDataset().getIdentifiableStatisticalResource().getUrn());
+        if (lastPublishedVersion == null) {
+            exceptionItems.add(new MetamacExceptionItem(ServiceExceptionType.DATASET_VERSION_IS_PART_OF_NOT_VISIBLE_PUBLICATION, publicationVersion.getSiemacMetadataStatisticalResource().getUrn()));
+        }
+    }
+
+    protected void checkDatasetThatReplaces(DatasetVersion resource, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
+        RelatedResourceResult datasetThatReplaces = datasetVersionRepository.retrieveIsReplacedBy(resource);
+        if (datasetThatReplaces != null) {
+            exceptionItems.add(new MetamacExceptionItem(ServiceExceptionType.DATASET_VERSION_IS_REPLACED_BY_NOT_VISIBLE, datasetThatReplaces.getUrn()));
+        }
+    }
+
+    @Override
+    protected void applyCancelPublicationCurrentResource(ServiceContext ctx, DatasetVersion resource, DatasetVersion previousResource) throws MetamacException {
+        resource.setBibliographicCitation(null);
+    }
+
+    @Override
+    protected void applyCancelPublicationPreviousResource(ServiceContext ctx, DatasetVersion previousResource) throws MetamacException {
+        // NOTHING
     }
 
     // ------------------------------------------------------------------------------------------------------

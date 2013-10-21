@@ -101,6 +101,11 @@ public class SharedDatasetsSecurityUtils extends SharedSecurityUtils {
         return isAnyResourcesRole(metamacPrincipal);
     }
 
+    public static boolean canCancelPublicationDataset(MetamacPrincipal metamacPrincipal) {
+        // TODO: Poner los roles correctos
+        return isAnyResourcesRole(metamacPrincipal);
+    }
+
     public static boolean canRetrieveLatestDatasetVersion(MetamacPrincipal metamacPrincipal) {
         // TODO: Poner los roles correctos
         return isAnyResourcesRole(metamacPrincipal);

@@ -2,6 +2,7 @@ package org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.quer
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_97_NOT_VISIBLE_HAS_PART_NOT_VISIBLE_QUERY_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_37_PREPARED_TO_PUBLISH_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_38_TO_PUBLISH_WITH_FUTURE_DATE_WITH_DATASET_VERSION_VISIBLE_BEFORE_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_39_TO_PUBLISH_WITH_FUTURE_DATE_WITH_DATASET_VERSION_VISIBLE_AFTER_NAME;
@@ -13,6 +14,8 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_45_TO_PUBLISH_WITH_FUTURE_DATE_WITH_DATASET_WITH_LAST_VERSION_VISIBLE_AFTER_QUERY_NO_PREVIOUS_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_46_TO_PUBLISH_WITH_FUTURE_DATE_WITH_DATASET_WITH_LAST_VERSION_VISIBLE_AFTER_QUERY_PREVIOUS_COMPATIBLE_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_47_TO_PUBLISH_WITH_FUTURE_DATE_WITH_DATASET_WITH_LAST_VERSION_VISIBLE_AFTER_QUERY_PREVIOUS_INCOMPATIBLE_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_52_NOT_VISIBLE_IS_PART_OF_NOT_VISIBLE_PUBLICATION_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_53_NOT_VISIBLE_IS_PART_OF_EMPTY_NAME;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +39,7 @@ import org.siemac.metamac.statistical.resources.core.utils.TaskMockUtils;
 import org.siemac.metamac.statistical.resources.core.utils.asserts.LifecycleAsserts;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.configuration.MetamacMock;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -254,6 +258,35 @@ public class QueryPublishingServiceTest extends StatisticalResourcesMockRestBase
         expectedMetamacException(new MetamacException(exceptionItems));
 
         queryLifecycleService.sendToPublished(getServiceContextAdministrador(), queryVersionUrn);
+    }
+
+    @Test
+    @MetamacMock(QUERY_VERSION_52_NOT_VISIBLE_IS_PART_OF_NOT_VISIBLE_PUBLICATION_NAME)
+    public void testCancelPublicationQueryVersionLinkedToNotVisiblePublication() throws Exception {
+        String queryVersionUrn = getQueryVersionMockUrn(QUERY_VERSION_52_NOT_VISIBLE_IS_PART_OF_NOT_VISIBLE_PUBLICATION_NAME);
+        String publicationVersionUrn = getPublicationVersionMockUrn(PUBLICATION_VERSION_97_NOT_VISIBLE_HAS_PART_NOT_VISIBLE_QUERY_NAME);
+
+        List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
+        exceptionItems.add(new MetamacExceptionItem(ServiceExceptionType.QUERY_VERSION_IS_PART_OF_NOT_VISIBLE_PUBLICATION, publicationVersionUrn));
+        expectedMetamacException(new MetamacException(exceptionItems));
+
+        queryLifecycleService.cancelPublication(getServiceContextAdministrador(), queryVersionUrn);
+    }
+
+    @Test
+    @MetamacMock(QUERY_VERSION_53_NOT_VISIBLE_IS_PART_OF_EMPTY_NAME)
+    public void testCancelPublicationQueryVersion() throws Exception {
+        String queryVersionUrn = getQueryVersionMockUrn(QUERY_VERSION_53_NOT_VISIBLE_IS_PART_OF_EMPTY_NAME);
+
+        queryLifecycleService.cancelPublication(getServiceContextAdministrador(), queryVersionUrn);
+
+        QueryVersion queryVersion = queryVersionRepository.retrieveByUrn(queryVersionUrn);
+
+        assertCancelPublicationQueryVersion(queryVersion, null);
+    }
+
+    private void assertCancelPublicationQueryVersion(QueryVersion current, QueryVersion previous) throws MetamacException {
+        LifecycleAsserts.assertAutomaticallyFilledMetadataLifecycleCancelPublication(current, previous);
     }
 
     private void assertPublishingQueryVersion(QueryVersion current, QueryVersion previous) throws MetamacException {

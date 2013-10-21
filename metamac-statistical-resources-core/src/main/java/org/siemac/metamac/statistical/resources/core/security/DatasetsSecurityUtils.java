@@ -98,6 +98,12 @@ public class DatasetsSecurityUtils extends SecurityUtils {
         }
     }
 
+    public static void canCancelPublicationDatasetVersion(ServiceContext ctx) throws MetamacException {
+        if (!SharedDatasetsSecurityUtils.canCancelPublicationDataset(getMetamacPrincipal(ctx))) {
+            throwExceptionIfOperationNotAllowed(ctx);
+        }
+    }
+
     public static void canVersionDataset(ServiceContext ctx) throws MetamacException {
         if (!SharedDatasetsSecurityUtils.canVersionDataset(getMetamacPrincipal(ctx))) {
             throwExceptionIfOperationNotAllowed(ctx);

@@ -10,6 +10,9 @@ public class ServiceExceptionType extends CommonServiceExceptionType {
     // Agency
     public static final CommonServiceExceptionType AGENCY_NOT_FOUND                                                       = create("exception.resources.agency.not_found");
 
+    // Resources
+    public static final CommonServiceExceptionType VALID_FROM_TOO_CLOSE_TO_CANCEL_PUBLICATION                             = create("exception.resources.metadata.valid_from_too_close_to_cancel_publication");
+
     // Dataset
     public static final CommonServiceExceptionType DATASET_NOT_FOUND                                                      = create("exception.resources.dataset.not_found");
     public static final CommonServiceExceptionType DATASET_VERSION_NOT_FOUND                                              = create("exception.resources.dataset.version_not_found");
@@ -23,8 +26,11 @@ public class ServiceExceptionType extends CommonServiceExceptionType {
     public static final CommonServiceExceptionType DATASET_VERSION_CANT_REPLACE_ITSELF                                    = create("exception.resources.dataset_version.cant_replace_itself");
     public static final CommonServiceExceptionType DATASET_VERSION_CANT_BE_DELETED                                        = create("exception.resources.dataset_version.cant_be_deleted");
     public static final CommonServiceExceptionType DATASET_VERSION_IS_PART_OF_OTHER_RESOURCES                             = create("exception.resources.dataset_version.is_part_of_publications");
+    public static final CommonServiceExceptionType DATASET_VERSION_IS_PART_OF_NOT_VISIBLE_PUBLICATION                     = create("exception.resources.dataset_version.is_part_of_not_visible_publication");
     public static final CommonServiceExceptionType DATASET_VERSION_IS_REPLACED_BY_OTHER_RESOURCE                          = create("exception.resources.dataset_version.is_replaced_by_other_datasets");
+    public static final CommonServiceExceptionType DATASET_VERSION_IS_REPLACED_BY_NOT_VISIBLE                             = create("exception.resources.dataset_version.is_replaced_by_not_visible_dataset");
     public static final CommonServiceExceptionType DATASET_VERSION_IS_REQUIRED_BY_OTHER_RESOURCES                         = create("exception.resources.dataset_version.is_required_by_queries");
+    public static final CommonServiceExceptionType DATASET_VERSION_IS_REQUIRED_BY_NOT_VISIBLE_QUERY                       = create("exception.resources.dataset_version.is_required_by_not_visible_query");
 
     // Datasource
     public static final CommonServiceExceptionType DATASOURCE_NOT_FOUND                                                   = create("exception.resources.datasource.not_found");
@@ -49,6 +55,7 @@ public class ServiceExceptionType extends CommonServiceExceptionType {
     public static final CommonServiceExceptionType PUBLICATION_VERSION_LINKED_TO_NOT_PUBLISHED_QUERY                      = create("exception.resources.publication_version.linked_to_query_not_published");
     public static final CommonServiceExceptionType PUBLICATION_VERSION_CANT_BE_DELETED                                    = create("exception.resources.publication_version.cant_be_deleted");
     public static final CommonServiceExceptionType PUBLICATION_VERSION_IS_REPLACED_BY_OTHER_RESOURCE                      = create("exception.resources.publication_version.is_replaced_by_other_publication");
+    public static final CommonServiceExceptionType PUBLICATION_VERSION_IS_REPLACED_BY_NOT_VISIBLE                         = create("exception.resources.publication_version.is_replaced_by_not_visible_publication");
 
     // Chapter
     public static final CommonServiceExceptionType CHAPTER_NOT_FOUND                                                      = create("exception.resources.chapter.not_found");
@@ -68,6 +75,7 @@ public class ServiceExceptionType extends CommonServiceExceptionType {
     public static final CommonServiceExceptionType QUERY_VERSION_PUBLISH_MUST_LINK_TO_DATASET                             = create("exception.resources.query_version.publish_must_link_to_dataset");
     public static final CommonServiceExceptionType QUERY_VERSION_CANT_BE_DELETED                                          = create("exception.resources.query_version.cant_be_deleted");
     public static final CommonServiceExceptionType QUERY_VERSION_IS_PART_OF_OTHER_RESOURCES                               = create("exception.resources.query_version.is_part_of_publications");
+    public static final CommonServiceExceptionType QUERY_VERSION_IS_PART_OF_NOT_VISIBLE_PUBLICATION                       = create("exception.resources.query_version.is_part_of_not_visible_publication");
 
     // Identifiable Statistical Resource
     public static final CommonServiceExceptionType IDENTIFIABLE_STATISTICAL_RESOURCE_NOT_FOUND                            = create("exception.resources.identifiable_statistical_resource.not_found");

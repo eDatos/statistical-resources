@@ -103,6 +103,11 @@ public class PublicationsSecurityUtils extends SecurityUtils {
             throwExceptionIfOperationNotAllowed(ctx);
         }
     }
+    public static void canCancelPublicationPublicationVersion(ServiceContext ctx) throws MetamacException {
+        if (!SharedPublicationsSecurityUtils.canCancelPublicationPublicationVersion(getMetamacPrincipal(ctx))) {
+            throwExceptionIfOperationNotAllowed(ctx);
+        }
+    }
 
     // ------------------------------------------------------------------------
     // CHAPTERS

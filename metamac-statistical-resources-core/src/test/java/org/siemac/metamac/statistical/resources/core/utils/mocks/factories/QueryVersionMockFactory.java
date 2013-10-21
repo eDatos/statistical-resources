@@ -2,6 +2,7 @@ package org.siemac.metamac.statistical.resources.core.utils.mocks.factories;
 
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_03_FOR_DATASET_03_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_04_FOR_DATASET_03_AND_LAST_VERSION_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_93_NOT_VISIBLE_HAS_PART_NOT_VISIBLE_DATASET_VERSION_NAME;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,6 +21,8 @@ import org.siemac.metamac.statistical.resources.core.utils.DatasetLifecycleTestU
 import org.siemac.metamac.statistical.resources.core.utils.QueryLifecycleTestUtils;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.DatasetMock;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.DatasetVersionMock;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.PublicationMock;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.PublicationVersionMock;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.QueryVersionMock;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.configuration.MockDescriptor;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.configuration.MockProvider;
@@ -102,6 +105,16 @@ public class QueryVersionMockFactory extends StatisticalResourcesMockFactory<Que
     public static final String             QUERY_VERSION_45_TO_PUBLISH_WITH_FUTURE_DATE_WITH_DATASET_WITH_LAST_VERSION_VISIBLE_AFTER_QUERY_NO_PREVIOUS_NAME           = "QUERY_VERSION_45_TO_PUBLISH_WITH_FUTURE_DATE_WITH_DATASET_WITH_LAST_VERSION_VISIBLE_AFTER_QUERY_NO_PREVIOUS";
     public static final String             QUERY_VERSION_46_TO_PUBLISH_WITH_FUTURE_DATE_WITH_DATASET_WITH_LAST_VERSION_VISIBLE_AFTER_QUERY_PREVIOUS_COMPATIBLE_NAME   = "QUERY_VERSION_46_TO_PUBLISH_WITH_FUTURE_DATE_WITH_DATASET_WITH_LAST_VERSION_VISIBLE_AFTER_QUERY_PREVIOUS_COMPATIBLE";
     public static final String             QUERY_VERSION_47_TO_PUBLISH_WITH_FUTURE_DATE_WITH_DATASET_WITH_LAST_VERSION_VISIBLE_AFTER_QUERY_PREVIOUS_INCOMPATIBLE_NAME = "QUERY_VERSION_47_TO_PUBLISH_WITH_FUTURE_DATE_WITH_DATASET_WITH_LAST_VERSION_VISIBLE_AFTER_QUERY_PREVIOUS_INCOMPATIBLE";
+
+    public static final String             QUERY_VERSION_48_NOT_VISIBLE_REQUIRES_DATASET_VERSION_NOT_VISIBLE_NAME                                                     = "QUERY_VERSION_48_NOT_VISIBLE_REQUIRES_DATASET_VERSION_NOT_VISIBLE";
+
+    public static final String             QUERY_VERSION_49_NOT_VISIBLE_REQUIRES_FIXED_DATASET_VERSION_NOT_VISIBLE_NAME                                               = "QUERY_VERSION_49_NOT_VISIBLE_REQUIRES_FIXED_DATASET_VERSION_NOT_VISIBLE";
+
+    public static final String             QUERY_VERSION_50_NOT_VISIBLE_REQUIRES_DATASET_NOT_VISIBLE_NAME                                                             = "QUERY_VERSION_50_NOT_VISIBLE_REQUIRES_DATASET_NOT_VISIBLE";
+    public static final String             QUERY_VERSION_51_NOT_VISIBLE_REQUIRES_FIXED_DATASET_VERSION_NOT_VISIBLE_NAME                                               = "QUERY_VERSION_51_NOT_VISIBLE_REQUIRES_FIXED_DATASET_VERSION_NOT_VISIBLE";
+
+    public static final String             QUERY_VERSION_52_NOT_VISIBLE_IS_PART_OF_NOT_VISIBLE_PUBLICATION_NAME                                                       = "QUERY_VERSION_52_NOT_VISIBLE_IS_PART_OF_NOT_VISIBLE_PUBLICATION";
+    public static final String             QUERY_VERSION_53_NOT_VISIBLE_IS_PART_OF_EMPTY_NAME                                                                         = "QUERY_VERSION_53_NOT_VISIBLE_IS_PART_OF_EMPTY";
 
     private static QueryVersionMockFactory instance                                                                                                                   = null;
 
@@ -413,6 +426,37 @@ public class QueryVersionMockFactory extends StatisticalResourcesMockFactory<Que
         setQuerySelectionBasedOnDatasetVersion(queryMock, lastVersion);
 
         QueryLifecycleTestUtils.prepareToPublished(queryMock);
+        return queryMock;
+    }
+
+    public static MockDescriptor getQueryVersion52NotVisibleIsPartOfNotVisiblePublication() {
+        Dataset dataset = DatasetMockFactory.createPublishedAndNotVisibleVersionsForDataset(1, new DateTime().plusDays(3));
+
+        DateTime queryValidFrom = new DateTime().plusDays(2);
+        QueryVersionMock queryMock = buildQueryVersionMockSimple("Q01");
+        queryMock.setDataset(dataset);
+        queryMock.getLifeCycleStatisticalResource().setValidFrom(queryValidFrom);
+        queryMock.setQuery(QueryMockFactory.generateQueryWithoutGeneratedVersion());
+        createQueryVersionInStatus(queryMock, ProcStatusEnum.PUBLISHED);
+
+        PublicationVersionMock publicationVersion = PublicationVersionMockFactory.buildPublishedReadyPublicationVersion(new PublicationMock(), INIT_VERSION, queryValidFrom.plusDays(1), null, true);
+        PublicationVersionMockFactory.createQueryCubeElementLevel(publicationVersion, queryMock.getQuery());
+        PublicationVersionMockFactory.createPublicationVersionInStatus(publicationVersion, ProcStatusEnum.PUBLISHED);
+        registerPublicationVersionMock(PublicationVersionMockFactory.PUBLICATION_VERSION_97_NOT_VISIBLE_HAS_PART_NOT_VISIBLE_QUERY_NAME, publicationVersion);
+
+        return new MockDescriptor(queryMock, publicationVersion);
+    }
+
+    public static QueryVersion getQueryVersion53NotVisibleIsPartOfEmpty() {
+        Dataset dataset = DatasetMockFactory.createPublishedAndNotVisibleVersionsForDataset(1, new DateTime().plusDays(3));
+
+        DateTime queryValidFrom = new DateTime().plusDays(2);
+        QueryVersionMock queryMock = buildQueryVersionMockSimple("Q01");
+        queryMock.setDataset(dataset);
+        queryMock.getLifeCycleStatisticalResource().setValidFrom(queryValidFrom);
+        queryMock.setQuery(QueryMockFactory.generateQueryWithoutGeneratedVersion());
+        createQueryVersionInStatus(queryMock, ProcStatusEnum.PUBLISHED);
+
         return queryMock;
     }
 

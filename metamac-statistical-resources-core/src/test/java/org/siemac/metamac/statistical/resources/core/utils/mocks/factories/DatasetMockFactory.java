@@ -1,16 +1,25 @@
 package org.siemac.metamac.statistical.resources.core.utils.mocks.factories;
 
 import static org.siemac.metamac.statistical.resources.core.utils.DatasetLifecycleTestUtils.fillAsPublished;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.*;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_03_FOR_DATASET_03_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_04_FOR_DATASET_03_AND_LAST_VERSION_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_05_FOR_DATASET_04_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_22_V1_PUBLISHED_FOR_DATASET_05_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_23_V2_PUBLISHED_FOR_DATASET_05_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_24_V3_PUBLISHED_FOR_DATASET_05_NAME;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_73_V01_FOR_DATASET_11_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_25_V1_PUBLISHED_FOR_DATASET_06_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_26_V2_PUBLISHED_NO_VISIBLE_FOR_DATASET_06_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_74_V02_FOR_DATASET_11_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_75_V01_FOR_DATASET_12_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_76_V02_FOR_DATASET_12_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_95_PUBLISHED_FOR_DATASET_32;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_96_NOT_VISIBLE_FOR_DATASET_32_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.addCodesToDimensionCoverage;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.fillDatasetVersionInStatusWithGeneratedDatasource;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_49_NOT_VISIBLE_REQUIRES_FIXED_DATASET_VERSION_NOT_VISIBLE_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_50_NOT_VISIBLE_REQUIRES_DATASET_NOT_VISIBLE_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_51_NOT_VISIBLE_REQUIRES_FIXED_DATASET_VERSION_NOT_VISIBLE_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.buildSelectionItemWithDimensionAndCodes;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -22,7 +31,6 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersi
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryStatusEnum;
-import org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.query.QueryLifecycleServiceTest;
 import org.siemac.metamac.statistical.resources.core.publication.domain.ElementLevel;
 import org.siemac.metamac.statistical.resources.core.publication.domain.Publication;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
@@ -32,6 +40,8 @@ import org.siemac.metamac.statistical.resources.core.utils.DatasetLifecycleTestU
 import org.siemac.metamac.statistical.resources.core.utils.QueryLifecycleTestUtils;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.DatasetMock;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.DatasetVersionMock;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.PublicationMock;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.PublicationVersionMock;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.QueryVersionMock;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.configuration.MockDescriptor;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.configuration.MockProvider;
@@ -94,6 +104,9 @@ public class DatasetMockFactory extends StatisticalResourcesMockFactory<Dataset>
     public static final String        DATASET_27_DIFFUSION_VALIDATION_USED_IN_PUBLICATION_VERSION_86_NAME                                                                                                                  = "DATASET_27_DIFFUSION_VALIDATION_USED_IN_PUBLICATION_VERSION_86_NAME";
     public static final String        DATASET_28_VALIDATION_REJECTED_USED_IN_PUBLICATION_VERSION_86_NAME                                                                                                                   = "DATASET_28_VALIDATION_REJECTED_USED_IN_PUBLICATION_VERSION_86_NAME";
     public static final String        DATASET_29_PUBLISHED_NOT_VISIBLE_USED_IN_PUBLICATION_VERSION_86_NAME                                                                                                                 = "DATASET_29_PUBLISHED_NOT_VISIBLE_USED_IN_PUBLICATION_VERSION_86_NAME";
+    public static final String        DATASET_30_LAST_VERSION_NOT_VISIBLE_WITH_PUBLICATION_AND_QUERIES_NOT_VISIBLE_BOTH_NOT_COMPATIBLE_NAME                                                                                = "DATASET_30_LAST_VERSION_NOT_VISIBLE_WITH_PUBLICATION_AND_QUERIES_NOT_VISIBLE_BOTH_NOT_COMPATIBLE";
+    public static final String        DATASET_31_LAST_VERSION_NOT_VISIBLE_WITH_PUBLICATION_AND_QUERIES_NOT_VISIBLE_BOTH_COMPATIBLE_NAME                                                                                    = "DATASET_31_LAST_VERSION_NOT_VISIBLE_WITH_PUBLICATION_AND_QUERIES_NOT_VISIBLE_BOTH_COMPATIBLE";
+    public static final String        DATASET_32_LAST_VERSION_NOT_VISIBLE_WITH_PUBLICATION_AND_QUERY_NOT_VISIBLE_COMPATIBLE_NAME                                                                                           = "DATASET_32_LAST_VERSION_NOT_VISIBLE_WITH_PUBLICATION_AND_QUERY_NOT_VISIBLE_COMPATIBLE";
 
     private static DatasetMockFactory instance                                                                                                                                                                             = null;
 
@@ -534,6 +547,160 @@ public class DatasetMockFactory extends StatisticalResourcesMockFactory<Dataset>
         registerQueryVersionMock(QueryVersionMockFactory.QUERY_VERSION_36_LINKED_TO_DATASET_NAME, query01);
 
         return new MockDescriptor(datasetVersion.getDataset(), query01);
+    }
+
+    public static MockDescriptor getDataset30LastVersionNotVisibleWithPublicationAndQueriesNotVisibleBothNotCompatible() {
+
+        DatasetMock dataset = new DatasetMock();
+        dataset.setSequentialId(1);
+
+        DateTime datasetValidFrom = new DateTime().plusDays(2);
+
+        // published
+        DatasetVersionMock datasetVersionPublished = DatasetVersionMockFactory.buildSimpleVersion(dataset, INIT_VERSION);
+        datasetVersionPublished.getSiemacMetadataStatisticalResource().setLastVersion(false);
+        addCodesToDimensionCoverage(datasetVersionPublished, "DIM_01", "D1_C01", "D1_C02", "D1_C03");
+        addCodesToDimensionCoverage(datasetVersionPublished, "DIM_02", "D2_C01", "D2_C02", "D2_C03");
+        addCodesToDimensionCoverage(datasetVersionPublished, "TIME_PERIOD", "2010");
+        getStatisticalResourcesPersistedDoMocks().mockDatasetVersion(datasetVersionPublished);
+        DatasetVersionMockFactory.fillDatasetVersionInStatusWithGeneratedDatasource(datasetVersionPublished, ProcStatusEnum.PUBLISHED);
+
+        // published not visible
+        DatasetVersionMock datasetVersionNotVisible = DatasetVersionMockFactory.buildSimpleVersion(dataset, SECOND_VERSION);
+        datasetVersionNotVisible.getSiemacMetadataStatisticalResource().setValidFrom(datasetValidFrom);
+        datasetVersionNotVisible.getSiemacMetadataStatisticalResource().setLastVersion(true);
+        datasetVersionNotVisible.getSiemacMetadataStatisticalResource().setReplacesVersion(StatisticalResourcesDoMocks.mockDatasetVersionRelated(datasetVersionPublished));
+        addCodesToDimensionCoverage(datasetVersionNotVisible, "DIM_01", "D1_C01", "D1_C02", "D1_C03");
+        addCodesToDimensionCoverage(datasetVersionNotVisible, "DIM_02", "D2_C01", "D2_C02", "D2_C03");
+        addCodesToDimensionCoverage(datasetVersionNotVisible, "TIME_PERIOD", "2010", "2011");
+        getStatisticalResourcesPersistedDoMocks().mockDatasetVersion(datasetVersionNotVisible);
+        fillDatasetVersionInStatusWithGeneratedDatasource(datasetVersionNotVisible, ProcStatusEnum.PUBLISHED);
+        registerDatasetVersionMock(DatasetVersionMockFactory.DATASET_VERSION_92_NOT_VISIBLE_FOR_DATASET_30_NAME, datasetVersionNotVisible);
+
+        PublicationVersionMock publicationVersion = PublicationVersionMockFactory.buildPublishedReadyPublicationVersion(new PublicationMock(), INIT_VERSION, datasetValidFrom.plusDays(1), null, true);
+        PublicationVersionMockFactory.createDatasetCubeElementLevel(publicationVersion, dataset);
+        PublicationVersionMockFactory.createPublicationVersionInStatus(publicationVersion, ProcStatusEnum.PUBLISHED);
+
+        // Query fixed
+        QueryVersionMock queryFixedMock = new QueryVersionMock();
+        queryFixedMock.setFixedDatasetVersion(datasetVersionNotVisible);
+        queryFixedMock.addSelection(buildSelectionItemWithDimensionAndCodes("DIM_01", "D1_C01", "D1_C02"));
+        queryFixedMock.addSelection(buildSelectionItemWithDimensionAndCodes("DIM_02", "D2_C01"));
+        queryFixedMock.addSelection(buildSelectionItemWithDimensionAndCodes("TIME_PERIOD", "2011"));
+        queryFixedMock.getLifeCycleStatisticalResource().setValidFrom(datasetValidFrom.plusDays(1));
+        QueryVersionMockFactory.createQueryVersionInStatus(queryFixedMock, ProcStatusEnum.PUBLISHED);
+        registerQueryVersionMock(QUERY_VERSION_49_NOT_VISIBLE_REQUIRES_FIXED_DATASET_VERSION_NOT_VISIBLE_NAME, queryFixedMock);
+
+        // Query To Dataset
+        QueryVersionMock queryMock = new QueryVersionMock();
+        queryMock.setDataset(dataset);
+        queryMock.addSelection(buildSelectionItemWithDimensionAndCodes("DIM_01", "D1_C01", "D1_C02"));
+        queryMock.addSelection(buildSelectionItemWithDimensionAndCodes("DIM_02", "D2_C01"));
+        queryMock.addSelection(buildSelectionItemWithDimensionAndCodes("TIME_PERIOD", "2011"));
+        queryMock.getLifeCycleStatisticalResource().setValidFrom(datasetValidFrom.plusDays(1));
+        QueryVersionMockFactory.createQueryVersionInStatus(queryMock, ProcStatusEnum.PUBLISHED);
+        registerQueryVersionMock(QUERY_VERSION_50_NOT_VISIBLE_REQUIRES_DATASET_NOT_VISIBLE_NAME, queryMock);
+
+        return new MockDescriptor(dataset, publicationVersion, queryFixedMock, queryMock);
+    }
+
+    public static MockDescriptor getDataset31LastVersionNotVisibleWithPublicationAndQueriesNotVisibleBothCompatible() {
+
+        DatasetMock dataset = new DatasetMock();
+        dataset.setSequentialId(1);
+
+        DateTime datasetValidFrom = new DateTime().plusDays(2);
+
+        // published
+        DatasetVersionMock datasetVersionPublished = DatasetVersionMockFactory.buildSimpleVersion(dataset, INIT_VERSION);
+        datasetVersionPublished.getSiemacMetadataStatisticalResource().setLastVersion(false);
+        addCodesToDimensionCoverage(datasetVersionPublished, "DIM_01", "D1_C01", "D1_C02", "D1_C03");
+        addCodesToDimensionCoverage(datasetVersionPublished, "DIM_02", "D2_C01", "D2_C02", "D2_C03");
+        addCodesToDimensionCoverage(datasetVersionPublished, "TIME_PERIOD", "2010");
+        getStatisticalResourcesPersistedDoMocks().mockDatasetVersion(datasetVersionPublished);
+        DatasetVersionMockFactory.fillDatasetVersionInStatusWithGeneratedDatasource(datasetVersionPublished, ProcStatusEnum.PUBLISHED);
+
+        // published not visible
+        DatasetVersionMock datasetVersionNotVisible = DatasetVersionMockFactory.buildSimpleVersion(dataset, SECOND_VERSION);
+        datasetVersionNotVisible.getSiemacMetadataStatisticalResource().setValidFrom(datasetValidFrom);
+        datasetVersionNotVisible.getSiemacMetadataStatisticalResource().setLastVersion(true);
+        datasetVersionNotVisible.getSiemacMetadataStatisticalResource().setReplacesVersion(StatisticalResourcesDoMocks.mockDatasetVersionRelated(datasetVersionPublished));
+        addCodesToDimensionCoverage(datasetVersionNotVisible, "DIM_01", "D1_C01", "D1_C02", "D1_C03");
+        addCodesToDimensionCoverage(datasetVersionNotVisible, "DIM_02", "D2_C01", "D2_C02", "D2_C03");
+        addCodesToDimensionCoverage(datasetVersionNotVisible, "TIME_PERIOD", "2010", "2011");
+        getStatisticalResourcesPersistedDoMocks().mockDatasetVersion(datasetVersionNotVisible);
+        fillDatasetVersionInStatusWithGeneratedDatasource(datasetVersionNotVisible, ProcStatusEnum.PUBLISHED);
+        registerDatasetVersionMock(DatasetVersionMockFactory.DATASET_VERSION_94_NOT_VISIBLE_FOR_DATASET_31_NAME, datasetVersionNotVisible);
+
+        PublicationVersionMock publicationVersion = PublicationVersionMockFactory.buildPublishedReadyPublicationVersion(new PublicationMock(), INIT_VERSION, datasetValidFrom.plusDays(1), null, true);
+        PublicationVersionMockFactory.createDatasetCubeElementLevel(publicationVersion, dataset);
+        PublicationVersionMockFactory.createPublicationVersionInStatus(publicationVersion, ProcStatusEnum.PUBLISHED);
+
+        // Query fixed
+        QueryVersionMock queryFixedMock = new QueryVersionMock();
+        queryFixedMock.setFixedDatasetVersion(datasetVersionNotVisible);
+        queryFixedMock.addSelection(buildSelectionItemWithDimensionAndCodes("DIM_01", "D1_C01", "D1_C02"));
+        queryFixedMock.addSelection(buildSelectionItemWithDimensionAndCodes("DIM_02", "D2_C01"));
+        queryFixedMock.addSelection(buildSelectionItemWithDimensionAndCodes("TIME_PERIOD", "2010"));
+        queryFixedMock.getLifeCycleStatisticalResource().setValidFrom(datasetValidFrom.plusDays(1));
+        QueryVersionMockFactory.createQueryVersionInStatus(queryFixedMock, ProcStatusEnum.PUBLISHED);
+        registerQueryVersionMock(QUERY_VERSION_51_NOT_VISIBLE_REQUIRES_FIXED_DATASET_VERSION_NOT_VISIBLE_NAME, queryFixedMock);
+
+        // Query To Dataset
+        QueryVersionMock queryMock = new QueryVersionMock();
+        queryMock.setDataset(dataset);
+        queryMock.addSelection(buildSelectionItemWithDimensionAndCodes("DIM_01", "D1_C01", "D1_C02"));
+        queryMock.addSelection(buildSelectionItemWithDimensionAndCodes("DIM_02", "D2_C01"));
+        queryMock.addSelection(buildSelectionItemWithDimensionAndCodes("TIME_PERIOD", "2010"));
+        queryMock.getLifeCycleStatisticalResource().setValidFrom(datasetValidFrom.plusDays(1));
+        QueryVersionMockFactory.createQueryVersionInStatus(queryMock, ProcStatusEnum.PUBLISHED);
+
+        return new MockDescriptor(dataset, publicationVersion, queryFixedMock, queryMock);
+    }
+
+    public static MockDescriptor getDataset32LastVersionNotVisibleWithPublicationAndQueryNotVisibleCompatible() {
+
+        DatasetMock dataset = new DatasetMock();
+        dataset.setSequentialId(1);
+
+        DateTime datasetValidFrom = new DateTime().plusDays(2);
+
+        // published
+        DatasetVersionMock datasetVersionPublished = DatasetVersionMockFactory.buildSimpleVersion(dataset, INIT_VERSION);
+        datasetVersionPublished.getSiemacMetadataStatisticalResource().setLastVersion(false);
+        addCodesToDimensionCoverage(datasetVersionPublished, "DIM_01", "D1_C01", "D1_C02", "D1_C03");
+        addCodesToDimensionCoverage(datasetVersionPublished, "DIM_02", "D2_C01", "D2_C02", "D2_C03");
+        addCodesToDimensionCoverage(datasetVersionPublished, "TIME_PERIOD", "2010");
+        getStatisticalResourcesPersistedDoMocks().mockDatasetVersion(datasetVersionPublished);
+        DatasetVersionMockFactory.fillDatasetVersionInStatusWithGeneratedDatasource(datasetVersionPublished, ProcStatusEnum.PUBLISHED);
+        registerDatasetVersionMock(DATASET_VERSION_95_PUBLISHED_FOR_DATASET_32, datasetVersionPublished);
+
+        // published not visible
+        DatasetVersionMock datasetVersionNotVisible = DatasetVersionMockFactory.buildSimpleVersion(dataset, SECOND_VERSION);
+        datasetVersionNotVisible.getSiemacMetadataStatisticalResource().setValidFrom(datasetValidFrom);
+        datasetVersionNotVisible.getSiemacMetadataStatisticalResource().setLastVersion(true);
+        datasetVersionNotVisible.getSiemacMetadataStatisticalResource().setReplacesVersion(StatisticalResourcesDoMocks.mockDatasetVersionRelated(datasetVersionPublished));
+        addCodesToDimensionCoverage(datasetVersionNotVisible, "DIM_01", "D1_C01", "D1_C02", "D1_C03");
+        addCodesToDimensionCoverage(datasetVersionNotVisible, "DIM_02", "D2_C01", "D2_C02", "D2_C03");
+        addCodesToDimensionCoverage(datasetVersionNotVisible, "TIME_PERIOD", "2010", "2011");
+        getStatisticalResourcesPersistedDoMocks().mockDatasetVersion(datasetVersionNotVisible);
+        fillDatasetVersionInStatusWithGeneratedDatasource(datasetVersionNotVisible, ProcStatusEnum.PUBLISHED);
+        registerDatasetVersionMock(DATASET_VERSION_96_NOT_VISIBLE_FOR_DATASET_32_NAME, datasetVersionNotVisible);
+
+        PublicationVersionMock publicationVersion = PublicationVersionMockFactory.buildPublishedReadyPublicationVersion(new PublicationMock(), INIT_VERSION, datasetValidFrom.plusDays(1), null, true);
+        PublicationVersionMockFactory.createDatasetCubeElementLevel(publicationVersion, dataset);
+        PublicationVersionMockFactory.createPublicationVersionInStatus(publicationVersion, ProcStatusEnum.PUBLISHED);
+
+        // Query To Dataset
+        QueryVersionMock queryMock = new QueryVersionMock();
+        queryMock.setDataset(dataset);
+        queryMock.addSelection(buildSelectionItemWithDimensionAndCodes("DIM_01", "D1_C01", "D1_C02"));
+        queryMock.addSelection(buildSelectionItemWithDimensionAndCodes("DIM_02", "D2_C01"));
+        queryMock.addSelection(buildSelectionItemWithDimensionAndCodes("TIME_PERIOD", "2010"));
+        queryMock.getLifeCycleStatisticalResource().setValidFrom(datasetValidFrom.plusDays(1));
+        QueryVersionMockFactory.createQueryVersionInStatus(queryMock, ProcStatusEnum.PUBLISHED);
+
+        return new MockDescriptor(dataset, publicationVersion, queryMock);
     }
 
     // *****************************************************

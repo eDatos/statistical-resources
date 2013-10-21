@@ -8,6 +8,7 @@ import java.net.URISyntaxException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -19,15 +20,24 @@ import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteriaBuilder;
 import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
 import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
+import org.fornax.cartridges.sculptor.framework.errorhandling.ApplicationException;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructure;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
+import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor;
+import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor.DsdAttribute;
+import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor.DsdDimension;
+import org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConstants;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.enume.task.domain.DatasetFileFormatEnum;
+import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.invocation.service.SrmRestInternalService;
+import org.siemac.metamac.statistical.resources.core.io.utils.ManipulateDataUtils;
 import org.siemac.metamac.statistical.resources.core.mock.Mocks;
 import org.siemac.metamac.statistical.resources.core.task.domain.FileDescriptor;
 import org.siemac.metamac.statistical.resources.core.task.domain.Task;
@@ -181,6 +191,7 @@ public class DataManipulateTest extends StatisticalResourcesBaseTest {
     @Test
     public void testImportSdmx21Datasource() throws Exception {
         // New Transaction: Because the job needs persisted data
+        createDatasetRepository("TEST_DATA_STR_ECB_EXR_RG", URN_DSD_ECB_EXR_RG);
         final TransactionTemplate tt = new TransactionTemplate(transactionManager);
         tt.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
         tt.execute(new TransactionCallbackWithoutResult() {
@@ -233,6 +244,7 @@ public class DataManipulateTest extends StatisticalResourcesBaseTest {
     @Test
     public void testImportSdmx21Datasource_FAIL_WITH_RECOVERY() throws Exception {
         // New Transaction: Because the job needs persisted data
+        createDatasetRepository("TEST_DATA_STR_ECB_EXR_RG", URN_DSD_ECB_EXR_RG);
         final TransactionTemplate tt = new TransactionTemplate(transactionManager);
         tt.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
         tt.execute(new TransactionCallbackWithoutResult() {
@@ -292,6 +304,8 @@ public class DataManipulateTest extends StatisticalResourcesBaseTest {
         // DSD
         Mockito.when(srmRestInternalService.retrieveDsdByUrn(Mockito.anyString())).thenReturn(Mocks.mock_DSD_ECB_EXR_RG_for_PX());
 
+        createDatasetRepository("TEST_DATA_STR_ECB_EXR_RG", URN_DSD_ECB_EXR_RG);
+
         // New Transaction: Because the job needs persisted data
         final TransactionTemplate tt = new TransactionTemplate(transactionManager);
         tt.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
@@ -335,6 +349,9 @@ public class DataManipulateTest extends StatisticalResourcesBaseTest {
 
     @Test
     public void testImportCsvDatasource() throws Exception {
+
+        createDatasetRepository("TEST_DATA_STR_ECB_EXR_RG", URN_DSD_ECB_EXR_RG);
+
         // New Transaction: Because the job needs persisted data
         final TransactionTemplate tt = new TransactionTemplate(transactionManager);
         tt.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
@@ -379,6 +396,9 @@ public class DataManipulateTest extends StatisticalResourcesBaseTest {
     @Test
     public void testDuplicateDatasource() throws Exception {
         // New Transaction: Because the job needs persisted data
+
+        createDatasetRepository("TEST_DATA_STR_ECB_EXR_RG", URN_DSD_ECB_EXR_RG);
+
         final TransactionTemplate tt = new TransactionTemplate(transactionManager);
         tt.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
         tt.execute(new TransactionCallbackWithoutResult() {
@@ -444,4 +464,23 @@ public class DataManipulateTest extends StatisticalResourcesBaseTest {
         assertNotNull(datasetRepositoryDto);
     }
 
+    private DatasetRepositoryDto createDatasetRepository(String datasetId, String dsdUrn) throws Exception {
+        DatasetRepositoryDto datasetRepositoryDto = new DatasetRepositoryDto();
+        datasetRepositoryDto.setDatasetId(datasetId);
+
+        DataStructure dsd = srmRestInternalService.retrieveDsdByUrn(dsdUrn);
+
+        List<DsdDimension> dimensions = DsdProcessor.getDimensions(dsd);
+        for (DsdDimension dimension : dimensions) {
+            datasetRepositoryDto.getDimensions().add(dimension.getComponentId());
+        }
+
+        // Attributes
+        List<DsdAttribute> attributes = DsdProcessor.getAttributes(dsd);
+        datasetRepositoryDto.getAttributes().addAll(ManipulateDataUtils.extractDefinitionOfAttributes(attributes));
+
+        datasetRepositoryDto.setLanguages(Arrays.asList(StatisticalResourcesConstants.DEFAULT_DATA_REPOSITORY_LOCALE));
+
+        return datasetRepositoriesServiceFacade.createDatasetRepository(datasetRepositoryDto);
+    }
 }

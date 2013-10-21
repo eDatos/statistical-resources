@@ -1,9 +1,24 @@
 package org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.dataset;
 
+import static org.junit.Assert.assertNull;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.LifecycleAsserts.assertNotNullAutomaticallyFilledMetadataSiemacSendToPublished;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetMockFactory.DATASET_30_LAST_VERSION_NOT_VISIBLE_WITH_PUBLICATION_AND_QUERIES_NOT_VISIBLE_BOTH_NOT_COMPATIBLE_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetMockFactory.DATASET_31_LAST_VERSION_NOT_VISIBLE_WITH_PUBLICATION_AND_QUERIES_NOT_VISIBLE_BOTH_COMPATIBLE_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetMockFactory.DATASET_32_LAST_VERSION_NOT_VISIBLE_WITH_PUBLICATION_AND_QUERY_NOT_VISIBLE_COMPATIBLE_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_70_PREPARED_TO_PUBLISH_EXTERNAL_ITEM_FULL_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_71_RELATED_RESOURCES_UNPUBLISHED_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_72_PREPARED_TO_PUBLISH_WITH_PREVIOUS_VERSION_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_91_SINGLE_VERSION_PUBLISHED_NOT_VISIBLE_IN_NOT_VISIBLE_PUB_AND_USED_BY_NOT_VISIBLE_QUERY_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_92_NOT_VISIBLE_FOR_DATASET_30_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_93_PUBLISHED_FOR_DATASET_31_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_94_NOT_VISIBLE_FOR_DATASET_31_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_95_PUBLISHED_FOR_DATASET_32;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_96_NOT_VISIBLE_FOR_DATASET_32_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_97_NOT_VISIBLE_REPLACED_BY_DATASET_98_NOT_VISIBLE_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_98_NOT_VISIBLE_REPLACES_DATASET_97_NOT_VISIBLE_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_99_NOT_VISIBLE_SINGLE_VERSION_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_93_NOT_VISIBLE_HAS_PART_NOT_VISIBLE_DATASET_VERSION_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_51_NOT_VISIBLE_REQUIRES_FIXED_DATASET_VERSION_NOT_VISIBLE_NAME;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +41,11 @@ import org.siemac.metamac.statistical.resources.core.lifecycle.serviceapi.Lifecy
 import org.siemac.metamac.statistical.resources.core.task.serviceapi.TaskService;
 import org.siemac.metamac.statistical.resources.core.utils.TaskMockUtils;
 import org.siemac.metamac.statistical.resources.core.utils.asserts.BaseAsserts;
+import org.siemac.metamac.statistical.resources.core.utils.asserts.LifecycleAsserts;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.configuration.MetamacMock;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetMockFactory;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.context.ContextConfiguration;
@@ -36,8 +55,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:spring/statistical-resources/include/dataset-repository-mockito.xml", "classpath:spring/statistical-resources/include/task-mockito.xml",
-        "classpath:spring/statistical-resources/include/apis-locator-mockito.xml",
-        "classpath:spring/statistical-resources/applicationContext-test.xml"})
+        "classpath:spring/statistical-resources/include/apis-locator-mockito.xml", "classpath:spring/statistical-resources/applicationContext-test.xml"})
 @TransactionConfiguration(transactionManager = "txManager", defaultRollback = true)
 @Transactional
 public class DatasetPublishingServiceTest extends StatisticalResourcesMockRestBaseTest {
@@ -155,6 +173,97 @@ public class DatasetPublishingServiceTest extends StatisticalResourcesMockRestBa
         expectedMetamacException(new MetamacException(exceptionItems));
 
         datasetVersionLifecycleService.sendToPublished(getServiceContextAdministrador(), datasetVersionUrn);
+    }
+
+    @Test
+    @MetamacMock(DATASET_VERSION_91_SINGLE_VERSION_PUBLISHED_NOT_VISIBLE_IN_NOT_VISIBLE_PUB_AND_USED_BY_NOT_VISIBLE_QUERY_NAME)
+    public void testCancelDatasetVersionPublicationWithPublicationAndQueryNotVisible() throws Exception {
+        DatasetVersion datasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_91_SINGLE_VERSION_PUBLISHED_NOT_VISIBLE_IN_NOT_VISIBLE_PUB_AND_USED_BY_NOT_VISIBLE_QUERY_NAME);
+
+        String publicationVersionUrn = getPublicationVersionMockUrn(PUBLICATION_VERSION_93_NOT_VISIBLE_HAS_PART_NOT_VISIBLE_DATASET_VERSION_NAME);
+        String queryVersionUrn = getQueryVersionMockUrn(QueryVersionMockFactory.QUERY_VERSION_48_NOT_VISIBLE_REQUIRES_DATASET_VERSION_NOT_VISIBLE_NAME);
+
+        List<MetamacExceptionItem> items = new ArrayList<MetamacExceptionItem>();
+        items.add(new MetamacExceptionItem(ServiceExceptionType.DATASET_VERSION_IS_PART_OF_NOT_VISIBLE_PUBLICATION, publicationVersionUrn));
+        items.add(new MetamacExceptionItem(ServiceExceptionType.DATASET_VERSION_IS_REQUIRED_BY_NOT_VISIBLE_QUERY, queryVersionUrn));
+        expectedMetamacException(new MetamacException(items));
+
+        datasetVersionLifecycleService.cancelPublication(getServiceContextAdministrador(), datasetVersion.getSiemacMetadataStatisticalResource().getUrn());
+    }
+
+    @Test
+    @MetamacMock(DATASET_VERSION_99_NOT_VISIBLE_SINGLE_VERSION_NAME)
+    public void testCancelDatasetVersionPublicationSingleVersionNotVisible() throws Exception {
+        String datasetVersionUrn = getDatasetVersionMockUrn(DATASET_VERSION_99_NOT_VISIBLE_SINGLE_VERSION_NAME);
+
+        datasetVersionLifecycleService.cancelPublication(getServiceContextAdministrador(), datasetVersionUrn);
+
+        DatasetVersion datasetVersion = datasetVersionRepository.retrieveByUrn(datasetVersionUrn);
+
+        assertCancelPublicationDatasetVersion(datasetVersion, null);
+    }
+
+    @Test
+    @MetamacMock(DATASET_30_LAST_VERSION_NOT_VISIBLE_WITH_PUBLICATION_AND_QUERIES_NOT_VISIBLE_BOTH_NOT_COMPATIBLE_NAME)
+    public void testCancelDatasetVersionPublicationWithPreviousVersionWithPublicationAndQueryNotVisible() throws Exception {
+        DatasetVersion datasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_92_NOT_VISIBLE_FOR_DATASET_30_NAME);
+
+        String queryVersionFixedUrn = getQueryVersionMockUrn(QueryVersionMockFactory.QUERY_VERSION_49_NOT_VISIBLE_REQUIRES_FIXED_DATASET_VERSION_NOT_VISIBLE_NAME);
+        String queryVersionUrn = getQueryVersionMockUrn(QueryVersionMockFactory.QUERY_VERSION_50_NOT_VISIBLE_REQUIRES_DATASET_NOT_VISIBLE_NAME);
+
+        List<MetamacExceptionItem> items = new ArrayList<MetamacExceptionItem>();
+        items.add(new MetamacExceptionItem(ServiceExceptionType.DATASET_VERSION_IS_REQUIRED_BY_NOT_VISIBLE_QUERY, queryVersionFixedUrn));
+        items.add(new MetamacExceptionItem(ServiceExceptionType.DATASET_VERSION_IS_REQUIRED_BY_NOT_VISIBLE_QUERY, queryVersionUrn));
+        expectedMetamacException(new MetamacException(items));
+
+        datasetVersionLifecycleService.cancelPublication(getServiceContextAdministrador(), datasetVersion.getSiemacMetadataStatisticalResource().getUrn());
+    }
+
+    @Test
+    @MetamacMock(DATASET_31_LAST_VERSION_NOT_VISIBLE_WITH_PUBLICATION_AND_QUERIES_NOT_VISIBLE_BOTH_COMPATIBLE_NAME)
+    public void testCancelDatasetVersionPublicationWithPreviousVersionWithPublicationAndQueryNotVisibleButCompatibles() throws Exception {
+        DatasetVersion datasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_94_NOT_VISIBLE_FOR_DATASET_31_NAME);
+
+        String queryVersionFixedUrn = getQueryVersionMockUrn(QUERY_VERSION_51_NOT_VISIBLE_REQUIRES_FIXED_DATASET_VERSION_NOT_VISIBLE_NAME);
+
+        List<MetamacExceptionItem> items = new ArrayList<MetamacExceptionItem>();
+        items.add(new MetamacExceptionItem(ServiceExceptionType.DATASET_VERSION_IS_REQUIRED_BY_NOT_VISIBLE_QUERY, queryVersionFixedUrn));
+        expectedMetamacException(new MetamacException(items));
+
+        datasetVersionLifecycleService.cancelPublication(getServiceContextAdministrador(), datasetVersion.getSiemacMetadataStatisticalResource().getUrn());
+    }
+
+    @Test
+    @MetamacMock(DATASET_VERSION_97_NOT_VISIBLE_REPLACED_BY_DATASET_98_NOT_VISIBLE_NAME)
+    public void testCancelDatasetVersionPublicationWithPreviousVersionWithPublicationAndQueryNotVisibleAllCanBeLinkedToPreviousVersion() throws Exception {
+        DatasetVersion datasetReplaces = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_98_NOT_VISIBLE_REPLACES_DATASET_97_NOT_VISIBLE_NAME);
+        DatasetVersion datasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_97_NOT_VISIBLE_REPLACED_BY_DATASET_98_NOT_VISIBLE_NAME);
+
+        List<MetamacExceptionItem> items = new ArrayList<MetamacExceptionItem>();
+        items.add(new MetamacExceptionItem(ServiceExceptionType.DATASET_VERSION_IS_REPLACED_BY_NOT_VISIBLE, datasetReplaces.getSiemacMetadataStatisticalResource().getUrn()));
+        expectedMetamacException(new MetamacException(items));
+
+        datasetVersionLifecycleService.cancelPublication(getServiceContextAdministrador(), datasetVersion.getSiemacMetadataStatisticalResource().getUrn());
+    }
+
+    @Test
+    @MetamacMock(DATASET_32_LAST_VERSION_NOT_VISIBLE_WITH_PUBLICATION_AND_QUERY_NOT_VISIBLE_COMPATIBLE_NAME)
+    public void testCancelDatasetVersionPublicationIsReplacedByOtherDataset() throws Exception {
+
+        DatasetVersion previous = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_95_PUBLISHED_FOR_DATASET_32);
+        DatasetVersion datasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_96_NOT_VISIBLE_FOR_DATASET_32_NAME);
+
+        datasetVersion = datasetVersionLifecycleService.cancelPublication(getServiceContextAdministrador(), datasetVersion.getSiemacMetadataStatisticalResource().getUrn());
+
+        previous = datasetVersionRepository.retrieveByUrn(previous.getSiemacMetadataStatisticalResource().getUrn());
+
+        assertCancelPublicationDatasetVersion(datasetVersion, previous);
+    }
+
+    private void assertCancelPublicationDatasetVersion(DatasetVersion current, DatasetVersion previous) throws MetamacException {
+        LifecycleAsserts.assertAutomaticallyFilledMetadataSiemacCancelPublication(current, previous);
+
+        assertNull(current.getBibliographicCitation());
     }
 
     private void assertPublishingDatasetVersion(DatasetVersion current, DatasetVersion previous) throws MetamacException {

@@ -1,6 +1,8 @@
 package org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.publication;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.LifecycleAsserts.assertNotNullAutomaticallyFilledMetadataSiemacSendToPublished;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.ChapterMockFactory.CHAPTER_05_EMPTY_IN_PUBLICATION_VERSION_89_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.CubeMockFactory.CUBE_08_EMPTY_IN_PUBLICATION_VERSION_90_NAME;
@@ -18,6 +20,9 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_88_WITH_NO_CUBES_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_89_WITH_EMPTY_CHAPTER_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_90_WITH_EMPTY_CUBE_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_94_NOT_VISIBLE_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_95_NOT_VISIBLE_IS_REPLACED_BY_PUBLICATION_VERSION_96_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_96_NOT_VISIBLE_REPLACES_PUBLICATION_VERSION_95_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryMockFactory.QUERY_16_DRAFT_USED_IN_PUBLICATION_VERSION_86_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryMockFactory.QUERY_17_PRODUCTION_VALIDATION_USED_IN_PUBLICATION_VERSION_86_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryMockFactory.QUERY_18_DIFFUSION_VALIDATION_USED_IN_PUBLICATION_VERSION_86_NAME;
@@ -29,6 +34,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -37,6 +43,7 @@ import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesMockRestBaseTest;
 import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResource;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceapi.LifecycleService;
 import org.siemac.metamac.statistical.resources.core.publication.domain.Cube;
@@ -46,6 +53,7 @@ import org.siemac.metamac.statistical.resources.core.publication.domain.Publicat
 import org.siemac.metamac.statistical.resources.core.task.serviceapi.TaskService;
 import org.siemac.metamac.statistical.resources.core.utils.TaskMockUtils;
 import org.siemac.metamac.statistical.resources.core.utils.asserts.BaseAsserts;
+import org.siemac.metamac.statistical.resources.core.utils.asserts.LifecycleAsserts;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.configuration.MetamacMock;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesDoMocks;
@@ -242,6 +250,38 @@ public class PublicationPublishingServiceTest extends StatisticalResourcesMockRe
         expectedMetamacException(new MetamacException(exceptionItems));
 
         publicationVersionLifecycleService.sendToPublished(getServiceContextAdministrador(), publicationVersionUrn);
+    }
+
+    @Test
+    @MetamacMock(PUBLICATION_VERSION_94_NOT_VISIBLE_NAME)
+    public void testCancelPublicationPublicationVersion() throws Exception {
+        String publicationUrn = getPublicationVersionMockUrn(PUBLICATION_VERSION_94_NOT_VISIBLE_NAME);
+
+        PublicationVersion publicationVersion = publicationVersionLifecycleService.cancelPublication(getServiceContextAdministrador(), publicationUrn);
+
+        assertCancelPublicationPublicationVersion(publicationVersion, null);
+    }
+
+    @Test
+    @MetamacMock(PUBLICATION_VERSION_95_NOT_VISIBLE_IS_REPLACED_BY_PUBLICATION_VERSION_96_NAME)
+    public void testCancelPublicationPublicationVersionIsReplacedByOtherNotVisible() throws Exception {
+        String publicationUrn = getPublicationVersionMockUrn(PUBLICATION_VERSION_95_NOT_VISIBLE_IS_REPLACED_BY_PUBLICATION_VERSION_96_NAME);
+        String publicationUrnThatReplaces = getPublicationVersionMockUrn(PUBLICATION_VERSION_96_NOT_VISIBLE_REPLACES_PUBLICATION_VERSION_95_NAME);
+
+        List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
+        exceptionItems.add(new MetamacExceptionItem(ServiceExceptionType.PUBLICATION_VERSION_IS_REPLACED_BY_NOT_VISIBLE, publicationUrnThatReplaces));
+
+        expectedMetamacException(new MetamacException(exceptionItems));
+
+        publicationVersionLifecycleService.cancelPublication(getServiceContextAdministrador(), publicationUrn);
+
+    }
+
+    private void assertCancelPublicationPublicationVersion(PublicationVersion current, PublicationVersion previous) throws MetamacException {
+        LifecycleAsserts.assertAutomaticallyFilledMetadataSiemacCancelPublication(current, previous);
+
+        assertNull(current.getFormatExtentResources());
+        assertTrue(current.getHasPart().isEmpty());
     }
 
     private void assertPublishingPublicationVersion(PublicationVersion current, PublicationVersion previous) throws MetamacException {

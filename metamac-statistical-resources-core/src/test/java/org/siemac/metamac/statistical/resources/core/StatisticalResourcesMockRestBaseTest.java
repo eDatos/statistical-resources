@@ -308,6 +308,13 @@ public class StatisticalResourcesMockRestBaseTest extends StatisticalResourcesBa
     protected String getDatasetMockUrn(String mockId) {
         return datasetMockFactory.retrieveMock(mockId).getIdentifiableStatisticalResource().getUrn();
     }
+    protected String getDatasetVersionMockUrn(String mockId) {
+        return datasetVersionMockFactory.retrieveMock(mockId).getSiemacMetadataStatisticalResource().getUrn();
+    }
+
+    protected String getPublicationVersionMockUrn(String mockId) {
+        return publicationVersionMockFactory.retrieveMock(mockId).getSiemacMetadataStatisticalResource().getUrn();
+    }
 
     protected List<String> getDatasetsMocksUrns(String... mockIds) {
         List<String> urns = new ArrayList<String>();
@@ -319,6 +326,10 @@ public class StatisticalResourcesMockRestBaseTest extends StatisticalResourcesBa
 
     protected String getQueryMockUrn(String mockId) {
         return queryMockFactory.retrieveMock(mockId).getIdentifiableStatisticalResource().getUrn();
+    }
+
+    protected String getQueryVersionMockUrn(String mockId) {
+        return queryVersionMockFactory.retrieveMock(mockId).getLifeCycleStatisticalResource().getUrn();
     }
 
     protected List<String> getQueryMocksUrns(String... mockIds) {
