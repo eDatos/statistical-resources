@@ -48,6 +48,9 @@ public class CommonDo2JaxbMapperImpl extends BaseDo2JaxbMapperImpl implements Co
         if (StringUtils.isNotEmpty(source.getUrnProvider())) {
             // By Urn
             categoryReferenceType.setURN(source.getUrnProvider());
+        } else {
+            // For adding references in details parameter in API
+            categoryReferenceType.setURN(source.getUrn());
         }
 
         // By CategoryRefType

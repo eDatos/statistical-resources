@@ -88,7 +88,7 @@ public class SdmxDataRestExternalFacadeV21Impl implements SdmxDataRestExternalFa
                     createRequestParameters(startPeriod, endPeriod, null, null, null, dimensionAtObservation, detail, getAcceptHeaderParameter(headers)));
 
             return Response.ok(new DeleteOnCloseFileInputStream(writerResult.getFile())).type(writerResult.getTypeSDMXDataMessageEnum().getValue())
-                    .header("Content-Disposition", "attachment; filename=" + "kaka").build();
+                    .header("Content-Disposition", "attachment; filename=" + "kaka").build(); // TODO generar nombre de attach
         } catch (Exception e) {
             throw manageException(e);
         }
@@ -338,6 +338,7 @@ public class SdmxDataRestExternalFacadeV21Impl implements SdmxDataRestExternalFa
         conditions.add(ConditionalCriteriaBuilder.criteriaFor(DatasetVersion.class).distinctRoot().buildSingle());
         return conditions;
     }
+
     private List<DatasetVersion> findDataFlowsCore(String agencyID, String resourceID, String version) throws Exception {
         // Find
         List<ConditionalCriteria> conditions = createDatasetVersionsConditions(agencyID, null, version);
