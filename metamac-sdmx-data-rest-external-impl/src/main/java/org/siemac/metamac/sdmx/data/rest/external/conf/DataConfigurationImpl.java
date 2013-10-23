@@ -21,6 +21,12 @@ public class DataConfigurationImpl implements DataConfiguration {
 
     private String               organisationIdDefault;
 
+    private String               sdmxRegistryApiUrlBase;
+
+    private String               sdmxSrmApiUrlBase;
+
+    private String               sdmxStatisticalResourceApiUrlBase;
+
     @Override
     public String retrieveMaintainerUrnDefault() throws MetamacException {
         if (maintainerUrnDefault == null) {
@@ -35,6 +41,30 @@ public class DataConfigurationImpl implements DataConfiguration {
             organisationIdDefault = retrieveProperty(DataConfigurationConstants.METAMAC_ORGANISATION, Boolean.TRUE);
         }
         return organisationIdDefault;
+    }
+
+    @Override
+    public String retrieveSdmxRegistryApiUrlBase() throws MetamacException {
+        if (sdmxRegistryApiUrlBase == null) {
+            sdmxRegistryApiUrlBase = retrieveProperty(DataConfigurationConstants.ENDPOINT_SDMX_REGISTRY_EXTERNAL_API, Boolean.TRUE);
+        }
+        return sdmxRegistryApiUrlBase;
+    }
+
+    @Override
+    public String retrieveSdmxSrmApiUrlBase() throws MetamacException {
+        if (sdmxSrmApiUrlBase == null) {
+            sdmxSrmApiUrlBase = retrieveProperty(DataConfigurationConstants.ENDPOINT_SDMX_SRM_EXTERNAL_API, Boolean.TRUE);
+        }
+        return sdmxSrmApiUrlBase;
+    }
+
+    @Override
+    public String retrieveSdmxStatisticalResourceApiUrlBase() throws MetamacException {
+        if (sdmxStatisticalResourceApiUrlBase == null) {
+            sdmxStatisticalResourceApiUrlBase = retrieveProperty(DataConfigurationConstants.ENDPOINT_SDMX_STATISTICAL_RESOURCES_EXTERNAL_API, Boolean.TRUE);
+        }
+        return sdmxStatisticalResourceApiUrlBase;
     }
 
     private String retrieveProperty(String propertyName, Boolean required) throws MetamacException {

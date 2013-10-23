@@ -13,7 +13,8 @@ public class RestServiceExceptionType {
 
     // Error Codes
     public static final RestServiceExceptionType                 UNKNOWN               = create("exception.statistic_sdmx_data.unknown");
-    public static final RestServiceExceptionType                 PARAMETER_UNKNOWN     = create("exception.statistic_sdmx_data.parameter.unknwon");
+    public static final RestServiceExceptionType                 NOT_FOUND             = create("exception.statistic_sdmx_data.not_found");
+    public static final RestServiceExceptionType                 PARAMETER_UNKNOWN     = create("exception.statistic_sdmx_data.parameter.unknown");
     public static final RestServiceExceptionType                 PARAMETER_UNSUPPORTED = create("exception.statistic_sdmx_data.parameter.unsupported");
 
     /**

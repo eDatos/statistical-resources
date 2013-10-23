@@ -2,6 +2,8 @@ package org.siemac.metamac.sdmx.data.rest.external.v2_1;
 
 public class RestExternalConstants {
 
+    public static String API_VERSION_2_1 = "v2.1";
+
     // Wildcards values for SDMX identifying parameters
     public enum WildcardIdentifyingEnum {
         ALL, UNKNOWN, LATEST;

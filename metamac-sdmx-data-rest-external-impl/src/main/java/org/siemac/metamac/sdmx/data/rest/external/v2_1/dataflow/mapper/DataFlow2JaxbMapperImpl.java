@@ -9,17 +9,30 @@ import org.sdmx.resources.sdmxml.schemas.v2_1.structure.DataflowsType;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.util.GeneratorUrnUtils;
 import org.siemac.metamac.core.common.util.shared.UrnUtils;
+import org.siemac.metamac.rest.utils.RestUtils;
+import org.siemac.metamac.sdmx.data.rest.external.conf.DataConfiguration;
+import org.siemac.metamac.sdmx.data.rest.external.v2_1.RestExternalConstants;
 import org.siemac.metamac.sdmx.data.rest.external.v2_1.base.mapper.BaseDo2JaxbMapperImpl;
 import org.siemac.metamac.sdmx.data.rest.external.v2_1.common.mapper.CommonDo2JaxbMapper;
+import org.siemac.metamac.sdmx.data.rest.external.v2_1.service.utils.UriCalculator;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component("dataFlow2JaxbMapper")
 public class DataFlow2JaxbMapperImpl extends BaseDo2JaxbMapperImpl implements DataFlow2JaxbMapper {
 
+    private static Logger       logger        = LoggerFactory.getLogger(DataFlow2JaxbMapperImpl.class);
+
     @Autowired
     private CommonDo2JaxbMapper commonDo2JaxbMapper;
+
+    @Autowired
+    private DataConfiguration   dataConfiguration;
+
+    private static final String PATH_DATAFLOW = "dataflow";
 
     @Override
     public DataflowsType dataflowsDo2Jaxb(List<DatasetVersion> sourceList, boolean asStub) throws MetamacException {
@@ -71,6 +84,14 @@ public class DataFlow2JaxbMapperImpl extends BaseDo2JaxbMapperImpl implements Da
             dataStructureRefType.setId(urnStructure[1]);
             dataStructureRefType.setVersion(urnStructure[2]);
             dataStructureReferenceType.setRef(dataStructureRefType);
+
+            // Uri
+            try {
+                dataflowType.setUri(UriCalculator.calculateUriForDataset(source, RestUtils.createLink(dataConfiguration.retrieveSdmxRegistryApiUrlBase(), RestExternalConstants.API_VERSION_2_1),
+                        PATH_DATAFLOW));
+            } catch (MetamacException e) {
+                logger.error("Impossible to calculate URI", e);
+            }
 
             dataflowType.setStructure(dataStructureReferenceType);
         }

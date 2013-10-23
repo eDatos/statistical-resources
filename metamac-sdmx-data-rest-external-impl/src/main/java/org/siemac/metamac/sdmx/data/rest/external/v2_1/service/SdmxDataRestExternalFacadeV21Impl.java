@@ -9,6 +9,7 @@ import javax.ws.rs.core.Response.Status;
 import javax.xml.bind.JAXBElement;
 import javax.xml.namespace.QName;
 
+import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.StringUtils;
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteriaBuilder;
@@ -19,9 +20,8 @@ import org.joda.time.DateTime;
 import org.sdmx.resources.sdmxml.rest.schemas.v2_1.types.DataParameterDetailEnum;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.CategorisationsType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.DataflowsType;
-import org.siemac.metamac.core.common.exception.CommonServiceExceptionType;
+import org.siemac.metamac.core.common.criteria.utils.CriteriaUtils;
 import org.siemac.metamac.core.common.exception.MetamacException;
-import org.siemac.metamac.core.common.exception.MetamacExceptionBuilder;
 import org.siemac.metamac.core.common.io.DeleteOnCloseFileInputStream;
 import org.siemac.metamac.core.common.util.SdmxTimeUtils;
 import org.siemac.metamac.sdmx.data.rest.external.conf.DataConfiguration;
@@ -41,7 +41,6 @@ import org.siemac.metamac.statistical.resources.core.io.domain.DsdSdmxInfo.DsdSd
 import org.siemac.metamac.statistical.resources.core.io.domain.RequestParameter;
 import org.siemac.metamac.statistical.resources.core.io.mapper.MetamacSdmx2StatRepoMapper;
 import org.siemac.metamac.statistical.resources.core.io.serviceimpl.WriterDataCallbackImpl;
-import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesCriteriaUtils;
 import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesVersionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -80,6 +79,8 @@ public class SdmxDataRestExternalFacadeV21Impl implements SdmxDataRestExternalFa
     private final ServiceContext             ctx                 = new ServiceContext("restExternal", "restExternal", "restExternal");
     private final Logger                     logger              = LoggerFactory.getLogger(SdmxDataRestExternalFacadeV21Impl.class);
     private final String                     HEADER_PARAM_ACCEPT = "accept";
+    private final String                     NAME_SUFIX          = ".xml";
+    private final String                     NAME_PREFIX         = "data";
 
     @Override
     public Response findData(HttpHeaders headers, String flowRef, String detail, String dimensionAtObservation, String startPeriod, String endPeriod) {
@@ -88,7 +89,7 @@ public class SdmxDataRestExternalFacadeV21Impl implements SdmxDataRestExternalFa
                     createRequestParameters(startPeriod, endPeriod, null, null, null, dimensionAtObservation, detail, getAcceptHeaderParameter(headers)));
 
             return Response.ok(new DeleteOnCloseFileInputStream(writerResult.getFile())).type(writerResult.getTypeSDMXDataMessageEnum().getValue())
-                    .header("Content-Disposition", "attachment; filename=" + "kaka").build(); // TODO generar nombre de attach
+                    .header("Content-Disposition", "attachment; filename=" + generateRandomAttachName()).build();
         } catch (Exception e) {
             throw manageException(e);
         }
@@ -100,7 +101,8 @@ public class SdmxDataRestExternalFacadeV21Impl implements SdmxDataRestExternalFa
             WriterResult writerResult = processDataRequest(flowRef, key, null,
                     createRequestParameters(startPeriod, endPeriod, null, null, null, dimensionAtObservation, detail, getAcceptHeaderParameter(headers)));
 
-            return Response.ok(new DeleteOnCloseFileInputStream(writerResult.getFile())).type(writerResult.getTypeSDMXDataMessageEnum().getValue()).build();
+            return Response.ok(new DeleteOnCloseFileInputStream(writerResult.getFile())).type(writerResult.getTypeSDMXDataMessageEnum().getValue())
+                    .header("Content-Disposition", "attachment; filename=" + generateRandomAttachName()).build();
         } catch (Exception e) {
             throw manageException(e);
         }
@@ -112,7 +114,8 @@ public class SdmxDataRestExternalFacadeV21Impl implements SdmxDataRestExternalFa
             WriterResult writerResult = processDataRequest(flowRef, key, providerRef,
                     createRequestParameters(startPeriod, endPeriod, null, null, null, dimensionAtObservation, detail, getAcceptHeaderParameter(headers)));
 
-            return Response.ok(new DeleteOnCloseFileInputStream(writerResult.getFile())).type(writerResult.getTypeSDMXDataMessageEnum().getValue()).build();
+            return Response.ok(new DeleteOnCloseFileInputStream(writerResult.getFile())).type(writerResult.getTypeSDMXDataMessageEnum().getValue())
+                    .header("Content-Disposition", "attachment; filename=" + generateRandomAttachName()).build();
         } catch (Exception e) {
             throw manageException(e);
         }
@@ -272,8 +275,7 @@ public class SdmxDataRestExternalFacadeV21Impl implements SdmxDataRestExternalFa
         PagedResult<DatasetVersion> datasetVersions = datasetService.findDatasetVersionsByCondition(ctx, conditions, PagingParameter.noLimits());
 
         if (datasetVersions.getValues().isEmpty()) {
-            manageException(new RestException(RestExceptionUtils.getError(RestServiceExceptionType.UNKNOWN), Status.NOT_FOUND)); // TODO establecer el mesnaje de error correcto si no se encuentran las
-            throw MetamacExceptionBuilder.builder().withExceptionItems(CommonServiceExceptionType.UNKNOWN).build();
+            throw manageException(new RestException(RestExceptionUtils.getError(RestServiceExceptionType.NOT_FOUND), Status.NOT_FOUND));
         }
 
         return datasetVersions;
@@ -284,13 +286,12 @@ public class SdmxDataRestExternalFacadeV21Impl implements SdmxDataRestExternalFa
 
         // Add flow ID
         if (!StringUtils.isEmpty(resourceId) && RestExternalConstants.WildcardIdentifyingEnum.UNKNOWN.equals(RestExternalConstants.WildcardIdentifyingEnum.fromCaseInsensitiveString(resourceId))) {
-            conditions.add(ConditionalCriteriaBuilder.criteriaFor(DatasetVersion.class).withProperty(DatasetVersionProperties.siemacMetadataStatisticalResource().code()).eq(resourceId).buildSingle());
+            conditions.add(ConditionalCriteriaBuilder.criteriaFor(Categorisation.class).withProperty(CategorisationProperties.versionableStatisticalResource().code()).eq(resourceId).buildSingle());
         }
 
         // Add agency query
         if (!StringUtils.isEmpty(agencyId) && RestExternalConstants.WildcardIdentifyingEnum.UNKNOWN.equals(RestExternalConstants.WildcardIdentifyingEnum.fromCaseInsensitiveString(agencyId))) {
-            conditions.add(ConditionalCriteriaBuilder.criteriaFor(DatasetVersion.class).withProperty(DatasetVersionProperties.siemacMetadataStatisticalResource().maintainer().codeNested())
-                    .eq(agencyId).buildSingle());
+            conditions.add(ConditionalCriteriaBuilder.criteriaFor(Categorisation.class).withProperty(CategorisationProperties.maintainer().codeNested()).eq(agencyId).buildSingle());
         }
 
         // Add version query
@@ -298,9 +299,23 @@ public class SdmxDataRestExternalFacadeV21Impl implements SdmxDataRestExternalFa
             version = StatisticalResourcesVersionUtils.INITIAL_VERSION;
         }
 
-        conditions.add(ConditionalCriteriaBuilder.criteriaFor(Categorisation.class).withProperty(CategorisationProperties.versionableStatisticalResource().versionLogic()).eq(version)
-                .withProperty(CategorisationProperties.datasetVersion().siemacMetadataStatisticalResource().procStatus()).eq(ProcStatusEnum.PUBLISHED).and()
-                .withProperty(CategorisationProperties.datasetVersion().siemacMetadataStatisticalResource().validFrom()).lessThanOrEqual(new DateTime()).buildSingle());
+        //@formatter:off
+        conditions.add(ConditionalCriteriaBuilder.criteriaFor(Categorisation.class).
+                withProperty(CategorisationProperties.versionableStatisticalResource().versionLogic()).eq(version).
+                and().
+                withProperty(CategorisationProperties.datasetVersion().siemacMetadataStatisticalResource().procStatus()).eq(ProcStatusEnum.PUBLISHED).
+                buildSingle());
+        
+       conditions.add(ConditionalCriteriaBuilder.criteriaFor(Categorisation.class).
+                withProperty(CriteriaUtils.getDatetimeLeafPropertyEmbedded(CategorisationProperties.datasetVersion().siemacMetadataStatisticalResource().validFrom(), Categorisation.class)).lessThanOrEqual(new DateTime().toDate()).
+                buildSingle());
+        
+        conditions.add(ConditionalCriteriaBuilder.criteriaFor(Categorisation.class).
+                withProperty(CriteriaUtils.getDatetimeLeafPropertyEmbedded(CategorisationProperties.datasetVersion().siemacMetadataStatisticalResource().validTo(), Categorisation.class)).isNull().
+                or().
+                withProperty(CriteriaUtils.getDatetimeLeafPropertyEmbedded(CategorisationProperties.datasetVersion().siemacMetadataStatisticalResource().validTo(), Categorisation.class)).greaterThan(new DateTime().toDate())
+        .buildSingle());
+        //@formatter:on
 
         conditions.add(ConditionalCriteriaBuilder.criteriaFor(Categorisation.class).distinctRoot().buildSingle());
         return conditions;
@@ -333,7 +348,20 @@ public class SdmxDataRestExternalFacadeV21Impl implements SdmxDataRestExternalFa
                     .withProperty(DatasetVersionProperties.siemacMetadataStatisticalResource().procStatus()).eq(ProcStatusEnum.PUBLISHED).and()
                     .withProperty(DatasetVersionProperties.siemacMetadataStatisticalResource().validFrom()).lessThanOrEqual(new DateTime()).buildSingle());
         } else if (RestExternalConstants.WildcardIdentifyingEnum.LATEST.equals(versionWildcard)) {
-            conditions.add(StatisticalResourcesCriteriaUtils.buildLastPublishedVersionCriteria(DatasetVersion.class, DatasetVersionProperties.siemacMetadataStatisticalResource()));
+            //@formatter:off
+            conditions.add(ConditionalCriteriaBuilder.criteriaFor(DatasetVersion.class).
+                withProperty(DatasetVersionProperties.siemacMetadataStatisticalResource().procStatus()).eq(ProcStatusEnum.PUBLISHED).
+                and().
+                withProperty(CriteriaUtils.getDatetimeLeafPropertyEmbedded(DatasetVersionProperties.siemacMetadataStatisticalResource().validFrom(), DatasetVersion.class)).lessThanOrEqual(new DateTime().toDate())
+            .buildSingle());
+
+            conditions.add(ConditionalCriteriaBuilder.criteriaFor(DatasetVersion.class).
+                    withProperty(CriteriaUtils.getDatetimeLeafPropertyEmbedded(DatasetVersionProperties.siemacMetadataStatisticalResource().validTo(), DatasetVersion.class)).isNull().
+                    or().
+                    withProperty(CriteriaUtils.getDatetimeLeafPropertyEmbedded(DatasetVersionProperties.siemacMetadataStatisticalResource().validTo(), DatasetVersion.class)).greaterThan(new DateTime().toDate())
+            .buildSingle());
+            
+            //@formatter:on
         }
         conditions.add(ConditionalCriteriaBuilder.criteriaFor(DatasetVersion.class).distinctRoot().buildSingle());
         return conditions;
@@ -386,7 +414,6 @@ public class SdmxDataRestExternalFacadeV21Impl implements SdmxDataRestExternalFa
         // START_PERIOD
         if (StringUtils.isNotEmpty(startPeriod)) {
             if (SdmxTimeUtils.isTimeRange(startPeriod)) {
-                // TODO mensaje de error: SDMX no permite el tipo temporal TimeRange en este parámetro
                 org.sdmx.resources.sdmxml.schemas.v2_1.message.Error error = RestExceptionUtils.getError(RestServiceExceptionType.PARAMETER_UNKNOWN, RestExternalConstants.START_PERIOD, startPeriod);
                 throw new RestException(error, Status.INTERNAL_SERVER_ERROR);
             }
@@ -396,7 +423,6 @@ public class SdmxDataRestExternalFacadeV21Impl implements SdmxDataRestExternalFa
         // END_PERIOD
         if (StringUtils.isNotEmpty(endPeriod)) {
             if (SdmxTimeUtils.isTimeRange(endPeriod)) {
-                // TODO mensaje de error: SDMX no permite el tipo temporal TimeRange en este parámetro
                 org.sdmx.resources.sdmxml.schemas.v2_1.message.Error error = RestExceptionUtils.getError(RestServiceExceptionType.PARAMETER_UNKNOWN, RestExternalConstants.START_PERIOD, startPeriod);
                 throw new RestException(error, Status.INTERNAL_SERVER_ERROR);
             }
@@ -450,4 +476,7 @@ public class SdmxDataRestExternalFacadeV21Impl implements SdmxDataRestExternalFa
         return null;
     }
 
+    private String generateRandomAttachName() {
+        return NAME_PREFIX + RandomStringUtils.randomAlphanumeric(10) + NAME_SUFIX;
+    }
 }

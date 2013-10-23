@@ -10,6 +10,9 @@
     <!-- The following URN must be the same in the SQL script provided -->
     <entry key="metamac.organisation.urn">urn:sdmx:org.sdmx.infomodel.base.Agency=SDMX:AGENCIES(1.0).SDMX01</entry>
     <entry key="metamac.organisation">SDMX01</entry>
-    <entry key="metamac.sdmx.srm.rest.external">http://host/metamac-registry-web/apis/registry</entry>
+    
+    <entry key="metamac.sdmx.registry.rest.external">http://localhost:9001/apis/sdmx/statistical-resources</entry>
+    <entry key="metamac.sdmx.srm.rest.external">http://localhost:9001/apis/sdmx/structural-resources</entry>
+    <entry key="metamac.sdmx.statistical_resources.rest.external">http://localhost:9001/apis/sdmx/statistical-resources</entry>
 
 </properties>
