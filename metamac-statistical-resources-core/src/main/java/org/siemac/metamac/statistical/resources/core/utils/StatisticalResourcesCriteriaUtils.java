@@ -24,12 +24,12 @@ public class StatisticalResourcesCriteriaUtils {
         return ConditionalCriteriaBuilder.criteriaFor(entityClass).
                 withProperty(siemacMetadataStatisticalResourceProperty.procStatus()).eq(ProcStatusEnum.PUBLISHED).
                 and().
-                withProperty(siemacMetadataStatisticalResourceProperty.validFrom()).lessThanOrEqual(now).
+                withProperty(CriteriaUtils.getDatetimeLeafPropertyEmbedded(siemacMetadataStatisticalResourceProperty.validFrom(), entityClass)).lessThanOrEqual(now).
                 and().
                     lbrace().
-                        withProperty(siemacMetadataStatisticalResourceProperty.validTo()).isNull().
+                        withProperty(CriteriaUtils.getDatetimeLeafPropertyEmbedded(siemacMetadataStatisticalResourceProperty.validTo(), entityClass)).isNull().
                         or().
-                        withProperty(siemacMetadataStatisticalResourceProperty.validTo()).greaterThan(now).
+                        withProperty(CriteriaUtils.getDatetimeLeafPropertyEmbedded(siemacMetadataStatisticalResourceProperty.validTo(), entityClass)).greaterThan(now).
                     rbrace().buildSingle();
         //@formatter:on
     }
@@ -41,12 +41,12 @@ public class StatisticalResourcesCriteriaUtils {
         return ConditionalCriteriaBuilder.criteriaFor(entityClass).
             withProperty(lifeCycleStatisticalResourceProperty.procStatus()).eq(ProcStatusEnum.PUBLISHED).
             and().
-            withProperty(lifeCycleStatisticalResourceProperty.validFrom()).lessThanOrEqual(now).
+            withProperty(CriteriaUtils.getDatetimeLeafPropertyEmbedded(lifeCycleStatisticalResourceProperty.validFrom(), entityClass)).lessThanOrEqual(now).
             and().
                 lbrace().
-                    withProperty(lifeCycleStatisticalResourceProperty.validTo()).isNull().
+                    withProperty(CriteriaUtils.getDatetimeLeafPropertyEmbedded(lifeCycleStatisticalResourceProperty.validTo(), entityClass)).isNull().
                     or().
-                    withProperty(lifeCycleStatisticalResourceProperty.validTo()).greaterThan(now).
+                    withProperty(CriteriaUtils.getDatetimeLeafPropertyEmbedded(lifeCycleStatisticalResourceProperty.validTo(), entityClass)).greaterThan(now).
                 rbrace().distinctRoot().buildSingle();
         //@formatter:on
     }
@@ -62,4 +62,5 @@ public class StatisticalResourcesCriteriaUtils {
         SculptorPropertyCriteria validFromBeforeNow = new SculptorPropertyCriteria(CriteriaUtils.getDatetimeLeafPropertyEmbedded(validFromProperty, entityClazz), new Date(), OperationType.GT);
         return new SculptorCriteriaConjunction(statusPublished, validFromBeforeNow);
     }
+
 }
