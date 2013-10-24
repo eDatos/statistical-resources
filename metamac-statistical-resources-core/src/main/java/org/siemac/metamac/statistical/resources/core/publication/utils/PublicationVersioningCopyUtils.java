@@ -29,13 +29,13 @@ public class PublicationVersioningCopyUtils {
     public static void copyPublicationVersion(PublicationVersion source, PublicationVersion target) {
         // Metadata
         target.setSiemacMetadataStatisticalResource(copySiemacMetadataStatisticalResource(source.getSiemacMetadataStatisticalResource(), target.getSiemacMetadataStatisticalResource()));
-        target.setFormatExtentResources(source.getFormatExtentResources());
+        target.setFormatExtentResources(null);
         target.setPublication(source.getPublication());
-        
+
         // Structure
         copyElementsLevels(source, target);
     }
-    
+
     private static void copyElementsLevels(PublicationVersion publicationVersionSource, PublicationVersion publicationVersionTarget) {
         List<ElementLevel> targets = new ArrayList<ElementLevel>();
         List<ElementLevel> sources = publicationVersionSource.getChildrenFirstLevel();
@@ -49,7 +49,7 @@ public class PublicationVersioningCopyUtils {
             targets.add(target);
         }
     }
-    
+
     private static ElementLevel copyElementLevel(ElementLevel source, PublicationVersion publicationVersionTarget) {
         ElementLevel target = new ElementLevel();
         if (source.getChapter() != null) {
@@ -80,10 +80,10 @@ public class PublicationVersioningCopyUtils {
         }
         Cube target = new Cube();
         target.setNameableStatisticalResource(copyNameableStatisticalResource(source.getNameableStatisticalResource(), target.getNameableStatisticalResource()));
-        
+
         target.setQuery(source.getQuery());
         target.setDataset(source.getDataset());
-        
+
         return target;
     }
 

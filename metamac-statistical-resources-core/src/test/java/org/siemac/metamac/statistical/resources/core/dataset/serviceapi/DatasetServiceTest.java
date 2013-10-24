@@ -698,6 +698,7 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
 
         // is replaced_by_version
         assertNull(datasetVersionRepository.retrieveIsReplacedByVersion(datasetVersionV1));
+        assertTrue(datasetVersionV1.getSiemacMetadataStatisticalResource().getLastVersion());
 
         datasetService.retrieveDatasetVersionByUrn(getServiceContextWithoutPrincipal(), urnV2);
     }

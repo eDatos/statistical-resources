@@ -189,6 +189,7 @@ public class LifecycleAsserts extends CommonAsserts {
 
         LifeCycleStatisticalResource lifeCycleStatisticalResource = resource.getLifeCycleStatisticalResource();
 
+        assertNull(lifeCycleStatisticalResource.getValidFrom());
         assertNull(lifeCycleStatisticalResource.getPublicationDate());
         assertNull(lifeCycleStatisticalResource.getPublicationUser());
         assertEquals(ProcStatusEnum.DIFFUSION_VALIDATION, lifeCycleStatisticalResource.getProcStatus());

@@ -340,10 +340,12 @@ public class DatasetLifecycleServiceTest extends StatisticalResourcesBaseTest im
     @Override
     @Test
     public void testApplyVersioningNewResource() throws Exception {
-        DatasetVersion datasetVersion = mockDatasetVersionInRepoFromMockFactory(DATASET_VERSION_14_OPER_03_CODE_01_PUBLISHED_NAME);
-        DatasetLifecycleTestUtils.fillAsVersioned(datasetVersion);
+        DatasetVersion previous = mockDatasetVersionInRepoFromMockFactory(DATASET_VERSION_14_OPER_03_CODE_01_PUBLISHED_NAME);
 
-        datasetLifecycleService.applyVersioningNewResource(getServiceContextAdministrador(), datasetVersion);
+        DatasetVersion datasetVersionNew = mockDatasetVersionInRepoFromMockFactory(DATASET_VERSION_14_OPER_03_CODE_01_PUBLISHED_NAME);
+        DatasetLifecycleTestUtils.fillAsVersioned(datasetVersionNew);
+
+        datasetLifecycleService.applyVersioningNewResource(getServiceContextAdministrador(), datasetVersionNew, previous);
     }
 
     @Override
@@ -352,7 +354,7 @@ public class DatasetLifecycleServiceTest extends StatisticalResourcesBaseTest im
         DatasetVersion datasetVersion = mockDatasetVersionInRepoFromMockFactory(DATASET_VERSION_14_OPER_03_CODE_01_PUBLISHED_NAME);
         DatasetLifecycleTestUtils.fillAsPublished(datasetVersion);
 
-        datasetLifecycleService.applyVersioningNewResource(getServiceContextAdministrador(), datasetVersion);
+        datasetLifecycleService.applyVersioningPreviousResource(getServiceContextAdministrador(), datasetVersion);
     }
 
     @Override

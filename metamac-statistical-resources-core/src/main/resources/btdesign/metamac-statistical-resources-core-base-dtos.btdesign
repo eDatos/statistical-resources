@@ -67,6 +67,7 @@ Application StatisticalResourcesDto {
 			String rejectValidationUser;
 			JAVADATE publicationDate;
 			String publicationUser;
+			Boolean lastVersion;
 			
 			- @RelatedResourceDto replacesVersion;
 			- @RelatedResourceDto isReplacedByVersion;

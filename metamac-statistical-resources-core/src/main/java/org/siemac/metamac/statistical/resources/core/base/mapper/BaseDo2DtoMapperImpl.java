@@ -3,6 +3,7 @@ package org.siemac.metamac.statistical.resources.core.base.mapper;
 import java.util.Collection;
 import java.util.HashSet;
 
+import org.apache.commons.lang.BooleanUtils;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatisticalResource;
@@ -95,6 +96,7 @@ public class BaseDo2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Base
         versionableStatisticalResourceDoToDto(source, target);
 
         target.setProcStatus(source.getEffectiveProcStatus());
+        target.setLastVersion(BooleanUtils.isTrue(source.getLastVersion()));
         target.setCreationDate(dateDoToDto(source.getCreationDate()));
         target.setCreationUser(source.getCreationUser());
         target.setProductionValidationDate(dateDoToDto(source.getProductionValidationDate()));
@@ -118,7 +120,7 @@ public class BaseDo2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Base
         }
         versionableStatisticalResourceDoToBaseDto(source, target);
 
-        target.setProcStatus(source.getProcStatus());
+        target.setProcStatus(source.getEffectiveProcStatus());
         target.setCreationDate(dateDoToDto(source.getCreationDate()));
         target.setPublicationDate(dateDoToDto(source.getPublicationDate()));
     }

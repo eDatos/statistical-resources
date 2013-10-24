@@ -1,4 +1,4 @@
-package org.siemac.metamac.statistical.resources.core.dataset.serviceapi;
+package org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.dataset;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -21,8 +21,11 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 
 import java.util.List;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.siemac.metamac.core.common.enume.domain.VersionPatternEnum;
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
@@ -33,6 +36,7 @@ import org.siemac.metamac.statistical.resources.core.base.constants.ProcStatusFo
 import org.siemac.metamac.statistical.resources.core.dataset.domain.CodeDimension;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
+import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.DatasetService;
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceapi.LifecycleService;
@@ -42,12 +46,15 @@ import org.siemac.metamac.statistical.resources.core.utils.TaskMockUtils;
 import org.siemac.metamac.statistical.resources.core.utils.asserts.BaseAsserts;
 import org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.configuration.MetamacMock;
+import org.springframework.aop.framework.Advised;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceFacade;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:spring/statistical-resources/include/dataset-repository-mockito.xml", "classpath:spring/statistical-resources/include/task-mockito.xml",
@@ -68,19 +75,34 @@ public class DatasetVersioningServiceTest extends StatisticalResourcesBaseTest {
     @Autowired
     private TaskService                      taskService;
 
+    @Autowired
+    private DatasetRepositoriesServiceFacade datasetRepositoriesServiceFacade;
+
+    @Before
+    // Get reference to dataset repository without proxy (verify not working with proxy)
+    public void fixInterceptorsMockito() throws Exception {
+        datasetRepositoriesServiceFacade = (DatasetRepositoriesServiceFacade) ((Advised) datasetRepositoriesServiceFacade).getTargetSource().getTarget();
+    }
+
+    @After
+    public void validateUsage() {
+        Mockito.validateMockitoUsage();
+    }
+
     @Test
     @MetamacMock(DATASET_VERSION_14_OPER_03_CODE_01_PUBLISHED_NAME)
     public void testVersioningDatasetVersion() throws Exception {
-        String datasetVersionUrn = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_14_OPER_03_CODE_01_PUBLISHED_NAME).getSiemacMetadataStatisticalResource().getUrn();
+        String previousDatasetVersionUrn = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_14_OPER_03_CODE_01_PUBLISHED_NAME).getSiemacMetadataStatisticalResource().getUrn();
 
-        DatasetVersion newDatasetVersion = datasetVersionLifecycleService.versioning(getServiceContextWithoutPrincipal(), datasetVersionUrn, VersionTypeEnum.MINOR);
-        DatasetVersion previousDatasetVersion = datasetService.retrieveDatasetVersionByUrn(getServiceContextWithoutPrincipal(), datasetVersionUrn);
+        DatasetVersion newDatasetVersion = datasetVersionLifecycleService.versioning(getServiceContextWithoutPrincipal(), previousDatasetVersionUrn, VersionTypeEnum.MINOR);
+        DatasetVersion previousDatasetVersion = datasetService.retrieveDatasetVersionByUrn(getServiceContextWithoutPrincipal(), previousDatasetVersionUrn);
 
         assertNotNull(newDatasetVersion);
         assertFalse(previousDatasetVersion.getSiemacMetadataStatisticalResource().getVersionLogic().equals(newDatasetVersion.getSiemacMetadataStatisticalResource().getVersionLogic()));
         checkNewDatasetVersionCreated(previousDatasetVersion, newDatasetVersion);
-    }
 
+        Mockito.verify(datasetRepositoriesServiceFacade).duplicateDatasetRepository(previousDatasetVersion.getDatasetRepositoryId(), newDatasetVersion.getSiemacMetadataStatisticalResource().getUrn());
+    }
     @Test
     @MetamacMock(DATASET_VERSION_14_OPER_03_CODE_01_PUBLISHED_NAME)
     public void testVersioningDatasetVersionCheckUrnIsCorrectForMinorChange() throws Exception {

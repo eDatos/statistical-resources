@@ -80,6 +80,7 @@ public class LifecycleFiller {
             throw new MetamacException(ServiceExceptionType.PARAMETER_REQUIRED, ServiceExceptionParameters.PREVIOUS_VERSION);
         }
 
+        resource.getLifeCycleStatisticalResource().setValidFrom(null);
         resource.getLifeCycleStatisticalResource().setPublicationDate(null);
         resource.getLifeCycleStatisticalResource().setPublicationUser(null);
         resource.getLifeCycleStatisticalResource().setProcStatus(ProcStatusEnum.DIFFUSION_VALIDATION);

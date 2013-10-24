@@ -147,7 +147,6 @@ public class QueryLifecycleServiceImpl extends LifecycleTemplateService<QueryVer
     private boolean isDatasetVersionPublishedAndVisibleBeforeOrEqualDate(DatasetVersion datasetVersion, DateTime date) {
         if (ProcStatusEnumUtils.isInAnyProcStatus(datasetVersion, ProcStatusEnum.PUBLISHED, ProcStatusEnum.PUBLISHED_NOT_VISIBLE)) {
             if (!datasetVersion.getSiemacMetadataStatisticalResource().getValidFrom().isAfter(date)) {
-                System.out.println("Dataset date " + datasetVersion.getSiemacMetadataStatisticalResource().getValidFrom() + " query date " + date);
                 return true;
             }
         }
@@ -200,7 +199,7 @@ public class QueryLifecycleServiceImpl extends LifecycleTemplateService<QueryVer
     }
 
     @Override
-    protected void applyVersioningNewResource(ServiceContext ctx, QueryVersion resource) throws MetamacException {
+    protected void applyVersioningNewResource(ServiceContext ctx, QueryVersion resource, QueryVersion previous) throws MetamacException {
         throw new UnsupportedOperationException(METHOD_NOT_IMPLEMENT_IN_THIS_VERSION);
     }
 

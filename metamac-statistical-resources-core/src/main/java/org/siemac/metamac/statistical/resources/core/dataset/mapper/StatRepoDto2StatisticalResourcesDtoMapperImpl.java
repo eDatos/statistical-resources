@@ -17,7 +17,7 @@ import org.siemac.metamac.statistical.resources.core.dto.datasets.AttributeValue
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdAttributeInstanceDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.CodeItemDto;
 import org.siemac.metamac.statistical.resources.core.invocation.service.SrmRestInternalService;
-import org.siemac.metamac.statistical.resources.core.utils.shared.ExternalItemUtils;
+import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesExternalItemUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -65,7 +65,7 @@ public class StatRepoDto2StatisticalResourcesDtoMapperImpl implements StatRepoDt
         String[] triplet = UrnUtils.splitUrnItemScheme(conceptSchemeRepresentationUrn);
         String conceptUrn = GeneratorUrnUtils.generateSdmxConceptUrn(new String[]{triplet[0]}, triplet[1], triplet[2], conceptCode);
         Concept concept = srmRestInternalService.retrieveConceptByUrn(conceptUrn);
-        ExternalItemDto externalItemDto = ExternalItemUtils.buildExternalItemDtoFromConcept(concept);
+        ExternalItemDto externalItemDto = StatisticalResourcesExternalItemUtils.buildExternalItemDtoFromConcept(concept);
         return externalItemDto;
     }
 
@@ -73,7 +73,7 @@ public class StatRepoDto2StatisticalResourcesDtoMapperImpl implements StatRepoDt
         String[] triplet = UrnUtils.splitUrnItemScheme(codelistRepresentationUrn);
         String codeUrn = GeneratorUrnUtils.generateSdmxCodeUrn(new String[]{triplet[0]}, triplet[1], triplet[2], codeCode);
         Code code = srmRestInternalService.retrieveCodeByUrn(codeUrn);
-        ExternalItemDto externalItemDto = ExternalItemUtils.buildExternalItemDtoFromCode(code);
+        ExternalItemDto externalItemDto = StatisticalResourcesExternalItemUtils.buildExternalItemDtoFromCode(code);
         return externalItemDto;
     }
 

@@ -319,6 +319,7 @@ public class PublicationVersionMockFactory extends StatisticalResourcesMockFacto
         PublicationVersion publicationVersion = createPublicationVersion();
         publicationVersion.getSiemacMetadataStatisticalResource().setProcStatus(ProcStatusEnum.PUBLISHED);
         publicationVersion.getSiemacMetadataStatisticalResource().setValidFrom(new DateTime().minusDays(2));
+        PublicationLifecycleTestUtils.fillAsPublished(publicationVersion);
         return publicationVersion;
     }
 

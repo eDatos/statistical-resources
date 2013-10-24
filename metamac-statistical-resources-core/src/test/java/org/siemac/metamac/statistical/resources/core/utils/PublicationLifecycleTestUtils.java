@@ -68,6 +68,23 @@ public class PublicationLifecycleTestUtils {
     public static void fillAsPublished(PublicationVersion publicationVersion) {
         prepareToPublished(publicationVersion);
         LifecycleTestUtils.fillAsPublishedSiemac(publicationVersion);
+        fillPublicationAsPublished(publicationVersion);
+    }
+
+    private static void fillPublicationAsPublished(PublicationVersion publicationVersion) {
+        if (publicationVersion.getFormatExtentResources() == null) {
+            publicationVersion.setFormatExtentResources(computeFormatExtent(publicationVersion));
+        }
+    }
+
+    private static Integer computeFormatExtent(PublicationVersion publicationVersion) {
+        Integer count = 0;
+        for (ElementLevel level : publicationVersion.getChildrenAllLevels()) {
+            if (level.getCube() != null) {
+                count++;
+            }
+        }
+        return count;
     }
 
     // *****************************************************

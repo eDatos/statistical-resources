@@ -23,7 +23,6 @@ import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.DatasetI
 import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.DatasetServiceDatasourceManagementTest;
 import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.DatasetServiceImportationTest;
 import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.DatasetServiceTest;
-import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.DatasetVersioningServiceTest;
 import org.siemac.metamac.statistical.resources.core.enume.utils.ProcStatusEnumUtilsTest;
 import org.siemac.metamac.statistical.resources.core.enume.utils.QueryStatusEnumUtilsTest;
 import org.siemac.metamac.statistical.resources.core.enume.utils.TypeRelatedResourceEnumUtilsTest;
@@ -39,6 +38,7 @@ import org.siemac.metamac.statistical.resources.core.lifecycle.SiemacLifecycleFi
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.checker.ExternalItemCheckerTest;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.dataset.DatasetLifecycleServiceTest;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.dataset.DatasetPublishingServiceTest;
+import org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.dataset.DatasetVersioningServiceTest;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.publication.PublicationLifecycleServiceTest;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.publication.PublicationPublishingServiceTest;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.query.QueryLifecycleServiceTest;

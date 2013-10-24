@@ -9,6 +9,7 @@ import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteriaBuilder;
 import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
+import org.joda.time.DateTime;
 import org.siemac.metamac.core.common.criteria.MetamacCriteria;
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaResult;
 import org.siemac.metamac.core.common.criteria.SculptorCriteria;
@@ -29,6 +30,7 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.Categorisati
 import org.siemac.metamac.statistical.resources.core.dataset.domain.CodeDimension;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionProperties;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionRepository;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.StatisticOfficiality;
 import org.siemac.metamac.statistical.resources.core.dataset.mapper.DatasetDo2DtoMapper;
@@ -62,6 +64,7 @@ import org.siemac.metamac.statistical.resources.core.publication.domain.Chapter;
 import org.siemac.metamac.statistical.resources.core.publication.domain.Cube;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersionProperties;
+import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersionRepository;
 import org.siemac.metamac.statistical.resources.core.publication.mapper.PublicationDo2DtoMapper;
 import org.siemac.metamac.statistical.resources.core.publication.mapper.PublicationDto2DoMapper;
 import org.siemac.metamac.statistical.resources.core.query.criteria.mapper.QueryMetamacCriteria2SculptorCriteriaMapper;
@@ -70,6 +73,7 @@ import org.siemac.metamac.statistical.resources.core.query.criteria.mapper.Query
 import org.siemac.metamac.statistical.resources.core.query.criteria.mapper.QueryVersionSculptorCriteria2MetamacCriteriaMapper;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersionProperties;
+import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersionRepository;
 import org.siemac.metamac.statistical.resources.core.query.mapper.QueryDo2DtoMapper;
 import org.siemac.metamac.statistical.resources.core.query.mapper.QueryDto2DoMapper;
 import org.siemac.metamac.statistical.resources.core.security.DatasetsSecurityUtils;
@@ -160,6 +164,13 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
 
     @Autowired
     private SrmRestInternalService                                   srmRestInternalService;
+
+    @Autowired
+    private DatasetVersionRepository                                 datasetVersionRepository;
+    @Autowired
+    private PublicationVersionRepository                             publicationVersionRepository;
+    @Autowired
+    private QueryVersionRepository                                   queryVersionRepository;
 
     public StatisticalResourcesServiceFacadeImpl() {
     }
@@ -438,6 +449,11 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         // Transform
         QueryVersion queryVersion = queryDto2DoMapper.queryVersionDtoToDo(queryVersionDto);
 
+        String urn = queryVersion.getLifeCycleStatisticalResource().getUrn();
+
+        // We set validfrom and ONLY validfrom transparently
+        queryVersion = changeQueryVersionValidFromAndSave(urn, new DateTime());
+
         // Send to published
         queryVersion = queryLifecycleService.sendToPublished(ctx, queryVersion.getLifeCycleStatisticalResource().getUrn());
 
@@ -455,13 +471,71 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         // Check optimistic locking
         queryDto2DoMapper.checkOptimisticLocking(queryVersionDto);
 
+        String urn = queryVersionDto.getUrn();
+
+        // We set validfrom and ONLY validfrom transparently
+        QueryVersion queryVersion = changeQueryVersionValidFromAndSave(urn, new DateTime());
+
         // Send to published
-        QueryVersion queryVersion = queryLifecycleService.sendToPublished(ctx, queryVersionDto.getUrn());
+        queryVersion = queryLifecycleService.sendToPublished(ctx, queryVersionDto.getUrn());
 
         // Transform
         queryVersionDto = queryDo2DtoMapper.queryVersionDoToBaseDto(queryVersion);
 
         return queryVersionDto;
+    }
+
+    @Override
+    public QueryVersionDto programPublicationQueryVersion(ServiceContext ctx, QueryVersionDto queryVersionDto, Date validFromDate) throws MetamacException {
+        // Security
+        QueriesSecurityUtils.canPublishQueryVersion(ctx);
+
+        // Transform only for optimistic locking
+        QueryVersion queryVersion = queryDto2DoMapper.queryVersionDtoToDo(queryVersionDto);
+        String urn = queryVersion.getLifeCycleStatisticalResource().getUrn();
+
+        // We set validfrom and ONLY validfrom transparently
+        queryVersion = changeQueryVersionValidFromAndSave(urn, validFromDate);
+
+        queryVersion = queryLifecycleService.sendToPublished(ctx, urn);
+
+        // Transform
+        queryVersionDto = queryDo2DtoMapper.queryVersionDoToDto(queryVersion);
+
+        return queryVersionDto;
+    }
+
+    @Override
+    public QueryVersionBaseDto programPublicationQueryVersion(ServiceContext ctx, QueryVersionBaseDto queryVersionDto, Date validFromDate) throws MetamacException {
+        // Security
+        QueriesSecurityUtils.canPublishQueryVersion(ctx);
+
+        // Check optimistic locking
+        queryDto2DoMapper.checkOptimisticLocking(queryVersionDto);
+
+        String urn = queryVersionDto.getUrn();
+
+        // We set validfrom and ONLY validfrom transparently
+        QueryVersion queryVersion = changeQueryVersionValidFromAndSave(urn, validFromDate);
+
+        queryVersion = queryLifecycleService.sendToPublished(ctx, urn);
+
+        // Transform
+        queryVersionDto = queryDo2DtoMapper.queryVersionDoToBaseDto(queryVersion);
+
+        return queryVersionDto;
+    }
+
+    private QueryVersion changeQueryVersionValidFromAndSave(String urn, Date validFrom) throws MetamacException {
+        QueryVersion queryVersion = queryVersionRepository.retrieveByUrn(urn);
+        queryVersion.getLifeCycleStatisticalResource().setValidFrom(queryDto2DoMapper.dateDtoToDo(validFrom));
+        return queryVersionRepository.save(queryVersion);
+    }
+
+    private QueryVersion changeQueryVersionValidFromAndSave(String urn, DateTime validFrom) throws MetamacException {
+        QueryVersion queryVersion = queryVersionRepository.retrieveByUrn(urn);
+        queryVersion.getLifeCycleStatisticalResource().setValidFrom(validFrom);
+        return queryVersionRepository.save(queryVersion);
     }
 
     @Override
@@ -863,6 +937,10 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
 
         // Transform
         DatasetVersion datasetVersion = datasetDto2DoMapper.datasetVersionDtoToDo(datasetVersionDto);
+        String datasetVersionUrn = datasetVersion.getSiemacMetadataStatisticalResource().getUrn();
+
+        // We set validfrom and ONLY validfrom transparently
+        datasetVersion = changeDatasetVersionValidFromAndSave(datasetVersionUrn, new DateTime());
 
         datasetVersion = datasetLifecycleService.sendToPublished(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getUrn());
 
@@ -880,12 +958,70 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         // Check optimistic locking
         datasetDto2DoMapper.checkOptimisticLocking(datasetVersionDto);
 
+        String datasetVersionUrn = datasetVersionDto.getUrn();
+
+        // We set validfrom and ONLY validfrom transparently
+        changeDatasetVersionValidFromAndSave(datasetVersionUrn, new DateTime());
+
         DatasetVersion datasetVersion = datasetLifecycleService.sendToPublished(ctx, datasetVersionDto.getUrn());
 
         // Transform
         datasetVersionDto = datasetDo2DtoMapper.datasetVersionDoToBaseDto(ctx, datasetVersion);
 
         return datasetVersionDto;
+    }
+
+    @Override
+    public DatasetVersionDto programPublicationDatasetVersion(ServiceContext ctx, DatasetVersionDto datasetVersionDto, Date validFromDate) throws MetamacException {
+        // Security
+        DatasetsSecurityUtils.canPublishDatasetVersion(ctx);
+
+        // Transform only for optimistic locking
+        DatasetVersion datasetVersion = datasetDto2DoMapper.datasetVersionDtoToDo(datasetVersionDto);
+        String datasetVersionUrn = datasetVersion.getSiemacMetadataStatisticalResource().getUrn();
+
+        // We set validfrom and ONLY validfrom transparently
+        datasetVersion = changeDatasetVersionValidFromAndSave(datasetVersionUrn, validFromDate);
+
+        datasetVersion = datasetLifecycleService.sendToPublished(ctx, datasetVersionUrn);
+
+        // Transform
+        datasetVersionDto = datasetDo2DtoMapper.datasetVersionDoToDto(ctx, datasetVersion);
+
+        return datasetVersionDto;
+    }
+
+    @Override
+    public DatasetVersionBaseDto programPublicationDatasetVersion(ServiceContext ctx, DatasetVersionBaseDto datasetVersionDto, Date validFromDate) throws MetamacException {
+        // Security
+        DatasetsSecurityUtils.canPublishDatasetVersion(ctx);
+
+        // Check optimistic locking
+        datasetDto2DoMapper.checkOptimisticLocking(datasetVersionDto);
+
+        String datasetVersionUrn = datasetVersionDto.getUrn();
+
+        // We set validfrom and ONLY validfrom transparently
+        DatasetVersion datasetVersion = changeDatasetVersionValidFromAndSave(datasetVersionUrn, validFromDate);
+
+        datasetVersion = datasetLifecycleService.sendToPublished(ctx, datasetVersionUrn);
+
+        // Transform
+        datasetVersionDto = datasetDo2DtoMapper.datasetVersionDoToBaseDto(ctx, datasetVersion);
+
+        return datasetVersionDto;
+    }
+
+    private DatasetVersion changeDatasetVersionValidFromAndSave(String urn, Date validFrom) throws MetamacException {
+        DatasetVersion datasetVersion = datasetVersionRepository.retrieveByUrn(urn);
+        datasetVersion.getSiemacMetadataStatisticalResource().setValidFrom(datasetDto2DoMapper.dateDtoToDo(validFrom));
+        return datasetVersionRepository.save(datasetVersion);
+    }
+
+    private DatasetVersion changeDatasetVersionValidFromAndSave(String urn, DateTime validFrom) throws MetamacException {
+        DatasetVersion datasetVersion = datasetVersionRepository.retrieveByUrn(urn);
+        datasetVersion.getSiemacMetadataStatisticalResource().setValidFrom(validFrom);
+        return datasetVersionRepository.save(datasetVersion);
     }
 
     @Override
@@ -1423,6 +1559,10 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
 
         // Transform
         PublicationVersion publicationVersion = publicationDto2DoMapper.publicationVersionDtoToDo(publicationVersionDto);
+        String urn = publicationVersion.getSiemacMetadataStatisticalResource().getUrn();
+
+        // We set validfrom and ONLY validfrom transparently
+        publicationVersion = changePublicationVersionValidFromAndSave(urn, new DateTime());
 
         publicationVersion = publicationLifecycleService.sendToPublished(ctx, publicationVersion.getSiemacMetadataStatisticalResource().getUrn());
 
@@ -1440,12 +1580,70 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         // Check optimistic locking
         publicationDto2DoMapper.checkOptimisticLocking(publicationVersionDto);
 
-        PublicationVersion publicationVersion = publicationLifecycleService.sendToPublished(ctx, publicationVersionDto.getUrn());
+        String urn = publicationVersionDto.getUrn();
+
+        // We set validfrom and ONLY validfrom transparently
+        PublicationVersion publicationVersion = changePublicationVersionValidFromAndSave(urn, new DateTime());
+
+        publicationVersion = publicationLifecycleService.sendToPublished(ctx, publicationVersionDto.getUrn());
 
         // Transform
         publicationVersionDto = publicationDo2DtoMapper.publicationVersionDoToBaseDto(publicationVersion);
 
         return publicationVersionDto;
+    }
+
+    @Override
+    public PublicationVersionDto programPublicationPublicationVersion(ServiceContext ctx, PublicationVersionDto publicationVersionDto, Date validFromDate) throws MetamacException {
+        // Security
+        PublicationsSecurityUtils.canPublishPublicationVersion(ctx);
+
+        // Transform only for optimistic locking
+        PublicationVersion publicationVersion = publicationDto2DoMapper.publicationVersionDtoToDo(publicationVersionDto);
+        String urn = publicationVersion.getSiemacMetadataStatisticalResource().getUrn();
+
+        // We set validfrom and ONLY validfrom transparently
+        publicationVersion = changePublicationVersionValidFromAndSave(urn, validFromDate);
+
+        publicationVersion = publicationLifecycleService.sendToPublished(ctx, urn);
+
+        // Transform
+        publicationVersionDto = publicationDo2DtoMapper.publicationVersionDoToDto(publicationVersion);
+
+        return publicationVersionDto;
+    }
+
+    @Override
+    public PublicationVersionBaseDto programPublicationPublicationVersion(ServiceContext ctx, PublicationVersionBaseDto publicationVersionDto, Date validFromDate) throws MetamacException {
+        // Security
+        PublicationsSecurityUtils.canPublishPublicationVersion(ctx);
+
+        // Check optimistic locking
+        publicationDto2DoMapper.checkOptimisticLocking(publicationVersionDto);
+
+        String urn = publicationVersionDto.getUrn();
+
+        // We set validfrom and ONLY validfrom transparently
+        PublicationVersion publicationVersion = changePublicationVersionValidFromAndSave(urn, validFromDate);
+
+        publicationVersion = publicationLifecycleService.sendToPublished(ctx, urn);
+
+        // Transform
+        publicationVersionDto = publicationDo2DtoMapper.publicationVersionDoToBaseDto(publicationVersion);
+
+        return publicationVersionDto;
+    }
+
+    private PublicationVersion changePublicationVersionValidFromAndSave(String urn, Date validFrom) throws MetamacException {
+        PublicationVersion publicationVersion = publicationVersionRepository.retrieveByUrn(urn);
+        publicationVersion.getSiemacMetadataStatisticalResource().setValidFrom(datasetDto2DoMapper.dateDtoToDo(validFrom));
+        return publicationVersionRepository.save(publicationVersion);
+    }
+
+    private PublicationVersion changePublicationVersionValidFromAndSave(String urn, DateTime validFrom) throws MetamacException {
+        PublicationVersion publicationVersion = publicationVersionRepository.retrieveByUrn(urn);
+        publicationVersion.getSiemacMetadataStatisticalResource().setValidFrom(validFrom);
+        return publicationVersionRepository.save(publicationVersion);
     }
 
     @Override

@@ -23,7 +23,9 @@ import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableSta
 import org.siemac.metamac.statistical.resources.core.base.utils.FillMetadataForCreateResourceUtils;
 import org.siemac.metamac.statistical.resources.core.base.validators.ProcStatusValidator;
 import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
+import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResource;
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResourceResult;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
@@ -165,12 +167,17 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
 
         checkCanPublicationVersionBeDeleted(publicationVersion);
 
-        // TODO RI: Comprobar si hay que eliminar relaciones a otros recursos
-
         if (VersionUtil.isInitialVersion(publicationVersion.getSiemacMetadataStatisticalResource().getVersionLogic())) {
             Publication publication = publicationVersion.getPublication();
             getPublicationRepository().delete(publication);
         } else {
+            // Previous version
+            RelatedResource previousResource = publicationVersion.getSiemacMetadataStatisticalResource().getReplacesVersion();
+            if (previousResource.getPublicationVersion() != null) {
+                PublicationVersion previousVersion = previousResource.getPublicationVersion();
+                previousVersion.getSiemacMetadataStatisticalResource().setLastVersion(true);
+                getPublicationVersionRepository().save(previousVersion);
+            }
             // Delete version
             Publication publication = publicationVersion.getPublication();
             publication.getVersions().remove(publicationVersion);

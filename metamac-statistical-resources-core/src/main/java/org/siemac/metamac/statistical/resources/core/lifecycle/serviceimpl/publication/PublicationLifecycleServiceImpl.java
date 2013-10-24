@@ -261,7 +261,7 @@ public class PublicationLifecycleServiceImpl extends LifecycleTemplateService<Pu
     }
 
     @Override
-    protected void applyVersioningNewResource(ServiceContext ctx, PublicationVersion resource) throws MetamacException {
+    protected void applyVersioningNewResource(ServiceContext ctx, PublicationVersion resource, PublicationVersion previous) throws MetamacException {
         // nothing specific to apply
     }
 

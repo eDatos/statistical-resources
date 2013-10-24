@@ -4,6 +4,7 @@ import static org.siemac.metamac.statistical.resources.core.error.utils.ServiceE
 
 import java.util.List;
 
+import org.fornax.cartridges.sculptor.framework.errorhandling.ApplicationException;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
@@ -34,32 +35,38 @@ import org.siemac.metamac.statistical.resources.core.query.serviceapi.QueryServi
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.arte.statistic.dataset.repository.domain.StatisticDatasetRepository;
+import com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceFacade;
+
 @Service("datasetLifecycleService")
 public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<DatasetVersion> {
 
     @Autowired
-    private LifecycleCommonMetadataChecker lifecycleCommonMetadataChecker;
+    private LifecycleCommonMetadataChecker   lifecycleCommonMetadataChecker;
 
     @Autowired
-    private ExternalItemChecker            externalItemChecker;
+    private ExternalItemChecker              externalItemChecker;
 
     @Autowired
-    private DatasetService                 datasetService;
+    private DatasetService                   datasetService;
 
     @Autowired
-    private DatasetVersionRepository       datasetVersionRepository;
+    private DatasetVersionRepository         datasetVersionRepository;
 
     @Autowired
-    private QueryVersionRepository         queryVersionRepository;
+    private QueryVersionRepository           queryVersionRepository;
 
     @Autowired
-    private PublicationVersionRepository   publicationVersionRepository;
+    private PublicationVersionRepository     publicationVersionRepository;
 
     @Autowired
-    private LifecycleService<QueryVersion> queryLifecycleService;
+    private LifecycleService<QueryVersion>   queryLifecycleService;
 
     @Autowired
-    private QueryService                   queryService;
+    private QueryService                     queryService;
+
+    @Autowired
+    private DatasetRepositoriesServiceFacade datasetRepositoriesServiceFacade;
 
     @Override
     protected String getResourceMetadataName() throws MetamacException {
@@ -277,13 +284,17 @@ public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<Datase
     }
 
     @Override
-    protected void applyVersioningNewResource(ServiceContext ctx, DatasetVersion resource) throws MetamacException {
+    protected void applyVersioningNewResource(ServiceContext ctx, DatasetVersion resource, DatasetVersion previous) throws MetamacException {
         resource.setUserModifiedDateNextUpdate(Boolean.FALSE);
+
+        String oldDatasetRepositoryId = previous.getDatasetRepositoryId();
         resource.setDatasetRepositoryId(resource.getSiemacMetadataStatisticalResource().getUrn());
 
-        // FIXME: Pendiente añadir método de duplicado en DatasetRepositoriesServiceFacade
-        // It's necessary to duplicate datasetRepository and set the new id to datasetVersion
-        // throw new UnsupportedOperationException("Not implemented: needed a DatasetRepositoriesServiceFacade method");
+        try {
+            datasetRepositoriesServiceFacade.duplicateDatasetRepository(oldDatasetRepositoryId, resource.getSiemacMetadataStatisticalResource().getUrn());
+        } catch (ApplicationException e) {
+            throw new MetamacException(e, ServiceExceptionType.UNKNOWN, "Error duplicating dataset repository");
+        }
     }
 
     @Override

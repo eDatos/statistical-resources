@@ -107,7 +107,7 @@ public class QueryLifecycleServiceTest extends StatisticalResourcesBaseTest impl
         thrown.expect(UnsupportedOperationException.class);
         thrown.expectMessage(METHOD_NOT_IMPLEMENT_IN_THIS_VERSION);
 
-        queryLifecycleService.applyVersioningNewResource(null, null);
+        queryLifecycleService.applyVersioningNewResource(null, null, null);
     }
 
     @Override

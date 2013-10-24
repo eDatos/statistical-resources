@@ -9,6 +9,7 @@ import static org.junit.Assert.assertTrue;
 import java.util.Collection;
 import java.util.Iterator;
 
+import org.apache.commons.lang.BooleanUtils;
 import org.junit.Assert;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableStatisticalResource;
@@ -306,6 +307,8 @@ public class BaseAsserts extends CommonAsserts {
         switch (mapperEnum) {
             case DO2DTO:
                 assertEquals(entity.getEffectiveProcStatus(), dto.getProcStatus());
+                boolean effectiveLastVersion = BooleanUtils.isTrue(entity.getLastVersion());
+                assertEquals(effectiveLastVersion, dto.getLastVersion());
 
                 assertEqualsDate(entity.getCreationDate(), dto.getCreationDate());
                 assertEquals(entity.getCreationUser(), dto.getCreationUser());

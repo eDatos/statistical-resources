@@ -35,10 +35,12 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 
 import java.net.URL;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -533,6 +535,12 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
     }
 
     @Override
+    public void testProgramPublicationQueryVersion() throws Exception {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
     @Test
     @MetamacMock(QUERY_VERSION_53_NOT_VISIBLE_IS_PART_OF_EMPTY_NAME)
     public void testCancelPublicationQueryVersion() throws Exception {
@@ -936,6 +944,12 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
     }
 
     @Override
+    public void testProgramPublicationPublicationVersion() throws Exception {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
     @Test
     @MetamacMock(PUBLICATION_VERSION_94_NOT_VISIBLE_NAME)
     public void testCancelPublicationPublicationVersion() throws Exception {
@@ -1302,6 +1316,39 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
             assertEqualsMetamacExceptionItem(ServiceExceptionType.OPTIMISTIC_LOCKING, 0, null, e.getExceptionItems().get(0));
         }
     }
+
+    @Override
+    public void testProgramPublicationDatasetVersion() throws Exception {
+        // TODO Auto-generated method stub
+
+    }
+
+    // @Override
+    // @Test
+    // @MetamacMock(DATASET_VERSION_70_PREPARED_TO_PUBLISH_EXTERNAL_ITEM_FULL_NAME)
+    // public void testProgramPublicationDatasetVersion() throws Exception {
+    // // Retrieve dataset - session 1
+    // DatasetVersionBaseDto datasetVersionDtoSession01 = statisticalResourcesServiceFacade.findDatasetsVersionsByCondition(getServiceContextAdministrador(), null).getResults().get(0);
+    // assertEquals(Long.valueOf(0), datasetVersionDtoSession01.getOptimisticLockingVersion());
+    //
+    // // Retrieve dataset - session 2
+    // DatasetVersionBaseDto datasetVersionDtoSession02 = statisticalResourcesServiceFacade.findDatasetsVersionsByCondition(getServiceContextAdministrador(), null).getResults().get(0);
+    // assertEquals(Long.valueOf(0), datasetVersionDtoSession02.getOptimisticLockingVersion());
+    //
+    // // Send to validation rejected - session 1 --> OK
+    // Date validFrom = new DateTime().plusDays(1).toDate();
+    // DatasetVersionBaseDto datasetVersionDtoSession1AfterUpdate01 = statisticalResourcesServiceFacade.programPublicationDatasetVersion(getServiceContextAdministrador(), datasetVersionDtoSession01,
+    // validFrom);
+    // assertTrue(datasetVersionDtoSession1AfterUpdate01.getOptimisticLockingVersion() > datasetVersionDtoSession01.getOptimisticLockingVersion());
+    //
+    // // Send to validation rejected - session 2 --> FAIL
+    // try {
+    // statisticalResourcesServiceFacade.programPublicationDatasetVersion(getServiceContextAdministrador(), datasetVersionDtoSession02, validFrom);
+    // fail("optimistic locking");
+    // } catch (MetamacException e) {
+    // assertEqualsMetamacExceptionItem(ServiceExceptionType.OPTIMISTIC_LOCKING, 0, null, e.getExceptionItems().get(0));
+    // }
+    // }
 
     @Override
     @Test

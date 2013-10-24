@@ -1,4 +1,4 @@
-package org.siemac.metamac.statistical.resources.core.utils.shared;
+package org.siemac.metamac.statistical.resources.core.utils;
 
 import java.util.List;
 
@@ -12,7 +12,7 @@ import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Code;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Concept;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Item;
 
-public class ExternalItemUtils {
+public class StatisticalResourcesExternalItemUtils {
 
     public static ExternalItemDto buildExternalItemDtoFromCode(Code code) {
         return buildExternalItemDtoFromItem(code, TypeExternalArtefactsEnum.CODE);
