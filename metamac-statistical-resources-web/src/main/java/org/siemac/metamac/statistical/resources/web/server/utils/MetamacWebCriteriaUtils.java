@@ -20,6 +20,7 @@ import org.siemac.metamac.statistical.resources.web.shared.criteria.base.HasData
 import org.siemac.metamac.statistical.resources.web.shared.criteria.base.HasStatisticalOperationCriteria;
 import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
 import org.siemac.metamac.web.common.shared.criteria.base.HasLastVersionCriteria;
+import org.siemac.metamac.web.common.shared.criteria.base.HasOnlyLastVersionCriteria;
 import org.siemac.metamac.web.common.shared.criteria.base.HasSimpleCriteria;
 
 public class MetamacWebCriteriaUtils {
@@ -35,8 +36,8 @@ public class MetamacWebCriteriaUtils {
             addRestrictionIfExists(criteria, buildStatisticalOperationCriteria((HasStatisticalOperationCriteria) webCriteria));
         }
 
-        if (webCriteria instanceof HasLastVersionCriteria) {
-            addRestrictionIfExists(criteria, buildOnlyLastVersionCriteria((HasLastVersionCriteria) webCriteria));
+        if (webCriteria instanceof HasOnlyLastVersionCriteria) {
+            addRestrictionIfExists(criteria, buildOnlyLastVersionCriteria((HasOnlyLastVersionCriteria) webCriteria));
         }
 
         if (webCriteria instanceof HasDataCriteria) {
@@ -130,7 +131,7 @@ public class MetamacWebCriteriaUtils {
         return null;
     }
 
-    private static MetamacCriteriaRestriction buildOnlyLastVersionCriteria(HasLastVersionCriteria criteria) {
+    private static MetamacCriteriaRestriction buildOnlyLastVersionCriteria(HasOnlyLastVersionCriteria criteria) {
         if (criteria.isOnlyLastVersion()) {
             return new MetamacCriteriaPropertyRestriction(StatisticalResourcesCriteriaPropertyEnum.LAST_VERSION.name(), criteria.isOnlyLastVersion(), OperationType.EQ);
         }

@@ -20,7 +20,7 @@ public class PublicationMainFormLayout extends LifecycleMainFormLayout {
         this.publicationVersionDto = publicationVersionDto;
         setCanEdit(PublicationClientSecurityUtils.canUpdatePublicationVersion(publicationVersionDto));
         setCanDelete(PublicationClientSecurityUtils.canDeletePublicationVersion(publicationVersionDto));
-        updatePublishSection(publicationVersionDto.getProcStatus());
+        updatePublishSection(publicationVersionDto.getProcStatus(), publicationVersionDto.getLastVersion());
     }
 
     @Override

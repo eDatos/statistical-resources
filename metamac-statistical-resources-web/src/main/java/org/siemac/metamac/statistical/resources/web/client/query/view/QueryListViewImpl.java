@@ -206,9 +206,8 @@ public class QueryListViewImpl extends LifeCycleBaseListViewImpl<QueryListUiHand
 
     @Override
     protected void programPublication(Date validFrom) {
-        // TODO Send to date and hour selected to service
         List<QueryVersionBaseDto> queryVersionDtos = StatisticalResourcesRecordUtils.getQueryVersionDtosFromListGridRecords(listGrid.getListGrid().getSelectedRecords());
-        getUiHandlers().programPublication(queryVersionDtos);
+        getUiHandlers().programPublication(queryVersionDtos, validFrom);
     }
 
     // Cancel programmed publication
@@ -219,8 +218,8 @@ public class QueryListViewImpl extends LifeCycleBaseListViewImpl<QueryListUiHand
 
             @Override
             public void onClick(ClickEvent event) {
-                // TODO Auto-generated method stub
-
+                List<QueryVersionBaseDto> queryVersionDtos = StatisticalResourcesRecordUtils.getQueryVersionDtosFromListGridRecords(listGrid.getListGrid().getSelectedRecords());
+                getUiHandlers().cancelProgrammedPublication(queryVersionDtos);
             }
         };
     }

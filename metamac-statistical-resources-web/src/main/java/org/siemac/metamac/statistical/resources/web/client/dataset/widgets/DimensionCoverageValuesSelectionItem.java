@@ -19,14 +19,20 @@ import org.siemac.metamac.web.common.client.widgets.form.CustomDynamicForm;
 import org.siemac.metamac.web.common.client.widgets.form.fields.CustomCanvasItem;
 
 import com.smartgwt.client.data.Record;
+import com.smartgwt.client.data.RecordList;
 import com.smartgwt.client.types.Autofit;
 import com.smartgwt.client.types.Overflow;
 import com.smartgwt.client.types.SelectionAppearance;
 import com.smartgwt.client.types.SelectionStyle;
+import com.smartgwt.client.widgets.form.fields.FormItem;
+import com.smartgwt.client.widgets.form.fields.events.ShowValueEvent;
+import com.smartgwt.client.widgets.form.fields.events.ShowValueHandler;
 import com.smartgwt.client.widgets.grid.HeaderSpan;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.grid.events.SelectionChangedHandler;
 import com.smartgwt.client.widgets.grid.events.SelectionEvent;
+import com.smartgwt.client.widgets.grid.events.SelectionUpdatedEvent;
+import com.smartgwt.client.widgets.grid.events.SelectionUpdatedHandler;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VLayout;
 
@@ -38,10 +44,12 @@ public class DimensionCoverageValuesSelectionItem extends CustomCanvasItem {
 
     private boolean            editionMode;
 
-    private Set<String>        dimensionIds;
+    private List<String>       dimensionIds;
 
-    public DimensionCoverageValuesSelectionItem(String name, String title, Set<String> dimensionIds, boolean editionMode) {
+    public DimensionCoverageValuesSelectionItem(String name, String title, List<String> dimensionIds, boolean editionMode) {
         super(name, title);
+        setShouldSaveValue(true);
+
         setCellStyle("dragAndDropCellStyle");
 
         this.editionMode = editionMode;
@@ -76,6 +84,14 @@ public class DimensionCoverageValuesSelectionItem extends CustomCanvasItem {
         mainPanel.addMember(selectedDimensionValuesListGrid);
         mainPanel.setPadding(10);
         setCanvas(mainPanel);
+
+    }
+    @Override
+    public void setRequired(Boolean required) {
+        super.setRequired(required);
+        for (FormItem item : dimensionsForm.getFields()) {
+            item.setRequired(required);
+        }
     }
 
     public Map<String, List<CodeItemDto>> getSelectedCodeDimensions() {
@@ -88,7 +104,7 @@ public class DimensionCoverageValuesSelectionItem extends CustomCanvasItem {
     }
 
     private DimensionsListGridItem createDimensionListGridItem(final String dimensionId) {
-        DimensionsListGridItem dimensionsListGridItem = new DimensionsListGridItem(dimensionId);
+        final DimensionsListGridItem dimensionsListGridItem = new DimensionsListGridItem(dimensionId);
         if (editionMode) {
             dimensionsListGridItem.getListGrid().addSelectionChangedHandler(new SelectionChangedHandler() {
 
@@ -115,8 +131,31 @@ public class DimensionCoverageValuesSelectionItem extends CustomCanvasItem {
                     }
                 }
             });
+            dimensionsListGridItem.getListGrid().addSelectionUpdatedHandler(new SelectionUpdatedHandler() {
+
+                @Override
+                public void onSelectionUpdated(SelectionUpdatedEvent event) {
+                    storeValue(buildRecordForForm());
+                }
+
+            });
         }
         return dimensionsListGridItem;
+    }
+
+    // To use form validation we trick the form using appropiate record or null
+    private Record buildRecordForForm() {
+        for (String dimensionId : dimensionIds) {
+            if (dimensionsForm.getItem(dimensionId) != null) {
+                ListGridRecord[] selectedRecords = ((DimensionsListGridItem) dimensionsForm.getItem(dimensionId)).getListGrid().getSelectedRecords();
+                if (selectedRecords.length == 0) {
+                    return null;
+                }
+            } else {
+                return null;
+            }
+        }
+        return new Record();
     }
 
     public void setDimensionCoverageValues(String dimensionId, List<CodeItemDto> codeItemDtos) {
@@ -144,32 +183,6 @@ public class DimensionCoverageValuesSelectionItem extends CustomCanvasItem {
             }
 
         }
-    }
-
-    // public void setSelectedDimensionValuesDirectly(String dimensionId, List<CodeItemDto> codeItems) {
-    // if (selectedDimensionValuesListGrid != null) {
-    // CodeItemRecord[] records = buildCodeItemRecords(dimensionId, codeItems);
-    // for (Record record : records) {
-    // selectedDimensionValuesListGrid.addData(record);
-    // }
-    // }
-    // }
-    //
-    // public void setSelectedDimensionValuesDirectly(Map<String, List<CodeItemDto>> codeItemsByDimension) {
-    // if (selectedDimensionValuesListGrid != null) {
-    // selectedDimensionValuesListGrid.setData((Record[]) null);
-    // for (String dimensionId : codeItemsByDimension.keySet()) {
-    // setSelectedDimensionValuesDirectly(dimensionId, codeItemsByDimension.get(dimensionId));
-    // }
-    // }
-    // }
-
-    private CodeItemRecord[] buildCodeItemRecords(String dimensionId, List<CodeItemDto> codeItems) {
-        List<CodeItemRecord> records = new ArrayList<CodeItemRecord>();
-        for (CodeItemDto codeItem : codeItems) {
-            records.add(StatisticalResourcesRecordUtils.getCodeItemRecord(dimensionId, codeItem));
-        }
-        return records.toArray(new CodeItemRecord[records.size()]);
     }
 
     private class DimensionsListGridItem extends CustomCanvasItem {

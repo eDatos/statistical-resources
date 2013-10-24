@@ -1,5 +1,7 @@
 package org.siemac.metamac.statistical.resources.web.shared.dataset;
 
+import java.util.Date;
+
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.web.client.enums.LifeCycleActionEnum;
@@ -21,6 +23,10 @@ public class UpdateDatasetVersionProcStatus {
     @Optional
     @In(3)
     VersionTypeEnum     versionType;
+
+    @Optional
+    @In(4)
+    Date                validFrom;
 
     @Out(1)
     DatasetVersionDto   datasetVersionDto;

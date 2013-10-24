@@ -12,6 +12,8 @@ import org.siemac.metamac.statistical.resources.web.client.NameTokens;
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesDefaults;
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb;
 import org.siemac.metamac.statistical.resources.web.client.enums.PublicationTabTypeEnum;
+import org.siemac.metamac.statistical.resources.web.client.events.RequestPublicationVersionsReloadEvent.RequestPublicationVersionsReloadHandler;
+import org.siemac.metamac.statistical.resources.web.client.events.RequestPublicationVersionsReloadEvent;
 import org.siemac.metamac.statistical.resources.web.client.events.SelectPublicationTabEvent;
 import org.siemac.metamac.statistical.resources.web.client.events.SelectPublicationTabEvent.SelectPublicationTabHandler;
 import org.siemac.metamac.statistical.resources.web.client.events.SetPublicationEvent;
@@ -49,6 +51,7 @@ import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 public class PublicationPresenter extends Presenter<PublicationPresenter.PublicationView, PublicationPresenter.PublicationProxy>
         implements
             PublicationUiHandlers,
+            RequestPublicationVersionsReloadHandler,
             SelectPublicationTabHandler,
             SetPublicationHandler {
 
@@ -130,6 +133,13 @@ public class PublicationPresenter extends Presenter<PublicationPresenter.Publica
         } else {
             getView().selectMetadataTab();
         }
+    }
+
+    @ProxyEvent
+    @Override
+    public void onRequestPublicationVersionsReload(RequestPublicationVersionsReloadEvent event) {
+        retrievePublicationVersions(event.getPublicationVersionUrn());
+        goToPublicationVersion(event.getPublicationVersionUrn());
     }
 
     @ProxyEvent

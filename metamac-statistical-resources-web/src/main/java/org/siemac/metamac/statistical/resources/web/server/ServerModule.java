@@ -10,6 +10,7 @@ import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.GetD
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.GetDatasetAttributesActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.GetDatasetDimensionCoverageActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.GetDatasetDimensionsActionHandler;
+import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.GetDatasetDimensionsCoverageActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.GetDatasetVersionActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.GetDatasetVersionMainCoveragesActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.GetDatasetVersionsActionHandler;
@@ -63,6 +64,7 @@ import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetAtt
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetAttributesAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetDimensionCoverageAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetDimensionsAction;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetDimensionsCoverageAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetVersionAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetVersionMainCoveragesAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetVersionsAction;
@@ -168,6 +170,7 @@ public class ServerModule extends HandlerModule {
         bindHandler(DeleteDatasourcesAction.class, DeleteDatasourcesActionHandler.class);
         bindHandler(GetDatasetDimensionsAction.class, GetDatasetDimensionsActionHandler.class);
         bindHandler(GetDatasetDimensionCoverageAction.class, GetDatasetDimensionCoverageActionHandler.class);
+        bindHandler(GetDatasetDimensionsCoverageAction.class, GetDatasetDimensionsCoverageActionHandler.class);
         bindHandler(GetDatasetVersionMainCoveragesAction.class, GetDatasetVersionMainCoveragesActionHandler.class);
         bindHandler(GetVersionsOfDatasetAction.class, GetVersionsOfDatasetActionHandler.class);
         bindHandler(GetDatasetAttributesAction.class, GetDatasetAttributesActionHandler.class);

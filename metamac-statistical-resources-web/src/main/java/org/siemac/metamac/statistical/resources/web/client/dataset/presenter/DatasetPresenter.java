@@ -11,7 +11,9 @@ import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesD
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb;
 import org.siemac.metamac.statistical.resources.web.client.dataset.view.handlers.DatasetUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.enums.DatasetTabTypeEnum;
+import org.siemac.metamac.statistical.resources.web.client.events.RequestDatasetVersionsReloadEvent;
 import org.siemac.metamac.statistical.resources.web.client.events.SelectDatasetTabEvent;
+import org.siemac.metamac.statistical.resources.web.client.events.RequestDatasetVersionsReloadEvent.RequestDatasetVersionsReloadHandler;
 import org.siemac.metamac.statistical.resources.web.client.events.SelectDatasetTabEvent.SelectDatasetTabHandler;
 import org.siemac.metamac.statistical.resources.web.client.events.SetDatasetEvent;
 import org.siemac.metamac.statistical.resources.web.client.events.SetDatasetEvent.SetDatasetHandler;
@@ -44,7 +46,12 @@ import com.gwtplatform.mvp.client.proxy.Proxy;
 import com.gwtplatform.mvp.client.proxy.RevealContentEvent;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 
-public class DatasetPresenter extends Presenter<DatasetPresenter.DatasetView, DatasetPresenter.DatasetProxy> implements DatasetUiHandlers, SelectDatasetTabHandler, SetDatasetHandler {
+public class DatasetPresenter extends Presenter<DatasetPresenter.DatasetView, DatasetPresenter.DatasetProxy>
+        implements
+            DatasetUiHandlers,
+            SelectDatasetTabHandler,
+            SetDatasetHandler,
+            RequestDatasetVersionsReloadHandler {
 
     private PlaceManager                              placeManager;
     private DispatchAsync                             dispatcher;
@@ -127,6 +134,13 @@ public class DatasetPresenter extends Presenter<DatasetPresenter.DatasetView, Da
         } else {
             getView().selectMetadataTab();
         }
+    }
+
+    @ProxyEvent
+    @Override
+    public void onRequestDatasetVersionsReload(RequestDatasetVersionsReloadEvent event) {
+        retrieveDatasetVersions(event.getDatasetVersionUrn());
+        goToDatasetVersion(event.getDatasetVersionUrn());
     }
 
     @ProxyEvent

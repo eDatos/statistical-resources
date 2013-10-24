@@ -224,7 +224,7 @@ public class DatasetMetadataTabViewImpl extends StatisticalResourceMetadataBaseV
                         if (window.validateForm()) {
                             Date selectedDate = window.getSelectedDate();
                             // TODO Send to date and hour selected to service
-                            getUiHandlers().programPublication(datasetVersionDto);
+                            getUiHandlers().programPublication(datasetVersionDto, selectedDate);
                             window.destroy();
                         }
                     }
@@ -235,7 +235,7 @@ public class DatasetMetadataTabViewImpl extends StatisticalResourceMetadataBaseV
 
             @Override
             public void onClick(ClickEvent event) {
-                // TODO
+                getUiHandlers().cancelProgrammedPublication(datasetVersionDto);
             }
         });
         mainFormLayout.getPublishButton().addClickHandler(new ClickHandler() {
@@ -523,7 +523,7 @@ public class DatasetMetadataTabViewImpl extends StatisticalResourceMetadataBaseV
         List<RelatedResourceDto> relatedResourceDtos = RelatedResourceUtils.getDatasetVersionBaseDtosAsRelatedResourceDtos(result.getDatasetVersionBaseDtos());
         resourceRelationDescriptorsEditionForm.setRelatedResourcesForReplaces(relatedResourceDtos, result.getFirstResultOut(), relatedResourceDtos.size(), result.getTotalResults());
     }
-    
+
     @Override
     public void setStatisticalOperationsForReplacesSelection(List<ExternalItemDto> results, ExternalItemDto defaultSelected) {
         resourceRelationDescriptorsEditionForm.setStatisticalOperationsForReplacesSelection(results, defaultSelected);

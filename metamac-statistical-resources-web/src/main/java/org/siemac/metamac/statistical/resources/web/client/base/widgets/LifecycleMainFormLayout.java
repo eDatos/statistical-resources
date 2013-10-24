@@ -21,6 +21,7 @@ public abstract class LifecycleMainFormLayout extends InternationalMainFormLayou
     private MainFormLayoutButton preview;
 
     private ProcStatusEnum       status;
+    private boolean              lastVersion;
 
     public LifecycleMainFormLayout() {
         super();
@@ -64,8 +65,9 @@ public abstract class LifecycleMainFormLayout extends InternationalMainFormLayou
         hideAllLifeCycleButtons();
     }
 
-    public void updatePublishSection(ProcStatusEnum status) {
+    public void updatePublishSection(ProcStatusEnum status, boolean lastVersion) {
         this.status = status;
+        this.lastVersion = lastVersion;
     }
 
     protected void updateVisibility() {
@@ -83,9 +85,10 @@ public abstract class LifecycleMainFormLayout extends InternationalMainFormLayou
             showRejectValidationButton();
             showProgramPublicationButton();
             showPublishButton();
-        } else if (ProcStatusEnum.PUBLISHED.equals(status)) {
-            showCancelProgrammedPublication();
+        } else if (ProcStatusEnum.PUBLISHED.equals(status) && lastVersion) {
             showVersioningButton();
+        } else if (ProcStatusEnum.PUBLISHED_NOT_VISIBLE.equals(status)) {
+            showCancelProgrammedPublication();
         }
         showPreviewButton();
     }

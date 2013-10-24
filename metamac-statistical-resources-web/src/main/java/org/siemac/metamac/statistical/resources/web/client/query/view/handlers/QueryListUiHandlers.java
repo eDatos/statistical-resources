@@ -1,5 +1,6 @@
 package org.siemac.metamac.statistical.resources.web.client.query.view.handlers;
 
+import java.util.Date;
 import java.util.List;
 
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
@@ -23,7 +24,8 @@ public interface QueryListUiHandlers extends BaseUiHandlers {
     void sendToDiffusionValidation(List<QueryVersionBaseDto> queryVersionBaseDtos);
     void rejectValidation(List<QueryVersionBaseDto> queryVersionBaseDtos);
     void publish(List<QueryVersionBaseDto> queryVersionBaseDtos);
-    void programPublication(List<QueryVersionBaseDto> queryVersionBaseDtos);
+    void programPublication(List<QueryVersionBaseDto> queryVersionBaseDtos, Date validFrom);
+    void cancelProgrammedPublication(List<QueryVersionBaseDto> queryVersionBaseDtos);
     void version(List<QueryVersionBaseDto> queryVersionBaseDtos, VersionTypeEnum versionType);
 
     // Related resources

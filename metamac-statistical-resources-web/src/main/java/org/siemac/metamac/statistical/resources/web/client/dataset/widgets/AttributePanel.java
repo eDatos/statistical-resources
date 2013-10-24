@@ -3,6 +3,7 @@ package org.siemac.metamac.statistical.resources.web.client.dataset.widgets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdAttributeDto;
@@ -111,8 +112,8 @@ public class AttributePanel extends VLayout {
         show();
     }
 
-    public void setDimensionCoverageValues(String dimensionId, List<CodeItemDto> codeItemDtos) {
-        mainFormLayout.setDimensionCoverageValues(dimensionId, codeItemDtos);
+    public void setDimensionsCoverageValues(Map<String, List<CodeItemDto>> dimensionsCoverage) {
+        mainFormLayout.setDimensionsCoverageValues(dimensionsCoverage);
     }
 
     private void showDatasetAttributeInstance(DsdAttributeDto dsdAttributeDto, List<DsdAttributeInstanceDto> dsdAttributeInstanceDtos) {

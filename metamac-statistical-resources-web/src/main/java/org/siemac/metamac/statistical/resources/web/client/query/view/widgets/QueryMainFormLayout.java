@@ -26,7 +26,7 @@ public class QueryMainFormLayout extends LifecycleMainFormLayout {
         setTitleLabelContents(InternationalStringUtils.getLocalisedString(queryVersionDto.getTitle()));
         setCanEdit(QueryClientSecurityUtils.canUpdatePublicationVersion(queryVersionDto));
         setCanDelete(QueryClientSecurityUtils.canDeletePublicationVersion(queryVersionDto));
-        updatePublishSection(queryVersionDto.getProcStatus());
+        updatePublishSection(queryVersionDto.getProcStatus(), queryVersionDto.getLastVersion());
     }
 
     @Override

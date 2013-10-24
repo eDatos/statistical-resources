@@ -51,15 +51,17 @@ public class UpdateQueryVersionsProcStatusActionHandler extends UpdateResourcePr
                         break;
 
                     case PUBLISH:
-                        // TODO
+                        if (action.getValidFrom() != null) {
+                            statisticalResourcesServiceFacade.programPublicationQueryVersion(ServiceContextHolder.getCurrentServiceContext(), queryVersionBaseDto, action.getValidFrom());
+                        } else {
+                            statisticalResourcesServiceFacade.publishQueryVersion(ServiceContextHolder.getCurrentServiceContext(), queryVersionBaseDto);
+                        }
                         break;
-
-                    case VERSION:
-                        // TODO
+                    case CANCEL_PROGRAMMED_PUBLICATION:
+                        statisticalResourcesServiceFacade.cancelPublicationQueryVersion(ServiceContextHolder.getCurrentServiceContext(), queryVersionBaseDto);
                         break;
-
                     default:
-                        break;
+                        throw new UnsupportedOperationException("Lifecycle operation unsupported " + lifeCycleAction);
                 }
 
             } catch (MetamacException e) {

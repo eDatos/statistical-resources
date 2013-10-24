@@ -50,7 +50,16 @@ public class UpdatePublicationVersionProcStatusActionHandler extends UpdateResou
                     break;
 
                 case PUBLISH:
-                    publicationVersionDto = statisticalResourcesServiceFacade.publishPublicationVersion(ServiceContextHolder.getCurrentServiceContext(),
+                    if (action.getValidFrom() != null) {
+                        publicationVersionDto = statisticalResourcesServiceFacade.programPublicationPublicationVersion(ServiceContextHolder.getCurrentServiceContext(),
+                                action.getPublicationVersionToUpdateProcStatus(), action.getValidFrom());
+                    } else {
+                        publicationVersionDto = statisticalResourcesServiceFacade.publishPublicationVersion(ServiceContextHolder.getCurrentServiceContext(),
+                                action.getPublicationVersionToUpdateProcStatus());
+                    }
+                    break;
+                case CANCEL_PROGRAMMED_PUBLICATION:
+                    publicationVersionDto = statisticalResourcesServiceFacade.cancelPublicationPublicationVersion(ServiceContextHolder.getCurrentServiceContext(),
                             action.getPublicationVersionToUpdateProcStatus());
                     break;
 
@@ -62,10 +71,6 @@ public class UpdatePublicationVersionProcStatusActionHandler extends UpdateResou
                 default:
                     break;
             }
-
-            // TODO remove this retrieve (it is here until the optimisticLocking error in the CORE were solved!)
-            publicationVersionDto = statisticalResourcesServiceFacade.retrievePublicationVersionByUrn(ServiceContextHolder.getCurrentServiceContext(), action.getPublicationVersionToUpdateProcStatus()
-                    .getUrn());
 
             return new UpdatePublicationVersionProcStatusResult(publicationVersionDto);
 

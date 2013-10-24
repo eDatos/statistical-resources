@@ -1,6 +1,7 @@
 package org.siemac.metamac.statistical.resources.web.client.dataset.widgets;
 
 import java.util.List;
+import java.util.Map;
 
 import org.fornax.cartridges.sculptor.framework.event.CamelEventBusImpl;
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
@@ -139,8 +140,8 @@ public class AttributeMainFormLayout extends MainFormLayout {
         return uiHandlers;
     }
 
-    public void setDimensionCoverageValues(String dimensionId, List<CodeItemDto> codeItemDtos) {
-        attributeDimensionOrGroupLevelEditionForm.setDimensionCoverageValues(dimensionId, codeItemDtos);
+    public void setDimensionsCoverageValues(Map<String, List<CodeItemDto>> dimensionsCoverages) {
+        attributeDimensionOrGroupLevelEditionForm.setDimensionsCoverageValues(dimensionsCoverages);
     }
 
     //

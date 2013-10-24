@@ -3,6 +3,7 @@ package org.siemac.metamac.statistical.resources.web.client.publication.presente
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getMessages;
 
+import java.util.Date;
 import java.util.List;
 
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
@@ -210,9 +211,16 @@ public class PublicationListPresenter extends StatisticalResourceBaseListPresent
     }
 
     @Override
-    public void programPublication(List<PublicationVersionBaseDto> publicationVersionBaseDtos) {
-        UpdatePublicationVersionsProcStatusAction action = new UpdatePublicationVersionsProcStatusAction(publicationVersionBaseDtos, LifeCycleActionEnum.PUBLISH);
-        updatePublicationVersionProcStatus(action, getMessages().lifeCycleResourcesProgramPublication());
+    public void programPublication(List<PublicationVersionBaseDto> publicationVersionBaseDtos, Date validFrom) {
+        UpdatePublicationVersionsProcStatusAction.Builder builder = new Builder(publicationVersionBaseDtos, LifeCycleActionEnum.PUBLISH);
+        builder.validFrom(validFrom);
+        updatePublicationVersionProcStatus(builder.build(), getMessages().lifeCycleResourcesProgramPublication());
+    }
+
+    @Override
+    public void cancelProgrammedPublication(List<PublicationVersionBaseDto> publicationVersionBaseDtos) {
+        UpdatePublicationVersionsProcStatusAction action = new UpdatePublicationVersionsProcStatusAction(publicationVersionBaseDtos, LifeCycleActionEnum.CANCEL_PROGRAMMED_PUBLICATION);
+        updatePublicationVersionProcStatus(action, getMessages().lifeCycleResourcesCancelProgrammedPublication());
     }
 
     @Override

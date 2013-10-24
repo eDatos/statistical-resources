@@ -1,5 +1,6 @@
 package org.siemac.metamac.statistical.resources.web.shared.publication;
 
+import java.util.Date;
 import java.util.List;
 
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
@@ -22,4 +23,8 @@ public class UpdatePublicationVersionsProcStatus {
     @Optional
     @In(3)
     VersionTypeEnum                 versionType;
+
+    @Optional
+    @In(4)
+    Date                            validFrom;
 }

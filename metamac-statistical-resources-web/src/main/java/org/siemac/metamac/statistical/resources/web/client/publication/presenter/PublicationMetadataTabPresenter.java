@@ -4,6 +4,7 @@ import static org.siemac.metamac.statistical.resources.web.client.StatisticalRes
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getMessages;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
@@ -16,6 +17,7 @@ import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesD
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb;
 import org.siemac.metamac.statistical.resources.web.client.base.presenter.StatisticalResourceMetadataBasePresenter;
 import org.siemac.metamac.statistical.resources.web.client.enums.LifeCycleActionEnum;
+import org.siemac.metamac.statistical.resources.web.client.events.RequestPublicationVersionsReloadEvent;
 import org.siemac.metamac.statistical.resources.web.client.events.SetPublicationEvent;
 import org.siemac.metamac.statistical.resources.web.client.publication.view.handlers.PublicationMetadataTabUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
@@ -224,22 +226,30 @@ public class PublicationMetadataTabPresenter
     }
 
     @Override
-    public void programPublication(PublicationVersionDto publication) {
-        dispatcher.execute(new UpdatePublicationVersionProcStatusAction(publication, LifeCycleActionEnum.PUBLISH),
-                new WaitingAsyncCallbackHandlingError<UpdatePublicationVersionProcStatusResult>(this) {
+    public void programPublication(PublicationVersionDto publication, Date validFrom) {
+        UpdatePublicationVersionProcStatusAction.Builder builder = new Builder(publication, LifeCycleActionEnum.PUBLISH);
+        builder.validFrom(validFrom);
+        dispatcher.execute(builder.build(), new WaitingAsyncCallbackHandlingError<UpdatePublicationVersionProcStatusResult>(this) {
 
-                    @Override
-                    public void onWaitSuccess(UpdatePublicationVersionProcStatusResult result) {
-                        ShowMessageEvent.fireSuccessMessage(PublicationMetadataTabPresenter.this, getMessages().lifeCycleResourceRejectValidation());
-                        getView().setPublication(result.getPublicationVersionDto());
-                    }
-                });
+            @Override
+            public void onWaitSuccess(UpdatePublicationVersionProcStatusResult result) {
+                ShowMessageEvent.fireSuccessMessage(PublicationMetadataTabPresenter.this, getMessages().lifeCycleResourceProgramPublication());
+                getView().setPublication(result.getPublicationVersionDto());
+            }
+        });
     }
 
     @Override
     public void cancelProgrammedPublication(PublicationVersionDto publication) {
-        // TODO Auto-generated method stub
+        dispatcher.execute(new UpdatePublicationVersionProcStatusAction(publication, LifeCycleActionEnum.CANCEL_PROGRAMMED_PUBLICATION),
+                new WaitingAsyncCallbackHandlingError<UpdatePublicationVersionProcStatusResult>(this) {
 
+                    @Override
+                    public void onWaitSuccess(UpdatePublicationVersionProcStatusResult result) {
+                        ShowMessageEvent.fireSuccessMessage(PublicationMetadataTabPresenter.this, getMessages().lifeCycleResourceCancelProgrammedPublication());
+                        getView().setPublication(result.getPublicationVersionDto());
+                    }
+                });
     }
 
     @Override
@@ -251,9 +261,8 @@ public class PublicationMetadataTabPresenter
             @Override
             public void onWaitSuccess(UpdatePublicationVersionProcStatusResult result) {
                 ShowMessageEvent.fireSuccessMessage(PublicationMetadataTabPresenter.this, getMessages().lifeCycleResourceVersion());
-                getView().setPublication(result.getPublicationVersionDto());
 
-                // TODO Reload the list of versions
+                RequestPublicationVersionsReloadEvent.fire(PublicationMetadataTabPresenter.this, result.getPublicationVersionDto().getUrn());
             }
         });
     }
@@ -283,11 +292,11 @@ public class PublicationMetadataTabPresenter
             }
         });
     }
-    
+
     @Override
     public void retrieveStatisticalOperationsForReplacesSelection() {
         dispatcher.execute(new GetStatisticalOperationsPaginatedListAction(0, Integer.MAX_VALUE, null), new WaitingAsyncCallbackHandlingError<GetStatisticalOperationsPaginatedListResult>(this) {
-            
+
             @Override
             public void onWaitSuccess(GetStatisticalOperationsPaginatedListResult result) {
                 getView().setStatisticalOperationsForReplacesSelection(result.getOperationsList(), StatisticalResourcesDefaults.getSelectedStatisticalOperation());

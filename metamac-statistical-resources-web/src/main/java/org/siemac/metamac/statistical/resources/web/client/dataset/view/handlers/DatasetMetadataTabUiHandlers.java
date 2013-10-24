@@ -1,5 +1,7 @@
 package org.siemac.metamac.statistical.resources.web.client.dataset.view.handlers;
 
+import java.util.Date;
+
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.web.client.base.view.handlers.StatisticalResourceUiHandlers;
@@ -16,7 +18,7 @@ public interface DatasetMetadataTabUiHandlers extends BaseUiHandlers, Statistica
     void sendToProductionValidation(DatasetVersionDto dataset);
     void sendToDiffusionValidation(DatasetVersionDto dataset);
     void rejectValidation(DatasetVersionDto dataset);
-    void programPublication(DatasetVersionDto dataset);
+    void programPublication(DatasetVersionDto dataset, Date selectedDate);
     void cancelProgrammedPublication(DatasetVersionDto dataset);
     void publish(DatasetVersionDto dataset);
     void version(DatasetVersionDto dataset, VersionTypeEnum versionType);

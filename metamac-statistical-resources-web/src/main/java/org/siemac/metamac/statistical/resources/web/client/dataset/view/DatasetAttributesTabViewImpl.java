@@ -3,6 +3,7 @@ package org.siemac.metamac.statistical.resources.web.client.dataset.view;
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
 
 import java.util.List;
+import java.util.Map;
 
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdAttributeDto;
@@ -96,8 +97,8 @@ public class DatasetAttributesTabViewImpl extends ViewWithUiHandlers<DatasetAttr
     }
 
     @Override
-    public void setDimensionCoverageValues(String dimensionId, List<CodeItemDto> codeItemDtos) {
-        attributePanel.setDimensionCoverageValues(dimensionId, codeItemDtos);
+    public void setDimensionsCoverageValues(Map<String, List<CodeItemDto>> dimensionsCoverage) {
+        attributePanel.setDimensionsCoverageValues(dimensionsCoverage);
     }
 
     //

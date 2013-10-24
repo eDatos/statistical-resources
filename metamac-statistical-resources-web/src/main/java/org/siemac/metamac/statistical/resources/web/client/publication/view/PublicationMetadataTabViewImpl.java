@@ -223,8 +223,7 @@ public class PublicationMetadataTabViewImpl extends StatisticalResourceMetadataB
                     public void onClick(com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
                         if (window.validateForm()) {
                             Date selectedDate = window.getSelectedDate();
-                            // TODO Send to date and hour selected to service
-                            getUiHandlers().programPublication(publicationVersionDto);
+                            getUiHandlers().programPublication(publicationVersionDto, selectedDate);
                             window.destroy();
                         }
                     }
@@ -235,10 +234,10 @@ public class PublicationMetadataTabViewImpl extends StatisticalResourceMetadataB
 
             @Override
             public void onClick(ClickEvent event) {
-                // TODO Auto-generated method stub
-
+                getUiHandlers().cancelProgrammedPublication(publicationVersionDto);
             }
         });
+
         mainFormLayout.getVersioningButton().addClickHandler(new ClickHandler() {
 
             @Override

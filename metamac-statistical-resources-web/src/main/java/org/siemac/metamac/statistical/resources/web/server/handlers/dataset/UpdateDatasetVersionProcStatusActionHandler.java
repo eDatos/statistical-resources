@@ -50,9 +50,17 @@ public class UpdateDatasetVersionProcStatusActionHandler extends UpdateResourceP
                     break;
 
                 case PUBLISH:
-                    datasetVersionDto = statisticalResourcesServiceFacade.publishDatasetVersion(ServiceContextHolder.getCurrentServiceContext(), action.getDatasetVersionToUpdateProcStatus());
+                    if (action.getValidFrom() != null) {
+                        datasetVersionDto = statisticalResourcesServiceFacade.programPublicationDatasetVersion(ServiceContextHolder.getCurrentServiceContext(),
+                                action.getDatasetVersionToUpdateProcStatus(), action.getValidFrom());
+                    } else {
+                        datasetVersionDto = statisticalResourcesServiceFacade.publishDatasetVersion(ServiceContextHolder.getCurrentServiceContext(), action.getDatasetVersionToUpdateProcStatus());
+                    }
                     break;
-
+                case CANCEL_PROGRAMMED_PUBLICATION:
+                    datasetVersionDto = statisticalResourcesServiceFacade
+                            .cancelPublicationDatasetVersion(ServiceContextHolder.getCurrentServiceContext(), action.getDatasetVersionToUpdateProcStatus());
+                    break;
                 case VERSION:
                     datasetVersionDto = statisticalResourcesServiceFacade.versioningDatasetVersion(ServiceContextHolder.getCurrentServiceContext(), action.getDatasetVersionToUpdateProcStatus(),
                             action.getVersionType());
@@ -61,9 +69,6 @@ public class UpdateDatasetVersionProcStatusActionHandler extends UpdateResourceP
                 default:
                     break;
             }
-
-            // TODO remove this retrieve (it is here until the optimisticLocking error in the CORE were solved!)
-            datasetVersionDto = statisticalResourcesServiceFacade.retrieveDatasetVersionByUrn(ServiceContextHolder.getCurrentServiceContext(), action.getDatasetVersionToUpdateProcStatus().getUrn());
 
             return new UpdateDatasetVersionProcStatusResult(datasetVersionDto);
 

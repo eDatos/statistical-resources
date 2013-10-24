@@ -3,6 +3,7 @@ package org.siemac.metamac.statistical.resources.web.client.dataset.presenter;
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getMessages;
 
+import java.util.Date;
 import java.util.List;
 
 import org.siemac.metamac.core.common.constants.shared.UrnConstants;
@@ -249,9 +250,17 @@ public class DatasetListPresenter extends StatisticalResourceBaseListPresenter<D
     }
 
     @Override
-    public void programPublication(List<DatasetVersionBaseDto> datasetVersionDtos) {
-        UpdateDatasetVersionsProcStatusAction action = new UpdateDatasetVersionsProcStatusAction(datasetVersionDtos, LifeCycleActionEnum.PUBLISH);
+    public void programPublication(List<DatasetVersionBaseDto> datasetVersionDtos, Date validFrom) {
+        UpdateDatasetVersionsProcStatusAction.Builder builder = new Builder(datasetVersionDtos, LifeCycleActionEnum.PUBLISH);
+        builder.validFrom(validFrom);
+        UpdateDatasetVersionsProcStatusAction action = builder.build();
         updateDatasetVersionProcStatus(action, getMessages().lifeCycleResourcesProgramPublication());
+    }
+
+    @Override
+    public void cancelProgrammedPublication(List<DatasetVersionBaseDto> datasetVersionDtos) {
+        UpdateDatasetVersionsProcStatusAction action = new UpdateDatasetVersionsProcStatusAction(datasetVersionDtos, LifeCycleActionEnum.CANCEL_PROGRAMMED_PUBLICATION);
+        updateDatasetVersionProcStatus(action, getMessages().lifeCycleResourcesCancelProgrammedPublication());
     }
 
     @Override

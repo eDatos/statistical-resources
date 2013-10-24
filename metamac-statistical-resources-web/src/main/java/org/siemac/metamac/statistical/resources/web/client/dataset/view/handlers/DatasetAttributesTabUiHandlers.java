@@ -15,7 +15,7 @@ public interface DatasetAttributesTabUiHandlers extends BaseUiHandlers {
     void deleteAttributeInstance(DsdAttributeDto dsdAttributeDto, DsdAttributeInstanceDto dsdAttributeInstanceDto);
     void deleteAttributeInstances(DsdAttributeDto dsdAttributeDto, List<String> uuid);
 
-    void retrieveDimensionCoverage(String dimensionId, MetamacWebCriteria metamacWebCriteria);
+    void retrieveDimensionsCoverage(List<String> dimensionId, MetamacWebCriteria metamacWebCriteria);
 
     void retrieveItemsFromItemSchemeForDatasetLevelAttribute(RepresentationDto representationDto, int firstResult, int maxResults, MetamacWebCriteria criteria);
     void retrieveItemsFromItemSchemeForDimensionOrGroupLevelAttribute(RepresentationDto representationDto, int firstResult, int maxResults, MetamacWebCriteria criteria);

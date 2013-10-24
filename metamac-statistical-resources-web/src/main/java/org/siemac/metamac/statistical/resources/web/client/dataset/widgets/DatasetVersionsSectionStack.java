@@ -7,8 +7,12 @@ import org.siemac.metamac.statistical.resources.web.client.base.widgets.Versiona
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.ds.DatasetDS;
 import org.siemac.metamac.statistical.resources.web.client.utils.StatisticalResourcesRecordUtils;
 
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.user.client.DeferredCommand;
 import com.smartgwt.client.data.Record;
 import com.smartgwt.client.data.RecordList;
+import com.smartgwt.client.types.SortDirection;
 
 public class DatasetVersionsSectionStack extends VersionableResourceSectionStack {
 
@@ -22,13 +26,10 @@ public class DatasetVersionsSectionStack extends VersionableResourceSectionStack
         for (DatasetVersionBaseDto datasetDto : datasetVersionBaseDtos) {
             listGrid.addData(StatisticalResourcesRecordUtils.getDatasetRecord(datasetDto));
         }
+        listGrid.sort(DatasetDS.VERSION, SortDirection.ASCENDING);
     }
 
     public void selectDatasetVersion(String currentDatasetVersionUrn) {
-        RecordList recordList = listGrid.getRecordList();
-        Record record = recordList.find(DatasetDS.URN, currentDatasetVersionUrn);
-        if (record != null) {
-            listGrid.selectRecord(record);
-        }
+        selectRecord(DatasetDS.URN, currentDatasetVersionUrn);
     }
 }

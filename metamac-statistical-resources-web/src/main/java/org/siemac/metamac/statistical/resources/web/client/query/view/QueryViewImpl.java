@@ -305,8 +305,7 @@ public class QueryViewImpl extends ViewWithUiHandlers<QueryUiHandlers> implement
                         public void onClick(com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
                             if (window.validateForm()) {
                                 Date selectedDate = window.getSelectedDate();
-                                // TODO Send to date and hour selected to service
-                                getUiHandlers().programPublication(queryVersionDto);
+                                getUiHandlers().programPublication(queryVersionDto, selectedDate);
                                 window.destroy();
                             }
                         }
@@ -317,7 +316,7 @@ public class QueryViewImpl extends ViewWithUiHandlers<QueryUiHandlers> implement
 
                 @Override
                 public void onClick(ClickEvent event) {
-                    // TODO Auto-generated method stub
+                    getUiHandlers().cancelProgrammedPublication(queryVersionDto);
 
                 }
             });

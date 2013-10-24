@@ -321,7 +321,7 @@ public abstract class LifeCycleBaseListViewImpl<C extends UiHandlers> extends Vi
         boolean canCancelProgrammedPublication = true;
         for (ListGridRecord record : records) {
             ProcStatusEnum procStatus = ((LifeCycleResourceRecord) record).getProcStatusEnum();
-            if (!ProcStatusEnum.PUBLISHED.equals(procStatus) || !canCancelProgrammedPublication(record)) { // TODO can be canceled if it is a publication programmed
+            if (!ProcStatusEnum.PUBLISHED_NOT_VISIBLE.equals(procStatus) || !canCancelProgrammedPublication(record)) { // TODO can be canceled if it is a publication programmed
                 canCancelProgrammedPublication = false;
                 break;
             }

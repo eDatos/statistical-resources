@@ -216,24 +216,21 @@ public class PublicationListViewImpl extends StatisticalResourceBaseListViewImpl
     }
 
     // Program publication
-
     @Override
     protected void programPublication(Date validFrom) {
-        // TODO Send to date and hour selected to service
         List<PublicationVersionBaseDto> publicationVersionDtos = StatisticalResourcesRecordUtils.getPublicationVersionBaseDtosFromListGridRecords(listGrid.getListGrid().getSelectedRecords());
-        getUiHandlers().programPublication(publicationVersionDtos);
+        getUiHandlers().programPublication(publicationVersionDtos, validFrom);
     }
 
     // Cancel programmed publication
-
     @Override
     protected ClickHandler getCancelProgrammedPublicationClickHandler() {
         return new ClickHandler() {
 
             @Override
             public void onClick(ClickEvent event) {
-                // TODO Auto-generated method stub
-
+                List<PublicationVersionBaseDto> publicationVersionDtos = StatisticalResourcesRecordUtils.getPublicationVersionBaseDtosFromListGridRecords(listGrid.getListGrid().getSelectedRecords());
+                getUiHandlers().cancelProgrammedPublication(publicationVersionDtos);
             }
         };
     }

@@ -19,6 +19,8 @@ import org.siemac.metamac.statistical.resources.web.client.widgets.forms.fields.
 import org.siemac.metamac.web.common.client.widgets.form.fields.CustomTextItem;
 import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
 
+import com.smartgwt.client.data.Record;
+
 public class AttributeDimensionOrGroupLevelEditionForm extends AttributeDimensionOrGroupLevelBaseForm {
 
     private DsdAttributeInstanceDto dsdAttributeInstanceDto;
@@ -52,29 +54,30 @@ public class AttributeDimensionOrGroupLevelEditionForm extends AttributeDimensio
     @Override
     protected DimensionCoverageValuesSelectionItem createDimensionValuesSelectionItem(String name, String title, DsdAttributeInstanceDto dsdAttributeInstanceDto) {
 
-        Set<String> dimensionIds = dsdAttributeInstanceDto.getCodeDimensions().keySet();
+        List<String> dimensionIds = new ArrayList<String>(dsdAttributeInstanceDto.getCodeDimensions().keySet());
 
         DimensionCoverageValuesSelectionItem selectionItem = new DimensionCoverageValuesSelectionItem(name, title, dimensionIds, true);
         selectionItem.setColSpan(4);
+        selectionItem.setRequired(true);
 
         // Load dimension values
-        for (String dimensionId : dimensionIds) {
-            getUiHandlers().retrieveDimensionCoverage(dimensionId, new MetamacWebCriteria());
-        }
+        getUiHandlers().retrieveDimensionsCoverage(dimensionIds, new MetamacWebCriteria());
 
         return selectionItem;
     }
 
-    public void setDimensionCoverageValues(String dimensionId, List<CodeItemDto> codeItemDtos) {
+    public void setDimensionsCoverageValues(Map<String, List<CodeItemDto>> dimensionsCoverages) {
         Map<String, List<CodeItemDto>> dimensionCodes = dsdAttributeInstanceDto.getCodeDimensions();
-        List<CodeItemDto> selectedCodes = new ArrayList<CodeItemDto>();
-        if (dimensionCodes != null && dimensionCodes.get(dimensionId) != null) {
-            selectedCodes = dimensionCodes.get(dimensionId);
-        }
 
-        DimensionCoverageValuesSelectionItem dimensionValues = (DimensionCoverageValuesSelectionItem) getItem(DsdAttributeInstanceDS.DIMENSION_SELECTION_VALUES);
-        dimensionValues.setDimensionCoverageValues(dimensionId, codeItemDtos);
-        dimensionValues.selectDimensionCodes(dimensionId, selectedCodes);
+        List<CodeItemDto> selectedCodes = new ArrayList<CodeItemDto>();
+        for (String dimensionId : dimensionsCoverages.keySet()) {
+            if (dimensionCodes != null && dimensionCodes.get(dimensionId) != null) {
+                selectedCodes = dimensionCodes.get(dimensionId);
+            }
+            DimensionCoverageValuesSelectionItem dimensionValues = (DimensionCoverageValuesSelectionItem) getItem(DsdAttributeInstanceDS.DIMENSION_SELECTION_VALUES);
+            dimensionValues.setDimensionCoverageValues(dimensionId, dimensionsCoverages.get(dimensionId));
+            dimensionValues.selectDimensionCodes(dimensionId, selectedCodes);
+        }
     }
 
     public DsdAttributeInstanceDto getDsdAttributeInstanceDto() {
@@ -125,5 +128,15 @@ public class AttributeDimensionOrGroupLevelEditionForm extends AttributeDimensio
     @Override
     protected void setDimensionValues(DsdAttributeDto dsdAttributeDto, DsdAttributeInstanceDto dsdAttributeInstanceDto) {
         // FILLED After values are set from async action
+    }
+
+    @Override
+    public Boolean validate(boolean validateHiddenFields) {
+        return super.validate(validateHiddenFields);
+    }
+
+    @Override
+    public boolean validate() {
+        return super.validate();
     }
 }

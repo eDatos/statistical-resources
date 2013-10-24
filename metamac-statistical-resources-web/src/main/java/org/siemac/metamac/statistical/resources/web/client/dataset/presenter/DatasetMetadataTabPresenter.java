@@ -4,12 +4,14 @@ import static org.siemac.metamac.statistical.resources.web.client.StatisticalRes
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getMessages;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
+import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionDto;
 import org.siemac.metamac.statistical.resources.web.client.LoggedInGatekeeper;
 import org.siemac.metamac.statistical.resources.web.client.NameTokens;
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesDefaults;
@@ -17,8 +19,12 @@ import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesW
 import org.siemac.metamac.statistical.resources.web.client.base.presenter.StatisticalResourceMetadataBasePresenter;
 import org.siemac.metamac.statistical.resources.web.client.dataset.utils.DatasetMetadataExternalField;
 import org.siemac.metamac.statistical.resources.web.client.dataset.view.handlers.DatasetMetadataTabUiHandlers;
+import org.siemac.metamac.statistical.resources.web.client.enums.DatasetTabTypeEnum;
 import org.siemac.metamac.statistical.resources.web.client.enums.LifeCycleActionEnum;
+import org.siemac.metamac.statistical.resources.web.client.events.RequestDatasetVersionsReloadEvent;
+import org.siemac.metamac.statistical.resources.web.client.events.SelectDatasetTabEvent;
 import org.siemac.metamac.statistical.resources.web.client.events.SetDatasetEvent;
+import org.siemac.metamac.statistical.resources.web.client.events.RequestDatasetVersionsReloadEvent.RequestDatasetVersionsReloadHandler;
 import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.MetamacPortalWebUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.PlaceRequestUtils;
@@ -236,12 +242,14 @@ public class DatasetMetadataTabPresenter extends StatisticalResourceMetadataBase
     }
 
     @Override
-    public void programPublication(DatasetVersionDto dataset) {
-        dispatcher.execute(new UpdateDatasetVersionProcStatusAction(dataset, LifeCycleActionEnum.PUBLISH), new WaitingAsyncCallbackHandlingError<UpdateDatasetVersionProcStatusResult>(this) {
+    public void programPublication(DatasetVersionDto dataset, Date validFrom) {
+        Builder builder = new Builder(dataset, LifeCycleActionEnum.PUBLISH);
+        builder.validFrom(validFrom);
+        dispatcher.execute(builder.build(), new WaitingAsyncCallbackHandlingError<UpdateDatasetVersionProcStatusResult>(this) {
 
             @Override
             public void onWaitSuccess(UpdateDatasetVersionProcStatusResult result) {
-                ShowMessageEvent.fireSuccessMessage(DatasetMetadataTabPresenter.this, getMessages().lifeCycleResourcePublish());
+                ShowMessageEvent.fireSuccessMessage(DatasetMetadataTabPresenter.this, getMessages().lifeCycleResourceProgramPublication());
                 getView().setDataset(result.getDatasetVersionDto());
             }
         });
@@ -261,8 +269,15 @@ public class DatasetMetadataTabPresenter extends StatisticalResourceMetadataBase
 
     @Override
     public void cancelProgrammedPublication(DatasetVersionDto dataset) {
-        // TODO Auto-generated method stub
+        dispatcher.execute(new UpdateDatasetVersionProcStatusAction(dataset, LifeCycleActionEnum.CANCEL_PROGRAMMED_PUBLICATION),
+                new WaitingAsyncCallbackHandlingError<UpdateDatasetVersionProcStatusResult>(this) {
 
+                    @Override
+                    public void onWaitSuccess(UpdateDatasetVersionProcStatusResult result) {
+                        ShowMessageEvent.fireSuccessMessage(DatasetMetadataTabPresenter.this, getMessages().lifeCycleResourceCancelProgrammedPublication());
+                        getView().setDataset(result.getDatasetVersionDto());
+                    }
+                });
     }
 
     @Override
@@ -274,9 +289,9 @@ public class DatasetMetadataTabPresenter extends StatisticalResourceMetadataBase
             @Override
             public void onWaitSuccess(UpdateDatasetVersionProcStatusResult result) {
                 ShowMessageEvent.fireSuccessMessage(DatasetMetadataTabPresenter.this, getMessages().lifeCycleResourceVersion());
-                getView().setDataset(result.getDatasetVersionDto());
-                // TODO reload the list of versions
+                RequestDatasetVersionsReloadEvent.fire(DatasetMetadataTabPresenter.this, result.getDatasetVersionDto().getUrn());
             }
+
         });
     }
 
@@ -382,11 +397,11 @@ public class DatasetMetadataTabPresenter extends StatisticalResourceMetadataBase
             }
         });
     }
-    
+
     @Override
     public void retrieveStatisticalOperationsForReplacesSelection() {
         dispatcher.execute(new GetStatisticalOperationsPaginatedListAction(0, Integer.MAX_VALUE, null), new WaitingAsyncCallbackHandlingError<GetStatisticalOperationsPaginatedListResult>(this) {
-            
+
             @Override
             public void onWaitSuccess(GetStatisticalOperationsPaginatedListResult result) {
                 getView().setStatisticalOperationsForReplacesSelection(result.getOperationsList(), StatisticalResourcesDefaults.getSelectedStatisticalOperation());

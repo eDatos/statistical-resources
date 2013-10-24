@@ -267,9 +267,8 @@ public class DatasetListViewImpl extends StatisticalResourceBaseListViewImpl<Dat
 
     @Override
     protected void programPublication(Date validFrom) {
-        // TODO Send to date and hour selected to service
         List<DatasetVersionBaseDto> datasetVersionDtos = StatisticalResourcesRecordUtils.getDatasetVersionBaseDtosFromListGridRecords(listGrid.getListGrid().getSelectedRecords());
-        getUiHandlers().programPublication(datasetVersionDtos);
+        getUiHandlers().programPublication(datasetVersionDtos, validFrom);
     }
 
     // Cancel programmed publication
@@ -280,8 +279,8 @@ public class DatasetListViewImpl extends StatisticalResourceBaseListViewImpl<Dat
 
             @Override
             public void onClick(ClickEvent event) {
-                // TODO Auto-generated method stub
-
+                List<DatasetVersionBaseDto> datasetVersionDtos = StatisticalResourcesRecordUtils.getDatasetVersionBaseDtosFromListGridRecords(listGrid.getListGrid().getSelectedRecords());
+                getUiHandlers().cancelProgrammedPublication(datasetVersionDtos);
             }
         };
     }

@@ -4,6 +4,7 @@ import static org.siemac.metamac.statistical.resources.web.client.StatisticalRes
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
@@ -11,7 +12,6 @@ import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdAttributeDt
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdAttributeInstanceDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.RepresentationDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.CodeItemDto;
-import org.siemac.metamac.statistical.resources.core.enume.dataset.domain.AttributeRelationshipTypeEnum;
 import org.siemac.metamac.statistical.resources.web.client.LoggedInGatekeeper;
 import org.siemac.metamac.statistical.resources.web.client.NameTokens;
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesDefaults;
@@ -32,6 +32,8 @@ import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetAtt
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetAttributesResult;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetDimensionCoverageAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetDimensionCoverageResult;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetDimensionsCoverageAction;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetDimensionsCoverageResult;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetVersionAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetVersionResult;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.SaveDatasetAttributeInstanceAction;
@@ -73,7 +75,7 @@ public class DatasetAttributesTabPresenter extends Presenter<DatasetAttributesTa
 
         void setAttributes(List<DsdAttributeDto> attributes);
         void setAttributeInstances(DsdAttributeDto dsdAttributeDto, List<DsdAttributeInstanceDto> dsdAttributeInstanceDtos);
-        void setDimensionCoverageValues(String dimensionId, List<CodeItemDto> codeItemDtos);
+        void setDimensionsCoverageValues(Map<String, List<CodeItemDto>> dimensionsCoverages);
         void setItemsForDatasetLevelAttributeValueSelection(List<ExternalItemDto> externalItemDtos, int firstResult, int totalResults);
         void setItemsForDimensionOrGroupLevelAttributeValueSelection(List<ExternalItemDto> externalItemDtos, int firstResult, int totalResults);
     }
@@ -212,14 +214,15 @@ public class DatasetAttributesTabPresenter extends Presenter<DatasetAttributesTa
     }
 
     @Override
-    public void retrieveDimensionCoverage(final String dimensionId, MetamacWebCriteria metamacWebCriteria) {
-        dispatcher.execute(new GetDatasetDimensionCoverageAction(datasetVersionUrn, dimensionId, metamacWebCriteria), new WaitingAsyncCallbackHandlingError<GetDatasetDimensionCoverageResult>(this) {
+    public void retrieveDimensionsCoverage(List<String> dimensionsIds, MetamacWebCriteria metamacWebCriteria) {
+        dispatcher.execute(new GetDatasetDimensionsCoverageAction(datasetVersionUrn, dimensionsIds, metamacWebCriteria),
+                new WaitingAsyncCallbackHandlingError<GetDatasetDimensionsCoverageResult>(this) {
 
-            @Override
-            public void onWaitSuccess(GetDatasetDimensionCoverageResult result) {
-                getView().setDimensionCoverageValues(dimensionId, result.getCodesDimension());
-            }
-        });
+                    @Override
+                    public void onWaitSuccess(GetDatasetDimensionsCoverageResult result) {
+                        getView().setDimensionsCoverageValues(result.getCodesDimensions());
+                    }
+                });
     }
 
     //

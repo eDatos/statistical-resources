@@ -2,6 +2,7 @@ package org.siemac.metamac.statistical.resources.web.client.dataset.widgets.form
 
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -44,7 +45,7 @@ public class AttributeDimensionOrGroupLevelForm extends AttributeDimensionOrGrou
 
     @Override
     protected DimensionCoverageValuesSelectionItem createDimensionValuesSelectionItem(String name, String title, DsdAttributeInstanceDto dsdAttributeInstanceDto) {
-        Set<String> dimensionIds = dsdAttributeInstanceDto.getCodeDimensions().keySet();
+        List<String> dimensionIds = new ArrayList<String>(dsdAttributeInstanceDto.getCodeDimensions().keySet());
 
         DimensionCoverageValuesSelectionItem selectionItem = new DimensionCoverageValuesSelectionItem(name, title, dimensionIds, false);
         selectionItem.setColSpan(4);

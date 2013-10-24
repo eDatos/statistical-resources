@@ -1,7 +1,8 @@
 package org.siemac.metamac.statistical.resources.web.client.query.view.handlers;
 
+import java.util.Date;
+
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
-import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionDto;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.DatasetVersionWebCriteria;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.ItemSchemeWebCriteria;
@@ -32,7 +33,7 @@ public interface QueryUiHandlers extends BaseUiHandlers {
     void sendToProductionValidation(QueryVersionDto queryVersionDto);
     void sendToDiffusionValidation(QueryVersionDto queryVersionDto);
     void rejectValidation(QueryVersionDto queryVersionDto);
-    void programPublication(QueryVersionDto queryVersionDto);
+    void programPublication(QueryVersionDto queryVersionDto, Date validFrom);
     void cancelProgrammedPublication(QueryVersionDto queryVersionDto);
     void publish(QueryVersionDto queryVersionDto);
     void version(QueryVersionDto queryVersionDto, VersionTypeEnum versionType);

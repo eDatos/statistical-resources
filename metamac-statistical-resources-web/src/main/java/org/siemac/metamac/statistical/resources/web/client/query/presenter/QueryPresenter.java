@@ -3,6 +3,7 @@ package org.siemac.metamac.statistical.resources.web.client.query.presenter;
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getMessages;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.siemac.metamac.core.common.constants.shared.UrnConstants;
@@ -313,12 +314,14 @@ public class QueryPresenter extends Presenter<QueryPresenter.QueryView, QueryPre
     }
 
     @Override
-    public void programPublication(QueryVersionDto query) {
-        dispatcher.execute(new UpdateQueryVersionProcStatusAction(query, LifeCycleActionEnum.PUBLISH), new WaitingAsyncCallbackHandlingError<UpdateQueryVersionProcStatusResult>(this) {
+    public void programPublication(QueryVersionDto query, Date validFrom) {
+        UpdateQueryVersionProcStatusAction.Builder builder = new Builder(query, LifeCycleActionEnum.PUBLISH);
+        builder.validFrom(validFrom);
+        dispatcher.execute(builder.build(), new WaitingAsyncCallbackHandlingError<UpdateQueryVersionProcStatusResult>(this) {
 
             @Override
             public void onWaitSuccess(UpdateQueryVersionProcStatusResult result) {
-                ShowMessageEvent.fireSuccessMessage(QueryPresenter.this, getMessages().lifeCycleResourcePublish());
+                ShowMessageEvent.fireSuccessMessage(QueryPresenter.this, getMessages().lifeCycleResourcesProgramPublication());
                 getView().setQueryDto(result.getQueryVersionDto());
             }
         });
@@ -326,6 +329,7 @@ public class QueryPresenter extends Presenter<QueryPresenter.QueryView, QueryPre
 
     @Override
     public void publish(QueryVersionDto query) {
+
         dispatcher.execute(new UpdateQueryVersionProcStatusAction(query, LifeCycleActionEnum.PUBLISH), new WaitingAsyncCallbackHandlingError<UpdateQueryVersionProcStatusResult>(this) {
 
             @Override
@@ -338,7 +342,15 @@ public class QueryPresenter extends Presenter<QueryPresenter.QueryView, QueryPre
 
     @Override
     public void cancelProgrammedPublication(QueryVersionDto query) {
-        // TODO Auto-generated method stub
+        dispatcher.execute(new UpdateQueryVersionProcStatusAction(query, LifeCycleActionEnum.CANCEL_PROGRAMMED_PUBLICATION), new WaitingAsyncCallbackHandlingError<UpdateQueryVersionProcStatusResult>(
+                this) {
+
+            @Override
+            public void onWaitSuccess(UpdateQueryVersionProcStatusResult result) {
+                ShowMessageEvent.fireSuccessMessage(QueryPresenter.this, getMessages().lifeCycleResourceCancelProgrammedPublication());
+                getView().setQueryDto(result.getQueryVersionDto());
+            }
+        });
     }
 
     @Override

@@ -51,13 +51,18 @@ public class UpdateDatasetVersionsProcStatusActionHandler extends UpdateResource
                         break;
 
                     case PUBLISH:
-                        // TODO
+                        if (action.getValidFrom() != null) {
+                            statisticalResourcesServiceFacade.programPublicationDatasetVersion(ServiceContextHolder.getCurrentServiceContext(), datasetVersionBaseDto, action.getValidFrom());
+                        } else {
+                            statisticalResourcesServiceFacade.publishDatasetVersion(ServiceContextHolder.getCurrentServiceContext(), datasetVersionBaseDto);
+                        }
                         break;
-
+                    case CANCEL_PROGRAMMED_PUBLICATION:
+                        statisticalResourcesServiceFacade.cancelPublicationDatasetVersion(ServiceContextHolder.getCurrentServiceContext(), datasetVersionBaseDto);
+                        break;
                     case VERSION:
                         statisticalResourcesServiceFacade.versioningDatasetVersion(ServiceContextHolder.getCurrentServiceContext(), datasetVersionBaseDto, action.getVersionType());
                         break;
-
                     default:
                         break;
                 }

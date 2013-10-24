@@ -50,11 +50,18 @@ public class UpdateQueryVersionProcStatusActionHandler extends UpdateResourcePro
                     break;
 
                 case PUBLISH:
-                    queryVersionDto = statisticalResourcesServiceFacade.publishQueryVersion(ServiceContextHolder.getCurrentServiceContext(), action.getQueryVersionToUpdateProcStatus());
+                    if (action.getValidFrom() != null) {
+                        queryVersionDto = statisticalResourcesServiceFacade.programPublicationQueryVersion(ServiceContextHolder.getCurrentServiceContext(), action.getQueryVersionToUpdateProcStatus(),
+                                action.getValidFrom());
+                    } else {
+                        queryVersionDto = statisticalResourcesServiceFacade.publishQueryVersion(ServiceContextHolder.getCurrentServiceContext(), action.getQueryVersionToUpdateProcStatus());
+                    }
                     break;
-
+                case CANCEL_PROGRAMMED_PUBLICATION:
+                    queryVersionDto = statisticalResourcesServiceFacade.cancelPublicationQueryVersion(ServiceContextHolder.getCurrentServiceContext(), action.getQueryVersionToUpdateProcStatus());
+                    break;
                 default:
-                    throw new UnsupportedOperationException("Operacion del ciclo de vida no soportada " + lifeCycleAction);
+                    throw new UnsupportedOperationException("Lifecycle operation unsupported " + lifeCycleAction);
             }
 
             // TODO remove this retrieve (it is here until the optimisticLocking error in the CORE were solved!)

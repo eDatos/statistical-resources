@@ -1,5 +1,6 @@
 package org.siemac.metamac.statistical.resources.web.client.dataset.view.handlers;
 
+import java.util.Date;
 import java.util.List;
 
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
@@ -23,7 +24,8 @@ public interface DatasetListUiHandlers extends NewStatisticalResourceUiHandlers 
     void sendToDiffusionValidation(List<DatasetVersionBaseDto> datasetVersionBaseDtos);
     void rejectValidation(List<DatasetVersionBaseDto> datasetVersionBaseDtos);
     void publish(List<DatasetVersionBaseDto> datasetVersionBaseDtos);
-    void programPublication(List<DatasetVersionBaseDto> datasetVersionBaseDtos);
+    void programPublication(List<DatasetVersionBaseDto> datasetVersionBaseDtos, Date validFrom);
+    void cancelProgrammedPublication(List<DatasetVersionBaseDto> datasetVersionBaseDtos);
     void version(List<DatasetVersionBaseDto> datasetVersionBaseDtos, VersionTypeEnum versionType);
 
     // DSD related actions
