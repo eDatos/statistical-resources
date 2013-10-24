@@ -1,5 +1,6 @@
 package org.siemac.metamac.statistical.resources.core.lifecycle;
 
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.siemac.metamac.statistical.resources.core.error.utils.ServiceExceptionParametersUtils.addParameter;
@@ -9,6 +10,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.joda.time.DateTime;
+import org.junit.Assert;
 import org.junit.Test;
 import org.siemac.metamac.common.test.utils.MetamacAsserts;
 import org.siemac.metamac.core.common.exception.MetamacException;
@@ -280,12 +282,10 @@ public class LifecycleCommonMetadataCheckerTest extends StatisticalResourcesBase
         resource.setFormatExtentResources(1);
 
         String baseMetadata = ServiceExceptionSingleParameters.PUBLICATION_VERSION;
-        expectedMetamacException(new MetamacException(Arrays.asList(new MetamacExceptionItem(ServiceExceptionType.METADATA_UNEXPECTED,
-                ServiceExceptionParameters.PUBLICATION_VERSION__FORMAT_EXTENT_RESOURCES))));
 
         List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
         lifecycleCommonMetadataChecker.checkPublicationVersionCommonMetadata(resource, baseMetadata, exceptionItems);
-        throw new MetamacException(exceptionItems);
+        assertEquals(0, exceptionItems.size());
     }
 
     @Test
