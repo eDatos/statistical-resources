@@ -351,6 +351,7 @@ public class WriterDataCallbackImpl implements WriterDataCallback {
             }
         }
     }
+
     private List<Pair<String, IdValuePair>> extractAttributesForCurrentLevel(List<IdValuePair> keys, Map<String, List<AttributeInstanceBasicDto>> normalizedAttributesMap) {
         List<Pair<String, IdValuePair>> attributes = new LinkedList<Pair<String, IdValuePair>>();
 

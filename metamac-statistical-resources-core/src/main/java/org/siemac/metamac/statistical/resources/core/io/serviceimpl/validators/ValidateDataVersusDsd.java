@@ -1,5 +1,6 @@
 package org.siemac.metamac.statistical.resources.core.io.serviceimpl.validators;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -7,7 +8,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Stack;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MultiMap;
 import org.apache.commons.collections.map.MultiValueMap;
 import org.apache.commons.lang.StringUtils;
@@ -44,6 +47,7 @@ import com.arte.statistic.dataset.repository.dto.CodeDimensionDto;
 import com.arte.statistic.dataset.repository.dto.ObservationExtendedDto;
 import com.arte.statistic.parser.sdmx.v2_1.domain.ComponentInfo;
 import com.arte.statistic.parser.sdmx.v2_1.domain.ComponentInfoTypeEnum;
+import com.arte.statistic.parser.sdmx.v2_1.domain.IdValuePair;
 
 public class ValidateDataVersusDsd {
 
@@ -64,6 +68,7 @@ public class ValidateDataVersusDsd {
     private Set<String>                            attributesCodeSet                             = null;
     private Set<String>                            attributeIdsAtObservationLevelSet             = null;
     private Set<String>                            mandatoryAttributeIdsAtObservationLevel       = null;
+    private Set<String>                            mandatoryAttributeIdsAtNonObservationLevel    = null;
     private Map<String, List<ComponentInfo>>       groupDimensionMapInfo                         = null;
     private boolean                                isExtraValidationForPrimaryMeasureRequired    = false;
 
@@ -117,6 +122,10 @@ public class ValidateDataVersusDsd {
 
     public Set<String> getMandatoryAttributeIdsAtObservationLevel() {
         return mandatoryAttributeIdsAtObservationLevel;
+    }
+
+    public Set<String> getMandatoryAttributeIdsAtNonObservationLevel() {
+        return mandatoryAttributeIdsAtNonObservationLevel;
     }
 
     public Map<String, List<ComponentInfo>> getGroupDimensionMapInfo() {
@@ -242,7 +251,7 @@ public class ValidateDataVersusDsd {
         ExceptionUtils.throwIfException(exceptions);
     }
 
-    public void checkAttributesInstances(List<AttributeInstanceDto> attributeInstanceDtos) throws MetamacException {
+    public void checkAttributesInstancesRepresentation(List<AttributeInstanceDto> attributeInstanceDtos) throws MetamacException {
         List<MetamacExceptionItem> exceptions = new LinkedList<MetamacExceptionItem>();
 
         int previousExceptionSize = 0;
@@ -271,6 +280,100 @@ public class ValidateDataVersusDsd {
 
         ExceptionUtils.throwIfException(exceptions);
     }
+
+    public void checkAttributesInstancesAssignmentStatus(String attributeId, List<AttributeInstanceDto> attributeInstanceDenormalizedDtos, Map<String, List<String>> coverage,
+            List<MetamacExceptionItem> exceptions) throws Exception {
+
+        if (getMandatoryAttributeIdsAtNonObservationLevel().contains(attributeId)) {
+            // Keys from attributes instances
+            Set<String> attributesKeySet = new HashSet<String>();
+            List<ComponentInfo> dimensionsInfos = retrieveDimensionsInfo();
+            for (AttributeInstanceDto attributeInstanceDto : attributeInstanceDenormalizedDtos) {
+                List<IdValuePair> keyList = new ArrayList<IdValuePair>();
+                for (ComponentInfo dimension : dimensionsInfos) {
+                    keyList.add(new IdValuePair(dimension.getCode(), attributeInstanceDto.getCodesByDimension().get(dimension.getCode()).get(0)));
+                }
+
+                // Add current attribute to this key in the map
+                attributesKeySet.add(ManipulateDataUtils.generateKeyFromIdValuePairs(keyList));
+            }
+
+            // Keys from coverage
+            Set<String> attributesCoverageKeySet = calculateAttributesCoverageKeySet(dimensionsInfos, coverage);
+
+            if (attributesKeySet.size() != attributesCoverageKeySet.size()) {
+                Set<String> subtractSet = (Set<String>) CollectionUtils.subtract(attributesKeySet, attributesCoverageKeySet);
+                exceptions.add(new MetamacExceptionItem(ServiceExceptionType.VALIDATION_NONOBSLEVEL_MANDATORY_ATTR_NOT_FOUND, attributeId, StringUtils.join(subtractSet.toArray(), " - ")));
+            }
+        }
+    }
+
+    private class OrderingStackElement {
+
+        private String codeId = null;
+        private int    dimNum = -1;
+
+        public OrderingStackElement(String codeId, int dimNum) {
+            super();
+            this.codeId = codeId;
+            this.dimNum = dimNum;
+        }
+
+        public String getCodeId() {
+            return codeId;
+        }
+
+        public int getDimNum() {
+            return dimNum;
+        }
+    }
+
+    public Set<String> calculateAttributesCoverageKeySet(List<ComponentInfo> dimensions, Map<String, List<String>> dimensionsCodesSelectedEffective) throws Exception {
+        Set<String> attributesKeySet = new HashSet<String>();
+
+        if (dimensionsCodesSelectedEffective.isEmpty()) {
+            return attributesKeySet;
+        }
+
+        // Build data
+        Stack<OrderingStackElement> stack = new Stack<OrderingStackElement>();
+        stack.push(new OrderingStackElement(StringUtils.EMPTY, -1));
+
+        ArrayList<IdValuePair> entryId = new ArrayList<IdValuePair>(dimensions.size());
+        for (int i = 0; i < dimensions.size(); i++) {
+            entryId.add(i, null);
+        }
+
+        int lastDimension = dimensions.size() - 1;
+        while (stack.size() > 0) {
+            // POP
+            OrderingStackElement elem = stack.pop();
+            int elemDimension = elem.getDimNum();
+            String elemCode = elem.getCodeId();
+
+            // The first time we don't need a key element
+            if (elemDimension != -1) {
+                entryId.set(elemDimension, new IdValuePair(dimensions.get(elemDimension).getCode(), elemCode));
+            }
+
+            // The entry is complete
+            if (elemDimension == lastDimension) {
+                // We have the full entry here
+                String key = ManipulateDataUtils.generateKeyFromIdValuePairs(entryId);
+                attributesKeySet.add(key);
+                entryId.set(elemDimension, null);
+            } else {
+                String dimension = dimensions.get(elemDimension + 1).getCode();
+                List<String> dimensionValues = dimensionsCodesSelectedEffective.get(dimension);
+                for (int i = dimensionValues.size() - 1; i >= 0; i--) {
+                    OrderingStackElement temp = new OrderingStackElement(dimensionValues.get(i), elemDimension + 1);
+                    stack.push(temp);
+                }
+            }
+        }
+        return attributesKeySet;
+    }
+
     @SuppressWarnings("unchecked")
     private void checkDimensionEnumeratedRepresentation(CodeDimensionDto codeDimensionDto, List<MetamacExceptionItem> exceptions) throws MetamacException {
         // Alternative enumerated representation
@@ -378,6 +481,7 @@ public class ValidateDataVersusDsd {
         List<ComponentInfo> attributesInfoList = new LinkedList<ComponentInfo>();
         Set<String> attributeIdsAtObservationLevelSet = new HashSet<String>();
         Set<String> mandatoryAttributeIdsAtObservationLevel = new HashSet<String>();
+        Set<String> mandatoryAttributeIdsAtNonObservationLevel = new HashSet<String>();
 
         if (dataStructure.getDataStructureComponents() != null && dataStructure.getDataStructureComponents().getAttributes() != null) {
             for (AttributeBase sourceAttribute : dataStructure.getDataStructureComponents().getAttributes().getAttributes()) {
@@ -396,6 +500,10 @@ public class ValidateDataVersusDsd {
                     if (dsdAttribute.isMandatory()) {
                         mandatoryAttributeIdsAtObservationLevel.add(dsdAttribute.getComponentId());
                     }
+                } else {
+                    if (dsdAttribute.isMandatory()) {
+                        mandatoryAttributeIdsAtNonObservationLevel.add(dsdAttribute.getComponentId());
+                    }
                 }
             }
         }
@@ -404,6 +512,7 @@ public class ValidateDataVersusDsd {
         this.attributesInfoList = attributesInfoList;
         this.attributeIdsAtObservationLevelSet = attributeIdsAtObservationLevelSet;
         this.mandatoryAttributeIdsAtObservationLevel = mandatoryAttributeIdsAtObservationLevel;
+        this.mandatoryAttributeIdsAtNonObservationLevel = mandatoryAttributeIdsAtNonObservationLevel;
         this.attributesCodeSet = attributesInfoMap.keySet();
     }
 

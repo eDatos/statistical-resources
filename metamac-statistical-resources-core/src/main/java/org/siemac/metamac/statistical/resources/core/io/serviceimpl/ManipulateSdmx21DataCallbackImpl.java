@@ -1,9 +1,7 @@
 package org.siemac.metamac.statistical.resources.core.io.serviceimpl;
 
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.siemac.metamac.core.common.exception.MetamacException;
@@ -26,7 +24,6 @@ public class ManipulateSdmx21DataCallbackImpl implements ManipulateDataCallback 
     private DatasetRepositoriesServiceFacade datasetRepositoriesServiceFacade = null;
 
     // DATASET: Calculated and cache data
-    private Set<String>                      keyAttributesAdded               = new HashSet<String>();
     private DatasetRepositoryDto             datasetRepositoryDto             = null;
     private String                           datasetVersionId                 = null;
     private String                           dataSourceID                     = null;

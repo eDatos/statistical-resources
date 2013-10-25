@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -653,12 +654,32 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
                 // Validate
                 ValidateDataVersusDsd validateDataVersusDsd = new ValidateDataVersusDsd(dataStructure, srmRestInternalService);
 
-                // Check
-                validateDataVersusDsd.checkAttributesInstances(attributesInstances);
+                // Check representation
+                validateDataVersusDsd.checkAttributesInstancesRepresentation(attributesInstances);
+
+                // Check mandatory attributes at non observation level
+                checkAttributesInstancesMandatoryAtNonObservationLevel(datasetVersion, validateDataVersusDsd);
             }
         } catch (ApplicationException e) {
             throw new MetamacException(e, ServiceExceptionType.UNKNOWN, "Error retrieving datasetRepository " + datasetVersion.getDatasetRepositoryId() + ". Details: " + e.getMessage());
         }
+    }
+
+    protected void checkAttributesInstancesMandatoryAtNonObservationLevel(DatasetVersion datasetVersion, ValidateDataVersusDsd validateDataVersusDsd) throws ApplicationException, MetamacException {
+        Map<String, List<String>> coverage = statisticsDatasetRepositoriesServiceFacade.findCodeDimensions(datasetVersion.getDatasetRepositoryId());
+        List<MetamacExceptionItem> exceptions = new LinkedList<MetamacExceptionItem>();
+        try {
+            for (String attributeId : validateDataVersusDsd.getMandatoryAttributeIdsAtNonObservationLevel()) {
+                List<AttributeInstanceDto> attributeInstanceDenormalizedDtos = statisticsDatasetRepositoriesServiceFacade.findAttributesInstancesWithDimensionAttachmentLevelDenormalized(
+                        datasetVersion.getDatasetRepositoryId(), attributeId, null);
+                validateDataVersusDsd.checkAttributesInstancesAssignmentStatus(attributeId, attributeInstanceDenormalizedDtos, coverage, exceptions);
+            }
+        } catch (Exception e) {
+            throw new MetamacException(e, ServiceExceptionType.UNKNOWN, "Error validating mandatory attributes at non observation level " + datasetVersion.getDatasetRepositoryId() + ". Details: "
+                    + e.getMessage());
+        }
+
+        ExceptionUtils.throwIfException(exceptions);
     }
 
     @Override

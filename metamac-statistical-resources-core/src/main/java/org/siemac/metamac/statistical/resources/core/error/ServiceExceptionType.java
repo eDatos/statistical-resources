@@ -1,9 +1,6 @@
 package org.siemac.metamac.statistical.resources.core.error;
 
-import java.util.List;
-
 import org.siemac.metamac.core.common.exception.CommonServiceExceptionType;
-import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 
 public class ServiceExceptionType extends CommonServiceExceptionType {
 
@@ -132,5 +129,7 @@ public class ServiceExceptionType extends CommonServiceExceptionType {
 
     public static final CommonServiceExceptionType IMPORTATION_OBSERVATION_CODE_ENUM_NOT_VALID                            = create("exception.resources.dataset.importation.observation.code_enumeration_not_valid");
     public static final CommonServiceExceptionType IMPORTATION_OBSERVATION_NOT_NUMERIC                                    = create("exception.resources.dataset.importation.observation.not_numeric");
+
+    public static final CommonServiceExceptionType VALIDATION_NONOBSLEVEL_MANDATORY_ATTR_NOT_FOUND                        = create("exception.resources.dataset.validation.nonobslevel_mandatory_attribute_not_found");
 
 }
