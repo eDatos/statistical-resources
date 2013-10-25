@@ -51,6 +51,7 @@ import org.siemac.metamac.statistical.resources.core.io.serviceimpl.ManipulatePx
 import org.siemac.metamac.statistical.resources.core.io.serviceimpl.ManipulateSdmx21DataCallbackImpl;
 import org.siemac.metamac.statistical.resources.core.io.serviceimpl.RecoveryImportDatasetJob;
 import org.siemac.metamac.statistical.resources.core.io.serviceimpl.validators.ValidateDataVersusDsd;
+import org.siemac.metamac.statistical.resources.core.task.domain.AlternativeEnumeratedRepresentation;
 import org.siemac.metamac.statistical.resources.core.task.domain.FileDescriptor;
 import org.siemac.metamac.statistical.resources.core.task.domain.FileDescriptorResult;
 import org.siemac.metamac.statistical.resources.core.task.domain.Task;
@@ -142,7 +143,9 @@ public class TaskServiceImpl extends TaskServiceImplBase {
             StringBuilder filePaths = new StringBuilder();
             StringBuilder fileNames = new StringBuilder();
             StringBuilder fileFormats = new StringBuilder();
+            StringBuilder alternativeRepresentations = new StringBuilder();
             serializeFilePathsAndNames(taskInfoDataset, filePaths, fileNames, fileFormats);
+            serializeAlternativeRepresentations(taskInfoDataset, alternativeRepresentations);
 
             // Scheduler an importation job
             Scheduler sched = SchedulerRepository.getInstance().lookup(SCHEDULER_INSTANCE_NAME); // get a reference to a scheduler
@@ -172,6 +175,7 @@ public class TaskServiceImpl extends TaskServiceImplBase {
             // put triggers in group named after the cluster node instance just to distinguish (in logging) what was scheduled from where
             JobDetail job = newJob(ImportDatasetJob.class).withIdentity(jobKey).usingJobData(ImportDatasetJob.FILE_PATHS, filePaths.toString())
                     .usingJobData(ImportDatasetJob.FILE_FORMATS, fileFormats.toString()).usingJobData(ImportDatasetJob.FILE_NAMES, fileNames.toString())
+                    .usingJobData(ImportDatasetJob.ALTERNATIVE_REPRESENTATIONS, alternativeRepresentations.toString())
                     .usingJobData(ImportDatasetJob.DATA_STRUCTURE_URN, taskInfoDataset.getDataStructureUrn()).usingJobData(ImportDatasetJob.DATASET_VERSION_ID, taskInfoDataset.getDatasetVersionId())
                     .usingJobData(ImportDatasetJob.USER, ctx.getUserId()).requestRecovery().build();
 
@@ -544,11 +548,20 @@ public class TaskServiceImpl extends TaskServiceImplBase {
         }
     }
 
+    protected void serializeAlternativeRepresentations(TaskInfoDataset taskInfoDataset, StringBuilder alternativeRepresentations) throws IOException, FileNotFoundException {
+        for (AlternativeEnumeratedRepresentation alternativeEnumeratedRepresentation : taskInfoDataset.getAlternativeRepresentations()) {
+            if (alternativeRepresentations.length() > 0) {
+                alternativeRepresentations.append(JobUtil.SERIALIZATION_SEPARATOR);
+            }
+            alternativeRepresentations.append(alternativeEnumeratedRepresentation.getComponentId()).append(JobUtil.SERIALIZATION_PAIR_SEPARATOR).append(alternativeEnumeratedRepresentation.getUrn());
+        }
+    }
+
     private void processDatasets(ServiceContext ctx, TaskInfoDataset taskInfoDataset, DateTime dateTime) throws Exception {
         DataStructure dataStructure = srmRestInternalService.retrieveDsdByUrn(taskInfoDataset.getDataStructureUrn());
 
         // Validator
-        ValidateDataVersusDsd validateDataVersusDsd = new ValidateDataVersusDsd(dataStructure, srmRestInternalService);
+        ValidateDataVersusDsd validateDataVersusDsd = new ValidateDataVersusDsd(dataStructure, srmRestInternalService, taskInfoDataset.getAlternativeRepresentations());
 
         // Callbacks
         ManipulateSdmx21DataCallbackImpl callback = null;

@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -21,6 +22,7 @@ import org.siemac.metamac.core.common.exception.MetamacExceptionBuilder;
 import org.siemac.metamac.core.common.util.ApplicationContextProvider;
 import org.siemac.metamac.statistical.resources.core.enume.task.domain.DatasetFileFormatEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
+import org.siemac.metamac.statistical.resources.core.task.domain.AlternativeEnumeratedRepresentation;
 import org.siemac.metamac.statistical.resources.core.task.domain.FileDescriptor;
 import org.siemac.metamac.statistical.resources.core.task.domain.TaskInfoDataset;
 import org.siemac.metamac.statistical.resources.core.task.serviceapi.TaskServiceFacade;
@@ -30,16 +32,17 @@ import org.slf4j.LoggerFactory;
 
 public class ImportDatasetJob implements Job {
 
-    private static Logger      logger             = LoggerFactory.getLogger(ImportDatasetJob.class);
+    private static Logger      logger                      = LoggerFactory.getLogger(ImportDatasetJob.class);
 
-    public static final String USER               = "user";
-    public static final String FILE_PATHS         = "filePaths";
-    public static final String FILE_NAMES         = "fileNames";
-    public static final String FILE_FORMATS       = "fileFormats";
-    public static final String DATA_STRUCTURE_URN = "dataStructureUrn";
-    public static final String DATASET_VERSION_ID = "datasetVersionId";
+    public static final String USER                        = "user";
+    public static final String FILE_PATHS                  = "filePaths";
+    public static final String FILE_NAMES                  = "fileNames";
+    public static final String FILE_FORMATS                = "fileFormats";
+    public static final String DATA_STRUCTURE_URN          = "dataStructureUrn";
+    public static final String DATASET_VERSION_ID          = "datasetVersionId";
+    public static final String ALTERNATIVE_REPRESENTATIONS = "alternativeRepresentations";
 
-    private TaskServiceFacade  taskServiceFacade  = null;
+    private TaskServiceFacade  taskServiceFacade           = null;
 
     /**
      * Quartz requires a public empty constructor so that the scheduler can instantiate the class whenever it needs.
@@ -73,6 +76,7 @@ public class ImportDatasetJob implements Job {
             taskInfoDataset.setDataStructureUrn(data.getString(DATA_STRUCTURE_URN));
             taskInfoDataset.getFiles().addAll(inflateFileDescriptors(data.getString(FILE_PATHS), data.getString(FILE_NAMES), data.getString(FILE_FORMATS)));
             taskInfoDataset.setDatasetVersionId(data.getString(DATASET_VERSION_ID));
+            taskInfoDataset.getAlternativeRepresentations().addAll(inflateAlternativeRepresentations(data.getString(ALTERNATIVE_REPRESENTATIONS)));
 
             getTaskServiceFacade().executeImportationTask(serviceContext, jobKey.getName(), taskInfoDataset);
             logger.info("ImportationJob: " + jobKey + " finished at " + new Date());
@@ -113,5 +117,22 @@ public class ImportDatasetJob implements Job {
         }
 
         return fileDescriptorDtos;
+    }
+
+    private List<AlternativeEnumeratedRepresentation> inflateAlternativeRepresentations(String alternativeRepresentations) {
+        List<AlternativeEnumeratedRepresentation> alternativeRepresentationList = new ArrayList<AlternativeEnumeratedRepresentation>();
+        if (!StringUtils.isEmpty(alternativeRepresentations)) {
+            String[] pairs = alternativeRepresentations.split("\\" + JobUtil.SERIALIZATION_SEPARATOR);
+
+            for (int i = 0; i < pairs.length; i++) {
+                String[] items = pairs[i].split(JobUtil.SERIALIZATION_PAIR_SEPARATOR);
+                AlternativeEnumeratedRepresentation alternativeEnumeratedRepresentation = new AlternativeEnumeratedRepresentation();
+                alternativeEnumeratedRepresentation.setComponentId(items[0]);
+                alternativeEnumeratedRepresentation.setUrn(items[1]);
+                alternativeRepresentationList.add(alternativeEnumeratedRepresentation);
+            }
+        }
+
+        return alternativeRepresentationList;
     }
 }

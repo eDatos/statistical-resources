@@ -42,16 +42,16 @@ public class Mocks {
     public static Codes mock_CL_DECIMALS() {
         Codes codes = new Codes();
 
-        codes.getCodes().add(SrmMockUtils.buildCode("0", "Zero", "en"));
-        codes.getCodes().add(SrmMockUtils.buildCode("1", "One", "en"));
-        codes.getCodes().add(SrmMockUtils.buildCode("2", "Two", "en"));
-        codes.getCodes().add(SrmMockUtils.buildCode("3", "Three", "en"));
-        codes.getCodes().add(SrmMockUtils.buildCode("4", "Four", "en"));
-        codes.getCodes().add(SrmMockUtils.buildCode("5", "Five", "en"));
-        codes.getCodes().add(SrmMockUtils.buildCode("6", "Six", "en"));
-        codes.getCodes().add(SrmMockUtils.buildCode("7", "Seven", "en"));
-        codes.getCodes().add(SrmMockUtils.buildCode("8", "Eight", "en"));
-        codes.getCodes().add(SrmMockUtils.buildCode("9", "Nine", "en"));
+        codes.getCodes().add(SrmMockUtils.buildCode("0", "Zero", "en", "ZERO"));
+        codes.getCodes().add(SrmMockUtils.buildCode("1", "One", "en", "ONE"));
+        codes.getCodes().add(SrmMockUtils.buildCode("2", "Two", "en", "TWO"));
+        codes.getCodes().add(SrmMockUtils.buildCode("3", "Three", "en", "THREE"));
+        codes.getCodes().add(SrmMockUtils.buildCode("4", "Four", "en", "FOUR"));
+        codes.getCodes().add(SrmMockUtils.buildCode("5", "Five", "en", "FIVE"));
+        codes.getCodes().add(SrmMockUtils.buildCode("6", "Six", "en", "SIX"));
+        codes.getCodes().add(SrmMockUtils.buildCode("7", "Seven", "en", "SEVEN"));
+        codes.getCodes().add(SrmMockUtils.buildCode("8", "Eight", "en", "EIGHT"));
+        codes.getCodes().add(SrmMockUtils.buildCode("9", "Nine", "en", "NINE"));
 
         return codes;
     }
@@ -59,14 +59,14 @@ public class Mocks {
     public static Codes mock_CL_FREQ() {
         Codes codes = new Codes();
 
-        codes.getCodes().add(SrmMockUtils.buildCode("A", "Annual", "en"));
-        codes.getCodes().add(SrmMockUtils.buildCode("B", "Daily - business week", "en"));
-        codes.getCodes().add(SrmMockUtils.buildCode("D", "Daily", "en"));
-        codes.getCodes().add(SrmMockUtils.buildCode("M", "Monthly", "en"));
-        codes.getCodes().add(SrmMockUtils.buildCode("N", "Minutely", "en"));
-        codes.getCodes().add(SrmMockUtils.buildCode("Q", "Quarterly", "en"));
-        codes.getCodes().add(SrmMockUtils.buildCode("S", "Half Yearly, semester", "en"));
-        codes.getCodes().add(SrmMockUtils.buildCode("W", "Weekly", "en"));
+        codes.getCodes().add(SrmMockUtils.buildCode("A", "Annual", "en", "ANNUAL"));
+        codes.getCodes().add(SrmMockUtils.buildCode("B", "Daily - business week", "en", "DAILY_B"));
+        codes.getCodes().add(SrmMockUtils.buildCode("D", "Daily", "en", "DAILY_D"));
+        codes.getCodes().add(SrmMockUtils.buildCode("M", "Monthly", "en", "MONTHLY"));
+        codes.getCodes().add(SrmMockUtils.buildCode("N", "Minutely", "en", "MINUTELY"));
+        codes.getCodes().add(SrmMockUtils.buildCode("Q", "Quarterly", "en", "QUARTERLY"));
+        codes.getCodes().add(SrmMockUtils.buildCode("S", "Half Yearly, semester", "en", "SEMESTER"));
+        codes.getCodes().add(SrmMockUtils.buildCode("W", "Weekly", "en", "WEEKLY"));
 
         return codes;
     }
@@ -74,11 +74,11 @@ public class Mocks {
     public static Codes mock_CL_CONF_STATUS() {
         Codes codes = new Codes();
 
-        codes.getCodes().add(SrmMockUtils.buildCode("C", "Confidential statistical information", "en"));
-        codes.getCodes().add(SrmMockUtils.buildCode("D", "Secondary confidentiality set by the sender, not for   publication", "en"));
-        codes.getCodes().add(SrmMockUtils.buildCode("F", "Free", "en"));
-        codes.getCodes().add(SrmMockUtils.buildCode("N", "Not for publication, restricted for internal use only", "en"));
-        codes.getCodes().add(SrmMockUtils.buildCode("S", "Secondary confidentiality set and managed by the receiver, not for publication", "en"));
+        codes.getCodes().add(SrmMockUtils.buildCode("C", "Confidential statistical information", "en", "CONF_STATUS_C"));
+        codes.getCodes().add(SrmMockUtils.buildCode("D", "Secondary confidentiality set by the sender, not for   publication", "en", "CONF_STATUS_D"));
+        codes.getCodes().add(SrmMockUtils.buildCode("F", "Free", "en", "CONF_STATUS_F"));
+        codes.getCodes().add(SrmMockUtils.buildCode("N", "Not for publication, restricted for internal use only", "en", "CONF_STATUS_N"));
+        codes.getCodes().add(SrmMockUtils.buildCode("S", "Secondary confidentiality set and managed by the receiver, not for publication", "en", "CONF_STATUS_S"));
 
         return codes;
     }
@@ -86,14 +86,14 @@ public class Mocks {
     public static Codes mock_CL_OBS_STATUS() {
         Codes codes = new Codes();
 
-        codes.getCodes().add(SrmMockUtils.buildCode("A", "Normal", "en"));
-        codes.getCodes().add(SrmMockUtils.buildCode("B", "Break", "en"));
-        codes.getCodes().add(SrmMockUtils.buildCode("E", "Estimated value", "en"));
-        codes.getCodes().add(SrmMockUtils.buildCode("F", "Forecast value", "en"));
-        codes.getCodes().add(SrmMockUtils.buildCode("I", "Imputed value (CCSA definition)", "en"));
-        codes.getCodes().add(SrmMockUtils.buildCode("M", "Missing value", "en"));
-        codes.getCodes().add(SrmMockUtils.buildCode("P", "Provisional value", "en"));
-        codes.getCodes().add(SrmMockUtils.buildCode("S", "Strike", "en"));
+        codes.getCodes().add(SrmMockUtils.buildCode("A", "Normal", "en", "OBS_STATUS_A"));
+        codes.getCodes().add(SrmMockUtils.buildCode("B", "Break", "en", "OBS_STATUS_B"));
+        codes.getCodes().add(SrmMockUtils.buildCode("E", "Estimated value", "en", "OBS_STATUS_E"));
+        codes.getCodes().add(SrmMockUtils.buildCode("F", "Forecast value", "en", "OBS_STATUS_F"));
+        codes.getCodes().add(SrmMockUtils.buildCode("I", "Imputed value (CCSA definition)", "en", "OBS_STATUS_I"));
+        codes.getCodes().add(SrmMockUtils.buildCode("M", "Missing value", "en", "OBS_STATUS_M"));
+        codes.getCodes().add(SrmMockUtils.buildCode("P", "Provisional value", "en", "OBS_STATUS_P"));
+        codes.getCodes().add(SrmMockUtils.buildCode("S", "Strike", "en", "OBS_STATUS_S"));
 
         return codes;
     }
@@ -101,15 +101,15 @@ public class Mocks {
     public static Codes mock_CL_UNIT_MULT() {
         Codes codes = new Codes();
 
-        codes.getCodes().add(SrmMockUtils.buildCode("0", "Units", "en"));
-        codes.getCodes().add(SrmMockUtils.buildCode("1", "Tens", "en"));
-        codes.getCodes().add(SrmMockUtils.buildCode("2", "Hundreds", "en"));
-        codes.getCodes().add(SrmMockUtils.buildCode("3", "Thousands", "en"));
-        codes.getCodes().add(SrmMockUtils.buildCode("4", "Tens of thousands", "en"));
-        codes.getCodes().add(SrmMockUtils.buildCode("6", "Millions", "en"));
-        codes.getCodes().add(SrmMockUtils.buildCode("9", "Billions", "en"));
-        codes.getCodes().add(SrmMockUtils.buildCode("12", "Trillions", "en"));
-        codes.getCodes().add(SrmMockUtils.buildCode("15", "Quadrillions", "en"));
+        codes.getCodes().add(SrmMockUtils.buildCode("0", "Units", "en", "UNITS"));
+        codes.getCodes().add(SrmMockUtils.buildCode("1", "Tens", "en", "TENS"));
+        codes.getCodes().add(SrmMockUtils.buildCode("2", "Hundreds", "en", "HUNDREDS"));
+        codes.getCodes().add(SrmMockUtils.buildCode("3", "Thousands", "en", "THOUSANDS"));
+        codes.getCodes().add(SrmMockUtils.buildCode("4", "Tens of thousands", "en", "TENS_OF_THOUSANDS"));
+        codes.getCodes().add(SrmMockUtils.buildCode("6", "Millions", "en", "MILLIONS"));
+        codes.getCodes().add(SrmMockUtils.buildCode("9", "Billions", "en", "BILLIONS"));
+        codes.getCodes().add(SrmMockUtils.buildCode("12", "Trillions", "en", "TRILLIONS"));
+        codes.getCodes().add(SrmMockUtils.buildCode("15", "Quadrillions", "en", "QUADRILLIONS"));
 
         return codes;
     }
@@ -117,9 +117,9 @@ public class Mocks {
     public static Codes mock_CL_EXR_TYPE() {
         Codes codes = new Codes();
 
-        codes.getCodes().add(SrmMockUtils.buildCode("CR00", "Official fixing", "en"));
-        codes.getCodes().add(SrmMockUtils.buildCode("RR00", "Reference rate", "en"));
-        codes.getCodes().add(SrmMockUtils.buildCode("SP00", "Spot", "en"));
+        codes.getCodes().add(SrmMockUtils.buildCode("CR00", "Official fixing", "en", "CR00"));
+        codes.getCodes().add(SrmMockUtils.buildCode("RR00", "Reference rate", "en", "RR00"));
+        codes.getCodes().add(SrmMockUtils.buildCode("SP00", "Spot", "en", "SP00"));
 
         return codes;
     }
@@ -127,8 +127,8 @@ public class Mocks {
     public static Codes mock_CL_EXR_VAR() {
         Codes codes = new Codes();
 
-        codes.getCodes().add(SrmMockUtils.buildCode("E", "End-of-period", "en"));
-        codes.getCodes().add(SrmMockUtils.buildCode("P", "Growth rate over previous period", "en"));
+        codes.getCodes().add(SrmMockUtils.buildCode("E", "End-of-period", "en", "E"));
+        codes.getCodes().add(SrmMockUtils.buildCode("P", "Growth rate over previous period", "en", "P"));
 
         return codes;
     }
@@ -136,11 +136,23 @@ public class Mocks {
     public static Codes mock_CL_CURRENCY() {
         Codes codes = new Codes();
 
-        codes.getCodes().add(SrmMockUtils.buildCode("CHF", "Swiss franc", "en"));
-        codes.getCodes().add(SrmMockUtils.buildCode("EUR", "Euro", "en"));
-        codes.getCodes().add(SrmMockUtils.buildCode("GBP", "Pound sterling", "en"));
-        codes.getCodes().add(SrmMockUtils.buildCode("JPY", "Japanese yen", "en"));
-        codes.getCodes().add(SrmMockUtils.buildCode("USD", "United States dollar", "en"));
+        codes.getCodes().add(SrmMockUtils.buildCode("CHF", "Swiss franc", "en", "CHF"));
+        codes.getCodes().add(SrmMockUtils.buildCode("EUR", "Euro", "en", "EUR"));
+        codes.getCodes().add(SrmMockUtils.buildCode("GBP", "Pound sterling", "en", "GBP"));
+        codes.getCodes().add(SrmMockUtils.buildCode("JPY", "Japanese yen", "en", "JPY"));
+        codes.getCodes().add(SrmMockUtils.buildCode("USD", "United States dollar", "en", "USD"));
+
+        return codes;
+    }
+
+    public static Codes mock_CL_DEMO() {
+        Codes codes = new Codes();
+
+        codes.getCodes().add(SrmMockUtils.buildCode("swiss", "Swiss franc", "en", "CHF"));
+        codes.getCodes().add(SrmMockUtils.buildCode("euro", "Euro", "en", "EUR"));
+        codes.getCodes().add(SrmMockUtils.buildCode("pound", "Pound sterling", "en", "GBP"));
+        codes.getCodes().add(SrmMockUtils.buildCode("yen", "Japanese yen", "en", "JPY"));
+        codes.getCodes().add(SrmMockUtils.buildCode("dollar", "United States dollar", "en", "USD"));
 
         return codes;
     }
@@ -778,6 +790,7 @@ public class Mocks {
         Mockito.when(srmRestInternalService.retrieveCodesOfCodelistEfficiently("urn:sdmx:org.sdmx.infomodel.codelist.Codelist=ECB:CL_EXR_TYPE(1.0)")).thenReturn(Mocks.mock_CL_EXR_TYPE());
         Mockito.when(srmRestInternalService.retrieveCodesOfCodelistEfficiently("urn:sdmx:org.sdmx.infomodel.codelist.Codelist=ECB:CL_EXR_VAR(1.0)")).thenReturn(Mocks.mock_CL_EXR_VAR());
         Mockito.when(srmRestInternalService.retrieveCodesOfCodelistEfficiently("urn:sdmx:org.sdmx.infomodel.codelist.Codelist=ISO:CL_CURRENCY(1.0)")).thenReturn(Mocks.mock_CL_CURRENCY());
+        Mockito.when(srmRestInternalService.retrieveCodesOfCodelistEfficiently("urn:sdmx:org.sdmx.infomodel.codelist.Codelist=SDMX:CL_DEMO(1.0)")).thenReturn(Mocks.mock_CL_DEMO());
 
         // CONCEPT SCHEME
         Mockito.when(srmRestInternalService.retrieveConceptsOfConceptSchemeEfficiently("urn:sdmx:org.sdmx.infomodel.conceptscheme.ConceptScheme=SDMX:CROSS_DOMAIN_CONCEPTS(1.0)")).thenReturn(

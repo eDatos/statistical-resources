@@ -1,6 +1,5 @@
 package org.siemac.metamac.statistical.resources.core.io.serviceimpl;
 
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -9,11 +8,9 @@ import java.util.Set;
 import org.apache.commons.lang.StringUtils;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructure;
-import org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConstants;
 import org.siemac.metamac.statistical.resources.core.invocation.service.SrmRestInternalService;
 import org.siemac.metamac.statistical.resources.core.io.mapper.MetamacSdmx2StatRepoMapper;
 import org.siemac.metamac.statistical.resources.core.io.serviceimpl.validators.ValidateDataVersusDsd;
-import org.siemac.metamac.statistical.resources.core.io.utils.ManipulateDataUtils;
 
 import com.arte.statistic.dataset.repository.dto.DatasetRepositoryDto;
 import com.arte.statistic.dataset.repository.dto.ObservationExtendedDto;

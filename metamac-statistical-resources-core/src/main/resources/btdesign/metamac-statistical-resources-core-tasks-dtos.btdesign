@@ -9,6 +9,7 @@ Application DatasetsStatisticalResourcesDto {
 		// TASK INFO DATASET
 		DataTransferObject TaskInfoDataset {
 			- List<@FileDescriptor> files;
+			- List<@AlternativeEnumeratedRepresentation> alternativeRepresentations;
 			String dataStructureUrn; 
 			String datasetVersionId;
 		}
@@ -25,6 +26,10 @@ Application DatasetsStatisticalResourcesDto {
 			JAVADATE nextUpdate;
 		}
 		
+		DataTransferObject AlternativeEnumeratedRepresentation {
+			String componentId;
+			String urn;
+		}
 	}
 
 }

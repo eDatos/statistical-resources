@@ -20,7 +20,6 @@ import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteriaBuilder;
 import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
 import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
-import org.fornax.cartridges.sculptor.framework.errorhandling.ApplicationException;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.junit.Before;
 import org.junit.Test;
@@ -33,12 +32,11 @@ import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor;
 import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor.DsdAttribute;
 import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor.DsdDimension;
 import org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConstants;
-import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.enume.task.domain.DatasetFileFormatEnum;
-import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.invocation.service.SrmRestInternalService;
 import org.siemac.metamac.statistical.resources.core.io.utils.ManipulateDataUtils;
 import org.siemac.metamac.statistical.resources.core.mock.Mocks;
+import org.siemac.metamac.statistical.resources.core.task.domain.AlternativeEnumeratedRepresentation;
 import org.siemac.metamac.statistical.resources.core.task.domain.FileDescriptor;
 import org.siemac.metamac.statistical.resources.core.task.domain.Task;
 import org.siemac.metamac.statistical.resources.core.task.domain.TaskInfoDataset;
@@ -71,7 +69,7 @@ import com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceF
 @Transactional
 public class DataManipulateTest extends StatisticalResourcesBaseTest {
 
-    private static Logger                    logger                          = LoggerFactory.getLogger(DataManipulateTest.class);
+    private static Logger                    logger                              = LoggerFactory.getLogger(DataManipulateTest.class);
 
     @Autowired
     private DatasetRepositoriesServiceFacade datasetRepositoriesServiceFacade;
@@ -94,17 +92,18 @@ public class DataManipulateTest extends StatisticalResourcesBaseTest {
     @PersistenceContext(unitName = "StatisticalResourcesEntityManagerFactory")
     protected EntityManager                  entityManager;
 
-    private final ServiceContext             serviceContext                  = new ServiceContext("system", "123456", "junit");
+    private final ServiceContext             serviceContext                      = new ServiceContext("system", "123456", "junit");
 
-    public static final String               DATA_STR_ECB_EXR_RG_XS          = "/sdmx/2_1/dataset/structured/ecb_exr_rg_xs.xml";
-    public static final String               DATA_GEN_ECB_EXR_RG_FLAT        = "/sdmx/2_1/dataset/generic/ecb_exr_rg_flat.xml";
-    public static final String               DATA_GEN_ECB_EXR_RG_FLAT_FAILED = "/sdmx/2_1/dataset/generic/ecb_exr_rg_flat_failed.xml";
+    public static final String               DATA_STR_ECB_EXR_RG_XS              = "/sdmx/2_1/dataset/structured/ecb_exr_rg_xs.xml";
+    public static final String               DATA_STR_ECB_EXR_RG_XS_DENORMALIZED = "/sdmx/2_1/dataset/structured/ecb_exr_rg_xs_denormalized.xml";
+    public static final String               DATA_GEN_ECB_EXR_RG_FLAT            = "/sdmx/2_1/dataset/generic/ecb_exr_rg_flat.xml";
+    public static final String               DATA_GEN_ECB_EXR_RG_FLAT_FAILED     = "/sdmx/2_1/dataset/generic/ecb_exr_rg_flat_failed.xml";
 
-    public static final String               DATA_PX_ECB_EXR_RG              = "/px/ecb_exr_rg.px";
+    public static final String               DATA_PX_ECB_EXR_RG                  = "/px/ecb_exr_rg.px";
 
-    public static final String               DATA_TSV_ECB_EXR_RG             = "/csv/ecb_exr_rg.tsv";
+    public static final String               DATA_TSV_ECB_EXR_RG                 = "/csv/ecb_exr_rg.tsv";
 
-    public static final String               URN_DSD_ECB_EXR_RG              = "urn:sdmx:org.sdmx.infomodel.datastructure.DataStructure=ECB:ECB_EXR_RG(1.0)";
+    public static final String               URN_DSD_ECB_EXR_RG                  = "urn:sdmx:org.sdmx.infomodel.datastructure.DataStructure=ECB:ECB_EXR_RG(1.0)";
 
     @Autowired
     @Qualifier("dataSourceDatasetRepository")
@@ -234,7 +233,65 @@ public class DataManipulateTest extends StatisticalResourcesBaseTest {
         });
 
         // Wait until the job is finished
-        waitUntilJobFinished();
+        waitUntilJobFinished(true);
+
+        DatasetRepositoryDto datasetRepositoryDto = datasetRepositoriesServiceFacade.retrieveDatasetRepository("TEST_DATA_STR_ECB_EXR_RG");
+
+        assertNotNull(datasetRepositoryDto);
+    }
+
+    @Test
+    public void testImportSdmx21DatasourceWithTranslation() throws Exception {
+        // New Transaction: Because the job needs persisted data
+        createDatasetRepository("TEST_DATA_STR_ECB_EXR_RG", URN_DSD_ECB_EXR_RG);
+        final TransactionTemplate tt = new TransactionTemplate(transactionManager);
+        tt.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
+        tt.execute(new TransactionCallbackWithoutResult() {
+
+            @Override
+            public void doInTransactionWithoutResult(TransactionStatus status) {
+                try {
+
+                    TaskInfoDataset taskInfoDataset = new TaskInfoDataset();
+                    taskInfoDataset.setDataStructureUrn(URN_DSD_ECB_EXR_RG);
+                    taskInfoDataset.setDatasetVersionId("TEST_DATA_STR_ECB_EXR_RG");
+
+                    {
+                        AlternativeEnumeratedRepresentation alternative = new AlternativeEnumeratedRepresentation();
+                        alternative.setComponentId("CURRENCY_DENOM");
+                        alternative.setUrn("urn:sdmx:org.sdmx.infomodel.codelist.Codelist=SDMX:CL_DEMO(1.0)");
+                        taskInfoDataset.getAlternativeRepresentations().add(alternative);
+                    }
+
+                    {
+                        AlternativeEnumeratedRepresentation alternative = new AlternativeEnumeratedRepresentation();
+                        alternative.setComponentId("CURRENCY");
+                        alternative.setUrn("urn:sdmx:org.sdmx.infomodel.codelist.Codelist=SDMX:CL_DEMO(1.0)");
+                        taskInfoDataset.getAlternativeRepresentations().add(alternative);
+                    }
+
+                    // File 01
+                    {
+                        FileDescriptor fileDescriptorDto = new FileDescriptor();
+                        fileDescriptorDto.setFileName(StringUtils.substringAfterLast(DATA_STR_ECB_EXR_RG_XS, "/"));
+                        fileDescriptorDto.setFile(new File(DataManipulateTest.class.getResource(DATA_STR_ECB_EXR_RG_XS_DENORMALIZED).toURI()));
+                        fileDescriptorDto.setDatasetFileFormatEnum(DatasetFileFormatEnum.SDMX_2_1);
+                        taskInfoDataset.addFile(fileDescriptorDto);
+                    }
+
+                    jobKey = taskService.planifyImportationDataset(serviceContext, taskInfoDataset);
+
+                } catch (MetamacException e) {
+                    e.printStackTrace();
+                } catch (URISyntaxException e) {
+                    e.printStackTrace();
+                }
+                logger.info("-- doInTransactionWithoutResult -- expects transaction commit");
+            }
+        });
+
+        // Wait until the job is finished
+        waitUntilJobFinished(true);
 
         DatasetRepositoryDto datasetRepositoryDto = datasetRepositoriesServiceFacade.retrieveDatasetRepository("TEST_DATA_STR_ECB_EXR_RG");
 
@@ -286,17 +343,18 @@ public class DataManipulateTest extends StatisticalResourcesBaseTest {
             }
         });
 
-        // Wait until the job is finished
-        waitUntilJobFinished();
+        // Wait until the job (importation) is finished
+        waitUntilJobFinished(true);
         Thread.sleep(15 * 1000);
 
         DatasetRepositoryDto datasetRepositoryDto = datasetRepositoriesServiceFacade.retrieveDatasetRepository("TEST_DATA_STR_ECB_EXR_RG");
         assertNotNull(datasetRepositoryDto);
 
+        waitUntilJobFinished(false);
+
         List<ConditionalCriteria> conditionList = ConditionalCriteriaBuilder.criteriaFor(Task.class).withProperty(TaskProperties.job()).eq(jobKey).build();
         PagedResult<Task> pagedResult = taskService.findTasksByCondition(serviceContext, conditionList, PagingParameter.noLimits());
         assertTrue(pagedResult.getValues().isEmpty());
-        waitUntilJobFinished();
     }
 
     @Test
@@ -340,7 +398,7 @@ public class DataManipulateTest extends StatisticalResourcesBaseTest {
         });
 
         // Wait until the job is finished
-        waitUntilJobFinished();
+        waitUntilJobFinished(true);
 
         DatasetRepositoryDto datasetRepositoryDto = datasetRepositoriesServiceFacade.retrieveDatasetRepository("TEST_DATA_STR_ECB_EXR_RG");
 
@@ -386,7 +444,7 @@ public class DataManipulateTest extends StatisticalResourcesBaseTest {
         });
 
         // Wait until the job is finished
-        waitUntilJobFinished();
+        waitUntilJobFinished(true);
 
         DatasetRepositoryDto datasetRepositoryDto = datasetRepositoriesServiceFacade.retrieveDatasetRepository("TEST_DATA_STR_ECB_EXR_RG");
 
@@ -432,7 +490,7 @@ public class DataManipulateTest extends StatisticalResourcesBaseTest {
         });
 
         // Wait until the job is finished
-        waitUntilJobFinished();
+        waitUntilJobFinished(true);
 
         // Duplication JOB
         final TransactionTemplate tt2 = new TransactionTemplate(transactionManager);
@@ -457,7 +515,7 @@ public class DataManipulateTest extends StatisticalResourcesBaseTest {
         });
 
         // Wait until the job is finished
-        waitUntilJobFinished();
+        waitUntilJobFinished(true);
 
         DatasetRepositoryDto datasetRepositoryDto = datasetRepositoriesServiceFacade.retrieveDatasetRepository("TEST_DATA_STR_ECB_EXR_RG_NEW");
 

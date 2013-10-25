@@ -95,10 +95,19 @@ public abstract class StatisticalResourcesBaseTest extends MetamacBaseTest {
         return DataBaseProvider.valueOf(databaseProvider);
     }
 
-    protected void waitUntilJobFinished() throws InterruptedException, SchedulerException {
-        // Wait until the job is finished
-        Thread.sleep(10 * 1000);
+    protected void waitUntilJobFinished(boolean initializeWait) throws InterruptedException, SchedulerException {
         Scheduler sched = SchedulerRepository.getInstance().lookup(TaskServiceImpl.SCHEDULER_INSTANCE_NAME); // get a reference to a scheduler
+
+        // Wait until the job is scheduled
+        while (initializeWait) {
+            if (sched.getCurrentlyExecutingJobs().size() != 0) {
+                break;
+            } else {
+                Thread.sleep(1 * 1000);
+            }
+        }
+
+        // Wait until the job is finished
         while (sched.getCurrentlyExecutingJobs().size() != 0) {
             Thread.sleep(1 * 1000);
         }

@@ -36,6 +36,7 @@ import org.siemac.metamac.statistical.resources.core.constants.StatisticalResour
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.invocation.service.SrmRestInternalService;
 import org.siemac.metamac.statistical.resources.core.io.utils.ManipulateDataUtils;
+import org.siemac.metamac.statistical.resources.core.task.domain.AlternativeEnumeratedRepresentation;
 
 import com.arte.statistic.dataset.repository.dto.AttributeInstanceBasicDto;
 import com.arte.statistic.dataset.repository.dto.AttributeInstanceDto;
@@ -46,31 +47,50 @@ import com.arte.statistic.parser.sdmx.v2_1.domain.ComponentInfoTypeEnum;
 
 public class ValidateDataVersusDsd {
 
-    private DataStructure                          dataStructure                              = null;
-    private SrmRestInternalService                 srmRestInternalService                     = null;
+    private DataStructure                          dataStructure                                 = null;
+    private SrmRestInternalService                 srmRestInternalService                        = null;
 
     // DSD: Calculated and cache data
-    private Map<String, ComponentInfo>             dimensionsInfoMap                          = null;
-    private List<ComponentInfo>                    dimensionsInfoList                         = null;
-    private List<ComponentInfo>                    attributesInfoList                         = null;
-    private MultiMap                               enumerationRepresentationsMultimap         = null; // Key: URN, Value: Set<String>
-    private Map<String, DsdProcessor.DsdDimension> dimensionsProcessorMap                     = null;
-    private Map<String, DsdProcessor.DsdAttribute> attributesProcessorMap                     = null;
-    private DsdProcessor.DsdPrimaryMeasure         dsdPrimaryMeasure                          = null;
-    private Set<String>                            dimensionsCodeSet                          = null;
-    private Set<String>                            attributesCodeSet                          = null;
-    private Set<String>                            attributeIdsAtObservationLevelSet          = null;
-    private Set<String>                            mandatoryAttributeIdsAtObservationLevel    = null;
-    private Map<String, List<ComponentInfo>>       groupDimensionMapInfo                      = null;
-    private boolean                                isExtraValidationForPrimaryMeasureRequired = false;
+    private Map<String, ComponentInfo>             dimensionsInfoMap                             = null;
+    private List<ComponentInfo>                    dimensionsInfoList                            = null;
+    private List<ComponentInfo>                    attributesInfoList                            = null;
+    private MultiMap                               enumerationRepresentationsMultimap            = null; // Key: URN representation, Value: Set<String>
+    private Map<String, Map<String, String>>       translationEnumRepresentationsMap             = null; // Key: componentId, Value: a map with (Key: alternativeCodeId and Value: normalizedCodeId)
+    private Map<String, String>                    alternativeSourceEnumerationRepresentationMap = null; // Key: componentId, Value: URN representation
+    private Map<String, DsdProcessor.DsdDimension> dimensionsProcessorMap                        = null;
+    private Map<String, DsdProcessor.DsdAttribute> attributesProcessorMap                        = null;
+    private DsdProcessor.DsdPrimaryMeasure         dsdPrimaryMeasure                             = null;
+    private Set<String>                            dimensionsCodeSet                             = null;
+    private Set<String>                            attributesCodeSet                             = null;
+    private Set<String>                            attributeIdsAtObservationLevelSet             = null;
+    private Set<String>                            mandatoryAttributeIdsAtObservationLevel       = null;
+    private Map<String, List<ComponentInfo>>       groupDimensionMapInfo                         = null;
+    private boolean                                isExtraValidationForPrimaryMeasureRequired    = false;
 
     public ValidateDataVersusDsd(DataStructure dataStructure, SrmRestInternalService srmRestInternalService) throws MetamacException {
         this.srmRestInternalService = srmRestInternalService;
         this.dataStructure = dataStructure;
+        this.alternativeSourceEnumerationRepresentationMap = new HashMap<String, String>();
+        this.translationEnumRepresentationsMap = new HashMap<String, Map<String, String>>();
 
         calculateCacheInfo();
     }
 
+    public ValidateDataVersusDsd(DataStructure dataStructure, SrmRestInternalService srmRestInternalService, List<AlternativeEnumeratedRepresentation> alternativeRepresentations)
+            throws MetamacException {
+        this.srmRestInternalService = srmRestInternalService;
+        this.dataStructure = dataStructure;
+        this.translationEnumRepresentationsMap = new HashMap<String, Map<String, String>>();
+
+        // Alternative representations
+        Map<String, String> alternativeSourceEnumerationRepresentationMap = new HashMap<String, String>();
+        for (AlternativeEnumeratedRepresentation alternativeEnumeratedRepresentation : alternativeRepresentations) {
+            alternativeSourceEnumerationRepresentationMap.put(alternativeEnumeratedRepresentation.getComponentId(), alternativeEnumeratedRepresentation.getUrn());
+        }
+        this.alternativeSourceEnumerationRepresentationMap = alternativeSourceEnumerationRepresentationMap;
+
+        calculateCacheInfo();
+    }
     /**************************************************************************
      * PUBLIC
      **************************************************************************/
@@ -167,7 +187,7 @@ public class ValidateDataVersusDsd {
             previousExceptionSize = exceptions.size();
             for (CodeDimensionDto codeDimensionDto : overExtendedDto.getCodesDimension()) {
                 // Enumerated representation
-                checkDimensionEnumeratedRepresentation(codeDimensionDto.getDimensionId(), codeDimensionDto.getCodeDimensionId(), exceptions);
+                checkDimensionEnumeratedRepresentation(codeDimensionDto, exceptions);
 
                 // Non Enumerated representation
                 checkDimensionNonEnumeratedRepresentation(codeDimensionDto.getDimensionId(), codeDimensionDto.getCodeDimensionId(),
@@ -251,22 +271,29 @@ public class ValidateDataVersusDsd {
 
         ExceptionUtils.throwIfException(exceptions);
     }
-
     @SuppressWarnings("unchecked")
-    private void checkDimensionEnumeratedRepresentation(String dimensionId, String value, List<MetamacExceptionItem> exceptions) throws MetamacException {
+    private void checkDimensionEnumeratedRepresentation(CodeDimensionDto codeDimensionDto, List<MetamacExceptionItem> exceptions) throws MetamacException {
+        // Alternative enumerated representation
+        if (translationEnumRepresentationsMap.containsKey(codeDimensionDto.getDimensionId())) {
+            Map<String, String> translationCodeMap = translationEnumRepresentationsMap.get(codeDimensionDto.getDimensionId());
+            if (translationCodeMap.containsKey(codeDimensionDto.getCodeDimensionId())) {
+                codeDimensionDto.setCodeDimensionId(translationCodeMap.get(codeDimensionDto.getCodeDimensionId()));
+            }
+        }
+
         // Enumerated representation
-        String enumeratedRepresentationUrn = dimensionsProcessorMap.get(dimensionId).getEnumeratedRepresentationUrn();
+        String enumeratedRepresentationUrn = dimensionsProcessorMap.get(codeDimensionDto.getDimensionId()).getEnumeratedRepresentationUrn();
         if (enumeratedRepresentationUrn != null) {
             // The codes of dimensions must be defined in the enumerated representation
             Set<String> validDimensionCodes = (Set<String>) enumerationRepresentationsMultimap.get(enumeratedRepresentationUrn);
-            if (!validDimensionCodes.contains(value)) {
-                exceptions.add(new MetamacExceptionItem(ServiceExceptionType.IMPORTATION_DIM_CODE_ENUM_NOT_VALID, value, dimensionId, enumeratedRepresentationUrn));
+            if (!validDimensionCodes.contains(codeDimensionDto.getCodeDimensionId())) {
+                exceptions.add(new MetamacExceptionItem(ServiceExceptionType.IMPORTATION_DIM_CODE_ENUM_NOT_VALID, codeDimensionDto.getCodeDimensionId(), codeDimensionDto.getDimensionId(),
+                        enumeratedRepresentationUrn));
             }
         }
     }
 
     private void checkDimensionNonEnumeratedRepresentation(String dimensionId, String value, String key, List<MetamacExceptionItem> exceptions) throws MetamacException {
-
         DsdProcessor.DsdDimension dsdDimension = dimensionsProcessorMap.get(dimensionId);
 
         if (dsdDimension.getTextFormatRepresentation() != null) {
@@ -455,12 +482,29 @@ public class ValidateDataVersusDsd {
         {
             // Codelist: If is not currently cached
             String codelistRepresentationUrn = dsdComponent.getCodelistRepresentationUrn();
-            if (codelistRepresentationUrn != null && !enumerationRepresentationsMultimap.containsKey(codelistRepresentationUrn)) {
-                Codes codes = srmRestInternalService.retrieveCodesOfCodelistEfficiently(codelistRepresentationUrn);
+            Codes codes = srmRestInternalService.retrieveCodesOfCodelistEfficiently(codelistRepresentationUrn);
 
+            if (codelistRepresentationUrn != null && !enumerationRepresentationsMultimap.containsKey(codelistRepresentationUrn)) {
                 for (CodeResourceInternal codeType : codes.getCodes()) {
                     enumerationRepresentationsMultimap.put(codelistRepresentationUrn, codeType.getId());
                 }
+            }
+
+            // Cache translation if is -+necessary
+            if (isTranslationNecessary(dsdComponent.getComponentId())) {
+                Map<String, String> variableElementMapToCodesMap = new HashMap<String, String>();
+                for (CodeResourceInternal codeType : codes.getCodes()) {
+                    variableElementMapToCodesMap.put(codeType.getVariableElement().getId(), codeType.getId());
+                }
+
+                Codes alternativeCodes = srmRestInternalService.retrieveCodesOfCodelistEfficiently(alternativeSourceEnumerationRepresentationMap.get(dsdComponent.getComponentId()));
+                // (Key: alternativeCodeId and Value: normalizedCodeId)
+                Map<String, String> translationCodeMap = new HashMap<String, String>();
+                for (CodeResourceInternal alternativeCodeType : alternativeCodes.getCodes()) {
+                    translationCodeMap.put(alternativeCodeType.getId(), variableElementMapToCodesMap.get(alternativeCodeType.getVariableElement().getId()));
+                }
+
+                translationEnumRepresentationsMap.put(dsdComponent.getComponentId(), translationCodeMap);
             }
         }
 
@@ -477,4 +521,11 @@ public class ValidateDataVersusDsd {
         }
     }
 
+    private boolean isTranslationNecessary(String componentId) {
+        if (alternativeSourceEnumerationRepresentationMap.containsKey(componentId) && !translationEnumRepresentationsMap.containsKey(componentId)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

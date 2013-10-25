@@ -11,7 +11,8 @@ import org.siemac.metamac.statistical.resources.core.enume.task.domain.DatasetFi
 
 public class JobUtil {
 
-    public static final String SERIALIZATION_SEPARATOR = "|";
+    public static final String SERIALIZATION_SEPARATOR      = "|";
+    public static final String SERIALIZATION_PAIR_SEPARATOR = "<>";
 
     public static File cacheFiles(InputStream is, DatasetFileFormatEnum datasetFileFormatEnum, String fileName) throws IOException {
         OutputStream os = null;

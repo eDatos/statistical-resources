@@ -159,12 +159,12 @@ public class SrmMockUtils {
     public static Codes buildCodes(int numCodes) {
         Codes codes = new Codes();
         for (int i = 1; i <= numCodes; i++) {
-            codes.getCodes().add(buildCode("code-0" + i, "Code 0" + i, DEFAULT_LOCALE));
+            codes.getCodes().add(buildCode("code-0" + i, "Code 0" + i, DEFAULT_LOCALE, "variableElement-0" + i));
         }
         return codes;
     }
 
-    public static CodeResourceInternal buildCode(String id, String name, String lang) {
+    public static CodeResourceInternal buildCode(String id, String name, String lang, String variableElementCode) {
         CodeResourceInternal code = new CodeResourceInternal();
         code.setId(id);
         code.setUrn("urn:uuid:" + id);
@@ -172,7 +172,14 @@ public class SrmMockUtils {
         code.setSelfLink(buildResourceLink(TypeExternalArtefactsEnum.CODE));
         code.setName(buildInternationalStringResource(name, lang));
         code.setKind(TypeExternalArtefactsEnum.CODE.getValue());
+        code.setVariableElement(buildVariableElementRef(variableElementCode));
         return code;
+    }
+
+    public static ResourceInternal buildVariableElementRef(String codeId) {
+        ResourceInternal ref = new ResourceInternal();
+        ref.setId(codeId);
+        return ref;
     }
 
     // -------------------------------------------------------------------------------------
