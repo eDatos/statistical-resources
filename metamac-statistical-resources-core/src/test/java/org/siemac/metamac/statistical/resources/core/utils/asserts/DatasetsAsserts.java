@@ -12,6 +12,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
+import junit.framework.AssertionFailedError;
+
 import org.apache.commons.lang.StringUtils;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
@@ -109,8 +111,18 @@ public class DatasetsAsserts extends BaseAsserts {
 
             for (int i = 0; i < expected.size(); i++) {
                 AttributeValue expectedValue = expected.get(i);
-                AttributeValue actualValue = actual.get(i);
-                assertEqualsAttributeValue(expectedValue, actualValue);
+                boolean found = false;
+                for (int j = 0; j < actual.size(); j++) {
+                    AttributeValue actualValue = actual.get(j);
+                    try {
+                        assertEqualsAttributeValue(expectedValue, actualValue);
+                        found = true;
+                    } catch (AssertionError e) {
+                    }
+                }
+                if (!found) {
+                    throw new AssertionFailedError("Expected attribute not found " + expectedValue.getIdentifier());
+                }
             }
         }
     }
