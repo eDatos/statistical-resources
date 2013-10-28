@@ -96,14 +96,17 @@ public class DatasetServiceDatasourceManagementTest extends StatisticalResources
     @Test
     @MetamacMock({DATASET_VERSION_01_BASIC_NAME, DATASET_VERSION_02_BASIC_NAME})
     public void testCreateDatasource() throws Exception {
+        DatasetVersion datasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_01_BASIC_NAME);
         DatasetVersion expectedDatasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_01_BASIC_NAME);
 
         // IMPORTATION TASK SET DATASETREPOSITORYID
-        expectedDatasetVersion.setDatasetRepositoryId(StatisticalResourcesPersistedDoMocks.mockString(10));
-        expectedDatasetVersion = datasetService.updateDatasetVersion(getServiceContextAdministrador(), expectedDatasetVersion);
+        String datasetRepositoryId = StatisticalResourcesPersistedDoMocks.mockString(10);
+        datasetVersion.setDatasetRepositoryId(datasetRepositoryId);
+        expectedDatasetVersion.setDatasetRepositoryId(datasetRepositoryId);
+        datasetVersion = datasetService.updateDatasetVersion(getServiceContextAdministrador(), datasetVersion);
 
         String datasetVersionUrn = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_01_BASIC_NAME).getSiemacMetadataStatisticalResource().getUrn();
-        mockDsdAndDataRepositorySimpleDimensions();
+        mockDsdAndDataRepositorySimpleDimensionsNoAttributes();
 
         Datasource expected = notPersistedDoMocks.mockDatasourceForPersist();
         Datasource actual = datasetService.createDatasource(getServiceContextWithoutPrincipal(), datasetVersionUrn, expected);
@@ -117,34 +120,60 @@ public class DatasetServiceDatasourceManagementTest extends StatisticalResources
     }
 
     @Test
+    @MetamacMock({DATASET_VERSION_01_BASIC_NAME, DATASET_VERSION_02_BASIC_NAME})
+    public void testCreateDatasourceWithObservationAttributes() throws Exception {
+        DatasetVersion datasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_01_BASIC_NAME);
+        DatasetVersion expectedDatasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_01_BASIC_NAME);
+
+        String datasetRepositoryId = StatisticalResourcesPersistedDoMocks.mockString(10);
+        // IMPORTATION TASK SET DATASETREPOSITORYID
+        expectedDatasetVersion.setDatasetRepositoryId(datasetRepositoryId);
+        datasetVersion.setDatasetRepositoryId(datasetRepositoryId);
+        datasetVersion = datasetService.updateDatasetVersion(getServiceContextAdministrador(), datasetVersion);
+
+        String datasetVersionUrn = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_01_BASIC_NAME).getSiemacMetadataStatisticalResource().getUrn();
+        mockDsdAndDataRepositorySimpleDimensionsWithObservationAttributes();
+
+        Datasource expected = notPersistedDoMocks.mockDatasourceForPersist();
+        Datasource actual = datasetService.createDatasource(getServiceContextWithoutPrincipal(), datasetVersionUrn, expected);
+        expected.setDatasetVersion(expectedDatasetVersion);
+
+        // SET EXPECTED METADATA
+
+        DataMockUtils.fillDatasetVersionWithCalculatedMetadataFromDataWithObservationAttributes(expectedDatasetVersion);
+
+        assertEqualsDatasource(expected, actual);
+    }
+
+    @Test
     @MetamacMock(DATASET_VERSION_51_IN_DRAFT_WITH_DATASOURCE_NAME)
     public void testCreateDatasourceDraft() throws Exception {
-        mockDsdAndDataRepositorySimpleDimensions();
+        mockDsdAndDataRepositorySimpleDimensionsNoAttributes();
         testCanAddDatasourceInCurrentProcStatus(DATASET_VERSION_51_IN_DRAFT_WITH_DATASOURCE_NAME);
     }
 
     @Test
     @MetamacMock(DATASET_VERSION_52_IN_PRODUCTION_VALIDATION_WITH_DATASOURCE_NAME)
     public void testCreateDatasourceProductionValidation() throws Exception {
-        mockDsdAndDataRepositorySimpleDimensions();
+        mockDsdAndDataRepositorySimpleDimensionsNoAttributes();
         testCanNotAddDatasourceInCurrentProcStatus(DATASET_VERSION_52_IN_PRODUCTION_VALIDATION_WITH_DATASOURCE_NAME);
     }
     @Test
     @MetamacMock(DATASET_VERSION_53_IN_DIFFUSION_VALIDATION_WITH_DATASOURCE_NAME)
     public void testCreateDatasourceDiffusionValidation() throws Exception {
-        mockDsdAndDataRepositorySimpleDimensions();
+        mockDsdAndDataRepositorySimpleDimensionsNoAttributes();
         testCanNotAddDatasourceInCurrentProcStatus(DATASET_VERSION_53_IN_DIFFUSION_VALIDATION_WITH_DATASOURCE_NAME);
     }
     @Test
     @MetamacMock(DATASET_VERSION_54_IN_VALIDATION_REJECTED_WITH_DATASOURCE_NAME)
     public void testCreateDatasourceValidationRejected() throws Exception {
-        mockDsdAndDataRepositorySimpleDimensions();
+        mockDsdAndDataRepositorySimpleDimensionsNoAttributes();
         testCanAddDatasourceInCurrentProcStatus(DATASET_VERSION_54_IN_VALIDATION_REJECTED_WITH_DATASOURCE_NAME);
     }
     @Test
     @MetamacMock(DATASET_VERSION_55_PUBLISHED_WITH_DATASOURCE_NAME)
     public void testCreateDatasourcePublished() throws Exception {
-        mockDsdAndDataRepositorySimpleDimensions();
+        mockDsdAndDataRepositorySimpleDimensionsNoAttributes();
         testCanNotAddDatasourceInCurrentProcStatus(DATASET_VERSION_55_PUBLISHED_WITH_DATASOURCE_NAME);
     }
 
@@ -176,7 +205,7 @@ public class DatasetServiceDatasourceManagementTest extends StatisticalResources
         DatasetVersion expectedDatasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_49_WITH_DATASOURCE_FROM_PX_WITH_NEXT_UPDATE_IN_ONE_MONTH_NAME);
         String datasetVersionUrn = expectedDatasetVersion.getSiemacMetadataStatisticalResource().getUrn();
 
-        mockDsdAndDataRepositorySimpleDimensions();
+        mockDsdAndDataRepositorySimpleDimensionsNoAttributes();
 
         DateTime newNextUpdate = new DateTime().plusWeeks(1);
         Datasource expected = notPersistedDoMocks.mockDatasourceForPersist();
@@ -195,7 +224,7 @@ public class DatasetServiceDatasourceManagementTest extends StatisticalResources
         DatasetVersion expectedDatasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_49_WITH_DATASOURCE_FROM_PX_WITH_NEXT_UPDATE_IN_ONE_MONTH_NAME);
         String datasetVersionUrn = expectedDatasetVersion.getSiemacMetadataStatisticalResource().getUrn();
 
-        mockDsdAndDataRepositorySimpleDimensions();
+        mockDsdAndDataRepositorySimpleDimensionsNoAttributes();
 
         DateTime oldNextUpdate = expectedDatasetVersion.getDateNextUpdate();
         DateTime newNextUpdate = new DateTime().plusYears(1);
@@ -215,7 +244,7 @@ public class DatasetServiceDatasourceManagementTest extends StatisticalResources
         DatasetVersion expectedDatasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_49_WITH_DATASOURCE_FROM_PX_WITH_NEXT_UPDATE_IN_ONE_MONTH_NAME);
         String datasetVersionUrn = expectedDatasetVersion.getSiemacMetadataStatisticalResource().getUrn();
 
-        mockDsdAndDataRepositorySimpleDimensions();
+        mockDsdAndDataRepositorySimpleDimensionsNoAttributes();
 
         DateTime oldNextUpdate = expectedDatasetVersion.getDateNextUpdate();
         DateTime newNextUpdate = new DateTime().minusMonths(1);
@@ -235,7 +264,7 @@ public class DatasetServiceDatasourceManagementTest extends StatisticalResources
         DatasetVersion expectedDatasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_50_WITH_DATASOURCE_FROM_PX_WITH_USER_NEXT_UPDATE_IN_ONE_MONTH_NAME);
         String datasetVersionUrn = expectedDatasetVersion.getSiemacMetadataStatisticalResource().getUrn();
 
-        mockDsdAndDataRepositorySimpleDimensions();
+        mockDsdAndDataRepositorySimpleDimensionsNoAttributes();
 
         DateTime oldNextUpdate = expectedDatasetVersion.getDateNextUpdate();
         DateTime nextUpdate = new DateTime().plusWeeks(1);
@@ -294,7 +323,7 @@ public class DatasetServiceDatasourceManagementTest extends StatisticalResources
     @Test
     @MetamacMock(DATASET_VERSION_51_IN_DRAFT_WITH_DATASOURCE_NAME)
     public void testUpdateDatasourceDraft() throws Exception {
-        mockDsdAndDataRepositorySimpleDimensions();
+        mockDsdAndDataRepositorySimpleDimensionsNoAttributes();
 
         testCanUpdateDatasourceInCurrentProcStatus(DATASET_VERSION_51_IN_DRAFT_WITH_DATASOURCE_NAME);
     }
@@ -302,14 +331,14 @@ public class DatasetServiceDatasourceManagementTest extends StatisticalResources
     @Test
     @MetamacMock(DATASET_VERSION_52_IN_PRODUCTION_VALIDATION_WITH_DATASOURCE_NAME)
     public void testUpdateDatasourceNotProductionValidation() throws Exception {
-        mockDsdAndDataRepositorySimpleDimensions();
+        mockDsdAndDataRepositorySimpleDimensionsNoAttributes();
         testCanNotUpdateDatasourceInCurrentProcStatus(DATASET_VERSION_52_IN_PRODUCTION_VALIDATION_WITH_DATASOURCE_NAME);
     }
 
     @Test
     @MetamacMock(DATASET_VERSION_53_IN_DIFFUSION_VALIDATION_WITH_DATASOURCE_NAME)
     public void testUpdateDatasourceDiffusionValidtaion() throws Exception {
-        mockDsdAndDataRepositorySimpleDimensions();
+        mockDsdAndDataRepositorySimpleDimensionsNoAttributes();
 
         testCanNotUpdateDatasourceInCurrentProcStatus(DATASET_VERSION_53_IN_DIFFUSION_VALIDATION_WITH_DATASOURCE_NAME);
     }
@@ -317,7 +346,7 @@ public class DatasetServiceDatasourceManagementTest extends StatisticalResources
     @Test
     @MetamacMock(DATASET_VERSION_54_IN_VALIDATION_REJECTED_WITH_DATASOURCE_NAME)
     public void testUpdateDatasourceValidationRejected() throws Exception {
-        mockDsdAndDataRepositorySimpleDimensions();
+        mockDsdAndDataRepositorySimpleDimensionsNoAttributes();
 
         testCanUpdateDatasourceInCurrentProcStatus(DATASET_VERSION_54_IN_VALIDATION_REJECTED_WITH_DATASOURCE_NAME);
         testCanNotUpdateDatasourceInCurrentProcStatus(DATASET_VERSION_55_PUBLISHED_WITH_DATASOURCE_NAME);
@@ -326,7 +355,7 @@ public class DatasetServiceDatasourceManagementTest extends StatisticalResources
     @Test
     @MetamacMock(DATASET_VERSION_55_PUBLISHED_WITH_DATASOURCE_NAME)
     public void testUpdateDatasourcePublished() throws Exception {
-        mockDsdAndDataRepositorySimpleDimensions();
+        mockDsdAndDataRepositorySimpleDimensionsNoAttributes();
 
         testCanNotUpdateDatasourceInCurrentProcStatus(DATASET_VERSION_55_PUBLISHED_WITH_DATASOURCE_NAME);
     }
@@ -405,7 +434,7 @@ public class DatasetServiceDatasourceManagementTest extends StatisticalResources
 
         Datasource expected = datasetVersion.getDatasources().get(0);
 
-        mockDsdAndDataRepositorySimpleDimensions();
+        mockDsdAndDataRepositorySimpleDimensionsNoAttributes();
 
         String datasourceUrn = expected.getIdentifiableStatisticalResource().getUrn();
 
@@ -419,7 +448,7 @@ public class DatasetServiceDatasourceManagementTest extends StatisticalResources
     public void testDeleteDatasource() throws Exception {
         Datasource expected = datasourceMockFactory.retrieveMock(DATASOURCE_01_BASIC_NAME);
 
-        mockDsdAndDataRepositorySimpleDimensions();
+        mockDsdAndDataRepositorySimpleDimensionsNoAttributes();
 
         String datasourceUrn = expected.getIdentifiableStatisticalResource().getUrn();
 
@@ -455,7 +484,7 @@ public class DatasetServiceDatasourceManagementTest extends StatisticalResources
     @Test
     @MetamacMock(DATASET_VERSION_51_IN_DRAFT_WITH_DATASOURCE_NAME)
     public void testDeleteDatasourceDraft() throws Exception {
-        mockDsdAndDataRepositorySimpleDimensions();
+        mockDsdAndDataRepositorySimpleDimensionsNoAttributes();
 
         testCanDeleteDatasourceInCurrentProcStatus(DATASET_VERSION_51_IN_DRAFT_WITH_DATASOURCE_NAME);
     }
@@ -463,7 +492,7 @@ public class DatasetServiceDatasourceManagementTest extends StatisticalResources
     @Test
     @MetamacMock(DATASET_VERSION_52_IN_PRODUCTION_VALIDATION_WITH_DATASOURCE_NAME)
     public void testDeleteDatasourceProductionValidation() throws Exception {
-        mockDsdAndDataRepositorySimpleDimensions();
+        mockDsdAndDataRepositorySimpleDimensionsNoAttributes();
 
         testCanNotDeleteDatasourceInCurrentProcStatus(DATASET_VERSION_52_IN_PRODUCTION_VALIDATION_WITH_DATASOURCE_NAME);
     }
@@ -471,7 +500,7 @@ public class DatasetServiceDatasourceManagementTest extends StatisticalResources
     @Test
     @MetamacMock(DATASET_VERSION_53_IN_DIFFUSION_VALIDATION_WITH_DATASOURCE_NAME)
     public void testDeleteDatasourceDiffusionValidation() throws Exception {
-        mockDsdAndDataRepositorySimpleDimensions();
+        mockDsdAndDataRepositorySimpleDimensionsNoAttributes();
 
         testCanNotDeleteDatasourceInCurrentProcStatus(DATASET_VERSION_53_IN_DIFFUSION_VALIDATION_WITH_DATASOURCE_NAME);
     }
@@ -479,7 +508,7 @@ public class DatasetServiceDatasourceManagementTest extends StatisticalResources
     @Test
     @MetamacMock(DATASET_VERSION_54_IN_VALIDATION_REJECTED_WITH_DATASOURCE_NAME)
     public void testDeleteDatasourceValidationRejected() throws Exception {
-        mockDsdAndDataRepositorySimpleDimensions();
+        mockDsdAndDataRepositorySimpleDimensionsNoAttributes();
 
         testCanDeleteDatasourceInCurrentProcStatus(DATASET_VERSION_54_IN_VALIDATION_REJECTED_WITH_DATASOURCE_NAME);
     }
@@ -487,7 +516,7 @@ public class DatasetServiceDatasourceManagementTest extends StatisticalResources
     @Test
     @MetamacMock(DATASET_VERSION_55_PUBLISHED_WITH_DATASOURCE_NAME)
     public void testDeleteDatasourcePublished() throws Exception {
-        mockDsdAndDataRepositorySimpleDimensions();
+        mockDsdAndDataRepositorySimpleDimensionsNoAttributes();
 
         testCanNotDeleteDatasourceInCurrentProcStatus(DATASET_VERSION_55_PUBLISHED_WITH_DATASOURCE_NAME);
     }
@@ -498,7 +527,7 @@ public class DatasetServiceDatasourceManagementTest extends StatisticalResources
         DatasetVersion datasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_90_WITH_TWO_DATASOURCES_NAME);
         Datasource expected = datasetVersion.getDatasources().get(0);
 
-        mockDsdAndDataRepositorySimpleDimensions();
+        mockDsdAndDataRepositorySimpleDimensionsNoAttributes();
 
         String datasourceUrn = expected.getIdentifiableStatisticalResource().getUrn();
 
@@ -519,7 +548,7 @@ public class DatasetServiceDatasourceManagementTest extends StatisticalResources
 
         mockTaskInProgressForResource(datasetVersionUrn, true);
 
-        mockDsdAndDataRepositorySimpleDimensions();
+        mockDsdAndDataRepositorySimpleDimensionsNoAttributes();
 
         String datasourceUrn = expected.getIdentifiableStatisticalResource().getUrn();
 
@@ -579,7 +608,7 @@ public class DatasetServiceDatasourceManagementTest extends StatisticalResources
         DatasetVersion expectedDatasetVersion = datasource.getDatasetVersion();
         String datasetVersionUrn = expectedDatasetVersion.getSiemacMetadataStatisticalResource().getUrn();
 
-        mockDsdAndDataRepositorySimpleDimensions();
+        mockDsdAndDataRepositorySimpleDimensionsNoAttributes();
 
         String datasourceUrn = datasource.getIdentifiableStatisticalResource().getUrn();
 
@@ -614,8 +643,12 @@ public class DatasetServiceDatasourceManagementTest extends StatisticalResources
         datasetService.deleteDatasource(getServiceContextWithoutPrincipal(), expected.getIdentifiableStatisticalResource().getUrn());
     }
 
-    private void mockDsdAndDataRepositorySimpleDimensions() throws Exception {
-        DataMockUtils.mockDsdAndDataRepositorySimpleDimensions(datasetRepositoriesServiceFacade, srmRestInternalService);
+    private void mockDsdAndDataRepositorySimpleDimensionsNoAttributes() throws Exception {
+        DataMockUtils.mockDsdAndDataRepositorySimpleDimensionsNoAttributes(datasetRepositoriesServiceFacade, srmRestInternalService);
+    }
+
+    private void mockDsdAndDataRepositorySimpleDimensionsWithObservationAttributes() throws Exception {
+        DataMockUtils.mockDsdAndDataRepositorySimpleDimensionsWithObservationAttributes(datasetRepositoriesServiceFacade, srmRestInternalService);
     }
 
     private void mockDsdAndDataRepositoryEmpty() throws Exception {

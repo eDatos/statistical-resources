@@ -46,7 +46,7 @@ public class StatisticalResourcesMockRestBaseTest extends StatisticalResourcesBa
     private StatisticalOperationsRestInternalFacadeV10 statisticalOperationsRestInternalFacadeV10;
 
     @Autowired
-    private MetamacApisLocator                         metamacApisLocator;
+    protected MetamacApisLocator                       metamacApisLocator;
 
     @Before
     public void setUp() throws MetamacException {

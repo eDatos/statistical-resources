@@ -6,8 +6,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.collections.CollectionUtils;
-import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
 import org.siemac.metamac.core.common.util.MetamacCollectionUtils;
+import org.siemac.metamac.core.common.util.MetamacPredicate;
+import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.TemporalCode;
 import org.siemac.metamac.statistical.resources.core.utils.predicates.ExternalItemEqualsUrnPredicate;
 import org.siemac.metamac.statistical.resources.core.utils.predicates.ObjectEqualsStringFieldPredicate;
@@ -45,6 +46,11 @@ public class StatisticalResourcesCollectionUtils extends MetamacCollectionUtils 
 
     @SuppressWarnings("unchecked")
     public static <T> boolean isInCollection(Collection<T> collection, ObjectEqualsStringFieldPredicate predicate) {
+        return (T) CollectionUtils.find(collection, predicate) != null;
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T> boolean isInCollection(Collection<T> collection, MetamacPredicate<T> predicate) {
         return (T) CollectionUtils.find(collection, predicate) != null;
     }
 

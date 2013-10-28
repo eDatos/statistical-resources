@@ -591,29 +591,37 @@ public class ValidateDataVersusDsd {
         {
             // Codelist: If is not currently cached
             String codelistRepresentationUrn = dsdComponent.getCodelistRepresentationUrn();
-            Codes codes = srmRestInternalService.retrieveCodesOfCodelistEfficiently(codelistRepresentationUrn);
 
-            if (codelistRepresentationUrn != null && !enumerationRepresentationsMultimap.containsKey(codelistRepresentationUrn)) {
-                for (CodeResourceInternal codeType : codes.getCodes()) {
-                    enumerationRepresentationsMultimap.put(codelistRepresentationUrn, codeType.getId());
-                }
-            }
+            if (codelistRepresentationUrn != null) {
 
-            // Cache translation if is -+necessary
-            if (isTranslationNecessary(dsdComponent.getComponentId())) {
-                Map<String, String> variableElementMapToCodesMap = new HashMap<String, String>();
-                for (CodeResourceInternal codeType : codes.getCodes()) {
-                    variableElementMapToCodesMap.put(codeType.getVariableElement().getId(), codeType.getId());
+                Codes codes = null;
+
+                if (!enumerationRepresentationsMultimap.containsKey(codelistRepresentationUrn)) {
+                    codes = srmRestInternalService.retrieveCodesOfCodelistEfficiently(codelistRepresentationUrn);
+                    for (CodeResourceInternal codeType : codes.getCodes()) {
+                        enumerationRepresentationsMultimap.put(codelistRepresentationUrn, codeType.getId());
+                    }
                 }
 
-                Codes alternativeCodes = srmRestInternalService.retrieveCodesOfCodelistEfficiently(alternativeSourceEnumerationRepresentationMap.get(dsdComponent.getComponentId()));
-                // (Key: alternativeCodeId and Value: normalizedCodeId)
-                Map<String, String> translationCodeMap = new HashMap<String, String>();
-                for (CodeResourceInternal alternativeCodeType : alternativeCodes.getCodes()) {
-                    translationCodeMap.put(alternativeCodeType.getId(), variableElementMapToCodesMap.get(alternativeCodeType.getVariableElement().getId()));
-                }
+                // Cache translation if is -+necessary
+                if (isTranslationNecessary(dsdComponent.getComponentId())) {
+                    if (codes == null) {
+                        codes = srmRestInternalService.retrieveCodesOfCodelistEfficiently(codelistRepresentationUrn);
+                    }
+                    Map<String, String> variableElementMapToCodesMap = new HashMap<String, String>();
+                    for (CodeResourceInternal codeType : codes.getCodes()) {
+                        variableElementMapToCodesMap.put(codeType.getVariableElement().getId(), codeType.getId());
+                    }
 
-                translationEnumRepresentationsMap.put(dsdComponent.getComponentId(), translationCodeMap);
+                    Codes alternativeCodes = srmRestInternalService.retrieveCodesOfCodelistEfficiently(alternativeSourceEnumerationRepresentationMap.get(dsdComponent.getComponentId()));
+                    // (Key: alternativeCodeId and Value: normalizedCodeId)
+                    Map<String, String> translationCodeMap = new HashMap<String, String>();
+                    for (CodeResourceInternal alternativeCodeType : alternativeCodes.getCodes()) {
+                        translationCodeMap.put(alternativeCodeType.getId(), variableElementMapToCodesMap.get(alternativeCodeType.getVariableElement().getId()));
+                    }
+
+                    translationEnumRepresentationsMap.put(dsdComponent.getComponentId(), translationCodeMap);
+                }
             }
         }
 

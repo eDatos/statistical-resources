@@ -6,8 +6,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -41,6 +44,7 @@ import org.siemac.metamac.statistical.resources.core.dto.SiemacMetadataStatistic
 import org.siemac.metamac.statistical.resources.core.dto.StatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.VersionRationaleTypeDto;
 import org.siemac.metamac.statistical.resources.core.dto.VersionableStatisticalResourceDto;
+import org.siemac.metamac.statistical.resources.core.enume.domain.VersionRationaleTypeEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionSingleParameters;
 import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesCollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -324,6 +328,8 @@ public class BaseDto2DoMapperImpl extends CommonDto2DoMapperImpl implements Base
         List<VersionRationaleType> targetsBefore = targets;
         List<VersionRationaleType> newTargets = new ArrayList<VersionRationaleType>();
 
+        sources = cleanDuplicateVersionRationaleTypes(sources);
+
         for (VersionRationaleTypeDto source : sources) {
             boolean existsBefore = false;
             for (VersionRationaleType target : targetsBefore) {
@@ -356,5 +362,13 @@ public class BaseDto2DoMapperImpl extends CommonDto2DoMapperImpl implements Base
         }
 
         return targets;
+    }
+
+    private List<VersionRationaleTypeDto> cleanDuplicateVersionRationaleTypes(List<VersionRationaleTypeDto> sources) {
+        LinkedHashMap<VersionRationaleTypeEnum, VersionRationaleTypeDto> cleanMap = new LinkedHashMap<VersionRationaleTypeEnum, VersionRationaleTypeDto>();
+        for (VersionRationaleTypeDto item : sources) {
+            cleanMap.put(item.getValue(), item);
+        }
+        return new ArrayList<VersionRationaleTypeDto>(cleanMap.values());
     }
 }

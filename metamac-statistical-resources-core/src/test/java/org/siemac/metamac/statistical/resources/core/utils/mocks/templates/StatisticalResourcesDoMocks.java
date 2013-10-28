@@ -25,6 +25,7 @@ import org.siemac.metamac.statistical.resources.core.common.domain.International
 import org.siemac.metamac.statistical.resources.core.common.domain.LocalisedString;
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResource;
 import org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConstants;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.AttributeValue;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Categorisation;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.CodeDimension;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
@@ -304,6 +305,24 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
             codes.add(mockCodeDimension(datasetVersion, dsdComponentId, identifier, identifier));
         }
         return codes;
+    }
+
+    // Attribute values
+    public static AttributeValue mockAttributeValue(DatasetVersion datasetVersion, String dsdComponentId, String identifier, String title) {
+        AttributeValue attrValue = new AttributeValue();
+        attrValue.setDatasetVersion(datasetVersion);
+        attrValue.setDsdComponentId(dsdComponentId);
+        attrValue.setIdentifier(identifier);
+        attrValue.setTitle(title);
+        return attrValue;
+    }
+
+    public static List<AttributeValue> mockAttributeValuesWithIdentifiers(DatasetVersion datasetVersion, String dsdComponentId, String... identifiers) {
+        List<AttributeValue> values = new ArrayList<AttributeValue>();
+        for (String identifier : identifiers) {
+            values.add(mockAttributeValue(datasetVersion, dsdComponentId, identifier, identifier));
+        }
+        return values;
     }
 
     // -----------------------------------------------------------------

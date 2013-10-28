@@ -26,6 +26,7 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 
 import org.joda.time.DateTime;
 import org.siemac.metamac.statistical.resources.core.base.domain.VersionRationaleType;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.AttributeValue;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.CodeDimension;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
@@ -408,6 +409,14 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
         datasetVersion.addDimensionsCoverage(new CodeDimension("dim2", "code-d2-1"));
         datasetVersion.addDimensionsCoverage(new CodeDimension("dim2", "code-d2-2"));
         datasetVersion.addDimensionsCoverage(new CodeDimension("dim3", "code-d3-1"));
+
+        datasetVersion.getAttributesCoverage().clear();
+        datasetVersion.addAttributesCoverage(new AttributeValue("attr1", "value-a1-1"));
+        datasetVersion.addAttributesCoverage(new AttributeValue("attr1", "value-a1-2"));
+        datasetVersion.addAttributesCoverage(new AttributeValue("attr2", "value-a2-1"));
+        datasetVersion.addAttributesCoverage(new AttributeValue("attr2", "value-a2-2"));
+        datasetVersion.addAttributesCoverage(new AttributeValue("attr3", "value-a3-1"));
+
         return datasetVersion;
     }
 

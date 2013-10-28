@@ -20,6 +20,7 @@ Application DatasetsStatisticalResources {
 			> @DatasetRepository
 			> @DatasetVersionRepository
 			> @CodeDimensionRepository
+			> @AttributeValueRepository
 			> @StatisticOfficialityRepository
 			> @TaskService
  			> @CategorisationRepository
@@ -53,8 +54,6 @@ Application DatasetsStatisticalResources {
     		proccessDatasetFileImportationResult(String datasetImportationId, List<@FileDescriptorResult> fileDescriptors) throws MetamacException;
     		importDatasourcesInDatasetVersion(String datasetVersionUrn, List<URL> fileUrls) throws MetamacException; 
     		importDatasourcesInStatisticalOperation(String statisticalOperationUrn, List<URL> fileUrls) throws MetamacException; 
-    		
-    		checkAttributesInstancesWithDatasetAndDimensionAttachment(@DatasetVersion datasetVersion) throws MetamacException;
     		
     		// Datasets
     		"Finds datasets by criteria"
@@ -211,7 +210,7 @@ Application DatasetsStatisticalResources {
 			//Frecuency which the data is updated
 			- @ExternalItem updateFrequency nullable databaseColumn="UPDATE_FREQUENCY_FK" cascade="all";
 			//Official/no official statistic
-			- @StatisticOfficiality statisticOfficiality nullable databaseColumn="STAT_OFFICIALITY_FK";
+			- @StatisticOfficiality statisticOfficiality nullable databaseColumn="STAT_OFFICIALITY_FK" cascade="none";
 			//Bibliographic citation
 			- @InternationalString bibliographicCitation nullable cascade="all" databaseColumn="BIBLIOGRAPHIC_CITATION_FK";
 
@@ -305,6 +304,7 @@ Application DatasetsStatisticalResources {
 
     		Repository AttributeValueRepository {
     			findByQuery;
+    			List<@AttributeValue> findValuesForDatasetVersionByAttributeId(long datasetVersionId, String attributeId) throws MetamacException;
     		}
     	}
 

@@ -4,10 +4,16 @@ import static org.siemac.metamac.core.common.serviceimpl.utils.ValidationUtils.c
 import static org.siemac.metamac.core.common.serviceimpl.utils.ValidationUtils.checkMetadataRequired;
 import static org.siemac.metamac.statistical.resources.core.error.utils.ServiceExceptionParametersUtils.addParameter;
 
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
+import org.fornax.cartridges.sculptor.framework.errorhandling.ApplicationException;
+import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
+import org.siemac.metamac.core.common.exception.utils.ExceptionUtils;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructure;
 import org.siemac.metamac.statistical.resources.core.base.domain.HasLifecycle;
 import org.siemac.metamac.statistical.resources.core.base.domain.HasSiemacMetadata;
 import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatisticalResource;
@@ -20,14 +26,30 @@ import org.siemac.metamac.statistical.resources.core.enume.domain.VersionRationa
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryTypeEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionSingleParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
+import org.siemac.metamac.statistical.resources.core.invocation.service.SrmRestInternalService;
+import org.siemac.metamac.statistical.resources.core.io.serviceimpl.validators.ValidateDataVersusDsd;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
 import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesValidationUtils;
 import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesVersionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import com.arte.statistic.dataset.repository.dto.AttributeInstanceDto;
+import com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceFacade;
 
 @Component
 public class LifecycleCommonMetadataChecker {
+
+    private static final Logger              logger = LoggerFactory.getLogger(LifecycleCommonMetadataChecker.class);
+
+    @Autowired
+    private SrmRestInternalService           srmRestInternalService;
+
+    @Autowired
+    private DatasetRepositoriesServiceFacade datasetRepositoriesServiceFacade;
 
     public void checkLifecycleCommonMetadata(HasLifecycle resource, String metadataName, List<MetamacExceptionItem> exceptionItems) {
         LifeCycleStatisticalResource lifeCycleStatisticalResource = resource.getLifeCycleStatisticalResource();
@@ -100,8 +122,43 @@ public class LifecycleCommonMetadataChecker {
                 checkMetadataRequired(resource.getDateNextUpdate(), addParameter(metadataName, ServiceExceptionSingleParameters.DATE_NEXT_UPDATE), exceptionItems);
             }
         }
+
+        if (resource.getRelatedDsd() != null) {
+            try {
+                DataStructure dsd = srmRestInternalService.retrieveDsdByUrn(resource.getRelatedDsd().getUrn());
+                ValidateDataVersusDsd validator = new ValidateDataVersusDsd(dsd, srmRestInternalService);
+
+                List<AttributeInstanceDto> attributesInstances = datasetRepositoriesServiceFacade.findAttributesInstances(resource.getDatasetRepositoryId());
+
+                validator.checkAttributesInstancesRepresentation(attributesInstances);
+
+                checkAttributesInstancesMandatoryAtNonObservationLevel(resource, validator);
+
+            } catch (MetamacException e) {
+                exceptionItems.addAll(e.getExceptionItems());
+            } catch (Exception e) {
+                logger.error("An error has occurred during attributes validation process ", e);
+                exceptionItems.add(new MetamacExceptionItem(ServiceExceptionType.DATASET_VERSION_VALIDATE_ATTRIBUTES_ERROR));
+            }
+        }
     }
 
+    private void checkAttributesInstancesMandatoryAtNonObservationLevel(DatasetVersion datasetVersion, ValidateDataVersusDsd validateDataVersusDsd) throws ApplicationException, MetamacException {
+        Map<String, List<String>> coverage = datasetRepositoriesServiceFacade.findCodeDimensions(datasetVersion.getDatasetRepositoryId());
+        List<MetamacExceptionItem> exceptions = new LinkedList<MetamacExceptionItem>();
+        try {
+            for (String attributeId : validateDataVersusDsd.getMandatoryAttributeIdsAtNonObservationLevel()) {
+                List<AttributeInstanceDto> attributeInstanceDenormalizedDtos = datasetRepositoriesServiceFacade.findAttributesInstancesWithDimensionAttachmentLevelDenormalized(
+                        datasetVersion.getDatasetRepositoryId(), attributeId, null);
+                validateDataVersusDsd.checkAttributesInstancesAssignmentStatus(attributeId, attributeInstanceDenormalizedDtos, coverage, exceptions);
+            }
+        } catch (Exception e) {
+            throw new MetamacException(e, ServiceExceptionType.UNKNOWN, "Error validating mandatory attributes at non observation level " + datasetVersion.getDatasetRepositoryId() + ". Details: "
+                    + e.getMessage());
+        }
+
+        ExceptionUtils.throwIfException(exceptions);
+    }
     private boolean hasAnyDatasourceDateNextUpdate(DatasetVersion resource) {
         for (Datasource datasource : resource.getDatasources()) {
             if (datasource.getDateNextUpdate() != null) {

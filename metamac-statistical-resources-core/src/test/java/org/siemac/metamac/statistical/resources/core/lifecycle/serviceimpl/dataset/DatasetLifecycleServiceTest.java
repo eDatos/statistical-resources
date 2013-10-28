@@ -417,7 +417,7 @@ public class DatasetLifecycleServiceTest extends StatisticalResourcesBaseTest im
     }
 
     private void mockDsdAndDataRepositorySimpleDimensions() throws Exception {
-        DataMockUtils.mockDsdAndDataRepositorySimpleDimensions(datasetRepositoriesServiceFacade, srmRestInternalService);
+        DataMockUtils.mockDsdAndDataRepositorySimpleDimensionsNoAttributes(datasetRepositoriesServiceFacade, srmRestInternalService);
     }
 
     private void mockTaskInProgressForResource(String datasetVersionUrn, boolean status) throws MetamacException {

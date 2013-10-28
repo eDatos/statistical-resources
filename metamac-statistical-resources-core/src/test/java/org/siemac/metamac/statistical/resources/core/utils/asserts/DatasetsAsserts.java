@@ -16,6 +16,7 @@ import org.apache.commons.lang.StringUtils;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
 import org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConstants;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.AttributeValue;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Categorisation;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.CodeDimension;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
@@ -90,6 +91,31 @@ public class DatasetsAsserts extends BaseAsserts {
     }
 
     public static void assertEqualsCodeDimension(CodeDimension expected, CodeDimension actual) {
+        assertEqualsNullability(expected, actual);
+        assertEquals(expected.getDsdComponentId(), actual.getDsdComponentId());
+        assertEquals(expected.getIdentifier(), actual.getIdentifier());
+        assertEquals(expected.getTitle(), actual.getTitle());
+        assertEqualsNullability(expected.getDatasetVersion(), actual.getDatasetVersion());
+        if (expected.getDatasetVersion() != null) {
+            assertEquals(expected.getDatasetVersion().getId(), actual.getDatasetVersion().getId());
+        }
+    }
+
+    public static void assertEqualsAttributeValuesCollection(List<AttributeValue> expected, List<AttributeValue> actual) {
+        assertEqualsNullability(expected, actual);
+
+        if (expected != null) {
+            assertEquals(expected.size(), actual.size());
+
+            for (int i = 0; i < expected.size(); i++) {
+                AttributeValue expectedValue = expected.get(i);
+                AttributeValue actualValue = actual.get(i);
+                assertEqualsAttributeValue(expectedValue, actualValue);
+            }
+        }
+    }
+
+    public static void assertEqualsAttributeValue(AttributeValue expected, AttributeValue actual) {
         assertEqualsNullability(expected, actual);
         assertEquals(expected.getDsdComponentId(), actual.getDsdComponentId());
         assertEquals(expected.getIdentifier(), actual.getIdentifier());
@@ -183,6 +209,8 @@ public class DatasetsAsserts extends BaseAsserts {
         assertEquals(expected.getFormatExtentObservations(), actual.getFormatExtentObservations());
 
         assertEqualsCodeDimensionsCollection(expected.getDimensionsCoverage(), actual.getDimensionsCoverage());
+
+        assertEqualsAttributeValuesCollection(expected.getAttributesCoverage(), actual.getAttributesCoverage());
 
         assertEqualsStatisticOfficiality(expected.getStatisticOfficiality(), actual.getStatisticOfficiality());
 

@@ -21,6 +21,8 @@ import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItemR
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
 import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.dto.SiemacMetadataStatisticalResourceDto;
+import org.siemac.metamac.statistical.resources.core.dto.VersionRationaleTypeDto;
+import org.siemac.metamac.statistical.resources.core.enume.domain.VersionRationaleTypeEnum;
 import org.siemac.metamac.statistical.resources.core.utils.asserts.BaseAsserts;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesDoMocks;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesDtoMocks;
@@ -63,61 +65,61 @@ public class BaseDto2DoMapperTest extends StatisticalResourcesBaseTest {
 
         assertFalse(entity.getUserModifiedKeywords());
     }
-    
+
     @Test
     public void testCalculateKeywordsCleanDuplicates() throws Exception {
         SiemacMetadataStatisticalResourceDto dto = new SiemacMetadataStatisticalResourceDto();
         SiemacMetadataStatisticalResource entity = new SiemacMetadataStatisticalResource();
-        
+
         entity.setUserModifiedKeywords(false);
         entity.setKeywords(null);
-        
+
         dto.setTitle(StatisticalResourcesDtoMocks.mockInternationalStringDto("es", "keytitulo1 keydesc1 keytitulo2 no"));
         dto.setDescription(StatisticalResourcesDtoMocks.mockInternationalStringDto("es", "keydesc1 keytitulo2 keydesc2 not"));
         dto.setKeywords(null);
-        
+
         entity = baseDto2DoMapper.siemacMetadataStatisticalResourceDtoToDo(dto, entity, METADATA_NAME_TEST);
-        
+
         assertContainsKeywordsInLocale(entity, "es", "keytitulo1", "keytitulo2", "keydesc1", "keydesc2");
-        
+
         assertFalse(entity.getUserModifiedKeywords());
     }
-    
+
     @Test
     public void testCalculateKeywordsCleanDuplicatesCaseInsensitive() throws Exception {
         SiemacMetadataStatisticalResourceDto dto = new SiemacMetadataStatisticalResourceDto();
         SiemacMetadataStatisticalResource entity = new SiemacMetadataStatisticalResource();
-        
+
         entity.setUserModifiedKeywords(false);
         entity.setKeywords(null);
-        
+
         dto.setTitle(StatisticalResourcesDtoMocks.mockInternationalStringDto("es", "keyTitulo1 keydesc1 keytitulo2 no"));
         dto.setDescription(StatisticalResourcesDtoMocks.mockInternationalStringDto("es", "keyDESC1 keytitulo2 keydesc2 not"));
         dto.setKeywords(null);
-        
+
         entity = baseDto2DoMapper.siemacMetadataStatisticalResourceDtoToDo(dto, entity, METADATA_NAME_TEST);
-        
+
         assertContainsKeywordsInLocale(entity, "es", "keytitulo1", "keytitulo2", "keydesc1", "keydesc2");
-        
+
         assertFalse(entity.getUserModifiedKeywords());
     }
-    
+
     @Test
     public void testCalculateKeywordsCleanHtml() throws Exception {
         SiemacMetadataStatisticalResourceDto dto = new SiemacMetadataStatisticalResourceDto();
         SiemacMetadataStatisticalResource entity = new SiemacMetadataStatisticalResource();
-        
+
         entity.setUserModifiedKeywords(false);
         entity.setKeywords(null);
-        
+
         dto.setTitle(StatisticalResourcesDtoMocks.mockInternationalStringDto("es", "<b>keyTitulo1</b> keydesc1 <p>keytitulo2</p> no"));
         dto.setDescription(StatisticalResourcesDtoMocks.mockInternationalStringDto("es", "<a href=\"link\">keyDESC1</a> keytitulo2 <i>keydesc2</i> not"));
         dto.setKeywords(null);
-        
+
         entity = baseDto2DoMapper.siemacMetadataStatisticalResourceDtoToDo(dto, entity, METADATA_NAME_TEST);
-        
+
         assertContainsKeywordsInLocale(entity, "es", "keytitulo1", "keytitulo2", "keydesc1", "keydesc2");
-        
+
         assertFalse(entity.getUserModifiedKeywords());
     }
 
@@ -196,6 +198,19 @@ public class BaseDto2DoMapperTest extends StatisticalResourcesBaseTest {
     }
 
     @Test
+    public void testDuplicateVersionRationaleTypes() throws Exception {
+        SiemacMetadataStatisticalResourceDto dto = new SiemacMetadataStatisticalResourceDto();
+        SiemacMetadataStatisticalResource entity = new SiemacMetadataStatisticalResource();
+
+        dto.addVersionRationaleType(new VersionRationaleTypeDto(VersionRationaleTypeEnum.MAJOR_CATEGORIES));
+        dto.addVersionRationaleType(new VersionRationaleTypeDto(VersionRationaleTypeEnum.MAJOR_CATEGORIES));
+
+        entity = baseDto2DoMapper.siemacMetadataStatisticalResourceDtoToDo(dto, entity, METADATA_NAME_TEST);
+
+        assertEquals(1, entity.getVersionRationaleTypes().size());
+    }
+
+    @Test
     public void testMapLanguageOnCreation() throws Exception {
         SiemacMetadataStatisticalResourceDto dto = new SiemacMetadataStatisticalResourceDto();
         SiemacMetadataStatisticalResource entity = new SiemacMetadataStatisticalResource();
@@ -218,7 +233,7 @@ public class BaseDto2DoMapperTest extends StatisticalResourcesBaseTest {
         entity.getLanguages().add(StatisticalResourcesDoMocks.mockCodeExternalItem("lang_es"));
 
         dto.setId(1L);
-//        dto.setLanguage(StatisticalResourcesDtoMocks.mockCodeExternalItemDto("lang_en"));
+        // dto.setLanguage(StatisticalResourcesDtoMocks.mockCodeExternalItemDto("lang_en"));
 
         entity = baseDto2DoMapper.siemacMetadataStatisticalResourceDtoToDo(dto, entity, METADATA_NAME_TEST);
 

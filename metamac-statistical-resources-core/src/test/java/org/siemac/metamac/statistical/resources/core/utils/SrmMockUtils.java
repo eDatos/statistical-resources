@@ -9,6 +9,7 @@ import org.siemac.metamac.rest.common.v1_0.domain.InternationalString;
 import org.siemac.metamac.rest.common.v1_0.domain.LocalisedString;
 import org.siemac.metamac.rest.common.v1_0.domain.ResourceLink;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Attribute;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.AttributeQualifierType;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.AttributeRelationship;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.AttributeUsageStatusType;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.CodeResourceInternal;
@@ -218,6 +219,18 @@ public class SrmMockUtils {
         return measureDim;
     }
 
+    public static Attribute buildMeasureAttribute(String id, ResourceInternal conceptSchemeRepresentationReference, AttributeRelationship attributeRelationship) {
+        Attribute attribute = new Attribute();
+        attribute.setId(id);
+        attribute.setType(AttributeQualifierType.MEASURE);
+        Representation conceptSchemeRepresentation = new Representation();
+        conceptSchemeRepresentation.setEnumerationConceptScheme(conceptSchemeRepresentationReference);
+        attribute.setLocalRepresentation(conceptSchemeRepresentation);
+        attribute.setConceptIdentity(buildConceptReferenceTypeWithURN("urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=ECB:ECB_CONCEPTS(1.0).EXR_TYPE"));
+        attribute.setAttributeRelationship(attributeRelationship);
+        return attribute;
+    }
+
     public static TimeDimension buildTimeDimension(String id, DataType type) {
         TimeDimension dim = new TimeDimension();
         dim.setId(id);
@@ -249,6 +262,18 @@ public class SrmMockUtils {
         return dim;
     }
 
+    public static Attribute buildTimeAttribute(String id, TextFormat textFormat, AttributeRelationship attributeRelationship) {
+        Attribute attribute = new Attribute();
+        attribute.setId(id);
+        attribute.setType(AttributeQualifierType.TIME);
+        Representation nonEnumeratedRepresentation = new Representation();
+        nonEnumeratedRepresentation.setTextFormat(textFormat);
+        attribute.setLocalRepresentation(nonEnumeratedRepresentation);
+        attribute.setConceptIdentity(buildConceptReferenceTypeWithURN("urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=ECB:ECB_CONCEPTS(1.0).EXR_TYPE"));
+        attribute.setAttributeRelationship(attributeRelationship);
+        return attribute;
+    }
+
     public static Dimension buildGeoDimension(String id, ResourceInternal codelistReference) {
         Dimension dim = new Dimension();
         dim.setId(id);
@@ -262,6 +287,18 @@ public class SrmMockUtils {
 
         dim.setConceptIdentity(buildConceptReferenceTypeWithURN("urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=ECB:ECB_CONCEPTS(1.0).EXR_TYPE"));
         return dim;
+    }
+
+    public static Attribute buildSpatialAttribute(String id, ResourceInternal codelistReference, AttributeRelationship attributeRelationship) {
+        Attribute attribute = new Attribute();
+        attribute.setId(id);
+        attribute.setType(AttributeQualifierType.SPATIAL);
+        Representation codelistRepresentation = new Representation();
+        codelistRepresentation.setEnumerationCodelist(codelistReference);
+        attribute.setLocalRepresentation(codelistRepresentation);
+        attribute.setConceptIdentity(buildConceptReferenceTypeWithURN("urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=ECB:ECB_CONCEPTS(1.0).EXR_TYPE"));
+        attribute.setAttributeRelationship(attributeRelationship);
+        return attribute;
     }
 
     public static Dimension buildDimension(String id, String conceptIdentityURN, String representationURN) {

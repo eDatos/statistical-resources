@@ -18,7 +18,7 @@ public class MetadataEditionChecks {
         }
         return false;
     }
-    
+
     public static boolean canLanguageBeEdited(Long id) {
         if (id == null) {
             return true;

@@ -37,8 +37,10 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.Categorisati
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionRepository;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
+import org.siemac.metamac.statistical.resources.core.invocation.service.SrmRestInternalService;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceapi.LifecycleService;
 import org.siemac.metamac.statistical.resources.core.task.serviceapi.TaskService;
+import org.siemac.metamac.statistical.resources.core.utils.DataMockUtils;
 import org.siemac.metamac.statistical.resources.core.utils.TaskMockUtils;
 import org.siemac.metamac.statistical.resources.core.utils.asserts.BaseAsserts;
 import org.siemac.metamac.statistical.resources.core.utils.asserts.LifecycleAsserts;
@@ -52,6 +54,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceFacade;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:spring/statistical-resources/include/dataset-repository-mockito.xml", "classpath:spring/statistical-resources/include/task-mockito.xml",
@@ -70,6 +74,12 @@ public class DatasetPublishingServiceTest extends StatisticalResourcesMockRestBa
     private LifecycleService<DatasetVersion> datasetVersionLifecycleService;
 
     @Autowired
+    private DatasetRepositoriesServiceFacade datasetRepositoriesServiceFacade;
+
+    @Autowired
+    private SrmRestInternalService           srmRestInternalService;
+
+    @Autowired
     private TaskService                      taskService;
 
     @Override
@@ -85,6 +95,8 @@ public class DatasetPublishingServiceTest extends StatisticalResourcesMockRestBa
         DatasetVersion datasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_70_PREPARED_TO_PUBLISH_EXTERNAL_ITEM_FULL_NAME);
         SiemacMetadataStatisticalResource siemacResource = datasetVersion.getSiemacMetadataStatisticalResource();
         String datasetVersionUrn = siemacResource.getUrn();
+
+        mockDsdAndDataRepositorySimpleDimensionsNoAttributes();
 
         mockSiemacExternalItemsPublished(siemacResource);
 
@@ -122,6 +134,8 @@ public class DatasetPublishingServiceTest extends StatisticalResourcesMockRestBa
         SiemacMetadataStatisticalResource siemacResource = datasetVersion.getSiemacMetadataStatisticalResource();
         String datasetVersionUrn = siemacResource.getUrn();
 
+        mockDsdAndDataRepositorySimpleDimensionsNoAttributes();
+
         mockSiemacExternalItemsPublished(siemacResource);
 
         mockDatasetVersionExternalItemsPublished(datasetVersion);
@@ -142,6 +156,8 @@ public class DatasetPublishingServiceTest extends StatisticalResourcesMockRestBa
         SiemacMetadataStatisticalResource siemacResource = datasetVersion.getSiemacMetadataStatisticalResource();
         String datasetVersionUrn = siemacResource.getUrn();
 
+        mockDsdAndDataRepositorySimpleDimensionsNoAttributes();
+
         mockSiemacExternalItemsNotPublished(siemacResource);
         mockDatasetVersionExternalItemsNotPublished(datasetVersion);
 
@@ -161,6 +177,8 @@ public class DatasetPublishingServiceTest extends StatisticalResourcesMockRestBa
         DatasetVersion datasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_71_RELATED_RESOURCES_UNPUBLISHED_NAME);
         SiemacMetadataStatisticalResource siemacResource = datasetVersion.getSiemacMetadataStatisticalResource();
         String datasetVersionUrn = siemacResource.getUrn();
+
+        mockDsdAndDataRepositorySimpleDimensionsNoAttributes();
 
         mockSiemacExternalItemsPublished(siemacResource);
         mockDatasetVersionExternalItemsPublished(datasetVersion);
@@ -349,4 +367,8 @@ public class DatasetPublishingServiceTest extends StatisticalResourcesMockRestBa
         TaskMockUtils.mockAllTaskInProgressForDatasetVersion(taskService, status);
     }
 
+    private void mockDsdAndDataRepositorySimpleDimensionsNoAttributes() throws Exception {
+        DataMockUtils.mockDataRepositorySimpleDimensionsNoAttributes(datasetRepositoriesServiceFacade);
+        DataMockUtils.mockDsdAPIAndRelatedWithNoAttributes(metamacApisLocator);
+    }
 }

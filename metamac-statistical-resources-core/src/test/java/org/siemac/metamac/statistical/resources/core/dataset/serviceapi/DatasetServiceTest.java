@@ -49,6 +49,8 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryMockFactory.QUERY_07_SIMPLE_MULTI_VERSION_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_40_TO_PUBLISH_WITH_DATASET_VERSION_NOT_PUBLISHED_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_41_TO_PUBLISH_WITH_DATASET_WITH_NO_PUBLISHED_VERSION_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_42_TO_PUBLISH_WITH_DATASET_WITH_LAST_VERSION_NOT_PUBLISHED_PREVIOUS_COMPATIBLE_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_43_TO_PUBLISH_WITH_DATASET_WITH_LAST_VERSION_NOT_PUBLISHED_PREVIOUS_INCOMPATIBLE_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.StatisticOfficialityMockFactory.STATISTIC_OFFICIALITY_01_BASIC_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.StatisticOfficialityMockFactory.STATISTIC_OFFICIALITY_02_BASIC_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesDoMocks.mockCodeDimensionsWithIdentifiers;
@@ -671,6 +673,39 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
     }
 
     @Test
+    @MetamacMock(QUERY_VERSION_42_TO_PUBLISH_WITH_DATASET_WITH_LAST_VERSION_NOT_PUBLISHED_PREVIOUS_COMPATIBLE_NAME)
+    public void testDeleteDatasetVersionIsRequiredByQueryLinkedToDatasetPreviousPublishedVersionCompatible() throws Exception {
+        QueryVersion queryVersion01 = queryVersionMockFactory.retrieveMock(QUERY_VERSION_42_TO_PUBLISH_WITH_DATASET_WITH_LAST_VERSION_NOT_PUBLISHED_PREVIOUS_COMPATIBLE_NAME);
+
+        String urn = queryVersion01.getDataset().getVersions().get(1).getSiemacMetadataStatisticalResource().getUrn();
+
+        // Delete dataset version
+        datasetService.deleteDatasetVersion(getServiceContextWithoutPrincipal(), urn);
+
+        expectedMetamacException(new MetamacException(ServiceExceptionType.DATASET_VERSION_NOT_FOUND, urn));
+
+        datasetService.retrieveDatasetVersionByUrn(getServiceContextWithoutPrincipal(), urn);
+    }
+
+    @Test
+    @MetamacMock(QUERY_VERSION_43_TO_PUBLISH_WITH_DATASET_WITH_LAST_VERSION_NOT_PUBLISHED_PREVIOUS_INCOMPATIBLE_NAME)
+    public void testDeleteDatasetVersionIsRequiredByQueryLinkedToDatasetPreviousPublishedVersionInCompatible() throws Exception {
+        QueryVersion queryVersion01 = queryVersionMockFactory.retrieveMock(QUERY_VERSION_43_TO_PUBLISH_WITH_DATASET_WITH_LAST_VERSION_NOT_PUBLISHED_PREVIOUS_INCOMPATIBLE_NAME);
+
+        String urn = queryVersion01.getDataset().getVersions().get(1).getSiemacMetadataStatisticalResource().getUrn();
+
+        MetamacExceptionItem itemRoot = new MetamacExceptionItem(ServiceExceptionType.DATASET_VERSION_CANT_BE_DELETED, urn);
+        MetamacExceptionItem item = new MetamacExceptionItem(ServiceExceptionType.DATASET_VERSION_IS_REQUIRED_BY_OTHER_RESOURCES_LAST_VERSION_INCOMPATIBLE, queryVersion01
+                .getLifeCycleStatisticalResource().getUrn());
+        itemRoot.setExceptionItems(Arrays.asList(item));
+
+        expectedMetamacException(new MetamacException(Arrays.asList(itemRoot)));
+
+        // Delete dataset version
+        datasetService.deleteDatasetVersion(getServiceContextWithoutPrincipal(), urn);
+    }
+
+    @Test
     @MetamacMock({DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME, DATASET_01_BASIC_NAME, DATASET_VERSION_01_BASIC_NAME})
     public void testDeleteDatasetVersionImportationTaskInProgress() throws Exception {
         String urn = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_01_BASIC_NAME).getSiemacMetadataStatisticalResource().getUrn();
@@ -769,19 +804,6 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
 
         List<URL> urls = Arrays.asList(buildURLForFile(fileForDatasetVersion37), buildURLForFile(fileForDatasetVersion38));
         datasetService.importDatasourcesInStatisticalOperation(getServiceContextWithoutPrincipal(), statisticalOperationUrn, urls);
-    }
-
-    @Override
-    @Test
-    @MetamacMock({DATASET_VERSION_37_WITH_SINGLE_DATASOURCE_IN_OPERATION_0001_NAME})
-    public void testCheckAttributesInstancesWithDatasetAndDimensionAttachment() throws Exception {
-        DatasetVersion datasetVersion37 = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_37_WITH_SINGLE_DATASOURCE_IN_OPERATION_0001_NAME);
-        datasetVersion37.getRelatedDsd().setUrn("urn:sdmx:org.sdmx.infomodel.datastructure.DataStructure=ECB:ECB_EXR_RG(1.0)");
-
-        Mockito.when(datasetRepositoriesServiceFacade.findAttributesInstances(anyString())).thenReturn(Mocks.mockAttributesInstances());
-        Mocks.mockRestService(srmRestInternalService);
-
-        datasetService.checkAttributesInstancesWithDatasetAndDimensionAttachment(getServiceContextWithoutPrincipal(), datasetVersion37);
     }
 
     @Test
@@ -1354,7 +1376,7 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
     }
 
     private void mockDsdAndDataRepositorySimpleDimensions() throws Exception {
-        DataMockUtils.mockDsdAndDataRepositorySimpleDimensions(datasetRepositoriesServiceFacade, srmRestInternalService);
+        DataMockUtils.mockDsdAndDataRepositorySimpleDimensionsNoAttributes(datasetRepositoriesServiceFacade, srmRestInternalService);
     }
 
     private void mockTaskInProgressForResource(String datasetVersionUrn, boolean status) throws MetamacException {
