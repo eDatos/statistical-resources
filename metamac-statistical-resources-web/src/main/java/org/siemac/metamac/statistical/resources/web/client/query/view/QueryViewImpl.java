@@ -82,6 +82,8 @@ public class QueryViewImpl extends ViewWithUiHandlers<QueryUiHandlers> implement
         super.setUiHandlers(uiHandlers);
         queryFormPanel.productionDescriptorsEditionForm.setUiHandlers(uiHandlers);
         queryFormPanel.productionDescriptorsForm.setUiHandlers(uiHandlers);
+        queryFormPanel.lifeCycleForm.setUiHandlers(uiHandlers);
+        queryFormPanel.lifeCycleEditionForm.setUiHandlers(uiHandlers);
 
         queryFormPanel.resourceRelationDescriptorsEditionForm.setUiHandlers(uiHandlers);
         queryFormPanel.resourceRelationDescriptorsForm.setUiHandlers(uiHandlers);
@@ -450,20 +452,27 @@ public class QueryViewImpl extends ViewWithUiHandlers<QueryUiHandlers> implement
 
             lifeCycleEditionForm.setLifeCycleStatisticalResourceDto(queryVersionDto);
             lifeCycleEditionForm.setRequiredTitleSuffix(requiredFieldsToNextProcStatus);
+
+            versionEditionForm.setLifeCycleStatisticalResourceDto(queryVersionDto);
+            versionEditionForm.setRequiredTitleSuffix(requiredFieldsToNextProcStatus);
+
             if (isCreationMode()) {
                 identifiersEditionForm.hide();
                 lifeCycleEditionForm.hide();
                 identifiersCreationForm.show();
+                versionEditionForm.hide();
+                resourceRelationDescriptorsEditionForm.hide();
+                thematicContentClassifiersEditionForm.hide();
             } else {
                 identifiersEditionForm.show();
                 lifeCycleEditionForm.show();
                 identifiersCreationForm.hide();
+                versionEditionForm.show();
+                resourceRelationDescriptorsEditionForm.show();
+                thematicContentClassifiersEditionForm.show();
             }
 
-            versionEditionForm.setLifeCycleStatisticalResourceDto(queryVersionDto);
-            versionEditionForm.setRequiredTitleSuffix(requiredFieldsToNextProcStatus);
         }
-
         private QueryVersionDto getQuery() {
             if (isCreationMode()) {
                 queryVersionDto = (QueryVersionDto) identifiersCreationForm.getNameableStatisticalResourceDto(queryVersionDto);

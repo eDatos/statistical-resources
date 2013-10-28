@@ -111,6 +111,8 @@ public class DatasetMetadataTabViewImpl extends StatisticalResourceMetadataBaseV
         super.setUiHandlers(uiHandlers);
         resourceRelationDescriptorsEditionForm.setUiHandlers(uiHandlers);
         resourceRelationDescriptorsForm.setUiHandlers(uiHandlers);
+        lifeCycleForm.setUiHandlers(uiHandlers);
+        lifeCycleEditionForm.setUiHandlers(uiHandlers);
         commonMetadataForm.setBaseUiHandlers(uiHandlers);
         contentDescriptorsEditionForm.setUiHandlers(uiHandlers);
         commonMetadataEditionForm.setUiHandlers(uiHandlers);

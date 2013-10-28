@@ -106,6 +106,8 @@ public class PublicationMetadataTabViewImpl extends StatisticalResourceMetadataB
         super.setUiHandlers(uiHandlers);
         resourceRelationDescriptorsEditionForm.setUiHandlers(uiHandlers);
         resourceRelationDescriptorsForm.setUiHandlers(uiHandlers);
+        lifeCycleForm.setUiHandlers(uiHandlers);
+        lifeCycleEditionForm.setUiHandlers(uiHandlers);
         commonMetadataForm.setBaseUiHandlers(uiHandlers);
         commonMetadataEditionForm.setUiHandlers(uiHandlers);
         thematicContentClassifiersEditionForm.setUiHandlers(uiHandlers);

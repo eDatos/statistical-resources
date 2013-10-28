@@ -151,4 +151,5 @@ public class LifeCycleResourceVersionEditionForm extends GroupDynamicForm {
             }
         };
     }
+
 }

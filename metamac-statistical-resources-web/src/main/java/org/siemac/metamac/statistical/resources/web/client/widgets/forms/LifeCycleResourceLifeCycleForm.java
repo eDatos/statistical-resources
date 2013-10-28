@@ -1,15 +1,18 @@
 package org.siemac.metamac.statistical.resources.web.client.widgets.forms;
 
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
+import static org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourcesFormUtils.setRelatedResourceValue;
 
 import org.siemac.metamac.statistical.resources.core.dto.LifeCycleStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.web.client.model.ds.LifeCycleResourceDS;
 import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
-import org.siemac.metamac.web.common.client.widgets.form.GroupDynamicForm;
+import org.siemac.metamac.statistical.resources.web.client.widgets.forms.fields.RelatedResourceLinkItem;
+import org.siemac.metamac.web.common.client.view.handlers.BaseUiHandlers;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewTextItem;
-import org.siemac.metamac.web.common.shared.RelatedResourceBaseUtils;
 
-public class LifeCycleResourceLifeCycleForm extends GroupDynamicForm {
+public class LifeCycleResourceLifeCycleForm extends NavigationEnabledDynamicForm {
+
+    private BaseUiHandlers uiHandlers;
 
     public LifeCycleResourceLifeCycleForm() {
         super(getConstants().formLifeCycle());
@@ -25,8 +28,10 @@ public class LifeCycleResourceLifeCycleForm extends GroupDynamicForm {
         ViewTextItem rejectValidationUser = new ViewTextItem(LifeCycleResourceDS.REJECT_VALIDATION_USER, getConstants().lifeCycleStatisticalResourceRejectValidationUser());
         ViewTextItem publicationDate = new ViewTextItem(LifeCycleResourceDS.PUBLICATION_DATE, getConstants().lifeCycleStatisticalResourcePublicationDate());
         ViewTextItem publicationUser = new ViewTextItem(LifeCycleResourceDS.PUBLICATION_USER, getConstants().lifeCycleStatisticalResourcePublicationUser());
-        ViewTextItem replacesVersion = new ViewTextItem(LifeCycleResourceDS.REPLACES_VERSION, getConstants().lifeCycleStatisticalResourceReplacesVersion());
-        ViewTextItem isReplacedByVersion = new ViewTextItem(LifeCycleResourceDS.IS_REPLACED_BY_VERSION, getConstants().lifeCycleStatisticalResourceIsReplacedByVersion());
+        RelatedResourceLinkItem replacesVersion = new RelatedResourceLinkItem(LifeCycleResourceDS.REPLACES_VERSION, getConstants().lifeCycleStatisticalResourceReplacesVersion(),
+                getCustomLinkItemNavigationClickHandler());
+        RelatedResourceLinkItem isReplacedByVersion = new RelatedResourceLinkItem(LifeCycleResourceDS.IS_REPLACED_BY_VERSION, getConstants().lifeCycleStatisticalResourceIsReplacedByVersion(),
+                getCustomLinkItemNavigationClickHandler());
 
         addFields(procStatus, creationDate, creationUser, productionValidationDate, productionValidationUser, diffusionValidationDate, diffusionValidationUser, rejectValidationDate,
                 rejectValidationUser, publicationDate, publicationUser, replacesVersion, isReplacedByVersion);
@@ -44,7 +49,16 @@ public class LifeCycleResourceLifeCycleForm extends GroupDynamicForm {
         setValue(LifeCycleResourceDS.REJECT_VALIDATION_USER, lifeCycleStatisticalResourceDto.getRejectValidationUser());
         setValue(LifeCycleResourceDS.PUBLICATION_DATE, lifeCycleStatisticalResourceDto.getPublicationDate());
         setValue(LifeCycleResourceDS.PUBLICATION_USER, lifeCycleStatisticalResourceDto.getPublicationUser());
-        setValue(LifeCycleResourceDS.REPLACES_VERSION, RelatedResourceBaseUtils.getRelatedResourceName(lifeCycleStatisticalResourceDto.getReplacesVersion()));
-        setValue(LifeCycleResourceDS.IS_REPLACED_BY_VERSION, RelatedResourceBaseUtils.getRelatedResourceName(lifeCycleStatisticalResourceDto.getIsReplacedByVersion()));
+        setRelatedResourceValue(getItem(LifeCycleResourceDS.REPLACES_VERSION), lifeCycleStatisticalResourceDto.getReplacesVersion());
+        setRelatedResourceValue(getItem(LifeCycleResourceDS.IS_REPLACED_BY_VERSION), lifeCycleStatisticalResourceDto.getIsReplacedByVersion());
+    }
+
+    public void setUiHandlers(BaseUiHandlers uiHandlers) {
+        this.uiHandlers = uiHandlers;
+    }
+
+    @Override
+    public BaseUiHandlers getBaseUiHandlers() {
+        return uiHandlers;
     }
 }
