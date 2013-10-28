@@ -691,29 +691,6 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         return datasetVersionsForFiles;
     }
 
-    // @Override
-    // public void checkAttributesInstancesWithDatasetAndDimensionAttachment(ServiceContext ctx, DatasetVersion datasetVersion) throws MetamacException {
-    // try {
-    // List<AttributeInstanceDto> attributesInstances = statisticsDatasetRepositoriesServiceFacade.findAttributesInstances(datasetVersion.getDatasetRepositoryId());
-    //
-    // if (attributesInstances != null && !attributesInstances.isEmpty()) {
-    // // Data structure definition
-    // DataStructure dataStructure = srmRestInternalService.retrieveDsdByUrn(datasetVersion.getRelatedDsd().getUrn());
-    //
-    // // Validate
-    // ValidateDataVersusDsd validateDataVersusDsd = new ValidateDataVersusDsd(dataStructure, srmRestInternalService);
-    //
-    // // Check representation
-    // validateDataVersusDsd.checkAttributesInstancesRepresentation(attributesInstances);
-    //
-    // // Check mandatory attributes at non observation level
-    // // checkAttributesInstancesMandatoryAtNonObservationLevel(datasetVersion, validateDataVersusDsd);
-    // }
-    // } catch (ApplicationException e) {
-    // throw new MetamacException(e, ServiceExceptionType.UNKNOWN, "Error retrieving datasetRepository " + datasetVersion.getDatasetRepositoryId() + ". Details: " + e.getMessage());
-    // }
-    // }
-
     @Override
     public void proccessDatasetFileImportationResult(ServiceContext ctx, String datasetImportationId, List<FileDescriptorResult> fileDescriptors) throws MetamacException {
         String datasetVersionUrn = datasetImportationId;
