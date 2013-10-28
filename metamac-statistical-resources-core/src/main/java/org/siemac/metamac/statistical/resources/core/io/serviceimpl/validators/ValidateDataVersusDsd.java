@@ -1,6 +1,7 @@
 package org.siemac.metamac.statistical.resources.core.io.serviceimpl.validators;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -285,27 +286,56 @@ public class ValidateDataVersusDsd {
             List<MetamacExceptionItem> exceptions) throws Exception {
 
         if (getMandatoryAttributeIdsAtNonObservationLevel().contains(attributeId)) {
-            // Keys from attributes instances
-            Set<String> attributesKeySet = new HashSet<String>();
-            List<ComponentInfo> dimensionsInfos = retrieveDimensionsInfo();
-            for (AttributeInstanceDto attributeInstanceDto : attributeInstanceDenormalizedDtos) {
-                List<IdValuePair> keyList = new ArrayList<IdValuePair>();
-                for (ComponentInfo dimension : dimensionsInfos) {
-                    keyList.add(new IdValuePair(dimension.getCode(), attributeInstanceDto.getCodesByDimension().get(dimension.getCode()).get(0)));
+
+            if (attributesProcessorMap.get(attributeId).isDatasetAttribute()) {
+                if (attributeInstanceDenormalizedDtos.isEmpty()) {
+                    exceptions.add(new MetamacExceptionItem(ServiceExceptionType.VALIDATION_NONOBSLEVEL_MANDATORY_ATTR_NOT_FOUND, attributeId, "Dataset"));
+                }
+            } else {
+                // Keys from attributes instances
+                Set<String> attributesKeySet = new HashSet<String>();
+
+                List<ComponentInfo> dimensionsInfos = getAttributeDimensions(attributeId);
+
+                for (AttributeInstanceDto attributeInstanceDto : attributeInstanceDenormalizedDtos) {
+                    List<IdValuePair> keyList = new ArrayList<IdValuePair>();
+                    for (ComponentInfo dimension : dimensionsInfos) {
+                        List<String> attributeCodesInDimension = attributeInstanceDto.getCodesByDimension().get(dimension.getCode());
+                        if (attributeCodesInDimension != null) {
+                            keyList.add(new IdValuePair(dimension.getCode(), attributeCodesInDimension.get(0)));
+                        }
+                    }
+
+                    // Add current attribute to this key in the map
+                    attributesKeySet.add(ManipulateDataUtils.generateKeyFromIdValuePairs(keyList));
                 }
 
-                // Add current attribute to this key in the map
-                attributesKeySet.add(ManipulateDataUtils.generateKeyFromIdValuePairs(keyList));
-            }
+                // Keys from coverage
+                Set<String> attributesCoverageKeySet = calculateAttributesCoverageKeySet(dimensionsInfos, coverage);
 
-            // Keys from coverage
-            Set<String> attributesCoverageKeySet = calculateAttributesCoverageKeySet(dimensionsInfos, coverage);
-
-            if (attributesKeySet.size() != attributesCoverageKeySet.size()) {
-                Set<String> subtractSet = (Set<String>) CollectionUtils.subtract(attributesKeySet, attributesCoverageKeySet);
-                exceptions.add(new MetamacExceptionItem(ServiceExceptionType.VALIDATION_NONOBSLEVEL_MANDATORY_ATTR_NOT_FOUND, attributeId, StringUtils.join(subtractSet.toArray(), " - ")));
+                if (attributesKeySet.size() != attributesCoverageKeySet.size()) {
+                    Collection<String> subtractSet = CollectionUtils.subtract(attributesCoverageKeySet, attributesKeySet);
+                    exceptions.add(new MetamacExceptionItem(ServiceExceptionType.VALIDATION_NONOBSLEVEL_MANDATORY_ATTR_NOT_FOUND, attributeId, StringUtils.join(subtractSet.toArray(), " - ")));
+                }
             }
         }
+    }
+
+    private List<ComponentInfo> getAttributeDimensions(String attributeId) {
+        DsdAttribute dsdAttribute = attributesProcessorMap.get(attributeId);
+        if (dsdAttribute.isDimensionAttribute()) {
+            if (dsdAttribute.getAttributeRelationship().getGroup() != null) {
+                return groupDimensionMapInfo.get(dsdAttribute.getAttributeRelationship().getGroup());
+            } else {
+                List<String> dimensionsIds = dsdAttribute.getAttributeRelationship().getDimensions();
+                List<ComponentInfo> dimensions = new ArrayList<ComponentInfo>(dimensionsIds.size());
+                for (String dimensionId : dimensionsIds) {
+                    dimensions.add(dimensionsInfoMap.get(dimensionId));
+                }
+                return dimensions;
+            }
+        }
+        return new ArrayList<ComponentInfo>();
     }
 
     private class OrderingStackElement {
