@@ -13,8 +13,8 @@
     <groupId>org.siemac.metamac.metamac-statistical-resources</groupId>
     <artifactId>metamac-sdmx-data-rest-external-impl</artifactId>
     <packaging>jar</packaging>
-    <name>METAMAC :: STATISTICAL RESOURCES :: DATA :: SDMX :: REST :: EXTERNAL API</name>
-    <description>METAMAC :: STATISTICAL RESOURCES :: DATA :: SDMX :: REST :: EXTERNAL API</description>
+    <name>METAMAC :: STATISTICAL RESOURCES :: DATA :: SDMX :: REST :: EXTERNAL API IMPL</name>
+    <description>METAMAC :: STATISTICAL RESOURCES :: DATA :: SDMX :: REST :: EXTERNAL API IMPL</description>
 
 	<dependencies>
 		<dependency>
