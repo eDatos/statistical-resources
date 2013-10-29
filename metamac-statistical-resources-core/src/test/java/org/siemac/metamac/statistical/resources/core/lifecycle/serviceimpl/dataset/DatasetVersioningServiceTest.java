@@ -39,8 +39,10 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
 import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.DatasetService;
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
+import org.siemac.metamac.statistical.resources.core.invocation.service.SrmRestInternalService;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceapi.LifecycleService;
 import org.siemac.metamac.statistical.resources.core.task.serviceapi.TaskService;
+import org.siemac.metamac.statistical.resources.core.utils.DataMockUtils;
 import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesCollectionUtils;
 import org.siemac.metamac.statistical.resources.core.utils.TaskMockUtils;
 import org.siemac.metamac.statistical.resources.core.utils.asserts.BaseAsserts;
@@ -78,10 +80,15 @@ public class DatasetVersioningServiceTest extends StatisticalResourcesBaseTest {
     @Autowired
     private DatasetRepositoriesServiceFacade datasetRepositoriesServiceFacade;
 
+    @Autowired
+    private SrmRestInternalService           srmRestInternalService;
+
     @Before
     // Get reference to dataset repository without proxy (verify not working with proxy)
     public void fixInterceptorsMockito() throws Exception {
         datasetRepositoriesServiceFacade = (DatasetRepositoriesServiceFacade) ((Advised) datasetRepositoriesServiceFacade).getTargetSource().getTarget();
+
+        mockDsdAndDataRepositorySimpleDimensionsNoAttributes();
     }
 
     @After
@@ -353,4 +360,7 @@ public class DatasetVersioningServiceTest extends StatisticalResourcesBaseTest {
         TaskMockUtils.mockTaskInProgressForDatasetVersion(taskService, datasetVersionUrn, status);
     }
 
+    private void mockDsdAndDataRepositorySimpleDimensionsNoAttributes() throws Exception {
+        DataMockUtils.mockDsdAndDataRepositorySimpleDimensionsNoAttributes(datasetRepositoriesServiceFacade, srmRestInternalService);
+    }
 }
