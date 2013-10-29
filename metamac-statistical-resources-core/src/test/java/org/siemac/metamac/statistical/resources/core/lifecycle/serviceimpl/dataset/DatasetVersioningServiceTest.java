@@ -110,6 +110,7 @@ public class DatasetVersioningServiceTest extends StatisticalResourcesBaseTest {
 
         Mockito.verify(datasetRepositoriesServiceFacade).duplicateDatasetRepository(previousDatasetVersion.getDatasetRepositoryId(), newDatasetVersion.getSiemacMetadataStatisticalResource().getUrn());
     }
+
     @Test
     @MetamacMock(DATASET_VERSION_14_OPER_03_CODE_01_PUBLISHED_NAME)
     public void testVersioningDatasetVersionCheckUrnIsCorrectForMinorChange() throws Exception {
