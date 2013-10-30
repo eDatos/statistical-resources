@@ -410,18 +410,27 @@ public class ValidateDataVersusDsd {
         if (translationEnumRepresentationsMap.containsKey(codeDimensionDto.getDimensionId())) {
             Map<String, String> translationCodeMap = translationEnumRepresentationsMap.get(codeDimensionDto.getDimensionId());
             if (translationCodeMap.containsKey(codeDimensionDto.getCodeDimensionId())) {
-                codeDimensionDto.setCodeDimensionId(translationCodeMap.get(codeDimensionDto.getCodeDimensionId()));
-            }
-        }
-
-        // Enumerated representation
-        String enumeratedRepresentationUrn = dimensionsProcessorMap.get(codeDimensionDto.getDimensionId()).getEnumeratedRepresentationUrn();
-        if (enumeratedRepresentationUrn != null) {
-            // The codes of dimensions must be defined in the enumerated representation
-            Set<String> validDimensionCodes = (Set<String>) enumerationRepresentationsMultimap.get(enumeratedRepresentationUrn);
-            if (!validDimensionCodes.contains(codeDimensionDto.getCodeDimensionId())) {
+                String translation = translationCodeMap.get(codeDimensionDto.getCodeDimensionId());
+                if (translation != null) {
+                    codeDimensionDto.setCodeDimensionId(translation);
+                } else {
+                    exceptions.add(new MetamacExceptionItem(ServiceExceptionType.IMPORTATION_DIM_CODE_ENUM_NOT_VALID_TRANSLATION, codeDimensionDto.getCodeDimensionId(), codeDimensionDto
+                            .getDimensionId()));
+                }
+            } else {
                 exceptions.add(new MetamacExceptionItem(ServiceExceptionType.IMPORTATION_DIM_CODE_ENUM_NOT_VALID, codeDimensionDto.getCodeDimensionId(), codeDimensionDto.getDimensionId(),
-                        enumeratedRepresentationUrn));
+                        alternativeSourceEnumerationRepresentationMap.get(codeDimensionDto.getDimensionId())));
+            }
+        } else {
+            // Original Enumerated representation
+            String enumeratedRepresentationUrn = dimensionsProcessorMap.get(codeDimensionDto.getDimensionId()).getEnumeratedRepresentationUrn();
+            if (enumeratedRepresentationUrn != null) {
+                // The codes of dimensions must be defined in the enumerated representation
+                Set<String> validDimensionCodes = (Set<String>) enumerationRepresentationsMultimap.get(enumeratedRepresentationUrn);
+                if (!validDimensionCodes.contains(codeDimensionDto.getCodeDimensionId())) {
+                    exceptions.add(new MetamacExceptionItem(ServiceExceptionType.IMPORTATION_DIM_CODE_ENUM_NOT_VALID, codeDimensionDto.getCodeDimensionId(), codeDimensionDto.getDimensionId(),
+                            enumeratedRepresentationUrn));
+                }
             }
         }
     }
@@ -640,14 +649,25 @@ public class ValidateDataVersusDsd {
                     }
                     Map<String, String> variableElementMapToCodesMap = new HashMap<String, String>();
                     for (CodeResourceInternal codeType : codes.getCodes()) {
-                        variableElementMapToCodesMap.put(codeType.getVariableElement().getId(), codeType.getId());
+                        if (codeType.getVariableElement() != null) {
+                            variableElementMapToCodesMap.put(codeType.getVariableElement().getId(), codeType.getId());
+                        }
                     }
 
                     Codes alternativeCodes = srmRestInternalService.retrieveCodesOfCodelistEfficiently(alternativeSourceEnumerationRepresentationMap.get(dsdComponent.getComponentId()));
                     // (Key: alternativeCodeId and Value: normalizedCodeId)
                     Map<String, String> translationCodeMap = new HashMap<String, String>();
                     for (CodeResourceInternal alternativeCodeType : alternativeCodes.getCodes()) {
-                        translationCodeMap.put(alternativeCodeType.getId(), variableElementMapToCodesMap.get(alternativeCodeType.getVariableElement().getId()));
+                        if (alternativeCodeType.getVariableElement() != null) {
+                            String originalCode = variableElementMapToCodesMap.get(alternativeCodeType.getVariableElement().getId());
+                            if (!StringUtils.isEmpty(originalCode)) {
+                                translationCodeMap.put(alternativeCodeType.getId(), variableElementMapToCodesMap.get(alternativeCodeType.getVariableElement().getId()));
+                            } else {
+                                translationCodeMap.put(alternativeCodeType.getId(), null);
+                            }
+                        } else {
+                            translationCodeMap.put(alternativeCodeType.getId(), null);
+                        }
                     }
 
                     translationEnumRepresentationsMap.put(dsdComponent.getComponentId(), translationCodeMap);
