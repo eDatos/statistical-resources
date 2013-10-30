@@ -3,12 +3,12 @@ package org.siemac.metamac.statistical.resources.core.utils.mocks.factories;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.siemac.metamac.core.common.test.utils.mocks.configuration.MockDescriptor;
+import org.siemac.metamac.core.common.test.utils.mocks.configuration.MockProvider;
 import org.siemac.metamac.statistical.resources.core.common.domain.InternationalString;
 import org.siemac.metamac.statistical.resources.core.common.domain.LocalisedString;
 import org.siemac.metamac.statistical.resources.core.common.domain.Translation;
 import org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConstants;
-import org.siemac.metamac.statistical.resources.core.utils.mocks.configuration.MockDescriptor;
-import org.siemac.metamac.statistical.resources.core.utils.mocks.configuration.MockProvider;
 
 @MockProvider
 public class TranslationMockFactory extends StatisticalResourcesMockFactory<Translation> {

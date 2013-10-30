@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.siemac.metamac.core.common.test.utils.mocks.configuration.MockDescriptor;
+import org.siemac.metamac.core.common.test.utils.mocks.configuration.MockFactory;
 import org.siemac.metamac.statistical.resources.core.common.domain.Translation;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
@@ -13,8 +15,6 @@ import org.siemac.metamac.statistical.resources.core.publication.domain.Cube;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
 import org.siemac.metamac.statistical.resources.core.query.domain.Query;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
-import org.siemac.metamac.statistical.resources.core.utils.mocks.configuration.MockDescriptor;
-import org.siemac.metamac.statistical.resources.core.utils.mocks.configuration.MockFactory;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesPersistedDoMocks;
 
 public abstract class StatisticalResourcesMockFactory<EntityMock> extends MockFactory<EntityMock> {

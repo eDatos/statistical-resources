@@ -26,6 +26,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.joda.time.DateTime;
+import org.siemac.metamac.core.common.test.utils.mocks.configuration.MockDescriptor;
+import org.siemac.metamac.core.common.test.utils.mocks.configuration.MockProvider;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
@@ -43,8 +45,6 @@ import org.siemac.metamac.statistical.resources.core.utils.mocks.DatasetVersionM
 import org.siemac.metamac.statistical.resources.core.utils.mocks.PublicationMock;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.PublicationVersionMock;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.QueryVersionMock;
-import org.siemac.metamac.statistical.resources.core.utils.mocks.configuration.MockDescriptor;
-import org.siemac.metamac.statistical.resources.core.utils.mocks.configuration.MockProvider;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesDoMocks;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesNotPersistedDoMocks;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesPersistedDoMocks;

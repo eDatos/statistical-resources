@@ -1,7 +1,7 @@
 package org.siemac.metamac.statistical.resources.core.utils.mocks.factories;
 
+import org.siemac.metamac.core.common.test.utils.mocks.configuration.MockProvider;
 import org.siemac.metamac.statistical.resources.core.publication.domain.Chapter;
-import org.siemac.metamac.statistical.resources.core.utils.mocks.configuration.MockProvider;
 
 @SuppressWarnings("unused")
 @MockProvider

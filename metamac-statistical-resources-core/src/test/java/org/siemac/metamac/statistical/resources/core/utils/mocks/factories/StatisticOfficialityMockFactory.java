@@ -1,7 +1,7 @@
 package org.siemac.metamac.statistical.resources.core.utils.mocks.factories;
 
+import org.siemac.metamac.core.common.test.utils.mocks.configuration.MockProvider;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.StatisticOfficiality;
-import org.siemac.metamac.statistical.resources.core.utils.mocks.configuration.MockProvider;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesDoMocks;
 
 @MockProvider
