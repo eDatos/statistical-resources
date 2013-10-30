@@ -84,6 +84,7 @@ import org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.check
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersionRepository;
 import org.siemac.metamac.statistical.resources.core.query.serviceapi.QueryService;
+import org.siemac.metamac.statistical.resources.core.task.domain.AlternativeEnumeratedRepresentation;
 import org.siemac.metamac.statistical.resources.core.task.domain.FileDescriptor;
 import org.siemac.metamac.statistical.resources.core.task.domain.FileDescriptorResult;
 import org.siemac.metamac.statistical.resources.core.task.domain.TaskInfoDataset;
@@ -578,8 +579,8 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
     }
 
     @Override
-    public void importDatasourcesInDatasetVersion(ServiceContext ctx, String datasetVersionUrn, List<URL> fileUrls) throws MetamacException {
-        datasetServiceInvocationValidator.checkImportDatasourcesInDatasetVersion(ctx, datasetVersionUrn, fileUrls);
+    public void importDatasourcesInDatasetVersion(ServiceContext ctx, String datasetVersionUrn, List<URL> fileUrls, Map<String, String> dimensionRepresentationMapping) throws MetamacException {
+        datasetServiceInvocationValidator.checkImportDatasourcesInDatasetVersion(ctx, datasetVersionUrn, fileUrls, dimensionRepresentationMapping);
 
         DatasetVersion datasetVersion = getDatasetVersionRepository().retrieveByUrn(datasetVersionUrn);
 
@@ -591,17 +592,24 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
 
         checkFilesCanBeAssociatedWithDataset(datasetUrn, datasetVersionUrn, fileUrls);
 
-        TaskInfoDataset taskInfo = buildImportationTaskInfo(datasetVersion, fileUrls);
+        TaskInfoDataset taskInfo = buildImportationTaskInfo(datasetVersion, fileUrls, dimensionRepresentationMapping);
 
         getTaskService().planifyImportationDataset(ctx, taskInfo);
     }
 
-    private TaskInfoDataset buildImportationTaskInfo(DatasetVersion datasetVersion, List<URL> fileUrls) {
+    private TaskInfoDataset buildImportationTaskInfo(DatasetVersion datasetVersion, List<URL> fileUrls, Map<String, String> dimensionRepresentationMapping) {
         String datasetVersionUrn = datasetVersion.getSiemacMetadataStatisticalResource().getUrn();
 
         TaskInfoDataset taskInfo = new TaskInfoDataset();
         taskInfo.setDatasetVersionId(datasetVersionUrn);
         taskInfo.setDataStructureUrn(datasetVersion.getRelatedDsd().getUrn());
+
+        for (String dimensionId : dimensionRepresentationMapping.keySet()) {
+            AlternativeEnumeratedRepresentation representation = new AlternativeEnumeratedRepresentation();
+            representation.setComponentId(dimensionId);
+            representation.setUrn(dimensionRepresentationMapping.get(dimensionId));
+            taskInfo.getAlternativeRepresentations().add(representation);
+        }
 
         for (URL url : fileUrls) {
             String filename = getFilenameFromPath(url.getPath());
@@ -656,7 +664,9 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         for (String datasetVersionUrn : datasetVersionsForFiles.keySet()) {
             try {
                 List<URL> urls = datasetVersionsForFiles.get(datasetVersionUrn);
-                importDatasourcesInDatasetVersion(ctx, datasetVersionUrn, urls);
+                HashMap<String, String> dimensionRepresentationMapping = new HashMap<String, String>();
+
+                importDatasourcesInDatasetVersion(ctx, datasetVersionUrn, urls, dimensionRepresentationMapping);
             } catch (MetamacException e) {
                 MetamacExceptionItem item = new MetamacExceptionItem(ServiceExceptionType.IMPORTATION_DATASET_VERSION_ERROR, datasetVersionUrn);
                 item.setExceptionItems(e.getExceptionItems());

@@ -35,12 +35,10 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 
 import java.net.URL;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -1466,7 +1464,8 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
         // import - session 2 --> FAIL
         try {
             List<URL> urls = Arrays.asList(new URL("file", null, "prueba.px"));
-            statisticalResourcesServiceFacade.importDatasourcesInDatasetVersion(getServiceContextAdministrador(), datasetVersionDtoSession02, urls);
+            Map<String, String> mappings = new HashMap<String, String>();
+            statisticalResourcesServiceFacade.importDatasourcesInDatasetVersion(getServiceContextAdministrador(), datasetVersionDtoSession02, urls, mappings);
             fail("optimistic locking");
         } catch (MetamacException e) {
             assertEqualsMetamacExceptionItem(ServiceExceptionType.OPTIMISTIC_LOCKING, 0, null, e.getExceptionItems().get(0));

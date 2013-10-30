@@ -4,6 +4,7 @@ import static org.siemac.metamac.statistical.resources.core.error.utils.ServiceE
 
 import java.net.URL;
 import java.util.List;
+import java.util.Map;
 
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
 import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
@@ -242,9 +243,10 @@ public class DatasetServiceInvocationValidatorImpl extends BaseInvocationValidat
         StatisticalResourcesValidationUtils.checkParameterRequired(fileDescriptors, ServiceExceptionParameters.FILE_DESCRIPTORS, exceptions);
     }
 
-    public static void checkImportDatasourcesInDatasetVersion(String datasetVersionUrn, List<URL> fileUrls, List<MetamacExceptionItem> exceptions) {
+    public static void checkImportDatasourcesInDatasetVersion(String datasetVersionUrn, List<URL> fileUrls, Map<String, String> dimensionRepresentationMapping, List<MetamacExceptionItem> exceptions) {
         StatisticalResourcesValidationUtils.checkParameterRequired(datasetVersionUrn, ServiceExceptionParameters.DATASET_VERSION_URN, exceptions);
         StatisticalResourcesValidationUtils.checkParameterRequired(fileUrls, ServiceExceptionParameters.FILE_URLS, exceptions);
+        StatisticalResourcesValidationUtils.checkParameterRequired(dimensionRepresentationMapping, ServiceExceptionParameters.DATASET_DIMENSION_REPRESENTATION_MAPPING, exceptions);
     }
 
     public static void checkImportDatasourcesInStatisticalOperation(String statisticalOperationUrn, List<URL> fileUrls, List<MetamacExceptionItem> exceptions) {

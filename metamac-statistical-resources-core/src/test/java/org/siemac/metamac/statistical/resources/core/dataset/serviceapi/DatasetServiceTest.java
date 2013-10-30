@@ -61,6 +61,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import org.apache.commons.lang.BooleanUtils;
@@ -98,7 +99,6 @@ import org.siemac.metamac.statistical.resources.core.enume.task.domain.DatasetFi
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.invocation.service.SrmRestInternalService;
-import org.siemac.metamac.statistical.resources.core.mock.Mocks;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
 import org.siemac.metamac.statistical.resources.core.task.domain.FileDescriptorResult;
@@ -763,7 +763,8 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
         String urn = datasetVersion.getSiemacMetadataStatisticalResource().getUrn();
 
         List<URL> urls = Arrays.asList(new File("prueba.px").toURI().toURL());
-        datasetService.importDatasourcesInDatasetVersion(getServiceContextWithoutPrincipal(), urn, urls);
+        HashMap<String, String> mappings = new HashMap<String, String>();
+        datasetService.importDatasourcesInDatasetVersion(getServiceContextWithoutPrincipal(), urn, urls, mappings);
     }
 
     @Test
@@ -776,7 +777,8 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
         expectedMetamacException(new MetamacException(ServiceExceptionType.TASKS_IN_PROGRESS, urn));
 
         List<URL> urls = Arrays.asList(new File("prueba.px").toURI().toURL());
-        datasetService.importDatasourcesInDatasetVersion(getServiceContextWithoutPrincipal(), urn, urls);
+        HashMap<String, String> mappings = new HashMap<String, String>();
+        datasetService.importDatasourcesInDatasetVersion(getServiceContextWithoutPrincipal(), urn, urls, mappings);
     }
 
     @Test
@@ -788,7 +790,8 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
         expectedMetamacException(new MetamacException(Arrays.asList(new MetamacExceptionItem(ServiceExceptionType.INVALID_FILE_FOR_DATASET_VERSION, "datasource_06.px", urn))));
 
         List<URL> urls = Arrays.asList(new File("datasource_06.px").toURI().toURL());
-        datasetService.importDatasourcesInDatasetVersion(getServiceContextWithoutPrincipal(), urn, urls);
+        HashMap<String, String> mappings = new HashMap<String, String>();
+        datasetService.importDatasourcesInDatasetVersion(getServiceContextWithoutPrincipal(), urn, urls, mappings);
     }
 
     @Override

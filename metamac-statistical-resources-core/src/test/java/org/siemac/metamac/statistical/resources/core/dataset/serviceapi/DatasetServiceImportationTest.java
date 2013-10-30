@@ -10,8 +10,13 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_36_FOR_IMPORT_IN_OPERATION_0002_NAME;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.junit.Before;
@@ -32,11 +37,11 @@ import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.validato
 import org.siemac.metamac.statistical.resources.core.dataset.serviceimpl.DatasetServiceImpl;
 import org.siemac.metamac.statistical.resources.core.enume.task.domain.DatasetFileFormatEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
+import org.siemac.metamac.statistical.resources.core.task.domain.AlternativeEnumeratedRepresentation;
 import org.siemac.metamac.statistical.resources.core.task.domain.FileDescriptor;
 import org.siemac.metamac.statistical.resources.core.task.domain.TaskInfoDataset;
 import org.siemac.metamac.statistical.resources.core.task.serviceapi.TaskService;
 import org.siemac.metamac.statistical.resources.core.utils.TaskInfoPredicateByDatasetId;
-import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory;
 
 public class DatasetServiceImportationTest extends StatisticalResourcesBaseTest {
 
@@ -73,12 +78,15 @@ public class DatasetServiceImportationTest extends StatisticalResourcesBaseTest 
         Mockito.when(datasetRepository.findDatasetUrnLinkedToDatasourceFile(filename)).thenReturn(null);
 
         List<URL> urls = Arrays.asList(buildFileUrl(filename));
-        datasetService.importDatasourcesInDatasetVersion(getServiceContextWithoutPrincipal(), datasetVersionUrn, urls);
+        Map<String, String> mappings = new HashMap<String, String>();
+        mappings.put("dimension01", "urn01");
+        mappings.put("dimension02", "urn02");
+        datasetService.importDatasourcesInDatasetVersion(getServiceContextWithoutPrincipal(), datasetVersionUrn, urls, mappings);
 
         ArgumentCaptor<TaskInfoDataset> argument = ArgumentCaptor.forClass(TaskInfoDataset.class);
         verify(taskService).planifyImportationDataset(any(ServiceContext.class), argument.capture());
 
-        assertTaskInfoFile(datasetVersion, 1, argument.getValue());
+        assertTaskInfoFile(datasetVersion, 1, argument.getValue(), mappings);
         assertTaskFile(filename, DatasetFileFormatEnum.PX, argument.getValue().getFiles().get(0));
     }
 
@@ -94,7 +102,8 @@ public class DatasetServiceImportationTest extends StatisticalResourcesBaseTest 
         expectedMetamacException(new MetamacException(Arrays.asList(new MetamacExceptionItem(ServiceExceptionType.INVALID_FILE_FOR_DATASET_VERSION, "prueba.px", datasetVersionUrn))));
 
         List<URL> urls = Arrays.asList(buildFileUrl(filename));
-        datasetService.importDatasourcesInDatasetVersion(getServiceContextWithoutPrincipal(), datasetVersionUrn, urls);
+        HashMap<String, String> mappings = new HashMap<String, String>();
+        datasetService.importDatasourcesInDatasetVersion(getServiceContextWithoutPrincipal(), datasetVersionUrn, urls, mappings);
     }
 
     @Test
@@ -115,7 +124,8 @@ public class DatasetServiceImportationTest extends StatisticalResourcesBaseTest 
         ArgumentCaptor<TaskInfoDataset> argument = ArgumentCaptor.forClass(TaskInfoDataset.class);
         verify(taskService).planifyImportationDataset(any(ServiceContext.class), argument.capture());
 
-        assertTaskInfoFile(datasetVersion, 1, argument.getValue());
+        HashMap<String, String> mappings = new HashMap<String, String>();
+        assertTaskInfoFile(datasetVersion, 1, argument.getValue(), mappings);
         assertTaskFile(filename, DatasetFileFormatEnum.PX, argument.getValue().getFiles().get(0));
     }
 
@@ -154,12 +164,14 @@ public class DatasetServiceImportationTest extends StatisticalResourcesBaseTest 
         ArgumentCaptor<TaskInfoDataset> argument = ArgumentCaptor.forClass(TaskInfoDataset.class);
         verify(taskService, Mockito.times(2)).planifyImportationDataset(any(ServiceContext.class), argument.capture());
 
+        HashMap<String, String> mappings = new HashMap<String, String>();
+
         TaskInfoDataset taskDataset01 = MetamacCollectionUtils.find(argument.getAllValues(), new TaskInfoPredicateByDatasetId(datasetVersion01.getSiemacMetadataStatisticalResource().getUrn()));
-        assertTaskInfoFile(datasetVersion01, 1, taskDataset01);
+        assertTaskInfoFile(datasetVersion01, 1, taskDataset01, mappings);
         assertTaskFile(filename01, DatasetFileFormatEnum.PX, taskDataset01.getFiles().get(0));
 
         TaskInfoDataset taskDataset02 = MetamacCollectionUtils.find(argument.getAllValues(), new TaskInfoPredicateByDatasetId(datasetVersion02.getSiemacMetadataStatisticalResource().getUrn()));
-        assertTaskInfoFile(datasetVersion02, 1, taskDataset02);
+        assertTaskInfoFile(datasetVersion02, 1, taskDataset02, mappings);
         assertTaskFile(filename02, DatasetFileFormatEnum.PX, taskDataset02.getFiles().get(0));
     }
 
@@ -227,12 +239,29 @@ public class DatasetServiceImportationTest extends StatisticalResourcesBaseTest 
 
     }
 
-    private void assertTaskInfoFile(DatasetVersion datasetVersion, int numFiles, TaskInfoDataset taskInfo) {
+    private void assertTaskInfoFile(DatasetVersion datasetVersion, int numFiles, TaskInfoDataset taskInfo, Map<String, String> mappings) {
         assertEquals(datasetVersion.getRelatedDsd().getUrn(), taskInfo.getDataStructureUrn());
         assertEquals(datasetVersion.getSiemacMetadataStatisticalResource().getUrn(), taskInfo.getDatasetVersionId());
         assertEquals(numFiles, taskInfo.getFiles().size());
-    }
+        assertEquals(mappings.size(), taskInfo.getAlternativeRepresentations().size());
+        Collections.sort(taskInfo.getAlternativeRepresentations(), new Comparator<AlternativeEnumeratedRepresentation>() {
 
+            @Override
+            public int compare(AlternativeEnumeratedRepresentation o1, AlternativeEnumeratedRepresentation o2) {
+                return o1.getComponentId().compareTo(o2.getComponentId());
+            }
+        });
+
+        List<String> dimensions = new ArrayList<String>(mappings.keySet());
+        Collections.sort(dimensions);
+
+        for (int i = 0; i < dimensions.size(); i++) {
+            String dimensionId = dimensions.get(i);
+            assertEquals(dimensionId, taskInfo.getAlternativeRepresentations().get(i).getComponentId());
+            assertEquals(mappings.get(dimensionId), taskInfo.getAlternativeRepresentations().get(i).getUrn());
+        }
+
+    }
     private void assertTaskFile(String filename, DatasetFileFormatEnum type, FileDescriptor fileDescriptor) {
         assertEquals(filename, fileDescriptor.getFileName());
         assertEquals(type, fileDescriptor.getDatasetFileFormatEnum());

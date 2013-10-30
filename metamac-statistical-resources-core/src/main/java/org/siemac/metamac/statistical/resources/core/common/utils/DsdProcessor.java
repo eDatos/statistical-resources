@@ -7,6 +7,8 @@ import java.util.Map;
 
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.util.ApplicationContextProvider;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Attribute;
@@ -60,6 +62,33 @@ public class DsdProcessor {
             }
         }
         return dimensions;
+    }
+
+    public static DsdDimension getDimension(DataStructure dsd, String dimensionId) throws MetamacException {
+        DataStructureComponents components = dsd.getDataStructureComponents();
+
+        DimensionBase foundDimension = null;
+        if (components != null && components.getDimensions() != null) {
+            Dimensions dimensionList = components.getDimensions();
+            for (DimensionBase dimObj : dimensionList.getDimensions()) {
+                if (dimensionId.equals(dimObj.getId())) {
+                    foundDimension = dimObj;
+                }
+            }
+        }
+        if (foundDimension != null) {
+            if (foundDimension instanceof Dimension) {
+                return new DsdDimension((Dimension) foundDimension);
+            } else if (foundDimension instanceof MeasureDimension) {
+                return new DsdDimension((MeasureDimension) foundDimension);
+            } else if (foundDimension instanceof TimeDimension) {
+                return new DsdDimension((TimeDimension) foundDimension);
+            } else {
+                throw new IllegalArgumentException("Found a dimension of unknown type " + foundDimension);
+            }
+        }
+
+        return null;
     }
 
     public static List<DsdAttribute> getAttributes(DataStructure dsd) throws MetamacException {

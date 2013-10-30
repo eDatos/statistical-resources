@@ -129,6 +129,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import org.fornax.cartridges.sculptor.framework.errorhandling.ApplicationException;
@@ -2258,7 +2259,8 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
 
         URL url = new URL("file", null, "myfile.px");
 
-        statisticalResourcesServiceFacade.importDatasourcesInDatasetVersion(getServiceContextAdministrador(), datasetVersionDto, Arrays.asList(url));
+        HashMap<String, String> mappings = new HashMap<String, String>();
+        statisticalResourcesServiceFacade.importDatasourcesInDatasetVersion(getServiceContextAdministrador(), datasetVersionDto, Arrays.asList(url), mappings);
     }
 
     @Override
