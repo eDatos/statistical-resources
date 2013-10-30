@@ -112,6 +112,7 @@ public class ServiceExceptionType extends CommonServiceExceptionType {
     public static final CommonServiceExceptionType IMPORTATION_ATTR_NOT_MATCH                                               = create("exception.resources.dataset.importation.attribute_not_match");
 
     public static final CommonServiceExceptionType IMPORTATION_DIM_CODE_ENUM_NOT_VALID                                      = create("exception.resources.dataset.importation.dimension_code_enumeration_not_valid");
+    public static final CommonServiceExceptionType IMPORTATION_DIM_CODE_ENUM_NOT_VALID_TRANSLATION                          = create("exception.resources.dataset.importation.dimension_code_enumeration_not_valid_translation");
     public static final CommonServiceExceptionType IMPORTATION_DIM_KEY_CARDINALITY_NOT_MATCH                                = create("exception.resources.dataset.importation.dimension_keys_cardinality_not_match");
     public static final CommonServiceExceptionType IMPORTATION_DIM_NOT_MATCH                                                = create("exception.resources.dataset.importation.dimension_not_match");
 
@@ -132,6 +133,6 @@ public class ServiceExceptionType extends CommonServiceExceptionType {
     public static final CommonServiceExceptionType IMPORTATION_OBSERVATION_CODE_ENUM_NOT_VALID                              = create("exception.resources.dataset.importation.observation.code_enumeration_not_valid");
     public static final CommonServiceExceptionType IMPORTATION_OBSERVATION_NOT_NUMERIC                                      = create("exception.resources.dataset.importation.observation.not_numeric");
 
-    public static final CommonServiceExceptionType VALIDATION_NONOBSLEVEL_MANDATORY_ATTR_NOT_FOUND                        = create("exception.resources.dataset.validation.nonobslevel_mandatory_attribute_not_found");
+    public static final CommonServiceExceptionType VALIDATION_NONOBSLEVEL_MANDATORY_ATTR_NOT_FOUND                          = create("exception.resources.dataset.validation.nonobslevel_mandatory_attribute_not_found");
 
 }
