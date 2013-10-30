@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -115,9 +116,11 @@ public class DatasourceImportationServlet extends HttpServlet {
             String statisticalOperationUrn = args.get(StatisticalResourcesSharedTokens.UPLOAD_PARAM_OPERATION_URN);
             String datasetVersionUrn = args.get(StatisticalResourcesSharedTokens.UPLOAD_PARAM_DATASET_VERSION_URN);
 
+            Map<String, String> dimensionMapping = buildDimensionsMappings(args);
+
             if (StringUtils.isNotBlank(datasetVersionUrn)) {
                 DatasetVersionDto datasetVersionDto = statisticalResourcesServiceFacade.retrieveDatasetVersionByUrn(ServiceContextHolder.getCurrentServiceContext(), datasetVersionUrn);
-                statisticalResourcesServiceFacade.importDatasourcesInDatasetVersion(ServiceContextHolder.getCurrentServiceContext(), datasetVersionDto, fileUrls);
+                statisticalResourcesServiceFacade.importDatasourcesInDatasetVersion(ServiceContextHolder.getCurrentServiceContext(), datasetVersionDto, fileUrls, dimensionMapping);
             } else if (StringUtils.isNotBlank(statisticalOperationUrn)) {
                 statisticalResourcesServiceFacade.importDatasourcesInStatisticalOperation(ServiceContextHolder.getCurrentServiceContext(), statisticalOperationUrn, fileUrls);
             }
@@ -139,6 +142,20 @@ public class DatasourceImportationServlet extends HttpServlet {
 
             sendFailedImportationResponse(response, errorMessage);
         }
+    }
+
+    private Map<String, String> buildDimensionsMappings(HashMap<String, String> args) {
+        Map<String, String> mapping = new HashMap<String, String>();
+        for (String itemId : args.keySet()) {
+            if (itemId.startsWith(StatisticalResourcesSharedTokens.UPLOAD_PARAM_DIM_PREFIX)) {
+                String dimensionId = itemId.substring(StatisticalResourcesSharedTokens.UPLOAD_PARAM_DIM_PREFIX.length());
+                String codelistUrn = args.get(itemId);
+                if (!StringUtils.isEmpty(codelistUrn)) {
+                    mapping.put(dimensionId, codelistUrn);
+                }
+            }
+        }
+        return mapping;
     }
 
     private void processQuery(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

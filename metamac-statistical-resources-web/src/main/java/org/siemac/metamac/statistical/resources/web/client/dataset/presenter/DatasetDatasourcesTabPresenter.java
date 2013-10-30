@@ -3,7 +3,10 @@ package org.siemac.metamac.statistical.resources.web.client.dataset.presenter;
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getMessages;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
@@ -22,6 +25,10 @@ import org.siemac.metamac.statistical.resources.web.client.utils.PlaceRequestUti
 import org.siemac.metamac.statistical.resources.web.client.utils.WaitingAsyncCallbackHandlingError;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.DeleteDatasourcesAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.DeleteDatasourcesResult;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.GetCodelistsWithVariableAction;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.GetCodelistsWithVariableResult;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetDimensionsVariableMappingAction;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetDimensionsVariableMappingResult;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetVersionAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetVersionResult;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasourcesByDatasetAction;
@@ -31,6 +38,7 @@ import org.siemac.metamac.statistical.resources.web.shared.dataset.SaveDatasourc
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationAction;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationResult;
 import org.siemac.metamac.web.common.client.events.ShowMessageEvent;
+import org.siemac.metamac.web.common.shared.criteria.MetamacVersionableWebCriteria;
 
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
@@ -62,6 +70,8 @@ public class DatasetDatasourcesTabPresenter extends Presenter<DatasetDatasources
         void setDatasetVersion(DatasetVersionDto datasetVersionDto);
         void setDatasources(String datasetUrn, List<DatasourceDto> datasources);
         void setDatasource(DatasourceDto datasourceDto);
+        void setCodelistsInVariable(String dimensionId, GetCodelistsWithVariableResult result);
+        void setDimensionVariablesForDataset(String urn, Map<String, String> mapping);
     }
 
     @ProxyCodeSplit
@@ -183,6 +193,27 @@ public class DatasetDatasourcesTabPresenter extends Presenter<DatasetDatasources
         });
     }
 
+    @Override
+    public void retrieveAlternativeCodelistsForVariable(final String dimensionId, String variableUrn, int firstResult, int maxResults, MetamacVersionableWebCriteria criteria) {
+        dispatcher.execute(new GetCodelistsWithVariableAction(variableUrn, firstResult, maxResults, criteria), new WaitingAsyncCallbackHandlingError<GetCodelistsWithVariableResult>(this) {
+
+            @Override
+            public void onWaitSuccess(GetCodelistsWithVariableResult result) {
+                getView().setCodelistsInVariable(dimensionId, result);
+            }
+        });
+    }
+
+    @Override
+    public void retrieveDimensionVariablesForDataset(final String datasetVersionUrn) {
+        dispatcher.execute(new GetDatasetDimensionsVariableMappingAction(datasetVersionUrn), new WaitingAsyncCallbackHandlingError<GetDatasetDimensionsVariableMappingResult>(this) {
+
+            @Override
+            public void onWaitSuccess(GetDatasetDimensionsVariableMappingResult result) {
+                getView().setDimensionVariablesForDataset(datasetVersionUrn, result.getDimensionsMapping());
+            }
+        });
+    }
     //
     // IMPORTATION
     //

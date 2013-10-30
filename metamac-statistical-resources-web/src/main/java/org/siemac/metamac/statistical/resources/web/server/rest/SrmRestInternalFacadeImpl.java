@@ -1,6 +1,7 @@
 package org.siemac.metamac.statistical.resources.web.server.rest;
 
 import static org.siemac.metamac.statistical.resources.web.server.utils.MetamacWebRestCriteriaUtils.buildQueryCode;
+import static org.siemac.metamac.statistical.resources.web.server.utils.MetamacWebRestCriteriaUtils.buildQueryCodelist;
 import static org.siemac.metamac.statistical.resources.web.server.utils.MetamacWebRestCriteriaUtils.buildQueryConcept;
 import static org.siemac.metamac.statistical.resources.web.server.utils.MetamacWebRestCriteriaUtils.buildQueryConceptScheme;
 import static org.siemac.metamac.statistical.resources.web.server.utils.MetamacWebRestCriteriaUtils.buildQueryDsd;
@@ -17,6 +18,8 @@ import org.siemac.metamac.core.common.enume.domain.TypeExternalArtefactsEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Agency;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Code;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codelist;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codelists;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codes;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ConceptSchemes;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Concepts;
@@ -34,12 +37,15 @@ import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Resourc
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.TimeDimension;
 import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor;
 import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor.DsdAttribute;
+import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor.DsdDimension;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdAttributeDto;
 import org.siemac.metamac.statistical.resources.core.invocation.service.SrmRestInternalService;
 import org.siemac.metamac.statistical.resources.web.server.utils.ExternalItemWebUtils;
+import org.siemac.metamac.statistical.resources.web.server.utils.MetamacWebRestCriteriaUtils;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.DsdWebCriteria;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.ItemSchemeWebCriteria;
 import org.siemac.metamac.web.common.server.utils.WebExceptionUtils;
+import org.siemac.metamac.web.common.shared.criteria.MetamacVersionableWebCriteria;
 import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
 import org.siemac.metamac.web.common.shared.domain.ExternalItemsResult;
 import org.siemac.metamac.web.common.shared.exception.MetamacWebException;
@@ -126,6 +132,45 @@ public class SrmRestInternalFacadeImpl implements SrmRestInternalFacade {
             Map<String, List<String>> groupDimensions = retrieveDsdGroupDimensionsIds(dsdUrn);
             List<DsdAttributeDto> dsdAttributeDtos = restMapper.buildDsdAttributeDtosFromDsdAttributes(dsdAttributes, groupDimensions);
             return dsdAttributeDtos;
+        } catch (MetamacException e) {
+            throw WebExceptionUtils.createMetamacWebException(e);
+        }
+    }
+
+    // CODE LISTS
+
+    @Override
+    public Map<String, String> findMappeableDimensionsInDsdWithVariables(String dsdUrn) throws MetamacWebException {
+        try {
+            DataStructure dsd = srmRestInternalService.retrieveDsdByUrn(dsdUrn);
+
+            Map<String, String> dimensionMapping = new HashMap<String, String>();
+
+            List<DsdDimension> dimensions = DsdProcessor.getDimensions(dsd);
+            for (DsdDimension dsdDimension : dimensions) {
+                if (dsdDimension.getCodelistRepresentationUrn() != null) {
+                    Codelist codelist = srmRestInternalService.retrieveCodelistByUrn(dsdDimension.getCodelistRepresentationUrn());
+                    dimensionMapping.put(dsdDimension.getComponentId(), codelist.getVariable().getUrn());
+                }
+            }
+            return dimensionMapping;
+        } catch (MetamacException e) {
+            throw WebExceptionUtils.createMetamacWebException(e);
+        }
+    }
+
+    @Override
+    public ExternalItemsResult findCodelistsWithVariable(String variableUrn, int firstResult, int maxResult, MetamacVersionableWebCriteria criteria) throws MetamacWebException {
+        try {
+            String query = buildQueryCodelist(criteria, variableUrn);
+
+            Codelists codelists = srmRestInternalService.findCodelists(firstResult, maxResult, query);
+
+            List<ExternalItemDto> codeistsExternalItems = new ArrayList<ExternalItemDto>();
+            for (ResourceInternal resource : codelists.getCodelists()) {
+                codeistsExternalItems.add(ExternalItemWebUtils.buildExternalItemDtoFromResource(resource, TypeExternalArtefactsEnum.CODE));
+            }
+            return ExternalItemWebUtils.createExternalItemsResultFromListBase(codelists, codeistsExternalItems);
         } catch (MetamacException e) {
             throw WebExceptionUtils.createMetamacWebException(e);
         }

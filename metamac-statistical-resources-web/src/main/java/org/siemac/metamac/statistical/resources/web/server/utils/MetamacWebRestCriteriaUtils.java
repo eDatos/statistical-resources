@@ -13,6 +13,8 @@ import org.siemac.metamac.rest.common.v1_0.domain.LogicalOperator;
 import org.siemac.metamac.rest.statistical_operations_internal.v1_0.domain.InstanceCriteriaPropertyRestriction;
 import org.siemac.metamac.rest.statistical_operations_internal.v1_0.domain.OperationCriteriaPropertyRestriction;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.CodeCriteriaPropertyRestriction;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codelist;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.CodelistCriteriaPropertyRestriction;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ConceptCriteriaPropertyRestriction;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ConceptSchemeCriteriaPropertyRestriction;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructureCriteriaPropertyRestriction;
@@ -22,6 +24,7 @@ import org.siemac.metamac.statistical.resources.web.shared.criteria.DsdWebCriter
 import org.siemac.metamac.statistical.resources.web.shared.criteria.ItemSchemeWebCriteria;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.base.HasSchemeCriteria;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.base.HasStatisticalOperationCriteria;
+import org.siemac.metamac.web.common.shared.criteria.MetamacVersionableWebCriteria;
 import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
 import org.siemac.metamac.web.common.shared.criteria.base.HasOnlyLastVersionCriteria;
 import org.siemac.metamac.web.common.shared.criteria.base.HasSimpleCriteria;
@@ -71,6 +74,24 @@ public class MetamacWebRestCriteriaUtils {
             addStatisticalOperationRestCriteria(queryBuilder, webCriteria, DataStructureCriteriaPropertyRestriction.STATISTICAL_OPERATION_URN);
 
             addOnlyLastVersionRestCriteria(queryBuilder, webCriteria, DataStructureCriteriaPropertyRestriction.LATEST);
+        }
+        return queryBuilder.toString();
+    }
+
+    // -------------------------------------------------------------------------------------------------------------
+    // CODE LIST
+    // -------------------------------------------------------------------------------------------------------------
+
+    public static String buildQueryCodelist(MetamacVersionableWebCriteria webCriteria, String variableUrn) {
+        StringBuilder queryBuilder = new StringBuilder();
+        if (webCriteria != null) {
+            addSimpleRestCriteria(queryBuilder, webCriteria, CodelistCriteriaPropertyRestriction.NAME, CodelistCriteriaPropertyRestriction.ID, CodelistCriteriaPropertyRestriction.URN);
+
+            addOnlyLastVersionRestCriteria(queryBuilder, webCriteria, CodelistCriteriaPropertyRestriction.LATEST);
+        }
+        if (variableUrn != null) {
+            String condition = fieldComparison(CodelistCriteriaPropertyRestriction.VARIABLE_URN, ComparisonOperator.EQ, variableUrn);
+            appendConditionToQuery(queryBuilder, condition);
         }
         return queryBuilder.toString();
     }
