@@ -252,10 +252,8 @@ public class DatasetDto2DoMapperTest extends StatisticalResourcesBaseTest {
     }
 
     @Test
-    @MetamacMock({DATASET_VERSION_01_BASIC_NAME})
     public void testCategorisationDtoToDo() throws MetamacException {
-        DatasetVersion datasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_01_BASIC_NAME);
-        CategorisationDto dto = StatisticalResourcesDtoMocks.mockCategorisationDto(datasetVersion.getSiemacMetadataStatisticalResource().getUrn());
+        CategorisationDto dto = StatisticalResourcesDtoMocks.mockCategorisationDto();
         Categorisation entity = datasetDto2DoMapper.categorisationDtoToDo(dto);
         assertEqualsCategorisation(dto, entity);
     }

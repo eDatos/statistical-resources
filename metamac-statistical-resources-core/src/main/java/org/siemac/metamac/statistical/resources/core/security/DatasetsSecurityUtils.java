@@ -1,8 +1,11 @@
 package org.siemac.metamac.statistical.resources.core.security;
 
+import java.util.Date;
+
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.sso.utils.SecurityUtils;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.Categorisation;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.core.security.shared.SharedDatasetsSecurityUtils;
 
@@ -222,8 +225,9 @@ public class DatasetsSecurityUtils extends SecurityUtils {
         }
     }
 
-    public static void canDeleteCategorisation(ServiceContext ctx) throws MetamacException {
-        if (!SharedDatasetsSecurityUtils.canDeleteCategorisation(getMetamacPrincipal(ctx))) {
+    public static void canDeleteCategorisation(ServiceContext ctx, Categorisation categorisation) throws MetamacException {
+        Date validFrom = categorisation != null && categorisation.getValidFromEffective() != null ? categorisation.getValidFromEffective().toDate() : null;
+        if (!SharedDatasetsSecurityUtils.canDeleteDatasetCategorisation(getMetamacPrincipal(ctx), validFrom)) {
             throwExceptionIfOperationNotAllowed(ctx);
         }
     }
@@ -234,8 +238,10 @@ public class DatasetsSecurityUtils extends SecurityUtils {
         }
     }
 
-    public static void canEndCategorisationValidity(ServiceContext ctx) throws MetamacException {
-        if (!SharedDatasetsSecurityUtils.canEndCategorisationValidity(getMetamacPrincipal(ctx))) {
+    public static void canEndCategorisationValidity(ServiceContext ctx, Categorisation categorisation) throws MetamacException {
+        Date validFrom = categorisation != null && categorisation.getValidFromEffective() != null ? categorisation.getValidFromEffective().toDate() : null;
+        Date validTo = categorisation != null && categorisation.getValidToEffective() != null ? categorisation.getValidToEffective().toDate() : null;
+        if (!SharedDatasetsSecurityUtils.canEndCategorisationValidity(getMetamacPrincipal(ctx), validFrom, validTo)) {
             throwExceptionIfOperationNotAllowed(ctx);
         }
     }

@@ -5,6 +5,7 @@ import java.util.List;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Agency;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Categories;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Category;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.CategorySchemes;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Code;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codelist;
@@ -82,6 +83,7 @@ public interface SrmRestInternalService {
     public List<String> findCategorySchemesAsUrnsList(String query) throws MetamacException;
 
     // CATEGORY
+    public Category retrieveCategoryByUrn(String urn) throws MetamacException;
     public List<ResourceInternal> findCategories(String query) throws MetamacException;
     public Categories findCategories(int firstResult, int maxResult, String query) throws MetamacException;
     public List<String> findCategoriesAsUrnsList(String query) throws MetamacException;

@@ -263,10 +263,6 @@ public class DatasetDto2DoMapperImpl extends BaseDto2DoMapperImpl implements Dat
         target.setVersionableStatisticalResource(new VersionableStatisticalResource());
         target.setMaintainer(externalItemDtoToDo(source.getMaintainer(), target.getMaintainer(), ServiceExceptionParameters.CATEGORISATION__MAINTAINER));
         target.setCategory(externalItemDtoToDo(source.getCategory(), target.getCategory(), ServiceExceptionParameters.CATEGORISATION__CATEGORY));
-        if (source.getDatasetVersion() != null) {
-            DatasetVersion datasetVersion = datasetVersionRepository.retrieveByUrn(source.getDatasetVersion().getUrn());
-            target.setDatasetVersion(datasetVersion);
-        }
         return target;
     }
 }

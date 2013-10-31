@@ -1,5 +1,7 @@
 package org.siemac.metamac.statistical.resources.core.security.shared;
 
+import java.util.Date;
+
 import org.siemac.metamac.sso.client.MetamacPrincipal;
 
 public class SharedDatasetsSecurityUtils extends SharedSecurityUtils {
@@ -185,9 +187,12 @@ public class SharedDatasetsSecurityUtils extends SharedSecurityUtils {
         return isAnyResourcesRole(metamacPrincipal);
     }
 
-    public static boolean canDeleteCategorisation(MetamacPrincipal metamacPrincipal) {
+    public static boolean canDeleteDatasetCategorisation(MetamacPrincipal metamacPrincipal, Date validFromEffective) {
         // TODO: Poner los roles correctos
-        return isAnyResourcesRole(metamacPrincipal);
+        if (isAnyResourcesRole(metamacPrincipal)) {
+            return validFromEffective == null;
+        }
+        return false;
     }
 
     public static boolean canRetrieveCategorisationsByDatasetVersion(MetamacPrincipal metamacPrincipal) {
@@ -195,9 +200,12 @@ public class SharedDatasetsSecurityUtils extends SharedSecurityUtils {
         return isAnyResourcesRole(metamacPrincipal);
     }
 
-    public static boolean canEndCategorisationValidity(MetamacPrincipal metamacPrincipal) {
+    public static boolean canEndCategorisationValidity(MetamacPrincipal metamacPrincipal, Date validFromEffective, Date validToEffective) {
         // TODO: Poner los roles correctos
-        return isAnyResourcesRole(metamacPrincipal);
+        if (isAnyResourcesRole(metamacPrincipal)) {
+            return validFromEffective != null && validFromEffective.before(new Date()) && validToEffective == null;
+        }
+        return false;
     }
 
 }

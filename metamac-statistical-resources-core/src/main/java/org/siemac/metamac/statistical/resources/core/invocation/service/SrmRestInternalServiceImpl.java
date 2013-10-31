@@ -13,6 +13,7 @@ import org.siemac.metamac.core.common.util.shared.UrnUtils;
 import org.siemac.metamac.rest.api.constants.RestApiConstants;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Agency;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Categories;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Category;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.CategorySchemes;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Code;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codelist;
@@ -610,6 +611,20 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
             String orderBy = null;
             return restApiLocator.getSrmRestInternalFacadeV10().findCategories(RestApiConstants.WILDCARD_ALL, RestApiConstants.WILDCARD_ALL, RestApiConstants.WILDCARD_ALL, query, orderBy, limit,
                     offset);
+        } catch (Exception e) {
+            throw manageSrmInternalRestException(e);
+        }
+    }
+
+    @Override
+    public Category retrieveCategoryByUrn(String urn) throws MetamacException {
+        try {
+            String[] params = UrnUtils.splitUrnItem(urn);
+            String agencyId = params[0];
+            String schemeId = params[1];
+            String version = params[2];
+            String categoryId = params[3];
+            return restApiLocator.getSrmRestInternalFacadeV10().retrieveCategory(agencyId, schemeId, version, categoryId);
         } catch (Exception e) {
             throw manageSrmInternalRestException(e);
         }

@@ -1071,7 +1071,7 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
         DatasetVersion datasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_01_BASIC_NAME);
         String categoryCode = "category01";
         String maintainerCode = "agency01"; // nested = ISTAC.agency01
-        Categorisation categorisation = notPersistedDoMocks.mockCategorisation(datasetVersion, maintainerCode, categoryCode);
+        Categorisation categorisation = notPersistedDoMocks.mockCategorisation(maintainerCode, categoryCode);
 
         assertNull(categorisation.getVersionableStatisticalResource().getCode());
         assertNull(categorisation.getVersionableStatisticalResource().getVersionLogic());
@@ -1101,9 +1101,9 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
         DatasetVersion datasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_01_BASIC_NAME);
         String categoryCode = "category01";
         String maintainerCode = "agency01"; // nested = ISTAC.agency01
-        Categorisation expected = notPersistedDoMocks.mockCategorisation(datasetVersion, maintainerCode, categoryCode);
+        Categorisation expected = notPersistedDoMocks.mockCategorisation(maintainerCode, categoryCode);
 
-        Categorisation actual = datasetService.createCategorisation(getServiceContextAdministrador(), expected);
+        Categorisation actual = datasetService.createCategorisation(getServiceContextAdministrador(), datasetVersion.getSiemacMetadataStatisticalResource().getUrn(), expected);
 
         // Validate
         assertEqualsCategorisation(expected, actual);
@@ -1123,13 +1123,14 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
     @MetamacMock({DATASET_VERSION_22_V1_PUBLISHED_FOR_DATASET_05_NAME, CATEGORISATION_SEQUENCE_NAME, CATEGORISATION_MAINTAINER_NAME})
     public void testCreateCategorisationDatasetAlreadyPublished() throws Exception {
         DatasetVersion datasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_22_V1_PUBLISHED_FOR_DATASET_05_NAME);
+        String datasetVersionUrn = datasetVersion.getSiemacMetadataStatisticalResource().getUrn();
         String categoryCode = "category01";
         String maintainerCode = "agency01"; // nested = ISTAC.agency01
-        Categorisation expected = notPersistedDoMocks.mockCategorisation(datasetVersion, maintainerCode, categoryCode);
+        Categorisation expected = notPersistedDoMocks.mockCategorisation(maintainerCode, categoryCode);
 
         mockFindPublishedCategory(expected.getCategory().getUrn());
         mockFindPublishedAgency(expected.getMaintainer().getUrn());
-        Categorisation actual = datasetService.createCategorisation(getServiceContextAdministrador(), expected);
+        Categorisation actual = datasetService.createCategorisation(getServiceContextAdministrador(), datasetVersionUrn, expected);
 
         // Validate
         assertEqualsCategorisation(expected, actual);
@@ -1143,14 +1144,15 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
     public void testCreateCategorisationDatasetAlreadyPublishedErrorCategoryNotPublished() throws Exception {
 
         DatasetVersion datasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_22_V1_PUBLISHED_FOR_DATASET_05_NAME);
-        Categorisation categorisation = notPersistedDoMocks.mockCategorisation(datasetVersion, "agency01", "category01");
+        Categorisation categorisation = notPersistedDoMocks.mockCategorisation("agency01", "category01");
+        String datasetVersionUrn = datasetVersion.getSiemacMetadataStatisticalResource().getUrn();
 
         mockFindNotPublishedCategory(categorisation.getCategory().getUrn());
         mockFindPublishedAgency(categorisation.getMaintainer().getUrn());
 
         expectedMetamacException(new MetamacException(ServiceExceptionType.EXTERNAL_ITEM_NOT_PUBLISHED, ServiceExceptionParameters.DATASET_VERSION__CATEGORISATIONS, categorisation.getCategory()
                 .getUrn()));
-        datasetService.createCategorisation(getServiceContextAdministrador(), categorisation);
+        datasetService.createCategorisation(getServiceContextAdministrador(), datasetVersionUrn, categorisation);
     }
 
     @Test
@@ -1158,14 +1160,15 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
     public void testCreateCategorisationDatasetAlreadyPublishedErrorMaintainerNotPublished() throws Exception {
 
         DatasetVersion datasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_22_V1_PUBLISHED_FOR_DATASET_05_NAME);
-        Categorisation categorisation = notPersistedDoMocks.mockCategorisation(datasetVersion, "agency01", "category01");
+        Categorisation categorisation = notPersistedDoMocks.mockCategorisation("agency01", "category01");
+        String datasetVersionUrn = datasetVersion.getSiemacMetadataStatisticalResource().getUrn();
 
         mockFindPublishedCategory(categorisation.getCategory().getUrn());
         mockFindNotPublishedAgency(categorisation.getMaintainer().getUrn());
 
         expectedMetamacException(new MetamacException(ServiceExceptionType.EXTERNAL_ITEM_NOT_PUBLISHED, ServiceExceptionParameters.DATASET_VERSION__CATEGORISATIONS, categorisation.getMaintainer()
                 .getUrn()));
-        datasetService.createCategorisation(getServiceContextAdministrador(), categorisation);
+        datasetService.createCategorisation(getServiceContextAdministrador(), datasetVersionUrn, categorisation);
     }
 
     @Test

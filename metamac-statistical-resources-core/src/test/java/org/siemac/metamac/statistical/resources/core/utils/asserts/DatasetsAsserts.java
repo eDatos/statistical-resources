@@ -489,8 +489,10 @@ public class DatasetsAsserts extends BaseAsserts {
 
             assertNotNull(entity.getVersion());
             assertEquals(entity.getVersion(), dto.getVersion());
+            assertEquals(entity.getDatasetVersion().getSiemacMetadataStatisticalResource().getUrn(), dto.getDatasetVersion().getUrn());
+        } else {
+            assertNull(entity.getDatasetVersion());
         }
-        assertEquals(entity.getDatasetVersion().getSiemacMetadataStatisticalResource().getUrn(), dto.getDatasetVersion().getUrn());
         assertEqualsExternalItem(entity.getCategory(), dto.getCategory(), mapperEnum);
         assertEqualsExternalItem(entity.getMaintainer(), dto.getMaintainer(), mapperEnum);
     }

@@ -2304,9 +2304,9 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
     @MetamacMock({DATASET_VERSION_01_BASIC_NAME, CATEGORISATION_SEQUENCE_NAME, CATEGORISATION_MAINTAINER_NAME})
     public void testCreateCategorisation() throws Exception {
         DatasetVersion datasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_01_BASIC_NAME);
-        CategorisationDto dto = StatisticalResourcesDtoMocks.mockCategorisationDto(datasetVersion.getSiemacMetadataStatisticalResource().getUrn());
+        CategorisationDto dto = StatisticalResourcesDtoMocks.mockCategorisationDto();
 
-        CategorisationDto persisted = statisticalResourcesServiceFacade.createCategorisation(getServiceContextAdministrador(), dto);
+        CategorisationDto persisted = statisticalResourcesServiceFacade.createCategorisation(getServiceContextAdministrador(), datasetVersion.getSiemacMetadataStatisticalResource().getUrn(), dto);
         assertNotNull(persisted);
         assertNotNull(persisted.getUrn());
     }

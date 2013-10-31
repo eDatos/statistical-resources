@@ -263,12 +263,12 @@ public class DatasetServiceInvocationValidatorImpl extends BaseInvocationValidat
     // CATEGORISATION
     // ----------------
 
-    public static void checkCreateCategorisation(Categorisation categorisation, List<MetamacExceptionItem> exceptions) {
+    public static void checkCreateCategorisation(String datasetVersionUrn, Categorisation categorisation, List<MetamacExceptionItem> exceptions) {
+        StatisticalResourcesValidationUtils.checkParameterRequired(datasetVersionUrn, ServiceExceptionParameters.DATASET_VERSION_URN, exceptions);
         StatisticalResourcesValidationUtils.checkParameterRequired(categorisation, ServiceExceptionParameters.CATEGORISATION, exceptions);
         if (categorisation == null) {
             return;
         }
-        StatisticalResourcesValidationUtils.checkMetadataRequired(categorisation.getDatasetVersion(), ServiceExceptionParameters.CATEGORISATION__DATASET_VERSION, exceptions);
         StatisticalResourcesValidationUtils.checkMetadataRequired(categorisation.getCategory(), ServiceExceptionParameters.CATEGORISATION__CATEGORY, exceptions);
         StatisticalResourcesValidationUtils.checkMetadataRequired(categorisation.getMaintainer(), ServiceExceptionParameters.CATEGORISATION__MAINTAINER, exceptions);
     }

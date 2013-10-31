@@ -238,11 +238,8 @@ public class StatisticalResourcesDtoMocks extends MetamacMocks {
     // CATEGORISATIONS
     // -----------------------------------------------------------------
 
-    public static CategorisationDto mockCategorisationDto(String datasetVersionUrn) {
+    public static CategorisationDto mockCategorisationDto() {
         CategorisationDto categorisationDto = new CategorisationDto();
-        categorisationDto.setDatasetVersion(new RelatedResourceDto());
-        categorisationDto.getDatasetVersion().setType(TypeRelatedResourceEnum.DATASET_VERSION);
-        categorisationDto.getDatasetVersion().setUrn(datasetVersionUrn);
         categorisationDto.setMaintainer(mockAgencyExternalItemDto());
         categorisationDto.setCategory(mockCategoryExternalItemDto());
         return categorisationDto;

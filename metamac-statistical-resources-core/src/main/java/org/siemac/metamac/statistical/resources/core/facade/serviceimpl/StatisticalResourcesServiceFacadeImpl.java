@@ -1230,7 +1230,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     }
 
     @Override
-    public CategorisationDto createCategorisation(ServiceContext ctx, CategorisationDto categorisationDto) throws MetamacException {
+    public CategorisationDto createCategorisation(ServiceContext ctx, String datasetVersionUrn, CategorisationDto categorisationDto) throws MetamacException {
 
         // Security
         DatasetsSecurityUtils.canCreateCategorisation(ctx);
@@ -1239,7 +1239,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         Categorisation categorisation = datasetDto2DoMapper.categorisationDtoToDo(categorisationDto);
 
         // Create
-        categorisation = getDatasetService().createCategorisation(ctx, categorisation);
+        categorisation = getDatasetService().createCategorisation(ctx, datasetVersionUrn, categorisation);
 
         // Transform
         return datasetDo2DtoMapper.categorisationDoToDto(categorisation);
@@ -1260,8 +1260,9 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
 
     @Override
     public void deleteCategorisation(ServiceContext ctx, String urn) throws MetamacException {
+        Categorisation categorisation = getDatasetService().retrieveCategorisationByUrn(ctx, urn);
         // Security
-        DatasetsSecurityUtils.canDeleteCategorisation(ctx);
+        DatasetsSecurityUtils.canDeleteCategorisation(ctx, categorisation);
 
         // Delete
         getDatasetService().deleteCategorisation(ctx, urn);
@@ -1283,11 +1284,12 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
 
     @Override
     public CategorisationDto endCategorisationValidity(ServiceContext ctx, String urn, Date validTo) throws MetamacException {
+        Categorisation categorisation = getDatasetService().retrieveCategorisationByUrn(ctx, urn);
         // Security
-        DatasetsSecurityUtils.canEndCategorisationValidity(ctx);
+        DatasetsSecurityUtils.canEndCategorisationValidity(ctx, categorisation);
 
         // Delete
-        Categorisation categorisation = getDatasetService().endCategorisationValidity(ctx, urn, CoreCommonUtil.transformDateToDateTime(validTo));
+        categorisation = getDatasetService().endCategorisationValidity(ctx, urn, CoreCommonUtil.transformDateToDateTime(validTo));
 
         // Transform
         CategorisationDto categorisationDto = datasetDo2DtoMapper.categorisationDoToDto(categorisation);

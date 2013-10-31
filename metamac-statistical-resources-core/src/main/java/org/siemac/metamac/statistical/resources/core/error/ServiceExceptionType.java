@@ -39,6 +39,7 @@ public class ServiceExceptionType extends CommonServiceExceptionType {
     // Categorisation
     public static final CommonServiceExceptionType CATEGORISATION_NOT_FOUND                                                 = create("exception.resources.categorisation.not_found");
     public static final CommonServiceExceptionType CATEGORISATION_CANT_END_VALIDITY_WITHOUT_VALIDITY_STARTED                = create("exception.resources.categorisation.cant_end_validity_without_validity_started");
+    public static final CommonServiceExceptionType CATEGORISATION_CANT_END_VALIDITY_BEFORE_VALIDITY_STARTED                 = create("exception.resources.categorisation.cant_end_validity_before_validity_started");
 
     // Publication
     public static final CommonServiceExceptionType PUBLICATION_NOT_FOUND                                                    = create("exception.resources.publication.not_found");

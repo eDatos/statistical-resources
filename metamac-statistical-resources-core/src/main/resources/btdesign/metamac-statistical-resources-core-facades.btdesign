@@ -158,7 +158,7 @@ Application FacadeStatisticalResources {
 
 			// CATEGORISATIONS
     		"Creates categorisation"
-    		@CategorisationDto createCategorisation(@CategorisationDto categorisationDto) throws MetamacException;
+    		@CategorisationDto createCategorisation(String datasetVersionUrn, @CategorisationDto categorisationDto) throws MetamacException;
     		"Retrieves categorisation by urn"
     		@CategorisationDto retrieveCategorisationByUrn(String urn) throws MetamacException;
     		"Deletes categorisation"

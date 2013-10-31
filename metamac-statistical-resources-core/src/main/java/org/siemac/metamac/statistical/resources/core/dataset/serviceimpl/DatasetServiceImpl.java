@@ -896,12 +896,16 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
     // ------------------------------------------------------------------------
 
     @Override
-    public Categorisation createCategorisation(ServiceContext ctx, Categorisation categorisation) throws MetamacException {
+    public Categorisation createCategorisation(ServiceContext ctx, String datasetVersionUrn, Categorisation categorisation) throws MetamacException {
 
         // Validation
-        datasetServiceInvocationValidator.checkCreateCategorisation(ctx, categorisation);
-        checkNotTasksInProgress(ctx, categorisation.getDatasetVersion().getSiemacMetadataStatisticalResource().getUrn());
-        if (ProcStatusEnum.PUBLISHED.equals(categorisation.getDatasetVersion().getLifeCycleStatisticalResource().getProcStatus())) {
+        datasetServiceInvocationValidator.checkCreateCategorisation(ctx, datasetVersionUrn, categorisation);
+
+        DatasetVersion datasetVersion = datasetVersionRepository.retrieveByUrn(datasetVersionUrn);
+
+        checkNotTasksInProgress(ctx, datasetVersionUrn);
+
+        if (ProcStatusEnum.PUBLISHED.equals(datasetVersion.getLifeCycleStatisticalResource().getProcStatus())) {
             // Check external items are externally published
             List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
             externalItemChecker.checkExternalItemsExternallyPublished(categorisation.getCategory(),
@@ -912,6 +916,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         }
 
         // Fill metadata
+        categorisation.setDatasetVersion(datasetVersion);
         fillMetadataForCreateCategorisation(ctx, categorisation);
 
         // Save categorisation
@@ -967,7 +972,6 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         datasetServiceInvocationValidator.checkDeleteCategorisation(ctx, urn);
         Categorisation categorisation = getCategorisationRepository().retrieveByUrn(urn);
         DatasetVersion datasetVersion = categorisation.getDatasetVersion();
-        checkNotTasksInProgress(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getUrn());
 
         // Check is not final
         checkNotTasksInProgress(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getUrn());
@@ -982,8 +986,11 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         // Validation
         datasetServiceInvocationValidator.checkEndCategorisationValidity(ctx, urn, validTo);
         Categorisation categorisation = getCategorisationRepository().retrieveByUrn(urn);
-        if (categorisation.getValidFromEffective() == null) {
+        if (categorisation.getValidFromEffective() == null || categorisation.getValidFromEffective().isAfterNow()) {
             throw new MetamacException(ServiceExceptionType.CATEGORISATION_CANT_END_VALIDITY_WITHOUT_VALIDITY_STARTED, urn);
+        }
+        if (validTo != null && validTo.isBefore(categorisation.getValidFromEffective())) {
+            throw new MetamacException(ServiceExceptionType.CATEGORISATION_CANT_END_VALIDITY_BEFORE_VALIDITY_STARTED, urn);
         }
         checkNotTasksInProgress(ctx, categorisation.getDatasetVersion().getSiemacMetadataStatisticalResource().getUrn());
 
