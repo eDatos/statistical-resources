@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.enume.domain.TypeExternalArtefactsEnum;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Category;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdAttributeDto;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.DsdWebCriteria;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.ItemSchemeWebCriteria;
@@ -42,4 +43,12 @@ public interface SrmRestInternalFacade {
     public ExternalItemsResult findOrganisationSchemes(int firstResult, int maxResult, MetamacWebCriteria criteria, TypeExternalArtefactsEnum type) throws MetamacWebException;
     public ExternalItemsResult findOrganisations(int firstResult, int maxResult, ItemSchemeWebCriteria criteria, TypeExternalArtefactsEnum type) throws MetamacWebException;
     public ExternalItemDto retrieveAgencyByUrn(String agencyUrn) throws MetamacWebException;
+
+    // CATEGORY SCHEMES
+
+    public ExternalItemsResult findCategorySchemes(int firstResult, int maxResult, MetamacWebCriteria criteria) throws MetamacWebException;
+
+    // CATEGORIES
+    public ExternalItemDto retrieveCategoryByUrn(String urn) throws MetamacWebException;
+    public ExternalItemsResult findCategories(int firstResult, int maxResult, ItemSchemeWebCriteria condition) throws MetamacWebException;
 }

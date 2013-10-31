@@ -1,6 +1,7 @@
 package org.siemac.metamac.statistical.resources.web.client.dataset.utils;
 
 import org.siemac.metamac.core.common.util.shared.BooleanUtils;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.CategorisationDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionBaseDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
@@ -143,5 +144,17 @@ public class DatasetClientSecurityUtils extends BaseClientSecurityUtils {
 
     public static boolean canImportDatasourcesInStatisticalOperation() {
         return SharedDatasetsSecurityUtils.canImportDatasourcesInStatisticalOperation(getMetamacPrincipal());
+    }
+
+    public static boolean canCreateCategorisation() {
+        return SharedDatasetsSecurityUtils.canCreateCategorisation(getMetamacPrincipal());
+    }
+
+    public static boolean canDeleteDatasetCategorisation(CategorisationDto categorisationDto) {
+        return SharedDatasetsSecurityUtils.canDeleteDatasetCategorisation(getMetamacPrincipal(), categorisationDto.getValidFrom());
+    }
+
+    public static boolean canEndCategorisationValidity(CategorisationDto categorisationDto) {
+        return SharedDatasetsSecurityUtils.canEndCategorisationValidity(getMetamacPrincipal(), categorisationDto.getValidFrom(), categorisationDto.getValidTo());
     }
 }

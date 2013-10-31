@@ -17,6 +17,7 @@ import org.siemac.metamac.core.common.util.shared.UrnUtils;
 import org.siemac.metamac.statistical.resources.core.dto.LifeCycleStatisticalResourceBaseDto;
 import org.siemac.metamac.statistical.resources.core.dto.LifeCycleStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.VersionRationaleTypeDto;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdAttributeDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.StatisticOfficialityDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.TemporalCodeDto;
@@ -346,21 +347,9 @@ public class CommonUtils {
         return metamacPortalBaseUrl;
     }
 
-    // TODO: FORMAT WILL NOT BE USED in STAT REOSURCES
-    // public static LinkedHashMap<String, String> getStatisticalResourceFormatHashMap() {
-    // if (statisticalResourceFormatHashMap == null) {
-    // statisticalResourceFormatHashMap = new LinkedHashMap<String, String>();
-    // statisticalResourceFormatHashMap.put(new String(), new String());
-    // for (StatisticalResourceFormatEnum f : StatisticalResourceFormatEnum.values()) {
-    // statisticalResourceFormatHashMap.put(f.toString(), getStatisticalResourceFormatName(f));
-    // }
-    // }
-    // return statisticalResourceFormatHashMap;
-    // }
-    //
-    // public static String getStatisticalResourceFormatName(StatisticalResourceFormatEnum statisticalResourceFormatEnum) {
-    // return statisticalResourceFormatEnum != null ? getCoreMessages().getString(getCoreMessages().statisticalResourceFormatEnum() + statisticalResourceFormatEnum.name()) : null;
-    // }
+    public static String getStatisticalOperationCodeFromDatasetVersion(DatasetVersionDto datasetVersionDto) {
+        return datasetVersionDto.getStatisticalOperation().getCode();
+    }
 
     //
     // COMMON UTILITIES
@@ -395,4 +384,5 @@ public class CommonUtils {
     public static String generateQueryUrn(String queryIdentifier) {
         return UrnUtils.generateUrn(UrnConstants.URN_SIEMAC_CLASS_QUERY_PREFIX, queryIdentifier);
     }
+
 }

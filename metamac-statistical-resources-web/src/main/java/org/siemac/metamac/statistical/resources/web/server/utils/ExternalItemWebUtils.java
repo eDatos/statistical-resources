@@ -6,6 +6,7 @@ import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.enume.domain.TypeExternalArtefactsEnum;
 import org.siemac.metamac.rest.common.v1_0.domain.ListBase;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Agency;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Category;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Code;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ResourceInternal;
 import org.siemac.metamac.web.common.server.utils.DtoUtils;
@@ -58,6 +59,18 @@ public class ExternalItemWebUtils extends org.siemac.metamac.web.common.client.u
         externalItemDto.setType(TypeExternalArtefactsEnum.CODE);
         externalItemDto.setTitle(DtoUtils.getInternationalStringDtoFromInternationalString(code.getName()));
         externalItemDto.setManagementAppUrl(code.getManagementAppLink());
+        return externalItemDto;
+    }
+
+    public static ExternalItemDto buildExternalItemDtoFromCategory(Category category) {
+        ExternalItemDto externalItemDto = new ExternalItemDto();
+        externalItemDto.setCode(category.getId());
+        externalItemDto.setUri(category.getSelfLink().getHref());
+        externalItemDto.setUrn(category.getUrn());
+        externalItemDto.setUrnProvider(category.getUrnProvider());
+        externalItemDto.setType(TypeExternalArtefactsEnum.CATEGORY);
+        externalItemDto.setTitle(DtoUtils.getInternationalStringDtoFromInternationalString(category.getName()));
+        externalItemDto.setManagementAppUrl(category.getManagementAppLink());
         return externalItemDto;
     }
 }

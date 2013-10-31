@@ -16,6 +16,7 @@ import org.siemac.metamac.statistical.resources.core.dto.SiemacMetadataStatistic
 import org.siemac.metamac.statistical.resources.core.dto.VersionRationaleTypeDto;
 import org.siemac.metamac.statistical.resources.core.dto.VersionableStatisticalResourceBaseDto;
 import org.siemac.metamac.statistical.resources.core.dto.VersionableStatisticalResourceDto;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.CategorisationDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionBaseDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdAttributeDto;
@@ -29,6 +30,7 @@ import org.siemac.metamac.statistical.resources.core.dto.query.CodeItemDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionBaseDto;
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.record.DatasetRecord;
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.record.DatasourceRecord;
+import org.siemac.metamac.statistical.resources.web.client.model.record.CategorisationRecord;
 import org.siemac.metamac.statistical.resources.web.client.model.record.CodeItemRecord;
 import org.siemac.metamac.statistical.resources.web.client.model.record.DsdAttributeInstanceRecord;
 import org.siemac.metamac.statistical.resources.web.client.model.record.DsdAttributeRecord;
@@ -162,6 +164,21 @@ public class StatisticalResourcesRecordUtils extends RecordUtils {
             }
         }
         return datasetVersionBaseDtos;
+    }
+
+    public static CategorisationRecord getCategorisationRecord(CategorisationDto categorisationDto) {
+        CategorisationRecord record = new CategorisationRecord(categorisationDto.getId(), categorisationDto.getCode(), InternationalStringUtils.getLocalisedString(categorisationDto.getTitle()),
+                categorisationDto.getCategory(), categorisationDto.getUrn(), categorisationDto.getMaintainer(), categorisationDto.getValidFrom(), categorisationDto.getValidTo(), categorisationDto);
+        return record;
+    }
+
+    public static CategorisationRecord[] getCategorisationRecords(List<CategorisationDto> categorisationDtos) {
+        CategorisationRecord[] records = new CategorisationRecord[categorisationDtos.size()];
+        int index = 0;
+        for (CategorisationDto categorisationDto : categorisationDtos) {
+            records[index++] = getCategorisationRecord(categorisationDto);
+        }
+        return records;
     }
 
     //

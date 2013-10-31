@@ -5,6 +5,7 @@ import java.util.List;
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb;
 import org.siemac.metamac.statistical.resources.web.client.constants.StatisticalResourceWebConstants;
+import org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourcesFormUtils;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.base.HasSchemeCriteria;
 import org.siemac.metamac.web.common.client.utils.ExternalItemUtils;
 import org.siemac.metamac.web.common.client.widgets.actions.search.SearchPaginatedAction;
@@ -49,7 +50,7 @@ public class ItemSchemeCriteriaFacetFilter implements FacetFilter {
     }
 
     public void populateCriteria(HasSchemeCriteria criteria) {
-        ExternalItemDto selectedResource = schemeWindow != null ? schemeWindow.getSelectedResource() : null;
+        ExternalItemDto selectedResource = StatisticalResourcesFormUtils.getExternalItemValue(schemeFilter);
         criteria.setSchemeUrn(selectedResource != null ? selectedResource.getUrn() : null);
     }
 
@@ -66,9 +67,10 @@ public class ItemSchemeCriteriaFacetFilter implements FacetFilter {
     }
 
     public void setSelectedConceptScheme(ExternalItemDto selected) {
-        schemeFilter.setValue(ExternalItemUtils.getExternalItemName(schemeWindow.getSelectedResource()));
+        StatisticalResourcesFormUtils.setExternalItemValue(schemeFilter, selected);
         filterAction.applyFilter();
     }
+
     private SearchExternalItemLinkItem createSchemeFilterItem(final SearchPaginatedAction<MetamacVersionableWebCriteria> action) {
         SearchExternalItemLinkItem item = new SearchExternalItemLinkItem("SCHEME", StatisticalResourcesWeb.getConstants().itemScheme());
 
@@ -87,6 +89,14 @@ public class ItemSchemeCriteriaFacetFilter implements FacetFilter {
                         schemeWindow.markForDestroy();
                     }
                 });
+            }
+        });
+
+        item.getClearIcon().addFormItemClickHandler(new FormItemClickHandler() {
+
+            @Override
+            public void onFormItemClick(FormItemIconClickEvent event) {
+                setSelectedConceptScheme(null);
             }
         });
 

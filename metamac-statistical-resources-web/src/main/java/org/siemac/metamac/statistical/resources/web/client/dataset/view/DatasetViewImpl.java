@@ -12,6 +12,7 @@ import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersion
 import org.siemac.metamac.statistical.resources.web.client.base.widgets.CustomTabSet;
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.record.DatasetRecord;
 import org.siemac.metamac.statistical.resources.web.client.dataset.presenter.DatasetAttributesTabPresenter.DatasetAttributesTabView;
+import org.siemac.metamac.statistical.resources.web.client.dataset.presenter.DatasetCategorisationsTabPresenter.DatasetCategorisationsTabView;
 import org.siemac.metamac.statistical.resources.web.client.dataset.presenter.DatasetDatasourcesTabPresenter.DatasetDatasourcesTabView;
 import org.siemac.metamac.statistical.resources.web.client.dataset.presenter.DatasetMetadataTabPresenter.DatasetMetadataTabView;
 import org.siemac.metamac.statistical.resources.web.client.dataset.presenter.DatasetPresenter;
@@ -44,13 +45,15 @@ public class DatasetViewImpl extends ViewWithUiHandlers<DatasetUiHandlers> imple
 
     private CustomTabSet                tabSet;
     private Tab                         datasetMetadataTab;
+    private Tab                         datasetCategorisationsTab;
     private Tab                         datasetDatasourcesTab;
     private Tab                         datasetAttributesTab;
 
     private DatasetVersionDto           datasetVersionDto;
 
     @Inject
-    public DatasetViewImpl(DatasetMetadataTabView datasetMetadataTabView, DatasetDatasourcesTabView datasetDatasourcesTabView, DatasetAttributesTabView datasetAttributesTabView) {
+    public DatasetViewImpl(DatasetMetadataTabView datasetMetadataTabView, DatasetDatasourcesTabView datasetDatasourcesTabView, DatasetAttributesTabView datasetAttributesTabView,
+            DatasetCategorisationsTabView datasetCategorisationsTabView) {
         panel = new VLayout();
 
         titleLabel = new TitleLabel(new String());
@@ -80,13 +83,16 @@ public class DatasetViewImpl extends ViewWithUiHandlers<DatasetUiHandlers> imple
         datasetMetadataTab = new Tab(getConstants().datasetMetadata());
         datasetMetadataTab.setPane((Canvas) datasetMetadataTabView.asWidget());
 
+        datasetCategorisationsTab = new Tab(getConstants().datasetCategorisations());
+        datasetCategorisationsTab.setPane((Canvas) datasetCategorisationsTabView.asWidget());
+
         datasetDatasourcesTab = new Tab(getConstants().datasetDatasources());
         datasetDatasourcesTab.setPane((Canvas) datasetDatasourcesTabView.asWidget());
 
         datasetAttributesTab = new Tab(getConstants().datasetAttributes());
         datasetAttributesTab.setPane((Canvas) datasetAttributesTabView.asWidget());
 
-        tabSet.setTabs(datasetMetadataTab, datasetDatasourcesTab, datasetAttributesTab);
+        tabSet.setTabs(datasetMetadataTab, datasetDatasourcesTab, datasetAttributesTab, datasetCategorisationsTab);
 
         //
         // PANEL LAYOUT
@@ -133,6 +139,15 @@ public class DatasetViewImpl extends ViewWithUiHandlers<DatasetUiHandlers> imple
                 getUiHandlers().goToDatasetAttributes();
             }
         });
+
+        datasetCategorisationsTab.addTabSelectedHandler(new TabSelectedHandler() {
+
+            @Override
+            public void onTabSelected(TabSelectedEvent event) {
+                getUiHandlers().goToDatasetCategorisations();
+
+            }
+        });
     }
 
     @Override
@@ -167,6 +182,11 @@ public class DatasetViewImpl extends ViewWithUiHandlers<DatasetUiHandlers> imple
     @Override
     public void selectMetadataTab() {
         tabSet.selectTab(datasetMetadataTab);
+    }
+
+    @Override
+    public void selectCategorisationsTab() {
+        tabSet.selectTab(datasetCategorisationsTab);
     }
 
     @Override

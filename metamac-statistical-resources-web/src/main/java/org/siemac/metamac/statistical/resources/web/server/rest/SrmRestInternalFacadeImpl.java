@@ -17,6 +17,9 @@ import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.enume.domain.TypeExternalArtefactsEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Agency;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Categories;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Category;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.CategorySchemes;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Code;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codelist;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codelists;
@@ -132,6 +135,55 @@ public class SrmRestInternalFacadeImpl implements SrmRestInternalFacade {
             Map<String, List<String>> groupDimensions = retrieveDsdGroupDimensionsIds(dsdUrn);
             List<DsdAttributeDto> dsdAttributeDtos = restMapper.buildDsdAttributeDtosFromDsdAttributes(dsdAttributes, groupDimensions);
             return dsdAttributeDtos;
+        } catch (MetamacException e) {
+            throw WebExceptionUtils.createMetamacWebException(e);
+        }
+    }
+
+    // CATEGORY SCHEMES
+
+    @Override
+    public ExternalItemsResult findCategorySchemes(int firstResult, int maxResult, MetamacWebCriteria criteria) throws MetamacWebException {
+        try {
+            String query = MetamacWebRestCriteriaUtils.buildQueryCategoryScheme(criteria);
+
+            CategorySchemes categorySchemes = srmRestInternalService.findCategorySchemes(firstResult, maxResult, query);
+
+            List<ExternalItemDto> items = new ArrayList<ExternalItemDto>();
+            for (ResourceInternal resource : categorySchemes.getCategorySchemes()) {
+                items.add(ExternalItemWebUtils.buildExternalItemDtoFromResource(resource, TypeExternalArtefactsEnum.CATEGORY_SCHEME));
+            }
+            return ExternalItemWebUtils.createExternalItemsResultFromListBase(categorySchemes, items);
+        } catch (MetamacException e) {
+            throw WebExceptionUtils.createMetamacWebException(e);
+        }
+    }
+
+    // CATEGORIES
+
+    @Override
+    public ExternalItemDto retrieveCategoryByUrn(String urn) throws MetamacWebException {
+        try {
+            Category category = srmRestInternalService.retrieveCategoryByUrn(urn);
+
+            return ExternalItemWebUtils.buildExternalItemDtoFromCategory(category);
+        } catch (MetamacException e) {
+            throw WebExceptionUtils.createMetamacWebException(e);
+        }
+    }
+
+    @Override
+    public ExternalItemsResult findCategories(int firstResult, int maxResult, ItemSchemeWebCriteria condition) throws MetamacWebException {
+        try {
+            String query = MetamacWebRestCriteriaUtils.buildQueryCategory(condition);
+
+            Categories categories = srmRestInternalService.findCategories(firstResult, maxResult, query);
+
+            List<ExternalItemDto> items = new ArrayList<ExternalItemDto>();
+            for (ResourceInternal resource : categories.getCategories()) {
+                items.add(ExternalItemWebUtils.buildExternalItemDtoFromResource(resource, TypeExternalArtefactsEnum.CATEGORY));
+            }
+            return ExternalItemWebUtils.createExternalItemsResultFromListBase(categories, items);
         } catch (MetamacException e) {
             throw WebExceptionUtils.createMetamacWebException(e);
         }

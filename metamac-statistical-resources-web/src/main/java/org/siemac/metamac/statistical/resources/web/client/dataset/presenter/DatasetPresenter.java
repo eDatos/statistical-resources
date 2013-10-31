@@ -64,6 +64,7 @@ public class DatasetPresenter extends Presenter<DatasetPresenter.DatasetView, Da
         void setDataset(DatasetVersionDto datasetDto);
         void setDatasetVersionsAndSelectCurrent(String currentDatasetUrn, List<DatasetVersionBaseDto> datasetVersionBaseDtos);
         void selectMetadataTab();
+        void selectCategorisationsTab();
         void selectDatasourcesTab();
         void selectAttributesTab();
     }
@@ -131,6 +132,8 @@ public class DatasetPresenter extends Presenter<DatasetPresenter.DatasetView, Da
             getView().selectDatasourcesTab();
         } else if (DatasetTabTypeEnum.ATTRIBUTES.equals(type)) {
             getView().selectAttributesTab();
+        } else if (DatasetTabTypeEnum.CATEGORISATIONS.equals(type)) {
+            getView().selectCategorisationsTab();
         } else {
             getView().selectMetadataTab();
         }
@@ -191,6 +194,13 @@ public class DatasetPresenter extends Presenter<DatasetPresenter.DatasetView, Da
     public void goToDatasetDatasources() {
         List<PlaceRequest> hierarchy = PlaceRequestUtils.getHierarchyUntilNameToken(placeManager, NameTokens.datasetPage);
         hierarchy.add(new PlaceRequest(NameTokens.datasetDatasourcesPage));
+        placeManager.revealPlaceHierarchy(hierarchy);
+    }
+
+    @Override
+    public void goToDatasetCategorisations() {
+        List<PlaceRequest> hierarchy = PlaceRequestUtils.getHierarchyUntilNameToken(placeManager, NameTokens.datasetPage);
+        hierarchy.add(new PlaceRequest(NameTokens.datasetCategorisationsPage));
         placeManager.revealPlaceHierarchy(hierarchy);
     }
 

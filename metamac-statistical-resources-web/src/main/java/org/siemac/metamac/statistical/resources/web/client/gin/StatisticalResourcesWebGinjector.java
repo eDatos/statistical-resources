@@ -2,6 +2,7 @@ package org.siemac.metamac.statistical.resources.web.client.gin;
 
 import org.siemac.metamac.statistical.resources.web.client.LoggedInGatekeeper;
 import org.siemac.metamac.statistical.resources.web.client.dataset.presenter.DatasetAttributesTabPresenter;
+import org.siemac.metamac.statistical.resources.web.client.dataset.presenter.DatasetCategorisationsTabPresenter;
 import org.siemac.metamac.statistical.resources.web.client.dataset.presenter.DatasetDatasourcesTabPresenter;
 import org.siemac.metamac.statistical.resources.web.client.dataset.presenter.DatasetListPresenter;
 import org.siemac.metamac.statistical.resources.web.client.dataset.presenter.DatasetMetadataTabPresenter;
@@ -40,6 +41,7 @@ public interface StatisticalResourcesWebGinjector extends MetamacWebGinjector {
     AsyncProvider<DatasetMetadataTabPresenter> getDatasetMetadataTabPresenter();
     AsyncProvider<DatasetDatasourcesTabPresenter> getDatasetDatasourcesTabPresenter();
     AsyncProvider<DatasetAttributesTabPresenter> getDatasetAttributesTabPresenter();
+    AsyncProvider<DatasetCategorisationsTabPresenter> getDatasetCategorisationsTabPresenter();
     AsyncProvider<PublicationListPresenter> getPublicationListPresenter();
     AsyncProvider<PublicationPresenter> getPublicationPresenter();
     AsyncProvider<PublicationMetadataTabPresenter> getPublicationMetadataTabPresenter();

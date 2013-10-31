@@ -12,6 +12,8 @@ import org.siemac.metamac.rest.common.v1_0.domain.ComparisonOperator;
 import org.siemac.metamac.rest.common.v1_0.domain.LogicalOperator;
 import org.siemac.metamac.rest.statistical_operations_internal.v1_0.domain.InstanceCriteriaPropertyRestriction;
 import org.siemac.metamac.rest.statistical_operations_internal.v1_0.domain.OperationCriteriaPropertyRestriction;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.CategoryCriteriaPropertyRestriction;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.CategorySchemeCriteriaPropertyRestriction;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.CodeCriteriaPropertyRestriction;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codelist;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.CodelistCriteriaPropertyRestriction;
@@ -104,6 +106,32 @@ public class MetamacWebRestCriteriaUtils {
         StringBuilder queryBuilder = new StringBuilder();
         if (webCriteria != null) {
             addSimpleRestCriteria(queryBuilder, webCriteria, CodeCriteriaPropertyRestriction.NAME, CodeCriteriaPropertyRestriction.ID, CodeCriteriaPropertyRestriction.URN);
+        }
+        return queryBuilder.toString();
+    }
+
+    // -------------------------------------------------------------------------------------------------------------
+    // CATEGORY SCHEME
+    // -------------------------------------------------------------------------------------------------------------
+
+    public static String buildQueryCategoryScheme(MetamacWebCriteria webCriteria) {
+        StringBuilder queryBuilder = new StringBuilder();
+        if (webCriteria != null) {
+            addSimpleRestCriteria(queryBuilder, webCriteria, CategorySchemeCriteriaPropertyRestriction.NAME, CategorySchemeCriteriaPropertyRestriction.ID,
+                    CategorySchemeCriteriaPropertyRestriction.URN);
+        }
+        return queryBuilder.toString();
+    }
+
+    // -------------------------------------------------------------------------------------------------------------
+    // CATEGORY
+    // -------------------------------------------------------------------------------------------------------------
+
+    public static String buildQueryCategory(ItemSchemeWebCriteria webCriteria) {
+        StringBuilder queryBuilder = new StringBuilder();
+        if (webCriteria != null) {
+            addSimpleRestCriteria(queryBuilder, webCriteria, CategoryCriteriaPropertyRestriction.NAME, CategoryCriteriaPropertyRestriction.ID, CategoryCriteriaPropertyRestriction.URN);
+            addSchemeRestCriteria(queryBuilder, webCriteria, CategoryCriteriaPropertyRestriction.CATEGORY_SCHEME_URN);
         }
         return queryBuilder.toString();
     }
