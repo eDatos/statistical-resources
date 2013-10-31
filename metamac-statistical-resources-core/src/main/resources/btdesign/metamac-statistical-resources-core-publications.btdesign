@@ -104,7 +104,7 @@ Application PublicationsStatisticalResources {
 			"Association to elements in the first level of the publication"
 			- Bag<@ElementLevel> childrenFirstLevel cascade="all-delete-orphan" fetch="lazy" inverse orderby="orderInLevel asc" <-> publicationVersionFirstLevel;
 			"Lists all resources across the structure"
-			- Bag<@RelatedResource> hasPart cascade="all-delete-orphan" databaseJoinTable="TB_RR_HAS_PART"  databaseColumn="HAS_PART_FK" databaseJoinColumn="PUB_VERSION_FK";
+			- Bag<@RelatedResource> hasPart cascade="all-delete-orphan" fetch="lazy" databaseJoinTable="TB_RR_HAS_PART"  databaseColumn="HAS_PART_FK" databaseJoinColumn="PUB_VERSION_FK";
 			
 			Repository PublicationVersionRepository {
 				save;
