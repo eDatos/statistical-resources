@@ -2343,7 +2343,7 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         assertNull(expected.getVersionableStatisticalResource().getValidTo());
         assertNull(expected.getValidToEffective());
 
-        DateTime validTo = new DateTime(2011, 1, 2, 3, 4, 5, 6);
+        DateTime validTo = new DateTime().plusDays(2);
         CategorisationDto actual = statisticalResourcesServiceFacade.endCategorisationValidity(getServiceContextAdministrador(), urn, validTo.toDate());
         MetamacAsserts.assertEqualsDate(validTo, actual.getValidTo());
         assertNull(expected.getDatasetVersion().getSiemacMetadataStatisticalResource().getValidTo());

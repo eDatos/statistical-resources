@@ -1344,7 +1344,7 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
         assertNull(expected.getVersionableStatisticalResource().getValidTo());
         assertNull(expected.getValidToEffective());
 
-        DateTime validTo = new DateTime(2011, 1, 2, 3, 4, 5, 6);
+        DateTime validTo = new DateTime().plusDays(3);
         Categorisation actual = datasetService.endCategorisationValidity(getServiceContextWithoutPrincipal(), urn, validTo);
         MetamacAsserts.assertEqualsDate(validTo, actual.getVersionableStatisticalResource().getValidTo());
         assertEquals(actual.getVersionableStatisticalResource().getValidTo(), actual.getValidToEffective());
@@ -1357,6 +1357,20 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
         String urn = expected.getVersionableStatisticalResource().getUrn();
         expectedMetamacException(new MetamacException(ServiceExceptionType.CATEGORISATION_CANT_END_VALIDITY_WITHOUT_VALIDITY_STARTED, urn));
         datasetService.endCategorisationValidity(getServiceContextWithoutPrincipal(), urn, null);
+    }
+
+    @Test
+    @MetamacMock({CATEGORISATION_01_DATASET_VERSION_03_PUBLISHED_NAME})
+    public void testEndCategorisationValidityErrorEndBeforeStart() throws Exception {
+        Categorisation expected = categorisationMockFactory.retrieveMock(CATEGORISATION_01_DATASET_VERSION_03_PUBLISHED_NAME);
+        String urn = expected.getVersionableStatisticalResource().getUrn();
+        assertNull(expected.getVersionableStatisticalResource().getValidTo());
+        assertNull(expected.getValidToEffective());
+
+        expectedMetamacException(new MetamacException(ServiceExceptionType.CATEGORISATION_CANT_END_VALIDITY_BEFORE_VALIDITY_STARTED, urn));
+
+        DateTime validTo = expected.getValidFromEffective().minusSeconds(1);
+        datasetService.endCategorisationValidity(getServiceContextWithoutPrincipal(), urn, validTo);
     }
 
     // ------------------------------------------------------------------------
