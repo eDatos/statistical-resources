@@ -205,30 +205,30 @@ public class StatisticalResourcesMockRestBaseTest extends StatisticalResourcesBa
     protected List<MetamacExceptionItem> getExceptionItemsForExternalItemNotPublishedLifecycle(LifeCycleStatisticalResource lifecycleResource, String baseField, boolean fromSiemac) {
         String prefix = baseField;
         if (!fromSiemac) {
-            prefix = buildField(baseField, "lifeCycleStatisticalResource");
+            prefix = buildField(baseField, "life_cycle_statistical_resource");
         }
         List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
-        exceptionItems.add(buildExternalItemNotPublishedException(lifecycleResource.getStatisticalOperation(), prefix, "statisticalOperation"));
+        exceptionItems.add(buildExternalItemNotPublishedException(lifecycleResource.getStatisticalOperation(), prefix, "statistical_operation"));
         exceptionItems.add(buildExternalItemNotPublishedException(lifecycleResource.getMaintainer(), prefix, "maintainer"));
 
         return exceptionItems;
     }
 
     protected List<MetamacExceptionItem> getExceptionItemsForExternalItemNotPublishedSiemac(SiemacMetadataStatisticalResource siemacResource, String baseField) {
-        String prefix = buildField(baseField, "siemacMetadataStatisticalResource");
+        String prefix = buildField(baseField, "siemac_metadata_statistical_resource");
 
         List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
 
         exceptionItems.addAll(getExceptionItemsForExternalItemNotPublishedLifecycle(siemacResource, prefix, true));
         exceptionItems.add(buildExternalItemNotPublishedException(siemacResource.getLanguage(), prefix, "language"));
         exceptionItems.addAll(buildExternalItemsNotPublishedExceptions(siemacResource.getLanguages(), prefix, "languages"));
-        exceptionItems.addAll(buildExternalItemsNotPublishedExceptions(siemacResource.getStatisticalOperationInstances(), prefix, "statisticalOperationInstances"));
+        exceptionItems.addAll(buildExternalItemsNotPublishedExceptions(siemacResource.getStatisticalOperationInstances(), prefix, "statistical_operation_instances"));
         exceptionItems.add(buildExternalItemNotPublishedException(siemacResource.getCreator(), prefix, "creator"));
         exceptionItems.addAll(buildExternalItemsNotPublishedExceptions(siemacResource.getContributor(), prefix, "contributor"));
         exceptionItems.addAll(buildExternalItemsNotPublishedExceptions(siemacResource.getPublisher(), prefix, "publisher"));
-        exceptionItems.addAll(buildExternalItemsNotPublishedExceptions(siemacResource.getPublisherContributor(), prefix, "publisherContributor"));
+        exceptionItems.addAll(buildExternalItemsNotPublishedExceptions(siemacResource.getPublisherContributor(), prefix, "publisher_contributor"));
         exceptionItems.addAll(buildExternalItemsNotPublishedExceptions(siemacResource.getMediator(), prefix, "mediator"));
-        exceptionItems.add(buildExternalItemNotPublishedException(siemacResource.getCommonMetadata(), prefix, "commonMetadata"));
+        exceptionItems.add(buildExternalItemNotPublishedException(siemacResource.getCommonMetadata(), prefix, "common_metadata"));
 
         return exceptionItems;
     }

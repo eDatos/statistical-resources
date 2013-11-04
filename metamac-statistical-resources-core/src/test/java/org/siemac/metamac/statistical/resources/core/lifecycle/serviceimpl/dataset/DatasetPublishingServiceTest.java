@@ -163,7 +163,7 @@ public class DatasetPublishingServiceTest extends StatisticalResourcesMockRestBa
 
         List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
 
-        exceptionItems.addAll(getExceptionItemsForExternalItemNotPublishedSiemac(siemacResource, "datasetVersion"));
+        exceptionItems.addAll(getExceptionItemsForExternalItemNotPublishedSiemac(siemacResource, "dataset_version"));
         exceptionItems.addAll(getExceptionItemsForExternalItemNotPublishedDataset(datasetVersion));
 
         expectedMetamacException(new MetamacException(exceptionItems));
@@ -183,7 +183,7 @@ public class DatasetPublishingServiceTest extends StatisticalResourcesMockRestBa
         mockSiemacExternalItemsPublished(siemacResource);
         mockDatasetVersionExternalItemsPublished(datasetVersion);
 
-        String prefix = "datasetVersion.siemacMetadataStatisticalResource";
+        String prefix = "dataset_version.siemac_metadata_statistical_resource";
 
         List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
         exceptionItems.add(buildRelatedResourceNotPublishedException(siemacResource.getReplaces(), prefix, "replaces"));
@@ -292,15 +292,15 @@ public class DatasetPublishingServiceTest extends StatisticalResourcesMockRestBa
     }
 
     private List<MetamacExceptionItem> getExceptionItemsForExternalItemNotPublishedDataset(DatasetVersion datasetVersion) {
-        String prefix = "datasetVersion";
+        String prefix = "dataset_version";
         List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
-        exceptionItems.addAll(buildExternalItemsNotPublishedExceptions(datasetVersion.getGeographicCoverage(), prefix, "geographicCoverage"));
-        exceptionItems.addAll(buildExternalItemsNotPublishedExceptions(datasetVersion.getMeasureCoverage(), prefix, "measureCoverage"));
-        exceptionItems.addAll(buildExternalItemsNotPublishedExceptions(datasetVersion.getGeographicGranularities(), prefix, "geographicGranularities"));
-        exceptionItems.addAll(buildExternalItemsNotPublishedExceptions(datasetVersion.getTemporalGranularities(), prefix, "temporalGranularities"));
-        exceptionItems.addAll(buildExternalItemsNotPublishedExceptions(datasetVersion.getStatisticalUnit(), prefix, "statisticalUnit"));
-        exceptionItems.add(buildExternalItemNotPublishedException(datasetVersion.getRelatedDsd(), prefix, "relatedDsd"));
-        exceptionItems.add(buildExternalItemNotPublishedException(datasetVersion.getUpdateFrequency(), prefix, "updateFrequency"));
+        exceptionItems.addAll(buildExternalItemsNotPublishedExceptions(datasetVersion.getGeographicCoverage(), prefix, "geographic_coverage"));
+        exceptionItems.addAll(buildExternalItemsNotPublishedExceptions(datasetVersion.getMeasureCoverage(), prefix, "measure_coverage"));
+        exceptionItems.addAll(buildExternalItemsNotPublishedExceptions(datasetVersion.getGeographicGranularities(), prefix, "geographic_granularities"));
+        exceptionItems.addAll(buildExternalItemsNotPublishedExceptions(datasetVersion.getTemporalGranularities(), prefix, "temporal_granularities"));
+        exceptionItems.addAll(buildExternalItemsNotPublishedExceptions(datasetVersion.getStatisticalUnit(), prefix, "statistical_unit"));
+        exceptionItems.add(buildExternalItemNotPublishedException(datasetVersion.getRelatedDsd(), prefix, "related_dsd"));
+        exceptionItems.add(buildExternalItemNotPublishedException(datasetVersion.getUpdateFrequency(), prefix, "update_frequency"));
         for (Categorisation categorisation : datasetVersion.getCategorisations()) {
             exceptionItems.add(buildExternalItemNotPublishedException(categorisation.getCategory(), prefix, "categorisations"));
             exceptionItems.add(buildExternalItemNotPublishedException(categorisation.getMaintainer(), prefix, "categorisations"));

@@ -137,7 +137,7 @@ public class PublicationPublishingServiceTest extends StatisticalResourcesMockRe
 
         List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
 
-        exceptionItems.addAll(getExceptionItemsForExternalItemNotPublishedSiemac(siemacResource, "publicationVersion"));
+        exceptionItems.addAll(getExceptionItemsForExternalItemNotPublishedSiemac(siemacResource, "publication_version"));
 
         expectedMetamacException(new MetamacException(exceptionItems));
 
@@ -189,7 +189,7 @@ public class PublicationPublishingServiceTest extends StatisticalResourcesMockRe
 
         mockSiemacExternalItemsPublished(siemacResource);
 
-        String prefix = "publicationVersion.siemacMetadataStatisticalResource";
+        String prefix = "publication_version.siemac_metadata_statistical_resource";
 
         List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
         exceptionItems.add(buildRelatedResourceNotPublishedException(siemacResource.getReplaces(), prefix, "replaces"));
