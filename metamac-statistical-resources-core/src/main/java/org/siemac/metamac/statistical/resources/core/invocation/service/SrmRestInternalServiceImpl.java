@@ -57,8 +57,7 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
         }
     }
 
-    @Override
-    public DataStructures findDsds(int firstResult, int maxResult, String query) throws MetamacException {
+    private DataStructures findDsds(int firstResult, int maxResult, String query) throws MetamacException {
         try {
             String offset = String.valueOf(firstResult);
             String limit = String.valueOf(maxResult);
@@ -103,8 +102,7 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
     // CONCEPT SCHEMES
     // -------------------------------------------------------------------------------------------------
 
-    @Override
-    public ConceptSchemes findConceptSchemes(int firstResult, int maxResult, String query) throws MetamacException {
+    private ConceptSchemes findConceptSchemes(int firstResult, int maxResult, String query) throws MetamacException {
         try {
             String limit = String.valueOf(maxResult);
             String offset = String.valueOf(firstResult);
@@ -194,13 +192,11 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
         }
     }
 
-    @Override
-    public Concepts findConcepts(int firstResult, int maxResult, String query) throws MetamacException {
+    private Concepts findConcepts(int firstResult, int maxResult, String query) throws MetamacException {
         return findConcepts(null, firstResult, maxResult, query);
     }
 
-    @Override
-    public Concepts findConcepts(String conceptSchemeUrn, int firstResult, int maxResult, String query) throws MetamacException {
+    private Concepts findConcepts(String conceptSchemeUrn, int firstResult, int maxResult, String query) throws MetamacException {
         try {
             String limit = String.valueOf(maxResult);
             String offset = String.valueOf(firstResult);
@@ -259,8 +255,7 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
     // CODELISTS
     // -------------------------------------------------------------------------------------------------
 
-    @Override
-    public Codelists findCodelists(int firstResult, int maxResult, String query) throws MetamacException {
+    private Codelists findCodelists(int firstResult, int maxResult, String query) throws MetamacException {
         try {
             String limit = String.valueOf(maxResult);
             String offset = String.valueOf(firstResult);
@@ -336,13 +331,11 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
         }
     }
 
-    @Override
-    public Codes findCodes(int firstResult, int maxResult, String query) throws MetamacException {
+    private Codes findCodes(int firstResult, int maxResult, String query) throws MetamacException {
         return findCodes(null, firstResult, maxResult, query);
     }
 
-    @Override
-    public Codes findCodes(String codelistUrn, int firstResult, int maxResult, String query) throws MetamacException {
+    private Codes findCodes(String codelistUrn, int firstResult, int maxResult, String query) throws MetamacException {
         try {
             String limit = String.valueOf(maxResult);
             String offset = String.valueOf(firstResult);
@@ -415,8 +408,7 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
     // ORGANISATION SCHEMES
     // -------------------------------------------------------------------------------------------------
 
-    @Override
-    public OrganisationSchemes findOrganisationSchemes(int firstResult, int maxResult, String query) throws MetamacException {
+    private OrganisationSchemes findOrganisationSchemes(int firstResult, int maxResult, String query) throws MetamacException {
         try {
             String limit = String.valueOf(maxResult);
             String offset = String.valueOf(firstResult);
@@ -478,8 +470,7 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
         }
     }
 
-    @Override
-    public Organisations findOrganisations(int firstResult, int maxResult, String query) throws MetamacException {
+    private Organisations findOrganisations(int firstResult, int maxResult, String query) throws MetamacException {
         try {
             String limit = String.valueOf(maxResult);
             String offset = String.valueOf(firstResult);
@@ -540,8 +531,7 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
     // CATEGORY SCHEMES
     // -------------------------------------------------------------------------------------------------
 
-    @Override
-    public CategorySchemes findCategorySchemes(int firstResult, int maxResult, String query) throws MetamacException {
+    private CategorySchemes findCategorySchemes(int firstResult, int maxResult, String query) throws MetamacException {
         try {
             String limit = String.valueOf(maxResult);
             String offset = String.valueOf(firstResult);
@@ -603,8 +593,7 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
         }
     }
 
-    @Override
-    public Categories findCategories(int firstResult, int maxResult, String query) throws MetamacException {
+    private Categories findCategories(int firstResult, int maxResult, String query) throws MetamacException {
         try {
             String limit = String.valueOf(maxResult);
             String offset = String.valueOf(firstResult);
