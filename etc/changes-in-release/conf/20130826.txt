@@ -1,5 +1,0 @@
-Sólo en web externa:
-
-- Añadida propiedad en 'metamac-statistical-resources-external-web-configuration.xml':
-	
-	metamac.portal.web.external
