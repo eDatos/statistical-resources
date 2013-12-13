@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
-<properties>
-    <comment>Configurations</comment>
-    <entry key="metamac.statistical_resources.user_guide.file_name">Gestor_recursos_estadisticos-Manual_usuario.pdf</entry>
-    <entry key="metamac.statistical_resources.dot_code_mapping">ONE_DOT=CODE_ONE,TWO_DOT=CODE_TWO,THREE_DOT=THREE_DOT,FOUR_DOT=FOUR_CODE,FIVE_DOT=FIVE_CODE,SIX_DOT=SIX_CODE</entry>
-</properties>
