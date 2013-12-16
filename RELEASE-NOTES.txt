@@ -1,0 +1,14 @@
+========================================================================
+METAMAC-STATISTICAL-RESOURCES -- Gestor de recursos estadísticos
+========================================================================
+
+El gestor de recursos estadísticos nos permite manejar los dos recursos
+estadísticos principales de una organización: publicaciones y datasets.
+
+Además permite la creación de consultas asociadas a datasets. Estas consultas
+no son más que una visión en particular de un dataset (normalmente simplificada).
+Ejemplo: último datos, últimos N datos, ....
+
+Por favor, consulta nuestro gestor de incidencia para obtener más información
+de las incidencias con el id [METAMAC-xxx].
+http://jira.arte-consultores.com/browse/METAMAC
