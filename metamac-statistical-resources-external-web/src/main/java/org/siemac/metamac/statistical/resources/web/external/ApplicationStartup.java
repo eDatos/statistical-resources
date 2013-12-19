@@ -6,10 +6,11 @@ import javax.servlet.ServletContextListener;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.siemac.metamac.core.common.conf.ConfigurationService;
+import org.siemac.metamac.core.common.constants.shared.ConfigurationConstants;
 import org.siemac.metamac.core.common.util.ApplicationContextProvider;
 import org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConfigurationConstants;
 
-public class ApplicationStartup implements ServletContextListener {
+public class ApplicationStartup extends ConfigurationConstants implements ServletContextListener {
 
     private static final Log     LOG = LogFactory.getLog(ApplicationStartup.class);
 

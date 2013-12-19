@@ -53,7 +53,6 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.siemac.metamac.common.test.utils.ConditionalCriteriaUtils;
 import org.siemac.metamac.core.common.conf.ConfigurationService;
-import org.siemac.metamac.core.common.constants.shared.ConfigurationConstants;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.util.ApplicationContextProvider;
 import org.siemac.metamac.core.common.util.shared.UrnUtils;
@@ -148,7 +147,7 @@ public abstract class StatisticalResourcesRestExternalFacadeV10BaseTest extends 
     @Before
     public void setUp() throws Exception {
         ConfigurationService configurationService = applicationContext.getBean(ConfigurationService.class);
-        apiEndpointv10 = configurationService.getProperty(ConfigurationConstants.ENDPOINT_STATISTICAL_RESOURCES_EXTERNAL_API) + "/v1.0";
+        apiEndpointv10 = configurationService.retrieveStatisticalResourcesExternalApiUrlBase() + "/v1.0";
 
         resetMocks();
     }
@@ -705,6 +704,7 @@ public abstract class StatisticalResourcesRestExternalFacadeV10BaseTest extends 
                     };
                 });
     }
+
     private void mockRetrieveDataStructureByUrn() throws MetamacException {
         when(srmRestExternalFacade.retrieveDataStructureByUrn(any(String.class))).thenAnswer(new Answer<DataStructure>() {
 
@@ -812,6 +812,7 @@ public abstract class StatisticalResourcesRestExternalFacadeV10BaseTest extends 
             };
         });
     }
+
     private String getAgencyIdFromConditionalCriteria(List<ConditionalCriteria> conditions) {
         // can use PublicationVersionProperties or DatasetVersionProperties...
         ConditionalCriteria conditionalCriteria = ConditionalCriteriaUtils.getConditionalCriteriaByPropertyName(conditions, Operator.Equal, PublicationVersionProperties

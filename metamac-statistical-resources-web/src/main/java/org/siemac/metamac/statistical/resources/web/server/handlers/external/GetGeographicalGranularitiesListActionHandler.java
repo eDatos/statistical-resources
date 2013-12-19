@@ -5,10 +5,7 @@ import java.util.ArrayList;
 import org.siemac.metamac.core.common.conf.ConfigurationService;
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
-import org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConfigurationConstants;
 import org.siemac.metamac.statistical.resources.web.server.rest.SrmRestInternalFacade;
-import org.siemac.metamac.statistical.resources.web.shared.external.GetGeographicalGranularitiesListAction;
-import org.siemac.metamac.statistical.resources.web.shared.external.GetGeographicalGranularitiesListResult;
 import org.siemac.metamac.web.common.server.handlers.SecurityActionHandler;
 import org.siemac.metamac.web.common.shared.domain.ExternalItemsResult;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +28,7 @@ public class GetGeographicalGranularitiesListActionHandler extends SecurityActio
 
     @Override
     public GetGeographicalGranularitiesListResult executeSecurityAction(GetGeographicalGranularitiesListAction action) throws ActionException {
-        String geoGranularityCodelistUrn = configurationService.getProperty(StatisticalResourcesConfigurationConstants.DEFAULT_CODELIST_GEOGRAPHICAL_GRANULARITY_URN);
+        String geoGranularityCodelistUrn = configurationService.retrieveDefaultCodelistGeographicalGranularityUrn();
         if (!StringUtils.isEmpty(geoGranularityCodelistUrn)) {
             ExternalItemsResult result = srmRestInternalFacade.findCodesInCodelist(geoGranularityCodelistUrn, action.getFirstResult(), action.getMaxResults(), action.getCriteria());
             return new GetGeographicalGranularitiesListResult(result.getExternalItemDtos(), result.getFirstResult(), result.getTotalResults());
