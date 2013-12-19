@@ -54,7 +54,7 @@ public class StatisticalResourcesMockRestBaseTest extends StatisticalResourcesBa
         mockApis();
     }
 
-    private void mockApis() {
+    private void mockApis() throws MetamacException {
         Mockito.when(metamacApisLocator.getStatisticalOperationsRestInternalFacadeV10()).thenReturn(statisticalOperationsRestInternalFacadeV10);
         Mockito.when(metamacApisLocator.getCommonMetadataRestExternalFacadeV10()).thenReturn(commonMetadataV10);
         Mockito.when(metamacApisLocator.getSrmRestInternalFacadeV10()).thenReturn(srmRestInternalFacadeV10);
@@ -308,6 +308,7 @@ public class StatisticalResourcesMockRestBaseTest extends StatisticalResourcesBa
     protected String getDatasetMockUrn(String mockId) {
         return datasetMockFactory.retrieveMock(mockId).getIdentifiableStatisticalResource().getUrn();
     }
+
     protected String getDatasetVersionMockUrn(String mockId) {
         return datasetVersionMockFactory.retrieveMock(mockId).getSiemacMetadataStatisticalResource().getUrn();
     }

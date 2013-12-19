@@ -130,12 +130,12 @@ public class StatisticalOperationsRestInternalServiceImpl implements Statistical
     // ---------------------------------------------------------------------------------
 
     @Override
-    public Instances findInstances(int firstResult, int maxResult, String query) {
+    public Instances findInstances(int firstResult, int maxResult, String query) throws MetamacException {
         return findInstances(null, firstResult, maxResult, query);
     }
 
     @Override
-    public Instances findInstances(String operationId, int firstResult, int maxResult, String query) {
+    public Instances findInstances(String operationId, int firstResult, int maxResult, String query) throws MetamacException {
         String limit = String.valueOf(maxResult);
         String offset = String.valueOf(firstResult);
         String orderBy = null;

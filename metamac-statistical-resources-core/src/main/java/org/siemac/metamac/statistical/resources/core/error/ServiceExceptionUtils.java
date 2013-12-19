@@ -5,13 +5,12 @@ import javax.ws.rs.core.Response.Status;
 import org.apache.cxf.jaxrs.client.ServerWebApplicationException;
 import org.apache.cxf.jaxrs.client.WebClient;
 import org.siemac.metamac.core.common.exception.MetamacException;
-import org.siemac.metamac.statistical.resources.core.invocation.service.CommonMetadataRestExternalServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class ServiceExceptionUtils {
 
-    private final static Logger logger = LoggerFactory.getLogger(CommonMetadataRestExternalServiceImpl.class);
+    private final static Logger logger = LoggerFactory.getLogger(ServiceExceptionUtils.class);
 
     public static MetamacException manageMetamacRestException(Exception e, String apiName, Object clientProxy) throws MetamacException {
         logger.error("Error", e);
