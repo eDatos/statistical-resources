@@ -9,6 +9,8 @@ import org.siemac.metamac.sso.client.MetamacPrincipal;
 import org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConstants;
 import org.siemac.metamac.statistical.resources.web.client.gin.StatisticalResourcesWebGinjector;
 import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
+import org.siemac.metamac.statistical.resources.web.shared.base.GetInitialValuesAction;
+import org.siemac.metamac.statistical.resources.web.shared.base.GetInitialValuesResult;
 import org.siemac.metamac.web.common.client.MetamacSecurityEntryPoint;
 import org.siemac.metamac.web.common.client.gin.MetamacWebGinjector;
 
