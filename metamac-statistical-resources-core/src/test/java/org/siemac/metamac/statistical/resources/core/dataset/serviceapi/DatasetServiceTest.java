@@ -592,6 +592,7 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
 
         Mockito.verify(datasetRepositoriesServiceFacade).deleteDatasetRepository(datasetRepositoryId);
     }
+
     @Test
     @MetamacMock({DATASET_VERSION_79_NO_PUB_REPLACES_DATASET_80_NAME, DATASET_VERSION_80_NO_PUB_IS_REPLACED_BY_DATASET_79_NAME})
     public void testDeleteDatasetVersionReplacedByOther() throws Exception {
