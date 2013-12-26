@@ -68,6 +68,7 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.StatisticOfficiality;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.TemporalCode;
 import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.validators.DatasetServiceInvocationValidator;
+import org.siemac.metamac.statistical.resources.core.dataset.utils.DatasetVersionUtils;
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.task.domain.DatasetFileFormatEnum;
@@ -260,6 +261,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
                     + " for attribute " + attribute.getComponentId());
         }
     }
+
     private void checkDatasetVersionForDatasourceHasNoQueries(Datasource datasource) throws MetamacException {
         List<QueryVersion> queries = queryVersionRepository.findLinkedToFixedDatasetVersion(datasource.getDatasetVersion().getId());
         List<QueryVersion> queriesDataset = queryVersionRepository.findLinkedToDataset(datasource.getDatasetVersion().getDataset().getId());
@@ -328,6 +330,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         try {
             DatasetRepositoryDto datasetRepositoryDto = new DatasetRepositoryDto();
             datasetRepositoryDto.setDatasetId(datasetVersion.getSiemacMetadataStatisticalResource().getUrn());
+            datasetRepositoryDto.setTableName(DatasetVersionUtils.generateDatasetRepositoryTableName(datasetVersion.getSiemacMetadataStatisticalResource()));
 
             DataStructure dsd = srmRestInternalService.retrieveDsdByUrn(datasetVersion.getRelatedDsd().getUrn());
 
@@ -810,6 +813,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
 
         return attributeInstance;
     }
+
     @Override
     public AttributeInstanceDto updateAttributeInstance(ServiceContext ctx, String datasetVersionUrn, AttributeInstanceDto attributeInstanceDto) throws MetamacException {
 

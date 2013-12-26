@@ -23,6 +23,7 @@ import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.DatasetI
 import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.DatasetServiceDatasourceManagementTest;
 import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.DatasetServiceImportationTest;
 import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.DatasetServiceTest;
+import org.siemac.metamac.statistical.resources.core.dataset.utils.DatasetVersionUtilsTest;
 import org.siemac.metamac.statistical.resources.core.enume.utils.ProcStatusEnumUtilsTest;
 import org.siemac.metamac.statistical.resources.core.enume.utils.QueryStatusEnumUtilsTest;
 import org.siemac.metamac.statistical.resources.core.enume.utils.TypeRelatedResourceEnumUtilsTest;
@@ -104,6 +105,7 @@ import org.siemac.metamac.statistical.resources.core.query.serviceapi.QueryVersi
                      PublicationLifecycleServiceTest.class,
                      QueryLifecycleServiceTest.class,
                      VersionUtilsTest.class,
+                     DatasetVersionUtilsTest.class,
                      CommonDto2DoMapperTest.class,
                      CommonDo2DtoMapperTest.class,
                      ExternalItemCheckerTest.class,

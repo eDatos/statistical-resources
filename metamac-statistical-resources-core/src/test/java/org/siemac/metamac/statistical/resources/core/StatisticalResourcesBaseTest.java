@@ -1,5 +1,9 @@
 package org.siemac.metamac.statistical.resources.core;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.List;
+
 import org.apache.commons.lang.StringUtils;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.junit.Rule;
@@ -31,6 +35,9 @@ import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.Stati
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesNotPersistedDoMocks;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesPersistedDoMocks;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.ResultSetExtractor;
+import org.springframework.jdbc.core.RowMapper;
 
 public abstract class StatisticalResourcesBaseTest extends MetamacBaseTest {
 
@@ -66,6 +73,9 @@ public abstract class StatisticalResourcesBaseTest extends MetamacBaseTest {
 
     @Rule
     public ExpectedException                                thrown                          = ExpectedException.none();
+
+    protected JdbcTemplate                                  jdbcTemplateRepository;
+    protected JdbcTemplate                                  jdbcTemplateResources;
 
     protected ServiceContext getServiceContextWithoutPrincipal() {
         return mockServiceContextWithoutPrincipal();
@@ -127,4 +137,48 @@ public abstract class StatisticalResourcesBaseTest extends MetamacBaseTest {
         return strBuilder.toString();
     }
 
+    protected class TableNameResultSetExtractor implements ResultSetExtractor<String> {
+
+        @Override
+        public String extractData(ResultSet rs) throws SQLException {
+            return rs.getString(1);
+        }
+    }
+
+    protected class TableNameRowMapper implements RowMapper<String> {
+
+        @Override
+        public String mapRow(ResultSet rs, int line) throws SQLException {
+            TableNameResultSetExtractor extractor = new TableNameResultSetExtractor();
+            return extractor.extractData(rs);
+        }
+    }
+
+    protected void clearDataBase() {
+        // REPOSITORY
+        {
+            List<String> tableNames = this.jdbcTemplateRepository.query("select TABLE_NAME from TB_DATASETS", new TableNameRowMapper());
+
+            // Truncate tables
+            this.jdbcTemplateRepository.update("truncate table TB_LOCALISED_STRINGS");
+            this.jdbcTemplateRepository.update("truncate table TB_DATASET_DIMENSIONS");
+            this.jdbcTemplateRepository.update("truncate table TB_ATTRIBUTE_DIMENSIONS");
+
+            // Deletes
+            this.jdbcTemplateRepository.update("delete from TB_ATTRIBUTES");
+            this.jdbcTemplateRepository.update("delete from TB_DATASETS");
+            this.jdbcTemplateRepository.update("delete from TB_INTERNATIONAL_STRINGS");
+
+            // Drop table data
+            for (String tableName : tableNames) {
+                this.jdbcTemplateRepository.update("drop table " + tableName);
+            }
+        }
+
+        // RESOURCES
+        {
+            this.jdbcTemplateResources.update("truncate table TB_TASKS");
+        }
+
+    }
 }

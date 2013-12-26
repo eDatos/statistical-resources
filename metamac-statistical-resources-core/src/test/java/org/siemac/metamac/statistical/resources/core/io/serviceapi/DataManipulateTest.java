@@ -6,8 +6,6 @@ import static org.junit.Assert.assertTrue;
 import java.io.File;
 import java.net.URISyntaxException;
 import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -15,12 +13,12 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
 
+import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.StringUtils;
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteriaBuilder;
 import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
 import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
-import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -47,8 +45,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.ResultSetExtractor;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
@@ -86,13 +82,8 @@ public class DataManipulateTest extends StatisticalResourcesBaseTest {
 
     public String                            jobKey;
 
-    private JdbcTemplate                     jdbcTemplateRepository;
-    private JdbcTemplate                     jdbcTemplateResources;
-
     @PersistenceContext(unitName = "StatisticalResourcesEntityManagerFactory")
     protected EntityManager                  entityManager;
-
-    private final ServiceContext             serviceContext                      = new ServiceContext("system", "123456", "junit");
 
     public static final String               DATA_STR_ECB_EXR_RG_XS              = "/sdmx/2_1/dataset/structured/ecb_exr_rg_xs.xml";
     public static final String               DATA_STR_ECB_EXR_RG_XS_DENORMALIZED = "/sdmx/2_1/dataset/structured/ecb_exr_rg_xs_denormalized.xml";
@@ -142,51 +133,6 @@ public class DataManipulateTest extends StatisticalResourcesBaseTest {
         clearDataBase(); // Clear dirty database
     }
 
-    private class TableNameResultSetExtractor implements ResultSetExtractor<String> {
-
-        @Override
-        public String extractData(ResultSet rs) throws SQLException {
-            return rs.getString(1);
-        }
-    }
-
-    private class TableNameRowMapper implements RowMapper<String> {
-
-        @Override
-        public String mapRow(ResultSet rs, int line) throws SQLException {
-            TableNameResultSetExtractor extractor = new TableNameResultSetExtractor();
-            return extractor.extractData(rs);
-        }
-    }
-
-    public void clearDataBase() {
-        // REPOSITORY
-        {
-            List<String> tableNames = this.jdbcTemplateRepository.query("select TABLE_NAME from TB_DATASETS", new TableNameRowMapper());
-
-            // Truncate tables
-            this.jdbcTemplateRepository.update("truncate table TB_LOCALISED_STRINGS");
-            this.jdbcTemplateRepository.update("truncate table TB_DATASET_DIMENSIONS");
-            this.jdbcTemplateRepository.update("truncate table TB_ATTRIBUTE_DIMENSIONS");
-
-            // Deletes
-            this.jdbcTemplateRepository.update("delete from TB_ATTRIBUTES");
-            this.jdbcTemplateRepository.update("delete from TB_DATASETS");
-            this.jdbcTemplateRepository.update("delete from TB_INTERNATIONAL_STRINGS");
-
-            // Drop table data
-            for (String tableName : tableNames) {
-                this.jdbcTemplateRepository.update("drop table " + tableName);
-            }
-        }
-
-        // RESOURCES
-        {
-            this.jdbcTemplateResources.update("truncate table TB_TASKS");
-        }
-
-    }
-
     @Test
     public void testImportSdmx21Datasource() throws Exception {
         // New Transaction: Because the job needs persisted data
@@ -221,7 +167,7 @@ public class DataManipulateTest extends StatisticalResourcesBaseTest {
                         taskInfoDataset.addFile(fileDescriptorDto);
                     }
 
-                    jobKey = taskService.planifyImportationDataset(serviceContext, taskInfoDataset);
+                    jobKey = taskService.planifyImportationDataset(getServiceContextWithoutPrincipal(), taskInfoDataset);
 
                 } catch (MetamacException e) {
                     e.printStackTrace();
@@ -279,7 +225,7 @@ public class DataManipulateTest extends StatisticalResourcesBaseTest {
                         taskInfoDataset.addFile(fileDescriptorDto);
                     }
 
-                    jobKey = taskService.planifyImportationDataset(serviceContext, taskInfoDataset);
+                    jobKey = taskService.planifyImportationDataset(getServiceContextWithoutPrincipal(), taskInfoDataset);
 
                 } catch (MetamacException e) {
                     e.printStackTrace();
@@ -332,7 +278,7 @@ public class DataManipulateTest extends StatisticalResourcesBaseTest {
                         taskInfoDataset.addFile(fileDescriptorDto);
                     }
 
-                    jobKey = taskService.planifyImportationDataset(serviceContext, taskInfoDataset);
+                    jobKey = taskService.planifyImportationDataset(getServiceContextWithoutPrincipal(), taskInfoDataset);
 
                 } catch (MetamacException e) {
                     e.printStackTrace();
@@ -353,7 +299,7 @@ public class DataManipulateTest extends StatisticalResourcesBaseTest {
         waitUntilJobFinished(false);
 
         List<ConditionalCriteria> conditionList = ConditionalCriteriaBuilder.criteriaFor(Task.class).withProperty(TaskProperties.job()).eq(jobKey).build();
-        PagedResult<Task> pagedResult = taskService.findTasksByCondition(serviceContext, conditionList, PagingParameter.noLimits());
+        PagedResult<Task> pagedResult = taskService.findTasksByCondition(getServiceContextWithoutPrincipal(), conditionList, PagingParameter.noLimits());
         assertTrue(pagedResult.getValues().isEmpty());
     }
 
@@ -386,7 +332,7 @@ public class DataManipulateTest extends StatisticalResourcesBaseTest {
                         taskInfoDataset.addFile(fileDescriptorDto);
                     }
 
-                    jobKey = taskService.planifyImportationDataset(serviceContext, taskInfoDataset);
+                    jobKey = taskService.planifyImportationDataset(getServiceContextWithoutPrincipal(), taskInfoDataset);
 
                 } catch (MetamacException e) {
                     e.printStackTrace();
@@ -432,7 +378,7 @@ public class DataManipulateTest extends StatisticalResourcesBaseTest {
                         taskInfoDataset.addFile(fileDescriptorDto);
                     }
 
-                    jobKey = taskService.planifyImportationDataset(serviceContext, taskInfoDataset);
+                    jobKey = taskService.planifyImportationDataset(getServiceContextWithoutPrincipal(), taskInfoDataset);
 
                 } catch (MetamacException e) {
                     e.printStackTrace();
@@ -478,7 +424,7 @@ public class DataManipulateTest extends StatisticalResourcesBaseTest {
                         taskInfoDataset.addFile(fileDescriptorDto);
                     }
 
-                    jobKey = taskService.planifyImportationDataset(serviceContext, taskInfoDataset);
+                    jobKey = taskService.planifyImportationDataset(getServiceContextWithoutPrincipal(), taskInfoDataset);
 
                 } catch (MetamacException e) {
                     e.printStackTrace();
@@ -505,7 +451,7 @@ public class DataManipulateTest extends StatisticalResourcesBaseTest {
                     taskInfoDataset.setDataStructureUrn(URN_DSD_ECB_EXR_RG);
                     taskInfoDataset.setDatasetVersionId("TEST_DATA_STR_ECB_EXR_RG");
 
-                    jobKey = taskService.planifyDuplicationDataset(serviceContext, taskInfoDataset, "TEST_DATA_STR_ECB_EXR_RG_NEW");
+                    jobKey = taskService.planifyDuplicationDataset(getServiceContextWithoutPrincipal(), taskInfoDataset, "TEST_DATA_STR_ECB_EXR_RG_NEW");
 
                 } catch (MetamacException e) {
                     e.printStackTrace();
@@ -525,6 +471,7 @@ public class DataManipulateTest extends StatisticalResourcesBaseTest {
     private DatasetRepositoryDto createDatasetRepository(String datasetId, String dsdUrn) throws Exception {
         DatasetRepositoryDto datasetRepositoryDto = new DatasetRepositoryDto();
         datasetRepositoryDto.setDatasetId(datasetId);
+        datasetRepositoryDto.setTableName("TEST_DATA_" + RandomStringUtils.randomAlphabetic(10));
 
         DataStructure dsd = srmRestInternalService.retrieveDsdByUrn(dsdUrn);
 
