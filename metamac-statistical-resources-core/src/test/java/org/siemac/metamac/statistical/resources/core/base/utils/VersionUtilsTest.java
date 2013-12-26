@@ -10,7 +10,7 @@ import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatis
 import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesVersionUtils;
 
 public class VersionUtilsTest {
-    
+
     @Test
     public void testInitialVersion() throws Exception {
         assertEquals("001.000", StatisticalResourcesVersionUtils.createInitialVersion());
@@ -24,8 +24,8 @@ public class VersionUtilsTest {
 
         assertEquals(false, StatisticalResourcesVersionUtils.isInitialVersion(mockHasLifecycleWithVersion("001.001")));
     }
-    
-    @Test(expected=Exception.class)
+
+    @Test(expected = Exception.class)
     public void testIsInitialVersionErrorVersionRequired() throws Exception {
         StatisticalResourcesVersionUtils.isInitialVersion(mockHasLifecycleWithVersion(null));
     }
