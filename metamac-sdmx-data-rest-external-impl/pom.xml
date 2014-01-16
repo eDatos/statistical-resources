@@ -20,7 +20,7 @@
 		<dependency>
         	<groupId>org.siemac.metamac.metamac-statistical-resources</groupId>
             <artifactId>metamac-sdmx-data-rest-external-api</artifactId>
-			<version>${statistic-metamac-sdmx-data-rest-external-api.version}</version>
+			<version>${metamac-sdmx-data-rest-external-api.version}</version>
 		</dependency>
         <dependency>
             <groupId>org.siemac.metamac.metamac-statistical-resources</groupId>
