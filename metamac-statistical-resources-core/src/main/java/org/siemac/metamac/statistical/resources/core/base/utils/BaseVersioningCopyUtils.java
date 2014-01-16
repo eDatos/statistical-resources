@@ -108,7 +108,6 @@ public class BaseVersioningCopyUtils extends CommonVersioningCopyUtils {
             target = new NameableStatisticalResource();
         }
         
-        // TODO: ¿Se hereda el titulo?
         target.setTitle(copyInternationalString(source.getTitle()));
         target.setDescription(copyInternationalString(source.getDescription()));
 
