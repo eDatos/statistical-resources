@@ -15,12 +15,8 @@ public class QueryClientSecurityUtils extends BaseClientSecurityUtils {
         return SharedQueriesSecurityUtils.canCreateQuery(getMetamacPrincipal());
     }
 
-    public static boolean canUpdatePublicationVersion(QueryVersionDto queryVersionDto) {
+    public static boolean canUpdateQueryVersion(QueryVersionDto queryVersionDto) {
         return SharedQueriesSecurityUtils.canUpdateQueryVersion(getMetamacPrincipal());
-    }
-
-    public static boolean canDeletePublicationVersion(QueryVersionDto queryVersionDto) {
-        return SharedQueriesSecurityUtils.canDeleteQueryVersion(getMetamacPrincipal());
     }
 
     public static boolean canMarkQueryVersionAsDiscontinued() {
@@ -44,5 +40,9 @@ public class QueryClientSecurityUtils extends BaseClientSecurityUtils {
 
     public static boolean canSendQueryVersionToValidationRejected() {
         return SharedQueriesSecurityUtils.canSendQueryVersionToValidationRejected(getMetamacPrincipal());
+    }
+
+    public static boolean canPublishQueryVersion() {
+        return SharedQueriesSecurityUtils.canPublishQueryVersion(getMetamacPrincipal());
     }
 }

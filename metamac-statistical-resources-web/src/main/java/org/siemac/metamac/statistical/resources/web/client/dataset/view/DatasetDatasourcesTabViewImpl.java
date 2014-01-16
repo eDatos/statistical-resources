@@ -16,15 +16,12 @@ import org.siemac.metamac.statistical.resources.web.client.dataset.presenter.Dat
 import org.siemac.metamac.statistical.resources.web.client.dataset.utils.DatasetClientSecurityUtils;
 import org.siemac.metamac.statistical.resources.web.client.dataset.view.handlers.DatasetDatasourcesTabUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.ImportDatasourcesWindow;
-import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.forms.DatasourceResourceIdentifiersEditionForm;
-import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.forms.DatasourceResourceIdentifiersForm;
 import org.siemac.metamac.statistical.resources.web.client.utils.StatisticalResourcesRecordUtils;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetCodelistsWithVariableResult;
 import org.siemac.metamac.web.common.client.listener.UploadListener;
 import org.siemac.metamac.web.common.client.widgets.CustomListGrid;
 import org.siemac.metamac.web.common.client.widgets.CustomToolStripButton;
 import org.siemac.metamac.web.common.client.widgets.DeleteConfirmationWindow;
-import org.siemac.metamac.web.common.client.widgets.form.MainFormLayout;
 
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
@@ -34,8 +31,6 @@ import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
-import com.smartgwt.client.widgets.grid.events.RecordClickEvent;
-import com.smartgwt.client.widgets.grid.events.RecordClickHandler;
 import com.smartgwt.client.widgets.grid.events.SelectionChangedHandler;
 import com.smartgwt.client.widgets.grid.events.SelectionEvent;
 import com.smartgwt.client.widgets.layout.VLayout;
@@ -46,7 +41,6 @@ public class DatasetDatasourcesTabViewImpl extends ViewWithUiHandlers<DatasetDat
     private VLayout              panel;
 
     private DatasourcesListPanel datasourcesListPanel;
-    private DatasourceFormPanel  datasourceFormPanel;
 
     private DatasetVersionDto    datasetVersionDto;
 
@@ -57,11 +51,8 @@ public class DatasetDatasourcesTabViewImpl extends ViewWithUiHandlers<DatasetDat
 
         datasourcesListPanel = new DatasourcesListPanel();
         datasourcesListPanel.setWidth("99%");
-        datasourceFormPanel = new DatasourceFormPanel();
-        datasourceFormPanel.setWidth("99%");
 
         panel.addMember(datasourcesListPanel);
-        panel.addMember(datasourceFormPanel);
     }
 
     @Override
@@ -81,11 +72,6 @@ public class DatasetDatasourcesTabViewImpl extends ViewWithUiHandlers<DatasetDat
     }
 
     @Override
-    public void setDatasource(DatasourceDto datasourceDto) {
-        datasourceFormPanel.selectDatasource(datasourceDto);
-    }
-
-    @Override
     public void setCodelistsInVariable(String dimensionId, GetCodelistsWithVariableResult result) {
         datasourcesListPanel.setCodeListsInVariable(dimensionId, result);
     }
@@ -93,10 +79,6 @@ public class DatasetDatasourcesTabViewImpl extends ViewWithUiHandlers<DatasetDat
     @Override
     public void setDimensionVariablesForDataset(String datasetVersionUrn, Map<String, String> mapping) {
         datasourcesListPanel.setDimensionVariablesForDataset(datasetVersionUrn, mapping);
-    }
-
-    private void hideDetailView() {
-        datasourceFormPanel.hide();
     }
 
     @Override
@@ -215,23 +197,11 @@ public class DatasetDatasourcesTabViewImpl extends ViewWithUiHandlers<DatasetDat
                 }
             });
 
-            datasourcesList.addRecordClickHandler(new RecordClickHandler() {
-
-                @Override
-                public void onRecordClick(RecordClickEvent event) {
-                    if (event.getFieldNum() != 0) { // Clicking checkBox will be ignored
-                        DatasourceRecord record = ((DatasourceRecord) event.getRecord());
-                        datasourceFormPanel.selectDatasource((DatasourceDto) record.getAttributeAsObject(DatasourceDS.DTO));
-                    }
-                }
-            });
-
             deleteConfirmationWindow.getYesButton().addClickHandler(new ClickHandler() {
 
                 @Override
                 public void onClick(ClickEvent event) {
                     getUiHandlers().deleteDatasources(getUrnsFromSelected());
-                    hideDetailView();
                 }
             });
         }
@@ -279,70 +249,4 @@ public class DatasetDatasourcesTabViewImpl extends ViewWithUiHandlers<DatasetDat
         }
     }
 
-    private class DatasourceFormPanel extends VLayout {
-
-        private MainFormLayout                           mainFormLayout;
-        private DatasourceResourceIdentifiersForm        identifiersForm;
-        private DatasourceResourceIdentifiersEditionForm identifiersEditionForm;
-
-        private DatasourceDto                            datasource;
-
-        public DatasourceFormPanel() {
-            super();
-            setWidth("99%");
-
-            mainFormLayout = new MainFormLayout(false);
-            mainFormLayout.setMargin(0);
-
-            this.addMember(mainFormLayout);
-            createViewForm();
-            createEditionForm();
-
-            bindEvents();
-            this.hide();
-        }
-
-        private void bindEvents() {
-            mainFormLayout.getSave().addClickHandler(new ClickHandler() {
-
-                @Override
-                public void onClick(ClickEvent event) {
-                    getUiHandlers().saveDatasource(getDatasource());
-                }
-            });
-        }
-
-        private void createViewForm() {
-            identifiersForm = new DatasourceResourceIdentifiersForm();
-            mainFormLayout.addViewCanvas(identifiersForm);
-        }
-
-        private void createEditionForm() {
-            identifiersEditionForm = new DatasourceResourceIdentifiersEditionForm();
-            mainFormLayout.addEditionCanvas(identifiersEditionForm);
-        }
-
-        private void selectDatasource(DatasourceDto datasourceDto) {
-            this.datasource = datasourceDto;
-            mainFormLayout.setTitleLabelContents(datasourceDto.getCode());
-            mainFormLayout.setViewMode();
-            fillViewForm(datasource);
-            fillEditionForm(datasource);
-            mainFormLayout.redraw();
-            this.show();
-        }
-
-        private void fillViewForm(DatasourceDto datasourceDto) {
-            identifiersForm.setDatasourceDto(datasourceDto);
-        }
-
-        private void fillEditionForm(DatasourceDto datasourceDto) {
-            identifiersEditionForm.setDatasourceDto(datasourceDto);
-        }
-
-        private DatasourceDto getDatasource() {
-            datasource = identifiersEditionForm.getDatasourceDto(datasource);
-            return datasource;
-        }
-    }
 }

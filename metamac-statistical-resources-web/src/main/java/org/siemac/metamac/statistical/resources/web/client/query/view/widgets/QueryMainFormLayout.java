@@ -1,13 +1,9 @@
 package org.siemac.metamac.statistical.resources.web.client.query.view.widgets;
 
-import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
-
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionDto;
 import org.siemac.metamac.statistical.resources.web.client.base.widgets.LifecycleMainFormLayout;
 import org.siemac.metamac.statistical.resources.web.client.query.utils.QueryClientSecurityUtils;
-import org.siemac.metamac.statistical.resources.web.client.resources.GlobalResources;
 import org.siemac.metamac.web.common.client.utils.InternationalStringUtils;
-import org.siemac.metamac.web.common.client.widgets.MainFormLayoutButton;
 
 public class QueryMainFormLayout extends LifecycleMainFormLayout {
 
@@ -24,39 +20,34 @@ public class QueryMainFormLayout extends LifecycleMainFormLayout {
     public void setQueryVersion(QueryVersionDto queryVersionDto) {
         this.queryVersionDto = queryVersionDto;
         setTitleLabelContents(InternationalStringUtils.getLocalisedString(queryVersionDto.getTitle()));
-        setCanEdit(QueryClientSecurityUtils.canUpdatePublicationVersion(queryVersionDto));
-        setCanDelete(QueryClientSecurityUtils.canDeletePublicationVersion(queryVersionDto));
+        setCanEdit(QueryClientSecurityUtils.canUpdateQueryVersion(queryVersionDto));
+        setCanDelete(QueryClientSecurityUtils.canDeleteQueryVersion(queryVersionDto));
         updatePublishSection(queryVersionDto.getProcStatus(), queryVersionDto.getLastVersion());
     }
 
     @Override
     protected boolean canSendToProductionValidation() {
-        // TODO Auto-generated method stub
-        return true;
+        return QueryClientSecurityUtils.canSendQueryVersionToProductionValidation();
     }
 
     @Override
     protected boolean canSendToDiffusionValidation() {
-        // TODO Auto-generated method stub
-        return true;
+        return QueryClientSecurityUtils.canSendQueryVersionToDiffusionValidation();
     }
 
     @Override
     protected boolean canRejectValidation() {
-        // TODO Auto-generated method stub
-        return true;
+        return QueryClientSecurityUtils.canSendQueryVersionToValidationRejected();
     }
 
     @Override
     protected boolean canPublish() {
-        // TODO Auto-generated method stub
-        return true;
+        return QueryClientSecurityUtils.canPublishQueryVersion();
     }
 
     @Override
     protected boolean canProgramPublication() {
-        // TODO Auto-generated method stub
-        return true;
+        return QueryClientSecurityUtils.canPublishQueryVersion();
     }
 
     @Override

@@ -3,8 +3,6 @@ package org.siemac.metamac.statistical.resources.web.client.dataset.presenter;
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getMessages;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -33,8 +31,6 @@ import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetVer
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetVersionResult;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasourcesByDatasetAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasourcesByDatasetResult;
-import org.siemac.metamac.statistical.resources.web.shared.dataset.SaveDatasourceAction;
-import org.siemac.metamac.statistical.resources.web.shared.dataset.SaveDatasourceResult;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationAction;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationResult;
 import org.siemac.metamac.web.common.client.events.ShowMessageEvent;
@@ -69,7 +65,6 @@ public class DatasetDatasourcesTabPresenter extends Presenter<DatasetDatasources
 
         void setDatasetVersion(DatasetVersionDto datasetVersionDto);
         void setDatasources(String datasetUrn, List<DatasourceDto> datasources);
-        void setDatasource(DatasourceDto datasourceDto);
         void setCodelistsInVariable(String dimensionId, GetCodelistsWithVariableResult result);
         void setDimensionVariablesForDataset(String urn, Map<String, String> mapping);
     }
@@ -165,18 +160,6 @@ public class DatasetDatasourcesTabPresenter extends Presenter<DatasetDatasources
             @Override
             public void onWaitSuccess(GetDatasourcesByDatasetResult result) {
                 getView().setDatasources(datasetUrn, result.getDatasourcesList());
-            }
-        });
-    }
-
-    @Override
-    public void saveDatasource(DatasourceDto datasourceDto) {
-        dispatcher.execute(new SaveDatasourceAction(datasetVersion.getUrn(), datasourceDto), new WaitingAsyncCallbackHandlingError<SaveDatasourceResult>(this) {
-
-            @Override
-            public void onWaitSuccess(SaveDatasourceResult result) {
-                getView().setDatasource(result.getDatasourceSaved());
-                retrieveDatasourcesByDataset(datasetVersion.getUrn(), 0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS);
             }
         });
     }

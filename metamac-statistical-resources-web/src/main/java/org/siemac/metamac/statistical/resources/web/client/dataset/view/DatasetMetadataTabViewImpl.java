@@ -225,7 +225,6 @@ public class DatasetMetadataTabViewImpl extends StatisticalResourceMetadataBaseV
                     public void onClick(com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
                         if (window.validateForm()) {
                             Date selectedDate = window.getSelectedDate();
-                            // TODO Send to date and hour selected to service
                             getUiHandlers().programPublication(datasetVersionDto, selectedDate);
                             window.destroy();
                         }
