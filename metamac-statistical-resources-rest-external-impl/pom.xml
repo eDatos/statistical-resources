@@ -30,7 +30,7 @@
             <version>${project.version}</version>
         </dependency>
         
-        <!-- TODO pendiente cambiar por external -->
+        <!-- TODO pendiente cambiar por external (METAMAC-1909) -->
         <dependency>
             <groupId>org.siemac.metamac.metamac-srm</groupId>
             <artifactId>metamac-srm-rest-internal-api</artifactId>
