@@ -3,6 +3,7 @@ package org.siemac.metamac.statistical.resources.core.security.shared;
 import java.util.Date;
 
 import org.siemac.metamac.sso.client.MetamacPrincipal;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 
 public class SharedDatasetsSecurityUtils extends SharedSecurityUtils {
 
@@ -143,6 +144,11 @@ public class SharedDatasetsSecurityUtils extends SharedSecurityUtils {
         return isAnyResourcesRole(metamacPrincipal);
     }
 
+    public static boolean canImportDatasources(MetamacPrincipal metamacPrincipal) {
+        // TODO: Poner los roles correctos
+        return isAnyResourcesRole(metamacPrincipal);
+    }
+
     public static boolean canImportDatasourcesInStatisticalOperation(MetamacPrincipal metamacPrincipal) {
         // TODO: Poner los roles correctos
         return isAnyResourcesRole(metamacPrincipal);
@@ -170,6 +176,10 @@ public class SharedDatasetsSecurityUtils extends SharedSecurityUtils {
 
     public static boolean canRetrieveAttributeInstances(MetamacPrincipal metamacPrincipal) {
         // TODO: Poner los roles correctos
+        return isAnyResourcesRole(metamacPrincipal);
+    }
+
+    public static boolean canPreviewDatasetData(MetamacPrincipal metamacPrincipal) {
         return isAnyResourcesRole(metamacPrincipal);
     }
 
