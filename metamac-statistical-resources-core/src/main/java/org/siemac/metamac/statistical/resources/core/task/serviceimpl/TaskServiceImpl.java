@@ -368,7 +368,7 @@ public class TaskServiceImpl extends TaskServiceImplBase {
             } else {
                 // If not, send notification about the failure. No further action is necessary because there is no waste in the repository.
                 markTaskAsFinished(ctx, task.getJob()); // Clear the error task
-                // TODO gestor de avisos: La tarea de duplicado acabó inesperadamente
+                // TODO gestor de avisos: La tarea de duplicado acabó inesperadamente (METAMAC-1991)
             }
         } catch (ApplicationException e) {
             logger.error("Unable to connect to the repository", e);
@@ -444,7 +444,7 @@ public class TaskServiceImpl extends TaskServiceImplBase {
         Task task = retrieveTaskByJob(ctx, job);
         getTaskRepository().delete(task);
 
-        // TODO envio al gestor de avisos que la importación fue correcta
+        // TODO envio al gestor de avisos que la importación fue correcta  (METAMAC-1991)
     }
 
     @Override
@@ -461,7 +461,7 @@ public class TaskServiceImpl extends TaskServiceImplBase {
             recoveryTaskInfo.setDatasetVersionId(extractDatasetIdFromJobKeyImportationDataset(jobKey));
             planifyRecoveryImportDataset(ctx, recoveryTaskInfo);
 
-            // TODO envio al gestor de avisos de fallo de importación
+            // TODO envio al gestor de avisos de fallo de importación  (METAMAC-1991)
         } else if (jobKey.startsWith(PREFIX_JOB_DUPLICATION_DATA)) {
             processRollbackDuplicationTask(ctx, task);
         }

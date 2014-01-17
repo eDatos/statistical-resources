@@ -40,7 +40,7 @@ public class SharedDatasetsSecurityUtils extends SharedSecurityUtils {
     // ------------------------------------------------------------------------
 
     public static boolean canFindDatasetsByCondition(MetamacPrincipal metamacPrincipal) {
-        // TODO Auto-generated method stub
+        // TODO: Poner los roles correctos
         return isAnyResourcesRole(metamacPrincipal);
     }
 

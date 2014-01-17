@@ -6,7 +6,7 @@ import org.sdmx.resources.sdmxml.schemas.v2_1.common.CodedStatusMessageType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.common.TextType;
 import org.siemac.metamac.sdmx.data.rest.external.v2_1.exception.RestServiceExceptionType;
 
-// TODO librería común statistic-sdmx-rest?
+// IDEA: Put in a common library statistic-sdmx-rest (LLCC-151)
 public class RestExceptionUtils {
 
     private final static String LANG_EN = "en";
