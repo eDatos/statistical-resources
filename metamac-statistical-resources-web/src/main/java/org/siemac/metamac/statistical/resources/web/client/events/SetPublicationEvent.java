@@ -20,7 +20,6 @@ public class SetPublicationEvent extends GwtEvent<SetPublicationEvent.SetPublica
         return TYPE;
     }
 
-    // TODO HasEventBus should be used instead of HasHandlers ¿?
     public static void fire(HasHandlers source, PublicationVersionDto publicationVersionDto) {
         if (TYPE != null) {
             source.fireEvent(new SetPublicationEvent(publicationVersionDto));

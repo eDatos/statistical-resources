@@ -64,9 +64,6 @@ public class UpdateQueryVersionProcStatusActionHandler extends UpdateResourcePro
                     throw new UnsupportedOperationException("Lifecycle operation unsupported " + lifeCycleAction);
             }
 
-            // TODO remove this retrieve (it is here until the optimisticLocking error in the CORE were solved!)
-            queryVersionDto = statisticalResourcesServiceFacade.retrieveQueryVersionByUrn(ServiceContextHolder.getCurrentServiceContext(), action.getQueryVersionToUpdateProcStatus().getUrn());
-
             return new UpdateQueryVersionProcStatusResult(queryVersionDto);
 
         } catch (MetamacException e) {

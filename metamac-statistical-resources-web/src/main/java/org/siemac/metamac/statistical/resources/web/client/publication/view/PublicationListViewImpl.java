@@ -14,6 +14,7 @@ import org.siemac.metamac.statistical.resources.web.client.enums.StatisticalReso
 import org.siemac.metamac.statistical.resources.web.client.publication.model.ds.PublicationDS;
 import org.siemac.metamac.statistical.resources.web.client.publication.model.record.PublicationRecord;
 import org.siemac.metamac.statistical.resources.web.client.publication.presenter.PublicationListPresenter;
+import org.siemac.metamac.statistical.resources.web.client.publication.utils.PublicationClientSecurityUtils;
 import org.siemac.metamac.statistical.resources.web.client.publication.view.handlers.PublicationListUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.publication.widgets.NewPublicationWindow;
 import org.siemac.metamac.statistical.resources.web.client.publication.widgets.PublicationVersionSearchSectionStack;
@@ -125,7 +126,6 @@ public class PublicationListViewImpl extends StatisticalResourceBaseListViewImpl
 
     @Override
     public void retrieveResultSet(int firstResult, int maxResults) {
-        // TODO why the criteria is null
         getUiHandlers().retrievePublications(firstResult, maxResults, null);
     }
 
@@ -249,50 +249,42 @@ public class PublicationListViewImpl extends StatisticalResourceBaseListViewImpl
 
     @Override
     protected boolean canDelete(ListGridRecord record) {
-        // TODO Security
-        return true;
+        return PublicationClientSecurityUtils.canDeletePublicationVersion(((PublicationRecord) record).getPublicationVersionBaseDto().getProcStatus());
     }
 
     @Override
     protected boolean canSendToProductionValidation(ListGridRecord record) {
-        // TODO Security
-        return true;
+        return PublicationClientSecurityUtils.canSendPublicationVersionToProductionValidation();
     }
 
     @Override
     protected boolean canSendToDiffusionValidation(ListGridRecord record) {
-        // TODO Security
-        return true;
+        return PublicationClientSecurityUtils.canSendPublicationVersionToDiffusionValidation();
     }
 
     @Override
     protected boolean canRejectValidation(ListGridRecord record) {
-        // TODO Auto-generated method stub
-        return true;
+        return PublicationClientSecurityUtils.canSendPublicationVersionToValidationRejected();
     }
 
     @Override
     protected boolean canPublish(ListGridRecord record) {
-        // TODO Security
-        return true;
+        return PublicationClientSecurityUtils.canPublishPublicationVersion();
     }
 
     @Override
     protected boolean canProgramPublication(ListGridRecord record) {
-        // TODO Security
-        return true;
+        return PublicationClientSecurityUtils.canProgramPublicationPublicationVersion();
     }
 
     @Override
     protected boolean canCancelProgrammedPublication(ListGridRecord record) {
-        // TODO Security
-        return true;
+        return PublicationClientSecurityUtils.canCancelPublicationPublicationVersion();
     }
 
     @Override
     protected boolean canVersion(ListGridRecord record) {
-        // TODO Auto-generated method stub
-        return true;
+        return PublicationClientSecurityUtils.canVersionPublication();
     }
 
     //

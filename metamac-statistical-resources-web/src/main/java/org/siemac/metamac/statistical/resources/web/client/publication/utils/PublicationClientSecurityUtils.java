@@ -19,8 +19,8 @@ public class PublicationClientSecurityUtils extends BaseClientSecurityUtils {
         return SharedPublicationsSecurityUtils.canUpdatePublicationVersion(getMetamacPrincipal());
     }
 
-    public static boolean canDeletePublicationVersion(PublicationVersionDto publicationVersionDto) {
-        if (ProcStatusEnum.PUBLISHED.equals(publicationVersionDto.getProcStatus())) {
+    public static boolean canDeletePublicationVersion(ProcStatusEnum publicationProcStatus) {
+        if (ProcStatusEnum.PUBLISHED.equals(publicationProcStatus)) {
             return false;
         }
         return SharedPublicationsSecurityUtils.canDeletePublicationVersion(getMetamacPrincipal());
@@ -40,6 +40,22 @@ public class PublicationClientSecurityUtils extends BaseClientSecurityUtils {
 
     public static boolean canSendPublicationVersionToValidationRejected() {
         return SharedPublicationsSecurityUtils.canSendPublicationVersionToValidationRejected(getMetamacPrincipal());
+    }
+
+    public static boolean canPublishPublicationVersion() {
+        return SharedPublicationsSecurityUtils.canPublishPublicationVersion(getMetamacPrincipal());
+    }
+
+    public static boolean canProgramPublicationPublicationVersion() {
+        return SharedPublicationsSecurityUtils.canProgramPublicationPublicationVersion(getMetamacPrincipal());
+    }
+
+    public static boolean canCancelPublicationPublicationVersion() {
+        return SharedPublicationsSecurityUtils.canCancelPublicationPublicationVersion(getMetamacPrincipal());
+    }
+
+    public static boolean canPreviewDataPublicationVersion() {
+        return SharedPublicationsSecurityUtils.canPreviewDataPublicationVersion(getMetamacPrincipal());
     }
 
     // ------------------------------------------------------------------------
@@ -81,4 +97,5 @@ public class PublicationClientSecurityUtils extends BaseClientSecurityUtils {
     public static boolean canDeleteCube() {
         return SharedPublicationsSecurityUtils.canDeleteCube(getMetamacPrincipal());
     }
+
 }

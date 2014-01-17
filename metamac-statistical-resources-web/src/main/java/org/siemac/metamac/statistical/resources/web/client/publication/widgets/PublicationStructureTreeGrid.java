@@ -435,7 +435,7 @@ public class PublicationStructureTreeGrid extends NavigableTreeGrid {
     }
 
     private boolean canCreateChapter() {
-        // TODO Security
+        // TODO Security (METAMAC-1845)
 
         // Chapters cannot be created under a cube
         if (selectedContextClickElement != null && selectedContextClickElement.getCube() != null) {
@@ -446,7 +446,7 @@ public class PublicationStructureTreeGrid extends NavigableTreeGrid {
     }
 
     private boolean canCreateCube() {
-        // TODO Security
+        // TODO Security (METAMAC-1845)
 
         // Cubes cannot be created under a cube
         if (selectedContextClickElement != null && selectedContextClickElement.getCube() != null) {
@@ -457,7 +457,7 @@ public class PublicationStructureTreeGrid extends NavigableTreeGrid {
     }
 
     private boolean canDeleteElement(String nodeName) {
-        // TODO Security
+        // TODO Security (METAMAC-1845)
         if (SCHEME_NODE_NAME.equals(nodeName)) {
             return false;
         }

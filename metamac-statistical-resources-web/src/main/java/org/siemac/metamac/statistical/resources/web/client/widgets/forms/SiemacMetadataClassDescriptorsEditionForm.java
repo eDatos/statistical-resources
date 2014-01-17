@@ -14,18 +14,15 @@ public class SiemacMetadataClassDescriptorsEditionForm extends GroupDynamicForm 
         super(getConstants().formClassDescriptors());
 
         ViewTextItem type = new ViewTextItem(SiemacMetadataDS.TYPE, getConstants().siemacMetadataStatisticalResourceType());
-        // TODO format
 
         setFields(type);
     }
 
     public void setSiemacMetadataStatisticalResourceDto(SiemacMetadataStatisticalResourceDto siemacMetadataStatisticalResourceDto) {
         setValue(SiemacMetadataDS.TYPE, CommonUtils.getStatisticalResourceTypeName(siemacMetadataStatisticalResourceDto.getType()));
-        // TODO format
     }
 
     public SiemacMetadataStatisticalResourceDto getSiemacMetadataStatisticalResourceDto(SiemacMetadataStatisticalResourceDto siemacMetadataStatisticalResourceDto) {
-        // TODO format
         return siemacMetadataStatisticalResourceDto;
     }
 }

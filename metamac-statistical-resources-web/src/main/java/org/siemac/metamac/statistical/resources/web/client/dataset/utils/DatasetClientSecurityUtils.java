@@ -8,7 +8,7 @@ import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum
 import org.siemac.metamac.statistical.resources.core.security.shared.SharedDatasetsSecurityUtils;
 import org.siemac.metamac.statistical.resources.web.client.base.utils.BaseClientSecurityUtils;
 
-// TODO take into account the metadata isTaskInBackground to avoid to execute some actions!
+// TODO take into account the metadata isTaskInBackground to avoid to execute some actions! (METAMAC-1845)
 public class DatasetClientSecurityUtils extends BaseClientSecurityUtils {
 
     // ------------------------------------------------------------------------
@@ -112,11 +112,31 @@ public class DatasetClientSecurityUtils extends BaseClientSecurityUtils {
         return canPublishDatasetVersion(datasetVersionBaseDto.getIsTaskInBackground());
     }
 
-    public static boolean canPublishDatasetVersion(boolean isTaskInBackground) {
+    public static boolean canPublishDatasetVersion(Boolean isTaskInBackground) {
         if (BooleanUtils.isTrue(isTaskInBackground)) {
             return false;
         }
-        return true; // TODO
+        return SharedDatasetsSecurityUtils.canPublishDataset(getMetamacPrincipal());
+    }
+
+    public static boolean canPreviewDatasetData(DatasetVersionDto datasetVersionDto) {
+        return SharedDatasetsSecurityUtils.canPreviewDatasetData(getMetamacPrincipal());
+    }
+
+    public static boolean canCancelPublicationDatasetVersion(DatasetVersionDto datasetVersionDto) {
+        return canCancelPublicationDatasetVersion(datasetVersionDto.getIsTaskInBackground());
+    }
+
+    public static boolean canCancelPublicationDatasetVersion(DatasetVersionBaseDto datasetVersionDto) {
+        return canCancelPublicationDatasetVersion(datasetVersionDto.getIsTaskInBackground());
+    }
+
+    private static boolean canCancelPublicationDatasetVersion(Boolean taskInBackground) {
+        if (BooleanUtils.isTrue(taskInBackground)) {
+            return false;
+        }
+        return SharedDatasetsSecurityUtils.canCancelPublicationDataset(getMetamacPrincipal());
+
     }
 
     // ------------------------------------------------------------------------
@@ -146,6 +166,10 @@ public class DatasetClientSecurityUtils extends BaseClientSecurityUtils {
         return SharedDatasetsSecurityUtils.canImportDatasourcesInStatisticalOperation(getMetamacPrincipal());
     }
 
+    public static boolean canImportDatasources() {
+        return SharedDatasetsSecurityUtils.canImportDatasources(getMetamacPrincipal());
+    }
+
     public static boolean canCreateCategorisation() {
         return SharedDatasetsSecurityUtils.canCreateCategorisation(getMetamacPrincipal());
     }
@@ -157,4 +181,5 @@ public class DatasetClientSecurityUtils extends BaseClientSecurityUtils {
     public static boolean canEndCategorisationValidity(CategorisationDto categorisationDto) {
         return SharedDatasetsSecurityUtils.canEndCategorisationValidity(getMetamacPrincipal(), categorisationDto.getValidFrom(), categorisationDto.getValidTo());
     }
+
 }

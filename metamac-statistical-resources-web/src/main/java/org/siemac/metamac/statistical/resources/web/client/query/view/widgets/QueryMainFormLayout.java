@@ -52,13 +52,12 @@ public class QueryMainFormLayout extends LifecycleMainFormLayout {
 
     @Override
     protected boolean canCancelProgrammedPublication() {
-        // TODO Auto-generated method stub
-        return true;
+        return QueryClientSecurityUtils.canCancelProgrammedPublication();
     }
 
     @Override
     protected boolean canVersioning() {
-        // Queries can not be version
+        // Queries can not be versioned
         return false;
     }
 

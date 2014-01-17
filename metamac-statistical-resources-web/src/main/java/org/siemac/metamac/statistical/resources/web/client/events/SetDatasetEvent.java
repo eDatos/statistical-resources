@@ -20,7 +20,6 @@ public class SetDatasetEvent extends GwtEvent<SetDatasetEvent.SetDatasetHandler>
         return TYPE;
     }
 
-    // TODO HasEventBus should be used instead of HasHandlers ¿?
     public static void fire(HasHandlers source, DatasetVersionDto datasetVersionDto) {
         if (TYPE != null) {
             source.fireEvent(new SetDatasetEvent(datasetVersionDto));

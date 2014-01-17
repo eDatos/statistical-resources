@@ -61,7 +61,7 @@ public class ClientModule extends AbstractPresenterModule {
         install(new DefaultModule(StatisticalResourcesPlaceManager.class));
 
         // Constants
-        bindConstant().annotatedWith(DefaultPlace.class).to(NameTokens.operationsListPage); // TODO: default place
+        bindConstant().annotatedWith(DefaultPlace.class).to(NameTokens.operationsListPage);
 
         // Gate keeper
         bind(LoggedInGatekeeper.class).in(Singleton.class);

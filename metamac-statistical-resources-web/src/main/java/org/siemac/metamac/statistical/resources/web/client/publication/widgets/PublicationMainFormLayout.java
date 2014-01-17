@@ -19,55 +19,47 @@ public class PublicationMainFormLayout extends LifecycleMainFormLayout {
     public void setPublicationVersion(PublicationVersionDto publicationVersionDto) {
         this.publicationVersionDto = publicationVersionDto;
         setCanEdit(PublicationClientSecurityUtils.canUpdatePublicationVersion(publicationVersionDto));
-        setCanDelete(PublicationClientSecurityUtils.canDeletePublicationVersion(publicationVersionDto));
+        setCanDelete(PublicationClientSecurityUtils.canDeletePublicationVersion(publicationVersionDto.getProcStatus()));
         updatePublishSection(publicationVersionDto.getProcStatus(), publicationVersionDto.getLastVersion());
     }
 
     @Override
     protected boolean canSendToProductionValidation() {
-        // TODO Auto-generated method stub
-        return true;
+        return PublicationClientSecurityUtils.canSendPublicationVersionToProductionValidation();
     }
 
     @Override
     protected boolean canSendToDiffusionValidation() {
-        // TODO Auto-generated method stub
-        return true;
+        return PublicationClientSecurityUtils.canSendPublicationVersionToDiffusionValidation();
     }
 
     @Override
     protected boolean canRejectValidation() {
-        // TODO Auto-generated method stub
-        return true;
+        return PublicationClientSecurityUtils.canSendPublicationVersionToValidationRejected();
     }
 
     @Override
     protected boolean canPublish() {
-        // TODO Auto-generated method stub
-        return true;
+        return PublicationClientSecurityUtils.canPublishPublicationVersion();
     }
 
     @Override
     protected boolean canProgramPublication() {
-        // TODO Auto-generated method stub
-        return true;
+        return PublicationClientSecurityUtils.canProgramPublicationPublicationVersion();
     }
 
     @Override
     protected boolean canCancelProgrammedPublication() {
-        // TODO Auto-generated method stub
-        return true;
+        return PublicationClientSecurityUtils.canCancelPublicationPublicationVersion();
     }
 
     @Override
     protected boolean canVersioning() {
-        // TODO Auto-generated method stub
-        return true;
+        return PublicationClientSecurityUtils.canVersionPublication();
     }
 
     @Override
     protected boolean canPreviewData() {
-        // TODO Auto-generated method stub
-        return true;
+        return PublicationClientSecurityUtils.canPreviewDataPublicationVersion();
     }
 }

@@ -14,13 +14,11 @@ public class SiemacMetadataClassDescriptorsForm extends GroupDynamicForm {
         super(getConstants().formClassDescriptors());
 
         ViewTextItem type = new ViewTextItem(SiemacMetadataDS.TYPE, getConstants().siemacMetadataStatisticalResourceType());
-        // TODO format
-
+        
         setFields(type);
     }
 
     public void setSiemacMetadataStatisticalResourceDto(SiemacMetadataStatisticalResourceDto siemacMetadataStatisticalResourceDto) {
         setValue(SiemacMetadataDS.TYPE, CommonUtils.getStatisticalResourceTypeName(siemacMetadataStatisticalResourceDto.getType()));
-        // TODO format
     }
 }

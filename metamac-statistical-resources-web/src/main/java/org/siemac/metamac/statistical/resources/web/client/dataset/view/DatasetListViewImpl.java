@@ -298,7 +298,7 @@ public class DatasetListViewImpl extends StatisticalResourceBaseListViewImpl<Dat
     private CustomToolStripButton createImportDatasourcesButton() {
         CustomToolStripButton importDatasourcesButton = new CustomToolStripButton(getConstants().actionLoadDatasources(), org.siemac.metamac.web.common.client.resources.GlobalResources.RESOURCE
                 .importResource().getURL());
-        // TODO Security importDatasourcesButton.setVisible(...);
+        importDatasourcesButton.setVisible(DatasetClientSecurityUtils.canImportDatasources());
         importDatasourcesButton.addClickHandler(new ClickHandler() {
 
             @Override
@@ -352,8 +352,8 @@ public class DatasetListViewImpl extends StatisticalResourceBaseListViewImpl<Dat
 
     @Override
     protected boolean canCancelProgrammedPublication(ListGridRecord record) {
-        // TODO Security
-        return true;
+        DatasetRecord datasetRecord = (DatasetRecord) record;
+        return DatasetClientSecurityUtils.canCancelPublicationDatasetVersion(datasetRecord.getDatasetVersionBaseDto());
     }
 
     @Override

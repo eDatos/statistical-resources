@@ -51,8 +51,6 @@ public class StatisticalResourcesStartupListener extends ApplicationStartupListe
         // Statistical resources properties
         checkRequiredProperty(StatisticalResourcesConfigurationConstants.USER_GUIDE_FILE_NAME);
 
-        // TODO add properties to check
-
         LOG.info("**************************************************************");
         LOG.info("[metamac-statistical-resources-web] Application configuration checked");
         LOG.info("**************************************************************");

@@ -11,6 +11,7 @@ import org.siemac.metamac.statistical.resources.web.client.enums.StatisticalReso
 import org.siemac.metamac.statistical.resources.web.client.query.model.ds.QueryDS;
 import org.siemac.metamac.statistical.resources.web.client.query.model.record.QueryRecord;
 import org.siemac.metamac.statistical.resources.web.client.query.presenter.QueryListPresenter;
+import org.siemac.metamac.statistical.resources.web.client.query.utils.QueryClientSecurityUtils;
 import org.siemac.metamac.statistical.resources.web.client.query.view.handlers.QueryListUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.query.view.widgets.QueryVersionSearchSectionStack;
 import org.siemac.metamac.statistical.resources.web.client.utils.ResourceFieldUtils;
@@ -120,13 +121,7 @@ public class QueryListViewImpl extends LifeCycleBaseListViewImpl<QueryListUiHand
 
     @Override
     public void retrieveResultSet(int firstResult, int maxResults) {
-        // TODO why the criteria is null?
         getUiHandlers().retrieveQueries(firstResult, maxResults, null);
-    }
-
-    @Override
-    protected void showVersionButton(ListGridRecord[] records) {
-        // Queries cannot be version
     }
 
     //
@@ -238,50 +233,44 @@ public class QueryListViewImpl extends LifeCycleBaseListViewImpl<QueryListUiHand
 
     @Override
     protected boolean canDelete(ListGridRecord record) {
-        // TODO Security
-        return true;
+        QueryRecord queryRecord = (QueryRecord) record;
+        return QueryClientSecurityUtils.canDeleteQueryVersion(queryRecord.getQueryVersionBaseDto());
     }
 
     @Override
     protected boolean canSendToProductionValidation(ListGridRecord record) {
-        // TODO Security
-        return true;
+        return QueryClientSecurityUtils.canSendQueryVersionToProductionValidation();
     }
 
     @Override
     protected boolean canSendToDiffusionValidation(ListGridRecord record) {
-        // TODO Security
-        return true;
+        return QueryClientSecurityUtils.canSendQueryVersionToDiffusionValidation();
     }
 
     @Override
     protected boolean canRejectValidation(ListGridRecord record) {
-        // TODO Security
-        return true;
+        return QueryClientSecurityUtils.canSendQueryVersionToValidationRejected();
     }
 
     @Override
     protected boolean canPublish(ListGridRecord record) {
-        // TODO Security
-        return true;
+        return QueryClientSecurityUtils.canPublishQueryVersion();
     }
 
     @Override
     protected boolean canProgramPublication(ListGridRecord record) {
-        // TODO Security
-        return true;
+        return QueryClientSecurityUtils.canProgramQueryVersionPublication();
     }
 
     @Override
     protected boolean canCancelProgrammedPublication(ListGridRecord record) {
-        // TODO Security
-        return true;
+        return QueryClientSecurityUtils.canCancelProgrammedPublication();
     }
 
     @Override
     protected boolean canVersion(ListGridRecord record) {
-        // TODO Security
-        return true;
+        // Can not be versioned
+        return false;
     }
 
     //

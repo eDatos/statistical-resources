@@ -144,10 +144,9 @@ public abstract class LifeCycleBaseListViewImpl<C extends UiHandlers> extends Vi
     private CustomToolStripButton createNewButton() {
         CustomToolStripButton button = new CustomToolStripButton(getConstants().actionNew(), RESOURCE.newListGrid().getURL());
         button.addClickHandler(getNewButtonClickHandler());
-        // TODO Security
+        button.setVisible(canCreate());
         return button;
     }
-
     // Delete
 
     private CustomToolStripButton createDeleteButton() {
@@ -321,7 +320,7 @@ public abstract class LifeCycleBaseListViewImpl<C extends UiHandlers> extends Vi
         boolean canCancelProgrammedPublication = true;
         for (ListGridRecord record : records) {
             ProcStatusEnum procStatus = ((LifeCycleResourceRecord) record).getProcStatusEnum();
-            if (!ProcStatusEnum.PUBLISHED_NOT_VISIBLE.equals(procStatus) || !canCancelProgrammedPublication(record)) { // TODO can be canceled if it is a publication programmed
+            if (!ProcStatusEnum.PUBLISHED_NOT_VISIBLE.equals(procStatus) || !canCancelProgrammedPublication(record)) {
                 canCancelProgrammedPublication = false;
                 break;
             }
@@ -330,7 +329,6 @@ public abstract class LifeCycleBaseListViewImpl<C extends UiHandlers> extends Vi
             cancelProgrammedPublicationButton.show();
         }
     }
-
     // Version
 
     private CustomToolStripButton createVersionButton() {
@@ -360,7 +358,7 @@ public abstract class LifeCycleBaseListViewImpl<C extends UiHandlers> extends Vi
         boolean canVersion = true;
         for (ListGridRecord record : records) {
             ProcStatusEnum procStatus = ((LifeCycleResourceRecord) record).getProcStatusEnum();
-            if (!ProcStatusEnum.PUBLISHED.equals(procStatus) || !canVersion(record)) { // TODO can be version if it is published! (no programmed publication)
+            if (!ProcStatusEnum.PUBLISHED.equals(procStatus) || !canVersion(record)) {
                 canVersion = false;
                 break;
             }
@@ -416,6 +414,7 @@ public abstract class LifeCycleBaseListViewImpl<C extends UiHandlers> extends Vi
     protected abstract ClickHandler getPublishClickHandler();
     protected abstract ClickHandler getCancelProgrammedPublicationClickHandler();
 
+    protected abstract boolean canCreate();
     protected abstract boolean canDelete(ListGridRecord record);
     protected abstract boolean canSendToProductionValidation(ListGridRecord record);
     protected abstract boolean canSendToDiffusionValidation(ListGridRecord record);

@@ -54,8 +54,7 @@ public class DatasetMainFormLayout extends LifecycleMainFormLayout {
 
     @Override
     protected boolean canCancelProgrammedPublication() {
-        // TODO Auto-generated method stub
-        return true;
+        return DatasetClientSecurityUtils.canCancelPublicationDatasetVersion(datasetVersionDto);
     }
 
     @Override
@@ -65,7 +64,6 @@ public class DatasetMainFormLayout extends LifecycleMainFormLayout {
 
     @Override
     protected boolean canPreviewData() {
-        // TODO Security
-        return true;
+        return DatasetClientSecurityUtils.canPreviewDatasetData(datasetVersionDto);
     }
 }

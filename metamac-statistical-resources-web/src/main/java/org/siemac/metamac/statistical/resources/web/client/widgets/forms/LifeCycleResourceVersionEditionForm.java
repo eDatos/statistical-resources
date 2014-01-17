@@ -23,6 +23,8 @@ import org.siemac.metamac.web.common.client.widgets.form.fields.ViewTextItem;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.FormItemIfFunction;
 import com.smartgwt.client.widgets.form.fields.FormItem;
+import com.smartgwt.client.widgets.form.validator.RequiredIfFunction;
+import com.smartgwt.client.widgets.form.validator.RequiredIfValidator;
 
 public class LifeCycleResourceVersionEditionForm extends GroupDynamicForm {
 
@@ -57,7 +59,7 @@ public class LifeCycleResourceVersionEditionForm extends GroupDynamicForm {
             @Override
             protected boolean condition(Object value) {
                 if (CommonUtils.isResourceInProductionValidationOrGreaterProcStatus(lifeCycleStatisticalResourceDto.getProcStatus())) {
-                    // TODO It is required only if the versionRationaleType == MINOR_ERRATA
+                    // TODO It is required only if the versionRationaleType == MINOR_ERRATA [METAMAC-2077]
                 }
                 return true;
             }

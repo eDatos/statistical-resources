@@ -1,5 +1,6 @@
 package org.siemac.metamac.statistical.resources.web.client.query.utils;
 
+import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionBaseDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionDto;
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.security.shared.SharedQueriesSecurityUtils;
@@ -24,7 +25,15 @@ public class QueryClientSecurityUtils extends BaseClientSecurityUtils {
     }
 
     public static boolean canDeleteQueryVersion(QueryVersionDto queryVersionDto) {
-        if (ProcStatusEnum.PUBLISHED.equals(queryVersionDto.getProcStatus())) {
+        return canDeleteQueryVersion(queryVersionDto.getProcStatus());
+    }
+
+    public static boolean canDeleteQueryVersion(QueryVersionBaseDto queryVersionDto) {
+        return canDeleteQueryVersion(queryVersionDto.getProcStatus());
+    }
+
+    public static boolean canDeleteQueryVersion(ProcStatusEnum queryProcStatus) {
+        if (ProcStatusEnum.PUBLISHED.equals(queryProcStatus)) {
             return false;
         }
         return SharedQueriesSecurityUtils.canDeleteQueryVersion(getMetamacPrincipal());
@@ -44,5 +53,13 @@ public class QueryClientSecurityUtils extends BaseClientSecurityUtils {
 
     public static boolean canPublishQueryVersion() {
         return SharedQueriesSecurityUtils.canPublishQueryVersion(getMetamacPrincipal());
+    }
+
+    public static boolean canCancelProgrammedPublication() {
+        return SharedQueriesSecurityUtils.canCancelPublicationQueryVersion(getMetamacPrincipal());
+    }
+
+    public static boolean canProgramQueryVersionPublication() {
+        return SharedQueriesSecurityUtils.canProgramQueryVersionPublication(getMetamacPrincipal());
     }
 }

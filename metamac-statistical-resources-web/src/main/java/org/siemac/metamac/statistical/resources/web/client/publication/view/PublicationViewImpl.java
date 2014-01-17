@@ -114,7 +114,7 @@ public class PublicationViewImpl extends ViewWithUiHandlers<PublicationUiHandler
 
     @Override
     public void setPublication(PublicationVersionDto publicationVersionDto) {
-        // TODO Update the title label when the title is changed!!
+        // TODO Update the title label when the title is changed!! (METAMAC-2078)
         this.publicationVersionDto = publicationVersionDto;
         titleLabel.setContents(InternationalStringUtils.getLocalisedString(publicationVersionDto.getTitle()));
         titleLabel.show();
