@@ -66,7 +66,7 @@ public class StatisticalResourcesRestExternalFacadeV10DatasetsTest extends Stati
 
     @Test
     public void testRetrieveDatasetJson() throws Exception {
-        // TODO testRetrieveDatasetJson
+        // TODO testRetrieveDatasetJson. Crear el fichero .json con el resultado de la llamada a la api (idem xml) (METAMAC-1570)
     }
 
     @Test

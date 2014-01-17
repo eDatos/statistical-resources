@@ -65,7 +65,7 @@ public class StatisticalResourcesRestExternalFacadeV10CollectionsTest extends St
     }
     @Test
     public void testRetrieveCollectionJson() throws Exception {
-        // TODO testRetrievePublicationJson
+        // TODO testRetrieveCollectionJson. Crear el fichero .json con el resultado de la llamada a la api (idem xml) (METAMAC-1570)
     }
 
     @Test

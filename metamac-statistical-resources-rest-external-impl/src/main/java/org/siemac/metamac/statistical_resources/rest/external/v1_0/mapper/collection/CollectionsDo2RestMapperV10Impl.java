@@ -159,18 +159,18 @@ public class CollectionsDo2RestMapperV10Impl implements CollectionsDo2RestMapper
 
     private Resource toCollectionReplaces(PublicationVersion source, List<String> selectedLanguages) throws MetamacException {
         RelatedResource replaces = source.getSiemacMetadataStatisticalResource().getReplaces();
-        // TODO comprobar si puede ser visible en la api (validFrom, publicado...)
+        // TODO comprobar si puede ser visible en la api (validFrom, publicado...) (METAMAC-1851) 
         return commonDo2RestMapper.toResource(replaces, selectedLanguages);
     }
 
     private Resource toCollectionIsReplacedBy(PublicationVersion source, List<String> selectedLanguages) throws MetamacException {
-        // TODO sustituir por retrieveIsReplacedByOnlyPublishedVersion
+        // TODO sustituir por retrieveIsReplacedByOnlyPublishedVersion (METAMAC-1851)
         RelatedResourceResult relatedResourceReplacesBy = publicationVersionRepository.retrieveIsReplacedBy(source);
         return toResource(relatedResourceReplacesBy, selectedLanguages);
     }
 
     private Resources toCollectionHasPart(PublicationVersion source, List<String> selectedLanguages) throws MetamacException {
-        // TODO comprobar si puede ser visible en la api (validFrom, publicado...)
+        // TODO comprobar si puede ser visible en la api (validFrom, publicado...) (METAMAC-1851)
         return commonDo2RestMapper.toResources(source.getHasPart(), selectedLanguages);
     }
 
@@ -216,10 +216,10 @@ public class CollectionsDo2RestMapperV10Impl implements CollectionsDo2RestMapper
         target.setName(commonDo2RestMapper.toInternationalString(source.getNameableStatisticalResource().getTitle(), selectedLanguages));
         target.setDescription(commonDo2RestMapper.toInternationalString(source.getNameableStatisticalResource().getDescription(), selectedLanguages));
         if (source.getDataset() != null) {
-            DatasetVersion dataset = datasetVersionRepository.retrieveLastVersion(source.getDatasetUrn()); // TODO retrieveLastPublishedVersion
+            DatasetVersion dataset = datasetVersionRepository.retrieveLastVersion(source.getDatasetUrn()); // TODO retrieveLastPublishedVersion (METAMAC-1851)
             target.setDataset(datasetsDo2RestMapper.toResourceAsLatest(dataset, selectedLanguages));
         } else if (source.getQuery() != null) {
-            QueryVersion query = queryVersionRepository.retrieveLastVersion(source.getQueryUrn()); // TODO retrieveLastPublishedVersion
+            QueryVersion query = queryVersionRepository.retrieveLastVersion(source.getQueryUrn()); // TODO retrieveLastPublishedVersion (METAMAC-1851)
             target.setQuery(queriesDo2RestMapper.toResource(query, selectedLanguages));
         }
         return target;

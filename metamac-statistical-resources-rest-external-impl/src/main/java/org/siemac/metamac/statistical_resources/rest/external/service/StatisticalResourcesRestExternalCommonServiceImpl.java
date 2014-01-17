@@ -102,7 +102,7 @@ public class StatisticalResourcesRestExternalCommonServiceImpl implements Statis
             String publicationUrn = GeneratorUrnUtils.generateSiemacStatisticalResourceCollectionUrn(maintainerCodes, resourceID);
             PublicationVersion publicationVersion = null;
             try {
-                publicationVersion = publicationVersionRepository.retrieveLastVersion(publicationUrn); // TODO retrieveLastPublishedVersion, y revisar tipo de excepción en catch
+                publicationVersion = publicationVersionRepository.retrieveLastVersion(publicationUrn); // TODO retrieveLastPublishedVersion, y revisar tipo de excepción en catch (METAMAC-1851)
             } catch (MetamacException e) {
                 if (e.getExceptionItems().size() == 1 && ServiceExceptionType.PUBLICATION_LAST_VERSION_NOT_FOUND.getCode().equals(e.getExceptionItems().get(0).getCode())) {
                     publicationVersion = null;
@@ -141,7 +141,7 @@ public class StatisticalResourcesRestExternalCommonServiceImpl implements Statis
             String queryUrn = GeneratorUrnUtils.generateSiemacStatisticalResourceQueryUrn(maintainerCodes, resourceID);
             QueryVersion queryVersion = null;
             try {
-                queryVersion = queryVersionRepository.retrieveLastVersion(queryUrn);// TODO retrieveLastPublishedVersion, y revisar tipo de excepción en catch
+                queryVersion = queryVersionRepository.retrieveLastVersion(queryUrn);// TODO retrieveLastPublishedVersion, y revisar tipo de excepción en catch (METAMAC-1851)
             } catch (MetamacException e) {
                 if (e.getExceptionItems().size() == 1 && ServiceExceptionType.QUERY_LAST_VERSION_NOT_FOUND.getCode().equals(e.getExceptionItems().get(0).getCode())) {
                     queryVersion = null;
@@ -172,7 +172,7 @@ public class StatisticalResourcesRestExternalCommonServiceImpl implements Statis
             PagingParameter pagingParameter) throws MetamacException {
 
         // Criteria to find by criteria
-        // TODO publicados y con fecha de validez posterior a ahora
+        // TODO publicados y con fecha de validez posterior a ahora (METAMAC-1851)
 
         List<ConditionalCriteria> conditionalCriteria = new ArrayList<ConditionalCriteria>();
         if (CollectionUtils.isNotEmpty(conditionalCriteriaQuery)) {
@@ -193,7 +193,7 @@ public class StatisticalResourcesRestExternalCommonServiceImpl implements Statis
             PagingParameter pagingParameter) throws MetamacException {
 
         // Criteria to find by criteria
-        // TODO publicados y con fecha de validez posterior a ahora
+        // TODO publicados y con fecha de validez posterior a ahora (METAMAC-1851)
 
         List<ConditionalCriteria> conditionalCriteria = new ArrayList<ConditionalCriteria>();
         if (CollectionUtils.isNotEmpty(conditionalCriteriaQuery)) {
@@ -214,7 +214,7 @@ public class StatisticalResourcesRestExternalCommonServiceImpl implements Statis
             throws MetamacException {
 
         // Criteria to find by criteria
-        // TODO publicados y con fecha de validez posterior a ahora
+        // TODO publicados y con fecha de validez posterior a ahora (METAMAC-1851)
 
         List<ConditionalCriteria> conditionalCriteria = new ArrayList<ConditionalCriteria>();
         if (CollectionUtils.isNotEmpty(conditionalCriteriaQuery)) {
@@ -251,7 +251,7 @@ public class StatisticalResourcesRestExternalCommonServiceImpl implements Statis
     private void addConditionalCriteriaVersionIfApplicable(String version, Class entityClass, SiemacMetadataStatisticalResourceProperty siemacMetadataStatisticalResourceProperty,
             List<ConditionalCriteria> conditionalCriteria) {
         if (SrmRestConstants.WILDCARD_LATEST.equals(version)) {
-            // TODO Latest
+            // TODO Latest (METAMAC-1850)
         } else if (version != null && !SrmRestConstants.WILDCARD_ALL.equals(version)) {
             conditionalCriteria.add(ConditionalCriteriaBuilder.criteriaFor(entityClass).withProperty(siemacMetadataStatisticalResourceProperty.versionLogic()).eq(version).buildSingle());
         }
@@ -277,7 +277,7 @@ public class StatisticalResourcesRestExternalCommonServiceImpl implements Statis
     private void addConditionalCriteriaVersionIfApplicable(String version, Class entityClass, LifeCycleStatisticalResourceProperty lifeCycleStatisticalResourceProperty,
             List<ConditionalCriteria> conditionalCriteria) {
         if (SrmRestConstants.WILDCARD_LATEST.equals(version)) {
-            // TODO Latest
+            // TODO Latest (METAMAC-1850)
         } else if (version != null && !SrmRestConstants.WILDCARD_ALL.equals(version)) {
             conditionalCriteria.add(ConditionalCriteriaBuilder.criteriaFor(entityClass).withProperty(lifeCycleStatisticalResourceProperty.versionLogic()).eq(version).buildSingle());
         }

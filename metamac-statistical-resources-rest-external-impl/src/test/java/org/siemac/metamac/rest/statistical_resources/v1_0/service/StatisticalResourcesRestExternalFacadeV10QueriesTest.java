@@ -82,10 +82,9 @@ public class StatisticalResourcesRestExternalFacadeV10QueriesTest extends Statis
         }
     }
 
-    @Ignore
-    // TODO testRetrieveQueryJson
     @Test
     public void testRetrieveQueryJson() throws Exception {
+        // TODO testRetrieveQueryJson. Crear el fichero .json con el resultado de la llamada a la api (idem xml) (METAMAC-1570)
     }
 
     @Test

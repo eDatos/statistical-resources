@@ -114,7 +114,7 @@ public abstract class StatisticalResourcesRestExternalFacadeV10BaseTest extends 
     private QueryVersionRepository            queryVersionRepository;
     private PublicationVersionRepository      publicationVersionRepository;
 
-    // TODO habrá que cambiar el mock cuando se consuma a la api externa
+    // TODO habrá que cambiar el mock cuando se consuma a la api externa (METAMAC-1909)
     private SrmRestInternalService            srmRestInternalService;
 
     private SrmRestExternalFacade             srmRestExternalFacade;
@@ -206,7 +206,7 @@ public abstract class StatisticalResourcesRestExternalFacadeV10BaseTest extends 
     }
 
     private void mockQueryVersionRepository() throws MetamacException {
-        when(queryVersionRepository.retrieveLastVersion(any(String.class))).thenAnswer(new Answer<QueryVersion>() { // TODO retrieveLastPublishedVersion
+        when(queryVersionRepository.retrieveLastVersion(any(String.class))).thenAnswer(new Answer<QueryVersion>() { // TODO retrieveLastPublishedVersion (METAMAC-1851)
 
                     @Override
                     public QueryVersion answer(InvocationOnMock invocation) throws Throwable {
@@ -229,7 +229,7 @@ public abstract class StatisticalResourcesRestExternalFacadeV10BaseTest extends 
 
         when(queryVersionRepository.retrieveIsPartOf(any(QueryVersion.class))).thenAnswer(new Answer<List<RelatedResourceResult>>() {
 
-            // TODO cambiar por retrieveIsPartOfOnlyPublishedVersion
+            // TODO cambiar por retrieveIsPartOfOnlyPublishedVersion (METAMAC-1851)
 
             @Override
             public List<RelatedResourceResult> answer(InvocationOnMock invocation) throws Throwable {
@@ -284,7 +284,7 @@ public abstract class StatisticalResourcesRestExternalFacadeV10BaseTest extends 
 
     private void mockDatasetVersionRepository() throws MetamacException {
 
-        when(datasetVersionRepository.retrieveLastVersion(any(String.class))).thenAnswer(new Answer<DatasetVersion>() { // TODO retrieveLastPublishedVersion
+        when(datasetVersionRepository.retrieveLastVersion(any(String.class))).thenAnswer(new Answer<DatasetVersion>() { // TODO retrieveLastPublishedVersion (METAMAC-1851)
 
                     @Override
                     public DatasetVersion answer(InvocationOnMock invocation) throws Throwable {
@@ -295,7 +295,7 @@ public abstract class StatisticalResourcesRestExternalFacadeV10BaseTest extends 
                 });
         when(datasetVersionRepository.retrieveIsRequiredBy(any(DatasetVersion.class))).thenAnswer(new Answer<List<RelatedResourceResult>>() {
 
-            // TODO cambiar por retrieveIsRequiredByOnlyPublishedVersion
+            // TODO cambiar por retrieveIsRequiredByOnlyPublishedVersion (METAMAC-1851)
 
             @Override
             public List<RelatedResourceResult> answer(InvocationOnMock invocation) throws Throwable {
@@ -308,7 +308,7 @@ public abstract class StatisticalResourcesRestExternalFacadeV10BaseTest extends 
 
         when(datasetVersionRepository.retrieveIsReplacedByVersion(any(DatasetVersion.class))).thenAnswer(new Answer<RelatedResourceResult>() {
 
-            // TODO retrieveIsReplacedByVersionOnlyPublishedVersion
+            // TODO retrieveIsReplacedByVersionOnlyPublishedVersion (METAMAC-1851)
 
             @Override
             public RelatedResourceResult answer(InvocationOnMock invocation) throws Throwable {
@@ -320,7 +320,7 @@ public abstract class StatisticalResourcesRestExternalFacadeV10BaseTest extends 
 
         when(datasetVersionRepository.retrieveIsReplacedBy(any(DatasetVersion.class))).thenAnswer(new Answer<RelatedResourceResult>() {
 
-            // TODO retrieveIsReplacedByOnlyPublishedVersion
+            // TODO retrieveIsReplacedByOnlyPublishedVersion (METAMAC-1851)
 
             @Override
             public RelatedResourceResult answer(InvocationOnMock invocation) throws Throwable {
@@ -330,7 +330,7 @@ public abstract class StatisticalResourcesRestExternalFacadeV10BaseTest extends 
 
         when(datasetVersionRepository.retrieveIsPartOf(any(DatasetVersion.class))).thenAnswer(new Answer<List<RelatedResourceResult>>() {
 
-            // TODO cambiar por retrieveIsPartOfOnlyPublishedVersion
+            // TODO cambiar por retrieveIsPartOfOnlyPublishedVersion (METAMAC-1851)
 
             @Override
             public List<RelatedResourceResult> answer(InvocationOnMock invocation) throws Throwable {
@@ -344,7 +344,7 @@ public abstract class StatisticalResourcesRestExternalFacadeV10BaseTest extends 
     }
 
     private void mockPublicationVersionRepository() throws MetamacException {
-        when(publicationVersionRepository.retrieveLastVersion(any(String.class))).thenAnswer(new Answer<PublicationVersion>() { // TODO retrieveLastPublishedVersion
+        when(publicationVersionRepository.retrieveLastVersion(any(String.class))).thenAnswer(new Answer<PublicationVersion>() { // TODO retrieveLastPublishedVersion (METAMAC-1851)
 
                     @Override
                     public PublicationVersion answer(InvocationOnMock invocation) throws Throwable {
@@ -359,7 +359,7 @@ public abstract class StatisticalResourcesRestExternalFacadeV10BaseTest extends 
 
         when(publicationVersionRepository.retrieveIsReplacedBy(any(PublicationVersion.class))).thenAnswer(new Answer<RelatedResourceResult>() {
 
-            // TODO retrieveIsReplacedByOnlyPublishedVersion
+            // TODO retrieveIsReplacedByOnlyPublishedVersion (METAMAC-1851)
 
             @Override
             public RelatedResourceResult answer(InvocationOnMock invocation) throws Throwable {

@@ -256,7 +256,7 @@ public class QueryListViewImpl extends LifeCycleBaseListViewImpl<QueryListUiHand
 
     @Override
     protected boolean canRejectValidation(ListGridRecord record) {
-        // TODO Auto-generated method stub
+        // TODO Security
         return true;
     }
 
@@ -280,7 +280,7 @@ public class QueryListViewImpl extends LifeCycleBaseListViewImpl<QueryListUiHand
 
     @Override
     protected boolean canVersion(ListGridRecord record) {
-        // TODO Auto-generated method stub
+        // TODO Security
         return true;
     }
 
