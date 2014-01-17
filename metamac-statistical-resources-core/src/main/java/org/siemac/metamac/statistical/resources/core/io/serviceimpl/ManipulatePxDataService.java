@@ -8,7 +8,6 @@ import org.siemac.metamac.statistical.resources.core.io.serviceimpl.validators.V
 
 import com.arte.statistic.parser.px.domain.PxModel;
 
-// TODO mover la definición de este servicio al btdesign de sculptor
 public interface ManipulatePxDataService {
 
     public static final String BEAN_ID = "manipulatePxDataService";

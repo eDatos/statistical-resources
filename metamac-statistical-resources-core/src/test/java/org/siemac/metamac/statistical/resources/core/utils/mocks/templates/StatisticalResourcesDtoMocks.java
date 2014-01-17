@@ -126,8 +126,6 @@ public class StatisticalResourcesDtoMocks extends MetamacMocks {
 
         mockIdentifiableStatisticalResourceDto(datasourceDto);
 
-        // TODO: Esto debe eliminarse cuando el código pase a ser generado automáticamente
-        // code is not setting in nameable because some resources have generated code
         datasourceDto.setCode(mockString(8));
         datasourceDto.setDatasetVersionUrn(URN_RELATED_RESOURCE_MOCK);
 
@@ -343,7 +341,6 @@ public class StatisticalResourcesDtoMocks extends MetamacMocks {
         siemacMetadataStatisticalResourceDto.addMediator(mockOrganizationUnitExternalItemDto());
         siemacMetadataStatisticalResourceDto.setNewnessUntilDate(mockDate());
 
-        // TODO: mock Related resources
         siemacMetadataStatisticalResourceDto.setReplacesVersion(null);
         siemacMetadataStatisticalResourceDto.setIsReplacedByVersion(null);
 

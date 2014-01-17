@@ -144,7 +144,8 @@ public class DatasetServiceInvocationValidatorImpl extends BaseInvocationValidat
     }
 
     public static void checkRetrieveCoverageForDatasetVersionAttribute(String datasetVersionUrn, String dsdAttributeId, List<MetamacExceptionItem> exceptions) {
-        // TODO checkRetrieveCoverageForDatasetVersionAttribute
+        StatisticalResourcesValidationUtils.checkMetadataRequired(datasetVersionUrn, ServiceExceptionSingleParameters.URN, exceptions);
+        StatisticalResourcesValidationUtils.checkMetadataRequired(dsdAttributeId, ServiceExceptionParameters.ATTRIBUTE_VALUE__ID, exceptions);
     }
 
     // ------------------------------------------------------------------------

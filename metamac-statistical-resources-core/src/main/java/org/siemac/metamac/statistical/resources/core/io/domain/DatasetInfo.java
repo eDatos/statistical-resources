@@ -67,7 +67,7 @@ public class DatasetInfo {
         this.dimensionAtObservation = calculateDimensionAtObservation(requestParameter);
 
         // 7- Calculate attributeInstances
-        this.attributeInstances = calculateAttributes(datasetRepositoriesServiceFacade); // TODO Si no es necesario sacar atributos en el mensaje hacer este calculo opcional por performance
+        this.attributeInstances = calculateAttributes(datasetRepositoriesServiceFacade);
     }
 
     public void setAttributeInstances(Map<String, List<AttributeInstanceBasicDto>> attributeInstances) {

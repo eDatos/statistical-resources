@@ -30,7 +30,6 @@ public class TaskServiceFacadeTest extends StatisticalResourcesBaseTest implemen
 
     @Override
     public void testExecuteDuplicationTask() throws Exception {
-        // TODO Auto-generated method stub
-
+        // See integration test in DataManipulateTest
     }
 }

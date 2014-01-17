@@ -122,6 +122,6 @@ public class QueryLifecycleServiceTest extends StatisticalResourcesBaseTest impl
     @Override
     @Test
     public void testCopyResourceForVersioning() throws Exception {
-        // TODO testCopyResourceForVersioning
+        // QUERY can not be versioned
     }
 }

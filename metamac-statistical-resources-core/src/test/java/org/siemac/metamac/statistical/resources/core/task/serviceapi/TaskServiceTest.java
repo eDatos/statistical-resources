@@ -78,19 +78,16 @@ public class TaskServiceTest extends StatisticalResourcesBaseTest implements Tas
 
     @Override
     public void testPlanifyDuplicationDataset() throws Exception {
-        // TODO Auto-generated method stub
-
+        // See integration test in DataManipulateTest
     }
 
     @Override
     public void testProcessDuplicationTask() throws Exception {
-        // TODO Auto-generated method stub
-
+        // See integration test in DataManipulateTest
     }
 
     @Override
     public void testExistDuplicationTaskInResource() throws Exception {
-        // TODO Auto-generated method stub
-
+        // See integration test in DataManipulateTest
     }
 }
