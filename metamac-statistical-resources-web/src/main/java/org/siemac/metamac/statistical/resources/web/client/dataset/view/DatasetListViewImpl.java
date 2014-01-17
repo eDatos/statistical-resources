@@ -315,6 +315,11 @@ public class DatasetListViewImpl extends StatisticalResourceBaseListViewImpl<Dat
     //
 
     @Override
+    protected boolean canCreate() {
+        return DatasetClientSecurityUtils.canCreateDataset();
+    }
+
+    @Override
     protected boolean canDelete(ListGridRecord record) {
         DatasetRecord datasetRecord = (DatasetRecord) record;
         return DatasetClientSecurityUtils.canDeleteDatasetVersion(datasetRecord.getDatasetVersionBaseDto());
