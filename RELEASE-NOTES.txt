@@ -12,3 +12,285 @@ Ejemplo: último datos, últimos N datos, ....
 Por favor, consulta nuestro gestor de incidencia para obtener más información
 de las incidencias con el id [METAMAC-xxx].
 http://jira.arte-consultores.com/browse/METAMAC
+
+------------------------------------------------------------------------------
+Release 1.0.0
+------------------------------------------------------------------------------
+
+Notas de publicación - Metamac - hito metamac-statistical-resources - 1.0.0
+
+** Defecto
+    * [METAMAC-1060] - Al crear una colección no está preparado para que se vea la estructura vacía
+    * [METAMAC-1166] - En los tests no se está almacenando el usuario de ServiceContext
+    * [METAMAC-1336] - Las tablas generadas por dbunit deben tener todos los campos especialmente las de herencia single table
+    * [METAMAC-1492] - Problema al establecer el orden de las tablas en el dbunit, se usa el orden de sculptor pero no es el correct
+    * [METAMAC-1561] - El repository Identifiable ya no se usa, borrarlo
+    * [METAMAC-1592] - Refactor de Queries, para contemplar versiones automaticas
+    * [METAMAC-1599] - Cambiar modelado de instancias de operaciones estadisticas de siemac para que sea repetible
+    * [METAMAC-1661] - El paquete en el que se generan las clases de los parámetros de error es incorrecto
+    * [METAMAC-1663] - Refactor de los metodos de test que preparan los recursos para fases del ciclo d evida
+    * [METAMAC-1685] - En la web no se están paginando correctamente los recursos externos
+    * [METAMAC-1703] - Los scripts de creación de la función de secuencia están incorrectos.
+    * [METAMAC-1731] - Error con la comprobación de checkMetadataRequired(ExternalItem) y checkMetadataOptionalIsValid
+    * [METAMAC-1754] - Problema con la codificación de URLs con dos puntos (:) en IE y Chrome
+    * [METAMAC-1769] -  Importación de datos de dataset
+    * [METAMAC-1822] - Tratamiento de lastUpdate en datasets y publicaciones
+    * [METAMAC-1837] - Error de BBDD al guardar el metadato VERSION_RATIONALE_TYPES con valores duplicados
+    * [METAMAC-1844] - NullPointer al crear publicaciones cuando no se ha especificado idioma en el data
+    * [METAMAC-1853] - Carga de listados de valores y valores por defecto al ir a una página concreta
+    * [METAMAC-1863] - Error durante la descompresión de ficheros ZIP
+    * [METAMAC-1867] - Al borrar una queryversion sin más versiones no se borra la query
+    * [METAMAC-1877] - API: SDMX Data
+    * [METAMAC-1880] - [URN] Debe usarse el codeNested del maintainer para generar las URN
+    * [METAMAC-1883] - Error al aplicar cambios del ciclo de vida en la web, Nullpointer en el LifecycleTemplateService
+    * [METAMAC-1884] - [WEB] Las pestañas de los datasets y publicaciones no son bookmarkables
+    * [METAMAC-1886] - Crear infraestructura para duplicar un dataset a nivel de repositorio
+    * [METAMAC-1897] - Un dataset no puede poner que reemplaza a otro dataset que ya ha sido reemplazado
+    * [METAMAC-1898] - Al borrar una versión de un dataset limpiar metadatos que se ponen al versionar
+    * [METAMAC-1907] - Crear war de Apis SDMX tras una fachada con la misma API
+    * [METAMAC-1908] - Error al acceder a pestaña atributos mientras se están importando datos
+    * [METAMAC-1911] - En las publicaciones al asociar un cubo a una query que antes estaba a un dataset no se limpia bien y viceversa
+    * [METAMAC-1919] - Popup de cargando en detalle de dataset version no desaparece
+    * [METAMAC-1928] - Validación de atributos de datasets contra DSD que no son importados (editables desde web)
+    * [METAMAC-1935] - Al borrar último datasource, borrar el datasetrepo
+    * [METAMAC-1948] - No permitir borrar un recurso si esta vinculado por otro recurso
+    * [METAMAC-1951] - No se controla que en los atributos de nivel dimensión o grupo, tenga almenos un código especificado por cada dimensión.
+    * [METAMAC-1954] - Valid from y valid to deberían mostar en los formularios horas y minutos
+    * [METAMAC-1957] - Metadato Reemplaza versión no es linkable
+    * [METAMAC-1958] - Eliminar una versión de una publicación no marca la versión anterior como última versión.
+    * [METAMAC-1959] - No se permite borrar una versión de un dataset si tiene recursos asociados.
+    * [METAMAC-1961] - Se permite que las queries se le cambie el version rationale type en creación y no debería.
+    * [METAMAC-1980] - En las importaciones de datos, mapeo automático de códigos según información de los elementos de variable
+
+
+** Historia
+    * [METAMAC-1161] - Gestión de consultas
+
+** Mejora
+    * [METAMAC-1304] - Renombrar los métodos mockInternationalString del MetamacMocks para que sea mockInternationalStringDto
+    * [METAMAC-1331] - Mejoras del sistema de tests
+    * [METAMAC-1339] - Crear clase de utilidades que permita obtener el MetamacPrincipal y lanzar una excepción si una operación no está permitida
+    * [METAMAC-1407] - Automatizar la generación del InvocationValidator
+    * [METAMAC-1429] - Crear clase de utilidades para el manejo de versiones
+    * [METAMAC-1493] - Generando constraint de base de datos para tablas single table con herencia
+    * [METAMAC-1513] - [Tests] Refactor de la configuración de los tests
+    * [METAMAC-1594] - Modificar los campos de tipo ML para que sean ML+URL 
+    * [METAMAC-1620] - Quitar título de los listados y poner una sección de tipo stack
+    * [METAMAC-1621] - Añadir en todos los árboles una columna que muestre un pop-up con la información en detalle
+    * [METAMAC-1622] - En las tablas, mostrar más columnas que las que aparecen por defecto. Inicialmente estarán ocultas.
+    * [METAMAC-1623] - [WEB] Los datos obligatorios para pasar un recurso de fase deben especificarse de alguna forma en la interfaz web para que el usuario sepa en cada momento cuáles les van a hacer requeridos al intentar pasar de fase.
+    * [METAMAC-1624] - Related Resources linkables
+    * [METAMAC-1642] - Refactor de enumerados para quitar el prefijo StatisticalResources cuando no es necesario
+    * [METAMAC-1656] - El dsd debe pedirse al crear el dataset y será requerido en la edición
+    * [METAMAC-1750] - Mejorar migas de pan incluyendo los códigos de los recursos
+    * [METAMAC-1757] - Añadir filtro para buscar por últimas versiones en popups de selección de recursos
+    * [METAMAC-1777] - Refactor de los métodos del servicio para que hagan transparente la obtención de las versiones 
+    * [METAMAC-1823] - En el CubeDto poner el recurso al que está enlazado como RelatedResource y no como URN
+    * [METAMAC-1842] - [Apis] Añadir constantes al fichero de RestApiConstants
+    * [METAMAC-1849] - [Identificadores] Se debe validar que un identificador sea semántico sólo en determinados tipos de recursos
+    * [METAMAC-1899] - Eliminar todos los campos UUID innecesarios
+    * [METAMAC-1936] - Revisar ServiceExceptionBaseParameters. quitar camelcase
+    * [METAMAC-1953] - Me planteo si sería mejor al cancelar publicaciones programadas, limpiar el validFrom
+    * [METAMAC-1963] - En la página de dataset se está cargando el dataset dos veces cada vez que se accede a la página
+    * [METAMAC-1977] - [CORE] Las tablas de datos deben tener un nombre semántico
+
+** Nueva Funcionalidad
+    * [METAMAC-1302] - Modificación de Sculptor para que genere tests a nivel de repositorio
+    * [METAMAC-1319] - Añadir comprobaciones al ValidationUtils para metadatos opcionales bien formados
+    * [METAMAC-1904] - Consultas deben poder marcarse en la web como discontinuadas
+    * [METAMAC-1906] - Añadir metadato Is part of a las queries
+    * [METAMAC-1930] - Generar una versión publicada no visible de una query cuando el nuevo dataset version es no visible
+    * [METAMAC-1931] - Las queries pueden tener dos vinculos a dataset version y dataset
+    * [METAMAC-1938] - Poner previsualizar consulta en la web
+
+** Reuniones
+    * [METAMAC-1690] - Plantear solución para le problema del is last published version
+
+** Soporte
+    * [METAMAC-930] - Subida a demos de todas la aplicaciones de METAMAC
+    * [METAMAC-990] - Revisión del documento de requisitos
+    * [METAMAC-1113] - Cambio en la configuración de Maven: uniqueVersion
+    * [METAMAC-1163] - Configuración de tests JUnit: cambio en la estrategia de filtrado de FilteredDataSet
+    * [METAMAC-1471] - Refactorizar las clases DoCopyUtils por VersioningCopyUtils
+    * [METAMAC-2003] - Añadir RELEASE-NOTES al proyecto
+
+** Tarea
+    * [METAMAC-322] - Modificar interceptor.xml para añadir MetamacException a las excepciones que deben hacer rollback
+    * [METAMAC-1004] - Montar la estructura de proyectos del gestor de recursos estadísticos (metamac-statistical-resources)
+    * [METAMAC-1006] - Creación tentativa de un conjunto de pantallas para el gestor de recursos estadísticos
+    * [METAMAC-1013] - Crear artefacto modificado a partir de fornax-cartridges-sculptor-framework-2.0.0-without-ejb.jar que incluya el bugfix de scultpor con orderbys de propeidades foráneas.
+    * [METAMAC-1042] - Reunión con Robert para conocer la situación actual de la aplicación
+    * [METAMAC-1044] - Definir DTOs
+    * [METAMAC-1045] - Sección: Colecciones estadísticas
+    * [METAMAC-1054] - Evitar tener dos URLs distintas para acceder a un mismo recurso
+    * [METAMAC-1057] - Modificar la configuración de Base de Datos para evitar errores de arranque en Cibercentro
+    * [METAMAC-1061] - Actualizacion de demo
+    * [METAMAC-1065] - Sección: Datasets
+    * [METAMAC-1130] - Análisis del sistema
+    * [METAMAC-1138] - Modelar el esqueleto de las principales entidades de la lógica de negocio
+    * [METAMAC-1280] - Añadir soporte para SQL Server
+    * [METAMAC-1288] - Repaso a sistema de tests de statistical-resources
+    * [METAMAC-1303] - Separación de los métodos del servicio en diferentes servicios vinculados a entidades
+    * [METAMAC-1465] - Añadir metadatos especificos de datasets
+    * [METAMAC-1475] - Problema con longitud de campos con valores con acentos en Oracle 
+    * [METAMAC-1477] - Modelar metadatos del nucleo de metadatos
+    * [METAMAC-1481] - Generar las claves de los ServiceExceptionParameters
+    * [METAMAC-1484] - Analizar como será el comportamiento de language y languages del siemac en la web, como afecta a los requeridos, a los campos que se muetsran por defecto, etc...
+    * [METAMAC-1487] - Servicio datasets
+    * [METAMAC-1499] - Bloqueo optimista
+    * [METAMAC-1534] - Gestionar URN de los recursos del módulo
+    * [METAMAC-1541] - [Interceptores] Modificación de la configuración de update de los interceptores
+    * [METAMAC-1542] - [Tests] Modificar los tests que devuelven fallos para que arrojen la excepción que se espera dado que el método no está implementado
+    * [METAMAC-1547] - Determinar la forma de tener los BaseValidator de los servicios centralizados, podría incluso usarlo la web
+    * [METAMAC-1548] - Definir funcionamiento del metadato KEYWORDS en Datasets
+    * [METAMAC-1558] - Gestión de publicaciones
+    * [METAMAC-1564] - Configuración y control de propiedades del DATA para aplicaciones internas y externas
+    * [METAMAC-1572] - Crear enumerado de RelatedResource
+    * [METAMAC-1575] - [Consultas] Comprobar que las URN son únicas
+    * [METAMAC-1578] - [WEB] CRUD de Datasets
+    * [METAMAC-1579] - [WEB] CRUD de Publicaciones
+    * [METAMAC-1583] - [Búsquedas] Permitir la búsqueda de datasets y publicaciones por operación estadística
+    * [METAMAC-1585] - Crear RelatedResourceBaseDto del que extiende RelatedResourceDto
+    * [METAMAC-1586] - Eliminar URI de RelatedResource
+    * [METAMAC-1597] - Refactor ciclo de vida con metodo plantilla
+    * [METAMAC-1601] - Refactor de Publicaciones para poder referenciar las publicaciones raiz agnostico de sus versiones
+    * [METAMAC-1602] - Refactor de Datasets para que incluyan urn y se puedan referenciar en lugar de a sus versiones
+    * [METAMAC-1605] - Ciclo de vida
+    * [METAMAC-1609] - Gestión de logs de logback para evitar que se creen logs donde no debe
+    * [METAMAC-1610] - Adaptar Related Resource para que no guarden información de títulos, sólo urns y type
+    * [METAMAC-1613] - Comprobaciones de metadatos si son editables o no deben ser compartidas entre la web y el mapper
+    * [METAMAC-1615] - Permitir editar atributos a nivel de dimensión y de dataset en el dataset
+    * [METAMAC-1617] - Estudiar documento estandar de sdmx para datasets y sus atributos
+    * [METAMAC-1638] - Selección del DSD en la web
+    * [METAMAC-1639] - Las versiones de los recursos estadísticos deben seguir el patrón XXX.YYY
+    * [METAMAC-1659] - Separar todo lo relativo a InternationalStrings, ExternalItems y RelatedResources de las clases base a common
+    * [METAMAC-1660] - Testear las clases CommonDto2DoMapper y CommonDo2DtoMapper
+    * [METAMAC-1666] - Seleccion de is replaced By y replaces
+    * [METAMAC-1667] - Actualizar el war de desarrollo del SRM para usar las nuevas properties
+    * [METAMAC-1673] - Revisar el título de las aplicaciones web internas (ver el que se muestra en el navegador)
+    * [METAMAC-1674] - [WEB] Permitir borrar un recurso cuando se está visualizando
+    * [METAMAC-1676] - Añadir botón de borrado cuando se está visualizando un recurso
+    * [METAMAC-1686] - Integración con api common metadata
+    * [METAMAC-1687] - Sección: Consultas
+    * [METAMAC-1691] - Creación del metadato isLastVersion para ultima versión ya sea publicada o no
+    * [METAMAC-1694] - ExternalItems: no almacenar la versión específica de la api, sino latest
+    * [METAMAC-1695] - External Item con URN opcional
+    * [METAMAC-1698] - Comprobar que todos los internationalString tienen traducción en el idioma por defecto
+    * [METAMAC-1699] - Códigos y URN de publicaciones y query
+    * [METAMAC-1743] - Validar la longitud de los LocalisedString
+    * [METAMAC-1755] - Configurar la visualización o no de SQL en logback
+    * [METAMAC-1756] - Logs: los cambios del logback no se reflejan sin reiniciar el servidor
+    * [METAMAC-1768] - Validación de dataset asociado a un dsd
+    * [METAMAC-1774] - Cambiar modelado de los coverages, se almacenarán los coverages de todas las dimensiones
+    * [METAMAC-1778] - Obtener las últimas versiones (publicada y no publicada) de los distintos tipos de recursos
+    * [METAMAC-1780] - Algoritmo de ordenación de valores temporales de SDMX con todos los patrones
+    * [METAMAC-1781] - Revisar relaciones de las entidades para evitar joins innecesarios, hacer especial hincapie en los related resource
+    * [METAMAC-1795] - Detalle de SiemacMetadata y sucesivos del base
+    * [METAMAC-1796] - Añadir al directorio DATA común propiedades para especificar los codelists por defecto para las granularidades temporales y geográficas y los lenguajes
+    * [METAMAC-1810] - Corregir errores existentes en los tests
+    * [METAMAC-1811] - Añadir en el listener qué aplicación está iniciándose
+    * [METAMAC-1812] - Refactor de los Dto de la web para los que son versiones pongan Version
+    * [METAMAC-1818] - Realizar servicios de find de Datasets, Publications y Queries 
+    * [METAMAC-1820] - La operación estadística debe estar disponible también para las Query
+    * [METAMAC-1827] - Revisar clientes de API de SRM tras cambios al obtener los items
+    * [METAMAC-1832] - ExternalItem: refactor urns
+    * [METAMAC-1846] - Búsqueda de recursos
+    * [METAMAC-1848] - [Mocks] Modificación del método del metamac-common-test que crea un mock de un ExternalItemComplete
+    * [METAMAC-1855] - [WEB] Envío de excepciones complejas desde un Servlet a código cliente
+    * [METAMAC-1857] - [WEB] Añadir botón para previsualizar los datasets y publicaciones
+    * [METAMAC-1874] - [WEB] Mostrar listado de versiones de un recurso cuando se está visualizando
+    * [METAMAC-1878] - Solucionar problema con los tests en el jenkins
+    * [METAMAC-1882] - Revision de componentes con laura
+    * [METAMAC-1889] - El metadato copyrightDate debe almacenar únicamente el año
+    * [METAMAC-1890] - [Metadatos] Eliminar el campo URI el CORE y la web
+    * [METAMAC-1892] - Modificar los métodos de las fachadas para que los listados que se devuelven sean básicos
+    * [METAMAC-1894] - Refactorizar el metadato coverages por dimensionsCoverage
+    * [METAMAC-1895] - Añadir el metadato attributesCoverage
+    * [METAMAC-1901] - [APIs] Modificar generación automática de wadl: prefijos con "ns"
+    * [METAMAC-1902] - Aplicaciones web externa: eliminar listener y servlet no necesarios
+    * [METAMAC-1910] - Traducción de códigos temporales
+    * [METAMAC-1922] - Comprobar que al borrar una versión de un dataset se borra el dataste repository
+    * [METAMAC-1939] - Categorizaciones
+    * [METAMAC-1943] - Importación de datasets: mapeo de códigos a través de elementos de variable
+    * [METAMAC-1996] - [CORE] Revisar si es necesario que exista una dependencia a DBUnit 
+    * [METAMAC-2000] - Modificar la estructura changes-in-release de los proyectos
+    * [METAMAC-2013] - [DATA] Evitar que se accedan a las properties del DATA saltándose el ConfigurationService
+    * [METAMAC-2020] - Revisar los TODO y FIXME antes de dar por finalizado cada módulo
+    * [METAMAC-2074] - Arreglar las versiones del metamac-sdmx-data-rest-external-api
+
+** Sub-tarea
+    * [METAMAC-929] - Documento de requisitos
+    * [METAMAC-1007] - Crear los DTOs con datos mínimos para usarlos en la web
+    * [METAMAC-1008] - Crear pantalla inicial del listado de operaciones
+    * [METAMAC-1016] - Crear página de listados de datasets de una operación
+    * [METAMAC-1047] - Revisar traducciones de metadatos de recursos
+    * [METAMAC-1049] - Listado de colecciones de una operación estadística
+    * [METAMAC-1050] - Metadatos de una colección
+    * [METAMAC-1052] - ¿El Identificador de una colección es único? ¿O relativo a la operación estadística?
+    * [METAMAC-1053] - Estructura de una colección
+    * [METAMAC-1055] - Crear colecciones
+    * [METAMAC-1056] - Eliminar colecciones
+    * [METAMAC-1058] - Ciclo de vida
+    * [METAMAC-1059] - Revisar el antiguo gpe y ver en qué momentos se emiten notificaciones y a quién para incluirlas en los requisitos
+    * [METAMAC-1066] - Detalle de un Dataset
+    * [METAMAC-1067] - Organizar pestañas de la colección en vistas distintas
+    * [METAMAC-1071] - Crear pestañas para datasets y organizarlas en vistas
+    * [METAMAC-1073] - Datasources de los datasets
+    * [METAMAC-1086] - Los datasets deben crearse indicando la agencia por defecto
+    * [METAMAC-1097] - Las colecciones deben asociarse a agencias
+    * [METAMAC-1116] - Usar componente de multiseleccion de agencias 
+    * [METAMAC-1117] - Usar componente multiple de agencias
+    * [METAMAC-1131] - Incorporar un anexo en el que se especifiquen los momentos en los que deberán enviarse notificaciones y los destinatarios de las mismas
+    * [METAMAC-1132] - Resolver dudas de Esther referidas al sistema
+    * [METAMAC-1140] - 03/10/2012 - Reunión con San relativa al modelado del esqueleto
+    * [METAMAC-1142] - Determinar si es necesario omitir la configuración del logback
+    * [METAMAC-1145] - Modelado de las entidades principales
+    * [METAMAC-1146] - Revisar el fichero de sculptor-generator.properties para asegurar que esté correcto
+    * [METAMAC-1150] - Realizar la configuración inicial de Tests
+    * [METAMAC-1151] - Realizar la configuración inicial de Spring
+    * [METAMAC-1162] - Obtener consulta por URN
+    * [METAMAC-1488] - Rellenar metadatos del ciclo de vida
+    * [METAMAC-1489] - Gestionar metadatos en las operaciones del servicio
+    * [METAMAC-1538] - Crear procedimiento almacenado que genere los códigos para los datasets
+    * [METAMAC-1551] - Cambiar los metadatos de siemac bidireccionales, y hacerlos calculados.
+    * [METAMAC-1555] - Comprobar que los metadatos calculados están rellenos en la fase adecuada
+    * [METAMAC-1557] - La generación de las constraint unique genera algunas innecesarias
+    * [METAMAC-1584] - [WEB] Crear CRUD de Queries
+    * [METAMAC-1604] - El orden de inserción del dbunit no se genera correctamente
+    * [METAMAC-1606] - Gestión del metadato keywords
+    * [METAMAC-1607] - Gestionar metadatos calculados a partir del DSD. Integración con API SRM interna
+    * [METAMAC-1608] - Gestionar metadatos calculados a partir de los datos cargados
+    * [METAMAC-1611] - Gestión de language y languages
+    * [METAMAC-1612] - Gestionar date next update junto con la subida de ficheros
+    * [METAMAC-1657] - Metadatos del dataset relacionados con el DSD
+    * [METAMAC-1688] - Añadir selección de datasets con buscador y lupa
+    * [METAMAC-1689] - Añadir posibilidad de editar la selección de la query y quitar el mock
+    * [METAMAC-1759] - [WEB] Permitir que al pulsar "Enter" se realice la búsqueda en los listados
+    * [METAMAC-1771] - Dar soporte a la edición de atributos de nivel superior a observación
+    * [METAMAC-1783] - [API] Obtener dataset
+    * [METAMAC-1800] - [API] Buscar datasets
+    * [METAMAC-1801] - [API] Obtener query
+    * [METAMAC-1802] - [API] Obtener collection
+    * [METAMAC-1804] - [API] Buscar collections
+    * [METAMAC-1809] - Añadir el metadato maintainer al queryVersion
+    * [METAMAC-1821] - Refactorizar enumerados del CORE para que exista un único enumerado de búsqueda para la web (independiente de la entidad para la que sea)
+    * [METAMAC-1828] - Error durante la comprobación de metadatos requeridos para pasar un DatasetVersion de borrador a validación de producción
+    * [METAMAC-1831] - [API] Refactor urn por urnProvider
+    * [METAMAC-1838] - [WEB] Los listados de publicaciones no muestran la información de la paginación. Sólo aparece cuando se selecciona un elemento.
+    * [METAMAC-1841] - Importación de fuentes de datos
+    * [METAMAC-1843] - [API] Revisar respuestas de la API
+    * [METAMAC-1847] - [WEB] Búsqueda avanzada
+    * [METAMAC-1852] - [API] Probar búsquedas en web
+    * [METAMAC-1869] - Añadir resto de ciclo de vida
+    * [METAMAC-1870] - [API] Atributos
+    * [METAMAC-1871] - [API] Mapas
+    * [METAMAC-1872] - [CORE] Error al realizar búsqueda de datasets estableciendo criterios para los metadatos granularidad temporal y granularidad geográfica a la vez
+    * [METAMAC-1881] - Publicación de recursos
+    * [METAMAC-1903] - Gestión de metadatos de relaciones
+    * [METAMAC-1916] - Cancelación de las publicaciones de recursos
+    * [METAMAC-1946] - Revisar las acciones dle ciclo de vida de rechazo, asegurarse que se limpian metadatos de produccion y difusion
+    * [METAMAC-1947] - Versionado de recursos
+    * [METAMAC-1949] - Mejorar gestión del dataset repository
+    * [METAMAC-1950] - Incorporar validación de atributos del dataset en algún punto.
+
+
