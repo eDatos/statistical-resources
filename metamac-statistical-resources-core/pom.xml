@@ -5,13 +5,13 @@
     <parent>
         <groupId>org.siemac.metamac.metamac-statistical-resources</groupId>
         <artifactId>metamac-statistical-resources-parent</artifactId>
-        <version>1.0.0-SNAPSHOT</version>
+        <version>1.0.0</version>
         <relativePath>../metamac-statistical-resources-parent/pom.xml</relativePath>
     </parent>
 
     <groupId>org.siemac.metamac.metamac-statistical-resources</groupId>
     <artifactId>metamac-statistical-resources-core</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.0</version>
     <name>METAMAC :: STATISTICAL RESOURCES :: CORE</name>
 
 
@@ -463,11 +463,11 @@
                                 <copy toDir="${metamac-statistical-resources.etcDir}/db/statistical-resources/01-create">
                                     <fileset dir="${basedir}/src/generated/resources/dbschema/01-create" />
                                 </copy>
-                                <move file="${metamac-statistical-resources.etcDir}/db/statistical-resources/01-create/01-StatisticalResources-create.sql" tofile="${metamac-statistical-resources.etcDir}/db/statistical-resources/01-create/01-statistical-resources-schema-create.sql"/>
+                                <move file="${metamac-statistical-resources.etcDir}/db/statistical-resources/01-create/01-StatisticalResources-create.sql" tofile="${metamac-statistical-resources.etcDir}/db/statistical-resources/01-create/01-statistical-resources-schema-create.sql" />
                                 <copy toDir="${metamac-statistical-resources.etcDir}/db/statistical-resources/02-drop">
                                     <fileset dir="${basedir}/src/generated/resources/dbschema/02-drop" />
                                 </copy>
-                                <move file="${metamac-statistical-resources.etcDir}/db/statistical-resources/02-drop/01-StatisticalResources-drop.sql" tofile="${metamac-statistical-resources.etcDir}/db/statistical-resources/02-drop/01-statistical-resources-schema-drop.sql"/>
+                                <move file="${metamac-statistical-resources.etcDir}/db/statistical-resources/02-drop/01-StatisticalResources-drop.sql" tofile="${metamac-statistical-resources.etcDir}/db/statistical-resources/02-drop/01-statistical-resources-schema-drop.sql" />
 
                                 <!-- Delete spring configuration files -->
                                 <delete file="${basedir}/src/main/resources/spring.properties" />
