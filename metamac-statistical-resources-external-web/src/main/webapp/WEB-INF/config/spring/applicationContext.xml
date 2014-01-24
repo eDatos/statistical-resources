@@ -11,12 +11,6 @@
     <!-- Activates annotation-based bean configuration -->
     <context:annotation-config />
 
-    <bean id="propertyPlaceholderConfigurer" class="org.siemac.metamac.core.common.conf.ConfigurationServicePropertyPlaceholderConfigurer">
-        <property name="configurationService">
-            <ref bean="configurationService" />
-        </property>
-    </bean>
-
     <import resource="classpath:/spring/statistical-resources/applicationContext.xml" />
      
     <import resource="classpath:/spring/statistical-resources-rest-external/applicationContext.xml" />
