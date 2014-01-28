@@ -12,8 +12,8 @@ import org.siemac.metamac.statistical.resources.web.client.NameTokens;
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesDefaults;
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb;
 import org.siemac.metamac.statistical.resources.web.client.enums.PublicationTabTypeEnum;
-import org.siemac.metamac.statistical.resources.web.client.events.RequestPublicationVersionsReloadEvent.RequestPublicationVersionsReloadHandler;
 import org.siemac.metamac.statistical.resources.web.client.events.RequestPublicationVersionsReloadEvent;
+import org.siemac.metamac.statistical.resources.web.client.events.RequestPublicationVersionsReloadEvent.RequestPublicationVersionsReloadHandler;
 import org.siemac.metamac.statistical.resources.web.client.events.SelectPublicationTabEvent;
 import org.siemac.metamac.statistical.resources.web.client.events.SelectPublicationTabEvent.SelectPublicationTabHandler;
 import org.siemac.metamac.statistical.resources.web.client.events.SetPublicationEvent;
@@ -22,11 +22,11 @@ import org.siemac.metamac.statistical.resources.web.client.operation.presenter.O
 import org.siemac.metamac.statistical.resources.web.client.publication.view.handlers.PublicationUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.PlaceRequestUtils;
-import org.siemac.metamac.statistical.resources.web.client.utils.WaitingAsyncCallbackHandlingError;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationAction;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationResult;
 import org.siemac.metamac.statistical.resources.web.shared.publication.GetVersionsOfPublicationAction;
 import org.siemac.metamac.statistical.resources.web.shared.publication.GetVersionsOfPublicationResult;
+import org.siemac.metamac.web.common.client.utils.WaitingAsyncCallbackHandlingError;
 
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.inject.Inject;

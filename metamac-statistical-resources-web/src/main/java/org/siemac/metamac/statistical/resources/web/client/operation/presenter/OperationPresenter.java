@@ -15,7 +15,7 @@ import org.siemac.metamac.statistical.resources.web.client.widgets.presenter.Sta
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationAction;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationResult;
 import org.siemac.metamac.web.common.client.events.ShowMessageEvent;
-import org.siemac.metamac.web.common.client.widgets.WaitingAsyncCallback;
+import org.siemac.metamac.web.common.client.utils.WaitingAsyncCallback;
 
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.inject.Inject;
