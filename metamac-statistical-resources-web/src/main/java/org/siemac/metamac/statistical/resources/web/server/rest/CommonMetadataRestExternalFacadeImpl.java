@@ -1,7 +1,7 @@
 package org.siemac.metamac.statistical.resources.web.server.rest;
 
-import static org.siemac.metamac.statistical.resources.core.invocation.utils.RestCriteriaUtils.appendConditionToQuery;
-import static org.siemac.metamac.statistical.resources.core.invocation.utils.RestCriteriaUtils.fieldComparison;
+import static org.siemac.metamac.rest.api.utils.RestCriteriaUtils.appendConditionToQuery;
+import static org.siemac.metamac.rest.api.utils.RestCriteriaUtils.fieldComparison;
 
 import java.util.ArrayList;
 import java.util.List;

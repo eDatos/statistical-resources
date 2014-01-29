@@ -1,7 +1,7 @@
 package org.siemac.metamac.statistical.resources.web.server.utils;
 
-import static org.siemac.metamac.statistical.resources.core.invocation.utils.RestCriteriaUtils.appendConditionToQuery;
-import static org.siemac.metamac.statistical.resources.core.invocation.utils.RestCriteriaUtils.fieldComparison;
+import static org.siemac.metamac.rest.api.utils.RestCriteriaUtils.appendConditionToQuery;
+import static org.siemac.metamac.rest.api.utils.RestCriteriaUtils.fieldComparison;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +15,6 @@ import org.siemac.metamac.rest.statistical_operations_internal.v1_0.domain.Opera
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.CategoryCriteriaPropertyRestriction;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.CategorySchemeCriteriaPropertyRestriction;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.CodeCriteriaPropertyRestriction;
-import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codelist;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.CodelistCriteriaPropertyRestriction;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ConceptCriteriaPropertyRestriction;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ConceptSchemeCriteriaPropertyRestriction;
