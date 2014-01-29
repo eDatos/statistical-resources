@@ -5,14 +5,13 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.siemac.metamac.core.common.util.MetamacCollectionUtils;
-import org.siemac.metamac.core.common.util.MetamacPredicate;
+import org.siemac.metamac.core.common.util.MetamacReflectionUtils;
+import org.siemac.metamac.core.common.util.predicates.ObjectEqualsStringFieldPredicate;
 import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.TemporalCode;
 import org.siemac.metamac.statistical.resources.core.utils.predicates.ExternalItemEqualsUrnPredicate;
-import org.siemac.metamac.statistical.resources.core.utils.predicates.ObjectEqualsStringFieldPredicate;
-import org.siemac.metamac.statistical.resources.core.utils.transformers.MetamacTransformer;
+import org.siemac.metamac.statistical.resources.core.utils.transformers.ExternalItemToUrnTransformer;
 import org.siemac.metamac.statistical.resources.core.utils.transformers.TemporalCodeToTimeCodeTransformer;
 
 public class StatisticalResourcesCollectionUtils extends MetamacCollectionUtils {
@@ -44,27 +43,18 @@ public class StatisticalResourcesCollectionUtils extends MetamacCollectionUtils 
         return true;
     }
 
-    @SuppressWarnings("unchecked")
-    public static <T> boolean isInCollection(Collection<T> collection, ObjectEqualsStringFieldPredicate predicate) {
-        return (T) CollectionUtils.find(collection, predicate) != null;
-    }
-
-    @SuppressWarnings("unchecked")
-    public static <T> boolean isInCollection(Collection<T> collection, MetamacPredicate<T> predicate) {
-        return (T) CollectionUtils.find(collection, predicate) != null;
-    }
-
-    @SuppressWarnings("unchecked")
-    public static <T> T find(Collection<T> collection, ObjectEqualsStringFieldPredicate predicate) {
-        return (T) CollectionUtils.find(collection, predicate);
-    }
-
-    public static <T, R> void mapCollection(Collection<T> collection, final Collection<R> outputCollection, MetamacTransformer<T, R> transformer) {
-        CollectionUtils.collect(collection, transformer, outputCollection);
-    }
-
     public static void temporalCodesToTimeCodes(Collection<TemporalCode> collection, final Collection<String> outputCollection) {
         mapCollection(collection, outputCollection, new TemporalCodeToTimeCodeTransformer());
+    }
+
+    public static void externalItemsToUrns(Collection<ExternalItem> collection, final Collection<String> outputCollection) {
+        mapCollection(collection, outputCollection, new ExternalItemToUrnTransformer());
+    }
+
+    public static List<String> mapExternalItemsToUrnsList(Collection<ExternalItem> collection) {
+        List<String> outputCollection = new ArrayList<String>();
+        mapCollection(collection, outputCollection, new ExternalItemToUrnTransformer());
+        return outputCollection;
     }
 
     public static <K, V> void addValueToMapValueList(Map<K, List<V>> map, K key, V value) {

@@ -1,7 +1,7 @@
 package org.siemac.metamac.statistical.resources.core.query.serviceimpl;
 
+import static org.siemac.metamac.core.common.util.MetamacCollectionUtils.find;
 import static org.siemac.metamac.statistical.resources.core.base.domain.utils.RelatedResourceResultUtils.getUrnsFromRelatedResourceResults;
-import static org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesCollectionUtils.find;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,10 +21,11 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.core.common.util.GeneratorUrnUtils;
 import org.siemac.metamac.core.common.util.SdmxTimeUtils;
+import org.siemac.metamac.core.common.util.predicates.ObjectEqualsStringFieldPredicate;
 import org.siemac.metamac.core.common.util.shared.VersionUtil;
+import org.siemac.metamac.core.common.util.transformers.MetamacTransformer;
 import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableStatisticalResourceRepository;
-import org.siemac.metamac.statistical.resources.core.base.domain.utils.RelatedResourceResultUtils;
 import org.siemac.metamac.statistical.resources.core.base.utils.FillMetadataForCreateResourceUtils;
 import org.siemac.metamac.statistical.resources.core.base.validators.ProcStatusValidator;
 import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
@@ -45,10 +46,8 @@ import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersionRe
 import org.siemac.metamac.statistical.resources.core.query.serviceapi.validators.QueryServiceInvocationValidator;
 import org.siemac.metamac.statistical.resources.core.query.serviceimpl.validators.QueryConstraintValidator;
 import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesCollectionUtils;
-import org.siemac.metamac.statistical.resources.core.utils.predicates.ObjectEqualsStringFieldPredicate;
 import org.siemac.metamac.statistical.resources.core.utils.transformers.CodeDimensionToCodeStringTransformer;
 import org.siemac.metamac.statistical.resources.core.utils.transformers.CodeItemToCodeStringTransformer;
-import org.siemac.metamac.statistical.resources.core.utils.transformers.MetamacTransformer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

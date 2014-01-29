@@ -1,15 +1,14 @@
 package org.siemac.metamac.statistical.resources.core.utils;
 
-import static org.siemac.metamac.statistical.resources.core.invocation.utils.RestCriteriaUtils.appendConditionToQuery;
-import static org.siemac.metamac.statistical.resources.core.invocation.utils.RestCriteriaUtils.fieldComparison;
-import static org.siemac.metamac.statistical.resources.core.invocation.utils.RestCriteriaUtils.transformListIntoQuotedCommaSeparatedString;
+import static org.siemac.metamac.rest.api.utils.RestCriteriaUtils.appendConditionToQuery;
+import static org.siemac.metamac.rest.api.utils.RestCriteriaUtils.fieldComparison;
+import static org.siemac.metamac.rest.api.utils.RestCriteriaUtils.transformListIntoQuotedCommaSeparatedString;
 
 import java.math.BigInteger;
 import java.util.List;
 
 import org.siemac.metamac.rest.common.v1_0.domain.ComparisonOperator;
 import org.siemac.metamac.rest.common.v1_0.domain.ListBase;
-
 
 public class RestMockUtils {
 
@@ -21,7 +20,7 @@ public class RestMockUtils {
         }
         return query.toString();
     }
-    
+
     protected static void populateListBaseWithResourcesWithOnlyUrns(ListBase listBase, List<String> urns) {
         listBase.setTotal(BigInteger.valueOf(urns.size()));
     }

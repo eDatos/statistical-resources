@@ -1,7 +1,7 @@
 package org.siemac.metamac.statistical.resources.core.dataset.serviceimpl;
 
+import static org.siemac.metamac.core.common.util.MetamacCollectionUtils.isInCollection;
 import static org.siemac.metamac.statistical.resources.core.base.domain.utils.RelatedResourceResultUtils.getUrnsFromRelatedResourceResults;
-import static org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesCollectionUtils.isInCollection;
 
 import java.io.File;
 import java.net.URL;
@@ -36,6 +36,7 @@ import org.siemac.metamac.core.common.util.GeneratorUrnUtils;
 import org.siemac.metamac.core.common.util.SdmxTimeUtils;
 import org.siemac.metamac.core.common.util.TimeSdmxComparator;
 import org.siemac.metamac.core.common.util.shared.VersionUtil;
+import org.siemac.metamac.core.common.util.transformers.MetamacTransformer;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.CodeResourceInternal;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codes;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Concepts;
@@ -91,7 +92,6 @@ import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesC
 import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesVersionUtils;
 import org.siemac.metamac.statistical.resources.core.utils.predicates.CodeDimensionEqualsIdentifierPredicate;
 import org.siemac.metamac.statistical.resources.core.utils.transformers.CodeDimensionToCodeStringTransformer;
-import org.siemac.metamac.statistical.resources.core.utils.transformers.MetamacTransformer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

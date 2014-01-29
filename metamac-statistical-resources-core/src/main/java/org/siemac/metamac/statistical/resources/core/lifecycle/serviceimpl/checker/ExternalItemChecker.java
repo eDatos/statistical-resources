@@ -1,10 +1,10 @@
 package org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.checker;
 
-import static org.siemac.metamac.statistical.resources.core.invocation.utils.RestCriteriaUtils.appendConditionToQuery;
-import static org.siemac.metamac.statistical.resources.core.invocation.utils.RestCriteriaUtils.fieldComparison;
-import static org.siemac.metamac.statistical.resources.core.invocation.utils.RestCriteriaUtils.processExternalItemsUrns;
-import static org.siemac.metamac.statistical.resources.core.invocation.utils.RestCriteriaUtils.transformListIntoQuotedCommaSeparatedString;
+import static org.siemac.metamac.rest.api.utils.RestCriteriaUtils.appendConditionToQuery;
+import static org.siemac.metamac.rest.api.utils.RestCriteriaUtils.fieldComparison;
+import static org.siemac.metamac.rest.api.utils.RestCriteriaUtils.transformListIntoQuotedCommaSeparatedString;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -33,6 +33,7 @@ import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.invocation.service.CommonMetadataRestExternalService;
 import org.siemac.metamac.statistical.resources.core.invocation.service.SrmRestInternalService;
 import org.siemac.metamac.statistical.resources.core.invocation.service.StatisticalOperationsRestInternalService;
+import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesCollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -73,7 +74,8 @@ public class ExternalItemChecker {
         String query = null;
         Collection<String> result = null;
 
-        List<String> expectedUrns = processExternalItemsUrns(externalItems);
+        List<String> expectedUrns = new ArrayList<String>();
+        StatisticalResourcesCollectionUtils.externalItemsToUrns(externalItems, expectedUrns);
 
         switch (typeExternalItem) {
             case AGENCY:
@@ -218,7 +220,6 @@ public class ExternalItemChecker {
         }
 
     }
-
     @SuppressWarnings("unchecked")
     private void checkResult(List<String> expectedList, Collection<String> actualList, String metadataName, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
         Collection<String> result = CollectionUtils.disjunction(expectedList, actualList);

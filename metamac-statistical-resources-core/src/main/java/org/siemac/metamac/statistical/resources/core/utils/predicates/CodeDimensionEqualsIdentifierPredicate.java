@@ -1,7 +1,7 @@
 package org.siemac.metamac.statistical.resources.core.utils.predicates;
 
 import org.apache.commons.lang3.StringUtils;
-import org.siemac.metamac.core.common.util.MetamacPredicate;
+import org.siemac.metamac.core.common.util.predicates.MetamacPredicate;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.CodeDimension;
 
 public class CodeDimensionEqualsIdentifierPredicate extends MetamacPredicate<CodeDimension> {

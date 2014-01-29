@@ -1,6 +1,6 @@
 package org.siemac.metamac.statistical.resources.core.utils;
 
-import org.siemac.metamac.core.common.util.MetamacPredicate;
+import org.siemac.metamac.core.common.util.predicates.MetamacPredicate;
 import org.siemac.metamac.statistical.resources.core.task.domain.TaskInfoDataset;
 
 

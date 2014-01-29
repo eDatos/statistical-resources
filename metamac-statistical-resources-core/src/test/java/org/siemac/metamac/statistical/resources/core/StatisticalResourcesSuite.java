@@ -29,7 +29,6 @@ import org.siemac.metamac.statistical.resources.core.enume.utils.QueryStatusEnum
 import org.siemac.metamac.statistical.resources.core.enume.utils.TypeRelatedResourceEnumUtilsTest;
 import org.siemac.metamac.statistical.resources.core.facade.serviceapi.StatisticalResourcesOptimisticLockingTest;
 import org.siemac.metamac.statistical.resources.core.facade.serviceapi.StatisticalResourcesServiceFacadeTest;
-import org.siemac.metamac.statistical.resources.core.invocation.utils.RestCriteriaUtilsTest;
 import org.siemac.metamac.statistical.resources.core.io.serviceapi.DataManipulateTest;
 import org.siemac.metamac.statistical.resources.core.lifecycle.LifecycleCheckerTest;
 import org.siemac.metamac.statistical.resources.core.lifecycle.LifecycleCommonMetadataCheckerTest;
@@ -60,6 +59,7 @@ import org.siemac.metamac.statistical.resources.core.query.repositoryimpl.QueryV
 import org.siemac.metamac.statistical.resources.core.query.serviceapi.QueryIntegrationServiceTest;
 import org.siemac.metamac.statistical.resources.core.query.serviceapi.QueryServiceTest;
 import org.siemac.metamac.statistical.resources.core.query.serviceapi.QueryVersioningServiceTest;
+import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesCollectionUtilsTest;
 
 // @formatter:off
 @RunWith(Suite.class)
@@ -112,7 +112,7 @@ import org.siemac.metamac.statistical.resources.core.query.serviceapi.QueryVersi
                      DatasetIntegrationServiceTest.class,
                      PublicationIntegrationServiceTest.class,
                      QueryIntegrationServiceTest.class,
-                     RestCriteriaUtilsTest.class,
+                     StatisticalResourcesCollectionUtilsTest.class,
                      StatisticalResourcesUrnParserUtilsTest.class,
                      DatasetPublishingServiceTest.class,
                      DatasetVersioningServiceTest.class,
