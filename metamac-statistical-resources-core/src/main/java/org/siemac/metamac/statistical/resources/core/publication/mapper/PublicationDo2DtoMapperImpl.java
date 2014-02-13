@@ -12,7 +12,9 @@ import org.siemac.metamac.statistical.resources.core.dto.publication.ElementLeve
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationStructureDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionBaseDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionDto;
+import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
+import org.siemac.metamac.statistical.resources.core.enume.utils.ProcStatusEnumUtils;
 import org.siemac.metamac.statistical.resources.core.publication.domain.Chapter;
 import org.siemac.metamac.statistical.resources.core.publication.domain.Cube;
 import org.siemac.metamac.statistical.resources.core.publication.domain.ElementLevel;
@@ -133,8 +135,13 @@ public class PublicationDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements
         target.setId(source.getId());
         target.setVersion(source.getVersion());
 
-        // Other
-        target.setFormatExtentResources(source.getFormatExtentResources());
+        // Other publication version attributes
+        if (ProcStatusEnumUtils.isInAnyProcStatus(source, ProcStatusEnum.PUBLISHED)) {
+            target.setFormatExtentResources(source.getFormatExtentResources());
+        } else {
+            target.setFormatExtentResources(source.getChildrenAllLevels().size());
+        }
+
         return target;
     }
 

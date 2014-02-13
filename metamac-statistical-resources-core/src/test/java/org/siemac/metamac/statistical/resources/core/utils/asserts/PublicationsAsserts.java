@@ -17,7 +17,9 @@ import org.siemac.metamac.statistical.resources.core.dto.publication.ElementLeve
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationStructureDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionBaseDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionDto;
+import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
+import org.siemac.metamac.statistical.resources.core.enume.utils.ProcStatusEnumUtils;
 import org.siemac.metamac.statistical.resources.core.publication.domain.Chapter;
 import org.siemac.metamac.statistical.resources.core.publication.domain.Cube;
 import org.siemac.metamac.statistical.resources.core.publication.domain.ElementLevel;
@@ -280,16 +282,21 @@ public class PublicationsAsserts extends BaseAsserts {
     private static void assertEqualsPublicationVersion(PublicationVersionDto dto, PublicationVersion entity, MapperEnum mapperEnum) throws MetamacException {
         assertEqualsSiemacMetadataStatisticalResource(entity.getSiemacMetadataStatisticalResource(), dto, mapperEnum);
 
-        // Publication attributes
-        assertEquals(entity.getFormatExtentResources(), dto.getFormatExtentResources());
-
         if (MapperEnum.DO2DTO.equals(mapperEnum)) {
+            if (ProcStatusEnumUtils.isInAnyProcStatus(entity, ProcStatusEnum.PUBLISHED)) {
+                assertEquals(entity.getFormatExtentResources(), dto.getFormatExtentResources());
+            } else {
+                assertNotNull(dto.getFormatExtentResources());
+                assertNull(entity.getFormatExtentResources());
+            }
+
             assertEquals(entity.getId(), dto.getId());
 
             assertNotNull(entity.getVersion());
             assertEquals(entity.getVersion(), dto.getVersion());
 
             assertEqualsRelatedResourceCollectionMapper(entity.getHasPart(), dto.getHasPart());
+
         }
     }
 

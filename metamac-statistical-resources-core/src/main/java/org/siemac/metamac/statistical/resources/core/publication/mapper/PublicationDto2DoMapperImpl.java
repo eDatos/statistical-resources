@@ -110,7 +110,7 @@ public class PublicationDto2DoMapperImpl extends BaseDto2DoMapperImpl implements
         siemacMetadataStatisticalResourceDtoToDo(source, target.getSiemacMetadataStatisticalResource(), ServiceExceptionParameters.PUBLICATION_VERSION__SIEMAC_METADATA_STATISTICAL_RESOURCE);
 
         // Other
-        target.setFormatExtentResources(source.getFormatExtentResources());
+        // We don't copy formatExtentResources because it is a calculated metadata
 
         return target;
     }
@@ -120,8 +120,7 @@ public class PublicationDto2DoMapperImpl extends BaseDto2DoMapperImpl implements
             String currentUrn = source.getUrn();
             RelatedResource resourceReplaced = relatedResourceDtoToDo(source.getReplaces(), null, ServiceExceptionParameters.PUBLICATION_VERSION__SIEMAC_METADATA_STATISTICAL_RESOURCE__REPLACES);
             if (currentUrn.equals(resourceReplaced.getPublicationVersion().getSiemacMetadataStatisticalResource().getUrn())) {
-                throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.PUBLICATION_VERSION_CANT_REPLACE_ITSELF)
-                        .withMessageParameters(currentUrn).build();
+                throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.PUBLICATION_VERSION_CANT_REPLACE_ITSELF).withMessageParameters(currentUrn).build();
             } else {
                 RelatedResourceResult resourceAlreadyReplacing = publicationVersionRepository.retrieveIsReplacedBy(resourceReplaced.getPublicationVersion());
                 if (resourceAlreadyReplacing != null && !resourceAlreadyReplacing.getUrn().equals(source.getUrn())) {

@@ -66,6 +66,14 @@ public class PublicationDo2DtoMapperTest extends StatisticalResourcesBaseTest {
     }
 
     @Test
+    @MetamacMock({PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME})
+    public void testPublicationDoToDtoWithComplexStructure() throws MetamacException {
+        PublicationVersion expected = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME);
+        PublicationVersionDto actual = publicationDo2DtoMapper.publicationVersionDoToDto(expected);
+        assertEqualsPublicationVersion(expected, actual);
+    }
+
+    @Test
     @MetamacMock({PUBLICATION_VERSION_31_V2_PUBLISHED_NO_VISIBLE_FOR_PUBLICATION_06_NAME})
     public void testPublicationDoToDtoProcStatusPublishedNotVisible() throws MetamacException {
         PublicationVersion expected = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_31_V2_PUBLISHED_NO_VISIBLE_FOR_PUBLICATION_06_NAME);
