@@ -53,6 +53,7 @@ public class ExternalItemWebUtils extends org.siemac.metamac.web.common.client.u
     public static ExternalItemDto buildExternalItemDtoFromCode(Code code) {
         ExternalItemDto externalItemDto = new ExternalItemDto();
         externalItemDto.setCode(code.getId());
+        externalItemDto.setCodeNested(code.getNestedId());
         externalItemDto.setUri(code.getSelfLink().getHref());
         externalItemDto.setUrn(code.getUrn());
         externalItemDto.setUrnProvider(code.getUrnProvider());
@@ -65,6 +66,7 @@ public class ExternalItemWebUtils extends org.siemac.metamac.web.common.client.u
     public static ExternalItemDto buildExternalItemDtoFromCategory(Category category) {
         ExternalItemDto externalItemDto = new ExternalItemDto();
         externalItemDto.setCode(category.getId());
+        externalItemDto.setCodeNested(category.getNestedId());
         externalItemDto.setUri(category.getSelfLink().getHref());
         externalItemDto.setUrn(category.getUrn());
         externalItemDto.setUrnProvider(category.getUrnProvider());
