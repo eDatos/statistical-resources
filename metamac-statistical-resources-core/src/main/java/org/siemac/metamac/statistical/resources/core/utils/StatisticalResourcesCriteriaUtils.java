@@ -51,12 +51,14 @@ public class StatisticalResourcesCriteriaUtils {
         //@formatter:on
     }
 
+    @SuppressWarnings("rawtypes")
     public static SculptorPropertyCriteriaBase buildPublishedVisibleCondition(Property procStatusProperty, Property validFromProperty, Class entityClazz) {
         SculptorPropertyCriteria statusPublished = new SculptorPropertyCriteria(procStatusProperty, ProcStatusEnum.PUBLISHED, OperationType.EQ);
         SculptorPropertyCriteria validFromBeforeNow = new SculptorPropertyCriteria(CriteriaUtils.getDatetimeLeafPropertyEmbedded(validFromProperty, entityClazz), new Date(), OperationType.LE);
         return new SculptorCriteriaConjunction(statusPublished, validFromBeforeNow);
     }
 
+    @SuppressWarnings("rawtypes")
     public static SculptorPropertyCriteriaBase buildPublishedNotVisibleCondition(Property procStatusProperty, Property validFromProperty, Class entityClazz) {
         SculptorPropertyCriteria statusPublished = new SculptorPropertyCriteria(procStatusProperty, ProcStatusEnum.PUBLISHED, OperationType.EQ);
         SculptorPropertyCriteria validFromBeforeNow = new SculptorPropertyCriteria(CriteriaUtils.getDatetimeLeafPropertyEmbedded(validFromProperty, entityClazz), new Date(), OperationType.GT);

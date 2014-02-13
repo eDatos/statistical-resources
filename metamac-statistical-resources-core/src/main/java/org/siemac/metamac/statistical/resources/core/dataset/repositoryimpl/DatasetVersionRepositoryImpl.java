@@ -244,6 +244,7 @@ public class DatasetVersionRepositoryImpl extends DatasetVersionRepositoryBase {
         List<RelatedResourceResult> resources = getRelatedResourceResultsFromRows(rows, TypeRelatedResourceEnum.QUERY_VERSION);
         return resources;
     }
+
     @Override
     public RelatedResourceResult retrieveIsReplacedByVersionOnlyLastPublished(DatasetVersion datasetVersion) throws MetamacException {
         return lifeCycleStatisticalResourceRepository.retrieveIsReplacedByVersionOnlyLastPublished(datasetVersion.getId(), TypeRelatedResourceEnum.DATASET_VERSION);
@@ -264,6 +265,7 @@ public class DatasetVersionRepositoryImpl extends DatasetVersionRepositoryBase {
         return siemacMetadataStatisticalResourceRepository.retrieveIsReplacedByOnlyLastPublished(datasetVersion.getId(), TypeRelatedResourceEnum.DATASET_VERSION);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public List<RelatedResourceResult> retrieveIsPartOf(DatasetVersion datasetVersion) throws MetamacException {
         //     @formatter:off
@@ -307,6 +309,7 @@ public class DatasetVersionRepositoryImpl extends DatasetVersionRepositoryBase {
         return resources;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public List<RelatedResourceResult> retrieveIsPartOfOnlyLastPublished(DatasetVersion datasetVersion) throws MetamacException {
         //     @formatter:off

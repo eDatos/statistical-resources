@@ -37,7 +37,6 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.Categorisati
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionRepository;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
-import org.siemac.metamac.statistical.resources.core.invocation.service.SrmRestInternalService;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceapi.LifecycleService;
 import org.siemac.metamac.statistical.resources.core.task.serviceapi.TaskService;
 import org.siemac.metamac.statistical.resources.core.utils.DataMockUtils;
@@ -72,9 +71,6 @@ public class DatasetPublishingServiceTest extends StatisticalResourcesMockRestBa
 
     @Autowired
     private DatasetRepositoriesServiceFacade datasetRepositoriesServiceFacade;
-
-    @Autowired
-    private SrmRestInternalService           srmRestInternalService;
 
     @Autowired
     private TaskService                      taskService;

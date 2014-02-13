@@ -44,7 +44,7 @@ import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.Stati
 public class SiemacLifecycleCheckerTest extends StatisticalResourcesBaseTest {
 
     @InjectMocks
-    private SiemacLifecycleChecker         siemacLifecycleServiceImpl = new SiemacLifecycleChecker();
+    private final SiemacLifecycleChecker   siemacLifecycleServiceImpl = new SiemacLifecycleChecker();
 
     @Mock
     private LifecycleChecker               lifecycleService;
@@ -52,6 +52,7 @@ public class SiemacLifecycleCheckerTest extends StatisticalResourcesBaseTest {
     @Mock
     private ExternalItemChecker            externalItemChecker;
 
+    @SuppressWarnings("unused")
     @Mock
     private RelatedResourceChecker         relatedResourceChecker;
 
