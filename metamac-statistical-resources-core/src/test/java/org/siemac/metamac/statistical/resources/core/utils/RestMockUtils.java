@@ -12,6 +12,7 @@ import org.siemac.metamac.rest.common.v1_0.domain.ListBase;
 
 public class RestMockUtils {
 
+    @SuppressWarnings("rawtypes")
     public static String mockQueryFindPublishedResourcesUrnsAsList(Enum urnPropertyName, Enum procStatusPropertyName, String procStatusValue, List<String> urns) {
         StringBuilder query = new StringBuilder();
         appendConditionToQuery(query, fieldComparison(urnPropertyName, ComparisonOperator.IN, transformListIntoQuotedCommaSeparatedString(urns)));

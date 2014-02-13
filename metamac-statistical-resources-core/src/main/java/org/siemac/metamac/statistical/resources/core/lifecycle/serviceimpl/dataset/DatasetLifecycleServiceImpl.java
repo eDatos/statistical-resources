@@ -24,7 +24,6 @@ import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParam
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionSingleParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.lifecycle.LifecycleCommonMetadataChecker;
-import org.siemac.metamac.statistical.resources.core.lifecycle.serviceapi.LifecycleService;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.LifecycleTemplateService;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.checker.ExternalItemChecker;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
@@ -35,7 +34,6 @@ import org.siemac.metamac.statistical.resources.core.query.serviceapi.QueryServi
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.arte.statistic.dataset.repository.domain.StatisticDatasetRepository;
 import com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceFacade;
 
 @Service("datasetLifecycleService")
@@ -58,9 +56,6 @@ public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<Datase
 
     @Autowired
     private PublicationVersionRepository     publicationVersionRepository;
-
-    @Autowired
-    private LifecycleService<QueryVersion>   queryLifecycleService;
 
     @Autowired
     private QueryService                     queryService;

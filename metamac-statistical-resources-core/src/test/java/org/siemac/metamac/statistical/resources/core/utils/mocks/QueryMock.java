@@ -4,19 +4,20 @@ import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableSta
 import org.siemac.metamac.statistical.resources.core.query.domain.Query;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesPersistedDoMocks;
 
-
 public class QueryMock extends Query {
 
-    private String maintainerCode;
-    
+    private static final long serialVersionUID = -7923978720823611119L;
+
+    private String            maintainerCode;
+
     public void setMaintainerCode(String maintainerCode) {
         this.maintainerCode = maintainerCode;
     }
-    
+
     public String getMaintainerCode() {
         return maintainerCode;
     }
-    
+
     @Override
     public IdentifiableStatisticalResource getIdentifiableStatisticalResource() {
         IdentifiableStatisticalResource resource = super.getIdentifiableStatisticalResource();
@@ -25,9 +26,9 @@ public class QueryMock extends Query {
         }
         return super.getIdentifiableStatisticalResource();
     }
-    
+
     public void setStatisticalOperationCode(String statisticalOperationCode) {
         getIdentifiableStatisticalResource().setStatisticalOperation(StatisticalResourcesPersistedDoMocks.mockStatisticalOperationExternalItem(statisticalOperationCode));
     }
-    
+
 }

@@ -18,7 +18,6 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatisticalResourceRepository;
 import org.siemac.metamac.statistical.resources.core.base.domain.utils.RepositoryUtils;
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResourceResult;
-import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
@@ -56,7 +55,6 @@ public class QueryVersionRepositoryImpl extends QueryVersionRepositoryBase {
         return result.get(0);
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public QueryVersion retrieveLastVersion(String queryUrn) throws MetamacException {
         // Prepare criteria
@@ -118,6 +116,7 @@ public class QueryVersionRepositoryImpl extends QueryVersionRepositoryBase {
         return lifeCycleStatisticalResourceRepository.retrieveIsReplacedByVersion(queryVersion.getId(), TypeRelatedResourceEnum.QUERY_VERSION);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public List<RelatedResourceResult> retrieveIsPartOf(QueryVersion queryVersion) throws MetamacException {
         //     @formatter:off
@@ -161,6 +160,7 @@ public class QueryVersionRepositoryImpl extends QueryVersionRepositoryBase {
         return resources;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public List<RelatedResourceResult> retrieveIsPartOfOnlyLastPublished(QueryVersion queryVersion) throws MetamacException {
         //     @formatter:off

@@ -20,8 +20,6 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.siemac.metamac.core.common.exception.MetamacException;
@@ -34,13 +32,7 @@ import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceapi.LifecycleService;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersionRepository;
-import org.siemac.metamac.statistical.resources.core.query.serviceapi.QueryService;
-import org.siemac.metamac.statistical.resources.core.task.serviceapi.TaskService;
-import org.siemac.metamac.statistical.resources.core.utils.TaskMockUtils;
 import org.siemac.metamac.statistical.resources.core.utils.asserts.LifecycleAsserts;
-import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory;
-import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory;
-import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.context.ContextConfiguration;

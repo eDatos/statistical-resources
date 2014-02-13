@@ -184,7 +184,6 @@ import org.siemac.metamac.statistical.resources.core.enume.domain.VersionRationa
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryStatusEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.invocation.service.SrmRestInternalService;
-import org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.checker.ExternalItemChecker;
 import org.siemac.metamac.statistical.resources.core.publication.domain.Chapter;
 import org.siemac.metamac.statistical.resources.core.publication.domain.Cube;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
@@ -231,9 +230,6 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
 
     @Autowired
     private DatasetRepositoriesServiceFacade  datasetRepositoriesServiceFacade;
-
-    @Autowired
-    private ExternalItemChecker               externalItemChecker;
 
     @Before
     public void onBeforeTest() throws Exception {
@@ -512,9 +508,6 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
     @Test
     @MetamacMock(QUERY_VERSION_01_WITH_SELECTION_NAME)
     public void testUpdateQueryVersionSelection() throws Exception {
-        int querySelectionItemsBefore = querySelectionItemRepository.findAll().size();
-        int codeItemsBefore = codeItemRepository.findAll().size();
-
         QueryVersionDto expectedQuery = statisticalResourcesServiceFacade.retrieveQueryVersionByUrn(getServiceContextAdministrador(),
                 queryVersionMockFactory.retrieveMock(QUERY_VERSION_01_WITH_SELECTION_NAME).getLifeCycleStatisticalResource().getUrn());
 

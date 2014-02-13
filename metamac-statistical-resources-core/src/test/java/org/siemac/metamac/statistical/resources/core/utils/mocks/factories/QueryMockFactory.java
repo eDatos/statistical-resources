@@ -37,10 +37,7 @@ import org.siemac.metamac.statistical.resources.core.publication.domain.Publicat
 import org.siemac.metamac.statistical.resources.core.query.domain.Query;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
 import org.siemac.metamac.statistical.resources.core.utils.DatasetLifecycleTestUtils;
-import org.siemac.metamac.statistical.resources.core.utils.PublicationLifecycleTestUtils;
 import org.siemac.metamac.statistical.resources.core.utils.QueryLifecycleTestUtils;
-import org.siemac.metamac.statistical.resources.core.utils.mocks.DatasetMock;
-import org.siemac.metamac.statistical.resources.core.utils.mocks.PublicationVersionMock;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.QueryMock;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.QueryVersionMock;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesDoMocks;

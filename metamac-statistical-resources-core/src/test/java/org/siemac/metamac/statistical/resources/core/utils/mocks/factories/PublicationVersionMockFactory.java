@@ -1,6 +1,5 @@
 package org.siemac.metamac.statistical.resources.core.utils.mocks.factories;
 
-import static org.siemac.metamac.statistical.resources.core.utils.PublicationLifecycleTestUtils.fillAsPublished;
 import static org.siemac.metamac.statistical.resources.core.utils.PublicationLifecycleTestUtils.prepareToDiffusionValidation;
 import static org.siemac.metamac.statistical.resources.core.utils.PublicationLifecycleTestUtils.prepareToProductionValidation;
 import static org.siemac.metamac.statistical.resources.core.utils.PublicationLifecycleTestUtils.prepareToPublished;
@@ -19,7 +18,6 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationMockFactory.PUBLICATION_04_STRUCTURED_WITH_2_PUBLICATION_VERSIONS_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationMockFactory.PUBLICATION_05_WITH_MULTIPLE_PUBLISHED_VERSIONS_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationMockFactory.PUBLICATION_06_WITH_MULTIPLE_PUBLISHED_VERSIONS_AND_LATEST_NO_VISIBLE_NAME;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_96_NOT_VISIBLE_REPLACES_PUBLICATION_VERSION_95_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryMockFactory.QUERY_16_DRAFT_USED_IN_PUBLICATION_VERSION_86_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryMockFactory.QUERY_17_PRODUCTION_VALIDATION_USED_IN_PUBLICATION_VERSION_86_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryMockFactory.QUERY_18_DIFFUSION_VALIDATION_USED_IN_PUBLICATION_VERSION_86_NAME;
@@ -41,15 +39,12 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersi
 import org.siemac.metamac.statistical.resources.core.enume.domain.NextVersionTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.VersionRationaleTypeEnum;
-import org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.publication.PublicationLifecycleServiceTest;
 import org.siemac.metamac.statistical.resources.core.publication.domain.ElementLevel;
 import org.siemac.metamac.statistical.resources.core.publication.domain.Publication;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
 import org.siemac.metamac.statistical.resources.core.query.domain.Query;
-import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
 import org.siemac.metamac.statistical.resources.core.utils.LifecycleTestUtils;
 import org.siemac.metamac.statistical.resources.core.utils.PublicationLifecycleTestUtils;
-import org.siemac.metamac.statistical.resources.core.utils.mocks.DatasetMock;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.PublicationMock;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.PublicationVersionMock;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesDoMocks;

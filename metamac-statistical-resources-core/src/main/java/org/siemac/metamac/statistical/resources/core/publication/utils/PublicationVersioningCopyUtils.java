@@ -1,6 +1,7 @@
 package org.siemac.metamac.statistical.resources.core.publication.utils;
 
-import static org.siemac.metamac.statistical.resources.core.base.utils.BaseVersioningCopyUtils.*;
+import static org.siemac.metamac.statistical.resources.core.base.utils.BaseVersioningCopyUtils.copyNameableStatisticalResource;
+import static org.siemac.metamac.statistical.resources.core.base.utils.BaseVersioningCopyUtils.copySiemacMetadataStatisticalResource;
 
 import java.util.ArrayList;
 import java.util.List;

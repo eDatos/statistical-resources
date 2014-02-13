@@ -97,6 +97,7 @@ public class ValidateDataVersusDsd {
 
         calculateCacheInfo();
     }
+
     /**************************************************************************
      * PUBLIC
      **************************************************************************/
@@ -282,6 +283,7 @@ public class ValidateDataVersusDsd {
         ExceptionUtils.throwIfException(exceptions);
     }
 
+    @SuppressWarnings("unchecked")
     public void checkAttributesInstancesAssignmentStatus(String attributeId, List<AttributeInstanceDto> attributeInstanceDenormalizedDtos, Map<String, List<String>> coverage,
             List<MetamacExceptionItem> exceptions) throws Exception {
 

@@ -3,7 +3,6 @@ package org.siemac.metamac.statistical.resources.core.dataset.serviceapi;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts.assertEqualsDatasetVersion;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts.assertEqualsDatasource;
@@ -158,18 +157,21 @@ public class DatasetServiceDatasourceManagementTest extends StatisticalResources
         mockDsdAndDataRepositorySimpleDimensionsNoAttributes();
         testCanNotAddDatasourceInCurrentProcStatus(DATASET_VERSION_52_IN_PRODUCTION_VALIDATION_WITH_DATASOURCE_NAME);
     }
+
     @Test
     @MetamacMock(DATASET_VERSION_53_IN_DIFFUSION_VALIDATION_WITH_DATASOURCE_NAME)
     public void testCreateDatasourceDiffusionValidation() throws Exception {
         mockDsdAndDataRepositorySimpleDimensionsNoAttributes();
         testCanNotAddDatasourceInCurrentProcStatus(DATASET_VERSION_53_IN_DIFFUSION_VALIDATION_WITH_DATASOURCE_NAME);
     }
+
     @Test
     @MetamacMock(DATASET_VERSION_54_IN_VALIDATION_REJECTED_WITH_DATASOURCE_NAME)
     public void testCreateDatasourceValidationRejected() throws Exception {
         mockDsdAndDataRepositorySimpleDimensionsNoAttributes();
         testCanAddDatasourceInCurrentProcStatus(DATASET_VERSION_54_IN_VALIDATION_REJECTED_WITH_DATASOURCE_NAME);
     }
+
     @Test
     @MetamacMock(DATASET_VERSION_55_PUBLISHED_WITH_DATASOURCE_NAME)
     public void testCreateDatasourcePublished() throws Exception {

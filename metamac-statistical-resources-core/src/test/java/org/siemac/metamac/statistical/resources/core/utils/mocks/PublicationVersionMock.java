@@ -8,7 +8,9 @@ import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.Stati
 
 public class PublicationVersionMock extends PublicationVersion {
 
-    private Integer sequentialId;
+    private static final long serialVersionUID = 3117920262758220340L;
+
+    private Integer           sequentialId;
 
     public static PublicationVersionMock buildBasicSingleVersionWithSequence(int sequenceId) {
         PublicationVersionMock instance = new PublicationVersionMock();

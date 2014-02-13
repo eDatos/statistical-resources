@@ -2,7 +2,11 @@ package org.siemac.metamac.statistical.resources.core.utils.mocks.templates;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.siemac.metamac.statistical.resources.core.utils.LifecycleTestUtils.*;
+import static org.siemac.metamac.statistical.resources.core.utils.LifecycleTestUtils.fillAsPublishedSiemac;
+import static org.siemac.metamac.statistical.resources.core.utils.LifecycleTestUtils.prepareToDiffusionValidationSiemac;
+import static org.siemac.metamac.statistical.resources.core.utils.LifecycleTestUtils.prepareToProductionValidationSiemac;
+import static org.siemac.metamac.statistical.resources.core.utils.LifecycleTestUtils.prepareToPublishingSiemac;
+import static org.siemac.metamac.statistical.resources.core.utils.LifecycleTestUtils.prepareToValidationRejectedFromProductionValidationSiemac;
 
 import org.siemac.metamac.statistical.resources.core.base.domain.HasSiemacMetadata;
 import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatisticalResource;

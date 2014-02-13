@@ -6,6 +6,8 @@ import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.Stati
 
 public class QueryVersionMock extends QueryVersion {
 
+    private static final long serialVersionUID = 3915367587722854680L;
+
     @Override
     public LifeCycleStatisticalResource getLifeCycleStatisticalResource() {
         if (super.getLifeCycleStatisticalResource() == null) {
@@ -13,21 +15,21 @@ public class QueryVersionMock extends QueryVersion {
         }
         return super.getLifeCycleStatisticalResource();
     }
-    
+
     public void setStatisticalOperationCode(String operationCode) {
         getLifeCycleStatisticalResource().setStatisticalOperation(StatisticalResourcesPersistedDoMocks.mockStatisticalOperationInstanceExternalItem(operationCode));
     }
-    
+
     public void setMaintainerCode(String maintainerCode) {
         getLifeCycleStatisticalResource().setMaintainer(StatisticalResourcesPersistedDoMocks.mockAgencyExternalItem(maintainerCode));
     }
-    
+
     public void setLastVersion(boolean lastVersion) {
         getLifeCycleStatisticalResource().setLastVersion(lastVersion);
     }
-    
+
     public void setVersionLogic(String version) {
         getLifeCycleStatisticalResource().setVersionLogic(version);
     }
-    
+
 }

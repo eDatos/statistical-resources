@@ -1069,7 +1069,6 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
     @Test
     @MetamacMock({DATASET_VERSION_01_BASIC_NAME, CATEGORISATION_SEQUENCE_NAME, CATEGORISATION_MAINTAINER_NAME})
     public void testInitializeCategorisationMetadataForCreation() throws Exception {
-        DatasetVersion datasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_01_BASIC_NAME);
         String categoryCode = "category01";
         String maintainerCode = "agency01"; // nested = ISTAC.agency01
         Categorisation categorisation = notPersistedDoMocks.mockCategorisation(maintainerCode, categoryCode);

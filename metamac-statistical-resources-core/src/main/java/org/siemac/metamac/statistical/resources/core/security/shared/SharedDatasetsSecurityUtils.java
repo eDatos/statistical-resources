@@ -3,7 +3,6 @@ package org.siemac.metamac.statistical.resources.core.security.shared;
 import java.util.Date;
 
 import org.siemac.metamac.sso.client.MetamacPrincipal;
-import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 
 public class SharedDatasetsSecurityUtils extends SharedSecurityUtils {
 

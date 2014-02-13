@@ -18,7 +18,6 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.CodeDimensio
 import org.siemac.metamac.statistical.resources.core.dataset.domain.CodeDimensionRepository;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts;
-import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -96,9 +95,9 @@ public class CodeDimensionRepositoryTest extends StatisticalResourcesBaseTest im
 
     private static class CodeDimensionsMockBuilder {
 
-        private final DatasetVersion datasetVersion;
-        private final String         dsdComponentId;
-        private List<CodeDimension>  codes;
+        private final DatasetVersion      datasetVersion;
+        private final String              dsdComponentId;
+        private final List<CodeDimension> codes;
 
         private CodeDimensionsMockBuilder(DatasetVersion datasetVersion, String dsdComponentId) {
             this.datasetVersion = datasetVersion;

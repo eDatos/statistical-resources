@@ -1,14 +1,15 @@
 package org.siemac.metamac.statistical.resources.core.utils.mocks;
 
 import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataStatisticalResource;
-import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesVersionUtils;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesPersistedDoMocks;
 
 public class DatasetVersionMock extends DatasetVersion {
 
-    private Integer sequentialId;
+    private static final long serialVersionUID = -289909094976654068L;
+
+    private Integer           sequentialId;
 
     public DatasetVersionMock() {
         setSiemacMetadataStatisticalResource(new SiemacMetadataStatisticalResource());

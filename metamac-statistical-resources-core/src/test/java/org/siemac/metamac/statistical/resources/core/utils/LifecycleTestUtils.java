@@ -14,8 +14,6 @@ import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.Stati
 
 public class LifecycleTestUtils {
 
-    private static final String USER_MOCK = "mocked_user";
-
     // ------------------------------------------------------------------------------------------------------
     // >> PRODUCTION VALIDATION
     // ------------------------------------------------------------------------------------------------------

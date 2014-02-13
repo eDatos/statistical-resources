@@ -3,7 +3,6 @@ package org.siemac.metamac.statistical.resources.core.utils.mocks.factories;
 import org.joda.time.DateTime;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesPersistedDoMocks;
-import org.springframework.stereotype.Component;
 
 @SuppressWarnings("unused")
 public class DatasourceMockFactory extends StatisticalResourcesMockFactory<Datasource> {

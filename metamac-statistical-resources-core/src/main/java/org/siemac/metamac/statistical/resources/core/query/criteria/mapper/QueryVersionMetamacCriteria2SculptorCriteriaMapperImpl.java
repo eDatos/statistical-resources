@@ -1,17 +1,15 @@
 package org.siemac.metamac.statistical.resources.core.query.criteria.mapper;
 
-import java.util.Date;
-
 import org.fornax.cartridges.sculptor.framework.domain.LeafProperty;
 import org.fornax.cartridges.sculptor.framework.domain.Property;
 import org.siemac.metamac.core.common.constants.CoreCommonConstants;
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaOrder;
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaPropertyRestriction;
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaPropertyRestriction.OperationType;
-import org.siemac.metamac.core.common.criteria.SculptorPropertyCriteria;
-import org.siemac.metamac.core.common.criteria.SculptorPropertyCriteriaBase;
 import org.siemac.metamac.core.common.criteria.SculptorCriteriaConjunction;
 import org.siemac.metamac.core.common.criteria.SculptorCriteriaDisjunction;
+import org.siemac.metamac.core.common.criteria.SculptorPropertyCriteria;
+import org.siemac.metamac.core.common.criteria.SculptorPropertyCriteriaBase;
 import org.siemac.metamac.core.common.criteria.mapper.MetamacCriteria2SculptorCriteria;
 import org.siemac.metamac.core.common.criteria.mapper.MetamacCriteria2SculptorCriteria.CriteriaCallback;
 import org.siemac.metamac.core.common.criteria.utils.CriteriaUtils;

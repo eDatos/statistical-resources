@@ -339,8 +339,6 @@ public class TaskServiceImpl extends TaskServiceImplBase {
         // Validation
         taskServiceInvocationValidator.checkProcessDuplicationTask(ctx, duplicationJobKey, taskInfoDataset, newDatasetId);
 
-        Task task = retrieveTaskByJob(ctx, duplicationJobKey);
-
         try {
             datasetRepositoriesServiceFacade.duplicateDatasetRepository(taskInfoDataset.getDatasetVersionId(), newDatasetId);
         } catch (Exception e) {
@@ -444,7 +442,7 @@ public class TaskServiceImpl extends TaskServiceImplBase {
         Task task = retrieveTaskByJob(ctx, job);
         getTaskRepository().delete(task);
 
-        // TODO envio al gestor de avisos que la importación fue correcta  (METAMAC-1991)
+        // TODO envio al gestor de avisos que la importación fue correcta (METAMAC-1991)
     }
 
     @Override
@@ -461,7 +459,7 @@ public class TaskServiceImpl extends TaskServiceImplBase {
             recoveryTaskInfo.setDatasetVersionId(extractDatasetIdFromJobKeyImportationDataset(jobKey));
             planifyRecoveryImportDataset(ctx, recoveryTaskInfo);
 
-            // TODO envio al gestor de avisos de fallo de importación  (METAMAC-1991)
+            // TODO envio al gestor de avisos de fallo de importación (METAMAC-1991)
         } else if (jobKey.startsWith(PREFIX_JOB_DUPLICATION_DATA)) {
             processRollbackDuplicationTask(ctx, task);
         }

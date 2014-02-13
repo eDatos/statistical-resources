@@ -9,7 +9,6 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.Categorisati
 import org.siemac.metamac.statistical.resources.core.dataset.domain.CategorisationSequence;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesPersistedDoMocks;
-import org.springframework.stereotype.Component;
 
 @SuppressWarnings("unused")
 public class CategorisationMockFactory extends StatisticalResourcesMockFactory<Categorisation> {

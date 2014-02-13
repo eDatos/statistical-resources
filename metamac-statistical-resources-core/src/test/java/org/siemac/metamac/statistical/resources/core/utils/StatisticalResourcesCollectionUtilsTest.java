@@ -8,7 +8,6 @@ import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.junit.Test;
-import org.siemac.metamac.rest.api.utils.RestCriteriaUtils;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
 import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesPersistedDoMocks;

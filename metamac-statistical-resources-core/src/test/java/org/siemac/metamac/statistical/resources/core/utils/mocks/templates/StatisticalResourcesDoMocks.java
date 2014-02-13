@@ -73,13 +73,6 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
         return mockQueryVersion(datasetVersion, isDatasetLastVersion);
     }
 
-    private static CodeItem mockCodeItem() {
-        CodeItem code = new CodeItem();
-        code.setCode(mockString(6));
-        code.setTitle(mockString(6));
-        return code;
-    }
-
     protected void mockQuerySelectionFromDatasetVersion(QueryVersion queryVersion, DatasetVersion datasetVersion) {
         List<CodeDimension> codes = datasetVersion.getDimensionsCoverage();
 
