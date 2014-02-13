@@ -23,51 +23,35 @@ public class RestMapper {
     @Qualifier("commonDto2DoMapper")
     CommonDto2DoMapper dto2DoMapper;
 
-    public List<ExternalItem> buildExternalItemsFromSrmResources(List<ResourceInternal> resources) throws MetamacException {
+    public List<ExternalItem> buildExternalItemsFromResourcesInternal(List<ResourceInternal> resources) throws MetamacException {
         List<ExternalItem> externalItems = new ArrayList<ExternalItem>();
         for (ResourceInternal resource : resources) {
-            externalItems.add(buildExternalItemFromSrmResource(resource));
+            externalItems.add(buildExternalItemFromResourceInternal(resource));
         }
         return externalItems;
     }
 
-    public ExternalItem buildExternalItemFromSrmResource(ResourceInternal resource) throws MetamacException {
+    public ExternalItem buildExternalItemFromResourceInternal(ResourceInternal resource) throws MetamacException {
         ExternalItem externalItem = new ExternalItem();
+        TypeExternalArtefactsEnum type = TypeExternalArtefactsEnum.fromValue(resource.getKind());
+
+        externalItem.setType(type);
         externalItem.setCode(resource.getId());
         externalItem.setCodeNested(resource.getNestedId());
-        externalItem.setUri(dto2DoMapper.srmInternalApiUrlDtoToDo(resource.getSelfLink().getHref()));
+        externalItem.setUri(dto2DoMapper.externalItemApiUrlDtoToDo(type, resource.getSelfLink().getHref()));
         externalItem.setUrn(resource.getUrn());
         externalItem.setUrnProvider(resource.getUrnProvider());
-        externalItem.setType(TypeExternalArtefactsEnum.fromValue(resource.getKind()));
-        externalItem.setManagementAppUrl(dto2DoMapper.srmInternalWebAppUrlDtoToDo(resource.getManagementAppLink()));
+        externalItem.setManagementAppUrl(dto2DoMapper.externalItemWebAppUrlDtoToDo(type, resource.getManagementAppLink()));
         externalItem.setTitle(getInternationalStringFromInternationalStringResource(resource.getName()));
         return externalItem;
     }
 
-    public ExternalItem buildExternalItemFromCode(CodeResourceInternal code) throws MetamacException {
-        ExternalItem externalItem = new ExternalItem();
-        externalItem.setCode(code.getId());
-        externalItem.setCodeNested(code.getNestedId());
-        externalItem.setUri(dto2DoMapper.srmInternalApiUrlDtoToDo(code.getSelfLink().getHref()));
-        externalItem.setUrn(code.getUrn());
-        externalItem.setUrnProvider(code.getUrnProvider());
-        externalItem.setType(TypeExternalArtefactsEnum.fromValue(code.getKind()));
-        externalItem.setManagementAppUrl(dto2DoMapper.srmInternalWebAppUrlDtoToDo(code.getManagementAppLink()));
-        externalItem.setTitle(getInternationalStringFromInternationalStringResource(code.getName()));
-        return externalItem;
+    public ExternalItem buildExternalItemFromSrmItemResourceInternal(ItemResourceInternal itemResourceInternal) throws MetamacException {
+        return buildExternalItemFromResourceInternal(itemResourceInternal);
     }
 
-    public ExternalItem buildExternalItemFromSrmItemResourceInternal(ItemResourceInternal itemResourceInternal) throws MetamacException {
-        ExternalItem externalItem = new ExternalItem();
-        externalItem.setCode(itemResourceInternal.getId());
-        externalItem.setCodeNested(itemResourceInternal.getNestedId());
-        externalItem.setUri(dto2DoMapper.srmInternalApiUrlDtoToDo(itemResourceInternal.getSelfLink().getHref()));
-        externalItem.setUrn(itemResourceInternal.getUrn());
-        externalItem.setUrnProvider(itemResourceInternal.getUrnProvider());
-        externalItem.setType(TypeExternalArtefactsEnum.fromValue(itemResourceInternal.getKind()));
-        externalItem.setManagementAppUrl(dto2DoMapper.srmInternalWebAppUrlDtoToDo(itemResourceInternal.getManagementAppLink()));
-        externalItem.setTitle(getInternationalStringFromInternationalStringResource(itemResourceInternal.getName()));
-        return externalItem;
+    public ExternalItem buildExternalItemFromCode(CodeResourceInternal code) throws MetamacException {
+        return buildExternalItemFromSrmItemResourceInternal(code);
     }
 
     public InternationalString getInternationalStringFromInternationalStringResource(org.siemac.metamac.rest.common.v1_0.domain.InternationalString intString) {
