@@ -3173,7 +3173,10 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         assertEquals(ProcStatusEnum.DIFFUSION_VALIDATION, updatedPublicationVersion.getProcStatus());
         assertNull(updatedPublicationVersion.getPublicationUser());
         assertNull(updatedPublicationVersion.getPublicationDate());
-        assertNull(updatedPublicationVersion.getFormatExtentResources());
+        // If is not published, the mapper calculate the formatExtentResources.
+        // In PublicationPublishingServiceTest.testCancelPublicationPublicationVersion() we check that do has this
+        // metadata to null
+        assertNotNull(updatedPublicationVersion.getFormatExtentResources());
         assertTrue(updatedPublicationVersion.getHasPart().isEmpty());
 
     }
