@@ -26,7 +26,6 @@ import org.siemac.metamac.statistical.resources.web.client.utils.MetamacPortalWe
 import org.siemac.metamac.statistical.resources.web.client.utils.PlaceRequestUtils;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.DatasetVersionWebCriteria;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.DsdWebCriteria;
-import org.siemac.metamac.statistical.resources.web.shared.criteria.ItemSchemeWebCriteria;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.VersionableStatisticalResourceWebCriteria;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.DeleteDatasetVersionsAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.DeleteDatasetVersionsResult;
@@ -58,6 +57,7 @@ import org.siemac.metamac.statistical.resources.web.shared.external.GetTemporalG
 import org.siemac.metamac.web.common.client.events.ShowMessageEvent;
 import org.siemac.metamac.web.common.client.utils.WaitingAsyncCallbackHandlingError;
 import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
+import org.siemac.metamac.web.common.shared.criteria.SrmItemRestCriteria;
 
 import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
@@ -373,7 +373,7 @@ public class DatasetMetadataTabPresenter extends StatisticalResourceMetadataBase
     }
 
     @Override
-    public void retrieveConceptsForStatisticalUnit(int firstResult, int maxResults, ItemSchemeWebCriteria criteria) {
+    public void retrieveConceptsForStatisticalUnit(int firstResult, int maxResults, SrmItemRestCriteria criteria) {
         dispatcher.execute(new GetConceptsPaginatedListAction(firstResult, maxResults, criteria), new WaitingAsyncCallbackHandlingError<GetConceptsPaginatedListResult>(this) {
 
             @Override

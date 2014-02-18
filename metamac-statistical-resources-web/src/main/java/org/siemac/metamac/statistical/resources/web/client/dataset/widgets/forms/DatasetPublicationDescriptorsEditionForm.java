@@ -2,8 +2,6 @@ package org.siemac.metamac.statistical.resources.web.client.dataset.widgets.form
 
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
 import static org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourcesFormUtils.getDate;
-import static org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourcesFormUtils.getExternalItemValue;
-import static org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourcesFormUtils.setExternalItemValue;
 
 import java.util.List;
 
@@ -51,7 +49,8 @@ public class DatasetPublicationDescriptorsEditionForm extends SiemacMetadataPubl
 
             @Override
             protected boolean condition(Object value) {
-                return CommonUtils.isResourceInProductionValidationOrGreaterProcStatus(procStatus) ? getExternalItemValue(getItem(DatasetDS.UPDATE_FRECUENCY)) != null : true;
+                ExternalItemDto externalItem = DatasetPublicationDescriptorsEditionForm.this.getValueAsExternalItemDto(DatasetDS.UPDATE_FRECUENCY);
+                return CommonUtils.isResourceInProductionValidationOrGreaterProcStatus(procStatus) ? externalItem != null : true;
             }
         });
 
@@ -83,7 +82,7 @@ public class DatasetPublicationDescriptorsEditionForm extends SiemacMetadataPubl
     public void setDatasetVersionDto(DatasetVersionDto datasetDto) {
         setSiemacMetadataStatisticalResourceDto(datasetDto);
         setValue(DatasetDS.DATE_NEXT_UPDATE, datasetDto.getDateNextUpdate());
-        setExternalItemValue(getItem(DatasetDS.UPDATE_FRECUENCY), datasetDto.getUpdateFrequency());
+        setValue(DatasetDS.UPDATE_FRECUENCY, datasetDto.getUpdateFrequency());
         setValue(DatasetDS.BIBLIOGRAPHIC_CITATION, RecordUtils.getInternationalStringRecord(datasetDto.getBibliographicCitation()));
 
         if (datasetDto.getStatisticOfficiality() != null) {
@@ -96,7 +95,7 @@ public class DatasetPublicationDescriptorsEditionForm extends SiemacMetadataPubl
     public DatasetVersionDto getDatasetVersionDto(DatasetVersionDto datasetDto) {
         datasetDto = (DatasetVersionDto) getSiemacMetadataStatisticalResourceDto(datasetDto);
         datasetDto.setDateNextUpdate(getDate(getItem(DatasetDS.DATE_NEXT_UPDATE)));
-        datasetDto.setUpdateFrequency(getExternalItemValue(getItem(DatasetDS.UPDATE_FRECUENCY)));
+        datasetDto.setUpdateFrequency(getValueAsExternalItemDto(DatasetDS.UPDATE_FRECUENCY));
 
         String statisticOfficialityIdentifier = getValueAsString(DatasetDS.STATISTIC_OFFICIALITY);
         if (!StringUtils.isEmpty(statisticOfficialityIdentifier)) {

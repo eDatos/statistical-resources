@@ -22,7 +22,6 @@ import org.siemac.metamac.statistical.resources.web.client.events.SelectDatasetT
 import org.siemac.metamac.statistical.resources.web.client.events.SetDatasetEvent;
 import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.PlaceRequestUtils;
-import org.siemac.metamac.statistical.resources.web.shared.criteria.ItemSchemeWebCriteria;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.DeleteDatasetAttributeInstancesAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.DeleteDatasetAttributeInstancesResult;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetAttributeInstancesAction;
@@ -43,6 +42,7 @@ import org.siemac.metamac.statistical.resources.web.shared.external.GetStatistic
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationResult;
 import org.siemac.metamac.web.common.client.utils.WaitingAsyncCallbackHandlingError;
 import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
+import org.siemac.metamac.web.common.shared.criteria.SrmItemRestCriteria;
 
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
@@ -230,19 +230,20 @@ public class DatasetAttributesTabPresenter extends Presenter<DatasetAttributesTa
     @Override
     public void retrieveItemsFromItemSchemeForDatasetLevelAttribute(RepresentationDto representationDto, int firstResult, int maxResults, MetamacWebCriteria criteria) {
 
-        ItemSchemeWebCriteria itemSchemeWebCriteria = new ItemSchemeWebCriteria(criteria);
+        SrmItemRestCriteria itemRestCriteria = new SrmItemRestCriteria();
+        itemRestCriteria.setCriteria(criteria.getCriteria());
 
         if (!StringUtils.isBlank(representationDto.getCodelistRepresentationUrn())) {
-            itemSchemeWebCriteria.setSchemeUrn(representationDto.getCodelistRepresentationUrn());
-            retrieveCodesFromItemSchemeForDatasetLevelAttribute(firstResult, maxResults, itemSchemeWebCriteria);
+            itemRestCriteria.setItemSchemeUrn(representationDto.getCodelistRepresentationUrn());
+            retrieveCodesFromItemSchemeForDatasetLevelAttribute(firstResult, maxResults, itemRestCriteria);
 
         } else if (!StringUtils.isBlank(representationDto.getConceptSchemeRepresentationUrn())) {
-            itemSchemeWebCriteria.setSchemeUrn(representationDto.getConceptSchemeRepresentationUrn());
-            retrieveConceptsFromItemSchemeForDatasetLevelAttribute(firstResult, maxResults, itemSchemeWebCriteria);
+            itemRestCriteria.setItemSchemeUrn(representationDto.getConceptSchemeRepresentationUrn());
+            retrieveConceptsFromItemSchemeForDatasetLevelAttribute(firstResult, maxResults, itemRestCriteria);
         }
     }
 
-    private void retrieveCodesFromItemSchemeForDatasetLevelAttribute(int firstResult, int maxResults, ItemSchemeWebCriteria criteria) {
+    private void retrieveCodesFromItemSchemeForDatasetLevelAttribute(int firstResult, int maxResults, SrmItemRestCriteria criteria) {
         dispatcher.execute(new GetCodesPaginatedListAction(firstResult, maxResults, criteria), new WaitingAsyncCallbackHandlingError<GetCodesPaginatedListResult>(this) {
 
             @Override
@@ -252,7 +253,7 @@ public class DatasetAttributesTabPresenter extends Presenter<DatasetAttributesTa
         });
     }
 
-    private void retrieveConceptsFromItemSchemeForDatasetLevelAttribute(int firstResult, int maxResults, ItemSchemeWebCriteria criteria) {
+    private void retrieveConceptsFromItemSchemeForDatasetLevelAttribute(int firstResult, int maxResults, SrmItemRestCriteria criteria) {
         dispatcher.execute(new GetConceptsPaginatedListAction(firstResult, maxResults, criteria), new WaitingAsyncCallbackHandlingError<GetConceptsPaginatedListResult>(this) {
 
             @Override
@@ -265,19 +266,20 @@ public class DatasetAttributesTabPresenter extends Presenter<DatasetAttributesTa
     @Override
     public void retrieveItemsFromItemSchemeForDimensionOrGroupLevelAttribute(RepresentationDto representationDto, int firstResult, int maxResults, MetamacWebCriteria criteria) {
 
-        ItemSchemeWebCriteria itemSchemeWebCriteria = new ItemSchemeWebCriteria(criteria);
+        SrmItemRestCriteria itemRestCriteria = new SrmItemRestCriteria();
+        itemRestCriteria.setCriteria(criteria.getCriteria());
 
         if (!StringUtils.isBlank(representationDto.getCodelistRepresentationUrn())) {
-            itemSchemeWebCriteria.setSchemeUrn(representationDto.getCodelistRepresentationUrn());
-            retrieveCodesFromItemSchemeForDimensionOrGroupLevelAttribute(firstResult, maxResults, itemSchemeWebCriteria);
+            itemRestCriteria.setItemSchemeUrn(representationDto.getCodelistRepresentationUrn());
+            retrieveCodesFromItemSchemeForDimensionOrGroupLevelAttribute(firstResult, maxResults, itemRestCriteria);
 
         } else if (!StringUtils.isBlank(representationDto.getConceptSchemeRepresentationUrn())) {
-            itemSchemeWebCriteria.setSchemeUrn(representationDto.getConceptSchemeRepresentationUrn());
-            retrieveConceptsFromItemSchemeForDimensionOrGroupLevelAttribute(firstResult, maxResults, itemSchemeWebCriteria);
+            itemRestCriteria.setItemSchemeUrn(representationDto.getConceptSchemeRepresentationUrn());
+            retrieveConceptsFromItemSchemeForDimensionOrGroupLevelAttribute(firstResult, maxResults, itemRestCriteria);
         }
     }
 
-    private void retrieveCodesFromItemSchemeForDimensionOrGroupLevelAttribute(int firstResult, int maxResults, ItemSchemeWebCriteria criteria) {
+    private void retrieveCodesFromItemSchemeForDimensionOrGroupLevelAttribute(int firstResult, int maxResults, SrmItemRestCriteria criteria) {
         dispatcher.execute(new GetCodesPaginatedListAction(firstResult, maxResults, criteria), new WaitingAsyncCallbackHandlingError<GetCodesPaginatedListResult>(this) {
 
             @Override
@@ -287,7 +289,7 @@ public class DatasetAttributesTabPresenter extends Presenter<DatasetAttributesTa
         });
     }
 
-    private void retrieveConceptsFromItemSchemeForDimensionOrGroupLevelAttribute(int firstResult, int maxResults, ItemSchemeWebCriteria criteria) {
+    private void retrieveConceptsFromItemSchemeForDimensionOrGroupLevelAttribute(int firstResult, int maxResults, SrmItemRestCriteria criteria) {
         dispatcher.execute(new GetConceptsPaginatedListAction(firstResult, maxResults, criteria), new WaitingAsyncCallbackHandlingError<GetConceptsPaginatedListResult>(this) {
 
             @Override

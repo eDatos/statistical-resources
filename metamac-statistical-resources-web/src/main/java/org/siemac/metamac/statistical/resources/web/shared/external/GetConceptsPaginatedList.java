@@ -3,7 +3,7 @@ package org.siemac.metamac.statistical.resources.web.shared.external;
 import java.util.List;
 
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
-import org.siemac.metamac.statistical.resources.web.shared.criteria.ItemSchemeWebCriteria;
+import org.siemac.metamac.web.common.shared.criteria.SrmItemRestCriteria;
 
 import com.gwtplatform.dispatch.annotation.GenDispatch;
 import com.gwtplatform.dispatch.annotation.In;
@@ -19,7 +19,7 @@ public class GetConceptsPaginatedList {
     int                   maxResults;
 
     @In(3)
-    ItemSchemeWebCriteria criteria;
+    SrmItemRestCriteria criteria;
 
     @Out(1)
     List<ExternalItemDto> concepts;

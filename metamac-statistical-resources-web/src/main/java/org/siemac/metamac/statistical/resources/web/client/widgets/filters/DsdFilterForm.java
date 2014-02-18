@@ -21,4 +21,5 @@ public class DsdFilterForm extends VersionableStatisticalResourceFilterForm<DsdW
         criteria.setFixedDsdCode(fixedDsdCode);
         return criteria;
     }
+
 }

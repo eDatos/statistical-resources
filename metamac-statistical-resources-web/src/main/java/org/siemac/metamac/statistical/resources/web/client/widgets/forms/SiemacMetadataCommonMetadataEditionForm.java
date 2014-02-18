@@ -8,57 +8,53 @@ import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.statistical.resources.core.dto.SiemacMetadataStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.web.client.base.view.handlers.StatisticalResourceUiHandlers;
-import org.siemac.metamac.statistical.resources.web.client.constants.StatisticalResourceWebConstants;
 import org.siemac.metamac.statistical.resources.web.client.model.ds.SiemacMetadataDS;
 import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
-import org.siemac.metamac.statistical.resources.web.client.widgets.windows.search.SearchSingleCommonConfigurationWindow;
-import org.siemac.metamac.statistical.resources.web.shared.criteria.CommonConfigurationWebCriteria;
+import org.siemac.metamac.web.common.client.model.ds.ExternalItemDS;
 import org.siemac.metamac.web.common.client.utils.CustomRequiredValidator;
+import org.siemac.metamac.web.common.client.utils.RecordUtils;
 import org.siemac.metamac.web.common.client.view.handlers.BaseUiHandlers;
-import org.siemac.metamac.web.common.client.widgets.actions.search.SearchPaginatedAction;
-import org.siemac.metamac.web.common.client.widgets.form.fields.SearchExternalItemLinkItem;
-
-import com.smartgwt.client.widgets.form.fields.events.ClickEvent;
-import com.smartgwt.client.widgets.form.fields.events.ClickHandler;
-import com.smartgwt.client.widgets.form.fields.events.FormItemClickHandler;
-import com.smartgwt.client.widgets.form.fields.events.FormItemIconClickEvent;
+import org.siemac.metamac.web.common.client.widgets.form.fields.external.SearchSingleCommonConfigurationItem;
+import org.siemac.metamac.web.common.client.widgets.form.utils.FormUtils;
+import org.siemac.metamac.web.common.shared.criteria.CommonConfigurationRestCriteria;
 
 public class SiemacMetadataCommonMetadataEditionForm extends NavigationEnabledDynamicForm {
 
-    protected ProcStatusEnum                      procStatus;
+    protected ProcStatusEnum                    procStatus;
 
-    private ExternalItemDto                       commonConfigurationDto;
-    private SearchSingleCommonConfigurationWindow searchCommonConfigurationWindow;
+    private SearchSingleCommonConfigurationItem commonConfiguration;
 
-    private SearchExternalItemLinkItem            commonConfiguration;
-
-    private StatisticalResourceUiHandlers         uiHandlers;
+    private StatisticalResourceUiHandlers       uiHandlers;
 
     public SiemacMetadataCommonMetadataEditionForm() {
         super(getConstants().formCommonMetadata());
 
-        commonConfiguration = createCommonMetadataItem(SiemacMetadataDS.COMMON_METADATA, getConstants().commonMetadata());
+        commonConfiguration = createSearchCommonConfigurationItem(SiemacMetadataDS.COMMON_METADATA, getConstants().commonMetadata());
+
         commonConfiguration.setValidators(new CustomRequiredValidator() {
 
             @Override
             protected boolean condition(Object value) {
-                return CommonUtils.isResourceInProductionValidationOrGreaterProcStatus(procStatus) ? commonConfiguration.getExternalItemDto() != null : true;
+                ExternalItemDto externalItemValue = FormUtils.getJsObjectAttributeAsTypedObject(value, ExternalItemDS.DTO);
+                return CommonUtils.isResourceInProductionValidationOrGreaterProcStatus(procStatus) ? externalItemValue != null : true;
             }
         });
 
         setFields(commonConfiguration);
     }
 
-    private void setCommonConfiguration(ExternalItemDto commonConfig) {
-        StatisticalResourcesFormUtils.setExternalItemValue(getItem(SiemacMetadataDS.COMMON_METADATA), commonConfig);
-        commonConfigurationDto = commonConfig;
+    private SearchSingleCommonConfigurationItem createSearchCommonConfigurationItem(final String name, String title) {
+        return new SearchSingleCommonConfigurationItem(name, title) {
+
+            @Override
+            protected void retrieveCommonConfigurations(CommonConfigurationRestCriteria criteria) {
+                uiHandlers.retrieveCommonConfigurations(criteria);
+            }
+        };
     }
 
     public void setCommonConfigurationsList(List<ExternalItemDto> commonConfigurations) {
-        if (searchCommonConfigurationWindow != null) {
-            searchCommonConfigurationWindow.setResources(commonConfigurations);
-            searchCommonConfigurationWindow.refreshSourcePaginationInfo(0, commonConfigurations.size(), commonConfigurations.size());
-        }
+        commonConfiguration.setCommonConfigurationsList(commonConfigurations);
     }
 
     public void setSiemacMetadataStatisticalResourceDto(SiemacMetadataStatisticalResourceDto siemacMetadataStatisticalResourceDto) {
@@ -67,44 +63,13 @@ public class SiemacMetadataCommonMetadataEditionForm extends NavigationEnabledDy
         setCommonConfiguration(siemacMetadataStatisticalResourceDto.getCommonMetadata());
     }
 
-    public SiemacMetadataStatisticalResourceDto getSiemacMetadataStatisticalResourceDto(SiemacMetadataStatisticalResourceDto siemacMetadataStatisticalResourceDto) {
-        siemacMetadataStatisticalResourceDto.setCommonMetadata(commonConfigurationDto);
-        return siemacMetadataStatisticalResourceDto;
+    private void setCommonConfiguration(ExternalItemDto commonConfig) {
+        setValue(SiemacMetadataDS.COMMON_METADATA, commonConfig);
     }
 
-    private SearchExternalItemLinkItem createCommonMetadataItem(String name, String title) {
-
-        final SearchExternalItemLinkItem dsdItem = new SearchExternalItemLinkItem(name, title);
-        dsdItem.getSearchIcon().addFormItemClickHandler(new FormItemClickHandler() {
-
-            @Override
-            public void onFormItemClick(FormItemIconClickEvent event) {
-
-                searchCommonConfigurationWindow = new SearchSingleCommonConfigurationWindow(getConstants().resourceSelection(), StatisticalResourceWebConstants.FORM_LIST_MAX_RESULTS,
-                        new SearchPaginatedAction<CommonConfigurationWebCriteria>() {
-
-                            @Override
-                            public void retrieveResultSet(int firstResult, int maxResults, CommonConfigurationWebCriteria criteria) {
-                                uiHandlers.retrieveCommonConfigurations(criteria);
-                            }
-
-                        });
-
-                uiHandlers.retrieveCommonConfigurations(searchCommonConfigurationWindow.getWebCriteria());
-
-                searchCommonConfigurationWindow.setSaveAction(new ClickHandler() {
-
-                    @Override
-                    public void onClick(ClickEvent event) {
-                        ExternalItemDto selectedResource = searchCommonConfigurationWindow.getSelectedResource();
-                        searchCommonConfigurationWindow.markForDestroy();
-                        setCommonConfiguration(selectedResource);
-                        validate(false);
-                    }
-                });
-            }
-        });
-        return dsdItem;
+    public SiemacMetadataStatisticalResourceDto getSiemacMetadataStatisticalResourceDto(SiemacMetadataStatisticalResourceDto siemacMetadataStatisticalResourceDto) {
+        siemacMetadataStatisticalResourceDto.setCommonMetadata(getValueAsExternalItemDto(SiemacMetadataDS.COMMON_METADATA));
+        return siemacMetadataStatisticalResourceDto;
     }
 
     public void setUiHandlers(StatisticalResourceUiHandlers uiHandlers) {

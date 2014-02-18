@@ -1,12 +1,14 @@
 package org.siemac.metamac.statistical.resources.web.client.widgets.forms;
 
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
-import static org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourcesFormUtils.setExternalItemValue;
 
 import org.siemac.metamac.statistical.resources.core.dto.SiemacMetadataStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.web.client.model.ds.SiemacMetadataDS;
 import org.siemac.metamac.web.common.client.view.handlers.BaseUiHandlers;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ExternalItemLinkItem;
+import org.siemac.metamac.web.common.client.widgets.form.fields.ViewTextItem;
+
+import com.smartgwt.client.data.Record;
 
 public class SiemacMetadataCommonMetadataForm extends NavigationEnabledDynamicForm {
 
@@ -21,7 +23,7 @@ public class SiemacMetadataCommonMetadataForm extends NavigationEnabledDynamicFo
     }
 
     public void setSiemacMetadataStatisticalResourceDto(SiemacMetadataStatisticalResourceDto siemacMetadataStatisticalResourceDto) {
-        setExternalItemValue(getItem(SiemacMetadataDS.COMMON_METADATA_VIEW), siemacMetadataStatisticalResourceDto.getCommonMetadata());
+        setValue(SiemacMetadataDS.COMMON_METADATA_VIEW, siemacMetadataStatisticalResourceDto.getCommonMetadata());
     }
 
     public void setBaseUiHandlers(BaseUiHandlers uiHandlers) {

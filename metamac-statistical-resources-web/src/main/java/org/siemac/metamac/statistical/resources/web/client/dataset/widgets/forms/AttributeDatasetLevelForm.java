@@ -5,6 +5,8 @@ import static org.siemac.metamac.statistical.resources.web.client.StatisticalRes
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdAttributeDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdAttributeInstanceDto;
 import org.siemac.metamac.statistical.resources.web.client.model.ds.DsdAttributeInstanceDS;
+import org.siemac.metamac.web.common.client.model.record.ExternalItemRecord;
+import org.siemac.metamac.web.common.client.utils.RecordUtils;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ExternalItemLinkItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewTextItem;
 
@@ -13,14 +15,14 @@ public class AttributeDatasetLevelForm extends AttributeBaseForm {
     @Override
     protected void buildEnumeratedRepresentationForm(DsdAttributeDto dsdAttributeDto, DsdAttributeInstanceDto dsdAttributeInstanceDto) {
         ExternalItemLinkItem value = new ExternalItemLinkItem(DsdAttributeInstanceDS.VALUE, getConstants().datasetAttributeValue());
-        if (dsdAttributeInstanceDto.getValue() != null) {
-            value.setExternalItem(dsdAttributeInstanceDto.getValue().getExternalItemValue());
-        } else {
-            value.setExternalItem(null);
-        }
         setFields(value);
-    }
 
+        ExternalItemRecord record = null;
+        if (dsdAttributeInstanceDto.getValue() != null) {
+            record = RecordUtils.getExternalItemRecord(dsdAttributeInstanceDto.getValue().getExternalItemValue());
+        }
+        setValue(DsdAttributeInstanceDS.VALUE, record);
+    }
     @Override
     protected void buildNonEnumeratedRepresentationForm(DsdAttributeDto dsdAttributeDto, DsdAttributeInstanceDto dsdAttributeInstanceDto) {
         ViewTextItem value = new ViewTextItem(DsdAttributeInstanceDS.VALUE, getConstants().datasetAttributeValue());

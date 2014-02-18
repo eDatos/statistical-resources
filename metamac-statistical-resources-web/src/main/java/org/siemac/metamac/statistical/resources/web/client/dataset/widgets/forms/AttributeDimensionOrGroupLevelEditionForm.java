@@ -5,7 +5,6 @@ import static org.siemac.metamac.statistical.resources.web.client.StatisticalRes
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.AttributeValueDto;
@@ -18,8 +17,6 @@ import org.siemac.metamac.statistical.resources.web.client.model.ds.DsdAttribute
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.fields.SearchExternalItemSimpleItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.CustomTextItem;
 import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
-
-import com.smartgwt.client.data.Record;
 
 public class AttributeDimensionOrGroupLevelEditionForm extends AttributeDimensionOrGroupLevelBaseForm {
 

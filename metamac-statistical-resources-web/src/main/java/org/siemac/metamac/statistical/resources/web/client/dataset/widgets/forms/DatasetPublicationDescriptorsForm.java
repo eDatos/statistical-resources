@@ -1,7 +1,6 @@
 package org.siemac.metamac.statistical.resources.web.client.dataset.widgets.forms;
 
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
-import static org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourcesFormUtils.setExternalItemValue;
 
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.ds.DatasetDS;
@@ -29,8 +28,8 @@ public class DatasetPublicationDescriptorsForm extends SiemacMetadataPublication
     public void setDatasetVersionDto(DatasetVersionDto datasetDto) {
         setSiemacMetadataStatisticalResourceDto(datasetDto);
         setValue(DatasetDS.DATE_NEXT_UPDATE, datasetDto.getDateNextUpdate());
-        setValue(DatasetDS.UPDATE_FRECUENCY, ExternalItemUtils.getExternalItemName(datasetDto.getUpdateFrequency()));
-        setExternalItemValue(getItem(DatasetDS.UPDATE_FRECUENCY), datasetDto.getUpdateFrequency());
+        setValue(DatasetDS.UPDATE_FRECUENCY, datasetDto.getUpdateFrequency());
+        setValue(DatasetDS.UPDATE_FRECUENCY, datasetDto.getUpdateFrequency());
         setValue(DatasetDS.STATISTIC_OFFICIALITY, CommonUtils.getStatisticOfficialityName(datasetDto.getStatisticOfficiality()));
         setValue(DatasetDS.BIBLIOGRAPHIC_CITATION, RecordUtils.getInternationalStringRecord(datasetDto.getBibliographicCitation()));
     }

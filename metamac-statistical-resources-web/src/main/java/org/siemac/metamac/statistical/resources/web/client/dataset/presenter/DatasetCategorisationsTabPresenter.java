@@ -19,7 +19,6 @@ import org.siemac.metamac.statistical.resources.web.client.events.SelectDatasetT
 import org.siemac.metamac.statistical.resources.web.client.events.SetDatasetEvent;
 import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.PlaceRequestUtils;
-import org.siemac.metamac.statistical.resources.web.shared.criteria.ItemSchemeWebCriteria;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.CreateDatasetCategorisationsAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.CreateDatasetCategorisationsResult;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.DeleteCategorisationsAction;
@@ -38,6 +37,7 @@ import org.siemac.metamac.statistical.resources.web.shared.external.GetStatistic
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationResult;
 import org.siemac.metamac.web.common.client.utils.WaitingAsyncCallbackHandlingError;
 import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
+import org.siemac.metamac.web.common.shared.criteria.SrmItemRestCriteria;
 
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
@@ -214,7 +214,7 @@ public class DatasetCategorisationsTabPresenter extends Presenter<DatasetCategor
 
     }
     @Override
-    public void retrieveCategoriesForCategorisations(int firstResult, int maxResults, ItemSchemeWebCriteria criteria) {
+    public void retrieveCategoriesForCategorisations(int firstResult, int maxResults, SrmItemRestCriteria criteria) {
         dispatcher.execute(new GetCategoriesPaginatedListAction(firstResult, maxResults, criteria), new WaitingAsyncCallbackHandlingError<GetCategoriesPaginatedListResult>(this) {
 
             @Override

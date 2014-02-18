@@ -4,8 +4,6 @@ import java.util.List;
 
 import org.siemac.metamac.statistical.resources.web.client.base.utils.SiemacMetadataExternalField;
 import org.siemac.metamac.statistical.resources.web.client.base.view.handlers.StatisticalResourceUiHandlers;
-import org.siemac.metamac.statistical.resources.web.shared.criteria.CommonConfigurationWebCriteria;
-import org.siemac.metamac.statistical.resources.web.shared.criteria.ItemSchemeWebCriteria;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetCommonMetadataConfigurationsListAction;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetCommonMetadataConfigurationsListResult;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetLanguagesCodesAction;
@@ -17,7 +15,9 @@ import org.siemac.metamac.statistical.resources.web.shared.external.GetOrganisat
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationInstancesPaginatedListAction;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationInstancesPaginatedListResult;
 import org.siemac.metamac.web.common.client.utils.WaitingAsyncCallbackHandlingError;
+import org.siemac.metamac.web.common.shared.criteria.CommonConfigurationRestCriteria;
 import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
+import org.siemac.metamac.web.common.shared.criteria.SrmItemRestCriteria;
 
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.dispatch.shared.DispatchAsync;
@@ -65,7 +65,7 @@ public abstract class StatisticalResourceMetadataBasePresenter<V extends Statist
     }
 
     @Override
-    public void retrieveOrganisationUnits(int firstResult, int maxResults, ItemSchemeWebCriteria webCriteria, final SiemacMetadataExternalField field) {
+    public void retrieveOrganisationUnits(int firstResult, int maxResults, SrmItemRestCriteria webCriteria, final SiemacMetadataExternalField field) {
         dispatcher.execute(new GetOrganisationUnitsPaginatedListAction(firstResult, maxResults, webCriteria), new WaitingAsyncCallbackHandlingError<GetOrganisationUnitsPaginatedListResult>(this) {
 
             @Override
@@ -76,7 +76,7 @@ public abstract class StatisticalResourceMetadataBasePresenter<V extends Statist
     }
 
     @Override
-    public void retrieveCommonConfigurations(CommonConfigurationWebCriteria criteria) {
+    public void retrieveCommonConfigurations(CommonConfigurationRestCriteria criteria) {
         dispatcher.execute(new GetCommonMetadataConfigurationsListAction(criteria), new WaitingAsyncCallbackHandlingError<GetCommonMetadataConfigurationsListResult>(this) {
 
             @Override

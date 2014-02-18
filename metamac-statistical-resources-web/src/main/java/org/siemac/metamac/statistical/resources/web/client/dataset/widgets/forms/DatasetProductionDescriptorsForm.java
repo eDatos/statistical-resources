@@ -5,7 +5,6 @@ import static org.siemac.metamac.statistical.resources.web.client.StatisticalRes
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.ds.DatasetDS;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.SiemacMetadataProductionDescriptorsForm;
-import org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourcesFormUtils;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ExternalItemLinkItem;
 
 public class DatasetProductionDescriptorsForm extends SiemacMetadataProductionDescriptorsForm {
@@ -19,6 +18,6 @@ public class DatasetProductionDescriptorsForm extends SiemacMetadataProductionDe
 
     public void setDatasetVersionDto(DatasetVersionDto datasetDto) {
         setSiemacMetadataStatisticalResourceDto(datasetDto);
-        StatisticalResourcesFormUtils.setExternalItemValue(getItem(DatasetDS.RELATED_DSD), datasetDto.getRelatedDsd());
+        setValue(DatasetDS.RELATED_DSD, datasetDto.getRelatedDsd());
     }
 }

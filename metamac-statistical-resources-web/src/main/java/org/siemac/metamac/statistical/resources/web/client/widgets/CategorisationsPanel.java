@@ -14,8 +14,6 @@ import org.siemac.metamac.statistical.resources.web.client.constants.Statistical
 import org.siemac.metamac.statistical.resources.web.client.model.ds.CategorisationDS;
 import org.siemac.metamac.statistical.resources.web.client.model.record.CategorisationRecord;
 import org.siemac.metamac.statistical.resources.web.client.utils.StatisticalResourcesRecordUtils;
-import org.siemac.metamac.statistical.resources.web.client.widgets.windows.search.SearchMultipleSrmItemWithSchemeFilterPaginatedWindow;
-import org.siemac.metamac.statistical.resources.web.shared.criteria.ItemSchemeWebCriteria;
 import org.siemac.metamac.web.common.client.MetamacWebCommon;
 import org.siemac.metamac.web.common.client.utils.ListGridUtils;
 import org.siemac.metamac.web.common.client.view.handlers.BaseUiHandlers;
@@ -23,7 +21,10 @@ import org.siemac.metamac.web.common.client.widgets.CustomLinkListGridField;
 import org.siemac.metamac.web.common.client.widgets.CustomListGridField;
 import org.siemac.metamac.web.common.client.widgets.DeleteConfirmationWindow;
 import org.siemac.metamac.web.common.client.widgets.actions.search.SearchPaginatedAction;
-import org.siemac.metamac.web.common.shared.criteria.MetamacVersionableWebCriteria;
+import org.siemac.metamac.web.common.client.widgets.windows.search.SearchMultipleSrmItemWithSchemeFilterPaginatedWindow;
+import org.siemac.metamac.web.common.shared.criteria.SrmExternalResourceRestCriteria;
+import org.siemac.metamac.web.common.shared.criteria.SrmItemRestCriteria;
+import org.siemac.metamac.web.common.shared.criteria.SrmItemSchemeRestCriteria;
 
 import com.smartgwt.client.types.Autofit;
 import com.smartgwt.client.types.Overflow;
@@ -172,26 +173,26 @@ public abstract class CategorisationsPanel extends VLayout {
     }
 
     private void showSearchCategoriesWindow() {
-        SearchPaginatedAction<MetamacVersionableWebCriteria> filterAction = new SearchPaginatedAction<MetamacVersionableWebCriteria>() {
+        SearchPaginatedAction<SrmItemSchemeRestCriteria> filterAction = new SearchPaginatedAction<SrmItemSchemeRestCriteria>() {
 
             @Override
-            public void retrieveResultSet(int firstResult, int maxResults, MetamacVersionableWebCriteria webCriteria) {
-                webCriteria.setOnlyLastVersion(categoriesSelectionWindow.getFilter().getSearchCriteria().isOnlyLastVersion());
+            public void retrieveResultSet(int firstResult, int maxResults, SrmItemSchemeRestCriteria webCriteria) {
+                webCriteria.setOnlyLastVersion(categoriesSelectionWindow.getFilter().getSearchCriteria().isItemSchemeLastVersion());
                 retrieveCategorySchemesForCategorisations(firstResult, maxResults, webCriteria);
             }
         };
 
         categoriesSelectionWindow = new SearchMultipleSrmItemWithSchemeFilterPaginatedWindow(getConstants().resourceSelection(), StatisticalResourceWebConstants.FORM_LIST_MAX_RESULTS, filterAction,
-                new SearchPaginatedAction<ItemSchemeWebCriteria>() {
+                new SearchPaginatedAction<SrmItemRestCriteria>() {
 
                     @Override
-                    public void retrieveResultSet(int firstResult, int maxResults, ItemSchemeWebCriteria webCriteria) {
+                    public void retrieveResultSet(int firstResult, int maxResults, SrmItemRestCriteria webCriteria) {
                         retrieveCategoriesForCategorisations(firstResult, maxResults, webCriteria);
                     }
 
                 });
 
-        retrieveCategoriesForCategorisations(0, StatisticalResourceWebConstants.FORM_LIST_MAX_RESULTS, new ItemSchemeWebCriteria());
+        retrieveCategoriesForCategorisations(0, StatisticalResourceWebConstants.FORM_LIST_MAX_RESULTS, new SrmItemRestCriteria());
 
         categoriesSelectionWindow.setSaveAction(new com.smartgwt.client.widgets.form.fields.events.ClickHandler() {
 
@@ -244,8 +245,8 @@ public abstract class CategorisationsPanel extends VLayout {
 
     // ACTIONS
 
-    protected abstract void retrieveCategorySchemesForCategorisations(int firstResult, int maxResults, MetamacVersionableWebCriteria webCriteria);
-    protected abstract void retrieveCategoriesForCategorisations(int firstResult, int maxResults, ItemSchemeWebCriteria webCriteria);
+    protected abstract void retrieveCategorySchemesForCategorisations(int firstResult, int maxResults, SrmExternalResourceRestCriteria webCriteria);
+    protected abstract void retrieveCategoriesForCategorisations(int firstResult, int maxResults, SrmItemRestCriteria webCriteria);
     protected abstract void createCategorisations(List<String> selectedResourcesUrns);
     protected abstract void deleteCategorisations(List<String> selectedCategorisationUrns);
     protected abstract void endCategorisationsValidity(List<String> selectedCategorisationUrns, Date endValidityDate);

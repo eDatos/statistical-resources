@@ -11,23 +11,21 @@ import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesDefaults;
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb;
-import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWebMessages;
 import org.siemac.metamac.statistical.resources.web.client.constants.StatisticalResourceWebConstants;
 import org.siemac.metamac.statistical.resources.web.client.dataset.view.handlers.DatasetDatasourcesTabUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.widgets.windows.search.SearchSingleSrmItemSchemeWindow;
 import org.siemac.metamac.statistical.resources.web.shared.utils.StatisticalResourcesSharedTokens;
+import org.siemac.metamac.web.common.client.utils.RecordUtils;
 import org.siemac.metamac.web.common.client.widgets.ImportResourceWindow;
 import org.siemac.metamac.web.common.client.widgets.InformationLabel;
 import org.siemac.metamac.web.common.client.widgets.actions.search.SearchPaginatedAction;
-import org.siemac.metamac.web.common.client.widgets.form.fields.SearchExternalItemLinkItem;
+import org.siemac.metamac.web.common.client.widgets.form.fields.external.SearchExternalItemLinkItem;
 import org.siemac.metamac.web.common.shared.criteria.MetamacVersionableWebCriteria;
 
 import com.smartgwt.client.widgets.form.fields.HiddenItem;
 import com.smartgwt.client.widgets.form.fields.StaticTextItem;
 import com.smartgwt.client.widgets.form.fields.events.ClickEvent;
 import com.smartgwt.client.widgets.form.fields.events.ClickHandler;
-import com.smartgwt.client.widgets.form.fields.events.FormItemClickHandler;
-import com.smartgwt.client.widgets.form.fields.events.FormItemIconClickEvent;
 
 public class ImportDatasourcesWindow extends ImportResourceWindow {
 
@@ -139,15 +137,13 @@ public class ImportDatasourcesWindow extends ImportResourceWindow {
 
         private SearchExternalItemLinkItem createItemForDimension(final String dimensionId, final String variableUrn) {
 
-            String name = DIMENSION_SELECTION_NAME_PREFIX + dimensionId;
+            final String name = DIMENSION_SELECTION_NAME_PREFIX + dimensionId;
             String title = dimensionId;
 
-            final SearchExternalItemLinkItem item = new SearchExternalItemLinkItem(name, title);
-            item.setExternalItem(null);
-            item.getSearchIcon().addFormItemClickHandler(new FormItemClickHandler() {
+            final SearchExternalItemLinkItem item = new SearchExternalItemLinkItem(name, title) {
 
                 @Override
-                public void onFormItemClick(FormItemIconClickEvent event) {
+                public void onSearch() {
                     final SearchSingleSrmItemSchemeWindow searchWindow = new SearchSingleSrmItemSchemeWindow(getConstants().resourceSelection(), StatisticalResourceWebConstants.FORM_LIST_MAX_RESULTS,
                             new SearchPaginatedAction<MetamacVersionableWebCriteria>() {
 
@@ -166,16 +162,15 @@ public class ImportDatasourcesWindow extends ImportResourceWindow {
                         public void onClick(ClickEvent event) {
                             ExternalItemDto selectedResource = searchWindow.getSelectedResource();
                             searchWindow.markForDestroy();
-                            item.setExternalItem(selectedResource);
-                            item.validate();
+                            ImportDatasourcesWindow.this.form.setValue(name, RecordUtils.getExternalItemRecord(selectedResource));
+                            ImportDatasourcesWindow.this.form.getItem(name).validate();
                         }
                     });
                     dimensionWindowsMap.put(dimensionId, searchWindow);
                 }
-            });
+            };
             return item;
         }
-
     }
 
     private DatasetDatasourcesTabUiHandlers getUiHandlers() {

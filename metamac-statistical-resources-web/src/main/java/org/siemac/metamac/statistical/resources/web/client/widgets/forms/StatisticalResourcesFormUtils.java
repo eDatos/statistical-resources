@@ -5,22 +5,21 @@ import java.util.List;
 
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
+import org.siemac.metamac.web.common.client.utils.RecordUtils;
 import org.siemac.metamac.web.common.client.widgets.form.fields.CustomDateItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ExternalItemLinkItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.RelatedResourceBaseLinkItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.RelatedResourceBaseListItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.external.ExternalItemListItem;
+import org.siemac.metamac.web.common.client.widgets.form.utils.FormUtils;
 
+import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.fields.FormItem;
 
-public class StatisticalResourcesFormUtils {
+public class StatisticalResourcesFormUtils extends FormUtils {
 
     public static void setExternalItemsValue(FormItem item, List<ExternalItemDto> externalItems) {
         ((ExternalItemListItem) item).setExternalItems(externalItems);
-    }
-
-    public static void setExternalItemValue(FormItem item, ExternalItemDto externalItem) {
-        ((ExternalItemLinkItem) item).setExternalItem(externalItem);
     }
 
     @SuppressWarnings("unchecked")
@@ -35,10 +34,6 @@ public class StatisticalResourcesFormUtils {
 
     public static List<ExternalItemDto> getExternalItemsValue(FormItem item) {
         return ((ExternalItemListItem) item).getExternalItemDtos();
-    }
-
-    public static ExternalItemDto getExternalItemValue(FormItem item) {
-        return ((ExternalItemLinkItem) item).getExternalItemDto();
     }
 
     @SuppressWarnings("unchecked")

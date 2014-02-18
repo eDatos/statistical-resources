@@ -18,14 +18,17 @@ import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.SiemacMetadataContentDescriptorsEditionForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.fields.SearchMultiExternalItemSimpleItem;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.fields.TemporalCodeListItem;
-import org.siemac.metamac.statistical.resources.web.client.widgets.windows.search.SearchMultipleSrmItemWithSchemeFilterPaginatedWindow;
-import org.siemac.metamac.statistical.resources.web.shared.criteria.ItemSchemeWebCriteria;
+import org.siemac.metamac.web.common.client.constants.CommonWebConstants;
 import org.siemac.metamac.web.common.client.utils.CustomRequiredValidator;
 import org.siemac.metamac.web.common.client.widgets.actions.search.SearchPaginatedAction;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewTextItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.external.ExternalItemListItem;
+import org.siemac.metamac.web.common.client.widgets.form.fields.external.SearchSrmListItemWithSchemeFilterItem;
+import org.siemac.metamac.web.common.client.widgets.windows.search.SearchMultipleSrmItemWithSchemeFilterPaginatedWindow;
 import org.siemac.metamac.web.common.shared.criteria.MetamacVersionableWebCriteria;
 import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
+import org.siemac.metamac.web.common.shared.criteria.SrmExternalResourceRestCriteria;
+import org.siemac.metamac.web.common.shared.criteria.SrmItemRestCriteria;
 
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.FormItemIfFunction;
@@ -180,44 +183,22 @@ public class DatasetContentDescriptorsEditionForm extends SiemacMetadataContentD
     }
 
     private ExternalItemListItem createStatisticalUnitItem() {
-        final ExternalItemListItem listItem = new ExternalItemListItem(DatasetDS.STATISTICAL_UNIT, getConstants().datasetStatisticalUnit(), true);
-        listItem.getSearchIcon().addFormItemClickHandler(new FormItemClickHandler() {
+
+        // FIXME: on select set form value
+        SearchSrmListItemWithSchemeFilterItem listItem = new SearchSrmListItemWithSchemeFilterItem(DatasetDS.STATISTICAL_UNIT, getConstants().datasetStatisticalUnit(),
+                CommonWebConstants.FORM_LIST_MAX_RESULTS) {
 
             @Override
-            public void onFormItemClick(FormItemIconClickEvent event) {
-                SearchPaginatedAction<MetamacVersionableWebCriteria> filterAction = new SearchPaginatedAction<MetamacVersionableWebCriteria>() {
-
-                    @Override
-                    public void retrieveResultSet(int firstResult, int maxResults, MetamacVersionableWebCriteria webCriteria) {
-                        webCriteria.setOnlyLastVersion(statisticalUnitWindow.getFilter().getSearchCriteria().isOnlyLastVersion());
-                        retrieveConceptSchemesForStatisticalUnit(firstResult, maxResults, webCriteria);
-                    }
-                };
-
-                statisticalUnitWindow = new SearchMultipleSrmItemWithSchemeFilterPaginatedWindow(getConstants().resourceSelection(), StatisticalResourceWebConstants.FORM_LIST_MAX_RESULTS,
-                        filterAction, new SearchPaginatedAction<ItemSchemeWebCriteria>() {
-
-                            @Override
-                            public void retrieveResultSet(int firstResult, int maxResults, ItemSchemeWebCriteria webCriteria) {
-                                retrieveConceptsForStatisticalUnit(firstResult, maxResults, webCriteria);
-                            }
-
-                        });
-
-                retrieveConceptsForStatisticalUnit(0, StatisticalResourceWebConstants.FORM_LIST_MAX_RESULTS, new ItemSchemeWebCriteria());
-
-                statisticalUnitWindow.setSelectedResources(listItem.getSelectedRelatedResources());
-
-                statisticalUnitWindow.setSaveAction(new ClickHandler() {
-
-                    @Override
-                    public void onClick(ClickEvent event) {
-                        setSelectedConceptsForStatisticalUnit(statisticalUnitWindow.getSelectedResources());
-                        statisticalUnitWindow.markForDestroy();
-                    }
-                });
+            protected void retrieveItems(int firstResult, int maxResults, SrmItemRestCriteria webCriteria) {
+                retrieveConceptsForStatisticalUnit(firstResult, maxResults, webCriteria);
             }
-        });
+
+            @Override
+            protected void retrieveItemSchemes(int firstResult, int maxResults, SrmExternalResourceRestCriteria webCriteria) {
+                retrieveConceptSchemesForStatisticalUnit(firstResult, maxResults, webCriteria);
+            }
+        };
+
         return listItem;
     }
 
@@ -225,7 +206,7 @@ public class DatasetContentDescriptorsEditionForm extends SiemacMetadataContentD
         uiHandlers.retrieveConceptSchemesForStatisticalUnit(firstResult, maxResults, webCriteria);
     };
 
-    private void retrieveConceptsForStatisticalUnit(int firstResult, int maxResults, ItemSchemeWebCriteria webCriteria) {
+    private void retrieveConceptsForStatisticalUnit(int firstResult, int maxResults, SrmItemRestCriteria webCriteria) {
         uiHandlers.retrieveConceptsForStatisticalUnit(firstResult, maxResults, webCriteria);
     };
 

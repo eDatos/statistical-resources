@@ -2,8 +2,6 @@ package org.siemac.metamac.statistical.resources.web.client.dataset.widgets.form
 
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getMessages;
-import static org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourcesFormUtils.getExternalItemValue;
-import static org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourcesFormUtils.setExternalItemValue;
 
 import java.util.Arrays;
 import java.util.List;
@@ -21,8 +19,8 @@ import org.siemac.metamac.statistical.resources.web.client.widgets.windows.searc
 import org.siemac.metamac.statistical.resources.web.shared.criteria.DsdWebCriteria;
 import org.siemac.metamac.web.common.client.utils.ExternalItemUtils;
 import org.siemac.metamac.web.common.client.widgets.actions.search.SearchPaginatedAction;
-import org.siemac.metamac.web.common.client.widgets.form.fields.SearchExternalItemLinkItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewTextItem;
+import org.siemac.metamac.web.common.client.widgets.form.fields.external.SearchExternalItemLinkItem;
 
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.FormItemIfFunction;
@@ -30,8 +28,6 @@ import com.smartgwt.client.widgets.form.fields.FormItem;
 import com.smartgwt.client.widgets.form.fields.FormItemIcon;
 import com.smartgwt.client.widgets.form.fields.events.ClickEvent;
 import com.smartgwt.client.widgets.form.fields.events.ClickHandler;
-import com.smartgwt.client.widgets.form.fields.events.FormItemClickHandler;
-import com.smartgwt.client.widgets.form.fields.events.FormItemIconClickEvent;
 
 public class DatasetProductionDescriptorsEditionForm extends SiemacMetadataProductionDescriptorsEditionForm {
 
@@ -75,12 +71,12 @@ public class DatasetProductionDescriptorsEditionForm extends SiemacMetadataProdu
 
     public DatasetVersionDto getDatasetVersionDto(DatasetVersionDto datasetDto) {
         datasetDto = (DatasetVersionDto) getSiemacMetadataStatisticalResourceDto(datasetDto);
-        datasetDto.setRelatedDsd(getExternalItemValue(getItem(DatasetDS.RELATED_DSD)));
+        datasetDto.setRelatedDsd(getValueAsExternalItemDto(DatasetDS.RELATED_DSD));
         return datasetDto;
     }
 
     private void setRelatedDsd(ExternalItemDto relatedDsdDto) {
-        setExternalItemValue(getItem(DatasetDS.RELATED_DSD), relatedDsdDto);
+        setValue(DatasetDS.RELATED_DSD, relatedDsdDto);
         setValue(DatasetDS.RELATED_DSD_VIEW, ExternalItemUtils.getExternalItemName(relatedDsdDto));
     }
 
@@ -102,11 +98,11 @@ public class DatasetProductionDescriptorsEditionForm extends SiemacMetadataProdu
                 searchDsdWindow.setOnlyLastVersion(false);
             }
 
-            retrieveResourcesForRelatedDsd(0, StatisticalResourceWebConstants.FORM_LIST_MAX_RESULTS, searchDsdWindow.getDsdWebCriteria());
+            retrieveDsds(0, StatisticalResourceWebConstants.FORM_LIST_MAX_RESULTS, searchDsdWindow.getDsdWebCriteria());
         }
     }
 
-    public void retrieveResourcesForRelatedDsd(int firstResult, int maxResults, DsdWebCriteria criteria) {
+    public void retrieveDsds(int firstResult, int maxResults, DsdWebCriteria criteria) {
         uiHandlers.retrieveDsdsForRelatedDsd(firstResult, maxResults, criteria);
     }
 
@@ -139,18 +135,17 @@ public class DatasetProductionDescriptorsEditionForm extends SiemacMetadataProdu
 
     private SearchExternalItemLinkItem createDsdsItem(String name, String title) {
 
-        final SearchExternalItemLinkItem dsdItem = new SearchExternalItemLinkItem(name, title);
-        dsdItem.getSearchIcon().addFormItemClickHandler(new FormItemClickHandler() {
+        final SearchExternalItemLinkItem dsdItem = new SearchExternalItemLinkItem(name, title) {
 
             @Override
-            public void onFormItemClick(FormItemIconClickEvent event) {
+            public void onSearch() {
 
                 searchDsdWindow = new SearchSingleDsdPaginatedWindow(getConstants().resourceSelection(), StatisticalResourceWebConstants.FORM_LIST_MAX_RESULTS,
                         new SearchPaginatedAction<DsdWebCriteria>() {
 
                             @Override
                             public void retrieveResultSet(int firstResult, int maxResults, DsdWebCriteria criteria) {
-                                retrieveResourcesForRelatedDsd(firstResult, maxResults, criteria);
+                                retrieveDsds(firstResult, maxResults, criteria);
                             }
                         });
 
@@ -160,6 +155,7 @@ public class DatasetProductionDescriptorsEditionForm extends SiemacMetadataProdu
                 } else {
                     retrieveStatisticalOperationsForDsdSelection();
                 }
+
                 searchDsdWindow.setSaveAction(new ClickHandler() {
 
                     @Override
@@ -168,17 +164,21 @@ public class DatasetProductionDescriptorsEditionForm extends SiemacMetadataProdu
                         searchDsdWindow.markForDestroy();
                         // Set selected resource in form
                         setRelatedDsd(selectedResource);
-                        validate(false);
+                        DatasetProductionDescriptorsEditionForm.this.validate(false);
                     }
                 });
+
+                searchDsdWindow.show();
             }
-        });
 
-        FormItemIcon infoIcon = new FormItemIcon();
-        infoIcon.setSrc(GlobalResources.RESOURCE.info().getURL());
-        infoIcon.setPrompt(getMessages().datasetRelatedDsdInfo());
-
-        dsdItem.setIcons(dsdItem.getSearchIcon(), dsdItem.getClearIcon(), infoIcon);
+            @Override
+            protected List<FormItemIcon> getAdditionalIcons() {
+                FormItemIcon infoIcon = new FormItemIcon();
+                infoIcon.setSrc(GlobalResources.RESOURCE.info().getURL());
+                infoIcon.setPrompt(getMessages().datasetRelatedDsdInfo());
+                return Arrays.asList(infoIcon);
+            }
+        };
 
         return dsdItem;
     }

@@ -5,54 +5,50 @@ import static org.siemac.metamac.statistical.resources.web.client.StatisticalRes
 import java.util.List;
 
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
-import org.siemac.metamac.statistical.resources.web.client.widgets.windows.search.SearchSingleExternalItemPaginatedWindow;
+import org.siemac.metamac.web.common.client.utils.RecordUtils;
 import org.siemac.metamac.web.common.client.widgets.actions.search.SearchPaginatedAction;
 import org.siemac.metamac.web.common.client.widgets.filters.SimpleFilterForm;
-import org.siemac.metamac.web.common.client.widgets.form.fields.SearchExternalItemLinkItem;
+import org.siemac.metamac.web.common.client.widgets.form.fields.external.SearchExternalItemLinkItem;
+import org.siemac.metamac.web.common.client.widgets.windows.search.SearchSingleExternalItemPaginatedWindow;
 import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
 
 import com.smartgwt.client.widgets.form.fields.events.ClickEvent;
 import com.smartgwt.client.widgets.form.fields.events.ClickHandler;
-import com.smartgwt.client.widgets.form.fields.events.FormItemClickHandler;
-import com.smartgwt.client.widgets.form.fields.events.FormItemIconClickEvent;
 
 public abstract class SearchExternalItemSimpleItem extends SearchExternalItemLinkItem {
 
+    private int                                                         maxResults;
     private SearchSingleExternalItemPaginatedWindow<MetamacWebCriteria> window;
 
     public SearchExternalItemSimpleItem(String name, String title, int maxResults) {
         super(name, title);
-        appendWindow(maxResults);
-        setExternalItem(null);
+        this.maxResults = maxResults;
     }
 
-    private void appendWindow(final int maxResults) {
-        getSearchIcon().addFormItemClickHandler(new FormItemClickHandler() {
+    @Override
+    protected void onSearch() {
+        SimpleFilterForm<MetamacWebCriteria> simpleFilter = new SimpleFilterForm<MetamacWebCriteria>();
+        window = new SearchSingleExternalItemPaginatedWindow<MetamacWebCriteria>(getConstants().resourceSelection(), maxResults, simpleFilter, new SearchPaginatedAction<MetamacWebCriteria>() {
 
             @Override
-            public void onFormItemClick(FormItemIconClickEvent event) {
-                SimpleFilterForm<MetamacWebCriteria> simpleFilter = new SimpleFilterForm<MetamacWebCriteria>();
-                window = new SearchSingleExternalItemPaginatedWindow<MetamacWebCriteria>(getConstants().resourceSelection(), maxResults, simpleFilter, new SearchPaginatedAction<MetamacWebCriteria>() {
+            public void retrieveResultSet(int firstResult, int maxResults, MetamacWebCriteria webCriteria) {
+                retrieveResources(firstResult, maxResults, webCriteria);
+            }
 
-                    @Override
-                    public void retrieveResultSet(int firstResult, int maxResults, MetamacWebCriteria webCriteria) {
-                        retrieveResources(firstResult, maxResults, webCriteria);
-                    }
+        });
+        retrieveResources(0, maxResults, new MetamacWebCriteria());
 
-                });
-                retrieveResources(0, maxResults, new MetamacWebCriteria());
+        window.setSaveAction(new ClickHandler() {
 
-                window.setSaveAction(new ClickHandler() {
-
-                    @Override
-                    public void onClick(ClickEvent event) {
-                        setExternalItem(window.getSelectedResource());
-                        window.markForDestroy();
-                    }
-                });
+            @Override
+            public void onClick(ClickEvent event) {
+                ExternalItemDto selectedResource = window.getSelectedResource();
+                if (getForm() != null) {
+                    getForm().setValue(getName(), RecordUtils.getExternalItemRecord(selectedResource));
+                }
+                window.markForDestroy();
             }
         });
-
     }
 
     public void setResources(List<ExternalItemDto> items, int firstResult, int totalResults) {

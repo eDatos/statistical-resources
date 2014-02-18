@@ -19,7 +19,6 @@ import org.siemac.metamac.statistical.resources.web.shared.criteria.VersionableS
 import org.siemac.metamac.statistical.resources.web.shared.criteria.base.HasDataCriteria;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.base.HasStatisticalOperationCriteria;
 import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
-import org.siemac.metamac.web.common.shared.criteria.base.HasLastVersionCriteria;
 import org.siemac.metamac.web.common.shared.criteria.base.HasOnlyLastVersionCriteria;
 import org.siemac.metamac.web.common.shared.criteria.base.HasSimpleCriteria;
 

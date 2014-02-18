@@ -14,12 +14,12 @@ import org.siemac.metamac.statistical.resources.web.client.base.view.handlers.St
 import org.siemac.metamac.statistical.resources.web.client.constants.StatisticalResourceWebConstants;
 import org.siemac.metamac.statistical.resources.web.client.model.ds.SiemacMetadataDS;
 import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
-import org.siemac.metamac.statistical.resources.web.client.widgets.forms.fields.SearchSrmListItemWithSchemeFilterItem;
-import org.siemac.metamac.statistical.resources.web.shared.criteria.ItemSchemeWebCriteria;
 import org.siemac.metamac.web.common.client.utils.CustomRequiredValidator;
 import org.siemac.metamac.web.common.client.widgets.form.GroupDynamicForm;
 import org.siemac.metamac.web.common.client.widgets.form.fields.CustomDateItem;
-import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
+import org.siemac.metamac.web.common.client.widgets.form.fields.external.SearchSrmListItemWithSchemeFilterItem;
+import org.siemac.metamac.web.common.shared.criteria.SrmExternalResourceRestCriteria;
+import org.siemac.metamac.web.common.shared.criteria.SrmItemRestCriteria;
 
 public class SiemacMetadataPublicationDescriptorsEditionForm extends GroupDynamicForm {
 
@@ -90,12 +90,12 @@ public class SiemacMetadataPublicationDescriptorsEditionForm extends GroupDynami
         return new SearchSrmListItemWithSchemeFilterItem(SiemacMetadataDS.PUBLISHER, getConstants().siemacMetadataStatisticalResourcePublisher(), StatisticalResourceWebConstants.FORM_LIST_MAX_RESULTS) {
 
             @Override
-            protected void retrieveItems(int firstResult, int maxResults, ItemSchemeWebCriteria webCriteria) {
+            protected void retrieveItems(int firstResult, int maxResults, SrmItemRestCriteria webCriteria) {
                 uiHandlers.retrieveOrganisationUnits(firstResult, maxResults, webCriteria, SiemacMetadataExternalField.PUBLISHER);
             }
 
             @Override
-            protected void retrieveItemSchemes(int firstResult, int maxResults, MetamacWebCriteria webCriteria) {
+            protected void retrieveItemSchemes(int firstResult, int maxResults, SrmExternalResourceRestCriteria webCriteria) {
                 uiHandlers.retrieveOrganisationUnitSchemes(firstResult, maxResults, webCriteria, SiemacMetadataExternalField.PUBLISHER);
             }
         };
@@ -118,12 +118,12 @@ public class SiemacMetadataPublicationDescriptorsEditionForm extends GroupDynami
                 StatisticalResourceWebConstants.FORM_LIST_MAX_RESULTS) {
 
             @Override
-            protected void retrieveItems(int firstResult, int maxResults, ItemSchemeWebCriteria webCriteria) {
+            protected void retrieveItems(int firstResult, int maxResults, SrmItemRestCriteria webCriteria) {
                 uiHandlers.retrieveOrganisationUnits(firstResult, maxResults, webCriteria, SiemacMetadataExternalField.PUBLISHER_CONTRIBUTOR);
             }
 
             @Override
-            protected void retrieveItemSchemes(int firstResult, int maxResults, MetamacWebCriteria webCriteria) {
+            protected void retrieveItemSchemes(int firstResult, int maxResults, SrmExternalResourceRestCriteria webCriteria) {
                 uiHandlers.retrieveOrganisationUnitSchemes(firstResult, maxResults, webCriteria, SiemacMetadataExternalField.PUBLISHER_CONTRIBUTOR);
             }
         };
@@ -145,12 +145,12 @@ public class SiemacMetadataPublicationDescriptorsEditionForm extends GroupDynami
         return new SearchSrmListItemWithSchemeFilterItem(SiemacMetadataDS.MEDIATOR, getConstants().siemacMetadataStatisticalResourceMediator(), StatisticalResourceWebConstants.FORM_LIST_MAX_RESULTS) {
 
             @Override
-            protected void retrieveItems(int firstResult, int maxResults, ItemSchemeWebCriteria webCriteria) {
+            protected void retrieveItems(int firstResult, int maxResults, SrmItemRestCriteria webCriteria) {
                 uiHandlers.retrieveOrganisationUnits(firstResult, maxResults, webCriteria, SiemacMetadataExternalField.MEDIATOR);
             }
 
             @Override
-            protected void retrieveItemSchemes(int firstResult, int maxResults, MetamacWebCriteria webCriteria) {
+            protected void retrieveItemSchemes(int firstResult, int maxResults, SrmExternalResourceRestCriteria webCriteria) {
                 uiHandlers.retrieveOrganisationUnitSchemes(firstResult, maxResults, webCriteria, SiemacMetadataExternalField.MEDIATOR);
             }
         };

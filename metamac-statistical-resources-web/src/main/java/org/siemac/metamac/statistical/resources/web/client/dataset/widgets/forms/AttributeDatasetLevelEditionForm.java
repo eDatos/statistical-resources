@@ -11,6 +11,7 @@ import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdAttributeIn
 import org.siemac.metamac.statistical.resources.web.client.constants.StatisticalResourceWebConstants;
 import org.siemac.metamac.statistical.resources.web.client.model.ds.DsdAttributeInstanceDS;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.fields.SearchExternalItemSimpleItem;
+import org.siemac.metamac.web.common.client.utils.RecordUtils;
 import org.siemac.metamac.web.common.client.widgets.form.fields.CustomTextItem;
 import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
 
@@ -24,11 +25,12 @@ public class AttributeDatasetLevelEditionForm extends AttributeBaseForm {
         this.dsdAttributeInstanceDto = dsdAttributeInstanceDto;
         this.dsdAttributeDto = dsdAttributeDto;
         SearchExternalItemSimpleItem value = createEnumeratedValueItem(DsdAttributeInstanceDS.VALUE, getConstants().datasetAttributeValue());
-        if (dsdAttributeInstanceDto.getValue() != null) {
-            value.setExternalItem(dsdAttributeInstanceDto.getValue().getExternalItemValue());
-        }
         value.setRequired(true);
         setFields(value);
+
+        if (dsdAttributeInstanceDto.getValue() != null) {
+            setValue(DsdAttributeInstanceDS.VALUE, RecordUtils.getExternalItemRecord(dsdAttributeInstanceDto.getValue().getExternalItemValue()));
+        }
     }
 
     @Override

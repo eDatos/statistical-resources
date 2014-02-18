@@ -34,11 +34,11 @@ public class SearchSingleDsdPaginatedWindow extends SearchRelatedResourceBasePag
         filterForm.setFixedDsdCode(dsdCode);
     }
 
-    public void setOnlyLastVersion(boolean onlyLastVersion) {
-        filterForm.setOnlyLastVersion(onlyLastVersion);
-    }
-
     public DsdWebCriteria getDsdWebCriteria() {
         return filterForm.getSearchCriteria();
+    }
+
+    public void setOnlyLastVersion(boolean onlyLastVersion) {
+        filterForm.setOnlyLastVersion(onlyLastVersion);
     }
 }

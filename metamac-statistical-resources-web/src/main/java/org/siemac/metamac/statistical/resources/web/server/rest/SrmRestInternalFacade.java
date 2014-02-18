@@ -5,12 +5,11 @@ import java.util.Map;
 
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.enume.domain.TypeExternalArtefactsEnum;
-import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Category;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdAttributeDto;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.DsdWebCriteria;
-import org.siemac.metamac.statistical.resources.web.shared.criteria.ItemSchemeWebCriteria;
 import org.siemac.metamac.web.common.shared.criteria.MetamacVersionableWebCriteria;
 import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
+import org.siemac.metamac.web.common.shared.criteria.SrmItemRestCriteria;
 import org.siemac.metamac.web.common.shared.domain.ExternalItemsResult;
 import org.siemac.metamac.web.common.shared.exception.MetamacWebException;
 
@@ -30,18 +29,18 @@ public interface SrmRestInternalFacade {
     // CODES
 
     public ExternalItemsResult findCodesInCodelist(String codelistUrn, int firstResult, int maxResult, MetamacWebCriteria condition) throws MetamacWebException;
-    public ExternalItemsResult findCodes(int firstResult, int maxResult, ItemSchemeWebCriteria condition) throws MetamacWebException;
+    public ExternalItemsResult findCodes(int firstResult, int maxResult, SrmItemRestCriteria condition) throws MetamacWebException;
     public ExternalItemDto retrieveCodeByUrn(String urn) throws MetamacWebException;
 
     // CONCEPTS
 
     public ExternalItemsResult findConceptSchemes(int firstResult, int maxResult, MetamacWebCriteria condition) throws MetamacWebException;
-    public ExternalItemsResult findConcepts(int firstResult, int maxResult, ItemSchemeWebCriteria condition) throws MetamacWebException;
+    public ExternalItemsResult findConcepts(int firstResult, int maxResult, SrmItemRestCriteria condition) throws MetamacWebException;
 
     // ORGANISATIONS
 
     public ExternalItemsResult findOrganisationSchemes(int firstResult, int maxResult, MetamacWebCriteria criteria, TypeExternalArtefactsEnum type) throws MetamacWebException;
-    public ExternalItemsResult findOrganisations(int firstResult, int maxResult, ItemSchemeWebCriteria criteria, TypeExternalArtefactsEnum type) throws MetamacWebException;
+    public ExternalItemsResult findOrganisations(int firstResult, int maxResult, SrmItemRestCriteria criteria, TypeExternalArtefactsEnum type) throws MetamacWebException;
     public ExternalItemDto retrieveAgencyByUrn(String agencyUrn) throws MetamacWebException;
 
     // CATEGORY SCHEMES
@@ -50,5 +49,5 @@ public interface SrmRestInternalFacade {
 
     // CATEGORIES
     public ExternalItemDto retrieveCategoryByUrn(String urn) throws MetamacWebException;
-    public ExternalItemsResult findCategories(int firstResult, int maxResult, ItemSchemeWebCriteria condition) throws MetamacWebException;
+    public ExternalItemsResult findCategories(int firstResult, int maxResult, SrmItemRestCriteria condition) throws MetamacWebException;
 }

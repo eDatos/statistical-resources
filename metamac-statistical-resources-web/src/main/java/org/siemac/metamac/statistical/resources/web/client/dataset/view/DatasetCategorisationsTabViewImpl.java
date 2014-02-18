@@ -9,12 +9,11 @@ import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersion
 import org.siemac.metamac.statistical.resources.web.client.dataset.presenter.DatasetCategorisationsTabPresenter.DatasetCategorisationsTabView;
 import org.siemac.metamac.statistical.resources.web.client.dataset.utils.DatasetClientSecurityUtils;
 import org.siemac.metamac.statistical.resources.web.client.dataset.view.handlers.DatasetCategorisationsTabUiHandlers;
-import org.siemac.metamac.statistical.resources.web.client.enums.DatasetTabTypeEnum;
-import org.siemac.metamac.statistical.resources.web.client.events.SelectDatasetTabEvent;
 import org.siemac.metamac.statistical.resources.web.client.model.record.CategorisationRecord;
 import org.siemac.metamac.statistical.resources.web.client.widgets.CategorisationsPanel;
-import org.siemac.metamac.statistical.resources.web.shared.criteria.ItemSchemeWebCriteria;
 import org.siemac.metamac.web.common.shared.criteria.MetamacVersionableWebCriteria;
+import org.siemac.metamac.web.common.shared.criteria.SrmExternalResourceRestCriteria;
+import org.siemac.metamac.web.common.shared.criteria.SrmItemRestCriteria;
 
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
@@ -118,12 +117,12 @@ public class DatasetCategorisationsTabViewImpl extends ViewWithUiHandlers<Datase
         }
 
         @Override
-        protected void retrieveCategoriesForCategorisations(int firstResult, int maxResults, ItemSchemeWebCriteria categoryWebCriteria) {
+        protected void retrieveCategoriesForCategorisations(int firstResult, int maxResults, SrmItemRestCriteria categoryWebCriteria) {
             getUiHandlers().retrieveCategoriesForCategorisations(firstResult, maxResults, categoryWebCriteria);
         }
 
         @Override
-        protected void retrieveCategorySchemesForCategorisations(int firstResult, int maxResults, MetamacVersionableWebCriteria categorySchemeWebCriteria) {
+        protected void retrieveCategorySchemesForCategorisations(int firstResult, int maxResults, SrmExternalResourceRestCriteria categorySchemeWebCriteria) {
             getUiHandlers().retrieveCategorySchemesForCategorisations(firstResult, maxResults, categorySchemeWebCriteria);
         }
     }

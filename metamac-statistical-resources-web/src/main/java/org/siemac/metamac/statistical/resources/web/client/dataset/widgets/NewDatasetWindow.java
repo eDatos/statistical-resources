@@ -1,8 +1,6 @@
 package org.siemac.metamac.statistical.resources.web.client.dataset.widgets;
 
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
-import static org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourcesFormUtils.getExternalItemValue;
-import static org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourcesFormUtils.setExternalItemValue;
 
 import java.util.List;
 
@@ -20,12 +18,10 @@ import org.siemac.metamac.web.common.client.widgets.actions.search.SearchPaginat
 import org.siemac.metamac.web.common.client.widgets.form.CustomDynamicForm;
 import org.siemac.metamac.web.common.client.widgets.form.fields.CustomButtonItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.RequiredTextItem;
-import org.siemac.metamac.web.common.client.widgets.form.fields.SearchExternalItemLinkItem;
+import org.siemac.metamac.web.common.client.widgets.form.fields.external.SearchExternalItemLinkItem;
 
 import com.smartgwt.client.widgets.form.fields.events.ClickEvent;
 import com.smartgwt.client.widgets.form.fields.events.ClickHandler;
-import com.smartgwt.client.widgets.form.fields.events.FormItemClickHandler;
-import com.smartgwt.client.widgets.form.fields.events.FormItemIconClickEvent;
 import com.smartgwt.client.widgets.form.fields.events.HasClickHandlers;
 
 public class NewDatasetWindow extends NewStatisticalResourceWindow {
@@ -44,7 +40,7 @@ public class NewDatasetWindow extends NewStatisticalResourceWindow {
         setAutoSize(true);
 
         RequiredTextItem nameItem = new RequiredTextItem(DatasetDS.TITLE, getConstants().nameableStatisticalResourceTitle());
-        nameItem.setWidth(FORM_ITEM_CUSTOM_WIDTH);
+        nameItem.setWidth("*");
 
         relatedDsdItem = createDsdItem();
         relatedDsdItem.setRequired(true);
@@ -54,6 +50,7 @@ public class NewDatasetWindow extends NewStatisticalResourceWindow {
         form = new CustomDynamicForm();
         form.setMargin(5);
         form.setFields(nameItem, relatedDsdItem, languageItem, maintainerItem, saveItem);
+        form.setWidth100();
 
         addItem(form);
         show();
@@ -66,7 +63,7 @@ public class NewDatasetWindow extends NewStatisticalResourceWindow {
     public DatasetVersionDto getNewDatasetVersionDto() {
         DatasetVersionDto datasetDto = new DatasetVersionDto();
         datasetDto.setTitle(InternationalStringUtils.updateInternationalString(new InternationalStringDto(), form.getValueAsString(DatasetDS.TITLE)));
-        datasetDto.setRelatedDsd(getExternalItemValue(form.getItem(DatasetDS.RELATED_DSD)));
+        datasetDto.setRelatedDsd(form.getValueAsExternalItemDto(DatasetDS.RELATED_DSD));
         populateSiemacResourceDto(datasetDto);
 
         return datasetDto;
@@ -81,7 +78,7 @@ public class NewDatasetWindow extends NewStatisticalResourceWindow {
     // RELATED DSD
     // ***********************************************************
     private void setRelatedDsd(ExternalItemDto relatedDsdDto) {
-        setExternalItemValue(form.getItem(DatasetDS.RELATED_DSD), relatedDsdDto);
+        form.setValue(DatasetDS.RELATED_DSD, relatedDsdDto);
     }
 
     public void setExternalItemsForRelatedDsd(List<ExternalItemDto> externalItemsDtos, int firstResult, int elementsInPage, int totalResults) {
@@ -104,12 +101,10 @@ public class NewDatasetWindow extends NewStatisticalResourceWindow {
 
     private SearchExternalItemLinkItem createDsdItem() {
 
-        final SearchExternalItemLinkItem item = new SearchExternalItemLinkItem(DatasetDS.RELATED_DSD, getConstants().datasetRelatedDSD());
-        item.setExternalItem(null);
-        item.getSearchIcon().addFormItemClickHandler(new FormItemClickHandler() {
+        final SearchExternalItemLinkItem item = new SearchExternalItemLinkItem(DatasetDS.RELATED_DSD, getConstants().datasetRelatedDSD()) {
 
             @Override
-            public void onFormItemClick(FormItemIconClickEvent event) {
+            public void onSearch() {
 
                 searchDsdWindow = new SearchSingleDsdPaginatedWindow(getConstants().resourceSelection(), StatisticalResourceWebConstants.FORM_LIST_MAX_RESULTS,
                         new SearchPaginatedAction<DsdWebCriteria>() {
@@ -135,10 +130,9 @@ public class NewDatasetWindow extends NewStatisticalResourceWindow {
                     }
                 });
             }
-        });
+        };
         return item;
     }
-
     public void retrieveStatisticalOperationsForDsdSelection() {
         uiHandlers.retrieveStatisticalOperationsForDsdSelection();
     }

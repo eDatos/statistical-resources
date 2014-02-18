@@ -46,10 +46,10 @@ import org.siemac.metamac.statistical.resources.core.invocation.service.SrmRestI
 import org.siemac.metamac.statistical.resources.web.server.utils.ExternalItemWebUtils;
 import org.siemac.metamac.statistical.resources.web.server.utils.MetamacWebRestCriteriaUtils;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.DsdWebCriteria;
-import org.siemac.metamac.statistical.resources.web.shared.criteria.ItemSchemeWebCriteria;
 import org.siemac.metamac.web.common.server.utils.WebExceptionUtils;
 import org.siemac.metamac.web.common.shared.criteria.MetamacVersionableWebCriteria;
 import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
+import org.siemac.metamac.web.common.shared.criteria.SrmItemRestCriteria;
 import org.siemac.metamac.web.common.shared.domain.ExternalItemsResult;
 import org.siemac.metamac.web.common.shared.exception.MetamacWebException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -173,7 +173,7 @@ public class SrmRestInternalFacadeImpl implements SrmRestInternalFacade {
     }
 
     @Override
-    public ExternalItemsResult findCategories(int firstResult, int maxResult, ItemSchemeWebCriteria condition) throws MetamacWebException {
+    public ExternalItemsResult findCategories(int firstResult, int maxResult, SrmItemRestCriteria condition) throws MetamacWebException {
         try {
             String query = MetamacWebRestCriteriaUtils.buildQueryCategory(condition);
 
@@ -258,13 +258,13 @@ public class SrmRestInternalFacadeImpl implements SrmRestInternalFacade {
     }
 
     @Override
-    public ExternalItemsResult findCodes(int firstResult, int maxResult, ItemSchemeWebCriteria condition) throws MetamacWebException {
+    public ExternalItemsResult findCodes(int firstResult, int maxResult, SrmItemRestCriteria condition) throws MetamacWebException {
         try {
             String query = null;
             String codelistUrn = null;
             if (condition != null) {
                 query = buildQueryCode(condition);
-                codelistUrn = condition.getSchemeUrn();
+                codelistUrn = condition.getItemSchemeUrn();
             }
             Codes codes = srmRestInternalService.findCodes(codelistUrn, firstResult, maxResult, query);
 
@@ -298,13 +298,13 @@ public class SrmRestInternalFacadeImpl implements SrmRestInternalFacade {
     }
 
     @Override
-    public ExternalItemsResult findConcepts(int firstResult, int maxResult, ItemSchemeWebCriteria condition) throws MetamacWebException {
+    public ExternalItemsResult findConcepts(int firstResult, int maxResult, SrmItemRestCriteria condition) throws MetamacWebException {
         try {
             String query = null;
             String conceptSchemeUrn = null;
             if (condition != null) {
                 query = buildQueryConcept(condition);
-                conceptSchemeUrn = condition.getSchemeUrn();
+                conceptSchemeUrn = condition.getItemSchemeUrn();
             }
             Concepts concepts = srmRestInternalService.findConcepts(conceptSchemeUrn, firstResult, maxResult, query);
 
@@ -338,7 +338,7 @@ public class SrmRestInternalFacadeImpl implements SrmRestInternalFacade {
     }
 
     @Override
-    public ExternalItemsResult findOrganisations(int firstResult, int maxResult, ItemSchemeWebCriteria criteria, TypeExternalArtefactsEnum type) throws MetamacWebException {
+    public ExternalItemsResult findOrganisations(int firstResult, int maxResult, SrmItemRestCriteria criteria, TypeExternalArtefactsEnum type) throws MetamacWebException {
         try {
             String query = buildQueryOrganisation(criteria, type);
 

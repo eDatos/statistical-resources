@@ -1,9 +1,7 @@
 package org.siemac.metamac.statistical.resources.web.client.query.view.widgets.forms;
 
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
-import static org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourcesFormUtils.getExternalItemValue;
 import static org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourcesFormUtils.getRelatedResourceValue;
-import static org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourcesFormUtils.setExternalItemValue;
 import static org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourcesFormUtils.setRelatedResourceValue;
 
 import java.util.ArrayList;
@@ -26,14 +24,11 @@ import org.siemac.metamac.statistical.resources.web.client.query.model.ds.QueryD
 import org.siemac.metamac.statistical.resources.web.client.query.view.handlers.QueryUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.NavigationEnabledDynamicForm;
-import org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourcesFormUtils;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.fields.CodeItemListItem;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.fields.SearchRelatedResourceLinkItem;
-import org.siemac.metamac.statistical.resources.web.client.widgets.forms.fields.SearchSrmLinkItemWithSchemeFilterItem;
 import org.siemac.metamac.statistical.resources.web.client.widgets.windows.search.SearchMultipleCodeItemWindow;
 import org.siemac.metamac.statistical.resources.web.client.widgets.windows.search.SearchSingleDatasetVersionRelatedResourcePaginatedWindow;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.DatasetVersionWebCriteria;
-import org.siemac.metamac.statistical.resources.web.shared.criteria.ItemSchemeWebCriteria;
 import org.siemac.metamac.web.common.client.view.handlers.BaseUiHandlers;
 import org.siemac.metamac.web.common.client.widgets.actions.search.SearchAction;
 import org.siemac.metamac.web.common.client.widgets.actions.search.SearchPaginatedAction;
@@ -41,7 +36,10 @@ import org.siemac.metamac.web.common.client.widgets.form.fields.CustomIntegerIte
 import org.siemac.metamac.web.common.client.widgets.form.fields.CustomSelectItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ExternalItemLinkItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewTextItem;
+import org.siemac.metamac.web.common.client.widgets.form.fields.external.SearchSrmLinkItemWithSchemeFilterItem;
 import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
+import org.siemac.metamac.web.common.shared.criteria.SrmItemRestCriteria;
+import org.siemac.metamac.web.common.shared.criteria.SrmItemSchemeRestCriteria;
 
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.FormItemIfFunction;
@@ -110,8 +108,8 @@ public class QueryProductionDescriptorsEditionForm extends NavigationEnabledDyna
     public void setQueryDto(QueryVersionDto queryDto) {
 
         setRelatedResourceValue(getItem(QueryDS.RELATED_DATASET_VERSION), queryDto.getRelatedDatasetVersion());
-        setExternalItemValue(getItem(LifeCycleResourceDS.MAINTAINER), queryDto.getMaintainer());
-        setExternalItemValue(getItem(LifeCycleResourceDS.MAINTAINER_VIEW), queryDto.getMaintainer());
+        setValue(LifeCycleResourceDS.MAINTAINER, queryDto.getMaintainer());
+        setValue(LifeCycleResourceDS.MAINTAINER_VIEW, queryDto.getMaintainer());
 
         String typeStr = queryDto.getType() != null ? queryDto.getType().name() : null;
         setValue(QueryDS.TYPE, typeStr);
@@ -128,7 +126,7 @@ public class QueryProductionDescriptorsEditionForm extends NavigationEnabledDyna
 
     public QueryVersionDto getQueryDto(QueryVersionDto queryDto) {
         QueryTypeEnum queryType = QueryTypeEnum.valueOf(getValueAsString(QueryDS.TYPE));
-        queryDto.setMaintainer(getExternalItemValue(getItem(SiemacMetadataDS.MAINTAINER)));
+        queryDto.setMaintainer(getValueAsExternalItemDto(SiemacMetadataDS.MAINTAINER));
         queryDto.setRelatedDatasetVersion(getRelatedResourceValue(getItem(QueryDS.RELATED_DATASET_VERSION)));
 
         queryDto.setType(queryType);
@@ -244,7 +242,7 @@ public class QueryProductionDescriptorsEditionForm extends NavigationEnabledDyna
 
     public void setDatasetDimensionsIds(List<String> datasetDimensions) {
 
-        ExternalItemDto maintainer = getExternalItemValue(getItem(QueryDS.MAINTAINER));
+        ExternalItemDto maintainer = getValueAsExternalItemDto(QueryDS.MAINTAINER);
         RelatedResourceDto datasetVersion = getRelatedResourceValue(getItem(QueryDS.RELATED_DATASET_VERSION));
 
         List<FormItem> fields = createComponents();
@@ -284,7 +282,7 @@ public class QueryProductionDescriptorsEditionForm extends NavigationEnabledDyna
                 item.setCodeItems(dtoSelection.get(dimensionId));
             }
         }
-        setExternalItemValue(getItem(QueryDS.MAINTAINER), maintainer);
+        setValue(QueryDS.MAINTAINER, maintainer);
         setRelatedResourceValue(getItem(QueryDS.RELATED_DATASET_VERSION), datasetVersion);
         if (hasTemporalDimension && QueryTypeEnum.LATEST_DATA.equals(queryDto.getType())) {
             setValue(QueryDS.LATEST_N_DATA, queryDto.getLatestDataNumber());
@@ -358,7 +356,7 @@ public class QueryProductionDescriptorsEditionForm extends NavigationEnabledDyna
 
     public void setDefaultMaintainer(ExternalItemDto defaultMaintainer) {
         if (defaultMaintainer != null) {
-            setExternalItemValue(getItem(LifeCycleResourceDS.MAINTAINER), defaultMaintainer);
+            setValue(LifeCycleResourceDS.MAINTAINER, defaultMaintainer);
         }
     }
 
@@ -379,12 +377,12 @@ public class QueryProductionDescriptorsEditionForm extends NavigationEnabledDyna
                 StatisticalResourceWebConstants.FORM_LIST_MAX_RESULTS) {
 
             @Override
-            protected void retrieveItems(int firstResult, int maxResults, ItemSchemeWebCriteria webCriteria) {
+            protected void retrieveItems(int firstResult, int maxResults, SrmItemRestCriteria webCriteria) {
                 uiHandlers.retrieveAgencies(firstResult, maxResults, webCriteria);
             }
 
             @Override
-            protected void retrieveItemSchemes(int firstResult, int maxResults, MetamacWebCriteria webCriteria) {
+            protected void retrieveItemSchemes(int firstResult, int maxResults, SrmItemSchemeRestCriteria webCriteria) {
                 uiHandlers.retrieveAgencySchemes(firstResult, maxResults, webCriteria);
             }
         };
@@ -440,7 +438,7 @@ public class QueryProductionDescriptorsEditionForm extends NavigationEnabledDyna
 
             @Override
             public boolean execute(FormItem item, Object value, DynamicForm form) {
-                ExternalItemDto maintainer = StatisticalResourcesFormUtils.getExternalItemValue(form.getItem(SiemacMetadataDS.MAINTAINER_VIEW));
+                ExternalItemDto maintainer = getValueAsExternalItemDto(SiemacMetadataDS.MAINTAINER_VIEW);
                 return MetadataEditionChecks.canMaintainerBeEdited(maintainer != null ? maintainer.getId() : null);
             }
         };
@@ -451,7 +449,7 @@ public class QueryProductionDescriptorsEditionForm extends NavigationEnabledDyna
 
             @Override
             public boolean execute(FormItem item, Object value, DynamicForm form) {
-                ExternalItemDto maintainer = StatisticalResourcesFormUtils.getExternalItemValue(form.getItem(SiemacMetadataDS.MAINTAINER_VIEW));
+                ExternalItemDto maintainer = getValueAsExternalItemDto(SiemacMetadataDS.MAINTAINER_VIEW);
                 return !MetadataEditionChecks.canMaintainerBeEdited(maintainer != null ? maintainer.getId() : null);
             }
         };

@@ -1,13 +1,13 @@
 package org.siemac.metamac.statistical.resources.web.client.base.presenter;
 
 import org.siemac.metamac.statistical.resources.web.client.base.view.handlers.NewStatisticalResourceUiHandlers;
-import org.siemac.metamac.statistical.resources.web.shared.criteria.ItemSchemeWebCriteria;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetAgenciesPaginatedListAction;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetAgenciesPaginatedListResult;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetAgencySchemesPaginatedListAction;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetAgencySchemesPaginatedListResult;
 import org.siemac.metamac.web.common.client.utils.WaitingAsyncCallbackHandlingError;
 import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
+import org.siemac.metamac.web.common.shared.criteria.SrmItemRestCriteria;
 
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.dispatch.shared.DispatchAsync;
@@ -42,7 +42,7 @@ public abstract class StatisticalResourceBaseListPresenter<V extends Statistical
     }
 
     @Override
-    public void retrieveAgencies(int firstResult, int maxResults, ItemSchemeWebCriteria webCriteria) {
+    public void retrieveAgencies(int firstResult, int maxResults, SrmItemRestCriteria webCriteria) {
         dispatcher.execute(new GetAgenciesPaginatedListAction(firstResult, maxResults, webCriteria), new WaitingAsyncCallbackHandlingError<GetAgenciesPaginatedListResult>(this) {
 
             @Override

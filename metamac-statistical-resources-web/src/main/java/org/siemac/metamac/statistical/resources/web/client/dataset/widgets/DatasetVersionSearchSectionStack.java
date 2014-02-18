@@ -15,16 +15,15 @@ import org.siemac.metamac.statistical.resources.web.shared.criteria.DsdWebCriter
 import org.siemac.metamac.statistical.resources.web.shared.external.GetDsdsPaginatedListResult;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetGeographicalGranularitiesListResult;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetTemporalGranularitiesListResult;
+import org.siemac.metamac.web.common.client.utils.RecordUtils;
 import org.siemac.metamac.web.common.client.widgets.actions.search.SearchPaginatedAction;
 import org.siemac.metamac.web.common.client.widgets.form.fields.CustomDateItem;
-import org.siemac.metamac.web.common.client.widgets.form.fields.SearchExternalItemLinkItem;
+import org.siemac.metamac.web.common.client.widgets.form.fields.external.SearchExternalItemLinkItem;
 import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
 
 import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.events.ClickEvent;
 import com.smartgwt.client.widgets.form.fields.events.ClickHandler;
-import com.smartgwt.client.widgets.form.fields.events.FormItemClickHandler;
-import com.smartgwt.client.widgets.form.fields.events.FormItemIconClickEvent;
 
 public class DatasetVersionSearchSectionStack extends SiemacMetadataResourceSearchSectionStack {
 
@@ -103,13 +102,10 @@ public class DatasetVersionSearchSectionStack extends SiemacMetadataResourceSear
 
     private SearchExternalItemLinkItem createTemporalGranularityItem(String name, String title) {
 
-        final SearchExternalItemLinkItem item = new SearchExternalItemLinkItem(name, title);
-        item.setExternalItem(null);
-        item.getSearchIcon().addFormItemClickHandler(new FormItemClickHandler() {
+        final SearchExternalItemLinkItem item = new SearchExternalItemLinkItem(name, title) {
 
             @Override
-            public void onFormItemClick(FormItemIconClickEvent event) {
-
+            public void onSearch() {
                 searchTemporalGranularitiesWindow = new SearchSingleItemWihtoutFilterWindow(getConstants().resourceSelection(), StatisticalResourceWebConstants.FORM_LIST_MAX_RESULTS,
                         new SearchPaginatedAction<MetamacWebCriteria>() {
 
@@ -128,15 +124,16 @@ public class DatasetVersionSearchSectionStack extends SiemacMetadataResourceSear
                     public void onClick(ClickEvent event) {
                         ExternalItemDto selectedResource = searchTemporalGranularitiesWindow.getSelectedResource();
                         searchTemporalGranularitiesWindow.markForDestroy();
-                        item.setExternalItem(selectedResource);
-                        item.validate();
+                        if (getForm() != null) {
+                            getForm().setValue(getName(), RecordUtils.getExternalItemRecord(selectedResource));
+                            getForm().validate();
+                        }
                     }
                 });
             }
-        });
+        };
         return item;
     }
-
     // Geographical granularities
 
     public void setGeographicalGranularities(GetGeographicalGranularitiesListResult result) {
@@ -148,13 +145,10 @@ public class DatasetVersionSearchSectionStack extends SiemacMetadataResourceSear
 
     private SearchExternalItemLinkItem createGeographicGranularityItem(String name, String title) {
 
-        final SearchExternalItemLinkItem item = new SearchExternalItemLinkItem(name, title);
-        item.setExternalItem(null);
-        item.getSearchIcon().addFormItemClickHandler(new FormItemClickHandler() {
+        final SearchExternalItemLinkItem item = new SearchExternalItemLinkItem(name, title) {
 
             @Override
-            public void onFormItemClick(FormItemIconClickEvent event) {
-
+            public void onSearch() {
                 searchGeographicGranularitiesWindow = new SearchSingleItemWihtoutFilterWindow(getConstants().resourceSelection(), StatisticalResourceWebConstants.FORM_LIST_MAX_RESULTS,
                         new SearchPaginatedAction<MetamacWebCriteria>() {
 
@@ -173,15 +167,16 @@ public class DatasetVersionSearchSectionStack extends SiemacMetadataResourceSear
                     public void onClick(ClickEvent event) {
                         ExternalItemDto selectedResource = searchGeographicGranularitiesWindow.getSelectedResource();
                         searchGeographicGranularitiesWindow.markForDestroy();
-                        item.setExternalItem(selectedResource);
-                        item.validate();
+                        if (getForm() != null) {
+                            getForm().setValue(getName(), RecordUtils.getExternalItemRecord(selectedResource));
+                            getForm().validate();
+                        }
                     }
                 });
             }
-        });
+        };
         return item;
     }
-
     // DSD
 
     public void setStatisticalOperationsForDsdSelection(java.util.List<ExternalItemDto> externalItemDtos) {
@@ -199,13 +194,10 @@ public class DatasetVersionSearchSectionStack extends SiemacMetadataResourceSear
 
     private SearchExternalItemLinkItem createDsdItem(String name, String title) {
 
-        final SearchExternalItemLinkItem item = new SearchExternalItemLinkItem(name, title);
-        item.setExternalItem(null);
-        item.getSearchIcon().addFormItemClickHandler(new FormItemClickHandler() {
+        final SearchExternalItemLinkItem item = new SearchExternalItemLinkItem(name, title) {
 
             @Override
-            public void onFormItemClick(FormItemIconClickEvent event) {
-
+            public void onSearch() {
                 searchDsdWindow = new SearchSingleDsdPaginatedWindow(getConstants().resourceSelection(), StatisticalResourceWebConstants.FORM_LIST_MAX_RESULTS,
                         new SearchPaginatedAction<DsdWebCriteria>() {
 
@@ -225,12 +217,14 @@ public class DatasetVersionSearchSectionStack extends SiemacMetadataResourceSear
                     public void onClick(ClickEvent event) {
                         ExternalItemDto selectedResource = searchDsdWindow.getSelectedResource();
                         searchDsdWindow.markForDestroy();
-                        item.setExternalItem(selectedResource);
-                        item.validate();
+                        if (getForm() != null) {
+                            getForm().setValue(getName(), RecordUtils.getExternalItemRecord(selectedResource));
+                            getForm().validate();
+                        }
                     }
                 });
             }
-        });
+        };
         return item;
     }
 

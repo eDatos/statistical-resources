@@ -17,9 +17,9 @@ import org.siemac.metamac.rest.common_metadata.v1_0.domain.ConfigurationCriteria
 import org.siemac.metamac.rest.common_metadata.v1_0.domain.Configurations;
 import org.siemac.metamac.rest.common_metadata.v1_0.domain.ResourceInternal;
 import org.siemac.metamac.statistical.resources.core.invocation.service.CommonMetadataRestExternalService;
-import org.siemac.metamac.statistical.resources.web.shared.criteria.CommonConfigurationWebCriteria;
 import org.siemac.metamac.web.common.server.utils.DtoUtils;
 import org.siemac.metamac.web.common.server.utils.WebExceptionUtils;
+import org.siemac.metamac.web.common.shared.criteria.CommonConfigurationRestCriteria;
 import org.siemac.metamac.web.common.shared.exception.MetamacWebException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -31,7 +31,7 @@ public class CommonMetadataRestExternalFacadeImpl implements CommonMetadataRestE
     private CommonMetadataRestExternalService commonMetadataRestExternalService;
 
     @Override
-    public List<ExternalItemDto> findConfigurations(CommonConfigurationWebCriteria criteria) throws MetamacWebException {
+    public List<ExternalItemDto> findConfigurations(CommonConfigurationRestCriteria criteria) throws MetamacWebException {
         String query = buildQuery(criteria);
         try {
             Configurations configurations = commonMetadataRestExternalService.findConfigurations(query);
@@ -41,7 +41,7 @@ public class CommonMetadataRestExternalFacadeImpl implements CommonMetadataRestE
         }
     }
 
-    private String buildQuery(CommonConfigurationWebCriteria webCriteria) {
+    private String buildQuery(CommonConfigurationRestCriteria webCriteria) {
         StringBuilder queryBuilder = new StringBuilder();
         if (webCriteria != null) {
             String simpleCriteria = webCriteria.getCriteria();

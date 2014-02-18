@@ -1,7 +1,6 @@
 package org.siemac.metamac.statistical.resources.web.client.widgets.forms;
 
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
-import static org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourcesFormUtils.setExternalItemValue;
 
 import org.siemac.metamac.statistical.resources.core.dto.StatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.web.client.model.ds.StatisticalResourceDS;
@@ -20,6 +19,6 @@ public class StatisticalResourceThematicContentClassifiersForm extends GroupDyna
     }
 
     public void setStatisticalResourceDto(StatisticalResourceDto dto) {
-        setExternalItemValue(getItem(StatisticalResourceDS.STATISTICAL_OPERATION), dto.getStatisticalOperation());
+        setValue(StatisticalResourceDS.STATISTICAL_OPERATION, dto.getStatisticalOperation());
     }
 }

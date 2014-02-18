@@ -3,7 +3,6 @@ package org.siemac.metamac.statistical.resources.web.client.dataset.widgets;
 import java.util.List;
 import java.util.Map;
 
-import org.fornax.cartridges.sculptor.framework.event.CamelEventBusImpl;
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdAttributeDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdAttributeInstanceDto;

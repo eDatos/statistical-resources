@@ -1,8 +1,6 @@
 package org.siemac.metamac.statistical.resources.web.client.base.widgets;
 
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
-import static org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourcesFormUtils.getExternalItemValue;
-import static org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourcesFormUtils.setExternalItemValue;
 
 import java.util.List;
 
@@ -11,12 +9,12 @@ import org.siemac.metamac.statistical.resources.core.dto.SiemacMetadataStatistic
 import org.siemac.metamac.statistical.resources.web.client.base.view.handlers.NewStatisticalResourceUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.constants.StatisticalResourceWebConstants;
 import org.siemac.metamac.statistical.resources.web.client.model.ds.SiemacMetadataDS;
-import org.siemac.metamac.statistical.resources.web.client.widgets.forms.fields.SearchSrmLinkItemWithSchemeFilterItem;
-import org.siemac.metamac.statistical.resources.web.shared.criteria.ItemSchemeWebCriteria;
 import org.siemac.metamac.web.common.client.widgets.CustomWindow;
 import org.siemac.metamac.web.common.client.widgets.form.CustomDynamicForm;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ExternalItemLinkItem;
-import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
+import org.siemac.metamac.web.common.client.widgets.form.fields.external.SearchSrmLinkItemWithSchemeFilterItem;
+import org.siemac.metamac.web.common.shared.criteria.SrmItemRestCriteria;
+import org.siemac.metamac.web.common.shared.criteria.SrmItemSchemeRestCriteria;
 
 public class NewStatisticalResourceWindow extends CustomWindow {
 
@@ -40,13 +38,13 @@ public class NewStatisticalResourceWindow extends CustomWindow {
     }
 
     protected void populateSiemacResourceDto(SiemacMetadataStatisticalResourceDto dto) {
-        ExternalItemDto language = getExternalItemValue(form.getItem(SiemacMetadataDS.LANGUAGE));
+        ExternalItemDto language = form.getValueAsExternalItemDto(SiemacMetadataDS.LANGUAGE);
         dto.setLanguage(language);
         dto.getLanguages().clear();
         if (language != null) {
             dto.addLanguage(language);
         }
-        dto.setMaintainer(getExternalItemValue(form.getItem(SiemacMetadataDS.MAINTAINER)));
+        dto.setMaintainer(form.getValueAsExternalItemDto(SiemacMetadataDS.MAINTAINER));
     }
 
     public boolean validateForm() {
@@ -58,7 +56,7 @@ public class NewStatisticalResourceWindow extends CustomWindow {
     // ***********************************************************
     public void setDefaultLanguage(ExternalItemDto defaultLanguage) {
         if (defaultLanguage != null) {
-            setExternalItemValue(form.getItem(SiemacMetadataDS.LANGUAGE), defaultLanguage);
+            form.setValue(SiemacMetadataDS.LANGUAGE, defaultLanguage);
         }
     }
 
@@ -71,10 +69,10 @@ public class NewStatisticalResourceWindow extends CustomWindow {
     // ***********************************************************
     public void setDefaultMaintainer(ExternalItemDto defaultMaintainer) {
         if (defaultMaintainer != null) {
-            setExternalItemValue(form.getItem(SiemacMetadataDS.MAINTAINER), defaultMaintainer);
+            form.setValue(SiemacMetadataDS.MAINTAINER, defaultMaintainer);
+            form.markForRedraw();
         }
     }
-
     public void setAgencySchemesForMaintainer(List<ExternalItemDto> externalItemsDtos, int firstResult, int elementsInPage, int totalResults) {
         if (maintainerItem != null) {
             maintainerItem.setFilterResources(externalItemsDtos, firstResult, elementsInPage, totalResults);
@@ -92,12 +90,12 @@ public class NewStatisticalResourceWindow extends CustomWindow {
                 StatisticalResourceWebConstants.FORM_LIST_MAX_RESULTS) {
 
             @Override
-            protected void retrieveItems(int firstResult, int maxResults, ItemSchemeWebCriteria webCriteria) {
+            protected void retrieveItems(int firstResult, int maxResults, SrmItemRestCriteria webCriteria) {
                 uiHandlers.retrieveAgencies(firstResult, maxResults, webCriteria);
             }
 
             @Override
-            protected void retrieveItemSchemes(int firstResult, int maxResults, MetamacWebCriteria webCriteria) {
+            protected void retrieveItemSchemes(int firstResult, int maxResults, SrmItemSchemeRestCriteria webCriteria) {
                 uiHandlers.retrieveAgencySchemes(firstResult, maxResults, webCriteria);
             }
         };

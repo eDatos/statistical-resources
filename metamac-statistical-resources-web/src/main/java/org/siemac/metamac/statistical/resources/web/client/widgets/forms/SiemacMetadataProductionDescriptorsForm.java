@@ -1,7 +1,6 @@
 package org.siemac.metamac.statistical.resources.web.client.widgets.forms;
 
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
-import static org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourcesFormUtils.setExternalItemValue;
 import static org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourcesFormUtils.setExternalItemsValue;
 
 import org.siemac.metamac.statistical.resources.core.dto.SiemacMetadataStatisticalResourceDto;
@@ -31,7 +30,7 @@ public class SiemacMetadataProductionDescriptorsForm extends LifeCycleResourcePr
     public void setSiemacMetadataStatisticalResourceDto(SiemacMetadataStatisticalResourceDto dto) {
         setLifeCycleResourceDto(dto);
 
-        setExternalItemValue(getItem(SiemacMetadataDS.CREATOR), dto.getCreator());
+        setValue(SiemacMetadataDS.CREATOR, dto.getCreator());
         setExternalItemsValue(getItem(SiemacMetadataDS.CONTRIBUTOR), dto.getContributor());
 
         setValue(SiemacMetadataDS.DATE_CREATED, dto.getResourceCreatedDate());

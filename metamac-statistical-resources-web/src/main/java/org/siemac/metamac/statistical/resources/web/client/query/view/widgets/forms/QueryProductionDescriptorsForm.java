@@ -85,7 +85,7 @@ public class QueryProductionDescriptorsForm extends NavigationEnabledDynamicForm
         }
 
         StatisticalResourcesFormUtils.setRelatedResourceValue(getItem(QueryDS.RELATED_DATASET_VERSION), queryDto.getRelatedDatasetVersion());
-        StatisticalResourcesFormUtils.setExternalItemValue(getItem(QueryDS.MAINTAINER), queryDto.getMaintainer());
+        setValue(QueryDS.MAINTAINER, queryDto.getMaintainer());
         // Status
         setValue(QueryDS.STATUS, CommonUtils.getQueryStatusName(queryDto));
         setValue(QueryDS.TYPE, CommonUtils.getQueryTypeName(queryDto));

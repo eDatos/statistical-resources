@@ -1,7 +1,6 @@
 package org.siemac.metamac.statistical.resources.web.client.widgets.forms;
 
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
-import static org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourcesFormUtils.setExternalItemValue;
 
 import org.siemac.metamac.statistical.resources.core.dto.SiemacMetadataStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.StatisticalResourceDto;
@@ -23,7 +22,7 @@ public class StatisticalResourceThematicContentClassifiersEditionForm extends Gr
 
     public void setStatisticalResourceDto(StatisticalResourceDto dto) {
         statisticalOperationCode = dto.getStatisticalOperation() != null ? dto.getStatisticalOperation().getCode() : null;
-        setExternalItemValue(getItem(StatisticalResourceDS.STATISTICAL_OPERATION), dto.getStatisticalOperation());
+        setValue(StatisticalResourceDS.STATISTICAL_OPERATION, dto.getStatisticalOperation());
     }
 
     public StatisticalResourceDto getStatisticalResourceDto(SiemacMetadataStatisticalResourceDto dto) {

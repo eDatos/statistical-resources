@@ -2,7 +2,6 @@ package org.siemac.metamac.statistical.resources.web.client.widgets.forms;
 
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
 import static org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourcesFormUtils.getExternalItemsValue;
-import static org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourcesFormUtils.setExternalItemValue;
 import static org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourcesFormUtils.setExternalItemsValue;
 
 import java.util.List;
@@ -49,7 +48,7 @@ public class SiemacMetadataLanguageEditionForm extends GroupDynamicForm {
     public void setSiemacMetadataStatisticalResourceDto(SiemacMetadataStatisticalResourceDto dto) {
         this.procStatus = dto.getProcStatus();
 
-        setExternalItemValue(getItem(SiemacMetadataDS.LANGUAGE), dto.getLanguage());
+        setValue(SiemacMetadataDS.LANGUAGE, dto.getLanguage());
         setExternalItemsValue(getItem(SiemacMetadataDS.LANGUAGES), dto.getLanguages());
     }
 

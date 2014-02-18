@@ -22,11 +22,11 @@ import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStr
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.OrganisationCriteriaPropertyRestriction;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.OrganisationSchemeCriteriaPropertyRestriction;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.DsdWebCriteria;
-import org.siemac.metamac.statistical.resources.web.shared.criteria.ItemSchemeWebCriteria;
-import org.siemac.metamac.statistical.resources.web.shared.criteria.base.HasSchemeCriteria;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.base.HasStatisticalOperationCriteria;
 import org.siemac.metamac.web.common.shared.criteria.MetamacVersionableWebCriteria;
 import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
+import org.siemac.metamac.web.common.shared.criteria.SrmItemRestCriteria;
+import org.siemac.metamac.web.common.shared.criteria.base.HasItemSchemeCriteria;
 import org.siemac.metamac.web.common.shared.criteria.base.HasOnlyLastVersionCriteria;
 import org.siemac.metamac.web.common.shared.criteria.base.HasSimpleCriteria;
 
@@ -126,7 +126,7 @@ public class MetamacWebRestCriteriaUtils {
     // CATEGORY
     // -------------------------------------------------------------------------------------------------------------
 
-    public static String buildQueryCategory(ItemSchemeWebCriteria webCriteria) {
+    public static String buildQueryCategory(SrmItemRestCriteria webCriteria) {
         StringBuilder queryBuilder = new StringBuilder();
         if (webCriteria != null) {
             addSimpleRestCriteria(queryBuilder, webCriteria, CategoryCriteriaPropertyRestriction.NAME, CategoryCriteriaPropertyRestriction.ID, CategoryCriteriaPropertyRestriction.URN);
@@ -151,7 +151,7 @@ public class MetamacWebRestCriteriaUtils {
     // CONCEPT
     // -------------------------------------------------------------------------------------------------------------
 
-    public static String buildQueryConcept(ItemSchemeWebCriteria webCriteria) {
+    public static String buildQueryConcept(SrmItemRestCriteria webCriteria) {
         StringBuilder queryBuilder = new StringBuilder();
         if (webCriteria != null) {
             addSimpleRestCriteria(queryBuilder, webCriteria, ConceptCriteriaPropertyRestriction.NAME, ConceptCriteriaPropertyRestriction.ID, ConceptCriteriaPropertyRestriction.URN);
@@ -170,7 +170,6 @@ public class MetamacWebRestCriteriaUtils {
         if (webCriteria != null) {
             addSimpleRestCriteria(queryBuilder, webCriteria, OrganisationSchemeCriteriaPropertyRestriction.NAME, OrganisationSchemeCriteriaPropertyRestriction.ID,
                     OrganisationSchemeCriteriaPropertyRestriction.URN);
-
         }
 
         addTypeRestCriteria(queryBuilder, type, OrganisationSchemeCriteriaPropertyRestriction.TYPE);
@@ -182,7 +181,7 @@ public class MetamacWebRestCriteriaUtils {
     // ORGANISATION
     // -------------------------------------------------------------------------------------------------------------
 
-    public static String buildQueryOrganisation(ItemSchemeWebCriteria webCriteria, TypeExternalArtefactsEnum type) {
+    public static String buildQueryOrganisation(SrmItemRestCriteria webCriteria, TypeExternalArtefactsEnum type) {
         StringBuilder queryBuilder = new StringBuilder();
         if (webCriteria != null) {
             addSimpleRestCriteria(queryBuilder, webCriteria, OrganisationCriteriaPropertyRestriction.NAME, OrganisationCriteriaPropertyRestriction.ID, OrganisationCriteriaPropertyRestriction.URN);
@@ -219,8 +218,8 @@ public class MetamacWebRestCriteriaUtils {
     }
 
     @SuppressWarnings("rawtypes")
-    private static void addSchemeRestCriteria(StringBuilder queryBuilder, HasSchemeCriteria criteria, Enum schemeField) {
-        String schemeUrn = criteria.getSchemeUrn();
+    private static void addSchemeRestCriteria(StringBuilder queryBuilder, HasItemSchemeCriteria criteria, Enum schemeField) {
+        String schemeUrn = criteria.getItemSchemeUrn();
         if (StringUtils.isNotBlank(schemeUrn)) {
             String schemeCondition = fieldComparison(schemeField, ComparisonOperator.EQ, schemeUrn);
             appendConditionToQuery(queryBuilder, schemeCondition);

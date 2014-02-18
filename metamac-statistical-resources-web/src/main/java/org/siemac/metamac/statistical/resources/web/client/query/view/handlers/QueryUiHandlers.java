@@ -5,9 +5,9 @@ import java.util.Date;
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionDto;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.DatasetVersionWebCriteria;
-import org.siemac.metamac.statistical.resources.web.shared.criteria.ItemSchemeWebCriteria;
 import org.siemac.metamac.web.common.client.view.handlers.BaseUiHandlers;
 import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
+import org.siemac.metamac.web.common.shared.criteria.SrmItemRestCriteria;
 
 public interface QueryUiHandlers extends BaseUiHandlers {
 
@@ -24,7 +24,7 @@ public interface QueryUiHandlers extends BaseUiHandlers {
     void retrieveDimensionCodesForDataset(String urn, String dimensionId, MetamacWebCriteria webCriteria);
 
     void retrieveAgencySchemes(int firstResult, int maxResults, MetamacWebCriteria webCriteria);
-    void retrieveAgencies(int firstResult, int maxResults, ItemSchemeWebCriteria webCriteria);
+    void retrieveAgencies(int firstResult, int maxResults, SrmItemRestCriteria webCriteria);
 
     void previewData(QueryVersionDto queryVersionDto);
 

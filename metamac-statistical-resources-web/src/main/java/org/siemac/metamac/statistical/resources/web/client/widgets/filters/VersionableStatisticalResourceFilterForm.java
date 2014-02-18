@@ -13,7 +13,6 @@ import org.siemac.metamac.web.common.client.widgets.filters.facets.OnlyLastVersi
 public class VersionableStatisticalResourceFilterForm<T extends VersionableStatisticalResourceWebCriteria> extends SimpleVersionableFilterForm<T> {
 
     private StatisticalOperationFacetFilter statisticalOperationFacet;
-    private OnlyLastVersionFacetFilter      onlyLastVersionFacet;
 
     public VersionableStatisticalResourceFilterForm() {
         super();
@@ -31,11 +30,6 @@ public class VersionableStatisticalResourceFilterForm<T extends VersionableStati
         if (statisticalOperation != null) {
             statisticalOperationFacet.setSelectedStatisticalOperation(statisticalOperation);
         }
-    }
-
-    @Override
-    public void setOnlyLastVersion(boolean onlyLastVersion) {
-        onlyLastVersionFacet.setOnlyLastVersion(onlyLastVersion);
     }
 
     // IMPORTANT: This method must be inherited if you change the WebCriteria in T

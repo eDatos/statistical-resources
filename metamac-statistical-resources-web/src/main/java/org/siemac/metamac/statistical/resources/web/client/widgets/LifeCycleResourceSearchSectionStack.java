@@ -11,6 +11,7 @@ import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.LifeCycleStatisticalResourceWebCriteria;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationsPaginatedListResult;
 import org.siemac.metamac.web.common.client.MetamacWebCommon;
+import org.siemac.metamac.web.common.client.utils.RecordUtils;
 import org.siemac.metamac.web.common.client.widgets.BaseAdvancedSearchSectionStack;
 import org.siemac.metamac.web.common.client.widgets.SearchExternalItemWindow;
 import org.siemac.metamac.web.common.client.widgets.actions.PaginatedAction;
@@ -19,7 +20,7 @@ import org.siemac.metamac.web.common.client.widgets.form.GroupDynamicForm;
 import org.siemac.metamac.web.common.client.widgets.form.fields.CustomButtonItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.CustomCheckboxItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.CustomDateItem;
-import org.siemac.metamac.web.common.client.widgets.form.fields.SearchExternalItemLinkItem;
+import org.siemac.metamac.web.common.client.widgets.form.fields.external.SearchExternalItemLinkItem;
 import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
 
 import com.smartgwt.client.types.SelectionStyle;
@@ -28,8 +29,6 @@ import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.form.fields.events.ClickEvent;
 import com.smartgwt.client.widgets.form.fields.events.ClickHandler;
-import com.smartgwt.client.widgets.form.fields.events.FormItemClickHandler;
-import com.smartgwt.client.widgets.form.fields.events.FormItemIconClickEvent;
 
 public abstract class LifeCycleResourceSearchSectionStack extends BaseAdvancedSearchSectionStack {
 
@@ -44,7 +43,7 @@ public abstract class LifeCycleResourceSearchSectionStack extends BaseAdvancedSe
         // Search last versions by default
         ((CustomCheckboxItem) advancedSearchForm.getItem(LifeCycleResourceDS.LAST_VERSION)).setValue(true);
         // Search by selected operation by default
-        ((SearchExternalItemLinkItem) advancedSearchForm.getItem(LifeCycleResourceDS.STATISTICAL_OPERATION)).setExternalItem(getSelectedStatisticalOperation());
+        advancedSearchForm.setValue(LifeCycleResourceDS.STATISTICAL_OPERATION, RecordUtils.getExternalItemRecord(getSelectedStatisticalOperation()));
     }
 
     @Override
@@ -111,11 +110,10 @@ public abstract class LifeCycleResourceSearchSectionStack extends BaseAdvancedSe
     //
 
     private SearchExternalItemLinkItem createSearchStatisticalOperationItem(String name, String title) {
-        SearchExternalItemLinkItem operationItem = new SearchExternalItemLinkItem(name, title);
-        operationItem.getSearchIcon().addFormItemClickHandler(new FormItemClickHandler() {
+        SearchExternalItemLinkItem operationItem = new SearchExternalItemLinkItem(name, title) {
 
             @Override
-            public void onFormItemClick(FormItemIconClickEvent event) {
+            public void onSearch() {
                 searchOperationWindow = new SearchExternalItemWindow(getConstants().statisticalOperation(), StatisticalResourceWebConstants.FORM_LIST_MAX_RESULTS, new PaginatedAction() {
 
                     @Override
@@ -138,12 +136,12 @@ public abstract class LifeCycleResourceSearchSectionStack extends BaseAdvancedSe
                     public void onClick(com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
                         ExternalItemDto selectedOperation = searchOperationWindow.getSelectedExternalItem();
                         searchOperationWindow.destroy();
-                        ((SearchExternalItemLinkItem) advancedSearchForm.getItem(LifeCycleResourceDS.STATISTICAL_OPERATION)).setExternalItem(selectedOperation);
-                        advancedSearchForm.validate(false);
+                        getForm().setValue(getName(), RecordUtils.getExternalItemRecord(selectedOperation));
+                        getForm().validate(false);
                     }
                 });
             }
-        });
+        };
         return operationItem;
     }
 
