@@ -36,7 +36,7 @@ import org.siemac.metamac.web.common.client.widgets.form.fields.CustomIntegerIte
 import org.siemac.metamac.web.common.client.widgets.form.fields.CustomSelectItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ExternalItemLinkItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewTextItem;
-import org.siemac.metamac.web.common.client.widgets.form.fields.external.SearchSrmLinkItemWithSchemeFilterItem;
+import org.siemac.metamac.web.common.client.widgets.form.fields.external.SearchSrmItemLinkItemWithSchemeFilterItem;
 import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
 import org.siemac.metamac.web.common.shared.criteria.SrmItemRestCriteria;
 import org.siemac.metamac.web.common.shared.criteria.SrmItemSchemeRestCriteria;
@@ -60,7 +60,7 @@ public class QueryProductionDescriptorsEditionForm extends NavigationEnabledDyna
     private Map<String, SearchMultipleCodeItemWindow>                dimensionCodeSelectionWindow;
     private Map<String, CodeItemListItem>                            selectionFields;
 
-    protected SearchSrmLinkItemWithSchemeFilterItem                  maintainerItem;
+    protected SearchSrmItemLinkItemWithSchemeFilterItem                  maintainerItem;
 
     private Map<String, List<CodeItemDto>>                           dtoSelection;
 
@@ -372,8 +372,8 @@ public class QueryProductionDescriptorsEditionForm extends NavigationEnabledDyna
         }
     }
 
-    private SearchSrmLinkItemWithSchemeFilterItem createMaintainerItem() {
-        return new SearchSrmLinkItemWithSchemeFilterItem(LifeCycleResourceDS.MAINTAINER, getConstants().siemacMetadataStatisticalResourceMaintainer(),
+    private SearchSrmItemLinkItemWithSchemeFilterItem createMaintainerItem() {
+        return new SearchSrmItemLinkItemWithSchemeFilterItem(LifeCycleResourceDS.MAINTAINER, getConstants().siemacMetadataStatisticalResourceMaintainer(),
                 StatisticalResourceWebConstants.FORM_LIST_MAX_RESULTS) {
 
             @Override

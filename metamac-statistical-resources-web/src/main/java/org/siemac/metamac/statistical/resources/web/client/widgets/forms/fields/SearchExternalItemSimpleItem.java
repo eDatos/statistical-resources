@@ -34,9 +34,9 @@ public abstract class SearchExternalItemSimpleItem extends SearchExternalItemLin
             public void retrieveResultSet(int firstResult, int maxResults, MetamacWebCriteria webCriteria) {
                 retrieveResources(firstResult, maxResults, webCriteria);
             }
-
         });
-        retrieveResources(0, maxResults, new MetamacWebCriteria());
+        
+        retrieveResources(0, maxResults, window.);
 
         window.setSaveAction(new ClickHandler() {
 
@@ -50,7 +50,6 @@ public abstract class SearchExternalItemSimpleItem extends SearchExternalItemLin
             }
         });
     }
-
     public void setResources(List<ExternalItemDto> items, int firstResult, int totalResults) {
         if (window != null) {
             window.setResources(items);

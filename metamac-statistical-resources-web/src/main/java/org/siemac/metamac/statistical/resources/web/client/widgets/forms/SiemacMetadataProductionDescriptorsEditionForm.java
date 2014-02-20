@@ -21,7 +21,7 @@ import org.siemac.metamac.web.common.client.widgets.form.GroupDynamicForm;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ExternalItemLinkItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.MultilanguageRichTextEditorItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewTextItem;
-import org.siemac.metamac.web.common.client.widgets.form.fields.external.SearchSrmLinkItemWithSchemeFilterItem;
+import org.siemac.metamac.web.common.client.widgets.form.fields.external.SearchSrmItemLinkItemWithSchemeFilterItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.external.SearchSrmListItemWithSchemeFilterItem;
 import org.siemac.metamac.web.common.shared.criteria.SrmExternalResourceRestCriteria;
 import org.siemac.metamac.web.common.shared.criteria.SrmItemRestCriteria;
@@ -35,7 +35,7 @@ public class SiemacMetadataProductionDescriptorsEditionForm extends GroupDynamic
 
     private SearchSrmListItemWithSchemeFilterItem contributorItem;
 
-    private SearchSrmLinkItemWithSchemeFilterItem creatorItem;
+    private SearchSrmItemLinkItemWithSchemeFilterItem creatorItem;
 
     public SiemacMetadataProductionDescriptorsEditionForm() {
         super(getConstants().formProductionDescriptors());
@@ -98,8 +98,8 @@ public class SiemacMetadataProductionDescriptorsEditionForm extends GroupDynamic
         creatorItem.setFilterResources(items, firstResult, items.size(), totalResults);
     }
 
-    private SearchSrmLinkItemWithSchemeFilterItem createCreatorItem() {
-        return new SearchSrmLinkItemWithSchemeFilterItem(SiemacMetadataDS.CREATOR, getConstants().siemacMetadataStatisticalResourceCreator(), StatisticalResourceWebConstants.FORM_LIST_MAX_RESULTS) {
+    private SearchSrmItemLinkItemWithSchemeFilterItem createCreatorItem() {
+        return new SearchSrmItemLinkItemWithSchemeFilterItem(SiemacMetadataDS.CREATOR, getConstants().siemacMetadataStatisticalResourceCreator(), StatisticalResourceWebConstants.FORM_LIST_MAX_RESULTS) {
 
             @Override
             protected void retrieveItemSchemes(int firstResult, int maxResults, SrmItemSchemeRestCriteria webCriteria) {

@@ -12,7 +12,7 @@ import org.siemac.metamac.statistical.resources.web.client.model.ds.SiemacMetada
 import org.siemac.metamac.web.common.client.widgets.CustomWindow;
 import org.siemac.metamac.web.common.client.widgets.form.CustomDynamicForm;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ExternalItemLinkItem;
-import org.siemac.metamac.web.common.client.widgets.form.fields.external.SearchSrmLinkItemWithSchemeFilterItem;
+import org.siemac.metamac.web.common.client.widgets.form.fields.external.SearchSrmItemLinkItemWithSchemeFilterItem;
 import org.siemac.metamac.web.common.shared.criteria.SrmItemRestCriteria;
 import org.siemac.metamac.web.common.shared.criteria.SrmItemSchemeRestCriteria;
 
@@ -23,7 +23,7 @@ public class NewStatisticalResourceWindow extends CustomWindow {
     protected CustomDynamicForm                     form;
     protected ExternalItemLinkItem                  languageItem;
 
-    protected SearchSrmLinkItemWithSchemeFilterItem maintainerItem;
+    protected SearchSrmItemLinkItemWithSchemeFilterItem maintainerItem;
 
     public NewStatisticalResourceWindow(String title) {
         super(title);
@@ -85,8 +85,8 @@ public class NewStatisticalResourceWindow extends CustomWindow {
         }
     }
 
-    private SearchSrmLinkItemWithSchemeFilterItem createMaintainerItem() {
-        return new SearchSrmLinkItemWithSchemeFilterItem(SiemacMetadataDS.MAINTAINER, getConstants().siemacMetadataStatisticalResourceMaintainer(),
+    private SearchSrmItemLinkItemWithSchemeFilterItem createMaintainerItem() {
+        return new SearchSrmItemLinkItemWithSchemeFilterItem(SiemacMetadataDS.MAINTAINER, getConstants().siemacMetadataStatisticalResourceMaintainer(),
                 StatisticalResourceWebConstants.FORM_LIST_MAX_RESULTS) {
 
             @Override
