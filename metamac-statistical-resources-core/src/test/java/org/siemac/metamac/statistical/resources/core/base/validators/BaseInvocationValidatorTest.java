@@ -17,8 +17,8 @@ public class BaseInvocationValidatorTest extends StatisticalResourcesBaseTest {
     private static String SEMANTIC_IDENTIFIER     = "SEMANTIC-IDENTIFIER";
     private static String NONSEMANTIC_IDENTIFIER  = "1-NONSEMANTIC-IDENTIFIER-@";
 
-    private static String METADATA_NAME_PARAMETER = ServiceExceptionParameters.DATASET_VERSION;
-    private static String METADATA_NAME_ERROR     = "parameter.resources.dataset_version.code";
+    private static String METADATA_NAME_PARAMETER = ServiceExceptionParameters.DATASET_VERSION__SIEMAC_METADATA_STATISTICAL_RESOURCE;
+    private static String METADATA_NAME_ERROR     = ServiceExceptionParameters.DATASET_VERSION__SIEMAC_METADATA_STATISTICAL_RESOURCE__CODE;
 
     // ----------------------------------------------------------------
     // DATASET
@@ -38,8 +38,6 @@ public class BaseInvocationValidatorTest extends StatisticalResourcesBaseTest {
 
         List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
         BaseInvocationValidator.checkForSemanticIdentifier(NONSEMANTIC_IDENTIFIER, TypeRelatedResourceEnum.DATASET, METADATA_NAME_PARAMETER, exceptionItems);
-
-        System.out.println("ESPERADO: " + exceptionItems.get(0).getMessage());
 
         ExceptionUtils.throwIfException(exceptionItems);
     }

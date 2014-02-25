@@ -36,6 +36,7 @@ import org.siemac.metamac.statistical.resources.core.common.domain.LocalisedStri
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Categorisation;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionRepository;
+import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceapi.LifecycleService;
 import org.siemac.metamac.statistical.resources.core.task.serviceapi.TaskService;
@@ -156,7 +157,7 @@ public class DatasetPublishingServiceTest extends StatisticalResourcesMockRestBa
 
         List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
 
-        exceptionItems.addAll(getExceptionItemsForExternalItemNotPublishedSiemac(siemacResource, "parameter.resources.dataset_version"));
+        exceptionItems.addAll(getExceptionItemsForExternalItemNotPublishedSiemac(siemacResource, ServiceExceptionParameters.DATASET_VERSION));
         exceptionItems.addAll(getExceptionItemsForExternalItemNotPublishedDataset(datasetVersion));
 
         expectedMetamacException(new MetamacException(exceptionItems));
@@ -176,7 +177,7 @@ public class DatasetPublishingServiceTest extends StatisticalResourcesMockRestBa
         mockSiemacExternalItemsPublished(siemacResource);
         mockDatasetVersionExternalItemsPublished(datasetVersion);
 
-        String prefix = "parameter.resources.dataset_version.siemac_metadata_statistical_resource";
+        String prefix = ServiceExceptionParameters.DATASET_VERSION__SIEMAC_METADATA_STATISTICAL_RESOURCE;
 
         List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
         exceptionItems.add(buildRelatedResourceNotPublishedException(siemacResource.getReplaces(), prefix, "replaces"));
@@ -285,7 +286,7 @@ public class DatasetPublishingServiceTest extends StatisticalResourcesMockRestBa
     }
 
     private List<MetamacExceptionItem> getExceptionItemsForExternalItemNotPublishedDataset(DatasetVersion datasetVersion) {
-        String prefix = "parameter.resources.dataset_version";
+        String prefix = ServiceExceptionParameters.DATASET_VERSION;
         List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
         exceptionItems.addAll(buildExternalItemsNotPublishedExceptions(datasetVersion.getGeographicCoverage(), prefix, "geographic_coverage"));
         exceptionItems.addAll(buildExternalItemsNotPublishedExceptions(datasetVersion.getMeasureCoverage(), prefix, "measure_coverage"));

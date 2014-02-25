@@ -28,6 +28,7 @@ import org.siemac.metamac.core.common.test.utils.mocks.configuration.MetamacMock
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesMockRestBaseTest;
 import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryStatusEnum;
+import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceapi.LifecycleService;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
@@ -245,7 +246,7 @@ public class QueryPublishingServiceTest extends StatisticalResourcesMockRestBase
 
         List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
 
-        exceptionItems.addAll(getExceptionItemsForExternalItemNotPublishedLifecycle(lifeCycleStatisticalResource, "parameter.resources.query_version", false));
+        exceptionItems.addAll(getExceptionItemsForExternalItemNotPublishedLifecycle(lifeCycleStatisticalResource, ServiceExceptionParameters.QUERY_VERSION, false));
 
         expectedMetamacException(new MetamacException(exceptionItems));
 

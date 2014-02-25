@@ -43,6 +43,7 @@ import org.siemac.metamac.core.common.test.utils.mocks.configuration.MetamacMock
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesMockRestBaseTest;
 import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResource;
+import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceapi.LifecycleService;
 import org.siemac.metamac.statistical.resources.core.publication.domain.Cube;
@@ -135,7 +136,7 @@ public class PublicationPublishingServiceTest extends StatisticalResourcesMockRe
 
         List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
 
-        exceptionItems.addAll(getExceptionItemsForExternalItemNotPublishedSiemac(siemacResource, "parameter.resources.publication_version"));
+        exceptionItems.addAll(getExceptionItemsForExternalItemNotPublishedSiemac(siemacResource, ServiceExceptionParameters.PUBLICATION_VERSION));
 
         expectedMetamacException(new MetamacException(exceptionItems));
 
@@ -187,7 +188,7 @@ public class PublicationPublishingServiceTest extends StatisticalResourcesMockRe
 
         mockSiemacExternalItemsPublished(siemacResource);
 
-        String prefix = "parameter.resources.publication_version.siemac_metadata_statistical_resource";
+        String prefix = ServiceExceptionParameters.PUBLICATION_VERSION__SIEMAC_METADATA_STATISTICAL_RESOURCE;
 
         List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
         exceptionItems.add(buildRelatedResourceNotPublishedException(siemacResource.getReplaces(), prefix, "replaces"));
