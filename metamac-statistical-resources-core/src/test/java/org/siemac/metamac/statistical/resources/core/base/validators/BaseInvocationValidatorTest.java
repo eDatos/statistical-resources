@@ -9,6 +9,7 @@ import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.core.common.exception.utils.ExceptionUtils;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
 import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
+import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 
 public class BaseInvocationValidatorTest extends StatisticalResourcesBaseTest {
@@ -16,8 +17,8 @@ public class BaseInvocationValidatorTest extends StatisticalResourcesBaseTest {
     private static String SEMANTIC_IDENTIFIER     = "SEMANTIC-IDENTIFIER";
     private static String NONSEMANTIC_IDENTIFIER  = "1-NONSEMANTIC-IDENTIFIER-@";
 
-    private static String METADATA_NAME_PARAMETER = "metadataName";
-    private static String METADATA_NAME_ERROR     = "metadataName.code";
+    private static String METADATA_NAME_PARAMETER = ServiceExceptionParameters.DATASET_VERSION;
+    private static String METADATA_NAME_ERROR     = "parameter.resources.dataset_version.code";
 
     // ----------------------------------------------------------------
     // DATASET
@@ -37,6 +38,9 @@ public class BaseInvocationValidatorTest extends StatisticalResourcesBaseTest {
 
         List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
         BaseInvocationValidator.checkForSemanticIdentifier(NONSEMANTIC_IDENTIFIER, TypeRelatedResourceEnum.DATASET, METADATA_NAME_PARAMETER, exceptionItems);
+
+        System.out.println("ESPERADO: " + exceptionItems.get(0).getMessage());
+
         ExceptionUtils.throwIfException(exceptionItems);
     }
 

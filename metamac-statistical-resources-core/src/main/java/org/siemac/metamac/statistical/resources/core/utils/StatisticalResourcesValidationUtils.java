@@ -15,7 +15,6 @@ import org.siemac.metamac.statistical.resources.core.common.domain.International
 import org.siemac.metamac.statistical.resources.core.common.domain.LocalisedString;
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResource;
 import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
-import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionSingleParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.publication.domain.ElementLevel;
@@ -34,7 +33,7 @@ public class StatisticalResourcesValidationUtils extends ValidationUtils {
         isEmpty(parameter, parameterName, exceptions);
 
         if (parameter.getOrderInLevel() != null && parameter.getOrderInLevel() < 0) {
-            exceptions.add(new MetamacExceptionItem(ServiceExceptionType.METADATA_INCORRECT, addParameter(parameterName, ServiceExceptionParameters.ORDER_IN_LEVEL)));
+            exceptions.add(new MetamacExceptionItem(ServiceExceptionType.METADATA_INCORRECT, addParameter(parameterName, ServiceExceptionSingleParameters.ORDER_IN_LEVEL)));
         }
     }
 

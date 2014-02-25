@@ -69,7 +69,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class PublicationPublishingServiceTest extends StatisticalResourcesMockRestBaseTest {
 
-    private PublicationVersionMockFactory        publicationVersionMockFactory = PublicationVersionMockFactory.getInstance();
+    private final PublicationVersionMockFactory  publicationVersionMockFactory = PublicationVersionMockFactory.getInstance();
 
     @Autowired
     @Qualifier("publicationLifecycleService")
@@ -135,7 +135,7 @@ public class PublicationPublishingServiceTest extends StatisticalResourcesMockRe
 
         List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
 
-        exceptionItems.addAll(getExceptionItemsForExternalItemNotPublishedSiemac(siemacResource, "publication_version"));
+        exceptionItems.addAll(getExceptionItemsForExternalItemNotPublishedSiemac(siemacResource, "parameter.resources.publication_version"));
 
         expectedMetamacException(new MetamacException(exceptionItems));
 
@@ -187,7 +187,7 @@ public class PublicationPublishingServiceTest extends StatisticalResourcesMockRe
 
         mockSiemacExternalItemsPublished(siemacResource);
 
-        String prefix = "publication_version.siemac_metadata_statistical_resource";
+        String prefix = "parameter.resources.publication_version.siemac_metadata_statistical_resource";
 
         List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
         exceptionItems.add(buildRelatedResourceNotPublishedException(siemacResource.getReplaces(), prefix, "replaces"));

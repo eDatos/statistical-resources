@@ -13,7 +13,6 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersi
 import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryTypeEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
-import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionSingleParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.query.domain.QuerySelectionItem;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
@@ -26,7 +25,7 @@ public class QueryServiceInvocationValidatorImpl extends BaseInvocationValidator
     // ------------------------------------------------------------------------
 
     public static void checkRetrieveQueryVersionByUrn(String urn, List<MetamacExceptionItem> exceptions) throws MetamacException {
-        StatisticalResourcesValidationUtils.checkParameterRequired(urn, ServiceExceptionSingleParameters.URN, exceptions);
+        StatisticalResourcesValidationUtils.checkParameterRequired(urn, ServiceExceptionParameters.URN, exceptions);
     }
 
     public static void checkRetrieveLatestQueryVersionByQueryUrn(String queryUrn, List<MetamacExceptionItem> exceptions) throws MetamacException {
@@ -59,7 +58,7 @@ public class QueryServiceInvocationValidatorImpl extends BaseInvocationValidator
     }
 
     public static void checkDeleteQueryVersion(String urn, List<MetamacExceptionItem> exceptions) {
-        StatisticalResourcesValidationUtils.checkParameterRequired(urn, ServiceExceptionSingleParameters.URN, exceptions);
+        StatisticalResourcesValidationUtils.checkParameterRequired(urn, ServiceExceptionParameters.URN, exceptions);
     }
 
     public static void checkNewQueryVersion(QueryVersion queryVersion, List<MetamacExceptionItem> exceptions) {

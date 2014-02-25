@@ -7,7 +7,6 @@ import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
-import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionSingleParameters;
 import org.siemac.metamac.statistical.resources.core.task.domain.FileDescriptor;
 import org.siemac.metamac.statistical.resources.core.task.domain.Task;
 import org.siemac.metamac.statistical.resources.core.task.domain.TaskInfoDataset;
@@ -82,8 +81,8 @@ public class TaskServiceInvocationValidatorImpl {
 
     public static void checkCreateTask(Task task, List<MetamacExceptionItem> exceptions) {
         StatisticalResourcesValidationUtils.checkParameterRequired(task, ServiceExceptionParameters.TASK, exceptions);
-        StatisticalResourcesValidationUtils.checkMetadataRequired(task.getId(), ServiceExceptionSingleParameters.JOB, exceptions);
-        StatisticalResourcesValidationUtils.checkMetadataRequired(task.getId(), ServiceExceptionSingleParameters.STATUS, exceptions);
+        StatisticalResourcesValidationUtils.checkMetadataRequired(task.getId(), ServiceExceptionParameters.TASK__JOB, exceptions);
+        StatisticalResourcesValidationUtils.checkMetadataRequired(task.getId(), ServiceExceptionParameters.TASK__STATUS, exceptions);
     }
 
     public static void checkRetrieveTaskByJob(String job, List<MetamacExceptionItem> exceptions) {
@@ -92,9 +91,9 @@ public class TaskServiceInvocationValidatorImpl {
 
     public static void checkUpdateTask(Task task, List<MetamacExceptionItem> exceptions) {
         StatisticalResourcesValidationUtils.checkParameterRequired(task, ServiceExceptionParameters.TASK, exceptions);
-        StatisticalResourcesValidationUtils.checkMetadataRequired(task.getId(), ServiceExceptionSingleParameters.ID, exceptions);
-        StatisticalResourcesValidationUtils.checkMetadataRequired(task.getId(), ServiceExceptionSingleParameters.JOB, exceptions);
-        StatisticalResourcesValidationUtils.checkMetadataRequired(task.getId(), ServiceExceptionSingleParameters.STATUS, exceptions);
+        StatisticalResourcesValidationUtils.checkMetadataRequired(task.getId(), ServiceExceptionParameters.TASK__ID, exceptions);
+        StatisticalResourcesValidationUtils.checkMetadataRequired(task.getId(), ServiceExceptionParameters.TASK__JOB, exceptions);
+        StatisticalResourcesValidationUtils.checkMetadataRequired(task.getId(), ServiceExceptionParameters.TASK__STATUS, exceptions);
     }
 
     public static void checkFindTasksByCondition(List<ConditionalCriteria> conditions, PagingParameter pagingParameter, List<MetamacExceptionItem> exceptions) {

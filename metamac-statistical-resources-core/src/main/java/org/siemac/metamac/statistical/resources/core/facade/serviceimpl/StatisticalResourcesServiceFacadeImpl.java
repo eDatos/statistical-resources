@@ -54,7 +54,7 @@ import org.siemac.metamac.statistical.resources.core.dto.publication.Publication
 import org.siemac.metamac.statistical.resources.core.dto.query.CodeItemDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionBaseDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionDto;
-import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionSingleParameters;
+import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
 import org.siemac.metamac.statistical.resources.core.invocation.service.SrmRestInternalService;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceapi.LifecycleService;
 import org.siemac.metamac.statistical.resources.core.publication.criteria.mapper.PublicationMetamacCriteria2SculptorCriteriaMapper;
@@ -268,7 +268,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
 
         // Transform
         QueryVersion queryVersion = queryDto2DoMapper.queryVersionDtoToDo(queryVersionDto);
-        ExternalItem statisticalOperation = datasetDto2DoMapper.externalItemDtoToDo(statisticalOperationDto, null, ServiceExceptionSingleParameters.STATISTICAL_OPERATION);
+        ExternalItem statisticalOperation = datasetDto2DoMapper.externalItemDtoToDo(statisticalOperationDto, null, ServiceExceptionParameters.STATISTICAL_OPERATION);
 
         // Create
         queryVersion = getQueryService().createQueryVersion(ctx, queryVersion, statisticalOperation);
@@ -720,7 +720,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
 
         // Transform
         DatasetVersion datasetVersion = datasetDto2DoMapper.datasetVersionDtoToDo(datasetVersionDto);
-        ExternalItem statisticalOperation = datasetDto2DoMapper.externalItemDtoToDo(statisticalOperationDto, null, ServiceExceptionSingleParameters.STATISTICAL_OPERATION);
+        ExternalItem statisticalOperation = datasetDto2DoMapper.externalItemDtoToDo(statisticalOperationDto, null, ServiceExceptionParameters.STATISTICAL_OPERATION);
 
         // Retrieve
         DatasetVersion datasetVersionCreated = getDatasetService().createDatasetVersion(ctx, datasetVersion, statisticalOperation);
@@ -1334,7 +1334,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
 
         // Transform
         PublicationVersion publicationVersion = publicationDto2DoMapper.publicationVersionDtoToDo(publicationVersionDto);
-        ExternalItem statisticalOperation = publicationDto2DoMapper.externalItemDtoToDo(statisticalOperationDto, null, ServiceExceptionSingleParameters.STATISTICAL_OPERATION);
+        ExternalItem statisticalOperation = publicationDto2DoMapper.externalItemDtoToDo(statisticalOperationDto, null, ServiceExceptionParameters.STATISTICAL_OPERATION);
 
         // Retrieve
         PublicationVersion publicationVersionCreated = getPublicationService().createPublicationVersion(ctx, publicationVersion, statisticalOperation);

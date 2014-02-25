@@ -74,9 +74,7 @@ import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.task.domain.DatasetFileFormatEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
-import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionSingleParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
-import org.siemac.metamac.statistical.resources.core.error.utils.ServiceExceptionParametersUtils;
 import org.siemac.metamac.statistical.resources.core.invocation.service.SrmRestInternalService;
 import org.siemac.metamac.statistical.resources.core.invocation.utils.RestMapper;
 import org.siemac.metamac.statistical.resources.core.io.utils.ManipulateDataUtils;
@@ -910,10 +908,8 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         if (ProcStatusEnum.PUBLISHED.equals(datasetVersion.getLifeCycleStatisticalResource().getProcStatus())) {
             // Check external items are externally published
             List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
-            externalItemChecker.checkExternalItemsExternallyPublished(categorisation.getCategory(),
-                    ServiceExceptionParametersUtils.addParameter(ServiceExceptionSingleParameters.DATASET_VERSION, ServiceExceptionSingleParameters.CATEGORISATIONS), exceptionItems);
-            externalItemChecker.checkExternalItemsExternallyPublished(categorisation.getMaintainer(),
-                    ServiceExceptionParametersUtils.addParameter(ServiceExceptionSingleParameters.DATASET_VERSION, ServiceExceptionSingleParameters.CATEGORISATIONS), exceptionItems);
+            externalItemChecker.checkExternalItemsExternallyPublished(categorisation.getCategory(), ServiceExceptionParameters.DATASET_VERSION__CATEGORISATIONS, exceptionItems);
+            externalItemChecker.checkExternalItemsExternallyPublished(categorisation.getMaintainer(), ServiceExceptionParameters.DATASET_VERSION__CATEGORISATIONS, exceptionItems);
             ExceptionUtils.throwIfException(exceptionItems);
         }
 

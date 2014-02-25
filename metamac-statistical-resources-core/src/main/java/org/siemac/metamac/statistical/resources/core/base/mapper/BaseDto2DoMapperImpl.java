@@ -80,7 +80,7 @@ public class BaseDto2DoMapperImpl extends CommonDto2DoMapperImpl implements Base
         }
 
         if (MetadataEditionChecks.canLanguageBeEdited(source.getId())) {
-            target.setLanguage(externalItemDtoToDo(source.getLanguage(), target.getLanguage(), ServiceExceptionSingleParameters.LANGUAGE));
+            target.setLanguage(externalItemDtoToDo(source.getLanguage(), target.getLanguage(), addParameter(metadataName, ServiceExceptionSingleParameters.LANGUAGE)));
         }
         // Always Modifiable
         languagesDtoListToDoListEnsuringLanguageIsContained(source.getLanguages(), target.getLanguages(), target.getLanguage(), addParameter(metadataName, ServiceExceptionSingleParameters.LANGUAGES));
@@ -106,7 +106,7 @@ public class BaseDto2DoMapperImpl extends CommonDto2DoMapperImpl implements Base
 
         target.setReplaces(relatedResourceDtoToDo(source.getReplaces(), target.getReplaces(), addParameter(metadataName, ServiceExceptionSingleParameters.REPLACES)));
 
-        target.setCommonMetadata(externalItemDtoToDo(source.getCommonMetadata(), target.getCommonMetadata(), ServiceExceptionSingleParameters.COMMON_METADATA));
+        target.setCommonMetadata(externalItemDtoToDo(source.getCommonMetadata(), target.getCommonMetadata(), addParameter(metadataName, ServiceExceptionSingleParameters.COMMON_METADATA)));
         target.setAccessRights(internationalStringDtoToDo(source.getAccessRights(), target.getAccessRights(), addParameter(metadataName, ServiceExceptionSingleParameters.ACCESS_RIGHTS)));
 
         return target;
@@ -293,8 +293,8 @@ public class BaseDto2DoMapperImpl extends CommonDto2DoMapperImpl implements Base
 
         // Only modifiable in creation
         if (MetadataEditionChecks.canStatisticalOperationBeEdited(target.getId())) {
-            target.setStatisticalOperation(externalItemDtoToDo(source.getStatisticalOperation(), target.getStatisticalOperation(), metadataName
-                    + ServiceExceptionSingleParameters.STATISTICAL_OPERATION));
+            target.setStatisticalOperation(externalItemDtoToDo(source.getStatisticalOperation(), target.getStatisticalOperation(),
+                    addParameter(metadataName, ServiceExceptionSingleParameters.STATISTICAL_OPERATION)));
         }
 
         // Optimistic locking: Update "update date" attribute to force update to root entity, to increment "version" attribute

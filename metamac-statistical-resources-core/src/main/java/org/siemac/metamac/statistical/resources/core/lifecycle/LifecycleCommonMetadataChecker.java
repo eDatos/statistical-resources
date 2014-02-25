@@ -157,6 +157,7 @@ public class LifecycleCommonMetadataChecker {
 
         ExceptionUtils.throwIfException(exceptions);
     }
+
     private boolean hasAnyDatasourceDateNextUpdate(DatasetVersion resource) {
         for (Datasource datasource : resource.getDatasources()) {
             if (datasource.getDateNextUpdate() != null) {

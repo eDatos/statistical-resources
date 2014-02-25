@@ -156,7 +156,7 @@ public class DatasetPublishingServiceTest extends StatisticalResourcesMockRestBa
 
         List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
 
-        exceptionItems.addAll(getExceptionItemsForExternalItemNotPublishedSiemac(siemacResource, "dataset_version"));
+        exceptionItems.addAll(getExceptionItemsForExternalItemNotPublishedSiemac(siemacResource, "parameter.resources.dataset_version"));
         exceptionItems.addAll(getExceptionItemsForExternalItemNotPublishedDataset(datasetVersion));
 
         expectedMetamacException(new MetamacException(exceptionItems));
@@ -176,7 +176,7 @@ public class DatasetPublishingServiceTest extends StatisticalResourcesMockRestBa
         mockSiemacExternalItemsPublished(siemacResource);
         mockDatasetVersionExternalItemsPublished(datasetVersion);
 
-        String prefix = "dataset_version.siemac_metadata_statistical_resource";
+        String prefix = "parameter.resources.dataset_version.siemac_metadata_statistical_resource";
 
         List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
         exceptionItems.add(buildRelatedResourceNotPublishedException(siemacResource.getReplaces(), prefix, "replaces"));
@@ -285,7 +285,7 @@ public class DatasetPublishingServiceTest extends StatisticalResourcesMockRestBa
     }
 
     private List<MetamacExceptionItem> getExceptionItemsForExternalItemNotPublishedDataset(DatasetVersion datasetVersion) {
-        String prefix = "dataset_version";
+        String prefix = "parameter.resources.dataset_version";
         List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
         exceptionItems.addAll(buildExternalItemsNotPublishedExceptions(datasetVersion.getGeographicCoverage(), prefix, "geographic_coverage"));
         exceptionItems.addAll(buildExternalItemsNotPublishedExceptions(datasetVersion.getMeasureCoverage(), prefix, "measure_coverage"));

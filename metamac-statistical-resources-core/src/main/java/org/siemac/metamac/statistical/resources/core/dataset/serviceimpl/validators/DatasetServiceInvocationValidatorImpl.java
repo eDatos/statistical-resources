@@ -44,11 +44,11 @@ public class DatasetServiceInvocationValidatorImpl extends BaseInvocationValidat
     }
 
     public static void checkRetrieveDatasourceByUrn(String urn, List<MetamacExceptionItem> exceptions) throws MetamacException {
-        StatisticalResourcesValidationUtils.checkParameterRequired(urn, ServiceExceptionSingleParameters.URN, exceptions);
+        StatisticalResourcesValidationUtils.checkParameterRequired(urn, ServiceExceptionParameters.URN, exceptions);
     }
 
     public static void checkDeleteDatasource(String urn, List<MetamacExceptionItem> exceptions) throws MetamacException {
-        StatisticalResourcesValidationUtils.checkParameterRequired(urn, ServiceExceptionSingleParameters.URN, exceptions);
+        StatisticalResourcesValidationUtils.checkParameterRequired(urn, ServiceExceptionParameters.URN, exceptions);
     }
 
     public static void checkRetrieveDatasourcesByDatasetVersion(String datasetVersionUrn, List<MetamacExceptionItem> exceptions) throws MetamacException {
@@ -104,16 +104,16 @@ public class DatasetServiceInvocationValidatorImpl extends BaseInvocationValidat
     }
 
     public static void checkRetrieveDatasetVersionDimensionsIds(String datasetVersionUrn, List<MetamacExceptionItem> exceptions) throws MetamacException {
-        StatisticalResourcesValidationUtils.checkParameterRequired(datasetVersionUrn, ServiceExceptionSingleParameters.URN, exceptions);
+        StatisticalResourcesValidationUtils.checkParameterRequired(datasetVersionUrn, ServiceExceptionParameters.URN, exceptions);
     }
 
     public static void checkRetrieveCoverageForDatasetVersionDimension(String datasetVersionUrn, String dsdDimensionId, List<MetamacExceptionItem> exceptions) {
-        StatisticalResourcesValidationUtils.checkMetadataRequired(datasetVersionUrn, ServiceExceptionSingleParameters.URN, exceptions);
+        StatisticalResourcesValidationUtils.checkMetadataRequired(datasetVersionUrn, ServiceExceptionParameters.URN, exceptions);
         StatisticalResourcesValidationUtils.checkMetadataRequired(dsdDimensionId, ServiceExceptionParameters.DSD_DIMENSION_ID, exceptions);
     }
 
     public static void checkFilterCoverageForDatasetVersionDimension(String datasetVersionUrn, String dsdDimensionId, String filter, List<MetamacExceptionItem> exceptions) {
-        StatisticalResourcesValidationUtils.checkMetadataRequired(datasetVersionUrn, ServiceExceptionSingleParameters.URN, exceptions);
+        StatisticalResourcesValidationUtils.checkMetadataRequired(datasetVersionUrn, ServiceExceptionParameters.URN, exceptions);
         StatisticalResourcesValidationUtils.checkMetadataRequired(dsdDimensionId, ServiceExceptionParameters.DSD_DIMENSION_ID, exceptions);
     }
 
@@ -139,12 +139,12 @@ public class DatasetServiceInvocationValidatorImpl extends BaseInvocationValidat
     }
 
     public static void checkRetrieveAttributeInstances(String datasetVersionUrn, String attributeId, List<MetamacExceptionItem> exceptions) {
-        StatisticalResourcesValidationUtils.checkMetadataRequired(datasetVersionUrn, ServiceExceptionSingleParameters.URN, exceptions);
+        StatisticalResourcesValidationUtils.checkMetadataRequired(datasetVersionUrn, ServiceExceptionParameters.URN, exceptions);
         StatisticalResourcesValidationUtils.checkMetadataRequired(attributeId, ServiceExceptionParameters.ATTRIBUTE_VALUE__ID, exceptions);
     }
 
     public static void checkRetrieveCoverageForDatasetVersionAttribute(String datasetVersionUrn, String dsdAttributeId, List<MetamacExceptionItem> exceptions) {
-        StatisticalResourcesValidationUtils.checkMetadataRequired(datasetVersionUrn, ServiceExceptionSingleParameters.URN, exceptions);
+        StatisticalResourcesValidationUtils.checkMetadataRequired(datasetVersionUrn, ServiceExceptionParameters.URN, exceptions);
         StatisticalResourcesValidationUtils.checkMetadataRequired(dsdAttributeId, ServiceExceptionParameters.ATTRIBUTE_VALUE__ID, exceptions);
     }
 
@@ -228,8 +228,8 @@ public class DatasetServiceInvocationValidatorImpl extends BaseInvocationValidat
 
         // Metadata that must be filled for existing entities
         StatisticalResourcesValidationUtils.checkMetadataRequired(datasetVersion.getDataset(), addParameter(metadataName, ServiceExceptionSingleParameters.DATASET), exceptions);
-        StatisticalResourcesValidationUtils.checkMetadataRequired(datasetVersion.getId(), ServiceExceptionSingleParameters.ID, exceptions);
-        StatisticalResourcesValidationUtils.checkMetadataRequired(datasetVersion.getVersion(), ServiceExceptionSingleParameters.VERSION, exceptions);
+        StatisticalResourcesValidationUtils.checkMetadataRequired(datasetVersion.getId(), addParameter(metadataName, ServiceExceptionSingleParameters.ID), exceptions);
+        StatisticalResourcesValidationUtils.checkMetadataRequired(datasetVersion.getVersion(), addParameter(metadataName, ServiceExceptionSingleParameters.VERSION), exceptions);
     }
 
     private static void checkDatasetVersion(DatasetVersion datasetVersion, String metadataName, List<MetamacExceptionItem> exceptions) {
@@ -275,11 +275,11 @@ public class DatasetServiceInvocationValidatorImpl extends BaseInvocationValidat
     }
 
     public static void checkRetrieveCategorisationByUrn(String urn, List<MetamacExceptionItem> exceptions) {
-        StatisticalResourcesValidationUtils.checkParameterRequired(urn, ServiceExceptionSingleParameters.URN, exceptions);
+        StatisticalResourcesValidationUtils.checkParameterRequired(urn, ServiceExceptionParameters.URN, exceptions);
     }
 
     public static void checkRetrieveCategorisationsByDatasetVersion(String datasetVersionUrn, List<MetamacExceptionItem> exceptions) {
-        StatisticalResourcesValidationUtils.checkParameterRequired(datasetVersionUrn, ServiceExceptionSingleParameters.URN, exceptions);
+        StatisticalResourcesValidationUtils.checkParameterRequired(datasetVersionUrn, ServiceExceptionParameters.URN, exceptions);
     }
 
     public static void checkFindCategorisationsByCondition(List<ConditionalCriteria> conditions, PagingParameter pagingParameter, List<MetamacExceptionItem> exceptions) {
@@ -287,11 +287,11 @@ public class DatasetServiceInvocationValidatorImpl extends BaseInvocationValidat
     }
 
     public static void checkDeleteCategorisation(String urn, List<MetamacExceptionItem> exceptions) {
-        StatisticalResourcesValidationUtils.checkParameterRequired(urn, ServiceExceptionSingleParameters.URN, exceptions);
+        StatisticalResourcesValidationUtils.checkParameterRequired(urn, ServiceExceptionParameters.URN, exceptions);
     }
 
     public static void checkEndCategorisationValidity(String urn, DateTime validTo, List<MetamacExceptionItem> exceptions) {
-        StatisticalResourcesValidationUtils.checkParameterRequired(urn, ServiceExceptionSingleParameters.URN, exceptions);
+        StatisticalResourcesValidationUtils.checkParameterRequired(urn, ServiceExceptionParameters.URN, exceptions);
     }
 
     public static void checkInitializeCategorisationMetadataForCreation(Categorisation categorisation, List<MetamacExceptionItem> exceptions) {

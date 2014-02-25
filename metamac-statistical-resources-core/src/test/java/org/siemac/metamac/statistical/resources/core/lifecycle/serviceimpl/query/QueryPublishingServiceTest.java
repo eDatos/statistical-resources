@@ -245,7 +245,7 @@ public class QueryPublishingServiceTest extends StatisticalResourcesMockRestBase
 
         List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
 
-        exceptionItems.addAll(getExceptionItemsForExternalItemNotPublishedLifecycle(lifeCycleStatisticalResource, "query_version", false));
+        exceptionItems.addAll(getExceptionItemsForExternalItemNotPublishedLifecycle(lifeCycleStatisticalResource, "parameter.resources.query_version", false));
 
         expectedMetamacException(new MetamacException(exceptionItems));
 

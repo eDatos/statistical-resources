@@ -73,7 +73,6 @@ import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryTypeEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
-import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionSingleParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryRepository;
 import org.siemac.metamac.statistical.resources.core.query.domain.QuerySelectionItemRepository;
@@ -178,7 +177,7 @@ public class QueryServiceTest extends StatisticalResourcesBaseTest implements Qu
 
     @Test
     public void testRetrieveQueryVersionByUrnParameterRequired() throws MetamacException {
-        expectedMetamacException(new MetamacException(ServiceExceptionType.PARAMETER_REQUIRED, ServiceExceptionSingleParameters.URN));
+        expectedMetamacException(new MetamacException(ServiceExceptionType.PARAMETER_REQUIRED, ServiceExceptionParameters.URN));
         queryService.retrieveQueryVersionByUrn(getServiceContextWithoutPrincipal(), EMPTY);
     }
 
@@ -548,6 +547,7 @@ public class QueryServiceTest extends StatisticalResourcesBaseTest implements Qu
 
         queryService.updateQueryVersion(getServiceContextWithoutPrincipal(), expected);
     }
+
     @Test
     @MetamacMock({DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME, QUERY_VERSION_06_BASIC_ACTIVE_NAME, QUERY_VERSION_08_BASIC_DISCONTINUED_NAME, QUERY_VERSION_09_BASIC_PENDING_REVIEW_NAME})
     public void testUpdateDatasetVersionQueryVersionChangesQueryStatusFromPendingReviewToActive() throws Exception {
@@ -576,6 +576,7 @@ public class QueryServiceTest extends StatisticalResourcesBaseTest implements Qu
         QueryVersion actual = queryService.updateQueryVersion(getServiceContextWithoutPrincipal(), expected);
         assertEquals(QueryStatusEnum.DISCONTINUED, actual.getStatus());
     }
+
     @Override
     @Test
     @MetamacMock(QUERY_VERSION_01_WITH_SELECTION_NAME)
@@ -929,7 +930,7 @@ public class QueryServiceTest extends StatisticalResourcesBaseTest implements Qu
     @Test
     @MetamacMock({QUERY_VERSION_01_WITH_SELECTION_NAME, QUERY_VERSION_06_BASIC_ACTIVE_NAME, QUERY_VERSION_08_BASIC_DISCONTINUED_NAME})
     public void testDeleteQueryVersionErrorUrnRequired() throws Exception {
-        expectedMetamacException(new MetamacException(ServiceExceptionType.PARAMETER_REQUIRED, ServiceExceptionSingleParameters.URN));
+        expectedMetamacException(new MetamacException(ServiceExceptionType.PARAMETER_REQUIRED, ServiceExceptionParameters.URN));
         queryService.deleteQueryVersion(getServiceContextWithoutPrincipal(), null);
     }
 

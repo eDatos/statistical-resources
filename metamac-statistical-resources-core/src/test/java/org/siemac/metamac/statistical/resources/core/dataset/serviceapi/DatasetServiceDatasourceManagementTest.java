@@ -412,7 +412,7 @@ public class DatasetServiceDatasourceManagementTest extends StatisticalResources
 
     @Test
     public void testRetrieveDatasourceByUrnParameterRequired() throws MetamacException {
-        expectedMetamacException(new MetamacException(ServiceExceptionType.PARAMETER_REQUIRED, ServiceExceptionSingleParameters.URN));
+        expectedMetamacException(new MetamacException(ServiceExceptionType.PARAMETER_REQUIRED, ServiceExceptionParameters.URN));
 
         datasetService.retrieveDatasourceByUrn(getServiceContextWithoutPrincipal(), EMPTY);
     }

@@ -97,8 +97,7 @@ public abstract class BaseInvocationValidator {
     }
 
     protected static void checkForSemanticIdentifier(String code, TypeRelatedResourceEnum resourceType, String metadataName, List<MetamacExceptionItem> exceptions) {
-        if (!(TypeRelatedResourceEnumUtils.checkIfTypeRelatedResourceIsAny(resourceType, TypeRelatedResourceEnum.DATASOURCE, TypeRelatedResourceEnum.CHAPTER,
-                TypeRelatedResourceEnum.CUBE))) {
+        if (!(TypeRelatedResourceEnumUtils.checkIfTypeRelatedResourceIsAny(resourceType, TypeRelatedResourceEnum.DATASOURCE, TypeRelatedResourceEnum.CHAPTER, TypeRelatedResourceEnum.CUBE))) {
             StatisticalResourcesValidationUtils.checkSemanticIdentifierAsMetamacID(code, addParameter(metadataName, ServiceExceptionSingleParameters.CODE), exceptions);
         }
     }
@@ -121,7 +120,8 @@ public abstract class BaseInvocationValidator {
         checkNameableStatisticalResource(resource, metadataName, exceptions);
     }
 
-    protected static void checkExistingNameableStatisticalResource(NameableStatisticalResource resource, TypeRelatedResourceEnum typeRelatedResource, String metadataName, List<MetamacExceptionItem> exceptions) {
+    protected static void checkExistingNameableStatisticalResource(NameableStatisticalResource resource, TypeRelatedResourceEnum typeRelatedResource, String metadataName,
+            List<MetamacExceptionItem> exceptions) {
         StatisticalResourcesValidationUtils.checkMetadataRequired(resource, metadataName, exceptions);
         if (resource == null) {
             return;
@@ -153,7 +153,8 @@ public abstract class BaseInvocationValidator {
         StatisticalResourcesValidationUtils.checkMetadataEmpty(resource.getVersionLogic(), addParameter(metadataName, ServiceExceptionSingleParameters.VERSION_LOGIC), exceptions);
     }
 
-    protected static void checkExistingVersionableStatisticalResource(VersionableStatisticalResource resource, TypeRelatedResourceEnum typeRelatedResource, String metadataName, List<MetamacExceptionItem> exceptions) {
+    protected static void checkExistingVersionableStatisticalResource(VersionableStatisticalResource resource, TypeRelatedResourceEnum typeRelatedResource, String metadataName,
+            List<MetamacExceptionItem> exceptions) {
         StatisticalResourcesValidationUtils.checkMetadataRequired(resource, metadataName, exceptions);
         if (resource == null) {
             return;
@@ -187,7 +188,8 @@ public abstract class BaseInvocationValidator {
         StatisticalResourcesValidationUtils.checkMetadataEmpty(resource.getProcStatus(), addParameter(metadataName, ServiceExceptionSingleParameters.PROC_STATUS), exceptions);
     }
 
-    protected static void checkExistingLifeCycleStatisticalResource(LifeCycleStatisticalResource resource, TypeRelatedResourceEnum typeRelatedResource, String metadataName, List<MetamacExceptionItem> exceptions) {
+    protected static void checkExistingLifeCycleStatisticalResource(LifeCycleStatisticalResource resource, TypeRelatedResourceEnum typeRelatedResource, String metadataName,
+            List<MetamacExceptionItem> exceptions) {
         StatisticalResourcesValidationUtils.checkMetadataRequired(resource, metadataName, exceptions);
         if (resource == null) {
             return;
@@ -218,7 +220,8 @@ public abstract class BaseInvocationValidator {
         checkNewLifeCycleStatisticalResource(resource, addParameter(metadataName, ServiceExceptionSingleParameters.SIEMAC_METADATA_STATISTICAL_RESOURCE), exceptions);
     }
 
-    protected static void checkExistingSiemacMetadataStatisticalResource(SiemacMetadataStatisticalResource resource, TypeRelatedResourceEnum typeRelatedResource, String metadataName, List<MetamacExceptionItem> exceptions) {
+    protected static void checkExistingSiemacMetadataStatisticalResource(SiemacMetadataStatisticalResource resource, TypeRelatedResourceEnum typeRelatedResource, String metadataName,
+            List<MetamacExceptionItem> exceptions) {
         StatisticalResourcesValidationUtils.checkMetadataRequired(resource, metadataName, exceptions);
         if (resource == null) {
             return;
