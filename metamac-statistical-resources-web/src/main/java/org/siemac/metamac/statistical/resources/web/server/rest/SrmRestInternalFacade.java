@@ -9,6 +9,7 @@ import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdAttributeDt
 import org.siemac.metamac.statistical.resources.web.shared.criteria.DsdWebCriteria;
 import org.siemac.metamac.web.common.shared.criteria.MetamacVersionableWebCriteria;
 import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
+import org.siemac.metamac.web.common.shared.criteria.SrmExternalResourceRestCriteria;
 import org.siemac.metamac.web.common.shared.criteria.SrmItemRestCriteria;
 import org.siemac.metamac.web.common.shared.domain.ExternalItemsResult;
 import org.siemac.metamac.web.common.shared.exception.MetamacWebException;
@@ -24,7 +25,8 @@ public interface SrmRestInternalFacade {
 
     // CODE LISTS
     public Map<String, String> findMappeableDimensionsInDsdWithVariables(String dsdUrn) throws MetamacWebException;
-    public ExternalItemsResult findCodelistsWithVariable(String variableUrn, int firstResult, int maxResult, MetamacVersionableWebCriteria condition) throws MetamacWebException;
+    public ExternalItemsResult findCodelistsWithVariable(String variableUrn, int firstResult, int maxResult, SrmExternalResourceRestCriteria srmExternalResourceRestCriteria)
+            throws MetamacWebException;
 
     // CODES
 

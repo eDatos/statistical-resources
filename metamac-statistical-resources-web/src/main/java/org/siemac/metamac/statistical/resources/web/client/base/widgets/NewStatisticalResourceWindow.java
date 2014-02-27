@@ -13,15 +13,15 @@ import org.siemac.metamac.web.common.client.widgets.CustomWindow;
 import org.siemac.metamac.web.common.client.widgets.form.CustomDynamicForm;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ExternalItemLinkItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.external.SearchSrmItemLinkItemWithSchemeFilterItem;
+import org.siemac.metamac.web.common.shared.criteria.SrmExternalResourceRestCriteria;
 import org.siemac.metamac.web.common.shared.criteria.SrmItemRestCriteria;
-import org.siemac.metamac.web.common.shared.criteria.SrmItemSchemeRestCriteria;
 
 public class NewStatisticalResourceWindow extends CustomWindow {
 
-    private NewStatisticalResourceUiHandlers        uiHandlers;
+    private NewStatisticalResourceUiHandlers            uiHandlers;
 
-    protected CustomDynamicForm                     form;
-    protected ExternalItemLinkItem                  languageItem;
+    protected CustomDynamicForm                         form;
+    protected ExternalItemLinkItem                      languageItem;
 
     protected SearchSrmItemLinkItemWithSchemeFilterItem maintainerItem;
 
@@ -95,7 +95,7 @@ public class NewStatisticalResourceWindow extends CustomWindow {
             }
 
             @Override
-            protected void retrieveItemSchemes(int firstResult, int maxResults, SrmItemSchemeRestCriteria webCriteria) {
+            protected void retrieveItemSchemes(int firstResult, int maxResults, SrmExternalResourceRestCriteria webCriteria) {
                 uiHandlers.retrieveAgencySchemes(firstResult, maxResults, webCriteria);
             }
         };

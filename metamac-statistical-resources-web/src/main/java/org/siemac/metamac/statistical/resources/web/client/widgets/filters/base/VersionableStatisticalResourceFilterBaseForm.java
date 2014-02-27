@@ -1,21 +1,24 @@
-package org.siemac.metamac.statistical.resources.web.client.widgets.filters;
+package org.siemac.metamac.statistical.resources.web.client.widgets.filters.base;
 
 import java.util.Arrays;
 import java.util.List;
 
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.statistical.resources.web.client.widgets.filters.facets.StatisticalOperationFacetFilter;
-import org.siemac.metamac.statistical.resources.web.shared.criteria.StatisticalResourceWebCriteria;
-import org.siemac.metamac.web.common.client.widgets.filters.base.SimpleFilterBaseForm;
+import org.siemac.metamac.statistical.resources.web.shared.criteria.VersionableStatisticalResourceWebCriteria;
+import org.siemac.metamac.web.common.client.widgets.filters.base.SimpleVersionableFilterBaseForm;
 import org.siemac.metamac.web.common.client.widgets.filters.facets.FacetFilter;
+import org.siemac.metamac.web.common.client.widgets.filters.facets.OnlyLastVersionFacetFilter;
 
-public class StatisticalResourceFilterForm extends SimpleFilterBaseForm<StatisticalResourceWebCriteria> {
+public abstract class VersionableStatisticalResourceFilterBaseForm<T extends VersionableStatisticalResourceWebCriteria> extends SimpleVersionableFilterBaseForm<T> {
 
     private StatisticalOperationFacetFilter statisticalOperationFacet;
 
-    public StatisticalResourceFilterForm() {
+    public VersionableStatisticalResourceFilterBaseForm() {
         super();
         statisticalOperationFacet = new StatisticalOperationFacetFilter();
+        onlyLastVersionFacet = new OnlyLastVersionFacetFilter();
+        onlyLastVersionFacet.setColSpan(2);
         criteriaFacet.setColSpan(2);
     }
 
@@ -29,9 +32,10 @@ public class StatisticalResourceFilterForm extends SimpleFilterBaseForm<Statisti
         }
     }
 
+    // IMPORTANT: This method must be inherited if you change the WebCriteria in T
     @Override
-    public StatisticalResourceWebCriteria getSearchCriteria() {
-        StatisticalResourceWebCriteria searchCriteria = super.getSearchCriteria();
+    public T getSearchCriteria() {
+        T searchCriteria = super.getSearchCriteria();
 
         statisticalOperationFacet.populateCriteria(searchCriteria);
 
@@ -39,12 +43,7 @@ public class StatisticalResourceFilterForm extends SimpleFilterBaseForm<Statisti
     }
 
     @Override
-    protected StatisticalResourceWebCriteria buildEmptySearchCriteria() {
-        return new StatisticalResourceWebCriteria();
-    }
-
-    @Override
     public List<FacetFilter> getFacets() {
-        return Arrays.asList(statisticalOperationFacet, criteriaFacet);
+        return Arrays.asList(statisticalOperationFacet, onlyLastVersionFacet, criteriaFacet);
     }
 }

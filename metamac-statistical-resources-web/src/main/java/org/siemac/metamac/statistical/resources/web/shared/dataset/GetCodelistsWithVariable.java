@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.web.common.shared.criteria.MetamacVersionableWebCriteria;
+import org.siemac.metamac.web.common.shared.criteria.SrmExternalResourceRestCriteria;
 
 import com.gwtplatform.dispatch.annotation.GenDispatch;
 import com.gwtplatform.dispatch.annotation.In;
@@ -13,23 +14,23 @@ import com.gwtplatform.dispatch.annotation.Out;
 public class GetCodelistsWithVariable {
 
     @In(1)
-    String                        variableUrn;
+    String                          variableUrn;
 
     @In(2)
-    int                           firstResult;
+    int                             firstResult;
 
     @In(3)
-    int                           maxResults;
+    int                             maxResults;
 
     @In(4)
-    MetamacVersionableWebCriteria criteria;
+    SrmExternalResourceRestCriteria criteria;
 
     @Out(1)
-    List<ExternalItemDto>         codelists;
+    List<ExternalItemDto>           codelists;
 
     @Out(2)
-    Integer                       firstResultOut;
+    Integer                         firstResultOut;
 
     @Out(3)
-    Integer                       totalResults;
+    Integer                         totalResults;
 }

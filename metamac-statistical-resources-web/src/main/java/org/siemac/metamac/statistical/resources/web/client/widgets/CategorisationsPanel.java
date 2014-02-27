@@ -24,7 +24,6 @@ import org.siemac.metamac.web.common.client.widgets.actions.search.SearchPaginat
 import org.siemac.metamac.web.common.client.widgets.windows.search.SearchMultipleSrmItemWithSchemeFilterPaginatedWindow;
 import org.siemac.metamac.web.common.shared.criteria.SrmExternalResourceRestCriteria;
 import org.siemac.metamac.web.common.shared.criteria.SrmItemRestCriteria;
-import org.siemac.metamac.web.common.shared.criteria.SrmItemSchemeRestCriteria;
 
 import com.smartgwt.client.types.Autofit;
 import com.smartgwt.client.types.Overflow;
@@ -173,10 +172,10 @@ public abstract class CategorisationsPanel extends VLayout {
     }
 
     private void showSearchCategoriesWindow() {
-        SearchPaginatedAction<SrmItemSchemeRestCriteria> filterAction = new SearchPaginatedAction<SrmItemSchemeRestCriteria>() {
+        SearchPaginatedAction<SrmExternalResourceRestCriteria> filterAction = new SearchPaginatedAction<SrmExternalResourceRestCriteria>() {
 
             @Override
-            public void retrieveResultSet(int firstResult, int maxResults, SrmItemSchemeRestCriteria webCriteria) {
+            public void retrieveResultSet(int firstResult, int maxResults, SrmExternalResourceRestCriteria webCriteria) {
                 webCriteria.setOnlyLastVersion(categoriesSelectionWindow.getFilter().getSearchCriteria().isItemSchemeLastVersion());
                 retrieveCategorySchemesForCategorisations(firstResult, maxResults, webCriteria);
             }

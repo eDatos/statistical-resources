@@ -2,15 +2,18 @@ package org.siemac.metamac.statistical.resources.web.client.widgets.windows.sear
 
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.web.common.client.widgets.actions.search.SearchPaginatedAction;
-import org.siemac.metamac.web.common.client.widgets.filters.SimpleVersionableFilterForm;
+import org.siemac.metamac.web.common.client.widgets.filters.SimpleSrmExternalResourceHiddenLastVersionFilterForm;
+import org.siemac.metamac.web.common.client.widgets.filters.SrmItemSchemeFilterForm;
+import org.siemac.metamac.web.common.client.widgets.filters.base.SimpleVersionableFilterBaseForm;
 import org.siemac.metamac.web.common.client.widgets.windows.search.SearchRelatedResourceBasePaginatedWindow;
 import org.siemac.metamac.web.common.shared.criteria.MetamacVersionableWebCriteria;
 import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
+import org.siemac.metamac.web.common.shared.criteria.SrmExternalResourceRestCriteria;
 
-public class SearchSingleSrmItemSchemeWindow extends SearchRelatedResourceBasePaginatedWindow<ExternalItemDto, MetamacVersionableWebCriteria> {
+public class SearchSingleSrmItemSchemeWindow extends SearchRelatedResourceBasePaginatedWindow<ExternalItemDto, SrmExternalResourceRestCriteria> {
 
-    public SearchSingleSrmItemSchemeWindow(String title, int maxResults, SearchPaginatedAction<MetamacVersionableWebCriteria> action) {
-        super(title, maxResults, new SimpleVersionableFilterForm<MetamacVersionableWebCriteria>(), action);
+    public SearchSingleSrmItemSchemeWindow(String title, int maxResults, SearchPaginatedAction<SrmExternalResourceRestCriteria> action) {
+        super(title, maxResults, new SrmItemSchemeFilterForm(), action);
     }
 
     public MetamacWebCriteria getWebCriteria() {

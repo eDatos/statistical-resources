@@ -25,15 +25,14 @@ import org.siemac.metamac.web.common.client.widgets.form.fields.external.SearchS
 import org.siemac.metamac.web.common.client.widgets.form.fields.external.SearchSrmListItemWithSchemeFilterItem;
 import org.siemac.metamac.web.common.shared.criteria.SrmExternalResourceRestCriteria;
 import org.siemac.metamac.web.common.shared.criteria.SrmItemRestCriteria;
-import org.siemac.metamac.web.common.shared.criteria.SrmItemSchemeRestCriteria;
 
 public class SiemacMetadataProductionDescriptorsEditionForm extends GroupDynamicForm {
 
-    protected ProcStatusEnum                      procStatus;
+    protected ProcStatusEnum                          procStatus;
 
-    private StatisticalResourceUiHandlers         uiHandlers;
+    private StatisticalResourceUiHandlers             uiHandlers;
 
-    private SearchSrmListItemWithSchemeFilterItem contributorItem;
+    private SearchSrmListItemWithSchemeFilterItem     contributorItem;
 
     private SearchSrmItemLinkItemWithSchemeFilterItem creatorItem;
 
@@ -102,7 +101,7 @@ public class SiemacMetadataProductionDescriptorsEditionForm extends GroupDynamic
         return new SearchSrmItemLinkItemWithSchemeFilterItem(SiemacMetadataDS.CREATOR, getConstants().siemacMetadataStatisticalResourceCreator(), StatisticalResourceWebConstants.FORM_LIST_MAX_RESULTS) {
 
             @Override
-            protected void retrieveItemSchemes(int firstResult, int maxResults, SrmItemSchemeRestCriteria webCriteria) {
+            protected void retrieveItemSchemes(int firstResult, int maxResults, SrmExternalResourceRestCriteria webCriteria) {
                 uiHandlers.retrieveOrganisationUnitSchemes(firstResult, maxResults, webCriteria, SiemacMetadataExternalField.CREATOR);
             }
 

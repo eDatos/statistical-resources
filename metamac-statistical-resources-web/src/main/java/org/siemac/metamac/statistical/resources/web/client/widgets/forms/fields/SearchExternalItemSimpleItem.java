@@ -5,6 +5,7 @@ import static org.siemac.metamac.statistical.resources.web.client.StatisticalRes
 import java.util.List;
 
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
+import org.siemac.metamac.web.common.client.MetamacWebCommon;
 import org.siemac.metamac.web.common.client.utils.RecordUtils;
 import org.siemac.metamac.web.common.client.widgets.actions.search.SearchPaginatedAction;
 import org.siemac.metamac.web.common.client.widgets.filters.SimpleFilterForm;
@@ -27,16 +28,17 @@ public abstract class SearchExternalItemSimpleItem extends SearchExternalItemLin
 
     @Override
     protected void onSearch() {
-        SimpleFilterForm<MetamacWebCriteria> simpleFilter = new SimpleFilterForm<MetamacWebCriteria>();
-        window = new SearchSingleExternalItemPaginatedWindow<MetamacWebCriteria>(getConstants().resourceSelection(), maxResults, simpleFilter, new SearchPaginatedAction<MetamacWebCriteria>() {
+        SimpleFilterForm simpleFilter = new SimpleFilterForm();
+        window = new SearchSingleExternalItemPaginatedWindow<MetamacWebCriteria>(MetamacWebCommon.getConstants().resourceSelection(), maxResults, simpleFilter,
+                new SearchPaginatedAction<MetamacWebCriteria>() {
 
-            @Override
-            public void retrieveResultSet(int firstResult, int maxResults, MetamacWebCriteria webCriteria) {
-                retrieveResources(firstResult, maxResults, webCriteria);
-            }
-        });
-        
-        retrieveResources(0, maxResults, window.);
+                    @Override
+                    public void retrieveResultSet(int firstResult, int maxResults, MetamacWebCriteria webCriteria) {
+                        retrieveResources(firstResult, maxResults, webCriteria);
+                    }
+                });
+
+        retrieveResources(0, maxResults, window.getSearchCriteria());
 
         window.setSaveAction(new ClickHandler() {
 

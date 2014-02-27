@@ -1,8 +1,9 @@
 package org.siemac.metamac.statistical.resources.web.client.widgets.filters;
 
+import org.siemac.metamac.statistical.resources.web.client.widgets.filters.base.VersionableStatisticalResourceFilterBaseForm;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.DatasetVersionWebCriteria;
 
-public class VersionableStatisticalResourceWithDataFilterForm<T extends DatasetVersionWebCriteria> extends VersionableStatisticalResourceFilterForm<T> {
+public class VersionableStatisticalResourceWithDataFilterForm extends VersionableStatisticalResourceFilterBaseForm<DatasetVersionWebCriteria> {
 
     private Boolean hasData;
 
@@ -14,17 +15,15 @@ public class VersionableStatisticalResourceWithDataFilterForm<T extends DatasetV
         this.hasData = hasData;
     }
 
-    // IMPORTANT: This method must be inherited if you change the WebCriteria in T
-    @SuppressWarnings("unchecked")
     @Override
-    public T getSearchCriteria() {
+    public DatasetVersionWebCriteria getSearchCriteria() {
         DatasetVersionWebCriteria searchCriteria = new DatasetVersionWebCriteria();
-        populateDatasetVersionWebCriteria(searchCriteria);
-        return (T) searchCriteria;
+        searchCriteria.setHasData(hasData);
+        return searchCriteria;
     }
 
-    protected void populateDatasetVersionWebCriteria(DatasetVersionWebCriteria searchCriteria) {
-        searchCriteria.setHasData(hasData);
-        populateVersionableStatisticalResourceSearchCriteria(searchCriteria);
+    @Override
+    protected DatasetVersionWebCriteria buildEmptySearchCriteria() {
+        return new DatasetVersionWebCriteria();
     }
 }

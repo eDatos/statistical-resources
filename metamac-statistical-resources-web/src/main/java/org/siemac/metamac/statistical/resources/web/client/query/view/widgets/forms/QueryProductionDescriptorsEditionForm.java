@@ -38,8 +38,8 @@ import org.siemac.metamac.web.common.client.widgets.form.fields.ExternalItemLink
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewTextItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.external.SearchSrmItemLinkItemWithSchemeFilterItem;
 import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
+import org.siemac.metamac.web.common.shared.criteria.SrmExternalResourceRestCriteria;
 import org.siemac.metamac.web.common.shared.criteria.SrmItemRestCriteria;
-import org.siemac.metamac.web.common.shared.criteria.SrmItemSchemeRestCriteria;
 
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.FormItemIfFunction;
@@ -60,7 +60,7 @@ public class QueryProductionDescriptorsEditionForm extends NavigationEnabledDyna
     private Map<String, SearchMultipleCodeItemWindow>                dimensionCodeSelectionWindow;
     private Map<String, CodeItemListItem>                            selectionFields;
 
-    protected SearchSrmItemLinkItemWithSchemeFilterItem                  maintainerItem;
+    protected SearchSrmItemLinkItemWithSchemeFilterItem              maintainerItem;
 
     private Map<String, List<CodeItemDto>>                           dtoSelection;
 
@@ -382,7 +382,7 @@ public class QueryProductionDescriptorsEditionForm extends NavigationEnabledDyna
             }
 
             @Override
-            protected void retrieveItemSchemes(int firstResult, int maxResults, SrmItemSchemeRestCriteria webCriteria) {
+            protected void retrieveItemSchemes(int firstResult, int maxResults, SrmExternalResourceRestCriteria webCriteria) {
                 uiHandlers.retrieveAgencySchemes(firstResult, maxResults, webCriteria);
             }
         };

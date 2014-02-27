@@ -23,8 +23,8 @@ import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Organis
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.OrganisationSchemeCriteriaPropertyRestriction;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.DsdWebCriteria;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.base.HasStatisticalOperationCriteria;
-import org.siemac.metamac.web.common.shared.criteria.MetamacVersionableWebCriteria;
 import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
+import org.siemac.metamac.web.common.shared.criteria.SrmExternalResourceRestCriteria;
 import org.siemac.metamac.web.common.shared.criteria.SrmItemRestCriteria;
 import org.siemac.metamac.web.common.shared.criteria.base.HasItemSchemeCriteria;
 import org.siemac.metamac.web.common.shared.criteria.base.HasOnlyLastVersionCriteria;
@@ -83,7 +83,7 @@ public class MetamacWebRestCriteriaUtils {
     // CODE LIST
     // -------------------------------------------------------------------------------------------------------------
 
-    public static String buildQueryCodelist(MetamacVersionableWebCriteria webCriteria, String variableUrn) {
+    public static String buildQueryCodelist(SrmExternalResourceRestCriteria webCriteria, String variableUrn) {
         StringBuilder queryBuilder = new StringBuilder();
         if (webCriteria != null) {
             addSimpleRestCriteria(queryBuilder, webCriteria, CodelistCriteriaPropertyRestriction.NAME, CodelistCriteriaPropertyRestriction.ID, CodelistCriteriaPropertyRestriction.URN);

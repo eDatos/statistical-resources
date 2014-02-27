@@ -49,6 +49,7 @@ import org.siemac.metamac.statistical.resources.web.shared.criteria.DsdWebCriter
 import org.siemac.metamac.web.common.server.utils.WebExceptionUtils;
 import org.siemac.metamac.web.common.shared.criteria.MetamacVersionableWebCriteria;
 import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
+import org.siemac.metamac.web.common.shared.criteria.SrmExternalResourceRestCriteria;
 import org.siemac.metamac.web.common.shared.criteria.SrmItemRestCriteria;
 import org.siemac.metamac.web.common.shared.domain.ExternalItemsResult;
 import org.siemac.metamac.web.common.shared.exception.MetamacWebException;
@@ -212,7 +213,7 @@ public class SrmRestInternalFacadeImpl implements SrmRestInternalFacade {
     }
 
     @Override
-    public ExternalItemsResult findCodelistsWithVariable(String variableUrn, int firstResult, int maxResult, MetamacVersionableWebCriteria criteria) throws MetamacWebException {
+    public ExternalItemsResult findCodelistsWithVariable(String variableUrn, int firstResult, int maxResult, SrmExternalResourceRestCriteria criteria) throws MetamacWebException {
         try {
             String query = buildQueryCodelist(criteria, variableUrn);
 

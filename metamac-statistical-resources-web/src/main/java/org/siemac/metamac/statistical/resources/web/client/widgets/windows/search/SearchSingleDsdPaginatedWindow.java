@@ -6,7 +6,7 @@ import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.statistical.resources.web.client.widgets.filters.DsdFilterForm;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.DsdWebCriteria;
 import org.siemac.metamac.web.common.client.widgets.actions.search.SearchPaginatedAction;
-import org.siemac.metamac.web.common.client.widgets.filters.FilterForm;
+import org.siemac.metamac.web.common.client.widgets.filters.base.FilterForm;
 import org.siemac.metamac.web.common.client.widgets.windows.search.SearchRelatedResourceBasePaginatedWindow;
 
 public class SearchSingleDsdPaginatedWindow extends SearchRelatedResourceBasePaginatedWindow<ExternalItemDto, DsdWebCriteria> {

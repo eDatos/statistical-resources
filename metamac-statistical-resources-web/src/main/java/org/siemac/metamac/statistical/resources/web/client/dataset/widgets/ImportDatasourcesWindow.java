@@ -21,6 +21,7 @@ import org.siemac.metamac.web.common.client.widgets.InformationLabel;
 import org.siemac.metamac.web.common.client.widgets.actions.search.SearchPaginatedAction;
 import org.siemac.metamac.web.common.client.widgets.form.fields.external.SearchExternalItemLinkItem;
 import org.siemac.metamac.web.common.shared.criteria.MetamacVersionableWebCriteria;
+import org.siemac.metamac.web.common.shared.criteria.SrmExternalResourceRestCriteria;
 
 import com.smartgwt.client.widgets.form.fields.HiddenItem;
 import com.smartgwt.client.widgets.form.fields.StaticTextItem;
@@ -145,16 +146,16 @@ public class ImportDatasourcesWindow extends ImportResourceWindow {
                 @Override
                 public void onSearch() {
                     final SearchSingleSrmItemSchemeWindow searchWindow = new SearchSingleSrmItemSchemeWindow(getConstants().resourceSelection(), StatisticalResourceWebConstants.FORM_LIST_MAX_RESULTS,
-                            new SearchPaginatedAction<MetamacVersionableWebCriteria>() {
+                            new SearchPaginatedAction<SrmExternalResourceRestCriteria>() {
 
                                 @Override
-                                public void retrieveResultSet(int firstResult, int maxResults, MetamacVersionableWebCriteria criteria) {
+                                public void retrieveResultSet(int firstResult, int maxResults, SrmExternalResourceRestCriteria criteria) {
                                     getUiHandlers().retrieveAlternativeCodelistsForVariable(dimensionId, variableUrn, firstResult, maxResults, criteria);
                                 }
 
                             });
 
-                    getUiHandlers().retrieveAlternativeCodelistsForVariable(dimensionId, variableUrn, 0, StatisticalResourceWebConstants.FORM_LIST_MAX_RESULTS, new MetamacVersionableWebCriteria());
+                    getUiHandlers().retrieveAlternativeCodelistsForVariable(dimensionId, variableUrn, 0, StatisticalResourceWebConstants.FORM_LIST_MAX_RESULTS, searchWindow.getSearchCriteria());
 
                     searchWindow.setSaveAction(new ClickHandler() {
 

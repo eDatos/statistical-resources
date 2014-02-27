@@ -35,6 +35,7 @@ import org.siemac.metamac.statistical.resources.web.shared.external.GetStatistic
 import org.siemac.metamac.web.common.client.events.ShowMessageEvent;
 import org.siemac.metamac.web.common.client.utils.WaitingAsyncCallbackHandlingError;
 import org.siemac.metamac.web.common.shared.criteria.MetamacVersionableWebCriteria;
+import org.siemac.metamac.web.common.shared.criteria.SrmExternalResourceRestCriteria;
 
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
@@ -177,7 +178,7 @@ public class DatasetDatasourcesTabPresenter extends Presenter<DatasetDatasources
     }
 
     @Override
-    public void retrieveAlternativeCodelistsForVariable(final String dimensionId, String variableUrn, int firstResult, int maxResults, MetamacVersionableWebCriteria criteria) {
+    public void retrieveAlternativeCodelistsForVariable(final String dimensionId, String variableUrn, int firstResult, int maxResults, SrmExternalResourceRestCriteria criteria) {
         dispatcher.execute(new GetCodelistsWithVariableAction(variableUrn, firstResult, maxResults, criteria), new WaitingAsyncCallbackHandlingError<GetCodelistsWithVariableResult>(this) {
 
             @Override

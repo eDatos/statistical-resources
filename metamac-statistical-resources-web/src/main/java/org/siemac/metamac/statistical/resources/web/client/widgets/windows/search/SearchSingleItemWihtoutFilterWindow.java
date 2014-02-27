@@ -9,7 +9,7 @@ import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
 public class SearchSingleItemWihtoutFilterWindow extends SearchRelatedResourceBasePaginatedWindow<ExternalItemDto, MetamacWebCriteria> {
 
     public SearchSingleItemWihtoutFilterWindow(String title, int maxResults, SearchPaginatedAction<MetamacWebCriteria> action) {
-        super(title, maxResults, new SimpleFilterForm<MetamacWebCriteria>(), action);
+        super(title, maxResults, new SimpleFilterForm(), action);
     }
 
     public MetamacWebCriteria getWebCriteria() {

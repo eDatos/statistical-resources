@@ -6,7 +6,7 @@ import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.base.HasStatisticalOperationCriteria;
 import org.siemac.metamac.web.common.client.utils.ExternalItemUtils;
-import org.siemac.metamac.web.common.client.widgets.filters.FilterAction;
+import org.siemac.metamac.web.common.client.widgets.filters.base.FilterAction;
 import org.siemac.metamac.web.common.client.widgets.filters.facets.FacetFilter;
 
 import com.smartgwt.client.types.TitleOrientation;

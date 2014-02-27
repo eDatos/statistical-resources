@@ -11,18 +11,15 @@ import org.siemac.metamac.web.common.client.widgets.windows.search.SearchRelated
 
 public class SearchSingleStatisticalRelatedResourcePaginatedWindow extends SearchRelatedResourceBasePaginatedWindow<RelatedResourceDto, StatisticalResourceWebCriteria> {
 
-    private StatisticalResourceFilterForm<StatisticalResourceWebCriteria> filterForm;
+    private StatisticalResourceFilterForm filterForm;
 
     public SearchSingleStatisticalRelatedResourcePaginatedWindow(String title, int maxResults, SearchPaginatedAction<StatisticalResourceWebCriteria> action) {
-        super(title, maxResults, new StatisticalResourceFilterForm<StatisticalResourceWebCriteria>(), action);
-        filterForm = (StatisticalResourceFilterForm<StatisticalResourceWebCriteria>) getFilterForm();
+        super(title, maxResults, new StatisticalResourceFilterForm(), action);
+        filterForm = (StatisticalResourceFilterForm) getFilterForm();
     }
 
     public void setStatisticalOperations(List<ExternalItemDto> statisticalOperations) {
         filterForm.setStatisticalOperations(statisticalOperations);
     }
 
-    public StatisticalResourceWebCriteria getSearchCriteria() {
-        return getFilterForm().getSearchCriteria();
-    }
 }
