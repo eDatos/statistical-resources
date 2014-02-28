@@ -90,7 +90,7 @@ public class DatasetCategorisationsTabPresenter extends Presenter<DatasetCategor
 
     @TitleFunction
     public String title() {
-        return getConstants().breadcrumbDatasetCategorisations();
+        return getConstants().breadcrumbDatasetSubjects();
     }
 
     @Override
@@ -168,12 +168,11 @@ public class DatasetCategorisationsTabPresenter extends Presenter<DatasetCategor
 
             @Override
             public void onWaitSuccess(CreateDatasetCategorisationsResult result) {
-                retrieveDatasetAndCategorisations(datasetVersionUrn);
+                fireSuccessMessage(StatisticalResourcesWeb.getMessages().datasetSubjectsSaved());
             }
 
             @Override
-            public void onWaitFailure(Throwable caught) {
-                super.onWaitFailure(caught);
+            protected void afterResult() {
                 retrieveDatasetAndCategorisations(datasetVersionUrn);
             }
         });
@@ -185,12 +184,11 @@ public class DatasetCategorisationsTabPresenter extends Presenter<DatasetCategor
 
             @Override
             public void onWaitSuccess(DeleteCategorisationsResult result) {
-                retrieveDatasetAndCategorisations(datasetVersionUrn);
+                fireSuccessMessage(StatisticalResourcesWeb.getMessages().datasetSubjectsDeleted());
             }
 
             @Override
-            public void onWaitFailure(Throwable caught) {
-                super.onWaitFailure(caught);
+            public void afterResult() {
                 retrieveDatasetAndCategorisations(datasetVersionUrn);
             }
         });
@@ -202,12 +200,11 @@ public class DatasetCategorisationsTabPresenter extends Presenter<DatasetCategor
 
             @Override
             public void onWaitSuccess(EndCategorisationsValidityResult result) {
-                retrieveDatasetAndCategorisations(datasetVersionUrn);
+                fireSuccessMessage(StatisticalResourcesWeb.getMessages().datasetSubjectsValidityEnded());
             }
 
             @Override
-            public void onWaitFailure(Throwable caught) {
-                super.onWaitFailure(caught);
+            public void afterResult() {
                 retrieveDatasetAndCategorisations(datasetVersionUrn);
             }
         });

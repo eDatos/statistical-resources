@@ -54,7 +54,6 @@ import org.siemac.metamac.statistical.resources.web.shared.external.GetStatistic
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationsPaginatedListResult;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetTemporalGranularitiesListAction;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetTemporalGranularitiesListResult;
-import org.siemac.metamac.web.common.client.events.ShowMessageEvent;
 import org.siemac.metamac.web.common.client.utils.WaitingAsyncCallbackHandlingError;
 import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
 import org.siemac.metamac.web.common.shared.criteria.SrmItemRestCriteria;
@@ -174,7 +173,7 @@ public class DatasetMetadataTabPresenter extends StatisticalResourceMetadataBase
 
             @Override
             public void onWaitSuccess(SaveDatasetVersionResult result) {
-                ShowMessageEvent.fireSuccessMessage(DatasetMetadataTabPresenter.this, getMessages().datasetSaved());
+                fireSuccessMessage(getMessages().datasetSaved());
                 getView().setDataset(result.getSavedDatasetVersion());
 
                 SetDatasetEvent.fire(DatasetMetadataTabPresenter.this, result.getSavedDatasetVersion());
@@ -206,7 +205,7 @@ public class DatasetMetadataTabPresenter extends StatisticalResourceMetadataBase
 
                     @Override
                     public void onWaitSuccess(UpdateDatasetVersionProcStatusResult result) {
-                        ShowMessageEvent.fireSuccessMessage(DatasetMetadataTabPresenter.this, getMessages().lifeCycleResourceSentToProductionValidation());
+                        fireSuccessMessage(getMessages().lifeCycleResourceSentToProductionValidation());
                         getView().setDataset(result.getDatasetVersionDto());
                     }
                 });
@@ -219,7 +218,7 @@ public class DatasetMetadataTabPresenter extends StatisticalResourceMetadataBase
 
                     @Override
                     public void onWaitSuccess(UpdateDatasetVersionProcStatusResult result) {
-                        ShowMessageEvent.fireSuccessMessage(DatasetMetadataTabPresenter.this, getMessages().lifeCycleResourceSentToDiffusionValidation());
+                        fireSuccessMessage(getMessages().lifeCycleResourceSentToDiffusionValidation());
                         getView().setDataset(result.getDatasetVersionDto());
                     }
                 });
@@ -231,7 +230,7 @@ public class DatasetMetadataTabPresenter extends StatisticalResourceMetadataBase
 
             @Override
             public void onWaitSuccess(UpdateDatasetVersionProcStatusResult result) {
-                ShowMessageEvent.fireSuccessMessage(DatasetMetadataTabPresenter.this, getMessages().lifeCycleResourceRejectValidation());
+                fireSuccessMessage(getMessages().lifeCycleResourceRejectValidation());
                 getView().setDataset(result.getDatasetVersionDto());
             }
         });
@@ -245,7 +244,7 @@ public class DatasetMetadataTabPresenter extends StatisticalResourceMetadataBase
 
             @Override
             public void onWaitSuccess(UpdateDatasetVersionProcStatusResult result) {
-                ShowMessageEvent.fireSuccessMessage(DatasetMetadataTabPresenter.this, getMessages().lifeCycleResourceProgramPublication());
+                fireSuccessMessage(getMessages().lifeCycleResourceProgramPublication());
                 getView().setDataset(result.getDatasetVersionDto());
             }
         });
@@ -257,7 +256,7 @@ public class DatasetMetadataTabPresenter extends StatisticalResourceMetadataBase
 
             @Override
             public void onWaitSuccess(UpdateDatasetVersionProcStatusResult result) {
-                ShowMessageEvent.fireSuccessMessage(DatasetMetadataTabPresenter.this, getMessages().lifeCycleResourcePublish());
+                fireSuccessMessage(getMessages().lifeCycleResourcePublish());
                 getView().setDataset(result.getDatasetVersionDto());
             }
         });
@@ -270,7 +269,7 @@ public class DatasetMetadataTabPresenter extends StatisticalResourceMetadataBase
 
                     @Override
                     public void onWaitSuccess(UpdateDatasetVersionProcStatusResult result) {
-                        ShowMessageEvent.fireSuccessMessage(DatasetMetadataTabPresenter.this, getMessages().lifeCycleResourceCancelProgrammedPublication());
+                        fireSuccessMessage(getMessages().lifeCycleResourceCancelProgrammedPublication());
                         getView().setDataset(result.getDatasetVersionDto());
                     }
                 });
@@ -284,7 +283,7 @@ public class DatasetMetadataTabPresenter extends StatisticalResourceMetadataBase
 
             @Override
             public void onWaitSuccess(UpdateDatasetVersionProcStatusResult result) {
-                ShowMessageEvent.fireSuccessMessage(DatasetMetadataTabPresenter.this, getMessages().lifeCycleResourceVersion());
+                fireSuccessMessage(getMessages().lifeCycleResourceVersion());
                 RequestDatasetVersionsReloadEvent.fire(DatasetMetadataTabPresenter.this, result.getDatasetVersionDto().getUrn());
             }
 

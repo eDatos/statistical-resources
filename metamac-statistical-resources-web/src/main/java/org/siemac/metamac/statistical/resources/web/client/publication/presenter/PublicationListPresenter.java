@@ -38,7 +38,6 @@ import org.siemac.metamac.statistical.resources.web.shared.publication.UpdatePub
 import org.siemac.metamac.statistical.resources.web.shared.publication.UpdatePublicationVersionsProcStatusAction.Builder;
 import org.siemac.metamac.statistical.resources.web.shared.publication.UpdatePublicationVersionsProcStatusResult;
 import org.siemac.metamac.web.common.client.events.SetTitleEvent;
-import org.siemac.metamac.web.common.client.events.ShowMessageEvent;
 import org.siemac.metamac.web.common.client.utils.WaitingAsyncCallbackHandlingError;
 import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
 
@@ -176,7 +175,7 @@ public class PublicationListPresenter extends StatisticalResourceBaseListPresent
 
             @Override
             public void onWaitSuccess(DeletePublicationVersionsResult result) {
-                ShowMessageEvent.fireSuccessMessage(PublicationListPresenter.this, getMessages().publicationDeleted());
+                fireSuccessMessage(getMessages().publicationDeleted());
                 retrievePublications(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, getView().getPublicationVersionWebCriteria());
             };
         });
@@ -234,13 +233,12 @@ public class PublicationListPresenter extends StatisticalResourceBaseListPresent
         dispatcher.execute(action, new WaitingAsyncCallbackHandlingError<UpdatePublicationVersionsProcStatusResult>(this) {
 
             @Override
-            public void onWaitFailure(Throwable caught) {
-                super.onWaitFailure(caught);
-                retrievePublications(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, getView().getPublicationVersionWebCriteria());
-            }
-            @Override
             public void onWaitSuccess(UpdatePublicationVersionsProcStatusResult result) {
-                ShowMessageEvent.fireSuccessMessage(PublicationListPresenter.this, successMessage);
+                fireSuccessMessage(successMessage);
+            }
+
+            @Override
+            public void afterResult() {
                 retrievePublications(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, getView().getPublicationVersionWebCriteria());
             }
         });

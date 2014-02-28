@@ -30,8 +30,6 @@ import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublic
 import org.siemac.metamac.statistical.resources.web.shared.query.GetQueryVersionsAction;
 import org.siemac.metamac.statistical.resources.web.shared.query.GetQueryVersionsResult;
 import org.siemac.metamac.web.common.client.events.SetTitleEvent;
-import org.siemac.metamac.web.common.client.events.ShowMessageEvent;
-import org.siemac.metamac.web.common.client.utils.WaitingAsyncCallback;
 import org.siemac.metamac.web.common.client.utils.WaitingAsyncCallbackHandlingError;
 
 import com.google.inject.Inject;
@@ -132,12 +130,9 @@ public class OperationResourcesPresenter extends Presenter<OperationResourcesVie
         DatasetVersionWebCriteria datasetWebCriteria = new DatasetVersionWebCriteria();
         datasetWebCriteria.setStatisticalOperationUrn(urn);
 
-        dispatcher.execute(new GetDatasetVersionsAction(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, datasetWebCriteria), new WaitingAsyncCallback<GetDatasetVersionsResult>() {
+        dispatcher.execute(new GetDatasetVersionsAction(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, datasetWebCriteria), new WaitingAsyncCallbackHandlingError<GetDatasetVersionsResult>(
+                this) {
 
-            @Override
-            public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fireErrorMessage(OperationResourcesPresenter.this, caught);
-            }
             @Override
             public void onWaitSuccess(GetDatasetVersionsResult result) {
                 getView().setDatasets(result.getDatasetVersionBaseDtos());
@@ -150,12 +145,8 @@ public class OperationResourcesPresenter extends Presenter<OperationResourcesVie
         publicationWebCriteria.setStatisticalOperationUrn(urn);
 
         dispatcher.execute(new GetPublicationVersionsAction(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, publicationWebCriteria),
-                new WaitingAsyncCallback<GetPublicationVersionsResult>() {
+                new WaitingAsyncCallbackHandlingError<GetPublicationVersionsResult>(this) {
 
-                    @Override
-                    public void onWaitFailure(Throwable caught) {
-                        ShowMessageEvent.fireErrorMessage(OperationResourcesPresenter.this, caught);
-                    }
                     @Override
                     public void onWaitSuccess(GetPublicationVersionsResult result) {
                         getView().setPublications(result.getPublicationBaseDtos());
@@ -166,17 +157,14 @@ public class OperationResourcesPresenter extends Presenter<OperationResourcesVie
 
         QueryVersionWebCriteria queryVersionWebCriteria = new QueryVersionWebCriteria();
         queryVersionWebCriteria.setStatisticalOperationUrn(urn);
-        dispatcher.execute(new GetQueryVersionsAction(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, queryVersionWebCriteria), new WaitingAsyncCallback<GetQueryVersionsResult>() {
+        dispatcher.execute(new GetQueryVersionsAction(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, queryVersionWebCriteria),
+                new WaitingAsyncCallbackHandlingError<GetQueryVersionsResult>(this) {
 
-            @Override
-            public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fireErrorMessage(OperationResourcesPresenter.this, caught);
-            }
-            @Override
-            public void onWaitSuccess(GetQueryVersionsResult result) {
-                getView().setQueries(result.getQueryVersionBaseDtos());
-            }
-        });
+                    @Override
+                    public void onWaitSuccess(GetQueryVersionsResult result) {
+                        getView().setQueries(result.getQueryVersionBaseDtos());
+                    }
+                });
     }
 
     //

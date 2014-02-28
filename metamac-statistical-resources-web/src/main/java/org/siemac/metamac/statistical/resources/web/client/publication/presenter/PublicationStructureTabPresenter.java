@@ -41,8 +41,6 @@ import org.siemac.metamac.statistical.resources.web.shared.publication.UpdatePub
 import org.siemac.metamac.statistical.resources.web.shared.publication.UpdatePublicationStructureElementLocationResult;
 import org.siemac.metamac.statistical.resources.web.shared.query.GetQueriesAction;
 import org.siemac.metamac.statistical.resources.web.shared.query.GetQueriesResult;
-import org.siemac.metamac.web.common.client.events.ShowMessageEvent;
-import org.siemac.metamac.web.common.client.utils.WaitingAsyncCallback;
 import org.siemac.metamac.web.common.client.utils.WaitingAsyncCallbackHandlingError;
 
 import com.google.inject.Inject;
@@ -158,12 +156,8 @@ public class PublicationStructureTabPresenter extends Presenter<PublicationStruc
     }
 
     private void retrievePublicationStructure(String publicationVersionUrn) {
-        dispatcher.execute(new GetPublicationStructureAction(publicationVersionUrn), new WaitingAsyncCallback<GetPublicationStructureResult>() {
+        dispatcher.execute(new GetPublicationStructureAction(publicationVersionUrn), new WaitingAsyncCallbackHandlingError<GetPublicationStructureResult>(this) {
 
-            @Override
-            public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fireErrorMessage(PublicationStructureTabPresenter.this, caught);
-            }
             @Override
             public void onWaitSuccess(GetPublicationStructureResult result) {
                 getView().setPublicationStructure(result.getPublicationStructureDto());
@@ -173,12 +167,8 @@ public class PublicationStructureTabPresenter extends Presenter<PublicationStruc
 
     @Override
     public void saveElement(String publicationVersionUrn, NameableStatisticalResourceDto element) {
-        dispatcher.execute(new SavePublicationStructureElementAction(publicationVersionUrn, element), new WaitingAsyncCallback<SavePublicationStructureElementResult>() {
+        dispatcher.execute(new SavePublicationStructureElementAction(publicationVersionUrn, element), new WaitingAsyncCallbackHandlingError<SavePublicationStructureElementResult>(this) {
 
-            @Override
-            public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fireErrorMessage(PublicationStructureTabPresenter.this, caught);
-            }
             @Override
             public void onWaitSuccess(SavePublicationStructureElementResult result) {
                 getView().setPublicationStructure(result.getPublicationStructureDto(), result.getSavedElement());
@@ -188,12 +178,8 @@ public class PublicationStructureTabPresenter extends Presenter<PublicationStruc
 
     @Override
     public void deleteElement(String publicationVersionUrn, String elementUrn) {
-        dispatcher.execute(new DeletePublicationStructureElementAction(publicationVersionUrn, elementUrn), new WaitingAsyncCallback<DeletePublicationStructureElementResult>() {
+        dispatcher.execute(new DeletePublicationStructureElementAction(publicationVersionUrn, elementUrn), new WaitingAsyncCallbackHandlingError<DeletePublicationStructureElementResult>(this) {
 
-            @Override
-            public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fireErrorMessage(PublicationStructureTabPresenter.this, caught);
-            }
             @Override
             public void onWaitSuccess(DeletePublicationStructureElementResult result) {
                 getView().setPublicationStructure(result.getPublicationStructureDto());
@@ -204,12 +190,8 @@ public class PublicationStructureTabPresenter extends Presenter<PublicationStruc
     @Override
     public void updateElementLocation(String publicationVersionUrn, String elementUrn, String parentTargetUrn, Long orderInLevel) {
         dispatcher.execute(new UpdatePublicationStructureElementLocationAction(publicationVersionUrn, elementUrn, parentTargetUrn, orderInLevel),
-                new WaitingAsyncCallback<UpdatePublicationStructureElementLocationResult>() {
+                new WaitingAsyncCallbackHandlingError<UpdatePublicationStructureElementLocationResult>(this) {
 
-                    @Override
-                    public void onWaitFailure(Throwable caught) {
-                        ShowMessageEvent.fireErrorMessage(PublicationStructureTabPresenter.this, caught);
-                    }
                     @Override
                     public void onWaitSuccess(UpdatePublicationStructureElementLocationResult result) {
                         getView().setPublicationStructure(result.getPublicationStructureDto());
@@ -223,12 +205,8 @@ public class PublicationStructureTabPresenter extends Presenter<PublicationStruc
 
     @Override
     public void retrieveDatasetsForCubes(int firstResult, int maxResults, StatisticalResourceWebCriteria criteria) {
-        dispatcher.execute(new GetDatasetsAction(firstResult, maxResults, criteria), new WaitingAsyncCallback<GetDatasetsResult>() {
+        dispatcher.execute(new GetDatasetsAction(firstResult, maxResults, criteria), new WaitingAsyncCallbackHandlingError<GetDatasetsResult>(this) {
 
-            @Override
-            public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fireErrorMessage(PublicationStructureTabPresenter.this, caught);
-            }
             @Override
             public void onWaitSuccess(GetDatasetsResult result) {
                 getView().setDatasetsForCubes(result);
@@ -249,12 +227,8 @@ public class PublicationStructureTabPresenter extends Presenter<PublicationStruc
 
     @Override
     public void retrieveQueriesForCubes(int firstResult, int maxResults, StatisticalResourceWebCriteria criteria) {
-        dispatcher.execute(new GetQueriesAction(firstResult, maxResults, criteria), new WaitingAsyncCallback<GetQueriesResult>() {
+        dispatcher.execute(new GetQueriesAction(firstResult, maxResults, criteria), new WaitingAsyncCallbackHandlingError<GetQueriesResult>(this) {
 
-            @Override
-            public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fireErrorMessage(PublicationStructureTabPresenter.this, caught);
-            }
             @Override
             public void onWaitSuccess(GetQueriesResult result) {
                 getView().setQueriesForCubes(result);
@@ -287,12 +261,8 @@ public class PublicationStructureTabPresenter extends Presenter<PublicationStruc
     @Override
     public void goToLastVersion(final String urn) {
         if (!StringUtils.isBlank(urn)) {
-            dispatcher.execute(new GetLatestResourceVersionAction(urn), new WaitingAsyncCallback<GetLatestResourceVersionResult>() {
+            dispatcher.execute(new GetLatestResourceVersionAction(urn), new WaitingAsyncCallbackHandlingError<GetLatestResourceVersionResult>(this) {
 
-                @Override
-                public void onWaitFailure(Throwable caught) {
-                    ShowMessageEvent.fireErrorMessage(PublicationStructureTabPresenter.this, caught);
-                }
                 @Override
                 public void onWaitSuccess(GetLatestResourceVersionResult result) {
                     LifeCycleStatisticalResourceDto resourceVersion = result.getResourceVersion();

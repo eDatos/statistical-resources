@@ -1,7 +1,5 @@
 package org.siemac.metamac.statistical.resources.web.client.widgets.forms.fields;
 
-import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
-
 import java.util.List;
 
 import org.siemac.metamac.core.common.dto.ExternalItemDto;

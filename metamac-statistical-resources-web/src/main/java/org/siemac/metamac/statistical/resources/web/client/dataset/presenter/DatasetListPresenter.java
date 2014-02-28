@@ -175,7 +175,7 @@ public class DatasetListPresenter extends StatisticalResourceBaseListPresenter<D
 
                     @Override
                     public void onWaitSuccess(SaveDatasetVersionResult result) {
-                        ShowMessageEvent.fireSuccessMessage(DatasetListPresenter.this, getMessages().datasetSaved());
+                        fireSuccessMessage(getMessages().datasetSaved());
                         retrieveDatasets(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, getView().getDatasetVersionWebCriteria());
                     }
                 });
@@ -187,13 +187,11 @@ public class DatasetListPresenter extends StatisticalResourceBaseListPresenter<D
 
             @Override
             public void onWaitSuccess(DeleteDatasetVersionsResult result) {
-                ShowMessageEvent.fireSuccessMessage(DatasetListPresenter.this, getMessages().datasetDeleted());
-                retrieveDatasets(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, getView().getDatasetVersionWebCriteria());
+                fireSuccessMessage(getMessages().datasetDeleted());
             }
 
             @Override
-            public void onWaitFailure(Throwable caught) {
-                super.onWaitFailure(caught);
+            public void afterResult() {
                 retrieveDatasets(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, getView().getDatasetVersionWebCriteria());
             }
         });
@@ -274,13 +272,14 @@ public class DatasetListPresenter extends StatisticalResourceBaseListPresenter<D
         dispatcher.execute(action, new WaitingAsyncCallbackHandlingError<UpdateDatasetVersionsProcStatusResult>(this) {
 
             @Override
-            public void onWaitFailure(Throwable caught) {
-                super.onWaitFailure(caught);
+            public void onWaitSuccess(UpdateDatasetVersionsProcStatusResult result) {
+                ShowMessagefireSuccessMessage(DatasetListPresenter.this, successMessage);
                 retrieveDatasets(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, getView().getDatasetVersionWebCriteria());
             }
+
             @Override
-            public void onWaitSuccess(UpdateDatasetVersionsProcStatusResult result) {
-                ShowMessageEvent.fireSuccessMessage(DatasetListPresenter.this, successMessage);
+            public void onWaitFailure(Throwable caught) {
+                super.onWaitFailure(caught);
                 retrieveDatasets(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, getView().getDatasetVersionWebCriteria());
             }
         });

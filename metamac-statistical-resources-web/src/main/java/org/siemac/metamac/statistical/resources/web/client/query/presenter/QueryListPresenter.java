@@ -36,8 +36,6 @@ import org.siemac.metamac.statistical.resources.web.shared.query.UpdateQueryVers
 import org.siemac.metamac.statistical.resources.web.shared.query.UpdateQueryVersionsProcStatusAction.Builder;
 import org.siemac.metamac.statistical.resources.web.shared.query.UpdateQueryVersionsProcStatusResult;
 import org.siemac.metamac.web.common.client.events.SetTitleEvent;
-import org.siemac.metamac.web.common.client.events.ShowMessageEvent;
-import org.siemac.metamac.web.common.client.utils.WaitingAsyncCallback;
 import org.siemac.metamac.web.common.client.utils.WaitingAsyncCallbackHandlingError;
 import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
 
@@ -148,12 +146,8 @@ public class QueryListPresenter extends LifeCycleBaseListPresenter<QueryListPres
 
     @Override
     public void retrieveQueries(int firstResult, int maxResults, QueryVersionWebCriteria criteria) {
-        dispatcher.execute(new GetQueryVersionsAction(firstResult, maxResults, criteria), new WaitingAsyncCallback<GetQueryVersionsResult>() {
+        dispatcher.execute(new GetQueryVersionsAction(firstResult, maxResults, criteria), new WaitingAsyncCallbackHandlingError<GetQueryVersionsResult>(this) {
 
-            @Override
-            public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fireErrorMessage(QueryListPresenter.this, caught);
-            }
             @Override
             public void onWaitSuccess(GetQueryVersionsResult result) {
                 getView().setQueryPaginatedList(result);
@@ -163,15 +157,11 @@ public class QueryListPresenter extends LifeCycleBaseListPresenter<QueryListPres
 
     @Override
     public void deleteQueries(List<String> urnsFromSelected) {
-        dispatcher.execute(new DeleteQueryVersionsAction(urnsFromSelected), new WaitingAsyncCallback<DeleteQueryVersionsResult>() {
+        dispatcher.execute(new DeleteQueryVersionsAction(urnsFromSelected), new WaitingAsyncCallbackHandlingError<DeleteQueryVersionsResult>(this) {
 
             @Override
-            public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fireErrorMessage(QueryListPresenter.this, caught);
-            }
-            @Override
             public void onWaitSuccess(DeleteQueryVersionsResult result) {
-                ShowMessageEvent.fireSuccessMessage(QueryListPresenter.this, getMessages().queryDeleted());
+                fireSuccessMessage(getMessages().queryDeleted());
                 retrieveQueries(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, getView().getQueryVersionWebCriteria());
             }
         });
@@ -230,13 +220,12 @@ public class QueryListPresenter extends LifeCycleBaseListPresenter<QueryListPres
         dispatcher.execute(action, new WaitingAsyncCallbackHandlingError<UpdateQueryVersionsProcStatusResult>(this) {
 
             @Override
-            public void onWaitFailure(Throwable caught) {
-                super.onWaitFailure(caught);
-                retrieveQueries(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, getView().getQueryVersionWebCriteria());
-            }
-            @Override
             public void onWaitSuccess(UpdateQueryVersionsProcStatusResult result) {
-                ShowMessageEvent.fireSuccessMessage(QueryListPresenter.this, successMessage);
+                fireSuccessMessage(successMessage);
+            }
+
+            @Override
+            protected void afterResult() {
                 retrieveQueries(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, getView().getQueryVersionWebCriteria());
             }
         });

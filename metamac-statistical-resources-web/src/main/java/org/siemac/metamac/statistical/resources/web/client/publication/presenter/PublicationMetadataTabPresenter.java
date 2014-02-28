@@ -40,7 +40,6 @@ import org.siemac.metamac.statistical.resources.web.shared.publication.SavePubli
 import org.siemac.metamac.statistical.resources.web.shared.publication.UpdatePublicationVersionProcStatusAction;
 import org.siemac.metamac.statistical.resources.web.shared.publication.UpdatePublicationVersionProcStatusAction.Builder;
 import org.siemac.metamac.statistical.resources.web.shared.publication.UpdatePublicationVersionProcStatusResult;
-import org.siemac.metamac.web.common.client.events.ShowMessageEvent;
 import org.siemac.metamac.web.common.client.utils.WaitingAsyncCallbackHandlingError;
 
 import com.google.gwt.user.client.Window;
@@ -148,7 +147,7 @@ public class PublicationMetadataTabPresenter
 
                     @Override
                     public void onWaitSuccess(SavePublicationVersionResult result) {
-                        ShowMessageEvent.fireSuccessMessage(PublicationMetadataTabPresenter.this, getMessages().publicationSaved());
+                        fireSuccessMessage(getMessages().publicationSaved());
                         getView().setPublication(result.getSavedPublicationVersion());
 
                         SetPublicationEvent.fire(PublicationMetadataTabPresenter.this, result.getSavedPublicationVersion());
@@ -180,7 +179,7 @@ public class PublicationMetadataTabPresenter
 
                     @Override
                     public void onWaitSuccess(UpdatePublicationVersionProcStatusResult result) {
-                        ShowMessageEvent.fireSuccessMessage(PublicationMetadataTabPresenter.this, getMessages().lifeCycleResourceSentToProductionValidation());
+                        fireSuccessMessage(getMessages().lifeCycleResourceSentToProductionValidation());
                         getView().setPublication(result.getPublicationVersionDto());
                     }
                 });
@@ -193,7 +192,7 @@ public class PublicationMetadataTabPresenter
 
                     @Override
                     public void onWaitSuccess(UpdatePublicationVersionProcStatusResult result) {
-                        ShowMessageEvent.fireSuccessMessage(PublicationMetadataTabPresenter.this, getMessages().lifeCycleResourceSentToDiffusionValidation());
+                        fireSuccessMessage(getMessages().lifeCycleResourceSentToDiffusionValidation());
                         getView().setPublication(result.getPublicationVersionDto());
                     }
                 });
@@ -206,7 +205,7 @@ public class PublicationMetadataTabPresenter
 
                     @Override
                     public void onWaitSuccess(UpdatePublicationVersionProcStatusResult result) {
-                        ShowMessageEvent.fireSuccessMessage(PublicationMetadataTabPresenter.this, getMessages().lifeCycleResourceRejectValidation());
+                        fireSuccessMessage(getMessages().lifeCycleResourceRejectValidation());
                         getView().setPublication(result.getPublicationVersionDto());
                     }
                 });
@@ -219,7 +218,7 @@ public class PublicationMetadataTabPresenter
 
                     @Override
                     public void onWaitSuccess(UpdatePublicationVersionProcStatusResult result) {
-                        ShowMessageEvent.fireSuccessMessage(PublicationMetadataTabPresenter.this, getMessages().lifeCycleResourcePublish());
+                        fireSuccessMessage(getMessages().lifeCycleResourcePublish());
                         getView().setPublication(result.getPublicationVersionDto());
                     }
                 });
@@ -233,7 +232,7 @@ public class PublicationMetadataTabPresenter
 
             @Override
             public void onWaitSuccess(UpdatePublicationVersionProcStatusResult result) {
-                ShowMessageEvent.fireSuccessMessage(PublicationMetadataTabPresenter.this, getMessages().lifeCycleResourceProgramPublication());
+                fireSuccessMessage(getMessages().lifeCycleResourceProgramPublication());
                 getView().setPublication(result.getPublicationVersionDto());
             }
         });
@@ -246,7 +245,7 @@ public class PublicationMetadataTabPresenter
 
                     @Override
                     public void onWaitSuccess(UpdatePublicationVersionProcStatusResult result) {
-                        ShowMessageEvent.fireSuccessMessage(PublicationMetadataTabPresenter.this, getMessages().lifeCycleResourceCancelProgrammedPublication());
+                        fireSuccessMessage(getMessages().lifeCycleResourceCancelProgrammedPublication());
                         getView().setPublication(result.getPublicationVersionDto());
                     }
                 });
@@ -260,7 +259,7 @@ public class PublicationMetadataTabPresenter
 
             @Override
             public void onWaitSuccess(UpdatePublicationVersionProcStatusResult result) {
-                ShowMessageEvent.fireSuccessMessage(PublicationMetadataTabPresenter.this, getMessages().lifeCycleResourceVersion());
+                fireSuccessMessage(getMessages().lifeCycleResourceVersion());
 
                 RequestPublicationVersionsReloadEvent.fire(PublicationMetadataTabPresenter.this, result.getPublicationVersionDto().getUrn());
             }

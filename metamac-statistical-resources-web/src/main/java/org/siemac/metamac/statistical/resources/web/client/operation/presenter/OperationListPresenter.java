@@ -12,8 +12,7 @@ import org.siemac.metamac.statistical.resources.web.client.utils.PlaceRequestUti
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationsPaginatedListAction;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationsPaginatedListResult;
 import org.siemac.metamac.web.common.client.events.SetTitleEvent;
-import org.siemac.metamac.web.common.client.events.ShowMessageEvent;
-import org.siemac.metamac.web.common.client.utils.WaitingAsyncCallback;
+import org.siemac.metamac.web.common.client.utils.WaitingAsyncCallbackHandlingError;
 
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
@@ -79,12 +78,7 @@ public class OperationListPresenter extends Presenter<OperationListPresenter.Ope
 
     @Override
     public void retrieveOperations(int firstResult, int maxResults) {
-        dispatcher.execute(new GetStatisticalOperationsPaginatedListAction(firstResult, maxResults, null), new WaitingAsyncCallback<GetStatisticalOperationsPaginatedListResult>() {
-
-            @Override
-            public void onWaitFailure(Throwable caught) {
-                ShowMessageEvent.fireErrorMessage(OperationListPresenter.this, caught);
-            }
+        dispatcher.execute(new GetStatisticalOperationsPaginatedListAction(firstResult, maxResults, null), new WaitingAsyncCallbackHandlingError<GetStatisticalOperationsPaginatedListResult>(this) {
 
             @Override
             public void onWaitSuccess(GetStatisticalOperationsPaginatedListResult result) {
