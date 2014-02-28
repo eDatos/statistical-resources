@@ -10,11 +10,15 @@ import static org.siemac.metamac.rest.statistical_resources.constants.RestTestCo
 import java.io.InputStream;
 import java.util.Arrays;
 
+import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.cxf.jaxrs.client.ClientConfiguration;
 import org.apache.cxf.jaxrs.client.ServerWebApplicationException;
-import org.junit.Ignore;
+import org.apache.cxf.jaxrs.client.WebClient;
+import org.apache.cxf.transport.http.HTTPConduit;
+import org.apache.cxf.transports.http.configuration.ConnectionType;
 import org.junit.Test;
 import org.siemac.metamac.rest.common.test.utils.MetamacRestAsserts;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Dimension;
@@ -41,6 +45,28 @@ public class StatisticalResourcesRestExternalFacadeV10QueriesTest extends Statis
         String requestUri = getFindQueriesUri(AGENCY_1, null, null, null, "es");
         InputStream responseExpected = StatisticalResourcesRestExternalFacadeV10QueriesTest.class.getResourceAsStream("/responses/queries/findQueries.xml");
         testRequestWithoutJaxbTransformation(requestUri, APPLICATION_XML, Status.OK, responseExpected);
+    }
+
+    @Test
+    public void testFindQueriesXmlWithQueryConditionsMatcher() throws Exception {
+        // Use argument Matcher for this test;
+        mockitoMockConfig.setApplyArgumentMatcher(true);
+        { // All data: specific with general format (StructureSpecificData)
+            WebClient create = WebClient.create(baseApi);
+
+            ClientConfiguration config = WebClient.getConfig(create);
+            HTTPConduit conduit = config.getHttpConduit();
+            conduit.getClient().setConnectionTimeout(3000000);
+            conduit.getClient().setReceiveTimeout(7000000);
+            conduit.getClient().setConnection(ConnectionType.CLOSE);
+
+            create.path("queries/agency1");
+            create.query("lang", "es");
+            create.query("query", "RELATED_DATASET_URN EQ 'URN_TEST'");
+            Response response = create.get();
+            assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+        }
+        mockitoMockConfig.resetToDefaultConfiguration();
     }
 
     @Test

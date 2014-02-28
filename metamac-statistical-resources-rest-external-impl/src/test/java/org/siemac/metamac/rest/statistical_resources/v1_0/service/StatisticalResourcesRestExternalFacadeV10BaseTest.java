@@ -1,6 +1,7 @@
 package org.siemac.metamac.rest.statistical_resources.v1_0.service;
 
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 import static org.siemac.metamac.rest.statistical_resources.constants.RestTestConstants.AGENCY_1;
@@ -60,6 +61,8 @@ import org.siemac.metamac.rest.common.test.MetamacRestBaseTest;
 import org.siemac.metamac.rest.common.test.ServerResource;
 import org.siemac.metamac.rest.common_metadata.v1_0.domain.Configuration;
 import org.siemac.metamac.rest.constants.RestConstants;
+import org.siemac.metamac.rest.statistical_resources.v1_0.mockito.FindQueriesByRelatedDatasetUrnMatcher;
+import org.siemac.metamac.rest.statistical_resources.v1_0.mockito.MockitoMockConfig;
 import org.siemac.metamac.rest.structural_resources.v1_0.utils.CommonMetadataRestMocks;
 import org.siemac.metamac.rest.structural_resources.v1_0.utils.RestDoMocks;
 import org.siemac.metamac.rest.structural_resources.v1_0.utils.SrmRestMocks;
@@ -121,6 +124,8 @@ public abstract class StatisticalResourcesRestExternalFacadeV10BaseTest extends 
     private CommonMetadataRestExternalFacade  commonMetadataRestExternalFacade;
     private DatasetRepositoriesServiceFacade  datasetRepositoriesServiceFacade;
 
+    protected static MockitoMockConfig        mockitoMockConfig;
+
     protected static List<String>             defaultLanguages   = Arrays.asList("es");
 
     @SuppressWarnings({"unchecked", "rawtypes"})
@@ -142,6 +147,8 @@ public abstract class StatisticalResourcesRestExternalFacadeV10BaseTest extends 
             providers.add(applicationContext.getBean("jaxbProvider", JAXBElementProvider.class));
             statisticalResourcesRestExternalFacadeClientXml = JAXRSClientFactory.create(jaxrsServerAddress, StatisticalResourcesV1_0.class, providers, Boolean.TRUE);
         }
+
+        mockitoMockConfig = applicationContext.getBean(MockitoMockConfig.class);
     }
 
     @Before
@@ -410,42 +417,43 @@ public abstract class StatisticalResourcesRestExternalFacadeV10BaseTest extends 
 
     @SuppressWarnings("unchecked")
     private void mockFindQueriesByCondition() throws MetamacException {
-        when(queryService.findQueryVersionsByCondition(any(ServiceContext.class), any(List.class), any(PagingParameter.class))).thenAnswer(new Answer<PagedResult<QueryVersion>>() {
+        when(queryService.findQueryVersionsByCondition(any(ServiceContext.class), argThat(new FindQueriesByRelatedDatasetUrnMatcher()), any(PagingParameter.class))).thenAnswer(
+                new Answer<PagedResult<QueryVersion>>() {
 
-            @Override
-            public org.fornax.cartridges.sculptor.framework.domain.PagedResult<QueryVersion> answer(InvocationOnMock invocation) throws Throwable {
-                List<ConditionalCriteria> conditions = (List<ConditionalCriteria>) invocation.getArguments()[1];
+                    @Override
+                    public org.fornax.cartridges.sculptor.framework.domain.PagedResult<QueryVersion> answer(InvocationOnMock invocation) throws Throwable {
+                        List<ConditionalCriteria> conditions = (List<ConditionalCriteria>) invocation.getArguments()[1];
 
-                String agencyID = getAgencyIdFromConditionalCriteria(conditions);
-                String resourceID = getResourceIdFromConditionalCriteria(conditions);
-                String version = getVersionFromConditionalCriteria(conditions);
+                        String agencyID = getAgencyIdFromConditionalCriteria(conditions);
+                        String resourceID = getResourceIdFromConditionalCriteria(conditions);
+                        String version = getVersionFromConditionalCriteria(conditions);
 
-                if (agencyID != null && resourceID != null && version != null) {
-                    // Retrieve one
-                    QueryVersion queryVersion = null;
-                    if (NOT_EXISTS.equals(agencyID) || NOT_EXISTS.equals(resourceID) || NOT_EXISTS.equals(version)) {
-                        queryVersion = null;
-                    } else if (AGENCY_1.equals(agencyID) && QUERY_1_CODE.equals(resourceID) && VERSION_1.equals(version)) {
-                        queryVersion = restDoMocks.mockQueryVersion(agencyID, resourceID, version);
-                    } else {
-                        fail();
-                    }
-                    List<QueryVersion> queries = new ArrayList<QueryVersion>();
-                    if (queryVersion != null) {
-                        queries.add(queryVersion);
-                    }
-                    return new PagedResult<QueryVersion>(queries, 0, queries.size(), queries.size());
-                } else {
-                    // any
-                    List<QueryVersion> queries = new ArrayList<QueryVersion>();
-                    queries.add(restDoMocks.mockQueryVersion(AGENCY_1, QUERY_1_CODE, VERSION_1));
-                    queries.add(restDoMocks.mockQueryVersion(AGENCY_1, QUERY_1_CODE, VERSION_2));
-                    queries.add(restDoMocks.mockQueryVersion(AGENCY_2, QUERY_1_CODE, VERSION_1));
-                    queries.add(restDoMocks.mockQueryVersion(AGENCY_1, QUERY_2_CODE, VERSION_1));
-                    return new PagedResult<QueryVersion>(queries, queries.size(), queries.size(), queries.size(), queries.size() * 10, 0);
-                }
-            };
-        });
+                        if (agencyID != null && resourceID != null && version != null) {
+                            // Retrieve one
+                            QueryVersion queryVersion = null;
+                            if (NOT_EXISTS.equals(agencyID) || NOT_EXISTS.equals(resourceID) || NOT_EXISTS.equals(version)) {
+                                queryVersion = null;
+                            } else if (AGENCY_1.equals(agencyID) && QUERY_1_CODE.equals(resourceID) && VERSION_1.equals(version)) {
+                                queryVersion = restDoMocks.mockQueryVersion(agencyID, resourceID, version);
+                            } else {
+                                fail();
+                            }
+                            List<QueryVersion> queries = new ArrayList<QueryVersion>();
+                            if (queryVersion != null) {
+                                queries.add(queryVersion);
+                            }
+                            return new PagedResult<QueryVersion>(queries, 0, queries.size(), queries.size());
+                        } else {
+                            // any
+                            List<QueryVersion> queries = new ArrayList<QueryVersion>();
+                            queries.add(restDoMocks.mockQueryVersion(AGENCY_1, QUERY_1_CODE, VERSION_1));
+                            queries.add(restDoMocks.mockQueryVersion(AGENCY_1, QUERY_1_CODE, VERSION_2));
+                            queries.add(restDoMocks.mockQueryVersion(AGENCY_2, QUERY_1_CODE, VERSION_1));
+                            queries.add(restDoMocks.mockQueryVersion(AGENCY_1, QUERY_2_CODE, VERSION_1));
+                            return new PagedResult<QueryVersion>(queries, queries.size(), queries.size(), queries.size(), queries.size() * 10, 0);
+                        }
+                    };
+                });
     }
 
     private void mockRetrieveDatasetVersionDimensionsIds() throws MetamacException {
