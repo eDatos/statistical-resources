@@ -273,7 +273,7 @@ public class DatasetListPresenter extends StatisticalResourceBaseListPresenter<D
 
             @Override
             public void onWaitSuccess(UpdateDatasetVersionsProcStatusResult result) {
-                ShowMessagefireSuccessMessage(DatasetListPresenter.this, successMessage);
+                fireSuccessMessage(successMessage);
                 retrieveDatasets(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, getView().getDatasetVersionWebCriteria());
             }
 
