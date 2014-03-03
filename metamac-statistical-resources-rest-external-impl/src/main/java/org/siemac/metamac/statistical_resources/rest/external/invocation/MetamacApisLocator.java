@@ -16,7 +16,7 @@ public class MetamacApisLocator {
     @Autowired
     private ConfigurationService     configurationService;
 
-    // FIXME SRM: cambiar a API externa
+    // FIXME SRM: cambiar a API externa (METAMAC-1909)
     private SrmRestInternalFacadeV10 srmRestExternalFacadeV10            = null;
 
     private CommonMetadataV1_0       commonMetadataRestExternalFacadeV10 = null;
