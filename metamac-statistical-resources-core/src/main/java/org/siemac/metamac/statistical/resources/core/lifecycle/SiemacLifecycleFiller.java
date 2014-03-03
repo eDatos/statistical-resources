@@ -36,7 +36,7 @@ public class SiemacLifecycleFiller {
 
     public void applySendToValidationRejectedActions(ServiceContext ctx, HasSiemacMetadata resource) {
         lifecycleFiller.applySendToValidationRejectedActions(ctx, resource);
-        // FIXME: clear metadata computed in production validation and diffusion validation
+        // FIXME: clear metadata computed in production validation and diffusion validation (METAMAC-2144)
 
     }
 
