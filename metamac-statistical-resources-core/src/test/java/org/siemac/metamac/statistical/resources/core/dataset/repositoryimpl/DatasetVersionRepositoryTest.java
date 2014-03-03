@@ -242,7 +242,7 @@ public class DatasetVersionRepositoryTest extends StatisticalResourcesBaseTest i
         List<RelatedResourceResult> resources = datasetVersionRepository.retrieveIsRequiredByOnlyLastPublished(datasetVersion);
         Assert.assertNotNull(resources);
         Assert.assertEquals(1, resources.size());
-        // TODO: must be published query
+        // TODO: must be published query (METAMAC-2143)
     }
 
     @Test
@@ -262,7 +262,7 @@ public class DatasetVersionRepositoryTest extends StatisticalResourcesBaseTest i
             List<RelatedResourceResult> resources = datasetVersionRepository.retrieveIsRequiredBy(lastDatasetVersion);
             Assert.assertNotNull(resources);
             Assert.assertEquals(3, resources.size());
-            // TODO: has to be draft version
+            // TODO: has to be draft version (METAMAC-2143)
         }
     }
 
@@ -296,7 +296,7 @@ public class DatasetVersionRepositoryTest extends StatisticalResourcesBaseTest i
             List<RelatedResourceResult> resources = datasetVersionRepository.retrieveIsRequiredBy(lastDatasetVersion);
             Assert.assertNotNull(resources);
             Assert.assertEquals(3, resources.size());
-            // TODO: has to be draft and not visible version
+            // TODO: has to be draft and not visible version (METAMAC-2143)
         }
     }
 
@@ -351,7 +351,7 @@ public class DatasetVersionRepositoryTest extends StatisticalResourcesBaseTest i
             List<RelatedResourceResult> resources = datasetVersionRepository.retrieveIsRequiredBy(lastDatasetVersion);
             Assert.assertNotNull(resources);
             assertEquals(3, resources.size());
-            // TODO: has to be published version
+            // TODO: has to be published version (METAMAC-2143)
         }
     }
 

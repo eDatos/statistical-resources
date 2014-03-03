@@ -68,7 +68,7 @@ public class PublicationLifecycleServiceTest extends StatisticalResourcesBaseTes
     @Override
     @Test
     public void testCheckSendToPublishedResource() throws Exception {
-        // TODO:
+        // TODO: Implementar (METAMAC-2143)
         // - Comprobar que al menos existe un cubo por capítulo
         // - comprobar que almenos existe un cubo en la publicación
         // - compobar que todos los datasets y consultas vinculados a cubos están publicados
@@ -80,7 +80,7 @@ public class PublicationLifecycleServiceTest extends StatisticalResourcesBaseTes
     @Override
     @Test
     public void testApplySendToPublishedResource() throws Exception {
-        // TODO:
+        // TODO: Implementar (METAMAC-2143)
         // - cumplimentar format_extent_resources
 
         fail("not implemented");
@@ -111,6 +111,6 @@ public class PublicationLifecycleServiceTest extends StatisticalResourcesBaseTes
     @Override
     @Test
     public void testCopyResourceForVersioning() throws Exception {
-        // TODO testCopyResourceForVersioning
+        // TODO: Implementar (METAMAC-2143)
     }
 }

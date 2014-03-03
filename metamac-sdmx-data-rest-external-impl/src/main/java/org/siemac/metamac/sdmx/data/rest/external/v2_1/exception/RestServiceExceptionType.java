@@ -5,7 +5,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
 
-// TODO librería común statistic-sdmx-rest?
+// IDEA librería común statistic-sdmx-rest (LLCC-151)
 public class RestServiceExceptionType {
 
     // Map

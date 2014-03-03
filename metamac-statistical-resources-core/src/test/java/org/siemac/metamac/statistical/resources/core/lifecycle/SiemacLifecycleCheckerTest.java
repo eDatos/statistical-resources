@@ -207,14 +207,14 @@ public class SiemacLifecycleCheckerTest extends StatisticalResourcesBaseTest {
     @Ignore
     @Test
     public void testCheckExternalItemsPreviouslyPublished() throws Exception {
+        // TODO: Implementar (METAMAC-2143)
         fail("not implemented");
-        // TODO: Implementar
     }
 
     @Ignore
     @Test
     public void testCheckRelatedResourcesPreviouslyPublished() throws Exception {
+        // TODO: Implementar (METAMAC-2143)
         fail("not implemented");
-        // TODO: Implementar
     }
 }

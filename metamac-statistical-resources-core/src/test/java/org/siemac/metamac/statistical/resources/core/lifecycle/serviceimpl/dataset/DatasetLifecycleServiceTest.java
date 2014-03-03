@@ -314,16 +314,16 @@ public class DatasetLifecycleServiceTest extends StatisticalResourcesBaseTest im
     @Override
     @Test
     public void testCheckSendToPublishedResource() throws Exception {
+        // TODO: Implementar (METAMAC-2143)
         fail("not implemented");
-        // TODO: Implementar
     }
 
     @Ignore
     @Override
     @Test
     public void testApplySendToPublishedResource() throws Exception {
+        // TODO: Implementar (METAMAC-2143)
         fail("not implemented");
-        // TODO: Implementar
     }
 
     // ------------------------------------------------------------------------------------------------------
@@ -359,7 +359,7 @@ public class DatasetLifecycleServiceTest extends StatisticalResourcesBaseTest im
     @Override
     @Test
     public void testCopyResourceForVersioning() throws Exception {
-        // TODO testCopyResourceForVersioning. Test all metadata
+        // TODO testCopyResourceForVersioning. Test all metadata (METAMAC-2143)
 
         DatasetVersion source = mockDatasetVersionInRepoFromMockFactory(DATASET_VERSION_70_PREPARED_TO_PUBLISH_EXTERNAL_ITEM_FULL_NAME);
         DatasetVersion target = datasetLifecycleService.copyResourceForVersioning(getServiceContextAdministrador(), source);

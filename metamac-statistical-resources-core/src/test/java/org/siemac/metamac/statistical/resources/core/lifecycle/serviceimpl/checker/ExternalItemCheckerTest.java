@@ -12,35 +12,35 @@ public class ExternalItemCheckerTest extends StatisticalResourcesBaseTest {
     @Ignore
     @Test
     public void testCheckExternalItemsExternallyPublishedExternalItem() throws Exception {
+        // TODO: Implementar (METAMAC-2143)
         fail("not implemented");
-        // TODO: Implementar
     }
     
     @Ignore
     @Test
     public void testCheckExternalItemsExternallyPublishedListExternalItems() throws Exception {
+        // TODO: Implementar (METAMAC-2143)
         fail("not implemented");
-        // TODO: Implementar
     }
 
     @Ignore
     @Test
     public void testCheckResult() throws Exception {
+        // TODO: Implementar (METAMAC-2143)
         fail("not implemented");
-        // TODO: Implementar
     }
     
     @Ignore
     @Test
     public void testCreateSpecificExceptionItem() throws Exception {
+        // TODO: Implementar (METAMAC-2143)
         fail("not implemented");
-        // TODO: Implementar
     }
     
     @Ignore
     @Test
     public void testCreateQueryForPublishedResourcesSearchingByUrn() throws Exception {
+        // TODO: Implementar (METAMAC-2143)
         fail("not implemented");
-        // TODO: Implementar
     }
 }

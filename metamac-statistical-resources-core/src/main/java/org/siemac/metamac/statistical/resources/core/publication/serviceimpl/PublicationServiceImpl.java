@@ -91,11 +91,11 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
         // Check status
         ProcStatusValidator.checkStatisticalResourceCanBeEdited(publicationVersion);
 
-        // TODO RI: Comprobar si el código ha cambiado, si puede cambair y si sigue siendo unico (ver ConceptsServiceImpl.java)
+        // TODO RI: Comprobar si el código ha cambiado, si puede cambair y si sigue siendo unico (ver ConceptsServiceImpl.java) (METAMAC-2145)
         identifiableStatisticalResourceRepository.checkDuplicatedUrn(publicationVersion.getSiemacMetadataStatisticalResource());
-        // TODO RI: Si el codigo ha cambiado debemos actualizar la URN
+        // TODO RI: Si el codigo ha cambiado debemos actualizar la URN (METAMAC-2145)
 
-        publicationVersion = getPublicationVersionRepository().save(publicationVersion);
+        publicationVersion = getPublicationVers ionRepository().save(publicationVersion);
         return publicationVersion;
     }
 

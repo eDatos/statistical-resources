@@ -48,14 +48,14 @@ public class SiemacLifecycleFiller {
         lifecycleFiller.applySendToPublishedCurrentResourceActions(ctx, resource, previousResource);
         resource.getSiemacMetadataStatisticalResource().setCopyrightedDate(resource.getLifeCycleStatisticalResource().getValidFrom().getYear());
 
-        // TODO: Metadatos de relaciones entre recursos
+        // TODO: Metadatos de relaciones entre recursos (METAMAC-2144)
     }
 
     public void applySendToPublishedPreviousResourceActions(ServiceContext ctx, HasSiemacMetadata resource, HasSiemacMetadata previousResource, RelatedResource currentAsRelatedResource)
             throws MetamacException {
         lifecycleFiller.applySendToPublishedPreviousResourceActions(ctx, resource, previousResource, currentAsRelatedResource);
 
-        // TODO: Metadatos de relaciones entre recursos
+        // TODO: Metadatos de relaciones entre recursos (METAMAC-2144)
     }
 
     // ------------------------------------------------------------------------------------------------------

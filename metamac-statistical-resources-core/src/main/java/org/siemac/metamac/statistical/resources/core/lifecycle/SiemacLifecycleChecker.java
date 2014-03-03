@@ -138,7 +138,7 @@ public class SiemacLifecycleChecker {
         lifecycleChecker.checkVersioning(resource, metadataName, exceptionItems);
         checkSiemacMetadataAllActions(resource, metadataName, exceptionItems);
 
-        // TODO: falta algo?
+        // TODO: falta algo (METAMAC-2144)
     }
 
     // ------------------------------------------------------------------------------------------------------

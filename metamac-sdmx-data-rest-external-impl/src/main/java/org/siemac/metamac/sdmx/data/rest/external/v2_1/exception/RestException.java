@@ -4,7 +4,7 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-//TODO librería común statistic-sdmx-rest?
+// IDEA librería común statistic-sdmx-rest (LLCC-151)
 /**
  * JAX-RS has a RuntimeException class, called WebApplicationException, that allows you to abort your JAX-RS service method.
  * Can take an HTTP status code or even a Response object as one of its constructor parameters

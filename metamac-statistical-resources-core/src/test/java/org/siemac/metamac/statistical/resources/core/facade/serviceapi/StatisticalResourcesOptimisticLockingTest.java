@@ -534,7 +534,7 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
 
     @Override
     public void testProgramPublicationQueryVersion() throws Exception {
-        // TODO Auto-generated method stub
+        // TODO: Implement (METAMAC-2143)
 
     }
 
@@ -943,7 +943,7 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
 
     @Override
     public void testProgramPublicationPublicationVersion() throws Exception {
-        // TODO Auto-generated method stub
+        // TODO: Implement (METAMAC-2143)
 
     }
 
@@ -1317,7 +1317,7 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
 
     @Override
     public void testProgramPublicationDatasetVersion() throws Exception {
-        // TODO Auto-generated method stub
+        // TODO: Implement (METAMAC-2143)
 
     }
 

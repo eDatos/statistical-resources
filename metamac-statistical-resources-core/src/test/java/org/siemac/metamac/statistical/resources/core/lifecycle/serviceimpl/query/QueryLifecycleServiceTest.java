@@ -73,7 +73,7 @@ public class QueryLifecycleServiceTest extends StatisticalResourcesBaseTest impl
     @Override
     @Test
     public void testCheckSendToPublishedResource() throws Exception {
-        // TODO:
+        // TODO: Implementar (METAMAC-2143)
         fail("not implemented");
     }
 
@@ -81,7 +81,7 @@ public class QueryLifecycleServiceTest extends StatisticalResourcesBaseTest impl
     @Override
     @Test
     public void testApplySendToPublishedResource() throws Exception {
-        // TODO:
+        // TODO: Implementar (METAMAC-2143)
         // - cumplimentar format_extent_resources
 
         fail("not implemented");
