@@ -18,7 +18,7 @@ public class CodeItemMultiListGrid extends ResourceMultiListGridSelector<CodeIte
 
     @Override
     protected void setSelectorFields() {
-        // FIXME: change messages
+        // FIXME: change messages (METAMAC-2146)
         CustomListGridField codeField = new CustomListGridField(CodeItemDS.CODE, MetamacWebCommon.getConstants().relatedResourceCode());
         codeField.setWidth("30%");
         CustomListGridField titleField = new CustomListGridField(CodeItemDS.TITLE, MetamacWebCommon.getConstants().relatedResourceTitle());
