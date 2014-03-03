@@ -5,8 +5,10 @@ import java.util.List;
 
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteriaBuilder;
+import org.joda.time.DateTime;
 import org.siemac.metamac.core.common.util.ApplicationContextProvider;
 import org.siemac.metamac.rest.common.test.mockito.ConditionalCriteriasMatcher;
+import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersionProperties;
 
@@ -29,6 +31,24 @@ public class FindQueriesByRelatedDatasetUrnMatcher extends ConditionalCriteriasM
         // default order
         expected.add(ConditionalCriteriaBuilder.criteriaFor(QueryVersion.class).orderBy(QueryVersionProperties.lifeCycleStatisticalResource().code()).ascending().buildSingle());
 
+        if (mockitoMockConfig.isExternalApi()) {
+            addConditionsForExternalApi(expected);
+        } else {
+            addConditionsForInternalApi(expected);
+        }
+
+        // distinc root
+        expected.add(ConditionalCriteriaBuilder.criteriaFor(QueryVersion.class).distinctRoot().buildSingle());
+
+        // maintainer
+        expected.add(ConditionalCriteriaBuilder.criteriaFor(QueryVersion.class).withProperty(QueryVersionProperties.lifeCycleStatisticalResource().maintainer().codeNested()).eq("agency1")
+                .buildSingle());
+
+        // Compare
+        return super.matches(expected, actual);
+    }
+
+    protected void addConditionsForInternalApi(List<ConditionalCriteria> expected) {
         //@formatter:off
         expected.add(ConditionalCriteriaBuilder.criteriaFor(QueryVersion.class)
             .lbrace()
@@ -41,15 +61,32 @@ public class FindQueriesByRelatedDatasetUrnMatcher extends ConditionalCriteriasM
             .buildSingle()
         );
         //@formatter:on
+    }
 
-        // distinc root
-        expected.add(ConditionalCriteriaBuilder.criteriaFor(QueryVersion.class).distinctRoot().buildSingle());
-
-        // maintainer
-        expected.add(ConditionalCriteriaBuilder.criteriaFor(QueryVersion.class).withProperty(QueryVersionProperties.lifeCycleStatisticalResource().maintainer().codeNested()).eq("agency1")
-                .buildSingle());
-
-        // Compare
-        return super.matches(expected, actual);
+    protected void addConditionsForExternalApi(List<ConditionalCriteria> expected) {
+        DateTime now = new DateTime();
+        //@formatter:off
+        expected.add(ConditionalCriteriaBuilder.criteriaFor(QueryVersion.class)
+              .withProperty(QueryVersionProperties.dataset().versions().siemacMetadataStatisticalResource().urn()).eq("URN_TEST")
+              .or()
+              .withProperty(QueryVersionProperties.fixedDatasetVersion().siemacMetadataStatisticalResource().urn()).eq("URN_TEST")
+              .buildSingle()
+        );
+        
+        expected.add(ConditionalCriteriaBuilder.criteriaFor(QueryVersion.class)
+              .lbrace()
+                  .withProperty(QueryVersionProperties.lifeCycleStatisticalResource().validTo()).greaterThan(now)
+                  .or()
+                  .withProperty(QueryVersionProperties.lifeCycleStatisticalResource().validTo()).isNull()
+              .rbrace()
+              .and()
+              .lbrace()
+                  .withProperty(QueryVersionProperties.lifeCycleStatisticalResource().validFrom()).lessThanOrEqual(now)
+                  .and()
+                  .withProperty(QueryVersionProperties.dataset().versions().siemacMetadataStatisticalResource().procStatus()).eq(ProcStatusEnum.PUBLISHED.toString())
+              .rbrace()
+            .buildSingle()
+        );
+        //@formatter:on
     }
 }

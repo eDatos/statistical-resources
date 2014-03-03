@@ -1,6 +1,7 @@
 package org.siemac.metamac.statistical_resources.rest.external.v1_0.mapper.query;
 
 import org.fornax.cartridges.sculptor.framework.domain.Property;
+import org.joda.time.DateTime;
 import org.siemac.metamac.rest.common.query.domain.MetamacRestOrder;
 import org.siemac.metamac.rest.common.query.domain.MetamacRestQueryPropertyRestriction;
 import org.siemac.metamac.rest.common.query.domain.OperationTypeEnum;
@@ -13,6 +14,7 @@ import org.siemac.metamac.rest.search.criteria.mapper.RestCriteria2SculptorCrite
 import org.siemac.metamac.rest.search.criteria.mapper.RestCriteria2SculptorCriteria.CriteriaCallback;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.QueryCriteriaPropertyOrder;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.QueryCriteriaPropertyRestriction;
+import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersionProperties;
 import org.siemac.metamac.statistical_resources.rest.external.v1_0.mapper.base.BaseRest2DoMapperV10Impl;
@@ -46,27 +48,13 @@ public class QueriesRest2DoMapperImpl extends BaseRest2DoMapperV10Impl implement
                 case DESCRIPTION:
                     return buildSculptorPropertyCriteria(QueryVersionProperties.lifeCycleStatisticalResource().description().texts().label(), PropertyTypeEnum.STRING, propertyRestriction);
                 case RELATED_DATASET_URN:
-                    // TODO Distinguir entre los dos querys Interna y Externa (METAMAC-1850)
-
-                    // Last version
-                    MetamacRestQueryPropertyRestriction propertyLastVersionCriteria = new MetamacRestQueryPropertyRestriction();
-                    propertyLastVersionCriteria.setOperationType(OperationTypeEnum.EQ);
-                    propertyLastVersionCriteria.setPropertyName(propertyRestriction.getPropertyName());
-                    propertyLastVersionCriteria.setValue("TRUE");
-                    SculptorPropertyCriteria propertyCriteriaDatasetLast = buildSculptorPropertyCriteria(QueryVersionProperties.dataset().versions().siemacMetadataStatisticalResource().lastVersion(),
-                            PropertyTypeEnum.BOOLEAN, propertyLastVersionCriteria);
-
-                    // Last URN
-                    SculptorPropertyCriteria propertyUrnCriteria = buildSculptorPropertyCriteria(QueryVersionProperties.dataset().versions().siemacMetadataStatisticalResource().urn(),
-                            PropertyTypeEnum.STRING, propertyRestriction);
-
-                    SculptorPropertyCriteriaConjunction sculptorPropertyCriteriaConjunction = new SculptorPropertyCriteriaConjunction(propertyCriteriaDatasetLast, propertyUrnCriteria);
-
-                    // Equals to Fixed URN
-                    SculptorPropertyCriteria propertyCriteriaFixed = buildSculptorPropertyCriteria(QueryVersionProperties.fixedDatasetVersion().siemacMetadataStatisticalResource().urn(),
-                            PropertyTypeEnum.STRING, propertyRestriction);
-
-                    return new SculptorPropertyCriteriaDisjunction(sculptorPropertyCriteriaConjunction, propertyCriteriaFixed);
+                    // TODO Latest (METAMAC-1851) cambiar el codigo que se ejecuta en cada api
+                    boolean isInternalApi = false;
+                    if (isInternalApi) {
+                        return buildRelatedDatasetInternalProperty(propertyRestriction);
+                    } else {
+                        return buildRelatedDatasetExternalProperty(propertyRestriction);
+                    }
                 case TYPE:
                     return buildSculptorPropertyCriteria(QueryVersionProperties.type(), PropertyTypeEnum.QUERY_TYPE, propertyRestriction);
                 case STATUS:
@@ -80,6 +68,103 @@ public class QueriesRest2DoMapperImpl extends BaseRest2DoMapperV10Impl implement
                 default:
                     throw toRestExceptionParameterIncorrect(propertyNameCriteria.name());
             }
+        }
+
+        protected SculptorPropertyCriteriaBase buildRelatedDatasetInternalProperty(MetamacRestQueryPropertyRestriction propertyRestriction) {
+            // Last version internal
+            MetamacRestQueryPropertyRestriction propertyLastVersionCriteria = new MetamacRestQueryPropertyRestriction();
+            propertyLastVersionCriteria.setOperationType(OperationTypeEnum.EQ);
+            propertyLastVersionCriteria.setPropertyName(propertyRestriction.getPropertyName());
+            propertyLastVersionCriteria.setValue("TRUE");
+            SculptorPropertyCriteria propertyCriteriaDatasetLast = buildSculptorPropertyCriteria(QueryVersionProperties.dataset().versions().siemacMetadataStatisticalResource().lastVersion(),
+                    PropertyTypeEnum.BOOLEAN, propertyLastVersionCriteria);
+
+            // URN
+            SculptorPropertyCriteria propertyUrnCriteria = buildSculptorPropertyCriteria(QueryVersionProperties.dataset().versions().siemacMetadataStatisticalResource().urn(),
+                    PropertyTypeEnum.STRING, propertyRestriction);
+
+            SculptorPropertyCriteriaConjunction sculptorPropertyCriteriaConjunction = new SculptorPropertyCriteriaConjunction(propertyCriteriaDatasetLast, propertyUrnCriteria);
+
+            // Equals to Fixed URN
+            SculptorPropertyCriteria propertyCriteriaFixed = buildSculptorPropertyCriteria(QueryVersionProperties.fixedDatasetVersion().siemacMetadataStatisticalResource().urn(),
+                    PropertyTypeEnum.STRING, propertyRestriction);
+
+            return new SculptorPropertyCriteriaDisjunction(sculptorPropertyCriteriaConjunction, propertyCriteriaFixed);
+        }
+
+        protected SculptorPropertyCriteriaBase buildRelatedDatasetExternalProperty(MetamacRestQueryPropertyRestriction propertyRestriction) {
+            DateTime now = new DateTime();
+
+            // Is Published
+            SculptorPropertyCriteria propertyPublishedCriteria;
+            {
+                MetamacRestQueryPropertyRestriction propertyPublishedRestriction = new MetamacRestQueryPropertyRestriction();
+                propertyPublishedRestriction.setOperationType(OperationTypeEnum.EQ);
+                propertyPublishedRestriction.setPropertyName(propertyRestriction.getPropertyName());
+                propertyPublishedRestriction.setValue(ProcStatusEnum.PUBLISHED.getName());
+
+                propertyPublishedCriteria = buildSculptorPropertyCriteria(QueryVersionProperties.dataset().versions().siemacMetadataStatisticalResource().procStatus(), PropertyTypeEnum.STRING,
+                        propertyPublishedRestriction);
+            }
+
+            // ValidFromLE
+            SculptorPropertyCriteria validFromLECriteria;
+            {
+                MetamacRestQueryPropertyRestriction propertyPublishedRestriction = new MetamacRestQueryPropertyRestriction();
+                propertyPublishedRestriction.setOperationType(OperationTypeEnum.LE);
+                propertyPublishedRestriction.setPropertyName(propertyRestriction.getPropertyName());
+                propertyPublishedRestriction.setValue(now.toString());
+
+                validFromLECriteria = buildSculptorPropertyCriteriaForDateProperty(propertyPublishedRestriction, QueryVersionProperties.lifeCycleStatisticalResource().validFrom(), QueryVersion.class,
+                        false);
+            }
+
+            // ValidToG
+            SculptorPropertyCriteria validToGCriteria;
+            {
+                MetamacRestQueryPropertyRestriction propertyPublishedRestriction = new MetamacRestQueryPropertyRestriction();
+                propertyPublishedRestriction.setOperationType(OperationTypeEnum.GT);
+                propertyPublishedRestriction.setPropertyName(propertyRestriction.getPropertyName());
+                propertyPublishedRestriction.setValue(now.toString());
+
+                validToGCriteria = buildSculptorPropertyCriteriaForDateProperty(propertyPublishedRestriction, QueryVersionProperties.lifeCycleStatisticalResource().validTo(), QueryVersion.class,
+                        false);
+            }
+
+            // ValidToIsNull
+            SculptorPropertyCriteria validToIsNullCriteria;
+            {
+                MetamacRestQueryPropertyRestriction propertyPublishedRestriction = new MetamacRestQueryPropertyRestriction();
+                propertyPublishedRestriction.setOperationType(OperationTypeEnum.IS_NULL);
+                propertyPublishedRestriction.setPropertyName(propertyRestriction.getPropertyName());
+                propertyPublishedRestriction.setValue(now.toString());
+
+                validToIsNullCriteria = buildSculptorPropertyCriteriaForDateProperty(propertyPublishedRestriction, QueryVersionProperties.lifeCycleStatisticalResource().validTo(), QueryVersion.class,
+                        false);
+            }
+
+            // DatasetVersion URN
+            SculptorPropertyCriteria propertyUrnCriteria;
+            {
+                propertyUrnCriteria = buildSculptorPropertyCriteria(QueryVersionProperties.dataset().versions().siemacMetadataStatisticalResource().urn(), PropertyTypeEnum.STRING, propertyRestriction);
+            }
+
+            // Fixed DatasetVersion URN
+            SculptorPropertyCriteria propertyCriteriaFixed;
+            {
+                propertyCriteriaFixed = buildSculptorPropertyCriteria(QueryVersionProperties.fixedDatasetVersion().siemacMetadataStatisticalResource().urn(), PropertyTypeEnum.STRING,
+                        propertyRestriction);
+            }
+
+            // -------> IMPORTANT: The following code must build the conditions tree in the same order of the conditions tree in test:
+            // QueryVersionRepositoryTest.testRetrieveRelatedUrnQueryForExternalAPI (core). Another untested order can produce incorrect results.
+            SculptorPropertyCriteriaDisjunction disjunctionUrnToCriteria = new SculptorPropertyCriteriaDisjunction(propertyUrnCriteria, propertyCriteriaFixed);
+            SculptorPropertyCriteriaDisjunction disjunctionValidToCriteria = new SculptorPropertyCriteriaDisjunction(validToGCriteria, validToIsNullCriteria);
+            SculptorPropertyCriteriaConjunction conjunctionValidCriteria = new SculptorPropertyCriteriaConjunction(validFromLECriteria, propertyPublishedCriteria);
+            SculptorPropertyCriteriaConjunction conjuctionPublishedCriteria = new SculptorPropertyCriteriaConjunction(disjunctionValidToCriteria, conjunctionValidCriteria);
+            // <--------
+
+            return new SculptorPropertyCriteriaConjunction(disjunctionUrnToCriteria, conjuctionPublishedCriteria);
         }
 
         @SuppressWarnings("rawtypes")

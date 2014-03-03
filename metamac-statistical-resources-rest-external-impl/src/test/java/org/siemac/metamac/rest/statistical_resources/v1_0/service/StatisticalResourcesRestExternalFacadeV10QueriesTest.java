@@ -48,9 +48,10 @@ public class StatisticalResourcesRestExternalFacadeV10QueriesTest extends Statis
     }
 
     @Test
-    public void testFindQueriesXmlWithQueryConditionsMatcher() throws Exception {
+    public void testFindQueriesXmlWithQueryConditionsMatcherExternal() throws Exception {
         // Use argument Matcher for this test;
         mockitoMockConfig.setApplyArgumentMatcher(true);
+        mockitoMockConfig.setExternalApi(true);
         { // All data: specific with general format (StructureSpecificData)
             WebClient create = WebClient.create(baseApi);
 

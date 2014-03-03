@@ -7,4 +7,8 @@ public interface MockitoMockConfig {
     public void setApplyArgumentMatcher(boolean applyArgumentMatcher);
 
     public boolean isApplyArgumentMatcher();
+
+    public void setExternalApi(boolean isExternalApi);
+
+    public boolean isExternalApi();
 }

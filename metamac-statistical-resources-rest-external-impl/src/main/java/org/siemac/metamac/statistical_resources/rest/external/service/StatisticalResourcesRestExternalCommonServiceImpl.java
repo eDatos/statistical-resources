@@ -15,6 +15,7 @@ import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteriaBuilder;
 import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
 import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
+import org.joda.time.DateTime;
 import org.siemac.metamac.core.common.constants.shared.UrnConstants;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.util.GeneratorUrnUtils;
@@ -26,6 +27,7 @@ import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataS
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionProperties;
 import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.DatasetService;
+import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersionProperties;
@@ -162,7 +164,7 @@ public class StatisticalResourcesRestExternalCommonServiceImpl implements Statis
     @Override
     public PagedResult<QueryVersion> findQueryVersions(String agencyID, List<ConditionalCriteria> conditionalCriteria, PagingParameter pagingParameter) {
         try {
-            return findQueryVersionsCommon(agencyID, null, null, conditionalCriteria, pagingParameter);
+            return findQueryVersionsCommon(agencyID, null, conditionalCriteria, pagingParameter);
         } catch (Exception e) {
             throw manageException(e);
         }
@@ -210,7 +212,7 @@ public class StatisticalResourcesRestExternalCommonServiceImpl implements Statis
         return entitiesPagedResult;
     }
 
-    private PagedResult<QueryVersion> findQueryVersionsCommon(String agencyID, String resourceID, String version, List<ConditionalCriteria> conditionalCriteriaQuery, PagingParameter pagingParameter)
+    private PagedResult<QueryVersion> findQueryVersionsCommon(String agencyID, String resourceID, List<ConditionalCriteria> conditionalCriteriaQuery, PagingParameter pagingParameter)
             throws MetamacException {
 
         // Criteria to find by criteria
@@ -224,7 +226,7 @@ public class StatisticalResourcesRestExternalCommonServiceImpl implements Statis
         }
         addConditionalCriteriaAgencyIfApplicable(agencyID, QueryVersion.class, QueryVersionProperties.lifeCycleStatisticalResource(), conditionalCriteria);
         addConditionalCriteriaResourceIfApplicable(resourceID, QueryVersion.class, QueryVersionProperties.lifeCycleStatisticalResource(), conditionalCriteria);
-        addConditionalCriteriaVersionIfApplicable(version, QueryVersion.class, QueryVersionProperties.lifeCycleStatisticalResource(), conditionalCriteria);
+        // addConditionalCriteriaVersionIfApplicable(QueryVersion.class, QueryVersionProperties.lifeCycleStatisticalResource(), conditionalCriteria);
 
         // Find
         PagedResult<QueryVersion> entitiesPagedResult = queryService.findQueryVersionsByCondition(SERVICE_CONTEXT, conditionalCriteria, pagingParameter);
@@ -251,7 +253,34 @@ public class StatisticalResourcesRestExternalCommonServiceImpl implements Statis
     private void addConditionalCriteriaVersionIfApplicable(String version, Class entityClass, SiemacMetadataStatisticalResourceProperty siemacMetadataStatisticalResourceProperty,
             List<ConditionalCriteria> conditionalCriteria) {
         if (SrmRestConstants.WILDCARD_LATEST.equals(version)) {
-            // TODO Latest (METAMAC-1850)
+            // TODO Latest (METAMAC-1851)cambiar el codigo que se ejecuta en cada api
+            boolean isInternalApi = false;
+            if (isInternalApi) {
+                // Last version
+                //@formatter:off
+                conditionalCriteria.add(ConditionalCriteriaBuilder.criteriaFor(entityClass)
+                    .withProperty(siemacMetadataStatisticalResourceProperty.lastVersion()).eq(Boolean.TRUE)
+                    .buildSingle()
+                );
+                // @formatter:on
+            } else {
+                // Last published version
+                //@formatter:off
+                DateTime now = new DateTime();
+                conditionalCriteria.add(ConditionalCriteriaBuilder.criteriaFor(entityClass)
+                        .withProperty(siemacMetadataStatisticalResourceProperty.procStatus()).eq(ProcStatusEnum.PUBLISHED)
+                    .and()
+                        .withProperty(siemacMetadataStatisticalResourceProperty.validFrom()).lessThanOrEqual(now)
+                    .and()
+                        .lbrace()
+                        .withProperty(siemacMetadataStatisticalResourceProperty.validTo()).greaterThan(now)
+                        .or()
+                        .withProperty(siemacMetadataStatisticalResourceProperty.validTo()).isNull()
+                        .rbrace()
+                    .buildSingle()
+                );
+                // @formatter:on
+            }
         } else if (version != null && !SrmRestConstants.WILDCARD_ALL.equals(version)) {
             conditionalCriteria.add(ConditionalCriteriaBuilder.criteriaFor(entityClass).withProperty(siemacMetadataStatisticalResourceProperty.versionLogic()).eq(version).buildSingle());
         }
@@ -272,15 +301,4 @@ public class StatisticalResourcesRestExternalCommonServiceImpl implements Statis
             conditionalCriteria.add(ConditionalCriteriaBuilder.criteriaFor(entityClass).withProperty(lifeCycleStatisticalResourceProperty.code()).eq(resourceID).buildSingle());
         }
     }
-
-    @SuppressWarnings({"unchecked", "rawtypes"})
-    private void addConditionalCriteriaVersionIfApplicable(String version, Class entityClass, LifeCycleStatisticalResourceProperty lifeCycleStatisticalResourceProperty,
-            List<ConditionalCriteria> conditionalCriteria) {
-        if (SrmRestConstants.WILDCARD_LATEST.equals(version)) {
-            // TODO Latest (METAMAC-1850)
-        } else if (version != null && !SrmRestConstants.WILDCARD_ALL.equals(version)) {
-            conditionalCriteria.add(ConditionalCriteriaBuilder.criteriaFor(entityClass).withProperty(lifeCycleStatisticalResourceProperty.versionLogic()).eq(version).buildSingle());
-        }
-    }
-
 }
