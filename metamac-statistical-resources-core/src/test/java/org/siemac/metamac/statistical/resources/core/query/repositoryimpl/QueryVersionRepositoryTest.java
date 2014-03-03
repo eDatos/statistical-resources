@@ -1,7 +1,9 @@
 package org.siemac.metamac.statistical.resources.core.query.repositoryimpl;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.QueryAsserts.assertEqualsQueryVersion;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetMockFactory.DATASET_24_SIMPLE_WITH_TWO_VERSIONS_WITH_QUERY_LINKED_TO_DATASET_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_03_FOR_DATASET_03_NAME;
@@ -51,6 +53,9 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 import java.util.Arrays;
 import java.util.List;
 
+import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
+import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteriaBuilder;
+import org.joda.time.DateTime;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -60,6 +65,7 @@ import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTes
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResourceResult;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
+import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryTypeEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
@@ -68,6 +74,7 @@ import org.siemac.metamac.statistical.resources.core.query.domain.CodeItem;
 import org.siemac.metamac.statistical.resources.core.query.domain.Query;
 import org.siemac.metamac.statistical.resources.core.query.domain.QuerySelectionItem;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
+import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersionProperties;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersionRepository;
 import org.siemac.metamac.statistical.resources.core.utils.asserts.CommonAsserts;
 import org.siemac.metamac.statistical.resources.core.utils.asserts.QueryAsserts;
@@ -259,6 +266,68 @@ public class QueryVersionRepositoryTest extends StatisticalResourcesBaseTest imp
         QueryVersion expected = queryVersionMockFactory.retrieveMock(QUERY_VERSION_21_FOR_QUERY_03_NAME);
         QueryVersion actual = queryVersionRepository.retrieveLastPublishedVersion(queryUrn);
         assertEqualsQueryVersion(expected, actual);
+    }
+
+    @Test
+    @MetamacMock({QUERY_03_BASIC_WITH_2_QUERY_VERSIONS_NAME})
+    public void testRetrieveLastPublishedVersionQueryForExternalAPI() throws Exception {
+        QueryVersion expected = queryVersionMockFactory.retrieveMock(QUERY_VERSION_21_FOR_QUERY_03_NAME);
+
+        // @formatter:off
+        DateTime now = new DateTime();
+        List<ConditionalCriteria> conditions = ConditionalCriteriaBuilder.criteriaFor(QueryVersion.class)
+                .withProperty(QueryVersionProperties.lifeCycleStatisticalResource().procStatus()).eq(ProcStatusEnum.PUBLISHED)
+            .and()
+                .withProperty(QueryVersionProperties.lifeCycleStatisticalResource().validFrom()).lessThanOrEqual(now)
+            .and()
+                .lbrace()
+                .withProperty(QueryVersionProperties.lifeCycleStatisticalResource().validTo()).greaterThan(now)
+                .or()
+                .withProperty(QueryVersionProperties.lifeCycleStatisticalResource().validTo()).isNull()
+                .rbrace()
+            .distinctRoot().build();
+        // @formatter:on
+
+        List<QueryVersion> result = queryVersionRepository.findByCondition(conditions);
+        assertTrue(result.size() == 1);
+        assertEquals(result.iterator().next().getLifeCycleStatisticalResource().getUrn(), expected.getLifeCycleStatisticalResource().getUrn());
+    }
+
+    @Test
+    @MetamacMock({QUERY_03_BASIC_WITH_2_QUERY_VERSIONS_NAME})
+    public void testRetrieveRelatedUrnQueryForExternalAPI() throws Exception {
+        QueryVersion expected = queryVersionMockFactory.retrieveMock(QUERY_VERSION_21_FOR_QUERY_03_NAME);
+
+        // @formatter:off
+        String expectedDatasetVersionUrn = expected.getDataset().getVersions().get(0).getSiemacMetadataStatisticalResource().getUrn();
+        
+        DateTime now = new DateTime();
+        List<ConditionalCriteria> conditions = ConditionalCriteriaBuilder.criteriaFor(QueryVersion.class)
+          .lbrace()
+              .withProperty(QueryVersionProperties.dataset().versions().siemacMetadataStatisticalResource().urn()).eq(expectedDatasetVersionUrn)
+              .or()
+              .withProperty(QueryVersionProperties.fixedDatasetVersion().siemacMetadataStatisticalResource().urn()).eq(expectedDatasetVersionUrn)
+          .rbrace()
+          .and()
+          .lbrace()
+              .lbrace()
+                  .withProperty(QueryVersionProperties.lifeCycleStatisticalResource().validTo()).greaterThan(now)
+                  .or()
+                  .withProperty(QueryVersionProperties.lifeCycleStatisticalResource().validTo()).isNull()
+              .rbrace()
+              .and()
+              .lbrace()
+                  .withProperty(QueryVersionProperties.lifeCycleStatisticalResource().validFrom()).lessThanOrEqual(now)
+                  .and()
+                  .withProperty(QueryVersionProperties.dataset().versions().siemacMetadataStatisticalResource().procStatus()).eq(ProcStatusEnum.PUBLISHED)
+              .rbrace()
+          .rbrace()
+          .distinctRoot().build();
+        // @formatter:on
+
+        List<QueryVersion> result = queryVersionRepository.findByCondition(conditions);
+        assertTrue(result.size() == 1);
+        assertEquals(result.iterator().next().getLifeCycleStatisticalResource().getUrn(), expected.getLifeCycleStatisticalResource().getUrn());
     }
 
     @Test
