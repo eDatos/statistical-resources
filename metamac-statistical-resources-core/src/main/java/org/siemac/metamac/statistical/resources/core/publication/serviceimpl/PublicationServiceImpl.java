@@ -95,7 +95,7 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
         identifiableStatisticalResourceRepository.checkDuplicatedUrn(publicationVersion.getSiemacMetadataStatisticalResource());
         // TODO RI: Si el codigo ha cambiado debemos actualizar la URN (METAMAC-2145)
 
-        publicationVersion = getPublicationVers ionRepository().save(publicationVersion);
+        publicationVersion = getPublicationVersionRepository().save(publicationVersion);
         return publicationVersion;
     }
 
