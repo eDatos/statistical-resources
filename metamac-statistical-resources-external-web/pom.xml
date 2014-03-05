@@ -8,7 +8,7 @@
         <artifactId>metamac-statistical-resources-parent</artifactId>
         <version>1.0.1-SNAPSHOT</version>
         <relativePath>../metamac-statistical-resources-parent/pom.xml</relativePath>
-    </parent>
+    </parent> 
 
     <groupId>org.siemac.metamac.metamac-statistical-resources</groupId>
     <artifactId>metamac-statistical-resources-external-web</artifactId>
@@ -42,7 +42,7 @@
             <groupId>com.ibm.icu</groupId>
             <artifactId>icu4j</artifactId>
             <version>${icu4j.version}</version>
-        </dependency>
+        </dependency>    
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>servlet-api</artifactId>
@@ -53,11 +53,6 @@
             <groupId>org.tuckey</groupId>
             <artifactId>urlrewritefilter</artifactId>
             <version>${urlrewritefilter.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.codehaus.enunciate</groupId>
-            <artifactId>enunciate-swagger</artifactId>
-            <version>${enunciate.version}</version>
         </dependency>
     </dependencies>
 
@@ -93,7 +88,7 @@
                                 <delete dir="${basedir}/target/enunciate" includeemptydirs="true" />
                             </target>
                         </configuration>
-                    </execution>
+                    </execution>                    
                 </executions>
             </plugin>
             <plugin>
@@ -101,7 +96,7 @@
                 <artifactId>maven-enunciate-plugin</artifactId>
                 <version>${enunciate.version}</version>
                 <configuration>
-                    <configFile>etc/enunciate/enunciate.xml</configFile>
+                    <configFile>etc/enunciate/enunciate.xml</configFile>  
                     <docsDir>${basedir}/src/main/webapp/docs/api</docsDir>
                 </configuration>
                 <executions>
@@ -111,14 +106,7 @@
                         </goals>
                     </execution>
                 </executions>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.codehaus.enunciate</groupId>
-                        <artifactId>enunciate-swagger</artifactId>
-                        <version>${enunciate.version}</version>
-                    </dependency>
-                </dependencies>
             </plugin>
         </plugins>
-    </build>
+    </build>    
 </project>
