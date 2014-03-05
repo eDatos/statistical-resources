@@ -115,6 +115,8 @@ public class QueryVersionMockFactory extends StatisticalResourcesMockFactory<Que
     public static final String             QUERY_VERSION_52_NOT_VISIBLE_IS_PART_OF_NOT_VISIBLE_PUBLICATION_NAME                                                       = "QUERY_VERSION_52_NOT_VISIBLE_IS_PART_OF_NOT_VISIBLE_PUBLICATION";
     public static final String             QUERY_VERSION_53_NOT_VISIBLE_IS_PART_OF_EMPTY_NAME                                                                         = "QUERY_VERSION_53_NOT_VISIBLE_IS_PART_OF_EMPTY";
 
+    public static final String             QUERY_VERSION_54_PREPARED_TO_PUBLISH_BUT_IN_PENDING_REVIEW_NAME                                                            = "QUERY_VERSION_54_PREPARED_TO_PUBLISH_BUT_IN_PENDING_REVIEW";
+
     private static QueryVersionMockFactory instance                                                                                                                   = null;
 
     private QueryVersionMockFactory() {
@@ -459,6 +461,20 @@ public class QueryVersionMockFactory extends StatisticalResourcesMockFactory<Que
         return queryMock;
     }
 
+    private static QueryVersion getQueryVersion54PreparedToPublishButInPendingReview() {
+        QueryVersionMock queryMock = buildQueryVersionMockSimpleWithFixedDatasetVersion("Q01");
+        queryMock.setQuery(QueryMockFactory.generateQueryWithoutGeneratedVersion());
+
+        DatasetVersion datasetVersion = queryMock.getFixedDatasetVersion();
+        DatasetLifecycleTestUtils.fillAsPublished(datasetVersion);
+
+        setQuerySelectionBasedOnDatasetVersion(queryMock, datasetVersion);
+
+        QueryLifecycleTestUtils.prepareToPublished(queryMock);
+        queryMock.setStatus(QueryStatusEnum.PENDING_REVIEW);
+        return queryMock;
+    }
+
     private static void setQuerySelectionBasedOnDatasetVersion(QueryVersionMock queryMock, DatasetVersion datasetVersion) {
         Map<String, QuerySelectionItem> selectionItems = new HashMap<String, QuerySelectionItem>();
         for (CodeDimension codeDim : datasetVersion.getDimensionsCoverage()) {
@@ -565,6 +581,7 @@ public class QueryVersionMockFactory extends StatisticalResourcesMockFactory<Que
         }
         return queryVersion;
     }
+
     // -----------------------------------------------------------------
     // LIFE CYCLE PREPARATIONS
     // -----------------------------------------------------------------

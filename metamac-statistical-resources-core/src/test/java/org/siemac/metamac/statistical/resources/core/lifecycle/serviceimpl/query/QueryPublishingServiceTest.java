@@ -16,6 +16,7 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_47_TO_PUBLISH_WITH_FUTURE_DATE_WITH_DATASET_WITH_LAST_VERSION_VISIBLE_AFTER_QUERY_PREVIOUS_INCOMPATIBLE_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_52_NOT_VISIBLE_IS_PART_OF_NOT_VISIBLE_PUBLICATION_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_53_NOT_VISIBLE_IS_PART_OF_EMPTY_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_54_PREPARED_TO_PUBLISH_BUT_IN_PENDING_REVIEW_NAME;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,6 +71,20 @@ public class QueryPublishingServiceTest extends StatisticalResourcesMockRestBase
         queryVersion = queryVersionRepository.retrieveByUrn(queryVersionUrn);
 
         assertPublishingQueryVersion(queryVersion, null);
+    }
+
+    @Test
+    @MetamacMock(QUERY_VERSION_54_PREPARED_TO_PUBLISH_BUT_IN_PENDING_REVIEW_NAME)
+    public void testPublishQueryVersionErrorIsPendingReview() throws Exception {
+        QueryVersion queryVersion = queryVersionMockFactory.retrieveMock(QUERY_VERSION_54_PREPARED_TO_PUBLISH_BUT_IN_PENDING_REVIEW_NAME);
+
+        LifeCycleStatisticalResource lifeCycleStatisticalResource = queryVersion.getLifeCycleStatisticalResource();
+        String queryVersionUrn = lifeCycleStatisticalResource.getUrn();
+
+        mockLifecycleExternalItemsPublished(lifeCycleStatisticalResource);
+
+        expectedMetamacException(new MetamacException(ServiceExceptionType.QUERY_VERSION_PUBLISH_INVALID_STATUS, queryVersion.getLifeCycleStatisticalResource().getUrn()));
+        queryLifecycleService.sendToPublished(getServiceContextAdministrador(), queryVersionUrn);
     }
 
     @Test
@@ -278,6 +293,9 @@ public class QueryPublishingServiceTest extends StatisticalResourcesMockRestBase
         assertCancelPublicationQueryVersion(queryVersion, null);
     }
 
+    // -------------------------------------------------------------------------------------------
+    // PRIVATE UTILS
+    // -------------------------------------------------------------------------------------------
     private void assertCancelPublicationQueryVersion(QueryVersion current, QueryVersion previous) throws MetamacException {
         LifecycleAsserts.assertAutomaticallyFilledMetadataLifecycleCancelPublication(current, previous);
     }
@@ -289,9 +307,4 @@ public class QueryPublishingServiceTest extends StatisticalResourcesMockRestBase
         assertNotNull(current.getStatus());
         assertTrue(current.getStatus().equals(QueryStatusEnum.ACTIVE) || current.getStatus().equals(QueryStatusEnum.DISCONTINUED));
     }
-
-    // -------------------------------------------------------------------------------------------
-    // PRIVATE UTILS
-    // -------------------------------------------------------------------------------------------
-
 }
