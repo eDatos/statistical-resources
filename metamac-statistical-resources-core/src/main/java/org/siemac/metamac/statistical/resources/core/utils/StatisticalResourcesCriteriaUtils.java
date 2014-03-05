@@ -19,35 +19,36 @@ public class StatisticalResourcesCriteriaUtils {
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     public static ConditionalCriteria buildLastPublishedVersionCriteria(Class entityClass, SiemacMetadataStatisticalResourceProperty siemacMetadataStatisticalResourceProperty) {
-        DateTime now = new DateTime();
+        Date now = new DateTime().toDate();
         //@formatter:off
-        return ConditionalCriteriaBuilder.criteriaFor(entityClass).
-                withProperty(siemacMetadataStatisticalResourceProperty.procStatus()).eq(ProcStatusEnum.PUBLISHED).
-                and().
-                withProperty(CriteriaUtils.getDatetimeLeafPropertyEmbedded(siemacMetadataStatisticalResourceProperty.validFrom(), entityClass)).lessThanOrEqual(now).
-                and().
-                    lbrace().
-                        withProperty(CriteriaUtils.getDatetimeLeafPropertyEmbedded(siemacMetadataStatisticalResourceProperty.validTo(), entityClass)).isNull().
-                        or().
-                        withProperty(CriteriaUtils.getDatetimeLeafPropertyEmbedded(siemacMetadataStatisticalResourceProperty.validTo(), entityClass)).greaterThan(now).
-                    rbrace().buildSingle();
+        return ConditionalCriteriaBuilder.criteriaFor(entityClass)
+                .withProperty(siemacMetadataStatisticalResourceProperty.procStatus()).eq(ProcStatusEnum.PUBLISHED)
+                .and()
+                .withProperty(CriteriaUtils.getDatetimeLeafPropertyEmbedded(siemacMetadataStatisticalResourceProperty.validFrom(), entityClass)).lessThanOrEqual(now)
+                .and()
+                    .lbrace()
+                        .withProperty(CriteriaUtils.getDatetimeLeafPropertyEmbedded(siemacMetadataStatisticalResourceProperty.validTo(), entityClass)).isNull()
+                        .or()
+                        .withProperty(CriteriaUtils.getDatetimeLeafPropertyEmbedded(siemacMetadataStatisticalResourceProperty.validTo(), entityClass)).greaterThan(now)
+                    .rbrace().buildSingle();
         //@formatter:on
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     public static ConditionalCriteria buildLastPublishedVersionCriteria(Class entityClass, LifeCycleStatisticalResourceProperty lifeCycleStatisticalResourceProperty) {
-        DateTime now = new DateTime();
+        Date now = new DateTime().toDate();
         //@formatter:off
-        return ConditionalCriteriaBuilder.criteriaFor(entityClass).
-                withProperty(lifeCycleStatisticalResourceProperty.procStatus()).eq(ProcStatusEnum.PUBLISHED).
-                and().
-                withProperty(CriteriaUtils.getDatetimeLeafPropertyEmbedded(lifeCycleStatisticalResourceProperty.validFrom(), entityClass)).lessThanOrEqual(now).
-                and().
-                    lbrace().
-                        withProperty(CriteriaUtils.getDatetimeLeafPropertyEmbedded(lifeCycleStatisticalResourceProperty.validTo(), entityClass)).isNull().
-                        or().
-                        withProperty(CriteriaUtils.getDatetimeLeafPropertyEmbedded(lifeCycleStatisticalResourceProperty.validTo(), entityClass)).greaterThan(now).
-                    rbrace().buildSingle();
+        return ConditionalCriteriaBuilder.criteriaFor(entityClass)
+                .withProperty(lifeCycleStatisticalResourceProperty.procStatus()).eq(ProcStatusEnum.PUBLISHED)
+                .and()
+                .withProperty(CriteriaUtils.getDatetimeLeafPropertyEmbedded(lifeCycleStatisticalResourceProperty.validFrom(), entityClass)).lessThanOrEqual(now)
+                .and()
+                    .lbrace()
+                        .withProperty(CriteriaUtils.getDatetimeLeafPropertyEmbedded(lifeCycleStatisticalResourceProperty.validTo(), entityClass)).isNull()
+                        .or()
+                        .withProperty(CriteriaUtils.getDatetimeLeafPropertyEmbedded(lifeCycleStatisticalResourceProperty.validTo(), entityClass)).greaterThan(now)
+                    .rbrace()
+               .buildSingle();
         //@formatter:on
     }
 

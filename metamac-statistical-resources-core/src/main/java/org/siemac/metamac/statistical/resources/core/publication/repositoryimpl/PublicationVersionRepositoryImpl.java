@@ -2,6 +2,7 @@ package org.siemac.metamac.statistical.resources.core.publication.repositoryimpl
 
 import static org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteriaBuilder.criteriaFor;
 
+import java.util.Date;
 import java.util.List;
 
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
@@ -29,11 +30,11 @@ import org.springframework.stereotype.Repository;
 public class PublicationVersionRepositoryImpl extends PublicationVersionRepositoryBase {
 
     @Autowired
-    private LifeCycleStatisticalResourceRepository lifeCycleStatisticalResourceRepository;
-    
+    private LifeCycleStatisticalResourceRepository      lifeCycleStatisticalResourceRepository;
+
     @Autowired
     private SiemacMetadataStatisticalResourceRepository siemacMetadataStatisticalResourceRepository;
-    
+
     public PublicationVersionRepositoryImpl() {
     }
 
@@ -41,8 +42,7 @@ public class PublicationVersionRepositoryImpl extends PublicationVersionReposito
     public PublicationVersion retrieveByUrn(String urn) throws MetamacException {
 
         // Prepare criteria
-        List<ConditionalCriteria> condition = criteriaFor(PublicationVersion.class)
-                .withProperty(PublicationVersionProperties.siemacMetadataStatisticalResource().urn()).eq(urn).distinctRoot().build();
+        List<ConditionalCriteria> condition = criteriaFor(PublicationVersion.class).withProperty(PublicationVersionProperties.siemacMetadataStatisticalResource().urn()).eq(urn).distinctRoot().build();
 
         // Find
         List<PublicationVersion> result = findByCondition(condition);
@@ -58,15 +58,17 @@ public class PublicationVersionRepositoryImpl extends PublicationVersionReposito
         return result.get(0);
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public PublicationVersion retrieveLastVersion(String publicationUrn) throws MetamacException {
 
         // Prepare criteria
+        // @formatter:off
         List<ConditionalCriteria> conditions = ConditionalCriteriaBuilder.criteriaFor(PublicationVersion.class)
                 .withProperty(PublicationVersionProperties.publication().identifiableStatisticalResource().urn()).eq(publicationUrn)
-                .orderBy(CriteriaUtils.getDatetimedLeafProperty(PublicationVersionProperties.siemacMetadataStatisticalResource().creationDate(), PublicationVersion.class)).descending()
+                .and()
+                .withProperty(PublicationVersionProperties.siemacMetadataStatisticalResource().lastVersion()).eq(Boolean.TRUE)
                 .distinctRoot().build();
+        // @formatter:on
 
         // Find
         PagingParameter paging = PagingParameter.rowAccess(0, 1);
@@ -76,20 +78,33 @@ public class PublicationVersionRepositoryImpl extends PublicationVersionReposito
         if (result.getRowCount() == 0) {
             throw new MetamacException(ServiceExceptionType.PUBLICATION_LAST_VERSION_NOT_FOUND, publicationUrn);
         }
-        
+
         return result.getValues().get(0);
     }
-    
+
     @SuppressWarnings("unchecked")
     @Override
     public PublicationVersion retrieveLastPublishedVersion(String publicationUrn) throws MetamacException {
         // Prepare criteria
-        List<ConditionalCriteria> conditions = ConditionalCriteriaBuilder.criteriaFor(PublicationVersion.class).withProperty(PublicationVersionProperties.publication().identifiableStatisticalResource().urn())
-                .eq(publicationUrn).and().withProperty(PublicationVersionProperties.siemacMetadataStatisticalResource().procStatus()).eq(ProcStatusEnum.PUBLISHED).and()
-                .withProperty(PublicationVersionProperties.siemacMetadataStatisticalResource().validFrom()).lessThanOrEqual(new DateTime())
-                .orderBy(CriteriaUtils.getDatetimedLeafProperty(PublicationVersionProperties.siemacMetadataStatisticalResource().creationDate(), PublicationVersion.class)).descending().distinctRoot().build();
+        Date now = new DateTime().toDate();
+        // @formatter:off
+        List<ConditionalCriteria> conditions = ConditionalCriteriaBuilder.criteriaFor(PublicationVersion.class)
+                .withProperty(PublicationVersionProperties.publication().identifiableStatisticalResource().urn()).eq(publicationUrn)
+                .and()
+                .withProperty(PublicationVersionProperties.siemacMetadataStatisticalResource().procStatus()).eq(ProcStatusEnum.PUBLISHED)
+                .and()
+                .withProperty(CriteriaUtils.getDatetimeLeafPropertyEmbedded(PublicationVersionProperties.siemacMetadataStatisticalResource().validFrom(), PublicationVersion.class)).lessThanOrEqual(now)
+                .and()
+                    .lbrace()
+                        .withProperty(CriteriaUtils.getDatetimeLeafPropertyEmbedded(PublicationVersionProperties.siemacMetadataStatisticalResource().validTo(), PublicationVersion.class)).isNull()
+                        .or()
+                        .withProperty(CriteriaUtils.getDatetimeLeafPropertyEmbedded(PublicationVersionProperties.siemacMetadataStatisticalResource().validTo(), PublicationVersion.class)).greaterThan(now)
+                    .rbrace()
+                .build();
+        // @formatter:on
 
         PagingParameter paging = PagingParameter.rowAccess(0, 1);
+
         // Find
         PagedResult<PublicationVersion> result = findByCondition(conditions, paging);
 
@@ -100,7 +115,6 @@ public class PublicationVersionRepositoryImpl extends PublicationVersionReposito
             return null;
         }
     }
-
     @Override
     public PublicationVersion retrieveByVersion(Long statisticalResourceId, String versionLogic) throws MetamacException {
 
@@ -120,17 +134,17 @@ public class PublicationVersionRepositoryImpl extends PublicationVersionReposito
         }
         return result.get(0);
     }
-    
+
     @Override
     public RelatedResourceResult retrieveIsReplacedByVersion(PublicationVersion publicationVersion) throws MetamacException {
         return lifeCycleStatisticalResourceRepository.retrieveIsReplacedByVersion(publicationVersion.getId(), TypeRelatedResourceEnum.PUBLICATION_VERSION);
     }
-    
+
     @Override
     public RelatedResourceResult retrieveIsReplacedBy(PublicationVersion publicationVersion) throws MetamacException {
         return siemacMetadataStatisticalResourceRepository.retrieveIsReplacedBy(publicationVersion.getId(), TypeRelatedResourceEnum.PUBLICATION_VERSION);
     }
-    
+
     @Override
     public RelatedResourceResult retrieveIsReplacedByOnlyLastPublished(PublicationVersion publicationVersion) throws MetamacException {
         return siemacMetadataStatisticalResourceRepository.retrieveIsReplacedByOnlyLastPublished(publicationVersion.getId(), TypeRelatedResourceEnum.PUBLICATION_VERSION);

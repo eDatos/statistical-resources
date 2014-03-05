@@ -213,6 +213,7 @@ public class DatasetMockFactory extends StatisticalResourcesMockFactory<Dataset>
         // not last version
         datasetVersionv1.getSiemacMetadataStatisticalResource().setCreationDate(new DateTime().minusDays(3));
         datasetVersionv1.getSiemacMetadataStatisticalResource().setValidFrom(new DateTime().minusDays(3));
+        datasetVersionv1.getSiemacMetadataStatisticalResource().setValidTo(new DateTime().minusDays(2));
         datasetVersionv1.getSiemacMetadataStatisticalResource().setLastVersion(false);
         getStatisticalResourcesPersistedDoMocks().mockDatasetVersion(datasetVersionv1);
         DatasetLifecycleTestUtils.prepareToVersioning(datasetVersionv1);
@@ -223,6 +224,7 @@ public class DatasetMockFactory extends StatisticalResourcesMockFactory<Dataset>
         // not last version
         datasetVersionv2.getSiemacMetadataStatisticalResource().setCreationDate(new DateTime().minusDays(2));
         datasetVersionv2.getSiemacMetadataStatisticalResource().setValidFrom(new DateTime().minusDays(2));
+        datasetVersionv2.getSiemacMetadataStatisticalResource().setValidTo(new DateTime().minusDays(1));
         datasetVersionv2.getSiemacMetadataStatisticalResource().setLastVersion(false);
         getStatisticalResourcesPersistedDoMocks().mockDatasetVersion(datasetVersionv2);
         DatasetLifecycleTestUtils.prepareToVersioning(datasetVersionv2);

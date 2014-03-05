@@ -62,6 +62,7 @@ public class DatasetVersionRepositoryImpl extends DatasetVersionRepositoryBase {
         return result.get(0);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public DatasetVersion retrieveByUrnPublished(String urn) throws MetamacException {
         // Prepare criteria
@@ -73,12 +74,6 @@ public class DatasetVersionRepositoryImpl extends DatasetVersionRepositoryBase {
             .withProperty(DatasetVersionProperties.siemacMetadataStatisticalResource().procStatus()).eq(ProcStatusEnum.PUBLISHED)
             .and()
             .withProperty(CriteriaUtils.getDatetimeLeafPropertyEmbedded(DatasetVersionProperties.siemacMetadataStatisticalResource().validFrom(), DatasetVersion.class)).lessThanOrEqual(now)
-            .and()
-                .lbrace()
-                    .withProperty(CriteriaUtils.getDatetimeLeafPropertyEmbedded(DatasetVersionProperties.siemacMetadataStatisticalResource().validTo(), DatasetVersion.class)).isNull()
-                    .or()
-                    .withProperty(CriteriaUtils.getDatetimeLeafPropertyEmbedded(DatasetVersionProperties.siemacMetadataStatisticalResource().validTo(), DatasetVersion.class)).greaterThan(now)
-                .rbrace()
             .distinctRoot().build();
         // @formatter:on
 
@@ -95,11 +90,17 @@ public class DatasetVersionRepositoryImpl extends DatasetVersionRepositoryBase {
 
         return result.get(0);
     }
+
     @Override
     public DatasetVersion retrieveLastVersion(String datasetUrn) throws MetamacException {
         // Prepare criteria
-        List<ConditionalCriteria> conditions = ConditionalCriteriaBuilder.criteriaFor(DatasetVersion.class).withProperty(DatasetVersionProperties.dataset().identifiableStatisticalResource().urn())
-                .eq(datasetUrn).and().withProperty(DatasetVersionProperties.siemacMetadataStatisticalResource().lastVersion()).eq(Boolean.TRUE).distinctRoot().build();
+        // @formatter:off
+        List<ConditionalCriteria> conditions = ConditionalCriteriaBuilder.criteriaFor(DatasetVersion.class)
+            .withProperty(DatasetVersionProperties.dataset().identifiableStatisticalResource().urn()).eq(datasetUrn)
+            .and()
+            .withProperty(DatasetVersionProperties.siemacMetadataStatisticalResource().lastVersion()).eq(Boolean.TRUE)
+            .distinctRoot().build();
+        // @formatter:on
 
         PagingParameter paging = PagingParameter.rowAccess(0, 1);
         // Find
@@ -117,14 +118,21 @@ public class DatasetVersionRepositoryImpl extends DatasetVersionRepositoryBase {
     @Override
     public DatasetVersion retrieveLastPublishedVersion(String datasetUrn) throws MetamacException {
         // Prepare criteria
+        Date now = new DateTime().toDate();
         // @formatter:off
         List<ConditionalCriteria> conditions = ConditionalCriteriaBuilder.criteriaFor(DatasetVersion.class)
             .withProperty(DatasetVersionProperties.dataset().identifiableStatisticalResource().urn()).eq(datasetUrn)
             .and()
             .withProperty(DatasetVersionProperties.siemacMetadataStatisticalResource().procStatus()).eq(ProcStatusEnum.PUBLISHED)
             .and()
-            .withProperty(DatasetVersionProperties.siemacMetadataStatisticalResource().validFrom()).lessThanOrEqual(new DateTime())
-            .orderBy(CriteriaUtils.getDatetimedLeafProperty(DatasetVersionProperties.siemacMetadataStatisticalResource().creationDate(), DatasetVersion.class)).descending().distinctRoot().build();
+            .withProperty(CriteriaUtils.getDatetimeLeafPropertyEmbedded(DatasetVersionProperties.siemacMetadataStatisticalResource().validFrom(), DatasetVersion.class)).lessThanOrEqual(now)
+            .and()
+                .lbrace()
+                    .withProperty(CriteriaUtils.getDatetimeLeafPropertyEmbedded(DatasetVersionProperties.siemacMetadataStatisticalResource().validTo(), DatasetVersion.class)).isNull()
+                    .or()
+                    .withProperty(CriteriaUtils.getDatetimeLeafPropertyEmbedded(DatasetVersionProperties.siemacMetadataStatisticalResource().validTo(), DatasetVersion.class)).greaterThan(now)
+                .rbrace()
+            .distinctRoot().build();
         // @formatter:on
         PagingParameter paging = PagingParameter.rowAccess(0, 1);
         // Find
