@@ -1,4 +1,4 @@
-<enunciate xsi:noNamespaceSchemaLocation="http://enunciate.codehaus.org/schemas/enunciate-1.26.xsd">
+<enunciate xsi:noNamespaceSchemaLocation="http://enunciate.codehaus.org/schemas/enunciate-1.27.xsd">
 
     <namespaces>
         <namespace uri="http://www.siemac.org/metamac/rest/statistical-resources/v1.0/domain" id="stat"/>
@@ -24,5 +24,6 @@
         <obj-c disabled="true" />
         <java-client generateJsonJar="false" />
         <jaxws-client generateJsonJar="false" />
+        <swagger disabled="false" dir="swagger"/>
     </modules>
 </enunciate>
