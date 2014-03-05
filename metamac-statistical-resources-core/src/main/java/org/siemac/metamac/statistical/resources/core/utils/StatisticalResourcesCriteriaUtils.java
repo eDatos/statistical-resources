@@ -39,15 +39,15 @@ public class StatisticalResourcesCriteriaUtils {
         DateTime now = new DateTime();
         //@formatter:off
         return ConditionalCriteriaBuilder.criteriaFor(entityClass).
-            withProperty(lifeCycleStatisticalResourceProperty.procStatus()).eq(ProcStatusEnum.PUBLISHED).
-            and().
-            withProperty(CriteriaUtils.getDatetimeLeafPropertyEmbedded(lifeCycleStatisticalResourceProperty.validFrom(), entityClass)).lessThanOrEqual(now).
-            and().
-                lbrace().
-                    withProperty(CriteriaUtils.getDatetimeLeafPropertyEmbedded(lifeCycleStatisticalResourceProperty.validTo(), entityClass)).isNull().
-                    or().
-                    withProperty(CriteriaUtils.getDatetimeLeafPropertyEmbedded(lifeCycleStatisticalResourceProperty.validTo(), entityClass)).greaterThan(now).
-                rbrace().distinctRoot().buildSingle();
+                withProperty(lifeCycleStatisticalResourceProperty.procStatus()).eq(ProcStatusEnum.PUBLISHED).
+                and().
+                withProperty(CriteriaUtils.getDatetimeLeafPropertyEmbedded(lifeCycleStatisticalResourceProperty.validFrom(), entityClass)).lessThanOrEqual(now).
+                and().
+                    lbrace().
+                        withProperty(CriteriaUtils.getDatetimeLeafPropertyEmbedded(lifeCycleStatisticalResourceProperty.validTo(), entityClass)).isNull().
+                        or().
+                        withProperty(CriteriaUtils.getDatetimeLeafPropertyEmbedded(lifeCycleStatisticalResourceProperty.validTo(), entityClass)).greaterThan(now).
+                    rbrace().buildSingle();
         //@formatter:on
     }
 

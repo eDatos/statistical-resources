@@ -103,6 +103,21 @@ public class DatasetVersionRepositoryTest extends StatisticalResourcesBaseTest i
     }
     @Override
     @Test
+    @MetamacMock({DATASET_VERSION_25_V1_PUBLISHED_FOR_DATASET_06_NAME, DATASET_VERSION_02_BASIC_NAME})
+    public void testRetrieveByUrnPublished() throws Exception {
+        DatasetVersion actual = datasetVersionRepository.retrieveByUrnPublished(datasetVersionMockFactory.retrieveMock(DATASET_VERSION_25_V1_PUBLISHED_FOR_DATASET_06_NAME)
+                .getSiemacMetadataStatisticalResource().getUrn());
+        assertEqualsDatasetVersion(datasetVersionMockFactory.retrieveMock(DATASET_VERSION_25_V1_PUBLISHED_FOR_DATASET_06_NAME), actual);
+    }
+    @Test
+    @MetamacMock({DATASET_VERSION_01_BASIC_NAME, DATASET_VERSION_02_BASIC_NAME})
+    public void testRetrieveByUrnPublishedNotFound() throws Exception {
+        String urn = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_01_BASIC_NAME).getSiemacMetadataStatisticalResource().getUrn();
+        expectedMetamacException(new MetamacException(ServiceExceptionType.DATASET_VERSION_NOT_FOUND, urn));
+        datasetVersionRepository.retrieveByUrnPublished(urn);
+    }
+    @Override
+    @Test
     @MetamacMock({DATASET_02_BASIC_WITH_GENERATED_VERSION_NAME, DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME})
     public void testRetrieveLastVersion() throws Exception {
         String datasetUrn = datasetMockFactory.retrieveMock(DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME).getIdentifiableStatisticalResource().getUrn();

@@ -4,6 +4,7 @@ import static org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCrit
 import static org.siemac.metamac.statistical.resources.core.base.domain.utils.RelatedResourceResultUtils.getRelatedResourceResultsFromRows;
 import static org.siemac.metamac.statistical.resources.core.base.domain.utils.RepositoryUtils.isLastPublishedVersionConditions;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Query;
@@ -62,6 +63,39 @@ public class DatasetVersionRepositoryImpl extends DatasetVersionRepositoryBase {
     }
 
     @Override
+    public DatasetVersion retrieveByUrnPublished(String urn) throws MetamacException {
+        // Prepare criteria
+        Date now = new DateTime().toDate();
+        // @formatter:off
+        List<ConditionalCriteria> condition = criteriaFor(DatasetVersion.class)
+            .withProperty(DatasetVersionProperties.siemacMetadataStatisticalResource().urn()).eq(urn)
+            .and()
+            .withProperty(DatasetVersionProperties.siemacMetadataStatisticalResource().procStatus()).eq(ProcStatusEnum.PUBLISHED)
+            .and()
+            .withProperty(CriteriaUtils.getDatetimeLeafPropertyEmbedded(DatasetVersionProperties.siemacMetadataStatisticalResource().validFrom(), DatasetVersion.class)).lessThanOrEqual(now)
+            .and()
+                .lbrace()
+                    .withProperty(CriteriaUtils.getDatetimeLeafPropertyEmbedded(DatasetVersionProperties.siemacMetadataStatisticalResource().validTo(), DatasetVersion.class)).isNull()
+                    .or()
+                    .withProperty(CriteriaUtils.getDatetimeLeafPropertyEmbedded(DatasetVersionProperties.siemacMetadataStatisticalResource().validTo(), DatasetVersion.class)).greaterThan(now)
+                .rbrace()
+            .distinctRoot().build();
+        // @formatter:on
+
+        // Find
+        List<DatasetVersion> result = findByCondition(condition);
+
+        // Check for unique result and return
+        if (result.size() == 0) {
+            throw new MetamacException(ServiceExceptionType.DATASET_VERSION_NOT_FOUND, urn);
+        } else if (result.size() > 1) {
+            // Exists a database constraint that makes URN unique
+            throw new MetamacException(ServiceExceptionType.UNKNOWN, "More than one dataset with urn " + urn);
+        }
+
+        return result.get(0);
+    }
+    @Override
     public DatasetVersion retrieveLastVersion(String datasetUrn) throws MetamacException {
         // Prepare criteria
         List<ConditionalCriteria> conditions = ConditionalCriteriaBuilder.criteriaFor(DatasetVersion.class).withProperty(DatasetVersionProperties.dataset().identifiableStatisticalResource().urn())
@@ -83,11 +117,15 @@ public class DatasetVersionRepositoryImpl extends DatasetVersionRepositoryBase {
     @Override
     public DatasetVersion retrieveLastPublishedVersion(String datasetUrn) throws MetamacException {
         // Prepare criteria
-        List<ConditionalCriteria> conditions = ConditionalCriteriaBuilder.criteriaFor(DatasetVersion.class).withProperty(DatasetVersionProperties.dataset().identifiableStatisticalResource().urn())
-                .eq(datasetUrn).and().withProperty(DatasetVersionProperties.siemacMetadataStatisticalResource().procStatus()).eq(ProcStatusEnum.PUBLISHED).and()
-                .withProperty(DatasetVersionProperties.siemacMetadataStatisticalResource().validFrom()).lessThanOrEqual(new DateTime())
-                .orderBy(CriteriaUtils.getDatetimedLeafProperty(DatasetVersionProperties.siemacMetadataStatisticalResource().creationDate(), DatasetVersion.class)).descending().distinctRoot().build();
-
+        // @formatter:off
+        List<ConditionalCriteria> conditions = ConditionalCriteriaBuilder.criteriaFor(DatasetVersion.class)
+            .withProperty(DatasetVersionProperties.dataset().identifiableStatisticalResource().urn()).eq(datasetUrn)
+            .and()
+            .withProperty(DatasetVersionProperties.siemacMetadataStatisticalResource().procStatus()).eq(ProcStatusEnum.PUBLISHED)
+            .and()
+            .withProperty(DatasetVersionProperties.siemacMetadataStatisticalResource().validFrom()).lessThanOrEqual(new DateTime())
+            .orderBy(CriteriaUtils.getDatetimedLeafProperty(DatasetVersionProperties.siemacMetadataStatisticalResource().creationDate(), DatasetVersion.class)).descending().distinctRoot().build();
+        // @formatter:on
         PagingParameter paging = PagingParameter.rowAccess(0, 1);
         // Find
         PagedResult<DatasetVersion> result = findByCondition(conditions, paging);
