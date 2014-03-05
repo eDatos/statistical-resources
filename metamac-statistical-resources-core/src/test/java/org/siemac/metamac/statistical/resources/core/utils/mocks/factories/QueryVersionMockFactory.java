@@ -116,6 +116,8 @@ public class QueryVersionMockFactory extends StatisticalResourcesMockFactory<Que
     public static final String             QUERY_VERSION_53_NOT_VISIBLE_IS_PART_OF_EMPTY_NAME                                                                         = "QUERY_VERSION_53_NOT_VISIBLE_IS_PART_OF_EMPTY";
 
     public static final String             QUERY_VERSION_54_PREPARED_TO_PUBLISH_BUT_IN_PENDING_REVIEW_NAME                                                            = "QUERY_VERSION_54_PREPARED_TO_PUBLISH_BUT_IN_PENDING_REVIEW";
+    public static final String             QUERY_VERSION_55_PREPARED_TO_PUBLISH_STATUS_ACTIVE_NAME                                                                    = "QUERY_VERSION_55_PREPARED_TO_PUBLISH_STATUS_ACTIVE";
+    public static final String             QUERY_VERSION_56_PREPARED_TO_PUBLISH_STATUS_DISCONTINUED_NAME                                                              = "QUERY_VERSION_56_PREPARED_TO_PUBLISH_STATUS_DISCONTINUED";
 
     private static QueryVersionMockFactory instance                                                                                                                   = null;
 
@@ -472,6 +474,34 @@ public class QueryVersionMockFactory extends StatisticalResourcesMockFactory<Que
 
         QueryLifecycleTestUtils.prepareToPublished(queryMock);
         queryMock.setStatus(QueryStatusEnum.PENDING_REVIEW);
+        return queryMock;
+    }
+
+    private static QueryVersion getQueryVersion55PreparedToPublishStatusActive() {
+        QueryVersionMock queryMock = buildQueryVersionMockSimpleWithFixedDatasetVersion("Q01");
+        queryMock.setQuery(QueryMockFactory.generateQueryWithoutGeneratedVersion());
+
+        DatasetVersion datasetVersion = queryMock.getFixedDatasetVersion();
+        DatasetLifecycleTestUtils.fillAsPublished(datasetVersion);
+
+        setQuerySelectionBasedOnDatasetVersion(queryMock, datasetVersion);
+
+        QueryLifecycleTestUtils.prepareToPublished(queryMock);
+        queryMock.setStatus(QueryStatusEnum.ACTIVE);
+        return queryMock;
+    }
+
+    private static QueryVersion getQueryVersion56PreparedToPublishStatusDiscontinued() {
+        QueryVersionMock queryMock = buildQueryVersionMockSimpleWithFixedDatasetVersion("Q01");
+        queryMock.setQuery(QueryMockFactory.generateQueryWithoutGeneratedVersion());
+
+        DatasetVersion datasetVersion = queryMock.getFixedDatasetVersion();
+        DatasetLifecycleTestUtils.fillAsPublished(datasetVersion);
+
+        setQuerySelectionBasedOnDatasetVersion(queryMock, datasetVersion);
+
+        QueryLifecycleTestUtils.prepareToPublished(queryMock);
+        queryMock.setStatus(QueryStatusEnum.DISCONTINUED);
         return queryMock;
     }
 

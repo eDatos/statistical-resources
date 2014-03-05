@@ -17,6 +17,8 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_52_NOT_VISIBLE_IS_PART_OF_NOT_VISIBLE_PUBLICATION_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_53_NOT_VISIBLE_IS_PART_OF_EMPTY_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_54_PREPARED_TO_PUBLISH_BUT_IN_PENDING_REVIEW_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_55_PREPARED_TO_PUBLISH_STATUS_ACTIVE_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_56_PREPARED_TO_PUBLISH_STATUS_DISCONTINUED_NAME;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -77,14 +79,40 @@ public class QueryPublishingServiceTest extends StatisticalResourcesMockRestBase
     @MetamacMock(QUERY_VERSION_54_PREPARED_TO_PUBLISH_BUT_IN_PENDING_REVIEW_NAME)
     public void testPublishQueryVersionErrorIsPendingReview() throws Exception {
         QueryVersion queryVersion = queryVersionMockFactory.retrieveMock(QUERY_VERSION_54_PREPARED_TO_PUBLISH_BUT_IN_PENDING_REVIEW_NAME);
+        String queryVersionUrn = queryVersion.getLifeCycleStatisticalResource().getUrn();
 
-        LifeCycleStatisticalResource lifeCycleStatisticalResource = queryVersion.getLifeCycleStatisticalResource();
-        String queryVersionUrn = lifeCycleStatisticalResource.getUrn();
+        mockLifecycleExternalItemsPublished(queryVersion.getLifeCycleStatisticalResource());
 
-        mockLifecycleExternalItemsPublished(lifeCycleStatisticalResource);
-
-        expectedMetamacException(new MetamacException(ServiceExceptionType.QUERY_VERSION_PUBLISH_INVALID_STATUS, queryVersion.getLifeCycleStatisticalResource().getUrn()));
+        expectedMetamacException(new MetamacException(ServiceExceptionType.QUERY_VERSION_PUBLISH_INVALID_STATUS, queryVersionUrn));
         queryLifecycleService.sendToPublished(getServiceContextAdministrador(), queryVersionUrn);
+    }
+
+    @Test
+    @MetamacMock(QUERY_VERSION_55_PREPARED_TO_PUBLISH_STATUS_ACTIVE_NAME)
+    public void testPublishQueryVersionStatusActive() throws Exception {
+        QueryVersion queryVersion = queryVersionMockFactory.retrieveMock(QUERY_VERSION_55_PREPARED_TO_PUBLISH_STATUS_ACTIVE_NAME);
+
+        String queryVersionUrn = queryVersion.getLifeCycleStatisticalResource().getUrn();
+        mockLifecycleExternalItemsPublished(queryVersion.getLifeCycleStatisticalResource());
+
+        queryLifecycleService.sendToPublished(getServiceContextAdministrador(), queryVersionUrn);
+        queryVersion = queryVersionRepository.retrieveByUrn(queryVersionUrn);
+
+        assertPublishingQueryVersion(queryVersion, null);
+    }
+
+    @Test
+    @MetamacMock(QUERY_VERSION_56_PREPARED_TO_PUBLISH_STATUS_DISCONTINUED_NAME)
+    public void testPublishQueryVersionStatusDiscontinued() throws Exception {
+        QueryVersion queryVersion = queryVersionMockFactory.retrieveMock(QUERY_VERSION_56_PREPARED_TO_PUBLISH_STATUS_DISCONTINUED_NAME);
+
+        String queryVersionUrn = queryVersion.getLifeCycleStatisticalResource().getUrn();
+        mockLifecycleExternalItemsPublished(queryVersion.getLifeCycleStatisticalResource());
+
+        queryLifecycleService.sendToPublished(getServiceContextAdministrador(), queryVersionUrn);
+        queryVersion = queryVersionRepository.retrieveByUrn(queryVersionUrn);
+
+        assertPublishingQueryVersion(queryVersion, null);
     }
 
     @Test
