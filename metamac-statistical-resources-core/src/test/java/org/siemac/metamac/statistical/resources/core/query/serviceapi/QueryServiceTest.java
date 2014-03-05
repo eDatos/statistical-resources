@@ -1009,7 +1009,7 @@ public class QueryServiceTest extends StatisticalResourcesBaseTest implements Qu
             QUERY_VERSION_15_PUBLISHED_NAME})
     public void testDeleteQueryVersionErrorInvalidProcStatusProductionValidation() throws Exception {
         String urn = queryVersionMockFactory.retrieveMock(QUERY_VERSION_12_PRODUCTION_VALIDATION_NAME).getLifeCycleStatisticalResource().getUrn();
-        expectedMetamacException(new MetamacException(ServiceExceptionType.LIFE_CYCLE_WRONG_PROC_STATUS, urn, "DRAFT, VALIDATION_REJECTED"));
+        expectedMetamacException(new MetamacException(ServiceExceptionType.LIFE_CYCLE_WRONG_PROC_STATUS, urn, ProcStatusForActionsConstants.PROC_STATUS_FOR_DELETE_RESOURCE));
 
         queryService.deleteQueryVersion(getServiceContextWithoutPrincipal(), urn);
     }
@@ -1019,7 +1019,7 @@ public class QueryServiceTest extends StatisticalResourcesBaseTest implements Qu
             QUERY_VERSION_15_PUBLISHED_NAME})
     public void testDeleteQueryVersionErrorInvalidProcStatusDiffusionValidation() throws Exception {
         String urn = queryVersionMockFactory.retrieveMock(QUERY_VERSION_13_DIFFUSION_VALIDATION_NAME).getLifeCycleStatisticalResource().getUrn();
-        expectedMetamacException(new MetamacException(ServiceExceptionType.LIFE_CYCLE_WRONG_PROC_STATUS, urn, "DRAFT, VALIDATION_REJECTED"));
+        expectedMetamacException(new MetamacException(ServiceExceptionType.LIFE_CYCLE_WRONG_PROC_STATUS, urn, ProcStatusForActionsConstants.PROC_STATUS_FOR_DELETE_RESOURCE));
 
         queryService.deleteQueryVersion(getServiceContextWithoutPrincipal(), urn);
     }
@@ -1029,7 +1029,7 @@ public class QueryServiceTest extends StatisticalResourcesBaseTest implements Qu
             QUERY_VERSION_15_PUBLISHED_NAME})
     public void testDeleteQueryVersionErrorInvalidProcStatusValidationRejected() throws Exception {
         String urn = queryVersionMockFactory.retrieveMock(QUERY_VERSION_12_PRODUCTION_VALIDATION_NAME).getLifeCycleStatisticalResource().getUrn();
-        expectedMetamacException(new MetamacException(ServiceExceptionType.LIFE_CYCLE_WRONG_PROC_STATUS, urn, "DRAFT, VALIDATION_REJECTED"));
+        expectedMetamacException(new MetamacException(ServiceExceptionType.LIFE_CYCLE_WRONG_PROC_STATUS, urn, ProcStatusForActionsConstants.PROC_STATUS_FOR_DELETE_RESOURCE));
 
         queryService.deleteQueryVersion(getServiceContextWithoutPrincipal(), urn);
     }
@@ -1039,7 +1039,16 @@ public class QueryServiceTest extends StatisticalResourcesBaseTest implements Qu
             QUERY_VERSION_15_PUBLISHED_NAME})
     public void testDeleteQueryVersionErrorInvalidProcStatusPublished() throws Exception {
         String urn = queryVersionMockFactory.retrieveMock(QUERY_VERSION_15_PUBLISHED_NAME).getLifeCycleStatisticalResource().getUrn();
-        expectedMetamacException(new MetamacException(ServiceExceptionType.LIFE_CYCLE_WRONG_PROC_STATUS, urn, "DRAFT, VALIDATION_REJECTED"));
+        expectedMetamacException(new MetamacException(ServiceExceptionType.LIFE_CYCLE_WRONG_PROC_STATUS, urn, ProcStatusForActionsConstants.PROC_STATUS_FOR_DELETE_RESOURCE));
+
+        queryService.deleteQueryVersion(getServiceContextWithoutPrincipal(), urn);
+    }
+
+    @Test
+    @MetamacMock(QUERY_VERSION_28_V2_PUBLISHED_NO_VISIBLE_FOR_QUERY_06_NAME)
+    public void testDeleteQueryVersionErrorInvalidProcStatusPublishedNotVisible() throws Exception {
+        String urn = queryVersionMockFactory.retrieveMock(QUERY_VERSION_28_V2_PUBLISHED_NO_VISIBLE_FOR_QUERY_06_NAME).getLifeCycleStatisticalResource().getUrn();
+        expectedMetamacException(new MetamacException(ServiceExceptionType.LIFE_CYCLE_WRONG_PROC_STATUS, urn, ProcStatusForActionsConstants.PROC_STATUS_FOR_DELETE_RESOURCE));
 
         queryService.deleteQueryVersion(getServiceContextWithoutPrincipal(), urn);
     }
