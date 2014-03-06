@@ -39,6 +39,7 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.TemporalCode
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryTypeEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
+import org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.query.QueryLifecycleServiceImpl;
 import org.siemac.metamac.statistical.resources.core.query.domain.Query;
 import org.siemac.metamac.statistical.resources.core.query.domain.QuerySelectionItem;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
@@ -71,6 +72,9 @@ public class QueryServiceImpl extends QueryServiceImplBase {
 
     @Autowired
     private QueryVersionRepository                    queryVersionRepository;
+
+    @Autowired
+    private QueryLifecycleServiceImpl                 queryLifecycleService;
 
     public QueryServiceImpl() {
     }
@@ -133,6 +137,7 @@ public class QueryServiceImpl extends QueryServiceImplBase {
         queryVersion = getQueryVersionRepository().save(queryVersion);
         return queryVersion;
     }
+
     @Override
     public QueryVersion updateQueryVersion(ServiceContext ctx, QueryVersion queryVersion) throws MetamacException {
         // Validations
@@ -144,7 +149,8 @@ public class QueryServiceImpl extends QueryServiceImplBase {
         // Fill metadata
         fillMetadataForUpdateQueryVersion(queryVersion);
 
-        // Check that could be update
+        // Check that datasetVersion is published if the query version already is
+        queryLifecycleService.checkLinkedDatasetOrDatasetVersionPublishedBeforeQuery(ctx, queryVersion);
 
         // Check URN duplicated. We have to do it right now because later the fillMetadata method change the hibernate cache
         identifiableStatisticalResourceRepository.checkDuplicatedUrn(queryVersion.getLifeCycleStatisticalResource());

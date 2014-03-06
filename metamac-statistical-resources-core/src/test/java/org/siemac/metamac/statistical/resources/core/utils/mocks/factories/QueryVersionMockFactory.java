@@ -213,9 +213,14 @@ public class QueryVersionMockFactory extends StatisticalResourcesMockFactory<Que
     }
 
     private static QueryVersion getQueryVersion15Published() {
-        QueryVersion queryVersion = createQueryWithGeneratedDatasetVersion();
+        DatasetVersion datasetVersion = getStatisticalResourcesPersistedDoMocks().mockDatasetVersion();
+        datasetVersion.getSiemacMetadataStatisticalResource().setValidFrom(new DateTime().minusDays(2));
+        StatisticalResourcesPersistedDoMocks.mockDatasetVersionCoverages(datasetVersion);
+        DatasetLifecycleTestUtils.fillAsPublished(datasetVersion);
+
+        QueryVersion queryVersion = createQueryWithDatasetVersion(datasetVersion, true);
         queryVersion.getLifeCycleStatisticalResource().setProcStatus(ProcStatusEnum.PUBLISHED);
-        queryVersion.getLifeCycleStatisticalResource().setValidFrom(new DateTime().minusDays(2));
+        queryVersion.getLifeCycleStatisticalResource().setValidFrom(new DateTime().minusDays(1));
         return queryVersion;
     }
 

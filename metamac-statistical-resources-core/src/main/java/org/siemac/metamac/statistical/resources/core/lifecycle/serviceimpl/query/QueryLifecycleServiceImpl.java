@@ -2,12 +2,14 @@ package org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.quer
 
 import static org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConstants.METHOD_NOT_IMPLEMENT_IN_THIS_VERSION;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.joda.time.DateTime;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
+import org.siemac.metamac.core.common.exception.utils.ExceptionUtils;
 import org.siemac.metamac.core.common.util.GeneratorUrnUtils;
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResourceResult;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
@@ -112,6 +114,18 @@ public class QueryLifecycleServiceImpl extends LifecycleTemplateService<QueryVer
         if (!QueryStatusEnum.ACTIVE.equals(resource.getStatus()) && !QueryStatusEnum.DISCONTINUED.equals(resource.getStatus())) {
             exceptionItems.add(new MetamacExceptionItem(ServiceExceptionType.QUERY_VERSION_PUBLISH_INVALID_STATUS, resource.getLifeCycleStatisticalResource().getUrn()));
         }
+        checkLinkedDatasetOrDatasetVersionPublishedBeforeQuery(ctx, resource, exceptionItems);
+    }
+
+    public void checkLinkedDatasetOrDatasetVersionPublishedBeforeQuery(ServiceContext ctx, QueryVersion resource) throws MetamacException {
+        if (ProcStatusEnumUtils.isInAnyProcStatus(resource, ProcStatusEnum.PUBLISHED, ProcStatusEnum.PUBLISHED_NOT_VISIBLE)) {
+            List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
+            checkLinkedDatasetOrDatasetVersionPublishedBeforeQuery(ctx, resource, exceptionItems);
+            ExceptionUtils.throwIfException(exceptionItems);
+        }
+    }
+
+    private void checkLinkedDatasetOrDatasetVersionPublishedBeforeQuery(ServiceContext ctx, QueryVersion resource, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
         if (resource.getDataset() != null) {
             checkLinkedDatasetPublishedOrVisibleBeforeQuery(ctx, resource, exceptionItems);
         } else if (resource.getFixedDatasetVersion() != null) {

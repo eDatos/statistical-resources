@@ -6,11 +6,14 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.QueryAsserts.assertEqualsQueryVersion;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.QueryAsserts.assertEqualsQueryVersionCollection;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetMockFactory.DATASET_01_BASIC_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetMockFactory.DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetMockFactory.DATASET_06_WITH_MULTIPLE_PUBLISHED_VERSIONS_AND_LATEST_NO_VISIBLE_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetMockFactory.DATASET_30_LAST_VERSION_NOT_VISIBLE_WITH_PUBLICATION_AND_QUERIES_NOT_VISIBLE_BOTH_NOT_COMPATIBLE_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_03_FOR_DATASET_03_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_04_FOR_DATASET_03_AND_LAST_VERSION_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_06_FOR_QUERIES_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_22_V1_PUBLISHED_FOR_DATASET_05_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_48_WITH_TEMPORAL_COVERAGE_FILLED_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_86_WITH_TEMPORAL_DIMENSION_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_87_WITH_NO_TEMPORAL_DIMENSION_NAME;
@@ -67,6 +70,7 @@ import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTes
 import org.siemac.metamac.statistical.resources.core.base.constants.ProcStatusForActionsConstants;
 import org.siemac.metamac.statistical.resources.core.base.domain.StatisticalResourceRepository;
 import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionRepository;
 import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.DatasetService;
@@ -571,10 +575,9 @@ public class QueryServiceTest extends StatisticalResourcesBaseTest implements Qu
         QueryVersion expected = queryVersionMockFactory.retrieveMock(QUERY_VERSION_08_BASIC_DISCONTINUED_NAME);
         expected.setDataset(datasetMockFactory.retrieveMock(DatasetMockFactory.DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME));
         expected.setFixedDatasetVersion(datasetVersionMockFactory.retrieveMock(DATASET_VERSION_04_FOR_DATASET_03_AND_LAST_VERSION_NAME));
-
         String params = buildCommaSeparatedString(ServiceExceptionParameters.QUERY_VERSION__DATASET, ServiceExceptionParameters.QUERY_VERSION__FIXED_DATASET_VERSION);
-        expectedMetamacException(new MetamacException(ServiceExceptionType.METADATA_INCOMPATIBLE, params));
 
+        expectedMetamacException(new MetamacException(ServiceExceptionType.METADATA_INCOMPATIBLE, params));
         queryService.updateQueryVersion(getServiceContextWithoutPrincipal(), expected);
     }
 
@@ -790,6 +793,174 @@ public class QueryServiceTest extends StatisticalResourcesBaseTest implements Qu
         query.getSelection().clear();
         query.addSelection(buildSelectionItemWithDimensionAndCodes("DIM_01", "CODE_01"));
         query.addSelection(buildSelectionItemWithDimensionAndCodes("DIM_02", "CODE_12"));
+
+        QueryVersion updatedQueryVersion = queryService.updateQueryVersion(getServiceContextWithoutPrincipal(), query);
+        assertEqualsQueryVersion(query, updatedQueryVersion);
+
+        int datasetVersionsAfter = datasetService.findDatasetVersionsByCondition(getServiceContextWithoutPrincipal(), null, null).getValues().size();
+        assertEquals(datasetVersionsBefore, datasetVersionsAfter);
+    }
+
+    @Test
+    @MetamacMock({QUERY_VERSION_11_DRAFT_NAME, DATASET_VERSION_06_FOR_QUERIES_NAME})
+    public void testUpdateDatasetVersionQueryVersionProcStatusDraft() throws Exception {
+        int datasetVersionsBefore = datasetService.findDatasetVersionsByCondition(getServiceContextWithoutPrincipal(), null, null).getValues().size();
+
+        QueryVersion query = queryVersionMockFactory.retrieveMock(QUERY_VERSION_11_DRAFT_NAME);
+        query.setFixedDatasetVersion(datasetVersionMockFactory.retrieveMock(DATASET_VERSION_06_FOR_QUERIES_NAME));
+        query.getSelection().clear();
+        query.addSelection(buildSelectionItemWithDimensionAndCodes("DIM_01", "CODE_01"));
+        query.addSelection(buildSelectionItemWithDimensionAndCodes("DIM_02", "CODE_12"));
+
+        QueryVersion updatedQueryVersion = queryService.updateQueryVersion(getServiceContextWithoutPrincipal(), query);
+        assertEqualsQueryVersion(query, updatedQueryVersion);
+
+        int datasetVersionsAfter = datasetService.findDatasetVersionsByCondition(getServiceContextWithoutPrincipal(), null, null).getValues().size();
+        assertEquals(datasetVersionsBefore, datasetVersionsAfter);
+    }
+
+    @Test
+    @MetamacMock({QUERY_VERSION_12_PRODUCTION_VALIDATION_NAME, DATASET_VERSION_06_FOR_QUERIES_NAME})
+    public void testUpdateDatasetVersionQueryVersionProcStatusProductionValidation() throws Exception {
+        int datasetVersionsBefore = datasetService.findDatasetVersionsByCondition(getServiceContextWithoutPrincipal(), null, null).getValues().size();
+
+        QueryVersion query = queryVersionMockFactory.retrieveMock(QUERY_VERSION_12_PRODUCTION_VALIDATION_NAME);
+        query.setFixedDatasetVersion(datasetVersionMockFactory.retrieveMock(DATASET_VERSION_06_FOR_QUERIES_NAME));
+        query.getSelection().clear();
+        query.addSelection(buildSelectionItemWithDimensionAndCodes("DIM_01", "CODE_01"));
+        query.addSelection(buildSelectionItemWithDimensionAndCodes("DIM_02", "CODE_12"));
+
+        QueryVersion updatedQueryVersion = queryService.updateQueryVersion(getServiceContextWithoutPrincipal(), query);
+        assertEqualsQueryVersion(query, updatedQueryVersion);
+
+        int datasetVersionsAfter = datasetService.findDatasetVersionsByCondition(getServiceContextWithoutPrincipal(), null, null).getValues().size();
+        assertEquals(datasetVersionsBefore, datasetVersionsAfter);
+    }
+
+    @Test
+    @MetamacMock({QUERY_VERSION_13_DIFFUSION_VALIDATION_NAME, DATASET_VERSION_06_FOR_QUERIES_NAME})
+    public void testUpdateDatasetVersionQueryVersionProcStatusDiffusionValidation() throws Exception {
+        int datasetVersionsBefore = datasetService.findDatasetVersionsByCondition(getServiceContextWithoutPrincipal(), null, null).getValues().size();
+
+        QueryVersion query = queryVersionMockFactory.retrieveMock(QUERY_VERSION_13_DIFFUSION_VALIDATION_NAME);
+        query.setFixedDatasetVersion(datasetVersionMockFactory.retrieveMock(DATASET_VERSION_06_FOR_QUERIES_NAME));
+        query.getSelection().clear();
+        query.addSelection(buildSelectionItemWithDimensionAndCodes("DIM_01", "CODE_01"));
+        query.addSelection(buildSelectionItemWithDimensionAndCodes("DIM_02", "CODE_12"));
+
+        QueryVersion updatedQueryVersion = queryService.updateQueryVersion(getServiceContextWithoutPrincipal(), query);
+        assertEqualsQueryVersion(query, updatedQueryVersion);
+
+        int datasetVersionsAfter = datasetService.findDatasetVersionsByCondition(getServiceContextWithoutPrincipal(), null, null).getValues().size();
+        assertEquals(datasetVersionsBefore, datasetVersionsAfter);
+    }
+
+    @Test
+    @MetamacMock({QUERY_VERSION_14_VALIDATION_REJECTED_NAME, DATASET_VERSION_06_FOR_QUERIES_NAME})
+    public void testUpdateDatasetVersionQueryVersionProcStatusValidationRejected() throws Exception {
+        int datasetVersionsBefore = datasetService.findDatasetVersionsByCondition(getServiceContextWithoutPrincipal(), null, null).getValues().size();
+
+        QueryVersion query = queryVersionMockFactory.retrieveMock(QUERY_VERSION_14_VALIDATION_REJECTED_NAME);
+        query.setFixedDatasetVersion(datasetVersionMockFactory.retrieveMock(DATASET_VERSION_06_FOR_QUERIES_NAME));
+        query.getSelection().clear();
+        query.addSelection(buildSelectionItemWithDimensionAndCodes("DIM_01", "CODE_01"));
+        query.addSelection(buildSelectionItemWithDimensionAndCodes("DIM_02", "CODE_12"));
+
+        QueryVersion updatedQueryVersion = queryService.updateQueryVersion(getServiceContextWithoutPrincipal(), query);
+        assertEqualsQueryVersion(query, updatedQueryVersion);
+
+        int datasetVersionsAfter = datasetService.findDatasetVersionsByCondition(getServiceContextWithoutPrincipal(), null, null).getValues().size();
+        assertEquals(datasetVersionsBefore, datasetVersionsAfter);
+    }
+
+    @Test
+    @MetamacMock({QUERY_VERSION_28_V2_PUBLISHED_NO_VISIBLE_FOR_QUERY_06_NAME, DATASET_VERSION_06_FOR_QUERIES_NAME})
+    public void testUpdateDatasetVersionQueryVersionProcStatusPublishedNotVisible() throws Exception {
+        QueryVersion query = queryVersionMockFactory.retrieveMock(QUERY_VERSION_28_V2_PUBLISHED_NO_VISIBLE_FOR_QUERY_06_NAME);
+        query.setDataset(null);
+        query.setFixedDatasetVersion(datasetVersionMockFactory.retrieveMock(DATASET_VERSION_06_FOR_QUERIES_NAME));
+        query.getSelection().clear();
+        query.addSelection(buildSelectionItemWithDimensionAndCodes("DIM_01", "CODE_01"));
+        query.addSelection(buildSelectionItemWithDimensionAndCodes("DIM_02", "CODE_12"));
+        String urn = query.getLifeCycleStatisticalResource().getUrn();
+
+        expectedMetamacException(new MetamacException(ServiceExceptionType.LIFE_CYCLE_WRONG_PROC_STATUS, urn, ProcStatusForActionsConstants.PROC_STATUS_FOR_EDIT_QUERY_VERSION));
+        queryService.updateQueryVersion(getServiceContextWithoutPrincipal(), query);
+    }
+
+    @Test
+    @MetamacMock({QUERY_VERSION_15_PUBLISHED_NAME, DATASET_VERSION_06_FOR_QUERIES_NAME})
+    public void testUpdateDatasetVersionQueryVersionProcStatusPublishedIncorrectDatasetVersion() throws Exception {
+        QueryVersion query = queryVersionMockFactory.retrieveMock(QUERY_VERSION_15_PUBLISHED_NAME);
+        DatasetVersion datasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_06_FOR_QUERIES_NAME);
+        assertEquals(ProcStatusEnum.DRAFT, datasetVersion.getSiemacMetadataStatisticalResource().getProcStatus());
+
+        query.setDataset(null);
+        query.setFixedDatasetVersion(datasetVersion);
+        query.getSelection().clear();
+        query.addSelection(buildSelectionItemWithDimensionAndCodes("DIM_01", "CODE_01"));
+        query.addSelection(buildSelectionItemWithDimensionAndCodes("DIM_02", "CODE_12"));
+
+        expectedMetamacException(new MetamacException(ServiceExceptionType.QUERY_VERSION_DATASET_VERSION_MUST_BE_PUBLISHED, datasetVersion.getSiemacMetadataStatisticalResource().getUrn()));
+        queryService.updateQueryVersion(getServiceContextWithoutPrincipal(), query);
+    }
+
+    @Test
+    @MetamacMock({QUERY_VERSION_15_PUBLISHED_NAME, DATASET_01_BASIC_NAME})
+    public void testUpdateDatasetVersionQueryVersionProcStatusPublishedIncorrectDataset() throws Exception {
+        QueryVersion query = queryVersionMockFactory.retrieveMock(QUERY_VERSION_15_PUBLISHED_NAME);
+        Dataset dataset = datasetMockFactory.retrieveMock(DATASET_01_BASIC_NAME);
+        assertEquals(1, dataset.getVersions().size());
+        assertEquals(ProcStatusEnum.DRAFT, dataset.getVersions().get(0).getSiemacMetadataStatisticalResource().getProcStatus());
+
+        query.setDataset(dataset);
+        query.setFixedDatasetVersion(null);
+        query.getSelection().clear();
+        query.addSelection(buildSelectionItemWithDimensionAndCodes("DIM_01", "CODE_01"));
+        query.addSelection(buildSelectionItemWithDimensionAndCodes("DIM_02", "CODE_12"));
+
+        expectedMetamacException(new MetamacException(ServiceExceptionType.QUERY_VERSION_DATASET_WITH_NO_PUBLISHED_VERSION, dataset.getIdentifiableStatisticalResource().getUrn()));
+        queryService.updateQueryVersion(getServiceContextWithoutPrincipal(), query);
+    }
+
+    @Test
+    @MetamacMock({QUERY_VERSION_15_PUBLISHED_NAME, DATASET_VERSION_22_V1_PUBLISHED_FOR_DATASET_05_NAME})
+    public void testUpdateDatasetVersionQueryVersionProcStatusPublishedCorrectDatasetVersion() throws Exception {
+        int datasetVersionsBefore = datasetService.findDatasetVersionsByCondition(getServiceContextWithoutPrincipal(), null, null).getValues().size();
+
+        QueryVersion query = queryVersionMockFactory.retrieveMock(QUERY_VERSION_15_PUBLISHED_NAME);
+        DatasetVersion datasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_22_V1_PUBLISHED_FOR_DATASET_05_NAME);
+        assertEquals(ProcStatusEnum.PUBLISHED, datasetVersion.getSiemacMetadataStatisticalResource().getProcStatus());
+
+        query.setDataset(null);
+        query.setFixedDatasetVersion(datasetVersion);
+        query.getSelection().clear();
+        query.addSelection(buildSelectionItemWithDimensionAndCodes("TIME_PERIOD", "2011"));
+        query.addSelection(buildSelectionItemWithDimensionAndCodes("GEO_DIM", "ES"));
+        query.addSelection(buildSelectionItemWithDimensionAndCodes("MEAS_DIM", "C01"));
+
+        QueryVersion updatedQueryVersion = queryService.updateQueryVersion(getServiceContextWithoutPrincipal(), query);
+        assertEqualsQueryVersion(query, updatedQueryVersion);
+
+        int datasetVersionsAfter = datasetService.findDatasetVersionsByCondition(getServiceContextWithoutPrincipal(), null, null).getValues().size();
+        assertEquals(datasetVersionsBefore, datasetVersionsAfter);
+    }
+
+    @Test
+    @MetamacMock({QUERY_VERSION_15_PUBLISHED_NAME, DATASET_06_WITH_MULTIPLE_PUBLISHED_VERSIONS_AND_LATEST_NO_VISIBLE_NAME})
+    public void testUpdateDatasetVersionQueryVersionProcStatusPublishedCorrectDataset() throws Exception {
+        int datasetVersionsBefore = datasetService.findDatasetVersionsByCondition(getServiceContextWithoutPrincipal(), null, null).getValues().size();
+
+        QueryVersion query = queryVersionMockFactory.retrieveMock(QUERY_VERSION_15_PUBLISHED_NAME);
+        Dataset dataset = datasetMockFactory.retrieveMock(DATASET_06_WITH_MULTIPLE_PUBLISHED_VERSIONS_AND_LATEST_NO_VISIBLE_NAME);
+        assertEquals(ProcStatusEnum.PUBLISHED, dataset.getVersions().get(0).getSiemacMetadataStatisticalResource().getProcStatus());
+
+        query.setDataset(dataset);
+        query.setFixedDatasetVersion(null);
+        query.getSelection().clear();
+        query.addSelection(buildSelectionItemWithDimensionAndCodes("TIME_PERIOD", "2011"));
+        query.addSelection(buildSelectionItemWithDimensionAndCodes("GEO_DIM", "ES"));
+        query.addSelection(buildSelectionItemWithDimensionAndCodes("MEAS_DIM", "C01"));
 
         QueryVersion updatedQueryVersion = queryService.updateQueryVersion(getServiceContextWithoutPrincipal(), query);
         assertEqualsQueryVersion(query, updatedQueryVersion);
