@@ -28,10 +28,8 @@ public class Categorisation extends CategorisationBase {
 
     @Override
     public DateTime getValidToEffective() {
-        if (this.getVersionableStatisticalResource().getValidTo() != null) {
-            return this.getVersionableStatisticalResource().getValidTo();
-        } else {
-            return this.getDatasetVersion().getSiemacMetadataStatisticalResource().getValidTo();
-        }
+        // We don't use the datasetVersion to calculate the effective validTo because the end of
+        // validity of the dataset does not mean the end of validity of the categorisation (METAMAC-2157)
+        return this.getVersionableStatisticalResource().getValidTo();
     }
 }
