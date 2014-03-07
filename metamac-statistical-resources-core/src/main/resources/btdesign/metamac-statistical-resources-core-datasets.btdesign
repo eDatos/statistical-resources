@@ -335,7 +335,7 @@ Application DatasetsStatisticalResources {
 			
 			"Calculate valid from of categorisation. If categorisation was created after dataset publication, validFrom will be equals to categorisation creation date. Otherwise, it will be validFrom of dataset"
 			DateTimeTZ validFromEffective nullable transient;
-			"Calculate valid to of categorisation. If categorisation validity was finished, validTo will be this date. Otherwise, it will be validTo of dataset"
+			"Calculate valid to of categorisation. If categorisation validity was finished, validTo will be this date."
 			DateTimeTZ validToEffective nullable transient;
 			
 			Repository CategorisationRepository {
