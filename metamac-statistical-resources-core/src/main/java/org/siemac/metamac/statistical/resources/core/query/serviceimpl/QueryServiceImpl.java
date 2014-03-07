@@ -39,7 +39,7 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.TemporalCode
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryTypeEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
-import org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.query.QueryLifecycleServiceImpl;
+import org.siemac.metamac.statistical.resources.core.lifecycle.serviceapi.query.QueryLifecycleService;
 import org.siemac.metamac.statistical.resources.core.query.domain.Query;
 import org.siemac.metamac.statistical.resources.core.query.domain.QuerySelectionItem;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
@@ -74,7 +74,7 @@ public class QueryServiceImpl extends QueryServiceImplBase {
     private QueryVersionRepository                    queryVersionRepository;
 
     @Autowired
-    private QueryLifecycleServiceImpl                 queryLifecycleService;
+    private QueryLifecycleService                     queryLifecycleService;
 
     public QueryServiceImpl() {
     }
