@@ -32,6 +32,7 @@ import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria.Op
 import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
 import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
+import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -231,7 +232,6 @@ public abstract class SdmxRestExternalFacadeV21BaseTest extends MetamacRestBaseT
                 });
     }
 
-    @SuppressWarnings("unchecked")
     protected void mockRetrieveDatasetRepository() throws Exception {
         when(datasetRepositoriesServiceFacade.retrieveDatasetRepository(any(String.class))).thenAnswer(new Answer<DatasetRepositoryDto>() {
 
@@ -247,7 +247,6 @@ public abstract class SdmxRestExternalFacadeV21BaseTest extends MetamacRestBaseT
         });
     }
 
-    @SuppressWarnings("unchecked")
     protected void mockFindCodeDimensions() throws Exception {
         when(datasetRepositoriesServiceFacade.findCodeDimensions(any(String.class))).thenAnswer(new Answer<Map<String, List<String>>>() {
 
@@ -358,7 +357,7 @@ public abstract class SdmxRestExternalFacadeV21BaseTest extends MetamacRestBaseT
         });
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "static-access"})
     protected void mockFindCategorisationsByCondition() throws Exception {
         when(datasetService.findCategorisationsByCondition(any(ServiceContext.class), any(List.class), any(PagingParameter.class))).thenAnswer(new Answer<PagedResult<Categorisation>>() {
 
@@ -387,7 +386,10 @@ public abstract class SdmxRestExternalFacadeV21BaseTest extends MetamacRestBaseT
                     mockDatasetVersion.getSiemacMetadataStatisticalResource().getMaintainer().setCodeNested(agencyID);
                     mockDatasetVersion.getSiemacMetadataStatisticalResource().setVersionLogic(version);
                     mockDatasetVersion.getRelatedDsd().setUrn(GeneratorUrnUtils.generateSdmxDatastructureUrn(new String[]{agencyID}, resourceID, version));
-                    Categorisation categorisation = sdmxDataCoreMocks.mockCategorisation(mockDatasetVersion, "ECB", resourceID);
+
+                    DateTime validFrom = new DateTime(2013, 3, 1, 3, 4, 12, 0);
+                    DateTime validTo = new DateTime(2013, 4, 16, 14, 4, 12, 0);
+                    Categorisation categorisation = sdmxDataCoreMocks.mockCategorisation(mockDatasetVersion, "ECB", resourceID, validFrom, validTo);
                     categorisations.add(categorisation);
                 } else {
                     {
@@ -398,7 +400,8 @@ public abstract class SdmxRestExternalFacadeV21BaseTest extends MetamacRestBaseT
                         mockDatasetVersion.getSiemacMetadataStatisticalResource().getMaintainer().setCodeNested(agencyID);
                         mockDatasetVersion.getSiemacMetadataStatisticalResource().setVersionLogic(version);
                         mockDatasetVersion.getRelatedDsd().setUrn(GeneratorUrnUtils.generateSdmxDatastructureUrn(new String[]{agencyID}, resourceID, version));
-                        Categorisation categorisation = sdmxDataCoreMocks.mockCategorisation(mockDatasetVersion, "ECB", resourceID);
+
+                        Categorisation categorisation = sdmxDataCoreMocks.mockCategorisation(mockDatasetVersion, "ECB", resourceID, null, null);
                         categorisations.add(categorisation);
                     }
                     {
@@ -409,7 +412,9 @@ public abstract class SdmxRestExternalFacadeV21BaseTest extends MetamacRestBaseT
                         mockDatasetVersion.getSiemacMetadataStatisticalResource().getMaintainer().setCodeNested(agencyID);
                         mockDatasetVersion.getSiemacMetadataStatisticalResource().setVersionLogic(version);
                         mockDatasetVersion.getRelatedDsd().setUrn(GeneratorUrnUtils.generateSdmxDatastructureUrn(new String[]{agencyID}, resourceID, version));
-                        Categorisation categorisation = sdmxDataCoreMocks.mockCategorisation(mockDatasetVersion, "ECB", resourceID);
+
+                        DateTime validFrom = new DateTime(2013, 3, 1, 3, 4, 12, 0);
+                        Categorisation categorisation = sdmxDataCoreMocks.mockCategorisation(mockDatasetVersion, "ECB", resourceID, validFrom, null);
                         categorisations.add(categorisation);
                     }
                     {
@@ -420,7 +425,9 @@ public abstract class SdmxRestExternalFacadeV21BaseTest extends MetamacRestBaseT
                         mockDatasetVersion.getSiemacMetadataStatisticalResource().getMaintainer().setCodeNested(agencyID);
                         mockDatasetVersion.getSiemacMetadataStatisticalResource().setVersionLogic(version);
                         mockDatasetVersion.getRelatedDsd().setUrn(GeneratorUrnUtils.generateSdmxDatastructureUrn(new String[]{agencyID}, resourceID, version));
-                        Categorisation categorisation = sdmxDataCoreMocks.mockCategorisation(mockDatasetVersion, "ECB", resourceID);
+
+                        DateTime validTo = new DateTime(2013, 4, 16, 14, 4, 12, 0);
+                        Categorisation categorisation = sdmxDataCoreMocks.mockCategorisation(mockDatasetVersion, "ECB", resourceID, null, validTo);
                         categorisations.add(categorisation);
                     }
                 }
@@ -431,7 +438,6 @@ public abstract class SdmxRestExternalFacadeV21BaseTest extends MetamacRestBaseT
         });
     }
 
-    @SuppressWarnings("unchecked")
     protected void mockApisLocator() throws Exception {
         when(apisLocator.retrieveDsdByUrn(any(String.class))).thenAnswer(new Answer<DataStructureType>() {
 
