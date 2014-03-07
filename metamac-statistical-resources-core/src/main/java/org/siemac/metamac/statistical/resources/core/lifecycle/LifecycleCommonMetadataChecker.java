@@ -180,6 +180,9 @@ public class LifecycleCommonMetadataChecker {
 
         if (QueryTypeEnum.LATEST_DATA.equals(resource.getType())) {
             checkMetadataRequired(resource.getLatestDataNumber(), addParameter(metadataName, ServiceExceptionSingleParameters.LATEST_DATA_NUMBER), exceptionItems);
+        }
+
+        if (QueryTypeEnum.AUTOINCREMENTAL.equals(resource.getType())) {
             checkMetadataRequired(resource.getLatestTemporalCodeInCreation(), addParameter(metadataName, ServiceExceptionSingleParameters.LATEST_TEMPORAL_CODE_IN_CREATION), exceptionItems);
         }
     }
