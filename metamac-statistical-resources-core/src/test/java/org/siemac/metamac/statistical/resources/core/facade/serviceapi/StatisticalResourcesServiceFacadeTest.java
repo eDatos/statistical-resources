@@ -1447,6 +1447,46 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
     }
 
     @Test
+    @MetamacMock(DATASET_VERSION_45_NEXT_VERSION_SCHEDULED_UPDATE_JANUARY_NAME)
+    public void testUpdateDatasetVersionChangeNextVersionToNonScheduledSetNextVersionDateNull() throws Exception {
+        // Retrieve dataset version
+        String datasetVersionUrn = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_45_NEXT_VERSION_SCHEDULED_UPDATE_JANUARY_NAME).getSiemacMetadataStatisticalResource().getUrn();
+        DatasetVersionDto datasetVersionDto = statisticalResourcesServiceFacade.retrieveDatasetVersionByUrn(getServiceContextAdministrador(), datasetVersionUrn);
+
+        // Check original premises are true
+        assertNotNull(datasetVersionDto.getNextVersionDate());
+        assertEquals(NextVersionTypeEnum.SCHEDULED_UPDATE, datasetVersionDto.getNextVersion());
+
+        // Update dataset version
+        datasetVersionDto.setNextVersion(NextVersionTypeEnum.NON_SCHEDULED_UPDATE);
+        DatasetVersionDto updatedDataset = statisticalResourcesServiceFacade.updateDatasetVersion(getServiceContextAdministrador(), datasetVersionDto);
+
+        // Check the result is the one that we expect
+        assertEquals(NextVersionTypeEnum.NON_SCHEDULED_UPDATE, updatedDataset.getNextVersion());
+        assertNull(updatedDataset.getNextVersionDate());
+    }
+
+    @Test
+    @MetamacMock(DATASET_VERSION_45_NEXT_VERSION_SCHEDULED_UPDATE_JANUARY_NAME)
+    public void testUpdateDatasetVersionChangeNextVersionToNoUpdatesSetNextVersionDateNull() throws Exception {
+        // Retrieve dataset version
+        String datasetVersionUrn = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_45_NEXT_VERSION_SCHEDULED_UPDATE_JANUARY_NAME).getSiemacMetadataStatisticalResource().getUrn();
+        DatasetVersionDto datasetVersionDto = statisticalResourcesServiceFacade.retrieveDatasetVersionByUrn(getServiceContextAdministrador(), datasetVersionUrn);
+
+        // Check original premises are true
+        assertNotNull(datasetVersionDto.getNextVersionDate());
+        assertEquals(NextVersionTypeEnum.SCHEDULED_UPDATE, datasetVersionDto.getNextVersion());
+
+        // Update dataset version
+        datasetVersionDto.setNextVersion(NextVersionTypeEnum.NO_UPDATES);
+        DatasetVersionDto updatedDataset = statisticalResourcesServiceFacade.updateDatasetVersion(getServiceContextAdministrador(), datasetVersionDto);
+
+        // Check the result is the one that we expect
+        assertEquals(NextVersionTypeEnum.NO_UPDATES, updatedDataset.getNextVersion());
+        assertNull(updatedDataset.getNextVersionDate());
+    }
+
+    @Test
     @MetamacMock({DATASET_VERSION_01_BASIC_NAME})
     public void testUpdateDatasetVersionIgnoreDateNextVersion() throws Exception {
         DatasetVersion datasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_01_BASIC_NAME);

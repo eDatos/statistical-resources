@@ -248,6 +248,8 @@ public class BaseDto2DoMapperImpl extends CommonDto2DoMapperImpl implements Base
 
         if (MetadataEditionChecks.canNextVersionDateBeEdited(target.getNextVersion())) {
             target.setNextVersionDate(CoreCommonUtil.transformDateToDateTime(source.getNextVersionDate()));
+        } else {
+            target.setNextVersionDate(null);
         }
 
         target.setVersionRationale(internationalStringDtoToDo(source.getVersionRationale(), target.getVersionRationale(),
