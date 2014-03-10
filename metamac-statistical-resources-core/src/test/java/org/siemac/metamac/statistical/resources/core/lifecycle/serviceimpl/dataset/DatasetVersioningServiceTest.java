@@ -244,7 +244,7 @@ public class DatasetVersioningServiceTest extends StatisticalResourcesBaseTest {
     private static void checkNewDatasetVersionCreated(DatasetVersion previous, DatasetVersion next) throws Exception {
         assertEqualsVersioningSiemacMetadata(previous.getSiemacMetadataStatisticalResource(), next.getSiemacMetadataStatisticalResource());
         checkInheritMetadata(previous, next);
-        checkNotInheritMetadta(next);
+        checkNotInheritMetadata(next);
         checkRelations(previous, next);
     }
 
@@ -261,7 +261,7 @@ public class DatasetVersioningServiceTest extends StatisticalResourcesBaseTest {
         checkVersionedDatasourcesCollection(previous.getDatasources(), next.getDatasources());
     }
 
-    private static void checkNotInheritMetadta(DatasetVersion next) {
+    private static void checkNotInheritMetadata(DatasetVersion next) {
         assertNotNull(next.getSiemacMetadataStatisticalResource().getUrn());
         assertEquals(next.getSiemacMetadataStatisticalResource().getUrn(), next.getDatasetRepositoryId());
         assertNull(next.getDateNextUpdate());
