@@ -5,21 +5,21 @@ import javax.servlet.ServletContextListener;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.siemac.metamac.core.common.conf.ConfigurationService;
 import org.siemac.metamac.core.common.constants.shared.ConfigurationConstants;
 import org.siemac.metamac.core.common.util.ApplicationContextProvider;
+import org.siemac.metamac.statistical.resources.core.conf.StatisticalResourcesConfiguration;
 import org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConfigurationConstants;
 
 public class ApplicationStartup extends ConfigurationConstants implements ServletContextListener {
 
-    private static final Log     LOG = LogFactory.getLog(ApplicationStartup.class);
+    private static final Log                  LOG = LogFactory.getLog(ApplicationStartup.class);
 
-    private ConfigurationService configurationService;
+    private StatisticalResourcesConfiguration configurationService;
 
     @Override
     public void contextInitialized(ServletContextEvent sce) {
         try {
-            configurationService = ApplicationContextProvider.getApplicationContext().getBean(ConfigurationService.class);
+            configurationService = ApplicationContextProvider.getApplicationContext().getBean(StatisticalResourcesConfiguration.class);
             checkConfiguration();
         } catch (Exception e) {
             // Abort startup application

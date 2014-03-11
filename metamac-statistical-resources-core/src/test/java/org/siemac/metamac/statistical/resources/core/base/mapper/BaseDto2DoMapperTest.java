@@ -15,7 +15,6 @@ import org.mockito.Answers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.siemac.metamac.common.test.mock.ConfigurationServiceMockImpl;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
 import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
@@ -24,23 +23,24 @@ import org.siemac.metamac.statistical.resources.core.dto.SiemacMetadataStatistic
 import org.siemac.metamac.statistical.resources.core.dto.VersionRationaleTypeDto;
 import org.siemac.metamac.statistical.resources.core.enume.domain.VersionRationaleTypeEnum;
 import org.siemac.metamac.statistical.resources.core.utils.asserts.BaseAsserts;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.StatisticalResourcesConfigurationMockImpl;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesDoMocks;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesDtoMocks;
 
 public class BaseDto2DoMapperTest extends StatisticalResourcesBaseTest {
 
-    private static final String          METADATA_NAME_TEST = "METADATA_TEST";
+    private static final String                       METADATA_NAME_TEST = "METADATA_TEST";
 
     @SuppressWarnings("unused")
     @Mock
-    private ExternalItemRepository       externalItemRepository;
+    private ExternalItemRepository                    externalItemRepository;
 
     @SuppressWarnings("unused")
     @Mock(answer = Answers.CALLS_REAL_METHODS)
-    private ConfigurationServiceMockImpl configurationService;
+    private StatisticalResourcesConfigurationMockImpl configurationService;
 
     @InjectMocks
-    private BaseDto2DoMapper             baseDto2DoMapper   = new BaseDto2DoMapperImpl();
+    private final BaseDto2DoMapper                    baseDto2DoMapper   = new BaseDto2DoMapperImpl();
 
     @Before
     public void prepareMocks() {

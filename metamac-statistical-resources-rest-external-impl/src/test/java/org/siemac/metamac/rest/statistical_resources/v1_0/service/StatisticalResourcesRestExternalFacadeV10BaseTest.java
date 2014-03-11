@@ -53,7 +53,6 @@ import org.junit.Test;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.siemac.metamac.common.test.utils.ConditionalCriteriaUtils;
-import org.siemac.metamac.core.common.conf.ConfigurationService;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.util.ApplicationContextProvider;
 import org.siemac.metamac.core.common.util.shared.UrnUtils;
@@ -74,6 +73,7 @@ import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStr
 import org.siemac.metamac.rest.utils.RestUtils;
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResourceResult;
 import org.siemac.metamac.statistical.resources.core.common.serviceapi.TranslationService;
+import org.siemac.metamac.statistical.resources.core.conf.StatisticalResourcesConfiguration;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.AttributeValue;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.CodeDimension;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
@@ -153,7 +153,7 @@ public abstract class StatisticalResourcesRestExternalFacadeV10BaseTest extends 
 
     @Before
     public void setUp() throws Exception {
-        ConfigurationService configurationService = applicationContext.getBean(ConfigurationService.class);
+        StatisticalResourcesConfiguration configurationService = applicationContext.getBean(StatisticalResourcesConfiguration.class);
         apiEndpointv10 = configurationService.retrieveStatisticalResourcesExternalApiUrlBase() + "/v1.0";
 
         resetMocks();

@@ -4,9 +4,9 @@ import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
-import org.siemac.metamac.core.common.conf.ConfigurationService;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionBuilder;
+import org.siemac.metamac.statistical.resources.core.conf.StatisticalResourcesConfiguration;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -15,17 +15,17 @@ import org.springframework.stereotype.Component;
 public class DataConfigurationImpl implements DataConfiguration {
 
     @Autowired
-    private ConfigurationService configurationService;
+    private StatisticalResourcesConfiguration configurationService;
 
-    private String               maintainerUrnDefault;
+    private String                            maintainerUrnDefault;
 
-    private String               organisationIdDefault;
+    private String                            organisationIdDefault;
 
-    private String               sdmxRegistryApiUrlBase;
+    private String                            sdmxRegistryApiUrlBase;
 
-    private String               sdmxSrmApiUrlBase;
+    private String                            sdmxSrmApiUrlBase;
 
-    private String               sdmxStatisticalResourceApiUrlBase;
+    private String                            sdmxStatisticalResourceApiUrlBase;
 
     @Override
     public String retrieveMaintainerUrnDefault() throws MetamacException {

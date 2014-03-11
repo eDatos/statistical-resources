@@ -3,10 +3,10 @@ package org.siemac.metamac.statistical.resources.web.server.handlers.dataset;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.siemac.metamac.core.common.conf.ConfigurationService;
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
+import org.siemac.metamac.statistical.resources.core.conf.StatisticalResourcesConfiguration;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.CategorisationDto;
 import org.siemac.metamac.statistical.resources.core.facade.serviceapi.StatisticalResourcesServiceFacade;
 import org.siemac.metamac.statistical.resources.web.server.rest.SrmRestInternalFacade;
@@ -27,7 +27,7 @@ public class CreateDatasetCategorisationsActionHandler extends SecurityActionHan
     private StatisticalResourcesServiceFacade statisticalResourcesServiceFacade;
 
     @Autowired
-    private ConfigurationService              configurationService;
+    private StatisticalResourcesConfiguration configurationService;
 
     @Autowired
     private SrmRestInternalFacade             srmRestInternalFacade;

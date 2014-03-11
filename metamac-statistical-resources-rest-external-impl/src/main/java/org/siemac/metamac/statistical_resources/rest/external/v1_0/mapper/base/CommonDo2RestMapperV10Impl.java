@@ -20,7 +20,6 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
-import org.siemac.metamac.core.common.conf.ConfigurationService;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.rest.common.v1_0.domain.InternationalString;
 import org.siemac.metamac.rest.common.v1_0.domain.LocalisedString;
@@ -82,6 +81,7 @@ import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor;
 import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor.DsdAttribute;
 import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor.DsdComponentType;
 import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor.DsdDimension;
+import org.siemac.metamac.statistical.resources.core.conf.StatisticalResourcesConfiguration;
 import org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConstants;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.AttributeValue;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.CodeDimension;
@@ -115,39 +115,39 @@ import com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceF
 @Component
 public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
 
-    private static final Logger              logger = LoggerFactory.getLogger(CommonDo2RestMapperV10.class);
+    private static final Logger               logger = LoggerFactory.getLogger(CommonDo2RestMapperV10.class);
 
     @Autowired
-    private ConfigurationService             configurationService;
+    private StatisticalResourcesConfiguration configurationService;
 
     @Autowired
-    private DatasetService                   datasetService;
+    private DatasetService                    datasetService;
 
     @Autowired
-    private TranslationService               translationService;
+    private TranslationService                translationService;
 
     @Autowired
-    private DatasetRepositoriesServiceFacade datasetRepositoriesServiceFacade;
+    private DatasetRepositoriesServiceFacade  datasetRepositoriesServiceFacade;
 
     @Autowired
-    private SrmRestExternalFacade            srmRestExternalFacade;
+    private SrmRestExternalFacade             srmRestExternalFacade;
 
     @Autowired
-    private CommonMetadataRestExternalFacade commonMetadataRestExternalFacade;
+    private CommonMetadataRestExternalFacade  commonMetadataRestExternalFacade;
 
     @Autowired
-    private DatasetsDo2RestMapperV10         datasetsDo2RestMapper;
+    private DatasetsDo2RestMapperV10          datasetsDo2RestMapper;
 
     @Autowired
-    private CollectionsDo2RestMapperV10      collectionsDo2RestMapper;
+    private CollectionsDo2RestMapperV10       collectionsDo2RestMapper;
 
     @Autowired
-    private QueriesDo2RestMapperV10          queriesDo2RestMapper;
+    private QueriesDo2RestMapperV10           queriesDo2RestMapper;
 
-    private String                           statisticalResourcesApiExternalEndpointV10;
-    private String                           srmApiExternalEndpoint;
-    private String                           statisticalOperationsApiExternalEndpoint;
-    private String                           defaultLanguage;
+    private String                            statisticalResourcesApiExternalEndpointV10;
+    private String                            srmApiExternalEndpoint;
+    private String                            statisticalOperationsApiExternalEndpoint;
+    private String                            defaultLanguage;
 
     @PostConstruct
     public void init() throws Exception {
@@ -179,6 +179,7 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
         dsdProcessorResult.setGroups(DsdProcessor.getGroups(dataStructure));
         return dsdProcessorResult;
     }
+
     @Override
     public void toMetadataStatisticalResource(SiemacMetadataStatisticalResource source, StatisticalResource target, List<String> selectedLanguages) throws MetamacException {
         if (source == null) {
@@ -220,6 +221,7 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
         target.setValidFrom(toDate(source.getValidFrom()));
         target.setValidTo(toDate(source.getValidTo()));
     }
+
     @Override
     public Data toData(DatasetVersion source, DsdProcessorResult dsdProcessorResult, Map<String, List<String>> dimensionValuesSelected, List<String> selectedLanguages) throws Exception {
         if (source == null) {
@@ -1126,6 +1128,7 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
             }
         }
     }
+
     private void toDataAttributesWithDatasetAndDimensionAttachmenteLevel(DsdProcessorResult dsdProcessorResult, String datasetRepositoryId, List<String> datasetDimensionsOrdered,
             Map<String, List<String>> dimensionsCodesSelectedEffective, DataAttributes targets) throws Exception {
 

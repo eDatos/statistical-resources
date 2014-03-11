@@ -22,10 +22,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.siemac.metamac.common.test.constants.ConfigurationMockConstants;
-import org.siemac.metamac.common.test.mock.ConfigurationServiceMockImpl;
 import org.siemac.metamac.common.test.utils.MetamacAsserts.MapperEnum;
 import org.siemac.metamac.common.test.utils.MetamacMocks;
-import org.siemac.metamac.core.common.conf.ConfigurationService;
 import org.siemac.metamac.core.common.constants.CoreCommonConstants;
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.dto.InternationalStringDto;
@@ -38,6 +36,7 @@ import org.siemac.metamac.statistical.resources.core.common.domain.International
 import org.siemac.metamac.statistical.resources.core.common.domain.InternationalStringRepository;
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResource;
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResourceRepository;
+import org.siemac.metamac.statistical.resources.core.conf.StatisticalResourcesConfiguration;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionRepository;
 import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
@@ -45,6 +44,7 @@ import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedRes
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersionRepository;
 import org.siemac.metamac.statistical.resources.core.utils.asserts.BaseAsserts;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.StatisticalResourcesConfigurationMockImpl;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesDtoMocks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -58,21 +58,21 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class CommonDto2DoMapperTest extends StatisticalResourcesBaseTest {
 
-    private static final String                 CODE_01                       = "mock01";
-    private static final String                 CODE_02                       = "mock02";
-    private static final String                 URN_01                        = "lorem:ipsum:externalItem:mock01:01";
-    private static final String                 URN_02                        = "lorem:ipsum:externalItem:mock02:02";
-    private static final String                 METADATA_NAME                 = "LOREM_IPSUM";
+    private static final String                         CODE_01                       = "mock01";
+    private static final String                         CODE_02                       = "mock02";
+    private static final String                         URN_01                        = "lorem:ipsum:externalItem:mock01:01";
+    private static final String                         URN_02                        = "lorem:ipsum:externalItem:mock02:02";
+    private static final String                         METADATA_NAME                 = "LOREM_IPSUM";
 
-    protected ConfigurationService              configurationService          = new ConfigurationServiceMockImpl();
-    private final ExternalItemRepository        externalItemRepository        = Mockito.mock(ExternalItemRepository.class);
-    private final InternationalStringRepository internationalStringRepository = Mockito.mock(InternationalStringRepository.class);
-    private final RelatedResourceRepository     relatedResourceRepository     = Mockito.mock(RelatedResourceRepository.class);
-    private final DatasetVersionRepository      datasetVersionRepository      = Mockito.mock(DatasetVersionRepository.class);
-    private final PublicationVersionRepository  publicationVersionRepository  = Mockito.mock(PublicationVersionRepository.class);
+    protected StatisticalResourcesConfigurationMockImpl configurationService          = new StatisticalResourcesConfigurationMockImpl();
+    private final ExternalItemRepository                externalItemRepository        = Mockito.mock(ExternalItemRepository.class);
+    private final InternationalStringRepository         internationalStringRepository = Mockito.mock(InternationalStringRepository.class);
+    private final RelatedResourceRepository             relatedResourceRepository     = Mockito.mock(RelatedResourceRepository.class);
+    private final DatasetVersionRepository              datasetVersionRepository      = Mockito.mock(DatasetVersionRepository.class);
+    private final PublicationVersionRepository          publicationVersionRepository  = Mockito.mock(PublicationVersionRepository.class);
 
     @Autowired
-    private CommonDto2DoMapper                  commonDto2DoMapper;
+    private CommonDto2DoMapper                          commonDto2DoMapper;
 
     @Before
     public void setRepositoriesToMapper() throws Exception {
@@ -90,7 +90,7 @@ public class CommonDto2DoMapperTest extends StatisticalResourcesBaseTest {
         externalItemRepositoryField.set(commonDto2DoMapper, repository);
     }
 
-    private void setFieldToBaseMapper(String fieldName, ConfigurationService fieldValue) throws Exception {
+    private void setFieldToBaseMapper(String fieldName, StatisticalResourcesConfiguration fieldValue) throws Exception {
         Field field = commonDto2DoMapper.getClass().getSuperclass().getDeclaredField(fieldName);
         field.setAccessible(true);
         field.set(commonDto2DoMapper, fieldValue);

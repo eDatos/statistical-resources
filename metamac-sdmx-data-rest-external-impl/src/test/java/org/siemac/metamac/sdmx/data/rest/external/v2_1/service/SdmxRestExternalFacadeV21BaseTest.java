@@ -40,13 +40,13 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.DataStructureType;
 import org.siemac.metamac.common.test.utils.ConditionalCriteriaUtils;
-import org.siemac.metamac.core.common.conf.ConfigurationService;
 import org.siemac.metamac.core.common.util.ApplicationContextProvider;
 import org.siemac.metamac.core.common.util.GeneratorUrnUtils;
 import org.siemac.metamac.rest.common.test.MetamacRestBaseTest;
 import org.siemac.metamac.rest.common.test.ServerResource;
 import org.siemac.metamac.rest.common.test.utils.MetamacRestAsserts;
 import org.siemac.metamac.sdmx.data.rest.external.v2_1.utils.SdmxDataCoreMocks;
+import org.siemac.metamac.statistical.resources.core.conf.StatisticalResourcesConfiguration;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Categorisation;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionProperties;
@@ -111,7 +111,7 @@ public abstract class SdmxRestExternalFacadeV21BaseTest extends MetamacRestBaseT
 
     @Before
     public void setUp() throws Exception {
-        ConfigurationService configurationService = applicationContext.getBean(ConfigurationService.class);
+        StatisticalResourcesConfiguration configurationService = applicationContext.getBean(StatisticalResourcesConfiguration.class);
         resetMocks();
     }
 

@@ -2,10 +2,10 @@ package org.siemac.metamac.statistical.resources.web.server.handlers.external;
 
 import java.util.ArrayList;
 
-import org.siemac.metamac.core.common.conf.ConfigurationService;
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
+import org.siemac.metamac.statistical.resources.core.conf.StatisticalResourcesConfiguration;
 import org.siemac.metamac.statistical.resources.web.server.rest.SrmRestInternalFacade;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetGeographicalGranularitiesListAction;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetGeographicalGranularitiesListResult;
@@ -21,10 +21,10 @@ import com.gwtplatform.dispatch.shared.ActionException;
 public class GetGeographicalGranularitiesListActionHandler extends SecurityActionHandler<GetGeographicalGranularitiesListAction, GetGeographicalGranularitiesListResult> {
 
     @Autowired
-    private ConfigurationService  configurationService;
+    private StatisticalResourcesConfiguration configurationService;
 
     @Autowired
-    private SrmRestInternalFacade srmRestInternalFacade;
+    private SrmRestInternalFacade             srmRestInternalFacade;
 
     public GetGeographicalGranularitiesListActionHandler() {
         super(GetGeographicalGranularitiesListAction.class);

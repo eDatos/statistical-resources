@@ -2,9 +2,9 @@ package org.siemac.metamac.statistical.resources.web.server.handlers.external;
 
 import java.util.ArrayList;
 
-import org.siemac.metamac.core.common.conf.ConfigurationService;
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.statistical.resources.core.conf.StatisticalResourcesConfiguration;
 import org.siemac.metamac.statistical.resources.web.server.rest.SrmRestInternalFacade;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetLanguagesCodesAction;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetLanguagesCodesResult;
@@ -21,10 +21,10 @@ import com.gwtplatform.dispatch.shared.ActionException;
 public class GetLanguagesCodesActionHandler extends SecurityActionHandler<GetLanguagesCodesAction, GetLanguagesCodesResult> {
 
     @Autowired
-    private ConfigurationService  configurationService;
+    private StatisticalResourcesConfiguration configurationService;
 
     @Autowired
-    private SrmRestInternalFacade srmRestInternalFacade;
+    private SrmRestInternalFacade             srmRestInternalFacade;
 
     public GetLanguagesCodesActionHandler() {
         super(GetLanguagesCodesAction.class);

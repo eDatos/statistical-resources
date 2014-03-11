@@ -5,10 +5,10 @@ import org.apache.cxf.jaxrs.client.WebClient;
 import org.sdmx.resources.sdmxml.schemas.v2_1.message.Structure;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.DataStructureType;
 import org.sdmx.resources.sdmxml.schemas.v2_1.structure.DataStructuresType;
-import org.siemac.metamac.core.common.conf.ConfigurationService;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.util.GeneratorUrnUtils;
 import org.siemac.metamac.sdmx.data.rest.external.conf.DataConfigurationConstants;
+import org.siemac.metamac.statistical.resources.core.conf.StatisticalResourcesConfiguration;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,13 +19,13 @@ import com.arte.statistic.sdmx.srm.rest.external.v2_1.service.SdmxSrmRestExterna
 @Component
 public class ApisLocator {
 
-    private final String                 DETAIL_STUBS                 = "referencestubs";
-    private final String                 REFERENCES_NONE              = "none";
+    private final String                      DETAIL_STUBS                 = "referencestubs";
+    private final String                      REFERENCES_NONE              = "none";
 
     @Autowired
-    private ConfigurationService         configurationService;
+    private StatisticalResourcesConfiguration configurationService;
 
-    private SdmxSrmRestExternalFacadeV21 sdmxSrmRestExternalFacadeV21 = null;
+    private SdmxSrmRestExternalFacadeV21      sdmxSrmRestExternalFacadeV21 = null;
 
     private SdmxSrmRestExternalFacadeV21 getSdmxSrmRestExternalFacadeV21() {
 

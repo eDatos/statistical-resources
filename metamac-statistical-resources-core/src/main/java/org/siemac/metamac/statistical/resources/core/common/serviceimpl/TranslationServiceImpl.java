@@ -5,7 +5,6 @@ import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
-import org.siemac.metamac.core.common.conf.ConfigurationService;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.time.DateTimeSdmx;
 import org.siemac.metamac.core.common.time.GregorianTimeSdmx;
@@ -17,6 +16,7 @@ import org.siemac.metamac.core.common.util.SdmxTimeUtils;
 import org.siemac.metamac.statistical.resources.core.common.domain.LocalisedString;
 import org.siemac.metamac.statistical.resources.core.common.domain.Translation;
 import org.siemac.metamac.statistical.resources.core.common.serviceapi.validators.TranslationServiceInvocationValidator;
+import org.siemac.metamac.statistical.resources.core.conf.StatisticalResourcesConfiguration;
 import org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConstants;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
@@ -33,7 +33,7 @@ public class TranslationServiceImpl extends TranslationServiceImplBase {
     private TranslationServiceInvocationValidator translationServiceInvocationValidator;
 
     @Autowired
-    private ConfigurationService                  configurationService;
+    private StatisticalResourcesConfiguration     configurationService;
 
     public TranslationServiceImpl() {
     }

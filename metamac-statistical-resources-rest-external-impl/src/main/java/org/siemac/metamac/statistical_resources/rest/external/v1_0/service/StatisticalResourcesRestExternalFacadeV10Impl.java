@@ -11,7 +11,6 @@ import java.util.Map;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
-import org.siemac.metamac.core.common.conf.ConfigurationService;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.rest.search.criteria.SculptorCriteria;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Collection;
@@ -20,6 +19,7 @@ import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Dataset;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Datasets;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Queries;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Query;
+import org.siemac.metamac.statistical.resources.core.conf.StatisticalResourcesConfiguration;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
@@ -59,7 +59,7 @@ public class StatisticalResourcesRestExternalFacadeV10Impl implements Statistica
     private QueriesRest2DoMapper                          queriesRest2DoMapper;
 
     @Autowired
-    private ConfigurationService                          configurationService;
+    private StatisticalResourcesConfiguration             configurationService;
 
     @Override
     public Datasets findDatasets(String query, String orderBy, String limit, String offset, List<String> lang) {
