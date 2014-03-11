@@ -10,6 +10,7 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionBuilder;
 import org.siemac.metamac.core.common.util.OptimisticLockingUtils;
 import org.siemac.metamac.core.common.util.shared.UrnUtils;
+import org.siemac.metamac.statistical.resources.core.base.checks.MetadataEditionChecks;
 import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.VersionableStatisticalResource;
@@ -148,10 +149,15 @@ public class DatasetDto2DoMapperImpl extends BaseDto2DoMapperImpl implements Dat
             datasetVersionDtoRelatedDsdToDo(source, target);
         }
 
-        boolean dateNextUpdateModified = hasDateBeModified(target.getDateNextUpdate(), source.getDateNextUpdate());
-        if (dateNextUpdateModified) {
-            target.setUserModifiedDateNextUpdate(true);
-            target.setDateNextUpdate(dateDtoToDo(source.getDateNextUpdate()));
+        if (MetadataEditionChecks.canNextVersionDateBeEdited(target.getSiemacMetadataStatisticalResource().getNextVersion())) {
+            boolean dateNextUpdateModified = hasDateBeModified(target.getDateNextUpdate(), source.getDateNextUpdate());
+            if (dateNextUpdateModified) {
+                target.setUserModifiedDateNextUpdate(true);
+                target.setDateNextUpdate(dateDtoToDo(source.getDateNextUpdate()));
+            }
+        } else {
+            target.setUserModifiedDateNextUpdate(false);
+            target.setDateNextUpdate(null);
         }
 
         target.setUpdateFrequency(externalItemDtoToDo(source.getUpdateFrequency(), target.getUpdateFrequency(), ServiceExceptionParameters.DATASET_VERSION__UPDATE_FREQUENCY));

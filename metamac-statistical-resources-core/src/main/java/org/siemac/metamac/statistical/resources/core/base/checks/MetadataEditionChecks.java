@@ -26,7 +26,15 @@ public class MetadataEditionChecks {
         return false;
     }
 
+    public static boolean canDateNextUpdateBeEdited(NextVersionTypeEnum nextVersion) {
+        return canNextDatesBeFilled(nextVersion);
+    }
+
     public static boolean canNextVersionDateBeEdited(NextVersionTypeEnum nextVersion) {
+        return canNextDatesBeFilled(nextVersion);
+    }
+
+    private static boolean canNextDatesBeFilled(NextVersionTypeEnum nextVersion) {
         if (NextVersionTypeEnum.SCHEDULED_UPDATE.equals(nextVersion)) {
             return true;
         }

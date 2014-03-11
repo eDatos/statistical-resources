@@ -70,9 +70,11 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.StatisticOff
 import org.siemac.metamac.statistical.resources.core.dataset.domain.TemporalCode;
 import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.validators.DatasetServiceInvocationValidator;
 import org.siemac.metamac.statistical.resources.core.dataset.utils.DatasetVersionUtils;
+import org.siemac.metamac.statistical.resources.core.enume.domain.NextVersionTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.task.domain.DatasetFileFormatEnum;
+import org.siemac.metamac.statistical.resources.core.enume.utils.NextVersionTypeEnumUtils;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.invocation.service.SrmRestInternalService;
@@ -1063,17 +1065,19 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
     }
 
     private void processDateNextUpdate(DatasetVersion resource) {
-        if (resource.getDateNextUpdate() == null || BooleanUtils.isNotTrue(resource.getUserModifiedDateNextUpdate())) {
-            DateTime mostRecentDate = null;
-            for (Datasource datasource : resource.getDatasources()) {
-                if (datasource.getDateNextUpdate() != null) {
-                    if (isNewDateBestOptionForDateNextUpdate(mostRecentDate, datasource.getDateNextUpdate())) {
-                        mostRecentDate = datasource.getDateNextUpdate();
+        if (NextVersionTypeEnumUtils.isInAnyNextVersionType(resource, NextVersionTypeEnum.SCHEDULED_UPDATE)) {
+            if (resource.getDateNextUpdate() == null || BooleanUtils.isNotTrue(resource.getUserModifiedDateNextUpdate())) {
+                DateTime mostRecentDate = null;
+                for (Datasource datasource : resource.getDatasources()) {
+                    if (datasource.getDateNextUpdate() != null) {
+                        if (isNewDateBestOptionForDateNextUpdate(mostRecentDate, datasource.getDateNextUpdate())) {
+                            mostRecentDate = datasource.getDateNextUpdate();
+                        }
                     }
                 }
+                resource.setDateNextUpdate(mostRecentDate);
+                resource.setUserModifiedDateNextUpdate(false);
             }
-            resource.setDateNextUpdate(mostRecentDate);
-            resource.setUserModifiedDateNextUpdate(false);
         }
     }
 

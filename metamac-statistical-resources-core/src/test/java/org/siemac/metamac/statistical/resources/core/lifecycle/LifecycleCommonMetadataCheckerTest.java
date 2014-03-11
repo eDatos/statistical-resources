@@ -247,9 +247,10 @@ public class LifecycleCommonMetadataCheckerTest extends StatisticalResourcesBase
     }
 
     @Test
-    public void testDatasetVersionCommonMetadataWithDatasourceWithNoDateNextUpdate() throws Exception {
+    public void testDatasetVersionCommonMetadataWithDatasourceWithNoDateNextUpdateAndScheduledUpdate() throws Exception {
         DatasetVersion resource = new DatasetVersion();
         resource.setSiemacMetadataStatisticalResource(new SiemacMetadataStatisticalResource());
+        resource.getSiemacMetadataStatisticalResource().setNextVersion(NextVersionTypeEnum.SCHEDULED_UPDATE);
         resource.addDatasource(new Datasource());
 
         String baseMetadata = ServiceExceptionSingleParameters.DATASET_VERSION;
@@ -261,6 +262,50 @@ public class LifecycleCommonMetadataCheckerTest extends StatisticalResourcesBase
                                                                     new MetamacExceptionItem(ServiceExceptionType.METADATA_REQUIRED, PARAMETER_VALUE_DATASET_VERSION__UPDATE_FREQUENCY), 
                                                                     new MetamacExceptionItem(ServiceExceptionType.METADATA_REQUIRED, PARAMETER_VALUE_DATASET_VERSION__STATISTIC_OFFICIALITY),
                                                                     new MetamacExceptionItem(ServiceExceptionType.METADATA_REQUIRED, PARAMETER_VALUE_DATASET_VERSION__DATE_NEXT_UPDATE))));
+        //@formatter:on
+
+        List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
+        lifecycleCommonMetadataChecker.checkDatasetVersionCommonMetadata(resource, baseMetadata, exceptionItems);
+        throw new MetamacException(exceptionItems);
+    }
+
+    @Test
+    public void testDatasetVersionCommonMetadataWithDatasourceWithNoDateNextUpdateAndNonScheduledUpdate() throws Exception {
+        DatasetVersion resource = new DatasetVersion();
+        resource.setSiemacMetadataStatisticalResource(new SiemacMetadataStatisticalResource());
+        resource.getSiemacMetadataStatisticalResource().setNextVersion(NextVersionTypeEnum.NON_SCHEDULED_UPDATE);
+        resource.addDatasource(new Datasource());
+
+        String baseMetadata = ServiceExceptionSingleParameters.DATASET_VERSION;
+
+        //@formatter:off
+        expectedMetamacException(new MetamacException(Arrays.asList(new MetamacExceptionItem(ServiceExceptionType.METADATA_REQUIRED, PARAMETER_VALUE_DATASET_VERSION__RELATED_DSD),
+                                                                    new MetamacExceptionItem(ServiceExceptionType.METADATA_REQUIRED, PARAMETER_VALUE_DATASET_VERSION__GEOGRAPHIC_GRANULARITIES), 
+                                                                    new MetamacExceptionItem(ServiceExceptionType.METADATA_REQUIRED, PARAMETER_VALUE_DATASET_VERSION__TEMPORAL_GRANULARITIES), 
+                                                                    new MetamacExceptionItem(ServiceExceptionType.METADATA_REQUIRED, PARAMETER_VALUE_DATASET_VERSION__UPDATE_FREQUENCY), 
+                                                                    new MetamacExceptionItem(ServiceExceptionType.METADATA_REQUIRED, PARAMETER_VALUE_DATASET_VERSION__STATISTIC_OFFICIALITY))));
+        //@formatter:on
+
+        List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
+        lifecycleCommonMetadataChecker.checkDatasetVersionCommonMetadata(resource, baseMetadata, exceptionItems);
+        throw new MetamacException(exceptionItems);
+    }
+
+    @Test
+    public void testDatasetVersionCommonMetadataWithDatasourceWithNoDateNextUpdateAndNoUpdates() throws Exception {
+        DatasetVersion resource = new DatasetVersion();
+        resource.setSiemacMetadataStatisticalResource(new SiemacMetadataStatisticalResource());
+        resource.getSiemacMetadataStatisticalResource().setNextVersion(NextVersionTypeEnum.NO_UPDATES);
+        resource.addDatasource(new Datasource());
+
+        String baseMetadata = ServiceExceptionSingleParameters.DATASET_VERSION;
+
+        //@formatter:off
+        expectedMetamacException(new MetamacException(Arrays.asList(new MetamacExceptionItem(ServiceExceptionType.METADATA_REQUIRED, PARAMETER_VALUE_DATASET_VERSION__RELATED_DSD),
+                                                                    new MetamacExceptionItem(ServiceExceptionType.METADATA_REQUIRED, PARAMETER_VALUE_DATASET_VERSION__GEOGRAPHIC_GRANULARITIES), 
+                                                                    new MetamacExceptionItem(ServiceExceptionType.METADATA_REQUIRED, PARAMETER_VALUE_DATASET_VERSION__TEMPORAL_GRANULARITIES), 
+                                                                    new MetamacExceptionItem(ServiceExceptionType.METADATA_REQUIRED, PARAMETER_VALUE_DATASET_VERSION__UPDATE_FREQUENCY), 
+                                                                    new MetamacExceptionItem(ServiceExceptionType.METADATA_REQUIRED, PARAMETER_VALUE_DATASET_VERSION__STATISTIC_OFFICIALITY))));
         //@formatter:on
 
         List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();

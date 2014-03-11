@@ -65,6 +65,7 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_46_NEXT_VERSION_SCHEDULED_UPDATE_JULY_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_47_WITH_COVERAGE_FILLED_WITH_TITLES_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_48_WITH_TEMPORAL_COVERAGE_FILLED_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_49_WITH_DATASOURCE_FROM_PX_WITH_NEXT_UPDATE_IN_ONE_MONTH_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_53_IN_DIFFUSION_VALIDATION_WITH_DATASOURCE_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_54_IN_VALIDATION_REJECTED_WITH_DATASOURCE_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_55_PUBLISHED_WITH_DATASOURCE_NAME;
@@ -1484,6 +1485,48 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         // Check the result is the one that we expect
         assertEquals(NextVersionTypeEnum.NO_UPDATES, updatedDataset.getNextVersion());
         assertNull(updatedDataset.getNextVersionDate());
+    }
+
+    @Test
+    @MetamacMock(DATASET_VERSION_49_WITH_DATASOURCE_FROM_PX_WITH_NEXT_UPDATE_IN_ONE_MONTH_NAME)
+    public void testUpdateDatasetVersionChangeNextVersionToNonScheduledSetDateNextUpdateNull() throws Exception {
+        // Retrieve dataset version
+        String datasetVersionUrn = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_49_WITH_DATASOURCE_FROM_PX_WITH_NEXT_UPDATE_IN_ONE_MONTH_NAME).getSiemacMetadataStatisticalResource()
+                .getUrn();
+        DatasetVersionDto datasetVersionDto = statisticalResourcesServiceFacade.retrieveDatasetVersionByUrn(getServiceContextAdministrador(), datasetVersionUrn);
+
+        // Check original premises are true
+        assertNotNull(datasetVersionDto.getDateNextUpdate());
+        assertEquals(NextVersionTypeEnum.SCHEDULED_UPDATE, datasetVersionDto.getNextVersion());
+
+        // Update dataset version
+        datasetVersionDto.setNextVersion(NextVersionTypeEnum.NON_SCHEDULED_UPDATE);
+        DatasetVersionDto updatedDataset = statisticalResourcesServiceFacade.updateDatasetVersion(getServiceContextAdministrador(), datasetVersionDto);
+
+        // Check the result is the one that we expect
+        assertEquals(NextVersionTypeEnum.NON_SCHEDULED_UPDATE, updatedDataset.getNextVersion());
+        assertNull(updatedDataset.getDateNextUpdate());
+    }
+
+    @Test
+    @MetamacMock(DATASET_VERSION_49_WITH_DATASOURCE_FROM_PX_WITH_NEXT_UPDATE_IN_ONE_MONTH_NAME)
+    public void testUpdateDatasetVersionChangeNextVersionToNoUpdatesSetDateNextUpdateNull() throws Exception {
+        // Retrieve dataset version
+        String datasetVersionUrn = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_49_WITH_DATASOURCE_FROM_PX_WITH_NEXT_UPDATE_IN_ONE_MONTH_NAME).getSiemacMetadataStatisticalResource()
+                .getUrn();
+        DatasetVersionDto datasetVersionDto = statisticalResourcesServiceFacade.retrieveDatasetVersionByUrn(getServiceContextAdministrador(), datasetVersionUrn);
+
+        // Check original premises are true
+        assertNotNull(datasetVersionDto.getDateNextUpdate());
+        assertEquals(NextVersionTypeEnum.SCHEDULED_UPDATE, datasetVersionDto.getNextVersion());
+
+        // Update dataset version
+        datasetVersionDto.setNextVersion(NextVersionTypeEnum.NO_UPDATES);
+        DatasetVersionDto updatedDataset = statisticalResourcesServiceFacade.updateDatasetVersion(getServiceContextAdministrador(), datasetVersionDto);
+
+        // Check the result is the one that we expect
+        assertEquals(NextVersionTypeEnum.NO_UPDATES, updatedDataset.getNextVersion());
+        assertNull(updatedDataset.getDateNextUpdate());
     }
 
     @Test
