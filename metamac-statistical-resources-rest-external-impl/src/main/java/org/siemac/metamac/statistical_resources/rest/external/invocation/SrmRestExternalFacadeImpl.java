@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
-// TODO SRM: cambiar a API externa (METAMAC-1909)
 @Component("srmRestExternalFacade")
 public class SrmRestExternalFacadeImpl implements SrmRestExternalFacade {
 

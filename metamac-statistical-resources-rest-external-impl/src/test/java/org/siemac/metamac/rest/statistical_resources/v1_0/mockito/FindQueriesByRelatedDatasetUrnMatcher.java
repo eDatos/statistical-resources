@@ -11,6 +11,7 @@ import org.siemac.metamac.rest.common.test.mockito.ConditionalCriteriasMatcher;
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersionProperties;
+import org.siemac.metamac.statistical_resources.rest.external.StatisticalResourcesRestExternalConstants;
 
 public class FindQueriesByRelatedDatasetUrnMatcher extends ConditionalCriteriasMatcher {
 
@@ -31,10 +32,10 @@ public class FindQueriesByRelatedDatasetUrnMatcher extends ConditionalCriteriasM
         // default order
         expected.add(ConditionalCriteriaBuilder.criteriaFor(QueryVersion.class).orderBy(QueryVersionProperties.lifeCycleStatisticalResource().code()).ascending().buildSingle());
 
-        if (mockitoMockConfig.isExternalApi()) {
-            addConditionsForExternalApi(expected);
-        } else {
+        if (StatisticalResourcesRestExternalConstants.IS_INTERNAL_API) {
             addConditionsForInternalApi(expected);
+        } else {
+            addConditionsForExternalApi(expected);
         }
 
         // distinc root

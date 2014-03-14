@@ -17,6 +17,7 @@ import org.siemac.metamac.rest.statistical_resources.v1_0.domain.QueryCriteriaPr
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersionProperties;
+import org.siemac.metamac.statistical_resources.rest.external.StatisticalResourcesRestExternalConstants;
 import org.siemac.metamac.statistical_resources.rest.external.v1_0.mapper.base.BaseRest2DoMapperV10Impl;
 import org.springframework.stereotype.Component;
 
@@ -48,9 +49,7 @@ public class QueriesRest2DoMapperImpl extends BaseRest2DoMapperV10Impl implement
                 case DESCRIPTION:
                     return buildSculptorPropertyCriteria(QueryVersionProperties.lifeCycleStatisticalResource().description().texts().label(), PropertyTypeEnum.STRING, propertyRestriction);
                 case RELATED_DATASET_URN:
-                    // TODO Latest (METAMAC-1851) cambiar el codigo que se ejecuta en cada api
-                    boolean isInternalApi = false;
-                    if (isInternalApi) {
+                    if (StatisticalResourcesRestExternalConstants.IS_INTERNAL_API) {
                         return buildRelatedDatasetInternalProperty(propertyRestriction);
                     } else {
                         return buildRelatedDatasetExternalProperty(propertyRestriction);

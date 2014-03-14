@@ -154,13 +154,19 @@ public class RestDoMocks {
     public QueryVersion mockQueryVersion(String agencyID, String resourceID, String version) {
         QueryVersion target = mockQueryVersionBasic(agencyID, resourceID, version);
         mockLifeCycleStatisticalResource(agencyID, resourceID, version, target.getLifeCycleStatisticalResource());
-        target.setFixedDatasetVersion(mockDatasetVersion(agencyID, "dataset01", "01.000"));
+
+        DatasetVersion mockDatasetVersion = mockDatasetVersion(agencyID, "dataset01", "01.000");
+        Dataset mockDataset = mockDatasetVersion(agencyID, "dataset01", "01.000").getDataset();
+
+        target.setFixedDatasetVersion(mockDatasetVersion);
         target.getSelection().clear();
 
         target.setStatus(QueryStatusEnum.ACTIVE);
         if (QUERY_1_CODE.equals(resourceID)) {
             mockQueryVersionFixed(target);
         } else if (QUERY_2_CODE.equals(resourceID)) {
+            target.setDataset(mockDataset);
+            target.setFixedDatasetVersion(null);
             mockQueryVersionAutoincremental(target);
         } else if (QUERY_3_CODE.equals(resourceID)) {
             mockQueryVersionLatestData(target);

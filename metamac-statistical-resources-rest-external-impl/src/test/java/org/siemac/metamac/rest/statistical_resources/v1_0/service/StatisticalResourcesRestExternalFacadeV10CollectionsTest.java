@@ -65,7 +65,13 @@ public class StatisticalResourcesRestExternalFacadeV10CollectionsTest extends St
     }
     @Test
     public void testRetrieveCollectionJson() throws Exception {
-        // TODO testRetrieveCollectionJson. Crear el fichero .json con el resultado de la llamada a la api (idem xml) (METAMAC-1570)
+        String requestBase = getRetrieveCollectionUri(AGENCY_1, COLLECTION_1_CODE, null, null);
+        String[] requestUris = new String[]{requestBase + "?lang=es", requestBase + ".json?lang=es", requestBase + "?_type=json&lang=es"};
+        for (int i = 0; i < requestUris.length; i++) {
+            String requestUri = requestUris[i];
+            InputStream responseExpected = StatisticalResourcesRestExternalFacadeV10CollectionsTest.class.getResourceAsStream("/responses/collections/retrieveCollection.id1.json");
+            testRequestWithoutJaxbTransformation(requestUri, APPLICATION_JSON, Status.OK, responseExpected);
+        }
     }
 
     @Test

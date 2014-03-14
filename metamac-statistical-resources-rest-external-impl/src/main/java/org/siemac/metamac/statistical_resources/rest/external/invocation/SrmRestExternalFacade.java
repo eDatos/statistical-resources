@@ -6,7 +6,6 @@ import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Concept
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Concepts;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructure;
 
-// TODO SRM: cambiar a API externa (METAMAC-1909)
 public interface SrmRestExternalFacade {
 
     public DataStructure retrieveDataStructureByUrn(String urn);

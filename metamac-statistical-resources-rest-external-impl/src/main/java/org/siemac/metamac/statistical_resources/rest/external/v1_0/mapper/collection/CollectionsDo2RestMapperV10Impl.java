@@ -29,10 +29,12 @@ import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResour
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionRepository;
 import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
+import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.publication.domain.Cube;
 import org.siemac.metamac.statistical.resources.core.publication.domain.ElementLevel;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersionRepository;
+import org.siemac.metamac.statistical.resources.core.publication.utils.PublicationsUtils;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersionRepository;
 import org.siemac.metamac.statistical_resources.rest.external.StatisticalResourcesRestExternalConstants;
@@ -158,20 +160,47 @@ public class CollectionsDo2RestMapperV10Impl implements CollectionsDo2RestMapper
     }
 
     private Resource toCollectionReplaces(PublicationVersion source, List<String> selectedLanguages) throws MetamacException {
-        RelatedResource replaces = source.getSiemacMetadataStatisticalResource().getReplaces();
-        // TODO comprobar si puede ser visible en la api (validFrom, publicado...) (METAMAC-1851) 
+        RelatedResource replaces = null;
+
+        if (StatisticalResourcesRestExternalConstants.IS_INTERNAL_API) {
+            replaces = source.getSiemacMetadataStatisticalResource().getReplaces();
+        } else {
+            replaces = source.getSiemacMetadataStatisticalResource().getReplaces();
+            // Check if the publication used in "replaces" is published
+            if (replaces != null) {
+                String urn = replaces.getPublicationVersion().getSiemacMetadataStatisticalResource().getUrn();
+                try {
+                    publicationVersionRepository.retrieveByUrnPublished(urn);
+                } catch (MetamacException e) {
+                    if (!e.getExceptionItems().isEmpty() && e.getExceptionItems().iterator().next().getCode().equals(ServiceExceptionType.DATASET_VERSION_NOT_FOUND.getCode())) {
+                        return null;
+                    }
+                }
+            }
+        }
         return commonDo2RestMapper.toResource(replaces, selectedLanguages);
     }
 
     private Resource toCollectionIsReplacedBy(PublicationVersion source, List<String> selectedLanguages) throws MetamacException {
-        // TODO sustituir por retrieveIsReplacedByOnlyPublishedVersion (METAMAC-1851)
-        RelatedResourceResult relatedResourceReplacesBy = publicationVersionRepository.retrieveIsReplacedBy(source);
+        RelatedResourceResult relatedResourceReplacesBy = null;
+
+        if (StatisticalResourcesRestExternalConstants.IS_INTERNAL_API) {
+            relatedResourceReplacesBy = publicationVersionRepository.retrieveIsReplacedBy(source);
+        } else {
+            relatedResourceReplacesBy = publicationVersionRepository.retrieveIsReplacedByOnlyLastPublished(source);
+        }
         return toResource(relatedResourceReplacesBy, selectedLanguages);
     }
 
     private Resources toCollectionHasPart(PublicationVersion source, List<String> selectedLanguages) throws MetamacException {
-        // TODO comprobar si puede ser visible en la api (validFrom, publicado...) (METAMAC-1851)
-        return commonDo2RestMapper.toResources(source.getHasPart(), selectedLanguages);
+        List<RelatedResource> hasPart = null;
+
+        if (StatisticalResourcesRestExternalConstants.IS_INTERNAL_API) {
+            hasPart = PublicationsUtils.computeHasPart(source); // Is necessary to calculate the has part
+        } else {
+            hasPart = source.getHasPart(); // All has part resources are already published
+        }
+        return commonDo2RestMapper.toResources(hasPart, selectedLanguages);
     }
 
     private CollectionData toCollectionData(PublicationVersion source, List<String> selectedLanguages) throws MetamacException {
@@ -215,13 +244,25 @@ public class CollectionsDo2RestMapperV10Impl implements CollectionsDo2RestMapper
         Table target = new Table();
         target.setName(commonDo2RestMapper.toInternationalString(source.getNameableStatisticalResource().getTitle(), selectedLanguages));
         target.setDescription(commonDo2RestMapper.toInternationalString(source.getNameableStatisticalResource().getDescription(), selectedLanguages));
-        if (source.getDataset() != null) {
-            DatasetVersion dataset = datasetVersionRepository.retrieveLastVersion(source.getDatasetUrn()); // TODO retrieveLastPublishedVersion (METAMAC-1851)
-            target.setDataset(datasetsDo2RestMapper.toResourceAsLatest(dataset, selectedLanguages));
-        } else if (source.getQuery() != null) {
-            QueryVersion query = queryVersionRepository.retrieveLastVersion(source.getQueryUrn()); // TODO retrieveLastPublishedVersion (METAMAC-1851)
-            target.setQuery(queriesDo2RestMapper.toResource(query, selectedLanguages));
+
+        if (StatisticalResourcesRestExternalConstants.IS_INTERNAL_API) {
+            if (source.getDataset() != null) {
+                DatasetVersion dataset = datasetVersionRepository.retrieveLastVersion(source.getDatasetUrn());
+                target.setDataset(datasetsDo2RestMapper.toResourceAsLatest(dataset, selectedLanguages));
+            } else if (source.getQuery() != null) {
+                QueryVersion query = queryVersionRepository.retrieveLastVersion(source.getQueryUrn());
+                target.setQuery(queriesDo2RestMapper.toResource(query, selectedLanguages));
+            }
+        } else {
+            if (source.getDataset() != null) {
+                DatasetVersion dataset = datasetVersionRepository.retrieveLastPublishedVersion(source.getDatasetUrn());
+                target.setDataset(datasetsDo2RestMapper.toResourceAsLatest(dataset, selectedLanguages));
+            } else if (source.getQuery() != null) {
+                QueryVersion query = queryVersionRepository.retrieveLastPublishedVersion(source.getQueryUrn());
+                target.setQuery(queriesDo2RestMapper.toResource(query, selectedLanguages));
+            }
         }
+
         return target;
     }
 

@@ -66,7 +66,13 @@ public class StatisticalResourcesRestExternalFacadeV10DatasetsTest extends Stati
 
     @Test
     public void testRetrieveDatasetJson() throws Exception {
-        // TODO testRetrieveDatasetJson. Crear el fichero .json con el resultado de la llamada a la api (idem xml) (METAMAC-1570)
+        String requestBase = getRetrieveDatasetUri(AGENCY_1, DATASET_1_CODE, VERSION_1, null, null);
+        String[] requestUris = new String[]{requestBase + "?lang=es", requestBase + ".json?lang=es", requestBase + "?_type=json&lang=es"};
+        for (int i = 0; i < requestUris.length; i++) {
+            String requestUri = requestUris[i];
+            InputStream responseExpected = StatisticalResourcesRestExternalFacadeV10DatasetsTest.class.getResourceAsStream("/responses/datasets/retrieveDataset.id1.json");
+            testRequestWithoutJaxbTransformation(requestUri, APPLICATION_JSON, Status.OK, responseExpected);
+        }
     }
 
     @Test

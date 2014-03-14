@@ -114,8 +114,11 @@ public class QueriesDo2RestMapperV10Impl implements QueriesDo2RestMapperV10 {
         if (source.getFixedDatasetVersion() != null) {
             return source.getFixedDatasetVersion();
         } else {
-            // TODO cambiar por LastPublished (METAMAC-1851)
-            return datasetVersionRepository.retrieveLastVersion(source.getDataset().getIdentifiableStatisticalResource().getUrn());
+            if (StatisticalResourcesRestExternalConstants.IS_INTERNAL_API) {
+                return datasetVersionRepository.retrieveLastVersion(source.getDataset().getIdentifiableStatisticalResource().getUrn());
+            } else {
+                return datasetVersionRepository.retrieveLastPublishedVersion(source.getDataset().getIdentifiableStatisticalResource().getUrn());
+            }
         }
     }
 
@@ -186,8 +189,14 @@ public class QueriesDo2RestMapperV10Impl implements QueriesDo2RestMapperV10 {
     }
 
     private Resources toQueryIsPartOf(QueryVersion source, List<String> selectedLanguages) throws MetamacException {
-        // TODO sustituir por retrieveIsPartOfOnlyPublishedVersion (METAMAC-1851)
-        List<RelatedResourceResult> relatedResourceIsPartOf = queryVersionRepository.retrieveIsPartOf(source);
+        List<RelatedResourceResult> relatedResourceIsPartOf = null;
+
+        if (StatisticalResourcesRestExternalConstants.IS_INTERNAL_API) {
+            relatedResourceIsPartOf = queryVersionRepository.retrieveIsPartOf(source);
+        } else {
+            relatedResourceIsPartOf = queryVersionRepository.retrieveIsPartOfOnlyLastPublished(source);
+        }
+
         if (CollectionUtils.isEmpty(relatedResourceIsPartOf)) {
             return null;
         }

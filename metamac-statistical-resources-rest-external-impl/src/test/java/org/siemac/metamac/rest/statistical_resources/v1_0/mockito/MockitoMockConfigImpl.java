@@ -21,14 +21,4 @@ public class MockitoMockConfigImpl implements MockitoMockConfig {
         return applyArgumentMatcher;
     }
 
-    @Override
-    public void setExternalApi(boolean isExternalApi) {
-        this.isExternalApi = isExternalApi;
-    }
-
-    @Override
-    public boolean isExternalApi() {
-        return isExternalApi;
-    }
-
 }

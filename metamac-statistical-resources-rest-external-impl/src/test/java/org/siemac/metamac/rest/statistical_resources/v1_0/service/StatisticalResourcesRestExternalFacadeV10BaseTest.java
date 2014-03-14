@@ -1,7 +1,6 @@
 package org.siemac.metamac.rest.statistical_resources.v1_0.service;
 
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 import static org.siemac.metamac.rest.statistical_resources.constants.RestTestConstants.AGENCY_1;
@@ -24,6 +23,8 @@ import static org.siemac.metamac.rest.statistical_resources.constants.RestTestCo
 import static org.siemac.metamac.rest.statistical_resources.constants.RestTestConstants.NOT_EXISTS;
 import static org.siemac.metamac.rest.statistical_resources.constants.RestTestConstants.QUERY_1_CODE;
 import static org.siemac.metamac.rest.statistical_resources.constants.RestTestConstants.QUERY_2_CODE;
+import static org.siemac.metamac.rest.statistical_resources.constants.RestTestConstants.QUERY_3_CODE;
+import static org.siemac.metamac.rest.statistical_resources.constants.RestTestConstants.QUERY_4_CODE;
 import static org.siemac.metamac.rest.statistical_resources.constants.RestTestConstants.VERSION_1;
 import static org.siemac.metamac.rest.statistical_resources.constants.RestTestConstants.VERSION_2;
 
@@ -60,7 +61,6 @@ import org.siemac.metamac.rest.common.test.MetamacRestBaseTest;
 import org.siemac.metamac.rest.common.test.ServerResource;
 import org.siemac.metamac.rest.common_metadata.v1_0.domain.Configuration;
 import org.siemac.metamac.rest.constants.RestConstants;
-import org.siemac.metamac.rest.statistical_resources.v1_0.mockito.FindQueriesByRelatedDatasetUrnMatcher;
 import org.siemac.metamac.rest.statistical_resources.v1_0.mockito.MockitoMockConfig;
 import org.siemac.metamac.rest.structural_resources.v1_0.utils.CommonMetadataRestMocks;
 import org.siemac.metamac.rest.structural_resources.v1_0.utils.RestDoMocks;
@@ -85,6 +85,7 @@ import org.siemac.metamac.statistical.resources.core.publication.domain.Publicat
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersionRepository;
 import org.siemac.metamac.statistical.resources.core.publication.serviceapi.PublicationService;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
+import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersionProperties;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersionRepository;
 import org.siemac.metamac.statistical.resources.core.query.serviceapi.QueryService;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesPersistedDoMocks;
@@ -117,7 +118,6 @@ public abstract class StatisticalResourcesRestExternalFacadeV10BaseTest extends 
     private QueryVersionRepository            queryVersionRepository;
     private PublicationVersionRepository      publicationVersionRepository;
 
-    // TODO habrá que cambiar el mock cuando se consuma a la api externa (METAMAC-1909)
     private SrmRestInternalService            srmRestInternalService;
 
     private SrmRestExternalFacade             srmRestExternalFacade;
@@ -213,40 +213,41 @@ public abstract class StatisticalResourcesRestExternalFacadeV10BaseTest extends 
     }
 
     private void mockQueryVersionRepository() throws MetamacException {
-        when(queryVersionRepository.retrieveLastVersion(any(String.class))).thenAnswer(new Answer<QueryVersion>() { // TODO retrieveLastPublishedVersion (METAMAC-1851)
+        if (StatisticalResourcesRestExternalConstants.IS_INTERNAL_API) {
+            when(queryVersionRepository.retrieveLastVersion(any(String.class))).thenAnswer(new Answer<QueryVersion>() {
 
-                    @Override
-                    public QueryVersion answer(InvocationOnMock invocation) throws Throwable {
-                        String queryUrn = (String) invocation.getArguments()[0];
-                        if (StringUtils.isBlank(queryUrn)) {
-                            return null;
-                        }
-                        String[] queryUrnSplited = StatisticalResourcesUrnUtils.splitUrnQueryGlobal(queryUrn);
+                @Override
+                public QueryVersion answer(InvocationOnMock invocation) throws Throwable {
+                    return mockQueryVersionRepositoryRetrieveLastVersionAnswer(invocation);
+                }
 
-                        String agencyID = queryUrnSplited[0];
-                        String resourceID = queryUrnSplited[1];
-                        String version = VERSION_1;
-                        if (QUERY_2_CODE.equals(resourceID)) {
-                            return restDoMocks.mockQueryVersionGlobalDataset(agencyID, resourceID, version);
-                        } else {
-                            return restDoMocks.mockQueryVersion(agencyID, resourceID, version);
-                        }
-                    };
-                });
+            });
 
-        when(queryVersionRepository.retrieveIsPartOf(any(QueryVersion.class))).thenAnswer(new Answer<List<RelatedResourceResult>>() {
+            when(queryVersionRepository.retrieveIsPartOf(any(QueryVersion.class))).thenAnswer(new Answer<List<RelatedResourceResult>>() {
 
-            // TODO cambiar por retrieveIsPartOfOnlyPublishedVersion (METAMAC-1851)
+                @Override
+                public List<RelatedResourceResult> answer(InvocationOnMock invocation) throws Throwable {
+                    return mockQueryVersionRepositoryRetrieveIsPartOf();
+                };
+            });
+        } else {
+            // EXTERNAL
+            when(queryVersionRepository.retrieveLastPublishedVersion(any(String.class))).thenAnswer(new Answer<QueryVersion>() {
 
-            @Override
-            public List<RelatedResourceResult> answer(InvocationOnMock invocation) throws Throwable {
-                List<RelatedResourceResult> queries = new ArrayList<RelatedResourceResult>();
-                queries.add(restDoMocks.mockPublicationRelatedResourceResult("agency01", "isPartOf01", "01.000"));
-                queries.add(restDoMocks.mockPublicationRelatedResourceResult("agency01", "isPartOf02", "01.000"));
-                return queries;
-            };
-        });
+                @Override
+                public QueryVersion answer(InvocationOnMock invocation) throws Throwable {
+                    return mockQueryVersionRepositoryRetrieveLastVersionAnswer(invocation);
+                }
+            });
 
+            when(queryVersionRepository.retrieveIsPartOfOnlyLastPublished(any(QueryVersion.class))).thenAnswer(new Answer<List<RelatedResourceResult>>() {
+
+                @Override
+                public List<RelatedResourceResult> answer(InvocationOnMock invocation) throws Throwable {
+                    return mockQueryVersionRepositoryRetrieveIsPartOf();
+                };
+            });
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -276,6 +277,21 @@ public abstract class StatisticalResourcesRestExternalFacadeV10BaseTest extends 
                         publications.add(dataset);
                     }
                     return new PagedResult<PublicationVersion>(publications, 0, publications.size(), publications.size());
+                } else if (agencyID != null && resourceID != null) {
+                    // Retrieve one
+                    PublicationVersion dataset = null;
+                    if (NOT_EXISTS.equals(agencyID) || NOT_EXISTS.equals(resourceID)) {
+                        dataset = null;
+                    } else if (AGENCY_1.equals(agencyID) && COLLECTION_1_CODE.equals(resourceID)) {
+                        dataset = restDoMocks.mockPublicationVersion(agencyID, resourceID, VERSION_1);
+                    } else {
+                        fail();
+                    }
+                    List<PublicationVersion> publications = new ArrayList<PublicationVersion>();
+                    if (dataset != null) {
+                        publications.add(dataset);
+                    }
+                    return new PagedResult<PublicationVersion>(publications, 0, publications.size(), publications.size());
                 } else {
                     // any
                     List<PublicationVersion> publications = new ArrayList<PublicationVersion>();
@@ -288,91 +304,124 @@ public abstract class StatisticalResourcesRestExternalFacadeV10BaseTest extends 
             };
         });
     }
-
     private void mockDatasetVersionRepository() throws MetamacException {
+        if (StatisticalResourcesRestExternalConstants.IS_INTERNAL_API) {
+            when(datasetVersionRepository.retrieveLastVersion(any(String.class))).thenAnswer(new Answer<DatasetVersion>() {
 
-        when(datasetVersionRepository.retrieveLastVersion(any(String.class))).thenAnswer(new Answer<DatasetVersion>() { // TODO retrieveLastPublishedVersion (METAMAC-1851)
+                @Override
+                public DatasetVersion answer(InvocationOnMock invocation) throws Throwable {
+                    return mockDatasetVersionRepositoryRetrieveLastVersionAnswer(invocation);
+                };
+            });
+            when(datasetVersionRepository.retrieveIsRequiredBy(any(DatasetVersion.class))).thenAnswer(new Answer<List<RelatedResourceResult>>() {
 
-                    @Override
-                    public DatasetVersion answer(InvocationOnMock invocation) throws Throwable {
-                        String datasetUrn = (String) invocation.getArguments()[0];
-                        String[] datasetUrnSplited = StatisticalResourcesUrnUtils.splitUrnDatasetGlobal(datasetUrn);
-                        return restDoMocks.mockDatasetVersion(datasetUrnSplited[0], datasetUrnSplited[1], VERSION_1);
-                    };
-                });
-        when(datasetVersionRepository.retrieveIsRequiredBy(any(DatasetVersion.class))).thenAnswer(new Answer<List<RelatedResourceResult>>() {
+                @Override
+                public List<RelatedResourceResult> answer(InvocationOnMock invocation) throws Throwable {
+                    return mockDatasetVersionRepositoryRetrieveIsRequiredByAnswer();
+                };
+            });
 
-            // TODO cambiar por retrieveIsRequiredByOnlyPublishedVersion (METAMAC-1851)
+            when(datasetVersionRepository.retrieveIsReplacedByVersion(any(DatasetVersion.class))).thenAnswer(new Answer<RelatedResourceResult>() {
 
-            @Override
-            public List<RelatedResourceResult> answer(InvocationOnMock invocation) throws Throwable {
-                List<RelatedResourceResult> queries = new ArrayList<RelatedResourceResult>();
-                queries.add(restDoMocks.mockQueryRelatedResourceResult("agency01", "isRequiredBy01", "01.000"));
-                queries.add(restDoMocks.mockQueryRelatedResourceResult("agency02", "isRequiredBy02", "01.000"));
-                return queries;
-            };
-        });
+                @Override
+                public RelatedResourceResult answer(InvocationOnMock invocation) throws Throwable {
+                    return mockDatasetVersionRepositoryRetrieveIsReplaceByVersionAnswer(invocation);
+                };
+            });
 
-        when(datasetVersionRepository.retrieveIsReplacedByVersion(any(DatasetVersion.class))).thenAnswer(new Answer<RelatedResourceResult>() {
+            when(datasetVersionRepository.retrieveIsReplacedBy(any(DatasetVersion.class))).thenAnswer(new Answer<RelatedResourceResult>() {
 
-            // TODO retrieveIsReplacedByVersionOnlyPublishedVersion (METAMAC-1851)
+                @Override
+                public RelatedResourceResult answer(InvocationOnMock invocation) throws Throwable {
+                    return mockDatasetVersionRepositoryRetrieveIsReplacedByAnswer();
+                };
+            });
 
-            @Override
-            public RelatedResourceResult answer(InvocationOnMock invocation) throws Throwable {
-                DatasetVersion datasetVersion = (DatasetVersion) invocation.getArguments()[0];
-                return restDoMocks.mockDatasetRelatedResourceResult(datasetVersion.getSiemacMetadataStatisticalResource().getMaintainer().getCodeNested(), datasetVersion
-                        .getSiemacMetadataStatisticalResource().getCode(), "02.000");
-            };
-        });
+            when(datasetVersionRepository.retrieveIsPartOf(any(DatasetVersion.class))).thenAnswer(new Answer<List<RelatedResourceResult>>() {
 
-        when(datasetVersionRepository.retrieveIsReplacedBy(any(DatasetVersion.class))).thenAnswer(new Answer<RelatedResourceResult>() {
+                @Override
+                public List<RelatedResourceResult> answer(InvocationOnMock invocation) throws Throwable {
+                    return mockDatasetVersionRepositoryRetrieveIsPartOfAnswer();
+                };
+            });
+        } else {
+            // EXTERNAL
+            when(datasetVersionRepository.retrieveLastPublishedVersion(any(String.class))).thenAnswer(new Answer<DatasetVersion>() {
 
-            // TODO retrieveIsReplacedByOnlyPublishedVersion (METAMAC-1851)
+                @Override
+                public DatasetVersion answer(InvocationOnMock invocation) throws Throwable {
+                    return mockDatasetVersionRepositoryRetrieveLastVersionAnswer(invocation);
+                };
+            });
+            when(datasetVersionRepository.retrieveIsRequiredByOnlyLastPublished(any(DatasetVersion.class))).thenAnswer(new Answer<List<RelatedResourceResult>>() {
 
-            @Override
-            public RelatedResourceResult answer(InvocationOnMock invocation) throws Throwable {
-                return restDoMocks.mockDatasetRelatedResourceResult("agency01", "dataset99", "01.000");
-            };
-        });
+                @Override
+                public List<RelatedResourceResult> answer(InvocationOnMock invocation) throws Throwable {
+                    return mockDatasetVersionRepositoryRetrieveIsRequiredByAnswer();
+                };
+            });
 
-        when(datasetVersionRepository.retrieveIsPartOf(any(DatasetVersion.class))).thenAnswer(new Answer<List<RelatedResourceResult>>() {
+            when(datasetVersionRepository.retrieveIsReplacedByVersionOnlyLastPublished(any(DatasetVersion.class))).thenAnswer(new Answer<RelatedResourceResult>() {
 
-            // TODO cambiar por retrieveIsPartOfOnlyPublishedVersion (METAMAC-1851)
+                @Override
+                public RelatedResourceResult answer(InvocationOnMock invocation) throws Throwable {
+                    return mockDatasetVersionRepositoryRetrieveIsReplaceByVersionAnswer(invocation);
+                };
+            });
 
-            @Override
-            public List<RelatedResourceResult> answer(InvocationOnMock invocation) throws Throwable {
-                List<RelatedResourceResult> queries = new ArrayList<RelatedResourceResult>();
-                queries.add(restDoMocks.mockPublicationRelatedResourceResult("agency01", "isPartOf01", "01.000"));
-                queries.add(restDoMocks.mockPublicationRelatedResourceResult("agency01", "isPartOf02", "01.000"));
-                return queries;
-            };
-        });
+            when(datasetVersionRepository.retrieveIsReplacedByOnlyLastPublished(any(DatasetVersion.class))).thenAnswer(new Answer<RelatedResourceResult>() {
+
+                @Override
+                public RelatedResourceResult answer(InvocationOnMock invocation) throws Throwable {
+                    return mockDatasetVersionRepositoryRetrieveIsReplacedByAnswer();
+                };
+            });
+
+            when(datasetVersionRepository.retrieveIsPartOfOnlyLastPublished(any(DatasetVersion.class))).thenAnswer(new Answer<List<RelatedResourceResult>>() {
+
+                @Override
+                public List<RelatedResourceResult> answer(InvocationOnMock invocation) throws Throwable {
+                    return mockDatasetVersionRepositoryRetrieveIsPartOfAnswer();
+                };
+            });
+        }
 
     }
 
     private void mockPublicationVersionRepository() throws MetamacException {
-        when(publicationVersionRepository.retrieveLastVersion(any(String.class))).thenAnswer(new Answer<PublicationVersion>() { // TODO retrieveLastPublishedVersion (METAMAC-1851)
+        if (StatisticalResourcesRestExternalConstants.IS_INTERNAL_API) {
+            when(publicationVersionRepository.retrieveLastVersion(any(String.class))).thenAnswer(new Answer<PublicationVersion>() {
 
-                    @Override
-                    public PublicationVersion answer(InvocationOnMock invocation) throws Throwable {
-                        String publicationUrn = (String) invocation.getArguments()[0];
-                        if (StringUtils.isBlank(publicationUrn)) {
-                            return null;
-                        }
-                        String[] publicationUrnSplited = StatisticalResourcesUrnUtils.splitUrnPublicationGlobal(publicationUrn);
-                        return restDoMocks.mockPublicationVersion(publicationUrnSplited[0], publicationUrnSplited[1], VERSION_1);
-                    };
-                });
+                @Override
+                public PublicationVersion answer(InvocationOnMock invocation) throws Throwable {
+                    return mockPublicationVersionRepositoryRetrieveLastVersionAnswer(invocation);
+                };
+            });
 
-        when(publicationVersionRepository.retrieveIsReplacedBy(any(PublicationVersion.class))).thenAnswer(new Answer<RelatedResourceResult>() {
+            when(publicationVersionRepository.retrieveIsReplacedBy(any(PublicationVersion.class))).thenAnswer(new Answer<RelatedResourceResult>() {
 
-            // TODO retrieveIsReplacedByOnlyPublishedVersion (METAMAC-1851)
+                @Override
+                public RelatedResourceResult answer(InvocationOnMock invocation) throws Throwable {
+                    return mockPublicationVersionRepositoryRetrieveIsReplacedByAnswer();
+                };
+            });
+        } else {
+            when(publicationVersionRepository.retrieveLastPublishedVersion(any(String.class))).thenAnswer(new Answer<PublicationVersion>() {
 
-            @Override
-            public RelatedResourceResult answer(InvocationOnMock invocation) throws Throwable {
-                return restDoMocks.mockPublicationRelatedResourceResult("agency01", "collection99", "01.000");
-            };
-        });
+                @Override
+                public PublicationVersion answer(InvocationOnMock invocation) throws Throwable {
+                    return mockPublicationVersionRepositoryRetrieveLastVersionAnswer(invocation);
+                };
+            });
+
+            when(publicationVersionRepository.retrieveIsReplacedByOnlyLastPublished(any(PublicationVersion.class))).thenAnswer(new Answer<RelatedResourceResult>() {
+
+                @Override
+                public RelatedResourceResult answer(InvocationOnMock invocation) throws Throwable {
+                    return mockPublicationVersionRepositoryRetrieveIsReplacedByAnswer();
+                };
+            });
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -417,45 +466,60 @@ public abstract class StatisticalResourcesRestExternalFacadeV10BaseTest extends 
 
     @SuppressWarnings("unchecked")
     private void mockFindQueriesByCondition() throws MetamacException {
-        when(queryService.findQueryVersionsByCondition(any(ServiceContext.class), argThat(new FindQueriesByRelatedDatasetUrnMatcher()), any(PagingParameter.class))).thenAnswer(
-                new Answer<PagedResult<QueryVersion>>() {
+        // when(queryService.findQueryVersionsByCondition(any(ServiceContext.class), argThat(new FindQueriesByRelatedDatasetUrnMatcher()), any(PagingParameter.class))).thenAnswer(
+        when(queryService.findQueryVersionsByCondition(any(ServiceContext.class), any(List.class), any(PagingParameter.class))).thenAnswer(new Answer<PagedResult<QueryVersion>>() {
 
-                    @Override
-                    public org.fornax.cartridges.sculptor.framework.domain.PagedResult<QueryVersion> answer(InvocationOnMock invocation) throws Throwable {
-                        List<ConditionalCriteria> conditions = (List<ConditionalCriteria>) invocation.getArguments()[1];
+            @Override
+            public org.fornax.cartridges.sculptor.framework.domain.PagedResult<QueryVersion> answer(InvocationOnMock invocation) throws Throwable {
+                List<ConditionalCriteria> conditions = (List<ConditionalCriteria>) invocation.getArguments()[1];
 
-                        String agencyID = getAgencyIdFromConditionalCriteria(conditions);
-                        String resourceID = getResourceIdFromConditionalCriteria(conditions);
-                        String version = getVersionFromConditionalCriteria(conditions);
+                String agencyID = getAgencyIdFromConditionalCriteriaForQueryVersionProperties(conditions);
+                String resourceID = getResourceIdFromConditionalCriteriaForQueryVersionProperties(conditions);
+                String version = getVersionFromConditionalCriteriaForQueryVersionProperties(conditions);
 
-                        if (agencyID != null && resourceID != null && version != null) {
-                            // Retrieve one
-                            QueryVersion queryVersion = null;
-                            if (NOT_EXISTS.equals(agencyID) || NOT_EXISTS.equals(resourceID) || NOT_EXISTS.equals(version)) {
-                                queryVersion = null;
-                            } else if (AGENCY_1.equals(agencyID) && QUERY_1_CODE.equals(resourceID) && VERSION_1.equals(version)) {
-                                queryVersion = restDoMocks.mockQueryVersion(agencyID, resourceID, version);
-                            } else {
-                                fail();
-                            }
-                            List<QueryVersion> queries = new ArrayList<QueryVersion>();
-                            if (queryVersion != null) {
-                                queries.add(queryVersion);
-                            }
-                            return new PagedResult<QueryVersion>(queries, 0, queries.size(), queries.size());
-                        } else {
-                            // any
-                            List<QueryVersion> queries = new ArrayList<QueryVersion>();
-                            queries.add(restDoMocks.mockQueryVersion(AGENCY_1, QUERY_1_CODE, VERSION_1));
-                            queries.add(restDoMocks.mockQueryVersion(AGENCY_1, QUERY_1_CODE, VERSION_2));
-                            queries.add(restDoMocks.mockQueryVersion(AGENCY_2, QUERY_1_CODE, VERSION_1));
-                            queries.add(restDoMocks.mockQueryVersion(AGENCY_1, QUERY_2_CODE, VERSION_1));
-                            return new PagedResult<QueryVersion>(queries, queries.size(), queries.size(), queries.size(), queries.size() * 10, 0);
-                        }
-                    };
-                });
+                if (agencyID != null && resourceID != null && version != null) {
+                    // Retrieve one
+                    QueryVersion queryVersion = null;
+                    if (NOT_EXISTS.equals(agencyID) || NOT_EXISTS.equals(resourceID) || NOT_EXISTS.equals(version)) {
+                        queryVersion = null;
+                    } else if ((AGENCY_1.equals(agencyID) || AGENCY_2.equals(agencyID)) && (QUERY_1_CODE.equals(resourceID) || QUERY_2_CODE.equals(resourceID))) {
+                        queryVersion = restDoMocks.mockQueryVersion(agencyID, resourceID, version);
+                    } else {
+                        fail();
+                    }
+                    List<QueryVersion> queries = new ArrayList<QueryVersion>();
+                    if (queryVersion != null) {
+                        queries.add(queryVersion);
+                    }
+                    return new PagedResult<QueryVersion>(queries, 0, queries.size(), queries.size());
+                } else if (agencyID != null && resourceID != null) {
+                    // Retrieve one
+                    QueryVersion queryVersion = null;
+                    if (NOT_EXISTS.equals(agencyID) || NOT_EXISTS.equals(resourceID)) {
+                        queryVersion = null;
+                    } else if ((AGENCY_1.equals(agencyID) || AGENCY_2.equals(agencyID))
+                            && (QUERY_1_CODE.equals(resourceID) || QUERY_2_CODE.equals(resourceID) || QUERY_3_CODE.equals(resourceID) || QUERY_4_CODE.equals(resourceID))) {
+                        queryVersion = restDoMocks.mockQueryVersion(agencyID, resourceID, VERSION_1);
+                    } else {
+                        fail();
+                    }
+                    List<QueryVersion> queries = new ArrayList<QueryVersion>();
+                    if (queryVersion != null) {
+                        queries.add(queryVersion);
+                    }
+                    return new PagedResult<QueryVersion>(queries, 0, queries.size(), queries.size());
+                } else {
+                    // any
+                    List<QueryVersion> queries = new ArrayList<QueryVersion>();
+                    queries.add(restDoMocks.mockQueryVersion(AGENCY_1, QUERY_1_CODE, VERSION_1));
+                    queries.add(restDoMocks.mockQueryVersion(AGENCY_1, QUERY_1_CODE, VERSION_2));
+                    queries.add(restDoMocks.mockQueryVersion(AGENCY_2, QUERY_1_CODE, VERSION_1));
+                    queries.add(restDoMocks.mockQueryVersion(AGENCY_1, QUERY_2_CODE, VERSION_1));
+                    return new PagedResult<QueryVersion>(queries, queries.size(), queries.size(), queries.size(), queries.size() * 10, 0);
+                }
+            };
+        });
     }
-
     private void mockRetrieveDatasetVersionDimensionsIds() throws MetamacException {
         when(datasetService.retrieveDatasetVersionDimensionsIds(any(ServiceContext.class), any(String.class))).thenAnswer(new Answer<List<String>>() {
 
@@ -842,6 +906,27 @@ public abstract class StatisticalResourcesRestExternalFacadeV10BaseTest extends 
         return conditionalCriteria != null ? (String) conditionalCriteria.getFirstOperant() : null;
     }
 
+    private String getAgencyIdFromConditionalCriteriaForQueryVersionProperties(List<ConditionalCriteria> conditions) {
+        // can use QueryVersionProperties...
+        ConditionalCriteria conditionalCriteria = ConditionalCriteriaUtils.getConditionalCriteriaByPropertyName(conditions, Operator.Equal, QueryVersionProperties.lifeCycleStatisticalResource()
+                .maintainer().codeNested());
+        return conditionalCriteria != null ? (String) conditionalCriteria.getFirstOperant() : null;
+    }
+
+    private String getResourceIdFromConditionalCriteriaForQueryVersionProperties(List<ConditionalCriteria> conditions) {
+        // can use QueryVersionProperties...
+        ConditionalCriteria conditionalCriteria = ConditionalCriteriaUtils.getConditionalCriteriaByPropertyName(conditions, Operator.Equal, QueryVersionProperties.lifeCycleStatisticalResource()
+                .code());
+        return conditionalCriteria != null ? (String) conditionalCriteria.getFirstOperant() : null;
+    }
+
+    private String getVersionFromConditionalCriteriaForQueryVersionProperties(List<ConditionalCriteria> conditions) {
+        // can use QueryVersionProperties...
+        ConditionalCriteria conditionalCriteria = ConditionalCriteriaUtils.getConditionalCriteriaByPropertyName(conditions, Operator.Equal, QueryVersionProperties.lifeCycleStatisticalResource()
+                .versionLogic());
+        return conditionalCriteria != null ? (String) conditionalCriteria.getFirstOperant() : null;
+    }
+
     private void resetMocks() throws Exception {
         datasetService = applicationContext.getBean(DatasetService.class);
         reset(datasetService);
@@ -893,5 +978,72 @@ public abstract class StatisticalResourcesRestExternalFacadeV10BaseTest extends 
         mockTranslationService();
 
         mockRetrieveConfigurationById();
+    }
+
+    protected QueryVersion mockQueryVersionRepositoryRetrieveLastVersionAnswer(InvocationOnMock invocation) {
+        String queryUrn = (String) invocation.getArguments()[0];
+        if (StringUtils.isBlank(queryUrn)) {
+            return null;
+        }
+        String[] queryUrnSplited = StatisticalResourcesUrnUtils.splitUrnQueryGlobal(queryUrn);
+
+        String agencyID = queryUrnSplited[0];
+        String resourceID = queryUrnSplited[1];
+        String version = VERSION_1;
+        if (QUERY_2_CODE.equals(resourceID)) {
+            return restDoMocks.mockQueryVersionGlobalDataset(agencyID, resourceID, version);
+        } else {
+            return restDoMocks.mockQueryVersion(agencyID, resourceID, version);
+        }
+    };
+
+    protected List<RelatedResourceResult> mockQueryVersionRepositoryRetrieveIsPartOf() {
+        List<RelatedResourceResult> queries = new ArrayList<RelatedResourceResult>();
+        queries.add(restDoMocks.mockPublicationRelatedResourceResult("agency01", "isPartOf01", "01.000"));
+        queries.add(restDoMocks.mockPublicationRelatedResourceResult("agency01", "isPartOf02", "01.000"));
+        return queries;
+    }
+
+    protected DatasetVersion mockDatasetVersionRepositoryRetrieveLastVersionAnswer(InvocationOnMock invocation) {
+        String datasetUrn = (String) invocation.getArguments()[0];
+        String[] datasetUrnSplited = StatisticalResourcesUrnUtils.splitUrnDatasetGlobal(datasetUrn);
+        return restDoMocks.mockDatasetVersion(datasetUrnSplited[0], datasetUrnSplited[1], VERSION_1);
+    }
+
+    protected List<RelatedResourceResult> mockDatasetVersionRepositoryRetrieveIsRequiredByAnswer() {
+        List<RelatedResourceResult> queries = new ArrayList<RelatedResourceResult>();
+        queries.add(restDoMocks.mockQueryRelatedResourceResult("agency01", "isRequiredBy01", "01.000"));
+        queries.add(restDoMocks.mockQueryRelatedResourceResult("agency02", "isRequiredBy02", "01.000"));
+        return queries;
+    }
+
+    protected RelatedResourceResult mockDatasetVersionRepositoryRetrieveIsReplaceByVersionAnswer(InvocationOnMock invocation) {
+        DatasetVersion datasetVersion = (DatasetVersion) invocation.getArguments()[0];
+        return restDoMocks.mockDatasetRelatedResourceResult(datasetVersion.getSiemacMetadataStatisticalResource().getMaintainer().getCodeNested(), datasetVersion
+                .getSiemacMetadataStatisticalResource().getCode(), "02.000");
+    }
+
+    protected RelatedResourceResult mockDatasetVersionRepositoryRetrieveIsReplacedByAnswer() {
+        return restDoMocks.mockDatasetRelatedResourceResult("agency01", "dataset99", "01.000");
+    }
+
+    protected List<RelatedResourceResult> mockDatasetVersionRepositoryRetrieveIsPartOfAnswer() {
+        List<RelatedResourceResult> queries = new ArrayList<RelatedResourceResult>();
+        queries.add(restDoMocks.mockPublicationRelatedResourceResult("agency01", "isPartOf01", "01.000"));
+        queries.add(restDoMocks.mockPublicationRelatedResourceResult("agency01", "isPartOf02", "01.000"));
+        return queries;
+    }
+
+    protected PublicationVersion mockPublicationVersionRepositoryRetrieveLastVersionAnswer(InvocationOnMock invocation) {
+        String publicationUrn = (String) invocation.getArguments()[0];
+        if (StringUtils.isBlank(publicationUrn)) {
+            return null;
+        }
+        String[] publicationUrnSplited = StatisticalResourcesUrnUtils.splitUrnPublicationGlobal(publicationUrn);
+        return restDoMocks.mockPublicationVersion(publicationUrnSplited[0], publicationUrnSplited[1], VERSION_1);
+    }
+
+    protected RelatedResourceResult mockPublicationVersionRepositoryRetrieveIsReplacedByAnswer() {
+        return restDoMocks.mockPublicationRelatedResourceResult("agency01", "collection99", "01.000");
     }
 }

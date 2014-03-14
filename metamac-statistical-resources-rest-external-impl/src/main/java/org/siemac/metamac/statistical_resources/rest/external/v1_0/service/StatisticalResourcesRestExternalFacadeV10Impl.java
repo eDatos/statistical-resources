@@ -96,13 +96,13 @@ public class StatisticalResourcesRestExternalFacadeV10Impl implements Statistica
 
     @Override
     public Collections findCollections(String query, String orderBy, String limit, String offset, List<String> lang) {
-        return findCollectionsCommon(null, null, null, query, orderBy, limit, offset, lang);
+        return findCollectionsCommon(null, null, query, orderBy, limit, offset, lang);
     }
 
     @Override
     public Collections findCollections(String agencyID, String query, String orderBy, String limit, String offset, List<String> lang) {
         checkParameterNotWildcardAll(StatisticalResourcesRestExternalConstants.PARAMETER_AGENCY_ID, agencyID);
-        return findCollectionsCommon(agencyID, null, null, query, orderBy, limit, offset, lang);
+        return findCollectionsCommon(agencyID, null, query, orderBy, limit, offset, lang);
     }
 
     @Override
@@ -161,7 +161,7 @@ public class StatisticalResourcesRestExternalFacadeV10Impl implements Statistica
         }
     }
 
-    private Collections findCollectionsCommon(String agencyID, String resourceID, String version, String query, String orderBy, String limit, String offset, List<String> lang) {
+    private Collections findCollectionsCommon(String agencyID, String resourceID, String query, String orderBy, String limit, String offset, List<String> lang) {
         try {
             SculptorCriteria sculptorCriteria = collectionsRest2DoMapper.getCollectionCriteriaMapper().restCriteriaToSculptorCriteria(query, orderBy, limit, offset);
 
