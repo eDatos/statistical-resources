@@ -52,6 +52,15 @@ public class PublicationVersionRepositoryTest extends StatisticalResourcesBaseTe
         assertEqualsPublicationVersion(publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_01_BASIC_NAME), actual);
     }
 
+    @Override
+    @Test
+    @MetamacMock({PUBLICATION_VERSION_30_V1_PUBLISHED_FOR_PUBLICATION_06_NAME})
+    public void testRetrieveByUrnPublished() throws Exception {
+        PublicationVersion actual = publicationVersionRepository.retrieveByUrnPublished(publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_30_V1_PUBLISHED_FOR_PUBLICATION_06_NAME)
+                .getSiemacMetadataStatisticalResource().getUrn());
+        assertEqualsPublicationVersion(publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_30_V1_PUBLISHED_FOR_PUBLICATION_06_NAME), actual);
+    }
+
     @Test
     public void testRetrieveByUrnNotFound() throws Exception {
         expectedMetamacException(new MetamacException(ServiceExceptionType.PUBLICATION_VERSION_NOT_FOUND, URN_NOT_EXISTS));
@@ -172,4 +181,5 @@ public class PublicationVersionRepositoryTest extends StatisticalResourcesBaseTe
         RelatedResourceResult resource = publicationVersionRepository.retrieveIsReplacedByOnlyLastPublished(publishedPublication);
         assertNull(resource);
     }
+
 }

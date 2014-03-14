@@ -58,6 +58,35 @@ public class PublicationVersionRepositoryImpl extends PublicationVersionReposito
         return result.get(0);
     }
 
+    @SuppressWarnings("unchecked")
+    @Override
+    public PublicationVersion retrieveByUrnPublished(String urn) throws MetamacException {
+        // Prepare criteria
+        Date now = new DateTime().toDate();
+        // @formatter:off
+        List<ConditionalCriteria> condition = criteriaFor(PublicationVersion.class)
+            .withProperty(PublicationVersionProperties.siemacMetadataStatisticalResource().urn()).eq(urn)
+            .and()
+            .withProperty(PublicationVersionProperties.siemacMetadataStatisticalResource().procStatus()).eq(ProcStatusEnum.PUBLISHED)
+            .and()
+            .withProperty(CriteriaUtils.getDatetimeLeafPropertyEmbedded(PublicationVersionProperties.siemacMetadataStatisticalResource().validFrom(), PublicationVersion.class)).lessThanOrEqual(now)
+            .distinctRoot().build();
+        // @formatter:on
+
+        // Find
+        List<PublicationVersion> result = findByCondition(condition);
+
+        // Check for unique result and return
+        if (result.size() == 0) {
+            throw new MetamacException(ServiceExceptionType.PUBLICATION_VERSION_NOT_FOUND, urn);
+        } else if (result.size() > 1) {
+            // Exists a database constraint that makes URN unique
+            throw new MetamacException(ServiceExceptionType.UNKNOWN, "More than one publication with urn " + urn);
+        }
+
+        return result.get(0);
+    }
+
     @Override
     public PublicationVersion retrieveLastVersion(String publicationUrn) throws MetamacException {
 

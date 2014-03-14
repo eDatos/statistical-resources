@@ -113,6 +113,7 @@ Application PublicationsStatisticalResources {
 				findByCondition;
 				findByCondition(PagingParameter pagingParameter);
 				@PublicationVersion retrieveByUrn(String urn) throws MetamacException;
+				@PublicationVersion retrieveByUrnPublished(String urn) throws MetamacException;
 				@PublicationVersion retrieveLastVersion(String publicationUrn) throws MetamacException;
 				@PublicationVersion retrieveLastPublishedVersion(String publicationUrn) throws MetamacException;
 				@PublicationVersion retrieveByVersion(Long statisticalResourceId, String versionLogic) throws MetamacException;

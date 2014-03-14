@@ -1,24 +1,15 @@
 package org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.publication;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.core.common.util.GeneratorUrnUtils;
-import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResource;
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResourceResult;
-import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionRepository;
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
-import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
 import org.siemac.metamac.statistical.resources.core.enume.utils.ProcStatusEnumUtils;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
@@ -29,7 +20,7 @@ import org.siemac.metamac.statistical.resources.core.publication.domain.ElementL
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersionRepository;
 import org.siemac.metamac.statistical.resources.core.publication.utils.PublicationVersioningCopyUtils;
-import org.siemac.metamac.statistical.resources.core.query.domain.Query;
+import org.siemac.metamac.statistical.resources.core.publication.utils.PublicationsUtils;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -105,28 +96,7 @@ public class PublicationLifecycleServiceImpl extends LifecycleTemplateService<Pu
     protected void applySendToPublishedCurrentResource(ServiceContext ctx, PublicationVersion resource, PublicationVersion previousResource) throws MetamacException {
         resource.setFormatExtentResources(resource.getChildrenAllLevels().size());
         resource.getHasPart().clear();
-        resource.getHasPart().addAll(computeHasPart(resource));
-    }
-
-    private List<RelatedResource> computeHasPart(PublicationVersion resource) {
-        Map<String, Dataset> datasetsByUrn = new HashMap<String, Dataset>();
-        Map<String, Query> queriesByUrn = new HashMap<String, Query>();
-
-        for (ElementLevel elementLevel : resource.getChildrenAllLevels()) {
-            if (elementLevel.isCube()) {
-                Cube cube = elementLevel.getCube();
-                if (cube.getDataset() != null) {
-                    datasetsByUrn.put(cube.getDatasetUrn(), cube.getDataset());
-                } else if (cube.getQuery() != null) {
-                    queriesByUrn.put(cube.getQueryUrn(), cube.getQuery());
-                }
-            }
-        }
-
-        List<RelatedResource> resources = new ArrayList<RelatedResource>();
-        resources.addAll(buildRelatedResourcesForDatasets(datasetsByUrn.values()));
-        resources.addAll(buildRelatedResourcesForQueries(queriesByUrn.values()));
-        return resources;
+        resource.getHasPart().addAll(PublicationsUtils.computeHasPart(resource));
     }
 
     @Override
@@ -311,33 +281,6 @@ public class PublicationLifecycleServiceImpl extends LifecycleTemplateService<Pu
     @Override
     protected String getResourceUrn(PublicationVersion resource) {
         return resource.getSiemacMetadataStatisticalResource().getUrn();
-    }
-
-    private Collection<RelatedResource> buildRelatedResourcesForQueries(Collection<Query> queries) {
-        Set<RelatedResource> resources = new HashSet<RelatedResource>();
-        for (Query query : queries) {
-            resources.add(buildRelatedResourceForQuery(query));
-        }
-        return resources;
-    }
-    private RelatedResource buildRelatedResourceForQuery(Query query) {
-        RelatedResource resource = new RelatedResource(TypeRelatedResourceEnum.QUERY);
-        resource.setQuery(query);
-        return resource;
-    }
-
-    private Collection<RelatedResource> buildRelatedResourcesForDatasets(Collection<Dataset> datasets) {
-        Set<RelatedResource> resources = new HashSet<RelatedResource>();
-        for (Dataset dataset : datasets) {
-            resources.add(buildRelatedResourceForDataset(dataset));
-        }
-        return resources;
-    }
-
-    private RelatedResource buildRelatedResourceForDataset(Dataset dataset) {
-        RelatedResource resource = new RelatedResource(TypeRelatedResourceEnum.DATASET);
-        resource.setDataset(dataset);
-        return resource;
     }
 
 }
