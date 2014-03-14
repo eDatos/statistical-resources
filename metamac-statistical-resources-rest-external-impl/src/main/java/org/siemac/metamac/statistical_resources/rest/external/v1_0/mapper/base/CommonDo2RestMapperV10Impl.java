@@ -219,7 +219,7 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
         target.setVersionRationaleTypes(toVersionRationaleTypes(source.getVersionRationaleTypes(), selectedLanguages));
         target.setVersionRationale(toInternationalString(source.getVersionRationale(), selectedLanguages));
         target.setValidFrom(toDate(source.getValidFrom()));
-        target.setValidTo(toDate(source.getValidTo()));
+        target.setValidTo(toDate(StatisticalResourcesRestExternalUtils.isDateAfterNowSetNull(source.getValidTo())));
     }
 
     @Override

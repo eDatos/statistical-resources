@@ -110,7 +110,13 @@ public class StatisticalResourcesRestExternalFacadeV10QueriesTest extends Statis
 
     @Test
     public void testRetrieveQueryJson() throws Exception {
-        // TODO testRetrieveQueryJson. Crear el fichero .json con el resultado de la llamada a la api (idem xml) (METAMAC-1570)
+        String requestBase = getRetrieveQueryUri(AGENCY_1, QUERY_1_CODE, null, null);
+        String[] requestUris = new String[]{requestBase + "?lang=es", requestBase + ".json?lang=es", requestBase + "?_type=json&lang=es"};
+        for (int i = 0; i < requestUris.length; i++) {
+            String requestUri = requestUris[i];
+            InputStream responseExpected = StatisticalResourcesRestExternalFacadeV10QueriesTest.class.getResourceAsStream("/responses/queries/retrieveQuery.id1.json");
+            testRequestWithoutJaxbTransformation(requestUri, APPLICATION_JSON, Status.OK, responseExpected);
+        }
     }
 
     @Test

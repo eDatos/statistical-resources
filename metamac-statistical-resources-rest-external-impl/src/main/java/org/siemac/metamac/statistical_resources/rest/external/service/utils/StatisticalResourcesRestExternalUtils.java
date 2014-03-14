@@ -11,6 +11,7 @@ import java.util.regex.Pattern;
 import javax.ws.rs.core.Response.Status;
 
 import org.apache.commons.lang3.StringUtils;
+import org.joda.time.DateTime;
 import org.siemac.metamac.rest.exception.RestCommonServiceExceptionType;
 import org.siemac.metamac.rest.exception.RestException;
 import org.siemac.metamac.rest.exception.utils.RestExceptionUtils;
@@ -75,5 +76,13 @@ public class StatisticalResourcesRestExternalUtils {
             return null;
         }
         return patternDataSeparator.matcher(value).replaceAll("\\\\ | \\\\");
+    }
+
+    public static DateTime isDateAfterNowSetNull(DateTime checkValidTo) {
+        if (checkValidTo == null || checkValidTo.isAfterNow()) {
+            return null;
+        } else {
+            return checkValidTo;
+        }
     }
 }
