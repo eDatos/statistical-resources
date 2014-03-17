@@ -154,7 +154,11 @@ public abstract class StatisticalResourcesRestExternalFacadeV10BaseTest extends 
     @Before
     public void setUp() throws Exception {
         StatisticalResourcesConfiguration configurationService = applicationContext.getBean(StatisticalResourcesConfiguration.class);
-        apiEndpointv10 = configurationService.retrieveStatisticalResourcesExternalApiUrlBase() + "/v1.0";
+        if (StatisticalResourcesRestExternalConstants.IS_INTERNAL_API) {
+            apiEndpointv10 = configurationService.retrieveStatisticalResourcesInternalApiUrlBase() + "/v1.0";
+        } else {
+            apiEndpointv10 = configurationService.retrieveStatisticalResourcesExternalApiUrlBase() + "/v1.0";
+        }
 
         resetMocks();
     }
