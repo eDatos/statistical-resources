@@ -223,7 +223,6 @@ public class TaskServiceImpl extends TaskServiceImplBase {
         return recoveryImportJobKey.getName();
     }
 
-    // @Override
     @Override
     public synchronized String planifyDuplicationDataset(ServiceContext ctx, TaskInfoDataset taskInfoDataset, String newDatasetId) throws MetamacException {
         // Validation
@@ -323,11 +322,14 @@ public class TaskServiceImpl extends TaskServiceImplBase {
             }
 
             // Delete failed entry
+            logger.info("Deleting failed task starting");
             getTaskRepository().delete(task);
+            logger.info("Deleting failed task finished");
         } catch (ApplicationException e) {
             if (task != null && DatasetRepositoryExceptionCodeEnum.DATASET_NOT_EXISTS.name().equals(e.getErrorCode())) {
                 getTaskRepository().delete(task);
             }
+            logger.error("Error while perform a recovery in dataset", e);
         } catch (Exception e) {
             logger.error("Error while perform a recovery in dataset", e);
         }
