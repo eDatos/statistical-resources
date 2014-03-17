@@ -16,5 +16,9 @@
     <bean id="commonMetadataRestExternalService" class="org.mockito.Mockito" factory-method="mock">
         <constructor-arg value="org.siemac.metamac.statistical.resources.core.invocation.service.CommonMetadataRestExternalService" />
     </bean>
+    
+    <bean id="noticesRestInternalService" class="org.mockito.Mockito" factory-method="mock">
+        <constructor-arg value="org.siemac.metamac.statistical.resources.core.invocation.service.CommonMetadataRestExternalService" />
+    </bean>
 
 </beans>
