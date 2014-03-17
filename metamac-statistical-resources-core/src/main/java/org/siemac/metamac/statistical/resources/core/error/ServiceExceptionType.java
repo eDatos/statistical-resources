@@ -133,4 +133,10 @@ public class ServiceExceptionType extends CommonServiceExceptionType {
 
     public static final CommonServiceExceptionType VALIDATION_NONOBSLEVEL_MANDATORY_ATTR_NOT_FOUND                          = create("exception.resources.dataset.validation.nonobslevel_mandatory_attribute_not_found");
 
+    // Notices
+    public static final CommonServiceExceptionType DUPLICATION_DATASET_JOB_ERROR                                            = create("notice_message.resources.exception.duplication_dataset_job.fails");
+    public static final CommonServiceExceptionType DUPLICATION_DATASET_JOB_ERROR_AND_CANT_MARK_AS_ERROR                     = create("notice_message.resources.exception.duplication_dataset_job.fails_and_cant_mark_as_error");
+    public static final CommonServiceExceptionType IMPORT_DATASET_JOB_ERROR                                                 = create("notice_message.resources.exception.import_dataset_job.fails");
+    public static final CommonServiceExceptionType IMPORT_DATASET_JOB_ERROR_AND_CANT_MARK_AS_ERROR                          = create("notice_message.resources.exception.import_dataset_job.fails_and_cant_mark_as_error");
+
 }
