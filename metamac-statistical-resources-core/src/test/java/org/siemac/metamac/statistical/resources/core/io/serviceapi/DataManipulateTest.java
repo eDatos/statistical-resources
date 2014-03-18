@@ -136,7 +136,7 @@ public class DataManipulateTest extends StatisticalResourcesBaseTest {
     @Test
     public void testImportSdmx21Datasource() throws Exception {
         // New Transaction: Because the job needs persisted data
-        createDatasetRepository("TEST_DATA_STR_ECB_EXR_RG", URN_DSD_ECB_EXR_RG);
+        createDatasetRepository("TESTDATA_STR_ECB_EXR_RG", URN_DSD_ECB_EXR_RG);
         final TransactionTemplate tt = new TransactionTemplate(transactionManager);
         tt.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
         tt.execute(new TransactionCallbackWithoutResult() {
@@ -147,7 +147,7 @@ public class DataManipulateTest extends StatisticalResourcesBaseTest {
 
                     TaskInfoDataset taskInfoDataset = new TaskInfoDataset();
                     taskInfoDataset.setDataStructureUrn(URN_DSD_ECB_EXR_RG);
-                    taskInfoDataset.setDatasetVersionId("TEST_DATA_STR_ECB_EXR_RG");
+                    taskInfoDataset.setDatasetVersionId("TESTDATA_STR_ECB_EXR_RG");
 
                     // File 01
                     {
@@ -181,7 +181,7 @@ public class DataManipulateTest extends StatisticalResourcesBaseTest {
         // Wait until the job is finished
         waitUntilJobFinished(true);
 
-        DatasetRepositoryDto datasetRepositoryDto = datasetRepositoriesServiceFacade.retrieveDatasetRepository("TEST_DATA_STR_ECB_EXR_RG");
+        DatasetRepositoryDto datasetRepositoryDto = datasetRepositoriesServiceFacade.retrieveDatasetRepository("TESTDATA_STR_ECB_EXR_RG");
 
         assertNotNull(datasetRepositoryDto);
     }
@@ -189,7 +189,7 @@ public class DataManipulateTest extends StatisticalResourcesBaseTest {
     @Test
     public void testImportSdmx21DatasourceWithTranslation() throws Exception {
         // New Transaction: Because the job needs persisted data
-        createDatasetRepository("TEST_DATA_STR_ECB_EXR_RG", URN_DSD_ECB_EXR_RG);
+        createDatasetRepository("TESTDATA_STR_ECB_EXR_RG", URN_DSD_ECB_EXR_RG);
         final TransactionTemplate tt = new TransactionTemplate(transactionManager);
         tt.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
         tt.execute(new TransactionCallbackWithoutResult() {
@@ -200,7 +200,7 @@ public class DataManipulateTest extends StatisticalResourcesBaseTest {
 
                     TaskInfoDataset taskInfoDataset = new TaskInfoDataset();
                     taskInfoDataset.setDataStructureUrn(URN_DSD_ECB_EXR_RG);
-                    taskInfoDataset.setDatasetVersionId("TEST_DATA_STR_ECB_EXR_RG");
+                    taskInfoDataset.setDatasetVersionId("TESTDATA_STR_ECB_EXR_RG");
 
                     {
                         AlternativeEnumeratedRepresentation alternative = new AlternativeEnumeratedRepresentation();
@@ -239,7 +239,7 @@ public class DataManipulateTest extends StatisticalResourcesBaseTest {
         // Wait until the job is finished
         waitUntilJobFinished(true);
 
-        DatasetRepositoryDto datasetRepositoryDto = datasetRepositoriesServiceFacade.retrieveDatasetRepository("TEST_DATA_STR_ECB_EXR_RG");
+        DatasetRepositoryDto datasetRepositoryDto = datasetRepositoriesServiceFacade.retrieveDatasetRepository("TESTDATA_STR_ECB_EXR_RG");
 
         assertNotNull(datasetRepositoryDto);
     }
@@ -247,7 +247,7 @@ public class DataManipulateTest extends StatisticalResourcesBaseTest {
     @Test
     public void testImportSdmx21Datasource_FAIL_WITH_RECOVERY() throws Exception {
         // New Transaction: Because the job needs persisted data
-        createDatasetRepository("TEST_DATA_STR_ECB_EXR_RG", URN_DSD_ECB_EXR_RG);
+        createDatasetRepository("TESTDATA_STR_ECB_EXR_RG", URN_DSD_ECB_EXR_RG);
         final TransactionTemplate tt = new TransactionTemplate(transactionManager);
         tt.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
         tt.execute(new TransactionCallbackWithoutResult() {
@@ -258,7 +258,7 @@ public class DataManipulateTest extends StatisticalResourcesBaseTest {
 
                     TaskInfoDataset taskInfoDataset = new TaskInfoDataset();
                     taskInfoDataset.setDataStructureUrn(URN_DSD_ECB_EXR_RG);
-                    taskInfoDataset.setDatasetVersionId("TEST_DATA_STR_ECB_EXR_RG");
+                    taskInfoDataset.setDatasetVersionId("TESTDATA_STR_ECB_EXR_RG");
 
                     // File 01
                     {
@@ -293,7 +293,7 @@ public class DataManipulateTest extends StatisticalResourcesBaseTest {
         waitUntilJobFinished(true);
         Thread.sleep(15 * 1000);
 
-        DatasetRepositoryDto datasetRepositoryDto = datasetRepositoriesServiceFacade.retrieveDatasetRepository("TEST_DATA_STR_ECB_EXR_RG");
+        DatasetRepositoryDto datasetRepositoryDto = datasetRepositoriesServiceFacade.retrieveDatasetRepository("TESTDATA_STR_ECB_EXR_RG");
         assertNotNull(datasetRepositoryDto);
 
         waitUntilJobFinished(false);
@@ -308,7 +308,7 @@ public class DataManipulateTest extends StatisticalResourcesBaseTest {
         // DSD
         Mockito.when(srmRestInternalService.retrieveDsdByUrn(Mockito.anyString())).thenReturn(Mocks.mock_DSD_ECB_EXR_RG_for_PX());
 
-        createDatasetRepository("TEST_DATA_STR_ECB_EXR_RG", URN_DSD_ECB_EXR_RG);
+        createDatasetRepository("TESTDATA_STR_ECB_EXR_RG", URN_DSD_ECB_EXR_RG);
 
         // New Transaction: Because the job needs persisted data
         final TransactionTemplate tt = new TransactionTemplate(transactionManager);
@@ -321,7 +321,7 @@ public class DataManipulateTest extends StatisticalResourcesBaseTest {
 
                     TaskInfoDataset taskInfoDataset = new TaskInfoDataset();
                     taskInfoDataset.setDataStructureUrn(URN_DSD_ECB_EXR_RG);
-                    taskInfoDataset.setDatasetVersionId("TEST_DATA_STR_ECB_EXR_RG");
+                    taskInfoDataset.setDatasetVersionId("TESTDATA_STR_ECB_EXR_RG");
 
                     // File 01
                     {
@@ -346,7 +346,7 @@ public class DataManipulateTest extends StatisticalResourcesBaseTest {
         // Wait until the job is finished
         waitUntilJobFinished(true);
 
-        DatasetRepositoryDto datasetRepositoryDto = datasetRepositoriesServiceFacade.retrieveDatasetRepository("TEST_DATA_STR_ECB_EXR_RG");
+        DatasetRepositoryDto datasetRepositoryDto = datasetRepositoriesServiceFacade.retrieveDatasetRepository("TESTDATA_STR_ECB_EXR_RG");
 
         assertNotNull(datasetRepositoryDto);
     }
@@ -354,7 +354,7 @@ public class DataManipulateTest extends StatisticalResourcesBaseTest {
     @Test
     public void testImportCsvDatasource() throws Exception {
 
-        createDatasetRepository("TEST_DATA_STR_ECB_EXR_RG", URN_DSD_ECB_EXR_RG);
+        createDatasetRepository("TESTDATA_STR_ECB_EXR_RG", URN_DSD_ECB_EXR_RG);
 
         // New Transaction: Because the job needs persisted data
         final TransactionTemplate tt = new TransactionTemplate(transactionManager);
@@ -367,7 +367,7 @@ public class DataManipulateTest extends StatisticalResourcesBaseTest {
 
                     TaskInfoDataset taskInfoDataset = new TaskInfoDataset();
                     taskInfoDataset.setDataStructureUrn(URN_DSD_ECB_EXR_RG);
-                    taskInfoDataset.setDatasetVersionId("TEST_DATA_STR_ECB_EXR_RG");
+                    taskInfoDataset.setDatasetVersionId("TESTDATA_STR_ECB_EXR_RG");
 
                     // File 01
                     {
@@ -392,7 +392,7 @@ public class DataManipulateTest extends StatisticalResourcesBaseTest {
         // Wait until the job is finished
         waitUntilJobFinished(true);
 
-        DatasetRepositoryDto datasetRepositoryDto = datasetRepositoriesServiceFacade.retrieveDatasetRepository("TEST_DATA_STR_ECB_EXR_RG");
+        DatasetRepositoryDto datasetRepositoryDto = datasetRepositoriesServiceFacade.retrieveDatasetRepository("TESTDATA_STR_ECB_EXR_RG");
 
         assertNotNull(datasetRepositoryDto);
     }
@@ -401,7 +401,7 @@ public class DataManipulateTest extends StatisticalResourcesBaseTest {
     public void testDuplicateDatasource() throws Exception {
         // New Transaction: Because the job needs persisted data
 
-        createDatasetRepository("TEST_DATA_STR_ECB_EXR_RG", URN_DSD_ECB_EXR_RG);
+        createDatasetRepository("TESTDATA_STR_ECB_EXR_RG", URN_DSD_ECB_EXR_RG);
 
         final TransactionTemplate tt = new TransactionTemplate(transactionManager);
         tt.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
@@ -413,7 +413,7 @@ public class DataManipulateTest extends StatisticalResourcesBaseTest {
 
                     TaskInfoDataset taskInfoDataset = new TaskInfoDataset();
                     taskInfoDataset.setDataStructureUrn(URN_DSD_ECB_EXR_RG);
-                    taskInfoDataset.setDatasetVersionId("TEST_DATA_STR_ECB_EXR_RG");
+                    taskInfoDataset.setDatasetVersionId("TESTDATA_STR_ECB_EXR_RG");
 
                     // File 01
                     {
@@ -449,9 +449,9 @@ public class DataManipulateTest extends StatisticalResourcesBaseTest {
 
                     TaskInfoDataset taskInfoDataset = new TaskInfoDataset();
                     taskInfoDataset.setDataStructureUrn(URN_DSD_ECB_EXR_RG);
-                    taskInfoDataset.setDatasetVersionId("TEST_DATA_STR_ECB_EXR_RG");
+                    taskInfoDataset.setDatasetVersionId("TESTDATA_STR_ECB_EXR_RG");
 
-                    jobKey = taskService.planifyDuplicationDataset(getServiceContextWithoutPrincipal(), taskInfoDataset, "TEST_DATA_STR_ECB_EXR_RG_NEW");
+                    jobKey = taskService.planifyDuplicationDataset(getServiceContextWithoutPrincipal(), taskInfoDataset, "TESTDATA_STR_ECB_EXR_RG_NEW");
 
                 } catch (MetamacException e) {
                     e.printStackTrace();
@@ -463,7 +463,7 @@ public class DataManipulateTest extends StatisticalResourcesBaseTest {
         // Wait until the job is finished
         waitUntilJobFinished(true);
 
-        DatasetRepositoryDto datasetRepositoryDto = datasetRepositoriesServiceFacade.retrieveDatasetRepository("TEST_DATA_STR_ECB_EXR_RG_NEW");
+        DatasetRepositoryDto datasetRepositoryDto = datasetRepositoriesServiceFacade.retrieveDatasetRepository("TESTDATA_STR_ECB_EXR_RG_NEW");
 
         assertNotNull(datasetRepositoryDto);
     }
@@ -471,7 +471,7 @@ public class DataManipulateTest extends StatisticalResourcesBaseTest {
     private DatasetRepositoryDto createDatasetRepository(String datasetId, String dsdUrn) throws Exception {
         DatasetRepositoryDto datasetRepositoryDto = new DatasetRepositoryDto();
         datasetRepositoryDto.setDatasetId(datasetId);
-        datasetRepositoryDto.setTableName("TEST_DATA_" + RandomStringUtils.randomAlphabetic(10));
+        datasetRepositoryDto.setTableName("DATA_" + RandomStringUtils.randomAlphabetic(10));
 
         DataStructure dsd = srmRestInternalService.retrieveDsdByUrn(dsdUrn);
 
