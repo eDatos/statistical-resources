@@ -45,7 +45,7 @@
         <metamac-statistical-resources.baseDir>${basedir}/..</metamac-statistical-resources.baseDir>
         <metamac-statistical-resources.etcDir>${metamac-statistical-resources.baseDir}/etc</metamac-statistical-resources.etcDir>
         
-        <statistic-dataset-repository.version>1.2.0</statistic-dataset-repository.version>
+        <statistic-dataset-repository.version>1.2.1-SNAPSHOT</statistic-dataset-repository.version>
         <statistic-parser.version>1.0.5</statistic-parser.version>
         <statistic-sdmx-srm-rest-external-api.version>1.1.1</statistic-sdmx-srm-rest-external-api.version>
     </properties>
