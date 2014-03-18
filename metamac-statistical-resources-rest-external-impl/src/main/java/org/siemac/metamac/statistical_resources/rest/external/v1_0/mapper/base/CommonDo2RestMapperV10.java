@@ -39,8 +39,8 @@ public interface CommonDo2RestMapperV10 {
 
     public Resource toResource(Resource source, List<String> selectedLanguages);
     public void toResource(Resource source, Resource target, List<String> selectedLanguages);
-    public Resources toResources(List<RelatedResource> sources, List<String> selectedLanguages);
-    public Resource toResource(RelatedResource source, List<String> selectedLanguages);
+    public Resources toResources(List<RelatedResource> sources, List<String> selectedLanguages) throws MetamacException;
+    public Resource toResource(RelatedResource source, List<String> selectedLanguages) throws MetamacException;
     public Resource toResource(RelatedResourceResult source, List<String> selectedLanguages) throws MetamacException;
 
     public ResourceLink toResourceLink(String kind, String href);

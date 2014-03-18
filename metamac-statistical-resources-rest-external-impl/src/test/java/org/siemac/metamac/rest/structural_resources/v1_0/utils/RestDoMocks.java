@@ -11,6 +11,7 @@ import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.joda.time.DateTime;
+import org.siemac.metamac.core.common.util.GeneratorUrnUtils;
 import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataStatisticalResource;
@@ -105,22 +106,27 @@ public class RestDoMocks {
         target.addCategorisation(coreDoMocks.mockCategorisationWithGeneratedCategory(target, maintainerCategorisation, "category02", "cat_data_02"));
 
         mockSiemacMetadataStatisticalResource(agencyID, resourceID, version, target.getSiemacMetadataStatisticalResource());
-        target.getSiemacMetadataStatisticalResource().setReplaces(mockDatasetRelatedResource(agencyID, "replace01", "01.000"));
+        target.getSiemacMetadataStatisticalResource().setReplaces(mockDatasetVersionResource(agencyID, "replace01", "01.000"));
         return target;
     }
 
     public RelatedResource mockDatasetRelatedResource(String agencyID, String resourceID, String version) {
-        DatasetVersion dataset = mockDatasetVersionBasic(agencyID, resourceID, version);
-        return StatisticalResourcesDoMocks.mockDatasetVersionRelated(dataset);
+        DatasetVersion datasetVersion = mockDatasetVersionBasic(agencyID, resourceID, version);
+        return StatisticalResourcesDoMocks.mockDatasetRelated(datasetVersion.getDataset());
     }
 
-    public RelatedResourceResult mockDatasetRelatedResourceResult(String agencyID, String resourceID, String version) {
+    public RelatedResource mockDatasetVersionResource(String agencyID, String resourceID, String version) {
+        DatasetVersion datasetVersion = mockDatasetVersionBasic(agencyID, resourceID, version);
+        return StatisticalResourcesDoMocks.mockDatasetVersionRelated(datasetVersion);
+    }
+
+    public RelatedResourceResult mockDatasetVersionRelatedResourceResult(String agencyID, String resourceID, String version) {
         RelatedResourceResult query = new RelatedResourceResult();
         query.setMaintainerNestedCode(agencyID);
         query.setCode(resourceID);
         query.setVersion(version);
         query.setType(TypeRelatedResourceEnum.DATASET_VERSION);
-        query.setUrn("urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Dataset=" + agencyID + ":" + resourceID + "(" + version + ")");
+        query.setUrn(GeneratorUrnUtils.generateSiemacStatisticalResourceDatasetVersionUrn(new String[]{agencyID}, resourceID, version));
         query.setTitle(StatisticalResourcesDoMocks.mockInternationalStringAsMap("es", "título " + resourceID, "en", "title " + resourceID));
         return query;
     }
@@ -355,17 +361,16 @@ public class RestDoMocks {
     }
 
     public RelatedResource mockQueryRelatedResource(String agencyID, String resourceID, String version) {
-        QueryVersion query = mockQueryVersionBasic(agencyID, resourceID, version);
-        return StatisticalResourcesDoMocks.mockQueryVersionRelated(query);
+        QueryVersion queryVersion = mockQueryVersionBasic(agencyID, resourceID, version);
+        return StatisticalResourcesDoMocks.mockQueryRelated(queryVersion.getQuery());
     }
 
-    public RelatedResourceResult mockQueryRelatedResourceResult(String agencyID, String resourceID, String version) {
+    public RelatedResourceResult mockQueryRelatedResourceResult(String agencyID, String resourceID) {
         RelatedResourceResult query = new RelatedResourceResult();
         query.setMaintainerNestedCode(agencyID);
         query.setCode(resourceID);
-        query.setVersion(version);
-        query.setType(TypeRelatedResourceEnum.QUERY_VERSION);
-        query.setUrn("urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Query=" + agencyID + ":" + resourceID + "(" + version + ")");
+        query.setType(TypeRelatedResourceEnum.QUERY);
+        query.setUrn(GeneratorUrnUtils.generateSiemacStatisticalResourceQueryUrn(new String[]{agencyID}, resourceID));
         query.setTitle(StatisticalResourcesDoMocks.mockInternationalStringAsMap("es", "título " + resourceID, "en", "title " + resourceID));
         return query;
     }

@@ -20,7 +20,7 @@
   "description": {
     "text": [
       {
-        "value": "description-TbmB9F4QBy_000001 en Espanol",
+        "value": "description-0Tw523rUXy_000001 en Espanol",
         "lang": "es"
       }
     ]
@@ -32,23 +32,6 @@
     "total": 1
   },
   "metadata": {
-    "replacesVersion": {
-      "id": "dataset1",
-      "urn": "urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Dataset=agency1:dataset1(00.001)",
-      "selfLink": {
-        "kind": "statisticalResources#dataset",
-        "href": "http://data.istac.es/apis/statistical-resources/v1.0/datasets/agency1/dataset1/00.001"
-      },
-      "name": {
-        "text": [
-          {
-            "value": "title-dataset1 en Espanol",
-            "lang": "es"
-          }
-        ]
-      },
-      "kind": "statisticalResources#dataset"
-    },
     "isReplacedByVersion": {
       "id": "dataset1",
       "urn": "urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Dataset=agency1:dataset1(02.000)",
@@ -68,40 +51,8 @@
     },
     "isRequiredBy": {
       "resource": [
-        {
-          "id": "isRequiredBy01",
-          "urn": "urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Query=agency01:isRequiredBy01",
-          "selfLink": {
-            "kind": "statisticalResources#query",
-            "href": "http://data.istac.es/apis/statistical-resources/v1.0/queries/agency01/isRequiredBy01"
-          },
-          "name": {
-            "text": [
-              {
-                "value": "título isRequiredBy01",
-                "lang": "es"
-              }
-            ]
-          },
-          "kind": "statisticalResources#query"
-        },
-        {
-          "id": "isRequiredBy02",
-          "urn": "urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Query=agency02:isRequiredBy02",
-          "selfLink": {
-            "kind": "statisticalResources#query",
-            "href": "http://data.istac.es/apis/statistical-resources/v1.0/queries/agency02/isRequiredBy02"
-          },
-          "name": {
-            "text": [
-              {
-                "value": "título isRequiredBy02",
-                "lang": "es"
-              }
-            ]
-          },
-          "kind": "statisticalResources#query"
-        }
+        null,
+        null
       ],
       "total": 2
     },
@@ -422,23 +373,6 @@
     "geographicGranularities": {
       "resource": [
         {
-          "id": "municipalities",
-          "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=MaintainerMock:CodelistMock(1.0).municipalities",
-          "selfLink": {
-            "kind": "structuralResources#code",
-            "href": "http://data.istac.es/apis/srm/latest/municipalities"
-          },
-          "name": {
-            "text": [
-              {
-                "value": "title-municipalities en Espanol",
-                "lang": "es"
-              }
-            ]
-          },
-          "kind": "structuralResources#code"
-        },
-        {
           "id": "countries",
           "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=MaintainerMock:CodelistMock(1.0).countries",
           "selfLink": {
@@ -449,6 +383,23 @@
             "text": [
               {
                 "value": "title-countries en Espanol",
+                "lang": "es"
+              }
+            ]
+          },
+          "kind": "structuralResources#code"
+        },
+        {
+          "id": "municipalities",
+          "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=MaintainerMock:CodelistMock(1.0).municipalities",
+          "selfLink": {
+            "kind": "structuralResources#code",
+            "href": "http://data.istac.es/apis/srm/latest/municipalities"
+          },
+          "name": {
+            "text": [
+              {
+                "value": "title-municipalities en Espanol",
                 "lang": "es"
               }
             ]
@@ -1751,16 +1702,16 @@
       "total": 2
     },
     "statisticalOperation": {
-      "id": "TbmB9F4QBy",
-      "urn": "urn:siemac:org.siemac.metamac.infomodel.statisticaloperations.Operation=TbmB9F4QBy",
+      "id": "0Tw523rUXy",
+      "urn": "urn:siemac:org.siemac.metamac.infomodel.statisticaloperations.Operation=0Tw523rUXy",
       "selfLink": {
         "kind": "statisticalOperations#operation",
-        "href": "http://data.istac.es/apis/operations/latest/TbmB9F4QBy"
+        "href": "http://data.istac.es/apis/operations/latest/0Tw523rUXy"
       },
       "name": {
         "text": [
           {
-            "value": "title-TbmB9F4QBy en Espanol",
+            "value": "title-0Tw523rUXy en Espanol",
             "lang": "es"
           }
         ]
@@ -1809,7 +1760,7 @@
     "subtitle": {
       "text": [
         {
-          "value": "subtitle-TbmB9F4QBy_000001 en Espanol",
+          "value": "subtitle-0Tw523rUXy_000001 en Espanol",
           "lang": "es"
         }
       ]
@@ -1817,7 +1768,7 @@
     "titleAlternative": {
       "text": [
         {
-          "value": "titleAlternative-TbmB9F4QBy_000001 en Espanol",
+          "value": "titleAlternative-0Tw523rUXy_000001 en Espanol",
           "lang": "es"
         }
       ]
@@ -1825,7 +1776,7 @@
     "keywords": {
       "text": [
         {
-          "value": "keyword1 keyword2 keyword3-TbmB9F4QBy_000001 en Espanol",
+          "value": "keyword1 keyword2 keyword3-0Tw523rUXy_000001 en Espanol",
           "lang": "es"
         }
       ]
@@ -1892,7 +1843,7 @@
     "conformsTo": {
       "text": [
         {
-          "value": "conformsTo-TbmB9F4QBy_000001 en Espanol",
+          "value": "conformsTo-0Tw523rUXy_000001 en Espanol",
           "lang": "es"
         }
       ]
@@ -2112,23 +2063,23 @@
     "accessRights": {
       "text": [
         {
-          "value": "accessRights-TbmB9F4QBy_000001 en Espanol",
+          "value": "accessRights-0Tw523rUXy_000001 en Espanol",
           "lang": "es"
         }
       ]
     },
     "maintainer": {
-      "id": "F7JKlVpccv",
+      "id": "qvxRu04mNF",
       "nestedId": "agency1",
-      "urn": "urn:sdmx:org.sdmx.infomodel.base.Agency=MaintainerMock:AgencySchemeMock(1.0).F7JKlVpccv",
+      "urn": "urn:sdmx:org.sdmx.infomodel.base.Agency=MaintainerMock:AgencySchemeMock(1.0).qvxRu04mNF",
       "selfLink": {
         "kind": "structuralResources#agency",
-        "href": "http://data.istac.es/apis/srm/latest/F7JKlVpccv"
+        "href": "http://data.istac.es/apis/srm/latest/qvxRu04mNF"
       },
       "name": {
         "text": [
           {
-            "value": "title-F7JKlVpccv en Espanol",
+            "value": "title-qvxRu04mNF en Espanol",
             "lang": "es"
           }
         ]
@@ -2156,7 +2107,7 @@
     "abstract": {
       "text": [
         {
-          "value": "abstract-TbmB9F4QBy_000001 en Espanol",
+          "value": "abstract-0Tw523rUXy_000001 en Espanol",
           "lang": "es"
         }
       ]

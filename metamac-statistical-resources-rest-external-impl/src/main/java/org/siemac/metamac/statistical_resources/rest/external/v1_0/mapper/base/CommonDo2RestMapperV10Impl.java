@@ -91,6 +91,8 @@ import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.DatasetS
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.VersionRationaleTypeEnum;
 import org.siemac.metamac.statistical.resources.core.query.domain.CodeItem;
+import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
+import org.siemac.metamac.statistical.resources.core.query.serviceapi.QueryService;
 import org.siemac.metamac.statistical_resources.rest.external.StatisticalResourcesRestExternalConstants;
 import org.siemac.metamac.statistical_resources.rest.external.exception.RestServiceExceptionType;
 import org.siemac.metamac.statistical_resources.rest.external.invocation.CommonMetadataRestExternalFacade;
@@ -122,6 +124,9 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
 
     @Autowired
     private DatasetService                    datasetService;
+
+    @Autowired
+    private QueryService                      queryService;
 
     @Autowired
     private TranslationService                translationService;
@@ -528,7 +533,7 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
     }
 
     @Override
-    public Resources toResources(List<RelatedResource> sources, List<String> selectedLanguages) {
+    public Resources toResources(List<RelatedResource> sources, List<String> selectedLanguages) throws MetamacException {
         if (CollectionUtils.isEmpty(sources)) {
             return null;
         }
@@ -541,7 +546,7 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
     }
 
     @Override
-    public Resource toResource(RelatedResource source, List<String> selectedLanguages) {
+    public Resource toResource(RelatedResource source, List<String> selectedLanguages) throws MetamacException {
         if (source == null) {
             return null;
         }
@@ -552,13 +557,18 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
                 return queriesDo2RestMapper.toResource(source.getQueryVersion(), selectedLanguages);
             case PUBLICATION_VERSION:
                 return collectionsDo2RestMapper.toResource(source.getPublicationVersion(), selectedLanguages);
+            case DATASET:
+                DatasetVersion datasetVersion = datasetService.retrieveLatestDatasetVersionByDatasetUrn(SERVICE_CONTEXT, source.getDataset().getIdentifiableStatisticalResource().getUrn());
+                return datasetsDo2RestMapper.toResourceAsLatest(datasetVersion, selectedLanguages);
+            case QUERY:
+                QueryVersion queryVersion = queryService.retrieveLatestPublishedQueryVersionByQueryUrn(SERVICE_CONTEXT, source.getQuery().getIdentifiableStatisticalResource().getUrn());
+                return queriesDo2RestMapper.toResource(queryVersion, selectedLanguages);
             default:
                 logger.error("RelatedResource unsupported: " + source.getType());
                 org.siemac.metamac.rest.common.v1_0.domain.Exception exception = RestExceptionUtils.getException(RestServiceExceptionType.UNKNOWN);
                 throw new RestException(exception, Status.INTERNAL_SERVER_ERROR);
         }
     }
-
     @Override
     public Resource toResource(RelatedResourceResult source, List<String> selectedLanguages) throws MetamacException {
         if (source == null) {
@@ -571,6 +581,12 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
                 return queriesDo2RestMapper.toResource(source, selectedLanguages);
             case PUBLICATION_VERSION:
                 return collectionsDo2RestMapper.toResource(source, selectedLanguages);
+            case DATASET:
+                DatasetVersion datasetVersion = datasetService.retrieveLatestDatasetVersionByDatasetUrn(SERVICE_CONTEXT, source.getUrn());
+                return datasetsDo2RestMapper.toResourceAsLatest(datasetVersion, selectedLanguages);
+            case QUERY:
+                QueryVersion queryVersion = queryService.retrieveLatestPublishedQueryVersionByQueryUrn(SERVICE_CONTEXT, source.getUrn());
+                return queriesDo2RestMapper.toResource(queryVersion, selectedLanguages);
             default:
                 logger.error("RelatedResource unsupported: " + source.getType());
                 org.siemac.metamac.rest.common.v1_0.domain.Exception exception = RestExceptionUtils.getException(RestServiceExceptionType.UNKNOWN);

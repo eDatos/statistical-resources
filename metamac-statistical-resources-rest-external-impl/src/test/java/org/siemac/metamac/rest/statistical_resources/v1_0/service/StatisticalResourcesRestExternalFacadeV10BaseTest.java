@@ -524,6 +524,7 @@ public abstract class StatisticalResourcesRestExternalFacadeV10BaseTest extends 
             };
         });
     }
+
     private void mockRetrieveDatasetVersionDimensionsIds() throws MetamacException {
         when(datasetService.retrieveDatasetVersionDimensionsIds(any(ServiceContext.class), any(String.class))).thenAnswer(new Answer<List<String>>() {
 
@@ -1016,19 +1017,19 @@ public abstract class StatisticalResourcesRestExternalFacadeV10BaseTest extends 
 
     protected List<RelatedResourceResult> mockDatasetVersionRepositoryRetrieveIsRequiredByAnswer() {
         List<RelatedResourceResult> queries = new ArrayList<RelatedResourceResult>();
-        queries.add(restDoMocks.mockQueryRelatedResourceResult("agency01", "isRequiredBy01", "01.000"));
-        queries.add(restDoMocks.mockQueryRelatedResourceResult("agency02", "isRequiredBy02", "01.000"));
+        queries.add(restDoMocks.mockQueryRelatedResourceResult("agency01", "isRequiredBy01"));
+        queries.add(restDoMocks.mockQueryRelatedResourceResult("agency02", "isRequiredBy02"));
         return queries;
     }
 
     protected RelatedResourceResult mockDatasetVersionRepositoryRetrieveIsReplaceByVersionAnswer(InvocationOnMock invocation) {
         DatasetVersion datasetVersion = (DatasetVersion) invocation.getArguments()[0];
-        return restDoMocks.mockDatasetRelatedResourceResult(datasetVersion.getSiemacMetadataStatisticalResource().getMaintainer().getCodeNested(), datasetVersion
+        return restDoMocks.mockDatasetVersionRelatedResourceResult(datasetVersion.getSiemacMetadataStatisticalResource().getMaintainer().getCodeNested(), datasetVersion
                 .getSiemacMetadataStatisticalResource().getCode(), "02.000");
     }
 
     protected RelatedResourceResult mockDatasetVersionRepositoryRetrieveIsReplacedByAnswer() {
-        return restDoMocks.mockDatasetRelatedResourceResult("agency01", "dataset99", "01.000");
+        return restDoMocks.mockDatasetVersionRelatedResourceResult("agency01", "dataset99", "01.000");
     }
 
     protected List<RelatedResourceResult> mockDatasetVersionRepositoryRetrieveIsPartOfAnswer() {
