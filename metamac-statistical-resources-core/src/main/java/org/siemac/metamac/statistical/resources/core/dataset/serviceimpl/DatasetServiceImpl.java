@@ -97,6 +97,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.arte.statistic.dataset.repository.domain.AttributeAttachmentLevelEnum;
+import com.arte.statistic.dataset.repository.dto.AttributeDto;
 import com.arte.statistic.dataset.repository.dto.AttributeInstanceDto;
 import com.arte.statistic.dataset.repository.dto.CodeDimensionDto;
 import com.arte.statistic.dataset.repository.dto.ConditionObservationDto;
@@ -342,6 +344,12 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
             // Attributes
             List<DsdAttribute> attributes = DsdProcessor.getAttributes(dsd);
             datasetRepositoryDto.getAttributes().addAll(ManipulateDataUtils.extractDefinitionOfAttributes(attributes));
+
+            // Add an additional attribute to DSD ones for identify DATASOURCE_ID.
+            AttributeDto datasourceIdAttribute = new AttributeDto();
+            datasourceIdAttribute.setAttachmentLevel(AttributeAttachmentLevelEnum.OBSERVATION);
+            datasourceIdAttribute.setAttributeId(StatisticalResourcesConstants.ATTRIBUTE_DATA_SOURCE_ID);
+            datasetRepositoryDto.getAttributes().add(datasourceIdAttribute);
 
             datasetRepositoryDto.setLanguages(Arrays.asList(StatisticalResourcesConstants.DEFAULT_DATA_REPOSITORY_LOCALE));
 
