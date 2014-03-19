@@ -52,15 +52,19 @@ public class TaskServiceFacadeImpl extends TaskServiceFacadeImplBase {
     }
 
     @Override
+    // This method is only used on application startup
     public void markAllInProgressTaskToFailed(ServiceContext ctx) throws MetamacException {
-        // Mark as failed current IN_PROGRESS states, if are available.
-        List<ConditionalCriteria> conditionList = ConditionalCriteriaBuilder.criteriaFor(Task.class).withProperty(TaskProperties.status()).eq(TaskStatusTypeEnum.IN_PROGRESS).build();
+        // Mark as failed current IN_PROGRESS states, if are available and also FAILED in order to retry the recovery process
+        List<ConditionalCriteria> conditionList = ConditionalCriteriaBuilder.criteriaFor(Task.class).withProperty(TaskProperties.status()).eq(TaskStatusTypeEnum.IN_PROGRESS).or()
+                .withProperty(TaskProperties.status()).eq(TaskStatusTypeEnum.FAILED).build();
         PagedResult<Task> pagedResult = taskservice.findTasksByCondition(ctx, conditionList, PagingParameter.noLimits());
 
         for (Task task : pagedResult.getValues()) {
             // Other Exception
             MetamacException metamacException = MetamacExceptionBuilder.builder().withPrincipalException(new MetamacExceptionItem(ServiceExceptionType.TASKS_ERROR_SERVER_DOWN)).build();
             taskservice.markTaskAsFailed(ctx, task.getJob(), metamacException);
+
+            // TODO envio al gestor de avisos de fallo de importación (METAMAC-2113)
         }
     }
 
