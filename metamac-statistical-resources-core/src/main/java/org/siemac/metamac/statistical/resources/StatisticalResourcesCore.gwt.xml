@@ -14,5 +14,6 @@
     <source path='core/utils/shared' />
     <source path='core/dto' />
     <source path='core/invocation/shared' />
+    <source path='navigation/shared' />
 
 </module>
