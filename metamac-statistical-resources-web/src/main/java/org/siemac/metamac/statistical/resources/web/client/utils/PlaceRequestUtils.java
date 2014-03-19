@@ -10,7 +10,7 @@ import org.siemac.metamac.core.common.util.shared.UrnUtils;
 import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
 import org.siemac.metamac.statistical.resources.core.utils.shared.StatisticalResourcesUrnParserUtils;
 import org.siemac.metamac.statistical.resources.navigation.shared.NameTokens;
-import org.siemac.metamac.statistical.resources.web.client.PlaceRequestParams;
+import org.siemac.metamac.statistical.resources.navigation.shared.PlaceRequestParams;
 import org.siemac.metamac.web.common.client.utils.CommonPlaceRequestUtils;
 
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
