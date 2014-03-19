@@ -1,6 +1,6 @@
 package org.siemac.metamac.statistical.resources.web.client.presenter;
 
-import org.siemac.metamac.statistical.resources.web.client.NameTokens;
+import org.siemac.metamac.statistical.resources.navigation.shared.NameTokens;
 import org.siemac.metamac.statistical.resources.web.client.view.handlers.UnauthorizedPageUiHandlers;
 
 import com.google.inject.Inject;

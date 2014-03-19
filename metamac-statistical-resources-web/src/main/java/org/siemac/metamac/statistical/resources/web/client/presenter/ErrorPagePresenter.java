@@ -2,7 +2,7 @@ package org.siemac.metamac.statistical.resources.web.client.presenter;
 
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
 
-import org.siemac.metamac.statistical.resources.web.client.NameTokens;
+import org.siemac.metamac.statistical.resources.navigation.shared.NameTokens;
 import org.siemac.metamac.statistical.resources.web.client.view.handlers.ErrorPageUiHandlers;
 
 import com.google.inject.Inject;

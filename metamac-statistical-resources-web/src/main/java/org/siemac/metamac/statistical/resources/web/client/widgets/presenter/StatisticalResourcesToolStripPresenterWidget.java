@@ -2,7 +2,7 @@ package org.siemac.metamac.statistical.resources.web.client.widgets.presenter;
 
 import java.util.List;
 
-import org.siemac.metamac.statistical.resources.web.client.NameTokens;
+import org.siemac.metamac.statistical.resources.navigation.shared.NameTokens;
 import org.siemac.metamac.statistical.resources.web.client.utils.PlaceRequestUtils;
 import org.siemac.metamac.web.common.client.widgets.toolstrip.presenter.MetamacToolStripPresenterWidget;
 

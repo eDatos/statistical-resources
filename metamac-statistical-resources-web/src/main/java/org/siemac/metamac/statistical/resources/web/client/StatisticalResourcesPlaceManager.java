@@ -1,5 +1,6 @@
 package org.siemac.metamac.statistical.resources.web.client;
 
+import org.siemac.metamac.statistical.resources.navigation.shared.NameTokens;
 import org.siemac.metamac.statistical.resources.web.client.gin.DefaultPlace;
 
 import com.google.inject.Inject;

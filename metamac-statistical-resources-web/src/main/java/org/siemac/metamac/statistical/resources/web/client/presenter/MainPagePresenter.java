@@ -3,7 +3,7 @@ package org.siemac.metamac.statistical.resources.web.client.presenter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.siemac.metamac.statistical.resources.web.client.NameTokens;
+import org.siemac.metamac.statistical.resources.navigation.shared.NameTokens;
 import org.siemac.metamac.statistical.resources.web.client.view.handlers.MainPageUiHandlers;
 import org.siemac.metamac.web.common.client.enums.MessageTypeEnum;
 import org.siemac.metamac.web.common.client.events.HideMessageEvent;
