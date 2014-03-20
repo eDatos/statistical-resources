@@ -14,16 +14,16 @@ import org.apache.commons.collections.CollectionUtils;
 import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.rest.common.v1_0.domain.ChildLinks;
-import org.siemac.metamac.rest.common.v1_0.domain.Resource;
 import org.siemac.metamac.rest.common.v1_0.domain.ResourceLink;
-import org.siemac.metamac.rest.common.v1_0.domain.Resources;
 import org.siemac.metamac.rest.exception.RestException;
 import org.siemac.metamac.rest.exception.utils.RestExceptionUtils;
 import org.siemac.metamac.rest.search.criteria.mapper.SculptorCriteria2RestCriteria;
-import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Data;
-import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Queries;
-import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Query;
-import org.siemac.metamac.rest.statistical_resources.v1_0.domain.QueryMetadata;
+import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.Data;
+import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.Queries;
+import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.Query;
+import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.QueryMetadata;
+import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.ResourceInternal;
+import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.ResourcesInternal;
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResourceResult;
 import org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConstants;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
@@ -75,7 +75,7 @@ public class QueriesDo2RestMapperV10Impl implements QueriesDo2RestMapperV10 {
 
         // Values
         for (QueryVersion source : sources.getValues()) {
-            Resource target = toResource(source, selectedLanguages);
+            ResourceInternal target = toResource(source, selectedLanguages);
             targets.getQueries().add(target);
         }
         return targets;
@@ -124,21 +124,23 @@ public class QueriesDo2RestMapperV10Impl implements QueriesDo2RestMapperV10 {
     }
 
     @Override
-    public Resource toResource(QueryVersion source, List<String> selectedLanguages) {
+    public ResourceInternal toResource(QueryVersion source, List<String> selectedLanguages) {
         if (source == null) {
             return null;
         }
-        Resource target = new Resource();
+        ResourceInternal target = new ResourceInternal();
         target.setId(source.getLifeCycleStatisticalResource().getCode());
         target.setUrn(toQueryUrn(source));
         target.setKind(StatisticalResourcesRestInternalConstants.KIND_QUERY);
         target.setSelfLink(toQuerySelfLink(source));
         target.setName(commonDo2RestMapper.toInternationalString(source.getLifeCycleStatisticalResource().getTitle(), selectedLanguages));
+        target.setManagementAppLink(toQueryVersionManagementApplicationLink(source));
+
         return target;
     }
 
     @Override
-    public Resource toResource(RelatedResourceResult source, List<String> selectedLanguages) {
+    public ResourceInternal toResource(RelatedResourceResult source, List<String> selectedLanguages) {
         if (source == null) {
             return null;
         }
@@ -148,12 +150,14 @@ public class QueriesDo2RestMapperV10Impl implements QueriesDo2RestMapperV10 {
             throw new RestException(exception, Status.INTERNAL_SERVER_ERROR);
         }
 
-        Resource target = new Resource();
+        ResourceInternal target = new ResourceInternal();
         target.setId(source.getCode());
         target.setUrn(toQueryUrn(source.getMaintainerNestedCode(), source.getCode()));
         target.setKind(StatisticalResourcesRestInternalConstants.KIND_QUERY);
         target.setSelfLink(toQuerySelfLink(source));
         target.setName(commonDo2RestMapper.toInternationalString(source.getTitle(), selectedLanguages));
+        target.setManagementAppLink(toQueryVersionManagementApplicationLink(source));
+
         return target;
     }
 
@@ -170,7 +174,7 @@ public class QueriesDo2RestMapperV10Impl implements QueriesDo2RestMapperV10 {
                 selectedLanguages));
         target.setAttributes(commonDo2RestMapper.toAttributes(datasetVersion.getSiemacMetadataStatisticalResource().getUrn(), dsdProcessorResult, selectedLanguages));
 
-        Resource relatedDataset = null;
+        ResourceInternal relatedDataset = null;
         if (source.getDataset() != null) {
             relatedDataset = datasetsDo2RestMapper.toResourceAsLatest(datasetVersion, selectedLanguages);
         } else {
@@ -186,10 +190,24 @@ public class QueriesDo2RestMapperV10Impl implements QueriesDo2RestMapperV10 {
         target.setValidTo(commonDo2RestMapper.toDate(StatisticalResourcesRestInternalUtils.isDateAfterNowSetNull(source.getLifeCycleStatisticalResource().getValidTo())));
         target.setRequires(datasetsDo2RestMapper.toResource(datasetVersion, selectedLanguages));
         target.setIsPartOf(toQueryIsPartOf(source, selectedLanguages));
+        target.setNextVersion(commonDo2RestMapper.toNextVersionType(source.getLifeCycleStatisticalResource().getNextVersion(), selectedLanguages));
+        target.setNextVersionDate(commonDo2RestMapper.toDate(source.getLifeCycleStatisticalResource().getNextVersionDate()));
+        target.setProcStatus(commonDo2RestMapper.toProcStatusType(source.getLifeCycleStatisticalResource().getProcStatus(), selectedLanguages));
+        target.setCreationDate(commonDo2RestMapper.toDate(source.getLifeCycleStatisticalResource().getCreationDate()));
+        target.setCreationUser(source.getLifeCycleStatisticalResource().getCreationUser());
+        target.setProductionValidationDate(commonDo2RestMapper.toDate(source.getLifeCycleStatisticalResource().getCreationDate()));
+        target.setProductionValidationUser(source.getLifeCycleStatisticalResource().getPublicationUser());
+        target.setDiffusionValidationDate(commonDo2RestMapper.toDate(source.getLifeCycleStatisticalResource().getDiffusionValidationDate()));
+        target.setDiffusionValidationUser(source.getLifeCycleStatisticalResource().getDiffusionValidationUser());
+        target.setRejectValidationDate(commonDo2RestMapper.toDate(source.getLifeCycleStatisticalResource().getRejectValidationDate()));
+        target.setRejectValidationUser(source.getLifeCycleStatisticalResource().getRejectValidationUser());
+        target.setPublicationDate(commonDo2RestMapper.toDate(source.getLifeCycleStatisticalResource().getPublicationDate()));
+        target.setPublicationUser(source.getLifeCycleStatisticalResource().getPublicationUser());
+
         return target;
     }
 
-    private Resources toQueryIsPartOf(QueryVersion source, List<String> selectedLanguages) throws MetamacException {
+    private ResourcesInternal toQueryIsPartOf(QueryVersion source, List<String> selectedLanguages) throws MetamacException {
         List<RelatedResourceResult> relatedResourceIsPartOf = null;
 
         if (StatisticalResourcesRestInternalConstants.IS_INTERNAL_API) {
@@ -201,7 +219,7 @@ public class QueriesDo2RestMapperV10Impl implements QueriesDo2RestMapperV10 {
         if (CollectionUtils.isEmpty(relatedResourceIsPartOf)) {
             return null;
         }
-        Resources targets = new Resources();
+        ResourcesInternal targets = new ResourcesInternal();
         for (RelatedResourceResult relatedResourceResult : relatedResourceIsPartOf) {
             targets.getResources().add(commonDo2RestMapper.toResource(relatedResourceResult, selectedLanguages));
         }
@@ -268,17 +286,17 @@ public class QueriesDo2RestMapperV10Impl implements QueriesDo2RestMapperV10 {
         return generateSiemacStatisticalResourceQueryUrn(new String[]{maintainerNestedCode}, code); // global urn without version
     }
 
-    private org.siemac.metamac.rest.statistical_resources.v1_0.domain.QueryStatus toQueryStatus(QueryStatusEnum source) {
+    private org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.QueryStatus toQueryStatus(QueryStatusEnum source) {
         if (source == null) {
             return null;
         }
         switch (source) {
             case ACTIVE:
-                return org.siemac.metamac.rest.statistical_resources.v1_0.domain.QueryStatus.ACTIVE;
+                return org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.QueryStatus.ACTIVE;
             case DISCONTINUED:
-                return org.siemac.metamac.rest.statistical_resources.v1_0.domain.QueryStatus.DISCONTINUED;
+                return org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.QueryStatus.DISCONTINUED;
             case PENDING_REVIEW:
-                return org.siemac.metamac.rest.statistical_resources.v1_0.domain.QueryStatus.ACTIVE; // This is not an error. PENDING_REVIEW is not provided in API
+                return org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.QueryStatus.ACTIVE; // This is not an error. PENDING_REVIEW is not provided in API
             default:
                 logger.error("QueryStatusEnum unsupported: " + source);
                 org.siemac.metamac.rest.common.v1_0.domain.Exception exception = RestExceptionUtils.getException(RestServiceExceptionType.UNKNOWN);
@@ -286,17 +304,17 @@ public class QueriesDo2RestMapperV10Impl implements QueriesDo2RestMapperV10 {
         }
     }
 
-    private org.siemac.metamac.rest.statistical_resources.v1_0.domain.QueryType toQueryType(QueryTypeEnum source) {
+    private org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.QueryType toQueryType(QueryTypeEnum source) {
         if (source == null) {
             return null;
         }
         switch (source) {
             case FIXED:
-                return org.siemac.metamac.rest.statistical_resources.v1_0.domain.QueryType.FIXED;
+                return org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.QueryType.FIXED;
             case AUTOINCREMENTAL:
-                return org.siemac.metamac.rest.statistical_resources.v1_0.domain.QueryType.AUTOINCREMENTAL;
+                return org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.QueryType.AUTOINCREMENTAL;
             case LATEST_DATA:
-                return org.siemac.metamac.rest.statistical_resources.v1_0.domain.QueryType.LATEST_DATA;
+                return org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.QueryType.LATEST_DATA;
             default:
                 logger.error("QueryTypeEnum unsupported: " + source);
                 org.siemac.metamac.rest.common.v1_0.domain.Exception exception = RestExceptionUtils.getException(RestServiceExceptionType.UNKNOWN);
@@ -366,4 +384,11 @@ public class QueriesDo2RestMapperV10Impl implements QueriesDo2RestMapperV10 {
         return StatisticalResourcesConstants.TEMPORAL_DIMENSION_ID.equals(dimensionId);
     }
 
+    private String toQueryVersionManagementApplicationLink(QueryVersion source) {
+        return commonDo2RestMapper.getInternalWebApplicationNavigation().buildQueryVersionUrl(source);
+    }
+
+    private String toQueryVersionManagementApplicationLink(RelatedResourceResult source) {
+        return commonDo2RestMapper.getInternalWebApplicationNavigation().buildQueryVersionUrl(source);
+    }
 }

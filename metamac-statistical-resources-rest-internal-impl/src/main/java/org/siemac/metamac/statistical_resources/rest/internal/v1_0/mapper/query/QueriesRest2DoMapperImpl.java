@@ -12,8 +12,8 @@ import org.siemac.metamac.rest.search.criteria.SculptorPropertyCriteriaConjuncti
 import org.siemac.metamac.rest.search.criteria.SculptorPropertyCriteriaDisjunction;
 import org.siemac.metamac.rest.search.criteria.mapper.RestCriteria2SculptorCriteria;
 import org.siemac.metamac.rest.search.criteria.mapper.RestCriteria2SculptorCriteria.CriteriaCallback;
-import org.siemac.metamac.rest.statistical_resources.v1_0.domain.QueryCriteriaPropertyOrder;
-import org.siemac.metamac.rest.statistical_resources.v1_0.domain.QueryCriteriaPropertyRestriction;
+import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.QueryCriteriaPropertyOrder;
+import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.QueryCriteriaPropertyRestriction;
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersionProperties;

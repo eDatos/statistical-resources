@@ -21,12 +21,12 @@ import org.apache.cxf.transport.http.HTTPConduit;
 import org.apache.cxf.transports.http.configuration.ConnectionType;
 import org.junit.Test;
 import org.siemac.metamac.rest.common.test.utils.MetamacRestAsserts;
-import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Dimension;
-import org.siemac.metamac.rest.statistical_resources.v1_0.domain.EnumeratedDimensionValue;
-import org.siemac.metamac.rest.statistical_resources.v1_0.domain.EnumeratedDimensionValues;
-import org.siemac.metamac.rest.statistical_resources.v1_0.domain.NonEnumeratedDimensionValues;
-import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Queries;
-import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Query;
+import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.Dimension;
+import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.EnumeratedDimensionValue;
+import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.EnumeratedDimensionValues;
+import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.NonEnumeratedDimensionValues;
+import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.Queries;
+import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.Query;
 import org.siemac.metamac.statistical_resources.rest.internal.StatisticalResourcesRestInternalConstants;
 import org.siemac.metamac.statistical_resources.rest.internal.exception.RestServiceExceptionType;
 

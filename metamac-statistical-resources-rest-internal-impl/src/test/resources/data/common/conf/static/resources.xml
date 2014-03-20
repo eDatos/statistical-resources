@@ -11,5 +11,10 @@
     <entry key="metamac.portal.web.external">http://istac.es/portal-web</entry>
 
     <entry key="metamac.edition.languages">es,en</entry>
+    
+    <entry key="metamac.statistical_resources.web.internal">http://localhost:8080/statistical-resources-internal</entry>
+    <entry key="metamac.srm.web.internal">http://localhost:8080/metamac-srm-web</entry>
+    <entry key="metamac.common_metadata.web.internal">http://localhost:8080/common-metadata-internal</entry>
+    <entry key="metamac.statistical_operations.web.internal">http://localhost:8080/statistical-operations-internal</entry>
 
 </properties>

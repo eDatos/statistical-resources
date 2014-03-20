@@ -27,6 +27,7 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.CodeDimensio
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.TemporalCode;
+import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.VersionRationaleTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryStatusEnum;
@@ -299,9 +300,11 @@ public class RestDoMocks {
         target.getSiemacMetadataStatisticalResource().setCode(resourceID);
         target.getSiemacMetadataStatisticalResource().setVersionLogic(version);
         target.getSiemacMetadataStatisticalResource().setTitle(StatisticalResourcesDoMocks.mockInternationalStringMetadata(resourceID, "title"));
+        target.getLifeCycleStatisticalResource().setCreationDate(new DateTime(2013, 06, 20, 20, 00, 20, 21));
+        target.getLifeCycleStatisticalResource().setCreationUser("creationUser");
+        target.getLifeCycleStatisticalResource().setProcStatus(ProcStatusEnum.DRAFT);
         return target;
     }
-
     private PublicationVersion mockPublicationVersionBasic(String agencyID, String resourceID, String version) {
         PublicationVersion target = PublicationVersionMockFactory.createComplexStructure();
         target.getSiemacMetadataStatisticalResource().setUrn("urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Collection=" + agencyID + ":" + resourceID + "(" + version + ")");
@@ -312,6 +315,9 @@ public class RestDoMocks {
         target.getSiemacMetadataStatisticalResource().setCode(resourceID);
         target.getSiemacMetadataStatisticalResource().setVersionLogic(version);
         target.getSiemacMetadataStatisticalResource().setTitle(StatisticalResourcesDoMocks.mockInternationalStringMetadata(resourceID, "title"));
+        target.getLifeCycleStatisticalResource().setCreationDate(new DateTime(2013, 06, 20, 20, 00, 20, 21));
+        target.getLifeCycleStatisticalResource().setCreationUser("creationUser");
+        target.getLifeCycleStatisticalResource().setProcStatus(ProcStatusEnum.DRAFT);
         return target;
     }
 
@@ -322,6 +328,9 @@ public class RestDoMocks {
         target.getLifeCycleStatisticalResource().setCode(resourceID);
         target.getLifeCycleStatisticalResource().setVersionLogic(version);
         target.getLifeCycleStatisticalResource().setTitle(StatisticalResourcesDoMocks.mockInternationalStringMetadata(resourceID, "title"));
+        target.getLifeCycleStatisticalResource().setCreationDate(new DateTime(2013, 06, 20, 20, 00, 20, 21));
+        target.getLifeCycleStatisticalResource().setCreationUser("creationUser");
+        target.getLifeCycleStatisticalResource().setProcStatus(ProcStatusEnum.DRAFT);
         return target;
     }
 

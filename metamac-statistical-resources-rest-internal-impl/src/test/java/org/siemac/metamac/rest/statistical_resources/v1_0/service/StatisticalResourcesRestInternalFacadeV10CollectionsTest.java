@@ -7,18 +7,13 @@ import static org.siemac.metamac.rest.statistical_resources.constants.RestTestCo
 import java.io.InputStream;
 import java.util.Arrays;
 
-import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import org.apache.cxf.jaxrs.client.ClientConfiguration;
 import org.apache.cxf.jaxrs.client.ServerWebApplicationException;
-import org.apache.cxf.jaxrs.client.WebClient;
-import org.apache.cxf.transport.http.HTTPConduit;
-import org.apache.cxf.transports.http.configuration.ConnectionType;
 import org.junit.Test;
 import org.siemac.metamac.rest.common.test.utils.MetamacRestAsserts;
-import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Collection;
-import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Collections;
+import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.Collection;
+import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.Collections;
 import org.siemac.metamac.statistical_resources.rest.internal.StatisticalResourcesRestInternalConstants;
 import org.siemac.metamac.statistical_resources.rest.internal.exception.RestServiceExceptionType;
 
@@ -62,25 +57,10 @@ public class StatisticalResourcesRestInternalFacadeV10CollectionsTest extends St
     public void testRetrieveCollectionXml() throws Exception {
         String requestBase = getRetrieveCollectionUri(AGENCY_1, COLLECTION_1_CODE, null, null);
         String[] requestUris = new String[]{requestBase + "?lang=es", requestBase + ".xml?lang=es", requestBase + "?_type=xml&lang=es"};
-        // for (int i = 0; i < requestUris.length; i++) {
-        // String requestUri = requestUris[i];
-        // InputStream responseExpected = StatisticalResourcesRestInternalFacadeV10CollectionsTest.class.getResourceAsStream("/responses/collections/retrieveCollection.id1.xml");
-        // testRequestWithoutJaxbTransformation(requestUri, APPLICATION_XML, Status.OK, responseExpected);
-        // }
-
-        { // All data: specific with general format (StructureSpecificData)
-            WebClient create = WebClient.create(baseApi);
-
-            ClientConfiguration config = WebClient.getConfig(create);
-            HTTPConduit conduit = config.getHttpConduit();
-            conduit.getClient().setConnectionTimeout(3000000);
-            conduit.getClient().setReceiveTimeout(7000000);
-            conduit.getClient().setConnection(ConnectionType.CLOSE);
-
-            create.path(requestBase);
-            create.query("lang", "es");
-            Response response = create.get();
-            assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+        for (int i = 0; i < requestUris.length; i++) {
+            String requestUri = requestUris[i];
+            InputStream responseExpected = StatisticalResourcesRestInternalFacadeV10CollectionsTest.class.getResourceAsStream("/responses/collections/retrieveCollection.id1.xml");
+            testRequestWithoutJaxbTransformation(requestUri, APPLICATION_XML, Status.OK, responseExpected);
         }
     }
 

@@ -20,7 +20,7 @@
   "description": {
     "text": [
       {
-        "value": "description-resource-Fl2Ylse2kQ en Espanol",
+        "value": "description-resource-VxyzGSrCp6 en Espanol",
         "lang": "es"
       }
     ]
@@ -33,6 +33,7 @@
   },
   "metadata": {
     "relatedDataset": {
+      "managementAppLink": "http://localhost:8080/statistical-resources-internal/#operations/operation;id=M5kyizWQXG/datasets/dataset;id=agency1:dataset01(01.000)",
       "id": "dataset01",
       "urn": "urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Dataset=agency1:dataset01(01.000)",
       "selfLink": {
@@ -80,7 +81,8 @@
           }
         ]
       },
-      "kind": "structuralResources#dataStructure"
+      "kind": "structuralResources#dataStructure",
+      "managementAppLink": "http://localhost:8080/metamac-srm-web/DSD01"
     },
     "dimensions": {
       "dimension": [
@@ -885,6 +887,7 @@
     "status": "ACTIVE",
     "type": "FIXED",
     "requires": {
+      "managementAppLink": "http://localhost:8080/statistical-resources-internal/#operations/operation;id=M5kyizWQXG/datasets/dataset;id=agency1:dataset01(01.000)",
       "id": "dataset01",
       "urn": "urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Dataset=agency1:dataset01(01.000)",
       "selfLink": {
@@ -904,6 +907,7 @@
     "isPartOf": {
       "resource": [
         {
+          "managementAppLink": "http://localhost:8080/statistical-resources-internal/#operations/operation;id=/collections/collection;id=agency01:isPartOf01(01.000)",
           "id": "isPartOf01",
           "urn": "urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Collection=agency01:isPartOf01",
           "selfLink": {
@@ -921,6 +925,7 @@
           "kind": "statisticalResources#collection"
         },
         {
+          "managementAppLink": "http://localhost:8080/statistical-resources-internal/#operations/operation;id=/collections/collection;id=agency01:isPartOf02(01.000)",
           "id": "isPartOf02",
           "urn": "urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Collection=agency01:isPartOf02",
           "selfLink": {
@@ -941,16 +946,17 @@
       "total": 2
     },
     "statisticalOperation": {
-      "id": "YsdSceNgir",
-      "urn": "urn:siemac:org.siemac.metamac.infomodel.statisticaloperations.Operation=YsdSceNgir",
+      "managementAppLink": "http://localhost:8080/statistical-operations-internal/6NCAzJl7Zy",
+      "id": "6NCAzJl7Zy",
+      "urn": "urn:siemac:org.siemac.metamac.infomodel.statisticaloperations.Operation=6NCAzJl7Zy",
       "selfLink": {
         "kind": "statisticalOperations#operation",
-        "href": "http://data.istac.es/apis/operations/latest/YsdSceNgir"
+        "href": "http://data.istac.es/apis/operations/latest/6NCAzJl7Zy"
       },
       "name": {
         "text": [
           {
-            "value": "title-YsdSceNgir en Espanol",
+            "value": "title-6NCAzJl7Zy en Espanol",
             "lang": "es"
           }
         ]
@@ -958,17 +964,18 @@
       "kind": "statisticalOperations#operation"
     },
     "maintainer": {
-      "id": "WiLkpXqmBD",
+      "managementAppLink": "http://localhost:8080/metamac-srm-web/NFtDo2beNj",
+      "id": "NFtDo2beNj",
       "nestedId": "agency1",
-      "urn": "urn:sdmx:org.sdmx.infomodel.base.Agency=MaintainerMock:AgencySchemeMock(1.0).WiLkpXqmBD",
+      "urn": "urn:sdmx:org.sdmx.infomodel.base.Agency=MaintainerMock:AgencySchemeMock(1.0).NFtDo2beNj",
       "selfLink": {
         "kind": "structuralResources#agency",
-        "href": "http://data.istac.es/apis/srm/latest/WiLkpXqmBD"
+        "href": "http://data.istac.es/apis/srm/latest/NFtDo2beNj"
       },
       "name": {
         "text": [
           {
-            "value": "title-WiLkpXqmBD en Espanol",
+            "value": "title-NFtDo2beNj en Espanol",
             "lang": "es"
           }
         ]
@@ -976,7 +983,12 @@
       "kind": "structuralResources#agency"
     },
     "validFrom": "2013-01-01T03:04:12Z",
-    "validTo": "2013-02-16T14:04:12Z"
+    "validTo": "2013-02-16T14:04:12Z",
+    "procStatus": "DRAFT",
+    "creationDate": "2013-06-20T20:00:20.021+01:00",
+    "creationUser": "creationUser",
+    "productionValidationDate": "2013-06-20T20:00:20.021+01:00",
+    "publicationDate": "2013-01-01T03:04:13Z"
   },
   "data": {
     "dimensions": {

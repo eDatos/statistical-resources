@@ -20,7 +20,7 @@
   "description": {
     "text": [
       {
-        "value": "description-0Tw523rUXy_000001 en Espanol",
+        "value": "description-2uMKvjAh1y_000001 en Espanol",
         "lang": "es"
       }
     ]
@@ -33,6 +33,7 @@
   },
   "metadata": {
     "isReplacedByVersion": {
+      "managementAppLink": "http://localhost:8080/statistical-resources-internal/#operations/operation;id=/datasets/dataset;id=agency1:dataset1(02.000)",
       "id": "dataset1",
       "urn": "urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Dataset=agency1:dataset1(02.000)",
       "selfLink": {
@@ -59,6 +60,7 @@
     "geographicCoverages": {
       "resource": [
         {
+          "managementAppLink": "http://localhost:8080/metamac-srm-web/santa-cruz-tenerife",
           "id": "santa-cruz-tenerife",
           "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=MaintainerMock:CodelistMock(1.0).santa-cruz-tenerife",
           "selfLink": {
@@ -76,6 +78,7 @@
           "kind": "structuralResources#code"
         },
         {
+          "managementAppLink": "http://localhost:8080/metamac-srm-web/tenerife",
           "id": "tenerife",
           "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=MaintainerMock:CodelistMock(1.0).tenerife",
           "selfLink": {
@@ -93,6 +96,7 @@
           "kind": "structuralResources#code"
         },
         {
+          "managementAppLink": "http://localhost:8080/metamac-srm-web/la-laguna",
           "id": "la-laguna",
           "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=MaintainerMock:CodelistMock(1.0).la-laguna",
           "selfLink": {
@@ -110,6 +114,7 @@
           "kind": "structuralResources#code"
         },
         {
+          "managementAppLink": "http://localhost:8080/metamac-srm-web/santa-cruz",
           "id": "santa-cruz",
           "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=MaintainerMock:CodelistMock(1.0).santa-cruz",
           "selfLink": {
@@ -127,6 +132,7 @@
           "kind": "structuralResources#code"
         },
         {
+          "managementAppLink": "http://localhost:8080/metamac-srm-web/la-palma",
           "id": "la-palma",
           "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=MaintainerMock:CodelistMock(1.0).la-palma",
           "selfLink": {
@@ -144,6 +150,7 @@
           "kind": "structuralResources#code"
         },
         {
+          "managementAppLink": "http://localhost:8080/metamac-srm-web/santa-cruz-la-palma",
           "id": "santa-cruz-la-palma",
           "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=MaintainerMock:CodelistMock(1.0).santa-cruz-la-palma",
           "selfLink": {
@@ -161,6 +168,7 @@
           "kind": "structuralResources#code"
         },
         {
+          "managementAppLink": "http://localhost:8080/metamac-srm-web/los-llanos-de-aridane",
           "id": "los-llanos-de-aridane",
           "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=MaintainerMock:CodelistMock(1.0).los-llanos-de-aridane",
           "selfLink": {
@@ -178,6 +186,7 @@
           "kind": "structuralResources#code"
         },
         {
+          "managementAppLink": "http://localhost:8080/metamac-srm-web/la-gomera",
           "id": "la-gomera",
           "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=MaintainerMock:CodelistMock(1.0).la-gomera",
           "selfLink": {
@@ -195,6 +204,7 @@
           "kind": "structuralResources#code"
         },
         {
+          "managementAppLink": "http://localhost:8080/metamac-srm-web/el-hierro",
           "id": "el-hierro",
           "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=MaintainerMock:CodelistMock(1.0).el-hierro",
           "selfLink": {
@@ -212,6 +222,7 @@
           "kind": "structuralResources#code"
         },
         {
+          "managementAppLink": "http://localhost:8080/metamac-srm-web/las-palmas-gran-canaria",
           "id": "las-palmas-gran-canaria",
           "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=MaintainerMock:CodelistMock(1.0).las-palmas-gran-canaria",
           "selfLink": {
@@ -229,6 +240,7 @@
           "kind": "structuralResources#code"
         },
         {
+          "managementAppLink": "http://localhost:8080/metamac-srm-web/gran-canaria",
           "id": "gran-canaria",
           "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=MaintainerMock:CodelistMock(1.0).gran-canaria",
           "selfLink": {
@@ -246,6 +258,7 @@
           "kind": "structuralResources#code"
         },
         {
+          "managementAppLink": "http://localhost:8080/metamac-srm-web/fuerteventura",
           "id": "fuerteventura",
           "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=MaintainerMock:CodelistMock(1.0).fuerteventura",
           "selfLink": {
@@ -263,6 +276,7 @@
           "kind": "structuralResources#code"
         },
         {
+          "managementAppLink": "http://localhost:8080/metamac-srm-web/lanzarote",
           "id": "lanzarote",
           "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=MaintainerMock:CodelistMock(1.0).lanzarote",
           "selfLink": {
@@ -334,6 +348,7 @@
     "measureCoverages": {
       "resource": [
         {
+          "managementAppLink": "http://localhost:8080/metamac-srm-web/code-d2-1",
           "id": "code-d2-1",
           "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=MaintainerMock:CodelistMock(1.0).code-d2-1",
           "selfLink": {
@@ -351,6 +366,7 @@
           "kind": "structuralResources#code"
         },
         {
+          "managementAppLink": "http://localhost:8080/metamac-srm-web/code-d2-2",
           "id": "code-d2-2",
           "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=MaintainerMock:CodelistMock(1.0).code-d2-2",
           "selfLink": {
@@ -373,23 +389,7 @@
     "geographicGranularities": {
       "resource": [
         {
-          "id": "countries",
-          "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=MaintainerMock:CodelistMock(1.0).countries",
-          "selfLink": {
-            "kind": "structuralResources#code",
-            "href": "http://data.istac.es/apis/srm/latest/countries"
-          },
-          "name": {
-            "text": [
-              {
-                "value": "title-countries en Espanol",
-                "lang": "es"
-              }
-            ]
-          },
-          "kind": "structuralResources#code"
-        },
-        {
+          "managementAppLink": "http://localhost:8080/metamac-srm-web/municipalities",
           "id": "municipalities",
           "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=MaintainerMock:CodelistMock(1.0).municipalities",
           "selfLink": {
@@ -405,6 +405,24 @@
             ]
           },
           "kind": "structuralResources#code"
+        },
+        {
+          "managementAppLink": "http://localhost:8080/metamac-srm-web/countries",
+          "id": "countries",
+          "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=MaintainerMock:CodelistMock(1.0).countries",
+          "selfLink": {
+            "kind": "structuralResources#code",
+            "href": "http://data.istac.es/apis/srm/latest/countries"
+          },
+          "name": {
+            "text": [
+              {
+                "value": "title-countries en Espanol",
+                "lang": "es"
+              }
+            ]
+          },
+          "kind": "structuralResources#code"
         }
       ],
       "total": 2
@@ -412,6 +430,7 @@
     "temporalGranularities": {
       "resource": [
         {
+          "managementAppLink": "http://localhost:8080/metamac-srm-web/monthly",
           "id": "monthly",
           "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=MaintainerMock:CodelistMock(1.0).monthly",
           "selfLink": {
@@ -429,6 +448,7 @@
           "kind": "structuralResources#code"
         },
         {
+          "managementAppLink": "http://localhost:8080/metamac-srm-web/yearly",
           "id": "yearly",
           "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=MaintainerMock:CodelistMock(1.0).yearly",
           "selfLink": {
@@ -453,6 +473,7 @@
     "statisticalUnit": {
       "resource": [
         {
+          "managementAppLink": "http://localhost:8080/metamac-srm-web/statisticalUnit1",
           "id": "statisticalUnit1",
           "urn": "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=MaintainerMock:ConceptSchemeMock(1.0).statisticalUnit1",
           "selfLink": {
@@ -470,6 +491,7 @@
           "kind": "structuralResources#concept"
         },
         {
+          "managementAppLink": "http://localhost:8080/metamac-srm-web/statisticalUnit2",
           "id": "statisticalUnit2",
           "urn": "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=MaintainerMock:ConceptSchemeMock(1.0).statisticalUnit2",
           "selfLink": {
@@ -487,6 +509,7 @@
           "kind": "structuralResources#concept"
         },
         {
+          "managementAppLink": "http://localhost:8080/metamac-srm-web/statisticalUnit3",
           "id": "statisticalUnit3",
           "urn": "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=MaintainerMock:ConceptSchemeMock(1.0).statisticalUnit3",
           "selfLink": {
@@ -509,6 +532,7 @@
     "subjectAreas": {
       "resource": [
         {
+          "managementAppLink": "http://localhost:8080/metamac-srm-web/category01",
           "id": "category01",
           "nestedId": "category01",
           "urn": "urn:sdmx:org.sdmx.infomodel.categoryscheme.Category=MaintainerMock:CategorySchemeMock(1.0).category01",
@@ -527,6 +551,7 @@
           "kind": "structuralResources#category"
         },
         {
+          "managementAppLink": "http://localhost:8080/metamac-srm-web/category02",
           "id": "category02",
           "nestedId": "category02",
           "urn": "urn:sdmx:org.sdmx.infomodel.categoryscheme.Category=MaintainerMock:CategorySchemeMock(1.0).category02",
@@ -578,7 +603,8 @@
           }
         ]
       },
-      "kind": "structuralResources#dataStructure"
+      "kind": "structuralResources#dataStructure",
+      "managementAppLink": "http://localhost:8080/metamac-srm-web/DSD01"
     },
     "dimensions": {
       "dimension": [
@@ -1610,6 +1636,7 @@
     "formatExtentDimensions": 5,
     "dateNextUpdate": "2013-12-02T03:04:05Z",
     "updateFrequency": {
+      "managementAppLink": "http://localhost:8080/metamac-srm-web/updateFrequency01",
       "id": "updateFrequency01",
       "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=MaintainerMock:CodelistMock(1.0).updateFrequency01",
       "selfLink": {
@@ -1646,6 +1673,7 @@
       ]
     },
     "language": {
+      "managementAppLink": "http://localhost:8080/metamac-srm-web/language01",
       "id": "language01",
       "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=MaintainerMock:CodelistMock(1.0).language01",
       "selfLink": {
@@ -1665,6 +1693,7 @@
     "languages": {
       "resource": [
         {
+          "managementAppLink": "http://localhost:8080/metamac-srm-web/language01",
           "id": "language01",
           "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=MaintainerMock:CodelistMock(1.0).language01",
           "selfLink": {
@@ -1682,6 +1711,7 @@
           "kind": "structuralResources#code"
         },
         {
+          "managementAppLink": "http://localhost:8080/metamac-srm-web/language02",
           "id": "language02",
           "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=MaintainerMock:CodelistMock(1.0).language02",
           "selfLink": {
@@ -1702,16 +1732,17 @@
       "total": 2
     },
     "statisticalOperation": {
-      "id": "0Tw523rUXy",
-      "urn": "urn:siemac:org.siemac.metamac.infomodel.statisticaloperations.Operation=0Tw523rUXy",
+      "managementAppLink": "http://localhost:8080/statistical-operations-internal/2uMKvjAh1y",
+      "id": "2uMKvjAh1y",
+      "urn": "urn:siemac:org.siemac.metamac.infomodel.statisticaloperations.Operation=2uMKvjAh1y",
       "selfLink": {
         "kind": "statisticalOperations#operation",
-        "href": "http://data.istac.es/apis/operations/latest/0Tw523rUXy"
+        "href": "http://data.istac.es/apis/operations/latest/2uMKvjAh1y"
       },
       "name": {
         "text": [
           {
-            "value": "title-0Tw523rUXy en Espanol",
+            "value": "title-2uMKvjAh1y en Espanol",
             "lang": "es"
           }
         ]
@@ -1721,6 +1752,7 @@
     "statisticalOperationInstances": {
       "resource": [
         {
+          "managementAppLink": "http://localhost:8080/statistical-operations-internal/instance01",
           "id": "instance01",
           "urn": "urn:siemac:org.siemac.metamac.infomodel.statisticaloperations.Operation=instance01",
           "selfLink": {
@@ -1738,6 +1770,7 @@
           "kind": "statisticalOperations#instance"
         },
         {
+          "managementAppLink": "http://localhost:8080/statistical-operations-internal/instance02",
           "id": "instance02",
           "urn": "urn:siemac:org.siemac.metamac.infomodel.statisticaloperations.Operation=instance02",
           "selfLink": {
@@ -1760,7 +1793,7 @@
     "subtitle": {
       "text": [
         {
-          "value": "subtitle-0Tw523rUXy_000001 en Espanol",
+          "value": "subtitle-2uMKvjAh1y_000001 en Espanol",
           "lang": "es"
         }
       ]
@@ -1768,7 +1801,7 @@
     "titleAlternative": {
       "text": [
         {
-          "value": "titleAlternative-0Tw523rUXy_000001 en Espanol",
+          "value": "titleAlternative-2uMKvjAh1y_000001 en Espanol",
           "lang": "es"
         }
       ]
@@ -1776,13 +1809,14 @@
     "keywords": {
       "text": [
         {
-          "value": "keyword1 keyword2 keyword3-0Tw523rUXy_000001 en Espanol",
+          "value": "keyword1 keyword2 keyword3-2uMKvjAh1y_000001 en Espanol",
           "lang": "es"
         }
       ]
     },
     "type": "DATASET",
     "creator": {
+      "managementAppLink": "http://localhost:8080/metamac-srm-web/creator",
       "id": "creator",
       "urn": "urn:sdmx:org.sdmx.infomodel.base.OrganisationUnit=MaintainerMock:OrganizationUnitMock(1.0).creator",
       "selfLink": {
@@ -1802,6 +1836,7 @@
     "contributors": {
       "resource": [
         {
+          "managementAppLink": "http://localhost:8080/metamac-srm-web/contributor01",
           "id": "contributor01",
           "urn": "urn:sdmx:org.sdmx.infomodel.base.OrganisationUnit=MaintainerMock:OrganizationUnitMock(1.0).contributor01",
           "selfLink": {
@@ -1819,6 +1854,7 @@
           "kind": "structuralResources#organisationUnit"
         },
         {
+          "managementAppLink": "http://localhost:8080/metamac-srm-web/contributor02",
           "id": "contributor02",
           "urn": "urn:sdmx:org.sdmx.infomodel.base.OrganisationUnit=MaintainerMock:OrganizationUnitMock(1.0).contributor02",
           "selfLink": {
@@ -1843,7 +1879,7 @@
     "conformsTo": {
       "text": [
         {
-          "value": "conformsTo-0Tw523rUXy_000001 en Espanol",
+          "value": "conformsTo-2uMKvjAh1y_000001 en Espanol",
           "lang": "es"
         }
       ]
@@ -1851,6 +1887,7 @@
     "publishers": {
       "resource": [
         {
+          "managementAppLink": "http://localhost:8080/metamac-srm-web/publisher01",
           "id": "publisher01",
           "urn": "urn:sdmx:org.sdmx.infomodel.base.OrganisationUnit=MaintainerMock:OrganizationUnitMock(1.0).publisher01",
           "selfLink": {
@@ -1868,6 +1905,7 @@
           "kind": "structuralResources#organisationUnit"
         },
         {
+          "managementAppLink": "http://localhost:8080/metamac-srm-web/publisher02",
           "id": "publisher02",
           "urn": "urn:sdmx:org.sdmx.infomodel.base.OrganisationUnit=MaintainerMock:OrganizationUnitMock(1.0).publisher02",
           "selfLink": {
@@ -1890,6 +1928,7 @@
     "publisherContributors": {
       "resource": [
         {
+          "managementAppLink": "http://localhost:8080/metamac-srm-web/publisherContributor01",
           "id": "publisherContributor01",
           "urn": "urn:sdmx:org.sdmx.infomodel.base.OrganisationUnit=MaintainerMock:OrganizationUnitMock(1.0).publisherContributor01",
           "selfLink": {
@@ -1907,6 +1946,7 @@
           "kind": "structuralResources#organisationUnit"
         },
         {
+          "managementAppLink": "http://localhost:8080/metamac-srm-web/publisherContributor02",
           "id": "publisherContributor02",
           "urn": "urn:sdmx:org.sdmx.infomodel.base.OrganisationUnit=MaintainerMock:OrganizationUnitMock(1.0).publisherContributor02",
           "selfLink": {
@@ -1929,6 +1969,7 @@
     "mediators": {
       "resource": [
         {
+          "managementAppLink": "http://localhost:8080/metamac-srm-web/mediator01",
           "id": "mediator01",
           "urn": "urn:sdmx:org.sdmx.infomodel.base.OrganisationUnit=MaintainerMock:OrganizationUnitMock(1.0).mediator01",
           "selfLink": {
@@ -1946,6 +1987,7 @@
           "kind": "structuralResources#organisationUnit"
         },
         {
+          "managementAppLink": "http://localhost:8080/metamac-srm-web/mediator02",
           "id": "mediator02",
           "urn": "urn:sdmx:org.sdmx.infomodel.base.OrganisationUnit=MaintainerMock:OrganizationUnitMock(1.0).mediator02",
           "selfLink": {
@@ -1967,6 +2009,7 @@
     },
     "newnessUntilDate": "2013-09-02T15:04:05+01:00",
     "replaces": {
+      "managementAppLink": "http://localhost:8080/statistical-resources-internal/#operations/operation;id=IletdpAULs/datasets/dataset;id=agency1:replace01(01.000)",
       "id": "replace01",
       "urn": "urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Dataset=agency1:replace01(01.000)",
       "selfLink": {
@@ -1984,6 +2027,7 @@
       "kind": "statisticalResources#dataset"
     },
     "isReplacedBy": {
+      "managementAppLink": "http://localhost:8080/statistical-resources-internal/#operations/operation;id=/datasets/dataset;id=agency01:dataset99(01.000)",
       "id": "dataset99",
       "urn": "urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Dataset=agency01:dataset99(01.000)",
       "selfLink": {
@@ -2003,6 +2047,7 @@
     "isPartOf": {
       "resource": [
         {
+          "managementAppLink": "http://localhost:8080/statistical-resources-internal/#operations/operation;id=/collections/collection;id=agency01:isPartOf01(01.000)",
           "id": "isPartOf01",
           "urn": "urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Collection=agency01:isPartOf01",
           "selfLink": {
@@ -2020,6 +2065,7 @@
           "kind": "statisticalResources#collection"
         },
         {
+          "managementAppLink": "http://localhost:8080/statistical-resources-internal/#operations/operation;id=/collections/collection;id=agency01:isPartOf02(01.000)",
           "id": "isPartOf02",
           "urn": "urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Collection=agency01:isPartOf02",
           "selfLink": {
@@ -2063,23 +2109,24 @@
     "accessRights": {
       "text": [
         {
-          "value": "accessRights-0Tw523rUXy_000001 en Espanol",
+          "value": "accessRights-2uMKvjAh1y_000001 en Espanol",
           "lang": "es"
         }
       ]
     },
     "maintainer": {
-      "id": "qvxRu04mNF",
+      "managementAppLink": "http://localhost:8080/metamac-srm-web/lkSfH5SNbG",
+      "id": "lkSfH5SNbG",
       "nestedId": "agency1",
-      "urn": "urn:sdmx:org.sdmx.infomodel.base.Agency=MaintainerMock:AgencySchemeMock(1.0).qvxRu04mNF",
+      "urn": "urn:sdmx:org.sdmx.infomodel.base.Agency=MaintainerMock:AgencySchemeMock(1.0).lkSfH5SNbG",
       "selfLink": {
         "kind": "structuralResources#agency",
-        "href": "http://data.istac.es/apis/srm/latest/qvxRu04mNF"
+        "href": "http://data.istac.es/apis/srm/latest/lkSfH5SNbG"
       },
       "name": {
         "text": [
           {
-            "value": "title-qvxRu04mNF en Espanol",
+            "value": "title-lkSfH5SNbG en Espanol",
             "lang": "es"
           }
         ]
@@ -2104,10 +2151,23 @@
     },
     "validFrom": "2013-01-01T03:04:12Z",
     "validTo": "2013-02-16T14:04:12Z",
+    "procStatus": "DRAFT",
+    "creationDate": "2013-06-20T20:00:20.021+01:00",
+    "creationUser": "creationUser",
+    "productionValidationDate": "2013-06-20T20:00:20.021+01:00",
+    "publicationDate": "2013-01-01T03:04:13Z",
+    "conformsToInternal": {
+      "text": [
+        {
+          "value": "conformsToInternal-2uMKvjAh1y_000001 en Espanol",
+          "lang": "es"
+        }
+      ]
+    },
     "abstract": {
       "text": [
         {
-          "value": "abstract-0Tw523rUXy_000001 en Espanol",
+          "value": "abstract-2uMKvjAh1y_000001 en Espanol",
           "lang": "es"
         }
       ]
