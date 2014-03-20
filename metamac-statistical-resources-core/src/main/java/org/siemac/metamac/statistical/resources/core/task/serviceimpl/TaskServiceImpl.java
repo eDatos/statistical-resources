@@ -366,6 +366,7 @@ public class TaskServiceImpl extends TaskServiceImplBase {
                 // If it exists, all is correct, the duplicate successfully finished but did not notice the application.
                 markTaskAsFinished(ctx, task.getJob());
             } else {
+                // TODO RI: Enviar notificacion
                 // If not, send notification about the failure. No further action is necessary because there is no waste in the repository.
                 markTaskAsFinished(ctx, task.getJob()); // Clear the error task
             }

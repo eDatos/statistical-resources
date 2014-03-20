@@ -25,6 +25,7 @@ public class SdmxContextInitialized implements ApplicationListener<ContextRefres
     public void onApplicationEvent(ContextRefreshedEvent event) {
         ServiceContext ctx = new ServiceContext("Metamac", "Tasks", "Metamac");
         try {
+            logger.info("Launching markAllInProgressTaskToFailed in order to recover all failed and in progress tasks");
             tasksServiceFacade.markAllInProgressTaskToFailed(ctx);
         } catch (MetamacException e) {
             logger.error("Impossible to mark old jobs with running state to failed state.", e);

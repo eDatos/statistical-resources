@@ -44,6 +44,7 @@ public class NoticesRestInternalServiceImpl implements NoticesRestInternalServic
             localisedMessage = ERROR + localisedMessage;
 
             createBackgroundNotification(actionCode, localisedMessage, user);
+            logger.info("Sending errorBackgroundNotification for user " + user);
         } catch (MetamacException e) {
             logger.error("Error creating createErrorBackgroundNotification:", e);
         }
@@ -57,6 +58,7 @@ public class NoticesRestInternalServiceImpl implements NoticesRestInternalServic
             String localisedMessage = LocaleUtil.getMessageForCode(successMessageCode, locale);
             localisedMessage = MessageFormat.format(localisedMessage, successMessageParameters);
             createBackgroundNotification(actionCode, localisedMessage, user);
+            logger.info("Sending successBackgroundNotification for user " + user);
         } catch (MetamacException e) {
             logger.error("Error creating createSuccessBackgroundNotification:", e);
         }

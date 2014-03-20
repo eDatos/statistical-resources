@@ -18,6 +18,8 @@ import org.siemac.metamac.statistical.resources.core.task.domain.Task;
 import org.siemac.metamac.statistical.resources.core.task.domain.TaskInfoDataset;
 import org.siemac.metamac.statistical.resources.core.task.domain.TaskProperties;
 import org.siemac.metamac.statistical.resources.core.task.serviceapi.TaskService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,8 +29,10 @@ import org.springframework.stereotype.Service;
 @Service("taskServiceFacade")
 public class TaskServiceFacadeImpl extends TaskServiceFacadeImplBase {
 
+    private static Logger logger = LoggerFactory.getLogger(TaskServiceFacadeImpl.class);
+
     @Autowired
-    private TaskService taskservice;
+    private TaskService   taskservice;
 
     public TaskServiceFacadeImpl() {
     }
@@ -64,6 +68,7 @@ public class TaskServiceFacadeImpl extends TaskServiceFacadeImplBase {
         for (Task task : pagedResult.getValues()) {
             // Other Exception
             MetamacException metamacException = MetamacExceptionBuilder.builder().withPrincipalException(ServiceExceptionType.TASKS_ERROR_SERVER_DOWN, task.getJob()).build();
+            logger.info("Recovering task " + task.getJob() + " of the user " + task.getCreatedBy());
             taskservice.markTaskAsFailed(ctx, task.getJob(), metamacException);
 
             getNoticesRestInternalService().createErrorBackgroundNotification(task.getCreatedBy(), ServiceNoticeAction.CANCEL_IN_PROGRESS_TASKS_WHILE_SERVER_SHUTDOWN, metamacException);
