@@ -8,12 +8,12 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 
-import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Collection;
-import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Collections;
-import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Dataset;
-import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Datasets;
-import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Queries;
-import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Query;
+import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.Collection;
+import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.Collections;
+import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.Dataset;
+import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.Datasets;
+import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.Queries;
+import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.Query;
 
 @Path("v1.0")
 // IMPORTANT: If a new version of API is added, remember change latest url y urlrewrite.xml in war
