@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xs:schema version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://www.siemac.org/metamac/rest/statistical-resources/v1.0/domain" xmlns:tns="http://www.siemac.org/metamac/rest/statistical-resources/v1.0/domain"
+<xs:schema version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://www.siemac.org/metamac/rest/statistical-resources-internal/v1.0/domain" xmlns:tns="http://www.siemac.org/metamac/rest/statistical-resources-internal/v1.0/domain"
     xmlns:common="http://www.siemac.org/metamac/rest/common/v1.0/domain">
 
     <xs:import namespace="http://www.siemac.org/metamac/rest/common/v1.0/domain" schemaLocation="metamac-rest-api:metamac-rest-common-domain-v1.0.xsd" />
@@ -56,25 +56,25 @@
         <xs:complexContent>
             <xs:extension base="tns:StatisticalResource">
                 <xs:sequence>
-                    <xs:element name="replacesVersion" type="common:Resource" minOccurs="0" />
-                    <xs:element name="isReplacedByVersion" type="common:Resource" minOccurs="0" />
-                    <xs:element name="isRequiredBy" type="common:Resources" />
-                    <xs:element name="geographicCoverages" type="common:Resources" />
+                    <xs:element name="replacesVersion" type="tns:ResourceInternal" minOccurs="0" />
+                    <xs:element name="isReplacedByVersion" type="tns:ResourceInternal" minOccurs="0" />
+                    <xs:element name="isRequiredBy" type="tns:ResourcesInternal" />
+                    <xs:element name="geographicCoverages" type="tns:ResourcesInternal" />
                     <xs:element name="temporalCoverages" type="common:Items" />
-                    <xs:element name="measureCoverages" type="common:Resources" />
-                    <xs:element name="geographicGranularities" type="common:Resources" />
-                    <xs:element name="temporalGranularities" type="common:Resources" />
+                    <xs:element name="measureCoverages" type="tns:ResourcesInternal" />
+                    <xs:element name="geographicGranularities" type="tns:ResourcesInternal" />
+                    <xs:element name="temporalGranularities" type="tns:ResourcesInternal" />
                     <xs:element name="dateStart" type="xs:dateTime" />
                     <xs:element name="dateEnd" type="xs:dateTime" />
-                    <xs:element name="statisticalUnit" type="common:Resources" minOccurs="0" />
-                    <xs:element name="subjectAreas" type="common:Resources" minOccurs="0" />
+                    <xs:element name="statisticalUnit" type="tns:ResourcesInternal" minOccurs="0" />
+                    <xs:element name="subjectAreas" type="tns:ResourcesInternal" minOccurs="0" />
                     <xs:element name="relatedDsd" type="tns:DataStructureDefinition" />
                     <xs:element name="dimensions" type="tns:Dimensions" />
                     <xs:element name="attributes" type="tns:Attributes" minOccurs="0" />
                     <xs:element name="formatExtentObservations" type="xs:long" minOccurs="0" />
                     <xs:element name="formatExtentDimensions" type="xs:int" minOccurs="0" />
                     <xs:element name="dateNextUpdate" type="xs:dateTime" />
-                    <xs:element name="updateFrequency" type="common:Resource" />
+                    <xs:element name="updateFrequency" type="tns:ResourceInternal" />
                     <xs:element name="statisticOfficiality" type="common:Item" />
                     <xs:element name="bibliographicCitation" type="common:InternationalString" />
                 </xs:sequence>
@@ -108,19 +108,32 @@
 
     <xs:complexType name="QueryMetadata">
         <xs:sequence>
-            <xs:element name="relatedDataset" type="common:Resource" minOccurs="1" />
+            <xs:element name="relatedDataset" type="tns:ResourceInternal" minOccurs="1" />
             <xs:element name="relatedDsd" type="tns:DataStructureDefinition" />
             <xs:element name="dimensions" type="tns:Dimensions" />
             <xs:element name="attributes" type="tns:Attributes" minOccurs="0" />
             <xs:element name="status" type="tns:QueryStatus" />
             <xs:element name="type" type="tns:QueryType" />
             <xs:element name="latestDataNumber" type="xs:int" minOccurs="0" />
-            <xs:element name="requires" type="common:Resource" />
-            <xs:element name="isPartOf" type="common:Resources" />
-            <xs:element name="statisticalOperation" type="common:Resource" />
-            <xs:element name="maintainer" type="common:Resource" />
+            <xs:element name="requires" type="tns:ResourceInternal" />
+            <xs:element name="isPartOf" type="tns:ResourcesInternal" />
+            <xs:element name="statisticalOperation" type="tns:ResourceInternal" />
+            <xs:element name="maintainer" type="tns:ResourceInternal" />
             <xs:element name="validFrom" type="xs:dateTime" />
             <xs:element name="validTo" type="xs:dateTime" minOccurs="0" />
+            <xs:element name="nextVersion" type="tns:NextVersionType" />
+            <xs:element name="nextVersionDate" type="xs:dateTime"  minOccurs="0" /> 
+            <xs:element name="procStatus" type="tns:ProcStatusType"/>
+            <xs:element name="creationDate" type="xs:dateTime" minOccurs="0"/>
+            <xs:element name="creationUser" type="xs:string" minOccurs="0"/>
+            <xs:element name="productionValidationDate" type="xs:dateTime" minOccurs="0"/>
+            <xs:element name="productionValidationUser" type="xs:string" minOccurs="0"/>
+            <xs:element name="diffusionValidationDate" type="xs:dateTime" minOccurs="0"/>
+            <xs:element name="diffusionValidationUser" type="xs:string" minOccurs="0"/>
+            <xs:element name="rejectValidationDate" type="xs:dateTime" minOccurs="0"/>
+            <xs:element name="rejectValidationUser" type="xs:string" minOccurs="0"/>
+            <xs:element name="publicationDate" type="xs:dateTime" minOccurs="0"/>
+            <xs:element name="publicationUser" type="xs:string" minOccurs="0"/>
         </xs:sequence>
     </xs:complexType>
 
@@ -133,38 +146,52 @@
 
     <xs:complexType name="StatisticalResource" abstract="true">
         <xs:sequence>
-            <xs:element name="language" type="common:Resource" />
-            <xs:element name="languages" type="common:Resources" />
-            <xs:element name="statisticalOperation" type="common:Resource" />
-            <xs:element name="statisticalOperationInstances" type="common:Resources" minOccurs="0" />
+            <xs:element name="language" type="tns:ResourceInternal" />
+            <xs:element name="languages" type="tns:ResourcesInternal" />
+            <xs:element name="statisticalOperation" type="tns:ResourceInternal" />
+            <xs:element name="statisticalOperationInstances" type="tns:ResourcesInternal" minOccurs="0" />
             <xs:element name="subtitle" type="common:InternationalString" minOccurs="0" />
             <xs:element name="titleAlternative" type="common:InternationalString" minOccurs="0" />
             <xs:element name="abstract" type="common:InternationalString" minOccurs="0" />
             <xs:element name="keywords" type="common:InternationalString" />
             <xs:element name="type" type="tns:StatisticalResourceType" />
-            <xs:element name="creator" type="common:Resource" />
-            <xs:element name="contributors" type="common:Resources" minOccurs="0" />
+            <xs:element name="creator" type="tns:ResourceInternal" />
+            <xs:element name="contributors" type="tns:ResourcesInternal" minOccurs="0" />
             <xs:element name="createdDate" type="xs:dateTime" />
             <xs:element name="lastUpdate" type="xs:dateTime" />
             <xs:element name="conformsTo" type="common:InternationalString" minOccurs="0" />
-            <xs:element name="publishers" type="common:Resources" />
-            <xs:element name="publisherContributors" type="common:Resources" minOccurs="0" />
-            <xs:element name="mediators" type="common:Resources" minOccurs="0" />
+            <xs:element name="publishers" type="tns:ResourcesInternal" />
+            <xs:element name="publisherContributors" type="tns:ResourcesInternal" minOccurs="0" />
+            <xs:element name="mediators" type="tns:ResourcesInternal" minOccurs="0" />
             <xs:element name="newnessUntilDate" type="xs:dateTime" minOccurs="0" />
-            <xs:element name="replaces" type="common:Resource" />
-            <xs:element name="isReplacedBy" type="common:Resource" />
-            <xs:element name="hasPart" type="common:Resources" />
-            <xs:element name="isPartOf" type="common:Resources" />
-            <xs:element name="rightsHolder" type="common:Resource" />
+            <xs:element name="replaces" type="tns:ResourceInternal" />
+            <xs:element name="isReplacedBy" type="tns:ResourceInternal" />
+            <xs:element name="hasPart" type="tns:ResourcesInternal" />
+            <xs:element name="isPartOf" type="tns:ResourcesInternal" />
+            <xs:element name="rightsHolder" type="tns:ResourceInternal" />
             <xs:element name="copyrightDate" type="xs:int" minOccurs="0" />
             <xs:element name="license" type="common:InternationalString" />
             <xs:element name="accessRights" type="common:InternationalString" minOccurs="0" />
-            <xs:element name="maintainer" type="common:Resource" />
+            <xs:element name="maintainer" type="tns:ResourceInternal" />
             <xs:element name="version" type="xs:string" />
             <xs:element name="versionRationaleTypes" type="tns:VersionRationaleTypes" />
             <xs:element name="versionRationale" type="common:InternationalString" minOccurs="0" />
             <xs:element name="validFrom" type="xs:dateTime" />
             <xs:element name="validTo" type="xs:dateTime" minOccurs="0" />
+            <xs:element name="nextVersion" type="tns:NextVersionType" />
+            <xs:element name="nextVersionDate" type="xs:dateTime" minOccurs="0" />
+            <xs:element name="procStatus" type="tns:ProcStatusType"/>
+            <xs:element name="creationDate" type="xs:dateTime" minOccurs="0"/>
+            <xs:element name="creationUser" type="xs:string" minOccurs="0"/>
+            <xs:element name="productionValidationDate" type="xs:dateTime" minOccurs="0"/>
+            <xs:element name="productionValidationUser" type="xs:string" minOccurs="0"/>
+            <xs:element name="diffusionValidationDate" type="xs:dateTime" minOccurs="0"/>
+            <xs:element name="diffusionValidationUser" type="xs:string" minOccurs="0"/>
+            <xs:element name="rejectValidationDate" type="xs:dateTime" minOccurs="0"/>
+            <xs:element name="rejectValidationUser" type="xs:string" minOccurs="0"/>
+            <xs:element name="publicationDate" type="xs:dateTime" minOccurs="0"/>
+            <xs:element name="publicationUser" type="xs:string" minOccurs="0"/>
+            <xs:element name="conformsToInternal" type="common:InternationalString" minOccurs="0" />
         </xs:sequence>
     </xs:complexType>
 
@@ -203,8 +230,8 @@
             <xs:extension base="tns:CollectionNode">
                 <xs:choice>
                     <xs:sequence>
-                        <xs:element name="dataset" type="common:Resource" />
-                        <xs:element name="query" type="common:Resource" />
+                        <xs:element name="dataset" type="tns:ResourceInternal" />
+                        <xs:element name="query" type="tns:ResourceInternal" />
                     </xs:sequence>
                 </xs:choice>
             </xs:extension>
@@ -254,7 +281,7 @@
 
     <xs:complexType name="DataStructureDefinition">
         <xs:complexContent>
-            <xs:extension base="common:Resource">
+            <xs:extension base="tns:ResourceInternal">
                 <xs:sequence>
                     <xs:element name="heading" type="tns:DimensionsId" />
                     <xs:element name="stub" type="tns:DimensionsId" />
@@ -284,7 +311,7 @@
             <xs:element name="id" type="xs:string" />
             <xs:element name="name" type="common:InternationalString" />
             <xs:element name="type" type="tns:DimensionType" />
-            <xs:element name="variable" type="common:Resource" minOccurs="0" />
+            <xs:element name="variable" type="tns:ResourceInternal" minOccurs="0" />
             <xs:element name="dimensionValues" type="tns:DimensionValues" />
         </xs:sequence>
     </xs:complexType>
@@ -316,10 +343,10 @@
 
     <xs:complexType name="EnumeratedDimensionValue">
         <xs:complexContent>
-            <xs:extension base="common:Resource">
+            <xs:extension base="tns:ResourceInternal">
                 <xs:sequence>
                     <xs:element name="visualisationParent" type="xs:string" minOccurs="0" />
-                    <xs:element name="variableElement" type="common:Resource" minOccurs="0" />
+                    <xs:element name="variableElement" type="tns:ResourceInternal" minOccurs="0" />
                     <xs:element name="showDecimalsPrecision" type="xs:int" minOccurs="0" />
                     <xs:element name="open" type="xs:boolean" minOccurs="0" />
                 </xs:sequence>
@@ -381,7 +408,7 @@
 
     <xs:complexType name="EnumeratedAttributeValue">
         <xs:complexContent>
-            <xs:extension base="common:Resource">
+            <xs:extension base="tns:ResourceInternal">
                 <xs:sequence>
                 </xs:sequence>
             </xs:extension>
@@ -411,7 +438,7 @@
         <xs:complexContent>
             <xs:extension base="common:ListBase">
                 <xs:sequence>
-                    <xs:element name="dataset" type="common:Resource" minOccurs="0" maxOccurs="unbounded" />
+                    <xs:element name="dataset" type="tns:ResourceInternal" minOccurs="0" maxOccurs="unbounded" />
                 </xs:sequence>
             </xs:extension>
         </xs:complexContent>
@@ -421,7 +448,7 @@
         <xs:complexContent>
             <xs:extension base="common:ListBase">
                 <xs:sequence>
-                    <xs:element name="collection" type="common:Resource" minOccurs="0" maxOccurs="unbounded" />
+                    <xs:element name="collection" type="tns:ResourceInternal" minOccurs="0" maxOccurs="unbounded" />
                 </xs:sequence>
             </xs:extension>
         </xs:complexContent>
@@ -431,7 +458,7 @@
         <xs:complexContent>
             <xs:extension base="common:ListBase">
                 <xs:sequence>
-                    <xs:element name="query" type="common:Resource" minOccurs="0" maxOccurs="unbounded" />
+                    <xs:element name="query" type="tns:ResourceInternal" minOccurs="0" maxOccurs="unbounded" />
                 </xs:sequence>
             </xs:extension>
         </xs:complexContent>
@@ -493,6 +520,25 @@
         </xs:restriction>
     </xs:simpleType>
 
+    <xs:simpleType name="NextVersionType">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="NO_UPDATES" />
+            <xs:enumeration value="NON_SCHEDULED_UPDATE" />
+            <xs:enumeration value="SCHEDULED_UPDATE" />
+        </xs:restriction>
+    </xs:simpleType>
+    
+    <xs:simpleType name="ProcStatusType">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="DRAFT" />
+            <xs:enumeration value="PRODUCTION_VALIDATION" />
+            <xs:enumeration value="DIFFUSION_VALIDATION" />
+            <xs:enumeration value="VALIDATION_REJECTED" />
+            <xs:enumeration value="PUBLISHED_NOT_VISIBLE" />
+            <xs:enumeration value="PUBLISHED" />
+        </xs:restriction>
+    </xs:simpleType>
+    
     <!-- Criterias -->
     <xs:simpleType name="DatasetCriteriaPropertyRestriction">
         <xs:restriction base="xs:token">
@@ -566,6 +612,25 @@
         </xs:restriction>
     </xs:simpleType>
 
+	<!-- Internal resources -->
+    <xs:complexType name="ResourcesInternal">
+        <xs:sequence>
+            <xs:element name="resource" type="tns:ResourceInternal" minOccurs="1" maxOccurs="unbounded" />
+        </xs:sequence>
+        <xs:attribute name="total" type="xs:unsignedLong" use="required"/>
+    </xs:complexType>  
+    
+    <xs:complexType name="ResourceInternal">
+        <xs:complexContent>
+            <xs:extension base="common:Resource">
+                <xs:sequence>
+                    <xs:element name="urnProvider" type="xs:string" minOccurs="1" />
+                    <xs:element name="managementAppLink" type="xs:string" />
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    
     <!-- Elements -->
     <xs:element name="dataset" type="tns:Dataset" />
     <xs:element name="datasets" type="tns:Datasets" />
