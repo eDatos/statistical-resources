@@ -60,6 +60,7 @@ public class StatisticalResourcesStartupListener extends ApplicationStartupListe
         checkRequiredProperty(ConfigurationConstants.ENDPOINT_SRM_INTERNAL_API);
         checkRequiredProperty(ConfigurationConstants.ENDPOINT_STATISTICAL_OPERATIONS_INTERNAL_API);
         checkRequiredProperty(ConfigurationConstants.ENDPOINT_COMMON_METADATA_EXTERNAL_API);
+        checkRequiredProperty(ConfigurationConstants.ENDPOINT_NOTICES_INTERNAL_API);
     }
 
     private void checkWebApplicationProperties() {
