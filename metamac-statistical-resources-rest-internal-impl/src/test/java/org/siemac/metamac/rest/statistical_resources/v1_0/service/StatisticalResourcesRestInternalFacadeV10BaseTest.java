@@ -102,7 +102,7 @@ import com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceF
 
 public abstract class StatisticalResourcesRestInternalFacadeV10BaseTest extends MetamacRestBaseTest {
 
-    private static String                     jaxrsServerAddress = "http://localhost:" + ServerResource.PORT + "/apis/statistical-resources";
+    private static String                     jaxrsServerAddress = "http://localhost:" + ServerResource.PORT + "/apis/statistical-resources-internal";
     protected String                          baseApi            = jaxrsServerAddress + "/v1.0";
     protected static ApplicationContext       applicationContext = null;
     protected static StatisticalResourcesV1_0 statisticalResourcesRestExternalFacadeClientXml;
