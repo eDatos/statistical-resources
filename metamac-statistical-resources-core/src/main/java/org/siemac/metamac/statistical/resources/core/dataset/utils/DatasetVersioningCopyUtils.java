@@ -47,13 +47,14 @@ public class DatasetVersioningCopyUtils extends CommonVersioningCopyUtils {
         DateTime now = new DateTime();
         int millisecondsOffset = 0;
         for (Datasource datasource : datasources) {
-            DateTime fakeDatasourceUpdateTime = new DateTime(now.getMillis() + millisecondsOffset);
+            DateTime fakeDatasourceUpdateTime = new DateTime(now.getMillis() + millisecondsOffset++);
             String filename = datasource.getFilename();
             String code = Datasource.generateDataSourceId(filename, fakeDatasourceUpdateTime);
             datasource.getIdentifiableStatisticalResource().setCode(code);
             datasource.getIdentifiableStatisticalResource().setUrn(GeneratorUrnUtils.generateSiemacStatisticalResourceDatasourceUrn(code));
         }
     }
+
     private static void copyDatasources(DatasetVersion source, DatasetVersion target) {
         target.getDatasources().clear();
         for (Datasource datasource : source.getDatasources()) {
