@@ -106,6 +106,7 @@ Application DatasetsStatisticalResources {
 			databaseTable="TB_DATASOURCES"
 			hint="idSequence=DATASOURCES"
 			not auditable
+			gap
 
 			"Added explicitly to avoid that Sculptor generate UUID"
 			Long id key;

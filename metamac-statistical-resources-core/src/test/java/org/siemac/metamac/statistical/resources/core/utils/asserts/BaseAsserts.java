@@ -238,7 +238,7 @@ public class BaseAsserts extends CommonAsserts {
         assertEqualsStatisticalResource(expected, actual);
     }
 
-    protected static void assertEqualsStatisticalResource(StatisticalResource expected, StatisticalResource actual) {
+    public static void assertEqualsStatisticalResource(StatisticalResource expected, StatisticalResource actual) {
         assertEqualsExternalItem(expected.getStatisticalOperation(), actual.getStatisticalOperation());
     }
 

@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.joda.time.DateTime;
+import org.siemac.metamac.core.common.util.GeneratorUrnUtils;
 import org.siemac.metamac.statistical.resources.core.base.domain.VersionableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.common.utils.CommonVersioningCopyUtils;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Categorisation;
@@ -37,9 +39,21 @@ public class DatasetVersioningCopyUtils extends CommonVersioningCopyUtils {
         // Relations
         target.setDataset(source.getDataset());
         copyDatasources(source, target);
+        changeDatasourcesCodesAndUrns(target.getDatasources());
         copyCategorisations(source, target);
     }
 
+    private static void changeDatasourcesCodesAndUrns(List<Datasource> datasources) {
+        DateTime now = new DateTime();
+        int millisecondsOffset = 0;
+        for (Datasource datasource : datasources) {
+            DateTime fakeDatasourceUpdateTime = new DateTime(now.getMillis() + millisecondsOffset);
+            String filename = datasource.getFilename();
+            String code = Datasource.generateDataSourceId(filename, fakeDatasourceUpdateTime);
+            datasource.getIdentifiableStatisticalResource().setCode(code);
+            datasource.getIdentifiableStatisticalResource().setUrn(GeneratorUrnUtils.generateSiemacStatisticalResourceDatasourceUrn(code));
+        }
+    }
     private static void copyDatasources(DatasetVersion source, DatasetVersion target) {
         target.getDatasources().clear();
         for (Datasource datasource : source.getDatasources()) {

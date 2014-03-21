@@ -39,6 +39,7 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionBuilder;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructure;
 import org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConstants;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
 import org.siemac.metamac.statistical.resources.core.enume.task.domain.DatasetFileFormatEnum;
 import org.siemac.metamac.statistical.resources.core.enume.task.domain.TaskStatusTypeEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
@@ -309,7 +310,7 @@ public class TaskServiceImpl extends TaskServiceImplBase {
             String fileNames = task.getExtensionPoint();
             String[] names = fileNames.split("\\" + JobUtil.SERIALIZATION_SEPARATOR);
             for (int i = 1; i < names.length; i++) {
-                String dataSourceId = generateDataSourceId(names[i], task.getCreatedDate());
+                String dataSourceId = Datasource.generateDataSourceId(names[i], task.getCreatedDate());
 
                 InternationalStringDto internationalStringDto = new InternationalStringDto();
                 LocalisedStringDto localisedStringDto = new LocalisedStringDto();
@@ -565,7 +566,7 @@ public class TaskServiceImpl extends TaskServiceImplBase {
         List<FileDescriptorResult> filesResult = new ArrayList<FileDescriptorResult>(taskInfoDataset.getFiles().size());
 
         for (FileDescriptor fileDescriptor : taskInfoDataset.getFiles()) {
-            String dataSourceId = generateDataSourceId(fileDescriptor.getFileName(), dateTime);
+            String dataSourceId = Datasource.generateDataSourceId(fileDescriptor.getFileName(), dateTime);
             Date nextUpdate = null;
             if (DatasetFileFormatEnum.SDMX_2_1.equals(fileDescriptor.getDatasetFileFormatEnum())) {
                 if (callback == null) {
@@ -596,10 +597,6 @@ public class TaskServiceImpl extends TaskServiceImplBase {
 
         // Callback
         getDatasetService().proccessDatasetFileImportationResult(ctx, taskInfoDataset.getDatasetVersionId(), filesResult);
-    }
-
-    private String generateDataSourceId(String fileName, DateTime dateTime) {
-        return fileName + "_" + dateTime.toString();
     }
 
 }

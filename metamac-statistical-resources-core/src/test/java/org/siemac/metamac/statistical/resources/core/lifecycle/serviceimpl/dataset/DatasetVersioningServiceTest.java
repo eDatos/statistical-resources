@@ -7,7 +7,6 @@ import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 import static org.siemac.metamac.common.test.utils.MetamacAsserts.assertEqualsDate;
-import static org.siemac.metamac.statistical.resources.core.utils.asserts.BaseAsserts.assertEqualsVersionedIdentifiableStatisticalResource;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.BaseAsserts.assertEqualsVersioningSiemacMetadata;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.CommonAsserts.assertEqualsExternalItem;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.CommonAsserts.assertEqualsExternalItemCollection;
@@ -22,6 +21,7 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 import java.util.List;
 
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -34,6 +34,7 @@ import org.siemac.metamac.core.common.util.GeneratorUrnUtils;
 import org.siemac.metamac.core.common.util.shared.VersionUtil;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
 import org.siemac.metamac.statistical.resources.core.base.constants.ProcStatusForActionsConstants;
+import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.CodeDimension;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
@@ -326,13 +327,13 @@ public class DatasetVersioningServiceTest extends StatisticalResourcesBaseTest {
         assertNotSame(expected.getDatasetVersion().getId(), actual.getDatasetVersion().getId());
     }
 
-    public static void checkVersionedDatasourcesCollection(List<Datasource> expected, List<Datasource> actual) {
-        if (expected != null) {
-            assertNotNull(actual);
-            assertEquals(expected.size(), actual.size());
-            for (Datasource expectedItem : expected) {
+    public static void checkVersionedDatasourcesCollection(List<Datasource> expectedPrevious, List<Datasource> actualNew) {
+        if (expectedPrevious != null) {
+            assertNotNull(actualNew);
+            assertEquals(expectedPrevious.size(), actualNew.size());
+            for (Datasource expectedItem : expectedPrevious) {
                 boolean match = false;
-                for (Datasource actualItem : actual) {
+                for (Datasource actualItem : actualNew) {
                     try {
                         checkVersionedDatasource(expectedItem, actualItem);
                         match = true;
@@ -347,14 +348,21 @@ public class DatasetVersioningServiceTest extends StatisticalResourcesBaseTest {
                 }
             }
         } else {
-            assertNull(actual);
+            assertNull(actualNew);
         }
     }
 
-    private static void checkVersionedDatasource(Datasource expected, Datasource actual) {
-        assertEqualsVersionedIdentifiableStatisticalResource(expected.getIdentifiableStatisticalResource(), actual.getIdentifiableStatisticalResource());
-        assertEquals(expected.getFilename(), actual.getFilename());
-        assertNotSame(expected.getDatasetVersion().getSiemacMetadataStatisticalResource().getUrn(), actual.getDatasetVersion().getSiemacMetadataStatisticalResource().getUrn());
+    private static void checkVersionedDatasource(Datasource expected, Datasource actualNewVersion) {
+        assertEqualsVersionedIdentifiableDatasourceCodeIsDifferent(expected.getIdentifiableStatisticalResource(), actualNewVersion.getIdentifiableStatisticalResource());
+        assertEquals(expected.getFilename(), actualNewVersion.getFilename());
+        assertFalse(expected.getDatasetVersion().getSiemacMetadataStatisticalResource().getUrn().equals(actualNewVersion.getDatasetVersion().getSiemacMetadataStatisticalResource().getUrn()));
+        assertNotNull(actualNewVersion.getIdentifiableStatisticalResource().getUrn());
+    }
+
+    public static void assertEqualsVersionedIdentifiableDatasourceCodeIsDifferent(IdentifiableStatisticalResource expected, IdentifiableStatisticalResource actual) {
+        assertFalse(expected.getCode().equals(actual.getCode()));
+
+        BaseAsserts.assertEqualsStatisticalResource(expected, actual);
     }
 
     private void mockTaskInProgressForResource(String datasetVersionUrn, boolean status) throws MetamacException {
