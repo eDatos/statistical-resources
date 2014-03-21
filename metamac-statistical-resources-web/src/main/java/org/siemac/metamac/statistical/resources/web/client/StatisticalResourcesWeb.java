@@ -70,7 +70,7 @@ public class StatisticalResourcesWeb extends MetamacSecurityEntryPoint {
     @Override
     protected void setConfigurationProperties(Map<String, String> propertyValues) {
         super.setConfigurationProperties(propertyValues);
-        String metamacPortalBaseUrl = propertyValues.get(ConfigurationConstants.WEB_APPLICATION_PORTAL_EXTERNAL_WEB);
+        String metamacPortalBaseUrl = propertyValues.get(ConfigurationConstants.WEB_APPLICATION_PORTAL_INTERNAL_WEB);
         CommonUtils.setMetamacPortalBaseUrl(metamacPortalBaseUrl);
     }
 
