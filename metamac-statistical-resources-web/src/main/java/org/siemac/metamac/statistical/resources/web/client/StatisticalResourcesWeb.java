@@ -64,7 +64,7 @@ public class StatisticalResourcesWeb extends MetamacSecurityEntryPoint {
 
     @Override
     protected String[] getPropertiesToLoad() {
-        return new String[]{ConfigurationConstants.WEB_APPLICATION_PORTAL_EXTERNAL_WEB};
+        return new String[]{ConfigurationConstants.WEB_APPLICATION_PORTAL_INTERNAL_WEB};
     }
 
     @Override
