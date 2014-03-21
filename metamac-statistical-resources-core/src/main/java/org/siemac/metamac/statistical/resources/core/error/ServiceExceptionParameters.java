@@ -47,6 +47,7 @@ public class ServiceExceptionParameters extends ServiceExceptionBaseParameters {
     public static final String       TASK_DATASOURCE_ID                       = "parameter.resources.datasourceId";
     public static final String       TASK                                     = "parameter.resources.task";
     public static final String       TASK_DATASET_JOB_KEY                     = "parameter.resources.jobKey";
+    public static final String       NOTIFY_TO_USER                           = "parameter.resources.notifyToUser";
 
     // Files
     public static final String       FILE_URLS                                = "parameter.resources.fileUrls";

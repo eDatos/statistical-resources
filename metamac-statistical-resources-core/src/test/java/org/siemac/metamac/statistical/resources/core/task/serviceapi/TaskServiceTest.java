@@ -90,4 +90,9 @@ public class TaskServiceTest extends StatisticalResourcesBaseTest implements Tas
     public void testExistDuplicationTaskInResource() throws Exception {
         // See integration test in DataManipulateTest
     }
+
+    @Override
+    public void testMarkTasksAsFailedOnApplicationStartup() throws Exception {
+        // See integration test in DataManipulateTest
+    }
 }

@@ -28,9 +28,10 @@ public class TaskServiceInvocationValidatorImpl {
         }
     }
 
-    public static void checkPlanifyRecoveryImportDataset(TaskInfoDataset taskInfoDataset, List<MetamacExceptionItem> exceptions) {
+    public static void checkPlanifyRecoveryImportDataset(TaskInfoDataset taskInfoDataset, Boolean notifyToUser, List<MetamacExceptionItem> exceptions) {
         StatisticalResourcesValidationUtils.checkParameterRequired(taskInfoDataset, ServiceExceptionParameters.TASK_INFO_DATASET, exceptions);
         StatisticalResourcesValidationUtils.checkMetadataRequired(taskInfoDataset.getDatasetVersionId(), ServiceExceptionParameters.TASK_INFO_DATASET_DATASET_VERSION_ID, exceptions);
+        StatisticalResourcesValidationUtils.checkParameterRequired(notifyToUser, ServiceExceptionParameters.NOTIFY_TO_USER, exceptions);
     }
 
     public static void checkPlanifyDuplicationDataset(TaskInfoDataset taskInfoDataset, String newDatasetId, List<MetamacExceptionItem> exceptions) {
@@ -46,13 +47,15 @@ public class TaskServiceInvocationValidatorImpl {
 
     public static void checkProcessRollbackImportationTask(String recoveryJobKey, TaskInfoDataset taskInfoDataset, List<MetamacExceptionItem> exceptions) {
         StatisticalResourcesValidationUtils.checkParameterRequired(recoveryJobKey, ServiceExceptionParameters.TASK_DATASET_JOB_KEY, exceptions);
-        checkPlanifyRecoveryImportDataset(taskInfoDataset, exceptions);
+        StatisticalResourcesValidationUtils.checkParameterRequired(taskInfoDataset, ServiceExceptionParameters.TASK_INFO_DATASET, exceptions);
+        StatisticalResourcesValidationUtils.checkMetadataRequired(taskInfoDataset.getDatasetVersionId(), ServiceExceptionParameters.TASK_INFO_DATASET_DATASET_VERSION_ID, exceptions);
     }
 
     public static void checkProcessDuplicationTask(String duplicationJobKey, TaskInfoDataset taskInfoDataset, String newDatasetId, List<MetamacExceptionItem> exceptions) {
         StatisticalResourcesValidationUtils.checkParameterRequired(duplicationJobKey, ServiceExceptionParameters.TASK_DATASET_JOB_KEY, exceptions);
         StatisticalResourcesValidationUtils.checkParameterRequired(newDatasetId, ServiceExceptionParameters.TASK_INFO_DATASET_NEW_DATASET_VERSION_ID, exceptions);
-        checkPlanifyRecoveryImportDataset(taskInfoDataset, exceptions);
+        StatisticalResourcesValidationUtils.checkParameterRequired(taskInfoDataset, ServiceExceptionParameters.TASK_INFO_DATASET, exceptions);
+        StatisticalResourcesValidationUtils.checkMetadataRequired(taskInfoDataset.getDatasetVersionId(), ServiceExceptionParameters.TASK_INFO_DATASET_DATASET_VERSION_ID, exceptions);
     }
 
     public static void checkExistsTaskForResource(String resourceId, List<MetamacExceptionItem> exceptions) throws MetamacException {
@@ -75,7 +78,11 @@ public class TaskServiceInvocationValidatorImpl {
         StatisticalResourcesValidationUtils.checkParameterRequired(job, ServiceExceptionParameters.TASK_DATASET_JOB_KEY, exceptions);
     }
 
-    public static void checkMarkTaskAsFailed(String job, Exception exception, List<MetamacExceptionItem> exceptions) {
+    public static void checkMarkTaskAsFailed(String job, List<MetamacExceptionItem> exceptions) {
+        StatisticalResourcesValidationUtils.checkParameterRequired(job, ServiceExceptionParameters.TASK_DATASET_JOB_KEY, exceptions);
+    }
+
+    public static void checkMarkTasksAsFailedOnApplicationStartup(String job, List<MetamacExceptionItem> exceptions) {
         StatisticalResourcesValidationUtils.checkParameterRequired(job, ServiceExceptionParameters.TASK_DATASET_JOB_KEY, exceptions);
     }
 
@@ -98,5 +105,4 @@ public class TaskServiceInvocationValidatorImpl {
 
     public static void checkFindTasksByCondition(List<ConditionalCriteria> conditions, PagingParameter pagingParameter, List<MetamacExceptionItem> exceptions) {
     }
-
 }

@@ -35,7 +35,7 @@ Application DatasetsStatisticalResources {
 			"Plannify a scheduled task to import"
 			String planifyImportationDataset(@TaskInfoDataset taskInfoDataset) throws MetamacException;
 			"Plannify a scheduled task to recovery import"
-			String planifyRecoveryImportDataset(@TaskInfoDataset taskInfoDataset) throws MetamacException;
+			String planifyRecoveryImportDataset(@TaskInfoDataset taskInfoDataset, Boolean notifyToUser) throws MetamacException;
 			"Plannify a scheduled task to recovery import"
 			String planifyDuplicationDataset(@TaskInfoDataset taskInfoDataset, String newDatasetId) throws MetamacException;
 			"Perform the importation task"
@@ -66,7 +66,9 @@ Application DatasetsStatisticalResources {
     		"Mark task as finished"
 			markTaskAsFinished(String job) throws MetamacException;
 		    "Mark task as failed"
-    		markTaskAsFailed(String job, java.lang.Exception exception) throws MetamacException;
+    		markTaskAsFailed(String job) throws MetamacException;
+    		"Mark task as failed on application startup"
+    		markTasksAsFailedOnApplicationStartup(String job) throws MetamacException;
     		"Find information about tasks"
 			PagedResult<@Task> findTasksByCondition(List<ConditionalCriteria> conditions, PagingParameter pagingParameter) throws MetamacException;
 		}

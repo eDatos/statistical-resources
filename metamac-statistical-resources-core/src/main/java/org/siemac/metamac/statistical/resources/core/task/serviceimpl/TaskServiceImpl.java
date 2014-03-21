@@ -37,12 +37,14 @@ import org.quartz.impl.StdSchedulerFactory;
 import org.siemac.metamac.core.common.exception.ExceptionLevelEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionBuilder;
+import org.siemac.metamac.core.common.util.ApplicationContextProvider;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructure;
 import org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConstants;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
 import org.siemac.metamac.statistical.resources.core.enume.task.domain.DatasetFileFormatEnum;
 import org.siemac.metamac.statistical.resources.core.enume.task.domain.TaskStatusTypeEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
+import org.siemac.metamac.statistical.resources.core.invocation.service.NoticesRestInternalService;
 import org.siemac.metamac.statistical.resources.core.invocation.service.SrmRestInternalService;
 import org.siemac.metamac.statistical.resources.core.io.mapper.MetamacSdmx2StatRepoMapper;
 import org.siemac.metamac.statistical.resources.core.io.serviceimpl.DuplicationDatasetJob;
@@ -52,6 +54,8 @@ import org.siemac.metamac.statistical.resources.core.io.serviceimpl.ManipulatePx
 import org.siemac.metamac.statistical.resources.core.io.serviceimpl.ManipulateSdmx21DataCallbackImpl;
 import org.siemac.metamac.statistical.resources.core.io.serviceimpl.RecoveryImportDatasetJob;
 import org.siemac.metamac.statistical.resources.core.io.serviceimpl.validators.ValidateDataVersusDsd;
+import org.siemac.metamac.statistical.resources.core.notices.ServiceNoticeAction;
+import org.siemac.metamac.statistical.resources.core.notices.ServiceNoticeMessage;
 import org.siemac.metamac.statistical.resources.core.task.domain.AlternativeEnumeratedRepresentation;
 import org.siemac.metamac.statistical.resources.core.task.domain.FileDescriptor;
 import org.siemac.metamac.statistical.resources.core.task.domain.FileDescriptorResult;
@@ -169,7 +173,8 @@ public class TaskServiceImpl extends TaskServiceImplBase {
             if (task != null) {
                 TaskInfoDataset recoveryTaskInfo = new TaskInfoDataset();
                 recoveryTaskInfo.setDatasetVersionId(taskInfoDataset.getDatasetVersionId());
-                planifyRecoveryImportDataset(ctx, recoveryTaskInfo); // Perform a clean recovery
+                // It's not necessary notify to user because this method is not for application startup recovers
+                planifyRecoveryImportDataset(ctx, recoveryTaskInfo, Boolean.FALSE); // Perform a clean recovery
                 throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.TASKS_JOB_RECOVERY_IN_PROCESS).withLoggedLevel(ExceptionLevelEnum.ERROR).build(); // Error
             }
 
@@ -197,9 +202,9 @@ public class TaskServiceImpl extends TaskServiceImplBase {
     }
 
     @Override
-    public synchronized String planifyRecoveryImportDataset(ServiceContext ctx, TaskInfoDataset taskInfoDataset) throws MetamacException {
+    public synchronized String planifyRecoveryImportDataset(ServiceContext ctx, TaskInfoDataset taskInfoDataset, Boolean notifyToUser) throws MetamacException {
         // Validation
-        taskServiceInvocationValidator.checkPlanifyRecoveryImportDataset(ctx, taskInfoDataset);
+        taskServiceInvocationValidator.checkPlanifyRecoveryImportDataset(ctx, taskInfoDataset, notifyToUser);
 
         // Job keys
         JobKey recoveryImportJobKey = createJobKeyForRecoveryImportationResource(taskInfoDataset.getDatasetVersionId());
@@ -209,9 +214,15 @@ public class TaskServiceImpl extends TaskServiceImplBase {
         Scheduler sched = SchedulerRepository.getInstance().lookup(SCHEDULER_INSTANCE_NAME); // get a reference to a scheduler
 
         // put triggers in group named after the cluster node instance just to distinguish (in logging) what was scheduled from where
-        JobDetail recoveryImportJob = newJob(RecoveryImportDatasetJob.class).withIdentity(recoveryImportJobKey)
-                .usingJobData(RecoveryImportDatasetJob.DATASET_VERSION_ID, taskInfoDataset.getDatasetVersionId()).usingJobData(RecoveryImportDatasetJob.USER, ctx.getUserId()).requestRecovery()
-                .build();
+        // @formatter:off
+        JobDetail recoveryImportJob = newJob(RecoveryImportDatasetJob.class)
+                                        .withIdentity(recoveryImportJobKey)
+                                        .usingJobData(RecoveryImportDatasetJob.DATASET_VERSION_ID, taskInfoDataset.getDatasetVersionId())
+                                        .usingJobData(RecoveryImportDatasetJob.USER, ctx.getUserId())
+                                        .usingJobData(RecoveryImportDatasetJob.NOTIFY_TO_USER, notifyToUser)
+                                        .requestRecovery()
+                                        .build();
+        // @formatter:on
 
         SimpleTrigger recoveryImportTrigger = newTrigger().withIdentity(recoveryImportTriggerKey).startAt(futureDate(10, IntervalUnit.SECOND)).withSchedule(simpleSchedule()).build();
 
@@ -229,8 +240,10 @@ public class TaskServiceImpl extends TaskServiceImplBase {
         // Validation
         taskServiceInvocationValidator.checkPlanifyDuplicationDataset(ctx, taskInfoDataset, newDatasetId);
 
+        String datasetId = taskInfoDataset.getDatasetVersionId();
+
         // Job keys
-        JobKey duplicationJobKey = createJobKeyForDuplicationResource(taskInfoDataset.getDatasetVersionId());
+        JobKey duplicationJobKey = createJobKeyForDuplicationResource(datasetId);
         TriggerKey duplicationTriggerKey = createTriggerKeyForDuplicationDataset(taskInfoDataset.getDatasetVersionId());
 
         try {
@@ -259,7 +272,7 @@ public class TaskServiceImpl extends TaskServiceImplBase {
 
             Task task = new Task(duplicationJobKey.getName());
             task.setStatus(TaskStatusTypeEnum.IN_PROGRESS);
-            task.setExtensionPoint(newDatasetId);
+            task.setExtensionPoint(newDatasetId + JobUtil.SERIALIZATION_SEPARATOR + datasetId);
             createTask(ctx, task);
 
             SimpleTrigger duplicationImportTrigger = newTrigger().withIdentity(duplicationTriggerKey).startAt(futureDate(10, IntervalUnit.SECOND)).withSchedule(simpleSchedule()).build();
@@ -360,16 +373,28 @@ public class TaskServiceImpl extends TaskServiceImplBase {
     }
 
     private void processRollbackDuplicationTask(ServiceContext ctx, Task task) throws MetamacException {
+        markTaskAsFinished(ctx, task.getJob());
+    }
+
+    private void processRollbackDuplicationTaskOnApplicationStartup(ServiceContext ctx, Task task) throws MetamacException {
         try {
-            DatasetRepositoryDto datasetRepository = datasetRepositoriesServiceFacade.retrieveDatasetRepository(task.getExtensionPoint());
+            String[] datasets = task.getExtensionPoint().split("\\" + JobUtil.SERIALIZATION_SEPARATOR);
+
+            DatasetRepositoryDto datasetRepository = datasetRepositoriesServiceFacade.retrieveDatasetRepository(datasets[0]);
 
             if (datasetRepository != null) {
-                // If it exists, all is correct, the duplicate successfully finished but did not notice the application.
+                // If it exists, all is correct, the duplicate successfully finished but did not notice the application. So, we have to do it with a success message
                 markTaskAsFinished(ctx, task.getJob());
+
+                String datasetVersionId = datasets[1];
+                String newDatasetVersionId = datasetRepository.getDatasetId();
+                getNoticesRestInternalService().createSuccessBackgroundNotification(task.getCreatedBy(), ServiceNoticeAction.DUPLICATION_DATASET_JOB, ServiceNoticeMessage.DUPLICATION_DATASET_JOB_OK,
+                        datasetVersionId, newDatasetVersionId);
             } else {
-                // TODO RI: Enviar notificacion
                 // If not, send notification about the failure. No further action is necessary because there is no waste in the repository.
                 markTaskAsFinished(ctx, task.getJob()); // Clear the error task
+                MetamacException metamacException = MetamacExceptionBuilder.builder().withPrincipalException(ServiceExceptionType.TASKS_ERROR_SERVER_DOWN, task.getJob()).build();
+                getNoticesRestInternalService().createErrorBackgroundNotification(task.getCreatedBy(), ServiceNoticeAction.CANCEL_IN_PROGRESS_TASKS_WHILE_SERVER_SHUTDOWN, metamacException);
             }
         } catch (ApplicationException e) {
             logger.error("Unable to connect to the repository", e);
@@ -447,9 +472,8 @@ public class TaskServiceImpl extends TaskServiceImplBase {
     }
 
     @Override
-    public void markTaskAsFailed(ServiceContext ctx, String jobKey, Exception exception) throws MetamacException {
+    public void markTasksAsFailedOnApplicationStartup(ServiceContext ctx, String jobKey) throws MetamacException {
         Task task = retrieveTaskByJob(ctx, jobKey);
-
         // Plannify a recovery job
         if (jobKey.startsWith(PREFIX_JOB_IMPORT_DATA)) {
             // Update
@@ -458,11 +482,27 @@ public class TaskServiceImpl extends TaskServiceImplBase {
 
             TaskInfoDataset recoveryTaskInfo = new TaskInfoDataset();
             recoveryTaskInfo.setDatasetVersionId(extractDatasetIdFromJobKeyImportationDataset(jobKey));
-            planifyRecoveryImportDataset(ctx, recoveryTaskInfo);
+            planifyRecoveryImportDataset(ctx, recoveryTaskInfo, Boolean.TRUE);
+        } else if (jobKey.startsWith(PREFIX_JOB_DUPLICATION_DATA)) {
+            processRollbackDuplicationTaskOnApplicationStartup(ctx, task);
+        }
+    }
+
+    @Override
+    public void markTaskAsFailed(ServiceContext ctx, String jobKey) throws MetamacException {
+        Task task = retrieveTaskByJob(ctx, jobKey);
+        // Plannify a recovery job
+        if (jobKey.startsWith(PREFIX_JOB_IMPORT_DATA)) {
+            // Update
+            task.setStatus(TaskStatusTypeEnum.FAILED);
+            updateTask(ctx, task);
+
+            TaskInfoDataset recoveryTaskInfo = new TaskInfoDataset();
+            recoveryTaskInfo.setDatasetVersionId(extractDatasetIdFromJobKeyImportationDataset(jobKey));
+            planifyRecoveryImportDataset(ctx, recoveryTaskInfo, Boolean.FALSE);
         } else if (jobKey.startsWith(PREFIX_JOB_DUPLICATION_DATA)) {
             processRollbackDuplicationTask(ctx, task);
         }
-
     }
 
     @Override
@@ -599,4 +639,7 @@ public class TaskServiceImpl extends TaskServiceImplBase {
         getDatasetService().proccessDatasetFileImportationResult(ctx, taskInfoDataset.getDatasetVersionId(), filesResult);
     }
 
+    private NoticesRestInternalService getNoticesRestInternalService() {
+        return (NoticesRestInternalService) ApplicationContextProvider.getApplicationContext().getBean(NoticesRestInternalService.BEAN_ID);
+    }
 }

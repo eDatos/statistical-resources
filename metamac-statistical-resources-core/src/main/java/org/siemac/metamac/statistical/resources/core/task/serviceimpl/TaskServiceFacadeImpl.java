@@ -8,12 +8,7 @@ import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
 import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.siemac.metamac.core.common.exception.MetamacException;
-import org.siemac.metamac.core.common.exception.MetamacExceptionBuilder;
-import org.siemac.metamac.core.common.util.ApplicationContextProvider;
 import org.siemac.metamac.statistical.resources.core.enume.task.domain.TaskStatusTypeEnum;
-import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
-import org.siemac.metamac.statistical.resources.core.invocation.service.NoticesRestInternalService;
-import org.siemac.metamac.statistical.resources.core.notices.ServiceNoticeAction;
 import org.siemac.metamac.statistical.resources.core.task.domain.Task;
 import org.siemac.metamac.statistical.resources.core.task.domain.TaskInfoDataset;
 import org.siemac.metamac.statistical.resources.core.task.domain.TaskProperties;
@@ -54,7 +49,7 @@ public class TaskServiceFacadeImpl extends TaskServiceFacadeImplBase {
 
     @Override
     public void markTaskAsFailed(ServiceContext ctx, String job, Exception exception) throws MetamacException {
-        taskservice.markTaskAsFailed(ctx, job, exception);
+        taskservice.markTaskAsFailed(ctx, job);
     }
 
     @Override
@@ -66,17 +61,8 @@ public class TaskServiceFacadeImpl extends TaskServiceFacadeImplBase {
         PagedResult<Task> pagedResult = taskservice.findTasksByCondition(ctx, conditionList, PagingParameter.noLimits());
 
         for (Task task : pagedResult.getValues()) {
-            // Other Exception
-            MetamacException metamacException = MetamacExceptionBuilder.builder().withPrincipalException(ServiceExceptionType.TASKS_ERROR_SERVER_DOWN, task.getJob()).build();
             logger.info("Recovering task " + task.getJob() + " of the user " + task.getCreatedBy());
-            taskservice.markTaskAsFailed(ctx, task.getJob(), metamacException);
-
-            getNoticesRestInternalService().createErrorBackgroundNotification(task.getCreatedBy(), ServiceNoticeAction.CANCEL_IN_PROGRESS_TASKS_WHILE_SERVER_SHUTDOWN, metamacException);
+            taskservice.markTasksAsFailedOnApplicationStartup(ctx, task.getJob());
         }
     }
-
-    private NoticesRestInternalService getNoticesRestInternalService() {
-        return (NoticesRestInternalService) ApplicationContextProvider.getApplicationContext().getBean(NoticesRestInternalService.BEAN_ID);
-    }
-
 }
