@@ -52,6 +52,7 @@ public class RecoveryImportDatasetJob implements Job {
         JobDataMap data = context.getJobDetail().getJobDataMap();
         String user = data.getString(USER);
         String datasetVersionId = data.getString(DATASET_VERSION_ID);
+        Boolean notifyToUser = data.getBoolean(NOTIFY_TO_USER);
 
         // Execution
         ServiceContext serviceContext = new ServiceContext(user, context.getFireInstanceId(), "statistical-resources-core");
@@ -67,8 +68,10 @@ public class RecoveryImportDatasetJob implements Job {
         } catch (Exception e) {
             logger.error("RecoveryImportationJob: the importation with key " + jobKey.getName() + " has failed", e);
         } finally {
-            MetamacException metamacException = MetamacExceptionBuilder.builder().withPrincipalException(ServiceExceptionType.TASKS_ERROR_SERVER_DOWN, jobKey).build();
-            getNoticesRestInternalService().createErrorBackgroundNotification(user, ServiceNoticeAction.CANCEL_IN_PROGRESS_TASKS_WHILE_SERVER_SHUTDOWN, metamacException);
+            if (notifyToUser) {
+                MetamacException metamacException = MetamacExceptionBuilder.builder().withPrincipalException(ServiceExceptionType.TASKS_ERROR_SERVER_DOWN, jobKey).build();
+                getNoticesRestInternalService().createErrorBackgroundNotification(user, ServiceNoticeAction.CANCEL_IN_PROGRESS_TASKS_WHILE_SERVER_SHUTDOWN, metamacException);
+            }
         }
     }
 
