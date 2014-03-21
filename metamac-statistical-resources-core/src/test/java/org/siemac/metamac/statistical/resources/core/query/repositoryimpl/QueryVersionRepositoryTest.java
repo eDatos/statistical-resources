@@ -61,6 +61,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.test.utils.mocks.configuration.MetamacMock;
+import org.siemac.metamac.core.common.util.GeneratorUrnUtils;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResourceResult;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
@@ -126,6 +127,11 @@ public class QueryVersionRepositoryTest extends StatisticalResourcesBaseTest imp
         queryVersion.setType(QueryTypeEnum.FIXED);
         queryVersion.setQuery(query);
 
+        String queryCode = queryVersion.getLifeCycleStatisticalResource().getCode();
+        String queryVersionNumber = INIT_VERSION;
+        String queryAgency = queryVersion.getLifeCycleStatisticalResource().getMaintainer().getCodeNested();
+        queryVersion.getLifeCycleStatisticalResource().setUrn(GeneratorUrnUtils.generateSiemacStatisticalResourceQueryVersionUrn(new String[]{queryAgency}, queryCode, queryVersionNumber));
+
         // QuerySelectionItem 01
         QuerySelectionItem querySelectionItem01 = new QuerySelectionItem();
         querySelectionItem01.setQuery(queryVersion);
@@ -184,6 +190,11 @@ public class QueryVersionRepositoryTest extends StatisticalResourcesBaseTest imp
         queryVersion.setStatus(QueryStatusEnum.ACTIVE);
         queryVersion.setType(QueryTypeEnum.FIXED);
         queryVersion.setQuery(query);
+
+        String queryCode = queryVersion.getLifeCycleStatisticalResource().getCode();
+        String queryVersionNumber = INIT_VERSION;
+        String queryAgency = queryVersion.getLifeCycleStatisticalResource().getMaintainer().getCodeNested();
+        queryVersion.getLifeCycleStatisticalResource().setUrn(GeneratorUrnUtils.generateSiemacStatisticalResourceQueryVersionUrn(new String[]{queryAgency}, queryCode, queryVersionNumber));
 
         // QuerySelectionItem 01
         QuerySelectionItem querySelectionItem01 = new QuerySelectionItem();

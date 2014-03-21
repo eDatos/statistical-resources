@@ -218,6 +218,13 @@ public class BaseAsserts extends CommonAsserts {
         assertEqualsIdentifiableStatisticalResource(expected, actual);
     }
 
+    protected static void assertEqualsVersionedNameableStatisticalResourceForResourceThatChangesCode(NameableStatisticalResource expected, NameableStatisticalResource actual) {
+        assertEqualsInternationalString(expected.getTitle(), actual.getTitle());
+        assertEqualsInternationalString(expected.getDescription(), actual.getDescription());
+
+        assertEqualsVersionedIdentifiableStatisticalResourceForResourceThatChangesCode(expected, actual);
+    }
+
     protected static void assertEqualsVersionedNameableStatisticalResource(NameableStatisticalResource expected, NameableStatisticalResource actual) {
         assertEqualsInternationalString(expected.getTitle(), actual.getTitle());
         assertEqualsInternationalString(expected.getDescription(), actual.getDescription());
@@ -229,6 +236,10 @@ public class BaseAsserts extends CommonAsserts {
         assertEquals(expected.getCode(), actual.getCode());
         assertEquals(expected.getUrn(), actual.getUrn());
 
+        assertEqualsStatisticalResource(expected, actual);
+    }
+
+    public static void assertEqualsVersionedIdentifiableStatisticalResourceForResourceThatChangesCode(IdentifiableStatisticalResource expected, IdentifiableStatisticalResource actual) {
         assertEqualsStatisticalResource(expected, actual);
     }
 

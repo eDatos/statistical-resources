@@ -81,6 +81,7 @@ public class PublicationVersioningCopyUtils {
         }
         Cube target = new Cube();
         target.setNameableStatisticalResource(copyNameableStatisticalResource(source.getNameableStatisticalResource(), target.getNameableStatisticalResource()));
+        target.fillCodeAndUrn();
 
         target.setQuery(source.getQuery());
         target.setDataset(source.getDataset());
@@ -94,6 +95,8 @@ public class PublicationVersioningCopyUtils {
         }
         Chapter target = new Chapter();
         target.setNameableStatisticalResource(copyNameableStatisticalResource(source.getNameableStatisticalResource(), target.getNameableStatisticalResource()));
+        target.fillCodeAndUrn();
         return target;
     }
+
 }

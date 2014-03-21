@@ -6,7 +6,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.commons.lang.RandomStringUtils;
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
 import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
 import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
@@ -55,8 +54,6 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
 
     @Autowired
     private PublicationVersionRepository              publicationVersionRepository;
-
-    private static int                                CODE_MAX_LENGTH = 10;
 
     public PublicationServiceImpl() {
     }
@@ -220,10 +217,7 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
 
     private Chapter fillMetadataForCreateChapter(ServiceContext ctx, Chapter chapter, ExternalItem statisticalOperation) {
         FillMetadataForCreateResourceUtils.fillMetadataForCreateNameableResource(chapter.getNameableStatisticalResource(), statisticalOperation);
-        String code = RandomStringUtils.randomAlphanumeric(CODE_MAX_LENGTH);
-        chapter.getNameableStatisticalResource().setCode(code);
-        chapter.getNameableStatisticalResource().setUrn(GeneratorUrnUtils.generateSiemacStatisticalResourceCollectionChapterUrn(code));
-
+        chapter.fillCodeAndUrn();
         return chapter;
     }
 
@@ -297,11 +291,7 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
 
     private Cube fillMetadataForCreateCube(ServiceContext ctx, Cube cube, ExternalItem statisticalOperation) {
         FillMetadataForCreateResourceUtils.fillMetadataForCreateNameableResource(cube.getNameableStatisticalResource(), statisticalOperation);
-
-        String code = RandomStringUtils.randomAlphanumeric(CODE_MAX_LENGTH);
-        cube.getNameableStatisticalResource().setCode(code);
-        cube.getNameableStatisticalResource().setUrn(GeneratorUrnUtils.generateSiemacStatisticalResourceCollectionCubeUrn(code));
-
+        cube.fillCodeAndUrn();
         return cube;
     }
 

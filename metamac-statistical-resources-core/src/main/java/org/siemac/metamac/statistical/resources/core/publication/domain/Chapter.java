@@ -7,17 +7,17 @@ import org.apache.commons.lang.RandomStringUtils;
 import org.siemac.metamac.core.common.util.GeneratorUrnUtils;
 
 /**
- * Publication cube
+ * Publication chapter
  */
 @Entity
-@Table(name = "TB_CUBES")
-public class Cube extends CubeBase {
+@Table(name = "TB_CHAPTERS")
+public class Chapter extends ChapterBase {
 
     private static final long serialVersionUID = 1L;
 
     private static int        CODE_MAX_LENGTH  = 10;
 
-    public Cube() {
+    public Chapter() {
     }
 
     public void fillCodeAndUrn() {
@@ -26,11 +26,4 @@ public class Cube extends CubeBase {
         this.getNameableStatisticalResource().setUrn(GeneratorUrnUtils.generateSiemacStatisticalResourceCollectionCubeUrn(code));
     }
 
-    public String getDatasetUrn() {
-        return super.getDataset() != null ? super.getDataset().getIdentifiableStatisticalResource().getUrn() : null;
-    }
-
-    public String getQueryUrn() {
-        return super.getQuery() != null ? super.getQuery().getIdentifiableStatisticalResource().getUrn() : null;
-    }
 }

@@ -163,6 +163,7 @@ Application PublicationsStatisticalResources {
         Entity Chapter {
         	databaseTable="TB_CHAPTERS"
         	hint="idSequence=CHAPTERS"
+        	gap
         	
         	"Added explicitly to avoid that Sculptor generate UUID"
 			Long id key;

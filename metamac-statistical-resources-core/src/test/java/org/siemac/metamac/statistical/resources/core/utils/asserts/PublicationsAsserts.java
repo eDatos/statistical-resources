@@ -213,7 +213,7 @@ public class PublicationsAsserts extends BaseAsserts {
 
     private static void assertEqualsVersionedCube(Cube expected, Cube actual) {
         if (expected != null && actual != null) {
-            assertEqualsVersionedNameableStatisticalResource(expected.getNameableStatisticalResource(), actual.getNameableStatisticalResource());
+            assertEqualsVersionedNameableStatisticalResourceForResourceThatChangesCode(expected.getNameableStatisticalResource(), actual.getNameableStatisticalResource());
             assertEquals(expected.getDatasetUrn(), actual.getDatasetUrn());
             assertEquals(expected.getQueryUrn(), actual.getQueryUrn());
         }
@@ -221,7 +221,7 @@ public class PublicationsAsserts extends BaseAsserts {
 
     private static void assertEqualsVersionedChapter(Chapter expected, Chapter actual) {
         if (expected != null && actual != null) {
-            assertEqualsVersionedNameableStatisticalResource(expected.getNameableStatisticalResource(), actual.getNameableStatisticalResource());
+            assertEqualsVersionedNameableStatisticalResourceForResourceThatChangesCode(expected.getNameableStatisticalResource(), actual.getNameableStatisticalResource());
             assertNotSame(expected.getCreatedDate(), actual.getCreatedDate());
             assertNotSame(expected.getLastUpdated(), actual.getLastUpdated());
         }
