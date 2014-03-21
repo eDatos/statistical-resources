@@ -55,5 +55,8 @@
 
     <!-- Core -->
     <import resource="classpath:/spring/statistical-resources/applicationContext.xml" />
+    
+    <!-- Rest -->
+    <import resource="classpath:/spring/statistical-resources-rest-internal/applicationContext.xml" />
 </beans>
 
