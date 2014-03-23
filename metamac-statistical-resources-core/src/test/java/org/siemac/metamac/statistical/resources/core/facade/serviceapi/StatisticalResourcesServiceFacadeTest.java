@@ -36,6 +36,8 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetMockFactory.DATASET_01_BASIC_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetMockFactory.DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetMockFactory.DATASET_04_FULL_FILLED_WITH_1_DATASET_VERSIONS_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetMockFactory.DATASET_05_WITH_MULTIPLE_PUBLISHED_VERSIONS_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetMockFactory.DATASET_06_WITH_MULTIPLE_PUBLISHED_VERSIONS_AND_LATEST_NO_VISIBLE_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetMockFactory.DATASET_32_LAST_VERSION_NOT_VISIBLE_WITH_PUBLICATION_AND_QUERY_NOT_VISIBLE_COMPATIBLE_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_01_BASIC_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_02_BASIC_NAME;
@@ -2130,6 +2132,30 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         assertEquals(1, results.size());
 
         assertEquals(expectedResult.getLifeCycleStatisticalResource().getUrn(), results.get(0).getUrn());
+    }
+
+    @Test
+    @MetamacMock({DATASET_06_WITH_MULTIPLE_PUBLISHED_VERSIONS_AND_LATEST_NO_VISIBLE_NAME, DATASET_05_WITH_MULTIPLE_PUBLISHED_VERSIONS_NAME})
+    public void testFindDatasetsVersionsByConditionLastVersionFalse() throws Exception {
+        int expectedResult = datasetMockFactory.retrieveMock(DATASET_06_WITH_MULTIPLE_PUBLISHED_VERSIONS_AND_LATEST_NO_VISIBLE_NAME).getVersions().size();
+        expectedResult = expectedResult + datasetMockFactory.retrieveMock(DATASET_05_WITH_MULTIPLE_PUBLISHED_VERSIONS_NAME).getVersions().size();
+
+        // Without Restrictions: we want last versions and not last versions
+        MetamacCriteria metamacCriteria = new MetamacCriteria();
+        MetamacCriteriaResult<DatasetVersionBaseDto> pagedResults = statisticalResourcesServiceFacade.findDatasetsVersionsByCondition(getServiceContextAdministrador(), metamacCriteria);
+
+        assertEquals(expectedResult, pagedResults.getPaginatorResult().getTotalResults().intValue());
+    }
+
+    @Test
+    @MetamacMock({DATASET_06_WITH_MULTIPLE_PUBLISHED_VERSIONS_AND_LATEST_NO_VISIBLE_NAME, DATASET_05_WITH_MULTIPLE_PUBLISHED_VERSIONS_NAME})
+    public void testFindDatasetsVersionsByConditionLastVersionTrue() throws Exception {
+        // Restrictions
+        MetamacCriteria metamacCriteria = new MetamacCriteria();
+        setCriteriaBooleanPropertyRestriction(metamacCriteria, StatisticalResourcesCriteriaPropertyEnum.LAST_VERSION, OperationType.EQ, Boolean.TRUE);
+        MetamacCriteriaResult<DatasetVersionBaseDto> pagedResults = statisticalResourcesServiceFacade.findDatasetsVersionsByCondition(getServiceContextAdministrador(), metamacCriteria);
+
+        assertEquals(2, pagedResults.getPaginatorResult().getTotalResults().intValue());
     }
 
     @Override
