@@ -114,16 +114,19 @@ public class LifeCycleResourceVersionEditionForm extends GroupDynamicForm {
         return lifeCycleStatisticalResourceDto;
     }
 
-    private FormItemIfFunction getNextVersionDateFormItemIfFunction() {
+    protected FormItemIfFunction getNextVersionDateFormItemIfFunction() {
         return new FormItemIfFunction() {
 
             @Override
             public boolean execute(FormItem item, Object value, DynamicForm form) {
-                // Show item if the next version is SCHEDULED_UPDATE
-                String nextVersionValue = form.getValueAsString(VersionableResourceDS.NEXT_VERSION);
-                return StringUtils.equals(NextVersionTypeEnum.SCHEDULED_UPDATE.toString(), nextVersionValue);
+                return isNextVersionScheduledUpdate();
             }
         };
+    }
+
+    protected boolean isNextVersionScheduledUpdate() {
+        String nextVersionValue = getValueAsString(VersionableResourceDS.NEXT_VERSION);
+        return StringUtils.equals(NextVersionTypeEnum.SCHEDULED_UPDATE.toString(), nextVersionValue);
     }
 
     // ------------------------------------------------------------------------------------------------------------

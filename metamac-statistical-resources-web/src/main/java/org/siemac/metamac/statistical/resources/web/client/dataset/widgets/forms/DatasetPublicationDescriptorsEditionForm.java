@@ -29,30 +29,8 @@ import com.smartgwt.client.widgets.form.fields.FormItemIcon;
 
 public class DatasetPublicationDescriptorsEditionForm extends SiemacMetadataPublicationDescriptorsEditionForm {
 
-    private DatasetMetadataTabUiHandlers uiHandlers;
-    private SearchExternalItemSimpleItem updateFrequency;
-
     public DatasetPublicationDescriptorsEditionForm() {
         super();
-
-        final CustomDateItem dateNextUpdate = createDateNextUpdateItem();
-        dateNextUpdate.setValidators(new CustomRequiredValidator() {
-
-            @Override
-            protected boolean condition(Object value) {
-                return CommonUtils.isResourceInProductionValidationOrGreaterProcStatus(procStatus) ? dateNextUpdate.getValueAsDate() != null : true;
-            }
-        });
-
-        updateFrequency = createUpdateFrequencyItem();
-        updateFrequency.setValidators(new CustomRequiredValidator() {
-
-            @Override
-            protected boolean condition(Object value) {
-                ExternalItemDto externalItem = DatasetPublicationDescriptorsEditionForm.this.getValueAsExternalItemDto(DatasetDS.UPDATE_FRECUENCY);
-                return CommonUtils.isResourceInProductionValidationOrGreaterProcStatus(procStatus) ? externalItem != null : true;
-            }
-        });
 
         final CustomSelectItem statisticOfficiality = new CustomSelectItem(DatasetDS.STATISTIC_OFFICIALITY, getConstants().datasetStatisticOfficiality());
         statisticOfficiality.setValueMap(CommonUtils.getStatisticOfficialityHashMap());
@@ -67,22 +45,11 @@ public class DatasetPublicationDescriptorsEditionForm extends SiemacMetadataPubl
 
         ViewMultiLanguageTextItem bibliographicCitation = new ViewMultiLanguageTextItem(DatasetDS.BIBLIOGRAPHIC_CITATION, getConstants().datasetBibliographicCitation());
 
-        addFields(dateNextUpdate, updateFrequency, statisticOfficiality, bibliographicCitation);
-    }
-
-    private CustomDateItem createDateNextUpdateItem() {
-        FormItemIcon infoIcon = new FormItemIcon();
-        infoIcon.setSrc(GlobalResources.RESOURCE.info().getURL());
-        infoIcon.setPrompt(StatisticalResourcesWeb.getMessages().dateNextUpdateInfo());
-        CustomDateItem item = new CustomDateItem(DatasetDS.DATE_NEXT_UPDATE, getConstants().datasetDateNextUpdate());
-        item.setIcons(infoIcon);
-        return item;
+        addFields(statisticOfficiality, bibliographicCitation);
     }
 
     public void setDatasetVersionDto(DatasetVersionDto datasetDto) {
         setSiemacMetadataStatisticalResourceDto(datasetDto);
-        setValue(DatasetDS.DATE_NEXT_UPDATE, datasetDto.getDateNextUpdate());
-        setValue(DatasetDS.UPDATE_FRECUENCY, datasetDto.getUpdateFrequency());
         setValue(DatasetDS.BIBLIOGRAPHIC_CITATION, RecordUtils.getInternationalStringRecord(datasetDto.getBibliographicCitation()));
 
         if (datasetDto.getStatisticOfficiality() != null) {
@@ -94,8 +61,6 @@ public class DatasetPublicationDescriptorsEditionForm extends SiemacMetadataPubl
 
     public DatasetVersionDto getDatasetVersionDto(DatasetVersionDto datasetDto) {
         datasetDto = (DatasetVersionDto) getSiemacMetadataStatisticalResourceDto(datasetDto);
-        datasetDto.setDateNextUpdate(getDate(getItem(DatasetDS.DATE_NEXT_UPDATE)));
-        datasetDto.setUpdateFrequency(getValueAsExternalItemDto(DatasetDS.UPDATE_FRECUENCY));
 
         String statisticOfficialityIdentifier = getValueAsString(DatasetDS.STATISTIC_OFFICIALITY);
         if (!StringUtils.isEmpty(statisticOfficialityIdentifier)) {
@@ -106,22 +71,4 @@ public class DatasetPublicationDescriptorsEditionForm extends SiemacMetadataPubl
         return datasetDto;
     }
 
-    public void setCodesForUpdateFrequency(List<ExternalItemDto> items, int firstResult, int totalResults) {
-        updateFrequency.setResources(items, firstResult, totalResults);
-    }
-
-    private SearchExternalItemSimpleItem createUpdateFrequencyItem() {
-        return new SearchExternalItemSimpleItem(DatasetDS.UPDATE_FRECUENCY, getConstants().datasetUpdateFrequency(), StatisticalResourceWebConstants.FORM_LIST_MAX_RESULTS) {
-
-            @Override
-            protected void retrieveResources(int firstResult, int maxResults, MetamacWebCriteria webCriteria) {
-                uiHandlers.retrieveTemporalCodesForField(firstResult, maxResults, webCriteria, DatasetMetadataExternalField.UPDATE_FREQUENCY);
-            }
-        };
-    }
-
-    public void setUiHandlers(DatasetMetadataTabUiHandlers uiHandlers) {
-        super.setUiHandlers(uiHandlers);
-        this.uiHandlers = uiHandlers;
-    }
 }

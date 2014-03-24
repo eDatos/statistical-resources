@@ -50,7 +50,7 @@ public class RequiredFieldUtils {
     // DATASET VERSION
 
     private static final String[] datasetFieldsToProductionValidation = new String[]{DESCRIPTION, NEXT_VERSION, VERSION_RATIONALE_TYPES, LANGUAGE, LANGUAGES, CREATOR, PUBLISHER, COMMON_METADATA,
-            GEOGRAPHIC_COVERAGE, GEOGRAPHIC_GRANULARITY, TEMPORAL_COVERAGE, TEMPORAL_GRANULARITY, DATE_NEXT_UPDATE, UPDATE_FRECUENCY, STATISTIC_OFFICIALITY};
+            GEOGRAPHIC_COVERAGE, GEOGRAPHIC_GRANULARITY, TEMPORAL_COVERAGE, TEMPORAL_GRANULARITY, UPDATE_FRECUENCY, STATISTIC_OFFICIALITY};
     private static final String[] datasetFieldsToDiffusionValidation  = datasetFieldsToProductionValidation;
     private static final String[] datasetFieldsToPublication          = datasetFieldsToDiffusionValidation;
 
