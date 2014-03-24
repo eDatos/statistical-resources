@@ -189,7 +189,7 @@ public class PublicationDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements
         }
 
         PublicationStructureDto publicationStructureDto = new PublicationStructureDto();
-        publicationStructureDto.setPublicationVersion(publicationVersionDoToPublicationVersionRelatedResourceDto(publicationVersion));
+        publicationStructureDto.setPublicationVersion(publicationVersionDoToBaseDto(publicationVersion));
 
         if (!publicationVersion.getChildrenFirstLevel().isEmpty()) {
             publicationStructureDto.getElements().addAll(elementsLevelDoListToDtoList(publicationVersion.getChildrenFirstLevel()));

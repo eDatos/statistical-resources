@@ -7,9 +7,12 @@ import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.statistical.resources.core.dto.NameableStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.CubeDto;
+import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionBaseDto;
+import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionDto;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
 import org.siemac.metamac.statistical.resources.web.client.constants.StatisticalResourceWebConstants;
 import org.siemac.metamac.statistical.resources.web.client.publication.model.ds.ElementLevelDS;
+import org.siemac.metamac.statistical.resources.web.client.publication.utils.PublicationClientSecurityUtils;
 import org.siemac.metamac.statistical.resources.web.client.publication.view.handlers.PublicationStructureTabUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
 import org.siemac.metamac.statistical.resources.web.client.widgets.windows.search.SearchSingleStatisticalRelatedResourcePaginatedWindow;
@@ -50,7 +53,7 @@ public class PublicationStructureElementPanel extends VLayout {
     private SearchSingleStatisticalRelatedResourcePaginatedWindow searchDatasetsWindow;
     private SearchSingleStatisticalRelatedResourcePaginatedWindow searchQueriesWindow;
 
-    private RelatedResourceDto                                    publicationVersion;
+    private PublicationVersionBaseDto                             publicationVersion;
     private NameableStatisticalResourceDto                        element;
 
     private PublicationStructureTabUiHandlers                     uiHandlers;
@@ -216,7 +219,14 @@ public class PublicationStructureElementPanel extends VLayout {
         mainFormLayout.setViewMode();
 
         setElementViewMode(element);
-        setElementEditionMode(element);
+
+        if (element instanceof CubeDto) {
+            mainFormLayout.setCanEdit(PublicationClientSecurityUtils.canUpdateCube(publicationVersion.getProcStatus()));
+            setElementEditionMode(element);
+        } else {
+            mainFormLayout.setCanEdit(PublicationClientSecurityUtils.canUpdateChapter(publicationVersion.getProcStatus()));
+            setElementEditionMode(element);
+        }
     }
 
     private void setElementViewMode(NameableStatisticalResourceDto element) {
@@ -296,7 +306,7 @@ public class PublicationStructureElementPanel extends VLayout {
         return element;
     }
 
-    public void setPublicationVersion(RelatedResourceDto publicationVersion) {
+    public void setPublicationVersion(PublicationVersionBaseDto publicationVersion) {
         this.publicationVersion = publicationVersion;
     }
 

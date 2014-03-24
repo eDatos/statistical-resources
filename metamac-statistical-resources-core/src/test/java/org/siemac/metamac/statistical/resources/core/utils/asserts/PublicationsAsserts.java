@@ -405,8 +405,8 @@ public class PublicationsAsserts extends BaseAsserts {
         assertRelaxedEqualsObject(expected.getCube(), actual.getCube());
     }
 
-    public static void assertEqualsPublicationVersionStructure(PublicationVersion expected, PublicationStructureDto actual) {
-        assertEqualsPublicationVersion(expected, actual.getPublicationVersion());
+    public static void assertEqualsPublicationVersionStructure(PublicationVersion expected, PublicationStructureDto actual) throws MetamacException {
+        assertEqualsPublicationVersionBase(expected, actual.getPublicationVersion());
         assertEqualsChildren(expected.getChildrenFirstLevel(), actual.getElements());
     }
 

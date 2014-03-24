@@ -16,11 +16,14 @@ public class PublicationClientSecurityUtils extends BaseClientSecurityUtils {
     }
 
     public static boolean canUpdatePublicationVersion(PublicationVersionDto publicationVersionDto) {
+        if (isPublished(publicationVersionDto.getProcStatus())) {
+            return false;
+        }
         return SharedPublicationsSecurityUtils.canUpdatePublicationVersion(getMetamacPrincipal());
     }
 
     public static boolean canDeletePublicationVersion(ProcStatusEnum publicationProcStatus) {
-        if (ProcStatusEnum.PUBLISHED.equals(publicationProcStatus)) {
+        if (isPublished(publicationProcStatus)) {
             return false;
         }
         return SharedPublicationsSecurityUtils.canDeletePublicationVersion(getMetamacPrincipal());
@@ -58,23 +61,42 @@ public class PublicationClientSecurityUtils extends BaseClientSecurityUtils {
         return SharedPublicationsSecurityUtils.canPreviewDataPublicationVersion(getMetamacPrincipal());
     }
 
+    public static boolean canUpdateElementLocation(ProcStatusEnum publicationProcStatus) {
+        if (isPublished(publicationProcStatus)) {
+            return false;
+        }
+        return SharedPublicationsSecurityUtils.canUpdateElementLocation(getMetamacPrincipal());
+    }
+
     // ------------------------------------------------------------------------
     // CHAPTERS
     // ------------------------------------------------------------------------
 
-    public static boolean canCreateChapter() {
+    public static boolean canCreateChapter(ProcStatusEnum publicationProcStatus) {
+        if (isPublished(publicationProcStatus)) {
+            return false;
+        }
         return SharedPublicationsSecurityUtils.canCreateChapter(getMetamacPrincipal());
     }
 
-    public static boolean canUpdateChapter() {
+    public static boolean canUpdateChapter(ProcStatusEnum publicationProcStatus) {
+        if (isPublished(publicationProcStatus)) {
+            return false;
+        }
         return SharedPublicationsSecurityUtils.canUpdateChapter(getMetamacPrincipal());
     }
 
-    public static boolean canUpdateChapterLocation() {
+    public static boolean canUpdateChapterLocation(ProcStatusEnum publicationProcStatus) {
+        if (isPublished(publicationProcStatus)) {
+            return false;
+        }
         return SharedPublicationsSecurityUtils.canUpdateChapterLocation(getMetamacPrincipal());
     }
 
-    public static boolean canDeleteChapter() {
+    public static boolean canDeleteChapter(ProcStatusEnum publicationProcStatus) {
+        if (isPublished(publicationProcStatus)) {
+            return false;
+        }
         return SharedPublicationsSecurityUtils.canDeleteChapter(getMetamacPrincipal());
     }
 
@@ -82,19 +104,31 @@ public class PublicationClientSecurityUtils extends BaseClientSecurityUtils {
     // CUBES
     // ------------------------------------------------------------------------
 
-    public static boolean canCreateCube() {
+    public static boolean canCreateCube(ProcStatusEnum publicationProcStatus) {
+        if (isPublished(publicationProcStatus)) {
+            return false;
+        }
         return SharedPublicationsSecurityUtils.canCreateCube(getMetamacPrincipal());
     }
 
-    public static boolean canUpdateCube() {
+    public static boolean canUpdateCube(ProcStatusEnum publicationProcStatus) {
+        if (isPublished(publicationProcStatus)) {
+            return false;
+        }
         return SharedPublicationsSecurityUtils.canUpdateCube(getMetamacPrincipal());
     }
 
-    public static boolean canUpdateCubeLocation() {
+    public static boolean canUpdateCubeLocation(ProcStatusEnum publicationProcStatus) {
+        if (isPublished(publicationProcStatus)) {
+            return false;
+        }
         return SharedPublicationsSecurityUtils.canUpdateCubeLocation(getMetamacPrincipal());
     }
 
-    public static boolean canDeleteCube() {
+    public static boolean canDeleteCube(ProcStatusEnum publicationProcStatus) {
+        if (isPublished(publicationProcStatus)) {
+            return false;
+        }
         return SharedPublicationsSecurityUtils.canDeleteCube(getMetamacPrincipal());
     }
 

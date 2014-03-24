@@ -63,7 +63,6 @@ public class QueryMainFormLayout extends LifecycleMainFormLayout {
 
     @Override
     protected boolean canPreviewData() {
-        // Do not show the query preview button
         return true;
     }
 }

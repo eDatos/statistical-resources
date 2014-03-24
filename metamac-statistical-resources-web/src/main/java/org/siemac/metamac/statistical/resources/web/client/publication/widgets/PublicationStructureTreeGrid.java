@@ -8,12 +8,13 @@ import java.util.List;
 
 import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.statistical.resources.core.dto.NameableStatisticalResourceDto;
-import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.ElementLevelDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationStructureDto;
+import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionBaseDto;
 import org.siemac.metamac.statistical.resources.web.client.base.widgets.NavigableTreeGrid;
 import org.siemac.metamac.statistical.resources.web.client.publication.model.ds.ElementLevelDS;
 import org.siemac.metamac.statistical.resources.web.client.publication.model.record.ElementLevelTreeNode;
+import org.siemac.metamac.statistical.resources.web.client.publication.utils.PublicationClientSecurityUtils;
 import org.siemac.metamac.statistical.resources.web.client.publication.view.handlers.PublicationStructureTabUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.utils.StatisticalResourcesRecordUtils;
 import org.siemac.metamac.web.common.client.resources.StyleUtils;
@@ -70,7 +71,7 @@ public class PublicationStructureTreeGrid extends NavigableTreeGrid {
     protected HandlerRegistration               leafClickHandlerRegistration;
     protected HandlerRegistration               folderDropHandlerRegistration;
 
-    protected RelatedResourceDto                publicationVersion;
+    protected PublicationVersionBaseDto         publicationVersion;
 
     protected Tree                              tree;
     protected TreeGridField                     titleField;
@@ -260,34 +261,38 @@ public class PublicationStructureTreeGrid extends NavigableTreeGrid {
                 TreeNode droppedNode = event.getNodes().length > 0 ? event.getNodes()[0] : null;
                 int position = event.getIndex(); // Absolute position
                 if (isDroppable(dropFolder)) {
-                    TreeNode[] siblings = getData().getChildren(dropFolder);
-
-                    // We find out the position of the node under the dropFolder
-                    int relativePosition = position; // Used to update position
-                    int pos = -1;
-                    for (int i = 0; i < siblings.length; i++) {
-                        if (siblings[i] == droppedNode) {
-                            pos = i;
-                        }
-                    }
-                    if (pos >= 0 && pos < position) { // If moved node is before final position, the position must be updated
-                        relativePosition--;
-                    }
-
-                    relativePosition++;
-
-                    String newItemParent = SCHEME_NODE_NAME.equals(dropFolder.getName()) ? SCHEME_NODE_NAME : dropFolder.getAttribute(ElementLevelDS.URN);
-
-                    if (SCHEME_NODE_NAME.equals(newItemParent)) {
-                        // The code will be moved to the first level. The parent is null.
-                        newItemParent = null;
-                    }
-
-                    if (droppedNode instanceof ElementLevelTreeNode) {
-                        getUiHandlers().updateElementLocation(publicationVersion.getUrn(), ((ElementLevelTreeNode) droppedNode).getUrn(), newItemParent, Long.valueOf(relativePosition));
-                    }
+                    updateLocation(dropFolder, droppedNode, position);
                 }
                 event.cancel();
+            }
+
+            protected void updateLocation(TreeNode dropFolder, TreeNode droppedNode, int position) {
+                TreeNode[] siblings = getData().getChildren(dropFolder);
+
+                // We find out the position of the node under the dropFolder
+                int relativePosition = position; // Used to update position
+                int pos = -1;
+                for (int i = 0; i < siblings.length; i++) {
+                    if (siblings[i] == droppedNode) {
+                        pos = i;
+                    }
+                }
+                if (pos >= 0 && pos < position) { // If moved node is before final position, the position must be updated
+                    relativePosition--;
+                }
+
+                relativePosition++;
+
+                String newItemParent = SCHEME_NODE_NAME.equals(dropFolder.getName()) ? SCHEME_NODE_NAME : dropFolder.getAttribute(ElementLevelDS.URN);
+
+                if (SCHEME_NODE_NAME.equals(newItemParent)) {
+                    // The code will be moved to the first level. The parent is null.
+                    newItemParent = null;
+                }
+
+                if (droppedNode instanceof ElementLevelTreeNode) {
+                    getUiHandlers().updateElementLocation(publicationVersion.getUrn(), ((ElementLevelTreeNode) droppedNode).getUrn(), newItemParent, Long.valueOf(relativePosition));
+                }
             }
         });
     }
@@ -310,7 +315,11 @@ public class PublicationStructureTreeGrid extends NavigableTreeGrid {
         publicationVersionRootNode.setChildren(createElementLevelsTreeNodes(publicationStructureDto.getElements()));
 
         addTreeNodesToTreeGrid(new ElementLevelTreeNode[]{publicationVersionRootNode});
+
         setAutoFitMaxRecords(numberOfElementsInTheTree);
+
+        setCanDrag(PublicationClientSecurityUtils.canUpdateElementLocation(publicationVersion.getProcStatus()));
+
     }
 
     public ElementLevelTreeNode[] createElementLevelsTreeNodes(List<ElementLevelDto> elementLevelDtos) {
@@ -345,8 +354,8 @@ public class PublicationStructureTreeGrid extends NavigableTreeGrid {
         contextMenu.showContextMenu();
     }
 
-    protected ElementLevelTreeNode createPublicationVersionRootNode(RelatedResourceDto publicationVersion) {
-        return StatisticalResourcesRecordUtils.getPublicationVersionRootNode(SCHEME_NODE_NAME, publicationVersion);
+    protected ElementLevelTreeNode createPublicationVersionRootNode(PublicationVersionBaseDto publicationVersion2) {
+        return StatisticalResourcesRecordUtils.getPublicationVersionRootNode(SCHEME_NODE_NAME, publicationVersion2);
     }
 
     protected void addItemsToContextMenu(MenuItem... menuItems) {
@@ -435,32 +444,34 @@ public class PublicationStructureTreeGrid extends NavigableTreeGrid {
     }
 
     private boolean canCreateChapter() {
-        // TODO Security (METAMAC-1845)
-
         // Chapters cannot be created under a cube
         if (selectedContextClickElement != null && selectedContextClickElement.getCube() != null) {
             return false;
         }
 
-        return true;
+        return PublicationClientSecurityUtils.canCreateChapter(publicationVersion.getProcStatus());
     }
 
     private boolean canCreateCube() {
-        // TODO Security (METAMAC-1845)
-
         // Cubes cannot be created under a cube
         if (selectedContextClickElement != null && selectedContextClickElement.getCube() != null) {
             return false;
         }
 
-        return true;
+        return PublicationClientSecurityUtils.canCreateCube(publicationVersion.getProcStatus());
     }
 
     private boolean canDeleteElement(String nodeName) {
-        // TODO Security (METAMAC-1845)
         if (SCHEME_NODE_NAME.equals(nodeName)) {
             return false;
         }
-        return true;
+        if (selectedContextClickElement != null) {
+            if (selectedContextClickElement.getCube() != null) {
+                return PublicationClientSecurityUtils.canDeleteCube(publicationVersion.getProcStatus());
+            } else if (selectedContextClickElement.getChapter() != null) {
+                return PublicationClientSecurityUtils.canDeleteChapter(publicationVersion.getProcStatus());
+            }
+        }
+        return false;
     }
 }

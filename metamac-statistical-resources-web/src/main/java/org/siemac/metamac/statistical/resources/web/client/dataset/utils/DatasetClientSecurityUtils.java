@@ -23,6 +23,9 @@ public class DatasetClientSecurityUtils extends BaseClientSecurityUtils {
         if (BooleanUtils.isTrue(datasetVersionDto.getIsTaskInBackground())) {
             return false;
         }
+        if (isPublished(datasetVersionDto.getProcStatus())) {
+            return false;
+        }
         return SharedDatasetsSecurityUtils.canUpdateDatasetVersion(getMetamacPrincipal());
     }
 
@@ -38,7 +41,7 @@ public class DatasetClientSecurityUtils extends BaseClientSecurityUtils {
         if (BooleanUtils.isTrue(isTaskInBackground)) {
             return false;
         }
-        if (ProcStatusEnum.PUBLISHED.equals(procStatus)) {
+        if (isPublished(procStatus)) {
             return false;
         }
         return SharedDatasetsSecurityUtils.canDeleteDatasetVersion(getMetamacPrincipal());
@@ -143,8 +146,11 @@ public class DatasetClientSecurityUtils extends BaseClientSecurityUtils {
     // DATASOURCES
     // ------------------------------------------------------------------------
 
-    public static boolean canDeleteDatasource(DatasetVersionDto datasetVersionDto) {
+    public static boolean canDeleteDatasources(DatasetVersionDto datasetVersionDto) {
         if (BooleanUtils.isTrue(datasetVersionDto.getIsTaskInBackground())) {
+            return false;
+        }
+        if (isPublished(datasetVersionDto.getProcStatus())) {
             return false;
         }
         return SharedDatasetsSecurityUtils.canDeleteDatasource(getMetamacPrincipal());
@@ -156,7 +162,7 @@ public class DatasetClientSecurityUtils extends BaseClientSecurityUtils {
         }
 
         // Datasources can only be imported in datasets in DRAFT or in VALIDATION_REJECTED
-        if (!ProcStatusEnum.DRAFT.equals(datasetVersionDto.getProcStatus()) && !ProcStatusEnum.VALIDATION_REJECTED.equals(datasetVersionDto.getProcStatus())) {
+        if (!isDraftOrValidationRejected(datasetVersionDto.getProcStatus())) {
             return false;
         }
         return SharedDatasetsSecurityUtils.canImportDatasourcesInDatasetVersion(getMetamacPrincipal());

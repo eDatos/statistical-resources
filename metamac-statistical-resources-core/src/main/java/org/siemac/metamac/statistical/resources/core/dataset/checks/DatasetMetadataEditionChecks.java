@@ -25,20 +25,4 @@ public class DatasetMetadataEditionChecks extends MetadataEditionChecks {
         return isDraftOrValidationRejected(procStatus);
     }
 
-
-    private static boolean isDraftOrValidationRejected(ProcStatusEnum procStatus) {
-        if (isAnyStatus(procStatus, ProcStatusEnum.DRAFT, ProcStatusEnum.VALIDATION_REJECTED)) {
-            return true;
-        }
-        return false;
-    }
-
-    private static boolean isAnyStatus(ProcStatusEnum status, ProcStatusEnum... posibleStatus) {
-        for (ProcStatusEnum posible : posibleStatus) {
-            if (status.equals(posible)) {
-                return true;
-            }
-        }
-        return false;
-    }
 }

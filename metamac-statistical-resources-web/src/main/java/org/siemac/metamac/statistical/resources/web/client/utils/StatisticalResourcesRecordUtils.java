@@ -10,7 +10,6 @@ import org.siemac.metamac.statistical.resources.core.dto.LifeCycleStatisticalRes
 import org.siemac.metamac.statistical.resources.core.dto.LifeCycleStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.NameableStatisticalResourceBaseDto;
 import org.siemac.metamac.statistical.resources.core.dto.NameableStatisticalResourceDto;
-import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.SiemacMetadataStatisticalResourceBaseDto;
 import org.siemac.metamac.statistical.resources.core.dto.SiemacMetadataStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.VersionRationaleTypeDto;
@@ -219,7 +218,7 @@ public class StatisticalResourcesRecordUtils extends RecordUtils {
         return elementLevelNode;
     }
 
-    public static ElementLevelTreeNode getPublicationVersionRootNode(String schemeNodeName, RelatedResourceDto publicationVersion) {
+    public static ElementLevelTreeNode getPublicationVersionRootNode(String schemeNodeName, PublicationVersionBaseDto publicationVersion) {
         ElementLevelTreeNode elementLevelTreeNode = new ElementLevelTreeNode();
         elementLevelTreeNode.setID(schemeNodeName);
         elementLevelTreeNode.setTitle(InternationalStringUtils.getLocalisedString(publicationVersion.getTitle()));

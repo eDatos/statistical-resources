@@ -1,6 +1,7 @@
 package org.siemac.metamac.statistical.resources.core.base.checks;
 
 import org.siemac.metamac.statistical.resources.core.enume.domain.NextVersionTypeEnum;
+import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesVersionUtils;
 
 public class MetadataEditionChecks {
@@ -46,5 +47,21 @@ public class MetadataEditionChecks {
             return false;
         }
         return true;
+    }
+
+    public static boolean isDraftOrValidationRejected(ProcStatusEnum procStatus) {
+        if (isAnyStatus(procStatus, ProcStatusEnum.DRAFT, ProcStatusEnum.VALIDATION_REJECTED)) {
+            return true;
+        }
+        return false;
+    }
+
+    public static boolean isAnyStatus(ProcStatusEnum status, ProcStatusEnum... posibleStatus) {
+        for (ProcStatusEnum posible : posibleStatus) {
+            if (status.equals(posible)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

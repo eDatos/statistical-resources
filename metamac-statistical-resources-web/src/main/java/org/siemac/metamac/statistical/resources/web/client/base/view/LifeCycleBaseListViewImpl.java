@@ -163,16 +163,7 @@ public abstract class LifeCycleBaseListViewImpl<C extends UiHandlers> extends Vi
     }
 
     private void showDeleteButton(ListGridRecord[] records) {
-        boolean canBeDeleted = true;
-        for (ListGridRecord record : records) {
-            if (!canDelete(record)) {
-                canBeDeleted = false;
-                break;
-            }
-        }
-        if (canBeDeleted) {
-            deleteButton.show();
-        }
+        deleteButton.show();
     }
 
     // Send to production validation
@@ -415,7 +406,6 @@ public abstract class LifeCycleBaseListViewImpl<C extends UiHandlers> extends Vi
     protected abstract ClickHandler getCancelProgrammedPublicationClickHandler();
 
     protected abstract boolean canCreate();
-    protected abstract boolean canDelete(ListGridRecord record);
     protected abstract boolean canSendToProductionValidation(ListGridRecord record);
     protected abstract boolean canSendToDiffusionValidation(ListGridRecord record);
     protected abstract boolean canRejectValidation(ListGridRecord record);

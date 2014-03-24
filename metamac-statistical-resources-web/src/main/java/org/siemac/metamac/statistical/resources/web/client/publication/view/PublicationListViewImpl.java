@@ -253,11 +253,6 @@ public class PublicationListViewImpl extends StatisticalResourceBaseListViewImpl
     }
 
     @Override
-    protected boolean canDelete(ListGridRecord record) {
-        return PublicationClientSecurityUtils.canDeletePublicationVersion(((PublicationRecord) record).getPublicationVersionBaseDto().getProcStatus());
-    }
-
-    @Override
     protected boolean canSendToProductionValidation(ListGridRecord record) {
         return PublicationClientSecurityUtils.canSendPublicationVersionToProductionValidation();
     }

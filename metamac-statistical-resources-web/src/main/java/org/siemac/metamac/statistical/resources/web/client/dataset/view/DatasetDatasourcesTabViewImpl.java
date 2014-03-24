@@ -134,6 +134,15 @@ public class DatasetDatasourcesTabViewImpl extends ViewWithUiHandlers<DatasetDat
             fieldCode.setAlign(Alignment.LEFT);
             datasourcesList.setFields(fieldCode);
 
+            datasourcesList.addSelectionChangedHandler(new SelectionChangedHandler() {
+
+                @Override
+                public void onSelectionChanged(SelectionEvent event) {
+                    updateListGridButtonsVisibilityBasedOnSelection(event.getSelection());
+                }
+
+            });
+
             // Delete confirmation window
 
             deleteConfirmationWindow = new DeleteConfirmationWindow(getConstants().actionConfirmDeleteTitle(), getConstants().datasourceDeleteConfirmation());
@@ -144,6 +153,11 @@ public class DatasetDatasourcesTabViewImpl extends ViewWithUiHandlers<DatasetDat
             addMember(toolStrip);
             addMember(datasourcesList);
             bindEvents();
+        }
+
+        private void updateListGridButtonsVisibilityBasedOnSelection(ListGridRecord[] selection) {
+            boolean someSelected = selection.length > 0;
+            deleteDatasourceButton.setVisible(DatasetClientSecurityUtils.canDeleteDatasources(datasetVersionDto) && someSelected);
         }
 
         private void setUiHandlers(DatasetDatasourcesTabUiHandlers uiHandlers) {
@@ -207,7 +221,7 @@ public class DatasetDatasourcesTabViewImpl extends ViewWithUiHandlers<DatasetDat
         }
 
         private void showListGridDeleteButton() {
-            if (DatasetClientSecurityUtils.canDeleteDatasource(datasetVersionDto)) {
+            if (DatasetClientSecurityUtils.canDeleteDatasources(datasetVersionDto)) {
                 deleteDatasourceButton.show();
             }
         }
@@ -246,6 +260,7 @@ public class DatasetDatasourcesTabViewImpl extends ViewWithUiHandlers<DatasetDat
 
         private void updateButtonsVisibility() {
             importDatasourcesButton.setVisible(DatasetClientSecurityUtils.canImportDatasourcesInDatasetVersion(datasetVersionDto));
+            updateListGridButtonsVisibilityBasedOnSelection(datasourcesList.getSelectedRecords());
         }
     }
 

@@ -20,7 +20,7 @@ Application PublicationsStatisticalResourcesDto {
 		"Dto for structure of publication"
 		DataTransferObject PublicationStructureDto {
 			- List<@ElementLevelDto> elements;
-			- @RelatedResourceDto publicationVersion;
+			- @PublicationVersionBaseDto publicationVersion;
 		}
 
 		"Dto for element of level. Can be a chapter or a cube"

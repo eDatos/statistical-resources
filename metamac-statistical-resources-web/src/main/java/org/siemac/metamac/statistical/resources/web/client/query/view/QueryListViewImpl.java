@@ -237,12 +237,6 @@ public class QueryListViewImpl extends LifeCycleBaseListViewImpl<QueryListUiHand
     }
 
     @Override
-    protected boolean canDelete(ListGridRecord record) {
-        QueryRecord queryRecord = (QueryRecord) record;
-        return QueryClientSecurityUtils.canDeleteQueryVersion(queryRecord.getQueryVersionBaseDto());
-    }
-
-    @Override
     protected boolean canSendToProductionValidation(ListGridRecord record) {
         return QueryClientSecurityUtils.canSendQueryVersionToProductionValidation();
     }
