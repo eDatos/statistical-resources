@@ -130,7 +130,7 @@ public class MetamacWebRestCriteriaUtils {
         StringBuilder queryBuilder = new StringBuilder();
         if (webCriteria != null) {
             addSimpleRestCriteria(queryBuilder, webCriteria, CategoryCriteriaPropertyRestriction.NAME, CategoryCriteriaPropertyRestriction.ID, CategoryCriteriaPropertyRestriction.URN);
-            addSchemeRestCriteria(queryBuilder, webCriteria, CategoryCriteriaPropertyRestriction.CATEGORY_SCHEME_URN);
+            addSchemeRestCriteria(queryBuilder, webCriteria, CategoryCriteriaPropertyRestriction.CATEGORY_SCHEME_URN, CategoryCriteriaPropertyRestriction.CATEGORY_SCHEME_LATEST);
         }
         return queryBuilder.toString();
     }
@@ -156,7 +156,7 @@ public class MetamacWebRestCriteriaUtils {
         if (webCriteria != null) {
             addSimpleRestCriteria(queryBuilder, webCriteria, ConceptCriteriaPropertyRestriction.NAME, ConceptCriteriaPropertyRestriction.ID, ConceptCriteriaPropertyRestriction.URN);
 
-            addSchemeRestCriteria(queryBuilder, webCriteria, ConceptCriteriaPropertyRestriction.CONCEPT_SCHEME_URN);
+            addSchemeRestCriteria(queryBuilder, webCriteria, ConceptCriteriaPropertyRestriction.CONCEPT_SCHEME_URN, ConceptCriteriaPropertyRestriction.CONCEPT_SCHEME_LATEST);
         }
         return queryBuilder.toString();
     }
@@ -186,7 +186,7 @@ public class MetamacWebRestCriteriaUtils {
         if (webCriteria != null) {
             addSimpleRestCriteria(queryBuilder, webCriteria, OrganisationCriteriaPropertyRestriction.NAME, OrganisationCriteriaPropertyRestriction.ID, OrganisationCriteriaPropertyRestriction.URN);
 
-            addSchemeRestCriteria(queryBuilder, webCriteria, OrganisationCriteriaPropertyRestriction.ORGANISATION_SCHEME_URN);
+            addSchemeRestCriteria(queryBuilder, webCriteria, OrganisationCriteriaPropertyRestriction.ORGANISATION_SCHEME_URN, OrganisationCriteriaPropertyRestriction.ORGANISATION_SCHEME_LATEST);
         }
 
         addTypeRestCriteria(queryBuilder, type, OrganisationCriteriaPropertyRestriction.TYPE);
@@ -218,12 +218,18 @@ public class MetamacWebRestCriteriaUtils {
     }
 
     @SuppressWarnings("rawtypes")
-    private static void addSchemeRestCriteria(StringBuilder queryBuilder, HasItemSchemeCriteria criteria, Enum schemeField) {
+    private static void addSchemeRestCriteria(StringBuilder queryBuilder, HasItemSchemeCriteria criteria, Enum schemeField, Enum lastVersionField) {
         String schemeUrn = criteria.getItemSchemeUrn();
         if (StringUtils.isNotBlank(schemeUrn)) {
             String schemeCondition = fieldComparison(schemeField, ComparisonOperator.EQ, schemeUrn);
             appendConditionToQuery(queryBuilder, schemeCondition);
         }
+
+        if (criteria.isItemSchemeLastVersion()) {
+            String lastVersionCondition = fieldComparison(lastVersionField, ComparisonOperator.EQ, criteria.isItemSchemeLastVersion());
+            appendConditionToQuery(queryBuilder, lastVersionCondition);
+        }
+
     }
 
     @SuppressWarnings("rawtypes")
