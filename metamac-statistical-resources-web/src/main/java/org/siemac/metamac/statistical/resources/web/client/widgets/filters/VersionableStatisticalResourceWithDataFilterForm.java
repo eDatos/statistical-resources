@@ -17,7 +17,7 @@ public class VersionableStatisticalResourceWithDataFilterForm extends Versionabl
 
     @Override
     public DatasetVersionWebCriteria getSearchCriteria() {
-        DatasetVersionWebCriteria searchCriteria = new DatasetVersionWebCriteria();
+        DatasetVersionWebCriteria searchCriteria = super.getSearchCriteria();
         searchCriteria.setHasData(hasData);
         return searchCriteria;
     }
