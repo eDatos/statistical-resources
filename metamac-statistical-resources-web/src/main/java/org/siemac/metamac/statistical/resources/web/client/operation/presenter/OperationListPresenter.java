@@ -6,6 +6,8 @@ import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.statistical.resources.navigation.shared.NameTokens;
 import org.siemac.metamac.statistical.resources.web.client.LoggedInGatekeeper;
 import org.siemac.metamac.statistical.resources.web.client.constants.StatisticalResourceWebConstants;
+import org.siemac.metamac.statistical.resources.web.client.enums.StatisticalResourcesToolStripLayoutEnum;
+import org.siemac.metamac.statistical.resources.web.client.events.SelectMenuLayoutEvent;
 import org.siemac.metamac.statistical.resources.web.client.operation.view.handlers.OperationListUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.presenter.MainPagePresenter;
 import org.siemac.metamac.statistical.resources.web.client.utils.PlaceRequestUtils;
@@ -68,6 +70,7 @@ public class OperationListPresenter extends Presenter<OperationListPresenter.Ope
     protected void onReset() {
         super.onReset();
         SetTitleEvent.fire(this, getConstants().statisticalResourcesDashboard());
+        SelectMenuLayoutEvent.fire(this, StatisticalResourcesToolStripLayoutEnum.STATISTIC_DESKTOP);
     }
 
     @Override

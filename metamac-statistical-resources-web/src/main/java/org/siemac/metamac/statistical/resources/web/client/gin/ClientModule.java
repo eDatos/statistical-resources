@@ -41,8 +41,6 @@ import org.siemac.metamac.statistical.resources.web.client.query.view.QueryViewI
 import org.siemac.metamac.statistical.resources.web.client.view.ErrorPageViewImpl;
 import org.siemac.metamac.statistical.resources.web.client.view.MainPageViewImpl;
 import org.siemac.metamac.statistical.resources.web.client.view.UnauthorizedPageViewImpl;
-import org.siemac.metamac.statistical.resources.web.client.widgets.presenter.StatisticalResourcesToolStripPresenterWidget;
-import org.siemac.metamac.statistical.resources.web.client.widgets.view.StatisticalResourcesToolStripViewImpl;
 
 import com.google.inject.Singleton;
 import com.gwtplatform.mvp.client.gin.AbstractPresenterModule;
@@ -98,10 +96,6 @@ public class ClientModule extends AbstractPresenterModule {
         // Error pages
         bindPresenter(ErrorPagePresenter.class, ErrorPagePresenter.ErrorPageView.class, ErrorPageViewImpl.class, ErrorPagePresenter.ErrorPageProxy.class);
         bindPresenter(UnauthorizedPagePresenter.class, UnauthorizedPagePresenter.UnauthorizedPageView.class, UnauthorizedPageViewImpl.class, UnauthorizedPagePresenter.UnauthorizedPageProxy.class);
-
-        // Presenter widgets
-        bindSingletonPresenterWidget(StatisticalResourcesToolStripPresenterWidget.class, StatisticalResourcesToolStripPresenterWidget.StatisticalResourcesToolStripView.class,
-                StatisticalResourcesToolStripViewImpl.class);
 
         // Interfaces
         bind(StatisticalResourcesWebConstants.class).in(Singleton.class);

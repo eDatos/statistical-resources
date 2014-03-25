@@ -6,12 +6,16 @@ import org.siemac.metamac.statistical.resources.web.client.LoggedInGatekeeper;
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesDefaults;
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb;
 import org.siemac.metamac.statistical.resources.web.client.enums.StatisticalResourcesToolStripButtonEnum;
+import org.siemac.metamac.statistical.resources.web.client.enums.StatisticalResourcesToolStripLayoutEnum;
+import org.siemac.metamac.statistical.resources.web.client.events.DeselectMenuButtonsEvent;
+import org.siemac.metamac.statistical.resources.web.client.events.SelectMenuButtonEvent;
+import org.siemac.metamac.statistical.resources.web.client.events.SelectMenuLayoutEvent;
+import org.siemac.metamac.statistical.resources.web.client.events.DeselectMenuButtonsEvent.DeselectMenuButtonHandler;
 import org.siemac.metamac.statistical.resources.web.client.operation.presenter.OperationPresenter.OperationProxy;
 import org.siemac.metamac.statistical.resources.web.client.operation.presenter.OperationPresenter.OperationView;
 import org.siemac.metamac.statistical.resources.web.client.presenter.MainPagePresenter;
 import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.PlaceRequestUtils;
-import org.siemac.metamac.statistical.resources.web.client.widgets.presenter.StatisticalResourcesToolStripPresenterWidget;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationAction;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationResult;
 import org.siemac.metamac.web.common.client.utils.WaitingAsyncCallbackHandlingError;
@@ -36,18 +40,16 @@ import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 
 public class OperationPresenter extends Presenter<OperationView, OperationProxy> {
 
-    private final DispatchAsync                          dispatcher;
-    private final PlaceManager                           placeManager;
-
-    private StatisticalResourcesToolStripPresenterWidget toolStripPresenterWidget;
+    private final DispatchAsync                       dispatcher;
+    private final PlaceManager                        placeManager;
 
     @ContentSlot
-    public static final Type<RevealContentHandler<?>>    TYPE_SetOperationResourcesToolBar                   = new Type<RevealContentHandler<?>>();
+    public static final Type<RevealContentHandler<?>> TYPE_SetOperationResourcesToolBar                   = new Type<RevealContentHandler<?>>();
 
-    public static final Object                           TYPE_SetContextAreaContentOperationResourcesToolBar = new Object();
+    public static final Object                        TYPE_SetContextAreaContentOperationResourcesToolBar = new Object();
 
     @ContentSlot
-    public static final Type<RevealContentHandler<?>>    TYPE_SetContextAreaContent                          = new Type<RevealContentHandler<?>>();
+    public static final Type<RevealContentHandler<?>> TYPE_SetContextAreaContent                          = new Type<RevealContentHandler<?>>();
 
     @ProxyCodeSplit
     @NameToken(NameTokens.operationPage)
@@ -59,12 +61,10 @@ public class OperationPresenter extends Presenter<OperationView, OperationProxy>
     }
 
     @Inject
-    public OperationPresenter(EventBus eventBus, OperationView view, OperationProxy proxy, DispatchAsync dispatcher, PlaceManager placeManager,
-            StatisticalResourcesToolStripPresenterWidget toolStripPresenterWidget) {
+    public OperationPresenter(EventBus eventBus, OperationView view, OperationProxy proxy, DispatchAsync dispatcher, PlaceManager placeManager) {
         super(eventBus, view, proxy);
         this.placeManager = placeManager;
         this.dispatcher = dispatcher;
-        this.toolStripPresenterWidget = toolStripPresenterWidget;
     }
 
     @TitleFunction
@@ -107,26 +107,22 @@ public class OperationPresenter extends Presenter<OperationView, OperationProxy>
     }
 
     @Override
-    protected void onReveal() {
-        super.onReveal();
-        setInSlot(TYPE_SetContextAreaContentOperationResourcesToolBar, toolStripPresenterWidget);
-    }
-
-    @Override
     protected void onReset() {
         super.onReset();
         selectToolStripButtonsBasedOnUrl();
     }
 
     private void selectToolStripButtonsBasedOnUrl() {
+        SelectMenuLayoutEvent.fire(this, StatisticalResourcesToolStripLayoutEnum.OPERATION_RESOURCES);
+
         if (PlaceRequestUtils.isNameTokenInPlaceHierarchy(placeManager, NameTokens.datasetsListPage)) {
-            toolStripPresenterWidget.selectButton(StatisticalResourcesToolStripButtonEnum.DATASETS.name());
+            SelectMenuButtonEvent.fire(this, StatisticalResourcesToolStripButtonEnum.DATASETS);
         } else if (PlaceRequestUtils.isNameTokenInPlaceHierarchy(placeManager, NameTokens.publicationsListPage)) {
-            toolStripPresenterWidget.selectButton(StatisticalResourcesToolStripButtonEnum.PUBLICATIONS.name());
+            SelectMenuButtonEvent.fire(this, StatisticalResourcesToolStripButtonEnum.PUBLICATIONS);
         } else if (PlaceRequestUtils.isNameTokenInPlaceHierarchy(placeManager, NameTokens.queriesListPage)) {
-            toolStripPresenterWidget.selectButton(StatisticalResourcesToolStripButtonEnum.QUERIES.name());
+            SelectMenuButtonEvent.fire(this, StatisticalResourcesToolStripButtonEnum.QUERIES);
         } else {
-            toolStripPresenterWidget.deselectButtons();
+            DeselectMenuButtonsEvent.fire(this);
         }
     }
 

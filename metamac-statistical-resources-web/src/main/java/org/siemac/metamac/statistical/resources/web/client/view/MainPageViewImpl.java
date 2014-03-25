@@ -2,8 +2,11 @@ package org.siemac.metamac.statistical.resources.web.client.view;
 
 import org.siemac.metamac.sso.client.MetamacPrincipal;
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb;
+import org.siemac.metamac.statistical.resources.web.client.enums.StatisticalResourcesToolStripButtonEnum;
+import org.siemac.metamac.statistical.resources.web.client.enums.StatisticalResourcesToolStripLayoutEnum;
 import org.siemac.metamac.statistical.resources.web.client.presenter.MainPagePresenter;
 import org.siemac.metamac.statistical.resources.web.client.view.handlers.MainPageUiHandlers;
+import org.siemac.metamac.statistical.resources.web.client.widgets.StatisticalResourcesMenu;
 import org.siemac.metamac.web.common.client.enums.MessageTypeEnum;
 import org.siemac.metamac.web.common.client.widgets.BreadCrumbsPanel;
 import org.siemac.metamac.web.common.client.widgets.MasterHead;
@@ -24,25 +27,27 @@ import com.smartgwt.client.widgets.layout.VLayout;
 
 public class MainPageViewImpl extends ViewWithUiHandlers<MainPageUiHandlers> implements MainPagePresenter.MainPageView {
 
-    private static final int       NORTH_HEIGHT   = 85;
-    private static final String    DEFAULT_MARGIN = "0px";
+    private static final int               NORTH_HEIGHT   = 85;
+    private static final String            DEFAULT_MARGIN = "0px";
 
-    private MainPageUiHandlers     uiHandlers;
+    private MainPageUiHandlers             uiHandlers;
 
-    private final MasterHead       masterHead;
-    private final BreadCrumbsPanel breadCrumbsPanel;
+    private final MasterHead               masterHead;
+    private final StatisticalResourcesMenu navigationMenu;
+    private final BreadCrumbsPanel         breadCrumbsPanel;
 
-    private final MessagePanel     messagePanel;
+    private final MessagePanel             messagePanel;
 
-    private VLayout                panel;
-    private HLayout                northLayout;
-    private HLayout                southLayout;
-    private VLayout                footerLayout;
+    private VLayout                        panel;
+    private HLayout                        northLayout;
+    private HLayout                        southLayout;
+    private VLayout                        footerLayout;
 
     @Inject
-    public MainPageViewImpl(MasterHead masterHead, BreadCrumbsPanel breadCrumbsPanel, MessagePanel messagePanel) {
+    public MainPageViewImpl(MasterHead masterHead, StatisticalResourcesMenu navigationMenu, BreadCrumbsPanel breadCrumbsPanel, MessagePanel messagePanel) {
         this.masterHead = masterHead;
         this.breadCrumbsPanel = breadCrumbsPanel;
+        this.navigationMenu = navigationMenu;
         this.messagePanel = messagePanel;
         // get rid of scroll bars, and clear out the window's built-in margin,
         // because we want to take advantage of the entire client area
@@ -63,7 +68,12 @@ public class MainPageViewImpl extends ViewWithUiHandlers<MainPageUiHandlers> imp
         // Nested layout container
         VLayout vLayout = new VLayout();
         vLayout.addMember(this.masterHead);
-        vLayout.addMember(this.breadCrumbsPanel);
+        vLayout.addMember(this.navigationMenu);
+
+        VLayout breadCrumbLayout = new VLayout();
+        breadCrumbLayout.addMember(this.breadCrumbsPanel);
+        breadCrumbLayout.setMargin(10);
+        vLayout.addMember(breadCrumbLayout);
 
         // Nested layout container to the North layout container
         northLayout.addMember(vLayout);
@@ -169,11 +179,27 @@ public class MainPageViewImpl extends ViewWithUiHandlers<MainPageUiHandlers> imp
     @Override
     public void setUiHandlers(MainPageUiHandlers uiHandlers) {
         this.uiHandlers = uiHandlers;
+        navigationMenu.setUiHandlers(uiHandlers);
     }
 
     @Override
     public void setTitle(String title) {
         masterHead.setTitleLabel(title);
+    }
+
+    @Override
+    public void selectMenuButton(StatisticalResourcesToolStripButtonEnum resourceType) {
+        navigationMenu.selectButton(resourceType);
+    }
+
+    @Override
+    public void selectMenuLayout(StatisticalResourcesToolStripLayoutEnum resourceType) {
+        navigationMenu.selectLayout(resourceType);
+    }
+
+    @Override
+    public void deselectMenuButtons() {
+        navigationMenu.deselectAll();
     }
 
     private String getUserName() {
@@ -183,4 +209,5 @@ public class MainPageViewImpl extends ViewWithUiHandlers<MainPageUiHandlers> imp
         }
         return new String();
     }
+
 }

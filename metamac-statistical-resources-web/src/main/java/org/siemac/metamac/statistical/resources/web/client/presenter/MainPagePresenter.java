@@ -1,9 +1,20 @@
 package org.siemac.metamac.statistical.resources.web.client.presenter;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.siemac.metamac.statistical.resources.navigation.shared.NameTokens;
+import org.siemac.metamac.statistical.resources.web.client.enums.StatisticalResourcesToolStripButtonEnum;
+import org.siemac.metamac.statistical.resources.web.client.enums.StatisticalResourcesToolStripLayoutEnum;
+import org.siemac.metamac.statistical.resources.web.client.events.DeselectMenuButtonsEvent.DeselectMenuButtonHandler;
+import org.siemac.metamac.statistical.resources.web.client.events.DeselectMenuButtonsEvent;
+import org.siemac.metamac.statistical.resources.web.client.events.SelectMenuButtonEvent;
+import org.siemac.metamac.statistical.resources.web.client.events.SelectMenuLayoutEvent;
+import org.siemac.metamac.statistical.resources.web.client.events.SelectMenuButtonEvent.SelectMenuButtonHandler;
+import org.siemac.metamac.statistical.resources.web.client.events.SelectMenuLayoutEvent.SelectMenuLayoutHandler;
+import org.siemac.metamac.statistical.resources.web.client.utils.PlaceRequestUtils;
 import org.siemac.metamac.statistical.resources.web.client.view.handlers.MainPageUiHandlers;
 import org.siemac.metamac.web.common.client.enums.MessageTypeEnum;
 import org.siemac.metamac.web.common.client.events.HideMessageEvent;
@@ -44,7 +55,10 @@ public class MainPagePresenter extends Presenter<MainPagePresenter.MainPageView,
             MainPageUiHandlers,
             ShowMessageHandler,
             HideMessageHandler,
-            SetTitleHandler {
+            SetTitleHandler,
+            SelectMenuButtonHandler,
+            SelectMenuLayoutHandler,
+            DeselectMenuButtonHandler {
 
     private static Logger       logger = Logger.getLogger(MainPagePresenter.class.getName());
 
@@ -70,6 +84,12 @@ public class MainPagePresenter extends Presenter<MainPagePresenter.MainPageView,
         void showMessage(Throwable throwable, String message, MessageTypeEnum type);
         void hideMessages();
         void setTitle(String title);
+
+        void selectMenuButton(StatisticalResourcesToolStripButtonEnum resourceType);
+
+        void selectMenuLayout(StatisticalResourcesToolStripLayoutEnum resourceType);
+
+        void deselectMenuButtons();
     }
 
     /**
@@ -158,6 +178,24 @@ public class MainPagePresenter extends Presenter<MainPagePresenter.MainPageView,
         getView().setTitle(event.getTitle());
     }
 
+    @ProxyEvent
+    @Override
+    public void onSelectMenuButton(SelectMenuButtonEvent event) {
+        getView().selectMenuButton(event.getResourceType());
+    }
+
+    @ProxyEvent
+    @Override
+    public void onDeselectMenuButton(DeselectMenuButtonsEvent event) {
+        getView().deselectMenuButtons();
+    }
+
+    @ProxyEvent
+    @Override
+    public void onSelectMenuLayout(SelectMenuLayoutEvent event) {
+        getView().selectMenuLayout(event.getResourceType());
+    }
+
     @Override
     public void closeSession() {
         dispatcher.execute(new CloseSessionAction(), new AsyncCallback<CloseSessionResult>() {
@@ -176,5 +214,41 @@ public class MainPagePresenter extends Presenter<MainPagePresenter.MainPageView,
 
     private void hideMessages() {
         getView().hideMessages();
+    }
+
+    @Override
+    public void goToDatasets() {
+        List<PlaceRequest> operationHierarchy = getHierarchyUntilNameToken(NameTokens.operationPage);
+        operationHierarchy.add(PlaceRequestUtils.buildRelativeDatasetsPlaceRequest());
+        placeManager.revealPlaceHierarchy(operationHierarchy);
+    }
+
+    @Override
+    public void goToPublications() {
+        List<PlaceRequest> operationHierarchy = getHierarchyUntilNameToken(NameTokens.operationPage);
+        operationHierarchy.add(PlaceRequestUtils.buildRelativePublicationsPlaceRequest());
+        placeManager.revealPlaceHierarchy(operationHierarchy);
+    }
+
+    @Override
+    public void goToQueries() {
+        List<PlaceRequest> operationHierarchy = getHierarchyUntilNameToken(NameTokens.operationPage);
+        operationHierarchy.add(PlaceRequestUtils.buildRelativeQueriesPlaceRequest());
+        placeManager.revealPlaceHierarchy(operationHierarchy);
+    }
+
+    protected List<PlaceRequest> getHierarchyUntilNameToken(String nameToken) {
+        List<PlaceRequest> filteredHierarchy = new ArrayList<PlaceRequest>();
+        List<PlaceRequest> hierarchy = placeManager.getCurrentPlaceHierarchy();
+        boolean found = false;
+        for (int i = 0; i < hierarchy.size() && !found; i++) {
+            PlaceRequest placeReq = hierarchy.get(i);
+            if (placeReq.matchesNameToken(nameToken)) {
+                found = true;
+            }
+            filteredHierarchy.add(placeReq);
+        }
+
+        return filteredHierarchy;
     }
 }
