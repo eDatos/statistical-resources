@@ -25,11 +25,11 @@ import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.forms
 import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.forms.DatasetPublicationDescriptorsForm;
 import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.forms.DatasetResourceRelationDescriptorsEditionForm;
 import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.forms.DatasetResourceRelationDescriptorsForm;
+import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.forms.DatasetVersionEditionForm;
+import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.forms.DatasetVersionForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.ProgramPublicationWindow;
 import org.siemac.metamac.statistical.resources.web.client.widgets.VersionWindow;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.LifeCycleResourceLifeCycleForm;
-import org.siemac.metamac.statistical.resources.web.client.widgets.forms.LifeCycleResourceVersionEditionForm;
-import org.siemac.metamac.statistical.resources.web.client.widgets.forms.LifeCycleResourceVersionForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.NameableResourceIdentifiersEditionForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.NameableResourceIdentifiersForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.SiemacMetadataCommonMetadataEditionForm;
@@ -71,7 +71,7 @@ public class DatasetMetadataTabViewImpl extends StatisticalResourceMetadataBaseV
     private DatasetResourceRelationDescriptorsForm                   resourceRelationDescriptorsForm;
     private DatasetPublicationDescriptorsForm                        publicationDescriptorsForm;
     private LifeCycleResourceLifeCycleForm                           lifeCycleForm;
-    private LifeCycleResourceVersionForm                             versionForm;
+    private DatasetVersionForm                                       versionForm;
     private SiemacMetadataIntellectualPropertyDescriptorsForm        intellectualPropertyDescriptorsForm;
 
     private NameableResourceIdentifiersEditionForm                   identifiersEditionForm;
@@ -84,7 +84,7 @@ public class DatasetMetadataTabViewImpl extends StatisticalResourceMetadataBaseV
     private DatasetResourceRelationDescriptorsEditionForm            resourceRelationDescriptorsEditionForm;
     private DatasetPublicationDescriptorsEditionForm                 publicationDescriptorsEditionForm;
     private LifeCycleResourceLifeCycleForm                           lifeCycleEditionForm;
-    private LifeCycleResourceVersionEditionForm                      versionEditionForm;
+    private DatasetVersionEditionForm                                versionEditionForm;
     private SiemacMetadataIntellectualPropertyDescriptorsEditionForm intellectualPropertyDescriptorsEditionForm;
 
     private DatasetVersionDto                                        datasetVersionDto;
@@ -119,6 +119,7 @@ public class DatasetMetadataTabViewImpl extends StatisticalResourceMetadataBaseV
         thematicContentClassifiersEditionForm.setUiHandlers(uiHandlers);
         productionDescriptorsEditionForm.setUiHandlers(uiHandlers);
         publicationDescriptorsEditionForm.setUiHandlers(uiHandlers);
+        versionEditionForm.setUiHandlers(uiHandlers);
         languageEditionForm.setUiHandlers(uiHandlers);
     }
 
@@ -325,7 +326,7 @@ public class DatasetMetadataTabViewImpl extends StatisticalResourceMetadataBaseV
         mainFormLayout.addViewCanvas(lifeCycleForm);
 
         // Version
-        versionForm = new LifeCycleResourceVersionForm();
+        versionForm = new DatasetVersionForm();
         mainFormLayout.addViewCanvas(versionForm);
 
         // Intellectual property descriptors
@@ -375,7 +376,7 @@ public class DatasetMetadataTabViewImpl extends StatisticalResourceMetadataBaseV
         mainFormLayout.addEditionCanvas(lifeCycleEditionForm);
 
         // Version
-        versionEditionForm = new LifeCycleResourceVersionEditionForm();
+        versionEditionForm = new DatasetVersionEditionForm();
         mainFormLayout.addEditionCanvas(versionEditionForm);
 
         // Intellectual property descriptors
@@ -569,7 +570,7 @@ public class DatasetMetadataTabViewImpl extends StatisticalResourceMetadataBaseV
                 contentDescriptorsEditionForm.setCodesForTemporalGranularities(externalItemsDtos, result.getFirstResultOut(), result.getTotalResults());
                 break;
             case UPDATE_FREQUENCY:
-                publicationDescriptorsEditionForm.setCodesForUpdateFrequency(externalItemsDtos, result.getFirstResultOut(), result.getTotalResults());
+                versionEditionForm.setCodesForUpdateFrequency(externalItemsDtos, result.getFirstResultOut(), result.getTotalResults());
                 break;
         }
     }
