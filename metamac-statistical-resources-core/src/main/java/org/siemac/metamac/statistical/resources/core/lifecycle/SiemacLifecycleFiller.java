@@ -36,8 +36,7 @@ public class SiemacLifecycleFiller {
 
     public void applySendToValidationRejectedActions(ServiceContext ctx, HasSiemacMetadata resource) {
         lifecycleFiller.applySendToValidationRejectedActions(ctx, resource);
-        // FIXME: clear metadata computed in production validation and diffusion validation (METAMAC-2144)
-
+        // Do not need to do anything else because appliers of the above PROC_STATUS not fill any specific metadata
     }
 
     // ------------------------------------------------------------------------------------------------------
@@ -47,15 +46,11 @@ public class SiemacLifecycleFiller {
     public void applySendToPublishedCurrentResourceActions(ServiceContext ctx, HasSiemacMetadata resource, HasSiemacMetadata previousResource) throws MetamacException {
         lifecycleFiller.applySendToPublishedCurrentResourceActions(ctx, resource, previousResource);
         resource.getSiemacMetadataStatisticalResource().setCopyrightedDate(resource.getLifeCycleStatisticalResource().getValidFrom().getYear());
-
-        // TODO: Metadatos de relaciones entre recursos (METAMAC-2144)
     }
 
     public void applySendToPublishedPreviousResourceActions(ServiceContext ctx, HasSiemacMetadata resource, HasSiemacMetadata previousResource, RelatedResource currentAsRelatedResource)
             throws MetamacException {
         lifecycleFiller.applySendToPublishedPreviousResourceActions(ctx, resource, previousResource, currentAsRelatedResource);
-
-        // TODO: Metadatos de relaciones entre recursos (METAMAC-2144)
     }
 
     // ------------------------------------------------------------------------------------------------------

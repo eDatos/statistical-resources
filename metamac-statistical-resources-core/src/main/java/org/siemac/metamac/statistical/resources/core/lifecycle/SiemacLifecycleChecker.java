@@ -137,8 +137,6 @@ public class SiemacLifecycleChecker {
     public void checkVersioning(HasSiemacMetadata resource, String metadataName, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
         lifecycleChecker.checkVersioning(resource, metadataName, exceptionItems);
         checkSiemacMetadataAllActions(resource, metadataName, exceptionItems);
-
-        // TODO: falta algo (METAMAC-2144)
     }
 
     // ------------------------------------------------------------------------------------------------------
