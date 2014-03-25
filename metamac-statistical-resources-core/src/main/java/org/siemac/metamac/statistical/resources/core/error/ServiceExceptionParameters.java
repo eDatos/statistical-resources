@@ -5,62 +5,62 @@ import java.io.Serializable;
 public class ServiceExceptionParameters extends ServiceExceptionBaseParameters {
 
     // Version
-    public static final String       VERSION_TYPE                             = "parameter.resources.versionType";
-    public static final String       PREVIOUS_VERSION                         = "parameter.resources.previousVersion";
+    public static final String       VERSION_TYPE                             = "parameter.resources.version_type";
+    public static final String       PREVIOUS_VERSION                         = "parameter.resources.previous_version";
 
     // DSD
-    public static final String       DSD_DIMENSION_ID                         = "parameter.resources.dsdDimensionId";
+    public static final String       DSD_DIMENSION_ID                         = "parameter.resources.dsd_dimension_id";
 
     // Statistical operation
-    public static final String       STATISTICAL_OPERATION_URN                = "parameter.resources.statisticalOperationUrn";
-    public static final String       STATISTICAL_OPERATION                    = "parameter.resources.statisticalOperation";
+    public static final String       STATISTICAL_OPERATION_URN                = "parameter.resources.statistical_operation_urn";
+    public static final String       STATISTICAL_OPERATION                    = "parameter.resources.statistical_operation";
 
     // Dataset
-    public static final String       DATASET_URN                              = "parameter.resources.datasetUrn";
-    public static final String       DATASET_VERSION_URN                      = "parameter.resources.datasetVersionUrn";
-    public static final String       DATASET_VERSION_URN_TO_COPY              = "parameter.resources.datasetVersionUrnToCopy";
+    public static final String       DATASET_URN                              = "parameter.resources.dataset_urn";
+    public static final String       DATASET_VERSION_URN                      = "parameter.resources.dataset_version_urn";
+    public static final String       DATASET_VERSION_URN_TO_COPY              = "parameter.resources.dataset_version_urn_to_copy";
     public static final String       DATASET_ATTRIBUTE                        = "parameter.resources.dataset_attribute";
     public static final String       DATASET_ATTRIBUTE__VALUE                 = "parameter.resources.dataset_attribute_value";
     public static final String       DATASET_ATTRIBUTE__UUID                  = "parameter.resources.dataset_attribute_uuid";
     public static final String       DATASET_DIMENSION_REPRESENTATION_MAPPING = "parameter.resources.dataset_dimension_representation_mapping";
 
     // Publication
-    public static final String       PUBLICATION_URN                          = "parameter.resources.publicationUrn";
-    public static final String       PUBLICATION_VERSION_URN                  = "parameter.resources.publicationVersionUrn";
-    public static final String       PUBLICATION_VERSION_URN_TO_COPY          = "parameter.resources.publicationVersionUrnToCopy";
-    public static final String       CHAPTER_URN                              = "parameter.resources.chapterUrn";
-    public static final String       PARENT_CHAPTER_URN                       = "parameter.resources.parentChapterUrn";
-    public static final String       ORDER_IN_LEVEL                           = "parameter.resources.orderInLevel";
-    public static final String       CUBE_URN                                 = "parameter.resources.cubeUrn";
+    public static final String       PUBLICATION_URN                          = "parameter.resources.publication_urn";
+    public static final String       PUBLICATION_VERSION_URN                  = "parameter.resources.publication_version_urn";
+    public static final String       PUBLICATION_VERSION_URN_TO_COPY          = "parameter.resources.publication_version_urn_to_copy";
+    public static final String       CHAPTER_URN                              = "parameter.resources.chapter_urn";
+    public static final String       PARENT_CHAPTER_URN                       = "parameter.resources.parent_chapter_urn";
+    public static final String       ORDER_IN_LEVEL                           = "parameter.resources.order_in_level";
+    public static final String       CUBE_URN                                 = "parameter.resources.cube_urn";
 
     // Query
-    public static final String       QUERY_URN                                = "parameter.resources.queryUrn";
-    public static final String       QUERY_VERSION__SELECTION__TIME_PERIOD    = "parameter.resources.queryVersion.selection.time_period";
+    public static final String       QUERY_URN                                = "parameter.resources.query_urn";
+    public static final String       QUERY_VERSION__SELECTION__TIME_PERIOD    = "parameter.resources.query_version.selection.time_period";
 
     // Tasks
-    public static final String       TASK_INFO_RESOURCE_ID                    = "parameter.resources.resourceId";
-    public static final String       TASK_INFO_DATASET                        = "parameter.resources.taskInfoDataset";
-    public static final String       TASK_INFO_DATASET_DSD_URN                = "parameter.resources.dataStructureUrn";
-    public static final String       TASK_INFO_DATASET_DATASET_VERSION_ID     = "parameter.resources.datasetVersionId";
-    public static final String       TASK_INFO_DATASET_NEW_DATASET_VERSION_ID = "parameter.resources.newDatasetVersionId";
+    public static final String       TASK_INFO_RESOURCE_ID                    = "parameter.resources.resource_id";
+    public static final String       TASK_INFO_DATASET                        = "parameter.resources.task_info_dataset";
+    public static final String       TASK_INFO_DATASET_DSD_URN                = "parameter.resources.data_structure_urn";
+    public static final String       TASK_INFO_DATASET_DATASET_VERSION_ID     = "parameter.resources.dataset_version_id";
+    public static final String       TASK_INFO_DATASET_NEW_DATASET_VERSION_ID = "parameter.resources.new_dataset_version_id";
     public static final String       TASK_INFO_DATASET_FILES                  = "parameter.resources.files";
-    public static final String       TASK_DATASOURCE_ID                       = "parameter.resources.datasourceId";
+    public static final String       TASK_DATASOURCE_ID                       = "parameter.resources.datasource_id";
     public static final String       TASK                                     = "parameter.resources.task";
-    public static final String       TASK_DATASET_JOB_KEY                     = "parameter.resources.jobKey";
-    public static final String       NOTIFY_TO_USER                           = "parameter.resources.notifyToUser";
+    public static final String       TASK_DATASET_JOB_KEY                     = "parameter.resources.job_key";
+    public static final String       NOTIFY_TO_USER                           = "parameter.resources.notify_to_user";
 
     // Files
-    public static final String       FILE_URLS                                = "parameter.resources.fileUrls";
-    public static final String       FILE_DESCRIPTORS                         = "parameter.resources.fileDescriptors";
-    public static final String       FILE_DESCRIPTOR_INPUT_MESSAGE            = "parameter.resources.inputMessage";
-    public static final String       FILE_DESCRIPTOR_FILE_NAME                = "parameter.resources.fileName";
-    public static final String       FILE_DESCRIPTOR_FORMAT                   = "parameter.resources.datasetFormat";
+    public static final String       FILE_URLS                                = "parameter.resources.file_urls";
+    public static final String       FILE_DESCRIPTORS                         = "parameter.resources.file_descriptors";
+    public static final String       FILE_DESCRIPTOR_INPUT_MESSAGE            = "parameter.resources.input_message";
+    public static final String       FILE_DESCRIPTOR_FILE_NAME                = "parameter.resources.file_name";
+    public static final String       FILE_DESCRIPTOR_FORMAT                   = "parameter.resources.dataset_format";
 
     // Rest parameters
-    public static final Serializable CONCEPT_SCHEME_URN                       = "parameter.resources.rest.conceptSchemeUrn";
-    public static final Serializable CODELIST_URN                             = "parameter.resources.rest.codelistUrn";
-    public static final Serializable CATEGORY_SCHEME_URN                      = "parameter.resources.rest.categorySchemeUrn";
-    public static final Serializable ORGANISATION_SCHEME_URN                  = "parameter.resources.rest.organisationSchemeUrn";
+    public static final Serializable CONCEPT_SCHEME_URN                       = "parameter.resources.rest.concept_scheme_urn";
+    public static final Serializable CODELIST_URN                             = "parameter.resources.rest.codelist_urn";
+    public static final Serializable CATEGORY_SCHEME_URN                      = "parameter.resources.rest.category_scheme_urn";
+    public static final Serializable ORGANISATION_SCHEME_URN                  = "parameter.resources.rest.organisation_scheme_urn";
 
     // Misc
     public static final String       TIME                                     = "parameter.resources.time";
