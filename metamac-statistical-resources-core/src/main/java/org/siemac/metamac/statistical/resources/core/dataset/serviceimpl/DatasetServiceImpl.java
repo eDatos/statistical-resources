@@ -656,10 +656,10 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
     }
 
     @Override
-    public void importDatasourcesInStatisticalOperation(ServiceContext ctx, String statisticalOperationUrn, List<URL> fileUrls) throws MetamacException {
-        datasetServiceInvocationValidator.checkImportDatasourcesInStatisticalOperation(ctx, statisticalOperationUrn, fileUrls);
+    public void importDatasourcesInStatisticalOperation(ServiceContext ctx, String statisticalOperationCode, List<URL> fileUrls) throws MetamacException {
+        datasetServiceInvocationValidator.checkImportDatasourcesInStatisticalOperation(ctx, statisticalOperationCode, fileUrls);
 
-        Map<String, List<URL>> datasetVersionsForFiles = organizeFilesByDatasetVersionUrn(statisticalOperationUrn, fileUrls);
+        Map<String, List<URL>> datasetVersionsForFiles = organizeFilesByDatasetVersionCode(statisticalOperationCode, fileUrls);
 
         List<MetamacExceptionItem> items = new ArrayList<MetamacExceptionItem>();
         for (String datasetVersionUrn : datasetVersionsForFiles.keySet()) {
@@ -679,7 +679,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         }
     }
 
-    protected Map<String, List<URL>> organizeFilesByDatasetVersionUrn(String statisticalOperationUrn, List<URL> fileUrls) throws MetamacException {
+    protected Map<String, List<URL>> organizeFilesByDatasetVersionCode(String statisticalOperationCode, List<URL> fileUrls) throws MetamacException {
         Map<String, List<URL>> datasetVersionsForFiles = new HashMap<String, List<URL>>();
         List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
         for (URL url : fileUrls) {
@@ -690,10 +690,10 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
                 datasetVersion = getDatasetVersionRepository().retrieveLastVersion(datasetUrn);
             }
 
-            if (datasetVersion != null && StringUtils.equals(statisticalOperationUrn, datasetVersion.getSiemacMetadataStatisticalResource().getStatisticalOperation().getUrn())) {
+            if (datasetVersion != null && StringUtils.equals(statisticalOperationCode, datasetVersion.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode())) {
                 StatisticalResourcesCollectionUtils.addValueToMapValueList(datasetVersionsForFiles, datasetVersion.getSiemacMetadataStatisticalResource().getUrn(), url);
             } else {
-                exceptionItems.add(new MetamacExceptionItem(ServiceExceptionType.FILE_NOT_LINKED_TO_ANY_DATASET_IN_STATISTICAL_OPERATION, filename, statisticalOperationUrn));
+                exceptionItems.add(new MetamacExceptionItem(ServiceExceptionType.FILE_NOT_LINKED_TO_ANY_DATASET_IN_STATISTICAL_OPERATION, filename, statisticalOperationCode));
             }
         }
         if (exceptionItems.size() > 0) {

@@ -14,6 +14,7 @@ public class ServiceExceptionParameters extends ServiceExceptionBaseParameters {
     // Statistical operation
     public static final String       STATISTICAL_OPERATION_URN                = "parameter.resources.statistical_operation_urn";
     public static final String       STATISTICAL_OPERATION                    = "parameter.resources.statistical_operation";
+    public static final String       STATISTICAL_OPERATION_CODE               = "parameter.resources.statistical_operation_code";
 
     // Dataset
     public static final String       DATASET_URN                              = "parameter.resources.dataset_urn";

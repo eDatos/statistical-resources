@@ -104,8 +104,8 @@ public class SharedDatasetsSecurityUtils extends SharedSecurityUtils {
         return isAnyStatisticalResourceRole(metamacPrincipal);
     }
 
-    public static boolean canRetrieveDatasetVersionDimensionsIds(MetamacPrincipal metamacPrincipal, String operationCode, ProcStatusEnum procStatus) {
-        return canRetrieveStatisticalResource(metamacPrincipal, operationCode, procStatus);
+    public static boolean canRetrieveDatasetVersionDimensionsIds(MetamacPrincipal metamacPrincipal) {
+        return isAnyStatisticalResourceRole(metamacPrincipal);
     }
 
     public static boolean canRetrieveCoverageForDatasetVersionDimension(MetamacPrincipal metamacPrincipal) {

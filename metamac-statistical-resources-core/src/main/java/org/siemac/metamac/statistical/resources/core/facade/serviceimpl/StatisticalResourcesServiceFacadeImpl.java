@@ -614,7 +614,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     @Override
     public DatasourceDto createDatasource(ServiceContext ctx, String urnDatasetVersion, DatasourceDto datasourceDto) throws MetamacException {
         // Security
-        DatasetsSecurityUtils.canCreateDatasource(ctx);
+        DatasetsSecurityUtils.canCreateDatasource(ctx, datasourceDto.getStatisticalOperation().getCode());
 
         // Transform
         Datasource datasource = datasetDto2DoMapper.datasourceDtoToDo(datasourceDto);
@@ -631,7 +631,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     @Override
     public DatasourceDto updateDatasource(ServiceContext ctx, DatasourceDto datasourceDto) throws MetamacException {
         // Security
-        DatasetsSecurityUtils.canUpdateDatasource(ctx);
+        DatasetsSecurityUtils.canUpdateDatasource(ctx, datasourceDto.getStatisticalOperation().getCode());
 
         // Transform
         Datasource datasource = datasetDto2DoMapper.datasourceDtoToDo(datasourceDto);
@@ -647,11 +647,11 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
 
     @Override
     public DatasourceDto retrieveDatasourceByUrn(ServiceContext ctx, String urn) throws MetamacException {
-        // Security
-        DatasetsSecurityUtils.canRetrieveDatasourceByUrn(ctx);
-
         // Retrieve
         Datasource datasource = getDatasetService().retrieveDatasourceByUrn(ctx, urn);
+
+        // Security
+        DatasetsSecurityUtils.canRetrieveDatasourceByUrn(ctx, datasource.getIdentifiableStatisticalResource().getStatisticalOperation().getCode());
 
         // Transform
         DatasourceDto datasourceDto = datasetDo2DtoMapper.datasourceDoToDto(datasource);
@@ -661,8 +661,11 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
 
     @Override
     public void deleteDatasource(ServiceContext ctx, String urn) throws MetamacException {
+        // Retrieve
+        String operationCode = getDatasetService().retrieveDatasourceByUrn(ctx, urn).getIdentifiableStatisticalResource().getStatisticalOperation().getCode();
+
         // Security
-        DatasetsSecurityUtils.canDeleteDatasource(ctx);
+        DatasetsSecurityUtils.canDeleteDatasource(ctx, operationCode);
 
         // Delete
         getDatasetService().deleteDatasource(ctx, urn);
@@ -670,8 +673,11 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
 
     @Override
     public List<DatasourceDto> retrieveDatasourcesByDatasetVersion(ServiceContext ctx, String urnDatasetVersion) throws MetamacException {
+        // Retrieve
+        String operationCode = getDatasetService().retrieveDatasetVersionByUrn(ctx, urnDatasetVersion).getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode();
+
         // Security
-        DatasetsSecurityUtils.canRetrieveDatasourcesByDatasetVersion(ctx);
+        DatasetsSecurityUtils.canRetrieveDatasourcesByDatasetVersion(ctx, operationCode);
 
         // Retrieve
         List<Datasource> datasources = getDatasetService().retrieveDatasourcesByDatasetVersion(ctx, urnDatasetVersion);
@@ -716,7 +722,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     @Override
     public DatasetVersionDto createDataset(ServiceContext ctx, DatasetVersionDto datasetVersionDto, ExternalItemDto statisticalOperationDto) throws MetamacException {
         // Security
-        DatasetsSecurityUtils.canCreateDataset(ctx);
+        DatasetsSecurityUtils.canCreateDataset(ctx, statisticalOperationDto.getCode());
 
         // Transform
         DatasetVersion datasetVersion = datasetDto2DoMapper.datasetVersionDtoToDo(datasetVersionDto);
@@ -734,12 +740,12 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     @Override
     public DatasetVersionDto updateDatasetVersion(ServiceContext ctx, DatasetVersionDto datasetVersionDto) throws MetamacException {
         // Security
-        DatasetsSecurityUtils.canUpdateDatasetVersion(ctx);
+        DatasetsSecurityUtils.canUpdateDatasetVersion(ctx, datasetVersionDto);
 
         // Transform
         DatasetVersion datasetVersion = datasetDto2DoMapper.datasetVersionDtoToDo(datasetVersionDto);
 
-        // //Update
+        // Update
         datasetVersion = getDatasetService().updateDatasetVersion(ctx, datasetVersion);
 
         // Transform
@@ -748,8 +754,11 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
 
     @Override
     public void deleteDatasetVersion(ServiceContext ctx, String urn) throws MetamacException {
+        // Retrieve
+        DatasetVersionDto datasetVersionDto = retrieveDatasetVersionByUrn(ctx, urn);
+
         // Security
-        DatasetsSecurityUtils.canDeleteDatasetVersion(ctx);
+        DatasetsSecurityUtils.canDeleteDatasetVersion(ctx, datasetVersionDto);
 
         // Delete
         getDatasetService().deleteDatasetVersion(ctx, urn);
@@ -771,15 +780,17 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
                 sculptorCriteria.getPageSize());
 
         return metamacCriteriaResult;
+
     }
 
     @Override
     public DatasetVersionDto retrieveDatasetVersionByUrn(ServiceContext ctx, String urn) throws MetamacException {
-        // Security
-        DatasetsSecurityUtils.canRetrieveDatasetVersionByUrn(ctx);
-
         // Retrieve
         DatasetVersion datasetVersion = getDatasetService().retrieveDatasetVersionByUrn(ctx, urn);
+
+        // Security
+        DatasetsSecurityUtils.canRetrieveDatasetVersionByUrn(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode(), datasetVersion
+                .getSiemacMetadataStatisticalResource().getEffectiveProcStatus());
 
         // Transform
         return datasetDo2DtoMapper.datasetVersionDoToDto(ctx, datasetVersion);
@@ -832,7 +843,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     @Override
     public DatasetVersionDto sendDatasetVersionToProductionValidation(ServiceContext ctx, DatasetVersionDto datasetVersionDto) throws MetamacException {
         // Security
-        DatasetsSecurityUtils.canSendDatasetVersionToProductionValidation(ctx);
+        DatasetsSecurityUtils.canSendDatasetVersionToProductionValidation(ctx, datasetVersionDto.getStatisticalOperation().getCode());
 
         // Transform
         DatasetVersion datasetVersion = datasetDto2DoMapper.datasetVersionDtoToDo(datasetVersionDto);
@@ -849,7 +860,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     @Override
     public DatasetVersionBaseDto sendDatasetVersionToProductionValidation(ServiceContext ctx, DatasetVersionBaseDto datasetVersionDto) throws MetamacException {
         // Security
-        DatasetsSecurityUtils.canSendDatasetVersionToProductionValidation(ctx);
+        DatasetsSecurityUtils.canSendDatasetVersionToProductionValidation(ctx, datasetVersionDto.getStatisticalOperation().getCode());
 
         // Check optimistic locking
         datasetDto2DoMapper.checkOptimisticLocking(datasetVersionDto);
@@ -866,7 +877,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     @Override
     public DatasetVersionDto sendDatasetVersionToDiffusionValidation(ServiceContext ctx, DatasetVersionDto datasetVersionDto) throws MetamacException {
         // Security
-        DatasetsSecurityUtils.canSendDatasetVersionToDiffusionValidation(ctx);
+        DatasetsSecurityUtils.canSendDatasetVersionToDiffusionValidation(ctx, datasetVersionDto.getStatisticalOperation().getCode());
 
         // Transform
         DatasetVersion datasetVersion = datasetDto2DoMapper.datasetVersionDtoToDo(datasetVersionDto);
@@ -883,7 +894,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     @Override
     public DatasetVersionBaseDto sendDatasetVersionToDiffusionValidation(ServiceContext ctx, DatasetVersionBaseDto datasetVersionDto) throws MetamacException {
         // Security
-        DatasetsSecurityUtils.canSendDatasetVersionToDiffusionValidation(ctx);
+        DatasetsSecurityUtils.canSendDatasetVersionToDiffusionValidation(ctx, datasetVersionDto.getStatisticalOperation().getCode());
 
         // Check optimistic locking
         datasetDto2DoMapper.checkOptimisticLocking(datasetVersionDto);
@@ -900,7 +911,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     @Override
     public DatasetVersionDto sendDatasetVersionToValidationRejected(ServiceContext ctx, DatasetVersionDto datasetVersionDto) throws MetamacException {
         // Security
-        DatasetsSecurityUtils.canSendDatasetVersionToValidationRejected(ctx);
+        DatasetsSecurityUtils.canSendDatasetVersionToValidationRejected(ctx, datasetVersionDto.getStatisticalOperation().getCode());
 
         // Transform
         DatasetVersion datasetVersion = datasetDto2DoMapper.datasetVersionDtoToDo(datasetVersionDto);
@@ -917,7 +928,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     @Override
     public DatasetVersionBaseDto sendDatasetVersionToValidationRejected(ServiceContext ctx, DatasetVersionBaseDto datasetVersionDto) throws MetamacException {
         // Security
-        DatasetsSecurityUtils.canSendDatasetVersionToValidationRejected(ctx);
+        DatasetsSecurityUtils.canSendDatasetVersionToValidationRejected(ctx, datasetVersionDto.getStatisticalOperation().getCode());
 
         // Check optimistic locking
         datasetDto2DoMapper.checkOptimisticLocking(datasetVersionDto);
@@ -934,7 +945,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     @Override
     public DatasetVersionDto publishDatasetVersion(ServiceContext ctx, DatasetVersionDto datasetVersionDto) throws MetamacException {
         // Security
-        DatasetsSecurityUtils.canPublishDatasetVersion(ctx);
+        DatasetsSecurityUtils.canPublishDatasetVersion(ctx, datasetVersionDto.getStatisticalOperation().getCode());
 
         // Transform
         DatasetVersion datasetVersion = datasetDto2DoMapper.datasetVersionDtoToDo(datasetVersionDto);
@@ -954,7 +965,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     @Override
     public DatasetVersionBaseDto publishDatasetVersion(ServiceContext ctx, DatasetVersionBaseDto datasetVersionDto) throws MetamacException {
         // Security
-        DatasetsSecurityUtils.canPublishDatasetVersion(ctx);
+        DatasetsSecurityUtils.canPublishDatasetVersion(ctx, datasetVersionDto.getStatisticalOperation().getCode());
 
         // Check optimistic locking
         datasetDto2DoMapper.checkOptimisticLocking(datasetVersionDto);
@@ -975,7 +986,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     @Override
     public DatasetVersionDto programPublicationDatasetVersion(ServiceContext ctx, DatasetVersionDto datasetVersionDto, Date validFromDate) throws MetamacException {
         // Security
-        DatasetsSecurityUtils.canPublishDatasetVersion(ctx);
+        DatasetsSecurityUtils.canPublishDatasetVersion(ctx, datasetVersionDto.getStatisticalOperation().getCode());
 
         // Transform only for optimistic locking
         DatasetVersion datasetVersion = datasetDto2DoMapper.datasetVersionDtoToDo(datasetVersionDto);
@@ -995,7 +1006,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     @Override
     public DatasetVersionBaseDto programPublicationDatasetVersion(ServiceContext ctx, DatasetVersionBaseDto datasetVersionDto, Date validFromDate) throws MetamacException {
         // Security
-        DatasetsSecurityUtils.canPublishDatasetVersion(ctx);
+        DatasetsSecurityUtils.canPublishDatasetVersion(ctx, datasetVersionDto.getStatisticalOperation().getCode());
 
         // Check optimistic locking
         datasetDto2DoMapper.checkOptimisticLocking(datasetVersionDto);
@@ -1028,7 +1039,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     @Override
     public DatasetVersionDto cancelPublicationDatasetVersion(ServiceContext ctx, DatasetVersionDto datasetVersionDto) throws MetamacException {
         // Security
-        DatasetsSecurityUtils.canCancelPublicationDatasetVersion(ctx);
+        DatasetsSecurityUtils.canCancelPublicationDatasetVersion(ctx, datasetVersionDto.getStatisticalOperation().getCode());
 
         // Transform
         DatasetVersion datasetVersion = datasetDto2DoMapper.datasetVersionDtoToDo(datasetVersionDto);
@@ -1044,7 +1055,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     @Override
     public DatasetVersionBaseDto cancelPublicationDatasetVersion(ServiceContext ctx, DatasetVersionBaseDto datasetVersionDto) throws MetamacException {
         // Security
-        DatasetsSecurityUtils.canCancelPublicationDatasetVersion(ctx);
+        DatasetsSecurityUtils.canCancelPublicationDatasetVersion(ctx, datasetVersionDto.getStatisticalOperation().getCode());
 
         // Check optimistic locking
         datasetDto2DoMapper.checkOptimisticLocking(datasetVersionDto);
@@ -1060,7 +1071,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     @Override
     public DatasetVersionDto versioningDatasetVersion(ServiceContext ctx, DatasetVersionDto datasetVersionDto, VersionTypeEnum versionType) throws MetamacException {
         // Security
-        DatasetsSecurityUtils.canVersionDataset(ctx);
+        DatasetsSecurityUtils.canVersionDataset(ctx, datasetVersionDto.getStatisticalOperation().getCode());
 
         // Transform
         DatasetVersion datasetVersion = datasetDto2DoMapper.datasetVersionDtoToDo(datasetVersionDto);
@@ -1075,7 +1086,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     @Override
     public DatasetVersionBaseDto versioningDatasetVersion(ServiceContext ctx, DatasetVersionBaseDto datasetVersionDto, VersionTypeEnum versionType) throws MetamacException {
         // Security
-        DatasetsSecurityUtils.canVersionDataset(ctx);
+        DatasetsSecurityUtils.canVersionDataset(ctx, datasetVersionDto.getStatisticalOperation().getCode());
 
         // Check optimistic locking
         datasetDto2DoMapper.checkOptimisticLocking(datasetVersionDto);
@@ -1089,11 +1100,12 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
 
     @Override
     public DatasetVersionDto retrieveLatestDatasetVersion(ServiceContext ctx, String datasetUrn) throws MetamacException {
-        // Security
-        DatasetsSecurityUtils.canRetrieveLatestDatasetVersion(ctx);
-
         // Retrieve
         DatasetVersion dataset = getDatasetService().retrieveLatestDatasetVersionByDatasetUrn(ctx, datasetUrn);
+
+        // Security
+        DatasetsSecurityUtils.canRetrieveLatestDatasetVersion(ctx, dataset.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode(), dataset.getSiemacMetadataStatisticalResource()
+                .getEffectiveProcStatus());
 
         // Transform
         DatasetVersionDto datasetVersionDto = datasetDo2DtoMapper.datasetVersionDoToDto(ctx, dataset);
@@ -1146,7 +1158,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     public void importDatasourcesInDatasetVersion(ServiceContext ctx, DatasetVersionDto datasetVersionDto, List<URL> fileUrls, Map<String, String> dimensionRepresentationMapping)
             throws MetamacException {
         // Security
-        DatasetsSecurityUtils.canImportDatasourcesInDatasetVersion(ctx, datasetVersionDto);
+        DatasetsSecurityUtils.canImportDatasourcesInDatasetVersion(ctx, datasetVersionDto.getStatisticalOperation().getCode());
 
         // Transform for optimistic locking
         DatasetVersion datasetVersion = datasetDto2DoMapper.datasetVersionDtoToDo(datasetVersionDto);
@@ -1156,17 +1168,20 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     }
 
     @Override
-    public void importDatasourcesInStatisticalOperation(ServiceContext ctx, String statisticalOperationUrn, List<URL> fileUrls) throws MetamacException {
+    public void importDatasourcesInStatisticalOperation(ServiceContext ctx, String statisticalOperationCode, List<URL> fileUrls) throws MetamacException {
         // Security
-        DatasetsSecurityUtils.canImportDatasourcesInStatisticalOperation(ctx, statisticalOperationUrn);
+        DatasetsSecurityUtils.canImportDatasourcesInStatisticalOperation(ctx, statisticalOperationCode);
 
-        getDatasetService().importDatasourcesInStatisticalOperation(ctx, statisticalOperationUrn, fileUrls);
+        getDatasetService().importDatasourcesInStatisticalOperation(ctx, statisticalOperationCode, fileUrls);
     }
 
     @Override
     public DsdAttributeInstanceDto createAttributeInstance(ServiceContext ctx, String datasetVersionUrn, DsdAttributeInstanceDto dsdAttributeInstanceDto) throws MetamacException {
+        // Retrieve
+        DatasetVersionDto datasetVersionDto = retrieveDatasetVersionByUrn(ctx, datasetVersionUrn);
+
         // Security
-        DatasetsSecurityUtils.canCreateAttributeInstance(ctx);
+        DatasetsSecurityUtils.canCreateAttributeInstance(ctx, datasetVersionDto);
 
         // Transform
         AttributeInstanceDto attributeInstanceDto = statisticalResourcesDto2StatRepoDtoMapper.dsdAttributeInstanceDtoToAttributeInstanceDto(dsdAttributeInstanceDto);
@@ -1181,8 +1196,11 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
 
     @Override
     public DsdAttributeInstanceDto updateAttributeInstance(ServiceContext ctx, String datasetVersionUrn, DsdAttributeInstanceDto dsdAttributeInstanceDto) throws MetamacException {
+        // Retrieve
+        DatasetVersionDto datasetVersionDto = retrieveDatasetVersionByUrn(ctx, datasetVersionUrn);
+
         // Security
-        DatasetsSecurityUtils.canUpdateAttributeInstance(ctx);
+        DatasetsSecurityUtils.canUpdateAttributeInstance(ctx, datasetVersionDto);
 
         // Transform
         AttributeInstanceDto attributeInstanceDto = statisticalResourcesDto2StatRepoDtoMapper.dsdAttributeInstanceDtoToAttributeInstanceDto(dsdAttributeInstanceDto);
@@ -1201,8 +1219,11 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
 
     @Override
     public void deleteAttributeInstance(ServiceContext ctx, String datasetVersionUrn, String uuid) throws MetamacException {
+        // Retrieve
+        DatasetVersionDto datasetVersionDto = retrieveDatasetVersionByUrn(ctx, datasetVersionUrn);
+
         // Security
-        DatasetsSecurityUtils.canDeleteAttributeInstance(ctx);
+        DatasetsSecurityUtils.canDeleteAttributeInstance(ctx, datasetVersionDto);
 
         // Delete attribute
         getDatasetService().deleteAttributeInstance(ctx, datasetVersionUrn, uuid);
@@ -1210,8 +1231,11 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
 
     @Override
     public List<DsdAttributeInstanceDto> retrieveAttributeInstances(ServiceContext ctx, String datasetVersionUrn, String attributeId) throws MetamacException {
+        // Retrieve
+        DatasetVersionDto datasetVersionDto = retrieveDatasetVersionByUrn(ctx, datasetVersionUrn);
+
         // Security
-        DatasetsSecurityUtils.canRetrieveAttributeInstances(ctx);
+        DatasetsSecurityUtils.canRetrieveAttributeInstances(ctx, datasetVersionDto);
 
         // Retrieve
         List<AttributeInstanceDto> instances = getDatasetService().retrieveAttributeInstances(ctx, datasetVersionUrn, attributeId);
@@ -1231,9 +1255,11 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
 
     @Override
     public CategorisationDto createCategorisation(ServiceContext ctx, String datasetVersionUrn, CategorisationDto categorisationDto) throws MetamacException {
+        // Retrieve
+        DatasetVersionDto datasetVersionDto = retrieveDatasetVersionByUrn(ctx, datasetVersionUrn);
 
         // Security
-        DatasetsSecurityUtils.canCreateCategorisation(ctx);
+        DatasetsSecurityUtils.canCreateCategorisation(ctx, datasetVersionDto);
 
         // Transform
         Categorisation categorisation = datasetDto2DoMapper.categorisationDtoToDo(categorisationDto);
@@ -1247,11 +1273,11 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
 
     @Override
     public CategorisationDto retrieveCategorisationByUrn(ServiceContext ctx, String urn) throws MetamacException {
-        // Security
-        DatasetsSecurityUtils.canRetrieveCategorisationByUrn(ctx);
-
         // Retrieve
         Categorisation categorisation = getDatasetService().retrieveCategorisationByUrn(ctx, urn);
+
+        // Security
+        DatasetsSecurityUtils.canRetrieveCategorisationByUrn(ctx, categorisation);
 
         // Transform
         CategorisationDto categorisationDto = datasetDo2DtoMapper.categorisationDoToDto(categorisation);
@@ -1260,7 +1286,9 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
 
     @Override
     public void deleteCategorisation(ServiceContext ctx, String urn) throws MetamacException {
+        // Retrieve
         Categorisation categorisation = getDatasetService().retrieveCategorisationByUrn(ctx, urn);
+
         // Security
         DatasetsSecurityUtils.canDeleteCategorisation(ctx, categorisation);
 
@@ -1270,9 +1298,11 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
 
     @Override
     public List<CategorisationDto> retrieveCategorisationsByDatasetVersion(ServiceContext ctx, String datasetVersionUrn) throws MetamacException {
+        // Retrieve
+        DatasetVersionDto datasetVersionDto = retrieveDatasetVersionByUrn(ctx, datasetVersionUrn);
 
         // Security
-        DatasetsSecurityUtils.canRetrieveCategorisationsByDatasetVersion(ctx);
+        DatasetsSecurityUtils.canRetrieveCategorisationsByDatasetVersion(ctx, datasetVersionDto);
 
         // Retrieve
         List<Categorisation> categorisations = getDatasetService().retrieveCategorisationsByDatasetVersion(ctx, datasetVersionUrn);
@@ -1284,7 +1314,9 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
 
     @Override
     public CategorisationDto endCategorisationValidity(ServiceContext ctx, String urn, Date validTo) throws MetamacException {
+        // Retrieve
         Categorisation categorisation = getDatasetService().retrieveCategorisationByUrn(ctx, urn);
+
         // Security
         DatasetsSecurityUtils.canEndCategorisationValidity(ctx, categorisation);
 

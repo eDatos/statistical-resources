@@ -252,8 +252,8 @@ public class DatasetServiceInvocationValidatorImpl extends BaseInvocationValidat
         }
     }
 
-    public static void checkImportDatasourcesInStatisticalOperation(String statisticalOperationUrn, List<URL> fileUrls, List<MetamacExceptionItem> exceptions) {
-        StatisticalResourcesValidationUtils.checkParameterRequired(statisticalOperationUrn, ServiceExceptionParameters.STATISTICAL_OPERATION_URN, exceptions);
+    public static void checkImportDatasourcesInStatisticalOperation(String statisticalOperationCode, List<URL> fileUrls, List<MetamacExceptionItem> exceptions) {
+        StatisticalResourcesValidationUtils.checkParameterRequired(statisticalOperationCode, ServiceExceptionParameters.STATISTICAL_OPERATION_CODE, exceptions);
         StatisticalResourcesValidationUtils.checkParameterRequired(fileUrls, ServiceExceptionParameters.FILE_URLS, exceptions);
     }
 
