@@ -11,9 +11,15 @@ import static org.siemac.metamac.statistical.resources.core.enume.domain.Statist
 import org.siemac.metamac.sso.client.MetamacPrincipal;
 import org.siemac.metamac.sso.client.MetamacPrincipalAccess;
 import org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConstants;
+import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourcesRoleEnum;
 
 public class SharedSecurityUtils {
+
+    protected static final StatisticalResourcesRoleEnum[] PRODUCTION_ROLES = {StatisticalResourcesRoleEnum.JEFE_PRODUCCION, StatisticalResourcesRoleEnum.TECNICO_PRODUCCION,
+            StatisticalResourcesRoleEnum.TECNICO_APOYO_PRODUCCION          };
+
+    protected static final StatisticalResourcesRoleEnum[] DIFFUSION_ROLES  = {StatisticalResourcesRoleEnum.TECNICO_APOYO_DIFUSION, StatisticalResourcesRoleEnum.TECNICO_DIFUSION};
 
     /**
      * Checks if logged user has one of the allowed roles
@@ -21,7 +27,7 @@ public class SharedSecurityUtils {
      * @param roles
      * @return
      */
-    protected static boolean isResourcesRoleAllowed(MetamacPrincipal metamacPrincipal, StatisticalResourcesRoleEnum... roles) {
+    protected static boolean isStatisticalResourcesRoleAllowed(MetamacPrincipal metamacPrincipal, StatisticalResourcesRoleEnum... roles) {
         // Administration has total control
         if (SharedSecurityUtils.isAdministrador(metamacPrincipal)) {
             return true;
@@ -30,7 +36,7 @@ public class SharedSecurityUtils {
         if (roles != null) {
             for (int i = 0; i < roles.length; i++) {
                 StatisticalResourcesRoleEnum role = roles[i];
-                if (SharedSecurityUtils.isUserInResourcesRol(metamacPrincipal, role)) {
+                if (SharedSecurityUtils.isUserInStatisticalResourcesRol(metamacPrincipal, role)) {
                     return true;
                 }
             }
@@ -62,12 +68,27 @@ public class SharedSecurityUtils {
         return false;
     }
 
+    protected static boolean isOperationAllowedForAnyStatisticalResoueceRole(MetamacPrincipal metamacPrincipal, String operationCode) {
+        // Administrator has total control in all statistical operations
+        if (isAdministrador(metamacPrincipal)) {
+            return true;
+        }
+        // Checks if the statistical operation is in any role
+        for (StatisticalResourcesRoleEnum role : StatisticalResourcesRoleEnum.values()) {
+            if (haveAccessToOperationInRol(metamacPrincipal, role, operationCode)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     /**
      * Checks user has any role
      */
-    protected static boolean isUserInResourcesRol(MetamacPrincipal metamacPrincipal, StatisticalResourcesRoleEnum role) {
+    protected static boolean isUserInStatisticalResourcesRol(MetamacPrincipal metamacPrincipal, StatisticalResourcesRoleEnum role) {
         if (ANY_ROLE_ALLOWED.equals(role)) {
-            return isAnyResourcesRole(metamacPrincipal);
+            return isAnyStatisticalResourceRole(metamacPrincipal);
         } else {
             return isRoleInAccesses(metamacPrincipal, role);
         }
@@ -103,16 +124,16 @@ public class SharedSecurityUtils {
         }
         return false;
     }
-    
+
     /**
      * Checks if metamacPrincipal has any of the roles allowed in SRM (except DSD module)
      * 
      * @param metamacPrincipal
      * @return
      */
-    protected static boolean isAnyResourcesRole(MetamacPrincipal metamacPrincipal) {
-        return isAdministrador(metamacPrincipal) || isTecnicoApoyoDifusion(metamacPrincipal) || isTecnicoDifusion(metamacPrincipal) 
-                || isTecnicoApoyoProduccion(metamacPrincipal) || isTecnicoProduccion(metamacPrincipal) || isJefeProduccion(metamacPrincipal);
+    protected static boolean isAnyStatisticalResourceRole(MetamacPrincipal metamacPrincipal) {
+        return isAdministrador(metamacPrincipal) || isTecnicoApoyoDifusion(metamacPrincipal) || isTecnicoDifusion(metamacPrincipal) || isTecnicoApoyoProduccion(metamacPrincipal)
+                || isTecnicoProduccion(metamacPrincipal) || isJefeProduccion(metamacPrincipal);
     }
 
     protected static boolean isTecnicoApoyoProduccion(MetamacPrincipal metamacPrincipal) {
@@ -122,11 +143,11 @@ public class SharedSecurityUtils {
     protected static boolean isTecnicoProduccion(MetamacPrincipal metamacPrincipal) {
         return isRoleInAccesses(metamacPrincipal, TECNICO_PRODUCCION);
     }
-    
+
     protected static boolean isTecnicoApoyoDifusion(MetamacPrincipal metamacPrincipal) {
         return isRoleInAccesses(metamacPrincipal, TECNICO_APOYO_DIFUSION);
     }
-    
+
     protected static boolean isTecnicoDifusion(MetamacPrincipal metamacPrincipal) {
         return isRoleInAccesses(metamacPrincipal, TECNICO_DIFUSION);
     }
@@ -134,4 +155,25 @@ public class SharedSecurityUtils {
     protected static boolean isJefeProduccion(MetamacPrincipal metamacPrincipal) {
         return isRoleInAccesses(metamacPrincipal, JEFE_PRODUCCION);
     }
+
+    // -----------------------------------------------------------------------
+    // STATISTICAL RESOURCES ACTIONS
+    // -----------------------------------------------------------------------
+
+    protected static boolean canModifyStatisticalResource(MetamacPrincipal metamacPrincipal, String operationCode, ProcStatusEnum procStatus) {
+        if (ProcStatusEnum.DRAFT.equals(procStatus) || ProcStatusEnum.VALIDATION_REJECTED.equals(procStatus)) {
+            return isOperationAllowed(metamacPrincipal, operationCode, PRODUCTION_ROLES);
+        } else {
+            return isOperationAllowed(metamacPrincipal, operationCode, StatisticalResourcesRoleEnum.JEFE_PRODUCCION, StatisticalResourcesRoleEnum.TECNICO_PRODUCCION);
+        }
+    }
+
+    protected static boolean canRetrieveStatisticalResource(MetamacPrincipal metamacPrincipal, String operationCode, ProcStatusEnum procStatus) {
+        if (ProcStatusEnum.PUBLISHED.equals(procStatus)) {
+            return true;
+        } else {
+            return isOperationAllowedForAnyStatisticalResoueceRole(metamacPrincipal, operationCode);
+        }
+    }
+
 }
