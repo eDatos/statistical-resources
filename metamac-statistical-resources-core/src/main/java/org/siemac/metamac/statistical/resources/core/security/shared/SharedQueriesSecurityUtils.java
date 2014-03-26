@@ -41,10 +41,8 @@ public class SharedQueriesSecurityUtils extends SharedSecurityUtils {
         return canModifyStatisticalResource(metamacPrincipal, operationCode, procStatus);
     }
 
-    public static boolean canMarkQueryVersionAsDiscontinued(MetamacPrincipal metamacPrincipal) {
-        // TODO: Pendiente eliminar!
-        // TODO: Poner los roles correctos
-        return isAnyStatisticalResourceRole(metamacPrincipal);
+    public static boolean canMarkQueryVersionAsDiscontinued(MetamacPrincipal metamacPrincipal, String operationCode, ProcStatusEnum procStatus) {
+        return canModifyStatisticalResource(metamacPrincipal, operationCode, procStatus);
     }
 
     public static boolean canDeleteQueryVersion(MetamacPrincipal metamacPrincipal, String operationCode, ProcStatusEnum procStatus) {

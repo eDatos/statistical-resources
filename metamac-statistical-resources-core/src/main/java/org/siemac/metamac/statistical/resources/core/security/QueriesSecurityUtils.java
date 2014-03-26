@@ -56,8 +56,8 @@ public class QueriesSecurityUtils extends SecurityUtils {
         }
     }
 
-    public static void canMarkQueryVersionAsDiscontinued(ServiceContext ctx) throws MetamacException {
-        if (!SharedQueriesSecurityUtils.canMarkQueryVersionAsDiscontinued(getMetamacPrincipal(ctx))) {
+    public static void canMarkQueryVersionAsDiscontinued(ServiceContext ctx, QueryVersionDto queryVersionDto) throws MetamacException {
+        if (!SharedQueriesSecurityUtils.canMarkQueryVersionAsDiscontinued(getMetamacPrincipal(ctx), queryVersionDto.getStatisticalOperation().getCode(), queryVersionDto.getProcStatus())) {
             throwExceptionIfOperationNotAllowed(ctx);
         }
     }

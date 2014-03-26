@@ -317,7 +317,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     @Override
     public QueryVersionDto markQueryVersionAsDiscontinued(ServiceContext ctx, QueryVersionDto queryVersionDto) throws MetamacException {
         // Security
-        QueriesSecurityUtils.canMarkQueryVersionAsDiscontinued(ctx);
+        QueriesSecurityUtils.canMarkQueryVersionAsDiscontinued(ctx, queryVersionDto);
 
         // Transform
         QueryVersion queryVersion = queryDto2DoMapper.queryVersionDtoToDo(queryVersionDto);
