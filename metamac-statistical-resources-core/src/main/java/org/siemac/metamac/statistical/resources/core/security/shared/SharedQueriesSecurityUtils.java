@@ -54,6 +54,10 @@ public class SharedQueriesSecurityUtils extends SharedSecurityUtils {
         return isAnyStatisticalResourceRole(metamacPrincipal);
     }
 
+    public static boolean canPreviewQueryData(MetamacPrincipal metamacPrincipal, String operationCode, ProcStatusEnum procStatus) {
+        return canRetrieveStatisticalResource(metamacPrincipal, operationCode, procStatus);
+    }
+
     public static boolean canRetrieveLatestPublishedQueryVersion(MetamacPrincipal metamacPrincipal) {
         return isAnyStatisticalResourceRole(metamacPrincipal);
     }
