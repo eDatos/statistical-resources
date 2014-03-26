@@ -1365,7 +1365,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     @Override
     public PublicationVersionDto createPublication(ServiceContext ctx, PublicationVersionDto publicationVersionDto, ExternalItemDto statisticalOperationDto) throws MetamacException {
         // Security
-        PublicationsSecurityUtils.canCreatePublication(ctx);
+        PublicationsSecurityUtils.canCreatePublication(ctx, statisticalOperationDto.getCode());
 
         // Transform
         PublicationVersion publicationVersion = publicationDto2DoMapper.publicationVersionDtoToDo(publicationVersionDto);
@@ -1383,7 +1383,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     @Override
     public PublicationVersionDto updatePublicationVersion(ServiceContext ctx, PublicationVersionDto publicationVersionDto) throws MetamacException {
         // Security
-        PublicationsSecurityUtils.canUpdatePublicationVersion(ctx);
+        PublicationsSecurityUtils.canUpdatePublicationVersion(ctx, publicationVersionDto);
 
         // Transform
         PublicationVersion publicationVersion = publicationDto2DoMapper.publicationVersionDtoToDo(publicationVersionDto);
@@ -1397,8 +1397,11 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
 
     @Override
     public void deletePublicationVersion(ServiceContext ctx, String urn) throws MetamacException {
+        // Retrieve
+        PublicationVersionDto publicationVersionDto = retrievePublicationVersionByUrn(ctx, urn);
+
         // Security
-        PublicationsSecurityUtils.canDeletePublicationVersion(ctx);
+        PublicationsSecurityUtils.canDeletePublicationVersion(ctx, publicationVersionDto);
 
         // Delete
         getPublicationService().deletePublicationVersion(ctx, urn);
@@ -1425,11 +1428,11 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
 
     @Override
     public PublicationVersionDto retrievePublicationVersionByUrn(ServiceContext ctx, String urn) throws MetamacException {
-        // Security
-        PublicationsSecurityUtils.canRetrievePublicationVersionByUrn(ctx);
-
         // Retrieve
         PublicationVersion publicationVersion = getPublicationService().retrievePublicationVersionByUrn(ctx, urn);
+
+        // Security
+        PublicationsSecurityUtils.canRetrievePublicationVersionByUrn(ctx, publicationVersion);
 
         // Transform
         return publicationDo2DtoMapper.publicationVersionDoToDto(publicationVersion);
@@ -1477,11 +1480,11 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
 
     @Override
     public PublicationStructureDto retrievePublicationVersionStructure(ServiceContext ctx, String publicationVersionUrn) throws MetamacException {
-        // Security
-        PublicationsSecurityUtils.canRetrievePublicationVersionStructure(ctx);
-
         // Retrieve
         PublicationVersion publicationVersion = getPublicationService().retrievePublicationVersionByUrn(ctx, publicationVersionUrn);
+
+        // Security
+        PublicationsSecurityUtils.canRetrievePublicationVersionStructure(ctx, publicationVersion);
 
         // Build structure
         PublicationStructureDto publicationStructureDto = publicationDo2DtoMapper.publicationVersionStructureDoToDto(publicationVersion);
@@ -1492,7 +1495,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     @Override
     public PublicationVersionDto sendPublicationVersionToProductionValidation(ServiceContext ctx, PublicationVersionDto publicationVersionDto) throws MetamacException {
         // Security
-        PublicationsSecurityUtils.canSendPublicationVersionToProductionValidation(ctx);
+        PublicationsSecurityUtils.canSendPublicationVersionToProductionValidation(ctx, publicationVersionDto.getStatisticalOperation().getCode());
 
         // Transform
         PublicationVersion publicationVersion = publicationDto2DoMapper.publicationVersionDtoToDo(publicationVersionDto);
@@ -1509,7 +1512,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     @Override
     public PublicationVersionBaseDto sendPublicationVersionToProductionValidation(ServiceContext ctx, PublicationVersionBaseDto publicationVersionDto) throws MetamacException {
         // Security
-        PublicationsSecurityUtils.canSendPublicationVersionToProductionValidation(ctx);
+        PublicationsSecurityUtils.canSendPublicationVersionToProductionValidation(ctx, publicationVersionDto.getStatisticalOperation().getCode());
 
         // Check optimistic locking
         publicationDto2DoMapper.checkOptimisticLocking(publicationVersionDto);
@@ -1526,7 +1529,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     @Override
     public PublicationVersionDto sendPublicationVersionToDiffusionValidation(ServiceContext ctx, PublicationVersionDto publicationVersionDto) throws MetamacException {
         // Security
-        PublicationsSecurityUtils.canSendPublicationVersionToDiffusionValidation(ctx);
+        PublicationsSecurityUtils.canSendPublicationVersionToDiffusionValidation(ctx, publicationVersionDto.getStatisticalOperation().getCode());
 
         // Transform
         PublicationVersion publicationVersion = publicationDto2DoMapper.publicationVersionDtoToDo(publicationVersionDto);
@@ -1543,7 +1546,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     @Override
     public PublicationVersionBaseDto sendPublicationVersionToDiffusionValidation(ServiceContext ctx, PublicationVersionBaseDto publicationVersionDto) throws MetamacException {
         // Security
-        PublicationsSecurityUtils.canSendPublicationVersionToDiffusionValidation(ctx);
+        PublicationsSecurityUtils.canSendPublicationVersionToDiffusionValidation(ctx, publicationVersionDto.getStatisticalOperation().getCode());
 
         // Check optimistic locking
         publicationDto2DoMapper.checkOptimisticLocking(publicationVersionDto);
@@ -1560,7 +1563,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     @Override
     public PublicationVersionDto sendPublicationVersionToValidationRejected(ServiceContext ctx, PublicationVersionDto publicationVersionDto) throws MetamacException {
         // Security
-        PublicationsSecurityUtils.canSendPublicationVersionToValidationRejected(ctx);
+        PublicationsSecurityUtils.canSendPublicationVersionToValidationRejected(ctx, publicationVersionDto.getStatisticalOperation().getCode());
 
         // Transform
         PublicationVersion publicationVersion = publicationDto2DoMapper.publicationVersionDtoToDo(publicationVersionDto);
@@ -1577,7 +1580,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     @Override
     public PublicationVersionBaseDto sendPublicationVersionToValidationRejected(ServiceContext ctx, PublicationVersionBaseDto publicationVersionDto) throws MetamacException {
         // Security
-        PublicationsSecurityUtils.canSendPublicationVersionToValidationRejected(ctx);
+        PublicationsSecurityUtils.canSendPublicationVersionToValidationRejected(ctx, publicationVersionDto.getStatisticalOperation().getCode());
 
         // Check optimistic locking
         publicationDto2DoMapper.checkOptimisticLocking(publicationVersionDto);
@@ -1594,7 +1597,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     @Override
     public PublicationVersionDto publishPublicationVersion(ServiceContext ctx, PublicationVersionDto publicationVersionDto) throws MetamacException {
         // Security
-        PublicationsSecurityUtils.canPublishPublicationVersion(ctx);
+        PublicationsSecurityUtils.canPublishPublicationVersion(ctx, publicationVersionDto.getStatisticalOperation().getCode());
 
         // Transform
         PublicationVersion publicationVersion = publicationDto2DoMapper.publicationVersionDtoToDo(publicationVersionDto);
@@ -1614,7 +1617,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     @Override
     public PublicationVersionBaseDto publishPublicationVersion(ServiceContext ctx, PublicationVersionBaseDto publicationVersionDto) throws MetamacException {
         // Security
-        PublicationsSecurityUtils.canPublishPublicationVersion(ctx);
+        PublicationsSecurityUtils.canPublishPublicationVersion(ctx, publicationVersionDto.getStatisticalOperation().getCode());
 
         // Check optimistic locking
         publicationDto2DoMapper.checkOptimisticLocking(publicationVersionDto);
@@ -1635,7 +1638,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     @Override
     public PublicationVersionDto programPublicationPublicationVersion(ServiceContext ctx, PublicationVersionDto publicationVersionDto, Date validFromDate) throws MetamacException {
         // Security
-        PublicationsSecurityUtils.canPublishPublicationVersion(ctx);
+        PublicationsSecurityUtils.canPublishPublicationVersion(ctx, publicationVersionDto.getStatisticalOperation().getCode());
 
         // Transform only for optimistic locking
         PublicationVersion publicationVersion = publicationDto2DoMapper.publicationVersionDtoToDo(publicationVersionDto);
@@ -1655,7 +1658,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     @Override
     public PublicationVersionBaseDto programPublicationPublicationVersion(ServiceContext ctx, PublicationVersionBaseDto publicationVersionDto, Date validFromDate) throws MetamacException {
         // Security
-        PublicationsSecurityUtils.canPublishPublicationVersion(ctx);
+        PublicationsSecurityUtils.canPublishPublicationVersion(ctx, publicationVersionDto.getStatisticalOperation().getCode());
 
         // Check optimistic locking
         publicationDto2DoMapper.checkOptimisticLocking(publicationVersionDto);
@@ -1688,7 +1691,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     @Override
     public PublicationVersionDto cancelPublicationPublicationVersion(ServiceContext ctx, PublicationVersionDto publicationVersionDto) throws MetamacException {
         // Security
-        PublicationsSecurityUtils.canCancelPublicationPublicationVersion(ctx);
+        PublicationsSecurityUtils.canCancelPublicationPublicationVersion(ctx, publicationVersionDto.getStatisticalOperation().getCode());
 
         // Transform
         PublicationVersion publicationVersion = publicationDto2DoMapper.publicationVersionDtoToDo(publicationVersionDto);
@@ -1704,7 +1707,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     @Override
     public PublicationVersionBaseDto cancelPublicationPublicationVersion(ServiceContext ctx, PublicationVersionBaseDto publicationVersionDto) throws MetamacException {
         // Security
-        PublicationsSecurityUtils.canCancelPublicationPublicationVersion(ctx);
+        PublicationsSecurityUtils.canCancelPublicationPublicationVersion(ctx, publicationVersionDto.getStatisticalOperation().getCode());
 
         // Check optimistic locking
         publicationDto2DoMapper.checkOptimisticLocking(publicationVersionDto);
@@ -1720,7 +1723,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     @Override
     public PublicationVersionDto versioningPublicationVersion(ServiceContext ctx, PublicationVersionDto publicationVersionDto, VersionTypeEnum versionType) throws MetamacException {
         // Security
-        PublicationsSecurityUtils.canVersionPublication(ctx);
+        PublicationsSecurityUtils.canVersionPublication(ctx, publicationVersionDto.getStatisticalOperation().getCode());
 
         // Transform
         PublicationVersion publicationVersion = publicationDto2DoMapper.publicationVersionDtoToDo(publicationVersionDto);
@@ -1737,7 +1740,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     @Override
     public PublicationVersionBaseDto versioningPublicationVersion(ServiceContext ctx, PublicationVersionBaseDto publicationVersionDto, VersionTypeEnum versionType) throws MetamacException {
         // Security
-        PublicationsSecurityUtils.canVersionPublication(ctx);
+        PublicationsSecurityUtils.canVersionPublication(ctx, publicationVersionDto.getStatisticalOperation().getCode());
 
         // Check optimistic locking
         publicationDto2DoMapper.checkOptimisticLocking(publicationVersionDto);
@@ -1757,11 +1760,11 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
 
     @Override
     public ChapterDto createChapter(ServiceContext ctx, String publicationUrn, ChapterDto chapterDto) throws MetamacException {
-        // Security
-        PublicationsSecurityUtils.canCreateChapter(ctx);
-
         // Transform
         Chapter chapter = publicationDto2DoMapper.chapterDtoToDo(chapterDto);
+
+        // Security
+        PublicationsSecurityUtils.canCreateChapter(ctx, chapter);
 
         // Create
         chapter = getPublicationService().createChapter(ctx, publicationUrn, chapter);
@@ -1773,11 +1776,11 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
 
     @Override
     public ChapterDto updateChapter(ServiceContext ctx, ChapterDto chapterDto) throws MetamacException {
-        // Security
-        PublicationsSecurityUtils.canUpdateChapter(ctx);
-
         // Transform
         Chapter chapter = publicationDto2DoMapper.chapterDtoToDo(chapterDto);
+
+        // Security
+        PublicationsSecurityUtils.canUpdateChapter(ctx, chapter);
 
         // Update
         chapter = getPublicationService().updateChapter(ctx, chapter);
@@ -1789,11 +1792,11 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
 
     @Override
     public ChapterDto updateChapterLocation(ServiceContext ctx, String chapterUrn, String parentTargetUrn, Long orderInLevel) throws MetamacException {
-        // Security
-        PublicationsSecurityUtils.canUpdateChapterLocation(ctx);
-
         // Update
         Chapter chapter = getPublicationService().updateChapterLocation(ctx, chapterUrn, parentTargetUrn, orderInLevel);
+
+        // Security
+        PublicationsSecurityUtils.canUpdateChapterLocation(ctx, chapter);
 
         // Transform to dto
         ChapterDto chapterDto = publicationDo2DtoMapper.chapterDoToDto(chapter);
@@ -1802,11 +1805,11 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
 
     @Override
     public ChapterDto retrieveChapter(ServiceContext ctx, String chapterUrn) throws MetamacException {
-        // Security
-        PublicationsSecurityUtils.canRetrieveChapter(ctx);
-
         // Retrieve
         Chapter chapter = getPublicationService().retrieveChapter(ctx, chapterUrn);
+
+        // Security
+        PublicationsSecurityUtils.canRetrieveChapter(ctx, chapter);
 
         // Transform
         ChapterDto chapterDto = publicationDo2DtoMapper.chapterDoToDto(chapter);
@@ -1815,8 +1818,11 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
 
     @Override
     public void deleteChapter(ServiceContext ctx, String chapterUrn) throws MetamacException {
+        // Retrieve
+        Chapter chapter = getPublicationService().retrieveChapter(ctx, chapterUrn);
+
         // Security
-        PublicationsSecurityUtils.canDeleteChapter(ctx);
+        PublicationsSecurityUtils.canDeleteChapter(ctx, chapter);
 
         // Delete
         getPublicationService().deleteChapter(ctx, chapterUrn);
@@ -1828,11 +1834,11 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
 
     @Override
     public CubeDto createCube(ServiceContext ctx, String publicationUrn, CubeDto cubeDto) throws MetamacException {
-        // Security
-        PublicationsSecurityUtils.canCreateCube(ctx);
-
         // Transform
         Cube cube = publicationDto2DoMapper.cubeDtoToDo(cubeDto);
+
+        // Security
+        PublicationsSecurityUtils.canCreateCube(ctx, cube);
 
         // Create
         cube = getPublicationService().createCube(ctx, publicationUrn, cube);
@@ -1845,11 +1851,11 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
 
     @Override
     public CubeDto updateCube(ServiceContext ctx, CubeDto cubeDto) throws MetamacException {
-        // Security
-        PublicationsSecurityUtils.canUpdateCube(ctx);
-
         // Transform
         Cube cube = publicationDto2DoMapper.cubeDtoToDo(cubeDto);
+
+        // Security
+        PublicationsSecurityUtils.canUpdateCube(ctx, cube);
 
         // Update
         cube = getPublicationService().updateCube(ctx, cube);
@@ -1861,11 +1867,11 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
 
     @Override
     public CubeDto updateCubeLocation(ServiceContext ctx, String cubeUrn, String parentTargetUrn, Long orderInLevel) throws MetamacException {
-        // Security
-        PublicationsSecurityUtils.canUpdateCubeLocation(ctx);
-
         // Update
         Cube cube = getPublicationService().updateCubeLocation(ctx, cubeUrn, parentTargetUrn, orderInLevel);
+
+        // Security
+        PublicationsSecurityUtils.canUpdateCubeLocation(ctx, cube);
 
         // Transform
         CubeDto cubeDto = publicationDo2DtoMapper.cubeDoToDto(cube);
@@ -1874,11 +1880,11 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
 
     @Override
     public CubeDto retrieveCube(ServiceContext ctx, String cubeUrn) throws MetamacException {
-        // Security
-        PublicationsSecurityUtils.canRetrieveCube(ctx);
-
         // Retrieve
         Cube cube = getPublicationService().retrieveCube(ctx, cubeUrn);
+
+        // Security
+        PublicationsSecurityUtils.canRetrieveCube(ctx, cube);
 
         // Transform
         CubeDto cubeDto = publicationDo2DtoMapper.cubeDoToDto(cube);
@@ -1888,8 +1894,11 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
 
     @Override
     public void deleteCube(ServiceContext ctx, String cubeUrn) throws MetamacException {
+        // Retrieve
+        Cube cube = getPublicationService().retrieveCube(ctx, cubeUrn);
+
         // Security
-        PublicationsSecurityUtils.canDeleteCube(ctx);
+        PublicationsSecurityUtils.canDeleteCube(ctx, cube);
 
         // Delete
         getPublicationService().deleteCube(ctx, cubeUrn);

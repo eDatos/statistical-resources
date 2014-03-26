@@ -1,6 +1,8 @@
 package org.siemac.metamac.statistical.resources.core.security.shared;
 
 import org.siemac.metamac.sso.client.MetamacPrincipal;
+import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
+import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourcesRoleEnum;
 
 public class SharedPublicationsSecurityUtils extends SharedSecurityUtils {
 
@@ -17,19 +19,16 @@ public class SharedPublicationsSecurityUtils extends SharedSecurityUtils {
     // PUBLICATIONS VERSIONS
     // ------------------------------------------------------------------------
 
-    public static boolean canCreatePublication(MetamacPrincipal metamacPrincipal) {
-        // TODO: Poner los roles correctos
-        return isAnyStatisticalResourceRole(metamacPrincipal);
+    public static boolean canCreatePublication(MetamacPrincipal metamacPrincipal, String operationCode) {
+        return isOperationAllowed(metamacPrincipal, operationCode, PRODUCTION_ROLES);
     }
 
-    public static boolean canUpdatePublicationVersion(MetamacPrincipal metamacPrincipal) {
-        // TODO: Poner los roles correctos
-        return isAnyStatisticalResourceRole(metamacPrincipal);
+    public static boolean canUpdatePublicationVersion(MetamacPrincipal metamacPrincipal, String operationCode, ProcStatusEnum procStatus) {
+        return canModifyStatisticalResource(metamacPrincipal, operationCode, procStatus);
     }
 
-    public static boolean canDeletePublicationVersion(MetamacPrincipal metamacPrincipal) {
-        // TODO: Poner los roles correctos
-        return isAnyStatisticalResourceRole(metamacPrincipal);
+    public static boolean canDeletePublicationVersion(MetamacPrincipal metamacPrincipal, String operationCode, ProcStatusEnum procStatus) {
+        return canModifyStatisticalResource(metamacPrincipal, operationCode, procStatus);
     }
 
     public static boolean canFindPublicationsVersionsByCondition(MetamacPrincipal metamacPrincipal) {
@@ -37,9 +36,8 @@ public class SharedPublicationsSecurityUtils extends SharedSecurityUtils {
         return isAnyStatisticalResourceRole(metamacPrincipal);
     }
 
-    public static boolean canRetrievePublicationVersionByUrn(MetamacPrincipal metamacPrincipal) {
-        // TODO: Poner los roles correctos
-        return isAnyStatisticalResourceRole(metamacPrincipal);
+    public static boolean canRetrievePublicationVersionByUrn(MetamacPrincipal metamacPrincipal, String operationCode, ProcStatusEnum procStatus) {
+        return canRetrieveStatisticalResource(metamacPrincipal, operationCode, procStatus);
     }
 
     public static boolean canRetrieveLatestPublicationVersion(MetamacPrincipal metamacPrincipal) {
@@ -48,7 +46,6 @@ public class SharedPublicationsSecurityUtils extends SharedSecurityUtils {
     }
 
     public static boolean canRetrieveLatestPublishedPublicationVersion(MetamacPrincipal metamacPrincipal) {
-        // TODO: Poner los roles correctos
         return isAnyStatisticalResourceRole(metamacPrincipal);
     }
 
@@ -57,116 +54,93 @@ public class SharedPublicationsSecurityUtils extends SharedSecurityUtils {
         return isAnyStatisticalResourceRole(metamacPrincipal);
     }
 
-    public static boolean canVersionPublication(MetamacPrincipal metamacPrincipal) {
-        // TODO: Poner los roles correctos
-        return isAnyStatisticalResourceRole(metamacPrincipal);
+    public static boolean canVersionPublication(MetamacPrincipal metamacPrincipal, String operationCode) {
+        return isOperationAllowed(metamacPrincipal, operationCode, PRODUCTION_ROLES);
     }
 
-    public static boolean canRetrievePublicationVersionStructure(MetamacPrincipal metamacPrincipal) {
-        // TODO: Poner los roles correctos
-        return isAnyStatisticalResourceRole(metamacPrincipal);
+    public static boolean canRetrievePublicationVersionStructure(MetamacPrincipal metamacPrincipal, String operationCode, ProcStatusEnum procStatus) {
+        return canRetrieveStatisticalResource(metamacPrincipal, operationCode, procStatus);
     }
 
-    public static boolean canSendPublicationVersionToProductionValidation(MetamacPrincipal metamacPrincipal) {
-        // TODO: Poner los roles correctos
-        return isAnyStatisticalResourceRole(metamacPrincipal);
+    public static boolean canSendPublicationVersionToProductionValidation(MetamacPrincipal metamacPrincipal, String operationCode) {
+        return isOperationAllowed(metamacPrincipal, operationCode, PRODUCTION_ROLES);
     }
 
-    public static boolean canSendPublicationVersionToDiffusionValidation(MetamacPrincipal metamacPrincipal) {
-        // TODO: Poner los roles correctos
-        return isAnyStatisticalResourceRole(metamacPrincipal);
+    public static boolean canSendPublicationVersionToDiffusionValidation(MetamacPrincipal metamacPrincipal, String operationCode) {
+        return isOperationAllowed(metamacPrincipal, operationCode, StatisticalResourcesRoleEnum.TECNICO_PRODUCCION, StatisticalResourcesRoleEnum.TECNICO_APOYO_PRODUCCION);
     }
 
-    public static boolean canSendPublicationVersionToValidationRejected(MetamacPrincipal metamacPrincipal) {
-        // TODO: Poner los roles correctos
-        return isAnyStatisticalResourceRole(metamacPrincipal);
+    public static boolean canSendPublicationVersionToValidationRejected(MetamacPrincipal metamacPrincipal, String operationCode) {
+        return isOperationAllowed(metamacPrincipal, operationCode, StatisticalResourcesRoleEnum.TECNICO_PRODUCCION, StatisticalResourcesRoleEnum.TECNICO_APOYO_PRODUCCION,
+                StatisticalResourcesRoleEnum.TECNICO_DIFUSION, StatisticalResourcesRoleEnum.TECNICO_APOYO_DIFUSION);
     }
 
-    public static boolean canPublishPublicationVersion(MetamacPrincipal metamacPrincipal) {
-        // TODO: Poner los roles correctos
-        return isAnyStatisticalResourceRole(metamacPrincipal);
+    public static boolean canPublishPublicationVersion(MetamacPrincipal metamacPrincipal, String operationCode) {
+        return isOperationAllowed(metamacPrincipal, operationCode, DIFFUSION_ROLES);
     }
 
-    public static boolean canProgramPublicationPublicationVersion(MetamacPrincipal metamacPrincipal) {
-        // TODO: Poner los roles correctos
-        return isAnyStatisticalResourceRole(metamacPrincipal);
+    public static boolean canProgramPublicationPublicationVersion(MetamacPrincipal metamacPrincipal, String operationCode) {
+        return canPublishPublicationVersion(metamacPrincipal, operationCode);
     }
 
-    public static boolean canCancelPublicationPublicationVersion(MetamacPrincipal metamacPrincipal) {
-        // TODO: Poner los roles correctos
-        return isAnyStatisticalResourceRole(metamacPrincipal);
+    public static boolean canCancelPublicationPublicationVersion(MetamacPrincipal metamacPrincipal, String operationCode) {
+        return isOperationAllowed(metamacPrincipal, operationCode, DIFFUSION_ROLES);
     }
 
-    public static boolean canPreviewDataPublicationVersion(MetamacPrincipal metamacPrincipal) {
-        // TODO: Poner los roles correctos
-        return isAnyStatisticalResourceRole(metamacPrincipal);
+    public static boolean canPreviewDataPublicationVersion(MetamacPrincipal metamacPrincipal, String operationCode, ProcStatusEnum procStatus) {
+        return canRetrieveStatisticalResource(metamacPrincipal, operationCode, procStatus);
     }
 
-    public static boolean canUpdateElementLocation(MetamacPrincipal metamacPrincipal) {
-        // TODO: Poner los roles correctos
-        return isAnyStatisticalResourceRole(metamacPrincipal);
+    public static boolean canUpdateElementLocation(MetamacPrincipal metamacPrincipal, String operationCode, ProcStatusEnum procStatus) {
+        return canModifyStatisticalResource(metamacPrincipal, operationCode, procStatus);
     }
 
     // ------------------------------------------------------------------------
     // CHAPTERS
     // ------------------------------------------------------------------------
 
-    // TODO: Comprobar si en la seguridad de los capitulos tambien hay que tener en cuenta algo relacionado con la version de la publicacion
-
-    public static boolean canCreateChapter(MetamacPrincipal metamacPrincipal) {
-        // TODO: Poner los roles correctos
-        return isAnyStatisticalResourceRole(metamacPrincipal);
+    public static boolean canCreateChapter(MetamacPrincipal metamacPrincipal, String operationCode, ProcStatusEnum procStatus) {
+        return canModifyStatisticalResource(metamacPrincipal, operationCode, procStatus);
     }
 
-    public static boolean canUpdateChapter(MetamacPrincipal metamacPrincipal) {
-        // TODO: Poner los roles correctos
-        return isAnyStatisticalResourceRole(metamacPrincipal);
+    public static boolean canUpdateChapter(MetamacPrincipal metamacPrincipal, String operationCode, ProcStatusEnum procStatus) {
+        return canModifyStatisticalResource(metamacPrincipal, operationCode, procStatus);
     }
 
-    public static boolean canUpdateChapterLocation(MetamacPrincipal metamacPrincipal) {
-        // TODO: Poner los roles correctos
-        return isAnyStatisticalResourceRole(metamacPrincipal);
+    public static boolean canUpdateChapterLocation(MetamacPrincipal metamacPrincipal, String operationCode, ProcStatusEnum procStatus) {
+        return canModifyStatisticalResource(metamacPrincipal, operationCode, procStatus);
     }
 
-    public static boolean canRetrieveChapter(MetamacPrincipal metamacPrincipal) {
-        // TODO: Poner los roles correctos
-        return isAnyStatisticalResourceRole(metamacPrincipal);
+    public static boolean canRetrieveChapter(MetamacPrincipal metamacPrincipal, String operationCode, ProcStatusEnum procStatus) {
+        return canRetrieveStatisticalResource(metamacPrincipal, operationCode, procStatus);
     }
 
-    public static boolean canDeleteChapter(MetamacPrincipal metamacPrincipal) {
-        // TODO: Poner los roles correctos
-        return isAnyStatisticalResourceRole(metamacPrincipal);
+    public static boolean canDeleteChapter(MetamacPrincipal metamacPrincipal, String operationCode, ProcStatusEnum procStatus) {
+        return canModifyStatisticalResource(metamacPrincipal, operationCode, procStatus);
     }
 
     // ------------------------------------------------------------------------
     // CUBES
     // ------------------------------------------------------------------------
 
-    // TODO: Comprobar si en la seguridad de los cubos tambien hay que tener en cuenta algo relacionado con la version de la publicacion
-
-    public static boolean canCreateCube(MetamacPrincipal metamacPrincipal) {
-        // TODO: Poner los roles correctos
-        return isAnyStatisticalResourceRole(metamacPrincipal);
+    public static boolean canCreateCube(MetamacPrincipal metamacPrincipal, String operationCode, ProcStatusEnum procStatus) {
+        return canModifyStatisticalResource(metamacPrincipal, operationCode, procStatus);
     }
 
-    public static boolean canUpdateCube(MetamacPrincipal metamacPrincipal) {
-        // TODO: Poner los roles correctos
-        return isAnyStatisticalResourceRole(metamacPrincipal);
+    public static boolean canUpdateCube(MetamacPrincipal metamacPrincipal, String operationCode, ProcStatusEnum procStatus) {
+        return canModifyStatisticalResource(metamacPrincipal, operationCode, procStatus);
     }
 
-    public static boolean canUpdateCubeLocation(MetamacPrincipal metamacPrincipal) {
-        // TODO: Poner los roles correctos
-        return isAnyStatisticalResourceRole(metamacPrincipal);
+    public static boolean canUpdateCubeLocation(MetamacPrincipal metamacPrincipal, String operationCode, ProcStatusEnum procStatus) {
+        return canModifyStatisticalResource(metamacPrincipal, operationCode, procStatus);
     }
 
-    public static boolean canRetrieveCube(MetamacPrincipal metamacPrincipal) {
-        // TODO: Poner los roles correctos
-        return isAnyStatisticalResourceRole(metamacPrincipal);
+    public static boolean canRetrieveCube(MetamacPrincipal metamacPrincipal, String operationCode, ProcStatusEnum procStatus) {
+        return canRetrieveStatisticalResource(metamacPrincipal, operationCode, procStatus);
     }
 
-    public static boolean canDeleteCube(MetamacPrincipal metamacPrincipal) {
-        // TODO: Poner los roles correctos
-        return isAnyStatisticalResourceRole(metamacPrincipal);
+    public static boolean canDeleteCube(MetamacPrincipal metamacPrincipal, String operationCode, ProcStatusEnum procStatus) {
+        return canModifyStatisticalResource(metamacPrincipal, operationCode, procStatus);
     }
 
 }
