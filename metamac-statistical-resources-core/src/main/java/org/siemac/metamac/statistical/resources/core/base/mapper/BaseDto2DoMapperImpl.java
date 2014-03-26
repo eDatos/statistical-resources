@@ -10,6 +10,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
@@ -47,6 +48,8 @@ import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionSingl
 import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesCollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.arte.libs.lang.ObjectUtils;
+
 @org.springframework.stereotype.Component("baseDto2DoMapper")
 public class BaseDto2DoMapperImpl extends CommonDto2DoMapperImpl implements BaseDto2DoMapper {
 
@@ -61,8 +64,8 @@ public class BaseDto2DoMapperImpl extends CommonDto2DoMapperImpl implements Base
     public SiemacMetadataStatisticalResource siemacMetadataStatisticalResourceDtoToDo(SiemacMetadataStatisticalResourceDto source, SiemacMetadataStatisticalResource target, String metadataName)
             throws MetamacException {
 
-        InternationalString oldTitle = target.getTitle();
-        InternationalString oldDescription = target.getDescription();
+        InternationalString oldTitle = cloneInternationalString(target.getTitle());
+        InternationalString oldDescription = cloneInternationalString(target.getDescription());
 
         // Hierarchy
         lifeCycleStatisticalResourceDtoToDo(source, target, metadataName);
@@ -109,6 +112,17 @@ public class BaseDto2DoMapperImpl extends CommonDto2DoMapperImpl implements Base
         target.setCommonMetadata(externalItemDtoToDo(source.getCommonMetadata(), target.getCommonMetadata(), addParameter(metadataName, ServiceExceptionSingleParameters.COMMON_METADATA)));
         target.setAccessRights(internationalStringDtoToDo(source.getAccessRights(), target.getAccessRights(), addParameter(metadataName, ServiceExceptionSingleParameters.ACCESS_RIGHTS)));
 
+        return target;
+    }
+
+    private InternationalString cloneInternationalString(InternationalString source) {
+        if (source == null) {
+            return null;
+        }
+        InternationalString target = new InternationalString();
+        for (LocalisedString localised : source.getTexts()) {
+            target.addText(new LocalisedString(localised.getLocale(), localised.getLabel()));
+        }
         return target;
     }
 
@@ -201,11 +215,17 @@ public class BaseDto2DoMapperImpl extends CommonDto2DoMapperImpl implements Base
         String text = intString != null ? intString.getLocalisedLabel(locale) : null;
         if (text != null) {
             String label = Jsoup.clean(text.trim(), Whitelist.none());
+            label = removeHtmlEntitiesLeft(label);
             for (String word : Arrays.asList(label.split("\\s+"))) {
                 words.add(word.toLowerCase());
             }
         }
         return words;
+    }
+
+    protected String removeHtmlEntitiesLeft(String word) {
+        word = StringEscapeUtils.unescapeHtml(word);
+        return word;
     }
 
     private Set<String> filterKeywords(Set<String> words) {
