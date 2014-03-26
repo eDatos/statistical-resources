@@ -84,123 +84,103 @@ public class SharedDatasetsSecurityUtils extends SharedSecurityUtils {
     }
 
     public static boolean canSendDatasetVersionToValidationRejected(MetamacPrincipal metamacPrincipal, String operationCode) {
-        return isOperationAllowed(metamacPrincipal, operationCode, StatisticalResourcesRoleEnum.TECNICO_PRODUCCION, StatisticalResourcesRoleEnum.TECNICO_APOYO_PRODUCCION);
+        return isOperationAllowed(metamacPrincipal, operationCode, StatisticalResourcesRoleEnum.TECNICO_PRODUCCION, StatisticalResourcesRoleEnum.TECNICO_APOYO_PRODUCCION,
+                StatisticalResourcesRoleEnum.TECNICO_DIFUSION, StatisticalResourcesRoleEnum.TECNICO_APOYO_DIFUSION);
     }
 
-    public static boolean canPublishDataset(MetamacPrincipal metamacPrincipal) {
-        // TODO: Poner los roles correctos (METAMAC-1845)
-        return isAnyStatisticalResourceRole(metamacPrincipal);
+    public static boolean canPublishDataset(MetamacPrincipal metamacPrincipal, String operationCode) {
+        return isOperationAllowed(metamacPrincipal, operationCode, DIFFUSION_ROLES);
     }
 
-    public static boolean canCancelPublicationDataset(MetamacPrincipal metamacPrincipal) {
-        // TODO: Poner los roles correctos (METAMAC-1845)
-        return isAnyStatisticalResourceRole(metamacPrincipal);
+    public static boolean canCancelPublicationDataset(MetamacPrincipal metamacPrincipal, String operationCode) {
+        return isOperationAllowed(metamacPrincipal, operationCode, DIFFUSION_ROLES);
     }
 
-    public static boolean canRetrieveLatestDatasetVersion(MetamacPrincipal metamacPrincipal) {
-        // TODO: Poner los roles correctos (METAMAC-1845)
-        return isAnyStatisticalResourceRole(metamacPrincipal);
+    public static boolean canRetrieveLatestDatasetVersion(MetamacPrincipal metamacPrincipal, String operationCode, ProcStatusEnum procStatus) {
+        return canRetrieveStatisticalResource(metamacPrincipal, operationCode, procStatus);
     }
 
     public static boolean canRetrieveLatestPublishedDatasetVersion(MetamacPrincipal metamacPrincipal) {
-        // TODO: Poner los roles correctos (METAMAC-1845)
         return isAnyStatisticalResourceRole(metamacPrincipal);
     }
 
-    public static boolean canRetrieveDatasetVersionDimensionsIds(MetamacPrincipal metamacPrincipal) {
-        // TODO: Poner los roles correctos (METAMAC-1845)
-        return isAnyStatisticalResourceRole(metamacPrincipal);
+    public static boolean canRetrieveDatasetVersionDimensionsIds(MetamacPrincipal metamacPrincipal, String operationCode, ProcStatusEnum procStatus) {
+        return canRetrieveStatisticalResource(metamacPrincipal, operationCode, procStatus);
     }
 
     public static boolean canRetrieveCoverageForDatasetVersionDimension(MetamacPrincipal metamacPrincipal) {
-        // TODO: Poner los roles correctos (METAMAC-1845)
         return isAnyStatisticalResourceRole(metamacPrincipal);
     }
 
     public static boolean canFilterCoverageForDatasetVersionDimension(MetamacPrincipal metamacPrincipal) {
-        // TODO: Poner los roles correctos (METAMAC-1845)
         return isAnyStatisticalResourceRole(metamacPrincipal);
     }
 
     public static boolean canFindStatisticOfficialities(MetamacPrincipal metamacPrincipal) {
-        // TODO: Poner los roles correctos (METAMAC-1845)
         return isAnyStatisticalResourceRole(metamacPrincipal);
     }
 
-    public static boolean canImportDatasourcesInDatasetVersion(MetamacPrincipal metamacPrincipal) {
-        // TODO: Poner los roles correctos (METAMAC-1845)
-        return isAnyStatisticalResourceRole(metamacPrincipal);
+    public static boolean canImportDatasourcesInDatasetVersion(MetamacPrincipal metamacPrincipal, String operationCode) {
+        return isOperationAllowed(metamacPrincipal, operationCode, PRODUCTION_ROLES);
     }
 
-    public static boolean canImportDatasources(MetamacPrincipal metamacPrincipal) {
-        // TODO: Poner los roles correctos (METAMAC-1845)
-        return isAnyStatisticalResourceRole(metamacPrincipal);
+    public static boolean canImportDatasources(MetamacPrincipal metamacPrincipal, String operationCode) {
+        return isOperationAllowed(metamacPrincipal, operationCode, PRODUCTION_ROLES);
     }
 
-    public static boolean canImportDatasourcesInStatisticalOperation(MetamacPrincipal metamacPrincipal) {
-        // TODO: Poner los roles correctos (METAMAC-1845)
-        return isAnyStatisticalResourceRole(metamacPrincipal);
+    public static boolean canImportDatasourcesInStatisticalOperation(MetamacPrincipal metamacPrincipal, String operationCode) {
+        return isOperationAllowed(metamacPrincipal, operationCode, PRODUCTION_ROLES);
     }
 
     public static boolean canRetrieveDatasetVersionMainCoverages(MetamacPrincipal metamacPrincipal) {
-        // TODO: Poner los roles correctos (METAMAC-1845)
         return isAnyStatisticalResourceRole(metamacPrincipal);
     }
 
-    public static boolean canCreateAttributeInstance(MetamacPrincipal metamacPrincipal) {
-        // TODO: Poner los roles correctos (METAMAC-1845)
-        return isAnyStatisticalResourceRole(metamacPrincipal);
+    public static boolean canCreateAttributeInstance(MetamacPrincipal metamacPrincipal, String operationCode, ProcStatusEnum procStatus) {
+        return canModifyStatisticalResource(metamacPrincipal, operationCode, procStatus);
     }
 
-    public static boolean canUpdateAttributeInstance(MetamacPrincipal metamacPrincipal) {
-        // TODO: Poner los roles correctos (METAMAC-1845)
-        return isAnyStatisticalResourceRole(metamacPrincipal);
+    public static boolean canUpdateAttributeInstance(MetamacPrincipal metamacPrincipal, String operationCode, ProcStatusEnum procStatus) {
+        return canModifyStatisticalResource(metamacPrincipal, operationCode, procStatus);
     }
 
-    public static boolean canDeleteAttributeInstance(MetamacPrincipal metamacPrincipal) {
-        // TODO: Poner los roles correctos (METAMAC-1845)
-        return isAnyStatisticalResourceRole(metamacPrincipal);
+    public static boolean canDeleteAttributeInstance(MetamacPrincipal metamacPrincipal, String operationCode, ProcStatusEnum procStatus) {
+        return canModifyStatisticalResource(metamacPrincipal, operationCode, procStatus);
     }
 
-    public static boolean canRetrieveAttributeInstances(MetamacPrincipal metamacPrincipal) {
-        // TODO: Poner los roles correctos (METAMAC-1845)
-        return isAnyStatisticalResourceRole(metamacPrincipal);
+    public static boolean canRetrieveAttributeInstances(MetamacPrincipal metamacPrincipal, String operationCode, ProcStatusEnum procStatus) {
+        return canRetrieveStatisticalResource(metamacPrincipal, operationCode, procStatus);
     }
 
-    public static boolean canPreviewDatasetData(MetamacPrincipal metamacPrincipal) {
-        return isAnyStatisticalResourceRole(metamacPrincipal);
+    public static boolean canPreviewDatasetData(MetamacPrincipal metamacPrincipal, String operationCode, ProcStatusEnum procStatus) {
+        return canRetrieveStatisticalResource(metamacPrincipal, operationCode, procStatus);
     }
 
     // ------------------------------------------------------------------------
     // CATEGORISATIONS
     // ------------------------------------------------------------------------
 
-    public static boolean canCreateCategorisation(MetamacPrincipal metamacPrincipal) {
-        // TODO: Poner los roles correctos (METAMAC-1845)
-        return isAnyStatisticalResourceRole(metamacPrincipal);
+    public static boolean canCreateCategorisation(MetamacPrincipal metamacPrincipal, String operationCode, ProcStatusEnum procStatus) {
+        return canModifyStatisticalResource(metamacPrincipal, operationCode, procStatus);
     }
 
-    public static boolean canRetrieveCategorisationByUrn(MetamacPrincipal metamacPrincipal) {
-        // TODO: Poner los roles correctos (METAMAC-1845)
-        return isAnyStatisticalResourceRole(metamacPrincipal);
+    public static boolean canRetrieveCategorisationByUrn(MetamacPrincipal metamacPrincipal, String operationCode, ProcStatusEnum procStatus) {
+        return canRetrieveStatisticalResource(metamacPrincipal, operationCode, procStatus);
     }
 
-    public static boolean canDeleteDatasetCategorisation(MetamacPrincipal metamacPrincipal, Date validFromEffective) {
-        // TODO: Poner los roles correctos (METAMAC-1845)
-        if (isAnyStatisticalResourceRole(metamacPrincipal)) {
+    public static boolean canDeleteDatasetCategorisation(MetamacPrincipal metamacPrincipal, Date validFromEffective, String operationCode, ProcStatusEnum procStatus) {
+        if (canModifyStatisticalResource(metamacPrincipal, operationCode, procStatus)) {
             return validFromEffective == null;
         }
         return false;
     }
 
-    public static boolean canRetrieveCategorisationsByDatasetVersion(MetamacPrincipal metamacPrincipal) {
-        // TODO: Poner los roles correctos (METAMAC-1845)
-        return isAnyStatisticalResourceRole(metamacPrincipal);
+    public static boolean canRetrieveCategorisationsByDatasetVersion(MetamacPrincipal metamacPrincipal, String operationCode, ProcStatusEnum procStatus) {
+        return canRetrieveStatisticalResource(metamacPrincipal, operationCode, procStatus);
     }
 
-    public static boolean canEndCategorisationValidity(MetamacPrincipal metamacPrincipal, Date validFromEffective, Date validToEffective) {
-        // TODO: Poner los roles correctos (METAMAC-1845)
-        if (isAnyStatisticalResourceRole(metamacPrincipal)) {
+    public static boolean canEndCategorisationValidity(MetamacPrincipal metamacPrincipal, Date validFromEffective, Date validToEffective, String operationCode, ProcStatusEnum procStatus) {
+        if (canModifyStatisticalResource(metamacPrincipal, operationCode, procStatus)) {
             return validFromEffective != null && validFromEffective.before(new Date()) && validToEffective == null;
         }
         return false;
