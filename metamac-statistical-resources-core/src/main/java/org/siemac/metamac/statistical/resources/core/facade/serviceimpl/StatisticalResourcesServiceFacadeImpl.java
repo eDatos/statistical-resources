@@ -209,11 +209,11 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
 
     @Override
     public QueryVersionDto retrieveQueryVersionByUrn(ServiceContext ctx, String urn) throws MetamacException {
-        // Security
-        QueriesSecurityUtils.canRetrieveQueryVersionByUrn(ctx);
-
         // Retrieve
         QueryVersion queryVersion = getQueryService().retrieveQueryVersionByUrn(ctx, urn);
+
+        // Security
+        QueriesSecurityUtils.canRetrieveQueryVersionByUrn(ctx, queryVersion);
 
         // Transform
         QueryVersionDto queryVersionDto = queryDo2DtoMapper.queryVersionDoToDto(queryVersion);
@@ -264,7 +264,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     @Override
     public QueryVersionDto createQuery(ServiceContext ctx, QueryVersionDto queryVersionDto, ExternalItemDto statisticalOperationDto) throws MetamacException {
         // Security
-        QueriesSecurityUtils.canCreateQuery(ctx);
+        QueriesSecurityUtils.canCreateQuery(ctx, statisticalOperationDto.getCode());
 
         // Transform
         QueryVersion queryVersion = queryDto2DoMapper.queryVersionDtoToDo(queryVersionDto);
@@ -282,7 +282,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     @Override
     public QueryVersionDto updateQueryVersion(ServiceContext ctx, QueryVersionDto queryVersionDto) throws MetamacException {
         // Security
-        QueriesSecurityUtils.canUpdateQueryVersion(ctx);
+        QueriesSecurityUtils.canUpdateQueryVersion(ctx, queryVersionDto);
 
         // Transform
         QueryVersion queryVersion = queryDto2DoMapper.queryVersionDtoToDo(queryVersionDto);
@@ -333,8 +333,11 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
 
     @Override
     public void deleteQueryVersion(ServiceContext ctx, String urn) throws MetamacException {
+        // Retrieve
+        QueryVersionDto queryVersionDto = retrieveQueryVersionByUrn(ctx, urn);
+
         // Security
-        QueriesSecurityUtils.canDeleteQueryVersion(ctx);
+        QueriesSecurityUtils.canDeleteQueryVersion(ctx, queryVersionDto);
 
         // Delete
         getQueryService().deleteQueryVersion(ctx, urn);
@@ -343,7 +346,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     @Override
     public QueryVersionDto sendQueryVersionToProductionValidation(ServiceContext ctx, QueryVersionDto queryVersionDto) throws MetamacException {
         // Security
-        QueriesSecurityUtils.canSendQueryVersionToProductionValidation(ctx);
+        QueriesSecurityUtils.canSendQueryVersionToProductionValidation(ctx, queryVersionDto.getStatisticalOperation().getCode());
 
         // Transform
         QueryVersion queryVersion = queryDto2DoMapper.queryVersionDtoToDo(queryVersionDto);
@@ -360,7 +363,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     @Override
     public QueryVersionBaseDto sendQueryVersionToProductionValidation(ServiceContext ctx, QueryVersionBaseDto queryVersionDto) throws MetamacException {
         // Security
-        QueriesSecurityUtils.canSendQueryVersionToProductionValidation(ctx);
+        QueriesSecurityUtils.canSendQueryVersionToProductionValidation(ctx, queryVersionDto.getStatisticalOperation().getCode());
 
         // Check optimistic locking
         queryDto2DoMapper.checkOptimisticLocking(queryVersionDto);
@@ -377,7 +380,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     @Override
     public QueryVersionDto sendQueryVersionToDiffusionValidation(ServiceContext ctx, QueryVersionDto queryVersionDto) throws MetamacException {
         // Security
-        QueriesSecurityUtils.canSendQueryVersionToDiffusionValidation(ctx);
+        QueriesSecurityUtils.canSendQueryVersionToDiffusionValidation(ctx, queryVersionDto.getStatisticalOperation().getCode());
 
         // Transform
         QueryVersion queryVersion = queryDto2DoMapper.queryVersionDtoToDo(queryVersionDto);
@@ -394,7 +397,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     @Override
     public QueryVersionBaseDto sendQueryVersionToDiffusionValidation(ServiceContext ctx, QueryVersionBaseDto queryVersionDto) throws MetamacException {
         // Security
-        QueriesSecurityUtils.canSendQueryVersionToDiffusionValidation(ctx);
+        QueriesSecurityUtils.canSendQueryVersionToDiffusionValidation(ctx, queryVersionDto.getStatisticalOperation().getCode());
 
         // Check optimistic locking
         queryDto2DoMapper.checkOptimisticLocking(queryVersionDto);
@@ -411,7 +414,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     @Override
     public QueryVersionDto sendQueryVersionToValidationRejected(ServiceContext ctx, QueryVersionDto queryVersionDto) throws MetamacException {
         // Security
-        QueriesSecurityUtils.canSendQueryVersionToValidationRejected(ctx);
+        QueriesSecurityUtils.canSendQueryVersionToValidationRejected(ctx, queryVersionDto.getStatisticalOperation().getCode());
 
         // Transform
         QueryVersion queryVersion = queryDto2DoMapper.queryVersionDtoToDo(queryVersionDto);
@@ -428,7 +431,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     @Override
     public QueryVersionBaseDto sendQueryVersionToValidationRejected(ServiceContext ctx, QueryVersionBaseDto queryVersionDto) throws MetamacException {
         // Security
-        QueriesSecurityUtils.canSendQueryVersionToValidationRejected(ctx);
+        QueriesSecurityUtils.canSendQueryVersionToValidationRejected(ctx, queryVersionDto.getStatisticalOperation().getCode());
 
         // Check optimistic locking
         queryDto2DoMapper.checkOptimisticLocking(queryVersionDto);
@@ -445,7 +448,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     @Override
     public QueryVersionDto publishQueryVersion(ServiceContext ctx, QueryVersionDto queryVersionDto) throws MetamacException {
         // Security
-        QueriesSecurityUtils.canPublishQueryVersion(ctx);
+        QueriesSecurityUtils.canPublishQueryVersion(ctx, queryVersionDto.getStatisticalOperation().getCode());
 
         // Transform
         QueryVersion queryVersion = queryDto2DoMapper.queryVersionDtoToDo(queryVersionDto);
@@ -467,7 +470,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     @Override
     public QueryVersionBaseDto publishQueryVersion(ServiceContext ctx, QueryVersionBaseDto queryVersionDto) throws MetamacException {
         // Security
-        QueriesSecurityUtils.canPublishQueryVersion(ctx);
+        QueriesSecurityUtils.canPublishQueryVersion(ctx, queryVersionDto.getStatisticalOperation().getCode());
 
         // Check optimistic locking
         queryDto2DoMapper.checkOptimisticLocking(queryVersionDto);
@@ -489,7 +492,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     @Override
     public QueryVersionDto programPublicationQueryVersion(ServiceContext ctx, QueryVersionDto queryVersionDto, Date validFromDate) throws MetamacException {
         // Security
-        QueriesSecurityUtils.canPublishQueryVersion(ctx);
+        QueriesSecurityUtils.canPublishQueryVersion(ctx, queryVersionDto.getStatisticalOperation().getCode());
 
         // Transform only for optimistic locking
         QueryVersion queryVersion = queryDto2DoMapper.queryVersionDtoToDo(queryVersionDto);
@@ -509,7 +512,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     @Override
     public QueryVersionBaseDto programPublicationQueryVersion(ServiceContext ctx, QueryVersionBaseDto queryVersionDto, Date validFromDate) throws MetamacException {
         // Security
-        QueriesSecurityUtils.canPublishQueryVersion(ctx);
+        QueriesSecurityUtils.canPublishQueryVersion(ctx, queryVersionDto.getStatisticalOperation().getCode());
 
         // Check optimistic locking
         queryDto2DoMapper.checkOptimisticLocking(queryVersionDto);
@@ -542,7 +545,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     @Override
     public QueryVersionDto cancelPublicationQueryVersion(ServiceContext ctx, QueryVersionDto queryVersionDto) throws MetamacException {
         // Security
-        QueriesSecurityUtils.canCancelPublicationQueryVersion(ctx);
+        QueriesSecurityUtils.canCancelPublicationQueryVersion(ctx, queryVersionDto.getStatisticalOperation().getCode());
 
         // Transform
         QueryVersion queryVersion = queryDto2DoMapper.queryVersionDtoToDo(queryVersionDto);
@@ -559,7 +562,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     @Override
     public QueryVersionBaseDto cancelPublicationQueryVersion(ServiceContext ctx, QueryVersionBaseDto queryVersionDto) throws MetamacException {
         // Security
-        QueriesSecurityUtils.canCancelPublicationQueryVersion(ctx);
+        QueriesSecurityUtils.canCancelPublicationQueryVersion(ctx, queryVersionDto.getStatisticalOperation().getCode());
 
         // Check optimistic locking
         queryDto2DoMapper.checkOptimisticLocking(queryVersionDto);
@@ -576,7 +579,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     @Override
     public QueryVersionDto versioningQueryVersion(ServiceContext ctx, QueryVersionDto queryVersionDto, VersionTypeEnum versionType) throws MetamacException {
         // Security
-        QueriesSecurityUtils.canVersionQueryVersion(ctx);
+        QueriesSecurityUtils.canVersionQueryVersion(ctx, queryVersionDto.getStatisticalOperation().getCode());
 
         // Transform
         QueryVersion queryVersion = queryDto2DoMapper.queryVersionDtoToDo(queryVersionDto);
@@ -593,7 +596,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     @Override
     public QueryVersionBaseDto versioningQueryVersion(ServiceContext ctx, QueryVersionBaseDto queryVersionDto, VersionTypeEnum versionType) throws MetamacException {
         // Security
-        QueriesSecurityUtils.canVersionQueryVersion(ctx);
+        QueriesSecurityUtils.canVersionQueryVersion(ctx, queryVersionDto.getStatisticalOperation().getCode());
 
         // Check optimistic locking
         queryDto2DoMapper.checkOptimisticLocking(queryVersionDto);

@@ -1,6 +1,8 @@
 package org.siemac.metamac.statistical.resources.core.security.shared;
 
 import org.siemac.metamac.sso.client.MetamacPrincipal;
+import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
+import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourcesRoleEnum;
 
 public class SharedQueriesSecurityUtils extends SharedSecurityUtils {
 
@@ -17,9 +19,8 @@ public class SharedQueriesSecurityUtils extends SharedSecurityUtils {
     // QUERIES VERSIONS
     // ------------------------------------------------------------------------
 
-    public static boolean canRetrieveQueryVersionByUrn(MetamacPrincipal metamacPrincipal) {
-        // TODO: Poner los roles correctos
-        return isAnyStatisticalResourceRole(metamacPrincipal);
+    public static boolean canRetrieveQueryVersionByUrn(MetamacPrincipal metamacPrincipal, String operationCode, ProcStatusEnum procStatus) {
+        return canRetrieveStatisticalResource(metamacPrincipal, operationCode, procStatus);
     }
 
     public static boolean canRetrieveQueriesVersions(MetamacPrincipal metamacPrincipal) {
@@ -27,9 +28,8 @@ public class SharedQueriesSecurityUtils extends SharedSecurityUtils {
         return isAnyStatisticalResourceRole(metamacPrincipal);
     }
 
-    public static boolean canCreateQuery(MetamacPrincipal metamacPrincipal) {
-        // TODO: Poner los roles correctos
-        return isAnyStatisticalResourceRole(metamacPrincipal);
+    public static boolean canCreateQuery(MetamacPrincipal metamacPrincipal, String operationCode) {
+        return isOperationAllowed(metamacPrincipal, operationCode, PRODUCTION_ROLES);
     }
 
     public static boolean canFindQueriesVersionsByCondition(MetamacPrincipal metamacPrincipal) {
@@ -37,19 +37,18 @@ public class SharedQueriesSecurityUtils extends SharedSecurityUtils {
         return isAnyStatisticalResourceRole(metamacPrincipal);
     }
 
-    public static boolean canUpdateQueryVersion(MetamacPrincipal metamacPrincipal) {
-        // TODO: Poner los roles correctos
-        return isAnyStatisticalResourceRole(metamacPrincipal);
+    public static boolean canUpdateQueryVersion(MetamacPrincipal metamacPrincipal, String operationCode, ProcStatusEnum procStatus) {
+        return canModifyStatisticalResource(metamacPrincipal, operationCode, procStatus);
     }
 
     public static boolean canMarkQueryVersionAsDiscontinued(MetamacPrincipal metamacPrincipal) {
+        // TODO: Pendiente eliminar!
         // TODO: Poner los roles correctos
         return isAnyStatisticalResourceRole(metamacPrincipal);
     }
 
-    public static boolean canDeleteQueryVersion(MetamacPrincipal metamacPrincipal) {
-        // TODO: Poner los roles correctos
-        return isAnyStatisticalResourceRole(metamacPrincipal);
+    public static boolean canDeleteQueryVersion(MetamacPrincipal metamacPrincipal, String operationCode, ProcStatusEnum procStatus) {
+        return canModifyStatisticalResource(metamacPrincipal, operationCode, procStatus);
     }
 
     public static boolean canRetrieveLatestQueryVersion(MetamacPrincipal metamacPrincipal) {
@@ -58,43 +57,36 @@ public class SharedQueriesSecurityUtils extends SharedSecurityUtils {
     }
 
     public static boolean canRetrieveLatestPublishedQueryVersion(MetamacPrincipal metamacPrincipal) {
-        // TODO: Poner los roles correctos
         return isAnyStatisticalResourceRole(metamacPrincipal);
     }
 
-    public static boolean canSendQueryVersionToProductionValidation(MetamacPrincipal metamacPrincipal) {
-        // TODO: Poner los roles correctos
-        return isAnyStatisticalResourceRole(metamacPrincipal);
+    public static boolean canSendQueryVersionToProductionValidation(MetamacPrincipal metamacPrincipal, String operationCode) {
+        return isOperationAllowed(metamacPrincipal, operationCode, PRODUCTION_ROLES);
     }
 
-    public static boolean canSendQueryVersionToDiffusionValidation(MetamacPrincipal metamacPrincipal) {
-        // TODO: Poner los roles correctos
-        return isAnyStatisticalResourceRole(metamacPrincipal);
+    public static boolean canSendQueryVersionToDiffusionValidation(MetamacPrincipal metamacPrincipal, String operationCode) {
+        return isOperationAllowed(metamacPrincipal, operationCode, StatisticalResourcesRoleEnum.TECNICO_PRODUCCION, StatisticalResourcesRoleEnum.TECNICO_APOYO_PRODUCCION);
     }
 
-    public static boolean canSendQueryVersionToValidationRejected(MetamacPrincipal metamacPrincipal) {
-        // TODO: Poner los roles correctos
-        return isAnyStatisticalResourceRole(metamacPrincipal);
+    public static boolean canSendQueryVersionToValidationRejected(MetamacPrincipal metamacPrincipal, String operationCode) {
+        return isOperationAllowed(metamacPrincipal, operationCode, StatisticalResourcesRoleEnum.TECNICO_PRODUCCION, StatisticalResourcesRoleEnum.TECNICO_APOYO_PRODUCCION,
+                StatisticalResourcesRoleEnum.TECNICO_DIFUSION, StatisticalResourcesRoleEnum.TECNICO_APOYO_DIFUSION);
     }
 
-    public static boolean canPublishQueryVersion(MetamacPrincipal metamacPrincipal) {
-        // TODO: Poner los roles correctos
-        return isAnyStatisticalResourceRole(metamacPrincipal);
+    public static boolean canPublishQueryVersion(MetamacPrincipal metamacPrincipal, String operationCode) {
+        return isOperationAllowed(metamacPrincipal, operationCode, DIFFUSION_ROLES);
     }
 
-    public static boolean canCancelPublicationQueryVersion(MetamacPrincipal metamacPrincipal) {
-        // TODO: Poner los roles correctos
-        return isAnyStatisticalResourceRole(metamacPrincipal);
+    public static boolean canCancelPublicationQueryVersion(MetamacPrincipal metamacPrincipal, String operationCode) {
+        return isOperationAllowed(metamacPrincipal, operationCode, DIFFUSION_ROLES);
     }
 
-    public static boolean canVersionQueryVersion(MetamacPrincipal metamacPrincipal) {
-        // TODO: Poner los roles correctos
-        return isAnyStatisticalResourceRole(metamacPrincipal);
+    public static boolean canVersionQueryVersion(MetamacPrincipal metamacPrincipal, String operationCode) {
+        return isOperationAllowed(metamacPrincipal, operationCode, PRODUCTION_ROLES);
     }
 
-    public static boolean canProgramQueryVersionPublication(MetamacPrincipal metamacPrincipal) {
-        // TODO: Poner los roles correctos
-        return isAnyStatisticalResourceRole(metamacPrincipal);
+    public static boolean canProgramQueryVersionPublication(MetamacPrincipal metamacPrincipal, String operationCode) {
+        return canPublishQueryVersion(metamacPrincipal, operationCode);
     }
 
 }
