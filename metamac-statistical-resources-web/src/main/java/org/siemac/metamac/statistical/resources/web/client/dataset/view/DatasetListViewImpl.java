@@ -143,27 +143,6 @@ public class DatasetListViewImpl extends StatisticalResourceBaseListViewImpl<Dat
     }
 
     @Override
-    public void setInSlot(Object slot, Widget content) {
-        if (slot == DatasetListPresenter.TYPE_SetContextAreaContentOperationResourcesToolBar) {
-            if (content != null) {
-                Canvas[] canvas = ((ToolStrip) content).getMembers();
-                for (int i = 0; i < canvas.length; i++) {
-                    if (canvas[i] instanceof ToolStripButton) {
-                        if (StatisticalResourcesToolStripButtonEnum.DATASETS.getValue().equals(((ToolStripButton) canvas[i]).getID())) {
-                            ((ToolStripButton) canvas[i]).select();
-                        }
-                    }
-                }
-                panel.addMember(content, 0);
-            }
-        } else {
-            // To support inheritance in your views it is good practice to call super.setInSlot when you can't handle the call.
-            // Who knows, maybe the parent class knows what to do with this slot.
-            super.setInSlot(slot, content);
-        }
-    }
-
-    @Override
     protected NewStatisticalResourceWindow getNewStatisticalResourceWindow() {
         return newDatasetWindow;
     }
@@ -298,12 +277,12 @@ public class DatasetListViewImpl extends StatisticalResourceBaseListViewImpl<Dat
     private CustomToolStripButton createImportDatasourcesButton() {
         CustomToolStripButton importDatasourcesButton = new CustomToolStripButton(getConstants().actionLoadDatasources(), org.siemac.metamac.web.common.client.resources.GlobalResources.RESOURCE
                 .importResource().getURL());
-        importDatasourcesButton.setVisible(DatasetClientSecurityUtils.canImportDatasources());
+        importDatasourcesButton.setVisible(DatasetClientSecurityUtils.canImportDatasourcesInStatisticalOperation());
         importDatasourcesButton.addClickHandler(new ClickHandler() {
 
             @Override
             public void onClick(ClickEvent event) {
-                importDatasourcesWindow.setStatisticalOperation(StatisticalResourcesDefaults.getSelectedStatisticalOperation().getUrn());
+                importDatasourcesWindow.setStatisticalOperation(StatisticalResourcesDefaults.getSelectedStatisticalOperation().getCode());
                 importDatasourcesWindow.show();
             }
         });
@@ -320,45 +299,43 @@ public class DatasetListViewImpl extends StatisticalResourceBaseListViewImpl<Dat
     }
 
     @Override
+    protected boolean canDelete(ListGridRecord record) {
+        return DatasetClientSecurityUtils.canDeleteDatasetVersion(getDtoFromRecord(record));
+    }
+
+    @Override
     protected boolean canSendToProductionValidation(ListGridRecord record) {
-        DatasetRecord datasetRecord = (DatasetRecord) record;
-        return DatasetClientSecurityUtils.canSendDatasetVersionToProductionValidation(datasetRecord.getDatasetVersionBaseDto());
+        return DatasetClientSecurityUtils.canSendDatasetVersionToProductionValidation(getDtoFromRecord(record));
     }
 
     @Override
     protected boolean canSendToDiffusionValidation(ListGridRecord record) {
-        DatasetRecord datasetRecord = (DatasetRecord) record;
-        return DatasetClientSecurityUtils.canSendDatasetVersionToDiffusionValidation(datasetRecord.getDatasetVersionBaseDto());
+        return DatasetClientSecurityUtils.canSendDatasetVersionToDiffusionValidation(getDtoFromRecord(record));
     }
 
     @Override
     protected boolean canRejectValidation(ListGridRecord record) {
-        DatasetRecord datasetRecord = (DatasetRecord) record;
-        return DatasetClientSecurityUtils.canSendDatasetVersionToValidationRejected(datasetRecord.getDatasetVersionBaseDto());
+        return DatasetClientSecurityUtils.canSendDatasetVersionToValidationRejected(getDtoFromRecord(record));
     }
 
     @Override
     protected boolean canPublish(ListGridRecord record) {
-        DatasetRecord datasetRecord = (DatasetRecord) record;
-        return DatasetClientSecurityUtils.canPublishDatasetVersion(datasetRecord.getDatasetVersionBaseDto());
+        return DatasetClientSecurityUtils.canPublishDatasetVersion(getDtoFromRecord(record));
     }
 
     @Override
     protected boolean canProgramPublication(ListGridRecord record) {
-        DatasetRecord datasetRecord = (DatasetRecord) record;
-        return DatasetClientSecurityUtils.canPublishDatasetVersion(datasetRecord.getDatasetVersionBaseDto());
+        return DatasetClientSecurityUtils.canPublishDatasetVersion(getDtoFromRecord(record));
     }
 
     @Override
     protected boolean canCancelProgrammedPublication(ListGridRecord record) {
-        DatasetRecord datasetRecord = (DatasetRecord) record;
-        return DatasetClientSecurityUtils.canCancelPublicationDatasetVersion(datasetRecord.getDatasetVersionBaseDto());
+        return DatasetClientSecurityUtils.canCancelPublicationDatasetVersion(getDtoFromRecord(record));
     }
 
     @Override
     protected boolean canVersion(ListGridRecord record) {
-        DatasetRecord datasetRecord = (DatasetRecord) record;
-        return DatasetClientSecurityUtils.canVersionDataset(datasetRecord.getDatasetVersionBaseDto());
+        return DatasetClientSecurityUtils.canVersionDataset(getDtoFromRecord(record));
     }
 
     //
@@ -399,5 +376,10 @@ public class DatasetListViewImpl extends StatisticalResourceBaseListViewImpl<Dat
     @Override
     public void setStatisticalOperationsForSearchSection(GetStatisticalOperationsPaginatedListResult result) {
         searchSectionStack.setStatisticalOperations(result);
+    }
+
+    private DatasetVersionBaseDto getDtoFromRecord(ListGridRecord record) {
+        DatasetRecord datasetRecord = (DatasetRecord) record;
+        return datasetRecord.getDatasetVersionBaseDto();
     }
 }

@@ -260,10 +260,21 @@ public class PublicationStructureTreeGrid extends NavigableTreeGrid {
                 TreeNode dropFolder = event.getFolder();
                 TreeNode droppedNode = event.getNodes().length > 0 ? event.getNodes()[0] : null;
                 int position = event.getIndex(); // Absolute position
-                if (isDroppable(dropFolder)) {
+                if (isDroppable(dropFolder) && canMoveNode(droppedNode)) {
                     updateLocation(dropFolder, droppedNode, position);
                 }
                 event.cancel();
+            }
+
+            private boolean canMoveNode(TreeNode droppedNode) {
+                ElementLevelTreeNode treeNode = ((ElementLevelTreeNode) droppedNode);
+                ElementLevelDto elementLevelDto = treeNode.getElementLevelDto();
+                if (elementLevelDto.getChapter() != null) {
+                    return PublicationClientSecurityUtils.canUpdateChapterLocation(publicationVersion.getProcStatus());
+                } else if (elementLevelDto.getCube() != null) {
+                    return PublicationClientSecurityUtils.canUpdateCubeLocation(publicationVersion.getProcStatus());
+                }
+                return false;
             }
 
             protected void updateLocation(TreeNode dropFolder, TreeNode droppedNode, int position) {

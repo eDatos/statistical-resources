@@ -62,12 +62,7 @@ public class PublicationListPresenter extends StatisticalResourceBaseListPresent
         implements
             PublicationListUiHandlers {
 
-    private final PlaceManager                        placeManager;
-
-    @ContentSlot
-    public static final Type<RevealContentHandler<?>> TYPE_SetOperationResourcesToolBar                   = new Type<RevealContentHandler<?>>();
-
-    public static final Object                        TYPE_SetContextAreaContentOperationResourcesToolBar = new Object();
+    private final PlaceManager placeManager;
 
     @ProxyCodeSplit
     @NameToken(NameTokens.publicationsListPage)

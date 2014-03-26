@@ -11,7 +11,6 @@ import org.siemac.metamac.statistical.resources.web.client.dataset.utils.Dataset
 import org.siemac.metamac.statistical.resources.web.client.dataset.view.handlers.DatasetCategorisationsTabUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.model.record.CategorisationRecord;
 import org.siemac.metamac.statistical.resources.web.client.widgets.CategorisationsPanel;
-import org.siemac.metamac.web.common.shared.criteria.MetamacVersionableWebCriteria;
 import org.siemac.metamac.web.common.shared.criteria.SrmExternalResourceRestCriteria;
 import org.siemac.metamac.web.common.shared.criteria.SrmItemRestCriteria;
 
@@ -26,7 +25,7 @@ public class DatasetCategorisationsTabViewImpl extends ViewWithUiHandlers<Datase
 
     private DatasetCategorisationsPanel categorisationsPanel;
 
-    private String                      datasetVersionUrn;
+    private DatasetVersionDto           datasetVersionDto;
 
     public DatasetCategorisationsTabViewImpl() {
         panel = new VLayout();
@@ -39,7 +38,7 @@ public class DatasetCategorisationsTabViewImpl extends ViewWithUiHandlers<Datase
 
     @Override
     public void setCategorisations(DatasetVersionDto datasetVersionDto, List<CategorisationDto> categorisationDtos) {
-        this.datasetVersionUrn = datasetVersionDto.getUrn();
+        this.datasetVersionDto = datasetVersionDto;
         categorisationsPanel.setCategorisations(categorisationDtos);
         categorisationsPanel.updateVisibility(datasetVersionDto);
     }
@@ -68,7 +67,7 @@ public class DatasetCategorisationsTabViewImpl extends ViewWithUiHandlers<Datase
 
         @Override
         public void updateNewButtonVisibility() {
-            if (DatasetClientSecurityUtils.canCreateCategorisation()) {
+            if (DatasetClientSecurityUtils.canCreateCategorisation(datasetVersionDto)) {
                 newCategorisationButton.show();
             } else {
                 newCategorisationButton.hide();
@@ -80,7 +79,7 @@ public class DatasetCategorisationsTabViewImpl extends ViewWithUiHandlers<Datase
             for (ListGridRecord record : records) {
                 if (record instanceof CategorisationRecord) {
                     CategorisationRecord categorisationRecord = (CategorisationRecord) record;
-                    if (!DatasetClientSecurityUtils.canDeleteDatasetCategorisation(categorisationRecord.getCategorisationDto())) {
+                    if (!DatasetClientSecurityUtils.canDeleteDatasetCategorisation(datasetVersionDto, categorisationRecord.getCategorisationDto())) {
                         return false;
                     }
                 }
@@ -93,7 +92,7 @@ public class DatasetCategorisationsTabViewImpl extends ViewWithUiHandlers<Datase
             for (ListGridRecord record : records) {
                 if (record instanceof CategorisationRecord) {
                     CategorisationRecord categorisationRecord = (CategorisationRecord) record;
-                    if (!DatasetClientSecurityUtils.canEndCategorisationValidity(categorisationRecord.getCategorisationDto())) {
+                    if (!DatasetClientSecurityUtils.canEndCategorisationValidity(datasetVersionDto, categorisationRecord.getCategorisationDto())) {
                         return false;
                     }
                 }
@@ -103,17 +102,17 @@ public class DatasetCategorisationsTabViewImpl extends ViewWithUiHandlers<Datase
 
         @Override
         protected void createCategorisations(List<String> categoriesUrns) {
-            getUiHandlers().createCategorisations(datasetVersionUrn, categoriesUrns);
+            getUiHandlers().createCategorisations(datasetVersionDto.getUrn(), categoriesUrns);
         }
 
         @Override
         protected void deleteCategorisations(List<String> categorisationsUrns) {
-            getUiHandlers().deleteCategorisations(datasetVersionUrn, categorisationsUrns);
+            getUiHandlers().deleteCategorisations(datasetVersionDto.getUrn(), categorisationsUrns);
         }
 
         @Override
         protected void endCategorisationsValidity(List<String> selectedCategorisationUrns, Date endValidityDate) {
-            getUiHandlers().endCategorisationsValidity(datasetVersionUrn, selectedCategorisationUrns, endValidityDate);
+            getUiHandlers().endCategorisationsValidity(datasetVersionDto.getUrn(), selectedCategorisationUrns, endValidityDate);
         }
 
         @Override

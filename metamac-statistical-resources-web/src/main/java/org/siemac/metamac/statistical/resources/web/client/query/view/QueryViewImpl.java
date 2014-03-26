@@ -11,8 +11,6 @@ import org.siemac.metamac.statistical.resources.core.dto.query.CodeItemDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionDto;
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesDefaults;
 import org.siemac.metamac.statistical.resources.web.client.base.utils.RequiredFieldUtils;
-import org.siemac.metamac.statistical.resources.web.client.enums.StatisticalResourcesToolStripButtonEnum;
-import org.siemac.metamac.statistical.resources.web.client.query.presenter.QueryListPresenter;
 import org.siemac.metamac.statistical.resources.web.client.query.presenter.QueryPresenter;
 import org.siemac.metamac.statistical.resources.web.client.query.view.handlers.QueryUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.query.view.widgets.QueryMainFormLayout;
@@ -41,12 +39,9 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
 import com.smartgwt.client.types.Overflow;
-import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.layout.VLayout;
-import com.smartgwt.client.widgets.toolbar.ToolStrip;
-import com.smartgwt.client.widgets.toolbar.ToolStripButton;
 
 public class QueryViewImpl extends ViewWithUiHandlers<QueryUiHandlers> implements QueryPresenter.QueryView {
 
@@ -129,27 +124,6 @@ public class QueryViewImpl extends ViewWithUiHandlers<QueryUiHandlers> implement
     @Override
     public void setAgenciesForMaintainer(GetAgenciesPaginatedListResult result) {
         queryFormPanel.productionDescriptorsEditionForm.setExternalItemsForMaintainer(result.getAgencies(), result.getFirstResultOut(), result.getAgencies().size(), result.getTotalResults());
-    }
-
-    @Override
-    public void setInSlot(Object slot, Widget content) {
-        if (slot == QueryListPresenter.TYPE_SetContextAreaContentOperationResourcesToolBar) {
-            if (content != null) {
-                Canvas[] canvas = ((ToolStrip) content).getMembers();
-                for (int i = 0; i < canvas.length; i++) {
-                    if (canvas[i] instanceof ToolStripButton) {
-                        if (StatisticalResourcesToolStripButtonEnum.QUERIES.getValue().equals(((ToolStripButton) canvas[i]).getID())) {
-                            ((ToolStripButton) canvas[i]).select();
-                        }
-                    }
-                }
-                panel.addMember(content, 0);
-            }
-        } else {
-            // To support inheritance in your views it is good practice to call super.setInSlot when you can't handle the call.
-            // Who knows, maybe the parent class knows what to do with this slot.
-            super.setInSlot(slot, content);
-        }
     }
 
     private class QueryFormPanel extends VLayout {

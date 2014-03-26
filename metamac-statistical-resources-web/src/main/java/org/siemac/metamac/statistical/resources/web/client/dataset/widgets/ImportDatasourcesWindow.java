@@ -87,11 +87,11 @@ public class ImportDatasourcesWindow extends ImportResourceWindow {
     }
     public void setDatasetVersion(String datasetVersionUrn) {
         ((HiddenItem) form.getItem(StatisticalResourcesSharedTokens.UPLOAD_PARAM_DATASET_VERSION_URN)).setDefaultValue(datasetVersionUrn);
-        setStatisticalOperation(StatisticalResourcesDefaults.getSelectedStatisticalOperation().getUrn());
+        setStatisticalOperation(StatisticalResourcesDefaults.getSelectedStatisticalOperation().getCode());
     }
 
     public void setStatisticalOperation(String statisticalOperationUrn) {
-        ((HiddenItem) form.getItem(StatisticalResourcesSharedTokens.UPLOAD_PARAM_OPERATION_URN)).setDefaultValue(statisticalOperationUrn);
+        ((HiddenItem) form.getItem(StatisticalResourcesSharedTokens.UPLOAD_PARAM_OPERATION_CODE)).setDefaultValue(statisticalOperationUrn);
     }
 
     public void setCodelistsForDimension(String dimensionId, List<ExternalItemDto> codelists, int firstResult, int totalResults) {
@@ -108,7 +108,7 @@ public class ImportDatasourcesWindow extends ImportResourceWindow {
             super(getConstants().datasources());
 
             HiddenItem datasetVersionUrnItem = new HiddenItem(StatisticalResourcesSharedTokens.UPLOAD_PARAM_DATASET_VERSION_URN);
-            HiddenItem operationUrnItem = new HiddenItem(StatisticalResourcesSharedTokens.UPLOAD_PARAM_OPERATION_URN);
+            HiddenItem operationUrnItem = new HiddenItem(StatisticalResourcesSharedTokens.UPLOAD_PARAM_OPERATION_CODE);
 
             addFieldsInThePenultimePosition(datasetVersionUrnItem, operationUrnItem);
         }

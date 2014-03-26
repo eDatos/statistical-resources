@@ -94,27 +94,6 @@ public class QueryListViewImpl extends LifeCycleBaseListViewImpl<QueryListUiHand
         searchSectionStack.clearSearchSection();
     }
 
-    @Override
-    public void setInSlot(Object slot, Widget content) {
-        if (slot == QueryListPresenter.TYPE_SetContextAreaContentOperationResourcesToolBar) {
-            if (content != null) {
-                Canvas[] canvas = ((ToolStrip) content).getMembers();
-                for (int i = 0; i < canvas.length; i++) {
-                    if (canvas[i] instanceof ToolStripButton) {
-                        if (StatisticalResourcesToolStripButtonEnum.QUERIES.getValue().equals(((ToolStripButton) canvas[i]).getID())) {
-                            ((ToolStripButton) canvas[i]).select();
-                        }
-                    }
-                }
-                panel.addMember(content, 0);
-            }
-        } else {
-            // To support inheritance in your views it is good practice to call super.setInSlot when you can't handle the call.
-            // Who knows, maybe the parent class knows what to do with this slot.
-            super.setInSlot(slot, content);
-        }
-    }
-
     //
     // LISTGRID
     //
@@ -237,33 +216,38 @@ public class QueryListViewImpl extends LifeCycleBaseListViewImpl<QueryListUiHand
     }
 
     @Override
+    protected boolean canDelete(ListGridRecord record) {
+        return QueryClientSecurityUtils.canDeleteQueryVersion(getDtoFromRecord(record));
+    }
+
+    @Override
     protected boolean canSendToProductionValidation(ListGridRecord record) {
-        return QueryClientSecurityUtils.canSendQueryVersionToProductionValidation();
+        return QueryClientSecurityUtils.canSendQueryVersionToProductionValidation(getDtoFromRecord(record));
     }
 
     @Override
     protected boolean canSendToDiffusionValidation(ListGridRecord record) {
-        return QueryClientSecurityUtils.canSendQueryVersionToDiffusionValidation();
+        return QueryClientSecurityUtils.canSendQueryVersionToDiffusionValidation(getDtoFromRecord(record));
     }
 
     @Override
     protected boolean canRejectValidation(ListGridRecord record) {
-        return QueryClientSecurityUtils.canSendQueryVersionToValidationRejected();
+        return QueryClientSecurityUtils.canSendQueryVersionToValidationRejected(getDtoFromRecord(record));
     }
 
     @Override
     protected boolean canPublish(ListGridRecord record) {
-        return QueryClientSecurityUtils.canPublishQueryVersion();
+        return QueryClientSecurityUtils.canPublishQueryVersion(getDtoFromRecord(record));
     }
 
     @Override
     protected boolean canProgramPublication(ListGridRecord record) {
-        return QueryClientSecurityUtils.canProgramQueryVersionPublication();
+        return QueryClientSecurityUtils.canProgramQueryVersionPublication(getDtoFromRecord(record));
     }
 
     @Override
     protected boolean canCancelProgrammedPublication(ListGridRecord record) {
-        return QueryClientSecurityUtils.canCancelProgrammedPublication();
+        return QueryClientSecurityUtils.canCancelQueryVersionProgrammedPublication(getDtoFromRecord(record));
     }
 
     @Override
@@ -300,5 +284,10 @@ public class QueryListViewImpl extends LifeCycleBaseListViewImpl<QueryListUiHand
     @Override
     public void setStatisticalOperationsForSearchSection(GetStatisticalOperationsPaginatedListResult result) {
         searchSectionStack.setStatisticalOperations(result);
+    }
+
+    private QueryVersionBaseDto getDtoFromRecord(ListGridRecord record) {
+        QueryRecord queryRecord = (QueryRecord) record;
+        return queryRecord.getQueryVersionBaseDto();
     }
 }

@@ -6,17 +6,17 @@ import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersion
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.security.shared.SharedDatasetsSecurityUtils;
-import org.siemac.metamac.statistical.resources.web.client.base.utils.BaseClientSecurityUtils;
+import org.siemac.metamac.statistical.resources.web.client.base.utils.LifecycleClientSecurityUtils;
 
 // TODO take into account the metadata isTaskInBackground to avoid to execute some actions! (METAMAC-1845)
-public class DatasetClientSecurityUtils extends BaseClientSecurityUtils {
+public class DatasetClientSecurityUtils extends LifecycleClientSecurityUtils {
 
     // ------------------------------------------------------------------------
     // DATASETS VERSIONS
     // ------------------------------------------------------------------------
 
     public static boolean canCreateDataset() {
-        return SharedDatasetsSecurityUtils.canCreateDataset(getMetamacPrincipal());
+        return SharedDatasetsSecurityUtils.canCreateDataset(getMetamacPrincipal(), getCurrentStatisticalOperationCode());
     }
 
     public static boolean canUpdateDatasetVersion(DatasetVersionDto datasetVersionDto) {
@@ -26,7 +26,7 @@ public class DatasetClientSecurityUtils extends BaseClientSecurityUtils {
         if (isPublished(datasetVersionDto.getProcStatus())) {
             return false;
         }
-        return SharedDatasetsSecurityUtils.canUpdateDatasetVersion(getMetamacPrincipal());
+        return SharedDatasetsSecurityUtils.canUpdateDatasetVersion(getMetamacPrincipal(), getCurrentStatisticalOperationCode(), datasetVersionDto.getProcStatus());
     }
 
     public static boolean canDeleteDatasetVersion(DatasetVersionDto datasetVersionDto) {
@@ -44,102 +44,125 @@ public class DatasetClientSecurityUtils extends BaseClientSecurityUtils {
         if (isPublished(procStatus)) {
             return false;
         }
-        return SharedDatasetsSecurityUtils.canDeleteDatasetVersion(getMetamacPrincipal());
-    }
-
-    public static boolean canVersionDataset(DatasetVersionDto datasetVersionDto) {
-        return canVersionDataset(datasetVersionDto.getIsTaskInBackground());
-    }
-
-    public static boolean canVersionDataset(DatasetVersionBaseDto datasetVersionBaseDto) {
-        return canVersionDataset(datasetVersionBaseDto.getIsTaskInBackground());
-    }
-
-    public static boolean canVersionDataset(boolean isTaskInBackground) {
-        if (BooleanUtils.isTrue(isTaskInBackground)) {
-            return false;
-        }
-        return SharedDatasetsSecurityUtils.canVersionDataset(getMetamacPrincipal());
-    }
-
-    public static boolean canSendDatasetVersionToProductionValidation(DatasetVersionDto datasetVersionDto) {
-        return canSendDatasetVersionToProductionValidation(datasetVersionDto.getIsTaskInBackground());
-    }
-
-    public static boolean canSendDatasetVersionToProductionValidation(DatasetVersionBaseDto datasetVersionBaseDto) {
-        return canSendDatasetVersionToProductionValidation(datasetVersionBaseDto.getIsTaskInBackground());
-    }
-
-    public static boolean canSendDatasetVersionToProductionValidation(boolean isTaskInBackground) {
-        if (BooleanUtils.isTrue(isTaskInBackground)) {
-            return false;
-        }
-        return SharedDatasetsSecurityUtils.canSendDatasetVersionToProductionValidation(getMetamacPrincipal());
-    }
-
-    public static boolean canSendDatasetVersionToDiffusionValidation(DatasetVersionDto datasetVersionDto) {
-        return canSendDatasetVersionToDiffusionValidation(datasetVersionDto.getIsTaskInBackground());
-    }
-
-    public static boolean canSendDatasetVersionToDiffusionValidation(DatasetVersionBaseDto datasetVersionBaseDto) {
-        return canSendDatasetVersionToDiffusionValidation(datasetVersionBaseDto.getIsTaskInBackground());
-    }
-
-    public static boolean canSendDatasetVersionToDiffusionValidation(boolean isTaskInBackground) {
-        if (BooleanUtils.isTrue(isTaskInBackground)) {
-            return false;
-        }
-        return SharedDatasetsSecurityUtils.canSendDatasetVersionToDiffusionValidation(getMetamacPrincipal());
-    }
-
-    public static boolean canSendDatasetVersionToValidationRejected(DatasetVersionDto datasetVersionDto) {
-        return canSendDatasetVersionToValidationRejected(datasetVersionDto.getIsTaskInBackground());
-    }
-
-    public static boolean canSendDatasetVersionToValidationRejected(DatasetVersionBaseDto datasetVersionBaseDto) {
-        return canSendDatasetVersionToValidationRejected(datasetVersionBaseDto.getIsTaskInBackground());
-    }
-
-    public static boolean canSendDatasetVersionToValidationRejected(boolean isTaskInBackground) {
-        if (BooleanUtils.isTrue(isTaskInBackground)) {
-            return false;
-        }
-        return SharedDatasetsSecurityUtils.canSendDatasetVersionToValidationRejected(getMetamacPrincipal());
-    }
-
-    public static boolean canPublishDatasetVersion(DatasetVersionDto datasetVersionDto) {
-        return canPublishDatasetVersion(datasetVersionDto.getIsTaskInBackground());
-    }
-
-    public static boolean canPublishDatasetVersion(DatasetVersionBaseDto datasetVersionBaseDto) {
-        return canPublishDatasetVersion(datasetVersionBaseDto.getIsTaskInBackground());
-    }
-
-    public static boolean canPublishDatasetVersion(Boolean isTaskInBackground) {
-        if (BooleanUtils.isTrue(isTaskInBackground)) {
-            return false;
-        }
-        return SharedDatasetsSecurityUtils.canPublishDataset(getMetamacPrincipal());
+        return SharedDatasetsSecurityUtils.canDeleteDatasetVersion(getMetamacPrincipal(), getCurrentStatisticalOperationCode(), procStatus);
     }
 
     public static boolean canPreviewDatasetData(DatasetVersionDto datasetVersionDto) {
-        return SharedDatasetsSecurityUtils.canPreviewDatasetData(getMetamacPrincipal());
+        return SharedDatasetsSecurityUtils.canPreviewDatasetData(getMetamacPrincipal(), getCurrentStatisticalOperationCode(), datasetVersionDto.getProcStatus());
     }
 
-    public static boolean canCancelPublicationDatasetVersion(DatasetVersionDto datasetVersionDto) {
-        return canCancelPublicationDatasetVersion(datasetVersionDto.getIsTaskInBackground());
+    // ------------------------------------------------------------------------
+    // DATASETS VERSIONS LIFECYCLE
+    // ------------------------------------------------------------------------
+
+    public static boolean canSendDatasetVersionToProductionValidation(DatasetVersionDto dto) {
+        return canSendDatasetVersionToProductionValidation(dto.getProcStatus(), dto.getIsTaskInBackground());
     }
 
-    public static boolean canCancelPublicationDatasetVersion(DatasetVersionBaseDto datasetVersionDto) {
-        return canCancelPublicationDatasetVersion(datasetVersionDto.getIsTaskInBackground());
+    public static boolean canSendDatasetVersionToProductionValidation(DatasetVersionBaseDto dto) {
+        return canSendDatasetVersionToProductionValidation(dto.getProcStatus(), dto.getIsTaskInBackground());
     }
 
-    private static boolean canCancelPublicationDatasetVersion(Boolean taskInBackground) {
+    public static boolean canSendDatasetVersionToDiffusionValidation(DatasetVersionDto dto) {
+        return canSendDatasetVersionToDiffusionValidation(dto.getProcStatus(), dto.getIsTaskInBackground());
+    }
+
+    public static boolean canSendDatasetVersionToDiffusionValidation(DatasetVersionBaseDto dto) {
+        return canSendDatasetVersionToDiffusionValidation(dto.getProcStatus(), dto.getIsTaskInBackground());
+    }
+
+    public static boolean canSendDatasetVersionToValidationRejected(DatasetVersionDto dto) {
+        return canSendDatasetVersionToValidationRejected(dto.getProcStatus(), dto.getIsTaskInBackground());
+    }
+
+    public static boolean canSendDatasetVersionToValidationRejected(DatasetVersionBaseDto dto) {
+        return canSendDatasetVersionToValidationRejected(dto.getProcStatus(), dto.getIsTaskInBackground());
+    }
+
+    public static boolean canPublishDatasetVersion(DatasetVersionDto dto) {
+        return canPublishDatasetVersion(dto.getProcStatus(), dto.getIsTaskInBackground());
+    }
+
+    public static boolean canPublishDatasetVersion(DatasetVersionBaseDto dto) {
+        return canPublishDatasetVersion(dto.getProcStatus(), dto.getIsTaskInBackground());
+    }
+
+    public static boolean canCancelPublicationDatasetVersion(DatasetVersionDto dto) {
+        return canCancelPublicationDatasetVersion(dto.getProcStatus(), dto.getIsTaskInBackground());
+    }
+
+    public static boolean canCancelPublicationDatasetVersion(DatasetVersionBaseDto dto) {
+        return canCancelPublicationDatasetVersion(dto.getProcStatus(), dto.getIsTaskInBackground());
+    }
+
+    public static boolean canVersionDataset(DatasetVersionDto dto) {
+        return canVersionDataset(dto.getProcStatus(), dto.getIsTaskInBackground());
+    }
+
+    public static boolean canVersionDataset(DatasetVersionBaseDto dto) {
+        return canVersionDataset(dto.getProcStatus(), dto.getIsTaskInBackground());
+    }
+
+    // LIFECYCLE COMMON
+
+    private static boolean canSendDatasetVersionToProductionValidation(ProcStatusEnum procStatus, boolean isTaskInBackground) {
+        if (BooleanUtils.isTrue(isTaskInBackground)) {
+            return false;
+        }
+        if (!canSendToProductionValidation(procStatus)) {
+            return false;
+        }
+        return SharedDatasetsSecurityUtils.canSendDatasetVersionToProductionValidation(getMetamacPrincipal(), getCurrentStatisticalOperationCode());
+    }
+
+    private static boolean canSendDatasetVersionToDiffusionValidation(ProcStatusEnum procStatus, boolean isTaskInBackground) {
+        if (BooleanUtils.isTrue(isTaskInBackground)) {
+            return false;
+        }
+        if (!canSendToDiffusionValidation(procStatus)) {
+            return false;
+        }
+        return SharedDatasetsSecurityUtils.canSendDatasetVersionToDiffusionValidation(getMetamacPrincipal(), getCurrentStatisticalOperationCode());
+    }
+
+    private static boolean canSendDatasetVersionToValidationRejected(ProcStatusEnum procStatus, boolean isTaskInBackground) {
+        if (BooleanUtils.isTrue(isTaskInBackground)) {
+            return false;
+        }
+        if (!canRejectValidation(procStatus)) {
+            return false;
+        }
+        return SharedDatasetsSecurityUtils.canSendDatasetVersionToValidationRejected(getMetamacPrincipal(), getCurrentStatisticalOperationCode());
+    }
+
+    private static boolean canPublishDatasetVersion(ProcStatusEnum procStatus, Boolean isTaskInBackground) {
+        if (BooleanUtils.isTrue(isTaskInBackground)) {
+            return false;
+        }
+        if (!canPublish(procStatus)) {
+            return false;
+        }
+        return SharedDatasetsSecurityUtils.canPublishDataset(getMetamacPrincipal(), getCurrentStatisticalOperationCode());
+    }
+
+    private static boolean canCancelPublicationDatasetVersion(ProcStatusEnum procStatus, Boolean taskInBackground) {
         if (BooleanUtils.isTrue(taskInBackground)) {
             return false;
         }
-        return SharedDatasetsSecurityUtils.canCancelPublicationDataset(getMetamacPrincipal());
+        if (!canCancelProgrammedPublication(procStatus)) {
+            return false;
+        }
+        return SharedDatasetsSecurityUtils.canCancelPublicationDataset(getMetamacPrincipal(), getCurrentStatisticalOperationCode());
+    }
 
+    private static boolean canVersionDataset(ProcStatusEnum procStatus, boolean isTaskInBackground) {
+        if (BooleanUtils.isTrue(isTaskInBackground)) {
+            return false;
+        }
+        if (!canVersion(procStatus)) {
+            return false;
+        }
+        return SharedDatasetsSecurityUtils.canVersionDataset(getMetamacPrincipal(), getCurrentStatisticalOperationCode());
     }
 
     // ------------------------------------------------------------------------
@@ -153,7 +176,7 @@ public class DatasetClientSecurityUtils extends BaseClientSecurityUtils {
         if (isPublished(datasetVersionDto.getProcStatus())) {
             return false;
         }
-        return SharedDatasetsSecurityUtils.canDeleteDatasource(getMetamacPrincipal());
+        return SharedDatasetsSecurityUtils.canDeleteDatasource(getMetamacPrincipal(), getCurrentStatisticalOperationCode());
     }
 
     public static boolean canImportDatasourcesInDatasetVersion(DatasetVersionDto datasetVersionDto) {
@@ -165,27 +188,24 @@ public class DatasetClientSecurityUtils extends BaseClientSecurityUtils {
         if (!isDraftOrValidationRejected(datasetVersionDto.getProcStatus())) {
             return false;
         }
-        return SharedDatasetsSecurityUtils.canImportDatasourcesInDatasetVersion(getMetamacPrincipal());
+        return SharedDatasetsSecurityUtils.canImportDatasourcesInDatasetVersion(getMetamacPrincipal(), getCurrentStatisticalOperationCode());
     }
 
     public static boolean canImportDatasourcesInStatisticalOperation() {
-        return SharedDatasetsSecurityUtils.canImportDatasourcesInStatisticalOperation(getMetamacPrincipal());
+        return SharedDatasetsSecurityUtils.canImportDatasourcesInStatisticalOperation(getMetamacPrincipal(), getCurrentStatisticalOperationCode());
     }
 
-    public static boolean canImportDatasources() {
-        return SharedDatasetsSecurityUtils.canImportDatasources(getMetamacPrincipal());
+    public static boolean canCreateCategorisation(DatasetVersionDto dto) {
+        return SharedDatasetsSecurityUtils.canCreateCategorisation(getMetamacPrincipal(), getCurrentStatisticalOperationCode(), dto.getProcStatus());
     }
 
-    public static boolean canCreateCategorisation() {
-        return SharedDatasetsSecurityUtils.canCreateCategorisation(getMetamacPrincipal());
+    public static boolean canDeleteDatasetCategorisation(DatasetVersionDto dto, CategorisationDto categorisationDto) {
+        return SharedDatasetsSecurityUtils.canDeleteDatasetCategorisation(getMetamacPrincipal(), categorisationDto.getValidFrom(), getCurrentStatisticalOperationCode(), dto.getProcStatus());
     }
 
-    public static boolean canDeleteDatasetCategorisation(CategorisationDto categorisationDto) {
-        return SharedDatasetsSecurityUtils.canDeleteDatasetCategorisation(getMetamacPrincipal(), categorisationDto.getValidFrom());
-    }
-
-    public static boolean canEndCategorisationValidity(CategorisationDto categorisationDto) {
-        return SharedDatasetsSecurityUtils.canEndCategorisationValidity(getMetamacPrincipal(), categorisationDto.getValidFrom(), categorisationDto.getValidTo());
+    public static boolean canEndCategorisationValidity(DatasetVersionDto dto, CategorisationDto categorisationDto) {
+        return SharedDatasetsSecurityUtils.canEndCategorisationValidity(getMetamacPrincipal(), categorisationDto.getValidFrom(), categorisationDto.getValidTo(), getCurrentStatisticalOperationCode(),
+                dto.getProcStatus());
     }
 
 }

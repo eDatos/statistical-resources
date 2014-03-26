@@ -71,13 +71,8 @@ import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 
 public class QueryPresenter extends Presenter<QueryPresenter.QueryView, QueryPresenter.QueryProxy> implements QueryUiHandlers {
 
-    private final DispatchAsync                       dispatcher;
-    private final PlaceManager                        placeManager;
-
-    @ContentSlot
-    public static final Type<RevealContentHandler<?>> TYPE_SetOperationResourcesToolBar                   = new Type<RevealContentHandler<?>>();
-
-    public static final Object                        TYPE_SetContextAreaContentOperationResourcesToolBar = new Object();
+    private final DispatchAsync dispatcher;
+    private final PlaceManager  placeManager;
 
     @ProxyCodeSplit
     @NameToken(NameTokens.queryPage)

@@ -2,7 +2,6 @@ package org.siemac.metamac.statistical.resources.web.client.base.widgets;
 
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
 
-import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.web.client.resources.GlobalResources;
 import org.siemac.metamac.web.common.client.widgets.MainFormLayoutButton;
 import org.siemac.metamac.web.common.client.widgets.form.InternationalMainFormLayout;
@@ -20,7 +19,6 @@ public abstract class LifecycleMainFormLayout extends InternationalMainFormLayou
     private MainFormLayoutButton versioning;
     private MainFormLayoutButton preview;
 
-    private ProcStatusEnum       status;
     private boolean              lastVersion;
 
     public LifecycleMainFormLayout() {
@@ -65,31 +63,36 @@ public abstract class LifecycleMainFormLayout extends InternationalMainFormLayou
         hideAllLifeCycleButtons();
     }
 
-    public void updatePublishSection(ProcStatusEnum status, boolean lastVersion) {
-        this.status = status;
+    public void updatePublishSection(boolean lastVersion) {
         this.lastVersion = lastVersion;
     }
 
     protected void updateVisibility() {
         // Hide all buttons
         hideAllLifeCycleButtons();
-        // Show buttons depending on the status
-        if (ProcStatusEnum.DRAFT.equals(status)) {
+
+        if (canSendToProductionValidation()) {
             showProductionValidationButton();
-        } else if (ProcStatusEnum.VALIDATION_REJECTED.equals(status)) {
-            showProductionValidationButton();
-        } else if (ProcStatusEnum.PRODUCTION_VALIDATION.equals(status)) {
+        }
+        if (canSendToDiffusionValidation()) {
             showDiffusionValidationButton();
+        }
+        if (canRejectValidation()) {
             showRejectValidationButton();
-        } else if (ProcStatusEnum.DIFFUSION_VALIDATION.equals(status)) {
-            showRejectValidationButton();
+        }
+        if (canProgramPublication()) {
             showProgramPublicationButton();
+        }
+        if (canPublish()) {
             showPublishButton();
-        } else if (ProcStatusEnum.PUBLISHED.equals(status) && lastVersion) {
+        }
+        if (canVersion() && lastVersion) {
             showVersioningButton();
-        } else if (ProcStatusEnum.PUBLISHED_NOT_VISIBLE.equals(status)) {
+        }
+        if (canCancelProgrammedPublication()) {
             showCancelProgrammedPublication();
         }
+
         showPreviewButton();
     }
 
@@ -141,7 +144,7 @@ public abstract class LifecycleMainFormLayout extends InternationalMainFormLayou
     }
 
     private void showVersioningButton() {
-        if (canVersioning()) {
+        if (canVersion()) {
             versioning.show();
         }
     }
@@ -194,6 +197,6 @@ public abstract class LifecycleMainFormLayout extends InternationalMainFormLayou
     protected abstract boolean canPublish();
     protected abstract boolean canProgramPublication();
     protected abstract boolean canCancelProgrammedPublication();
-    protected abstract boolean canVersioning();
+    protected abstract boolean canVersion();
     protected abstract boolean canPreviewData();
 }

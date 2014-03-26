@@ -19,47 +19,47 @@ public class PublicationMainFormLayout extends LifecycleMainFormLayout {
     public void setPublicationVersion(PublicationVersionDto publicationVersionDto) {
         this.publicationVersionDto = publicationVersionDto;
         setCanEdit(PublicationClientSecurityUtils.canUpdatePublicationVersion(publicationVersionDto));
-        setCanDelete(PublicationClientSecurityUtils.canDeletePublicationVersion(publicationVersionDto.getProcStatus()));
-        updatePublishSection(publicationVersionDto.getProcStatus(), publicationVersionDto.getLastVersion());
+        setCanDelete(PublicationClientSecurityUtils.canDeletePublicationVersion(publicationVersionDto));
+        updatePublishSection(publicationVersionDto.getLastVersion());
     }
 
     @Override
     protected boolean canSendToProductionValidation() {
-        return PublicationClientSecurityUtils.canSendPublicationVersionToProductionValidation();
+        return PublicationClientSecurityUtils.canSendPublicationVersionToProductionValidation(publicationVersionDto);
     }
 
     @Override
     protected boolean canSendToDiffusionValidation() {
-        return PublicationClientSecurityUtils.canSendPublicationVersionToDiffusionValidation();
+        return PublicationClientSecurityUtils.canSendPublicationVersionToDiffusionValidation(publicationVersionDto);
     }
 
     @Override
     protected boolean canRejectValidation() {
-        return PublicationClientSecurityUtils.canSendPublicationVersionToValidationRejected();
+        return PublicationClientSecurityUtils.canSendPublicationVersionToValidationRejected(publicationVersionDto);
     }
 
     @Override
     protected boolean canPublish() {
-        return PublicationClientSecurityUtils.canPublishPublicationVersion();
+        return PublicationClientSecurityUtils.canPublishPublicationVersion(publicationVersionDto);
     }
 
     @Override
     protected boolean canProgramPublication() {
-        return PublicationClientSecurityUtils.canProgramPublicationPublicationVersion();
+        return PublicationClientSecurityUtils.canProgramPublicationPublicationVersion(publicationVersionDto);
     }
 
     @Override
     protected boolean canCancelProgrammedPublication() {
-        return PublicationClientSecurityUtils.canCancelPublicationPublicationVersion();
+        return PublicationClientSecurityUtils.canCancelPublicationPublicationVersion(publicationVersionDto);
     }
 
     @Override
-    protected boolean canVersioning() {
-        return PublicationClientSecurityUtils.canVersionPublication();
+    protected boolean canVersion() {
+        return PublicationClientSecurityUtils.canVersionPublication(publicationVersionDto);
     }
 
     @Override
     protected boolean canPreviewData() {
-        return PublicationClientSecurityUtils.canPreviewDataPublicationVersion();
+        return PublicationClientSecurityUtils.canPreviewDataPublicationVersion(publicationVersionDto);
     }
 }

@@ -11,6 +11,7 @@ import org.siemac.metamac.statistical.resources.web.client.publication.model.rec
 import org.siemac.metamac.statistical.resources.web.client.publication.presenter.PublicationMetadataTabPresenter.PublicationMetadataTabView;
 import org.siemac.metamac.statistical.resources.web.client.publication.presenter.PublicationPresenter;
 import org.siemac.metamac.statistical.resources.web.client.publication.presenter.PublicationStructureTabPresenter.PublicationStructureTabView;
+import org.siemac.metamac.statistical.resources.web.client.publication.utils.PublicationClientSecurityUtils;
 import org.siemac.metamac.statistical.resources.web.client.publication.view.handlers.PublicationUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.publication.widgets.PublicationVersionsSectionStack;
 import org.siemac.metamac.web.common.client.utils.InternationalStringUtils;

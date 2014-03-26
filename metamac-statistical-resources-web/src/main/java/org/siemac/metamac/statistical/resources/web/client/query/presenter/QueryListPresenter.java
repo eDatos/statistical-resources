@@ -58,13 +58,8 @@ import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 
 public class QueryListPresenter extends LifeCycleBaseListPresenter<QueryListPresenter.QueryListView, QueryListPresenter.QueryListProxy> implements QueryListUiHandlers {
 
-    private final DispatchAsync                       dispatcher;
-    private final PlaceManager                        placeManager;
-
-    @ContentSlot
-    public static final Type<RevealContentHandler<?>> TYPE_SetOperationResourcesToolBar                   = new Type<RevealContentHandler<?>>();
-
-    public static final Object                        TYPE_SetContextAreaContentOperationResourcesToolBar = new Object();
+    private final DispatchAsync dispatcher;
+    private final PlaceManager  placeManager;
 
     @ProxyCodeSplit
     @NameToken(NameTokens.queriesListPage)

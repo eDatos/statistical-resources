@@ -15,6 +15,10 @@ public class StatisticalResourcesDefaults {
         return DtoCopyUtils.copy(selectedStatisticalOperation);
     }
 
+    public static String getSelectedStatisticalOperationCode() {
+        return selectedStatisticalOperation != null ? selectedStatisticalOperation.getCode() : null;
+    }
+
     public static void setSelectedStatisticalOperation(ExternalItemDto selectedStatisticalOperation) {
         StatisticalResourcesDefaults.selectedStatisticalOperation = selectedStatisticalOperation;
     }

@@ -22,47 +22,47 @@ public class QueryMainFormLayout extends LifecycleMainFormLayout {
         setTitleLabelContents(InternationalStringUtils.getLocalisedString(queryVersionDto.getTitle()));
         setCanEdit(QueryClientSecurityUtils.canUpdateQueryVersion(queryVersionDto));
         setCanDelete(QueryClientSecurityUtils.canDeleteQueryVersion(queryVersionDto));
-        updatePublishSection(queryVersionDto.getProcStatus(), queryVersionDto.getLastVersion());
+        updatePublishSection(queryVersionDto.getLastVersion());
     }
 
     @Override
     protected boolean canSendToProductionValidation() {
-        return QueryClientSecurityUtils.canSendQueryVersionToProductionValidation();
+        return QueryClientSecurityUtils.canSendQueryVersionToProductionValidation(queryVersionDto);
     }
 
     @Override
     protected boolean canSendToDiffusionValidation() {
-        return QueryClientSecurityUtils.canSendQueryVersionToDiffusionValidation();
+        return QueryClientSecurityUtils.canSendQueryVersionToDiffusionValidation(queryVersionDto);
     }
 
     @Override
     protected boolean canRejectValidation() {
-        return QueryClientSecurityUtils.canSendQueryVersionToValidationRejected();
+        return QueryClientSecurityUtils.canSendQueryVersionToValidationRejected(queryVersionDto);
     }
 
     @Override
     protected boolean canPublish() {
-        return QueryClientSecurityUtils.canPublishQueryVersion();
+        return QueryClientSecurityUtils.canPublishQueryVersion(queryVersionDto);
     }
 
     @Override
     protected boolean canProgramPublication() {
-        return QueryClientSecurityUtils.canPublishQueryVersion();
+        return QueryClientSecurityUtils.canPublishQueryVersion(queryVersionDto);
     }
 
     @Override
     protected boolean canCancelProgrammedPublication() {
-        return QueryClientSecurityUtils.canCancelProgrammedPublication();
+        return QueryClientSecurityUtils.canCancelQueryVersionProgrammedPublication(queryVersionDto);
     }
 
     @Override
-    protected boolean canVersioning() {
+    protected boolean canVersion() {
         // Queries can not be versioned
-        return false;
+        return QueryClientSecurityUtils.canVersionQueryVersion(queryVersionDto);
     }
 
     @Override
     protected boolean canPreviewData() {
-        return true;
+        return QueryClientSecurityUtils.canPreviewQueryData(queryVersionDto);
     }
 }

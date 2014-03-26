@@ -113,7 +113,7 @@ public class DatasourceImportationServlet extends HttpServlet {
             List<File> files = ZipUtils.unzipArchive(new File(tempZipFilePathName), outputFolder);
             List<URL> fileUrls = getURLsFromFiles(files);
 
-            String statisticalOperationUrn = args.get(StatisticalResourcesSharedTokens.UPLOAD_PARAM_OPERATION_URN);
+            String statisticalOperationCode = args.get(StatisticalResourcesSharedTokens.UPLOAD_PARAM_OPERATION_CODE);
             String datasetVersionUrn = args.get(StatisticalResourcesSharedTokens.UPLOAD_PARAM_DATASET_VERSION_URN);
 
             Map<String, String> dimensionMapping = buildDimensionsMappings(args);
@@ -121,8 +121,8 @@ public class DatasourceImportationServlet extends HttpServlet {
             if (StringUtils.isNotBlank(datasetVersionUrn)) {
                 DatasetVersionDto datasetVersionDto = statisticalResourcesServiceFacade.retrieveDatasetVersionByUrn(ServiceContextHolder.getCurrentServiceContext(), datasetVersionUrn);
                 statisticalResourcesServiceFacade.importDatasourcesInDatasetVersion(ServiceContextHolder.getCurrentServiceContext(), datasetVersionDto, fileUrls, dimensionMapping);
-            } else if (StringUtils.isNotBlank(statisticalOperationUrn)) {
-                statisticalResourcesServiceFacade.importDatasourcesInStatisticalOperation(ServiceContextHolder.getCurrentServiceContext(), statisticalOperationUrn, fileUrls);
+            } else if (StringUtils.isNotBlank(statisticalOperationCode)) {
+                statisticalResourcesServiceFacade.importDatasourcesInStatisticalOperation(ServiceContextHolder.getCurrentServiceContext(), statisticalOperationCode, fileUrls);
             }
 
             sendSuccessImportationResponse(response, fileName);

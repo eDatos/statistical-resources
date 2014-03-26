@@ -20,7 +20,7 @@ public class DatasetMainFormLayout extends LifecycleMainFormLayout {
         this.datasetVersionDto = datasetVersionDto;
         setCanEdit(DatasetClientSecurityUtils.canUpdateDatasetVersion(datasetVersionDto));
         setCanDelete(DatasetClientSecurityUtils.canDeleteDatasetVersion(datasetVersionDto));
-        updatePublishSection(datasetVersionDto.getProcStatus(), datasetVersionDto.getLastVersion());
+        updatePublishSection(datasetVersionDto.getLastVersion());
     }
 
     //
@@ -58,7 +58,7 @@ public class DatasetMainFormLayout extends LifecycleMainFormLayout {
     }
 
     @Override
-    protected boolean canVersioning() {
+    protected boolean canVersion() {
         return DatasetClientSecurityUtils.canVersionDataset(datasetVersionDto);
     }
 

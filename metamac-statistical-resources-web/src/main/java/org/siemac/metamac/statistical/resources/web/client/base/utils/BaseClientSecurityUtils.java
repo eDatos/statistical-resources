@@ -1,7 +1,9 @@
 package org.siemac.metamac.statistical.resources.web.client.base.utils;
 
+import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.sso.client.MetamacPrincipal;
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
+import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesDefaults;
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb;
 
 public class BaseClientSecurityUtils {
@@ -31,4 +33,10 @@ public class BaseClientSecurityUtils {
         }
         return false;
     }
+
+    protected static String getCurrentStatisticalOperationCode() {
+        ExternalItemDto statisticalOperation = StatisticalResourcesDefaults.getSelectedStatisticalOperation();
+        return statisticalOperation != null ? statisticalOperation.getCode() : null;
+    }
+
 }

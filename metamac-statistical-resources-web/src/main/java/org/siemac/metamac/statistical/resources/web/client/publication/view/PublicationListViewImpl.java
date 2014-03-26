@@ -95,27 +95,6 @@ public class PublicationListViewImpl extends StatisticalResourceBaseListViewImpl
     }
 
     @Override
-    public void setInSlot(Object slot, Widget content) {
-        if (slot == PublicationListPresenter.TYPE_SetContextAreaContentOperationResourcesToolBar) {
-            if (content != null) {
-                Canvas[] canvas = ((ToolStrip) content).getMembers();
-                for (int i = 0; i < canvas.length; i++) {
-                    if (canvas[i] instanceof ToolStripButton) {
-                        if (StatisticalResourcesToolStripButtonEnum.PUBLICATIONS.getValue().equals(((ToolStripButton) canvas[i]).getID())) {
-                            ((ToolStripButton) canvas[i]).select();
-                        }
-                    }
-                }
-                panel.addMember(content, 0);
-            }
-        } else {
-            // To support inheritance in your views it is good practice to call super.setInSlot when you can't handle the call.
-            // Who knows, maybe the parent class knows what to do with this slot.
-            super.setInSlot(slot, content);
-        }
-    }
-
-    @Override
     public Widget asWidget() {
         return panel;
     }
@@ -253,38 +232,42 @@ public class PublicationListViewImpl extends StatisticalResourceBaseListViewImpl
     }
 
     @Override
-    protected boolean canSendToProductionValidation(ListGridRecord record) {
-        return PublicationClientSecurityUtils.canSendPublicationVersionToProductionValidation();
+    protected boolean canDelete(ListGridRecord record) {
+        return PublicationClientSecurityUtils.canDeletePublicationVersion(getDtoFromRecord(record));
     }
 
     @Override
+    protected boolean canSendToProductionValidation(ListGridRecord record) {
+        return PublicationClientSecurityUtils.canSendPublicationVersionToProductionValidation(getDtoFromRecord(record));
+    }
+    @Override
     protected boolean canSendToDiffusionValidation(ListGridRecord record) {
-        return PublicationClientSecurityUtils.canSendPublicationVersionToDiffusionValidation();
+        return PublicationClientSecurityUtils.canSendPublicationVersionToDiffusionValidation(getDtoFromRecord(record));
     }
 
     @Override
     protected boolean canRejectValidation(ListGridRecord record) {
-        return PublicationClientSecurityUtils.canSendPublicationVersionToValidationRejected();
+        return PublicationClientSecurityUtils.canSendPublicationVersionToValidationRejected(getDtoFromRecord(record));
     }
 
     @Override
     protected boolean canPublish(ListGridRecord record) {
-        return PublicationClientSecurityUtils.canPublishPublicationVersion();
+        return PublicationClientSecurityUtils.canPublishPublicationVersion(getDtoFromRecord(record));
     }
 
     @Override
     protected boolean canProgramPublication(ListGridRecord record) {
-        return PublicationClientSecurityUtils.canProgramPublicationPublicationVersion();
+        return PublicationClientSecurityUtils.canProgramPublicationPublicationVersion(getDtoFromRecord(record));
     }
 
     @Override
     protected boolean canCancelProgrammedPublication(ListGridRecord record) {
-        return PublicationClientSecurityUtils.canCancelPublicationPublicationVersion();
+        return PublicationClientSecurityUtils.canCancelPublicationPublicationVersion(getDtoFromRecord(record));
     }
 
     @Override
     protected boolean canVersion(ListGridRecord record) {
-        return PublicationClientSecurityUtils.canVersionPublication();
+        return PublicationClientSecurityUtils.canVersionPublication(getDtoFromRecord(record));
     }
 
     //
@@ -305,5 +288,10 @@ public class PublicationListViewImpl extends StatisticalResourceBaseListViewImpl
     @Override
     public void setStatisticalOperationsForSearchSection(GetStatisticalOperationsPaginatedListResult result) {
         searchSectionStack.setStatisticalOperations(result);
+    }
+
+    private PublicationVersionBaseDto getDtoFromRecord(ListGridRecord record) {
+        PublicationRecord pubRecord = (PublicationRecord) record;
+        return pubRecord.getPublicationVersionBaseDto();
     }
 }
