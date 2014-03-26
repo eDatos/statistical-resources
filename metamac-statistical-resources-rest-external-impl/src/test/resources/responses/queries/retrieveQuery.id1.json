@@ -20,7 +20,7 @@
   "description": {
     "text": [
       {
-        "value": "description-resource-Fl2Ylse2kQ en Espanol",
+        "value": "description-resource-VKqTui3c3S en Espanol",
         "lang": "es"
       }
     ]
@@ -95,22 +95,6 @@
             ]
           },
           "type": "GEOGRAPHIC_DIMENSION",
-          "variable": {
-            "id": "variable-GEO_DIM-codelist01",
-            "urn": "urn:siemac:org.siemac.metamac.infomodel.structuralresources.Variable=variable-GEO_DIM-codelist01",
-            "selfLink": {
-              "href": "http://apis.metamac.org/metamac-srm-web/apis/structural-resources-internal/v1.0/variables/variable-GEO_DIM-codelist01"
-            },
-            "name": {
-              "text": [
-                {
-                  "value": "variable-GEO_DIM-codelist01 en Español",
-                  "lang": "es"
-                }
-              ]
-            },
-            "kind": "structuralResources#variable"
-          },
           "dimensionValues": {
             "value": [
               {
@@ -941,16 +925,16 @@
       "total": 2
     },
     "statisticalOperation": {
-      "id": "YsdSceNgir",
-      "urn": "urn:siemac:org.siemac.metamac.infomodel.statisticaloperations.Operation=YsdSceNgir",
+      "id": "0OvDovThQU",
+      "urn": "urn:siemac:org.siemac.metamac.infomodel.statisticaloperations.Operation=0OvDovThQU",
       "selfLink": {
         "kind": "statisticalOperations#operation",
-        "href": "http://data.istac.es/apis/operations/latest/YsdSceNgir"
+        "href": "http://data.istac.es/apis/operations/latest/0OvDovThQU"
       },
       "name": {
         "text": [
           {
-            "value": "title-YsdSceNgir en Espanol",
+            "value": "title-0OvDovThQU en Espanol",
             "lang": "es"
           }
         ]
@@ -958,17 +942,17 @@
       "kind": "statisticalOperations#operation"
     },
     "maintainer": {
-      "id": "WiLkpXqmBD",
+      "id": "AYn7MFs7Wj",
       "nestedId": "agency1",
-      "urn": "urn:sdmx:org.sdmx.infomodel.base.Agency=MaintainerMock:AgencySchemeMock(1.0).WiLkpXqmBD",
+      "urn": "urn:sdmx:org.sdmx.infomodel.base.Agency=MaintainerMock:AgencySchemeMock(1.0).AYn7MFs7Wj",
       "selfLink": {
         "kind": "structuralResources#agency",
-        "href": "http://data.istac.es/apis/srm/latest/WiLkpXqmBD"
+        "href": "http://data.istac.es/apis/srm/latest/AYn7MFs7Wj"
       },
       "name": {
         "text": [
           {
-            "value": "title-WiLkpXqmBD en Espanol",
+            "value": "title-AYn7MFs7Wj en Espanol",
             "lang": "es"
           }
         ]

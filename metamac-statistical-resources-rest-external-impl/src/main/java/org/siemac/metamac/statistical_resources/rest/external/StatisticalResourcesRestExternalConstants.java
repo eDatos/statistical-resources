@@ -10,7 +10,6 @@ public class StatisticalResourcesRestExternalConstants extends StatisticalResour
     public static final String         PORTAL_PATH_DATASETS     = "datasets";
     public static final String         KEY_DIMENSIONS_SEPARATOR = "#";
 
-    // TODO Latest (METAMAC-1785)cambiar el codigo que se ejecuta en cada api
     public static boolean              IS_INTERNAL_API          = false;
 
 }

@@ -60,15 +60,14 @@ import org.siemac.metamac.rest.statistical_resources.v1_0.domain.SelectedLanguag
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.StatisticalResource;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.StatisticalResourceType;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.VersionRationaleTypes;
-import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.CodeResourceInternal;
-import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codelist;
-import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codes;
-import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Concepts;
-import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructure;
-import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DimensionVisualisation;
-import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ItemResourceInternal;
-import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ShowDecimalPrecision;
-import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.TextFormat;
+import org.siemac.metamac.rest.structural_resources.v1_0.domain.CodeResource;
+import org.siemac.metamac.rest.structural_resources.v1_0.domain.Codes;
+import org.siemac.metamac.rest.structural_resources.v1_0.domain.Concepts;
+import org.siemac.metamac.rest.structural_resources.v1_0.domain.DataStructure;
+import org.siemac.metamac.rest.structural_resources.v1_0.domain.DimensionVisualisation;
+import org.siemac.metamac.rest.structural_resources.v1_0.domain.ItemResource;
+import org.siemac.metamac.rest.structural_resources.v1_0.domain.ShowDecimalPrecision;
+import org.siemac.metamac.rest.structural_resources.v1_0.domain.TextFormat;
 import org.siemac.metamac.rest.utils.RestCommonUtil;
 import org.siemac.metamac.rest.utils.RestUtils;
 import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataStatisticalResource;
@@ -77,10 +76,6 @@ import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResource;
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResourceResult;
 import org.siemac.metamac.statistical.resources.core.common.serviceapi.TranslationService;
-import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor;
-import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor.DsdAttribute;
-import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor.DsdComponentType;
-import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor.DsdDimension;
 import org.siemac.metamac.statistical.resources.core.conf.StatisticalResourcesConfiguration;
 import org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConstants;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.AttributeValue;
@@ -97,6 +92,10 @@ import org.siemac.metamac.statistical_resources.rest.external.StatisticalResourc
 import org.siemac.metamac.statistical_resources.rest.external.exception.RestServiceExceptionType;
 import org.siemac.metamac.statistical_resources.rest.external.invocation.CommonMetadataRestExternalFacade;
 import org.siemac.metamac.statistical_resources.rest.external.invocation.SrmRestExternalFacade;
+import org.siemac.metamac.statistical_resources.rest.external.service.utils.DsdExternalProcessor;
+import org.siemac.metamac.statistical_resources.rest.external.service.utils.DsdExternalProcessor.DsdAttribute;
+import org.siemac.metamac.statistical_resources.rest.external.service.utils.DsdExternalProcessor.DsdComponentType;
+import org.siemac.metamac.statistical_resources.rest.external.service.utils.DsdExternalProcessor.DsdDimension;
 import org.siemac.metamac.statistical_resources.rest.external.service.utils.StatisticalResourcesRestExternalUtils;
 import org.siemac.metamac.statistical_resources.rest.external.v1_0.domain.DsdProcessorResult;
 import org.siemac.metamac.statistical_resources.rest.external.v1_0.mapper.collection.CollectionsDo2RestMapperV10;
@@ -179,9 +178,9 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
         DsdProcessorResult dsdProcessorResult = new DsdProcessorResult();
         DataStructure dataStructure = srmRestExternalFacade.retrieveDataStructureByUrn(urn);
         dsdProcessorResult.setDataStructure(dataStructure);
-        dsdProcessorResult.setDimensions(DsdProcessor.getDimensions(dataStructure));
-        dsdProcessorResult.setAttributes(DsdProcessor.getAttributes(dataStructure));
-        dsdProcessorResult.setGroups(DsdProcessor.getGroups(dataStructure));
+        dsdProcessorResult.setDimensions(DsdExternalProcessor.getDimensions(dataStructure));
+        dsdProcessorResult.setAttributes(DsdExternalProcessor.getAttributes(dataStructure));
+        dsdProcessorResult.setGroups(DsdExternalProcessor.getGroups(dataStructure));
         return dsdProcessorResult;
     }
 
@@ -615,10 +614,6 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
         target.setId(source.getComponentId());
         target.setType(toDimensionType(source.getType()));
         target.setName(toInternationalString(source.getConceptIdentity().getName(), selectedLanguages));
-        if (source.getCodelistRepresentationUrn() != null) {
-            Codelist codelistRepresentation = srmRestExternalFacade.retrieveCodelistByUrn(source.getCodelistRepresentationUrn());
-            target.setVariable(toResource(codelistRepresentation.getVariable(), selectedLanguages));
-        }
 
         // Dimension values
         target.setDimensionValues(toDimensionValues(datasetVersionUrn, dataStructure, source, dimensionVisualisation, effectiveDimensionValuesToData, selectedLanguages));
@@ -666,10 +661,8 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
         // This map contains nodes that are not in the result. If a child of this nodes is in the result, we use this map to put it inside the nearest parent node in result
         Map<String, String> parentsReplacedToVisualisation = new HashMap<String, String>();
 
-        String order = dimensionVisualisation != null ? dimensionVisualisation.getOrder() : null;
-        String openness = dimensionVisualisation != null ? dimensionVisualisation.getOpenness() : null;
-        Codes codes = srmRestExternalFacade.retrieveCodesByCodelistUrn(codelistUrn, order, openness); // note: srm api returns codes in order
-        for (CodeResourceInternal code : codes.getCodes()) {
+        Codes codes = srmRestExternalFacade.retrieveCodesByCodelistUrn(codelistUrn, null, null); // note: srm api returns codes in order
+        for (CodeResource code : codes.getCodes()) {
             String id = code.getId();
             boolean skip = false;
             if (effectiveDimensionValuesToData != null) {
@@ -701,6 +694,7 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
         }
         EnumeratedDimensionValues targets = new EnumeratedDimensionValues();
 
+        // In EXTERNAL API, the showDecimalPrecision
         Map<String, Integer> showDecimalPrecisionsByUrn = null;
         if (DsdComponentType.MEASURE.equals(dimensionType)) {
             if (dataStructure.getShowDecimalsPrecisions() != null && !CollectionUtils.isEmpty(dataStructure.getShowDecimalsPrecisions().getShowDecimalPrecisions())) {
@@ -715,7 +709,7 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
         Map<String, String> parentsReplacedToVisualisation = new HashMap<String, String>();
 
         Concepts concepts = srmRestExternalFacade.retrieveConceptsByConceptSchemeByUrn(conceptSchemeUrn);
-        for (ItemResourceInternal concept : concepts.getConcepts()) {
+        for (ItemResource concept : concepts.getConcepts()) {
             String id = concept.getId();
             boolean skip = false;
             if (effectiveDimensionValuesToData != null) {
@@ -757,8 +751,7 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
         return targets;
     }
 
-    private EnumeratedDimensionValue toEnumeratedDimensionValue(CodeResourceInternal source, Map<String, String> parentsReplacedToVisualisation, List<String> selectedLanguages)
-            throws MetamacException {
+    private EnumeratedDimensionValue toEnumeratedDimensionValue(CodeResource source, Map<String, String> parentsReplacedToVisualisation, List<String> selectedLanguages) throws MetamacException {
         if (source == null) {
             return null;
         }
@@ -776,7 +769,7 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
         return target;
     }
 
-    private EnumeratedDimensionValue toEnumeratedDimensionValue(ItemResourceInternal source, Map<String, Integer> showDecimalPrecisionsByUrn, Map<String, String> effectiveParentVisualisation,
+    private EnumeratedDimensionValue toEnumeratedDimensionValue(ItemResource source, Map<String, Integer> showDecimalPrecisionsByUrn, Map<String, String> effectiveParentVisualisation,
             List<String> selectedLanguages) throws MetamacException {
         if (source == null) {
             return null;
@@ -816,7 +809,7 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
      * This map contains nodes that are not in the result. If a child of this nodes is in the result, we use this map to put it inside the nearest parent node in result
      * The parent visualisation will be the nearest parent in result
      */
-    private void updateParentsReplacedToVisualisationWithNotEffectiveDimensionValue(Map<String, String> parentsReplacedToVisualisation, ItemResourceInternal code) {
+    private void updateParentsReplacedToVisualisationWithNotEffectiveDimensionValue(Map<String, String> parentsReplacedToVisualisation, ItemResource code) {
         String parentVisualisationEffective = null;
         if (code.getParent() == null) {
             parentVisualisationEffective = null;
@@ -917,7 +910,7 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
         }
         EnumeratedAttributeValues targets = new EnumeratedAttributeValues();
         Codes codes = srmRestExternalFacade.retrieveCodesByCodelistUrn(codelistUrn, null, null);
-        for (CodeResourceInternal code : codes.getCodes()) {
+        for (CodeResource code : codes.getCodes()) {
             String id = code.getId();
             if (!coveragesById.containsKey(id)) {
                 // skip to include only values in coverage
@@ -936,7 +929,7 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
         }
         EnumeratedAttributeValues targets = new EnumeratedAttributeValues();
         Concepts concepts = srmRestExternalFacade.retrieveConceptsByConceptSchemeByUrn(conceptSchemeUrn);
-        for (ItemResourceInternal concept : concepts.getConcepts()) {
+        for (ItemResource concept : concepts.getConcepts()) {
             String id = concept.getId();
             if (!coveragesById.containsKey(id)) {
                 // skip to include only values in coverage
@@ -948,7 +941,7 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
         return targets;
     }
 
-    private EnumeratedAttributeValue toEnumeratedAttributeValue(ItemResourceInternal source, List<String> selectedLanguages) throws MetamacException {
+    private EnumeratedAttributeValue toEnumeratedAttributeValue(ItemResource source, List<String> selectedLanguages) throws MetamacException {
         if (source == null) {
             return null;
         }
@@ -1228,7 +1221,7 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
         return conditionDimensionDtos;
     }
 
-    private DimensionsId toDimensionsId(org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DimensionReferences sources) {
+    private DimensionsId toDimensionsId(org.siemac.metamac.rest.structural_resources.v1_0.domain.DimensionReferences sources) {
         if (sources == null) {
             return null;
         }

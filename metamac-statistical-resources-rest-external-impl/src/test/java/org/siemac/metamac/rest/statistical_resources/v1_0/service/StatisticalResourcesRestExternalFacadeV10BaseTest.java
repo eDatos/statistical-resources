@@ -62,14 +62,14 @@ import org.siemac.metamac.rest.common.test.ServerResource;
 import org.siemac.metamac.rest.common_metadata.v1_0.domain.Configuration;
 import org.siemac.metamac.rest.constants.RestConstants;
 import org.siemac.metamac.rest.statistical_resources.v1_0.mockito.MockitoMockConfig;
+import org.siemac.metamac.rest.structural_resources.v1_0.domain.Codelist;
+import org.siemac.metamac.rest.structural_resources.v1_0.domain.Codes;
+import org.siemac.metamac.rest.structural_resources.v1_0.domain.Concept;
+import org.siemac.metamac.rest.structural_resources.v1_0.domain.Concepts;
+import org.siemac.metamac.rest.structural_resources.v1_0.domain.DataStructure;
 import org.siemac.metamac.rest.structural_resources.v1_0.utils.CommonMetadataRestMocks;
 import org.siemac.metamac.rest.structural_resources.v1_0.utils.RestDoMocks;
 import org.siemac.metamac.rest.structural_resources.v1_0.utils.SrmRestMocks;
-import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codelist;
-import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codes;
-import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Concept;
-import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Concepts;
-import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructure;
 import org.siemac.metamac.rest.utils.RestUtils;
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResourceResult;
 import org.siemac.metamac.statistical.resources.core.common.serviceapi.TranslationService;
@@ -79,7 +79,6 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.CodeDimensio
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionRepository;
 import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.DatasetService;
-import org.siemac.metamac.statistical.resources.core.invocation.service.SrmRestInternalService;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersionProperties;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersionRepository;
@@ -117,8 +116,6 @@ public abstract class StatisticalResourcesRestExternalFacadeV10BaseTest extends 
     private DatasetVersionRepository          datasetVersionRepository;
     private QueryVersionRepository            queryVersionRepository;
     private PublicationVersionRepository      publicationVersionRepository;
-
-    private SrmRestInternalService            srmRestInternalService;
 
     private SrmRestExternalFacade             srmRestExternalFacade;
     private CommonMetadataRestExternalFacade  commonMetadataRestExternalFacade;
@@ -840,15 +837,6 @@ public abstract class StatisticalResourcesRestExternalFacadeV10BaseTest extends 
                 return SrmRestMocks.mockConcept(urnSplited[0], urnSplited[1], urnSplited[2], urnSplited[3]);
             };
         });
-        when(srmRestInternalService.retrieveConceptByUrn(any(String.class))).thenAnswer(new Answer<Concept>() {
-
-            @Override
-            public Concept answer(InvocationOnMock invocation) throws Throwable {
-                String urn = (String) invocation.getArguments()[0];
-                String[] urnSplited = UrnUtils.splitUrnItem(urn);
-                return SrmRestMocks.mockConcept(urnSplited[0], urnSplited[1], urnSplited[2], urnSplited[3]);
-            };
-        });
     }
 
     private void mockRetrieveConfigurationById() throws MetamacException {
@@ -951,8 +939,6 @@ public abstract class StatisticalResourcesRestExternalFacadeV10BaseTest extends 
 
         srmRestExternalFacade = applicationContext.getBean(SrmRestExternalFacade.class);
         reset(srmRestExternalFacade);
-        srmRestInternalService = applicationContext.getBean(SrmRestInternalService.class);
-        reset(srmRestInternalService);
         datasetRepositoriesServiceFacade = applicationContext.getBean(DatasetRepositoriesServiceFacade.class);
         reset(datasetRepositoriesServiceFacade);
 

@@ -3,9 +3,9 @@ package org.siemac.metamac.statistical_resources.rest.external.v1_0.domain;
 import java.util.List;
 import java.util.Map;
 
-import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructure;
-import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor.DsdAttribute;
-import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor.DsdDimension;
+import org.siemac.metamac.rest.structural_resources.v1_0.domain.DataStructure;
+import org.siemac.metamac.statistical_resources.rest.external.service.utils.DsdExternalProcessor.DsdAttribute;
+import org.siemac.metamac.statistical_resources.rest.external.service.utils.DsdExternalProcessor.DsdDimension;
 
 public class DsdProcessorResult {
 

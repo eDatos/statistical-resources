@@ -16,35 +16,35 @@ import static org.siemac.metamac.rest.structural_resources.v1_0.utils.RestMocks.
 import java.util.Arrays;
 import java.util.List;
 
+import org.siemac.metamac.rest.common.v1_0.domain.Resource;
 import org.siemac.metamac.rest.common.v1_0.domain.ResourceLink;
-import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Attribute;
-import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.AttributeBase;
-import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.AttributeQualifierType;
-import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.AttributeRelationship;
-import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Attributes;
-import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.CodeResourceInternal;
-import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codelist;
-import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codes;
-import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Concept;
-import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Concepts;
-import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructure;
-import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructureComponents;
-import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataType;
-import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Dimension;
-import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DimensionReferences;
-import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DimensionType;
-import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Dimensions;
-import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Empty;
-import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Group;
-import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Groups;
-import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ItemResourceInternal;
-import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.MeasureDimension;
-import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Representation;
-import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ResourceInternal;
-import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ShowDecimalPrecision;
-import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ShowDecimalPrecisions;
-import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.TextFormat;
-import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.TimeDimension;
+import org.siemac.metamac.rest.structural_resources.v1_0.domain.Attribute;
+import org.siemac.metamac.rest.structural_resources.v1_0.domain.AttributeBase;
+import org.siemac.metamac.rest.structural_resources.v1_0.domain.AttributeQualifierType;
+import org.siemac.metamac.rest.structural_resources.v1_0.domain.AttributeRelationship;
+import org.siemac.metamac.rest.structural_resources.v1_0.domain.Attributes;
+import org.siemac.metamac.rest.structural_resources.v1_0.domain.CodeResource;
+import org.siemac.metamac.rest.structural_resources.v1_0.domain.Codelist;
+import org.siemac.metamac.rest.structural_resources.v1_0.domain.Codes;
+import org.siemac.metamac.rest.structural_resources.v1_0.domain.Concept;
+import org.siemac.metamac.rest.structural_resources.v1_0.domain.Concepts;
+import org.siemac.metamac.rest.structural_resources.v1_0.domain.DataStructure;
+import org.siemac.metamac.rest.structural_resources.v1_0.domain.DataStructureComponents;
+import org.siemac.metamac.rest.structural_resources.v1_0.domain.DataType;
+import org.siemac.metamac.rest.structural_resources.v1_0.domain.Dimension;
+import org.siemac.metamac.rest.structural_resources.v1_0.domain.DimensionReferences;
+import org.siemac.metamac.rest.structural_resources.v1_0.domain.DimensionType;
+import org.siemac.metamac.rest.structural_resources.v1_0.domain.Dimensions;
+import org.siemac.metamac.rest.structural_resources.v1_0.domain.Empty;
+import org.siemac.metamac.rest.structural_resources.v1_0.domain.Group;
+import org.siemac.metamac.rest.structural_resources.v1_0.domain.Groups;
+import org.siemac.metamac.rest.structural_resources.v1_0.domain.ItemResource;
+import org.siemac.metamac.rest.structural_resources.v1_0.domain.MeasureDimension;
+import org.siemac.metamac.rest.structural_resources.v1_0.domain.Representation;
+import org.siemac.metamac.rest.structural_resources.v1_0.domain.ShowDecimalPrecision;
+import org.siemac.metamac.rest.structural_resources.v1_0.domain.ShowDecimalPrecisions;
+import org.siemac.metamac.rest.structural_resources.v1_0.domain.TextFormat;
+import org.siemac.metamac.rest.structural_resources.v1_0.domain.TimeDimension;
 
 public class SrmRestMocks {
 
@@ -105,9 +105,6 @@ public class SrmRestMocks {
         codelist.setAgencyID(agencyID);
         codelist.setId(resourceID);
         codelist.setVersion(version);
-        if (resourceID.contains("GEO_DIM")) {
-            codelist.setVariable(mockVariableResource("variable-" + resourceID));
-        }
         return codelist;
     }
 
@@ -132,54 +129,54 @@ public class SrmRestMocks {
 
         Codes codes = new Codes();
         {
-            CodeResourceInternal parent = mockCodeResourceGeographical(agencyID, resourceID, version, "santa-cruz-tenerife", null, 1, true);
+            CodeResource parent = mockCodeResourceGeographical(agencyID, resourceID, version, "santa-cruz-tenerife", null, 1, true);
             codes.getCodes().add(parent);
             {
-                CodeResourceInternal child = mockCodeResourceGeographical(agencyID, resourceID, version, "tenerife", parent.getUrn(), 1, false);
+                CodeResource child = mockCodeResourceGeographical(agencyID, resourceID, version, "tenerife", parent.getUrn(), 1, false);
                 codes.getCodes().add(child);
                 {
-                    CodeResourceInternal child2 = mockCodeResourceGeographical(agencyID, resourceID, version, "la-laguna", child.getUrn(), 1, true);
+                    CodeResource child2 = mockCodeResourceGeographical(agencyID, resourceID, version, "la-laguna", child.getUrn(), 1, true);
                     codes.getCodes().add(child2);
                 }
                 {
-                    CodeResourceInternal child2 = mockCodeResourceGeographical(agencyID, resourceID, version, "santa-cruz", child.getUrn(), 2, true);
+                    CodeResource child2 = mockCodeResourceGeographical(agencyID, resourceID, version, "santa-cruz", child.getUrn(), 2, true);
                     codes.getCodes().add(child2);
                 }
             }
             {
-                CodeResourceInternal child = mockCodeResourceGeographical(agencyID, resourceID, version, "la-palma", parent.getUrn(), 2, true);
+                CodeResource child = mockCodeResourceGeographical(agencyID, resourceID, version, "la-palma", parent.getUrn(), 2, true);
                 codes.getCodes().add(child);
                 {
-                    CodeResourceInternal child2 = mockCodeResourceGeographical(agencyID, resourceID, version, "los-llanos-de-aridane", child.getUrn(), 1, true);
+                    CodeResource child2 = mockCodeResourceGeographical(agencyID, resourceID, version, "los-llanos-de-aridane", child.getUrn(), 1, true);
                     codes.getCodes().add(child2);
                 }
                 {
-                    CodeResourceInternal child2 = mockCodeResourceGeographical(agencyID, resourceID, version, "santa-cruz-la-palma", child.getUrn(), 2, true);
+                    CodeResource child2 = mockCodeResourceGeographical(agencyID, resourceID, version, "santa-cruz-la-palma", child.getUrn(), 2, true);
                     codes.getCodes().add(child2);
                 }
             }
             {
-                CodeResourceInternal child = mockCodeResourceGeographical(agencyID, resourceID, version, "la-gomera", parent.getUrn(), 3, true);
+                CodeResource child = mockCodeResourceGeographical(agencyID, resourceID, version, "la-gomera", parent.getUrn(), 3, true);
                 codes.getCodes().add(child);
             }
             {
-                CodeResourceInternal child = mockCodeResourceGeographical(agencyID, resourceID, version, "el-hierro", parent.getUrn(), 4, true);
+                CodeResource child = mockCodeResourceGeographical(agencyID, resourceID, version, "el-hierro", parent.getUrn(), 4, true);
                 codes.getCodes().add(child);
             }
         }
         {
-            CodeResourceInternal parent = mockCodeResourceGeographical(agencyID, resourceID, version, "las-palmas-gran-canaria", null, 1, false);
+            CodeResource parent = mockCodeResourceGeographical(agencyID, resourceID, version, "las-palmas-gran-canaria", null, 1, false);
             codes.getCodes().add(parent);
             {
-                CodeResourceInternal child = mockCodeResourceGeographical(agencyID, resourceID, version, "gran-canaria", parent.getUrn(), 1, true);
+                CodeResource child = mockCodeResourceGeographical(agencyID, resourceID, version, "gran-canaria", parent.getUrn(), 1, true);
                 codes.getCodes().add(child);
             }
             {
-                CodeResourceInternal child = mockCodeResourceGeographical(agencyID, resourceID, version, "fuerteventura", parent.getUrn(), 2, true);
+                CodeResource child = mockCodeResourceGeographical(agencyID, resourceID, version, "fuerteventura", parent.getUrn(), 2, true);
                 codes.getCodes().add(child);
             }
             {
-                CodeResourceInternal child = mockCodeResourceGeographical(agencyID, resourceID, version, "lanzarote", parent.getUrn(), 3, true);
+                CodeResource child = mockCodeResourceGeographical(agencyID, resourceID, version, "lanzarote", parent.getUrn(), 3, true);
                 codes.getCodes().add(child);
             }
         }
@@ -189,7 +186,7 @@ public class SrmRestMocks {
     public static Codes mockCodesByCodelist(String agencyID, String resourceID, String version, List<String> codesId) {
         Codes codes = new Codes();
         for (String codeId : codesId) {
-            CodeResourceInternal code = mockCodeResource(agencyID, resourceID, version, codeId, null, null, true);
+            CodeResource code = mockCodeResource(agencyID, resourceID, version, codeId, null, null, true);
             codes.getCodes().add(code);
         }
         return codes;
@@ -198,23 +195,23 @@ public class SrmRestMocks {
     public static Codes mockCodesByCodelistWithHierarchy(String agencyID, String resourceID, String version) {
         Codes codes = new Codes();
         {
-            CodeResourceInternal parent = mockCodeResource(agencyID, resourceID, version, resourceID + "-code01", null, 1, true);
+            CodeResource parent = mockCodeResource(agencyID, resourceID, version, resourceID + "-code01", null, 1, true);
             codes.getCodes().add(parent);
         }
         {
-            CodeResourceInternal parent = mockCodeResource(agencyID, resourceID, version, resourceID + "-code02", null, 2, false);
+            CodeResource parent = mockCodeResource(agencyID, resourceID, version, resourceID + "-code02", null, 2, false);
             codes.getCodes().add(parent);
             {
-                CodeResourceInternal child = mockCodeResource(agencyID, resourceID, version, resourceID + "-code03", parent.getUrn(), 1, true);
+                CodeResource child = mockCodeResource(agencyID, resourceID, version, resourceID + "-code03", parent.getUrn(), 1, true);
                 codes.getCodes().add(child);
             }
         }
         {
-            CodeResourceInternal parent = mockCodeResource(agencyID, resourceID, version, resourceID + "-code04", null, 3, true);
+            CodeResource parent = mockCodeResource(agencyID, resourceID, version, resourceID + "-code04", null, 3, true);
             codes.getCodes().add(parent);
         }
         {
-            CodeResourceInternal parent = mockCodeResource(agencyID, resourceID, version, resourceID + "-code05", null, 4, false);
+            CodeResource parent = mockCodeResource(agencyID, resourceID, version, resourceID + "-code05", null, 4, false);
             codes.getCodes().add(parent);
         }
         return codes;
@@ -231,7 +228,7 @@ public class SrmRestMocks {
     public static Concepts mockConceptsByConceptScheme(String agencyID, String resourceID, String version, List<String> conceptsId) {
         Concepts concepts = new Concepts();
         for (String conceptId : conceptsId) {
-            ItemResourceInternal concept = mockConceptResource(agencyID, resourceID, version, conceptId, null);
+            ItemResource concept = mockConceptResource(agencyID, resourceID, version, conceptId, null);
             concepts.getConcepts().add(concept);
         }
         return concepts;
@@ -247,15 +244,14 @@ public class SrmRestMocks {
         return concepts;
     }
 
-    public static CodeResourceInternal mockCodeResourceGeographical(String agencyID, String maintainableParentID, String maintainableVersionID, String resourceID, String parentUrn, Integer order,
-            Boolean open) {
-        CodeResourceInternal code = mockCodeResource(agencyID, maintainableParentID, maintainableVersionID, resourceID, parentUrn, order, open);
+    public static CodeResource mockCodeResourceGeographical(String agencyID, String maintainableParentID, String maintainableVersionID, String resourceID, String parentUrn, Integer order, Boolean open) {
+        CodeResource code = mockCodeResource(agencyID, maintainableParentID, maintainableVersionID, resourceID, parentUrn, order, open);
         code.setVariableElement(mockVariableElementResource("variableElement-" + resourceID));
         return code;
     }
 
-    public static CodeResourceInternal mockCodeResource(String agencyID, String maintainableParentID, String maintainableVersionID, String resourceID, String parentUrn, Integer order, Boolean open) {
-        CodeResourceInternal code = new CodeResourceInternal();
+    public static CodeResource mockCodeResource(String agencyID, String maintainableParentID, String maintainableVersionID, String resourceID, String parentUrn, Integer order, Boolean open) {
+        CodeResource code = new CodeResource();
         code.setUrn("urn:sdmx:org.sdmx.infomodel.codelist.Code=" + agencyID + ":" + maintainableParentID + "(" + maintainableVersionID + ")." + resourceID);
         code.setId(resourceID);
         code.setName(mockInternationalString(resourceID));
@@ -268,8 +264,8 @@ public class SrmRestMocks {
         return code;
     }
 
-    public static ItemResourceInternal mockConceptResource(String agencyID, String maintainableParentID, String maintainableVersionID, String resourceID, String parentUrn) {
-        ItemResourceInternal concept = new ItemResourceInternal();
+    public static ItemResource mockConceptResource(String agencyID, String maintainableParentID, String maintainableVersionID, String resourceID, String parentUrn) {
+        ItemResource concept = new ItemResource();
         concept.setUrn("urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=" + agencyID + ":" + maintainableParentID + "(" + maintainableVersionID + ")." + resourceID);
         concept.setId(resourceID);
         concept.setName(mockInternationalString(resourceID));
@@ -328,7 +324,7 @@ public class SrmRestMocks {
         return group;
     }
 
-    private static AttributeBase mockAttributeDataset(String id, ResourceInternal enumeratedCodelist, ResourceInternal enumeratedConceptScheme) {
+    private static AttributeBase mockAttributeDataset(String id, Resource enumeratedCodelist, Resource enumeratedConceptScheme) {
         Attribute attribute = new Attribute();
         mockAttributeBase(id, attribute, enumeratedCodelist, enumeratedConceptScheme);
         attribute.setAttributeRelationship(new AttributeRelationship());
@@ -336,7 +332,7 @@ public class SrmRestMocks {
         return attribute;
     }
 
-    private static AttributeBase mockAttributeDimension(String id, AttributeQualifierType type, List<String> dimensions, ResourceInternal enumeratedCodelist, ResourceInternal enumeratedConceptScheme) {
+    private static AttributeBase mockAttributeDimension(String id, AttributeQualifierType type, List<String> dimensions, Resource enumeratedCodelist, Resource enumeratedConceptScheme) {
         Attribute attribute = new Attribute();
         mockAttributeBase(id, attribute, enumeratedCodelist, enumeratedConceptScheme);
         attribute.setAttributeRelationship(new AttributeRelationship());
@@ -345,7 +341,7 @@ public class SrmRestMocks {
         return attribute;
     }
 
-    private static AttributeBase mockAttributeGroup(String id, String group, ResourceInternal enumeratedCodelist, ResourceInternal enumeratedConceptScheme) {
+    private static AttributeBase mockAttributeGroup(String id, String group, Resource enumeratedCodelist, Resource enumeratedConceptScheme) {
         Attribute attribute = new Attribute();
         mockAttributeBase(id, attribute, enumeratedCodelist, enumeratedConceptScheme);
         attribute.setAttributeRelationship(new AttributeRelationship());
@@ -353,7 +349,7 @@ public class SrmRestMocks {
         return attribute;
     }
 
-    private static AttributeBase mockAttributePrimaryMeasure(String id, ResourceInternal enumeratedCodelist, ResourceInternal enumeratedConceptScheme) {
+    private static AttributeBase mockAttributePrimaryMeasure(String id, Resource enumeratedCodelist, Resource enumeratedConceptScheme) {
         Attribute attribute = new Attribute();
         mockAttributeBase(id, attribute, enumeratedCodelist, enumeratedConceptScheme);
         attribute.setAttributeRelationship(new AttributeRelationship());
@@ -361,7 +357,7 @@ public class SrmRestMocks {
         return attribute;
     }
 
-    private static void mockAttributeBase(String id, AttributeBase attribute, ResourceInternal enumeratedCodelist, ResourceInternal enumeratedConceptScheme) {
+    private static void mockAttributeBase(String id, AttributeBase attribute, Resource enumeratedCodelist, Resource enumeratedConceptScheme) {
         attribute.setId(id);
         attribute.setConceptIdentity(mockConceptResource("agency01", "conceptScheme01", "01.000", id + "-concept01", null));
         attribute.setLocalRepresentation(new Representation());
@@ -374,8 +370,8 @@ public class SrmRestMocks {
         }
     }
 
-    private static ResourceInternal mockCodelistResource(String agencyID, String resourceID, String version) {
-        ResourceInternal codelist = new ResourceInternal();
+    private static Resource mockCodelistResource(String agencyID, String resourceID, String version) {
+        Resource codelist = new Resource();
         codelist.setUrn("urn:sdmx:org.sdmx.infomodel.codelist.Codelist=" + agencyID + ":" + resourceID + "(" + version + ")");
         codelist.setId(resourceID);
         codelist.setName(mockInternationalString(resourceID));
@@ -384,8 +380,8 @@ public class SrmRestMocks {
         return codelist;
     }
 
-    private static ResourceInternal mockConceptSchemeResource(String agencyID, String resourceID, String version) {
-        ResourceInternal conceptScheme = new ResourceInternal();
+    private static Resource mockConceptSchemeResource(String agencyID, String resourceID, String version) {
+        Resource conceptScheme = new Resource();
         conceptScheme.setUrn("urn:sdmx:org.sdmx.infomodel.conceptscheme.ConceptScheme=" + agencyID + ":" + resourceID + "(" + version + ")");
         conceptScheme.setId(resourceID);
         conceptScheme.setName(mockInternationalString(resourceID));
@@ -394,8 +390,8 @@ public class SrmRestMocks {
         return conceptScheme;
     }
 
-    private static ResourceInternal mockVariableResource(String resourceID) {
-        ResourceInternal variable = new ResourceInternal();
+    private static Resource mockVariableResource(String resourceID) {
+        Resource variable = new Resource();
         variable.setUrn("urn:siemac:org.siemac.metamac.infomodel.structuralresources.Variable=" + resourceID);
         variable.setId(resourceID);
         variable.setName(mockInternationalString(resourceID));
@@ -404,8 +400,8 @@ public class SrmRestMocks {
         return variable;
     }
 
-    private static ResourceInternal mockVariableElementResource(String resourceID) {
-        ResourceInternal variableElement = new ResourceInternal();
+    private static Resource mockVariableElementResource(String resourceID) {
+        Resource variableElement = new Resource();
         variableElement.setUrn("urn:siemac:org.siemac.metamac.infomodel.structuralresources.Variable=variable01." + resourceID);
         variableElement.setId(resourceID);
         variableElement.setName(mockInternationalString(resourceID));
