@@ -38,12 +38,8 @@
         <constructor-arg value="com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceFacade" />
     </bean>
 
-    <bean id="srmRestInternalService" class="org.mockito.Mockito" factory-method="mock">
-        <constructor-arg value="org.siemac.metamac.statistical.resources.core.invocation.service.SrmRestInternalService" />
-    </bean>
-
-    <bean id="srmRestExternalFacade" class="org.mockito.Mockito" factory-method="mock">
-        <constructor-arg value="org.siemac.metamac.statistical_resources.rest.internal.invocation.SrmRestExternalFacade" />
+    <bean id="srmRestInternalFacade" class="org.mockito.Mockito" factory-method="mock">
+        <constructor-arg value="org.siemac.metamac.statistical_resources.rest.internal.invocation.SrmRestInternalFacade" />
     </bean>
     
     <bean id="commonMetadataRestExternalFacade" class="org.mockito.Mockito" factory-method="mock">

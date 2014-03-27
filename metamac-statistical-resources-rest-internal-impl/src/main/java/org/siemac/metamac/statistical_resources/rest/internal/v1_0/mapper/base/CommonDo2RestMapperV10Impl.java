@@ -100,7 +100,7 @@ import org.siemac.metamac.statistical.resources.core.query.serviceapi.QueryServi
 import org.siemac.metamac.statistical_resources.rest.internal.StatisticalResourcesRestInternalConstants;
 import org.siemac.metamac.statistical_resources.rest.internal.exception.RestServiceExceptionType;
 import org.siemac.metamac.statistical_resources.rest.internal.invocation.CommonMetadataRestExternalFacade;
-import org.siemac.metamac.statistical_resources.rest.internal.invocation.SrmRestExternalFacade;
+import org.siemac.metamac.statistical_resources.rest.internal.invocation.SrmRestInternalFacade;
 import org.siemac.metamac.statistical_resources.rest.internal.service.utils.InternalWebApplicationNavigation;
 import org.siemac.metamac.statistical_resources.rest.internal.service.utils.LookupUtil;
 import org.siemac.metamac.statistical_resources.rest.internal.service.utils.StatisticalResourcesRestInternalUtils;
@@ -141,7 +141,7 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
     private DatasetRepositoriesServiceFacade  datasetRepositoriesServiceFacade;
 
     @Autowired
-    private SrmRestExternalFacade             srmRestExternalFacade;
+    private SrmRestInternalFacade             srmRestExternalFacade;
 
     @Autowired
     private CommonMetadataRestExternalFacade  commonMetadataRestExternalFacade;
@@ -156,8 +156,8 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
     private QueriesDo2RestMapperV10           queriesDo2RestMapper;
 
     private String                            statisticalResourcesApiInternalEndpointV10;
-    private String                            srmApiExternalEndpoint;
-    private String                            statisticalOperationsApiExternalEndpoint;
+    private String                            srmApiInternalEndpoint;
+    private String                            statisticalOperationsApiInternalEndpoint;
     private String                            statisticalResourcesInternalWebApplication;
     private String                            srmInternalWebApplication;
     private String                            commonMetadataInternalWebApplication;
@@ -181,12 +181,12 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
         statisticalResourcesApiInternalEndpointV10 = RestUtils.createLink(statisticalResourcesApiInternalEndpoint, StatisticalResourcesRestInternalConstants.API_VERSION_1_0);
 
         // SRM external Api (do not add api version! it is already stored in database (~latest))
-        srmApiExternalEndpoint = configurationService.retrieveSrmExternalApiUrlBase();
-        srmApiExternalEndpoint = StringUtils.removeEnd(srmApiExternalEndpoint, "/");
+        srmApiInternalEndpoint = configurationService.retrieveSrmInternalApiUrlBase();
+        srmApiInternalEndpoint = StringUtils.removeEnd(srmApiInternalEndpoint, "/");
 
         // Statistical operations external Api (do not add api version! it is already stored in database (~latest))
-        statisticalOperationsApiExternalEndpoint = configurationService.retrieveStatisticalOperationsExternalApiUrlBase();
-        statisticalOperationsApiExternalEndpoint = StringUtils.removeEnd(statisticalOperationsApiExternalEndpoint, "/");
+        statisticalOperationsApiInternalEndpoint = configurationService.retrieveStatisticalOperationsInternalApiUrlBase();
+        statisticalOperationsApiInternalEndpoint = StringUtils.removeEnd(statisticalOperationsApiInternalEndpoint, "/");
 
         // MISC
         defaultLanguage = configurationService.retrieveLanguageDefault();
@@ -397,7 +397,7 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
             return null;
         }
         ResourceInternal target = new ResourceInternal();
-        toResourceExternalItem(source, statisticalOperationsApiExternalEndpoint, statisticalOperationsWebApplication, target, selectedLanguages);
+        toResourceExternalItem(source, statisticalOperationsApiInternalEndpoint, statisticalOperationsWebApplication, target, selectedLanguages);
         return target;
     }
 
@@ -430,7 +430,7 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
         if (source == null) {
             return;
         }
-        toResourceExternalItem(source, srmApiExternalEndpoint, srmInternalWebApplication, target, selectedLanguages);
+        toResourceExternalItem(source, srmApiInternalEndpoint, srmInternalWebApplication, target, selectedLanguages);
     }
 
     @Override

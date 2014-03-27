@@ -15,10 +15,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
-@Component("srmRestExternalFacade")
-public class SrmRestExternalFacadeImpl implements SrmRestExternalFacade {
+@Component("srmRestInternalFacade")
+public class SrmRestInternalFacadeImpl implements SrmRestInternalFacade {
 
-    private final Logger       logger = LoggerFactory.getLogger(SrmRestExternalFacadeImpl.class);
+    private final Logger       logger = LoggerFactory.getLogger(SrmRestInternalFacadeImpl.class);
 
     @Autowired
     @Qualifier("metamacApisLocatorRest")

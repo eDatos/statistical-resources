@@ -79,7 +79,6 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.CodeDimensio
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionRepository;
 import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.DatasetService;
-import org.siemac.metamac.statistical.resources.core.invocation.service.SrmRestInternalService;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersionProperties;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersionRepository;
@@ -92,7 +91,7 @@ import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.Stati
 import org.siemac.metamac.statistical.resources.core.utils.shared.StatisticalResourcesUrnUtils;
 import org.siemac.metamac.statistical_resources.rest.internal.StatisticalResourcesRestInternalConstants;
 import org.siemac.metamac.statistical_resources.rest.internal.invocation.CommonMetadataRestExternalFacade;
-import org.siemac.metamac.statistical_resources.rest.internal.invocation.SrmRestExternalFacade;
+import org.siemac.metamac.statistical_resources.rest.internal.invocation.SrmRestInternalFacade;
 import org.siemac.metamac.statistical_resources.rest.internal.v1_0.service.StatisticalResourcesV1_0;
 import org.springframework.context.ApplicationContext;
 
@@ -118,9 +117,7 @@ public abstract class StatisticalResourcesRestInternalFacadeV10BaseTest extends 
     private QueryVersionRepository            queryVersionRepository;
     private PublicationVersionRepository      publicationVersionRepository;
 
-    private SrmRestInternalService            srmRestInternalService;
-
-    private SrmRestExternalFacade             srmRestExternalFacade;
+    private SrmRestInternalFacade             srmRestInternalFacade;
     private CommonMetadataRestExternalFacade  commonMetadataRestExternalFacade;
     private DatasetRepositoriesServiceFacade  datasetRepositoriesServiceFacade;
 
@@ -308,6 +305,7 @@ public abstract class StatisticalResourcesRestInternalFacadeV10BaseTest extends 
             };
         });
     }
+
     private void mockDatasetVersionRepository() throws MetamacException {
         if (StatisticalResourcesRestInternalConstants.IS_INTERNAL_API) {
             when(datasetVersionRepository.retrieveLastVersion(any(String.class))).thenAnswer(new Answer<DatasetVersion>() {
@@ -783,7 +781,7 @@ public abstract class StatisticalResourcesRestInternalFacadeV10BaseTest extends 
     }
 
     private void mockRetrieveDataStructureByUrn() throws MetamacException {
-        when(srmRestExternalFacade.retrieveDataStructureByUrn(any(String.class))).thenAnswer(new Answer<DataStructure>() {
+        when(srmRestInternalFacade.retrieveDataStructureByUrn(any(String.class))).thenAnswer(new Answer<DataStructure>() {
 
             @Override
             public DataStructure answer(InvocationOnMock invocation) throws Throwable {
@@ -795,7 +793,7 @@ public abstract class StatisticalResourcesRestInternalFacadeV10BaseTest extends 
     }
 
     private void mockRetrieveCodelistByUrn() throws MetamacException {
-        when(srmRestExternalFacade.retrieveCodelistByUrn(any(String.class))).thenAnswer(new Answer<Codelist>() {
+        when(srmRestInternalFacade.retrieveCodelistByUrn(any(String.class))).thenAnswer(new Answer<Codelist>() {
 
             @Override
             public Codelist answer(InvocationOnMock invocation) throws Throwable {
@@ -807,7 +805,7 @@ public abstract class StatisticalResourcesRestInternalFacadeV10BaseTest extends 
     }
 
     private void mockRetrieveCodesByCodelistUrn() throws MetamacException {
-        when(srmRestExternalFacade.retrieveCodesByCodelistUrn(any(String.class), any(String.class), any(String.class))).thenAnswer(new Answer<Codes>() {
+        when(srmRestInternalFacade.retrieveCodesByCodelistUrn(any(String.class), any(String.class), any(String.class))).thenAnswer(new Answer<Codes>() {
 
             @Override
             public Codes answer(InvocationOnMock invocation) throws Throwable {
@@ -819,7 +817,7 @@ public abstract class StatisticalResourcesRestInternalFacadeV10BaseTest extends 
     }
 
     private void mockRetrieveConceptsByConceptSchemeUrn() throws MetamacException {
-        when(srmRestExternalFacade.retrieveConceptsByConceptSchemeByUrn(any(String.class))).thenAnswer(new Answer<Concepts>() {
+        when(srmRestInternalFacade.retrieveConceptsByConceptSchemeByUrn(any(String.class))).thenAnswer(new Answer<Concepts>() {
 
             @Override
             public Concepts answer(InvocationOnMock invocation) throws Throwable {
@@ -831,16 +829,7 @@ public abstract class StatisticalResourcesRestInternalFacadeV10BaseTest extends 
     }
 
     private void mockRetrieveConceptByUrn() throws MetamacException {
-        when(srmRestExternalFacade.retrieveConceptByUrn(any(String.class))).thenAnswer(new Answer<Concept>() {
-
-            @Override
-            public Concept answer(InvocationOnMock invocation) throws Throwable {
-                String urn = (String) invocation.getArguments()[0];
-                String[] urnSplited = UrnUtils.splitUrnItem(urn);
-                return SrmRestMocks.mockConcept(urnSplited[0], urnSplited[1], urnSplited[2], urnSplited[3]);
-            };
-        });
-        when(srmRestInternalService.retrieveConceptByUrn(any(String.class))).thenAnswer(new Answer<Concept>() {
+        when(srmRestInternalFacade.retrieveConceptByUrn(any(String.class))).thenAnswer(new Answer<Concept>() {
 
             @Override
             public Concept answer(InvocationOnMock invocation) throws Throwable {
@@ -949,10 +938,8 @@ public abstract class StatisticalResourcesRestInternalFacadeV10BaseTest extends 
         publicationVersionRepository = applicationContext.getBean(PublicationVersionRepository.class);
         reset(publicationVersionRepository);
 
-        srmRestExternalFacade = applicationContext.getBean(SrmRestExternalFacade.class);
-        reset(srmRestExternalFacade);
-        srmRestInternalService = applicationContext.getBean(SrmRestInternalService.class);
-        reset(srmRestInternalService);
+        srmRestInternalFacade = applicationContext.getBean(SrmRestInternalFacade.class);
+        reset(srmRestInternalFacade);
         datasetRepositoriesServiceFacade = applicationContext.getBean(DatasetRepositoriesServiceFacade.class);
         reset(datasetRepositoriesServiceFacade);
 

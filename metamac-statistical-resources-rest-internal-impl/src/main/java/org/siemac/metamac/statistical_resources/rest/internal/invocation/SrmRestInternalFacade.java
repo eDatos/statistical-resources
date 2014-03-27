@@ -6,7 +6,7 @@ import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Concept
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Concepts;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructure;
 
-public interface SrmRestExternalFacade {
+public interface SrmRestInternalFacade {
 
     public DataStructure retrieveDataStructureByUrn(String urn);
 
