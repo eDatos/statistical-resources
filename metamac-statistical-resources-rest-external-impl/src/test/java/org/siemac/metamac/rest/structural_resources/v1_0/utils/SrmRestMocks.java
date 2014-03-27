@@ -105,6 +105,9 @@ public class SrmRestMocks {
         codelist.setAgencyID(agencyID);
         codelist.setId(resourceID);
         codelist.setVersion(version);
+        if (resourceID.contains("GEO_DIM")) {
+            codelist.setVariable(mockVariableResource("variable-" + resourceID));
+        }
         return codelist;
     }
 

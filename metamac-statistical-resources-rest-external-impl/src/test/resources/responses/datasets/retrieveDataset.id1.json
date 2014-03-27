@@ -20,7 +20,7 @@
   "description": {
     "text": [
       {
-        "value": "description-UGTz9XnkOU_000001 en Espanol",
+        "value": "description-Bt64EXpmRp_000001 en Espanol",
         "lang": "es"
       }
     ]
@@ -373,23 +373,6 @@
     "geographicGranularities": {
       "resource": [
         {
-          "id": "countries",
-          "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=MaintainerMock:CodelistMock(1.0).countries",
-          "selfLink": {
-            "kind": "structuralResources#code",
-            "href": "http://data.istac.es/apis/srm/latest/countries"
-          },
-          "name": {
-            "text": [
-              {
-                "value": "title-countries en Espanol",
-                "lang": "es"
-              }
-            ]
-          },
-          "kind": "structuralResources#code"
-        },
-        {
           "id": "municipalities",
           "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=MaintainerMock:CodelistMock(1.0).municipalities",
           "selfLink": {
@@ -400,6 +383,23 @@
             "text": [
               {
                 "value": "title-municipalities en Espanol",
+                "lang": "es"
+              }
+            ]
+          },
+          "kind": "structuralResources#code"
+        },
+        {
+          "id": "countries",
+          "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=MaintainerMock:CodelistMock(1.0).countries",
+          "selfLink": {
+            "kind": "structuralResources#code",
+            "href": "http://data.istac.es/apis/srm/latest/countries"
+          },
+          "name": {
+            "text": [
+              {
+                "value": "title-countries en Espanol",
                 "lang": "es"
               }
             ]
@@ -593,6 +593,22 @@
             ]
           },
           "type": "GEOGRAPHIC_DIMENSION",
+          "variable": {
+            "id": "variable-GEO_DIM-codelist01",
+            "urn": "urn:siemac:org.siemac.metamac.infomodel.structuralresources.Variable=variable-GEO_DIM-codelist01",
+            "selfLink": {
+              "href": "http://apis.metamac.org/metamac-srm-web/apis/structural-resources-internal/v1.0/variables/variable-GEO_DIM-codelist01"
+            },
+            "name": {
+              "text": [
+                {
+                  "value": "variable-GEO_DIM-codelist01 en Español",
+                  "lang": "es"
+                }
+              ]
+            },
+            "kind": "structuralResources#variable"
+          },
           "dimensionValues": {
             "value": [
               {
@@ -1686,16 +1702,16 @@
       "total": 2
     },
     "statisticalOperation": {
-      "id": "UGTz9XnkOU",
-      "urn": "urn:siemac:org.siemac.metamac.infomodel.statisticaloperations.Operation=UGTz9XnkOU",
+      "id": "Bt64EXpmRp",
+      "urn": "urn:siemac:org.siemac.metamac.infomodel.statisticaloperations.Operation=Bt64EXpmRp",
       "selfLink": {
         "kind": "statisticalOperations#operation",
-        "href": "http://data.istac.es/apis/operations/latest/UGTz9XnkOU"
+        "href": "http://data.istac.es/apis/operations/latest/Bt64EXpmRp"
       },
       "name": {
         "text": [
           {
-            "value": "title-UGTz9XnkOU en Espanol",
+            "value": "title-Bt64EXpmRp en Espanol",
             "lang": "es"
           }
         ]
@@ -1744,7 +1760,7 @@
     "subtitle": {
       "text": [
         {
-          "value": "subtitle-UGTz9XnkOU_000001 en Espanol",
+          "value": "subtitle-Bt64EXpmRp_000001 en Espanol",
           "lang": "es"
         }
       ]
@@ -1752,7 +1768,7 @@
     "titleAlternative": {
       "text": [
         {
-          "value": "titleAlternative-UGTz9XnkOU_000001 en Espanol",
+          "value": "titleAlternative-Bt64EXpmRp_000001 en Espanol",
           "lang": "es"
         }
       ]
@@ -1760,7 +1776,7 @@
     "keywords": {
       "text": [
         {
-          "value": "keyword1 keyword2 keyword3-UGTz9XnkOU_000001 en Espanol",
+          "value": "keyword1 keyword2 keyword3-Bt64EXpmRp_000001 en Espanol",
           "lang": "es"
         }
       ]
@@ -1827,7 +1843,7 @@
     "conformsTo": {
       "text": [
         {
-          "value": "conformsTo-UGTz9XnkOU_000001 en Espanol",
+          "value": "conformsTo-Bt64EXpmRp_000001 en Espanol",
           "lang": "es"
         }
       ]
@@ -2047,23 +2063,23 @@
     "accessRights": {
       "text": [
         {
-          "value": "accessRights-UGTz9XnkOU_000001 en Espanol",
+          "value": "accessRights-Bt64EXpmRp_000001 en Espanol",
           "lang": "es"
         }
       ]
     },
     "maintainer": {
-      "id": "8iATnQjt28",
+      "id": "4OsXU0QU2D",
       "nestedId": "agency1",
-      "urn": "urn:sdmx:org.sdmx.infomodel.base.Agency=MaintainerMock:AgencySchemeMock(1.0).8iATnQjt28",
+      "urn": "urn:sdmx:org.sdmx.infomodel.base.Agency=MaintainerMock:AgencySchemeMock(1.0).4OsXU0QU2D",
       "selfLink": {
         "kind": "structuralResources#agency",
-        "href": "http://data.istac.es/apis/srm/latest/8iATnQjt28"
+        "href": "http://data.istac.es/apis/srm/latest/4OsXU0QU2D"
       },
       "name": {
         "text": [
           {
-            "value": "title-8iATnQjt28 en Espanol",
+            "value": "title-4OsXU0QU2D en Espanol",
             "lang": "es"
           }
         ]
@@ -2091,7 +2107,7 @@
     "abstract": {
       "text": [
         {
-          "value": "abstract-UGTz9XnkOU_000001 en Espanol",
+          "value": "abstract-Bt64EXpmRp_000001 en Espanol",
           "lang": "es"
         }
       ]
