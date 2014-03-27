@@ -27,16 +27,6 @@
             <artifactId>metamac-statistical-resources-core</artifactId>
             <classifier>client</classifier>
             <version>${project.version}</version>
-            <exclusions>
-            	<exclusion>
-            		<artifactId>metamac-statistical-operations-rest-internal-api</artifactId>
-            		<groupId>org.siemac.metamac.metamac-statistical-operations</groupId>
-            	</exclusion>
-            	<exclusion>
-            		<artifactId>metamac-srm-rest-internal-api</artifactId>
-            		<groupId>org.siemac.metamac.metamac-srm</groupId>
-            	</exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.siemac.metamac</groupId>
@@ -95,16 +85,6 @@
             <type>test-jar</type>
             <version>${project.version}</version>
             <scope>test</scope>
-            <exclusions>
-            	<exclusion>
-            		<artifactId>metamac-statistical-operations-rest-internal-api</artifactId>
-            		<groupId>org.siemac.metamac.metamac-statistical-operations</groupId>
-            	</exclusion>
-            	<exclusion>
-            		<artifactId>metamac-srm-rest-internal-api</artifactId>
-            		<groupId>org.siemac.metamac.metamac-srm</groupId>
-            	</exclusion>
-            </exclusions>
         </dependency>        
 		<dependency>
 			<groupId>org.siemac.metamac</groupId>
