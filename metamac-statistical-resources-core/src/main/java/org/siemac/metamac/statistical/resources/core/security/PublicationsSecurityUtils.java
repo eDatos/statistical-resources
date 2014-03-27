@@ -131,9 +131,9 @@ public class PublicationsSecurityUtils extends SecurityUtils {
     // CHAPTERS
     // ------------------------------------------------------------------------
 
-    public static void canCreateChapter(ServiceContext ctx, Chapter chapter) throws MetamacException {
-        String operationCode = chapter.getElementLevel().getPublicationVersion().getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode();
-        ProcStatusEnum procStatus = chapter.getElementLevel().getPublicationVersion().getSiemacMetadataStatisticalResource().getEffectiveProcStatus();
+    public static void canCreateChapter(ServiceContext ctx, PublicationVersion publicationVersion) throws MetamacException {
+        String operationCode = publicationVersion.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode();
+        ProcStatusEnum procStatus = publicationVersion.getSiemacMetadataStatisticalResource().getEffectiveProcStatus();
 
         if (!SharedPublicationsSecurityUtils.canCreateChapter(getMetamacPrincipal(ctx), operationCode, procStatus)) {
             throwExceptionIfOperationNotAllowed(ctx);
@@ -180,9 +180,9 @@ public class PublicationsSecurityUtils extends SecurityUtils {
     // CUBES
     // ------------------------------------------------------------------------
 
-    public static void canCreateCube(ServiceContext ctx, Cube cube) throws MetamacException {
-        String operationCode = cube.getElementLevel().getPublicationVersion().getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode();
-        ProcStatusEnum procStatus = cube.getElementLevel().getPublicationVersion().getSiemacMetadataStatisticalResource().getEffectiveProcStatus();
+    public static void canCreateCube(ServiceContext ctx, PublicationVersion publicationVersion) throws MetamacException {
+        String operationCode = publicationVersion.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode();
+        ProcStatusEnum procStatus = publicationVersion.getSiemacMetadataStatisticalResource().getEffectiveProcStatus();
 
         if (!SharedPublicationsSecurityUtils.canCreateCube(getMetamacPrincipal(ctx), operationCode, procStatus)) {
             throwExceptionIfOperationNotAllowed(ctx);

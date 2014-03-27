@@ -1763,8 +1763,10 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         // Transform
         Chapter chapter = publicationDto2DoMapper.chapterDtoToDo(chapterDto);
 
+        PublicationVersion publicationVersion = getPublicationService().retrievePublicationVersionByUrn(ctx, publicationUrn);
+
         // Security
-        PublicationsSecurityUtils.canCreateChapter(ctx, chapter);
+        PublicationsSecurityUtils.canCreateChapter(ctx, publicationVersion);
 
         // Create
         chapter = getPublicationService().createChapter(ctx, publicationUrn, chapter);
@@ -1792,11 +1794,14 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
 
     @Override
     public ChapterDto updateChapterLocation(ServiceContext ctx, String chapterUrn, String parentTargetUrn, Long orderInLevel) throws MetamacException {
-        // Update
-        Chapter chapter = getPublicationService().updateChapterLocation(ctx, chapterUrn, parentTargetUrn, orderInLevel);
+        // Retrieve to check security
+        Chapter chapter = getPublicationService().retrieveChapter(ctx, chapterUrn);
 
         // Security
         PublicationsSecurityUtils.canUpdateChapterLocation(ctx, chapter);
+
+        // Update
+        chapter = getPublicationService().updateChapterLocation(ctx, chapterUrn, parentTargetUrn, orderInLevel);
 
         // Transform to dto
         ChapterDto chapterDto = publicationDo2DtoMapper.chapterDoToDto(chapter);
@@ -1837,8 +1842,10 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         // Transform
         Cube cube = publicationDto2DoMapper.cubeDtoToDo(cubeDto);
 
+        PublicationVersion publicationVersion = getPublicationService().retrievePublicationVersionByUrn(ctx, publicationUrn);
+
         // Security
-        PublicationsSecurityUtils.canCreateCube(ctx, cube);
+        PublicationsSecurityUtils.canCreateCube(ctx, publicationVersion);
 
         // Create
         cube = getPublicationService().createCube(ctx, publicationUrn, cube);
@@ -1867,11 +1874,14 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
 
     @Override
     public CubeDto updateCubeLocation(ServiceContext ctx, String cubeUrn, String parentTargetUrn, Long orderInLevel) throws MetamacException {
-        // Update
-        Cube cube = getPublicationService().updateCubeLocation(ctx, cubeUrn, parentTargetUrn, orderInLevel);
+        // Retrieve cube for security checkings
+        Cube cube = getPublicationService().retrieveCube(ctx, cubeUrn);
 
         // Security
         PublicationsSecurityUtils.canUpdateCubeLocation(ctx, cube);
+
+        // Update
+        cube = getPublicationService().updateCubeLocation(ctx, cubeUrn, parentTargetUrn, orderInLevel);
 
         // Transform
         CubeDto cubeDto = publicationDo2DtoMapper.cubeDoToDto(cube);
