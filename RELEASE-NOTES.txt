@@ -13,6 +13,17 @@ Por favor, consulta nuestro gestor de incidencia para obtener más información
 de las incidencias con el id [METAMAC-xxx].
 http://jira.arte-consultores.com/browse/METAMAC
 
+
+------------------------------------------------------------------------------
+Release 1.0.2
+------------------------------------------------------------------------------
+
+Notas de publicación - Metamac - Versión statistical-resources - 1.0.2
+
+** Error
+    * [METAMAC-2230] - [WEB INTERNA] Cuando se obtienen los temas para crear una categorización se produce un error
+    * [METAMAC-2242] - [API] Se produce un error al obtener en la API datos que no tienen atributos
+
 ------------------------------------------------------------------------------
 Release 1.0.1
 ------------------------------------------------------------------------------
