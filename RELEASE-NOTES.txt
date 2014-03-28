@@ -14,6 +14,86 @@ de las incidencias con el id [METAMAC-xxx].
 http://jira.arte-consultores.com/browse/METAMAC
 
 ------------------------------------------------------------------------------
+Release 1.0.1
+------------------------------------------------------------------------------
+
+Notas de publicación - Metamac - Versión statistical-resources - 1.0.1
+
+** Error
+    * [METAMAC-1918] - Comprobar que cada acción de los servicios sólo se realiza con los estados adecuados. 
+    * [METAMAC-1970] - En las publicaciones no se cumplimenta el formatExtentResources
+    * [METAMAC-2039] - [ESTADISTICAS.ARTE] No se visualiza la página 1 del nuevo portal
+    * [METAMAC-2044] - Corregir ubicación de los bean de configurationService
+    * [METAMAC-2078] - En las paginas de detalle de recursos, la etiqueta del título debe actualizarse cuando se actualize el título del recurso en edición
+    * [METAMAC-2079] - Correcciones Post-release
+    * [METAMAC-2088] - Revisar scripts de insercion de base de datos con las credenciales correctas
+    * [METAMAC-2116] - Revisar los environment.xml porque están puestas las properties mal
+    * [METAMAC-2117] - Los manuales tienen los ejemplos de environment.xml incorrecto
+    * [METAMAC-2120] - Corregir error en el valor de las propiedades del datasource en el fichero environment.xml
+    * [METAMAC-2136] - [CORE] Generar un JAR de test que contenga los fuentes de las clases de tests para poder depurar
+    * [METAMAC-2155] - Las keywords parece que no están respetando las tildes 
+    * [METAMAC-2157] - [CORE] Las categorizaciones están cumplimentando de manera incorrecta el validTo
+    * [METAMAC-2159] - [CORE] El metadato lastestTemporalCodeInCreation se está poniendo como requerido cuando se trata de una consulta de ULTIMO_DATO y debería serlo para la AUTOINCREMENTAL
+    * [METAMAC-2163] - [CORE] El versionado de los datasets no está funcionando correctamente
+    * [METAMAC-2164] - Al versionar un dataset version, los datasources pierden la urn
+    * [METAMAC-2166] - [WEB] El metadato versionRationale no se está marcando como requerido para pasar de fase
+    * [METAMAC-2167] - [CORE] Cuando el tipo de próxima actualización cambia de una programada a una que no lo es la fecha de próxima versión debe ser nula 
+    * [METAMAC-2184] - [WEB] Se está permitiendo editar un recurso estando Publicado
+    * [METAMAC-2187] - [CORE] Al publicar un recurso debe cumplimentarse el copyrightDate
+    * [METAMAC-2199] - [WEB INTERNA] Los componentes de búsqueda que asocian a externalItem no filtran por última versión del esquema
+    * [METAMAC-2201] - El code y la urn debe ser not nullable, asegurarse además de generar urns para los que no tengan ahora
+    * [METAMAC-2202] - El type de los stat_resources se están guardando a null, sólo estan rellenos para DATASET y COLLECTION
+    * [METAMAC-2204] - [WEB] Cuando se trata de eliminar una fuente de datos y da un error del CORE la WEB da un mensaje de éxito
+    * [METAMAC-2205] - [WEB INTERNA] No se puede enlazar una query a una versión vieja de un dataset porque no se listan sino últimas versiones
+    * [METAMAC-2207] - [CORE] Al editar el dataset de una query por otro anterior publicado da un error diciendo que el datasetVersion no está publicado
+    * [METAMAC-2216] - Arreglar test de importación ahora se importa pasando code de la operación en lugar de la urn
+
+** Mejora
+    * [METAMAC-2073] - Revisar los CSS necesarios en las aplicaciones y eliminar lo obsoleto
+    * [METAMAC-2104] - Mover el RestCriteriaUtils del statistical-resources al rest-api para que otros proyectos puedan usarlo
+    * [METAMAC-2105] - Mover CollectionUtils al core-common partiendo de algunas del statistical-resources
+    * [METAMAC-2130] - [CORE] Añadir al generador de parámetros la posibilidad de que puedan tener un prefijo
+    * [METAMAC-2141] - Refactor de los WaitingAsyncCallback para homogeneizar el manejo de acciones asincronas con menos código
+
+** Nueva función
+    * [METAMAC-1905] - Las queries deben poder editarse aún estando publicadas
+
+** Soporte
+    * [METAMAC-2160] - [API] Añadir Suite de Test al proyecto metamac-sdmx-data-rest-external-impl
+    * [METAMAC-2192] - [CORE] Existen datasets que no tienen el atributo DATASOURCE_ID definido
+
+** Tarea
+    * [METAMAC-1426] - Visualización de las migas de pan
+    * [METAMAC-1719] - [Excepciones]: traducción de excepciones en el CORE. Intersector de traduccion de mensajes.
+    * [METAMAC-1788] - Añadir el nestedId a ExternalItem, recursos de la API...
+    * [METAMAC-1845] - Seguridad en el acceso a la aplicación
+    * [METAMAC-1956] - Revisar todas las propiedades de parámetros. metadatos y mensajes pasar a underscore las que aún queden en camel case y traducirlas para la web
+    * [METAMAC-2020] - Revisar los TODO y FIXME antes de dar por finalizado cada módulo
+    * [METAMAC-2021] - Al publicar una query no puede estar en PENDING_REVIEW
+    * [METAMAC-2072] - Comprobar que los datasource tienen un código único e independiente
+    * [METAMAC-2082] - Cambio de los nombres de los war
+    * [METAMAC-2092] - Moviendo de paquete del WaitingAsyncCallback y añadiendo uno nuevo que gestiona errores
+    * [METAMAC-2093] - Creación de un componente comun de requestUtils para calculo de urls
+    * [METAMAC-2110] - Mejorar el componente de external item de vista y busqueda
+    * [METAMAC-2113] - Añadir notificaciones a las tareas que se realizan en background
+    * [METAMAC-2121] - Refactor de componentes de Externalitem del statistical-resources al web common para uso general
+    * [METAMAC-2131] - [CORE] Añadir método para comprobar que no faltan traducciones de parámetros ni mensajes de error
+    * [METAMAC-2133] - Cambiar driver a oracle 11 para pasar los tests en jenkins
+    * [METAMAC-2144] - Revisar los apply y los filler de las diferentes transiciones del ciclo de vida para completar cosas pendientes
+    * [METAMAC-2145] - [CORE] Al actualizar una publicación, comprobar si el código ha cambiado y si es así, actualizar la URN
+    * [METAMAC-2156] - DATE_NEXT_UPDATE es obligatorio sólo cuando DATE_NEXT_VERSION lo es
+    * [METAMAC-2179] - [Servidor] Añadir a las respuestas JSON de las API un filtro para devolver en JSONP
+    * [METAMAC-2193] - [CORE] Cuando la aplicación se reinicia, forzar el recuperado de las tareas fallidas
+    * [METAMAC-2198] - [CORE] Desde la aplicación interna del GPE los recursos deben previsualizarse en el portal interno
+    * [METAMAC-2203] - [LOGS] Desactivar que en el log se impriman las respuestas de la API
+
+** Subtarea
+    * [METAMAC-1850] - [API] Tratamiento de versión ~latest
+    * [METAMAC-1851] - [API] Devolver sólo los recursos publicados y con validFrom alcanzado
+    * [METAMAC-1909] - [API] La api externa debe consumir api externa de SRM
+
+
+------------------------------------------------------------------------------
 Release 1.0.0
 ------------------------------------------------------------------------------
 
