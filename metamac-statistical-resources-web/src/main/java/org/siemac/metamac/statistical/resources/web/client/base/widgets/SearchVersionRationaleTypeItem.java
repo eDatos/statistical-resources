@@ -27,7 +27,7 @@ import com.smartgwt.client.widgets.grid.ListGridRecord;
 
 public class SearchVersionRationaleTypeItem extends ExternalItemListItem {
 
-    protected static final int                 FORM_ITEM_CUSTOM_WIDTH   = 500;
+    protected static final int                 FORM_ITEM_CUSTOM_WIDTH   = 1000;
 
     protected SearchVersionRationaleTypeWindow searchVersionRationaleTypeWindow;
     protected List<VersionRationaleTypeDto>    versionRationaleTypeDtos = CommonUtils.getVersionRationaleTypeValues();

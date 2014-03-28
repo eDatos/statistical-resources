@@ -191,7 +191,7 @@ public abstract class CategorisationsPanel extends VLayout {
 
                 });
 
-        retrieveCategoriesForCategorisations(0, StatisticalResourceWebConstants.FORM_LIST_MAX_RESULTS, new SrmItemRestCriteria());
+        retrieveCategoriesForCategorisations(0, StatisticalResourceWebConstants.FORM_LIST_MAX_RESULTS, categoriesSelectionWindow.getFilter().getSearchCriteria());
 
         categoriesSelectionWindow.setSaveAction(new com.smartgwt.client.widgets.form.fields.events.ClickHandler() {
 
