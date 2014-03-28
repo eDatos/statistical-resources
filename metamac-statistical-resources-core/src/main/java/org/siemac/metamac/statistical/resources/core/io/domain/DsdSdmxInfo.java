@@ -48,6 +48,10 @@ public class DsdSdmxInfo {
     private LinkedHashMap<String, ComponentInfo> getDimensions(DataStructureType dsd) throws MetamacException {
         LinkedHashMap<String, ComponentInfo> dimensionMap = new LinkedHashMap<String, ComponentInfo>();
 
+        if (dsd.getDataStructureComponents().getDimensionList() == null) {
+            return dimensionMap;
+        }
+
         List<Object> dimensions = dsd.getDataStructureComponents().getDimensionList().getDimensionsAndMeasureDimensionsAndTimeDimensions();
         for (Object sourceDimension : dimensions) {
             if (sourceDimension instanceof DimensionType) {
@@ -79,6 +83,11 @@ public class DsdSdmxInfo {
 
     private LinkedHashMap<String, AttributeInfo> getAttributes(DataStructureType dsd, LinkedHashMap<String, GroupInfo> groups, LinkedHashMap<String, ComponentInfo> dimensions) throws MetamacException {
         LinkedHashMap<String, AttributeInfo> attributesMap = new LinkedHashMap<String, AttributeInfo>();
+
+        if (dsd.getDataStructureComponents().getAttributeList() == null) {
+            return attributesMap;
+        }
+
         List<Object> attributeList = dsd.getDataStructureComponents().getAttributeList().getAttributesAndReportingYearStartDaies();
 
         for (Object sourceAttribute : attributeList) {
