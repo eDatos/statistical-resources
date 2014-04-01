@@ -129,17 +129,4 @@ public class LifecycleFiller {
         }
         previousVersion.getLifeCycleStatisticalResource().setLastVersion(false);
     }
-
-    private RelatedResource cloneRelatedResource(RelatedResource relatedResource) {
-        RelatedResource cloned = new RelatedResource();
-        cloned.setDataset(relatedResource.getDataset());
-        cloned.setDatasetVersion(relatedResource.getDatasetVersion());
-        cloned.setPublication(relatedResource.getPublication());
-        cloned.setPublicationVersion(relatedResource.getPublicationVersion());
-        cloned.setQuery(relatedResource.getQuery());
-        cloned.setQueryVersion(relatedResource.getQueryVersion());
-        cloned.setType(relatedResource.getType());
-        cloned.setVersion(0L);
-        return cloned;
-    }
 }

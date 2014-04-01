@@ -515,22 +515,6 @@ public class TaskServiceImpl extends TaskServiceImplBase {
         return pagedResult;
     }
 
-    private void executeDormantJobsInThisDataset(String datasetId) {
-        // Scheduler an importation job
-        Scheduler sched = SchedulerRepository.getInstance().lookup(SCHEDULER_INSTANCE_NAME); // get a reference to a scheduler
-
-        try {
-            JobKey importationJobKey = createJobKeyForImportationResource(datasetId);
-            if (sched.checkExists(importationJobKey)) {
-                TriggerKey triggerImportationKey = createTriggerKeyForImportationDataset(datasetId);
-                SimpleTrigger trigger = newTrigger().withIdentity(triggerImportationKey).startAt(futureDate(10, IntervalUnit.SECOND)).withSchedule(simpleSchedule()).build();
-                sched.scheduleJob(sched.getJobDetail(importationJobKey), trigger);
-            }
-        } catch (SchedulerException e) {
-            logger.error("Error while perform a scheduling of dormant jobs", e);
-        }
-    }
-
     /****************************************************************
      * PRIVATES
      ****************************************************************/
