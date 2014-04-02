@@ -24,6 +24,6 @@ public class DatasetPublicationDescriptorsForm extends SiemacMetadataPublication
     public void setDatasetVersionDto(DatasetVersionDto datasetDto) {
         setSiemacMetadataStatisticalResourceDto(datasetDto);
         setValue(DatasetDS.STATISTIC_OFFICIALITY, CommonUtils.getStatisticOfficialityName(datasetDto.getStatisticOfficiality()));
-        setValue(DatasetDS.BIBLIOGRAPHIC_CITATION, RecordUtils.getInternationalStringRecord(datasetDto.getBibliographicCitation()));
+        setValue(DatasetDS.BIBLIOGRAPHIC_CITATION, datasetDto.getBibliographicCitation());
     }
 }

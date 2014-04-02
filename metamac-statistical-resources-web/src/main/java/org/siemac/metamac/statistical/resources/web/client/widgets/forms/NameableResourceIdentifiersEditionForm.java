@@ -20,12 +20,12 @@ public class NameableResourceIdentifiersEditionForm extends IdentifiableResource
 
     public void setNameableStatisticalResourceDto(NameableStatisticalResourceDto nameableStatisticalResourceDto) {
         setIdentifiableStatisticalResourceDto(nameableStatisticalResourceDto);
-        setValue(NameableResourceDS.TITLE, RecordUtils.getInternationalStringRecord(nameableStatisticalResourceDto.getTitle()));
+        setValue(NameableResourceDS.TITLE, nameableStatisticalResourceDto.getTitle());
     }
 
     public NameableStatisticalResourceDto getNameableStatisticalResourceDto(NameableStatisticalResourceDto nameableStatisticalResourceDto) {
         nameableStatisticalResourceDto = (NameableStatisticalResourceDto) getIdentifiableStatisticalResourceDto(nameableStatisticalResourceDto);
-        nameableStatisticalResourceDto.setTitle((InternationalStringDto) getValue(NameableResourceDS.TITLE));
+        nameableStatisticalResourceDto.setTitle(getValueAsInternationalStringDto(NameableResourceDS.TITLE));
         return nameableStatisticalResourceDto;
     }
 }

@@ -28,12 +28,12 @@ public class QueryIdentifiersCreationForm extends GroupDynamicForm {
 
     public void setNameableStatisticalResourceDto(NameableStatisticalResourceDto nameableStatisticalResourceDto) {
         setValue(IdentifiableResourceDS.CODE, nameableStatisticalResourceDto.getCode());
-        setValue(NameableResourceDS.TITLE, RecordUtils.getInternationalStringRecord(nameableStatisticalResourceDto.getTitle()));
+        setValue(NameableResourceDS.TITLE, nameableStatisticalResourceDto.getTitle());
     }
 
     public NameableStatisticalResourceDto getNameableStatisticalResourceDto(NameableStatisticalResourceDto nameableStatisticalResourceDto) {
         nameableStatisticalResourceDto.setCode(getValueAsString(IdentifiableResourceDS.CODE));
-        nameableStatisticalResourceDto.setTitle((InternationalStringDto) getValue(NameableResourceDS.TITLE));
+        nameableStatisticalResourceDto.setTitle(getValueAsInternationalStringDto(NameableResourceDS.TITLE));
         return nameableStatisticalResourceDto;
     }
 }

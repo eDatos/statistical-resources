@@ -5,7 +5,6 @@ import static org.siemac.metamac.statistical.resources.web.client.widgets.forms.
 
 import org.siemac.metamac.statistical.resources.core.dto.SiemacMetadataStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.web.client.model.ds.SiemacMetadataDS;
-import org.siemac.metamac.web.common.client.utils.RecordUtils;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ExternalItemLinkItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewMultiLanguageTextItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewTextItem;
@@ -35,7 +34,7 @@ public class SiemacMetadataProductionDescriptorsForm extends LifeCycleResourcePr
 
         setValue(SiemacMetadataDS.DATE_CREATED, dto.getResourceCreatedDate());
         setValue(SiemacMetadataDS.LAST_UPDATE, dto.getLastUpdate());
-        setValue(SiemacMetadataDS.CONFORMS_TO, RecordUtils.getInternationalStringRecord(dto.getConformsTo()));
-        setValue(SiemacMetadataDS.CONFORMS_TO_INTERNAL, RecordUtils.getInternationalStringRecord(dto.getConformsToInternal()));
+        setValue(SiemacMetadataDS.CONFORMS_TO, dto.getConformsTo());
+        setValue(SiemacMetadataDS.CONFORMS_TO_INTERNAL, dto.getConformsToInternal());
     }
 }

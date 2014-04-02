@@ -8,14 +8,16 @@ import java.util.logging.Logger;
 import org.siemac.metamac.statistical.resources.navigation.shared.NameTokens;
 import org.siemac.metamac.statistical.resources.web.client.enums.StatisticalResourcesToolStripButtonEnum;
 import org.siemac.metamac.statistical.resources.web.client.enums.StatisticalResourcesToolStripLayoutEnum;
-import org.siemac.metamac.statistical.resources.web.client.events.DeselectMenuButtonsEvent.DeselectMenuButtonHandler;
 import org.siemac.metamac.statistical.resources.web.client.events.DeselectMenuButtonsEvent;
+import org.siemac.metamac.statistical.resources.web.client.events.DeselectMenuButtonsEvent.DeselectMenuButtonHandler;
 import org.siemac.metamac.statistical.resources.web.client.events.SelectMenuButtonEvent;
-import org.siemac.metamac.statistical.resources.web.client.events.SelectMenuLayoutEvent;
 import org.siemac.metamac.statistical.resources.web.client.events.SelectMenuButtonEvent.SelectMenuButtonHandler;
+import org.siemac.metamac.statistical.resources.web.client.events.SelectMenuLayoutEvent;
 import org.siemac.metamac.statistical.resources.web.client.events.SelectMenuLayoutEvent.SelectMenuLayoutHandler;
 import org.siemac.metamac.statistical.resources.web.client.utils.PlaceRequestUtils;
 import org.siemac.metamac.statistical.resources.web.client.view.handlers.MainPageUiHandlers;
+import org.siemac.metamac.statistical.resources.web.shared.base.GetUserGuideUrlAction;
+import org.siemac.metamac.statistical.resources.web.shared.base.GetUserGuideUrlResult;
 import org.siemac.metamac.web.common.client.enums.MessageTypeEnum;
 import org.siemac.metamac.web.common.client.events.HideMessageEvent;
 import org.siemac.metamac.web.common.client.events.HideMessageEvent.HideMessageHandler;
@@ -23,10 +25,13 @@ import org.siemac.metamac.web.common.client.events.SetTitleEvent;
 import org.siemac.metamac.web.common.client.events.SetTitleEvent.SetTitleHandler;
 import org.siemac.metamac.web.common.client.events.ShowMessageEvent;
 import org.siemac.metamac.web.common.client.events.ShowMessageEvent.ShowMessageHandler;
+import org.siemac.metamac.web.common.client.utils.CommonWebUtils;
+import org.siemac.metamac.web.common.client.utils.WaitingAsyncCallbackHandlingError;
 import org.siemac.metamac.web.common.client.widgets.BreadCrumbsPanel;
 import org.siemac.metamac.web.common.client.widgets.MasterHead;
 import org.siemac.metamac.web.common.shared.CloseSessionAction;
 import org.siemac.metamac.web.common.shared.CloseSessionResult;
+import org.siemac.metamac.web.common.shared.utils.SharedTokens;
 
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.user.client.Window;
@@ -208,6 +213,17 @@ public class MainPagePresenter extends Presenter<MainPagePresenter.MainPageView,
             @Override
             public void onSuccess(CloseSessionResult result) {
                 Window.Location.assign(result.getLogoutPageUrl());
+            }
+        });
+    }
+
+    @Override
+    public void downloadUserGuide() {
+        dispatcher.execute(new GetUserGuideUrlAction(), new WaitingAsyncCallbackHandlingError<GetUserGuideUrlResult>(this) {
+
+            @Override
+            public void onWaitSuccess(GetUserGuideUrlResult result) {
+                CommonWebUtils.showDownloadFileWindow(SharedTokens.FILE_DOWNLOAD_DIR_PATH, SharedTokens.PARAM_FILE_NAME, result.getUserGuideUrl());
             }
         });
     }

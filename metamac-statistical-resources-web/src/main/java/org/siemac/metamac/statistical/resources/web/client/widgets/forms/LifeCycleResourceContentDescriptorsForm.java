@@ -24,6 +24,6 @@ public class LifeCycleResourceContentDescriptorsForm extends GroupDynamicForm {
     public void setLifeCycleResource(LifeCycleStatisticalResourceDto lifeCycleStatisticalResourceDto) {
         this.procStatus = lifeCycleStatisticalResourceDto.getProcStatus();
 
-        setValue(LifeCycleResourceDS.DESCRIPTION, RecordUtils.getInternationalStringRecord(lifeCycleStatisticalResourceDto.getDescription()));
+        setValue(LifeCycleResourceDS.DESCRIPTION, lifeCycleStatisticalResourceDto.getDescription());
     }
 }

@@ -15,4 +15,6 @@ public interface MainPageUiHandlers extends UiHandlers {
 
     void goToQueries();
 
+    void downloadUserGuide();
+
 }

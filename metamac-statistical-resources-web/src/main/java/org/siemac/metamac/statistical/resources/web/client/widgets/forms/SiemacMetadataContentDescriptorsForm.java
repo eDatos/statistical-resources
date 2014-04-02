@@ -21,9 +21,9 @@ public class SiemacMetadataContentDescriptorsForm extends LifeCycleResourceConte
 
     public void setSiemacMetadataStatisticalResourceDto(SiemacMetadataStatisticalResourceDto siemacMetadataStatisticalResourceDto) {
         setLifeCycleResource(siemacMetadataStatisticalResourceDto);
-        setValue(SiemacMetadataDS.SUBTITLE, RecordUtils.getInternationalStringRecord(siemacMetadataStatisticalResourceDto.getSubtitle()));
-        setValue(SiemacMetadataDS.TITLE_ALTERNATIVE, RecordUtils.getInternationalStringRecord(siemacMetadataStatisticalResourceDto.getTitleAlternative()));
-        setValue(SiemacMetadataDS.ABSTRACT, RecordUtils.getInternationalStringRecord(siemacMetadataStatisticalResourceDto.getAbstractLogic()));
-        setValue(SiemacMetadataDS.KEYWORDS, RecordUtils.getInternationalStringRecord(siemacMetadataStatisticalResourceDto.getKeywords()));
+        setValue(SiemacMetadataDS.SUBTITLE, siemacMetadataStatisticalResourceDto.getSubtitle());
+        setValue(SiemacMetadataDS.TITLE_ALTERNATIVE, siemacMetadataStatisticalResourceDto.getTitleAlternative());
+        setValue(SiemacMetadataDS.ABSTRACT, siemacMetadataStatisticalResourceDto.getAbstractLogic());
+        setValue(SiemacMetadataDS.KEYWORDS, siemacMetadataStatisticalResourceDto.getKeywords());
     }
 }

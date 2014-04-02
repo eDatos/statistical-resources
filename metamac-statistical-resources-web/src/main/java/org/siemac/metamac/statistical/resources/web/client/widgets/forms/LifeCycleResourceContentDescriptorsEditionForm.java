@@ -2,15 +2,13 @@ package org.siemac.metamac.statistical.resources.web.client.widgets.forms;
 
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
 
-import org.siemac.metamac.core.common.dto.InternationalStringDto;
 import org.siemac.metamac.statistical.resources.core.dto.LifeCycleStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.web.client.model.ds.LifeCycleResourceDS;
 import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
 import org.siemac.metamac.web.common.client.utils.CustomRequiredValidator;
-import org.siemac.metamac.web.common.client.utils.RecordUtils;
 import org.siemac.metamac.web.common.client.widgets.form.GroupDynamicForm;
-import org.siemac.metamac.web.common.client.widgets.form.fields.MultilanguageRichTextEditorItem;
+import org.siemac.metamac.web.common.client.widgets.form.fields.MultiLanguageRichTextEditorItem;
 
 public class LifeCycleResourceContentDescriptorsEditionForm extends GroupDynamicForm {
 
@@ -19,7 +17,7 @@ public class LifeCycleResourceContentDescriptorsEditionForm extends GroupDynamic
     public LifeCycleResourceContentDescriptorsEditionForm() {
         super(getConstants().formContentDescriptors());
 
-        final MultilanguageRichTextEditorItem description = new MultilanguageRichTextEditorItem(LifeCycleResourceDS.DESCRIPTION, getConstants().nameableStatisticalResourceDescription());
+        final MultiLanguageRichTextEditorItem description = new MultiLanguageRichTextEditorItem(LifeCycleResourceDS.DESCRIPTION, getConstants().nameableStatisticalResourceDescription());
         description.setValidators(new CustomRequiredValidator() {
 
             @Override
@@ -34,11 +32,11 @@ public class LifeCycleResourceContentDescriptorsEditionForm extends GroupDynamic
     public void setLifeCycleStatisticalResourceDto(LifeCycleStatisticalResourceDto lifeCycleStatisticalResourceDto) {
         this.procStatus = lifeCycleStatisticalResourceDto.getProcStatus();
 
-        setValue(LifeCycleResourceDS.DESCRIPTION, RecordUtils.getInternationalStringRecord(lifeCycleStatisticalResourceDto.getDescription()));
+        setValue(LifeCycleResourceDS.DESCRIPTION, lifeCycleStatisticalResourceDto.getDescription());
     }
 
     public LifeCycleStatisticalResourceDto getLifeCycleStatisticalResourceDto(LifeCycleStatisticalResourceDto lifeCycleStatisticalResourceDto) {
-        lifeCycleStatisticalResourceDto.setDescription((InternationalStringDto) getValue(LifeCycleResourceDS.DESCRIPTION));
+        lifeCycleStatisticalResourceDto.setDescription(getValueAsInternationalStringDto(LifeCycleResourceDS.DESCRIPTION));
         return lifeCycleStatisticalResourceDto;
     }
 }

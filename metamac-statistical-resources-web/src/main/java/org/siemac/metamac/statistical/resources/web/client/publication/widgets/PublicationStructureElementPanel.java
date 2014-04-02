@@ -8,7 +8,6 @@ import org.siemac.metamac.statistical.resources.core.dto.NameableStatisticalReso
 import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.CubeDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionBaseDto;
-import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionDto;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
 import org.siemac.metamac.statistical.resources.web.client.constants.StatisticalResourceWebConstants;
 import org.siemac.metamac.statistical.resources.web.client.publication.model.ds.ElementLevelDS;
@@ -27,8 +26,8 @@ import org.siemac.metamac.web.common.client.widgets.form.GroupDynamicForm;
 import org.siemac.metamac.web.common.client.widgets.form.InternationalMainFormLayout;
 import org.siemac.metamac.web.common.client.widgets.form.fields.CustomLinkItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.CustomSelectItem;
+import org.siemac.metamac.web.common.client.widgets.form.fields.MultiLanguageRichTextEditorItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.MultiLanguageTextItem;
-import org.siemac.metamac.web.common.client.widgets.form.fields.MultilanguageRichTextEditorItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.SearchCustomLinkItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewMultiLanguageTextItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewTextItem;
@@ -147,7 +146,7 @@ public class PublicationStructureElementPanel extends VLayout {
         MultiLanguageTextItem title = new MultiLanguageTextItem(ElementLevelDS.TITLE, getConstants().publicationStructureElementTitle());
         title.setRequired(true);
 
-        MultilanguageRichTextEditorItem description = new MultilanguageRichTextEditorItem(ElementLevelDS.DESCRIPTION, getConstants().publicationStructureElementDescription());
+        MultiLanguageRichTextEditorItem description = new MultiLanguageRichTextEditorItem(ElementLevelDS.DESCRIPTION, getConstants().publicationStructureElementDescription());
 
         ViewTextItem urn = new ViewTextItem(ElementLevelDS.URN, getConstants().publicationStructureElementURN());
 
@@ -231,8 +230,8 @@ public class PublicationStructureElementPanel extends VLayout {
 
     private void setElementViewMode(NameableStatisticalResourceDto element) {
 
-        form.setValue(ElementLevelDS.TITLE, RecordUtils.getInternationalStringRecord(element.getTitle()));
-        form.setValue(ElementLevelDS.DESCRIPTION, RecordUtils.getInternationalStringRecord(element.getDescription()));
+        form.setValue(ElementLevelDS.TITLE, element.getTitle());
+        form.setValue(ElementLevelDS.DESCRIPTION, element.getDescription());
         form.setValue(ElementLevelDS.URN, element.getUrn());
 
         if (element instanceof CubeDto) {
@@ -249,8 +248,8 @@ public class PublicationStructureElementPanel extends VLayout {
 
     private void setElementEditionMode(NameableStatisticalResourceDto element) {
 
-        editionForm.setValue(ElementLevelDS.TITLE, RecordUtils.getInternationalStringRecord(element.getTitle()));
-        editionForm.setValue(ElementLevelDS.DESCRIPTION, RecordUtils.getInternationalStringRecord(element.getDescription()));
+        editionForm.setValue(ElementLevelDS.TITLE, element.getTitle());
+        editionForm.setValue(ElementLevelDS.DESCRIPTION, element.getDescription());
         editionForm.setValue(ElementLevelDS.URN, element.getUrn());
 
         if (element instanceof CubeDto) {
@@ -290,8 +289,8 @@ public class PublicationStructureElementPanel extends VLayout {
 
     public NameableStatisticalResourceDto getSelectedElement() {
 
-        element.setTitle((InternationalStringDto) editionForm.getValue(ElementLevelDS.TITLE));
-        element.setDescription((InternationalStringDto) editionForm.getValue(ElementLevelDS.DESCRIPTION));
+        element.setTitle(editionForm.getValueAsInternationalStringDto(ElementLevelDS.TITLE));
+        element.setDescription(editionForm.getValueAsInternationalStringDto(ElementLevelDS.DESCRIPTION));
 
         if (element instanceof CubeDto) {
             if (StatisticalResourceTypeEnum.DATASET.name().equals(editionForm.getValueAsString(ElementLevelDS.RESOURCE_TYPE_TO_LINK))) {

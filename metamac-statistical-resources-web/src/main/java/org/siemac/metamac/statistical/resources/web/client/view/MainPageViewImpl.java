@@ -99,6 +99,14 @@ public class MainPageViewImpl extends ViewWithUiHandlers<MainPageUiHandlers> imp
             }
         });
 
+        masterHead.getHelpLink().addClickHandler(new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                uiHandlers.downloadUserGuide();
+            }
+        });
+
         MetamacNavBar navBar = new MetamacNavBar();
         northLayout.setZIndex(0);
         southLayout.setZIndex(0);

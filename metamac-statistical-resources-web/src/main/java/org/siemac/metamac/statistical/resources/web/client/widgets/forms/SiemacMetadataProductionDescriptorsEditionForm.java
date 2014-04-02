@@ -7,7 +7,6 @@ import static org.siemac.metamac.statistical.resources.web.client.widgets.forms.
 import java.util.List;
 
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
-import org.siemac.metamac.core.common.dto.InternationalStringDto;
 import org.siemac.metamac.statistical.resources.core.dto.SiemacMetadataStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.web.client.base.utils.SiemacMetadataExternalField;
@@ -16,10 +15,9 @@ import org.siemac.metamac.statistical.resources.web.client.constants.Statistical
 import org.siemac.metamac.statistical.resources.web.client.model.ds.SiemacMetadataDS;
 import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
 import org.siemac.metamac.web.common.client.utils.CustomRequiredValidator;
-import org.siemac.metamac.web.common.client.utils.RecordUtils;
 import org.siemac.metamac.web.common.client.widgets.form.GroupDynamicForm;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ExternalItemLinkItem;
-import org.siemac.metamac.web.common.client.widgets.form.fields.MultilanguageRichTextEditorItem;
+import org.siemac.metamac.web.common.client.widgets.form.fields.MultiLanguageRichTextEditorItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewTextItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.external.SearchSrmItemLinkItemWithSchemeFilterItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.external.SearchSrmListItemWithSchemeFilterItem;
@@ -55,8 +53,8 @@ public class SiemacMetadataProductionDescriptorsEditionForm extends GroupDynamic
 
         ViewTextItem dateCreated = new ViewTextItem(SiemacMetadataDS.DATE_CREATED, getConstants().siemacMetadataStatisticalResourceDateCreated());
         ViewTextItem lastUpdate = new ViewTextItem(SiemacMetadataDS.LAST_UPDATE, getConstants().siemacMetadataStatisticalResourceLastUpdate());
-        MultilanguageRichTextEditorItem conformsTo = new MultilanguageRichTextEditorItem(SiemacMetadataDS.CONFORMS_TO, getConstants().siemacMetadataStatisticalResourceConformsTo());
-        MultilanguageRichTextEditorItem conformsToInternal = new MultilanguageRichTextEditorItem(SiemacMetadataDS.CONFORMS_TO_INTERNAL, getConstants()
+        MultiLanguageRichTextEditorItem conformsTo = new MultiLanguageRichTextEditorItem(SiemacMetadataDS.CONFORMS_TO, getConstants().siemacMetadataStatisticalResourceConformsTo());
+        MultiLanguageRichTextEditorItem conformsToInternal = new MultiLanguageRichTextEditorItem(SiemacMetadataDS.CONFORMS_TO_INTERNAL, getConstants()
                 .siemacMetadataStatisticalResourceConformsToInternal());
 
         setFields(dateCreated, lastUpdate, maintainer, creatorItem, contributorItem, conformsTo, conformsToInternal);
@@ -71,8 +69,8 @@ public class SiemacMetadataProductionDescriptorsEditionForm extends GroupDynamic
 
         setValue(SiemacMetadataDS.DATE_CREATED, siemacMetadataStatisticalResourceDto.getResourceCreatedDate());
         setValue(SiemacMetadataDS.LAST_UPDATE, siemacMetadataStatisticalResourceDto.getLastUpdate());
-        setValue(SiemacMetadataDS.CONFORMS_TO, RecordUtils.getInternationalStringRecord(siemacMetadataStatisticalResourceDto.getConformsTo()));
-        setValue(SiemacMetadataDS.CONFORMS_TO_INTERNAL, RecordUtils.getInternationalStringRecord(siemacMetadataStatisticalResourceDto.getConformsToInternal()));
+        setValue(SiemacMetadataDS.CONFORMS_TO, siemacMetadataStatisticalResourceDto.getConformsTo());
+        setValue(SiemacMetadataDS.CONFORMS_TO_INTERNAL, siemacMetadataStatisticalResourceDto.getConformsToInternal());
     }
 
     public SiemacMetadataStatisticalResourceDto getSiemacMetadataStatisticalResourceDto(SiemacMetadataStatisticalResourceDto siemacMetadataStatisticalResourceDto) {
@@ -80,8 +78,8 @@ public class SiemacMetadataProductionDescriptorsEditionForm extends GroupDynamic
         siemacMetadataStatisticalResourceDto.getContributor().clear();
         siemacMetadataStatisticalResourceDto.getContributor().addAll(getExternalItemsValue(getItem(SiemacMetadataDS.CONTRIBUTOR)));
 
-        siemacMetadataStatisticalResourceDto.setConformsTo((InternationalStringDto) getValue(SiemacMetadataDS.CONFORMS_TO));
-        siemacMetadataStatisticalResourceDto.setConformsToInternal((InternationalStringDto) getValue(SiemacMetadataDS.CONFORMS_TO_INTERNAL));
+        siemacMetadataStatisticalResourceDto.setConformsTo(getValueAsInternationalStringDto(SiemacMetadataDS.CONFORMS_TO));
+        siemacMetadataStatisticalResourceDto.setConformsToInternal(getValueAsInternationalStringDto(SiemacMetadataDS.CONFORMS_TO_INTERNAL));
         return siemacMetadataStatisticalResourceDto;
     }
 

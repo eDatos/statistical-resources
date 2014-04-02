@@ -18,6 +18,6 @@ public class NameableResourceIdentifiersForm extends IdentifiableResourceIdentif
 
     public void setNameableStatisticalResourceDto(NameableStatisticalResourceDto nameableStatisticalResourceDto) {
         setIdentifiableStatisticalResourceDto(nameableStatisticalResourceDto);
-        setValue(NameableResourceDS.TITLE, RecordUtils.getInternationalStringRecord(nameableStatisticalResourceDto.getTitle()));
+        setValue(NameableResourceDS.TITLE, nameableStatisticalResourceDto.getTitle());
     }
 }
