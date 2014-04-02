@@ -36,4 +36,15 @@ public class StatisticalResourcesConfigurationImpl extends ConfigurationServiceI
 
         return dotCodeMappingMap;
     }
+
+    @Override
+    public String retrieveUserGuideFileName() throws MetamacException {
+        return retrieveProperty(StatisticalResourcesConfigurationConstants.USER_GUIDE_FILE_NAME, Boolean.TRUE);
+    }
+
+    @Override
+    public String retrieveDocsPath() throws MetamacException {
+        return retrieveProperty(StatisticalResourcesConfigurationConstants.DOCS_PATH, Boolean.TRUE);
+    }
+
 }
