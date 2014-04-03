@@ -71,7 +71,16 @@
         <servlet-name>upload</servlet-name>
         <url-pattern>/files/upload/*</url-pattern>
     </servlet-mapping>
-
+    
+    <servlet>
+        <servlet-name>download</servlet-name>
+        <servlet-class>org.siemac.metamac.web.common.server.servlet.FileDownloadServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>download</servlet-name>
+        <url-pattern>/files/download/*</url-pattern>
+    </servlet-mapping>
+    
     <servlet>
         <servlet-name>dispatch</servlet-name>
         <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
