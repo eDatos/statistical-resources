@@ -37,12 +37,6 @@
             <groupId>com.arte.statistic.statistic-sdmx-srm</groupId>
             <artifactId>statistic-sdmx-srm-rest-external-api</artifactId>
             <version>${statistic-sdmx-srm-rest-external-api.version}</version>
-            <exclusions>
-                <exclusion>
-                    <artifactId>metamac-rest-api</artifactId>
-                    <groupId>org.siemac.metamac</groupId>
-                </exclusion>
-            </exclusions>
         </dependency>
         
         <!-- Spring -->

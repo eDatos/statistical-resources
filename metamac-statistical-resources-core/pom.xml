@@ -21,12 +21,6 @@
             <groupId>org.siemac.metamac.metamac-sso</groupId>
             <artifactId>metamac-sso-client</artifactId>
             <version>${metamac-sso.version}</version>
-            <exclusions>
-                <exclusion>
-                    <artifactId>metamac-core-common</artifactId>
-                    <groupId>org.siemac.metamac</groupId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.siemac.metamac</groupId>
@@ -70,34 +64,16 @@
             <groupId>org.siemac.metamac.metamac-srm</groupId>
             <artifactId>metamac-srm-rest-internal-api</artifactId>
             <version>${metamac-srm-rest-internal-api.version}</version>
-            <exclusions>
-                <exclusion>
-                    <artifactId>metamac-rest-api</artifactId>
-                    <groupId>org.siemac.metamac</groupId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.siemac.metamac.metamac-statistical-operations</groupId>
             <artifactId>metamac-statistical-operations-rest-internal-api</artifactId>
             <version>${metamac-statistical-operations-rest-internal-api.version}</version>
-            <exclusions>
-                <exclusion>
-                    <artifactId>metamac-rest-api</artifactId>
-                    <groupId>org.siemac.metamac</groupId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.siemac.metamac.metamac-common-metadata</groupId>
             <artifactId>metamac-common-metadata-rest-external-api</artifactId>
             <version>${metamac-common-metadata-rest-external-api.version}</version>
-            <exclusions>
-                <exclusion>
-                    <artifactId>metamac-rest-api</artifactId>
-                    <groupId>org.siemac.metamac</groupId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.siemac.metamac</groupId>
@@ -113,12 +89,6 @@
             <groupId>org.siemac.metamac.metamac-notifications</groupId>
             <artifactId>metamac-notifications-rest-internal-api</artifactId>
             <version>${metamac-notifications-rest-internal-api.version}</version>
-            <exclusions>
-                <exclusion>
-                    <artifactId>metamac-rest-api</artifactId>
-                    <groupId>org.siemac.metamac</groupId>
-                </exclusion>
-            </exclusions>
         </dependency>
 
         <!-- STATISTIC -->
@@ -270,15 +240,6 @@
             <artifactId>fornax-cartridges-sculptor-generator</artifactId>
             <version>${sculptor.version}</version>
             <scope>provided</scope>
-            <exclusions>
-                <!-- La inclusion de esta libreria provoca un BUG en el plugin de eclipse de GWT cuando usamos GIN en un proyecto GWT, es demasiado antigua
-                    esta version. No importa que el scope sea PROVIDED, el plugin de GWT no es capaz de tragarselo. -->
-                <!-- POR TANTO CUANDO SE EJECUTE EL PLUGIN DE GWT DE ECLIPSE ES NECESARIO DESCOMENTAR ESTAS LINEAS -->
-                <!-- <exclusion> -->
-                <!-- <groupId>p2.osgi.bundle</groupId> -->
-                <!-- <artifactId>com.google.inject</artifactId> -->
-                <!-- </exclusion> -->
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.fornax.cartridges</groupId>
