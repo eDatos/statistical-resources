@@ -1,8 +1,10 @@
 package org.siemac.metamac.statistical.resources.core.constants;
 
+import org.siemac.metamac.rest.notices.v1_0.domain.enume.MetamacApplicationsEnum;
+
 public class StatisticalResourcesConstants {
 
-    public static final String APPLICATION_ID                            = "GESTOR_RECURSOS_ESTADISTICOS";
+    public static final String APPLICATION_ID                            = MetamacApplicationsEnum.GESTOR_RECURSOS_ESTADISTICOS.getName();
     public static final String DEFAULT_DATA_REPOSITORY_LOCALE            = "es";
     public static String       ATTRIBUTE_DATA_SOURCE_ID                  = "DATA_SOURCE_ID";
     public static final String BIBLIOGRAPHIC_CITATION_URI_TOKEN          = "#URI#";
