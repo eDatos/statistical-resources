@@ -100,7 +100,7 @@ public class SharedSecurityUtils {
      */
     protected static boolean haveAccessToOperationInRol(MetamacPrincipal metamacPrincipal, StatisticalResourcesRoleEnum role, String operation) {
         for (MetamacPrincipalAccess metamacPrincipalAccess : metamacPrincipal.getAccesses()) {
-            if (StatisticalResourcesConstants.SECURITY_APPLICATION_ID.equals(metamacPrincipalAccess.getApplication()) && metamacPrincipalAccess.getRole().equals(role.name())) {
+            if (StatisticalResourcesConstants.APPLICATION_ID.equals(metamacPrincipalAccess.getApplication()) && metamacPrincipalAccess.getRole().equals(role.name())) {
                 if (metamacPrincipalAccess.getOperation() == null || metamacPrincipalAccess.getOperation().equals(operation)) {
                     return true;
                 }
@@ -118,7 +118,7 @@ public class SharedSecurityUtils {
      */
     protected static boolean isRoleInAccesses(MetamacPrincipal metamacPrincipal, StatisticalResourcesRoleEnum role) {
         for (MetamacPrincipalAccess metamacPrincipalAccess : metamacPrincipal.getAccesses()) {
-            if (StatisticalResourcesConstants.SECURITY_APPLICATION_ID.equals(metamacPrincipalAccess.getApplication()) && metamacPrincipalAccess.getRole().equals(role.name())) {
+            if (StatisticalResourcesConstants.APPLICATION_ID.equals(metamacPrincipalAccess.getApplication()) && metamacPrincipalAccess.getRole().equals(role.name())) {
                 return true;
             }
         }

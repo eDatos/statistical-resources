@@ -124,7 +124,7 @@ public class StatisticalResourcesWeb extends MetamacSecurityEntryPoint {
 
     @Override
     protected String getSecurityApplicationId() {
-        return StatisticalResourcesConstants.SECURITY_APPLICATION_ID;
+        return StatisticalResourcesConstants.APPLICATION_ID;
     }
 
     @Override
