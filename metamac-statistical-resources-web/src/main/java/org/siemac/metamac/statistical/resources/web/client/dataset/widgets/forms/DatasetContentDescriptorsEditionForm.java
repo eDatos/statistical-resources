@@ -184,7 +184,6 @@ public class DatasetContentDescriptorsEditionForm extends SiemacMetadataContentD
 
     private ExternalItemListItem createStatisticalUnitItem() {
 
-        // FIXME: on select set form value (METAMAC-2146)
         SearchSrmListItemWithSchemeFilterItem listItem = new SearchSrmListItemWithSchemeFilterItem(DatasetDS.STATISTICAL_UNIT, getConstants().datasetStatisticalUnit(),
                 CommonWebConstants.FORM_LIST_MAX_RESULTS) {
 
