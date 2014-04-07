@@ -1,10 +1,10 @@
 package org.siemac.metamac.statistical.resources.web.client.widgets.selectors;
 
 import org.siemac.metamac.statistical.resources.core.dto.query.CodeItemDto;
+import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb;
 import org.siemac.metamac.statistical.resources.web.client.model.ds.CodeItemDS;
 import org.siemac.metamac.statistical.resources.web.client.model.record.CodeItemRecord;
 import org.siemac.metamac.statistical.resources.web.client.utils.StatisticalResourcesRecordUtils;
-import org.siemac.metamac.web.common.client.MetamacWebCommon;
 import org.siemac.metamac.web.common.client.widgets.CustomListGridField;
 import org.siemac.metamac.web.common.client.widgets.selectors.ResourceMultiListGridSelector;
 
@@ -18,16 +18,15 @@ public class CodeItemMultiListGrid extends ResourceMultiListGridSelector<CodeIte
 
     @Override
     protected void setSelectorFields() {
-        // FIXME: change messages (METAMAC-2146)
-        CustomListGridField codeField = new CustomListGridField(CodeItemDS.CODE, MetamacWebCommon.getConstants().relatedResourceCode());
+        CustomListGridField codeField = new CustomListGridField(CodeItemDS.CODE, StatisticalResourcesWeb.getConstants().codeItemCode());
         codeField.setWidth("30%");
-        CustomListGridField titleField = new CustomListGridField(CodeItemDS.TITLE, MetamacWebCommon.getConstants().relatedResourceTitle());
+        CustomListGridField titleField = new CustomListGridField(CodeItemDS.TITLE, StatisticalResourcesWeb.getConstants().codeItemTitle());
 
         baseCheckListGrid.setFields(codeField, titleField);
 
-        codeField = new CustomListGridField(CodeItemDS.CODE, MetamacWebCommon.getConstants().relatedResourceCode());
+        codeField = new CustomListGridField(CodeItemDS.CODE, StatisticalResourcesWeb.getConstants().codeItemCode());
         codeField.setWidth("30%");
-        titleField = new CustomListGridField(CodeItemDS.TITLE, MetamacWebCommon.getConstants().relatedResourceTitle());
+        titleField = new CustomListGridField(CodeItemDS.TITLE, StatisticalResourcesWeb.getConstants().codeItemTitle());
 
         selectionListGrid.setFields(codeField, titleField);
     }
