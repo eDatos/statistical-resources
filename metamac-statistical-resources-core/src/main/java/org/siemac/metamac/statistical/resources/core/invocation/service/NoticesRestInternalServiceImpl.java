@@ -86,7 +86,6 @@ public class NoticesRestInternalServiceImpl implements NoticesRestInternalServic
         } catch (Exception e) {
             throw manageNoticesInternalRestException(e);
         }
-
     }
 
     // -------------------------------------------------------------------------------------------------
