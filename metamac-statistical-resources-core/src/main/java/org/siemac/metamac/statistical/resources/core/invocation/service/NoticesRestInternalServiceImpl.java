@@ -41,7 +41,7 @@ public class NoticesRestInternalServiceImpl implements NoticesRestInternalServic
 
             Throwable localisedException = translateExceptions.translateException(locale, exception);
             String localisedMessage = localisedException.getMessage();
-            localisedMessage = ERROR + localisedMessage;
+            localisedMessage = ERROR + " - " + localisedMessage;
 
             createBackgroundNotification(actionCode, localisedMessage, user);
             logger.info("Sending errorBackgroundNotification for user " + user);
