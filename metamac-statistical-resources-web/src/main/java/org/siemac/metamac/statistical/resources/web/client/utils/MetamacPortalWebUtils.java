@@ -101,6 +101,7 @@ public class MetamacPortalWebUtils {
             builder.append(URL_QUERY_PARAMETER_RESOURCETYPE);
             builder.append(URL_QUERY_EQUALS);
             builder.append(resourceType);
+            builder.append(URL_QUERY_AND);
             builder.append(URL_QUERY_PARAMETER_AGENCYID);
             builder.append(URL_QUERY_EQUALS);
             builder.append(maintainerCode);
