@@ -6,7 +6,7 @@ import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersion
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionDto;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
-import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
+import org.siemac.metamac.web.common.shared.constants.CommonSharedConstants;
 import org.siemac.metamac.web.common.shared.exception.MetamacWebException;
 
 public class MetamacPortalWebUtils {
@@ -123,7 +123,7 @@ public class MetamacPortalWebUtils {
                 return URL_QUERY_RESOURCE_TYPE_COLLECTION;
 
             default:
-                throw new MetamacWebException(ServiceExceptionType.UNKNOWN.getCode(), "StatisticalResourceTypeEnum " + type + " not valid.");
+                throw new MetamacWebException(CommonSharedConstants.EXCEPTION_UNKNOWN, "StatisticalResourceTypeEnum " + type + " not valid.");
         }
     }
 }
