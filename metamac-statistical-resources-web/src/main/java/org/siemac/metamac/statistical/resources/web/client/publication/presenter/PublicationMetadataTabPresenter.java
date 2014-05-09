@@ -40,7 +40,9 @@ import org.siemac.metamac.statistical.resources.web.shared.publication.SavePubli
 import org.siemac.metamac.statistical.resources.web.shared.publication.UpdatePublicationVersionProcStatusAction;
 import org.siemac.metamac.statistical.resources.web.shared.publication.UpdatePublicationVersionProcStatusAction.Builder;
 import org.siemac.metamac.statistical.resources.web.shared.publication.UpdatePublicationVersionProcStatusResult;
+import org.siemac.metamac.web.common.client.events.ShowMessageEvent;
 import org.siemac.metamac.web.common.client.utils.WaitingAsyncCallbackHandlingError;
+import org.siemac.metamac.web.common.shared.exception.MetamacWebException;
 
 import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
@@ -268,8 +270,12 @@ public class PublicationMetadataTabPresenter
 
     @Override
     public void previewData(PublicationVersionDto publicationVersionDto) {
-        String url = MetamacPortalWebUtils.buildPublicationVersionUrl(publicationVersionDto);
-        Window.open(url, "_blank", "");
+        try {
+            String url = MetamacPortalWebUtils.buildPublicationVersionUrl(publicationVersionDto);
+            Window.open(url, "_blank", "");
+        } catch (MetamacWebException e) {
+            ShowMessageEvent.fireErrorMessage(this, e);
+        }
     }
 
     //

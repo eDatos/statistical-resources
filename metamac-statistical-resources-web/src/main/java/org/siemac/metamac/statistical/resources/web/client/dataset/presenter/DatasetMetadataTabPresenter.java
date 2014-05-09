@@ -54,9 +54,11 @@ import org.siemac.metamac.statistical.resources.web.shared.external.GetStatistic
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationsPaginatedListResult;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetTemporalGranularitiesListAction;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetTemporalGranularitiesListResult;
+import org.siemac.metamac.web.common.client.events.ShowMessageEvent;
 import org.siemac.metamac.web.common.client.utils.WaitingAsyncCallbackHandlingError;
 import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
 import org.siemac.metamac.web.common.shared.criteria.SrmItemRestCriteria;
+import org.siemac.metamac.web.common.shared.exception.MetamacWebException;
 
 import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
@@ -83,16 +85,21 @@ public class DatasetMetadataTabPresenter extends StatisticalResourceMetadataBase
 
         // metadata fill methods
         void setDatasetsForReplaces(GetDatasetVersionsResult result);
+
         void setStatisticalOperationsForReplacesSelection(List<ExternalItemDto> results, ExternalItemDto defaultSelected);
+
         void setDatasetsMainCoverages(GetDatasetVersionMainCoveragesResult result);
 
         void setStatisticalOperationsForDsdSelection(List<ExternalItemDto> results, ExternalItemDto defaultSelected);
+
         void setDsdsForRelatedDsd(GetDsdsPaginatedListResult result);
 
         void setCodesForGeographicalGranularities(GetGeographicalGranularitiesListResult result);
+
         void setTemporalCodesForField(GetTemporalGranularitiesListResult result, DatasetMetadataExternalField field);
 
         void setConceptSchemesForStatisticalUnit(GetConceptSchemesPaginatedListResult result);
+
         void setConceptsForStatisticalUnit(GetConceptsPaginatedListResult result);
     }
 
@@ -292,8 +299,12 @@ public class DatasetMetadataTabPresenter extends StatisticalResourceMetadataBase
 
     @Override
     public void previewData(DatasetVersionDto datasetVersionDto) {
-        String url = MetamacPortalWebUtils.buildDatasetVersionUrl(datasetVersionDto);
-        Window.open(url, "_blank", "");
+        try {
+            String url = MetamacPortalWebUtils.buildDatasetVersionUrl(datasetVersionDto);
+            Window.open(url, "_blank", "");
+        } catch (MetamacWebException e) {
+            ShowMessageEvent.fireErrorMessage(this, e);
+        }
     }
 
     //

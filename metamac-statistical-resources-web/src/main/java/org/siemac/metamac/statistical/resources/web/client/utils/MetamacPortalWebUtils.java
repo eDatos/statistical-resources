@@ -5,95 +5,125 @@ import org.siemac.metamac.statistical.resources.core.dto.LifeCycleStatisticalRes
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionDto;
+import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
+import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
+import org.siemac.metamac.web.common.shared.exception.MetamacWebException;
 
 public class MetamacPortalWebUtils {
 
-    private static final String PAGE_SINGLEPAGE_RESOURCES      = "view.html";
-    private static final String PAGE_COLLECTION_RESOURCE       = "index.html";
-    private static final String DATASETS                       = "datasets";
-    private static final String QUERIES                        = "queries";
-    private static final String URL_SEPARATOR                  = "/";
-    private static final String URL_SINGLEPAGE_SEPARATOR       = "#";
-    private static final String URL_QUERY_SEPARATOR            = "?";
-    private static final String URL_QUERY_EQUALS               = "=";
-    private static final String URL_QUERY_AND                  = "&";
-    private static final String URL_QUERY_PARAMETER_RESOURCEID = "resourceId";
-    private static final String URL_QUERY_PARAMETER_AGENCYID   = "agencyId";
+    private static final String PAGE_DATA_RESOURCE                 = "data.html";
+    private static final String PAGE_COLLECTION_RESOURCE           = "collection.html";
+    private static final String URL_SINGLEPAGE_RESOURCE_DATASETS   = "datasets";
+    private static final String URL_SINGLEPAGE_RESOURCE_QUERIES    = "queries";
+    private static final String URL_SEPARATOR                      = "/";
+    private static final String URL_SINGLEPAGE_SEPARATOR           = "#";
+    private static final String URL_QUERY_SEPARATOR                = "?";
+    private static final String URL_QUERY_EQUALS                   = "=";
+    private static final String URL_QUERY_AND                      = "&";
+    private static final String URL_QUERY_PARAMETER_RESOURCEID     = "resourceId";
+    private static final String URL_QUERY_PARAMETER_AGENCYID       = "agencyId";
+    private static final String URL_QUERY_PARAMETER_VERSION        = "version";
+    private static final String URL_QUERY_PARAMETER_RESOURCETYPE   = "resourceType";
 
-    public static String buildDatasetVersionUrl(DatasetVersionDto datasetVersionDto) {
-        return buildSinglepageResourceUrl(DATASETS, datasetVersionDto);
+    private static final String URL_QUERY_RESOURCE_TYPE_DATASET    = "dataset";
+    private static final String URL_QUERY_RESOURCE_TYPE_QUERY      = "query";
+    private static final String URL_QUERY_RESOURCE_TYPE_COLLECTION = "collection";
+
+    public static String buildDatasetVersionUrl(DatasetVersionDto datasetVersionDto) throws MetamacWebException {
+        StringBuilder builder = new StringBuilder();
+        builder.append(buildEndpointUrl());
+        builder.append(PAGE_DATA_RESOURCE);
+        builder.append(URL_QUERY_SEPARATOR);
+        builder.append(buildQueryParametersForVersionableResource(datasetVersionDto, StatisticalResourceTypeEnum.DATASET));
+        builder.append(URL_SINGLEPAGE_SEPARATOR);
+        builder.append(URL_SINGLEPAGE_RESOURCE_DATASETS);
+
+        return builder.toString();
     }
 
-    public static String buildQueryVersionUrl(QueryVersionDto queryVersionDto) {
-        return buildSinglepageResourceUrlWithoutVersion(QUERIES, queryVersionDto);
+    public static String buildQueryVersionUrl(QueryVersionDto queryVersionDto) throws MetamacWebException {
+        StringBuilder builder = new StringBuilder();
+        builder.append(buildEndpointUrl());
+        builder.append(PAGE_DATA_RESOURCE);
+        builder.append(URL_QUERY_SEPARATOR);
+        builder.append(buildQueryParametersForNotVersionableResource(queryVersionDto, StatisticalResourceTypeEnum.QUERY));
+        builder.append(URL_SINGLEPAGE_SEPARATOR);
+        builder.append(URL_SINGLEPAGE_RESOURCE_QUERIES);
+
+        return builder.toString();
     }
 
-    public static String buildPublicationVersionUrl(PublicationVersionDto publicationVersionDto) {
-        String urlWithoutVersion = buildPublicationUrlWithoutVersion(publicationVersionDto);
-        return urlWithoutVersion;
+    public static String buildPublicationVersionUrl(PublicationVersionDto publicationVersionDto) throws MetamacWebException {
+        StringBuilder builder = new StringBuilder();
+        builder.append(buildEndpointUrl());
+        builder.append(PAGE_COLLECTION_RESOURCE);
+        builder.append(URL_QUERY_SEPARATOR);
+        builder.append(buildQueryParametersForNotVersionableResource(publicationVersionDto, StatisticalResourceTypeEnum.COLLECTION));
+
+        return builder.toString();
     }
 
-    private static String buildSinglepageResourceUrl(String urlToken, LifeCycleStatisticalResourceDto lifeCycleStatisticalResourceDto) {
+    private static String buildEndpointUrl() {
+        String urlBase = CommonUtils.getMetamacPortalBaseUrl();
+        StringBuilder builder = new StringBuilder().append(urlBase);
+
+        if (!StringUtils.isBlank(urlBase) && !urlBase.endsWith(URL_SEPARATOR)) {
+            builder.append(URL_SEPARATOR);
+        }
+        return builder.toString();
+    }
+
+    private static String buildQueryParametersForVersionableResource(LifeCycleStatisticalResourceDto lifeCycleStatisticalResourceDto, StatisticalResourceTypeEnum type) throws MetamacWebException {
         StringBuilder builder = new StringBuilder();
 
-        String urlWithoutVersion = buildSinglepageResourceUrlWithoutVersion(urlToken, lifeCycleStatisticalResourceDto);
-        if (!StringUtils.isEmpty(urlWithoutVersion)) {
-            String version = lifeCycleStatisticalResourceDto.getVersionLogic();
-            builder.append(urlWithoutVersion).append(URL_SEPARATOR).append(version);
+        if (lifeCycleStatisticalResourceDto != null) {
+            String parametersForNotVersionableResource = buildQueryParametersForNotVersionableResource(lifeCycleStatisticalResourceDto, type);
+            builder.append(parametersForNotVersionableResource);
+            builder.append(URL_QUERY_AND);
+            builder.append(URL_QUERY_PARAMETER_VERSION);
+            builder.append(URL_QUERY_EQUALS);
+            builder.append(lifeCycleStatisticalResourceDto.getVersionLogic());
         }
 
         return builder.toString();
+
     }
 
-    private static String buildSinglepageResourceUrlWithoutVersion(String urlToken, LifeCycleStatisticalResourceDto lifeCycleStatisticalResourceDto) {
-        String urlBase = CommonUtils.getMetamacPortalBaseUrl();
-        StringBuilder builder = new StringBuilder().append(urlBase);
+    private static String buildQueryParametersForNotVersionableResource(LifeCycleStatisticalResourceDto lifeCycleStatisticalResourceDto, StatisticalResourceTypeEnum type) throws MetamacWebException {
+        StringBuilder builder = new StringBuilder();
 
-        if (!StringUtils.isBlank(urlBase) && lifeCycleStatisticalResourceDto != null) {
-
-            String maintainerCode = lifeCycleStatisticalResourceDto.getMaintainer() != null ? lifeCycleStatisticalResourceDto.getMaintainer().getCode() : null;
-            String Code = lifeCycleStatisticalResourceDto.getCode();
-
-            if (!urlBase.endsWith(URL_SEPARATOR)) {
-                builder.append(URL_SEPARATOR);
-            }
-
-            builder.append(PAGE_SINGLEPAGE_RESOURCES);
-            builder.append(URL_SINGLEPAGE_SEPARATOR);
-            builder.append(urlToken);
-            builder.append(URL_SEPARATOR);
-            builder.append(maintainerCode);
-            builder.append(URL_SEPARATOR);
-            builder.append(Code);
-        }
-
-        return builder.toString();
-    }
-
-    private static String buildPublicationUrlWithoutVersion(LifeCycleStatisticalResourceDto lifeCycleStatisticalResourceDto) {
-        String urlBase = CommonUtils.getMetamacPortalBaseUrl();
-        StringBuilder builder = new StringBuilder().append(urlBase);
-
-        if (!StringUtils.isBlank(urlBase) && lifeCycleStatisticalResourceDto != null) {
+        if (lifeCycleStatisticalResourceDto != null) {
 
             String maintainerCode = lifeCycleStatisticalResourceDto.getMaintainer() != null ? lifeCycleStatisticalResourceDto.getMaintainer().getCode() : null;
-            String Code = lifeCycleStatisticalResourceDto.getCode();
+            String code = lifeCycleStatisticalResourceDto.getCode();
+            String resourceType = determinateResourceType(type);
 
-            if (!urlBase.endsWith(URL_SEPARATOR)) {
-                builder.append(URL_SEPARATOR);
-            }
-
-            builder.append(PAGE_COLLECTION_RESOURCE);
-            builder.append(URL_QUERY_SEPARATOR);
+            builder.append(URL_QUERY_PARAMETER_RESOURCETYPE);
+            builder.append(URL_QUERY_EQUALS);
+            builder.append(resourceType);
             builder.append(URL_QUERY_PARAMETER_AGENCYID);
             builder.append(URL_QUERY_EQUALS);
             builder.append(maintainerCode);
             builder.append(URL_QUERY_AND);
             builder.append(URL_QUERY_PARAMETER_RESOURCEID);
             builder.append(URL_QUERY_EQUALS);
-            builder.append(Code);
+            builder.append(code);
         }
-
         return builder.toString();
+
+    }
+
+    private static String determinateResourceType(StatisticalResourceTypeEnum type) throws MetamacWebException {
+        switch (type) {
+            case QUERY:
+                return URL_QUERY_RESOURCE_TYPE_QUERY;
+            case DATASET:
+                return URL_QUERY_RESOURCE_TYPE_DATASET;
+            case COLLECTION:
+                return URL_QUERY_RESOURCE_TYPE_COLLECTION;
+
+            default:
+                throw new MetamacWebException(ServiceExceptionType.UNKNOWN.getCode(), "StatisticalResourceTypeEnum " + type + " not valid.");
+        }
     }
 }

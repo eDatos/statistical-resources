@@ -45,11 +45,12 @@ import org.siemac.metamac.statistical.resources.web.shared.query.SaveQueryVersio
 import org.siemac.metamac.statistical.resources.web.shared.query.UpdateQueryVersionProcStatusAction;
 import org.siemac.metamac.statistical.resources.web.shared.query.UpdateQueryVersionProcStatusAction.Builder;
 import org.siemac.metamac.statistical.resources.web.shared.query.UpdateQueryVersionProcStatusResult;
+import org.siemac.metamac.web.common.client.events.ShowMessageEvent;
 import org.siemac.metamac.web.common.client.utils.WaitingAsyncCallbackHandlingError;
 import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
 import org.siemac.metamac.web.common.shared.criteria.SrmItemRestCriteria;
+import org.siemac.metamac.web.common.shared.exception.MetamacWebException;
 
-import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
@@ -57,7 +58,6 @@ import com.gwtplatform.dispatch.shared.DispatchAsync;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.Presenter;
 import com.gwtplatform.mvp.client.View;
-import com.gwtplatform.mvp.client.annotations.ContentSlot;
 import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
 import com.gwtplatform.mvp.client.annotations.TitleFunction;
@@ -67,7 +67,6 @@ import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 import com.gwtplatform.mvp.client.proxy.Proxy;
 import com.gwtplatform.mvp.client.proxy.RevealContentEvent;
-import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 
 public class QueryPresenter extends Presenter<QueryPresenter.QueryView, QueryPresenter.QueryProxy> implements QueryUiHandlers {
 
@@ -88,13 +87,19 @@ public class QueryPresenter extends Presenter<QueryPresenter.QueryView, QueryPre
     public interface QueryView extends View, HasUiHandlers<QueryUiHandlers> {
 
         void setQueryDto(QueryVersionDto queryDto);
+
         void newQueryDto();
+
         void setDatasetsForQuery(GetDatasetVersionsResult result);
+
         void setStatisticalOperationsForDatasetSelection(GetStatisticalOperationsPaginatedListResult result);
+
         void setDatasetDimensionsIds(List<String> datasetDimensionsIds);
+
         void setDatasetDimensionCodes(String dimensionId, List<CodeItemDto> codesDimension);
 
         void setAgencySchemesForMaintainer(GetAgencySchemesPaginatedListResult result);
+
         void setAgenciesForMaintainer(GetAgenciesPaginatedListResult result);
     }
 
@@ -363,8 +368,12 @@ public class QueryPresenter extends Presenter<QueryPresenter.QueryView, QueryPre
 
     @Override
     public void previewData(QueryVersionDto queryVersionDto) {
-        String url = MetamacPortalWebUtils.buildQueryVersionUrl(queryVersionDto);
-        Window.open(url, "_blank", "");
+        try {
+            String url = MetamacPortalWebUtils.buildQueryVersionUrl(queryVersionDto);
+            Window.open(url, "_blank", "");
+        } catch (MetamacWebException e) {
+            ShowMessageEvent.fireErrorMessage(this, e);
+        }
     }
 
     //
