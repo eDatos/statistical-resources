@@ -37,7 +37,8 @@ public abstract class SearchMultiExternalItemSimpleItem extends ExternalItemList
                     }
 
                 });
-                retrieveResources(0, maxResults, new MetamacWebCriteria());
+
+                window.retrieveItems();
 
                 window.setSelectedResources(getSelectedRelatedResources());
 
