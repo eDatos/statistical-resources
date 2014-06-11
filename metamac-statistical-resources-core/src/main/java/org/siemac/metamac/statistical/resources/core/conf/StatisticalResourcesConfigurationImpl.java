@@ -16,7 +16,7 @@ public class StatisticalResourcesConfigurationImpl extends ConfigurationServiceI
     public Map<KeyDotEnum, String> retrieveDotCodeMapping() throws MetamacException {
 
         Map<KeyDotEnum, String> dotCodeMappingMap = new HashMap<StatisticalResourcesConfiguration.KeyDotEnum, String>(6);
-        List<Object> dotCodeMappingList = retrievePropertyList(StatisticalResourcesConfigurationConstants.DOT_CODE_MAPPING, true);
+        List<Object> dotCodeMappingList = retrievePropertyList(StatisticalResourcesConfigurationConstants.DOT_CODE_MAPPING);
 
         for (Object item : dotCodeMappingList) {
             String[] splitItem = ((String) item).split("=");
@@ -39,12 +39,12 @@ public class StatisticalResourcesConfigurationImpl extends ConfigurationServiceI
 
     @Override
     public String retrieveUserGuideFileName() throws MetamacException {
-        return retrieveProperty(StatisticalResourcesConfigurationConstants.USER_GUIDE_FILE_NAME, Boolean.TRUE);
+        return retrieveProperty(StatisticalResourcesConfigurationConstants.USER_GUIDE_FILE_NAME);
     }
 
     @Override
     public String retrieveDocsPath() throws MetamacException {
-        return retrieveProperty(StatisticalResourcesConfigurationConstants.DOCS_PATH, Boolean.TRUE);
+        return retrieveProperty(StatisticalResourcesConfigurationConstants.DOCS_PATH);
     }
 
 }

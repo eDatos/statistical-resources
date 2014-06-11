@@ -1,66 +1,42 @@
 package org.siemac.metamac.statistical.resources.web.external;
 
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.siemac.metamac.core.common.constants.shared.ConfigurationConstants;
-import org.siemac.metamac.core.common.util.ApplicationContextProvider;
-import org.siemac.metamac.statistical.resources.core.conf.StatisticalResourcesConfiguration;
+import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.core.common.listener.ApplicationStartupListener;
 import org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConfigurationConstants;
 
-public class ApplicationStartup extends ConfigurationConstants implements ServletContextListener {
-
-    private static final Log                  LOG = LogFactory.getLog(ApplicationStartup.class);
-
-    private StatisticalResourcesConfiguration configurationService;
+public class ApplicationStartup extends ApplicationStartupListener {
 
     @Override
-    public void contextInitialized(ServletContextEvent sce) {
-        try {
-            configurationService = ApplicationContextProvider.getApplicationContext().getBean(StatisticalResourcesConfiguration.class);
-            checkConfiguration();
-        } catch (Exception e) {
-            // Abort startup application
-            throw new RuntimeException(e);
-        }
+    public String projectName() {
+        return "statistical-resources-external";
     }
 
-    private void checkConfiguration() {
-        LOG.info("********************************************************************************");
-        LOG.info("[metamac-statistical-resources-external-web] Checking application configuration");
-        LOG.info("********************************************************************************");
-
+    @Override
+    public void checkApplicationProperties() throws MetamacException {
         // Datasource
-        configurationService.checkRequiredProperty(StatisticalResourcesConfigurationConstants.DB_DRIVER_NAME);
-        configurationService.checkRequiredProperty(StatisticalResourcesConfigurationConstants.DB_URL);
-        configurationService.checkRequiredProperty(StatisticalResourcesConfigurationConstants.DB_USERNAME);
-        configurationService.checkRequiredProperty(StatisticalResourcesConfigurationConstants.DB_PASSWORD);
-        configurationService.checkRequiredProperty(StatisticalResourcesConfigurationConstants.DB_DIALECT);
+        checkRequiredProperty(StatisticalResourcesConfigurationConstants.DB_DRIVER_NAME);
+        checkRequiredProperty(StatisticalResourcesConfigurationConstants.DB_URL);
+        checkRequiredProperty(StatisticalResourcesConfigurationConstants.DB_USERNAME);
+        checkRequiredProperty(StatisticalResourcesConfigurationConstants.DB_PASSWORD);
+        checkRequiredProperty(StatisticalResourcesConfigurationConstants.DB_DIALECT);
+
         // Datasource repository
-        configurationService.checkRequiredProperty(StatisticalResourcesConfigurationConstants.DB_REPOSITORY_DRIVER_NAME);
-        configurationService.checkRequiredProperty(StatisticalResourcesConfigurationConstants.DB_REPOSITORY_URL);
-        configurationService.checkRequiredProperty(StatisticalResourcesConfigurationConstants.DB_REPOSITORY_USERNAME);
-        configurationService.checkRequiredProperty(StatisticalResourcesConfigurationConstants.DB_REPOSITORY_PASSWORD);
-        configurationService.checkRequiredProperty(StatisticalResourcesConfigurationConstants.DB_REPOSITORY_DIALECT);
+        checkRequiredProperty(StatisticalResourcesConfigurationConstants.DB_REPOSITORY_DRIVER_NAME);
+        checkRequiredProperty(StatisticalResourcesConfigurationConstants.DB_REPOSITORY_URL);
+        checkRequiredProperty(StatisticalResourcesConfigurationConstants.DB_REPOSITORY_USERNAME);
+        checkRequiredProperty(StatisticalResourcesConfigurationConstants.DB_REPOSITORY_PASSWORD);
+        checkRequiredProperty(StatisticalResourcesConfigurationConstants.DB_REPOSITORY_DIALECT);
+
         // Api
-        configurationService.checkRequiredProperty(StatisticalResourcesConfigurationConstants.ENDPOINT_STATISTICAL_RESOURCES_EXTERNAL_API);
-        configurationService.checkRequiredProperty(StatisticalResourcesConfigurationConstants.ENDPOINT_SRM_EXTERNAL_API);
-        configurationService.checkRequiredProperty(StatisticalResourcesConfigurationConstants.ENDPOINT_STATISTICAL_OPERATIONS_EXTERNAL_API);
-        configurationService.checkRequiredProperty(StatisticalResourcesConfigurationConstants.ENDPOINT_COMMON_METADATA_EXTERNAL_API);
+        checkRequiredProperty(StatisticalResourcesConfigurationConstants.ENDPOINT_STATISTICAL_RESOURCES_EXTERNAL_API);
+        checkRequiredProperty(StatisticalResourcesConfigurationConstants.ENDPOINT_SRM_EXTERNAL_API);
+        checkRequiredProperty(StatisticalResourcesConfigurationConstants.ENDPOINT_STATISTICAL_OPERATIONS_EXTERNAL_API);
+        checkRequiredProperty(StatisticalResourcesConfigurationConstants.ENDPOINT_COMMON_METADATA_EXTERNAL_API);
+
         // Web application
-        configurationService.checkRequiredProperty(StatisticalResourcesConfigurationConstants.WEB_APPLICATION_PORTAL_EXTERNAL_WEB);
+        checkRequiredProperty(StatisticalResourcesConfigurationConstants.WEB_APPLICATION_PORTAL_EXTERNAL_WEB);
+
         // Misc
-        configurationService.checkRequiredProperty(StatisticalResourcesConfigurationConstants.METAMAC_EDITION_LANGUAGES);
-
-        LOG.info("********************************************************************************");
-        LOG.info("[metamac-statistical-resources-external-web] Application configuration checked");
-        LOG.info("********************************************************************************");
+        checkRequiredProperty(StatisticalResourcesConfigurationConstants.METAMAC_EDITION_LANGUAGES);
     }
-
-    @Override
-    public void contextDestroyed(ServletContextEvent sce) {
-    }
-
 }
