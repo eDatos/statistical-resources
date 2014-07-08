@@ -1,0 +1,19 @@
+Application ContentConstraintsEnums {
+    basePackage=org.siemac.metamac.statistical.resources
+
+    Module enums {    	
+		basePackage=org.siemac.metamac.statistical.resources.core.enume.constraint
+    	
+		""
+		enum ContentConstraintTypeEnum {
+    		ALLOWED,
+    		ACTUAL
+    	}
+    	
+    	"Type of RegionValue. Non SDMX"
+		enum RegionValueTypeEnum {
+    		KEY_SET,
+    		CUBE
+    	}
+    }
+}

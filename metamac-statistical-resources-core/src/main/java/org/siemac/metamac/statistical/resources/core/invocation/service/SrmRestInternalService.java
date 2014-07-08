@@ -2,6 +2,7 @@ package org.siemac.metamac.statistical.resources.core.invocation.service;
 
 import java.util.List;
 
+import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Agency;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Categories;
@@ -15,10 +16,13 @@ import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Concept
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ConceptScheme;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ConceptSchemes;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Concepts;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ContentConstraint;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ContentConstraints;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructure;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructures;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.OrganisationSchemes;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Organisations;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.RegionReference;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ResourceInternal;
 
 public interface SrmRestInternalService {
@@ -89,4 +93,18 @@ public interface SrmRestInternalService {
     public List<String> findCategoriesAsUrnsList(String query) throws MetamacException;
 
     public Categories retrieveCategoriesOfCategorySchemeEfficiently(String categorySchemeUrn) throws MetamacException;
+
+    // CONSTRAINTS
+    public ContentConstraints findContentConstraints(int firstResult, int maxResult, String query, Boolean includeDraft) throws MetamacException;
+    public List<ResourceInternal> findContentConstraints(String query, Boolean includeDraft) throws MetamacException;
+    public List<String> findContentConstraintsAsUrnsList(String query, Boolean includeDraft) throws MetamacException;
+
+    public RegionReference retrieveRegionForContentConstraint(String contentConstraintUrn, String regionCode, Boolean includeDraft) throws MetamacException;
+    public ContentConstraint saveContentConstraint(ServiceContext serviceContext, ContentConstraint contentConstraint) throws MetamacException;
+    public RegionReference saveRegionForContentConstraint(ServiceContext serviceContext, RegionReference regionReference) throws MetamacException;
+    public void deleteContentConstraint(ServiceContext serviceContext, String urn) throws MetamacException;
+    public void publishContentConstraint(ServiceContext serviceContext, String urn, Boolean alsoMarkAsPublic) throws MetamacException;
+
+    public ContentConstraint retrieveContentConstraintByUrn(String urn, Boolean includeDraft) throws MetamacException;
+    public void deleteRegion(ServiceContext serviceContext, String contentConstraintUrn, String regionCode) throws MetamacException;
 }

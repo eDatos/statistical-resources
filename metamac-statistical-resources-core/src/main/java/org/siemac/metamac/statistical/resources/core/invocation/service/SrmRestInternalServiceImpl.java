@@ -6,7 +6,11 @@ import static org.siemac.metamac.rest.api.constants.RestApiConstants.MAXIMUM_LIM
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.ws.rs.core.Response;
+
+import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
+import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.util.GeneratorUrnUtils;
 import org.siemac.metamac.core.common.util.shared.UrnUtils;
@@ -23,10 +27,13 @@ import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Concept
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ConceptScheme;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ConceptSchemes;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Concepts;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ContentConstraint;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ContentConstraints;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructure;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructures;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.OrganisationSchemes;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Organisations;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.RegionReference;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ResourceInternal;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
@@ -656,6 +663,155 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
                 urns.add(resource.getUrn());
             }
             return urns;
+        } catch (Exception e) {
+            throw manageSrmInternalRestException(e);
+        }
+    }
+
+    // -------------------------------------------------------------------------------------------------
+    // CONSTRAINTS
+    // -------------------------------------------------------------------------------------------------
+    @Override
+    public ContentConstraint retrieveContentConstraintByUrn(String urn, Boolean includeDraft) throws MetamacException {
+        try {
+            String[] contentConstraintComponents = GeneratorUrnUtils.extractVersionableArtefactParts(urn);
+            String agencyId = contentConstraintComponents[0];
+            String resourceId = contentConstraintComponents[1];
+            String version = contentConstraintComponents[2];
+            return restApiLocator.getSrmRestInternalFacadeV10().retrieveContentConstraint(agencyId, resourceId, version, BooleanUtils.toStringTrueFalse(includeDraft));
+        } catch (Exception e) {
+            throw manageSrmInternalRestException(e);
+        }
+    }
+
+    @Override
+    public ContentConstraints findContentConstraints(int firstResult, int maxResult, String query, Boolean includeDraft) throws MetamacException {
+        try {
+            String offset = String.valueOf(firstResult);
+            String limit = String.valueOf(maxResult);
+            return restApiLocator.getSrmRestInternalFacadeV10().findContentConstraints(query, null, limit, offset, BooleanUtils.toStringTrueFalse(includeDraft));
+        } catch (Exception e) {
+            throw manageSrmInternalRestException(e);
+        }
+    }
+
+    @Override
+    public List<ResourceInternal> findContentConstraints(String query, Boolean includeDraft) throws MetamacException {
+        try {
+            Integer offset = DEFAULT_OFFSET;
+            List<ResourceInternal> results = new ArrayList<ResourceInternal>();
+            ContentConstraints contentConstraints = null;
+            do {
+                contentConstraints = findContentConstraints(offset, MAXIMUM_LIMIT, query, includeDraft);
+                results.addAll(contentConstraints.getContentConstraints());
+                offset += contentConstraints.getContentConstraints().size(); // next page
+            } while (contentConstraints.getTotal().intValue() != results.size());
+            return results;
+        } catch (Exception e) {
+            throw manageSrmInternalRestException(e);
+        }
+    }
+
+    @Override
+    public List<String> findContentConstraintsAsUrnsList(String query, Boolean includeDraft) throws MetamacException {
+        try {
+            List<ResourceInternal> contentConstraints = findContentConstraints(query, includeDraft);
+            List<String> urns = new ArrayList<String>();
+            for (ResourceInternal resource : contentConstraints) {
+                urns.add(resource.getUrn());
+            }
+            return urns;
+        } catch (Exception e) {
+            throw manageSrmInternalRestException(e);
+        }
+    }
+
+    @Override
+    public ContentConstraint saveContentConstraint(ServiceContext serviceContext, ContentConstraint contentConstraint) throws MetamacException {
+        try {
+            Response createContentConstraint = restApiLocator.getSrmRestInternalFacadeV10().createContentConstraint(contentConstraint, serviceContext.getUserId());
+
+            ContentConstraint result = null;
+            if (Response.Status.CREATED.equals(createContentConstraint.getStatus())) {
+                result = (ContentConstraint) createContentConstraint.getEntity();
+            }
+
+            return result;
+        } catch (Exception e) {
+            throw manageSrmInternalRestException(e);
+        }
+    }
+
+    @Override
+    public void deleteContentConstraint(ServiceContext serviceContext, String urn) throws MetamacException {
+        try {
+            String[] contentConstraintComponents = GeneratorUrnUtils.extractVersionableArtefactParts(urn);
+            String agencyId = contentConstraintComponents[0];
+            String resourceId = contentConstraintComponents[1];
+            String version = contentConstraintComponents[2];
+            restApiLocator.getSrmRestInternalFacadeV10().deleteContentConstraintByUrn(agencyId, resourceId, version, serviceContext.getUserId());
+        } catch (Exception e) {
+            throw manageSrmInternalRestException(e);
+        }
+    }
+
+    @Override
+    public void publishContentConstraint(ServiceContext serviceContext, String urn, Boolean alsoMarkAsPublic) throws MetamacException {
+        try {
+            String[] contentConstraintComponents = GeneratorUrnUtils.extractVersionableArtefactParts(urn);
+            String agencyId = contentConstraintComponents[0];
+            String resourceId = contentConstraintComponents[1];
+            String version = contentConstraintComponents[2];
+            restApiLocator.getSrmRestInternalFacadeV10().publishContentConstraint(agencyId, resourceId, version, alsoMarkAsPublic, serviceContext.getUserId());
+        } catch (Exception e) {
+            throw manageSrmInternalRestException(e);
+        }
+    }
+
+    @Override
+    public RegionReference retrieveRegionForContentConstraint(String contentConstraintUrn, String regionCode, Boolean includeDraft) throws MetamacException {
+        try {
+            String[] contentConstraintComponents = GeneratorUrnUtils.extractVersionableArtefactParts(contentConstraintUrn);
+            String agencyId = contentConstraintComponents[0];
+            String resourceId = contentConstraintComponents[1];
+            String version = contentConstraintComponents[2];
+            return restApiLocator.getSrmRestInternalFacadeV10().retrieveRegionForContentConstraint(agencyId, resourceId, version, regionCode, BooleanUtils.toStringTrueFalse(includeDraft));
+        } catch (Exception e) {
+            throw manageSrmInternalRestException(e);
+        }
+    }
+
+    @Override
+    public RegionReference saveRegionForContentConstraint(ServiceContext serviceContext, RegionReference regionReference) throws MetamacException {
+        try {
+            String[] contentConstraintComponents = GeneratorUrnUtils.extractVersionableArtefactParts(regionReference.getContentConstraintUrn());
+            String agencyId = contentConstraintComponents[0];
+            String resourceId = contentConstraintComponents[1];
+            String version = contentConstraintComponents[2];
+
+            Response saveRegionForContentConstraint = restApiLocator.getSrmRestInternalFacadeV10().saveRegionForContentConstraint(agencyId, resourceId, version, regionReference,
+                    serviceContext.getUserId());
+
+            RegionReference result = null;
+            if (Response.Status.CREATED.equals(saveRegionForContentConstraint.getStatus())) {
+                result = (RegionReference) saveRegionForContentConstraint.getEntity();
+            }
+
+            return result;
+        } catch (Exception e) {
+            throw manageSrmInternalRestException(e);
+        }
+    }
+
+    @Override
+    public void deleteRegion(ServiceContext serviceContext, String contentConstraintUrn, String regionCode) throws MetamacException {
+        try {
+            String[] contentConstraintComponents = GeneratorUrnUtils.extractVersionableArtefactParts(contentConstraintUrn);
+            String agencyId = contentConstraintComponents[0];
+            String resourceId = contentConstraintComponents[1];
+            String version = contentConstraintComponents[2];
+
+            restApiLocator.getSrmRestInternalFacadeV10().deleteRegion(agencyId, resourceId, version, regionCode, serviceContext.getUserId());
         } catch (Exception e) {
             throw manageSrmInternalRestException(e);
         }

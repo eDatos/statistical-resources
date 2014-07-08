@@ -3455,6 +3455,52 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
     }
 
     // ------------------------------------------------------------
+    // CONSTRAINTS
+    // ------------------------------------------------------------
+
+    @Override
+    public void testCreateContentConstraint() throws Exception {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void testRetrieveContentConstraintByUrn() throws Exception {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void testDeleteContentConstraint() throws Exception {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void testFindContentConstraintsForArtefact() throws Exception {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void testRetrieveRegionForContentConstraint() throws Exception {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void testSaveRegionForContentConstraint() throws Exception {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void testDeleteRegion() throws Exception {
+        // TODO Auto-generated method stub
+
+    }
+
+    // ------------------------------------------------------------
     // CRITERIA UTILS
     // ------------------------------------------------------------
     @SuppressWarnings("rawtypes")
@@ -3536,4 +3582,5 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         String urn = buildDatasetUrn(expected.getMaintainer().getCodeNested(), statisticalOperation.getCode(), 1, "001.000");
         DataMockUtils.mockDsdAndCreateDatasetRepository(datasetRepositoriesServiceFacade, srmRestInternalService, urn);
     }
+
 }

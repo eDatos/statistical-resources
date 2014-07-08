@@ -66,4 +66,12 @@ public class ServiceExceptionParameters extends ServiceExceptionBaseParameters {
     // Misc
     public static final String       TIME                                     = "parameter.resources.time";
 
+    // Constraints
+    public static final String       CONTENT_CONSTRAINT                       = "parameter.resources.content_constraint";
+    public static final String       CONTENT_CONSTRAINT_ATTACHMENT            = "parameter.resources.content_constraint.attachment";
+    public static final String       ANNOTATION                               = "annotation";
+    public static final String       TEXT                                     = "text";
+    public static final String       COMMENT                                  = "comment";
+    public static final String       NAME                                     = "name";
+
 }

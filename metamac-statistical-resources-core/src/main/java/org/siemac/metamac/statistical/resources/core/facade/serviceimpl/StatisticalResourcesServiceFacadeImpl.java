@@ -15,14 +15,21 @@ import org.siemac.metamac.core.common.criteria.MetamacCriteria;
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaResult;
 import org.siemac.metamac.core.common.criteria.SculptorCriteria;
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
+import org.siemac.metamac.core.common.enume.domain.TypeExternalArtefactsEnum;
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.util.CoreCommonUtil;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ContentConstraint;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructure;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.RegionReference;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ResourceInternal;
 import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
 import org.siemac.metamac.statistical.resources.core.common.mapper.CommonDo2DtoMapper;
 import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor;
 import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor.DsdAttribute;
+import org.siemac.metamac.statistical.resources.core.constraint.api.ConstraintsService;
+import org.siemac.metamac.statistical.resources.core.constraint.mapper.ConstraintDto2RestMapper;
+import org.siemac.metamac.statistical.resources.core.constraint.mapper.ConstraintRest2DtoMapper;
 import org.siemac.metamac.statistical.resources.core.dataset.criteria.mapper.DatasetMetamacCriteria2SculptorCriteriaMapper;
 import org.siemac.metamac.statistical.resources.core.dataset.criteria.mapper.DatasetSculptorCriteria2MetamacCriteriaMapper;
 import org.siemac.metamac.statistical.resources.core.dataset.criteria.mapper.DatasetVersionMetamacCriteria2SculptorCriteriaMapper;
@@ -39,6 +46,9 @@ import org.siemac.metamac.statistical.resources.core.dataset.mapper.DatasetDto2D
 import org.siemac.metamac.statistical.resources.core.dataset.mapper.StatRepoDto2StatisticalResourcesDtoMapper;
 import org.siemac.metamac.statistical.resources.core.dataset.mapper.StatisticalResourcesDto2StatRepoDtoMapper;
 import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
+import org.siemac.metamac.statistical.resources.core.dto.constraint.ContentConstraintBasicDto;
+import org.siemac.metamac.statistical.resources.core.dto.constraint.ContentConstraintDto;
+import org.siemac.metamac.statistical.resources.core.dto.constraint.RegionValueDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.CategorisationDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionBaseDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
@@ -54,7 +64,9 @@ import org.siemac.metamac.statistical.resources.core.dto.publication.Publication
 import org.siemac.metamac.statistical.resources.core.dto.query.CodeItemDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionBaseDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionDto;
+import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
+import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.invocation.service.SrmRestInternalService;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceapi.LifecycleService;
 import org.siemac.metamac.statistical.resources.core.publication.criteria.mapper.PublicationMetamacCriteria2SculptorCriteriaMapper;
@@ -77,6 +89,7 @@ import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersionPr
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersionRepository;
 import org.siemac.metamac.statistical.resources.core.query.mapper.QueryDo2DtoMapper;
 import org.siemac.metamac.statistical.resources.core.query.mapper.QueryDto2DoMapper;
+import org.siemac.metamac.statistical.resources.core.security.ConstraintsSecurityUtils;
 import org.siemac.metamac.statistical.resources.core.security.DatasetsSecurityUtils;
 import org.siemac.metamac.statistical.resources.core.security.PublicationsSecurityUtils;
 import org.siemac.metamac.statistical.resources.core.security.QueriesSecurityUtils;
@@ -111,6 +124,12 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
 
     @Autowired
     private PublicationDto2DoMapper                                  publicationDto2DoMapper;
+
+    @Autowired
+    private ConstraintDto2RestMapper                                 constraintDto2RestMapper;
+
+    @Autowired
+    private ConstraintRest2DtoMapper                                 constraintRest2DtoMapper;
 
     @Autowired
     private QueryVersionMetamacCriteria2SculptorCriteriaMapper       queryVersionMetamacCriteria2SculptorCriteriaMapper;
@@ -165,6 +184,9 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
 
     @Autowired
     private SrmRestInternalService                                   srmRestInternalService;
+
+    @Autowired
+    private ConstraintsService                                       contraintsService;
 
     @Autowired
     private DatasetVersionRepository                                 datasetVersionRepository;
@@ -783,7 +805,6 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
                 sculptorCriteria.getPageSize());
 
         return metamacCriteriaResult;
-
     }
 
     @Override
@@ -1912,5 +1933,158 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
 
         // Delete
         getPublicationService().deleteCube(ctx, cubeUrn);
+    }
+
+    // ------------------------------------------------------------------------
+    // CONSTRAINTS
+    // ------------------------------------------------------------------------
+
+    @Override
+    public List<ExternalItemDto> findContentConstraintsForArtefact(ServiceContext ctx, String artefactUrn) throws MetamacException {
+        // Security
+        ConstraintsSecurityUtils.canFindContentConstraintsForArtefact(ctx);
+
+        // Find
+        List<ResourceInternal> contentConstraintsForArtefact = contraintsService.findContentConstraintsForArtefact(ctx, artefactUrn);
+
+        // Transform
+        return constraintRest2DtoMapper.externalItemConstraintToExternalItemDto(contentConstraintsForArtefact);
+    }
+
+    @Override
+    public ContentConstraintBasicDto createContentConstraint(ServiceContext ctx, ContentConstraintDto contentConstraintDto) throws MetamacException {
+        // Security
+        DatasetVersionDto datasetVersionDto = obtainDatasetVersionFromContentConstraint(ctx, contentConstraintDto);
+        ConstraintsSecurityUtils.canCreateContentConstraint(ctx, datasetVersionDto.getStatisticalOperation().getCode());
+
+        // Transform
+        ContentConstraint contentConstraint = constraintDto2RestMapper.constraintDtoTo(contentConstraintDto);
+
+        // Create
+        contentConstraint = contraintsService.createContentConstraint(ctx, contentConstraint);
+
+        // Transform
+        return constraintRest2DtoMapper.toConstraintBasicDto(contentConstraint);
+    }
+
+    @Override
+    public ContentConstraintDto retrieveContentConstraintByUrn(ServiceContext ctx, String urn, Boolean includeDraft) throws MetamacException {
+        // Retrieve
+        ContentConstraint contentConstraint = contraintsService.retrieveContentConstraintByUrn(ctx, urn, includeDraft);
+
+        // Security
+        DatasetVersionDto datasetVersionDto = obtainDatasetVersionFromContentConstraint(ctx, contentConstraint); // Dataset for extract operation
+        ProcStatusEnum procStatus = null; // ProcStatus of contentConstraints, null is draft
+        if (contentConstraint.getLifeCycle() != null) {
+            procStatus = ProcStatusEnum.valueOf(contentConstraint.getLifeCycle().getProcStatus().value());
+        }
+        ConstraintsSecurityUtils.canRetrieveContentConstraintByUrn(ctx, datasetVersionDto.getStatisticalOperation().getCode(), procStatus);
+
+        // Transform
+        return constraintRest2DtoMapper.toConstraintDto(contentConstraint);
+    }
+
+    @Override
+    public void deleteContentConstraint(ServiceContext ctx, String urn) throws MetamacException {
+        // Retrieve
+        ContentConstraint contentConstraint = contraintsService.retrieveContentConstraintByUrn(ctx, urn, Boolean.TRUE);
+
+        // Security
+        DatasetVersionDto datasetVersionDto = obtainDatasetVersionFromContentConstraint(ctx, contentConstraint); // Dataset for extract operation
+        ProcStatusEnum procStatus = null; // ProcStatus of contentConstraints, null is draft
+        if (contentConstraint.getLifeCycle() != null) {
+            procStatus = ProcStatusEnum.valueOf(contentConstraint.getLifeCycle().getProcStatus().value());
+        }
+        ConstraintsSecurityUtils.canDeleteContentConstraint(ctx, datasetVersionDto, procStatus);
+
+        // Delete
+        contraintsService.deleteContentConstraint(ctx, urn); // TODO pasar procStatus - op code para filtrar
+    }
+
+    @Override
+    public RegionValueDto saveRegionForContentConstraint(ServiceContext ctx, String contentConstraintUrn, RegionValueDto regionValueDto) throws MetamacException {
+        // Retrieve
+        ContentConstraint contentConstraint = contraintsService.retrieveContentConstraintByUrn(ctx, contentConstraintUrn, Boolean.TRUE);
+
+        // Security
+        DatasetVersionDto datasetVersionDto = obtainDatasetVersionFromContentConstraint(ctx, contentConstraint); // Dataset for extract operation
+        ProcStatusEnum procStatus = null; // ProcStatus of contentConstraints, null is draft
+        if (contentConstraint.getLifeCycle() != null) {
+            procStatus = ProcStatusEnum.valueOf(contentConstraint.getLifeCycle().getProcStatus().value());
+        }
+        ConstraintsSecurityUtils.canSaveForContentConstraint(ctx, datasetVersionDto, procStatus);
+
+        // Transform
+        RegionReference regionReference = constraintDto2RestMapper.toRegionReference(regionValueDto);
+
+        // Create
+        regionReference = contraintsService.saveRegionForContentConstraint(ctx, regionReference);
+
+        // Transform
+        return constraintRest2DtoMapper.toRegionDto(regionReference);
+    }
+
+    @Override
+    public void deleteRegion(ServiceContext ctx, String contentConstraintUrn, String regionCode) throws MetamacException {
+        // Retrieve
+        ContentConstraint contentConstraint = contraintsService.retrieveContentConstraintByUrn(ctx, contentConstraintUrn, Boolean.TRUE);
+
+        // Security
+        DatasetVersionDto datasetVersionDto = obtainDatasetVersionFromContentConstraint(ctx, contentConstraint); // Dataset for extract operation
+        ProcStatusEnum procStatus = null; // ProcStatus of contentConstraints, null is draft
+        if (contentConstraint.getLifeCycle() != null) {
+            procStatus = ProcStatusEnum.valueOf(contentConstraint.getLifeCycle().getProcStatus().value());
+        }
+        ConstraintsSecurityUtils.deleteRegion(ctx, datasetVersionDto, procStatus);
+
+        // Delete
+        contraintsService.deleteRegion(ctx, contentConstraintUrn, regionCode);
+    }
+
+    @Override
+    public RegionValueDto retrieveRegionForContentConstraint(ServiceContext ctx, String contentConstraintUrn, String regionCode) throws MetamacException {
+        // Retrieve
+        ContentConstraint contentConstraint = contraintsService.retrieveContentConstraintByUrn(ctx, contentConstraintUrn, Boolean.TRUE);
+
+        // Security
+        DatasetVersionDto datasetVersionDto = obtainDatasetVersionFromContentConstraint(ctx, contentConstraint); // Dataset for extract operation
+        ProcStatusEnum procStatus = null; // ProcStatus of contentConstraints, null is draft
+        if (contentConstraint.getLifeCycle() != null) {
+            procStatus = ProcStatusEnum.valueOf(contentConstraint.getLifeCycle().getProcStatus().value());
+        }
+        ConstraintsSecurityUtils.canRetrieveRegionForContentConstraint(ctx, datasetVersionDto, procStatus);
+
+        // Find
+        RegionReference regionReference = contraintsService.retrieveRegionForContentConstraint(ctx, contentConstraintUrn, regionCode);
+
+        // Transform
+        return constraintRest2DtoMapper.toRegionDto(regionReference);
+    }
+
+    protected DatasetVersionDto obtainDatasetVersionFromContentConstraint(ServiceContext ctx, ContentConstraintDto contentConstraintDto) throws MetamacException {
+        if (contentConstraintDto == null || contentConstraintDto.getConstraintAttachment() == null || contentConstraintDto.getConstraintAttachment().getType() == null) {
+            throw new MetamacException(ServiceExceptionType.METADATA_REQUIRED, ServiceExceptionParameters.CONTENT_CONSTRAINT_ATTACHMENT);
+        }
+
+        if (TypeExternalArtefactsEnum.DATASET.equals(contentConstraintDto.getConstraintAttachment().getType())) {
+            throw new MetamacException(ServiceExceptionType.METADATA_INCORRECT, ServiceExceptionParameters.CONTENT_CONSTRAINT_ATTACHMENT);
+        }
+
+        DatasetVersionDto datasetVersionDto = retrieveDatasetVersionByUrn(ctx, contentConstraintDto.getConstraintAttachment().getUrn());
+        return datasetVersionDto;
+    }
+
+    protected DatasetVersionDto obtainDatasetVersionFromContentConstraint(ServiceContext ctx, ContentConstraint contentConstraint) throws MetamacException {
+        if (contentConstraint == null || contentConstraint.getConstraintAttachment() == null || contentConstraint.getConstraintAttachment().getKind() == null) {
+            throw new MetamacException(ServiceExceptionType.METADATA_REQUIRED, ServiceExceptionParameters.CONTENT_CONSTRAINT_ATTACHMENT);
+        }
+
+        if (TypeExternalArtefactsEnum.DATASET.getValue().equals(contentConstraint.getConstraintAttachment().getKind())) {
+            throw new MetamacException(ServiceExceptionType.METADATA_INCORRECT, ServiceExceptionParameters.CONTENT_CONSTRAINT_ATTACHMENT);
+        }
+
+        DatasetVersionDto datasetVersionDto = retrieveDatasetVersionByUrn(ctx, contentConstraint.getConstraintAttachment().getUrn());
+
+        return datasetVersionDto;
     }
 }

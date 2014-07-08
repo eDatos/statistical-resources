@@ -1,0 +1,151 @@
+import "classpath:/btdesign/metamac-core-common-dtos.btdesign"
+import "classpath:/btdesign/metamac-statistical-resources-core-common-dtos.btdesign"
+import "classpath:/btdesign/metamac-statistical-resources-core-base-dtos.btdesign"
+import "classpath:/btdesign/metamac-statistical-resources-core-constraints-enums.btdesign"
+
+
+Application ContentConstraintsEnumsDto {
+    basePackage=unused
+
+    Module domain_constraint_dto {
+    	basePackage=org.siemac.metamac.statistical.resources.core.dto.constraint
+    	
+    	
+  		DataTransferObject MaintainableArtefactDto extends @AuditableDto {
+  			//********************
+  			// Maintainable 
+  			//********************  		
+            "A version string following an agreed convention"
+            String versionLogic;
+            "Date from which the version is valid"
+            JAVADATE validFrom nullable;
+            "Date from which version is superceded"
+            JAVADATE validTo nullable;
+            "Defines whether a maintained artefact is draft or final."
+            Boolean finalLogic;
+            "If set to 'true' it indicates that the content of the object is held externally."
+            Boolean isExternalReference;
+            "The URL of an SDMX-ML document containing the external object."
+            String structureURL nullable;
+            "The URL of an SDMXcompliant web service from which the external object can be retrieved."
+            String serviceURL nullable;
+			"Version number that replaces the current one."
+			String replacedByVersion nullable;
+			"Version number who replaces the current one."
+			String replaceToVersion nullable;
+
+            "Association to the Maintenance Agency responsible for maintaining the artefact."
+            String agencyID required;
+  			
+  			//********************
+  			// Nameable 
+  			//********************  
+  			"A multi-lingual name is provided by this role via the International String class"
+            - @InternationalStringDto name required;
+            "A multi-lingual description is provided by this role via the International String class."
+            - @InternationalStringDto description nullable;
+            "A multi-lingual comment is provided by this role via the International String class."
+            - @InternationalStringDto comment nullable;
+
+
+  			//********************
+  			// Identifiable 
+  			//********************  
+            "The unique identifier of the object."
+            String code nullable;
+            "Universal resource identifier that may or may not be resolvable."
+            String uriProvider nullable;
+            "Universal resource name, this is for use in registries: all registered objects have a urn."
+            String urn nullable;
+            "Universal resource name. It is optional to imported artefacts. For created artefacts is identical to urn metadata"
+            String urnProvider nullable;
+            
+            //********************
+  			// Annotable Artefact
+  			//******************** 
+            - Set<@AnnotationDto> annotations;
+            
+  		}
+  		
+  		"Dto for AnnotationDto"
+        DataTransferObject AnnotationDto extends @IdentityDto {
+
+        "Identifier for the Annotation. It can be used to disambiguate one Annotation from another where there are several
+			Annotations for the same annotated object."
+            String code nullable;
+            "A title used to identify an annotation."
+            String title nullable;
+            "Specifies how the annotation is to be processed."
+            String type nullable;
+            "A link to external descriptive text."
+            String url nullable;
+            "An International String provides the multilingual text content of the annotation via this role."
+            - @InternationalStringDto text nullable;
+        }
+		        
+        "Dto for ContentConstraintBasicDto"
+        DataTransferObject ContentConstraintBasicDto extends @MaintainableArtefactDto  {
+        	
+        	"The type attribute indicates whether this constraint states what data is actually present for the constraint attachment, or if it defines what content is allowed"
+			-@ContentConstraintTypeEnum type nullable;
+			
+        	"Reference to constrainable artefact"
+            - @ExternalItemDto constraintAttachment;
+        }
+
+        "Dto for CategorisationDto"
+        DataTransferObject ContentConstraintDto extends @ContentConstraintBasicDto
+            "Regions"
+            - List<@RegionValueBasicDto> regions;
+        }
+        
+        "Dto for RegionValueBasicDto"
+	    DataTransferObject RegionValueBasicDto extends @IdentityDto {
+	    	-@RegionValueTypeEnum regionValueTypeEnum not nullable;
+	    
+	    	String code;
+	    }
+	            
+    	"Dto for RegionValueDto"
+	    DataTransferObject RegionValueDto extends @RegionValueBasicDto {
+	    	String contentConstraintUrn
+	    
+			- List<@KeyValueDto> keys;
+	    }
+	    
+        "Dto for KeyValueDto"
+	    DataTransferObject KeyValueDto extends @IdentityDto {
+	    
+	    	-@RegionValueDto region;
+	    
+			Boolean included nullable;
+			String keyRepresentation;
+			
+			- List<@KeyPartDto> parts;
+	    }
+	        
+	    "Dto for KeyPartDto"
+	    DataTransferObject KeyPartDto extends @IdentityDto {
+	    
+	    	String identifier;
+			String value;
+			Boolean cascadeValues nullable;
+			Integer position;
+			
+			// Only for CUBES: TimeRangeValueType
+			"BeforePeriod is the period before which the period is meant to cover"
+			String beforePeriod nullable;
+			Boolean beforePeriodInclusive nullable;
+			"AfterPeriod is the period after which the period is meant to cover"
+			String afterPeriod nullable;
+			Boolean afterPeriodInclusive nullable;
+			"StartPeriod is the start date or the range that the queried date must occur within"
+			String startPeriod nullable;
+			Boolean startPeriodInclusive nullable;
+			"EndPeriod is the end period of the range"
+			String endPeriod nullable;
+			Boolean endPeriodInclusive nullable;
+	    }
+	    
+    }
+}

@@ -1817,7 +1817,47 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
         // no optimistic locking in this operation
     }
 
+    @Override
+    public void testCreateContentConstraint() throws Exception {
+        // TODO METAMAC-1985 Auto-generated method stub
+    }
+
+    @Override
+    public void testRetrieveContentConstraintByUrn() throws Exception {
+        // no optimistic locking in this operation
+
+    }
+
+    @Override
+    public void testDeleteContentConstraint() throws Exception {
+        // no optimistic locking in this operation
+
+    }
+
+    @Override
+    public void testFindContentConstraintsForArtefact() throws Exception {
+        // no optimistic locking in this operation
+
+    }
+
+    @Override
+    public void testRetrieveRegionForContentConstraint() throws Exception {
+        // no optimistic locking in this operation
+
+    }
+
+    @Override
+    public void testSaveRegionForContentConstraint() throws Exception {
+        // TODO METAMAC-1985 Auto-generated method stub
+    }
+
+    @Override
+    public void testDeleteRegion() throws Exception {
+        // no optimistic locking in this operation
+    }
+
     private void mockDsdAndDataRepositorySimpleDimensions() throws Exception {
         DataMockUtils.mockDsdAndDataRepositorySimpleDimensionsNoAttributes(datasetRepositoriesServiceFacade, srmRestInternalService);
     }
+
 }

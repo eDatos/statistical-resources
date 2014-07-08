@@ -248,6 +248,21 @@ public class ValidateDataVersusDsd {
                 continue;
             }
 
+            //@formatter:off
+            // TODO METAMAC-1985, check if the observation is included or excluded
+            // Para todas las CK definidas para este flujo de datos.
+            //      Para todas las Regiones de cada CK
+            //          Ver si hace match la observación con alguna clave de region
+            //              Si no lo hace y:
+            //                  es isIncluded -> Error (en esta región debería de estar)
+            //                  es !isIncluded -> OK
+            //              Si lo hace y:
+            //                  es isIncluded -> OK 
+            //                  es !isIncluded -> Error (en esta región no debería de estar)
+            //              -- Hay que estudiar que pasa entre las regiones? -> A mi entender ñas claves tienen que ser disjuntas entre las regiones
+            //              
+            //@formatter:on
+
         }
 
         ExceptionUtils.throwIfException(exceptions);

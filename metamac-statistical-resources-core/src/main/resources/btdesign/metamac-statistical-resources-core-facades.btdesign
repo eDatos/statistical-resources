@@ -15,6 +15,9 @@ import "classpath:/btdesign/metamac-statistical-resources-core-datasets-dtos.btd
 import "classpath:/btdesign/metamac-statistical-resources-core-publications.btdesign"
 import "classpath:/btdesign/metamac-statistical-resources-core-publications-dtos.btdesign"
 
+import "classpath:/btdesign/metamac-statistical-resources-core-constraints-enums.btdesign"
+import "classpath:/btdesign/metamac-statistical-resources-core-constraints-dtos.btdesign"
+
 Application FacadeStatisticalResources {
 	basePackage=unused
 
@@ -236,6 +239,23 @@ Application FacadeStatisticalResources {
 	    	@CubeDto retrieveCube(String cubeUrn) throws MetamacException;
 	    	"Deletes cube"
 	    	deleteCube(String cubeUrn) throws MetamacException;
+	    	
+	    	// CONSTRAINTS
+	    	"Find content constraints by constrained artefact"
+	    	List<@ExternalItemDto> findContentConstraintsForArtefact(String artefactUrn) throws MetamacException;
+	    	"Create content constraint"
+    		@ContentConstraintBasicDto createContentConstraint(@ContentConstraintDto contentConstraint) throws MetamacException;
+    		"Retrieves categorisation by urn"
+    		@ContentConstraintDto retrieveContentConstraintByUrn(String urn, Boolean includeDraft) throws MetamacException;
+    		"Deletes content constraint"
+    		deleteContentConstraint(String urn) throws MetamacException;
+    		
+    		"Retrieve region with keies"
+			@RegionValueDto retrieveRegionForContentConstraint(String contentConstraintUrn, String regionCode) throws MetamacException;
+    		"Create or update a region"
+    		@RegionValueDto saveRegionForContentConstraint(String contentConstraintUrn, @RegionValueDto regionValueDto) throws MetamacException;
+    		"Remove region"
+    		deleteRegion(String contentConstraintUrn, String regionCode) throws MetamacException;
 		}
 	}
 }

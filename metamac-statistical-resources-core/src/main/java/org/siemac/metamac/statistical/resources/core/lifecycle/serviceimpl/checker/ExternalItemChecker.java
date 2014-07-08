@@ -25,6 +25,7 @@ import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.CodeCri
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.CodelistCriteriaPropertyRestriction;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ConceptCriteriaPropertyRestriction;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ConceptSchemeCriteriaPropertyRestriction;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ContentConstraintCriteriaPropertyRestriction;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructureCriteriaPropertyRestriction;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.OrganisationCriteriaPropertyRestriction;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.OrganisationSchemeCriteriaPropertyRestriction;
@@ -132,6 +133,12 @@ public class ExternalItemChecker {
                         org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ProcStatus.EXTERNALLY_PUBLISHED.toString(), expectedUrns);
 
                 result = srmRestInternalService.findOrganisationSchemesAsUrnsList(query);
+                checkResult(expectedUrns, result, metadataName, exceptionItems);
+                break;
+            case CONTENT_CONSTRAINTS:
+                query = createQueryForPublishedResourcesSearchingByUrn(ContentConstraintCriteriaPropertyRestriction.URN, ContentConstraintCriteriaPropertyRestriction.PROC_STATUS,
+                        org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ProcStatus.EXTERNALLY_PUBLISHED.toString(), expectedUrns);
+                result = srmRestInternalService.findContentConstraintsAsUrnsList(query, null);
                 checkResult(expectedUrns, result, metadataName, exceptionItems);
                 break;
             case CONFIGURATION:
