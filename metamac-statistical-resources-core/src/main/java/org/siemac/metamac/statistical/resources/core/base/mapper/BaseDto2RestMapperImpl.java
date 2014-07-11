@@ -15,7 +15,6 @@ import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Maintai
 import org.siemac.metamac.statistical.resources.core.common.mapper.CommonDto2RestMapperImpl;
 import org.siemac.metamac.statistical.resources.core.dto.constraint.AnnotationDto;
 import org.siemac.metamac.statistical.resources.core.dto.constraint.MaintainableArtefactDto;
-import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionSingleParameters;
 
 @org.springframework.stereotype.Component("baseDto2RestMapper")
@@ -56,7 +55,7 @@ public class BaseDto2RestMapperImpl extends CommonDto2RestMapperImpl implements 
         // Attributes modifiable
         target.setName(internationalStringDtoToRest(source.getName(), target.getName(), addParameter(metadataName, ServiceExceptionSingleParameters.TITLE)));
         target.setDescription(internationalStringDtoToRest(source.getDescription(), target.getDescription(), addParameter(metadataName, ServiceExceptionSingleParameters.DESCRIPTION)));
-        target.setComment(internationalStringDtoToRest(source.getComment(), target.getComment(), addParameter(metadataName, ServiceExceptionParameters.COMMENT)));
+        target.setComment(internationalStringDtoToRest(source.getComment(), target.getComment(), addParameter(metadataName, ServiceExceptionSingleParameters.COMMENT)));
         // parameter
         // name
     }
@@ -76,7 +75,7 @@ public class BaseDto2RestMapperImpl extends CommonDto2RestMapperImpl implements 
         List<Annotation> results = new ArrayList<Annotation>(source.getAnnotations().size());
         while (itAnnotationsSource.hasNext()) {
             AnnotationDto annotationDto = itAnnotationsSource.next();
-            Annotation annotationRest = annotationDtoToRest(annotationDto, null, addParameter(metadataName, ServiceExceptionParameters.ANNOTATION));
+            Annotation annotationRest = annotationDtoToRest(annotationDto, null, addParameter(metadataName, ServiceExceptionSingleParameters.ANNOTATION));
             results.add(annotationRest);
         }
 
@@ -100,7 +99,7 @@ public class BaseDto2RestMapperImpl extends CommonDto2RestMapperImpl implements 
         target.setKind(source.getType().getValue());
         // Without managementAppUrl and selfLink
 
-        target.setName(internationalStringDtoToRest(source.getTitle(), target.getName(), addParameter(metadataName, ServiceExceptionParameters.NAME)));
+        target.setName(internationalStringDtoToRest(source.getTitle(), target.getName(), addParameter(metadataName, ServiceExceptionSingleParameters.NAME)));
         return target;
     }
 }

@@ -12,7 +12,7 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.serviceimpl.utils.ValidationUtils;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Annotation;
 import org.siemac.metamac.statistical.resources.core.dto.constraint.AnnotationDto;
-import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
+import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionSingleParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 
 @org.springframework.stereotype.Component("commonDto2RestMapper")
@@ -54,7 +54,7 @@ public class CommonDto2RestMapperImpl implements CommonDto2RestMapper {
         target.setTitle(source.getTitle());
         target.setType(source.getType());
         target.setUrl(source.getUrl());
-        target.setText(internationalStringDtoToRest(source.getText(), target.getText(), addParameter(metadataName, ServiceExceptionParameters.TEXT)));
+        target.setText(internationalStringDtoToRest(source.getText(), target.getText(), addParameter(metadataName, ServiceExceptionSingleParameters.TEXT)));
 
         return target;
     }
