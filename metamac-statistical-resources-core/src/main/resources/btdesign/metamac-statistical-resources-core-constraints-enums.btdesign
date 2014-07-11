@@ -1,7 +1,7 @@
 Application ContentConstraintsEnums {
     basePackage=org.siemac.metamac.statistical.resources
 
-    Module enums {    	
+    Module enums_constraints {    	
 		basePackage=org.siemac.metamac.statistical.resources.core.enume.constraint
     	
 		""
