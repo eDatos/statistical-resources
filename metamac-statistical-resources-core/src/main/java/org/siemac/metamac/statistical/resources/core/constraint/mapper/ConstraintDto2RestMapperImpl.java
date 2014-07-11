@@ -22,6 +22,7 @@ import org.siemac.metamac.statistical.resources.core.dto.constraint.KeyValueDto;
 import org.siemac.metamac.statistical.resources.core.dto.constraint.RegionValueDto;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
 
+@org.springframework.stereotype.Component("constraintDto2RestMapper")
 public class ConstraintDto2RestMapperImpl extends BaseDto2RestMapperImpl implements ConstraintDto2RestMapper {
 
     @Override

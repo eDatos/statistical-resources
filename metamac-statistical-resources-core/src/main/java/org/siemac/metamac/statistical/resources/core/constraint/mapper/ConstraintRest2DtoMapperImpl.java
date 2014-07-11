@@ -24,6 +24,7 @@ import org.siemac.metamac.statistical.resources.core.dto.constraint.RegionValueB
 import org.siemac.metamac.statistical.resources.core.dto.constraint.RegionValueDto;
 import org.siemac.metamac.statistical.resources.core.enume.constraint.domain.RegionValueTypeEnum;
 
+@org.springframework.stereotype.Component("constraintRest2DtoMapper")
 public class ConstraintRest2DtoMapperImpl extends BaseRest2DtoMapperImpl implements ConstraintRest2DtoMapper {
 
     @Override
