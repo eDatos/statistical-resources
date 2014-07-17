@@ -11,7 +11,7 @@
 
     <groupId>org.siemac.metamac.metamac-statistical-resources</groupId>
     <artifactId>metamac-statistical-resources-parent</artifactId>
-    <version>1.1.0</version>
+    <version>1.1.1-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>METAMAC :: STATISTICAL RESOURCES :: PARENT</name>
     <description>METAMAC :: STATISTICAL RESOURCES :: PARENT</description>
@@ -50,10 +50,4 @@
         <statistic-parser.version>1.0.6</statistic-parser.version>
         <statistic-sdmx-srm-rest-external-api.version>1.2.0</statistic-sdmx-srm-rest-external-api.version>
     </properties>
-
-  <scm>
-    <connection>scm:svn:http://svn.arte-consultores.com/svn/arte/istac/metamac/metamac-parent/tags/20140717-0852-v1.1.0/metamac-statistical-resources-parent</connection>
-    <developerConnection>scm:svn:http://svn.arte-consultores.com/svn/arte/istac/metamac/metamac-parent/tags/20140717-0852-v1.1.0/metamac-statistical-resources-parent</developerConnection>
-    <url>http://svn.arte-consultores.com/viewvc/arte/istac/metamac/metamac-parent/tags/20140717-0852-v1.1.0/metamac-statistical-resources-parent</url>
-  </scm>
 </project>
