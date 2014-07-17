@@ -44,6 +44,7 @@
                 <configuration>
                     <checkModificationExcludes>
                         <checkModificationExclude>${basedir}/etc/db/statistical-resources/01-create/01-statistical-resources-schema-create.sql</checkModificationExclude>
+                        <checkModificationExclude>${basedir}/etc/db/statistical-resources/01-create/01-statistical-resources-schema-create.sql:modified</checkModificationExclude>
                     </checkModificationExcludes>
                 </configuration>
             </plugin>
