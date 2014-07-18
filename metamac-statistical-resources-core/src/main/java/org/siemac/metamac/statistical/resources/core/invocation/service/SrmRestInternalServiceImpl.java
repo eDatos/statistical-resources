@@ -11,6 +11,7 @@ import javax.ws.rs.core.Response;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
+import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.util.GeneratorUrnUtils;
 import org.siemac.metamac.core.common.util.shared.UrnUtils;
@@ -743,13 +744,26 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
     }
 
     @Override
-    public void deleteContentConstraint(ServiceContext serviceContext, String urn) throws MetamacException {
+    public void deleteContentConstraint(ServiceContext serviceContext, String urn, Boolean forceDeleteFinal) throws MetamacException {
         try {
             String[] contentConstraintComponents = GeneratorUrnUtils.extractVersionableArtefactParts(urn);
             String agencyId = contentConstraintComponents[0];
             String resourceId = contentConstraintComponents[1];
             String version = contentConstraintComponents[2];
-            restApiLocator.getSrmRestInternalFacadeV10().deleteContentConstraintByUrn(agencyId, resourceId, version, serviceContext.getUserId());
+            restApiLocator.getSrmRestInternalFacadeV10().deleteContentConstraintByUrn(agencyId, resourceId, version, forceDeleteFinal, serviceContext.getUserId());
+        } catch (Exception e) {
+            throw manageSrmInternalRestException(e);
+        }
+    }
+
+    @Override
+    public void versioningContentConstraint(ServiceContext serviceContext, String urn, VersionTypeEnum versionTypeEnum) throws MetamacException {
+        try {
+            String[] contentConstraintComponents = GeneratorUrnUtils.extractVersionableArtefactParts(urn);
+            String agencyId = contentConstraintComponents[0];
+            String resourceId = contentConstraintComponents[1];
+            String version = contentConstraintComponents[2];
+            restApiLocator.getSrmRestInternalFacadeV10().versioningContentConstraint(agencyId, resourceId, version, serviceContext.getUserId(), versionTypeEnum.getName());
         } catch (Exception e) {
             throw manageSrmInternalRestException(e);
         }

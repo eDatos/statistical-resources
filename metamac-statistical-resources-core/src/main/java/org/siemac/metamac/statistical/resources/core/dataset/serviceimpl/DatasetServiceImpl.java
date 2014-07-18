@@ -58,6 +58,7 @@ import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor.D
 import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor.DsdDimension;
 import org.siemac.metamac.statistical.resources.core.conf.StatisticalResourcesConfiguration;
 import org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConstants;
+import org.siemac.metamac.statistical.resources.core.constraint.api.ConstraintsService;
 import org.siemac.metamac.statistical.resources.core.dataset.checks.DatasetMetadataEditionChecks;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.AttributeValue;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Categorisation;
@@ -143,6 +144,9 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
 
     @Autowired
     private StatisticalResourcesConfiguration         configurationService;
+
+    @Autowired
+    private ConstraintsService                        constraintsService;
 
     // ------------------------------------------------------------------------
     // DATASOURCES
@@ -508,6 +512,9 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         }
 
         tryToDeleteDatasetRepository(datasetRepositoryId);
+
+        // Remove associated constraints
+        constraintsService.deleteContentConstraintsForArtefactUrn(ctx, datasetVersionUrn);
     }
 
     private void checkCanDatasetVersionBeDeleted(ServiceContext ctx, DatasetVersion datasetVersion) throws MetamacException {

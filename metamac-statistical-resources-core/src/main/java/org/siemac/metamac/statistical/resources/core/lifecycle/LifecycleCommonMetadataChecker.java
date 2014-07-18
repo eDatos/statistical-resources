@@ -10,10 +10,10 @@ import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ApplicationException;
+import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.core.common.exception.utils.ExceptionUtils;
-import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructure;
 import org.siemac.metamac.statistical.resources.core.base.domain.HasLifecycle;
 import org.siemac.metamac.statistical.resources.core.base.domain.HasSiemacMetadata;
 import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatisticalResource;
@@ -30,6 +30,7 @@ import org.siemac.metamac.statistical.resources.core.invocation.service.SrmRestI
 import org.siemac.metamac.statistical.resources.core.io.serviceimpl.validators.ValidateDataVersusDsd;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
+import org.siemac.metamac.statistical.resources.core.task.domain.TaskInfoDataset;
 import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesValidationUtils;
 import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesVersionUtils;
 import org.slf4j.Logger;
@@ -105,7 +106,7 @@ public class LifecycleCommonMetadataChecker {
         checkMetadataRequired(siemacMetadataStatisticalResource.getCommonMetadata(), addParameter(metadataName, ServiceExceptionSingleParameters.COMMON_METADATA), exceptionItems);
     }
 
-    public void checkDatasetVersionCommonMetadata(DatasetVersion resource, String metadataName, List<MetamacExceptionItem> exceptionItems) {
+    public void checkDatasetVersionCommonMetadata(ServiceContext ctx, DatasetVersion resource, String metadataName, List<MetamacExceptionItem> exceptionItems) {
 
         checkMetadataRequired(resource.getRelatedDsd(), addParameter(metadataName, ServiceExceptionSingleParameters.RELATED_DSD), exceptionItems);
 
@@ -128,8 +129,10 @@ public class LifecycleCommonMetadataChecker {
 
         if (resource.getRelatedDsd() != null) {
             try {
-                DataStructure dsd = srmRestInternalService.retrieveDsdByUrn(resource.getRelatedDsd().getUrn());
-                ValidateDataVersusDsd validator = new ValidateDataVersusDsd(dsd, srmRestInternalService);
+                TaskInfoDataset taskInfoDataset = new TaskInfoDataset();
+                taskInfoDataset.setDatasetVersionId(resource.getSiemacMetadataStatisticalResource().getUrn());
+                taskInfoDataset.setDataStructureUrn(resource.getRelatedDsd().getUrn());
+                ValidateDataVersusDsd validator = new ValidateDataVersusDsd(ctx, srmRestInternalService, taskInfoDataset);
 
                 List<AttributeInstanceDto> attributesInstances = datasetRepositoriesServiceFacade.findAttributesInstances(resource.getDatasetRepositoryId());
 

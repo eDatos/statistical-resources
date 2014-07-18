@@ -1819,7 +1819,7 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
 
     @Override
     public void testCreateContentConstraint() throws Exception {
-        // TODO METAMAC-1985 Auto-generated method stub
+        // no optimistic locking in this operation
     }
 
     @Override
@@ -1848,7 +1848,7 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
 
     @Override
     public void testSaveRegionForContentConstraint() throws Exception {
-        // TODO METAMAC-1985 Auto-generated method stub
+        // no optimistic locking in this operation
     }
 
     @Override

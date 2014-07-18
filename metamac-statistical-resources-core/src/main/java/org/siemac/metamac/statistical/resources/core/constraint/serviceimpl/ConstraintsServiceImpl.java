@@ -3,6 +3,7 @@ package org.siemac.metamac.statistical.resources.core.constraint.serviceimpl;
 import java.util.List;
 
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
+import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.rest.common.v1_0.domain.ComparisonOperator;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ContentConstraint;
@@ -43,7 +44,25 @@ public class ConstraintsServiceImpl implements ConstraintsService {
 
     @Override
     public void deleteContentConstraint(ServiceContext ctx, String urn) throws MetamacException {
-        srmRestInternalService.deleteContentConstraint(ctx, urn);
+        srmRestInternalService.deleteContentConstraint(ctx, urn, Boolean.FALSE);
+    }
+
+    @Override
+    public void deleteContentConstraintsForArtefactUrn(ServiceContext ctx, String artefactUrn) throws MetamacException {
+        List<ResourceInternal> contentConstraintsForArtefact = findContentConstraintsForArtefact(ctx, artefactUrn);
+        for (ResourceInternal resourceInternal : contentConstraintsForArtefact) {
+            srmRestInternalService.deleteContentConstraint(ctx, resourceInternal.getUrn(), Boolean.TRUE); // Force to remove final constraints
+        }
+    }
+
+    @Override
+    public void versioningContentConstraint(ServiceContext ctx, String urn, VersionTypeEnum versionTypeEnum) throws MetamacException {
+        srmRestInternalService.versioningContentConstraint(ctx, urn, versionTypeEnum);
+    }
+
+    @Override
+    public void publishContentConstraint(ServiceContext ctx, String urn, Boolean alsoMarkAsPublic) throws MetamacException {
+        srmRestInternalService.publishContentConstraint(ctx, urn, alsoMarkAsPublic);
     }
 
     @Override

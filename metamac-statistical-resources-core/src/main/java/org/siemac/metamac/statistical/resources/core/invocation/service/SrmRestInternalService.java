@@ -3,6 +3,7 @@ package org.siemac.metamac.statistical.resources.core.invocation.service;
 import java.util.List;
 
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
+import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Agency;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Categories;
@@ -102,8 +103,9 @@ public interface SrmRestInternalService {
     public RegionReference retrieveRegionForContentConstraint(String contentConstraintUrn, String regionCode, Boolean includeDraft) throws MetamacException;
     public ContentConstraint saveContentConstraint(ServiceContext serviceContext, ContentConstraint contentConstraint) throws MetamacException;
     public RegionReference saveRegionForContentConstraint(ServiceContext serviceContext, RegionReference regionReference) throws MetamacException;
-    public void deleteContentConstraint(ServiceContext serviceContext, String urn) throws MetamacException;
+    public void deleteContentConstraint(ServiceContext serviceContext, String urn, Boolean forceDeleteFinal) throws MetamacException;
     public void publishContentConstraint(ServiceContext serviceContext, String urn, Boolean alsoMarkAsPublic) throws MetamacException;
+    public void versioningContentConstraint(ServiceContext serviceContext, String urn, VersionTypeEnum versionTypeEnum) throws MetamacException;
 
     public ContentConstraint retrieveContentConstraintByUrn(String urn, Boolean includeDraft) throws MetamacException;
     public void deleteRegion(ServiceContext serviceContext, String contentConstraintUrn, String regionCode) throws MetamacException;

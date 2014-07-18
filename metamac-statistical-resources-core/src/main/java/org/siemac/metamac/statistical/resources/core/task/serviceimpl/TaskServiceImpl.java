@@ -10,6 +10,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
 
@@ -38,8 +39,11 @@ import org.siemac.metamac.core.common.exception.ExceptionLevelEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionBuilder;
 import org.siemac.metamac.core.common.util.ApplicationContextProvider;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ContentConstraint;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructure;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ResourceInternal;
 import org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConstants;
+import org.siemac.metamac.statistical.resources.core.constraint.api.ConstraintsService;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
 import org.siemac.metamac.statistical.resources.core.enume.task.domain.DatasetFileFormatEnum;
 import org.siemac.metamac.statistical.resources.core.enume.task.domain.TaskStatusTypeEnum;
@@ -112,6 +116,9 @@ public class TaskServiceImpl extends TaskServiceImplBase {
     @Autowired
     private ManipulateCsvDataService         manipulateCsvDataService;
 
+    @Autowired
+    private ConstraintsService               constraintsService;
+
     @PostConstruct
     public void afterPropertiesSet() throws Exception {
 
@@ -162,6 +169,11 @@ public class TaskServiceImpl extends TaskServiceImplBase {
             // Validation: There shouldn't be a recovery job in process, please wait
             if (sched.checkExists(createJobKeyForRecoveryImportationResource(taskInfoDataset.getDatasetVersionId()))) {
                 throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.TASKS_JOB_RECOVERY_IN_PROCESS).withLoggedLevel(ExceptionLevelEnum.ERROR).build(); // Error
+            }
+
+            // Validation: There shouldn't be an duplication processing on this dataset
+            if (sched.checkExists(createJobKeyForDuplicationResource(taskInfoDataset.getDatasetVersionId()))) {
+                throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.TASKS_ERROR_MAX_CURRENT_JOBS).withLoggedLevel(ExceptionLevelEnum.ERROR).build(); // Error
             }
 
             // Checking garbage
@@ -581,8 +593,11 @@ public class TaskServiceImpl extends TaskServiceImplBase {
     private void processDatasets(ServiceContext ctx, TaskInfoDataset taskInfoDataset, DateTime dateTime) throws Exception {
         DataStructure dataStructure = srmRestInternalService.retrieveDsdByUrn(taskInfoDataset.getDataStructureUrn());
 
+        // Fetch and marks as final the Dataset's content constraints
+        List<ContentConstraint> calculateConstraints = calculateConstraints(ctx, taskInfoDataset.getDatasetVersionId());
+
         // Validator
-        ValidateDataVersusDsd validateDataVersusDsd = new ValidateDataVersusDsd(dataStructure, srmRestInternalService, taskInfoDataset.getAlternativeRepresentations());
+        ValidateDataVersusDsd validateDataVersusDsd = new ValidateDataVersusDsd(ctx, dataStructure, srmRestInternalService, calculateConstraints, taskInfoDataset);
 
         // Callbacks
         ManipulateSdmx21DataCallbackImpl callback = null;
@@ -625,5 +640,30 @@ public class TaskServiceImpl extends TaskServiceImplBase {
 
     private NoticesRestInternalService getNoticesRestInternalService() {
         return (NoticesRestInternalService) ApplicationContextProvider.getApplicationContext().getBean(NoticesRestInternalService.BEAN_ID);
+    }
+
+    /**
+     * Fetch Dataset's content constraints
+     * 
+     * @param ctx
+     * @param datasetVersionUrn
+     * @return
+     * @throws MetamacException
+     */
+    private List<ContentConstraint> calculateConstraints(ServiceContext ctx, String datasetVersionUrn) throws MetamacException {
+        List<ResourceInternal> contentConstraintsForArtefact = constraintsService.findContentConstraintsForArtefact(ctx, datasetVersionUrn);
+
+        List<ContentConstraint> result = new LinkedList<ContentConstraint>();
+        for (ResourceInternal resourceInternal : contentConstraintsForArtefact) {
+            // This means, you can come Draft, but in our business, the validation against constraints involves that are at least as marked as final
+            ContentConstraint contentConstraint = constraintsService.retrieveContentConstraintByUrn(ctx, resourceInternal.getUrn(), Boolean.TRUE);
+            result.add(contentConstraint);
+
+            if (!contentConstraint.isIsFinal()) {
+                constraintsService.publishContentConstraint(ctx, contentConstraint.getUrn(), Boolean.FALSE); // mark as final logic, no mark as public
+            }
+        }
+
+        return result;
     }
 }

@@ -75,6 +75,9 @@ public class ServiceExceptionType extends CommonServiceExceptionType {
     public static final CommonServiceExceptionType QUERY_VERSION_IS_PART_OF_OTHER_RESOURCES                                 = create("exception.resources.query_version.is_part_of_publications");
     public static final CommonServiceExceptionType QUERY_VERSION_IS_PART_OF_NOT_VISIBLE_PUBLICATION                         = create("exception.resources.query_version.is_part_of_not_visible_publication");
 
+    // Constraints
+    public static final CommonServiceExceptionType CONSTRAINTS_CREATE_DATASET_WITH_DATASOURCES                              = create("exception.resources.constraints.create.dataset_with_datasources");
+
     // Identifiable Statistical Resource
     public static final CommonServiceExceptionType IDENTIFIABLE_STATISTICAL_RESOURCE_NOT_FOUND                              = create("exception.resources.identifiable_statistical_resource.not_found");
     public static final CommonServiceExceptionType IDENTIFIABLE_STATISTICAL_RESOURCE_URN_DUPLICATED                         = create("exception.resources.identifiable_statistical_resource.urn_duplicated");
@@ -117,6 +120,8 @@ public class ServiceExceptionType extends CommonServiceExceptionType {
     public static final CommonServiceExceptionType IMPORTATION_OBSERVATION_ATTR_NOT_MATCH                                   = create("exception.resources.dataset.importation.observation_attribute_not_match");
     public static final CommonServiceExceptionType IMPORTATION_OBSERVATION_ATTR_CARDINALITY_EXCEEDED                        = create("exception.resources.dataset.importation.observation_attributes_cardinality_exceeded");
     public static final CommonServiceExceptionType IMPORTATION_OBSERVATION_MANDATORY_ATTR_NOT_FOUND                         = create("exception.resources.dataset.importation.observation_mandatory_attribute_not_found");
+
+    public static final CommonServiceExceptionType IMPORTATION_OBSERVATION_MANDATORY_CONTENT_CONSTRAINT_FAIL                = create("exception.resources.dataset.importation.observation_content_constraint_fail");
 
     public static final CommonServiceExceptionType IMPORTATION_OBSERVATION_NONENUMERATED_MINLENGTH                          = create("exception.resources.dataset.importation.observation.nonenumerated.minlength");
     public static final CommonServiceExceptionType IMPORTATION_OBSERVATION_NONENUMERATED_MAXLENGTH                          = create("exception.resources.dataset.importation.observation.nonenumerated.maxlength");

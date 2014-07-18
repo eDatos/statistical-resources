@@ -242,7 +242,7 @@ public class LifecycleCommonMetadataCheckerTest extends StatisticalResourcesBase
         //@formatter:on
 
         List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
-        lifecycleCommonMetadataChecker.checkDatasetVersionCommonMetadata(resource, baseMetadata, exceptionItems);
+        lifecycleCommonMetadataChecker.checkDatasetVersionCommonMetadata(getServiceContextAdministrador(), resource, baseMetadata, exceptionItems);
         throw new MetamacException(exceptionItems);
     }
 
@@ -265,7 +265,7 @@ public class LifecycleCommonMetadataCheckerTest extends StatisticalResourcesBase
         //@formatter:on
 
         List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
-        lifecycleCommonMetadataChecker.checkDatasetVersionCommonMetadata(resource, baseMetadata, exceptionItems);
+        lifecycleCommonMetadataChecker.checkDatasetVersionCommonMetadata(getServiceContextAdministrador(), resource, baseMetadata, exceptionItems);
         throw new MetamacException(exceptionItems);
     }
 
@@ -287,7 +287,7 @@ public class LifecycleCommonMetadataCheckerTest extends StatisticalResourcesBase
         //@formatter:on
 
         List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
-        lifecycleCommonMetadataChecker.checkDatasetVersionCommonMetadata(resource, baseMetadata, exceptionItems);
+        lifecycleCommonMetadataChecker.checkDatasetVersionCommonMetadata(getServiceContextAdministrador(), resource, baseMetadata, exceptionItems);
         throw new MetamacException(exceptionItems);
     }
 
@@ -309,7 +309,7 @@ public class LifecycleCommonMetadataCheckerTest extends StatisticalResourcesBase
         //@formatter:on
 
         List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
-        lifecycleCommonMetadataChecker.checkDatasetVersionCommonMetadata(resource, baseMetadata, exceptionItems);
+        lifecycleCommonMetadataChecker.checkDatasetVersionCommonMetadata(getServiceContextAdministrador(), resource, baseMetadata, exceptionItems);
         throw new MetamacException(exceptionItems);
     }
 
@@ -332,7 +332,7 @@ public class LifecycleCommonMetadataCheckerTest extends StatisticalResourcesBase
         //@formatter:on
 
         List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
-        lifecycleCommonMetadataChecker.checkDatasetVersionCommonMetadata(resource, baseMetadata, exceptionItems);
+        lifecycleCommonMetadataChecker.checkDatasetVersionCommonMetadata(getServiceContextAdministrador(), resource, baseMetadata, exceptionItems);
         throw new MetamacException(exceptionItems);
     }
 

@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.fornax.cartridges.sculptor.framework.errorhandling.ApplicationException;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
+import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.core.common.util.GeneratorUrnUtils;
@@ -14,6 +15,7 @@ import org.siemac.metamac.statistical.resources.core.common.domain.International
 import org.siemac.metamac.statistical.resources.core.common.domain.LocalisedString;
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResourceResult;
 import org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConstants;
+import org.siemac.metamac.statistical.resources.core.constraint.api.ConstraintsService;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Categorisation;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionRepository;
@@ -31,6 +33,7 @@ import org.siemac.metamac.statistical.resources.core.publication.domain.Publicat
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersionRepository;
 import org.siemac.metamac.statistical.resources.core.query.serviceapi.QueryService;
+import org.siemac.metamac.statistical.resources.core.task.serviceapi.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -61,7 +64,13 @@ public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<Datase
     private QueryService                     queryService;
 
     @Autowired
+    private TaskService                      taskService;
+
+    @Autowired
     private DatasetRepositoriesServiceFacade datasetRepositoriesServiceFacade;
+
+    @Autowired
+    private ConstraintsService               constraintsService;
 
     @Override
     protected String getResourceMetadataName() throws MetamacException {
@@ -116,12 +125,12 @@ public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<Datase
 
     @Override
     protected void checkSendToPublishedResource(ServiceContext ctx, DatasetVersion resource, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
-        checkExternalItemsPreviouslyPublished(resource, ServiceExceptionParameters.DATASET_VERSION, exceptionItems);
+        checkExternalItemsPreviouslyPublished(ctx, resource, ServiceExceptionParameters.DATASET_VERSION, exceptionItems);
 
         // No related resources to check
     }
 
-    private void checkExternalItemsPreviouslyPublished(DatasetVersion resource, String metadataName, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
+    private void checkExternalItemsPreviouslyPublished(ServiceContext ctx, DatasetVersion resource, String metadataName, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
 
         externalItemChecker.checkExternalItemsExternallyPublished(resource.getGeographicCoverage(), addParameter(metadataName, ServiceExceptionSingleParameters.GEOGRAPHIC_COVERAGE), exceptionItems);
         externalItemChecker.checkExternalItemsExternallyPublished(resource.getMeasureCoverage(), addParameter(metadataName, ServiceExceptionSingleParameters.MEASURE_COVERAGE), exceptionItems);
@@ -143,6 +152,9 @@ public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<Datase
             externalItemChecker.checkExternalItemsExternallyPublished(categorisation.getCategory(), addParameter(metadataName, ServiceExceptionSingleParameters.CATEGORISATIONS), exceptionItems);
             externalItemChecker.checkExternalItemsExternallyPublished(categorisation.getMaintainer(), addParameter(metadataName, ServiceExceptionSingleParameters.CATEGORISATIONS), exceptionItems);
         }
+
+        // Publish associated constraints
+        constraintsService.publishContentConstraint(ctx, resource.getLifeCycleStatisticalResource().getUrn(), Boolean.TRUE);
     }
 
     @Override
@@ -280,16 +292,48 @@ public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<Datase
 
     @Override
     protected void applyVersioningNewResource(ServiceContext ctx, DatasetVersion resource, DatasetVersion previous) throws MetamacException {
-        resource.setUserModifiedDateNextUpdate(Boolean.FALSE);
 
-        String oldDatasetRepositoryId = previous.getDatasetRepositoryId();
-        resource.setDatasetRepositoryId(resource.getSiemacMetadataStatisticalResource().getUrn());
+        // Versioning the content constraints associated
+        constraintsService.versioningContentConstraint(ctx, previous.getLifeCycleStatisticalResource().getUrn(), guessVersionTypeEnum(resource, previous));
 
-        try {
-            datasetRepositoriesServiceFacade.duplicateDatasetRepository(oldDatasetRepositoryId, resource.getSiemacMetadataStatisticalResource().getUrn());
-        } catch (ApplicationException e) {
-            throw new MetamacException(e, ServiceExceptionType.UNKNOWN, "Error duplicating dataset repository");
+        // TODO: METAMAC-2188: Cuando se haga en la web la tarea, descomentar el bloque de código comentado y eliminar el que está sin comentar.
+        // OJO como no se puede devolver a la web el TaskInfo la solución es que la web siempre muestre el mensaje de que hay tareas
+        // en background cuando llame al versionado (esto no es problema porque el background no está condicionado por nada,
+        // se ejecuta siempre).
+
+        {
+            // resource.setUserModifiedDateNextUpdate(Boolean.FALSE);
+            // String oldDatasetRepositoryId = previous.getDatasetRepositoryId();
+            // resource.setDatasetRepositoryId(resource.getSiemacMetadataStatisticalResource().getUrn());
+            //
+            // TaskInfoDataset taskInfo = new TaskInfoDataset();
+            // taskInfo.setDatasetVersionId(oldDatasetRepositoryId);
+            // taskService.planifyDuplicationDataset(ctx, taskInfo, resource.getDatasetRepositoryId());
         }
+
+        {
+            resource.setUserModifiedDateNextUpdate(Boolean.FALSE);
+
+            String oldDatasetRepositoryId = previous.getDatasetRepositoryId();
+            resource.setDatasetRepositoryId(resource.getSiemacMetadataStatisticalResource().getUrn());
+
+            try {
+                datasetRepositoriesServiceFacade.duplicateDatasetRepository(oldDatasetRepositoryId, resource.getSiemacMetadataStatisticalResource().getUrn());
+            } catch (ApplicationException e) {
+                throw new MetamacException(e, ServiceExceptionType.UNKNOWN, "Error duplicating dataset repository");
+            }
+        }
+    }
+
+    private VersionTypeEnum guessVersionTypeEnum(DatasetVersion resource, DatasetVersion previous) {
+
+        String[] versionPreviousParts = resource.getLifeCycleStatisticalResource().getVersionLogic().split("_");
+        String[] versionParts = resource.getLifeCycleStatisticalResource().getVersionLogic().split("_");
+        if (versionParts[0] != null && versionPreviousParts[0] != null && Integer.valueOf(versionParts[0]) > Integer.valueOf(versionPreviousParts[0])) {
+            return VersionTypeEnum.MAJOR;
+        }
+
+        return VersionTypeEnum.MINOR;
     }
 
     @Override
@@ -334,7 +378,7 @@ public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<Datase
 
     @Override
     protected void checkResourceMetadataAllActions(ServiceContext ctx, DatasetVersion resource, List<MetamacExceptionItem> exceptions) throws MetamacException {
-        lifecycleCommonMetadataChecker.checkDatasetVersionCommonMetadata(resource, ServiceExceptionParameters.DATASET_VERSION, exceptions);
+        lifecycleCommonMetadataChecker.checkDatasetVersionCommonMetadata(ctx, resource, ServiceExceptionParameters.DATASET_VERSION, exceptions);
     }
 
     @Override

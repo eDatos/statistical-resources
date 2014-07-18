@@ -15,6 +15,7 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_21_PRODUCTION_VALIDATION_READY_FOR_VALIDATION_REJECTED_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_70_PREPARED_TO_PUBLISH_EXTERNAL_ITEM_FULL_NAME;
 
+import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -122,7 +123,7 @@ public class DatasetLifecycleServiceTest extends StatisticalResourcesBaseTest im
 
         verify(datasetVersionRepository, times(1)).retrieveByUrn(datasetVersionUrn);
         verify(siemacLifecycleChecker, times(1)).checkSendToProductionValidation(any(HasSiemacMetadata.class), anyString(), anyListOf(MetamacExceptionItem.class));
-        verify(lifecycleCommonMetadataChecker, times(1)).checkDatasetVersionCommonMetadata(any(DatasetVersion.class), anyString(), anyListOf(MetamacExceptionItem.class));
+        verify(lifecycleCommonMetadataChecker, times(1)).checkDatasetVersionCommonMetadata(any(ServiceContext.class), any(DatasetVersion.class), anyString(), anyListOf(MetamacExceptionItem.class));
     }
 
     @Test
@@ -231,7 +232,7 @@ public class DatasetLifecycleServiceTest extends StatisticalResourcesBaseTest im
 
         datasetLifecycleService.sendToDiffusionValidation(getServiceContextAdministrador(), datasteVersionUrn);
 
-        Mockito.verify(lifecycleCommonMetadataChecker, Mockito.times(1)).checkDatasetVersionCommonMetadata(Mockito.any(DatasetVersion.class), Mockito.anyString(),
+        Mockito.verify(lifecycleCommonMetadataChecker, Mockito.times(1)).checkDatasetVersionCommonMetadata(any(ServiceContext.class), Mockito.any(DatasetVersion.class), Mockito.anyString(),
                 Mockito.anyListOf(MetamacExceptionItem.class));
     }
 
@@ -284,7 +285,7 @@ public class DatasetLifecycleServiceTest extends StatisticalResourcesBaseTest im
 
         datasetLifecycleService.sendToValidationRejected(getServiceContextAdministrador(), datasetVersionUrn);
 
-        Mockito.verify(lifecycleCommonMetadataChecker, Mockito.times(1)).checkDatasetVersionCommonMetadata(Mockito.any(DatasetVersion.class), Mockito.anyString(),
+        Mockito.verify(lifecycleCommonMetadataChecker, Mockito.times(1)).checkDatasetVersionCommonMetadata(Mockito.any(ServiceContext.class), Mockito.any(DatasetVersion.class), Mockito.anyString(),
                 Mockito.anyListOf(MetamacExceptionItem.class));
     }
 

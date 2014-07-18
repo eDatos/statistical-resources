@@ -3460,44 +3460,37 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
 
     @Override
     public void testCreateContentConstraint() throws Exception {
-        // TODO Auto-generated method stub
-
+        // Without test in facade
     }
 
     @Override
     public void testRetrieveContentConstraintByUrn() throws Exception {
-        // TODO Auto-generated method stub
-
+        // Without test in facade
     }
 
     @Override
     public void testDeleteContentConstraint() throws Exception {
-        // TODO Auto-generated method stub
-
+        // Without test in facade
     }
 
     @Override
     public void testFindContentConstraintsForArtefact() throws Exception {
-        // TODO Auto-generated method stub
-
+        // Without test in facade
     }
 
     @Override
     public void testRetrieveRegionForContentConstraint() throws Exception {
-        // TODO Auto-generated method stub
-
+        // Without test in facade
     }
 
     @Override
     public void testSaveRegionForContentConstraint() throws Exception {
-        // TODO Auto-generated method stub
-
+        // Without test in facade
     }
 
     @Override
     public void testDeleteRegion() throws Exception {
-        // TODO Auto-generated method stub
-
+        // Without test in facade
     }
 
     // ------------------------------------------------------------
