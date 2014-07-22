@@ -493,6 +493,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
 
         checkCanDatasetVersionBeDeleted(ctx, datasetVersion);
 
+        // Remove dataset version
         String datasetRepositoryId = datasetVersion.getDatasetRepositoryId();
         if (VersionUtil.isInitialVersion(datasetVersion.getSiemacMetadataStatisticalResource().getVersionLogic())) {
             Dataset dataset = datasetVersion.getDataset();
@@ -511,10 +512,11 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
             getDatasetVersionRepository().delete(datasetVersion);
         }
 
-        tryToDeleteDatasetRepository(datasetRepositoryId);
-
         // Remove associated constraints
         constraintsService.deleteContentConstraintsForArtefactUrn(ctx, datasetVersionUrn);
+
+        // Remove data dataset-repository
+        tryToDeleteDatasetRepository(datasetRepositoryId);
     }
 
     private void checkCanDatasetVersionBeDeleted(ServiceContext ctx, DatasetVersion datasetVersion) throws MetamacException {
