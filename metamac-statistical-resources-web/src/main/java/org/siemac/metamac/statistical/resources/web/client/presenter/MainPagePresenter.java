@@ -95,6 +95,9 @@ public class MainPagePresenter extends Presenter<MainPagePresenter.MainPageView,
         void selectMenuLayout(StatisticalResourcesToolStripLayoutEnum resourceType);
 
         void deselectMenuButtons();
+
+        void showWaitPopup();
+        void hideWaitPopup();
     }
 
     /**

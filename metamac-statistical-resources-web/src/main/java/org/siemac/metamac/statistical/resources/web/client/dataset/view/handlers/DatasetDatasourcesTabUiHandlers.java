@@ -2,7 +2,6 @@ package org.siemac.metamac.statistical.resources.web.client.dataset.view.handler
 
 import java.util.List;
 
-import org.siemac.metamac.web.common.shared.criteria.MetamacVersionableWebCriteria;
 import org.siemac.metamac.web.common.shared.criteria.SrmExternalResourceRestCriteria;
 
 import com.gwtplatform.mvp.client.UiHandlers;

@@ -26,7 +26,6 @@ import com.smartgwt.client.widgets.form.fields.events.HasClickHandlers;
 
 public class NewDatasetWindow extends NewStatisticalResourceWindow {
 
-    private static final int               FORM_ITEM_CUSTOM_WIDTH = 300;
     private static final String            FIELD_SAVE             = "save-sch";
 
     private DatasetListUiHandlers          uiHandlers;

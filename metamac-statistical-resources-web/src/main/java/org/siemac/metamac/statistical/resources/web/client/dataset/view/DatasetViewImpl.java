@@ -49,8 +49,6 @@ public class DatasetViewImpl extends ViewWithUiHandlers<DatasetUiHandlers> imple
     private Tab                         datasetDatasourcesTab;
     private Tab                         datasetAttributesTab;
 
-    private DatasetVersionDto           datasetVersionDto;
-
     @Inject
     public DatasetViewImpl(DatasetMetadataTabView datasetMetadataTabView, DatasetDatasourcesTabView datasetDatasourcesTabView, DatasetAttributesTabView datasetAttributesTabView,
             DatasetCategorisationsTabView datasetCategorisationsTabView) {
@@ -152,7 +150,6 @@ public class DatasetViewImpl extends ViewWithUiHandlers<DatasetUiHandlers> imple
 
     @Override
     public void setDataset(DatasetVersionDto datasetVersionDto) {
-        this.datasetVersionDto = datasetVersionDto;
         setTitleLabelContents(datasetVersionDto);
         setInformationLabelContents(datasetVersionDto);
     }
