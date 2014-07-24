@@ -10,7 +10,6 @@ import org.siemac.metamac.statistical.resources.web.client.enums.StatisticalReso
 import org.siemac.metamac.statistical.resources.web.client.events.DeselectMenuButtonsEvent;
 import org.siemac.metamac.statistical.resources.web.client.events.SelectMenuButtonEvent;
 import org.siemac.metamac.statistical.resources.web.client.events.SelectMenuLayoutEvent;
-import org.siemac.metamac.statistical.resources.web.client.events.DeselectMenuButtonsEvent.DeselectMenuButtonHandler;
 import org.siemac.metamac.statistical.resources.web.client.operation.presenter.OperationPresenter.OperationProxy;
 import org.siemac.metamac.statistical.resources.web.client.operation.presenter.OperationPresenter.OperationView;
 import org.siemac.metamac.statistical.resources.web.client.presenter.MainPagePresenter;
