@@ -20,7 +20,6 @@ import org.siemac.metamac.web.common.client.widgets.ImportResourceWindow;
 import org.siemac.metamac.web.common.client.widgets.InformationLabel;
 import org.siemac.metamac.web.common.client.widgets.actions.search.SearchPaginatedAction;
 import org.siemac.metamac.web.common.client.widgets.form.fields.external.SearchExternalItemLinkItem;
-import org.siemac.metamac.web.common.shared.criteria.MetamacVersionableWebCriteria;
 import org.siemac.metamac.web.common.shared.criteria.SrmExternalResourceRestCriteria;
 
 import com.smartgwt.client.widgets.form.fields.HiddenItem;
@@ -80,11 +79,13 @@ public class ImportDatasourcesWindow extends ImportResourceWindow {
 
                     ImportDatasourcesWindow.this.form.submitForm();
                     hide();
+                    getUiHandlers().showWaitPopup();
                 }
             }
         });
         body.addMember(form);
     }
+
     public void setDatasetVersion(String datasetVersionUrn) {
         ((HiddenItem) form.getItem(StatisticalResourcesSharedTokens.UPLOAD_PARAM_DATASET_VERSION_URN)).setDefaultValue(datasetVersionUrn);
         setStatisticalOperation(StatisticalResourcesDefaults.getSelectedStatisticalOperation().getCode());

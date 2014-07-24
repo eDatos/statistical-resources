@@ -17,4 +17,6 @@ public interface DatasetDatasourcesTabUiHandlers extends UiHandlers {
     void datasourcesImportationSucceed(String fileName);
     void retrieveAlternativeCodelistsForVariable(String dimensionId, String variableUrn, int firstResult, int maxResults, SrmExternalResourceRestCriteria criteria);
     void retrieveDimensionVariablesForDataset(String urn);
+    
+    void showWaitPopup();
 }

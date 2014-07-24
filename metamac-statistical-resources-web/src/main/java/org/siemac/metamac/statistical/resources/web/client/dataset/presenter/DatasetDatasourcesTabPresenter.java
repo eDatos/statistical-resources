@@ -16,6 +16,7 @@ import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesW
 import org.siemac.metamac.statistical.resources.web.client.constants.StatisticalResourceWebConstants;
 import org.siemac.metamac.statistical.resources.web.client.dataset.view.handlers.DatasetDatasourcesTabUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.enums.DatasetTabTypeEnum;
+import org.siemac.metamac.statistical.resources.web.client.events.ChangeWaitPopupVisibilityEvent;
 import org.siemac.metamac.statistical.resources.web.client.events.SelectDatasetTabEvent;
 import org.siemac.metamac.statistical.resources.web.client.events.SetDatasetEvent;
 import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
@@ -197,6 +198,7 @@ public class DatasetDatasourcesTabPresenter extends Presenter<DatasetDatasources
             }
         });
     }
+
     //
     // IMPORTATION
     //
@@ -205,10 +207,17 @@ public class DatasetDatasourcesTabPresenter extends Presenter<DatasetDatasources
     public void datasourcesImportationSucceed(String fileName) {
         ShowMessageEvent.fireSuccessMessage(DatasetDatasourcesTabPresenter.this, getMessages().datasourcesImportationPlanned());
         placeManager.revealCurrentPlace();
+        ChangeWaitPopupVisibilityEvent.fire(this, false);
     }
 
     @Override
     public void datasourcesImportationFailed(String errorMessage) {
         ShowMessageEvent.fireErrorMessage(DatasetDatasourcesTabPresenter.this, errorMessage);
+        ChangeWaitPopupVisibilityEvent.fire(this, false);
+    }
+
+    @Override
+    public void showWaitPopup() {
+        ChangeWaitPopupVisibilityEvent.fire(this, true);
     }
 }

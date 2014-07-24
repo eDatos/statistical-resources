@@ -1,5 +1,6 @@
 package org.siemac.metamac.statistical.resources.web.client.view;
 
+import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.sso.client.MetamacPrincipal;
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb;
 import org.siemac.metamac.statistical.resources.web.client.enums.StatisticalResourcesToolStripButtonEnum;
@@ -13,6 +14,7 @@ import org.siemac.metamac.web.common.client.widgets.MasterHead;
 import org.siemac.metamac.web.common.client.widgets.MessagePanel;
 import org.siemac.metamac.web.common.client.widgets.MetamacNavBar;
 import org.siemac.metamac.web.common.client.widgets.VersionFooter;
+import org.siemac.metamac.web.common.client.widgets.WaitPopup;
 
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
@@ -35,6 +37,7 @@ public class MainPageViewImpl extends ViewWithUiHandlers<MainPageUiHandlers> imp
     private final MasterHead               masterHead;
     private final StatisticalResourcesMenu navigationMenu;
     private final BreadCrumbsPanel         breadCrumbsPanel;
+    private WaitPopup                      waitPopup;
 
     private final MessagePanel             messagePanel;
 
@@ -210,12 +213,25 @@ public class MainPageViewImpl extends ViewWithUiHandlers<MainPageUiHandlers> imp
         navigationMenu.deselectAll();
     }
 
+    @Override
+    public void showWaitPopup() {
+        waitPopup = new WaitPopup();
+        waitPopup.show(StringUtils.EMPTY);
+    }
+
+    @Override
+    public void hideWaitPopup() {
+        if (waitPopup != null) {
+            waitPopup.hideFinal();
+        }
+    }
+
     private String getUserName() {
         MetamacPrincipal metamacPrincipal = StatisticalResourcesWeb.getCurrentUser();
         if (metamacPrincipal != null) {
             return metamacPrincipal.getUserId();
         }
-        return new String();
+        return StringUtils.EMPTY;
     }
 
 }

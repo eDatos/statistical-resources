@@ -8,6 +8,8 @@ import java.util.logging.Logger;
 import org.siemac.metamac.statistical.resources.navigation.shared.NameTokens;
 import org.siemac.metamac.statistical.resources.web.client.enums.StatisticalResourcesToolStripButtonEnum;
 import org.siemac.metamac.statistical.resources.web.client.enums.StatisticalResourcesToolStripLayoutEnum;
+import org.siemac.metamac.statistical.resources.web.client.events.ChangeWaitPopupVisibilityEvent;
+import org.siemac.metamac.statistical.resources.web.client.events.ChangeWaitPopupVisibilityEvent.ChangeWaitPopupVisibilityHandler;
 import org.siemac.metamac.statistical.resources.web.client.events.DeselectMenuButtonsEvent;
 import org.siemac.metamac.statistical.resources.web.client.events.DeselectMenuButtonsEvent.DeselectMenuButtonHandler;
 import org.siemac.metamac.statistical.resources.web.client.events.SelectMenuButtonEvent;
@@ -63,7 +65,8 @@ public class MainPagePresenter extends Presenter<MainPagePresenter.MainPageView,
             SetTitleHandler,
             SelectMenuButtonHandler,
             SelectMenuLayoutHandler,
-            DeselectMenuButtonHandler {
+            DeselectMenuButtonHandler,
+            ChangeWaitPopupVisibilityHandler {
 
     private static Logger       logger = Logger.getLogger(MainPagePresenter.class.getName());
 
@@ -196,6 +199,16 @@ public class MainPagePresenter extends Presenter<MainPagePresenter.MainPageView,
     @Override
     public void onDeselectMenuButton(DeselectMenuButtonsEvent event) {
         getView().deselectMenuButtons();
+    }
+
+    @ProxyEvent
+    @Override
+    public void onChangeWaitPopupVisibility(ChangeWaitPopupVisibilityEvent event) {
+        if (event.isShowPopup()) {
+            getView().showWaitPopup();
+        } else {
+            getView().hideWaitPopup();
+        }
     }
 
     @ProxyEvent
