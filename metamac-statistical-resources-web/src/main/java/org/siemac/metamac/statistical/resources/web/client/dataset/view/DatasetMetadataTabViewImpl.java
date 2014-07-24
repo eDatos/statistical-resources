@@ -50,6 +50,7 @@ import org.siemac.metamac.statistical.resources.web.shared.external.GetDsdsPagin
 import org.siemac.metamac.statistical.resources.web.shared.external.GetGeographicalGranularitiesListResult;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetTemporalGranularitiesListResult;
 import org.siemac.metamac.statistical.resources.web.shared.utils.RelatedResourceUtils;
+import org.siemac.metamac.web.common.client.widgets.InformationWindow;
 
 import com.google.gwt.user.client.ui.Widget;
 import com.smartgwt.client.widgets.events.ClickEvent;
@@ -585,6 +586,12 @@ public class DatasetMetadataTabViewImpl extends StatisticalResourceMetadataBaseV
     public void setConceptsForStatisticalUnit(GetConceptsPaginatedListResult result) {
         List<ExternalItemDto> externalItemsDtos = result.getConcepts();
         contentDescriptorsEditionForm.setConceptsForStatisticalUnit(externalItemsDtos, result.getFirstResultOut(), result.getTotalResults());
+    }
+
+    @Override
+    public void showInformationMessage(String title, String message) {
+        InformationWindow informationWindow = new InformationWindow(title, message);
+        informationWindow.show();
     }
 
     // Generic forms for parent

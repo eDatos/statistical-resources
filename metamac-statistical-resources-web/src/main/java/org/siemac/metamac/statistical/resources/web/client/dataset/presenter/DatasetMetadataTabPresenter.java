@@ -101,6 +101,8 @@ public class DatasetMetadataTabPresenter extends StatisticalResourceMetadataBase
         void setConceptSchemesForStatisticalUnit(GetConceptSchemesPaginatedListResult result);
 
         void setConceptsForStatisticalUnit(GetConceptsPaginatedListResult result);
+
+        void showInformationMessage(String title, String message);
     }
 
     @ProxyCodeSplit
@@ -290,10 +292,9 @@ public class DatasetMetadataTabPresenter extends StatisticalResourceMetadataBase
 
             @Override
             public void onWaitSuccess(UpdateDatasetVersionProcStatusResult result) {
-                fireSuccessMessage(getMessages().lifeCycleResourceVersion());
+                getView().showInformationMessage(getMessages().datasetVersioning(), getMessages().datasetBackgroundVersionInProgress());
                 RequestDatasetVersionsReloadEvent.fire(DatasetMetadataTabPresenter.this, result.getDatasetVersionDto().getUrn());
             }
-
         });
     }
 

@@ -4,7 +4,6 @@ import static org.siemac.metamac.statistical.resources.core.error.utils.ServiceE
 
 import java.util.List;
 
-import org.fornax.cartridges.sculptor.framework.errorhandling.ApplicationException;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
@@ -33,6 +32,7 @@ import org.siemac.metamac.statistical.resources.core.publication.domain.Publicat
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersionRepository;
 import org.siemac.metamac.statistical.resources.core.query.serviceapi.QueryService;
+import org.siemac.metamac.statistical.resources.core.task.domain.TaskInfoDataset;
 import org.siemac.metamac.statistical.resources.core.task.serviceapi.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -296,39 +296,18 @@ public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<Datase
         // Versioning the content constraints associated
         constraintsService.versioningContentConstraint(ctx, previous.getLifeCycleStatisticalResource().getUrn(), guessVersionTypeEnum(resource, previous));
 
-        // TODO: METAMAC-2188: Cuando se haga en la web la tarea, descomentar el bloque de código comentado y eliminar el que está sin comentar.
-        // OJO como no se puede devolver a la web el TaskInfo la solución es que la web siempre muestre el mensaje de que hay tareas
-        // en background cuando llame al versionado (esto no es problema porque el background no está condicionado por nada,
-        // se ejecuta siempre).
+        resource.setUserModifiedDateNextUpdate(Boolean.FALSE);
+        String oldDatasetRepositoryId = previous.getDatasetRepositoryId();
+        resource.setDatasetRepositoryId(resource.getSiemacMetadataStatisticalResource().getUrn());
 
-        {
-            // resource.setUserModifiedDateNextUpdate(Boolean.FALSE);
-            // String oldDatasetRepositoryId = previous.getDatasetRepositoryId();
-            // resource.setDatasetRepositoryId(resource.getSiemacMetadataStatisticalResource().getUrn());
-            //
-            // TaskInfoDataset taskInfo = new TaskInfoDataset();
-            // taskInfo.setDatasetVersionId(oldDatasetRepositoryId);
-            // taskService.planifyDuplicationDataset(ctx, taskInfo, resource.getDatasetRepositoryId());
-        }
-
-        {
-            resource.setUserModifiedDateNextUpdate(Boolean.FALSE);
-
-            String oldDatasetRepositoryId = previous.getDatasetRepositoryId();
-            resource.setDatasetRepositoryId(resource.getSiemacMetadataStatisticalResource().getUrn());
-
-            try {
-                datasetRepositoriesServiceFacade.duplicateDatasetRepository(oldDatasetRepositoryId, resource.getSiemacMetadataStatisticalResource().getUrn());
-            } catch (ApplicationException e) {
-                throw new MetamacException(e, ServiceExceptionType.UNKNOWN, "Error duplicating dataset repository");
-            }
-        }
+        TaskInfoDataset taskInfo = new TaskInfoDataset();
+        taskInfo.setDatasetVersionId(oldDatasetRepositoryId);
+        taskService.planifyDuplicationDataset(ctx, taskInfo, resource.getDatasetRepositoryId());
     }
 
     private VersionTypeEnum guessVersionTypeEnum(DatasetVersion resource, DatasetVersion previous) {
-
-        String[] versionPreviousParts = resource.getLifeCycleStatisticalResource().getVersionLogic().split("_");
-        String[] versionParts = resource.getLifeCycleStatisticalResource().getVersionLogic().split("_");
+        String[] versionPreviousParts = previous.getLifeCycleStatisticalResource().getVersionLogic().split("\\.");
+        String[] versionParts = resource.getLifeCycleStatisticalResource().getVersionLogic().split("\\.");
         if (versionParts[0] != null && versionPreviousParts[0] != null && Integer.valueOf(versionParts[0]) > Integer.valueOf(versionPreviousParts[0])) {
             return VersionTypeEnum.MAJOR;
         }
