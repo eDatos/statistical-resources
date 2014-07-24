@@ -4,6 +4,7 @@ import static org.siemac.metamac.core.common.serviceimpl.utils.ValidationUtils.c
 import static org.siemac.metamac.core.common.serviceimpl.utils.ValidationUtils.checkMetadataRequired;
 import static org.siemac.metamac.statistical.resources.core.error.utils.ServiceExceptionParametersUtils.addParameter;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -154,9 +155,14 @@ public class LifecycleCommonMetadataChecker {
         List<MetamacExceptionItem> exceptions = new LinkedList<MetamacExceptionItem>();
         try {
             for (String attributeId : validateDataVersusDsd.getMandatoryAttributeIdsAtNonObservationLevel()) {
-                List<AttributeInstanceDto> attributeInstanceDenormalizedDtos = datasetRepositoriesServiceFacade.findAttributesInstancesWithDimensionAttachmentLevelDenormalized(
+                List<AttributeInstanceDto> attributeInstancesWithDimensionAttachmentLevel = datasetRepositoriesServiceFacade.findAttributesInstancesWithDimensionAttachmentLevelDenormalized(
                         datasetVersion.getDatasetRepositoryId(), attributeId, null);
-                validateDataVersusDsd.checkAttributesInstancesAssignmentStatus(attributeId, attributeInstanceDenormalizedDtos, coverage, exceptions);
+                List<AttributeInstanceDto> attributeInstancesWithDatasetAttachmentLevel = datasetRepositoriesServiceFacade.findAttributesInstancesWithDatasetAttachmentLevel(
+                        datasetVersion.getDatasetRepositoryId(), attributeId);
+                List<AttributeInstanceDto> attributeInstances = new ArrayList<AttributeInstanceDto>();
+                attributeInstances.addAll(attributeInstancesWithDimensionAttachmentLevel);
+                attributeInstances.addAll(attributeInstancesWithDatasetAttachmentLevel);
+                validateDataVersusDsd.checkAttributesInstancesAssignmentStatus(attributeId, attributeInstances, coverage, exceptions);
             }
         } catch (Exception e) {
             throw new MetamacException(e, ServiceExceptionType.UNKNOWN, "Error validating mandatory attributes at non observation level " + datasetVersion.getDatasetRepositoryId() + ". Details: "
