@@ -65,15 +65,12 @@ public class DatasetLifecycleServiceTest extends StatisticalResourcesBaseTest im
     @Mock
     private SiemacLifecycleChecker           siemacLifecycleChecker;
 
-    @SuppressWarnings("unused")
     @Mock
     private SiemacLifecycleFiller            siemacLifecycleFiller;
 
-    @SuppressWarnings("unused")
     @Mock(answer = Answers.CALLS_REAL_METHODS)
     private RestMapperTestImpl               restMapper;
 
-    @SuppressWarnings("unused")
     @Mock
     private LifecycleInvocationValidatorBase lifecycleInvocationValidatorBase;
 
