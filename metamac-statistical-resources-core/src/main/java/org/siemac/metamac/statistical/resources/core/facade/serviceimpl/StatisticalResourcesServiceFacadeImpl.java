@@ -25,6 +25,7 @@ import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Content
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructure;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.RegionReference;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ResourceInternal;
+import org.siemac.metamac.sso.utils.SecurityUtils;
 import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
 import org.siemac.metamac.statistical.resources.core.common.mapper.CommonDo2DtoMapper;
 import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor;
@@ -95,6 +96,9 @@ import org.siemac.metamac.statistical.resources.core.security.ConstraintsSecurit
 import org.siemac.metamac.statistical.resources.core.security.DatasetsSecurityUtils;
 import org.siemac.metamac.statistical.resources.core.security.PublicationsSecurityUtils;
 import org.siemac.metamac.statistical.resources.core.security.QueriesSecurityUtils;
+import org.siemac.metamac.statistical.resources.core.security.shared.SharedDatasetsSecurityUtils;
+import org.siemac.metamac.statistical.resources.core.security.shared.SharedPublicationsSecurityUtils;
+import org.siemac.metamac.statistical.resources.core.security.shared.SharedQueriesSecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -247,11 +251,14 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
 
     @Override
     public QueryVersionDto retrieveLatestQueryVersion(ServiceContext ctx, String queryUrn) throws MetamacException {
-        // Security
-        QueriesSecurityUtils.canRetrieveLatestQueryVersion(ctx);
-
         // Retrieve
         QueryVersion query = getQueryService().retrieveLatestQueryVersionByQueryUrn(ctx, queryUrn);
+
+        // Security
+        if (!SharedQueriesSecurityUtils.canRetrieveLatestQueryVersion(SecurityUtils.getMetamacPrincipal(ctx), query.getLifeCycleStatisticalResource().getStatisticalOperation().getCode(), query
+                .getLifeCycleStatisticalResource().getEffectiveProcStatus())) {
+            query = getQueryService().retrieveLatestPublishedQueryVersionByQueryUrn(ctx, queryUrn);
+        }
 
         // Transform
         QueryVersionDto queryVersionDto = queryDo2DtoMapper.queryVersionDoToDto(query);
@@ -1130,8 +1137,10 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         DatasetVersion dataset = getDatasetService().retrieveLatestDatasetVersionByDatasetUrn(ctx, datasetUrn);
 
         // Security
-        DatasetsSecurityUtils.canRetrieveLatestDatasetVersion(ctx, dataset.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode(), dataset.getSiemacMetadataStatisticalResource()
-                .getEffectiveProcStatus());
+        if (!SharedDatasetsSecurityUtils.canRetrieveLatestDatasetVersion(SecurityUtils.getMetamacPrincipal(ctx), dataset.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode(),
+                dataset.getSiemacMetadataStatisticalResource().getEffectiveProcStatus())) {
+            dataset = getDatasetService().retrieveLatestPublishedDatasetVersionByDatasetUrn(ctx, datasetUrn);
+        }
 
         // Transform
         DatasetVersionDto datasetVersionDto = datasetDo2DtoMapper.datasetVersionDoToDto(ctx, dataset);
@@ -1463,11 +1472,14 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
 
     @Override
     public PublicationVersionDto retrieveLatestPublicationVersion(ServiceContext ctx, String publicationUrn) throws MetamacException {
-        // Security
-        PublicationsSecurityUtils.canRetrieveLatestPublicationVersion(ctx);
-
         // Retrieve
         PublicationVersion publication = getPublicationService().retrieveLatestPublicationVersionByPublicationUrn(ctx, publicationUrn);
+
+        // Security
+        if (!SharedPublicationsSecurityUtils.canRetrieveLatestPublicationVersion(SecurityUtils.getMetamacPrincipal(ctx), publication.getSiemacMetadataStatisticalResource().getStatisticalOperation()
+                .getCode(), publication.getSiemacMetadataStatisticalResource().getEffectiveProcStatus())) {
+            publication = getPublicationService().retrieveLatestPublishedPublicationVersionByPublicationUrn(ctx, publicationUrn);
+        }
 
         // Transform
         PublicationVersionDto publicationVersionDto = publicationDo2DtoMapper.publicationVersionDoToDto(publication);

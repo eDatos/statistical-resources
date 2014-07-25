@@ -40,9 +40,8 @@ public class SharedPublicationsSecurityUtils extends SharedSecurityUtils {
         return canRetrieveStatisticalResource(metamacPrincipal, operationCode, procStatus);
     }
 
-    public static boolean canRetrieveLatestPublicationVersion(MetamacPrincipal metamacPrincipal) {
-        // TODO: Poner los roles correctos
-        return isAnyStatisticalResourceRole(metamacPrincipal);
+    public static boolean canRetrieveLatestPublicationVersion(MetamacPrincipal metamacPrincipal, String operationCode, ProcStatusEnum procStatus) {
+        return canRetrieveStatisticalResource(metamacPrincipal, operationCode, procStatus);
     }
 
     public static boolean canRetrieveLatestPublishedPublicationVersion(MetamacPrincipal metamacPrincipal) {

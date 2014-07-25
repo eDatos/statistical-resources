@@ -64,8 +64,8 @@ public class PublicationsSecurityUtils extends SecurityUtils {
         }
     }
 
-    public static void canRetrieveLatestPublicationVersion(ServiceContext ctx) throws MetamacException {
-        if (!SharedPublicationsSecurityUtils.canRetrieveLatestPublicationVersion(getMetamacPrincipal(ctx))) {
+    public static void canRetrieveLatestPublicationVersion(ServiceContext ctx, String operationCode, ProcStatusEnum procStatus) throws MetamacException {
+        if (!SharedPublicationsSecurityUtils.canRetrieveLatestPublicationVersion(getMetamacPrincipal(ctx), operationCode, procStatus)) {
             throwExceptionIfOperationNotAllowed(ctx);
         }
     }

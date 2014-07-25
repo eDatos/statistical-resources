@@ -68,8 +68,8 @@ public class QueriesSecurityUtils extends SecurityUtils {
         }
     }
 
-    public static void canRetrieveLatestQueryVersion(ServiceContext ctx) throws MetamacException {
-        if (!SharedQueriesSecurityUtils.canRetrieveLatestQueryVersion(getMetamacPrincipal(ctx))) {
+    public static void canRetrieveLatestQueryVersion(ServiceContext ctx, String operationCode, ProcStatusEnum procStatus) throws MetamacException {
+        if (!SharedQueriesSecurityUtils.canRetrieveLatestQueryVersion(getMetamacPrincipal(ctx), operationCode, procStatus)) {
             throwExceptionIfOperationNotAllowed(ctx);
         }
     }
