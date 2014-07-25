@@ -116,8 +116,7 @@ public class DatasetVersionSearchSectionStack extends SiemacMetadataResourceSear
 
                         });
 
-                getUiHandlers().retrieveTemporalGranularitiesForSearchSection(0, StatisticalResourceWebConstants.FORM_LIST_MAX_RESULTS, null);
-
+                searchTemporalGranularitiesWindow.retrieveItems();
                 searchTemporalGranularitiesWindow.setSaveAction(new ClickHandler() {
 
                     @Override
@@ -159,8 +158,7 @@ public class DatasetVersionSearchSectionStack extends SiemacMetadataResourceSear
 
                         });
 
-                getUiHandlers().retrieveGeographicGranularitiesForSearchSection(0, StatisticalResourceWebConstants.FORM_LIST_MAX_RESULTS, null);
-
+                searchGeographicGranularitiesWindow.retrieveItems();
                 searchGeographicGranularitiesWindow.setSaveAction(new ClickHandler() {
 
                     @Override
@@ -209,7 +207,7 @@ public class DatasetVersionSearchSectionStack extends SiemacMetadataResourceSear
 
                 // Load resources (to populate the selection window)
                 getUiHandlers().retrieveStatisticalOperationsForDsdSelectionInSearchSection();
-                getUiHandlers().retrieveDsdsForSearchSection(0, StatisticalResourceWebConstants.FORM_LIST_MAX_RESULTS, new DsdWebCriteria());
+                searchDsdWindow.retrieveItems();
 
                 searchDsdWindow.setSaveAction(new ClickHandler() {
 

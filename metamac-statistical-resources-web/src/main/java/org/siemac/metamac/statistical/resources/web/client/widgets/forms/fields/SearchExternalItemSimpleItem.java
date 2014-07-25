@@ -36,8 +36,7 @@ public abstract class SearchExternalItemSimpleItem extends SearchExternalItemLin
                     }
                 });
 
-        retrieveResources(0, maxResults, window.getSearchCriteria());
-
+        window.retrieveItems();
         window.setSaveAction(new ClickHandler() {
 
             @Override

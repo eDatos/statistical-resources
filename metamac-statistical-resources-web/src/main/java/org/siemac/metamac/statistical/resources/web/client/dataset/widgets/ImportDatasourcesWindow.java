@@ -181,8 +181,7 @@ public class ImportDatasourcesWindow extends ImportResourceWindow {
                                 }
                             });
 
-                    getUiHandlers().retrieveAlternativeCodelistsForVariable(dimensionId, variableUrn, 0, StatisticalResourceWebConstants.FORM_LIST_MAX_RESULTS, searchWindow.getSearchCriteria());
-
+                    searchWindow.retrieveItems();
                     searchWindow.setSaveAction(new ClickHandler() {
 
                         @Override
