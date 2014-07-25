@@ -11,7 +11,6 @@ public class SharedQueriesSecurityUtils extends SharedSecurityUtils {
     // ------------------------------------------------------------------------
 
     public static boolean canFindQueriesByCondition(MetamacPrincipal metamacPrincipal) {
-        // TODO: Poner los roles correctos
         return isAnyStatisticalResourceRole(metamacPrincipal);
     }
 
@@ -24,7 +23,6 @@ public class SharedQueriesSecurityUtils extends SharedSecurityUtils {
     }
 
     public static boolean canRetrieveQueriesVersions(MetamacPrincipal metamacPrincipal) {
-        // TODO: Poner los roles correctos
         return isAnyStatisticalResourceRole(metamacPrincipal);
     }
 
@@ -33,7 +31,6 @@ public class SharedQueriesSecurityUtils extends SharedSecurityUtils {
     }
 
     public static boolean canFindQueriesVersionsByCondition(MetamacPrincipal metamacPrincipal) {
-        // TODO: Poner los roles correctos
         return isAnyStatisticalResourceRole(metamacPrincipal);
     }
 

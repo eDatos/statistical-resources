@@ -11,7 +11,6 @@ public class SharedPublicationsSecurityUtils extends SharedSecurityUtils {
     // ------------------------------------------------------------------------
 
     public static boolean canFindPublications(MetamacPrincipal metamacPrincipal) {
-        // TODO: Poner los roles correctos
         return isAnyStatisticalResourceRole(metamacPrincipal);
     }
 
@@ -32,7 +31,6 @@ public class SharedPublicationsSecurityUtils extends SharedSecurityUtils {
     }
 
     public static boolean canFindPublicationsVersionsByCondition(MetamacPrincipal metamacPrincipal) {
-        // TODO: Poner los roles correctos
         return isAnyStatisticalResourceRole(metamacPrincipal);
     }
 
@@ -49,7 +47,6 @@ public class SharedPublicationsSecurityUtils extends SharedSecurityUtils {
     }
 
     public static boolean canRetrievePublicationVersions(MetamacPrincipal metamacPrincipal) {
-        // TODO: Poner los roles correctos
         return isAnyStatisticalResourceRole(metamacPrincipal);
     }
 

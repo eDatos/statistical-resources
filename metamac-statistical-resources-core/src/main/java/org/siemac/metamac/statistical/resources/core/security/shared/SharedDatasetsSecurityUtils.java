@@ -37,7 +37,6 @@ public class SharedDatasetsSecurityUtils extends SharedSecurityUtils {
     // ------------------------------------------------------------------------
 
     public static boolean canFindDatasetsByCondition(MetamacPrincipal metamacPrincipal) {
-        // TODO: METAMAC-1845 - Specify the correct roles
         return isAnyStatisticalResourceRole(metamacPrincipal);
     }
 
@@ -58,7 +57,6 @@ public class SharedDatasetsSecurityUtils extends SharedSecurityUtils {
     }
 
     public static boolean canFindDatasetsVersionsByCondition(MetamacPrincipal metamacPrincipal) {
-        // TODO: Poner los roles correctos (METAMAC-1845)
         return isAnyStatisticalResourceRole(metamacPrincipal);
     }
 
@@ -67,7 +65,6 @@ public class SharedDatasetsSecurityUtils extends SharedSecurityUtils {
     }
 
     public static boolean canRetrieveDatasetVersions(MetamacPrincipal metamacPrincipal) {
-        // TODO: Poner los roles correctos (METAMAC-1845)
         return isAnyStatisticalResourceRole(metamacPrincipal);
     }
 
