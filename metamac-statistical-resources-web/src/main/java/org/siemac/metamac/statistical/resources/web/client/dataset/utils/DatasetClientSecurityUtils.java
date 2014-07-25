@@ -8,7 +8,6 @@ import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum
 import org.siemac.metamac.statistical.resources.core.security.shared.SharedDatasetsSecurityUtils;
 import org.siemac.metamac.statistical.resources.web.client.base.utils.LifecycleClientSecurityUtils;
 
-// TODO take into account the metadata isTaskInBackground to avoid to execute some actions! (METAMAC-1845)
 public class DatasetClientSecurityUtils extends LifecycleClientSecurityUtils {
 
     // ------------------------------------------------------------------------
