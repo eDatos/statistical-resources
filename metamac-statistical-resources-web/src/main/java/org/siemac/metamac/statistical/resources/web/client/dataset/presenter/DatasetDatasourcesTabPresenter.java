@@ -19,7 +19,7 @@ import org.siemac.metamac.statistical.resources.web.client.enums.DatasetTabTypeE
 import org.siemac.metamac.statistical.resources.web.client.events.ChangeWaitPopupVisibilityEvent;
 import org.siemac.metamac.statistical.resources.web.client.events.SelectDatasetTabEvent;
 import org.siemac.metamac.statistical.resources.web.client.events.SetDatasetEvent;
-import org.siemac.metamac.statistical.resources.web.client.events.ShowUnauthorizedResourceWarningMessageEvent;
+import org.siemac.metamac.statistical.resources.web.client.events.ShowUnauthorizedDatasetWarningMessageEvent;
 import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.PlaceRequestUtils;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.DeleteDatasourcesAction;
@@ -148,7 +148,7 @@ public class DatasetDatasourcesTabPresenter extends Presenter<DatasetDatasources
             @Override
             public void onWaitFailure(Throwable caught) {
                 if (CommonErrorUtils.isOperationNotAllowedException(caught)) {
-                    ShowUnauthorizedResourceWarningMessageEvent.fire(DatasetDatasourcesTabPresenter.this, datasetUrn);
+                    ShowUnauthorizedDatasetWarningMessageEvent.fire(DatasetDatasourcesTabPresenter.this, datasetUrn);
                 } else {
                     super.onWaitFailure(caught);
                 }

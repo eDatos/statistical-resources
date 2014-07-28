@@ -21,7 +21,7 @@ import org.siemac.metamac.statistical.resources.web.client.dataset.view.handlers
 import org.siemac.metamac.statistical.resources.web.client.enums.LifeCycleActionEnum;
 import org.siemac.metamac.statistical.resources.web.client.events.RequestDatasetVersionsReloadEvent;
 import org.siemac.metamac.statistical.resources.web.client.events.SetDatasetEvent;
-import org.siemac.metamac.statistical.resources.web.client.events.ShowUnauthorizedResourceWarningMessageEvent;
+import org.siemac.metamac.statistical.resources.web.client.events.ShowUnauthorizedDatasetWarningMessageEvent;
 import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.MetamacPortalWebUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.PlaceRequestUtils;
@@ -173,7 +173,7 @@ public class DatasetMetadataTabPresenter extends StatisticalResourceMetadataBase
             @Override
             public void onWaitFailure(Throwable caught) {
                 if (CommonErrorUtils.isOperationNotAllowedException(caught)) {
-                    ShowUnauthorizedResourceWarningMessageEvent.fire(DatasetMetadataTabPresenter.this, urn);
+                    ShowUnauthorizedDatasetWarningMessageEvent.fire(DatasetMetadataTabPresenter.this, urn);
                 } else {
                     super.onWaitFailure(caught);
                 }

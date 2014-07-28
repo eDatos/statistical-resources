@@ -46,6 +46,7 @@ import org.siemac.metamac.statistical.resources.web.shared.query.UpdateQueryVers
 import org.siemac.metamac.statistical.resources.web.shared.query.UpdateQueryVersionProcStatusAction.Builder;
 import org.siemac.metamac.statistical.resources.web.shared.query.UpdateQueryVersionProcStatusResult;
 import org.siemac.metamac.web.common.client.events.ShowMessageEvent;
+import org.siemac.metamac.web.common.client.utils.CommonErrorUtils;
 import org.siemac.metamac.web.common.client.utils.WaitingAsyncCallbackHandlingError;
 import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
 import org.siemac.metamac.web.common.shared.criteria.SrmItemRestCriteria;
@@ -101,6 +102,8 @@ public class QueryPresenter extends Presenter<QueryPresenter.QueryView, QueryPre
         void setAgencySchemesForMaintainer(GetAgencySchemesPaginatedListResult result);
 
         void setAgenciesForMaintainer(GetAgenciesPaginatedListResult result);
+
+        void showUnauthorizedResourceWarningMessage();
     }
 
     @Inject
@@ -157,6 +160,14 @@ public class QueryPresenter extends Presenter<QueryPresenter.QueryView, QueryPre
         String urn = UrnUtils.generateUrn(UrnConstants.URN_SIEMAC_CLASS_QUERY_PREFIX, queryCode);
         dispatcher.execute(new GetQueryVersionAction(urn), new WaitingAsyncCallbackHandlingError<GetQueryVersionResult>(this) {
 
+            @Override
+            public void onWaitFailure(Throwable caught) {
+                if (CommonErrorUtils.isOperationNotAllowedException(caught)) {
+                    getView().showUnauthorizedResourceWarningMessage();
+                } else {
+                    super.onWaitFailure(caught);
+                }
+            }
             @Override
             public void onWaitSuccess(GetQueryVersionResult result) {
                 getView().setQueryDto(result.getQueryVersionDto());

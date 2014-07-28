@@ -19,6 +19,7 @@ import org.siemac.metamac.statistical.resources.web.client.base.presenter.Statis
 import org.siemac.metamac.statistical.resources.web.client.enums.LifeCycleActionEnum;
 import org.siemac.metamac.statistical.resources.web.client.events.RequestPublicationVersionsReloadEvent;
 import org.siemac.metamac.statistical.resources.web.client.events.SetPublicationEvent;
+import org.siemac.metamac.statistical.resources.web.client.events.ShowUnauthorizedPublicationWarningMessageEvent;
 import org.siemac.metamac.statistical.resources.web.client.publication.view.handlers.PublicationMetadataTabUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.MetamacPortalWebUtils;
@@ -41,6 +42,7 @@ import org.siemac.metamac.statistical.resources.web.shared.publication.UpdatePub
 import org.siemac.metamac.statistical.resources.web.shared.publication.UpdatePublicationVersionProcStatusAction.Builder;
 import org.siemac.metamac.statistical.resources.web.shared.publication.UpdatePublicationVersionProcStatusResult;
 import org.siemac.metamac.web.common.client.events.ShowMessageEvent;
+import org.siemac.metamac.web.common.client.utils.CommonErrorUtils;
 import org.siemac.metamac.web.common.client.utils.WaitingAsyncCallbackHandlingError;
 import org.siemac.metamac.web.common.shared.exception.MetamacWebException;
 
@@ -131,9 +133,17 @@ public class PublicationMetadataTabPresenter
         retrievePublication(publicationUrn);
     }
 
-    private void retrievePublication(String urn) {
+    private void retrievePublication(final String urn) {
         dispatcher.execute(new GetPublicationVersionAction(urn), new WaitingAsyncCallbackHandlingError<GetPublicationVersionResult>(this) {
 
+            @Override
+            public void onWaitFailure(Throwable caught) {
+                if (CommonErrorUtils.isOperationNotAllowedException(caught)) {
+                    ShowUnauthorizedPublicationWarningMessageEvent.fire(PublicationMetadataTabPresenter.this, urn);
+                } else {
+                    super.onWaitFailure(caught);
+                }
+            }
             @Override
             public void onWaitSuccess(GetPublicationVersionResult result) {
                 getView().setPublication(result.getPublicationVersionDto());

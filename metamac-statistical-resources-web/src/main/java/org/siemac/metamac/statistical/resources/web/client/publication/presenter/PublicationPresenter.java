@@ -18,6 +18,8 @@ import org.siemac.metamac.statistical.resources.web.client.events.SelectPublicat
 import org.siemac.metamac.statistical.resources.web.client.events.SelectPublicationTabEvent.SelectPublicationTabHandler;
 import org.siemac.metamac.statistical.resources.web.client.events.SetPublicationEvent;
 import org.siemac.metamac.statistical.resources.web.client.events.SetPublicationEvent.SetPublicationHandler;
+import org.siemac.metamac.statistical.resources.web.client.events.ShowUnauthorizedPublicationWarningMessageEvent;
+import org.siemac.metamac.statistical.resources.web.client.events.ShowUnauthorizedPublicationWarningMessageEvent.ShowUnauthorizedPublicationWarningMessageHandler;
 import org.siemac.metamac.statistical.resources.web.client.operation.presenter.OperationPresenter;
 import org.siemac.metamac.statistical.resources.web.client.publication.view.handlers.PublicationUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
@@ -53,7 +55,8 @@ public class PublicationPresenter extends Presenter<PublicationPresenter.Publica
             PublicationUiHandlers,
             RequestPublicationVersionsReloadHandler,
             SelectPublicationTabHandler,
-            SetPublicationHandler {
+            SetPublicationHandler,
+            ShowUnauthorizedPublicationWarningMessageHandler {
 
     private final DispatchAsync                       dispatcher;
     private final PlaceManager                        placeManager;
@@ -78,6 +81,7 @@ public class PublicationPresenter extends Presenter<PublicationPresenter.Publica
         void setPublicationVersionsAndSelectCurrent(String currentUrn, List<PublicationVersionBaseDto> publicationVersionBaseDtos);
         void selectMetadataTab();
         void selectStructureTab();
+        void showUnauthorizedResourceWarningMessage();
     }
 
     @Inject
@@ -146,6 +150,13 @@ public class PublicationPresenter extends Presenter<PublicationPresenter.Publica
     @Override
     public void onSetPublicationVersion(SetPublicationEvent event) {
         getView().setPublication(event.getPublicationVersionDto());
+    }
+
+    @ProxyEvent
+    @Override
+    public void onShowUnauthorizedPublicationWarningMessage(ShowUnauthorizedPublicationWarningMessageEvent event) {
+        retrievePublicationVersions(event.getUrn());
+        getView().showUnauthorizedResourceWarningMessage();
     }
 
     private void retrieveOperation(String urn) {

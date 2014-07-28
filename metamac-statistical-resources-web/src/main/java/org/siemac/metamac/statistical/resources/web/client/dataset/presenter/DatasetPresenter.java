@@ -17,8 +17,8 @@ import org.siemac.metamac.statistical.resources.web.client.events.SelectDatasetT
 import org.siemac.metamac.statistical.resources.web.client.events.SelectDatasetTabEvent.SelectDatasetTabHandler;
 import org.siemac.metamac.statistical.resources.web.client.events.SetDatasetEvent;
 import org.siemac.metamac.statistical.resources.web.client.events.SetDatasetEvent.SetDatasetHandler;
-import org.siemac.metamac.statistical.resources.web.client.events.ShowUnauthorizedResourceWarningMessageEvent;
-import org.siemac.metamac.statistical.resources.web.client.events.ShowUnauthorizedResourceWarningMessageEvent.ShowUnauthorizedResourceWarningMessageHandler;
+import org.siemac.metamac.statistical.resources.web.client.events.ShowUnauthorizedDatasetWarningMessageEvent;
+import org.siemac.metamac.statistical.resources.web.client.events.ShowUnauthorizedDatasetWarningMessageEvent.ShowUnauthorizedDatasetWarningMessageHandler;
 import org.siemac.metamac.statistical.resources.web.client.operation.presenter.OperationPresenter;
 import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.PlaceRequestUtils;
@@ -54,7 +54,7 @@ public class DatasetPresenter extends Presenter<DatasetPresenter.DatasetView, Da
             SelectDatasetTabHandler,
             SetDatasetHandler,
             RequestDatasetVersionsReloadHandler,
-            ShowUnauthorizedResourceWarningMessageHandler {
+            ShowUnauthorizedDatasetWarningMessageHandler {
 
     private PlaceManager                              placeManager;
     private DispatchAsync                             dispatcher;
@@ -158,7 +158,7 @@ public class DatasetPresenter extends Presenter<DatasetPresenter.DatasetView, Da
 
     @ProxyEvent
     @Override
-    public void onShowUnauthorizedResourceWarningMessage(ShowUnauthorizedResourceWarningMessageEvent event) {
+    public void onShowUnauthorizedDatasetWarningMessage(ShowUnauthorizedDatasetWarningMessageEvent event) {
         retrieveDatasetVersions(event.getUrn());
         getView().showUnauthorizedResourceWarningMessage();
     }

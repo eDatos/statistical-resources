@@ -1,6 +1,7 @@
 package org.siemac.metamac.statistical.resources.web.client.query.view;
 
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
+import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getMessages;
 
 import java.util.Date;
 import java.util.List;
@@ -10,6 +11,7 @@ import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.CodeItemDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionDto;
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesDefaults;
+import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb;
 import org.siemac.metamac.statistical.resources.web.client.base.utils.RequiredFieldUtils;
 import org.siemac.metamac.statistical.resources.web.client.query.presenter.QueryPresenter;
 import org.siemac.metamac.statistical.resources.web.client.query.view.handlers.QueryUiHandlers;
@@ -34,10 +36,12 @@ import org.siemac.metamac.statistical.resources.web.shared.external.GetAgenciesP
 import org.siemac.metamac.statistical.resources.web.shared.external.GetAgencySchemesPaginatedListResult;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationsPaginatedListResult;
 import org.siemac.metamac.statistical.resources.web.shared.utils.RelatedResourceUtils;
+import org.siemac.metamac.web.common.client.widgets.WarningLabel;
 
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
+import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.Overflow;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
@@ -49,21 +53,30 @@ public class QueryViewImpl extends ViewWithUiHandlers<QueryUiHandlers> implement
 
     private QueryFormPanel queryFormPanel;
 
+    private WarningLabel   warningLabel;
+
     @Inject
     public QueryViewImpl() {
         super();
         panel = new VLayout();
         panel.setHeight100();
 
+        warningLabel = new WarningLabel();
+        warningLabel.setVisible(false);
+        warningLabel.setAlign(Alignment.CENTER);
+        warningLabel.setMargin(50);
+        warningLabel.setIconSize(24);
+
         VLayout subPanel = new VLayout();
         subPanel.setOverflow(Overflow.SCROLL);
         subPanel.setMembersMargin(5);
         subPanel.setMargin(15);
+        subPanel.addMember(warningLabel);
 
         queryFormPanel = new QueryFormPanel();
         queryFormPanel.setWidth("99%");
-
         subPanel.addMember(queryFormPanel);
+
         panel.addMember(subPanel);
     }
 
@@ -85,13 +98,23 @@ public class QueryViewImpl extends ViewWithUiHandlers<QueryUiHandlers> implement
     }
 
     @Override
+    public void showUnauthorizedResourceWarningMessage() {
+        queryFormPanel.hide();
+        setWarningLabelContents(getMessages().lifeCycleResourceRetrieveOperationNotAllowed(StatisticalResourcesWeb.getCurrentUser().getUserId()));
+    }
+
+    @Override
     public void setQueryDto(QueryVersionDto queryDto) {
+        clearWarningLabel();
         queryFormPanel.setQuery(queryDto);
+        queryFormPanel.show();
     }
 
     @Override
     public void newQueryDto() {
+        clearWarningLabel();
         queryFormPanel.createQuery();
+        queryFormPanel.show();
     }
 
     @Override
@@ -124,6 +147,16 @@ public class QueryViewImpl extends ViewWithUiHandlers<QueryUiHandlers> implement
     @Override
     public void setAgenciesForMaintainer(GetAgenciesPaginatedListResult result) {
         queryFormPanel.productionDescriptorsEditionForm.setExternalItemsForMaintainer(result.getAgencies(), result.getFirstResultOut(), result.getAgencies().size(), result.getTotalResults());
+    }
+
+    private void setWarningLabelContents(String message) {
+        warningLabel.setContents(message);
+        warningLabel.show();
+    }
+
+    private void clearWarningLabel() {
+        warningLabel.setContents(StringUtils.EMPTY);
+        warningLabel.hide();
     }
 
     private class QueryFormPanel extends VLayout {

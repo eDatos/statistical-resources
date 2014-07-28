@@ -17,6 +17,7 @@ import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesW
 import org.siemac.metamac.statistical.resources.web.client.enums.PublicationTabTypeEnum;
 import org.siemac.metamac.statistical.resources.web.client.events.SelectPublicationTabEvent;
 import org.siemac.metamac.statistical.resources.web.client.events.SetPublicationEvent;
+import org.siemac.metamac.statistical.resources.web.client.events.ShowUnauthorizedPublicationWarningMessageEvent;
 import org.siemac.metamac.statistical.resources.web.client.publication.view.handlers.PublicationStructureTabUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.PlaceRequestUtils;
@@ -33,14 +34,13 @@ import org.siemac.metamac.statistical.resources.web.shared.publication.DeletePub
 import org.siemac.metamac.statistical.resources.web.shared.publication.DeletePublicationStructureElementResult;
 import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublicationStructureAction;
 import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublicationStructureResult;
-import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublicationVersionAction;
-import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublicationVersionResult;
 import org.siemac.metamac.statistical.resources.web.shared.publication.SavePublicationStructureElementAction;
 import org.siemac.metamac.statistical.resources.web.shared.publication.SavePublicationStructureElementResult;
 import org.siemac.metamac.statistical.resources.web.shared.publication.UpdatePublicationStructureElementLocationAction;
 import org.siemac.metamac.statistical.resources.web.shared.publication.UpdatePublicationStructureElementLocationResult;
 import org.siemac.metamac.statistical.resources.web.shared.query.GetQueriesAction;
 import org.siemac.metamac.statistical.resources.web.shared.query.GetQueriesResult;
+import org.siemac.metamac.web.common.client.utils.CommonErrorUtils;
 import org.siemac.metamac.web.common.client.utils.WaitingAsyncCallbackHandlingError;
 
 import com.google.inject.Inject;
@@ -141,25 +141,23 @@ public class PublicationStructureTabPresenter extends Presenter<PublicationStruc
     private void loadInitialData() {
         String publicationCode = PlaceRequestUtils.getPublicationParamFromUrl(placeManager);
         String publicationVersionUrn = CommonUtils.generatePublicationUrn(publicationCode);
-        retrievePublication(publicationVersionUrn);
         retrievePublicationStructure(publicationVersionUrn);
     }
 
-    private void retrievePublication(String publicationVersionUrn) {
-        dispatcher.execute(new GetPublicationVersionAction(publicationVersionUrn), new WaitingAsyncCallbackHandlingError<GetPublicationVersionResult>(this) {
-
-            @Override
-            public void onWaitSuccess(GetPublicationVersionResult result) {
-                SetPublicationEvent.fire(PublicationStructureTabPresenter.this, result.getPublicationVersionDto());
-            }
-        });
-    }
-
-    private void retrievePublicationStructure(String publicationVersionUrn) {
+    private void retrievePublicationStructure(final String publicationVersionUrn) {
         dispatcher.execute(new GetPublicationStructureAction(publicationVersionUrn), new WaitingAsyncCallbackHandlingError<GetPublicationStructureResult>(this) {
 
             @Override
+            public void onWaitFailure(Throwable caught) {
+                if (CommonErrorUtils.isOperationNotAllowedException(caught)) {
+                    ShowUnauthorizedPublicationWarningMessageEvent.fire(PublicationStructureTabPresenter.this, publicationVersionUrn);
+                } else {
+                    super.onWaitFailure(caught);
+                }
+            }
+            @Override
             public void onWaitSuccess(GetPublicationStructureResult result) {
+                SetPublicationEvent.fire(PublicationStructureTabPresenter.this, result.getPublicationVersion());
                 getView().setPublicationStructure(result.getPublicationStructureDto());
             }
         });
