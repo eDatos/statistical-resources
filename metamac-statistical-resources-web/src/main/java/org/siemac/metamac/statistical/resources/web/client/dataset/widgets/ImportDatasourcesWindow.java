@@ -45,8 +45,8 @@ public class ImportDatasourcesWindow extends ImportResourceWindow {
         super(getConstants().actionLoadDatasources());
 
         InformationLabel informationLabel = new InformationLabel(getMessages().datasourceImportationInfoMessage());
-        informationLabel.setWidth(300);
-        informationLabel.setMargin(10);
+        informationLabel.setWidth(getWidth());
+        informationLabel.setMargin(5);
         body.addMember(informationLabel);
 
         UploadDatasourceForm uploadDatasourceForm = new UploadDatasourceForm(dimensionsMapping);
@@ -60,8 +60,8 @@ public class ImportDatasourcesWindow extends ImportResourceWindow {
         super(getConstants().actionLoadDatasources());
 
         InformationLabel informationLabel = new InformationLabel(getMessages().datasourceImportationInfoMessage());
-        informationLabel.setWidth(300);
-        informationLabel.setMargin(10);
+        informationLabel.setWidth(getWidth());
+        informationLabel.setMargin(5);
         body.addMember(informationLabel);
 
         UploadDatasourceForm form = new UploadDatasourceForm(null);
