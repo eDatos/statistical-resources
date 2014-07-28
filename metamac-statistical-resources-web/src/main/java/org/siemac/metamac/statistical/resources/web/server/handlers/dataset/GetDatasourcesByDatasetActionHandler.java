@@ -3,6 +3,7 @@ package org.siemac.metamac.statistical.resources.web.server.handlers.dataset;
 import java.util.List;
 
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasourceDto;
 import org.siemac.metamac.statistical.resources.core.facade.serviceapi.StatisticalResourcesServiceFacade;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasourcesByDatasetAction;
@@ -29,7 +30,8 @@ public class GetDatasourcesByDatasetActionHandler extends SecurityActionHandler<
     public GetDatasourcesByDatasetResult executeSecurityAction(GetDatasourcesByDatasetAction action) throws ActionException {
         try {
             List<DatasourceDto> datasources = statisticalResourcesServiceFacade.retrieveDatasourcesByDatasetVersion(ServiceContextHolder.getCurrentServiceContext(), action.getDatasetVersionUrn());
-            return new GetDatasourcesByDatasetResult(datasources);
+            DatasetVersionDto datasetVersion = statisticalResourcesServiceFacade.retrieveDatasetVersionByUrn(ServiceContextHolder.getCurrentServiceContext(), action.getDatasetVersionUrn());
+            return new GetDatasourcesByDatasetResult(datasetVersion, datasources);
         } catch (MetamacException e) {
             throw WebExceptionUtils.createMetamacWebException(e);
         }

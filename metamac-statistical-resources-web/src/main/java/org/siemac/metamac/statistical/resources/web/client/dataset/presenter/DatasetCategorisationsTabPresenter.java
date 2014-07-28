@@ -17,6 +17,7 @@ import org.siemac.metamac.statistical.resources.web.client.dataset.view.handlers
 import org.siemac.metamac.statistical.resources.web.client.enums.DatasetTabTypeEnum;
 import org.siemac.metamac.statistical.resources.web.client.events.SelectDatasetTabEvent;
 import org.siemac.metamac.statistical.resources.web.client.events.SetDatasetEvent;
+import org.siemac.metamac.statistical.resources.web.client.events.ShowUnauthorizedResourceWarningMessageEvent;
 import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.PlaceRequestUtils;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.CreateDatasetCategorisationsAction;
@@ -35,6 +36,7 @@ import org.siemac.metamac.statistical.resources.web.shared.external.GetCategoryS
 import org.siemac.metamac.statistical.resources.web.shared.external.GetCategorySchemesPaginatedListResult;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationAction;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationResult;
+import org.siemac.metamac.web.common.client.utils.CommonErrorUtils;
 import org.siemac.metamac.web.common.client.utils.WaitingAsyncCallbackHandlingError;
 import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
 import org.siemac.metamac.web.common.shared.criteria.SrmItemRestCriteria;
@@ -141,9 +143,17 @@ public class DatasetCategorisationsTabPresenter extends Presenter<DatasetCategor
         });
     }
 
-    private void retrieveDatasetAndCategorisations(String datasetUrn) {
+    private void retrieveDatasetAndCategorisations(final String datasetUrn) {
         dispatcher.execute(new GetDatasetVersionAction(datasetUrn), new WaitingAsyncCallbackHandlingError<GetDatasetVersionResult>(this) {
 
+            @Override
+            public void onWaitFailure(Throwable caught) {
+                if (CommonErrorUtils.isOperationNotAllowedException(caught)) {
+                    ShowUnauthorizedResourceWarningMessageEvent.fire(DatasetCategorisationsTabPresenter.this, datasetUrn);
+                } else {
+                    super.onWaitFailure(caught);
+                }
+            }
             @Override
             public void onWaitSuccess(GetDatasetVersionResult result) {
                 SetDatasetEvent.fire(DatasetCategorisationsTabPresenter.this, result.getDatasetVersionDto());
@@ -208,8 +218,8 @@ public class DatasetCategorisationsTabPresenter extends Presenter<DatasetCategor
                 retrieveDatasetAndCategorisations(datasetVersionUrn);
             }
         });
-
     }
+
     @Override
     public void retrieveCategoriesForCategorisations(int firstResult, int maxResults, SrmItemRestCriteria criteria) {
         dispatcher.execute(new GetCategoriesPaginatedListAction(firstResult, maxResults, criteria), new WaitingAsyncCallbackHandlingError<GetCategoriesPaginatedListResult>(this) {

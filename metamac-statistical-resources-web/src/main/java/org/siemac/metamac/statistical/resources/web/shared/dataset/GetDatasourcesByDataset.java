@@ -2,6 +2,7 @@ package org.siemac.metamac.statistical.resources.web.shared.dataset;
 
 import java.util.List;
 
+import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasourceDto;
 
 import com.gwtplatform.dispatch.annotation.GenDispatch;
@@ -15,6 +16,8 @@ public class GetDatasourcesByDataset {
     String              datasetVersionUrn;
 
     @Out(1)
-    List<DatasourceDto> datasourcesList;
+    DatasetVersionDto   datasetVersion;
 
+    @Out(2)
+    List<DatasourceDto> datasourcesList;
 }

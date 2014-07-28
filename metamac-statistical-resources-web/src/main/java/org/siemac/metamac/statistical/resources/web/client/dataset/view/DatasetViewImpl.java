@@ -9,6 +9,7 @@ import org.siemac.metamac.core.common.util.shared.BooleanUtils;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionBaseDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
+import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb;
 import org.siemac.metamac.statistical.resources.web.client.base.widgets.CustomTabSet;
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.record.DatasetRecord;
 import org.siemac.metamac.statistical.resources.web.client.dataset.presenter.DatasetAttributesTabPresenter.DatasetAttributesTabView;
@@ -21,10 +22,12 @@ import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.Datas
 import org.siemac.metamac.web.common.client.utils.InternationalStringUtils;
 import org.siemac.metamac.web.common.client.widgets.InformationLabel;
 import org.siemac.metamac.web.common.client.widgets.TitleLabel;
+import org.siemac.metamac.web.common.client.widgets.WarningLabel;
 
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
+import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.Overflow;
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.grid.events.RecordClickEvent;
@@ -40,6 +43,7 @@ public class DatasetViewImpl extends ViewWithUiHandlers<DatasetUiHandlers> imple
 
     private TitleLabel                  titleLabel;
     private InformationLabel            informationLabel;
+    private WarningLabel                warningLabel;
 
     private DatasetVersionsSectionStack versionsSectionStack;
 
@@ -57,8 +61,14 @@ public class DatasetViewImpl extends ViewWithUiHandlers<DatasetUiHandlers> imple
         titleLabel = new TitleLabel(new String());
         titleLabel.setVisible(false);
 
-        informationLabel = new InformationLabel(StringUtils.EMPTY);
+        informationLabel = new InformationLabel();
         informationLabel.setVisible(false);
+
+        warningLabel = new WarningLabel();
+        warningLabel.setVisible(false);
+        warningLabel.setAlign(Alignment.CENTER);
+        warningLabel.setMargin(50);
+        warningLabel.setIconSize(24);
 
         //
         // DATASET VERSIONS
@@ -104,6 +114,7 @@ public class DatasetViewImpl extends ViewWithUiHandlers<DatasetUiHandlers> imple
         VLayout tabSubPanel = new VLayout();
         tabSubPanel.addMember(titleLabel);
         tabSubPanel.addMember(informationLabel);
+        tabSubPanel.addMember(warningLabel);
         tabSubPanel.addMember(tabSet);
         tabSubPanel.setMargin(15);
         subPanel.addMember(tabSubPanel);
@@ -143,15 +154,16 @@ public class DatasetViewImpl extends ViewWithUiHandlers<DatasetUiHandlers> imple
             @Override
             public void onTabSelected(TabSelectedEvent event) {
                 getUiHandlers().goToDatasetCategorisations();
-
             }
         });
     }
 
     @Override
     public void setDataset(DatasetVersionDto datasetVersionDto) {
+        clearWarningLabel();
         setTitleLabelContents(datasetVersionDto);
         setInformationLabelContents(datasetVersionDto);
+        tabSet.show();
     }
 
     @Override
@@ -160,9 +172,22 @@ public class DatasetViewImpl extends ViewWithUiHandlers<DatasetUiHandlers> imple
         versionsSectionStack.selectDatasetVersion(currentDatasetUrn);
     }
 
+    @Override
+    public void showUnauthorizedResourceWarningMessage() {
+        clearTitleLabel();
+        clearInformationLabel();
+        tabSet.hide();
+        setWarningLabelContents(getMessages().lifeCycleResourceRetrieveOperationNotAllowed(StatisticalResourcesWeb.getCurrentUser().getUserId()));
+    }
+
     private void setTitleLabelContents(DatasetVersionDto datasetVersionDto) {
         titleLabel.setContents(InternationalStringUtils.getLocalisedString(datasetVersionDto.getTitle()));
         titleLabel.show();
+    }
+
+    private void setWarningLabelContents(String message) {
+        warningLabel.setContents(message);
+        warningLabel.show();
     }
 
     private void setInformationLabelContents(DatasetVersionDto datasetVersionDto) {
@@ -171,9 +196,23 @@ public class DatasetViewImpl extends ViewWithUiHandlers<DatasetUiHandlers> imple
             informationLabel.setContents(message);
             informationLabel.show();
         } else {
-            informationLabel.setContents(StringUtils.EMPTY);
-            informationLabel.hide();
+            clearInformationLabel();
         }
+    }
+
+    private void clearInformationLabel() {
+        informationLabel.setContents(StringUtils.EMPTY);
+        informationLabel.hide();
+    }
+
+    private void clearWarningLabel() {
+        warningLabel.setContents(StringUtils.EMPTY);
+        warningLabel.hide();
+    }
+
+    private void clearTitleLabel() {
+        titleLabel.setContents(StringUtils.EMPTY);
+        titleLabel.hide();
     }
 
     @Override

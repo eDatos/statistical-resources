@@ -8,7 +8,6 @@ import com.gwtplatform.mvp.client.UiHandlers;
 
 public interface DatasetDatasourcesTabUiHandlers extends UiHandlers {
 
-    void retrieveDatasourcesByDataset(String datasetUrn, int firstResult, int maxResults);
     void deleteDatasources(List<String> datasourcesUrns);
 
     // Importation

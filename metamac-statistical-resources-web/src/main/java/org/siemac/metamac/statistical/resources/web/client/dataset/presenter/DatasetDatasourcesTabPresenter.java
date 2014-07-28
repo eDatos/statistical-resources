@@ -19,6 +19,7 @@ import org.siemac.metamac.statistical.resources.web.client.enums.DatasetTabTypeE
 import org.siemac.metamac.statistical.resources.web.client.events.ChangeWaitPopupVisibilityEvent;
 import org.siemac.metamac.statistical.resources.web.client.events.SelectDatasetTabEvent;
 import org.siemac.metamac.statistical.resources.web.client.events.SetDatasetEvent;
+import org.siemac.metamac.statistical.resources.web.client.events.ShowUnauthorizedResourceWarningMessageEvent;
 import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.PlaceRequestUtils;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.DeleteDatasourcesAction;
@@ -27,13 +28,12 @@ import org.siemac.metamac.statistical.resources.web.shared.dataset.GetCodelistsW
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetCodelistsWithVariableResult;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetDimensionsVariableMappingAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetDimensionsVariableMappingResult;
-import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetVersionAction;
-import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetVersionResult;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasourcesByDatasetAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasourcesByDatasetResult;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationAction;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationResult;
 import org.siemac.metamac.web.common.client.events.ShowMessageEvent;
+import org.siemac.metamac.web.common.client.utils.CommonErrorUtils;
 import org.siemac.metamac.web.common.client.utils.WaitingAsyncCallbackHandlingError;
 import org.siemac.metamac.web.common.shared.criteria.SrmExternalResourceRestCriteria;
 
@@ -139,27 +139,24 @@ public class DatasetDatasourcesTabPresenter extends Presenter<DatasetDatasources
     private void loadInitialData() {
         String datasetCode = PlaceRequestUtils.getDatasetParamFromUrl(placeManager);
         String datasetUrn = CommonUtils.generateDatasetUrn(datasetCode);
-        retrieveDataset(datasetUrn);
         retrieveDatasourcesByDataset(datasetUrn, 0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS);
     }
 
-    public void retrieveDataset(String datasetUrn) {
-        dispatcher.execute(new GetDatasetVersionAction(datasetUrn), new WaitingAsyncCallbackHandlingError<GetDatasetVersionResult>(this) {
+    private void retrieveDatasourcesByDataset(final String datasetUrn, int firstResult, int maxResults) {
+        dispatcher.execute(new GetDatasourcesByDatasetAction(datasetUrn), new WaitingAsyncCallbackHandlingError<GetDatasourcesByDatasetResult>(DatasetDatasourcesTabPresenter.this) {
 
             @Override
-            public void onWaitSuccess(GetDatasetVersionResult result) {
-                setDataset(result.getDatasetVersionDto());
-                SetDatasetEvent.fire(DatasetDatasourcesTabPresenter.this, result.getDatasetVersionDto());
+            public void onWaitFailure(Throwable caught) {
+                if (CommonErrorUtils.isOperationNotAllowedException(caught)) {
+                    ShowUnauthorizedResourceWarningMessageEvent.fire(DatasetDatasourcesTabPresenter.this, datasetUrn);
+                } else {
+                    super.onWaitFailure(caught);
+                }
             }
-        });
-    }
-
-    @Override
-    public void retrieveDatasourcesByDataset(final String datasetUrn, int firstResult, int maxResults) {
-        dispatcher.execute(new GetDatasourcesByDatasetAction(datasetUrn), new WaitingAsyncCallbackHandlingError<GetDatasourcesByDatasetResult>(this) {
-
             @Override
             public void onWaitSuccess(GetDatasourcesByDatasetResult result) {
+                setDataset(result.getDatasetVersion());
+                SetDatasetEvent.fire(DatasetDatasourcesTabPresenter.this, result.getDatasetVersion());
                 getView().setDatasources(datasetUrn, result.getDatasourcesList());
             }
         });
