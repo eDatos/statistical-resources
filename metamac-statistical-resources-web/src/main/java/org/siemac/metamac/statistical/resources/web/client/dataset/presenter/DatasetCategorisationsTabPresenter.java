@@ -179,10 +179,6 @@ public class DatasetCategorisationsTabPresenter extends Presenter<DatasetCategor
             @Override
             public void onWaitSuccess(CreateDatasetCategorisationsResult result) {
                 fireSuccessMessage(StatisticalResourcesWeb.getMessages().datasetSubjectsSaved());
-            }
-
-            @Override
-            protected void afterResult() {
                 retrieveDatasetAndCategorisations(datasetVersionUrn);
             }
         });
@@ -195,10 +191,6 @@ public class DatasetCategorisationsTabPresenter extends Presenter<DatasetCategor
             @Override
             public void onWaitSuccess(DeleteCategorisationsResult result) {
                 fireSuccessMessage(StatisticalResourcesWeb.getMessages().datasetSubjectsDeleted());
-            }
-
-            @Override
-            public void afterResult() {
                 retrieveDatasetAndCategorisations(datasetVersionUrn);
             }
         });
@@ -211,10 +203,6 @@ public class DatasetCategorisationsTabPresenter extends Presenter<DatasetCategor
             @Override
             public void onWaitSuccess(EndCategorisationsValidityResult result) {
                 fireSuccessMessage(StatisticalResourcesWeb.getMessages().datasetSubjectsValidityEnded());
-            }
-
-            @Override
-            public void afterResult() {
                 retrieveDatasetAndCategorisations(datasetVersionUrn);
             }
         });
