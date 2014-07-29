@@ -204,6 +204,17 @@ public class CommonUtils {
         return versionRationaleTypeDtos;
     }
 
+    public static boolean containsMinorErrataVersionRationaleType(List<VersionRationaleTypeDto> versionRationaleTypeDtos) {
+        if (versionRationaleTypeDtos != null) {
+            for (VersionRationaleTypeDto type : versionRationaleTypeDtos) {
+                if (VersionRationaleTypeEnum.MINOR_ERRATA.equals(type.getValue())) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     // -----------------------------------------------------------------------------------------
     // VERSION TYPE
     // -----------------------------------------------------------------------------------------

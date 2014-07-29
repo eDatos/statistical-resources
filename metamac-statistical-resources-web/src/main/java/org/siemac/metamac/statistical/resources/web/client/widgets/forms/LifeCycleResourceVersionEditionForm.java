@@ -1,10 +1,15 @@
 package org.siemac.metamac.statistical.resources.web.client.widgets.forms;
 
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
+import static org.siemac.metamac.web.common.client.utils.InternationalStringUtils.cleanInternationalString;
 
+import java.util.List;
+
+import org.siemac.metamac.core.common.dto.InternationalStringDto;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.statistical.resources.core.base.checks.MetadataEditionChecks;
 import org.siemac.metamac.statistical.resources.core.dto.LifeCycleStatisticalResourceDto;
+import org.siemac.metamac.statistical.resources.core.dto.VersionRationaleTypeDto;
 import org.siemac.metamac.statistical.resources.core.enume.domain.NextVersionTypeEnum;
 import org.siemac.metamac.statistical.resources.web.client.base.widgets.SearchVersionRationaleTypeItem;
 import org.siemac.metamac.statistical.resources.web.client.model.ds.VersionableResourceDS;
@@ -55,7 +60,11 @@ public class LifeCycleResourceVersionEditionForm extends GroupDynamicForm {
             @Override
             protected boolean condition(Object value) {
                 if (CommonUtils.isResourceInProductionValidationOrGreaterProcStatus(lifeCycleStatisticalResourceDto.getProcStatus())) {
-                    // TODO It is required only if the versionRationaleType == MINOR_ERRATA [METAMAC-2077]
+                    List<VersionRationaleTypeDto> types = versionRationaleTypeItem.getSelectedVersionRationaleTypeDtos();
+                    if (CommonUtils.containsMinorErrataVersionRationaleType(types)) {
+                        InternationalStringDto versionRationale = cleanInternationalString(getValueAsInternationalStringDto(VersionableResourceDS.VERSION_RATIONALE));
+                        return versionRationale != null;
+                    }
                 }
                 return true;
             }
@@ -105,7 +114,7 @@ public class LifeCycleResourceVersionEditionForm extends GroupDynamicForm {
         lifeCycleStatisticalResourceDto.getVersionRationaleTypes().addAll(
                 ((SearchVersionRationaleTypeItem) getItem(VersionableResourceDS.VERSION_RATIONALE_TYPES)).getSelectedVersionRationaleTypeDtos());
 
-        lifeCycleStatisticalResourceDto.setVersionRationale(getValueAsInternationalStringDto(VersionableResourceDS.VERSION_RATIONALE));;
+        lifeCycleStatisticalResourceDto.setVersionRationale(getValueAsInternationalStringDto(VersionableResourceDS.VERSION_RATIONALE));
         lifeCycleStatisticalResourceDto.setNextVersion(!StringUtils.isBlank(getValueAsString(VersionableResourceDS.NEXT_VERSION)) ? NextVersionTypeEnum
                 .valueOf(getValueAsString(VersionableResourceDS.NEXT_VERSION)) : null);
         lifeCycleStatisticalResourceDto.setNextVersionDate(((CustomDateItem) getItem(VersionableResourceDS.DATE_NEXT_VERSION)).getValueAsDate());
