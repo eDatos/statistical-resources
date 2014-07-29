@@ -12,7 +12,6 @@ import org.siemac.metamac.statistical.resources.web.client.model.ds.SiemacMetada
 import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
 import org.siemac.metamac.web.common.client.model.ds.ExternalItemDS;
 import org.siemac.metamac.web.common.client.utils.CustomRequiredValidator;
-import org.siemac.metamac.web.common.client.utils.RecordUtils;
 import org.siemac.metamac.web.common.client.view.handlers.BaseUiHandlers;
 import org.siemac.metamac.web.common.client.widgets.form.fields.external.SearchSingleCommonConfigurationItem;
 import org.siemac.metamac.web.common.client.widgets.form.utils.FormUtils;
