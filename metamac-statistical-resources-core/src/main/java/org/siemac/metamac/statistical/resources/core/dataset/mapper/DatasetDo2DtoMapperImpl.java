@@ -172,6 +172,8 @@ public class DatasetDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements Dat
         // Identity
         target.setId(source.getId());
         target.setVersion(source.getVersion());
+        
+        target.setDatasetRepositoryId(source.getDatasetRepositoryId());
 
         target.getGeographicGranularities().clear();
         target.getGeographicGranularities().addAll(externalItemDoCollectionToDtoCollection(source.getGeographicGranularities()));

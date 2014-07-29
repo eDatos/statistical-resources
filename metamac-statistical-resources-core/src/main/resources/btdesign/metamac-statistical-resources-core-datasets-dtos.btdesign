@@ -28,6 +28,8 @@ Application DatasetsStatisticalResourcesDto {
 			JAVADATE dateEnd;
 			- Bag<@ExternalItemDto> statisticalUnit;
 
+			//Identifiers
+			String datasetRepositoryId;
 
 			//Production descriptor
 
