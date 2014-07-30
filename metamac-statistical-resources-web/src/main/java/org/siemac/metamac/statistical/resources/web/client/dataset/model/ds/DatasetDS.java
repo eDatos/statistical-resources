@@ -4,6 +4,9 @@ import org.siemac.metamac.statistical.resources.web.client.model.ds.SiemacMetada
 
 public class DatasetDS extends SiemacMetadataDS {
 
+    // IDENTIFIERS
+    public static final String DATASET_REPOSITORY_ID      = "ds-rep-id";
+
     // CONTENT DESCRIPTORS
     public static final String GEOGRAPHIC_COVERAGE        = "ds-geo-cov";
     public static final String TEMPORAL_COVERAGE          = "ds-tem-cov";

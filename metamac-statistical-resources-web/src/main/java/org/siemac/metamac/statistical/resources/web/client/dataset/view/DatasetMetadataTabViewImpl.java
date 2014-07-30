@@ -19,6 +19,8 @@ import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.forms
 import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.forms.DatasetClassDescriptorsForm;
 import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.forms.DatasetContentDescriptorsEditionForm;
 import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.forms.DatasetContentDescriptorsForm;
+import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.forms.DatasetIdentifiersEditionForm;
+import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.forms.DatasetIdentifiersForm;
 import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.forms.DatasetProductionDescriptorsEditionForm;
 import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.forms.DatasetProductionDescriptorsForm;
 import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.forms.DatasetPublicationDescriptorsEditionForm;
@@ -30,8 +32,6 @@ import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.forms
 import org.siemac.metamac.statistical.resources.web.client.widgets.ProgramPublicationWindow;
 import org.siemac.metamac.statistical.resources.web.client.widgets.VersionWindow;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.LifeCycleResourceLifeCycleForm;
-import org.siemac.metamac.statistical.resources.web.client.widgets.forms.NameableResourceIdentifiersEditionForm;
-import org.siemac.metamac.statistical.resources.web.client.widgets.forms.NameableResourceIdentifiersForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.SiemacMetadataCommonMetadataEditionForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.SiemacMetadataCommonMetadataForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.SiemacMetadataIntellectualPropertyDescriptorsEditionForm;
@@ -62,7 +62,7 @@ public class DatasetMetadataTabViewImpl extends StatisticalResourceMetadataBaseV
     private VLayout                                                  panel;
     private DatasetMainFormLayout                                    mainFormLayout;
 
-    private NameableResourceIdentifiersForm                          identifiersForm;
+    private DatasetIdentifiersForm                                   identifiersForm;
     private DatasetContentDescriptorsForm                            contentDescriptorsForm;
     private SiemacMetadataCommonMetadataForm                         commonMetadataForm;
     private SiemacMetadataThematicContentClassifiersForm             thematicContentClassifiersForm;
@@ -75,7 +75,7 @@ public class DatasetMetadataTabViewImpl extends StatisticalResourceMetadataBaseV
     private DatasetVersionForm                                       versionForm;
     private SiemacMetadataIntellectualPropertyDescriptorsForm        intellectualPropertyDescriptorsForm;
 
-    private NameableResourceIdentifiersEditionForm                   identifiersEditionForm;
+    private DatasetIdentifiersEditionForm                            identifiersEditionForm;
     private DatasetContentDescriptorsEditionForm                     contentDescriptorsEditionForm;
     private SiemacMetadataCommonMetadataEditionForm                  commonMetadataEditionForm;
     private SiemacMetadataThematicContentClassifiersEditionForm      thematicContentClassifiersEditionForm;
@@ -287,7 +287,7 @@ public class DatasetMetadataTabViewImpl extends StatisticalResourceMetadataBaseV
 
     private void createViewForm() {
         // Identifiers Form
-        identifiersForm = new NameableResourceIdentifiersForm();
+        identifiersForm = new DatasetIdentifiersForm();
         mainFormLayout.addViewCanvas(identifiersForm);
 
         // Content descriptors form
@@ -337,7 +337,7 @@ public class DatasetMetadataTabViewImpl extends StatisticalResourceMetadataBaseV
 
     private void createEditionForm() {
         // Identifiers form
-        identifiersEditionForm = new NameableResourceIdentifiersEditionForm();
+        identifiersEditionForm = new DatasetIdentifiersEditionForm();
         mainFormLayout.addEditionCanvas(identifiersEditionForm);
 
         // Content descriptors form
@@ -402,7 +402,7 @@ public class DatasetMetadataTabViewImpl extends StatisticalResourceMetadataBaseV
 
     private void setDatasetViewMode(DatasetVersionDto datasetDto) {
         // Identifiers
-        identifiersForm.setNameableStatisticalResourceDto(datasetDto);
+        identifiersForm.setDatasetVersionDto(datasetDto);
 
         // Content descriptors
         contentDescriptorsForm.setDatasetVersionDto(datasetDto);
@@ -444,7 +444,7 @@ public class DatasetMetadataTabViewImpl extends StatisticalResourceMetadataBaseV
         String[] requiredFieldsToNextProcStatus = RequiredFieldUtils.getDatasetRequiredFieldsToNextProcStatus(datasetDto.getProcStatus());
 
         // Identifiers form
-        identifiersEditionForm.setNameableStatisticalResourceDto(datasetDto);
+        identifiersEditionForm.setDatasetVersionDto(datasetDto);
         identifiersEditionForm.setRequiredTitleSuffix(requiredFieldsToNextProcStatus);
 
         // Content Descriptors
@@ -494,7 +494,7 @@ public class DatasetMetadataTabViewImpl extends StatisticalResourceMetadataBaseV
 
     public DatasetVersionDto getDatasetVersionDto() {
         // Identifiers form
-        datasetVersionDto = (DatasetVersionDto) identifiersEditionForm.getNameableStatisticalResourceDto(datasetVersionDto);
+        datasetVersionDto = identifiersEditionForm.getDatasetVersionDto(datasetVersionDto);
 
         // Content descriptors form
         datasetVersionDto = contentDescriptorsEditionForm.getDatasetVersionDto(datasetVersionDto);

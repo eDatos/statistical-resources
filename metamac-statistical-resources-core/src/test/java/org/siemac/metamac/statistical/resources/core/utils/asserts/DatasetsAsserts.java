@@ -269,6 +269,8 @@ public class DatasetsAsserts extends BaseAsserts {
             case DO2DTO:
                 assertEquals(entity.getId(), dto.getId());
                 assertEquals(entity.getVersion(), dto.getVersion());
+                
+                assertEquals(entity.getDatasetRepositoryId(), dto.getDatasetRepositoryId());
 
                 assertEqualsExternalItemCollectionMapper(entity.getTemporalGranularities(), dto.getTemporalGranularities());
                 assertEqualsExternalItemCollectionMapper(entity.getGeographicGranularities(), dto.getGeographicGranularities());
