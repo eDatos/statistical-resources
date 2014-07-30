@@ -1,6 +1,5 @@
 package org.siemac.metamac.statistical.resources.web.client.base.utils;
 
-import static org.siemac.metamac.statistical.resources.web.client.dataset.model.ds.DatasetDS.DATE_NEXT_UPDATE;
 import static org.siemac.metamac.statistical.resources.web.client.dataset.model.ds.DatasetDS.GEOGRAPHIC_COVERAGE;
 import static org.siemac.metamac.statistical.resources.web.client.dataset.model.ds.DatasetDS.GEOGRAPHIC_GRANULARITY;
 import static org.siemac.metamac.statistical.resources.web.client.dataset.model.ds.DatasetDS.STATISTIC_OFFICIALITY;

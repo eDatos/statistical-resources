@@ -6,9 +6,6 @@ import org.siemac.metamac.statistical.resources.core.dto.SiemacMetadataStatistic
 import org.siemac.metamac.statistical.resources.web.client.model.ds.SiemacMetadataDS;
 import org.siemac.metamac.web.common.client.view.handlers.BaseUiHandlers;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ExternalItemLinkItem;
-import org.siemac.metamac.web.common.client.widgets.form.fields.ViewTextItem;
-
-import com.smartgwt.client.data.Record;
 
 public class SiemacMetadataCommonMetadataForm extends NavigationEnabledDynamicForm {
 

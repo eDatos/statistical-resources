@@ -2,11 +2,8 @@ package org.siemac.metamac.statistical.resources.web.client.widgets.windows.sear
 
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.web.common.client.widgets.actions.search.SearchPaginatedAction;
-import org.siemac.metamac.web.common.client.widgets.filters.SimpleSrmExternalResourceHiddenLastVersionFilterForm;
 import org.siemac.metamac.web.common.client.widgets.filters.SrmItemSchemeFilterForm;
-import org.siemac.metamac.web.common.client.widgets.filters.base.SimpleVersionableFilterBaseForm;
 import org.siemac.metamac.web.common.client.widgets.windows.search.SearchRelatedResourceBasePaginatedWindow;
-import org.siemac.metamac.web.common.shared.criteria.MetamacVersionableWebCriteria;
 import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
 import org.siemac.metamac.web.common.shared.criteria.SrmExternalResourceRestCriteria;
 
