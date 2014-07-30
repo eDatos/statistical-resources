@@ -4,7 +4,9 @@ import static org.siemac.metamac.statistical.resources.web.client.StatisticalRes
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getMessages;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.statistical.resources.core.dto.NameableStatisticalResourceDto;
@@ -21,6 +23,8 @@ import org.siemac.metamac.web.common.client.resources.StyleUtils;
 import org.siemac.metamac.web.common.client.utils.ListGridUtils;
 import org.siemac.metamac.web.common.client.widgets.DeleteConfirmationWindow;
 
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 import com.smartgwt.client.data.Record;
 import com.smartgwt.client.data.RecordList;
@@ -43,10 +47,14 @@ import com.smartgwt.client.widgets.tree.TreeGridField;
 import com.smartgwt.client.widgets.tree.TreeNode;
 import com.smartgwt.client.widgets.tree.events.FolderClickEvent;
 import com.smartgwt.client.widgets.tree.events.FolderClickHandler;
+import com.smartgwt.client.widgets.tree.events.FolderClosedEvent;
+import com.smartgwt.client.widgets.tree.events.FolderClosedHandler;
 import com.smartgwt.client.widgets.tree.events.FolderContextClickEvent;
 import com.smartgwt.client.widgets.tree.events.FolderContextClickHandler;
 import com.smartgwt.client.widgets.tree.events.FolderDropEvent;
 import com.smartgwt.client.widgets.tree.events.FolderDropHandler;
+import com.smartgwt.client.widgets.tree.events.FolderOpenedEvent;
+import com.smartgwt.client.widgets.tree.events.FolderOpenedHandler;
 import com.smartgwt.client.widgets.tree.events.LeafClickEvent;
 import com.smartgwt.client.widgets.tree.events.LeafClickHandler;
 import com.smartgwt.client.widgets.tree.events.LeafContextClickEvent;
@@ -70,6 +78,8 @@ public class PublicationStructureTreeGrid extends NavigableTreeGrid {
     protected HandlerRegistration               folderClickHandlerRegistration;
     protected HandlerRegistration               leafClickHandlerRegistration;
     protected HandlerRegistration               folderDropHandlerRegistration;
+    protected HandlerRegistration               folderOpenedHandlerRegistration;
+    protected HandlerRegistration               folderClosedHandlerRegistration;
 
     protected PublicationVersionBaseDto         publicationVersion;
 
@@ -86,6 +96,9 @@ public class PublicationStructureTreeGrid extends NavigableTreeGrid {
     protected ElementLevelDto                   selectedContextClickElement;
 
     protected int                               numberOfElementsInTheTree;
+
+    // Internal representation that helps us to recover opened nodes after reloading tree
+    private Map<String, String>                 treeOpenStates   = new HashMap<String, String>();
 
     public PublicationStructureTreeGrid(TreeNodeClickAction treeNodeClickAction) {
         this.treeNodeClickAction = treeNodeClickAction;
@@ -143,8 +156,43 @@ public class PublicationStructureTreeGrid extends NavigableTreeGrid {
         // Order by ORDER field
         setCanSort(true);
         setSortField(ElementLevelDS.ORDER_IN_LEVEL);
-
         setShowFilterEditor(true);
+
+        createContextMenu();
+
+        bindEvents();
+    }
+
+    private void createContextMenu() {
+        contextMenu = new Menu();
+
+        createChapterMenuItem = new MenuItem(getConstants().publicationStructureCreateChapter());
+        contextMenu.addItem(createChapterMenuItem);
+
+        createCubeMenuItem = new MenuItem(getConstants().publicationStructureCreateCube());
+        contextMenu.addItem(createCubeMenuItem);
+
+        deleteElementMenuItem = new MenuItem(getConstants().publicationStructureDeleteElement());
+        deleteElementMenuItem.addClickHandler(new ClickHandler() {
+
+            @Override
+            public void onClick(MenuItemClickEvent event) {
+                DeleteConfirmationWindow deleteConfirmationWindow = new DeleteConfirmationWindow(getMessages().publicationStructureElementDeleteConfirmationTitle(), getMessages()
+                        .publicationStructureElementDeleteConfirmation());
+                deleteConfirmationWindow.show();
+                deleteConfirmationWindow.getYesButton().addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
+
+                    @Override
+                    public void onClick(ClickEvent event) {
+                        getUiHandlers().deleteElement(publicationVersion.getUrn(), getElementLevelUrn(selectedContextClickElement));
+                    }
+                });
+            }
+        });
+        contextMenu.addItem(deleteElementMenuItem);
+    }
+
+    private void bindEvents() {
 
         filterEditionHandler = addFilterEditorSubmitHandler(new FilterEditorSubmitHandler() {
 
@@ -184,41 +232,6 @@ public class PublicationStructureTreeGrid extends NavigableTreeGrid {
                 }
             }
         });
-
-        //
-        // CONTEXT MENU
-        //
-
-        contextMenu = new Menu();
-
-        createChapterMenuItem = new MenuItem(getConstants().publicationStructureCreateChapter());
-        contextMenu.addItem(createChapterMenuItem);
-
-        createCubeMenuItem = new MenuItem(getConstants().publicationStructureCreateCube());
-        contextMenu.addItem(createCubeMenuItem);
-
-        deleteElementMenuItem = new MenuItem(getConstants().publicationStructureDeleteElement());
-        deleteElementMenuItem.addClickHandler(new ClickHandler() {
-
-            @Override
-            public void onClick(MenuItemClickEvent event) {
-                DeleteConfirmationWindow deleteConfirmationWindow = new DeleteConfirmationWindow(getMessages().publicationStructureElementDeleteConfirmationTitle(), getMessages()
-                        .publicationStructureElementDeleteConfirmation());
-                deleteConfirmationWindow.show();
-                deleteConfirmationWindow.getYesButton().addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
-
-                    @Override
-                    public void onClick(ClickEvent event) {
-                        getUiHandlers().deleteElement(publicationVersion.getUrn(), getElementLevelUrn(selectedContextClickElement));
-                    }
-                });
-            }
-        });
-        contextMenu.addItem(deleteElementMenuItem);
-
-        //
-        // Bind events
-        //
 
         folderClickHandlerRegistration = addFolderClickHandler(new FolderClickHandler() {
 
@@ -306,6 +319,22 @@ public class PublicationStructureTreeGrid extends NavigableTreeGrid {
                 }
             }
         });
+
+        folderOpenedHandlerRegistration = addFolderOpenedHandler(new FolderOpenedHandler() {
+
+            @Override
+            public void onFolderOpened(FolderOpenedEvent event) {
+                saveTreeOpenState();
+            }
+        });
+
+        folderClosedHandlerRegistration = addFolderClosedHandler(new FolderClosedHandler() {
+
+            @Override
+            public void onFolderClosed(FolderClosedEvent event) {
+                saveTreeOpenState();
+            }
+        });
     }
 
     public void removeHandlerRegistrations() {
@@ -331,6 +360,7 @@ public class PublicationStructureTreeGrid extends NavigableTreeGrid {
 
         setCanDrag(PublicationClientSecurityUtils.canUpdateElementLocation(publicationVersion.getProcStatus()));
 
+        recoverOpenState();
     }
 
     public ElementLevelTreeNode[] createElementLevelsTreeNodes(List<ElementLevelDto> elementLevelDtos) {
@@ -484,5 +514,21 @@ public class PublicationStructureTreeGrid extends NavigableTreeGrid {
             }
         }
         return false;
+    }
+
+    private void recoverOpenState() {
+        if (treeOpenStates.containsKey(publicationVersion.getUrn()) && !StringUtils.isBlank(treeOpenStates.get(publicationVersion.getUrn()))) {
+            setOpenState(treeOpenStates.get(publicationVersion.getUrn()));
+        }
+    }
+
+    private void saveTreeOpenState() {
+        Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+
+            @Override
+            public void execute() {
+                treeOpenStates.put(publicationVersion.getUrn(), getOpenState());
+            }
+        });
     }
 }
