@@ -21,7 +21,6 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 import java.util.List;
 
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -108,8 +107,6 @@ public class DatasetVersioningServiceTest extends StatisticalResourcesBaseTest {
         assertNotNull(newDatasetVersion);
         assertFalse(previousDatasetVersion.getSiemacMetadataStatisticalResource().getVersionLogic().equals(newDatasetVersion.getSiemacMetadataStatisticalResource().getVersionLogic()));
         checkNewDatasetVersionCreated(previousDatasetVersion, newDatasetVersion);
-
-        Mockito.verify(datasetRepositoriesServiceFacade).duplicateDatasetRepository(previousDatasetVersion.getDatasetRepositoryId(), newDatasetVersion.getSiemacMetadataStatisticalResource().getUrn());
     }
 
     @Test

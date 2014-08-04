@@ -28,6 +28,7 @@ import org.mockito.MockitoAnnotations;
 import org.siemac.metamac.core.common.enume.domain.TypeExternalArtefactsEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
+import org.siemac.metamac.core.common.util.ApplicationContextProvider;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.CodeResourceInternal;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructure;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructureComponents;
@@ -35,6 +36,7 @@ import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ItemRes
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
 import org.siemac.metamac.statistical.resources.core.base.domain.HasSiemacMetadata;
 import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
+import org.siemac.metamac.statistical.resources.core.constraint.api.ConstraintsService;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Categorisation;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionRepository;
@@ -91,6 +93,9 @@ public class DatasetLifecycleServiceTest extends StatisticalResourcesBaseTest im
 
     @Mock
     private TaskService                      taskService;
+
+    @Mock
+    private ConstraintsService               constraintsService;
 
     @Before
     public void setUp() {
@@ -341,6 +346,8 @@ public class DatasetLifecycleServiceTest extends StatisticalResourcesBaseTest im
 
         DatasetVersion datasetVersionNew = mockDatasetVersionInRepoFromMockFactory(DATASET_VERSION_14_OPER_03_CODE_01_PUBLISHED_NAME);
         DatasetLifecycleTestUtils.fillAsVersioned(datasetVersionNew);
+
+        ApplicationContextProvider.getApplicationContext().getBean(ConstraintsService.class);
 
         datasetLifecycleService.applyVersioningNewResource(getServiceContextAdministrador(), datasetVersionNew, previous);
     }
