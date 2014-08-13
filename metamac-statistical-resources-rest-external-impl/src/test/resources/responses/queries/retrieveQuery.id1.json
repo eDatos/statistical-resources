@@ -20,7 +20,7 @@
   "description": {
     "text": [
       {
-        "value": "description-resource-IGSeCLR0mB en Espanol",
+        "value": "description-resource-OXjtzreCKx en Espanol",
         "lang": "es"
       }
     ]
@@ -543,7 +543,8 @@
               }
             ]
           },
-          "attachmentLevel": "DATASET"
+          "attachmentLevel": "DATASET",
+          "type": "OTHER"
         },
         {
           "id": "at2",
@@ -592,7 +593,8 @@
               }
             ],
             "total": 2
-          }
+          },
+          "type": "OTHER"
         },
         {
           "id": "at3",
@@ -612,7 +614,8 @@
               }
             ],
             "total": 1
-          }
+          },
+          "type": "OTHER"
         },
         {
           "id": "at4",
@@ -635,7 +638,8 @@
               }
             ],
             "total": 2
-          }
+          },
+          "type": "OTHER"
         },
         {
           "id": "at5",
@@ -696,7 +700,8 @@
               }
             ],
             "total": 3
-          }
+          },
+          "type": "TEMPORAL"
         },
         {
           "id": "at6",
@@ -775,7 +780,8 @@
               }
             ],
             "total": 3
-          }
+          },
+          "type": "OTHER"
         },
         {
           "id": "at7",
@@ -804,7 +810,8 @@
               }
             ],
             "total": 4
-          }
+          },
+          "type": "OTHER"
         },
         {
           "id": "at8",
@@ -827,7 +834,8 @@
               }
             ],
             "total": 2
-          }
+          },
+          "type": "OTHER"
         },
         {
           "id": "at9",
@@ -853,7 +861,8 @@
               }
             ],
             "total": 3
-          }
+          },
+          "type": "OTHER"
         },
         {
           "id": "at10",
@@ -865,7 +874,8 @@
               }
             ]
           },
-          "attachmentLevel": "PRIMARY_MEASURE"
+          "attachmentLevel": "PRIMARY_MEASURE",
+          "type": "OTHER"
         },
         {
           "id": "at11",
@@ -877,7 +887,8 @@
               }
             ]
           },
-          "attachmentLevel": "PRIMARY_MEASURE"
+          "attachmentLevel": "PRIMARY_MEASURE",
+          "type": "OTHER"
         }
       ],
       "total": 11
@@ -941,16 +952,16 @@
       "total": 2
     },
     "statisticalOperation": {
-      "id": "v1Y3CpFktO",
-      "urn": "urn:siemac:org.siemac.metamac.infomodel.statisticaloperations.Operation=v1Y3CpFktO",
+      "id": "4zKeMdT4f7",
+      "urn": "urn:siemac:org.siemac.metamac.infomodel.statisticaloperations.Operation=4zKeMdT4f7",
       "selfLink": {
         "kind": "statisticalOperations#operation",
-        "href": "http://data.istac.es/apis/operations/latest/v1Y3CpFktO"
+        "href": "http://data.istac.es/apis/operations/latest/4zKeMdT4f7"
       },
       "name": {
         "text": [
           {
-            "value": "title-v1Y3CpFktO en Espanol",
+            "value": "title-4zKeMdT4f7 en Espanol",
             "lang": "es"
           }
         ]
@@ -958,17 +969,17 @@
       "kind": "statisticalOperations#operation"
     },
     "maintainer": {
-      "id": "FixTWh2Hqc",
+      "id": "3MaqvfTveA",
       "nestedId": "agency1",
-      "urn": "urn:sdmx:org.sdmx.infomodel.base.Agency=MaintainerMock:AgencySchemeMock(1.0).FixTWh2Hqc",
+      "urn": "urn:sdmx:org.sdmx.infomodel.base.Agency=MaintainerMock:AgencySchemeMock(1.0).3MaqvfTveA",
       "selfLink": {
         "kind": "structuralResources#agency",
-        "href": "http://data.istac.es/apis/srm/latest/FixTWh2Hqc"
+        "href": "http://data.istac.es/apis/srm/latest/3MaqvfTveA"
       },
       "name": {
         "text": [
           {
-            "value": "title-FixTWh2Hqc en Espanol",
+            "value": "title-3MaqvfTveA en Espanol",
             "lang": "es"
           }
         ]

@@ -15,6 +15,7 @@ import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Attributes;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Data;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.DataStructureDefinition;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Dimensions;
+import org.siemac.metamac.rest.statistical_resources.v1_0.domain.NextVersionType;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.SelectedLanguages;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.StatisticalResource;
 import org.siemac.metamac.rest.structural_resources.v1_0.domain.DataStructure;
@@ -24,6 +25,7 @@ import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResour
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResourceResult;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.TemporalCode;
+import org.siemac.metamac.statistical.resources.core.enume.domain.NextVersionTypeEnum;
 import org.siemac.metamac.statistical.resources.core.query.domain.CodeItem;
 import org.siemac.metamac.statistical_resources.rest.external.v1_0.domain.DsdProcessorResult;
 
@@ -52,6 +54,8 @@ public interface CommonDo2RestMapperV10 {
     public InternationalString toInternationalString(Map<String, String> sources, List<String> selectedLanguages);
 
     public Date toDate(DateTime source);
+
+    public NextVersionType toNextVersionType(NextVersionTypeEnum source, List<String> selectedLanguages);
 
     public SelectedLanguages toLanguages(List<String> selectedLanguages);
 

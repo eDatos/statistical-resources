@@ -20,7 +20,7 @@
   "description": {
     "text": [
       {
-        "value": "description-Bt64EXpmRp_000001 en Espanol",
+        "value": "description-nXpSu40HBR_000001 en Espanol",
         "lang": "es"
       }
     ]
@@ -373,23 +373,6 @@
     "geographicGranularities": {
       "resource": [
         {
-          "id": "municipalities",
-          "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=MaintainerMock:CodelistMock(1.0).municipalities",
-          "selfLink": {
-            "kind": "structuralResources#code",
-            "href": "http://data.istac.es/apis/srm/latest/municipalities"
-          },
-          "name": {
-            "text": [
-              {
-                "value": "title-municipalities en Espanol",
-                "lang": "es"
-              }
-            ]
-          },
-          "kind": "structuralResources#code"
-        },
-        {
           "id": "countries",
           "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=MaintainerMock:CodelistMock(1.0).countries",
           "selfLink": {
@@ -400,6 +383,23 @@
             "text": [
               {
                 "value": "title-countries en Espanol",
+                "lang": "es"
+              }
+            ]
+          },
+          "kind": "structuralResources#code"
+        },
+        {
+          "id": "municipalities",
+          "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=MaintainerMock:CodelistMock(1.0).municipalities",
+          "selfLink": {
+            "kind": "structuralResources#code",
+            "href": "http://data.istac.es/apis/srm/latest/municipalities"
+          },
+          "name": {
+            "text": [
+              {
+                "value": "title-municipalities en Espanol",
                 "lang": "es"
               }
             ]
@@ -1267,7 +1267,8 @@
               }
             ]
           },
-          "attachmentLevel": "DATASET"
+          "attachmentLevel": "DATASET",
+          "type": "OTHER"
         },
         {
           "id": "at2",
@@ -1316,7 +1317,8 @@
               }
             ],
             "total": 2
-          }
+          },
+          "type": "OTHER"
         },
         {
           "id": "at3",
@@ -1336,7 +1338,8 @@
               }
             ],
             "total": 1
-          }
+          },
+          "type": "OTHER"
         },
         {
           "id": "at4",
@@ -1359,7 +1362,8 @@
               }
             ],
             "total": 2
-          }
+          },
+          "type": "OTHER"
         },
         {
           "id": "at5",
@@ -1420,7 +1424,8 @@
               }
             ],
             "total": 3
-          }
+          },
+          "type": "TEMPORAL"
         },
         {
           "id": "at6",
@@ -1499,7 +1504,8 @@
               }
             ],
             "total": 3
-          }
+          },
+          "type": "OTHER"
         },
         {
           "id": "at7",
@@ -1528,7 +1534,8 @@
               }
             ],
             "total": 4
-          }
+          },
+          "type": "OTHER"
         },
         {
           "id": "at8",
@@ -1551,7 +1558,8 @@
               }
             ],
             "total": 2
-          }
+          },
+          "type": "OTHER"
         },
         {
           "id": "at9",
@@ -1577,7 +1585,8 @@
               }
             ],
             "total": 3
-          }
+          },
+          "type": "OTHER"
         },
         {
           "id": "at10",
@@ -1589,7 +1598,8 @@
               }
             ]
           },
-          "attachmentLevel": "PRIMARY_MEASURE"
+          "attachmentLevel": "PRIMARY_MEASURE",
+          "type": "OTHER"
         },
         {
           "id": "at11",
@@ -1601,7 +1611,8 @@
               }
             ]
           },
-          "attachmentLevel": "PRIMARY_MEASURE"
+          "attachmentLevel": "PRIMARY_MEASURE",
+          "type": "OTHER"
         }
       ],
       "total": 11
@@ -1702,16 +1713,16 @@
       "total": 2
     },
     "statisticalOperation": {
-      "id": "Bt64EXpmRp",
-      "urn": "urn:siemac:org.siemac.metamac.infomodel.statisticaloperations.Operation=Bt64EXpmRp",
+      "id": "nXpSu40HBR",
+      "urn": "urn:siemac:org.siemac.metamac.infomodel.statisticaloperations.Operation=nXpSu40HBR",
       "selfLink": {
         "kind": "statisticalOperations#operation",
-        "href": "http://data.istac.es/apis/operations/latest/Bt64EXpmRp"
+        "href": "http://data.istac.es/apis/operations/latest/nXpSu40HBR"
       },
       "name": {
         "text": [
           {
-            "value": "title-Bt64EXpmRp en Espanol",
+            "value": "title-nXpSu40HBR en Espanol",
             "lang": "es"
           }
         ]
@@ -1760,7 +1771,7 @@
     "subtitle": {
       "text": [
         {
-          "value": "subtitle-Bt64EXpmRp_000001 en Espanol",
+          "value": "subtitle-nXpSu40HBR_000001 en Espanol",
           "lang": "es"
         }
       ]
@@ -1768,7 +1779,7 @@
     "titleAlternative": {
       "text": [
         {
-          "value": "titleAlternative-Bt64EXpmRp_000001 en Espanol",
+          "value": "titleAlternative-nXpSu40HBR_000001 en Espanol",
           "lang": "es"
         }
       ]
@@ -1776,7 +1787,7 @@
     "keywords": {
       "text": [
         {
-          "value": "keyword1 keyword2 keyword3-Bt64EXpmRp_000001 en Espanol",
+          "value": "keyword1 keyword2 keyword3-nXpSu40HBR_000001 en Espanol",
           "lang": "es"
         }
       ]
@@ -1843,7 +1854,7 @@
     "conformsTo": {
       "text": [
         {
-          "value": "conformsTo-Bt64EXpmRp_000001 en Espanol",
+          "value": "conformsTo-nXpSu40HBR_000001 en Espanol",
           "lang": "es"
         }
       ]
@@ -2063,23 +2074,23 @@
     "accessRights": {
       "text": [
         {
-          "value": "accessRights-Bt64EXpmRp_000001 en Espanol",
+          "value": "accessRights-nXpSu40HBR_000001 en Espanol",
           "lang": "es"
         }
       ]
     },
     "maintainer": {
-      "id": "4OsXU0QU2D",
+      "id": "Ja1tueCa7t",
       "nestedId": "agency1",
-      "urn": "urn:sdmx:org.sdmx.infomodel.base.Agency=MaintainerMock:AgencySchemeMock(1.0).4OsXU0QU2D",
+      "urn": "urn:sdmx:org.sdmx.infomodel.base.Agency=MaintainerMock:AgencySchemeMock(1.0).Ja1tueCa7t",
       "selfLink": {
         "kind": "structuralResources#agency",
-        "href": "http://data.istac.es/apis/srm/latest/4OsXU0QU2D"
+        "href": "http://data.istac.es/apis/srm/latest/Ja1tueCa7t"
       },
       "name": {
         "text": [
           {
-            "value": "title-4OsXU0QU2D en Espanol",
+            "value": "title-Ja1tueCa7t en Espanol",
             "lang": "es"
           }
         ]
@@ -2104,10 +2115,11 @@
     },
     "validFrom": "2013-01-01T03:04:12Z",
     "validTo": "2013-02-16T14:04:12Z",
+    "nextVersion": "NO_UPDATES",
     "abstract": {
       "text": [
         {
-          "value": "abstract-Bt64EXpmRp_000001 en Espanol",
+          "value": "abstract-nXpSu40HBR_000001 en Espanol",
           "lang": "es"
         }
       ]

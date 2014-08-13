@@ -37,6 +37,7 @@ import org.siemac.metamac.rest.statistical_resources.v1_0.domain.AttributeValues
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Attributes;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.CodeRepresentation;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.CodeRepresentations;
+import org.siemac.metamac.rest.statistical_resources.v1_0.domain.ComponentType;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Data;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.DataAttribute;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.DataAttributes;
@@ -52,6 +53,7 @@ import org.siemac.metamac.rest.statistical_resources.v1_0.domain.EnumeratedAttri
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.EnumeratedAttributeValues;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.EnumeratedDimensionValue;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.EnumeratedDimensionValues;
+import org.siemac.metamac.rest.statistical_resources.v1_0.domain.NextVersionType;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.NonEnumeratedAttributeValue;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.NonEnumeratedAttributeValues;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.NonEnumeratedDimensionValue;
@@ -84,6 +86,7 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.CodeDimensio
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.TemporalCode;
 import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.DatasetService;
+import org.siemac.metamac.statistical.resources.core.enume.domain.NextVersionTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.VersionRationaleTypeEnum;
 import org.siemac.metamac.statistical.resources.core.query.domain.CodeItem;
@@ -97,6 +100,7 @@ import org.siemac.metamac.statistical_resources.rest.external.service.utils.DsdE
 import org.siemac.metamac.statistical_resources.rest.external.service.utils.DsdExternalProcessor.DsdAttribute;
 import org.siemac.metamac.statistical_resources.rest.external.service.utils.DsdExternalProcessor.DsdComponentType;
 import org.siemac.metamac.statistical_resources.rest.external.service.utils.DsdExternalProcessor.DsdDimension;
+import org.siemac.metamac.statistical_resources.rest.external.service.utils.LookupUtil;
 import org.siemac.metamac.statistical_resources.rest.external.service.utils.StatisticalResourcesRestExternalUtils;
 import org.siemac.metamac.statistical_resources.rest.external.v1_0.domain.DsdProcessorResult;
 import org.siemac.metamac.statistical_resources.rest.external.v1_0.mapper.collection.CollectionsDo2RestMapperV10;
@@ -225,6 +229,7 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
         target.setVersionRationale(toInternationalString(source.getVersionRationale(), selectedLanguages));
         target.setValidFrom(toDate(source.getValidFrom()));
         target.setValidTo(toDate(StatisticalResourcesRestExternalUtils.isDateAfterNowSetNull(source.getValidTo())));
+        target.setNextVersion(toNextVersionType(source.getNextVersion(), selectedLanguages));
     }
 
     @Override
@@ -350,6 +355,24 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
             targets.add(source.getIdentifier());
         }
         return targets;
+    }
+
+    @Override
+    public NextVersionType toNextVersionType(NextVersionTypeEnum source, List<String> selectedLanguages) {
+        if (source == null) {
+            return null;
+        }
+
+        NextVersionType result;
+        try {
+            result = LookupUtil.lookup(NextVersionType.class, source.getName());
+        } catch (Exception e) {
+            logger.error("NextVersionTypeEnum unsupported: " + source);
+            org.siemac.metamac.rest.common.v1_0.domain.Exception exception = RestExceptionUtils.getException(RestServiceExceptionType.UNKNOWN);
+            throw new RestException(exception, Status.INTERNAL_SERVER_ERROR);
+        }
+
+        return result;
     }
 
     @Override
@@ -871,6 +894,9 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
             org.siemac.metamac.rest.common.v1_0.domain.Exception exception = RestExceptionUtils.getException(RestServiceExceptionType.UNKNOWN);
             throw new RestException(exception, Status.INTERNAL_SERVER_ERROR);
         }
+
+        // Specific type
+        target.setType(ComponentType.valueOf(source.getType().name()));
 
         // Attributes values
         target.setAttributeValues(toAttributeValues(datasetVersionUrn, source, selectedLanguages));

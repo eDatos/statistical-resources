@@ -8,7 +8,7 @@
         <cdomain:text xml:lang="es">title-dataset1 en Espanol</cdomain:text>
     </stat:name>
     <stat:description>
-        <cdomain:text xml:lang="es">description-p9XNdAtho0_000001 en Espanol</cdomain:text>
+        <cdomain:text xml:lang="es">description-bUDA5g9JmW_000001 en Espanol</cdomain:text>
     </stat:description>
     <stat:selectedLanguages total="1">
         <stat:language>es</stat:language>
@@ -41,11 +41,11 @@
             </cdomain:resource>
         </stat:languages>
         <stat:statisticalOperation kind="statisticalOperations#operation">
-            <cdomain:id>p9XNdAtho0</cdomain:id>
-            <cdomain:urn>urn:siemac:org.siemac.metamac.infomodel.statisticaloperations.Operation=p9XNdAtho0</cdomain:urn>
-            <cdomain:selfLink kind="statisticalOperations#operation" href="http://data.istac.es/apis/operations/latest/p9XNdAtho0"/>
+            <cdomain:id>bUDA5g9JmW</cdomain:id>
+            <cdomain:urn>urn:siemac:org.siemac.metamac.infomodel.statisticaloperations.Operation=bUDA5g9JmW</cdomain:urn>
+            <cdomain:selfLink kind="statisticalOperations#operation" href="http://data.istac.es/apis/operations/latest/bUDA5g9JmW"/>
             <cdomain:name>
-                <cdomain:text xml:lang="es">title-p9XNdAtho0 en Espanol</cdomain:text>
+                <cdomain:text xml:lang="es">title-bUDA5g9JmW en Espanol</cdomain:text>
             </cdomain:name>
         </stat:statisticalOperation>
         <stat:statisticalOperationInstances total="2">
@@ -67,16 +67,16 @@
             </cdomain:resource>
         </stat:statisticalOperationInstances>
         <stat:subtitle>
-            <cdomain:text xml:lang="es">subtitle-p9XNdAtho0_000001 en Espanol</cdomain:text>
+            <cdomain:text xml:lang="es">subtitle-bUDA5g9JmW_000001 en Espanol</cdomain:text>
         </stat:subtitle>
         <stat:titleAlternative>
-            <cdomain:text xml:lang="es">titleAlternative-p9XNdAtho0_000001 en Espanol</cdomain:text>
+            <cdomain:text xml:lang="es">titleAlternative-bUDA5g9JmW_000001 en Espanol</cdomain:text>
         </stat:titleAlternative>
         <stat:abstract>
-            <cdomain:text xml:lang="es">abstract-p9XNdAtho0_000001 en Espanol</cdomain:text>
+            <cdomain:text xml:lang="es">abstract-bUDA5g9JmW_000001 en Espanol</cdomain:text>
         </stat:abstract>
         <stat:keywords>
-            <cdomain:text xml:lang="es">keyword1 keyword2 keyword3-p9XNdAtho0_000001 en Espanol</cdomain:text>
+            <cdomain:text xml:lang="es">keyword1 keyword2 keyword3-bUDA5g9JmW_000001 en Espanol</cdomain:text>
         </stat:keywords>
         <stat:type>DATASET</stat:type>
         <stat:creator kind="structuralResources#organisationUnit">
@@ -108,7 +108,7 @@
         <stat:createdDate>2012-01-02T03:04:05Z</stat:createdDate>
         <stat:lastUpdate>2013-01-02T03:04:05Z</stat:lastUpdate>
         <stat:conformsTo>
-            <cdomain:text xml:lang="es">conformsTo-p9XNdAtho0_000001 en Espanol</cdomain:text>
+            <cdomain:text xml:lang="es">conformsTo-bUDA5g9JmW_000001 en Espanol</cdomain:text>
         </stat:conformsTo>
         <stat:publishers total="2">
             <cdomain:resource kind="structuralResources#organisationUnit">
@@ -210,15 +210,15 @@
             <cdomain:text xml:lang="es">license en Español</cdomain:text>
         </stat:license>
         <stat:accessRights>
-            <cdomain:text xml:lang="es">accessRights-p9XNdAtho0_000001 en Espanol</cdomain:text>
+            <cdomain:text xml:lang="es">accessRights-bUDA5g9JmW_000001 en Espanol</cdomain:text>
         </stat:accessRights>
         <stat:maintainer kind="structuralResources#agency">
-            <cdomain:id>pkC7WH5HLU</cdomain:id>
+            <cdomain:id>3AHZJF7Yan</cdomain:id>
             <cdomain:nestedId>agency1</cdomain:nestedId>
-            <cdomain:urn>urn:sdmx:org.sdmx.infomodel.base.Agency=MaintainerMock:AgencySchemeMock(1.0).pkC7WH5HLU</cdomain:urn>
-            <cdomain:selfLink kind="structuralResources#agency" href="http://data.istac.es/apis/srm/latest/pkC7WH5HLU"/>
+            <cdomain:urn>urn:sdmx:org.sdmx.infomodel.base.Agency=MaintainerMock:AgencySchemeMock(1.0).3AHZJF7Yan</cdomain:urn>
+            <cdomain:selfLink kind="structuralResources#agency" href="http://data.istac.es/apis/srm/latest/3AHZJF7Yan"/>
             <cdomain:name>
-                <cdomain:text xml:lang="es">title-pkC7WH5HLU en Espanol</cdomain:text>
+                <cdomain:text xml:lang="es">title-3AHZJF7Yan en Espanol</cdomain:text>
             </cdomain:name>
         </stat:maintainer>
         <stat:version>01.000</stat:version>
@@ -231,6 +231,7 @@
         </stat:versionRationale>
         <stat:validFrom>2013-01-01T03:04:12Z</stat:validFrom>
         <stat:validTo>2013-02-16T14:04:12Z</stat:validTo>
+        <stat:nextVersion>NO_UPDATES</stat:nextVersion>
         <stat:isReplacedByVersion kind="statisticalResources#dataset">
             <cdomain:id>dataset1</cdomain:id>
             <cdomain:urn>urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Dataset=agency1:dataset1(02.000)</cdomain:urn>
@@ -410,19 +411,19 @@
         </stat:geographicGranularities>
         <stat:temporalGranularities total="2">
             <cdomain:resource kind="structuralResources#code">
-                <cdomain:id>yearly</cdomain:id>
-                <cdomain:urn>urn:sdmx:org.sdmx.infomodel.codelist.Code=MaintainerMock:CodelistMock(1.0).yearly</cdomain:urn>
-                <cdomain:selfLink kind="structuralResources#code" href="http://data.istac.es/apis/srm/latest/yearly"/>
-                <cdomain:name>
-                    <cdomain:text xml:lang="es">title-yearly en Espanol</cdomain:text>
-                </cdomain:name>
-            </cdomain:resource>
-            <cdomain:resource kind="structuralResources#code">
                 <cdomain:id>monthly</cdomain:id>
                 <cdomain:urn>urn:sdmx:org.sdmx.infomodel.codelist.Code=MaintainerMock:CodelistMock(1.0).monthly</cdomain:urn>
                 <cdomain:selfLink kind="structuralResources#code" href="http://data.istac.es/apis/srm/latest/monthly"/>
                 <cdomain:name>
                     <cdomain:text xml:lang="es">title-monthly en Espanol</cdomain:text>
+                </cdomain:name>
+            </cdomain:resource>
+            <cdomain:resource kind="structuralResources#code">
+                <cdomain:id>yearly</cdomain:id>
+                <cdomain:urn>urn:sdmx:org.sdmx.infomodel.codelist.Code=MaintainerMock:CodelistMock(1.0).yearly</cdomain:urn>
+                <cdomain:selfLink kind="structuralResources#code" href="http://data.istac.es/apis/srm/latest/yearly"/>
+                <cdomain:name>
+                    <cdomain:text xml:lang="es">title-yearly en Espanol</cdomain:text>
                 </cdomain:name>
             </cdomain:resource>
         </stat:temporalGranularities>
@@ -855,6 +856,7 @@
                     <cdomain:text xml:lang="es">at1-concept01 en Español</cdomain:text>
                 </stat:name>
                 <stat:attachmentLevel>DATASET</stat:attachmentLevel>
+                <stat:type>OTHER</stat:type>
             </stat:attribute>
             <stat:attribute>
                 <stat:id>at2</stat:id>
@@ -880,6 +882,7 @@
                         </cdomain:name>
                     </stat:value>
                 </stat:attributeValues>
+                <stat:type>OTHER</stat:type>
             </stat:attribute>
             <stat:attribute>
                 <stat:id>at3</stat:id>
@@ -892,6 +895,7 @@
                         <stat:dimensionId>GEO_DIM</stat:dimensionId>
                     </stat:dimension>
                 </stat:dimensions>
+                <stat:type>OTHER</stat:type>
             </stat:attribute>
             <stat:attribute>
                 <stat:id>at4</stat:id>
@@ -907,6 +911,7 @@
                         <stat:dimensionId>dim01</stat:dimensionId>
                     </stat:dimension>
                 </stat:dimensions>
+                <stat:type>OTHER</stat:type>
             </stat:attribute>
             <stat:attribute>
                 <stat:id>at5</stat:id>
@@ -942,6 +947,7 @@
                         </stat:name>
                     </stat:value>
                 </stat:attributeValues>
+                <stat:type>TEMPORAL</stat:type>
             </stat:attribute>
             <stat:attribute>
                 <stat:id>at6</stat:id>
@@ -986,6 +992,7 @@
                         </cdomain:name>
                     </stat:value>
                 </stat:attributeValues>
+                <stat:type>OTHER</stat:type>
             </stat:attribute>
             <stat:attribute>
                 <stat:id>at7</stat:id>
@@ -1007,6 +1014,7 @@
                         <stat:dimensionId>dim01</stat:dimensionId>
                     </stat:dimension>
                 </stat:dimensions>
+                <stat:type>OTHER</stat:type>
             </stat:attribute>
             <stat:attribute>
                 <stat:id>at8</stat:id>
@@ -1022,6 +1030,7 @@
                         <stat:dimensionId>TIME_PERIOD</stat:dimensionId>
                     </stat:dimension>
                 </stat:dimensions>
+                <stat:type>OTHER</stat:type>
             </stat:attribute>
             <stat:attribute>
                 <stat:id>at9</stat:id>
@@ -1040,6 +1049,7 @@
                         <stat:dimensionId>dim01</stat:dimensionId>
                     </stat:dimension>
                 </stat:dimensions>
+                <stat:type>OTHER</stat:type>
             </stat:attribute>
             <stat:attribute>
                 <stat:id>at10</stat:id>
@@ -1047,6 +1057,7 @@
                     <cdomain:text xml:lang="es">at10-concept01 en Español</cdomain:text>
                 </stat:name>
                 <stat:attachmentLevel>PRIMARY_MEASURE</stat:attachmentLevel>
+                <stat:type>OTHER</stat:type>
             </stat:attribute>
             <stat:attribute>
                 <stat:id>at11</stat:id>
@@ -1054,6 +1065,7 @@
                     <cdomain:text xml:lang="es">at11-concept01 en Español</cdomain:text>
                 </stat:name>
                 <stat:attachmentLevel>PRIMARY_MEASURE</stat:attachmentLevel>
+                <stat:type>OTHER</stat:type>
             </stat:attribute>
         </stat:attributes>
         <stat:formatExtentObservations>3</stat:formatExtentObservations>
