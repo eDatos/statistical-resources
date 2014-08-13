@@ -20,7 +20,7 @@
   "description": {
     "text": [
       {
-        "value": "description-2uMKvjAh1y_000001 en Espanol",
+        "value": "description-NWRBB2sqdQ_000001 en Espanol",
         "lang": "es"
       }
     ]
@@ -389,24 +389,6 @@
     "geographicGranularities": {
       "resource": [
         {
-          "managementAppLink": "http://localhost:8080/metamac-srm-web/municipalities",
-          "id": "municipalities",
-          "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=MaintainerMock:CodelistMock(1.0).municipalities",
-          "selfLink": {
-            "kind": "structuralResources#code",
-            "href": "http://data.istac.es/apis/srm/latest/municipalities"
-          },
-          "name": {
-            "text": [
-              {
-                "value": "title-municipalities en Espanol",
-                "lang": "es"
-              }
-            ]
-          },
-          "kind": "structuralResources#code"
-        },
-        {
           "managementAppLink": "http://localhost:8080/metamac-srm-web/countries",
           "id": "countries",
           "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=MaintainerMock:CodelistMock(1.0).countries",
@@ -418,6 +400,24 @@
             "text": [
               {
                 "value": "title-countries en Espanol",
+                "lang": "es"
+              }
+            ]
+          },
+          "kind": "structuralResources#code"
+        },
+        {
+          "managementAppLink": "http://localhost:8080/metamac-srm-web/municipalities",
+          "id": "municipalities",
+          "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=MaintainerMock:CodelistMock(1.0).municipalities",
+          "selfLink": {
+            "kind": "structuralResources#code",
+            "href": "http://data.istac.es/apis/srm/latest/municipalities"
+          },
+          "name": {
+            "text": [
+              {
+                "value": "title-municipalities en Espanol",
                 "lang": "es"
               }
             ]
@@ -1293,7 +1293,8 @@
               }
             ]
           },
-          "attachmentLevel": "DATASET"
+          "attachmentLevel": "DATASET",
+          "type": "OTHER"
         },
         {
           "id": "at2",
@@ -1342,7 +1343,8 @@
               }
             ],
             "total": 2
-          }
+          },
+          "type": "OTHER"
         },
         {
           "id": "at3",
@@ -1362,7 +1364,8 @@
               }
             ],
             "total": 1
-          }
+          },
+          "type": "OTHER"
         },
         {
           "id": "at4",
@@ -1385,7 +1388,8 @@
               }
             ],
             "total": 2
-          }
+          },
+          "type": "OTHER"
         },
         {
           "id": "at5",
@@ -1446,7 +1450,8 @@
               }
             ],
             "total": 3
-          }
+          },
+          "type": "TEMPORAL"
         },
         {
           "id": "at6",
@@ -1525,7 +1530,8 @@
               }
             ],
             "total": 3
-          }
+          },
+          "type": "OTHER"
         },
         {
           "id": "at7",
@@ -1554,7 +1560,8 @@
               }
             ],
             "total": 4
-          }
+          },
+          "type": "OTHER"
         },
         {
           "id": "at8",
@@ -1577,7 +1584,8 @@
               }
             ],
             "total": 2
-          }
+          },
+          "type": "OTHER"
         },
         {
           "id": "at9",
@@ -1603,7 +1611,8 @@
               }
             ],
             "total": 3
-          }
+          },
+          "type": "OTHER"
         },
         {
           "id": "at10",
@@ -1615,7 +1624,8 @@
               }
             ]
           },
-          "attachmentLevel": "PRIMARY_MEASURE"
+          "attachmentLevel": "PRIMARY_MEASURE",
+          "type": "OTHER"
         },
         {
           "id": "at11",
@@ -1627,7 +1637,8 @@
               }
             ]
           },
-          "attachmentLevel": "PRIMARY_MEASURE"
+          "attachmentLevel": "PRIMARY_MEASURE",
+          "type": "OTHER"
         }
       ],
       "total": 11
@@ -1732,17 +1743,17 @@
       "total": 2
     },
     "statisticalOperation": {
-      "managementAppLink": "http://localhost:8080/statistical-operations-internal/2uMKvjAh1y",
-      "id": "2uMKvjAh1y",
-      "urn": "urn:siemac:org.siemac.metamac.infomodel.statisticaloperations.Operation=2uMKvjAh1y",
+      "managementAppLink": "http://localhost:8080/statistical-operations-internal/NWRBB2sqdQ",
+      "id": "NWRBB2sqdQ",
+      "urn": "urn:siemac:org.siemac.metamac.infomodel.statisticaloperations.Operation=NWRBB2sqdQ",
       "selfLink": {
         "kind": "statisticalOperations#operation",
-        "href": "http://data.istac.es/apis/operations/latest/2uMKvjAh1y"
+        "href": "http://data.istac.es/apis/operations/latest/NWRBB2sqdQ"
       },
       "name": {
         "text": [
           {
-            "value": "title-2uMKvjAh1y en Espanol",
+            "value": "title-NWRBB2sqdQ en Espanol",
             "lang": "es"
           }
         ]
@@ -1793,7 +1804,7 @@
     "subtitle": {
       "text": [
         {
-          "value": "subtitle-2uMKvjAh1y_000001 en Espanol",
+          "value": "subtitle-NWRBB2sqdQ_000001 en Espanol",
           "lang": "es"
         }
       ]
@@ -1801,7 +1812,7 @@
     "titleAlternative": {
       "text": [
         {
-          "value": "titleAlternative-2uMKvjAh1y_000001 en Espanol",
+          "value": "titleAlternative-NWRBB2sqdQ_000001 en Espanol",
           "lang": "es"
         }
       ]
@@ -1809,7 +1820,7 @@
     "keywords": {
       "text": [
         {
-          "value": "keyword1 keyword2 keyword3-2uMKvjAh1y_000001 en Espanol",
+          "value": "keyword1 keyword2 keyword3-NWRBB2sqdQ_000001 en Espanol",
           "lang": "es"
         }
       ]
@@ -1879,7 +1890,7 @@
     "conformsTo": {
       "text": [
         {
-          "value": "conformsTo-2uMKvjAh1y_000001 en Espanol",
+          "value": "conformsTo-NWRBB2sqdQ_000001 en Espanol",
           "lang": "es"
         }
       ]
@@ -2009,7 +2020,7 @@
     },
     "newnessUntilDate": "2013-09-02T15:04:05+01:00",
     "replaces": {
-      "managementAppLink": "http://localhost:8080/statistical-resources-internal/#operations/operation;id=IletdpAULs/datasets/dataset;id=agency1:replace01(01.000)",
+      "managementAppLink": "http://localhost:8080/statistical-resources-internal/#operations/operation;id=nD5JNPyyTl/datasets/dataset;id=agency1:replace01(01.000)",
       "id": "replace01",
       "urn": "urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Dataset=agency1:replace01(01.000)",
       "selfLink": {
@@ -2109,24 +2120,24 @@
     "accessRights": {
       "text": [
         {
-          "value": "accessRights-2uMKvjAh1y_000001 en Espanol",
+          "value": "accessRights-NWRBB2sqdQ_000001 en Espanol",
           "lang": "es"
         }
       ]
     },
     "maintainer": {
-      "managementAppLink": "http://localhost:8080/metamac-srm-web/lkSfH5SNbG",
-      "id": "lkSfH5SNbG",
+      "managementAppLink": "http://localhost:8080/metamac-srm-web/dNRszT7fKF",
+      "id": "dNRszT7fKF",
       "nestedId": "agency1",
-      "urn": "urn:sdmx:org.sdmx.infomodel.base.Agency=MaintainerMock:AgencySchemeMock(1.0).lkSfH5SNbG",
+      "urn": "urn:sdmx:org.sdmx.infomodel.base.Agency=MaintainerMock:AgencySchemeMock(1.0).dNRszT7fKF",
       "selfLink": {
         "kind": "structuralResources#agency",
-        "href": "http://data.istac.es/apis/srm/latest/lkSfH5SNbG"
+        "href": "http://data.istac.es/apis/srm/latest/dNRszT7fKF"
       },
       "name": {
         "text": [
           {
-            "value": "title-lkSfH5SNbG en Espanol",
+            "value": "title-dNRszT7fKF en Espanol",
             "lang": "es"
           }
         ]
@@ -2151,6 +2162,7 @@
     },
     "validFrom": "2013-01-01T03:04:12Z",
     "validTo": "2013-02-16T14:04:12Z",
+    "nextVersion": "NO_UPDATES",
     "procStatus": "DRAFT",
     "creationDate": "2013-06-20T20:00:20.021+01:00",
     "creationUser": "creationUser",
@@ -2159,7 +2171,7 @@
     "conformsToInternal": {
       "text": [
         {
-          "value": "conformsToInternal-2uMKvjAh1y_000001 en Espanol",
+          "value": "conformsToInternal-NWRBB2sqdQ_000001 en Espanol",
           "lang": "es"
         }
       ]
@@ -2167,7 +2179,7 @@
     "abstract": {
       "text": [
         {
-          "value": "abstract-2uMKvjAh1y_000001 en Espanol",
+          "value": "abstract-NWRBB2sqdQ_000001 en Espanol",
           "lang": "es"
         }
       ]

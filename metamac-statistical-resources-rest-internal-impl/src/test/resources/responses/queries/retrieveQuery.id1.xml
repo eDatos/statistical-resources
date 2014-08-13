@@ -8,7 +8,7 @@
         <cdomain:text xml:lang="es">title-query1 en Espanol</cdomain:text>
     </ns2:name>
     <ns2:description>
-        <cdomain:text xml:lang="es">description-resource-Rq31Mdlpc7 en Espanol</cdomain:text>
+        <cdomain:text xml:lang="es">description-resource-OGlNevOzFE en Espanol</cdomain:text>
     </ns2:description>
     <ns2:selectedLanguages total="1">
         <ns2:language>es</ns2:language>
@@ -21,7 +21,7 @@
             <cdomain:name>
                 <cdomain:text xml:lang="es">title-dataset01 en Espanol</cdomain:text>
             </cdomain:name>
-            <ns2:managementAppLink>http://localhost:8080/statistical-resources-internal/#operations/operation;id=dpiLZeKDOY/datasets/dataset;id=agency1:dataset01(01.000)</ns2:managementAppLink>
+            <ns2:managementAppLink>http://localhost:8080/statistical-resources-internal/#operations/operation;id=DVnuVYpL1d/datasets/dataset;id=agency1:dataset01(01.000)</ns2:managementAppLink>
         </ns2:relatedDataset>
         <ns2:relatedDsd kind="structuralResources#dataStructure">
             <cdomain:id>DSD01</cdomain:id>
@@ -285,6 +285,7 @@
                     <cdomain:text xml:lang="es">at1-concept01 en Español</cdomain:text>
                 </ns2:name>
                 <ns2:attachmentLevel>DATASET</ns2:attachmentLevel>
+                <ns2:type>OTHER</ns2:type>
             </ns2:attribute>
             <ns2:attribute>
                 <ns2:id>at2</ns2:id>
@@ -310,6 +311,7 @@
                         </cdomain:name>
                     </ns2:value>
                 </ns2:attributeValues>
+                <ns2:type>OTHER</ns2:type>
             </ns2:attribute>
             <ns2:attribute>
                 <ns2:id>at3</ns2:id>
@@ -322,6 +324,7 @@
                         <ns2:dimensionId>GEO_DIM</ns2:dimensionId>
                     </ns2:dimension>
                 </ns2:dimensions>
+                <ns2:type>OTHER</ns2:type>
             </ns2:attribute>
             <ns2:attribute>
                 <ns2:id>at4</ns2:id>
@@ -337,6 +340,7 @@
                         <ns2:dimensionId>dim01</ns2:dimensionId>
                     </ns2:dimension>
                 </ns2:dimensions>
+                <ns2:type>OTHER</ns2:type>
             </ns2:attribute>
             <ns2:attribute>
                 <ns2:id>at5</ns2:id>
@@ -372,6 +376,7 @@
                         </ns2:name>
                     </ns2:value>
                 </ns2:attributeValues>
+                <ns2:type>TEMPORAL</ns2:type>
             </ns2:attribute>
             <ns2:attribute>
                 <ns2:id>at6</ns2:id>
@@ -416,6 +421,7 @@
                         </cdomain:name>
                     </ns2:value>
                 </ns2:attributeValues>
+                <ns2:type>OTHER</ns2:type>
             </ns2:attribute>
             <ns2:attribute>
                 <ns2:id>at7</ns2:id>
@@ -437,6 +443,7 @@
                         <ns2:dimensionId>dim01</ns2:dimensionId>
                     </ns2:dimension>
                 </ns2:dimensions>
+                <ns2:type>OTHER</ns2:type>
             </ns2:attribute>
             <ns2:attribute>
                 <ns2:id>at8</ns2:id>
@@ -452,6 +459,7 @@
                         <ns2:dimensionId>TIME_PERIOD</ns2:dimensionId>
                     </ns2:dimension>
                 </ns2:dimensions>
+                <ns2:type>OTHER</ns2:type>
             </ns2:attribute>
             <ns2:attribute>
                 <ns2:id>at9</ns2:id>
@@ -470,6 +478,7 @@
                         <ns2:dimensionId>dim01</ns2:dimensionId>
                     </ns2:dimension>
                 </ns2:dimensions>
+                <ns2:type>OTHER</ns2:type>
             </ns2:attribute>
             <ns2:attribute>
                 <ns2:id>at10</ns2:id>
@@ -477,6 +486,7 @@
                     <cdomain:text xml:lang="es">at10-concept01 en Español</cdomain:text>
                 </ns2:name>
                 <ns2:attachmentLevel>PRIMARY_MEASURE</ns2:attachmentLevel>
+                <ns2:type>OTHER</ns2:type>
             </ns2:attribute>
             <ns2:attribute>
                 <ns2:id>at11</ns2:id>
@@ -484,6 +494,7 @@
                     <cdomain:text xml:lang="es">at11-concept01 en Español</cdomain:text>
                 </ns2:name>
                 <ns2:attachmentLevel>PRIMARY_MEASURE</ns2:attachmentLevel>
+                <ns2:type>OTHER</ns2:type>
             </ns2:attribute>
         </ns2:attributes>
         <ns2:status>ACTIVE</ns2:status>
@@ -495,7 +506,7 @@
             <cdomain:name>
                 <cdomain:text xml:lang="es">title-dataset01 en Espanol</cdomain:text>
             </cdomain:name>
-            <ns2:managementAppLink>http://localhost:8080/statistical-resources-internal/#operations/operation;id=dpiLZeKDOY/datasets/dataset;id=agency1:dataset01(01.000)</ns2:managementAppLink>
+            <ns2:managementAppLink>http://localhost:8080/statistical-resources-internal/#operations/operation;id=DVnuVYpL1d/datasets/dataset;id=agency1:dataset01(01.000)</ns2:managementAppLink>
         </ns2:requires>
         <ns2:isPartOf total="2">
             <ns2:resource kind="statisticalResources#collection">
@@ -518,23 +529,23 @@
             </ns2:resource>
         </ns2:isPartOf>
         <ns2:statisticalOperation kind="statisticalOperations#operation">
-            <cdomain:id>VqFyLGgOk2</cdomain:id>
-            <cdomain:urn>urn:siemac:org.siemac.metamac.infomodel.statisticaloperations.Operation=VqFyLGgOk2</cdomain:urn>
-            <cdomain:selfLink kind="statisticalOperations#operation" href="http://data.istac.es/apis/operations/latest/VqFyLGgOk2"/>
+            <cdomain:id>RdlekHNzQk</cdomain:id>
+            <cdomain:urn>urn:siemac:org.siemac.metamac.infomodel.statisticaloperations.Operation=RdlekHNzQk</cdomain:urn>
+            <cdomain:selfLink kind="statisticalOperations#operation" href="http://data.istac.es/apis/operations/latest/RdlekHNzQk"/>
             <cdomain:name>
-                <cdomain:text xml:lang="es">title-VqFyLGgOk2 en Espanol</cdomain:text>
+                <cdomain:text xml:lang="es">title-RdlekHNzQk en Espanol</cdomain:text>
             </cdomain:name>
-            <ns2:managementAppLink>http://localhost:8080/statistical-operations-internal/VqFyLGgOk2</ns2:managementAppLink>
+            <ns2:managementAppLink>http://localhost:8080/statistical-operations-internal/RdlekHNzQk</ns2:managementAppLink>
         </ns2:statisticalOperation>
         <ns2:maintainer kind="structuralResources#agency">
-            <cdomain:id>7BwtRcYR6S</cdomain:id>
+            <cdomain:id>aHqWco83mP</cdomain:id>
             <cdomain:nestedId>agency1</cdomain:nestedId>
-            <cdomain:urn>urn:sdmx:org.sdmx.infomodel.base.Agency=MaintainerMock:AgencySchemeMock(1.0).7BwtRcYR6S</cdomain:urn>
-            <cdomain:selfLink kind="structuralResources#agency" href="http://data.istac.es/apis/srm/latest/7BwtRcYR6S"/>
+            <cdomain:urn>urn:sdmx:org.sdmx.infomodel.base.Agency=MaintainerMock:AgencySchemeMock(1.0).aHqWco83mP</cdomain:urn>
+            <cdomain:selfLink kind="structuralResources#agency" href="http://data.istac.es/apis/srm/latest/aHqWco83mP"/>
             <cdomain:name>
-                <cdomain:text xml:lang="es">title-7BwtRcYR6S en Espanol</cdomain:text>
+                <cdomain:text xml:lang="es">title-aHqWco83mP en Espanol</cdomain:text>
             </cdomain:name>
-            <ns2:managementAppLink>http://localhost:8080/metamac-srm-web/7BwtRcYR6S</ns2:managementAppLink>
+            <ns2:managementAppLink>http://localhost:8080/metamac-srm-web/aHqWco83mP</ns2:managementAppLink>
         </ns2:maintainer>
         <ns2:validFrom>2013-01-01T03:04:12Z</ns2:validFrom>
         <ns2:validTo>2013-02-16T14:04:12Z</ns2:validTo>

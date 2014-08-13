@@ -8,7 +8,7 @@
         <cdomain:text xml:lang="es">title-dataset1 en Espanol</cdomain:text>
     </ns2:name>
     <ns2:description>
-        <cdomain:text xml:lang="es">description-nR97Ll2Tj2_000001 en Espanol</cdomain:text>
+        <cdomain:text xml:lang="es">description-T3SLcdTcnO_000001 en Espanol</cdomain:text>
     </ns2:description>
     <ns2:selectedLanguages total="1">
         <ns2:language>es</ns2:language>
@@ -44,13 +44,13 @@
             </ns2:resource>
         </ns2:languages>
         <ns2:statisticalOperation kind="statisticalOperations#operation">
-            <cdomain:id>nR97Ll2Tj2</cdomain:id>
-            <cdomain:urn>urn:siemac:org.siemac.metamac.infomodel.statisticaloperations.Operation=nR97Ll2Tj2</cdomain:urn>
-            <cdomain:selfLink kind="statisticalOperations#operation" href="http://data.istac.es/apis/operations/latest/nR97Ll2Tj2"/>
+            <cdomain:id>T3SLcdTcnO</cdomain:id>
+            <cdomain:urn>urn:siemac:org.siemac.metamac.infomodel.statisticaloperations.Operation=T3SLcdTcnO</cdomain:urn>
+            <cdomain:selfLink kind="statisticalOperations#operation" href="http://data.istac.es/apis/operations/latest/T3SLcdTcnO"/>
             <cdomain:name>
-                <cdomain:text xml:lang="es">title-nR97Ll2Tj2 en Espanol</cdomain:text>
+                <cdomain:text xml:lang="es">title-T3SLcdTcnO en Espanol</cdomain:text>
             </cdomain:name>
-            <ns2:managementAppLink>http://localhost:8080/statistical-operations-internal/nR97Ll2Tj2</ns2:managementAppLink>
+            <ns2:managementAppLink>http://localhost:8080/statistical-operations-internal/T3SLcdTcnO</ns2:managementAppLink>
         </ns2:statisticalOperation>
         <ns2:statisticalOperationInstances total="2">
             <ns2:resource kind="statisticalOperations#instance">
@@ -73,16 +73,16 @@
             </ns2:resource>
         </ns2:statisticalOperationInstances>
         <ns2:subtitle>
-            <cdomain:text xml:lang="es">subtitle-nR97Ll2Tj2_000001 en Espanol</cdomain:text>
+            <cdomain:text xml:lang="es">subtitle-T3SLcdTcnO_000001 en Espanol</cdomain:text>
         </ns2:subtitle>
         <ns2:titleAlternative>
-            <cdomain:text xml:lang="es">titleAlternative-nR97Ll2Tj2_000001 en Espanol</cdomain:text>
+            <cdomain:text xml:lang="es">titleAlternative-T3SLcdTcnO_000001 en Espanol</cdomain:text>
         </ns2:titleAlternative>
         <ns2:abstract>
-            <cdomain:text xml:lang="es">abstract-nR97Ll2Tj2_000001 en Espanol</cdomain:text>
+            <cdomain:text xml:lang="es">abstract-T3SLcdTcnO_000001 en Espanol</cdomain:text>
         </ns2:abstract>
         <ns2:keywords>
-            <cdomain:text xml:lang="es">keyword1 keyword2 keyword3-nR97Ll2Tj2_000001 en Espanol</cdomain:text>
+            <cdomain:text xml:lang="es">keyword1 keyword2 keyword3-T3SLcdTcnO_000001 en Espanol</cdomain:text>
         </ns2:keywords>
         <ns2:type>DATASET</ns2:type>
         <ns2:creator kind="structuralResources#organisationUnit">
@@ -117,7 +117,7 @@
         <ns2:createdDate>2012-01-02T03:04:05Z</ns2:createdDate>
         <ns2:lastUpdate>2013-01-02T03:04:05Z</ns2:lastUpdate>
         <ns2:conformsTo>
-            <cdomain:text xml:lang="es">conformsTo-nR97Ll2Tj2_000001 en Espanol</cdomain:text>
+            <cdomain:text xml:lang="es">conformsTo-T3SLcdTcnO_000001 en Espanol</cdomain:text>
         </ns2:conformsTo>
         <ns2:publishers total="2">
             <ns2:resource kind="structuralResources#organisationUnit">
@@ -187,7 +187,7 @@
             <cdomain:name>
                 <cdomain:text xml:lang="es">title-replace01 en Espanol</cdomain:text>
             </cdomain:name>
-            <ns2:managementAppLink>http://localhost:8080/statistical-resources-internal/#operations/operation;id=aReTRfGBi6/datasets/dataset;id=agency1:replace01(01.000)</ns2:managementAppLink>
+            <ns2:managementAppLink>http://localhost:8080/statistical-resources-internal/#operations/operation;id=1lnFyDzBRP/datasets/dataset;id=agency1:replace01(01.000)</ns2:managementAppLink>
         </ns2:replaces>
         <ns2:isReplacedBy kind="statisticalResources#dataset">
             <cdomain:id>dataset99</cdomain:id>
@@ -229,17 +229,17 @@
             <cdomain:text xml:lang="es">license en Español</cdomain:text>
         </ns2:license>
         <ns2:accessRights>
-            <cdomain:text xml:lang="es">accessRights-nR97Ll2Tj2_000001 en Espanol</cdomain:text>
+            <cdomain:text xml:lang="es">accessRights-T3SLcdTcnO_000001 en Espanol</cdomain:text>
         </ns2:accessRights>
         <ns2:maintainer kind="structuralResources#agency">
-            <cdomain:id>lb8ZTWYAKf</cdomain:id>
+            <cdomain:id>vhcUA5dMIp</cdomain:id>
             <cdomain:nestedId>agency1</cdomain:nestedId>
-            <cdomain:urn>urn:sdmx:org.sdmx.infomodel.base.Agency=MaintainerMock:AgencySchemeMock(1.0).lb8ZTWYAKf</cdomain:urn>
-            <cdomain:selfLink kind="structuralResources#agency" href="http://data.istac.es/apis/srm/latest/lb8ZTWYAKf"/>
+            <cdomain:urn>urn:sdmx:org.sdmx.infomodel.base.Agency=MaintainerMock:AgencySchemeMock(1.0).vhcUA5dMIp</cdomain:urn>
+            <cdomain:selfLink kind="structuralResources#agency" href="http://data.istac.es/apis/srm/latest/vhcUA5dMIp"/>
             <cdomain:name>
-                <cdomain:text xml:lang="es">title-lb8ZTWYAKf en Espanol</cdomain:text>
+                <cdomain:text xml:lang="es">title-vhcUA5dMIp en Espanol</cdomain:text>
             </cdomain:name>
-            <ns2:managementAppLink>http://localhost:8080/metamac-srm-web/lb8ZTWYAKf</ns2:managementAppLink>
+            <ns2:managementAppLink>http://localhost:8080/metamac-srm-web/vhcUA5dMIp</ns2:managementAppLink>
         </ns2:maintainer>
         <ns2:version>01.000</ns2:version>
         <ns2:versionRationaleTypes total="2">
@@ -251,13 +251,14 @@
         </ns2:versionRationale>
         <ns2:validFrom>2013-01-01T03:04:12Z</ns2:validFrom>
         <ns2:validTo>2013-02-16T14:04:12Z</ns2:validTo>
+        <ns2:nextVersion>NO_UPDATES</ns2:nextVersion>
         <ns2:procStatus>DRAFT</ns2:procStatus>
         <ns2:creationDate>2013-06-20T20:00:20.021+01:00</ns2:creationDate>
         <ns2:creationUser>creationUser</ns2:creationUser>
         <ns2:productionValidationDate>2013-06-20T20:00:20.021+01:00</ns2:productionValidationDate>
         <ns2:publicationDate>2013-01-01T03:04:13Z</ns2:publicationDate>
         <ns2:conformsToInternal>
-            <cdomain:text xml:lang="es">conformsToInternal-nR97Ll2Tj2_000001 en Espanol</cdomain:text>
+            <cdomain:text xml:lang="es">conformsToInternal-T3SLcdTcnO_000001 en Espanol</cdomain:text>
         </ns2:conformsToInternal>
         <ns2:isReplacedByVersion kind="statisticalResources#dataset">
             <cdomain:id>dataset1</cdomain:id>
@@ -909,6 +910,7 @@
                     <cdomain:text xml:lang="es">at1-concept01 en Español</cdomain:text>
                 </ns2:name>
                 <ns2:attachmentLevel>DATASET</ns2:attachmentLevel>
+                <ns2:type>OTHER</ns2:type>
             </ns2:attribute>
             <ns2:attribute>
                 <ns2:id>at2</ns2:id>
@@ -934,6 +936,7 @@
                         </cdomain:name>
                     </ns2:value>
                 </ns2:attributeValues>
+                <ns2:type>OTHER</ns2:type>
             </ns2:attribute>
             <ns2:attribute>
                 <ns2:id>at3</ns2:id>
@@ -946,6 +949,7 @@
                         <ns2:dimensionId>GEO_DIM</ns2:dimensionId>
                     </ns2:dimension>
                 </ns2:dimensions>
+                <ns2:type>OTHER</ns2:type>
             </ns2:attribute>
             <ns2:attribute>
                 <ns2:id>at4</ns2:id>
@@ -961,6 +965,7 @@
                         <ns2:dimensionId>dim01</ns2:dimensionId>
                     </ns2:dimension>
                 </ns2:dimensions>
+                <ns2:type>OTHER</ns2:type>
             </ns2:attribute>
             <ns2:attribute>
                 <ns2:id>at5</ns2:id>
@@ -996,6 +1001,7 @@
                         </ns2:name>
                     </ns2:value>
                 </ns2:attributeValues>
+                <ns2:type>TEMPORAL</ns2:type>
             </ns2:attribute>
             <ns2:attribute>
                 <ns2:id>at6</ns2:id>
@@ -1040,6 +1046,7 @@
                         </cdomain:name>
                     </ns2:value>
                 </ns2:attributeValues>
+                <ns2:type>OTHER</ns2:type>
             </ns2:attribute>
             <ns2:attribute>
                 <ns2:id>at7</ns2:id>
@@ -1061,6 +1068,7 @@
                         <ns2:dimensionId>dim01</ns2:dimensionId>
                     </ns2:dimension>
                 </ns2:dimensions>
+                <ns2:type>OTHER</ns2:type>
             </ns2:attribute>
             <ns2:attribute>
                 <ns2:id>at8</ns2:id>
@@ -1076,6 +1084,7 @@
                         <ns2:dimensionId>TIME_PERIOD</ns2:dimensionId>
                     </ns2:dimension>
                 </ns2:dimensions>
+                <ns2:type>OTHER</ns2:type>
             </ns2:attribute>
             <ns2:attribute>
                 <ns2:id>at9</ns2:id>
@@ -1094,6 +1103,7 @@
                         <ns2:dimensionId>dim01</ns2:dimensionId>
                     </ns2:dimension>
                 </ns2:dimensions>
+                <ns2:type>OTHER</ns2:type>
             </ns2:attribute>
             <ns2:attribute>
                 <ns2:id>at10</ns2:id>
@@ -1101,6 +1111,7 @@
                     <cdomain:text xml:lang="es">at10-concept01 en Español</cdomain:text>
                 </ns2:name>
                 <ns2:attachmentLevel>PRIMARY_MEASURE</ns2:attachmentLevel>
+                <ns2:type>OTHER</ns2:type>
             </ns2:attribute>
             <ns2:attribute>
                 <ns2:id>at11</ns2:id>
@@ -1108,6 +1119,7 @@
                     <cdomain:text xml:lang="es">at11-concept01 en Español</cdomain:text>
                 </ns2:name>
                 <ns2:attachmentLevel>PRIMARY_MEASURE</ns2:attachmentLevel>
+                <ns2:type>OTHER</ns2:type>
             </ns2:attribute>
         </ns2:attributes>
         <ns2:formatExtentObservations>3</ns2:formatExtentObservations>

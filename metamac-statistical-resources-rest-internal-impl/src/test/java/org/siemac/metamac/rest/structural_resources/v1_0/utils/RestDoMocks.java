@@ -27,6 +27,7 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.CodeDimensio
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.TemporalCode;
+import org.siemac.metamac.statistical.resources.core.enume.domain.NextVersionTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.VersionRationaleTypeEnum;
@@ -341,6 +342,7 @@ public class RestDoMocks {
         target.setLastUpdate(new DateTime(2013, 1, 2, 3, 4, 5, 0));
         target.setNewnessUntilDate(new DateTime(2013, 9, 2, 15, 4, 5, 0));
         target.setCopyrightedDate(2014);
+        target.setNextVersion(NextVersionTypeEnum.NO_UPDATES);
         mockLifeCycleStatisticalResource(agencyID, resourceID, version, target);
     }
 

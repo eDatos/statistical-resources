@@ -35,6 +35,7 @@ import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.Attrib
 import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.Attributes;
 import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.CodeRepresentation;
 import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.CodeRepresentations;
+import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.ComponentType;
 import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.Data;
 import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.DataAttribute;
 import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.DataAttributes;
@@ -1001,6 +1002,9 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
             org.siemac.metamac.rest.common.v1_0.domain.Exception exception = RestExceptionUtils.getException(RestServiceExceptionType.UNKNOWN);
             throw new RestException(exception, Status.INTERNAL_SERVER_ERROR);
         }
+
+        // Specific type
+        target.setType(ComponentType.valueOf(source.getType().name()));
 
         // Attributes values
         target.setAttributeValues(toAttributeValues(datasetVersionUrn, source, selectedLanguages));
