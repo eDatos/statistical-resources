@@ -165,6 +165,7 @@
             <xs:element name="versionRationale" type="common:InternationalString" minOccurs="0" />
             <xs:element name="validFrom" type="xs:dateTime" />
             <xs:element name="validTo" type="xs:dateTime" minOccurs="0" />
+            <xs:element name="nextVersion" type="tns:NextVersionType" />
         </xs:sequence>
     </xs:complexType>
 
@@ -348,6 +349,7 @@
             <xs:element name="attachmentLevel" type="tns:AttributeAttachmentLevelType" />
             <xs:element name="dimensions" type="tns:AttributeDimensions" minOccurs="0" />
             <xs:element name="attributeValues" type="tns:AttributeValues" />
+            <xs:element name="type" type="tns:componentType"/>
         </xs:sequence>
     </xs:complexType>
     
@@ -455,6 +457,15 @@
         </xs:restriction>
     </xs:simpleType>
 
+    <xs:simpleType name="componentType">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="OTHER" />
+            <xs:enumeration value="SPATIAL" />
+            <xs:enumeration value="TEMPORAL" />
+            <xs:enumeration value="MEASURE" />
+        </xs:restriction>
+    </xs:simpleType>
+    
     <xs:simpleType name="StatisticalResourceType">
         <xs:restriction base="xs:token">
             <xs:enumeration value="DATASET" />
@@ -493,6 +504,14 @@
         </xs:restriction>
     </xs:simpleType>
 
+    <xs:simpleType name="NextVersionType">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="NO_UPDATES" />
+            <xs:enumeration value="NON_SCHEDULED_UPDATE" />
+            <xs:enumeration value="SCHEDULED_UPDATE" />
+        </xs:restriction>
+    </xs:simpleType>
+    
     <!-- Criterias -->
     <xs:simpleType name="DatasetCriteriaPropertyRestriction">
         <xs:restriction base="xs:token">

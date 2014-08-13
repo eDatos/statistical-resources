@@ -375,6 +375,7 @@
             <xs:element name="attachmentLevel" type="tns:AttributeAttachmentLevelType" />
             <xs:element name="dimensions" type="tns:AttributeDimensions" minOccurs="0" />
             <xs:element name="attributeValues" type="tns:AttributeValues" />
+            <xs:element name="type" type="tns:componentType" />
         </xs:sequence>
     </xs:complexType>
     
@@ -479,6 +480,15 @@
             <xs:enumeration value="DATASET" />
             <xs:enumeration value="DIMENSION" />
             <xs:enumeration value="PRIMARY_MEASURE" />
+        </xs:restriction>
+    </xs:simpleType>
+    
+    <xs:simpleType name="componentType">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="OTHER" />
+            <xs:enumeration value="SPATIAL" />
+            <xs:enumeration value="TEMPORAL" />
+            <xs:enumeration value="MEASURE" />
         </xs:restriction>
     </xs:simpleType>
 
