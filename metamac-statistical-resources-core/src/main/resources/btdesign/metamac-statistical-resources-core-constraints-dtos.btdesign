@@ -119,7 +119,6 @@ Application ContentConstraintsEnumsDto {
 	    	-@RegionValueDto region;
 	    
 			Boolean included nullable;
-			String keyRepresentation;
 			
 			- List<@KeyPartDto> parts;
 	    }
