@@ -835,7 +835,7 @@ public abstract class StatisticalResourcesRestInternalFacadeV10BaseTest extends 
             public Concept answer(InvocationOnMock invocation) throws Throwable {
                 String urn = (String) invocation.getArguments()[0];
                 String[] urnSplited = UrnUtils.splitUrnItem(urn);
-                return SrmRestMocks.mockConcept(urnSplited[0], urnSplited[1], urnSplited[2], urnSplited[3]);
+                return SrmRestMocks.mockConcept(urnSplited[0], urnSplited[1], urnSplited[2], urnSplited[3], true);
             };
         });
     }

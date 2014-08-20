@@ -51,6 +51,7 @@ import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.Enumer
 import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.EnumeratedAttributeValues;
 import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.EnumeratedDimensionValue;
 import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.EnumeratedDimensionValues;
+import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.MeasureQuantity;
 import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.NextVersionType;
 import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.NonEnumeratedAttributeValue;
 import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.NonEnumeratedAttributeValues;
@@ -66,10 +67,12 @@ import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.Versio
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.CodeResourceInternal;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codelist;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codes;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Concept;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Concepts;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructure;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DimensionVisualisation;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ItemResourceInternal;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Quantity;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ShowDecimalPrecision;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.TextFormat;
 import org.siemac.metamac.rest.utils.RestCommonUtil;
@@ -863,7 +866,7 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
                 updateParentsReplacedToVisualisationWithNotEffectiveDimensionValue(parentsReplacedToVisualisation, concept);
                 continue;
             }
-            targets.getValues().add(toEnumeratedDimensionValue(concept, showDecimalPrecisionsByUrn, parentsReplacedToVisualisation, selectedLanguages));
+            targets.getValues().add(toEnumeratedDimensionValue(concept, showDecimalPrecisionsByUrn, parentsReplacedToVisualisation, selectedLanguages, dimensionType));
         }
         targets.setTotal(BigInteger.valueOf(targets.getValues().size()));
         return targets;
@@ -906,7 +909,7 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
     }
 
     private EnumeratedDimensionValue toEnumeratedDimensionValue(ItemResourceInternal source, Map<String, Integer> showDecimalPrecisionsByUrn, Map<String, String> effectiveParentVisualisation,
-            List<String> selectedLanguages) throws MetamacException {
+            List<String> selectedLanguages, DsdComponentType dimensionType) throws MetamacException {
         if (source == null) {
             return null;
         }
@@ -922,6 +925,29 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
         if (showDecimalPrecisionsByUrn != null) {
             target.setShowDecimalsPrecision(showDecimalPrecisionsByUrn.get(source.getUrn()));
         }
+
+        // Measure Dimension Type
+        if (DsdComponentType.MEASURE.equals(dimensionType)) {
+            Concept conceptDetail = srmRestExternalFacade.retrieveConceptByUrn(source.getUrn());
+            if (conceptDetail.getQuantity() != null) {
+                target.setMeasureQuantity(toQuantity(conceptDetail.getQuantity(), selectedLanguages));
+            }
+        }
+
+        return target;
+    }
+
+    private MeasureQuantity toQuantity(Quantity source, List<String> selectedLanguages) throws MetamacException {
+        if (source == null) {
+            return null;
+        }
+
+        MeasureQuantity target = new MeasureQuantity();
+
+        org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.ItemResourceInternal targetItemResourceInternal = new org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.ItemResourceInternal();
+        toResource(source.getUnitCode(), targetItemResourceInternal, selectedLanguages);
+        target.setUnitCode(targetItemResourceInternal);
+
         return target;
     }
 
@@ -1030,9 +1056,9 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
 
         AttributeValues targets = null;
         if (attribute.getCodelistRepresentationUrn() != null) {
-            targets = toEnumeratedAttributeValuesFromCodelist(coveragesById, attribute.getCodelistRepresentationUrn(), selectedLanguages);
+            targets = toEnumeratedAttributeValuesFromCodelist(coveragesById, attribute.getCodelistRepresentationUrn(), attribute.getType(), selectedLanguages);
         } else if (attribute.getConceptSchemeRepresentationUrn() != null) {
-            targets = toEnumeratedAttributeValuesFromConceptScheme(coveragesById, attribute.getConceptSchemeRepresentationUrn(), selectedLanguages);
+            targets = toEnumeratedAttributeValuesFromConceptScheme(coveragesById, attribute.getConceptSchemeRepresentationUrn(), attribute.getType(), selectedLanguages);
         } else if (DsdComponentType.TEMPORAL.equals(attribute.getType())) {
             targets = toNonEnumeratedAttributeValuesFromTextFormatType(coverages, attribute.getTextFormatRepresentation(), attribute.getType(), selectedLanguages);
         } else {
@@ -1043,7 +1069,8 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
         return targets;
     }
 
-    private EnumeratedAttributeValues toEnumeratedAttributeValuesFromCodelist(Map<String, AttributeValue> coveragesById, String codelistUrn, List<String> selectedLanguages) throws MetamacException {
+    private EnumeratedAttributeValues toEnumeratedAttributeValuesFromCodelist(Map<String, AttributeValue> coveragesById, String codelistUrn, DsdComponentType attributeType,
+            List<String> selectedLanguages) throws MetamacException {
         if (codelistUrn == null) {
             return null;
         }
@@ -1055,14 +1082,14 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
                 // skip to include only values in coverage
                 continue;
             }
-            targets.getValues().add(toEnumeratedAttributeValue(code, selectedLanguages));
+            targets.getValues().add(toEnumeratedAttributeValue(code, attributeType, selectedLanguages));
         }
         targets.setTotal(BigInteger.valueOf(targets.getValues().size()));
         return targets;
     }
 
-    private EnumeratedAttributeValues toEnumeratedAttributeValuesFromConceptScheme(Map<String, AttributeValue> coveragesById, String conceptSchemeUrn, List<String> selectedLanguages)
-            throws MetamacException {
+    private EnumeratedAttributeValues toEnumeratedAttributeValuesFromConceptScheme(Map<String, AttributeValue> coveragesById, String conceptSchemeUrn, DsdComponentType attributeType,
+            List<String> selectedLanguages) throws MetamacException {
         if (conceptSchemeUrn == null) {
             return null;
         }
@@ -1074,18 +1101,27 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
                 // skip to include only values in coverage
                 continue;
             }
-            targets.getValues().add(toEnumeratedAttributeValue(concept, selectedLanguages));
+            targets.getValues().add(toEnumeratedAttributeValue(concept, attributeType, selectedLanguages));
         }
         targets.setTotal(BigInteger.valueOf(targets.getValues().size()));
         return targets;
     }
 
-    private EnumeratedAttributeValue toEnumeratedAttributeValue(ItemResourceInternal source, List<String> selectedLanguages) throws MetamacException {
+    private EnumeratedAttributeValue toEnumeratedAttributeValue(ItemResourceInternal source, DsdComponentType attributeType, List<String> selectedLanguages) throws MetamacException {
         if (source == null) {
             return null;
         }
         EnumeratedAttributeValue target = new EnumeratedAttributeValue();
         toResource(source, target, selectedLanguages);
+
+        // Measure Attribute Type
+        if (DsdComponentType.MEASURE.equals(attributeType)) {
+            Concept conceptDetail = srmRestExternalFacade.retrieveConceptByUrn(source.getUrn());
+            if (conceptDetail.getQuantity() != null) {
+                target.setMeasureQuantity(toQuantity(conceptDetail.getQuantity(), selectedLanguages));
+            }
+        }
+
         return target;
     }
 

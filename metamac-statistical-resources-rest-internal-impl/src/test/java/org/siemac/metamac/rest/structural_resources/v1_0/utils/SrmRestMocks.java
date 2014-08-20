@@ -39,6 +39,7 @@ import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Group;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Groups;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ItemResourceInternal;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.MeasureDimension;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Quantity;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Representation;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ResourceInternal;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ShowDecimalPrecision;
@@ -280,13 +281,34 @@ public class SrmRestMocks {
         return concept;
     }
 
-    public static Concept mockConcept(String agencyID, String maintainableParentID, String maintainableVersionID, String resourceID) {
+    public static ItemResourceInternal mockCodeResource(String agencyID, String maintainableParentID, String maintainableVersionID, String resourceID, String parentUrn) {
+        ItemResourceInternal concept = new ItemResourceInternal();
+        concept.setUrn("urn:sdmx:org.sdmx.infomodel.codelist.Code=" + agencyID + ":" + maintainableParentID + "(" + maintainableVersionID + ")." + resourceID);
+        concept.setId(resourceID);
+        concept.setName(mockInternationalString(resourceID));
+        concept.setParent(parentUrn);
+        concept.setKind("structuralResources#code");
+        concept.setSelfLink(mockResourceLink("http://apis.metamac.org/metamac-srm-web/apis/structural-resources-internal/v1.0/codelists/" + agencyID + "/" + maintainableParentID + "/"
+                + maintainableVersionID + "/codes/" + resourceID));
+        return concept;
+    }
+
+    public static Concept mockConcept(String agencyID, String maintainableParentID, String maintainableVersionID, String resourceID, boolean withQuatity) {
         Concept concept = new Concept();
         concept.setUrn("urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=" + agencyID + ":" + maintainableParentID + "(" + maintainableVersionID + ")." + resourceID);
         concept.setUrnProvider(concept.getUrn());
         concept.setId(resourceID);
         concept.setName(mockInternationalString(resourceID));
+        if (withQuatity) {
+            concept.setQuantity(mockQuantity(agencyID, "codelist01", maintainableVersionID, "code01"));
+        }
         return concept;
+    }
+
+    private static Quantity mockQuantity(String agencyID, String maintainableParentID, String maintainableVersionID, String resourceID) {
+        Quantity quantity = new Quantity();
+        quantity.setUnitCode(mockCodeResource(agencyID, maintainableParentID, maintainableVersionID, resourceID, null));
+        return quantity;
     }
 
     private static Dimension mockDimension(String id, Boolean isSpatial) {

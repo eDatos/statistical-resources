@@ -8,7 +8,7 @@
         <cdomain:text xml:lang="es">title-query1 en Espanol</cdomain:text>
     </stat:name>
     <stat:description>
-        <cdomain:text xml:lang="es">description-resource-8qyemeC99y en Espanol</cdomain:text>
+        <cdomain:text xml:lang="es">description-resource-jqp14Iz5ZO en Espanol</cdomain:text>
     </stat:description>
     <stat:selectedLanguages total="1">
         <stat:language>es</stat:language>
@@ -236,6 +236,16 @@
                             <cdomain:text xml:lang="es">measure01-conceptScheme01-concept01 en Español</cdomain:text>
                         </cdomain:name>
                         <stat:showDecimalsPrecision>4</stat:showDecimalsPrecision>
+                        <stat:measureQuantity>
+                            <stat:unitCode kind="structuralResources#code">
+<cdomain:id>code01</cdomain:id>
+<cdomain:urn>urn:sdmx:org.sdmx.infomodel.codelist.Code=agency01:codelist01(01.000).code01</cdomain:urn>
+<cdomain:selfLink href="http://apis.metamac.org/metamac-srm-web/apis/structural-resources-internal/v1.0/codelists/agency01/codelist01/01.000/codes/code01"/>
+<cdomain:name>
+    <cdomain:text xml:lang="es">code01 en Español</cdomain:text>
+</cdomain:name>
+                            </stat:unitCode>
+                        </stat:measureQuantity>
                     </stat:value>
                     <stat:value kind="structuralResources#concept">
                         <cdomain:id>measure01-conceptScheme01-concept02</cdomain:id>
@@ -245,6 +255,16 @@
                             <cdomain:text xml:lang="es">measure01-conceptScheme01-concept02 en Español</cdomain:text>
                         </cdomain:name>
                         <stat:visualisationParent>urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=agency01:measure01-conceptScheme01(01.000).measure01-conceptScheme01-concept01</stat:visualisationParent>
+                        <stat:measureQuantity>
+                            <stat:unitCode kind="structuralResources#code">
+<cdomain:id>code01</cdomain:id>
+<cdomain:urn>urn:sdmx:org.sdmx.infomodel.codelist.Code=agency01:codelist01(01.000).code01</cdomain:urn>
+<cdomain:selfLink href="http://apis.metamac.org/metamac-srm-web/apis/structural-resources-internal/v1.0/codelists/agency01/codelist01/01.000/codes/code01"/>
+<cdomain:name>
+    <cdomain:text xml:lang="es">code01 en Español</cdomain:text>
+</cdomain:name>
+                            </stat:unitCode>
+                        </stat:measureQuantity>
                     </stat:value>
                     <stat:value kind="structuralResources#concept">
                         <cdomain:id>measure01-conceptScheme01-concept05</cdomain:id>
@@ -254,6 +274,16 @@
                             <cdomain:text xml:lang="es">measure01-conceptScheme01-concept05 en Español</cdomain:text>
                         </cdomain:name>
                         <stat:showDecimalsPrecision>1</stat:showDecimalsPrecision>
+                        <stat:measureQuantity>
+                            <stat:unitCode kind="structuralResources#code">
+<cdomain:id>code01</cdomain:id>
+<cdomain:urn>urn:sdmx:org.sdmx.infomodel.codelist.Code=agency01:codelist01(01.000).code01</cdomain:urn>
+<cdomain:selfLink href="http://apis.metamac.org/metamac-srm-web/apis/structural-resources-internal/v1.0/codelists/agency01/codelist01/01.000/codes/code01"/>
+<cdomain:name>
+    <cdomain:text xml:lang="es">code01 en Español</cdomain:text>
+</cdomain:name>
+                            </stat:unitCode>
+                        </stat:measureQuantity>
                     </stat:value>
                 </stat:dimensionValues>
             </stat:dimension>
@@ -524,20 +554,20 @@
             </cdomain:resource>
         </stat:isPartOf>
         <stat:statisticalOperation kind="statisticalOperations#operation">
-            <cdomain:id>puWzIsYGS4</cdomain:id>
-            <cdomain:urn>urn:siemac:org.siemac.metamac.infomodel.statisticaloperations.Operation=puWzIsYGS4</cdomain:urn>
-            <cdomain:selfLink kind="statisticalOperations#operation" href="http://data.istac.es/apis/operations/latest/puWzIsYGS4"/>
+            <cdomain:id>Dg1ujuiUZq</cdomain:id>
+            <cdomain:urn>urn:siemac:org.siemac.metamac.infomodel.statisticaloperations.Operation=Dg1ujuiUZq</cdomain:urn>
+            <cdomain:selfLink kind="statisticalOperations#operation" href="http://data.istac.es/apis/operations/latest/Dg1ujuiUZq"/>
             <cdomain:name>
-                <cdomain:text xml:lang="es">title-puWzIsYGS4 en Espanol</cdomain:text>
+                <cdomain:text xml:lang="es">title-Dg1ujuiUZq en Espanol</cdomain:text>
             </cdomain:name>
         </stat:statisticalOperation>
         <stat:maintainer kind="structuralResources#agency">
-            <cdomain:id>7qK5fhHjLs</cdomain:id>
+            <cdomain:id>j6FElnWmPM</cdomain:id>
             <cdomain:nestedId>agency1</cdomain:nestedId>
-            <cdomain:urn>urn:sdmx:org.sdmx.infomodel.base.Agency=MaintainerMock:AgencySchemeMock(1.0).7qK5fhHjLs</cdomain:urn>
-            <cdomain:selfLink kind="structuralResources#agency" href="http://data.istac.es/apis/srm/latest/7qK5fhHjLs"/>
+            <cdomain:urn>urn:sdmx:org.sdmx.infomodel.base.Agency=MaintainerMock:AgencySchemeMock(1.0).j6FElnWmPM</cdomain:urn>
+            <cdomain:selfLink kind="structuralResources#agency" href="http://data.istac.es/apis/srm/latest/j6FElnWmPM"/>
             <cdomain:name>
-                <cdomain:text xml:lang="es">title-7qK5fhHjLs en Espanol</cdomain:text>
+                <cdomain:text xml:lang="es">title-j6FElnWmPM en Espanol</cdomain:text>
             </cdomain:name>
         </stat:maintainer>
         <stat:validFrom>2013-01-01T03:04:12Z</stat:validFrom>

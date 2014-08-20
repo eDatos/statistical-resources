@@ -20,7 +20,7 @@
   "description": {
     "text": [
       {
-        "value": "description-NWRBB2sqdQ_000001 en Espanol",
+        "value": "description-zSkyltQlOn_000001 en Espanol",
         "lang": "es"
       }
     ]
@@ -1157,6 +1157,24 @@
             "value": [
               {
                 "showDecimalsPrecision": 4,
+                "measureQuantity": {
+                  "unitCode": {
+                    "id": "code01",
+                    "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=agency01:codelist01(01.000).code01",
+                    "selfLink": {
+                      "href": "http://apis.metamac.org/metamac-srm-web/apis/structural-resources-internal/v1.0/codelists/agency01/codelist01/01.000/codes/code01"
+                    },
+                    "name": {
+                      "text": [
+                        {
+                          "value": "code01 en Español",
+                          "lang": "es"
+                        }
+                      ]
+                    },
+                    "kind": "structuralResources#code"
+                  }
+                },
                 "id": "measure01-conceptScheme01-concept01",
                 "urn": "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=agency01:measure01-conceptScheme01(01.000).measure01-conceptScheme01-concept01",
                 "selfLink": {
@@ -1174,6 +1192,24 @@
               },
               {
                 "visualisationParent": "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=agency01:measure01-conceptScheme01(01.000).measure01-conceptScheme01-concept01",
+                "measureQuantity": {
+                  "unitCode": {
+                    "id": "code01",
+                    "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=agency01:codelist01(01.000).code01",
+                    "selfLink": {
+                      "href": "http://apis.metamac.org/metamac-srm-web/apis/structural-resources-internal/v1.0/codelists/agency01/codelist01/01.000/codes/code01"
+                    },
+                    "name": {
+                      "text": [
+                        {
+                          "value": "code01 en Español",
+                          "lang": "es"
+                        }
+                      ]
+                    },
+                    "kind": "structuralResources#code"
+                  }
+                },
                 "id": "measure01-conceptScheme01-concept02",
                 "urn": "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=agency01:measure01-conceptScheme01(01.000).measure01-conceptScheme01-concept02",
                 "selfLink": {
@@ -1191,6 +1227,24 @@
               },
               {
                 "showDecimalsPrecision": 1,
+                "measureQuantity": {
+                  "unitCode": {
+                    "id": "code01",
+                    "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=agency01:codelist01(01.000).code01",
+                    "selfLink": {
+                      "href": "http://apis.metamac.org/metamac-srm-web/apis/structural-resources-internal/v1.0/codelists/agency01/codelist01/01.000/codes/code01"
+                    },
+                    "name": {
+                      "text": [
+                        {
+                          "value": "code01 en Español",
+                          "lang": "es"
+                        }
+                      ]
+                    },
+                    "kind": "structuralResources#code"
+                  }
+                },
                 "id": "measure01-conceptScheme01-concept05",
                 "urn": "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=agency01:measure01-conceptScheme01(01.000).measure01-conceptScheme01-concept05",
                 "selfLink": {
@@ -1743,17 +1797,17 @@
       "total": 2
     },
     "statisticalOperation": {
-      "managementAppLink": "http://localhost:8080/statistical-operations-internal/NWRBB2sqdQ",
-      "id": "NWRBB2sqdQ",
-      "urn": "urn:siemac:org.siemac.metamac.infomodel.statisticaloperations.Operation=NWRBB2sqdQ",
+      "managementAppLink": "http://localhost:8080/statistical-operations-internal/zSkyltQlOn",
+      "id": "zSkyltQlOn",
+      "urn": "urn:siemac:org.siemac.metamac.infomodel.statisticaloperations.Operation=zSkyltQlOn",
       "selfLink": {
         "kind": "statisticalOperations#operation",
-        "href": "http://data.istac.es/apis/operations/latest/NWRBB2sqdQ"
+        "href": "http://data.istac.es/apis/operations/latest/zSkyltQlOn"
       },
       "name": {
         "text": [
           {
-            "value": "title-NWRBB2sqdQ en Espanol",
+            "value": "title-zSkyltQlOn en Espanol",
             "lang": "es"
           }
         ]
@@ -1804,7 +1858,7 @@
     "subtitle": {
       "text": [
         {
-          "value": "subtitle-NWRBB2sqdQ_000001 en Espanol",
+          "value": "subtitle-zSkyltQlOn_000001 en Espanol",
           "lang": "es"
         }
       ]
@@ -1812,7 +1866,7 @@
     "titleAlternative": {
       "text": [
         {
-          "value": "titleAlternative-NWRBB2sqdQ_000001 en Espanol",
+          "value": "titleAlternative-zSkyltQlOn_000001 en Espanol",
           "lang": "es"
         }
       ]
@@ -1820,7 +1874,7 @@
     "keywords": {
       "text": [
         {
-          "value": "keyword1 keyword2 keyword3-NWRBB2sqdQ_000001 en Espanol",
+          "value": "keyword1 keyword2 keyword3-zSkyltQlOn_000001 en Espanol",
           "lang": "es"
         }
       ]
@@ -1890,7 +1944,7 @@
     "conformsTo": {
       "text": [
         {
-          "value": "conformsTo-NWRBB2sqdQ_000001 en Espanol",
+          "value": "conformsTo-zSkyltQlOn_000001 en Espanol",
           "lang": "es"
         }
       ]
@@ -2020,7 +2074,7 @@
     },
     "newnessUntilDate": "2013-09-02T15:04:05+01:00",
     "replaces": {
-      "managementAppLink": "http://localhost:8080/statistical-resources-internal/#operations/operation;id=nD5JNPyyTl/datasets/dataset;id=agency1:replace01(01.000)",
+      "managementAppLink": "http://localhost:8080/statistical-resources-internal/#operations/operation;id=oPPEPHpVY6/datasets/dataset;id=agency1:replace01(01.000)",
       "id": "replace01",
       "urn": "urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Dataset=agency1:replace01(01.000)",
       "selfLink": {
@@ -2120,24 +2174,24 @@
     "accessRights": {
       "text": [
         {
-          "value": "accessRights-NWRBB2sqdQ_000001 en Espanol",
+          "value": "accessRights-zSkyltQlOn_000001 en Espanol",
           "lang": "es"
         }
       ]
     },
     "maintainer": {
-      "managementAppLink": "http://localhost:8080/metamac-srm-web/dNRszT7fKF",
-      "id": "dNRszT7fKF",
+      "managementAppLink": "http://localhost:8080/metamac-srm-web/kxvP8j0wXw",
+      "id": "kxvP8j0wXw",
       "nestedId": "agency1",
-      "urn": "urn:sdmx:org.sdmx.infomodel.base.Agency=MaintainerMock:AgencySchemeMock(1.0).dNRszT7fKF",
+      "urn": "urn:sdmx:org.sdmx.infomodel.base.Agency=MaintainerMock:AgencySchemeMock(1.0).kxvP8j0wXw",
       "selfLink": {
         "kind": "structuralResources#agency",
-        "href": "http://data.istac.es/apis/srm/latest/dNRszT7fKF"
+        "href": "http://data.istac.es/apis/srm/latest/kxvP8j0wXw"
       },
       "name": {
         "text": [
           {
-            "value": "title-dNRszT7fKF en Espanol",
+            "value": "title-kxvP8j0wXw en Espanol",
             "lang": "es"
           }
         ]
@@ -2171,7 +2225,7 @@
     "conformsToInternal": {
       "text": [
         {
-          "value": "conformsToInternal-NWRBB2sqdQ_000001 en Espanol",
+          "value": "conformsToInternal-zSkyltQlOn_000001 en Espanol",
           "lang": "es"
         }
       ]
@@ -2179,7 +2233,7 @@
     "abstract": {
       "text": [
         {
-          "value": "abstract-NWRBB2sqdQ_000001 en Espanol",
+          "value": "abstract-zSkyltQlOn_000001 en Espanol",
           "lang": "es"
         }
       ]

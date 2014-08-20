@@ -349,6 +349,7 @@
                     <xs:element name="variableElement" type="tns:ResourceInternal" minOccurs="0" />
                     <xs:element name="showDecimalsPrecision" type="xs:int" minOccurs="0" />
                     <xs:element name="open" type="xs:boolean" minOccurs="0" />
+                    <xs:element name="measureQuantity" type="tns:MeasureQuantity"  minOccurs="0"/>
                 </xs:sequence>
             </xs:extension>
         </xs:complexContent>
@@ -361,6 +362,12 @@
         </xs:sequence>
     </xs:complexType>
 
+    <xs:complexType name="MeasureQuantity">
+        <xs:sequence>
+            <xs:element name="unitCode" type="tns:ItemResourceInternal" minOccurs="1" />
+        </xs:sequence>
+    </xs:complexType>
+    
     <xs:complexType name="Attributes">
         <xs:sequence>
             <xs:element name="attribute" type="tns:Attribute" minOccurs="1" maxOccurs="unbounded" />
@@ -411,6 +418,7 @@
         <xs:complexContent>
             <xs:extension base="tns:ResourceInternal">
                 <xs:sequence>
+                	<xs:element name="measureQuantity" type="tns:MeasureQuantity"  minOccurs="0"/>
                 </xs:sequence>
             </xs:extension>
         </xs:complexContent>
@@ -636,6 +644,16 @@
                 <xs:sequence>
                     <xs:element name="urnProvider" type="xs:string" minOccurs="1" />
                     <xs:element name="managementAppLink" type="xs:string" />
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    
+    <xs:complexType name="ItemResourceInternal">
+        <xs:complexContent>
+            <xs:extension base="tns:ResourceInternal">
+                <xs:sequence>
+                    <xs:element name="parent" type="xs:string" minOccurs="0" />
                 </xs:sequence>
             </xs:extension>
         </xs:complexContent>

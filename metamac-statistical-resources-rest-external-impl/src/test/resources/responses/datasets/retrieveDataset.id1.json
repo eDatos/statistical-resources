@@ -20,7 +20,7 @@
   "description": {
     "text": [
       {
-        "value": "description-nXpSu40HBR_000001 en Espanol",
+        "value": "description-XtJNk1udcN_000001 en Espanol",
         "lang": "es"
       }
     ]
@@ -412,23 +412,6 @@
     "temporalGranularities": {
       "resource": [
         {
-          "id": "yearly",
-          "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=MaintainerMock:CodelistMock(1.0).yearly",
-          "selfLink": {
-            "kind": "structuralResources#code",
-            "href": "http://data.istac.es/apis/srm/latest/yearly"
-          },
-          "name": {
-            "text": [
-              {
-                "value": "title-yearly en Espanol",
-                "lang": "es"
-              }
-            ]
-          },
-          "kind": "structuralResources#code"
-        },
-        {
           "id": "monthly",
           "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=MaintainerMock:CodelistMock(1.0).monthly",
           "selfLink": {
@@ -439,6 +422,23 @@
             "text": [
               {
                 "value": "title-monthly en Espanol",
+                "lang": "es"
+              }
+            ]
+          },
+          "kind": "structuralResources#code"
+        },
+        {
+          "id": "yearly",
+          "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=MaintainerMock:CodelistMock(1.0).yearly",
+          "selfLink": {
+            "kind": "structuralResources#code",
+            "href": "http://data.istac.es/apis/srm/latest/yearly"
+          },
+          "name": {
+            "text": [
+              {
+                "value": "title-yearly en Espanol",
                 "lang": "es"
               }
             ]
@@ -1131,6 +1131,24 @@
             "value": [
               {
                 "showDecimalsPrecision": 4,
+                "measureQuantity": {
+                  "unitCode": {
+                    "id": "code01",
+                    "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=agency01:codelist01(01.000).code01",
+                    "selfLink": {
+                      "href": "http://apis.metamac.org/metamac-srm-web/apis/structural-resources-internal/v1.0/codelists/agency01/codelist01/01.000/codes/code01"
+                    },
+                    "name": {
+                      "text": [
+                        {
+                          "value": "code01 en Español",
+                          "lang": "es"
+                        }
+                      ]
+                    },
+                    "kind": "structuralResources#code"
+                  }
+                },
                 "id": "measure01-conceptScheme01-concept01",
                 "urn": "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=agency01:measure01-conceptScheme01(01.000).measure01-conceptScheme01-concept01",
                 "selfLink": {
@@ -1148,6 +1166,24 @@
               },
               {
                 "visualisationParent": "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=agency01:measure01-conceptScheme01(01.000).measure01-conceptScheme01-concept01",
+                "measureQuantity": {
+                  "unitCode": {
+                    "id": "code01",
+                    "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=agency01:codelist01(01.000).code01",
+                    "selfLink": {
+                      "href": "http://apis.metamac.org/metamac-srm-web/apis/structural-resources-internal/v1.0/codelists/agency01/codelist01/01.000/codes/code01"
+                    },
+                    "name": {
+                      "text": [
+                        {
+                          "value": "code01 en Español",
+                          "lang": "es"
+                        }
+                      ]
+                    },
+                    "kind": "structuralResources#code"
+                  }
+                },
                 "id": "measure01-conceptScheme01-concept02",
                 "urn": "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=agency01:measure01-conceptScheme01(01.000).measure01-conceptScheme01-concept02",
                 "selfLink": {
@@ -1165,6 +1201,24 @@
               },
               {
                 "showDecimalsPrecision": 1,
+                "measureQuantity": {
+                  "unitCode": {
+                    "id": "code01",
+                    "urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=agency01:codelist01(01.000).code01",
+                    "selfLink": {
+                      "href": "http://apis.metamac.org/metamac-srm-web/apis/structural-resources-internal/v1.0/codelists/agency01/codelist01/01.000/codes/code01"
+                    },
+                    "name": {
+                      "text": [
+                        {
+                          "value": "code01 en Español",
+                          "lang": "es"
+                        }
+                      ]
+                    },
+                    "kind": "structuralResources#code"
+                  }
+                },
                 "id": "measure01-conceptScheme01-concept05",
                 "urn": "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=agency01:measure01-conceptScheme01(01.000).measure01-conceptScheme01-concept05",
                 "selfLink": {
@@ -1713,16 +1767,16 @@
       "total": 2
     },
     "statisticalOperation": {
-      "id": "nXpSu40HBR",
-      "urn": "urn:siemac:org.siemac.metamac.infomodel.statisticaloperations.Operation=nXpSu40HBR",
+      "id": "XtJNk1udcN",
+      "urn": "urn:siemac:org.siemac.metamac.infomodel.statisticaloperations.Operation=XtJNk1udcN",
       "selfLink": {
         "kind": "statisticalOperations#operation",
-        "href": "http://data.istac.es/apis/operations/latest/nXpSu40HBR"
+        "href": "http://data.istac.es/apis/operations/latest/XtJNk1udcN"
       },
       "name": {
         "text": [
           {
-            "value": "title-nXpSu40HBR en Espanol",
+            "value": "title-XtJNk1udcN en Espanol",
             "lang": "es"
           }
         ]
@@ -1771,7 +1825,7 @@
     "subtitle": {
       "text": [
         {
-          "value": "subtitle-nXpSu40HBR_000001 en Espanol",
+          "value": "subtitle-XtJNk1udcN_000001 en Espanol",
           "lang": "es"
         }
       ]
@@ -1779,7 +1833,7 @@
     "titleAlternative": {
       "text": [
         {
-          "value": "titleAlternative-nXpSu40HBR_000001 en Espanol",
+          "value": "titleAlternative-XtJNk1udcN_000001 en Espanol",
           "lang": "es"
         }
       ]
@@ -1787,7 +1841,7 @@
     "keywords": {
       "text": [
         {
-          "value": "keyword1 keyword2 keyword3-nXpSu40HBR_000001 en Espanol",
+          "value": "keyword1 keyword2 keyword3-XtJNk1udcN_000001 en Espanol",
           "lang": "es"
         }
       ]
@@ -1854,7 +1908,7 @@
     "conformsTo": {
       "text": [
         {
-          "value": "conformsTo-nXpSu40HBR_000001 en Espanol",
+          "value": "conformsTo-XtJNk1udcN_000001 en Espanol",
           "lang": "es"
         }
       ]
@@ -2074,23 +2128,23 @@
     "accessRights": {
       "text": [
         {
-          "value": "accessRights-nXpSu40HBR_000001 en Espanol",
+          "value": "accessRights-XtJNk1udcN_000001 en Espanol",
           "lang": "es"
         }
       ]
     },
     "maintainer": {
-      "id": "Ja1tueCa7t",
+      "id": "J3jZDRMJhh",
       "nestedId": "agency1",
-      "urn": "urn:sdmx:org.sdmx.infomodel.base.Agency=MaintainerMock:AgencySchemeMock(1.0).Ja1tueCa7t",
+      "urn": "urn:sdmx:org.sdmx.infomodel.base.Agency=MaintainerMock:AgencySchemeMock(1.0).J3jZDRMJhh",
       "selfLink": {
         "kind": "structuralResources#agency",
-        "href": "http://data.istac.es/apis/srm/latest/Ja1tueCa7t"
+        "href": "http://data.istac.es/apis/srm/latest/J3jZDRMJhh"
       },
       "name": {
         "text": [
           {
-            "value": "title-Ja1tueCa7t en Espanol",
+            "value": "title-J3jZDRMJhh en Espanol",
             "lang": "es"
           }
         ]
@@ -2119,7 +2173,7 @@
     "abstract": {
       "text": [
         {
-          "value": "abstract-nXpSu40HBR_000001 en Espanol",
+          "value": "abstract-XtJNk1udcN_000001 en Espanol",
           "lang": "es"
         }
       ]
