@@ -192,7 +192,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     private SrmRestInternalService                                   srmRestInternalService;
 
     @Autowired
-    private ConstraintsService                                       contraintsService;
+    private ConstraintsService                                       constraintsService;
 
     @Autowired
     private DatasetVersionRepository                                 datasetVersionRepository;
@@ -1959,7 +1959,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         ConstraintsSecurityUtils.canFindContentConstraintsForArtefact(ctx);
 
         // Find
-        List<ResourceInternal> contentConstraintsForArtefact = contraintsService.findContentConstraintsForArtefact(ctx, artefactUrn);
+        List<ResourceInternal> contentConstraintsForArtefact = constraintsService.findContentConstraintsForArtefact(ctx, artefactUrn);
 
         // Transform
         return constraintRest2DtoMapper.externalItemConstraintToExternalItemDto(contentConstraintsForArtefact);
@@ -1980,7 +1980,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         ContentConstraint contentConstraint = constraintDto2RestMapper.constraintDtoTo(contentConstraintDto);
 
         // Create
-        contentConstraint = contraintsService.createContentConstraint(ctx, contentConstraint);
+        contentConstraint = constraintsService.createContentConstraint(ctx, contentConstraint);
 
         // Transform
         return constraintRest2DtoMapper.toConstraintBasicDto(contentConstraint);
@@ -1989,7 +1989,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     @Override
     public ContentConstraintDto retrieveContentConstraintByUrn(ServiceContext ctx, String urn, Boolean includeDraft) throws MetamacException {
         // Retrieve
-        ContentConstraint contentConstraint = contraintsService.retrieveContentConstraintByUrn(ctx, urn, includeDraft);
+        ContentConstraint contentConstraint = constraintsService.retrieveContentConstraintByUrn(ctx, urn, includeDraft);
 
         // Security
         DatasetVersion datasetVersion = obtainDatasetVersionFromContentConstraint(ctx, contentConstraint); // Dataset for extract operation
@@ -2006,7 +2006,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     @Override
     public void deleteContentConstraint(ServiceContext ctx, String urn) throws MetamacException {
         // Retrieve
-        ContentConstraint contentConstraint = contraintsService.retrieveContentConstraintByUrn(ctx, urn, Boolean.TRUE);
+        ContentConstraint contentConstraint = constraintsService.retrieveContentConstraintByUrn(ctx, urn, Boolean.TRUE);
 
         // Security
         DatasetVersion datasetVersion = obtainDatasetVersionFromContentConstraint(ctx, contentConstraint); // Dataset for extract operation
@@ -2017,13 +2017,13 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         ConstraintsSecurityUtils.canDeleteContentConstraint(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode(), procStatus);
 
         // Delete
-        contraintsService.deleteContentConstraint(ctx, urn);
+        constraintsService.deleteContentConstraint(ctx, urn);
     }
 
     @Override
     public RegionValueDto saveRegionForContentConstraint(ServiceContext ctx, String contentConstraintUrn, RegionValueDto regionValueDto) throws MetamacException {
         // Retrieve
-        ContentConstraint contentConstraint = contraintsService.retrieveContentConstraintByUrn(ctx, contentConstraintUrn, Boolean.TRUE);
+        ContentConstraint contentConstraint = constraintsService.retrieveContentConstraintByUrn(ctx, contentConstraintUrn, Boolean.TRUE);
 
         // Security
         DatasetVersion datasetVersion = obtainDatasetVersionFromContentConstraint(ctx, contentConstraint); // Dataset for extract operation
@@ -2037,7 +2037,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         RegionReference regionReference = constraintDto2RestMapper.toRegionReference(regionValueDto);
 
         // Create
-        regionReference = contraintsService.saveRegionForContentConstraint(ctx, regionReference);
+        regionReference = constraintsService.saveRegionForContentConstraint(ctx, regionReference);
 
         // Transform
         return constraintRest2DtoMapper.toRegionDto(regionReference);
@@ -2046,7 +2046,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     @Override
     public void deleteRegion(ServiceContext ctx, String contentConstraintUrn, String regionCode) throws MetamacException {
         // Retrieve
-        ContentConstraint contentConstraint = contraintsService.retrieveContentConstraintByUrn(ctx, contentConstraintUrn, Boolean.TRUE);
+        ContentConstraint contentConstraint = constraintsService.retrieveContentConstraintByUrn(ctx, contentConstraintUrn, Boolean.TRUE);
 
         // Security
         DatasetVersion datasetVersion = obtainDatasetVersionFromContentConstraint(ctx, contentConstraint); // Dataset for extract operation
@@ -2057,13 +2057,13 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         ConstraintsSecurityUtils.deleteRegion(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode(), procStatus);
 
         // Delete
-        contraintsService.deleteRegion(ctx, contentConstraintUrn, regionCode);
+        constraintsService.deleteRegion(ctx, contentConstraintUrn, regionCode);
     }
 
     @Override
     public RegionValueDto retrieveRegionForContentConstraint(ServiceContext ctx, String contentConstraintUrn, String regionCode) throws MetamacException {
         // Retrieve
-        ContentConstraint contentConstraint = contraintsService.retrieveContentConstraintByUrn(ctx, contentConstraintUrn, Boolean.TRUE);
+        ContentConstraint contentConstraint = constraintsService.retrieveContentConstraintByUrn(ctx, contentConstraintUrn, Boolean.TRUE);
 
         // Security
         DatasetVersion datasetVersion = obtainDatasetVersionFromContentConstraint(ctx, contentConstraint); // Dataset for extract operation
@@ -2074,7 +2074,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         ConstraintsSecurityUtils.canRetrieveRegionForContentConstraint(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode(), procStatus);
 
         // Find
-        RegionReference regionReference = contraintsService.retrieveRegionForContentConstraint(ctx, contentConstraintUrn, regionCode);
+        RegionReference regionReference = constraintsService.retrieveRegionForContentConstraint(ctx, contentConstraintUrn, regionCode);
 
         // Transform
         return constraintRest2DtoMapper.toRegionDto(regionReference);

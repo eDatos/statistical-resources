@@ -67,6 +67,7 @@ public class DatasetPresenter extends Presenter<DatasetPresenter.DatasetView, Da
         void setDataset(DatasetVersionDto datasetDto);
         void setDatasetVersionsAndSelectCurrent(String currentDatasetUrn, List<DatasetVersionBaseDto> datasetVersionBaseDtos);
         void selectMetadataTab();
+        void selectConstraintsTab();
         void selectCategorisationsTab();
         void selectDatasourcesTab();
         void selectAttributesTab();
@@ -132,7 +133,9 @@ public class DatasetPresenter extends Presenter<DatasetPresenter.DatasetView, Da
     @Override
     public void onSelectDatasetTab(SelectDatasetTabEvent event) {
         DatasetTabTypeEnum type = event.getDatasetTabTypeEnum();
-        if (DatasetTabTypeEnum.DATASOURCES.equals(type)) {
+        if (DatasetTabTypeEnum.CONSTRAINTS.equals(type)) {
+            getView().selectConstraintsTab();
+        } else if (DatasetTabTypeEnum.DATASOURCES.equals(type)) {
             getView().selectDatasourcesTab();
         } else if (DatasetTabTypeEnum.ATTRIBUTES.equals(type)) {
             getView().selectAttributesTab();
@@ -196,36 +199,39 @@ public class DatasetPresenter extends Presenter<DatasetPresenter.DatasetView, Da
 
     @Override
     public void goToDatasetMetadata() {
-        List<PlaceRequest> hierarchy = PlaceRequestUtils.getHierarchyUntilNameToken(placeManager, NameTokens.datasetPage);
-        hierarchy.add(new PlaceRequest(NameTokens.datasetMetadataPage));
-        placeManager.revealPlaceHierarchy(hierarchy);
+        goToTab(NameTokens.datasetMetadataPage);
+    }
+
+    @Override
+    public void goToDatasetConstraints() {
+        goToTab(NameTokens.datasetConstraintsPage);
     }
 
     @Override
     public void goToDatasetDatasources() {
-        List<PlaceRequest> hierarchy = PlaceRequestUtils.getHierarchyUntilNameToken(placeManager, NameTokens.datasetPage);
-        hierarchy.add(new PlaceRequest(NameTokens.datasetDatasourcesPage));
-        placeManager.revealPlaceHierarchy(hierarchy);
+        goToTab(NameTokens.datasetDatasourcesPage);
     }
 
     @Override
     public void goToDatasetCategorisations() {
-        List<PlaceRequest> hierarchy = PlaceRequestUtils.getHierarchyUntilNameToken(placeManager, NameTokens.datasetPage);
-        hierarchy.add(new PlaceRequest(NameTokens.datasetCategorisationsPage));
-        placeManager.revealPlaceHierarchy(hierarchy);
+        goToTab(NameTokens.datasetCategorisationsPage);
     }
 
     @Override
     public void goToDatasetAttributes() {
-        List<PlaceRequest> hierarchy = PlaceRequestUtils.getHierarchyUntilNameToken(placeManager, NameTokens.datasetPage);
-        hierarchy.add(new PlaceRequest(NameTokens.datasetAttributesPage));
-        placeManager.revealPlaceHierarchy(hierarchy);
+        goToTab(NameTokens.datasetAttributesPage);
     }
 
     @Override
     public void goToDatasetVersion(String urn) {
         List<PlaceRequest> hierarchy = PlaceRequestUtils.getHierarchyUntilNameToken(placeManager, NameTokens.datasetsListPage);
         hierarchy.add(PlaceRequestUtils.buildRelativeDatasetPlaceRequest(urn));
+        placeManager.revealPlaceHierarchy(hierarchy);
+    }
+
+    private void goToTab(String tabNameToken) {
+        List<PlaceRequest> hierarchy = PlaceRequestUtils.getHierarchyUntilNameToken(placeManager, NameTokens.datasetPage);
+        hierarchy.add(new PlaceRequest(tabNameToken));
         placeManager.revealPlaceHierarchy(hierarchy);
     }
 }

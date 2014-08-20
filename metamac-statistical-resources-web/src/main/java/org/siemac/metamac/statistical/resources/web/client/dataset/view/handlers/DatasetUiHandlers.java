@@ -5,6 +5,7 @@ import com.gwtplatform.mvp.client.UiHandlers;
 public interface DatasetUiHandlers extends UiHandlers {
 
     public void goToDatasetMetadata();
+    public void goToDatasetConstraints();
     public void goToDatasetDatasources();
     public void goToDatasetAttributes();
     public void goToDatasetCategorisations();

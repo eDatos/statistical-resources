@@ -9,6 +9,7 @@ public class NameTokens {
     public static final String datasetsListPage           = "datasets";
     public static final String datasetPage                = "dataset";
     public static final String datasetMetadataPage        = "datasetMetadata";
+    public static final String datasetConstraintsPage     = "datasetConstraints";
     public static final String datasetDatasourcesPage     = "datasetDatasources";
     public static final String datasetAttributesPage      = "datasetAttributes";
     public static final String datasetCategorisationsPage = "datasetCategorisations";

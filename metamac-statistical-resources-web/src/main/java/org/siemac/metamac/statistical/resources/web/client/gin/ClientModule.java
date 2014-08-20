@@ -7,12 +7,14 @@ import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesW
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWebMessages;
 import org.siemac.metamac.statistical.resources.web.client.dataset.presenter.DatasetAttributesTabPresenter;
 import org.siemac.metamac.statistical.resources.web.client.dataset.presenter.DatasetCategorisationsTabPresenter;
+import org.siemac.metamac.statistical.resources.web.client.dataset.presenter.DatasetConstraintsTabPresenter;
 import org.siemac.metamac.statistical.resources.web.client.dataset.presenter.DatasetDatasourcesTabPresenter;
 import org.siemac.metamac.statistical.resources.web.client.dataset.presenter.DatasetListPresenter;
 import org.siemac.metamac.statistical.resources.web.client.dataset.presenter.DatasetMetadataTabPresenter;
 import org.siemac.metamac.statistical.resources.web.client.dataset.presenter.DatasetPresenter;
 import org.siemac.metamac.statistical.resources.web.client.dataset.view.DatasetAttributesTabViewImpl;
 import org.siemac.metamac.statistical.resources.web.client.dataset.view.DatasetCategorisationsTabViewImpl;
+import org.siemac.metamac.statistical.resources.web.client.dataset.view.DatasetConstraintsTabViewImpl;
 import org.siemac.metamac.statistical.resources.web.client.dataset.view.DatasetDatasourcesTabViewImpl;
 import org.siemac.metamac.statistical.resources.web.client.dataset.view.DatasetListViewImpl;
 import org.siemac.metamac.statistical.resources.web.client.dataset.view.DatasetMetadataTabViewImpl;
@@ -76,6 +78,8 @@ public class ClientModule extends AbstractPresenterModule {
         bindPresenter(DatasetPresenter.class, DatasetPresenter.DatasetView.class, DatasetViewImpl.class, DatasetPresenter.DatasetProxy.class);
         bindPresenter(DatasetMetadataTabPresenter.class, DatasetMetadataTabPresenter.DatasetMetadataTabView.class, DatasetMetadataTabViewImpl.class,
                 DatasetMetadataTabPresenter.DatasetMetadataTabProxy.class);
+        bindPresenter(DatasetConstraintsTabPresenter.class, DatasetConstraintsTabPresenter.DatasetConstraintsTabView.class, DatasetConstraintsTabViewImpl.class,
+                DatasetConstraintsTabPresenter.DatasetConstraintsTabProxy.class);
         bindPresenter(DatasetDatasourcesTabPresenter.class, DatasetDatasourcesTabPresenter.DatasetDatasourcesTabView.class, DatasetDatasourcesTabViewImpl.class,
                 DatasetDatasourcesTabPresenter.DatasetDatasourcesTabProxy.class);
         bindPresenter(DatasetAttributesTabPresenter.class, DatasetAttributesTabPresenter.DatasetAttributesTabView.class, DatasetAttributesTabViewImpl.class,

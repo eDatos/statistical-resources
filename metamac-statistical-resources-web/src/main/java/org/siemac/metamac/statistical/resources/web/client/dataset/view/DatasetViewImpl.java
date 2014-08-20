@@ -14,6 +14,7 @@ import org.siemac.metamac.statistical.resources.web.client.base.widgets.CustomTa
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.record.DatasetRecord;
 import org.siemac.metamac.statistical.resources.web.client.dataset.presenter.DatasetAttributesTabPresenter.DatasetAttributesTabView;
 import org.siemac.metamac.statistical.resources.web.client.dataset.presenter.DatasetCategorisationsTabPresenter.DatasetCategorisationsTabView;
+import org.siemac.metamac.statistical.resources.web.client.dataset.presenter.DatasetConstraintsTabPresenter.DatasetConstraintsTabView;
 import org.siemac.metamac.statistical.resources.web.client.dataset.presenter.DatasetDatasourcesTabPresenter.DatasetDatasourcesTabView;
 import org.siemac.metamac.statistical.resources.web.client.dataset.presenter.DatasetMetadataTabPresenter.DatasetMetadataTabView;
 import org.siemac.metamac.statistical.resources.web.client.dataset.presenter.DatasetPresenter;
@@ -49,13 +50,14 @@ public class DatasetViewImpl extends ViewWithUiHandlers<DatasetUiHandlers> imple
 
     private CustomTabSet                tabSet;
     private Tab                         datasetMetadataTab;
-    private Tab                         datasetCategorisationsTab;
+    private Tab                         datasetConstraintsTab;
     private Tab                         datasetDatasourcesTab;
     private Tab                         datasetAttributesTab;
+    private Tab                         datasetCategorisationsTab;
 
     @Inject
-    public DatasetViewImpl(DatasetMetadataTabView datasetMetadataTabView, DatasetDatasourcesTabView datasetDatasourcesTabView, DatasetAttributesTabView datasetAttributesTabView,
-            DatasetCategorisationsTabView datasetCategorisationsTabView) {
+    public DatasetViewImpl(DatasetMetadataTabView datasetMetadataTabView, DatasetConstraintsTabView datasetConstraintsTabView, DatasetDatasourcesTabView datasetDatasourcesTabView,
+            DatasetAttributesTabView datasetAttributesTabView, DatasetCategorisationsTabView datasetCategorisationsTabView) {
         panel = new VLayout();
 
         titleLabel = new TitleLabel(new String());
@@ -91,6 +93,9 @@ public class DatasetViewImpl extends ViewWithUiHandlers<DatasetUiHandlers> imple
         datasetMetadataTab = new Tab(getConstants().datasetMetadata());
         datasetMetadataTab.setPane((Canvas) datasetMetadataTabView.asWidget());
 
+        datasetConstraintsTab = new Tab(getConstants().datasetConstraints());
+        datasetConstraintsTab.setPane((Canvas) datasetConstraintsTabView.asWidget());
+
         datasetCategorisationsTab = new Tab(getConstants().datasetCategorisations());
         datasetCategorisationsTab.setPane((Canvas) datasetCategorisationsTabView.asWidget());
 
@@ -100,7 +105,7 @@ public class DatasetViewImpl extends ViewWithUiHandlers<DatasetUiHandlers> imple
         datasetAttributesTab = new Tab(getConstants().datasetAttributes());
         datasetAttributesTab.setPane((Canvas) datasetAttributesTabView.asWidget());
 
-        tabSet.setTabs(datasetMetadataTab, datasetDatasourcesTab, datasetAttributesTab, datasetCategorisationsTab);
+        tabSet.setTabs(datasetMetadataTab, datasetConstraintsTab, datasetDatasourcesTab, datasetAttributesTab, datasetCategorisationsTab);
 
         //
         // PANEL LAYOUT
@@ -130,6 +135,14 @@ public class DatasetViewImpl extends ViewWithUiHandlers<DatasetUiHandlers> imple
             @Override
             public void onTabSelected(TabSelectedEvent event) {
                 getUiHandlers().goToDatasetMetadata();
+            }
+        });
+
+        datasetConstraintsTab.addTabSelectedHandler(new TabSelectedHandler() {
+
+            @Override
+            public void onTabSelected(TabSelectedEvent event) {
+                getUiHandlers().goToDatasetConstraints();
             }
         });
 
@@ -218,6 +231,11 @@ public class DatasetViewImpl extends ViewWithUiHandlers<DatasetUiHandlers> imple
     @Override
     public void selectMetadataTab() {
         tabSet.selectTab(datasetMetadataTab);
+    }
+
+    @Override
+    public void selectConstraintsTab() {
+        tabSet.selectTab(datasetConstraintsTab);
     }
 
     @Override
