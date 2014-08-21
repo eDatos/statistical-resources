@@ -6,16 +6,16 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 
 public interface LifecycleService<E extends Object> {
 
-    public E sendToProductionValidation(ServiceContext ctx, String urn) throws MetamacException;
+    E sendToProductionValidation(ServiceContext ctx, String urn) throws MetamacException;
 
-    public E sendToDiffusionValidation(ServiceContext ctx, String urn) throws MetamacException;
+    E sendToDiffusionValidation(ServiceContext ctx, String urn) throws MetamacException;
 
-    public E sendToValidationRejected(ServiceContext ctx, String urn) throws MetamacException;
+    E sendToValidationRejected(ServiceContext ctx, String urn) throws MetamacException;
 
-    public E sendToPublished(ServiceContext ctx, String urn) throws MetamacException;
+    E sendToPublished(ServiceContext ctx, String urn) throws MetamacException;
 
-    public E cancelPublication(ServiceContext ctx, String urn) throws MetamacException;
+    E cancelPublication(ServiceContext ctx, String urn) throws MetamacException;
 
-    public E versioning(ServiceContext ctx, String urn, VersionTypeEnum versionType) throws MetamacException;
+    E versioning(ServiceContext ctx, String urn, VersionTypeEnum versionType) throws MetamacException;
 
 }
