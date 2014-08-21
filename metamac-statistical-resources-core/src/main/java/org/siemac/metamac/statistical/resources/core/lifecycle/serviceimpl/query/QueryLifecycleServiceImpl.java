@@ -15,6 +15,7 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersi
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.utils.ProcStatusEnumUtils;
+import org.siemac.metamac.statistical.resources.core.enume.utils.QueryStatusEnumUtils;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.lifecycle.LifecycleCommonMetadataChecker;
@@ -38,16 +39,16 @@ public class QueryLifecycleServiceImpl extends LifecycleTemplateService<QueryVer
     private LifecycleCommonMetadataChecker lifecycleCommonMetadataChecker;
 
     @Autowired
-    private QueryVersionRepository queryVersionRepository;
+    private QueryVersionRepository         queryVersionRepository;
 
     @Autowired
-    private PublicationVersionRepository publicationVersionRepository;
+    private PublicationVersionRepository   publicationVersionRepository;
 
     @Autowired
-    private QueryService queryService;
+    private QueryService                   queryService;
 
     @Autowired
-    private DatasetVersionRepository datasetVersionRepository;
+    private DatasetVersionRepository       datasetVersionRepository;
 
     @Override
     protected String getResourceMetadataName() throws MetamacException {
@@ -166,10 +167,8 @@ public class QueryLifecycleServiceImpl extends LifecycleTemplateService<QueryVer
         if (ProcStatusEnumUtils.isInAnyProcStatus(datasetVersion, ProcStatusEnum.PUBLISHED)) {
             return true;
         }
-        if (ProcStatusEnumUtils.isInAnyProcStatus(datasetVersion, ProcStatusEnum.PUBLISHED_NOT_VISIBLE)) {
-            if (!datasetVersion.getSiemacMetadataStatisticalResource().getValidFrom().isAfter(date)) {
-                return true;
-            }
+        if ((ProcStatusEnumUtils.isInAnyProcStatus(datasetVersion, ProcStatusEnum.PUBLISHED_NOT_VISIBLE)) && (!datasetVersion.getSiemacMetadataStatisticalResource().getValidFrom().isAfter(date))) {
+            return true;
         }
         return false;
     }
