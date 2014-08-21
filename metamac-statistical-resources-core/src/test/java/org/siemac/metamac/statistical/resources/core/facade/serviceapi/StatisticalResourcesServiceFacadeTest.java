@@ -1614,9 +1614,7 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
     @Test
     @MetamacMock({DATASET_VERSION_09_OPER_0001_CODE_000003_NAME, DATASET_VERSION_10_OPER_0002_CODE_000001_NAME, DATASET_VERSION_11_OPER_0002_CODE_000002_NAME})
     public void testFindDatasetsVersionsByConditionCheckLastUpdatedIsDefaultOrder() throws Exception {
-        String dsOper1Code3Urn = this.datasetVersionMockFactory.retrieveMock(DATASET_VERSION_09_OPER_0001_CODE_000003_NAME).getLifeCycleStatisticalResource().getUrn();
         String dsOper2Code1Urn = this.datasetVersionMockFactory.retrieveMock(DATASET_VERSION_10_OPER_0002_CODE_000001_NAME).getLifeCycleStatisticalResource().getUrn();
-        String dsOper2Code2Urn = this.datasetVersionMockFactory.retrieveMock(DATASET_VERSION_11_OPER_0002_CODE_000002_NAME).getLifeCycleStatisticalResource().getUrn();
 
         MetamacCriteria metamacCriteria = new MetamacCriteria();
 
@@ -1629,9 +1627,11 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         assertTrue(datasetsPagedResult.getResults().get(0) instanceof DatasetVersionBaseDto);
 
         int i = 0;
-        assertEquals(dsOper1Code3Urn, datasetsPagedResult.getResults().get(i++).getUrn());
-        assertEquals(dsOper2Code1Urn, datasetsPagedResult.getResults().get(i++).getUrn());
-        assertEquals(dsOper2Code2Urn, datasetsPagedResult.getResults().get(i++).getUrn());
+        Date lastUpdated01 = datasetsPagedResult.getResults().get(i++).getLastUpdated();
+        Date lastUpdated02 = datasetsPagedResult.getResults().get(i++).getLastUpdated();
+        Date lastUpdated03 = datasetsPagedResult.getResults().get(i++).getLastUpdated();
+        assertTrue(lastUpdated01.before(lastUpdated02));
+        assertTrue(lastUpdated02.before(lastUpdated03));
 
         // Update queryVersion 02
         DatasetVersionDto dsOper2Code1 = this.statisticalResourcesServiceFacade.retrieveDatasetVersionByUrn(this.getServiceContextAdministrador(), dsOper2Code1Urn);
@@ -1646,9 +1646,13 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         assertTrue(datasetsPagedResult.getResults().get(0) instanceof DatasetVersionBaseDto);
 
         i = 0;
-        assertEquals(dsOper1Code3Urn, datasetsPagedResult.getResults().get(i++).getUrn());
-        assertEquals(dsOper2Code2Urn, datasetsPagedResult.getResults().get(i++).getUrn());
-        assertEquals(dsOper2Code1Urn, datasetsPagedResult.getResults().get(i++).getUrn());
+        lastUpdated01 = datasetsPagedResult.getResults().get(i++).getLastUpdated();
+        lastUpdated02 = datasetsPagedResult.getResults().get(i++).getLastUpdated();
+        lastUpdated03 = datasetsPagedResult.getResults().get(i++).getLastUpdated();
+        assertTrue(lastUpdated01.before(lastUpdated02));
+        assertTrue(lastUpdated02.before(lastUpdated03));
+
+        assertEquals(dsOper2Code1Urn, datasetsPagedResult.getResults().get(2).getUrn());
     }
 
     @Test
