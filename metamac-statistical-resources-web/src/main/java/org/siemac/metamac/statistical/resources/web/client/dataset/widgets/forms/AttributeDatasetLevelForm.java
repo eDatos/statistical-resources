@@ -17,12 +17,12 @@ public class AttributeDatasetLevelForm extends AttributeBaseForm {
         ExternalItemLinkItem value = new ExternalItemLinkItem(DsdAttributeInstanceDS.VALUE, getConstants().datasetAttributeValue());
         setFields(value);
 
-        ExternalItemRecord record = null;
         if (dsdAttributeInstanceDto.getValue() != null) {
-            record = RecordUtils.getExternalItemRecord(dsdAttributeInstanceDto.getValue().getExternalItemValue());
+            ExternalItemRecord record = RecordUtils.getExternalItemRecord(dsdAttributeInstanceDto.getValue().getExternalItemValue());
+            setValue(DsdAttributeInstanceDS.VALUE, record);
         }
-        setValue(DsdAttributeInstanceDS.VALUE, record);
     }
+
     @Override
     protected void buildNonEnumeratedRepresentationForm(DsdAttributeDto dsdAttributeDto, DsdAttributeInstanceDto dsdAttributeInstanceDto) {
         ViewTextItem value = new ViewTextItem(DsdAttributeInstanceDS.VALUE, getConstants().datasetAttributeValue());

@@ -4,6 +4,13 @@ Application DatasetsStatisticalResourcesEnums {
 	Module datasets_enums {
 		basePackage=org.siemac.metamac.statistical.resources.core.enume.dataset
 
+		enum DimensionTypeEnum {
+			OTHER,
+			SPATIAL,
+			TEMPORAL,
+			MEASURE;
+		}
+
 		enum AttributeRelationshipTypeEnum {
 			NO_SPECIFIED_RELATIONSHIP, 
 			PRIMARY_MEASURE_RELATIONSHIP, 

@@ -24,8 +24,8 @@ import org.siemac.metamac.statistical.resources.web.client.utils.PlaceRequestUti
 import org.siemac.metamac.statistical.resources.web.shared.criteria.DatasetVersionWebCriteria;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetDimensionCoverageAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetDimensionCoverageResult;
-import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetDimensionsAction;
-import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetDimensionsResult;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetDimensionsIdsAction;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetDimensionsIdsResult;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetVersionsAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetVersionsResult;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetAgenciesPaginatedListAction;
@@ -260,10 +260,10 @@ public class QueryPresenter extends Presenter<QueryPresenter.QueryView, QueryPre
 
     @Override
     public void retrieveDimensionsForDataset(String urn) {
-        dispatcher.execute(new GetDatasetDimensionsAction(urn), new WaitingAsyncCallbackHandlingError<GetDatasetDimensionsResult>(this) {
+        dispatcher.execute(new GetDatasetDimensionsIdsAction(urn), new WaitingAsyncCallbackHandlingError<GetDatasetDimensionsIdsResult>(this) {
 
             @Override
-            public void onWaitSuccess(GetDatasetDimensionsResult result) {
+            public void onWaitSuccess(GetDatasetDimensionsIdsResult result) {
                 getView().setDatasetDimensionsIds(result.getDatasetVersionDimensionsIds());
             }
         });

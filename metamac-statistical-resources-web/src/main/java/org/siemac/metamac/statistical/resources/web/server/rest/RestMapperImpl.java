@@ -7,16 +7,38 @@ import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.AttributeRelationship;
 import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor.DsdAttribute;
+import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor.DsdDimension;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdAttributeDto;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdDimensionDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.RelationshipDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.RepresentationDto;
 import org.siemac.metamac.statistical.resources.core.enume.dataset.domain.AttributeRelationshipTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.dataset.domain.AttributeRepresentationTypeEnum;
+import org.siemac.metamac.statistical.resources.core.enume.dataset.domain.DimensionTypeEnum;
 import org.siemac.metamac.web.common.shared.exception.MetamacWebException;
 import org.springframework.stereotype.Component;
 
 @Component
 public class RestMapperImpl implements RestMapper {
+
+    @Override
+    public List<DsdDimensionDto> buildDsdDimensionDtosFromDsdDimensions(List<DsdDimension> dsdDimensions) throws MetamacWebException {
+        List<DsdDimensionDto> dsdDimensionDtos = new ArrayList<DsdDimensionDto>();
+        for (DsdDimension dsdDimension : dsdDimensions) {
+            dsdDimensionDtos.add(buildDsdDimemsionDtoFromDsdDimension(dsdDimension));
+        }
+        return dsdDimensionDtos;
+    }
+
+    @Override
+    public DsdDimensionDto buildDsdDimemsionDtoFromDsdDimension(DsdDimension dsdDimension) throws MetamacWebException {
+        DsdDimensionDto dsdDimensionDto = new DsdDimensionDto();
+        dsdDimensionDto.setDimensionId(dsdDimension.getComponentId());
+        dsdDimensionDto.setType(getDimensionType(dsdDimension));
+        dsdDimensionDto.setCodelistRepresentationUrn(dsdDimension.getEnumeratedRepresentationUrn());
+        dsdDimensionDto.setConceptSchemeRepresentationUrn(dsdDimension.getConceptSchemeRepresentationUrn());
+        return dsdDimensionDto;
+    }
 
     @Override
     public List<DsdAttributeDto> buildDsdAttributeDtosFromDsdAttributes(List<DsdAttribute> dsdAttributes, Map<String, List<String>> dsdGgroupDimensions) throws MetamacWebException {
@@ -69,6 +91,24 @@ public class RestMapperImpl implements RestMapper {
         }
         if (attributeRelationship.getNone() != null) {
             return AttributeRelationshipTypeEnum.NO_SPECIFIED_RELATIONSHIP;
+        }
+        return null;
+    }
+
+    private DimensionTypeEnum getDimensionType(DsdDimension dimension) {
+        if (dimension.getType() != null) {
+            switch (dimension.getType()) {
+                case MEASURE:
+                    return DimensionTypeEnum.MEASURE;
+                case OTHER:
+                    return DimensionTypeEnum.OTHER;
+                case SPATIAL:
+                    return DimensionTypeEnum.SPATIAL;
+                case TEMPORAL:
+                    return DimensionTypeEnum.TEMPORAL;
+                default:
+                    break;
+            }
         }
         return null;
     }

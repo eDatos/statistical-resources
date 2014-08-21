@@ -82,7 +82,14 @@ Application DatasetsStatisticalResourcesDto {
             - Bag<@TemporalCodeDto> temporalCoverage;
             - Bag<@ExternalItemDto> measureCoverage;
         }
-        
+
+         DataTransferObject DsdDimensionDto extends @IdentityDto {
+        	String dimensionId;
+        	- @DimensionTypeEnum type;
+        	String codelistRepresentationUrn;
+        	String conceptSchemeRepresentationUrn;
+        }
+
         DataTransferObject DsdAttributeDto extends @IdentityDto {
         	String identifier;
         	- @RelationshipDto attributeRelationship;

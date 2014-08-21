@@ -42,6 +42,7 @@ import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor;
 import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor.DsdAttribute;
 import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor.DsdDimension;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdAttributeDto;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdDimensionDto;
 import org.siemac.metamac.statistical.resources.core.invocation.service.SrmRestInternalService;
 import org.siemac.metamac.statistical.resources.web.server.utils.ExternalItemWebUtils;
 import org.siemac.metamac.statistical.resources.web.server.utils.MetamacWebRestCriteriaUtils;
@@ -82,6 +83,18 @@ public class SrmRestInternalFacadeImpl implements SrmRestInternalFacade {
             throw WebExceptionUtils.createMetamacWebException(e);
         }
     }
+
+    @Override
+    public List<DsdDimensionDto> retrieveDsdDimensions(String dsdUrn) throws MetamacWebException {
+        try {
+            DataStructure dataStructure = srmRestInternalService.retrieveDsdByUrn(dsdUrn);
+            List<DsdDimension> dsdDimensions = DsdProcessor.getDimensions(dataStructure);
+            List<DsdDimensionDto> dsdDimensionDtos = restMapper.buildDsdDimensionDtosFromDsdDimensions(dsdDimensions);
+            return dsdDimensionDtos;
+        } catch (MetamacException e) {
+            throw WebExceptionUtils.createMetamacWebException(e);
+        }
+    };
 
     @Override
     public List<String> retrieveDsdDimensionsIds(String dsdUrn) throws MetamacWebException {

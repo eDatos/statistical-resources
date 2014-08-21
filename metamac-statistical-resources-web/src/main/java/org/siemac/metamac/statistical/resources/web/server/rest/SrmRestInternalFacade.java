@@ -6,6 +6,7 @@ import java.util.Map;
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.enume.domain.TypeExternalArtefactsEnum;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdAttributeDto;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdDimensionDto;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.DsdWebCriteria;
 import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
 import org.siemac.metamac.web.common.shared.criteria.SrmExternalResourceRestCriteria;
@@ -19,6 +20,7 @@ public interface SrmRestInternalFacade {
 
     public ExternalItemsResult findDsds(int firstResult, int maxResult, DsdWebCriteria condition) throws MetamacWebException;
     public List<String> retrieveDsdDimensionsIds(String dsdUrn) throws MetamacWebException;
+    public List<DsdDimensionDto> retrieveDsdDimensions(String dsdUrn) throws MetamacWebException;
     public Map<String, List<String>> retrieveDsdGroupDimensionsIds(String dsdUrn) throws MetamacWebException;
     public List<DsdAttributeDto> retrieveDsdAttributes(String dsdUrn) throws MetamacWebException;
 

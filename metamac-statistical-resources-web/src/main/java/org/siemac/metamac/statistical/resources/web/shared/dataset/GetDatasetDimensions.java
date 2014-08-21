@@ -2,6 +2,9 @@ package org.siemac.metamac.statistical.resources.web.shared.dataset;
 
 import java.util.List;
 
+import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdDimensionDto;
+
 import com.gwtplatform.dispatch.annotation.GenDispatch;
 import com.gwtplatform.dispatch.annotation.In;
 import com.gwtplatform.dispatch.annotation.Out;
@@ -10,8 +13,11 @@ import com.gwtplatform.dispatch.annotation.Out;
 public class GetDatasetDimensions {
 
     @In(1)
-    String       urn;
+    String                urn;
 
     @Out(1)
-    List<String> datasetVersionDimensionsIds;
+    DatasetVersionDto     datasetVersion;
+
+    @Out(2)
+    List<DsdDimensionDto> datasetVersionDimension;
 }
