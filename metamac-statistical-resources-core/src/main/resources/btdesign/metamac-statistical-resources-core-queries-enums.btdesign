@@ -8,8 +8,7 @@ Application QueriesStatisticalResourcesEnums {
     	"QueryStatus Enum is used to specify the valid states of the query"
     	enum QueryStatusEnum {
     		ACTIVE,
-    		DISCONTINUED,
-    		PENDING_REVIEW
+    		DISCONTINUED
     	}
     	
     	enum QueryTypeEnum {

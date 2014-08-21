@@ -111,95 +111,95 @@ import com.arte.statistic.dataset.repository.dto.AttributeInstanceDto;
 public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesServiceFacadeImplBase {
 
     @Autowired
-    private CommonDo2DtoMapper                                       commonDo2DtoMapper;
+    private CommonDo2DtoMapper commonDo2DtoMapper;
 
     @Autowired
-    private QueryDo2DtoMapper                                        queryDo2DtoMapper;
+    private QueryDo2DtoMapper queryDo2DtoMapper;
 
     @Autowired
-    private QueryDto2DoMapper                                        queryDto2DoMapper;
+    private QueryDto2DoMapper queryDto2DoMapper;
 
     @Autowired
-    private DatasetDo2DtoMapper                                      datasetDo2DtoMapper;
+    private DatasetDo2DtoMapper datasetDo2DtoMapper;
 
     @Autowired
-    private DatasetDto2DoMapper                                      datasetDto2DoMapper;
+    private DatasetDto2DoMapper datasetDto2DoMapper;
 
     @Autowired
-    private PublicationDo2DtoMapper                                  publicationDo2DtoMapper;
+    private PublicationDo2DtoMapper publicationDo2DtoMapper;
 
     @Autowired
-    private PublicationDto2DoMapper                                  publicationDto2DoMapper;
+    private PublicationDto2DoMapper publicationDto2DoMapper;
 
     @Autowired
-    private ConstraintDto2RestMapper                                 constraintDto2RestMapper;
+    private ConstraintDto2RestMapper constraintDto2RestMapper;
 
     @Autowired
-    private ConstraintRest2DtoMapper                                 constraintRest2DtoMapper;
+    private ConstraintRest2DtoMapper constraintRest2DtoMapper;
 
     @Autowired
-    private QueryVersionMetamacCriteria2SculptorCriteriaMapper       queryVersionMetamacCriteria2SculptorCriteriaMapper;
+    private QueryVersionMetamacCriteria2SculptorCriteriaMapper queryVersionMetamacCriteria2SculptorCriteriaMapper;
 
     @Autowired
-    private QueryVersionSculptorCriteria2MetamacCriteriaMapper       queryVersionSculptorCriteria2MetamacCriteriaMapper;
+    private QueryVersionSculptorCriteria2MetamacCriteriaMapper queryVersionSculptorCriteria2MetamacCriteriaMapper;
 
     @Autowired
-    private QueryMetamacCriteria2SculptorCriteriaMapper              queryMetamacCriteria2SculptorCriteriaMapper;
+    private QueryMetamacCriteria2SculptorCriteriaMapper queryMetamacCriteria2SculptorCriteriaMapper;
 
     @Autowired
-    private QuerySculptorCriteria2MetamacCriteriaMapper              querySculptorCriteria2MetamacCriteriaMapper;
+    private QuerySculptorCriteria2MetamacCriteriaMapper querySculptorCriteria2MetamacCriteriaMapper;
 
     @Autowired
-    private DatasetVersionMetamacCriteria2SculptorCriteriaMapper     datasetVersionMetamacCriteria2SculptorCriteriaMapper;
+    private DatasetVersionMetamacCriteria2SculptorCriteriaMapper datasetVersionMetamacCriteria2SculptorCriteriaMapper;
 
     @Autowired
-    private DatasetVersionSculptorCriteria2MetamacCriteriaMapper     datasetVersionSculptorCriteria2MetamacCriteriaMapper;
+    private DatasetVersionSculptorCriteria2MetamacCriteriaMapper datasetVersionSculptorCriteria2MetamacCriteriaMapper;
 
     @Autowired
-    private DatasetMetamacCriteria2SculptorCriteriaMapper            datasetMetamacCriteria2SculptorCriteriaMapper;
+    private DatasetMetamacCriteria2SculptorCriteriaMapper datasetMetamacCriteria2SculptorCriteriaMapper;
 
     @Autowired
-    private DatasetSculptorCriteria2MetamacCriteriaMapper            datasetSculptorCriteria2MetamacCriteriaMapper;
+    private DatasetSculptorCriteria2MetamacCriteriaMapper datasetSculptorCriteria2MetamacCriteriaMapper;
 
     @Autowired
     private PublicationVersionMetamacCriteria2SculptorCriteriaMapper publicationVersionMetamacCriteria2SculptorCriteriaMapper;
 
     @Autowired
-    private PublicationSculptorCriteria2MetamacCriteriaMapper        publicationSculptorCriteria2MetamacCriteriaMapper;
+    private PublicationSculptorCriteria2MetamacCriteriaMapper publicationSculptorCriteria2MetamacCriteriaMapper;
 
     @Autowired
-    private PublicationMetamacCriteria2SculptorCriteriaMapper        publicationMetamacCriteria2SculptorCriteriaMapper;
+    private PublicationMetamacCriteria2SculptorCriteriaMapper publicationMetamacCriteria2SculptorCriteriaMapper;
 
     @Autowired
     private PublicationVersionSculptorCriteria2MetamacCriteriaMapper publicationVersionSculptorCriteria2MetamacCriteriaMapper;
 
     @Autowired
-    private LifecycleService<DatasetVersion>                         datasetLifecycleService;
+    private LifecycleService<DatasetVersion> datasetLifecycleService;
 
     @Autowired
-    private LifecycleService<PublicationVersion>                     publicationLifecycleService;
+    private LifecycleService<PublicationVersion> publicationLifecycleService;
 
     @Autowired
-    private LifecycleService<QueryVersion>                           queryLifecycleService;
+    private LifecycleService<QueryVersion> queryLifecycleService;
 
     @Autowired
-    private StatisticalResourcesDto2StatRepoDtoMapper                statisticalResourcesDto2StatRepoDtoMapper;
+    private StatisticalResourcesDto2StatRepoDtoMapper statisticalResourcesDto2StatRepoDtoMapper;
 
     @Autowired
-    private StatRepoDto2StatisticalResourcesDtoMapper                statRepoDto2StatisticalResourcesDtoMapper;
+    private StatRepoDto2StatisticalResourcesDtoMapper statRepoDto2StatisticalResourcesDtoMapper;
 
     @Autowired
-    private SrmRestInternalService                                   srmRestInternalService;
+    private SrmRestInternalService srmRestInternalService;
 
     @Autowired
-    private ConstraintsService                                       constraintsService;
+    private ConstraintsService constraintsService;
 
     @Autowired
-    private DatasetVersionRepository                                 datasetVersionRepository;
+    private DatasetVersionRepository datasetVersionRepository;
     @Autowired
-    private PublicationVersionRepository                             publicationVersionRepository;
+    private PublicationVersionRepository publicationVersionRepository;
     @Autowired
-    private QueryVersionRepository                                   queryVersionRepository;
+    private QueryVersionRepository queryVersionRepository;
 
     public StatisticalResourcesServiceFacadeImpl() {
     }
@@ -214,7 +214,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         QueriesSecurityUtils.canFindQueriesByCondition(ctx);
 
         // Transform
-        SculptorCriteria sculptorCriteria = queryMetamacCriteria2SculptorCriteriaMapper.getQueryCriteriaMapper().metamacCriteria2SculptorCriteria(criteria);
+        SculptorCriteria sculptorCriteria = this.queryMetamacCriteria2SculptorCriteriaMapper.getQueryCriteriaMapper().metamacCriteria2SculptorCriteria(criteria);
 
         // Add condition for latest queryVersion
         ConditionalCriteria latestQueryVersionRestriction = ConditionalCriteriaBuilder.criteriaFor(QueryVersion.class)
@@ -222,10 +222,10 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         sculptorCriteria.getConditions().add(latestQueryVersionRestriction);
 
         // Find
-        PagedResult<QueryVersion> result = getQueryService().findQueryVersionsByCondition(ctx, sculptorCriteria.getConditions(), sculptorCriteria.getPagingParameter());
+        PagedResult<QueryVersion> result = this.getQueryService().findQueryVersionsByCondition(ctx, sculptorCriteria.getConditions(), sculptorCriteria.getPagingParameter());
 
         // Transform
-        MetamacCriteriaResult<RelatedResourceDto> metamacCriteriaResult = querySculptorCriteria2MetamacCriteriaMapper.pageResultToMetamacCriteriaResultQueryRelatedResourceDto(result,
+        MetamacCriteriaResult<RelatedResourceDto> metamacCriteriaResult = this.querySculptorCriteria2MetamacCriteriaMapper.pageResultToMetamacCriteriaResultQueryRelatedResourceDto(result,
                 sculptorCriteria.getPageSize());
 
         return metamacCriteriaResult;
@@ -238,13 +238,13 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     @Override
     public QueryVersionDto retrieveQueryVersionByUrn(ServiceContext ctx, String urn) throws MetamacException {
         // Retrieve
-        QueryVersion queryVersion = getQueryService().retrieveQueryVersionByUrn(ctx, urn);
+        QueryVersion queryVersion = this.getQueryService().retrieveQueryVersionByUrn(ctx, urn);
 
         // Security
         QueriesSecurityUtils.canRetrieveQueryVersionByUrn(ctx, queryVersion);
 
         // Transform
-        QueryVersionDto queryVersionDto = queryDo2DtoMapper.queryVersionDoToDto(queryVersion);
+        QueryVersionDto queryVersionDto = this.queryDo2DtoMapper.queryVersionDoToDto(queryVersion);
 
         return queryVersionDto;
     }
@@ -252,16 +252,16 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     @Override
     public QueryVersionDto retrieveLatestQueryVersion(ServiceContext ctx, String queryUrn) throws MetamacException {
         // Retrieve
-        QueryVersion query = getQueryService().retrieveLatestQueryVersionByQueryUrn(ctx, queryUrn);
+        QueryVersion query = this.getQueryService().retrieveLatestQueryVersionByQueryUrn(ctx, queryUrn);
 
         // Security
         if (!SharedQueriesSecurityUtils.canRetrieveLatestQueryVersion(SecurityUtils.getMetamacPrincipal(ctx), query.getLifeCycleStatisticalResource().getStatisticalOperation().getCode(), query
                 .getLifeCycleStatisticalResource().getEffectiveProcStatus())) {
-            query = getQueryService().retrieveLatestPublishedQueryVersionByQueryUrn(ctx, queryUrn);
+            query = this.getQueryService().retrieveLatestPublishedQueryVersionByQueryUrn(ctx, queryUrn);
         }
 
         // Transform
-        QueryVersionDto queryVersionDto = queryDo2DtoMapper.queryVersionDoToDto(query);
+        QueryVersionDto queryVersionDto = this.queryDo2DtoMapper.queryVersionDoToDto(query);
         return queryVersionDto;
     }
 
@@ -271,10 +271,10 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         QueriesSecurityUtils.canRetrieveLatestPublishedQueryVersion(ctx);
 
         // Retrieve
-        QueryVersion query = getQueryService().retrieveLatestPublishedQueryVersionByQueryUrn(ctx, queryUrn);
+        QueryVersion query = this.getQueryService().retrieveLatestPublishedQueryVersionByQueryUrn(ctx, queryUrn);
 
         // Transform
-        QueryVersionDto queryVersionDto = queryDo2DtoMapper.queryVersionDoToDto(query);
+        QueryVersionDto queryVersionDto = this.queryDo2DtoMapper.queryVersionDoToDto(query);
         return queryVersionDto;
     }
 
@@ -284,10 +284,10 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         QueriesSecurityUtils.canRetrieveQueriesVersions(ctx);
 
         // Retrieve
-        List<QueryVersion> queryVersions = getQueryService().retrieveQueryVersions(ctx);
+        List<QueryVersion> queryVersions = this.getQueryService().retrieveQueryVersions(ctx);
 
         // Transform
-        List<QueryVersionBaseDto> queriesDto = queryDo2DtoMapper.queryVersionDoListToDtoList(queryVersions);
+        List<QueryVersionBaseDto> queriesDto = this.queryDo2DtoMapper.queryVersionDoListToDtoList(queryVersions);
 
         return queriesDto;
     }
@@ -298,14 +298,14 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         QueriesSecurityUtils.canCreateQuery(ctx, statisticalOperationDto.getCode());
 
         // Transform
-        QueryVersion queryVersion = queryDto2DoMapper.queryVersionDtoToDo(queryVersionDto);
-        ExternalItem statisticalOperation = datasetDto2DoMapper.externalItemDtoToDo(statisticalOperationDto, null, ServiceExceptionParameters.STATISTICAL_OPERATION);
+        QueryVersion queryVersion = this.queryDto2DoMapper.queryVersionDtoToDo(queryVersionDto);
+        ExternalItem statisticalOperation = this.datasetDto2DoMapper.externalItemDtoToDo(statisticalOperationDto, null, ServiceExceptionParameters.STATISTICAL_OPERATION);
 
         // Create
-        queryVersion = getQueryService().createQueryVersion(ctx, queryVersion, statisticalOperation);
+        queryVersion = this.getQueryService().createQueryVersion(ctx, queryVersion, statisticalOperation);
 
         // Transform to DTO
-        queryVersionDto = queryDo2DtoMapper.queryVersionDoToDto(queryVersion);
+        queryVersionDto = this.queryDo2DtoMapper.queryVersionDoToDto(queryVersion);
 
         return queryVersionDto;
     }
@@ -316,13 +316,13 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         QueriesSecurityUtils.canUpdateQueryVersion(ctx, queryVersionDto);
 
         // Transform
-        QueryVersion queryVersion = queryDto2DoMapper.queryVersionDtoToDo(queryVersionDto);
+        QueryVersion queryVersion = this.queryDto2DoMapper.queryVersionDtoToDo(queryVersionDto);
 
         // Update
-        queryVersion = getQueryService().updateQueryVersion(ctx, queryVersion);
+        queryVersion = this.getQueryService().updateQueryVersion(ctx, queryVersion);
 
         // Transform to Dto
-        queryVersionDto = queryDo2DtoMapper.queryVersionDoToDto(queryVersion);
+        queryVersionDto = this.queryDo2DtoMapper.queryVersionDoToDto(queryVersion);
 
         return queryVersionDto;
     }
@@ -333,45 +333,28 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         QueriesSecurityUtils.canFindQueriesVersionsByCondition(ctx);
 
         // Transform
-        SculptorCriteria sculptorCriteria = queryVersionMetamacCriteria2SculptorCriteriaMapper.getQueryCriteriaMapper().metamacCriteria2SculptorCriteria(criteria);
+        SculptorCriteria sculptorCriteria = this.queryVersionMetamacCriteria2SculptorCriteriaMapper.getQueryCriteriaMapper().metamacCriteria2SculptorCriteria(criteria);
 
         // Find
-        PagedResult<QueryVersion> result = getQueryService().findQueryVersionsByCondition(ctx, sculptorCriteria.getConditions(), sculptorCriteria.getPagingParameter());
+        PagedResult<QueryVersion> result = this.getQueryService().findQueryVersionsByCondition(ctx, sculptorCriteria.getConditions(), sculptorCriteria.getPagingParameter());
 
         // Transform
-        MetamacCriteriaResult<QueryVersionBaseDto> metamacCriteriaResult = queryVersionSculptorCriteria2MetamacCriteriaMapper.pageResultToMetamacCriteriaResultQuery(result,
+        MetamacCriteriaResult<QueryVersionBaseDto> metamacCriteriaResult = this.queryVersionSculptorCriteria2MetamacCriteriaMapper.pageResultToMetamacCriteriaResultQuery(result,
                 sculptorCriteria.getPageSize());
 
         return metamacCriteriaResult;
     }
 
     @Override
-    public QueryVersionDto markQueryVersionAsDiscontinued(ServiceContext ctx, QueryVersionDto queryVersionDto) throws MetamacException {
-        // Security
-        QueriesSecurityUtils.canMarkQueryVersionAsDiscontinued(ctx, queryVersionDto);
-
-        // Transform
-        QueryVersion queryVersion = queryDto2DoMapper.queryVersionDtoToDo(queryVersionDto);
-
-        // Update
-        queryVersion = getQueryService().markQueryVersionAsDiscontinued(ctx, queryVersion);
-
-        // Transform
-        queryVersionDto = queryDo2DtoMapper.queryVersionDoToDto(queryVersion);
-
-        return queryVersionDto;
-    }
-
-    @Override
     public void deleteQueryVersion(ServiceContext ctx, String urn) throws MetamacException {
         // Retrieve
-        QueryVersionDto queryVersionDto = retrieveQueryVersionByUrn(ctx, urn);
+        QueryVersionDto queryVersionDto = this.retrieveQueryVersionByUrn(ctx, urn);
 
         // Security
         QueriesSecurityUtils.canDeleteQueryVersion(ctx, queryVersionDto);
 
         // Delete
-        getQueryService().deleteQueryVersion(ctx, urn);
+        this.getQueryService().deleteQueryVersion(ctx, urn);
     }
 
     @Override
@@ -380,13 +363,13 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         QueriesSecurityUtils.canSendQueryVersionToProductionValidation(ctx, queryVersionDto.getStatisticalOperation().getCode());
 
         // Transform
-        QueryVersion queryVersion = queryDto2DoMapper.queryVersionDtoToDo(queryVersionDto);
+        QueryVersion queryVersion = this.queryDto2DoMapper.queryVersionDtoToDo(queryVersionDto);
 
         // Send to production validation and retrieve
-        queryVersion = queryLifecycleService.sendToProductionValidation(ctx, queryVersion.getLifeCycleStatisticalResource().getUrn());
+        queryVersion = this.queryLifecycleService.sendToProductionValidation(ctx, queryVersion.getLifeCycleStatisticalResource().getUrn());
 
         // Transform
-        queryVersionDto = queryDo2DtoMapper.queryVersionDoToDto(queryVersion);
+        queryVersionDto = this.queryDo2DtoMapper.queryVersionDoToDto(queryVersion);
 
         return queryVersionDto;
     }
@@ -397,13 +380,13 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         QueriesSecurityUtils.canSendQueryVersionToProductionValidation(ctx, queryVersionDto.getStatisticalOperation().getCode());
 
         // Check optimistic locking
-        queryDto2DoMapper.checkOptimisticLocking(queryVersionDto);
+        this.queryDto2DoMapper.checkOptimisticLocking(queryVersionDto);
 
         // Send to production validation and retrieve
-        QueryVersion queryVersion = queryLifecycleService.sendToProductionValidation(ctx, queryVersionDto.getUrn());
+        QueryVersion queryVersion = this.queryLifecycleService.sendToProductionValidation(ctx, queryVersionDto.getUrn());
 
         // Transform
-        queryVersionDto = queryDo2DtoMapper.queryVersionDoToBaseDto(queryVersion);
+        queryVersionDto = this.queryDo2DtoMapper.queryVersionDoToBaseDto(queryVersion);
 
         return queryVersionDto;
     }
@@ -414,13 +397,13 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         QueriesSecurityUtils.canSendQueryVersionToDiffusionValidation(ctx, queryVersionDto.getStatisticalOperation().getCode());
 
         // Transform
-        QueryVersion queryVersion = queryDto2DoMapper.queryVersionDtoToDo(queryVersionDto);
+        QueryVersion queryVersion = this.queryDto2DoMapper.queryVersionDtoToDo(queryVersionDto);
 
         // Send to production validation and retrieve
-        queryVersion = queryLifecycleService.sendToDiffusionValidation(ctx, queryVersion.getLifeCycleStatisticalResource().getUrn());
+        queryVersion = this.queryLifecycleService.sendToDiffusionValidation(ctx, queryVersion.getLifeCycleStatisticalResource().getUrn());
 
         // Transform
-        queryVersionDto = queryDo2DtoMapper.queryVersionDoToDto(queryVersion);
+        queryVersionDto = this.queryDo2DtoMapper.queryVersionDoToDto(queryVersion);
 
         return queryVersionDto;
     }
@@ -431,13 +414,13 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         QueriesSecurityUtils.canSendQueryVersionToDiffusionValidation(ctx, queryVersionDto.getStatisticalOperation().getCode());
 
         // Check optimistic locking
-        queryDto2DoMapper.checkOptimisticLocking(queryVersionDto);
+        this.queryDto2DoMapper.checkOptimisticLocking(queryVersionDto);
 
         // Send to production validation and retrieve
-        QueryVersion queryVersion = queryLifecycleService.sendToDiffusionValidation(ctx, queryVersionDto.getUrn());
+        QueryVersion queryVersion = this.queryLifecycleService.sendToDiffusionValidation(ctx, queryVersionDto.getUrn());
 
         // Transform
-        queryVersionDto = queryDo2DtoMapper.queryVersionDoToBaseDto(queryVersion);
+        queryVersionDto = this.queryDo2DtoMapper.queryVersionDoToBaseDto(queryVersion);
 
         return queryVersionDto;
     }
@@ -448,13 +431,13 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         QueriesSecurityUtils.canSendQueryVersionToValidationRejected(ctx, queryVersionDto.getStatisticalOperation().getCode());
 
         // Transform
-        QueryVersion queryVersion = queryDto2DoMapper.queryVersionDtoToDo(queryVersionDto);
+        QueryVersion queryVersion = this.queryDto2DoMapper.queryVersionDtoToDo(queryVersionDto);
 
         // Send to production validation and retrieve
-        queryVersion = queryLifecycleService.sendToValidationRejected(ctx, queryVersion.getLifeCycleStatisticalResource().getUrn());
+        queryVersion = this.queryLifecycleService.sendToValidationRejected(ctx, queryVersion.getLifeCycleStatisticalResource().getUrn());
 
         // Transform
-        queryVersionDto = queryDo2DtoMapper.queryVersionDoToDto(queryVersion);
+        queryVersionDto = this.queryDo2DtoMapper.queryVersionDoToDto(queryVersion);
 
         return queryVersionDto;
     }
@@ -465,13 +448,13 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         QueriesSecurityUtils.canSendQueryVersionToValidationRejected(ctx, queryVersionDto.getStatisticalOperation().getCode());
 
         // Check optimistic locking
-        queryDto2DoMapper.checkOptimisticLocking(queryVersionDto);
+        this.queryDto2DoMapper.checkOptimisticLocking(queryVersionDto);
 
         // Send to production validation and retrieve
-        QueryVersion queryVersion = queryLifecycleService.sendToValidationRejected(ctx, queryVersionDto.getUrn());
+        QueryVersion queryVersion = this.queryLifecycleService.sendToValidationRejected(ctx, queryVersionDto.getUrn());
 
         // Transform
-        queryVersionDto = queryDo2DtoMapper.queryVersionDoToBaseDto(queryVersion);
+        queryVersionDto = this.queryDo2DtoMapper.queryVersionDoToBaseDto(queryVersion);
 
         return queryVersionDto;
     }
@@ -482,18 +465,18 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         QueriesSecurityUtils.canPublishQueryVersion(ctx, queryVersionDto.getStatisticalOperation().getCode());
 
         // Transform
-        QueryVersion queryVersion = queryDto2DoMapper.queryVersionDtoToDo(queryVersionDto);
+        QueryVersion queryVersion = this.queryDto2DoMapper.queryVersionDtoToDo(queryVersionDto);
 
         String urn = queryVersion.getLifeCycleStatisticalResource().getUrn();
 
         // We set validfrom and ONLY validfrom transparently
-        queryVersion = changeQueryVersionValidFromAndSave(urn, new DateTime());
+        queryVersion = this.changeQueryVersionValidFromAndSave(urn, new DateTime());
 
         // Send to published
-        queryVersion = queryLifecycleService.sendToPublished(ctx, queryVersion.getLifeCycleStatisticalResource().getUrn());
+        queryVersion = this.queryLifecycleService.sendToPublished(ctx, queryVersion.getLifeCycleStatisticalResource().getUrn());
 
         // Transform
-        queryVersionDto = queryDo2DtoMapper.queryVersionDoToDto(queryVersion);
+        queryVersionDto = this.queryDo2DtoMapper.queryVersionDoToDto(queryVersion);
 
         return queryVersionDto;
     }
@@ -504,18 +487,18 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         QueriesSecurityUtils.canPublishQueryVersion(ctx, queryVersionDto.getStatisticalOperation().getCode());
 
         // Check optimistic locking
-        queryDto2DoMapper.checkOptimisticLocking(queryVersionDto);
+        this.queryDto2DoMapper.checkOptimisticLocking(queryVersionDto);
 
         String urn = queryVersionDto.getUrn();
 
         // We set validfrom and ONLY validfrom transparently
-        QueryVersion queryVersion = changeQueryVersionValidFromAndSave(urn, new DateTime());
+        QueryVersion queryVersion = this.changeQueryVersionValidFromAndSave(urn, new DateTime());
 
         // Send to published
-        queryVersion = queryLifecycleService.sendToPublished(ctx, queryVersionDto.getUrn());
+        queryVersion = this.queryLifecycleService.sendToPublished(ctx, queryVersionDto.getUrn());
 
         // Transform
-        queryVersionDto = queryDo2DtoMapper.queryVersionDoToBaseDto(queryVersion);
+        queryVersionDto = this.queryDo2DtoMapper.queryVersionDoToBaseDto(queryVersion);
 
         return queryVersionDto;
     }
@@ -526,16 +509,16 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         QueriesSecurityUtils.canPublishQueryVersion(ctx, queryVersionDto.getStatisticalOperation().getCode());
 
         // Transform only for optimistic locking
-        QueryVersion queryVersion = queryDto2DoMapper.queryVersionDtoToDo(queryVersionDto);
+        QueryVersion queryVersion = this.queryDto2DoMapper.queryVersionDtoToDo(queryVersionDto);
         String urn = queryVersion.getLifeCycleStatisticalResource().getUrn();
 
         // We set validfrom and ONLY validfrom transparently
-        queryVersion = changeQueryVersionValidFromAndSave(urn, validFromDate);
+        queryVersion = this.changeQueryVersionValidFromAndSave(urn, validFromDate);
 
-        queryVersion = queryLifecycleService.sendToPublished(ctx, urn);
+        queryVersion = this.queryLifecycleService.sendToPublished(ctx, urn);
 
         // Transform
-        queryVersionDto = queryDo2DtoMapper.queryVersionDoToDto(queryVersion);
+        queryVersionDto = this.queryDo2DtoMapper.queryVersionDoToDto(queryVersion);
 
         return queryVersionDto;
     }
@@ -546,31 +529,31 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         QueriesSecurityUtils.canPublishQueryVersion(ctx, queryVersionDto.getStatisticalOperation().getCode());
 
         // Check optimistic locking
-        queryDto2DoMapper.checkOptimisticLocking(queryVersionDto);
+        this.queryDto2DoMapper.checkOptimisticLocking(queryVersionDto);
 
         String urn = queryVersionDto.getUrn();
 
         // We set validfrom and ONLY validfrom transparently
-        QueryVersion queryVersion = changeQueryVersionValidFromAndSave(urn, validFromDate);
+        QueryVersion queryVersion = this.changeQueryVersionValidFromAndSave(urn, validFromDate);
 
-        queryVersion = queryLifecycleService.sendToPublished(ctx, urn);
+        queryVersion = this.queryLifecycleService.sendToPublished(ctx, urn);
 
         // Transform
-        queryVersionDto = queryDo2DtoMapper.queryVersionDoToBaseDto(queryVersion);
+        queryVersionDto = this.queryDo2DtoMapper.queryVersionDoToBaseDto(queryVersion);
 
         return queryVersionDto;
     }
 
     private QueryVersion changeQueryVersionValidFromAndSave(String urn, Date validFrom) throws MetamacException {
-        QueryVersion queryVersion = queryVersionRepository.retrieveByUrn(urn);
-        queryVersion.getLifeCycleStatisticalResource().setValidFrom(queryDto2DoMapper.dateDtoToDo(validFrom));
-        return queryVersionRepository.save(queryVersion);
+        QueryVersion queryVersion = this.queryVersionRepository.retrieveByUrn(urn);
+        queryVersion.getLifeCycleStatisticalResource().setValidFrom(this.queryDto2DoMapper.dateDtoToDo(validFrom));
+        return this.queryVersionRepository.save(queryVersion);
     }
 
     private QueryVersion changeQueryVersionValidFromAndSave(String urn, DateTime validFrom) throws MetamacException {
-        QueryVersion queryVersion = queryVersionRepository.retrieveByUrn(urn);
+        QueryVersion queryVersion = this.queryVersionRepository.retrieveByUrn(urn);
         queryVersion.getLifeCycleStatisticalResource().setValidFrom(validFrom);
-        return queryVersionRepository.save(queryVersion);
+        return this.queryVersionRepository.save(queryVersion);
     }
 
     @Override
@@ -579,13 +562,13 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         QueriesSecurityUtils.canCancelPublicationQueryVersion(ctx, queryVersionDto.getStatisticalOperation().getCode());
 
         // Transform
-        QueryVersion queryVersion = queryDto2DoMapper.queryVersionDtoToDo(queryVersionDto);
+        QueryVersion queryVersion = this.queryDto2DoMapper.queryVersionDtoToDo(queryVersionDto);
 
         // Send to published
-        queryVersion = queryLifecycleService.cancelPublication(ctx, queryVersion.getLifeCycleStatisticalResource().getUrn());
+        queryVersion = this.queryLifecycleService.cancelPublication(ctx, queryVersion.getLifeCycleStatisticalResource().getUrn());
 
         // Transform
-        queryVersionDto = queryDo2DtoMapper.queryVersionDoToDto(queryVersion);
+        queryVersionDto = this.queryDo2DtoMapper.queryVersionDoToDto(queryVersion);
 
         return queryVersionDto;
     }
@@ -596,13 +579,13 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         QueriesSecurityUtils.canCancelPublicationQueryVersion(ctx, queryVersionDto.getStatisticalOperation().getCode());
 
         // Check optimistic locking
-        queryDto2DoMapper.checkOptimisticLocking(queryVersionDto);
+        this.queryDto2DoMapper.checkOptimisticLocking(queryVersionDto);
 
         // Send to published
-        QueryVersion queryVersion = queryLifecycleService.cancelPublication(ctx, queryVersionDto.getUrn());
+        QueryVersion queryVersion = this.queryLifecycleService.cancelPublication(ctx, queryVersionDto.getUrn());
 
         // Transform
-        queryVersionDto = queryDo2DtoMapper.queryVersionDoToBaseDto(queryVersion);
+        queryVersionDto = this.queryDo2DtoMapper.queryVersionDoToBaseDto(queryVersion);
 
         return queryVersionDto;
     }
@@ -613,13 +596,13 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         QueriesSecurityUtils.canVersionQueryVersion(ctx, queryVersionDto.getStatisticalOperation().getCode());
 
         // Transform
-        QueryVersion queryVersion = queryDto2DoMapper.queryVersionDtoToDo(queryVersionDto);
+        QueryVersion queryVersion = this.queryDto2DoMapper.queryVersionDtoToDo(queryVersionDto);
 
         // Versioning
-        queryVersion = queryLifecycleService.versioning(ctx, queryVersion.getLifeCycleStatisticalResource().getUrn(), versionType);
+        queryVersion = this.queryLifecycleService.versioning(ctx, queryVersion.getLifeCycleStatisticalResource().getUrn(), versionType);
 
         // Transform
-        queryVersionDto = queryDo2DtoMapper.queryVersionDoToDto(queryVersion);
+        queryVersionDto = this.queryDo2DtoMapper.queryVersionDoToDto(queryVersion);
 
         return queryVersionDto;
     }
@@ -630,15 +613,13 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         QueriesSecurityUtils.canVersionQueryVersion(ctx, queryVersionDto.getStatisticalOperation().getCode());
 
         // Check optimistic locking
-        queryDto2DoMapper.checkOptimisticLocking(queryVersionDto);
+        this.queryDto2DoMapper.checkOptimisticLocking(queryVersionDto);
 
         // Versioning
-        QueryVersion queryVersion = queryLifecycleService.versioning(ctx, queryVersionDto.getUrn(), versionType);
+        QueryVersion queryVersion = this.queryLifecycleService.versioning(ctx, queryVersionDto.getUrn(), versionType);
 
         // Transform
-        queryVersionDto = queryDo2DtoMapper.queryVersionDoToBaseDto(queryVersion);
-
-        return queryVersionDto;
+        return this.queryDo2DtoMapper.queryVersionDoToBaseDto(queryVersion);
     }
 
     // ------------------------------------------------------------------------
@@ -651,13 +632,13 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         DatasetsSecurityUtils.canCreateDatasource(ctx, datasourceDto.getStatisticalOperation().getCode());
 
         // Transform
-        Datasource datasource = datasetDto2DoMapper.datasourceDtoToDo(datasourceDto);
+        Datasource datasource = this.datasetDto2DoMapper.datasourceDtoToDo(datasourceDto);
 
         // Create
-        datasource = getDatasetService().createDatasource(ctx, urnDatasetVersion, datasource);
+        datasource = this.getDatasetService().createDatasource(ctx, urnDatasetVersion, datasource);
 
         // Transform to DTO
-        datasourceDto = datasetDo2DtoMapper.datasourceDoToDto(datasource);
+        datasourceDto = this.datasetDo2DtoMapper.datasourceDoToDto(datasource);
 
         return datasourceDto;
     }
@@ -668,13 +649,13 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         DatasetsSecurityUtils.canUpdateDatasource(ctx, datasourceDto.getStatisticalOperation().getCode());
 
         // Transform
-        Datasource datasource = datasetDto2DoMapper.datasourceDtoToDo(datasourceDto);
+        Datasource datasource = this.datasetDto2DoMapper.datasourceDtoToDo(datasourceDto);
 
         // Update
-        datasource = getDatasetService().updateDatasource(ctx, datasource);
+        datasource = this.getDatasetService().updateDatasource(ctx, datasource);
 
         // Transform to Dtos
-        datasourceDto = datasetDo2DtoMapper.datasourceDoToDto(datasource);
+        datasourceDto = this.datasetDo2DtoMapper.datasourceDoToDto(datasource);
 
         return datasourceDto;
     }
@@ -682,13 +663,13 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     @Override
     public DatasourceDto retrieveDatasourceByUrn(ServiceContext ctx, String urn) throws MetamacException {
         // Retrieve
-        Datasource datasource = getDatasetService().retrieveDatasourceByUrn(ctx, urn);
+        Datasource datasource = this.getDatasetService().retrieveDatasourceByUrn(ctx, urn);
 
         // Security
         DatasetsSecurityUtils.canRetrieveDatasourceByUrn(ctx, datasource.getIdentifiableStatisticalResource().getStatisticalOperation().getCode());
 
         // Transform
-        DatasourceDto datasourceDto = datasetDo2DtoMapper.datasourceDoToDto(datasource);
+        DatasourceDto datasourceDto = this.datasetDo2DtoMapper.datasourceDoToDto(datasource);
 
         return datasourceDto;
     }
@@ -696,28 +677,28 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     @Override
     public void deleteDatasource(ServiceContext ctx, String urn) throws MetamacException {
         // Retrieve
-        String operationCode = getDatasetService().retrieveDatasourceByUrn(ctx, urn).getIdentifiableStatisticalResource().getStatisticalOperation().getCode();
+        String operationCode = this.getDatasetService().retrieveDatasourceByUrn(ctx, urn).getIdentifiableStatisticalResource().getStatisticalOperation().getCode();
 
         // Security
         DatasetsSecurityUtils.canDeleteDatasource(ctx, operationCode);
 
         // Delete
-        getDatasetService().deleteDatasource(ctx, urn);
+        this.getDatasetService().deleteDatasource(ctx, urn);
     }
 
     @Override
     public List<DatasourceDto> retrieveDatasourcesByDatasetVersion(ServiceContext ctx, String urnDatasetVersion) throws MetamacException {
         // Retrieve
-        String operationCode = getDatasetService().retrieveDatasetVersionByUrn(ctx, urnDatasetVersion).getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode();
+        String operationCode = this.getDatasetService().retrieveDatasetVersionByUrn(ctx, urnDatasetVersion).getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode();
 
         // Security
         DatasetsSecurityUtils.canRetrieveDatasourcesByDatasetVersion(ctx, operationCode);
 
         // Retrieve
-        List<Datasource> datasources = getDatasetService().retrieveDatasourcesByDatasetVersion(ctx, urnDatasetVersion);
+        List<Datasource> datasources = this.getDatasetService().retrieveDatasourcesByDatasetVersion(ctx, urnDatasetVersion);
 
         // Transform
-        List<DatasourceDto> datasourcesDto = datasetDo2DtoMapper.datasourceDoListToDtoList(datasources);
+        List<DatasourceDto> datasourcesDto = this.datasetDo2DtoMapper.datasourceDoListToDtoList(datasources);
 
         return datasourcesDto;
     }
@@ -732,7 +713,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         DatasetsSecurityUtils.canFindDatasetsByCondition(ctx);
 
         // Transform
-        SculptorCriteria sculptorCriteria = datasetMetamacCriteria2SculptorCriteriaMapper.getDatasetCriteriaMapper().metamacCriteria2SculptorCriteria(criteria);
+        SculptorCriteria sculptorCriteria = this.datasetMetamacCriteria2SculptorCriteriaMapper.getDatasetCriteriaMapper().metamacCriteria2SculptorCriteria(criteria);
 
         // Add condition for latest datasetVersions
         ConditionalCriteria latestDatasetVersionRestriction = ConditionalCriteriaBuilder.criteriaFor(DatasetVersion.class)
@@ -740,10 +721,10 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         sculptorCriteria.getConditions().add(latestDatasetVersionRestriction);
 
         // Find
-        PagedResult<DatasetVersion> result = getDatasetService().findDatasetVersionsByCondition(ctx, sculptorCriteria.getConditions(), sculptorCriteria.getPagingParameter());
+        PagedResult<DatasetVersion> result = this.getDatasetService().findDatasetVersionsByCondition(ctx, sculptorCriteria.getConditions(), sculptorCriteria.getPagingParameter());
 
         // Transform
-        MetamacCriteriaResult<RelatedResourceDto> metamacCriteriaResult = datasetSculptorCriteria2MetamacCriteriaMapper.pageResultToMetamacCriteriaResultDatasetRelatedResourceDto(result,
+        MetamacCriteriaResult<RelatedResourceDto> metamacCriteriaResult = this.datasetSculptorCriteria2MetamacCriteriaMapper.pageResultToMetamacCriteriaResultDatasetRelatedResourceDto(result,
                 sculptorCriteria.getPageSize());
 
         return metamacCriteriaResult;
@@ -759,14 +740,14 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         DatasetsSecurityUtils.canCreateDataset(ctx, statisticalOperationDto.getCode());
 
         // Transform
-        DatasetVersion datasetVersion = datasetDto2DoMapper.datasetVersionDtoToDo(datasetVersionDto);
-        ExternalItem statisticalOperation = datasetDto2DoMapper.externalItemDtoToDo(statisticalOperationDto, null, ServiceExceptionParameters.STATISTICAL_OPERATION);
+        DatasetVersion datasetVersion = this.datasetDto2DoMapper.datasetVersionDtoToDo(datasetVersionDto);
+        ExternalItem statisticalOperation = this.datasetDto2DoMapper.externalItemDtoToDo(statisticalOperationDto, null, ServiceExceptionParameters.STATISTICAL_OPERATION);
 
         // Retrieve
-        DatasetVersion datasetVersionCreated = getDatasetService().createDatasetVersion(ctx, datasetVersion, statisticalOperation);
+        DatasetVersion datasetVersionCreated = this.getDatasetService().createDatasetVersion(ctx, datasetVersion, statisticalOperation);
 
         // Transform
-        DatasetVersionDto datasetCreated = datasetDo2DtoMapper.datasetVersionDoToDto(ctx, datasetVersionCreated);
+        DatasetVersionDto datasetCreated = this.datasetDo2DtoMapper.datasetVersionDoToDto(ctx, datasetVersionCreated);
 
         return datasetCreated;
     }
@@ -777,25 +758,25 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         DatasetsSecurityUtils.canUpdateDatasetVersion(ctx, datasetVersionDto);
 
         // Transform
-        DatasetVersion datasetVersion = datasetDto2DoMapper.datasetVersionDtoToDo(datasetVersionDto);
+        DatasetVersion datasetVersion = this.datasetDto2DoMapper.datasetVersionDtoToDo(datasetVersionDto);
 
         // Update
-        datasetVersion = getDatasetService().updateDatasetVersion(ctx, datasetVersion);
+        datasetVersion = this.getDatasetService().updateDatasetVersion(ctx, datasetVersion);
 
         // Transform
-        return datasetDo2DtoMapper.datasetVersionDoToDto(ctx, datasetVersion);
+        return this.datasetDo2DtoMapper.datasetVersionDoToDto(ctx, datasetVersion);
     }
 
     @Override
     public void deleteDatasetVersion(ServiceContext ctx, String urn) throws MetamacException {
         // Retrieve
-        DatasetVersionDto datasetVersionDto = retrieveDatasetVersionByUrn(ctx, urn);
+        DatasetVersionDto datasetVersionDto = this.retrieveDatasetVersionByUrn(ctx, urn);
 
         // Security
         DatasetsSecurityUtils.canDeleteDatasetVersion(ctx, datasetVersionDto);
 
         // Delete
-        getDatasetService().deleteDatasetVersion(ctx, urn);
+        this.getDatasetService().deleteDatasetVersion(ctx, urn);
     }
 
     @Override
@@ -804,13 +785,13 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         DatasetsSecurityUtils.canFindDatasetsVersionsByCondition(ctx);
 
         // Transform
-        SculptorCriteria sculptorCriteria = datasetVersionMetamacCriteria2SculptorCriteriaMapper.getDatasetVersionCriteriaMapper().metamacCriteria2SculptorCriteria(criteria);
+        SculptorCriteria sculptorCriteria = this.datasetVersionMetamacCriteria2SculptorCriteriaMapper.getDatasetVersionCriteriaMapper().metamacCriteria2SculptorCriteria(criteria);
 
         // Find
-        PagedResult<DatasetVersion> result = getDatasetService().findDatasetVersionsByCondition(ctx, sculptorCriteria.getConditions(), sculptorCriteria.getPagingParameter());
+        PagedResult<DatasetVersion> result = this.getDatasetService().findDatasetVersionsByCondition(ctx, sculptorCriteria.getConditions(), sculptorCriteria.getPagingParameter());
 
         // Transform
-        MetamacCriteriaResult<DatasetVersionBaseDto> metamacCriteriaResult = datasetVersionSculptorCriteria2MetamacCriteriaMapper.pageResultToMetamacCriteriaResultDatasetVersion(ctx, result,
+        MetamacCriteriaResult<DatasetVersionBaseDto> metamacCriteriaResult = this.datasetVersionSculptorCriteria2MetamacCriteriaMapper.pageResultToMetamacCriteriaResultDatasetVersion(ctx, result,
                 sculptorCriteria.getPageSize());
 
         return metamacCriteriaResult;
@@ -819,14 +800,14 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     @Override
     public DatasetVersionDto retrieveDatasetVersionByUrn(ServiceContext ctx, String urn) throws MetamacException {
         // Retrieve
-        DatasetVersion datasetVersion = getDatasetService().retrieveDatasetVersionByUrn(ctx, urn);
+        DatasetVersion datasetVersion = this.getDatasetService().retrieveDatasetVersionByUrn(ctx, urn);
 
         // Security
         DatasetsSecurityUtils.canRetrieveDatasetVersionByUrn(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode(), datasetVersion
                 .getSiemacMetadataStatisticalResource().getEffectiveProcStatus());
 
         // Transform
-        return datasetDo2DtoMapper.datasetVersionDoToDto(ctx, datasetVersion);
+        return this.datasetDo2DtoMapper.datasetVersionDoToDto(ctx, datasetVersion);
     }
 
     @Override
@@ -835,12 +816,12 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         DatasetsSecurityUtils.canRetrieveDatasetVersions(ctx);
 
         // Retrieve
-        List<DatasetVersion> datasetVersions = getDatasetService().retrieveDatasetVersions(ctx, datasetVersionUrn);
+        List<DatasetVersion> datasetVersions = this.getDatasetService().retrieveDatasetVersions(ctx, datasetVersionUrn);
 
         // Transform
         List<DatasetVersionBaseDto> datasets = new ArrayList<DatasetVersionBaseDto>();
         for (DatasetVersion version : datasetVersions) {
-            datasets.add(datasetDo2DtoMapper.datasetVersionDoToBaseDto(ctx, version));
+            datasets.add(this.datasetDo2DtoMapper.datasetVersionDoToBaseDto(ctx, version));
         }
         return datasets;
     }
@@ -850,7 +831,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         // Security
         DatasetsSecurityUtils.canRetrieveDatasetVersionDimensionsIds(ctx);
 
-        return getDatasetService().retrieveDatasetVersionDimensionsIds(ctx, datasetVersionUrn);
+        return this.getDatasetService().retrieveDatasetVersionDimensionsIds(ctx, datasetVersionUrn);
     }
 
     @Override
@@ -858,9 +839,9 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         // Security
         DatasetsSecurityUtils.canRetrieveCoverageForDatasetVersionDimension(ctx);
 
-        List<CodeDimension> codeDimensions = getDatasetService().retrieveCoverageForDatasetVersionDimension(ctx, datasetVersionUrn, dsdDimensionId);
+        List<CodeDimension> codeDimensions = this.getDatasetService().retrieveCoverageForDatasetVersionDimension(ctx, datasetVersionUrn, dsdDimensionId);
 
-        return datasetDo2DtoMapper.codeDimensionDoListToCodeItemDtoList(codeDimensions);
+        return this.datasetDo2DtoMapper.codeDimensionDoListToCodeItemDtoList(codeDimensions);
     }
 
     @Override
@@ -868,9 +849,9 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         // Security
         DatasetsSecurityUtils.canFilterCoverageForDatasetVersionDimension(ctx);
 
-        List<CodeDimension> codeDimensions = getDatasetService().filterCoverageForDatasetVersionDimension(ctx, datasetVersionUrn, dsdDimensionId, filter);
+        List<CodeDimension> codeDimensions = this.getDatasetService().filterCoverageForDatasetVersionDimension(ctx, datasetVersionUrn, dsdDimensionId, filter);
 
-        return datasetDo2DtoMapper.codeDimensionDoListToCodeItemDtoList(codeDimensions);
+        return this.datasetDo2DtoMapper.codeDimensionDoListToCodeItemDtoList(codeDimensions);
     }
 
     @Override
@@ -879,13 +860,13 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         DatasetsSecurityUtils.canSendDatasetVersionToProductionValidation(ctx, datasetVersionDto.getStatisticalOperation().getCode());
 
         // Transform
-        DatasetVersion datasetVersion = datasetDto2DoMapper.datasetVersionDtoToDo(datasetVersionDto);
+        DatasetVersion datasetVersion = this.datasetDto2DoMapper.datasetVersionDtoToDo(datasetVersionDto);
 
         // Send to production validation and retrieve
-        datasetVersion = datasetLifecycleService.sendToProductionValidation(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getUrn());
+        datasetVersion = this.datasetLifecycleService.sendToProductionValidation(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getUrn());
 
         // Transform
-        datasetVersionDto = datasetDo2DtoMapper.datasetVersionDoToDto(ctx, datasetVersion);
+        datasetVersionDto = this.datasetDo2DtoMapper.datasetVersionDoToDto(ctx, datasetVersion);
 
         return datasetVersionDto;
     }
@@ -896,13 +877,13 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         DatasetsSecurityUtils.canSendDatasetVersionToProductionValidation(ctx, datasetVersionDto.getStatisticalOperation().getCode());
 
         // Check optimistic locking
-        datasetDto2DoMapper.checkOptimisticLocking(datasetVersionDto);
+        this.datasetDto2DoMapper.checkOptimisticLocking(datasetVersionDto);
 
         // Send to production validation and retrieve
-        DatasetVersion datasetVersion = datasetLifecycleService.sendToProductionValidation(ctx, datasetVersionDto.getUrn());
+        DatasetVersion datasetVersion = this.datasetLifecycleService.sendToProductionValidation(ctx, datasetVersionDto.getUrn());
 
         // Transform
-        datasetVersionDto = datasetDo2DtoMapper.datasetVersionDoToBaseDto(ctx, datasetVersion);
+        datasetVersionDto = this.datasetDo2DtoMapper.datasetVersionDoToBaseDto(ctx, datasetVersion);
 
         return datasetVersionDto;
     }
@@ -913,13 +894,13 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         DatasetsSecurityUtils.canSendDatasetVersionToDiffusionValidation(ctx, datasetVersionDto.getStatisticalOperation().getCode());
 
         // Transform
-        DatasetVersion datasetVersion = datasetDto2DoMapper.datasetVersionDtoToDo(datasetVersionDto);
+        DatasetVersion datasetVersion = this.datasetDto2DoMapper.datasetVersionDtoToDo(datasetVersionDto);
 
         // Send to production validation and retrieve
-        datasetVersion = datasetLifecycleService.sendToDiffusionValidation(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getUrn());
+        datasetVersion = this.datasetLifecycleService.sendToDiffusionValidation(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getUrn());
 
         // Transform
-        datasetVersionDto = datasetDo2DtoMapper.datasetVersionDoToDto(ctx, datasetVersion);
+        datasetVersionDto = this.datasetDo2DtoMapper.datasetVersionDoToDto(ctx, datasetVersion);
 
         return datasetVersionDto;
     }
@@ -930,13 +911,13 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         DatasetsSecurityUtils.canSendDatasetVersionToDiffusionValidation(ctx, datasetVersionDto.getStatisticalOperation().getCode());
 
         // Check optimistic locking
-        datasetDto2DoMapper.checkOptimisticLocking(datasetVersionDto);
+        this.datasetDto2DoMapper.checkOptimisticLocking(datasetVersionDto);
 
         // Send to production validation and retrieve
-        DatasetVersion datasetVersion = datasetLifecycleService.sendToDiffusionValidation(ctx, datasetVersionDto.getUrn());
+        DatasetVersion datasetVersion = this.datasetLifecycleService.sendToDiffusionValidation(ctx, datasetVersionDto.getUrn());
 
         // Transform
-        datasetVersionDto = datasetDo2DtoMapper.datasetVersionDoToBaseDto(ctx, datasetVersion);
+        datasetVersionDto = this.datasetDo2DtoMapper.datasetVersionDoToBaseDto(ctx, datasetVersion);
 
         return datasetVersionDto;
     }
@@ -947,13 +928,13 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         DatasetsSecurityUtils.canSendDatasetVersionToValidationRejected(ctx, datasetVersionDto.getStatisticalOperation().getCode());
 
         // Transform
-        DatasetVersion datasetVersion = datasetDto2DoMapper.datasetVersionDtoToDo(datasetVersionDto);
+        DatasetVersion datasetVersion = this.datasetDto2DoMapper.datasetVersionDtoToDo(datasetVersionDto);
 
         // Send to production validation and retrieve
-        datasetVersion = datasetLifecycleService.sendToValidationRejected(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getUrn());
+        datasetVersion = this.datasetLifecycleService.sendToValidationRejected(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getUrn());
 
         // Transform
-        datasetVersionDto = datasetDo2DtoMapper.datasetVersionDoToDto(ctx, datasetVersion);
+        datasetVersionDto = this.datasetDo2DtoMapper.datasetVersionDoToDto(ctx, datasetVersion);
 
         return datasetVersionDto;
     }
@@ -964,13 +945,13 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         DatasetsSecurityUtils.canSendDatasetVersionToValidationRejected(ctx, datasetVersionDto.getStatisticalOperation().getCode());
 
         // Check optimistic locking
-        datasetDto2DoMapper.checkOptimisticLocking(datasetVersionDto);
+        this.datasetDto2DoMapper.checkOptimisticLocking(datasetVersionDto);
 
         // Send to production validation and retrieve
-        DatasetVersion datasetVersion = datasetLifecycleService.sendToValidationRejected(ctx, datasetVersionDto.getUrn());
+        DatasetVersion datasetVersion = this.datasetLifecycleService.sendToValidationRejected(ctx, datasetVersionDto.getUrn());
 
         // Transform
-        datasetVersionDto = datasetDo2DtoMapper.datasetVersionDoToBaseDto(ctx, datasetVersion);
+        datasetVersionDto = this.datasetDo2DtoMapper.datasetVersionDoToBaseDto(ctx, datasetVersion);
 
         return datasetVersionDto;
     }
@@ -981,16 +962,16 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         DatasetsSecurityUtils.canPublishDatasetVersion(ctx, datasetVersionDto.getStatisticalOperation().getCode());
 
         // Transform
-        DatasetVersion datasetVersion = datasetDto2DoMapper.datasetVersionDtoToDo(datasetVersionDto);
+        DatasetVersion datasetVersion = this.datasetDto2DoMapper.datasetVersionDtoToDo(datasetVersionDto);
         String datasetVersionUrn = datasetVersion.getSiemacMetadataStatisticalResource().getUrn();
 
         // We set validfrom and ONLY validfrom transparently
-        datasetVersion = changeDatasetVersionValidFromAndSave(datasetVersionUrn, new DateTime());
+        datasetVersion = this.changeDatasetVersionValidFromAndSave(datasetVersionUrn, new DateTime());
 
-        datasetVersion = datasetLifecycleService.sendToPublished(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getUrn());
+        datasetVersion = this.datasetLifecycleService.sendToPublished(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getUrn());
 
         // Transform
-        datasetVersionDto = datasetDo2DtoMapper.datasetVersionDoToDto(ctx, datasetVersion);
+        datasetVersionDto = this.datasetDo2DtoMapper.datasetVersionDoToDto(ctx, datasetVersion);
 
         return datasetVersionDto;
     }
@@ -1001,17 +982,17 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         DatasetsSecurityUtils.canPublishDatasetVersion(ctx, datasetVersionDto.getStatisticalOperation().getCode());
 
         // Check optimistic locking
-        datasetDto2DoMapper.checkOptimisticLocking(datasetVersionDto);
+        this.datasetDto2DoMapper.checkOptimisticLocking(datasetVersionDto);
 
         String datasetVersionUrn = datasetVersionDto.getUrn();
 
         // We set validfrom and ONLY validfrom transparently
-        changeDatasetVersionValidFromAndSave(datasetVersionUrn, new DateTime());
+        this.changeDatasetVersionValidFromAndSave(datasetVersionUrn, new DateTime());
 
-        DatasetVersion datasetVersion = datasetLifecycleService.sendToPublished(ctx, datasetVersionDto.getUrn());
+        DatasetVersion datasetVersion = this.datasetLifecycleService.sendToPublished(ctx, datasetVersionDto.getUrn());
 
         // Transform
-        datasetVersionDto = datasetDo2DtoMapper.datasetVersionDoToBaseDto(ctx, datasetVersion);
+        datasetVersionDto = this.datasetDo2DtoMapper.datasetVersionDoToBaseDto(ctx, datasetVersion);
 
         return datasetVersionDto;
     }
@@ -1022,16 +1003,16 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         DatasetsSecurityUtils.canPublishDatasetVersion(ctx, datasetVersionDto.getStatisticalOperation().getCode());
 
         // Transform only for optimistic locking
-        DatasetVersion datasetVersion = datasetDto2DoMapper.datasetVersionDtoToDo(datasetVersionDto);
+        DatasetVersion datasetVersion = this.datasetDto2DoMapper.datasetVersionDtoToDo(datasetVersionDto);
         String datasetVersionUrn = datasetVersion.getSiemacMetadataStatisticalResource().getUrn();
 
         // We set validfrom and ONLY validfrom transparently
-        datasetVersion = changeDatasetVersionValidFromAndSave(datasetVersionUrn, validFromDate);
+        datasetVersion = this.changeDatasetVersionValidFromAndSave(datasetVersionUrn, validFromDate);
 
-        datasetVersion = datasetLifecycleService.sendToPublished(ctx, datasetVersionUrn);
+        datasetVersion = this.datasetLifecycleService.sendToPublished(ctx, datasetVersionUrn);
 
         // Transform
-        datasetVersionDto = datasetDo2DtoMapper.datasetVersionDoToDto(ctx, datasetVersion);
+        datasetVersionDto = this.datasetDo2DtoMapper.datasetVersionDoToDto(ctx, datasetVersion);
 
         return datasetVersionDto;
     }
@@ -1042,31 +1023,31 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         DatasetsSecurityUtils.canPublishDatasetVersion(ctx, datasetVersionDto.getStatisticalOperation().getCode());
 
         // Check optimistic locking
-        datasetDto2DoMapper.checkOptimisticLocking(datasetVersionDto);
+        this.datasetDto2DoMapper.checkOptimisticLocking(datasetVersionDto);
 
         String datasetVersionUrn = datasetVersionDto.getUrn();
 
         // We set validfrom and ONLY validfrom transparently
-        DatasetVersion datasetVersion = changeDatasetVersionValidFromAndSave(datasetVersionUrn, validFromDate);
+        DatasetVersion datasetVersion = this.changeDatasetVersionValidFromAndSave(datasetVersionUrn, validFromDate);
 
-        datasetVersion = datasetLifecycleService.sendToPublished(ctx, datasetVersionUrn);
+        datasetVersion = this.datasetLifecycleService.sendToPublished(ctx, datasetVersionUrn);
 
         // Transform
-        datasetVersionDto = datasetDo2DtoMapper.datasetVersionDoToBaseDto(ctx, datasetVersion);
+        datasetVersionDto = this.datasetDo2DtoMapper.datasetVersionDoToBaseDto(ctx, datasetVersion);
 
         return datasetVersionDto;
     }
 
     private DatasetVersion changeDatasetVersionValidFromAndSave(String urn, Date validFrom) throws MetamacException {
-        DatasetVersion datasetVersion = datasetVersionRepository.retrieveByUrn(urn);
-        datasetVersion.getSiemacMetadataStatisticalResource().setValidFrom(datasetDto2DoMapper.dateDtoToDo(validFrom));
-        return datasetVersionRepository.save(datasetVersion);
+        DatasetVersion datasetVersion = this.datasetVersionRepository.retrieveByUrn(urn);
+        datasetVersion.getSiemacMetadataStatisticalResource().setValidFrom(this.datasetDto2DoMapper.dateDtoToDo(validFrom));
+        return this.datasetVersionRepository.save(datasetVersion);
     }
 
     private DatasetVersion changeDatasetVersionValidFromAndSave(String urn, DateTime validFrom) throws MetamacException {
-        DatasetVersion datasetVersion = datasetVersionRepository.retrieveByUrn(urn);
+        DatasetVersion datasetVersion = this.datasetVersionRepository.retrieveByUrn(urn);
         datasetVersion.getSiemacMetadataStatisticalResource().setValidFrom(validFrom);
-        return datasetVersionRepository.save(datasetVersion);
+        return this.datasetVersionRepository.save(datasetVersion);
     }
 
     @Override
@@ -1075,12 +1056,12 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         DatasetsSecurityUtils.canCancelPublicationDatasetVersion(ctx, datasetVersionDto.getStatisticalOperation().getCode());
 
         // Transform
-        DatasetVersion datasetVersion = datasetDto2DoMapper.datasetVersionDtoToDo(datasetVersionDto);
+        DatasetVersion datasetVersion = this.datasetDto2DoMapper.datasetVersionDtoToDo(datasetVersionDto);
 
-        datasetVersion = datasetLifecycleService.cancelPublication(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getUrn());
+        datasetVersion = this.datasetLifecycleService.cancelPublication(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getUrn());
 
         // Transform
-        datasetVersionDto = datasetDo2DtoMapper.datasetVersionDoToDto(ctx, datasetVersion);
+        datasetVersionDto = this.datasetDo2DtoMapper.datasetVersionDoToDto(ctx, datasetVersion);
 
         return datasetVersionDto;
     }
@@ -1091,12 +1072,12 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         DatasetsSecurityUtils.canCancelPublicationDatasetVersion(ctx, datasetVersionDto.getStatisticalOperation().getCode());
 
         // Check optimistic locking
-        datasetDto2DoMapper.checkOptimisticLocking(datasetVersionDto);
+        this.datasetDto2DoMapper.checkOptimisticLocking(datasetVersionDto);
 
-        DatasetVersion datasetVersion = datasetLifecycleService.cancelPublication(ctx, datasetVersionDto.getUrn());
+        DatasetVersion datasetVersion = this.datasetLifecycleService.cancelPublication(ctx, datasetVersionDto.getUrn());
 
         // Transform
-        datasetVersionDto = datasetDo2DtoMapper.datasetVersionDoToBaseDto(ctx, datasetVersion);
+        datasetVersionDto = this.datasetDo2DtoMapper.datasetVersionDoToBaseDto(ctx, datasetVersion);
 
         return datasetVersionDto;
     }
@@ -1107,13 +1088,13 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         DatasetsSecurityUtils.canVersionDataset(ctx, datasetVersionDto.getStatisticalOperation().getCode());
 
         // Transform
-        DatasetVersion datasetVersion = datasetDto2DoMapper.datasetVersionDtoToDo(datasetVersionDto);
+        DatasetVersion datasetVersion = this.datasetDto2DoMapper.datasetVersionDtoToDo(datasetVersionDto);
 
         // Versioning
-        datasetVersion = datasetLifecycleService.versioning(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getUrn(), versionType);
+        datasetVersion = this.datasetLifecycleService.versioning(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getUrn(), versionType);
 
         // Transform
-        return datasetDo2DtoMapper.datasetVersionDoToDto(ctx, datasetVersion);
+        return this.datasetDo2DtoMapper.datasetVersionDoToDto(ctx, datasetVersion);
     }
 
     @Override
@@ -1122,28 +1103,28 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         DatasetsSecurityUtils.canVersionDataset(ctx, datasetVersionDto.getStatisticalOperation().getCode());
 
         // Check optimistic locking
-        datasetDto2DoMapper.checkOptimisticLocking(datasetVersionDto);
+        this.datasetDto2DoMapper.checkOptimisticLocking(datasetVersionDto);
 
         // Versioning
-        DatasetVersion datasetVersion = datasetLifecycleService.versioning(ctx, datasetVersionDto.getUrn(), versionType);
+        DatasetVersion datasetVersion = this.datasetLifecycleService.versioning(ctx, datasetVersionDto.getUrn(), versionType);
 
         // Transform
-        return datasetDo2DtoMapper.datasetVersionDoToBaseDto(ctx, datasetVersion);
+        return this.datasetDo2DtoMapper.datasetVersionDoToBaseDto(ctx, datasetVersion);
     }
 
     @Override
     public DatasetVersionDto retrieveLatestDatasetVersion(ServiceContext ctx, String datasetUrn) throws MetamacException {
         // Retrieve
-        DatasetVersion dataset = getDatasetService().retrieveLatestDatasetVersionByDatasetUrn(ctx, datasetUrn);
+        DatasetVersion dataset = this.getDatasetService().retrieveLatestDatasetVersionByDatasetUrn(ctx, datasetUrn);
 
         // Security
         if (!SharedDatasetsSecurityUtils.canRetrieveLatestDatasetVersion(SecurityUtils.getMetamacPrincipal(ctx), dataset.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode(),
                 dataset.getSiemacMetadataStatisticalResource().getEffectiveProcStatus())) {
-            dataset = getDatasetService().retrieveLatestPublishedDatasetVersionByDatasetUrn(ctx, datasetUrn);
+            dataset = this.getDatasetService().retrieveLatestPublishedDatasetVersionByDatasetUrn(ctx, datasetUrn);
         }
 
         // Transform
-        DatasetVersionDto datasetVersionDto = datasetDo2DtoMapper.datasetVersionDoToDto(ctx, dataset);
+        DatasetVersionDto datasetVersionDto = this.datasetDo2DtoMapper.datasetVersionDoToDto(ctx, dataset);
         return datasetVersionDto;
     }
 
@@ -1153,10 +1134,10 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         DatasetsSecurityUtils.canRetrieveLatestPublishedDatasetVersion(ctx);
 
         // Retrieve
-        DatasetVersion dataset = getDatasetService().retrieveLatestPublishedDatasetVersionByDatasetUrn(ctx, datasetUrn);
+        DatasetVersion dataset = this.getDatasetService().retrieveLatestPublishedDatasetVersionByDatasetUrn(ctx, datasetUrn);
 
         // Transform
-        DatasetVersionDto datasetVersionDto = datasetDo2DtoMapper.datasetVersionDoToDto(ctx, dataset);
+        DatasetVersionDto datasetVersionDto = this.datasetDo2DtoMapper.datasetVersionDoToDto(ctx, dataset);
         return datasetVersionDto;
     }
 
@@ -1166,13 +1147,13 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         DatasetsSecurityUtils.canRetrieveDatasetVersionMainCoverages(ctx);
 
         // Retrieve
-        DatasetVersion dataset = getDatasetService().retrieveDatasetVersionByUrn(ctx, datasetVersionUrn);
+        DatasetVersion dataset = this.getDatasetService().retrieveDatasetVersionByUrn(ctx, datasetVersionUrn);
 
         // Transform
         DatasetVersionMainCoveragesDto mainCoveragesDto = new DatasetVersionMainCoveragesDto();
-        mainCoveragesDto.getGeographicCoverage().addAll(commonDo2DtoMapper.externalItemDoCollectionToDtoList(dataset.getGeographicCoverage()));
-        mainCoveragesDto.getTemporalCoverage().addAll(commonDo2DtoMapper.temporalCodeDoCollectionToDtoList(dataset.getTemporalCoverage()));
-        mainCoveragesDto.getMeasureCoverage().addAll(commonDo2DtoMapper.externalItemDoCollectionToDtoList(dataset.getMeasureCoverage()));
+        mainCoveragesDto.getGeographicCoverage().addAll(this.commonDo2DtoMapper.externalItemDoCollectionToDtoList(dataset.getGeographicCoverage()));
+        mainCoveragesDto.getTemporalCoverage().addAll(this.commonDo2DtoMapper.temporalCodeDoCollectionToDtoList(dataset.getTemporalCoverage()));
+        mainCoveragesDto.getMeasureCoverage().addAll(this.commonDo2DtoMapper.externalItemDoCollectionToDtoList(dataset.getMeasureCoverage()));
 
         return mainCoveragesDto;
     }
@@ -1183,10 +1164,10 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         DatasetsSecurityUtils.canFindStatisticOfficialities(ctx);
 
         // Retrieve
-        List<StatisticOfficiality> statisticOfficialities = getDatasetService().findStatisticOfficialities(ctx);
+        List<StatisticOfficiality> statisticOfficialities = this.getDatasetService().findStatisticOfficialities(ctx);
 
         // Transform
-        return datasetDo2DtoMapper.statisticOfficialityDoList2DtoList(statisticOfficialities);
+        return this.datasetDo2DtoMapper.statisticOfficialityDoList2DtoList(statisticOfficialities);
     }
 
     @Override
@@ -1196,10 +1177,10 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         DatasetsSecurityUtils.canImportDatasourcesInDatasetVersion(ctx, datasetVersionDto.getStatisticalOperation().getCode());
 
         // Transform for optimistic locking
-        DatasetVersion datasetVersion = datasetDto2DoMapper.datasetVersionDtoToDo(datasetVersionDto);
+        DatasetVersion datasetVersion = this.datasetDto2DoMapper.datasetVersionDtoToDo(datasetVersionDto);
 
         // Service
-        getDatasetService().importDatasourcesInDatasetVersion(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getUrn(), fileUrls, dimensionRepresentationMapping);
+        this.getDatasetService().importDatasourcesInDatasetVersion(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getUrn(), fileUrls, dimensionRepresentationMapping);
     }
 
     @Override
@@ -1207,46 +1188,46 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         // Security
         DatasetsSecurityUtils.canImportDatasourcesInStatisticalOperation(ctx, statisticalOperationCode);
 
-        getDatasetService().importDatasourcesInStatisticalOperation(ctx, statisticalOperationCode, fileUrls);
+        this.getDatasetService().importDatasourcesInStatisticalOperation(ctx, statisticalOperationCode, fileUrls);
     }
 
     @Override
     public DsdAttributeInstanceDto createAttributeInstance(ServiceContext ctx, String datasetVersionUrn, DsdAttributeInstanceDto dsdAttributeInstanceDto) throws MetamacException {
         // Retrieve
-        DatasetVersionDto datasetVersionDto = retrieveDatasetVersionByUrn(ctx, datasetVersionUrn);
+        DatasetVersionDto datasetVersionDto = this.retrieveDatasetVersionByUrn(ctx, datasetVersionUrn);
 
         // Security
         DatasetsSecurityUtils.canCreateAttributeInstance(ctx, datasetVersionDto);
 
         // Transform
-        AttributeInstanceDto attributeInstanceDto = statisticalResourcesDto2StatRepoDtoMapper.dsdAttributeInstanceDtoToAttributeInstanceDto(dsdAttributeInstanceDto);
+        AttributeInstanceDto attributeInstanceDto = this.statisticalResourcesDto2StatRepoDtoMapper.dsdAttributeInstanceDtoToAttributeInstanceDto(dsdAttributeInstanceDto);
 
         // Create attribute
-        AttributeInstanceDto attributeInstanceCreated = getDatasetService().createAttributeInstance(ctx, datasetVersionUrn, attributeInstanceDto);
+        AttributeInstanceDto attributeInstanceCreated = this.getDatasetService().createAttributeInstance(ctx, datasetVersionUrn, attributeInstanceDto);
 
-        DsdAttribute dsdAttribute = getDatasetVersionAttribute(ctx, datasetVersionUrn, attributeInstanceCreated.getAttributeId());
+        DsdAttribute dsdAttribute = this.getDatasetVersionAttribute(ctx, datasetVersionUrn, attributeInstanceCreated.getAttributeId());
 
-        return statRepoDto2StatisticalResourcesDtoMapper.attributeDtoToDsdAttributeInstanceDto(dsdAttribute, attributeInstanceCreated);
+        return this.statRepoDto2StatisticalResourcesDtoMapper.attributeDtoToDsdAttributeInstanceDto(dsdAttribute, attributeInstanceCreated);
     }
 
     @Override
     public DsdAttributeInstanceDto updateAttributeInstance(ServiceContext ctx, String datasetVersionUrn, DsdAttributeInstanceDto dsdAttributeInstanceDto) throws MetamacException {
         // Retrieve
-        DatasetVersionDto datasetVersionDto = retrieveDatasetVersionByUrn(ctx, datasetVersionUrn);
+        DatasetVersionDto datasetVersionDto = this.retrieveDatasetVersionByUrn(ctx, datasetVersionUrn);
 
         // Security
         DatasetsSecurityUtils.canUpdateAttributeInstance(ctx, datasetVersionDto);
 
         // Transform
-        AttributeInstanceDto attributeInstanceDto = statisticalResourcesDto2StatRepoDtoMapper.dsdAttributeInstanceDtoToAttributeInstanceDto(dsdAttributeInstanceDto);
+        AttributeInstanceDto attributeInstanceDto = this.statisticalResourcesDto2StatRepoDtoMapper.dsdAttributeInstanceDtoToAttributeInstanceDto(dsdAttributeInstanceDto);
 
         // Update attribute
-        AttributeInstanceDto attributeInstanceUpdated = getDatasetService().updateAttributeInstance(ctx, datasetVersionUrn, attributeInstanceDto);
+        AttributeInstanceDto attributeInstanceUpdated = this.getDatasetService().updateAttributeInstance(ctx, datasetVersionUrn, attributeInstanceDto);
 
         if (attributeInstanceUpdated != null) {
-            DsdAttribute dsdAttribute = getDatasetVersionAttribute(ctx, datasetVersionUrn, attributeInstanceUpdated.getAttributeId());
+            DsdAttribute dsdAttribute = this.getDatasetVersionAttribute(ctx, datasetVersionUrn, attributeInstanceUpdated.getAttributeId());
 
-            return statRepoDto2StatisticalResourcesDtoMapper.attributeDtoToDsdAttributeInstanceDto(dsdAttribute, attributeInstanceUpdated);
+            return this.statRepoDto2StatisticalResourcesDtoMapper.attributeDtoToDsdAttributeInstanceDto(dsdAttribute, attributeInstanceUpdated);
         } else {
             return null;
         }
@@ -1255,35 +1236,35 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     @Override
     public void deleteAttributeInstance(ServiceContext ctx, String datasetVersionUrn, String uuid) throws MetamacException {
         // Retrieve
-        DatasetVersionDto datasetVersionDto = retrieveDatasetVersionByUrn(ctx, datasetVersionUrn);
+        DatasetVersionDto datasetVersionDto = this.retrieveDatasetVersionByUrn(ctx, datasetVersionUrn);
 
         // Security
         DatasetsSecurityUtils.canDeleteAttributeInstance(ctx, datasetVersionDto);
 
         // Delete attribute
-        getDatasetService().deleteAttributeInstance(ctx, datasetVersionUrn, uuid);
+        this.getDatasetService().deleteAttributeInstance(ctx, datasetVersionUrn, uuid);
     }
 
     @Override
     public List<DsdAttributeInstanceDto> retrieveAttributeInstances(ServiceContext ctx, String datasetVersionUrn, String attributeId) throws MetamacException {
         // Retrieve
-        DatasetVersionDto datasetVersionDto = retrieveDatasetVersionByUrn(ctx, datasetVersionUrn);
+        DatasetVersionDto datasetVersionDto = this.retrieveDatasetVersionByUrn(ctx, datasetVersionUrn);
 
         // Security
         DatasetsSecurityUtils.canRetrieveAttributeInstances(ctx, datasetVersionDto);
 
         // Retrieve
-        List<AttributeInstanceDto> instances = getDatasetService().retrieveAttributeInstances(ctx, datasetVersionUrn, attributeId);
+        List<AttributeInstanceDto> instances = this.getDatasetService().retrieveAttributeInstances(ctx, datasetVersionUrn, attributeId);
 
-        DsdAttribute dsdAttribute = getDatasetVersionAttribute(ctx, datasetVersionUrn, attributeId);
+        DsdAttribute dsdAttribute = this.getDatasetVersionAttribute(ctx, datasetVersionUrn, attributeId);
 
-        return statRepoDto2StatisticalResourcesDtoMapper.attributeDtosToDsdAttributeInstanceDtos(dsdAttribute, instances);
+        return this.statRepoDto2StatisticalResourcesDtoMapper.attributeDtosToDsdAttributeInstanceDtos(dsdAttribute, instances);
     }
 
     private DsdAttribute getDatasetVersionAttribute(ServiceContext ctx, String datasetVersionUrn, String attributeId) throws MetamacException {
-        DatasetVersion datasetVersion = getDatasetService().retrieveDatasetVersionByUrn(ctx, datasetVersionUrn);
+        DatasetVersion datasetVersion = this.getDatasetService().retrieveDatasetVersionByUrn(ctx, datasetVersionUrn);
 
-        DataStructure dsd = srmRestInternalService.retrieveDsdByUrn(datasetVersion.getRelatedDsd().getUrn());
+        DataStructure dsd = this.srmRestInternalService.retrieveDsdByUrn(datasetVersion.getRelatedDsd().getUrn());
 
         return DsdProcessor.getAttribute(dsd, attributeId);
     }
@@ -1291,75 +1272,75 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     @Override
     public CategorisationDto createCategorisation(ServiceContext ctx, String datasetVersionUrn, CategorisationDto categorisationDto) throws MetamacException {
         // Retrieve
-        DatasetVersionDto datasetVersionDto = retrieveDatasetVersionByUrn(ctx, datasetVersionUrn);
+        DatasetVersionDto datasetVersionDto = this.retrieveDatasetVersionByUrn(ctx, datasetVersionUrn);
 
         // Security
         DatasetsSecurityUtils.canCreateCategorisation(ctx, datasetVersionDto);
 
         // Transform
-        Categorisation categorisation = datasetDto2DoMapper.categorisationDtoToDo(categorisationDto);
+        Categorisation categorisation = this.datasetDto2DoMapper.categorisationDtoToDo(categorisationDto);
 
         // Create
-        categorisation = getDatasetService().createCategorisation(ctx, datasetVersionUrn, categorisation);
+        categorisation = this.getDatasetService().createCategorisation(ctx, datasetVersionUrn, categorisation);
 
         // Transform
-        return datasetDo2DtoMapper.categorisationDoToDto(categorisation);
+        return this.datasetDo2DtoMapper.categorisationDoToDto(categorisation);
     }
 
     @Override
     public CategorisationDto retrieveCategorisationByUrn(ServiceContext ctx, String urn) throws MetamacException {
         // Retrieve
-        Categorisation categorisation = getDatasetService().retrieveCategorisationByUrn(ctx, urn);
+        Categorisation categorisation = this.getDatasetService().retrieveCategorisationByUrn(ctx, urn);
 
         // Security
         DatasetsSecurityUtils.canRetrieveCategorisationByUrn(ctx, categorisation);
 
         // Transform
-        CategorisationDto categorisationDto = datasetDo2DtoMapper.categorisationDoToDto(categorisation);
+        CategorisationDto categorisationDto = this.datasetDo2DtoMapper.categorisationDoToDto(categorisation);
         return categorisationDto;
     }
 
     @Override
     public void deleteCategorisation(ServiceContext ctx, String urn) throws MetamacException {
         // Retrieve
-        Categorisation categorisation = getDatasetService().retrieveCategorisationByUrn(ctx, urn);
+        Categorisation categorisation = this.getDatasetService().retrieveCategorisationByUrn(ctx, urn);
 
         // Security
         DatasetsSecurityUtils.canDeleteCategorisation(ctx, categorisation);
 
         // Delete
-        getDatasetService().deleteCategorisation(ctx, urn);
+        this.getDatasetService().deleteCategorisation(ctx, urn);
     }
 
     @Override
     public List<CategorisationDto> retrieveCategorisationsByDatasetVersion(ServiceContext ctx, String datasetVersionUrn) throws MetamacException {
         // Retrieve
-        DatasetVersionDto datasetVersionDto = retrieveDatasetVersionByUrn(ctx, datasetVersionUrn);
+        DatasetVersionDto datasetVersionDto = this.retrieveDatasetVersionByUrn(ctx, datasetVersionUrn);
 
         // Security
         DatasetsSecurityUtils.canRetrieveCategorisationsByDatasetVersion(ctx, datasetVersionDto);
 
         // Retrieve
-        List<Categorisation> categorisations = getDatasetService().retrieveCategorisationsByDatasetVersion(ctx, datasetVersionUrn);
+        List<Categorisation> categorisations = this.getDatasetService().retrieveCategorisationsByDatasetVersion(ctx, datasetVersionUrn);
 
         // Transform
-        List<CategorisationDto> categorisationsDto = datasetDo2DtoMapper.categorisationDoListToDtoList(categorisations);
+        List<CategorisationDto> categorisationsDto = this.datasetDo2DtoMapper.categorisationDoListToDtoList(categorisations);
         return categorisationsDto;
     }
 
     @Override
     public CategorisationDto endCategorisationValidity(ServiceContext ctx, String urn, Date validTo) throws MetamacException {
         // Retrieve
-        Categorisation categorisation = getDatasetService().retrieveCategorisationByUrn(ctx, urn);
+        Categorisation categorisation = this.getDatasetService().retrieveCategorisationByUrn(ctx, urn);
 
         // Security
         DatasetsSecurityUtils.canEndCategorisationValidity(ctx, categorisation);
 
         // Delete
-        categorisation = getDatasetService().endCategorisationValidity(ctx, urn, CoreCommonUtil.transformDateToDateTime(validTo));
+        categorisation = this.getDatasetService().endCategorisationValidity(ctx, urn, CoreCommonUtil.transformDateToDateTime(validTo));
 
         // Transform
-        CategorisationDto categorisationDto = datasetDo2DtoMapper.categorisationDoToDto(categorisation);
+        CategorisationDto categorisationDto = this.datasetDo2DtoMapper.categorisationDoToDto(categorisation);
         return categorisationDto;
     }
 
@@ -1373,7 +1354,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         PublicationsSecurityUtils.canFindPublicationsByCondition(ctx);
 
         // Transform
-        SculptorCriteria sculptorCriteria = publicationMetamacCriteria2SculptorCriteriaMapper.getPublicationCriteriaMapper().metamacCriteria2SculptorCriteria(criteria);
+        SculptorCriteria sculptorCriteria = this.publicationMetamacCriteria2SculptorCriteriaMapper.getPublicationCriteriaMapper().metamacCriteria2SculptorCriteria(criteria);
 
         // Add condition for latest queryVersion
         ConditionalCriteria latestPublicationVersionRestriction = ConditionalCriteriaBuilder.criteriaFor(PublicationVersion.class)
@@ -1381,10 +1362,10 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         sculptorCriteria.getConditions().add(latestPublicationVersionRestriction);
 
         // Find
-        PagedResult<PublicationVersion> result = getPublicationService().findPublicationVersionsByCondition(ctx, sculptorCriteria.getConditions(), sculptorCriteria.getPagingParameter());
+        PagedResult<PublicationVersion> result = this.getPublicationService().findPublicationVersionsByCondition(ctx, sculptorCriteria.getConditions(), sculptorCriteria.getPagingParameter());
 
         // Transform
-        MetamacCriteriaResult<RelatedResourceDto> metamacCriteriaResult = publicationSculptorCriteria2MetamacCriteriaMapper.pageResultToMetamacCriteriaResultPublicationRelatedResourceDto(result,
+        MetamacCriteriaResult<RelatedResourceDto> metamacCriteriaResult = this.publicationSculptorCriteria2MetamacCriteriaMapper.pageResultToMetamacCriteriaResultPublicationRelatedResourceDto(result,
                 sculptorCriteria.getPageSize());
 
         return metamacCriteriaResult;
@@ -1400,14 +1381,14 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         PublicationsSecurityUtils.canCreatePublication(ctx, statisticalOperationDto.getCode());
 
         // Transform
-        PublicationVersion publicationVersion = publicationDto2DoMapper.publicationVersionDtoToDo(publicationVersionDto);
-        ExternalItem statisticalOperation = publicationDto2DoMapper.externalItemDtoToDo(statisticalOperationDto, null, ServiceExceptionParameters.STATISTICAL_OPERATION);
+        PublicationVersion publicationVersion = this.publicationDto2DoMapper.publicationVersionDtoToDo(publicationVersionDto);
+        ExternalItem statisticalOperation = this.publicationDto2DoMapper.externalItemDtoToDo(statisticalOperationDto, null, ServiceExceptionParameters.STATISTICAL_OPERATION);
 
         // Retrieve
-        PublicationVersion publicationVersionCreated = getPublicationService().createPublicationVersion(ctx, publicationVersion, statisticalOperation);
+        PublicationVersion publicationVersionCreated = this.getPublicationService().createPublicationVersion(ctx, publicationVersion, statisticalOperation);
 
         // Transform
-        PublicationVersionDto publicationCreated = publicationDo2DtoMapper.publicationVersionDoToDto(publicationVersionCreated);
+        PublicationVersionDto publicationCreated = this.publicationDo2DtoMapper.publicationVersionDoToDto(publicationVersionCreated);
 
         return publicationCreated;
     }
@@ -1418,25 +1399,25 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         PublicationsSecurityUtils.canUpdatePublicationVersion(ctx, publicationVersionDto);
 
         // Transform
-        PublicationVersion publicationVersion = publicationDto2DoMapper.publicationVersionDtoToDo(publicationVersionDto);
+        PublicationVersion publicationVersion = this.publicationDto2DoMapper.publicationVersionDtoToDo(publicationVersionDto);
 
         // Update
-        publicationVersion = getPublicationService().updatePublicationVersion(ctx, publicationVersion);
+        publicationVersion = this.getPublicationService().updatePublicationVersion(ctx, publicationVersion);
 
         // Transform
-        return publicationDo2DtoMapper.publicationVersionDoToDto(publicationVersion);
+        return this.publicationDo2DtoMapper.publicationVersionDoToDto(publicationVersion);
     }
 
     @Override
     public void deletePublicationVersion(ServiceContext ctx, String urn) throws MetamacException {
         // Retrieve
-        PublicationVersionDto publicationVersionDto = retrievePublicationVersionByUrn(ctx, urn);
+        PublicationVersionDto publicationVersionDto = this.retrievePublicationVersionByUrn(ctx, urn);
 
         // Security
         PublicationsSecurityUtils.canDeletePublicationVersion(ctx, publicationVersionDto);
 
         // Delete
-        getPublicationService().deletePublicationVersion(ctx, urn);
+        this.getPublicationService().deletePublicationVersion(ctx, urn);
 
     }
 
@@ -1446,14 +1427,14 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         PublicationsSecurityUtils.canFindPublicationsVersionsByCondition(ctx);
 
         // Transform
-        SculptorCriteria sculptorCriteria = publicationVersionMetamacCriteria2SculptorCriteriaMapper.getPublicationVersionCriteriaMapper().metamacCriteria2SculptorCriteria(criteria);
+        SculptorCriteria sculptorCriteria = this.publicationVersionMetamacCriteria2SculptorCriteriaMapper.getPublicationVersionCriteriaMapper().metamacCriteria2SculptorCriteria(criteria);
 
         // Find
-        PagedResult<PublicationVersion> result = getPublicationService().findPublicationVersionsByCondition(ctx, sculptorCriteria.getConditions(), sculptorCriteria.getPagingParameter());
+        PagedResult<PublicationVersion> result = this.getPublicationService().findPublicationVersionsByCondition(ctx, sculptorCriteria.getConditions(), sculptorCriteria.getPagingParameter());
 
         // Transform
-        MetamacCriteriaResult<PublicationVersionBaseDto> metamacCriteriaResult = publicationVersionSculptorCriteria2MetamacCriteriaMapper.pageResultToMetamacCriteriaResultPublicationVersion(result,
-                sculptorCriteria.getPageSize());
+        MetamacCriteriaResult<PublicationVersionBaseDto> metamacCriteriaResult = this.publicationVersionSculptorCriteria2MetamacCriteriaMapper.pageResultToMetamacCriteriaResultPublicationVersion(
+                result, sculptorCriteria.getPageSize());
 
         return metamacCriteriaResult;
     }
@@ -1461,28 +1442,28 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     @Override
     public PublicationVersionDto retrievePublicationVersionByUrn(ServiceContext ctx, String urn) throws MetamacException {
         // Retrieve
-        PublicationVersion publicationVersion = getPublicationService().retrievePublicationVersionByUrn(ctx, urn);
+        PublicationVersion publicationVersion = this.getPublicationService().retrievePublicationVersionByUrn(ctx, urn);
 
         // Security
         PublicationsSecurityUtils.canRetrievePublicationVersionByUrn(ctx, publicationVersion);
 
         // Transform
-        return publicationDo2DtoMapper.publicationVersionDoToDto(publicationVersion);
+        return this.publicationDo2DtoMapper.publicationVersionDoToDto(publicationVersion);
     }
 
     @Override
     public PublicationVersionDto retrieveLatestPublicationVersion(ServiceContext ctx, String publicationUrn) throws MetamacException {
         // Retrieve
-        PublicationVersion publication = getPublicationService().retrieveLatestPublicationVersionByPublicationUrn(ctx, publicationUrn);
+        PublicationVersion publication = this.getPublicationService().retrieveLatestPublicationVersionByPublicationUrn(ctx, publicationUrn);
 
         // Security
         if (!SharedPublicationsSecurityUtils.canRetrieveLatestPublicationVersion(SecurityUtils.getMetamacPrincipal(ctx), publication.getSiemacMetadataStatisticalResource().getStatisticalOperation()
                 .getCode(), publication.getSiemacMetadataStatisticalResource().getEffectiveProcStatus())) {
-            publication = getPublicationService().retrieveLatestPublishedPublicationVersionByPublicationUrn(ctx, publicationUrn);
+            publication = this.getPublicationService().retrieveLatestPublishedPublicationVersionByPublicationUrn(ctx, publicationUrn);
         }
 
         // Transform
-        PublicationVersionDto publicationVersionDto = publicationDo2DtoMapper.publicationVersionDoToDto(publication);
+        PublicationVersionDto publicationVersionDto = this.publicationDo2DtoMapper.publicationVersionDoToDto(publication);
         return publicationVersionDto;
     }
 
@@ -1492,10 +1473,10 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         PublicationsSecurityUtils.canRetrieveLatestPublishedPublicationVersion(ctx);
 
         // Retrieve
-        PublicationVersion publication = getPublicationService().retrieveLatestPublishedPublicationVersionByPublicationUrn(ctx, publicationUrn);
+        PublicationVersion publication = this.getPublicationService().retrieveLatestPublishedPublicationVersionByPublicationUrn(ctx, publicationUrn);
 
         // Transform
-        PublicationVersionDto publicationVersionDto = publicationDo2DtoMapper.publicationVersionDoToDto(publication);
+        PublicationVersionDto publicationVersionDto = this.publicationDo2DtoMapper.publicationVersionDoToDto(publication);
         return publicationVersionDto;
     }
 
@@ -1505,10 +1486,10 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         PublicationsSecurityUtils.canRetrievePublicationVersions(ctx);
 
         // Retrieve
-        List<PublicationVersion> publicationVersions = getPublicationService().retrievePublicationVersions(ctx, urn);
+        List<PublicationVersion> publicationVersions = this.getPublicationService().retrievePublicationVersions(ctx, urn);
 
         // Transform
-        List<PublicationVersionBaseDto> publications = publicationDo2DtoMapper.publicationVersionDoListToDtoList(publicationVersions);
+        List<PublicationVersionBaseDto> publications = this.publicationDo2DtoMapper.publicationVersionDoListToDtoList(publicationVersions);
 
         return publications;
     }
@@ -1516,13 +1497,13 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     @Override
     public PublicationStructureDto retrievePublicationVersionStructure(ServiceContext ctx, String publicationVersionUrn) throws MetamacException {
         // Retrieve
-        PublicationVersion publicationVersion = getPublicationService().retrievePublicationVersionByUrn(ctx, publicationVersionUrn);
+        PublicationVersion publicationVersion = this.getPublicationService().retrievePublicationVersionByUrn(ctx, publicationVersionUrn);
 
         // Security
         PublicationsSecurityUtils.canRetrievePublicationVersionStructure(ctx, publicationVersion);
 
         // Build structure
-        PublicationStructureDto publicationStructureDto = publicationDo2DtoMapper.publicationVersionStructureDoToDto(publicationVersion);
+        PublicationStructureDto publicationStructureDto = this.publicationDo2DtoMapper.publicationVersionStructureDoToDto(publicationVersion);
 
         return publicationStructureDto;
     }
@@ -1533,13 +1514,13 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         PublicationsSecurityUtils.canSendPublicationVersionToProductionValidation(ctx, publicationVersionDto.getStatisticalOperation().getCode());
 
         // Transform
-        PublicationVersion publicationVersion = publicationDto2DoMapper.publicationVersionDtoToDo(publicationVersionDto);
+        PublicationVersion publicationVersion = this.publicationDto2DoMapper.publicationVersionDtoToDo(publicationVersionDto);
 
         // Send to production validation and retrieve
-        publicationVersion = publicationLifecycleService.sendToProductionValidation(ctx, publicationVersion.getSiemacMetadataStatisticalResource().getUrn());
+        publicationVersion = this.publicationLifecycleService.sendToProductionValidation(ctx, publicationVersion.getSiemacMetadataStatisticalResource().getUrn());
 
         // Transform
-        publicationVersionDto = publicationDo2DtoMapper.publicationVersionDoToDto(publicationVersion);
+        publicationVersionDto = this.publicationDo2DtoMapper.publicationVersionDoToDto(publicationVersion);
 
         return publicationVersionDto;
     }
@@ -1550,13 +1531,13 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         PublicationsSecurityUtils.canSendPublicationVersionToProductionValidation(ctx, publicationVersionDto.getStatisticalOperation().getCode());
 
         // Check optimistic locking
-        publicationDto2DoMapper.checkOptimisticLocking(publicationVersionDto);
+        this.publicationDto2DoMapper.checkOptimisticLocking(publicationVersionDto);
 
         // Send to production validation and retrieve
-        PublicationVersion publicationVersion = publicationLifecycleService.sendToProductionValidation(ctx, publicationVersionDto.getUrn());
+        PublicationVersion publicationVersion = this.publicationLifecycleService.sendToProductionValidation(ctx, publicationVersionDto.getUrn());
 
         // Transform
-        publicationVersionDto = publicationDo2DtoMapper.publicationVersionDoToBaseDto(publicationVersion);
+        publicationVersionDto = this.publicationDo2DtoMapper.publicationVersionDoToBaseDto(publicationVersion);
 
         return publicationVersionDto;
     }
@@ -1567,13 +1548,13 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         PublicationsSecurityUtils.canSendPublicationVersionToDiffusionValidation(ctx, publicationVersionDto.getStatisticalOperation().getCode());
 
         // Transform
-        PublicationVersion publicationVersion = publicationDto2DoMapper.publicationVersionDtoToDo(publicationVersionDto);
+        PublicationVersion publicationVersion = this.publicationDto2DoMapper.publicationVersionDtoToDo(publicationVersionDto);
 
         // Send to production validation and retrieve
-        publicationVersion = publicationLifecycleService.sendToDiffusionValidation(ctx, publicationVersion.getSiemacMetadataStatisticalResource().getUrn());
+        publicationVersion = this.publicationLifecycleService.sendToDiffusionValidation(ctx, publicationVersion.getSiemacMetadataStatisticalResource().getUrn());
 
         // Transform
-        publicationVersionDto = publicationDo2DtoMapper.publicationVersionDoToDto(publicationVersion);
+        publicationVersionDto = this.publicationDo2DtoMapper.publicationVersionDoToDto(publicationVersion);
 
         return publicationVersionDto;
     }
@@ -1584,13 +1565,13 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         PublicationsSecurityUtils.canSendPublicationVersionToDiffusionValidation(ctx, publicationVersionDto.getStatisticalOperation().getCode());
 
         // Check optimistic locking
-        publicationDto2DoMapper.checkOptimisticLocking(publicationVersionDto);
+        this.publicationDto2DoMapper.checkOptimisticLocking(publicationVersionDto);
 
         // Send to production validation and retrieve
-        PublicationVersion publicationVersion = publicationLifecycleService.sendToDiffusionValidation(ctx, publicationVersionDto.getUrn());
+        PublicationVersion publicationVersion = this.publicationLifecycleService.sendToDiffusionValidation(ctx, publicationVersionDto.getUrn());
 
         // Transform
-        publicationVersionDto = publicationDo2DtoMapper.publicationVersionDoToBaseDto(publicationVersion);
+        publicationVersionDto = this.publicationDo2DtoMapper.publicationVersionDoToBaseDto(publicationVersion);
 
         return publicationVersionDto;
     }
@@ -1601,13 +1582,13 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         PublicationsSecurityUtils.canSendPublicationVersionToValidationRejected(ctx, publicationVersionDto.getStatisticalOperation().getCode());
 
         // Transform
-        PublicationVersion publicationVersion = publicationDto2DoMapper.publicationVersionDtoToDo(publicationVersionDto);
+        PublicationVersion publicationVersion = this.publicationDto2DoMapper.publicationVersionDtoToDo(publicationVersionDto);
 
         // Send to production validation and retrieve
-        publicationVersion = publicationLifecycleService.sendToValidationRejected(ctx, publicationVersion.getSiemacMetadataStatisticalResource().getUrn());
+        publicationVersion = this.publicationLifecycleService.sendToValidationRejected(ctx, publicationVersion.getSiemacMetadataStatisticalResource().getUrn());
 
         // Transform
-        publicationVersionDto = publicationDo2DtoMapper.publicationVersionDoToDto(publicationVersion);
+        publicationVersionDto = this.publicationDo2DtoMapper.publicationVersionDoToDto(publicationVersion);
 
         return publicationVersionDto;
     }
@@ -1618,13 +1599,13 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         PublicationsSecurityUtils.canSendPublicationVersionToValidationRejected(ctx, publicationVersionDto.getStatisticalOperation().getCode());
 
         // Check optimistic locking
-        publicationDto2DoMapper.checkOptimisticLocking(publicationVersionDto);
+        this.publicationDto2DoMapper.checkOptimisticLocking(publicationVersionDto);
 
         // Send to production validation and retrieve
-        PublicationVersion publicationVersion = publicationLifecycleService.sendToValidationRejected(ctx, publicationVersionDto.getUrn());
+        PublicationVersion publicationVersion = this.publicationLifecycleService.sendToValidationRejected(ctx, publicationVersionDto.getUrn());
 
         // Transform
-        publicationVersionDto = publicationDo2DtoMapper.publicationVersionDoToBaseDto(publicationVersion);
+        publicationVersionDto = this.publicationDo2DtoMapper.publicationVersionDoToBaseDto(publicationVersion);
 
         return publicationVersionDto;
     }
@@ -1635,16 +1616,16 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         PublicationsSecurityUtils.canPublishPublicationVersion(ctx, publicationVersionDto.getStatisticalOperation().getCode());
 
         // Transform
-        PublicationVersion publicationVersion = publicationDto2DoMapper.publicationVersionDtoToDo(publicationVersionDto);
+        PublicationVersion publicationVersion = this.publicationDto2DoMapper.publicationVersionDtoToDo(publicationVersionDto);
         String urn = publicationVersion.getSiemacMetadataStatisticalResource().getUrn();
 
         // We set validfrom and ONLY validfrom transparently
-        publicationVersion = changePublicationVersionValidFromAndSave(urn, new DateTime());
+        publicationVersion = this.changePublicationVersionValidFromAndSave(urn, new DateTime());
 
-        publicationVersion = publicationLifecycleService.sendToPublished(ctx, publicationVersion.getSiemacMetadataStatisticalResource().getUrn());
+        publicationVersion = this.publicationLifecycleService.sendToPublished(ctx, publicationVersion.getSiemacMetadataStatisticalResource().getUrn());
 
         // Transform
-        publicationVersionDto = publicationDo2DtoMapper.publicationVersionDoToDto(publicationVersion);
+        publicationVersionDto = this.publicationDo2DtoMapper.publicationVersionDoToDto(publicationVersion);
 
         return publicationVersionDto;
     }
@@ -1655,17 +1636,17 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         PublicationsSecurityUtils.canPublishPublicationVersion(ctx, publicationVersionDto.getStatisticalOperation().getCode());
 
         // Check optimistic locking
-        publicationDto2DoMapper.checkOptimisticLocking(publicationVersionDto);
+        this.publicationDto2DoMapper.checkOptimisticLocking(publicationVersionDto);
 
         String urn = publicationVersionDto.getUrn();
 
         // We set validfrom and ONLY validfrom transparently
-        PublicationVersion publicationVersion = changePublicationVersionValidFromAndSave(urn, new DateTime());
+        PublicationVersion publicationVersion = this.changePublicationVersionValidFromAndSave(urn, new DateTime());
 
-        publicationVersion = publicationLifecycleService.sendToPublished(ctx, publicationVersionDto.getUrn());
+        publicationVersion = this.publicationLifecycleService.sendToPublished(ctx, publicationVersionDto.getUrn());
 
         // Transform
-        publicationVersionDto = publicationDo2DtoMapper.publicationVersionDoToBaseDto(publicationVersion);
+        publicationVersionDto = this.publicationDo2DtoMapper.publicationVersionDoToBaseDto(publicationVersion);
 
         return publicationVersionDto;
     }
@@ -1676,16 +1657,16 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         PublicationsSecurityUtils.canPublishPublicationVersion(ctx, publicationVersionDto.getStatisticalOperation().getCode());
 
         // Transform only for optimistic locking
-        PublicationVersion publicationVersion = publicationDto2DoMapper.publicationVersionDtoToDo(publicationVersionDto);
+        PublicationVersion publicationVersion = this.publicationDto2DoMapper.publicationVersionDtoToDo(publicationVersionDto);
         String urn = publicationVersion.getSiemacMetadataStatisticalResource().getUrn();
 
         // We set validfrom and ONLY validfrom transparently
-        publicationVersion = changePublicationVersionValidFromAndSave(urn, validFromDate);
+        publicationVersion = this.changePublicationVersionValidFromAndSave(urn, validFromDate);
 
-        publicationVersion = publicationLifecycleService.sendToPublished(ctx, urn);
+        publicationVersion = this.publicationLifecycleService.sendToPublished(ctx, urn);
 
         // Transform
-        publicationVersionDto = publicationDo2DtoMapper.publicationVersionDoToDto(publicationVersion);
+        publicationVersionDto = this.publicationDo2DtoMapper.publicationVersionDoToDto(publicationVersion);
 
         return publicationVersionDto;
     }
@@ -1696,31 +1677,31 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         PublicationsSecurityUtils.canPublishPublicationVersion(ctx, publicationVersionDto.getStatisticalOperation().getCode());
 
         // Check optimistic locking
-        publicationDto2DoMapper.checkOptimisticLocking(publicationVersionDto);
+        this.publicationDto2DoMapper.checkOptimisticLocking(publicationVersionDto);
 
         String urn = publicationVersionDto.getUrn();
 
         // We set validfrom and ONLY validfrom transparently
-        PublicationVersion publicationVersion = changePublicationVersionValidFromAndSave(urn, validFromDate);
+        PublicationVersion publicationVersion = this.changePublicationVersionValidFromAndSave(urn, validFromDate);
 
-        publicationVersion = publicationLifecycleService.sendToPublished(ctx, urn);
+        publicationVersion = this.publicationLifecycleService.sendToPublished(ctx, urn);
 
         // Transform
-        publicationVersionDto = publicationDo2DtoMapper.publicationVersionDoToBaseDto(publicationVersion);
+        publicationVersionDto = this.publicationDo2DtoMapper.publicationVersionDoToBaseDto(publicationVersion);
 
         return publicationVersionDto;
     }
 
     private PublicationVersion changePublicationVersionValidFromAndSave(String urn, Date validFrom) throws MetamacException {
-        PublicationVersion publicationVersion = publicationVersionRepository.retrieveByUrn(urn);
-        publicationVersion.getSiemacMetadataStatisticalResource().setValidFrom(datasetDto2DoMapper.dateDtoToDo(validFrom));
-        return publicationVersionRepository.save(publicationVersion);
+        PublicationVersion publicationVersion = this.publicationVersionRepository.retrieveByUrn(urn);
+        publicationVersion.getSiemacMetadataStatisticalResource().setValidFrom(this.datasetDto2DoMapper.dateDtoToDo(validFrom));
+        return this.publicationVersionRepository.save(publicationVersion);
     }
 
     private PublicationVersion changePublicationVersionValidFromAndSave(String urn, DateTime validFrom) throws MetamacException {
-        PublicationVersion publicationVersion = publicationVersionRepository.retrieveByUrn(urn);
+        PublicationVersion publicationVersion = this.publicationVersionRepository.retrieveByUrn(urn);
         publicationVersion.getSiemacMetadataStatisticalResource().setValidFrom(validFrom);
-        return publicationVersionRepository.save(publicationVersion);
+        return this.publicationVersionRepository.save(publicationVersion);
     }
 
     @Override
@@ -1729,12 +1710,12 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         PublicationsSecurityUtils.canCancelPublicationPublicationVersion(ctx, publicationVersionDto.getStatisticalOperation().getCode());
 
         // Transform
-        PublicationVersion publicationVersion = publicationDto2DoMapper.publicationVersionDtoToDo(publicationVersionDto);
+        PublicationVersion publicationVersion = this.publicationDto2DoMapper.publicationVersionDtoToDo(publicationVersionDto);
 
-        publicationVersion = publicationLifecycleService.cancelPublication(ctx, publicationVersion.getSiemacMetadataStatisticalResource().getUrn());
+        publicationVersion = this.publicationLifecycleService.cancelPublication(ctx, publicationVersion.getSiemacMetadataStatisticalResource().getUrn());
 
         // Transform
-        publicationVersionDto = publicationDo2DtoMapper.publicationVersionDoToDto(publicationVersion);
+        publicationVersionDto = this.publicationDo2DtoMapper.publicationVersionDoToDto(publicationVersion);
 
         return publicationVersionDto;
     }
@@ -1745,12 +1726,12 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         PublicationsSecurityUtils.canCancelPublicationPublicationVersion(ctx, publicationVersionDto.getStatisticalOperation().getCode());
 
         // Check optimistic locking
-        publicationDto2DoMapper.checkOptimisticLocking(publicationVersionDto);
+        this.publicationDto2DoMapper.checkOptimisticLocking(publicationVersionDto);
 
-        PublicationVersion publicationVersion = publicationLifecycleService.cancelPublication(ctx, publicationVersionDto.getUrn());
+        PublicationVersion publicationVersion = this.publicationLifecycleService.cancelPublication(ctx, publicationVersionDto.getUrn());
 
         // Transform
-        publicationVersionDto = publicationDo2DtoMapper.publicationVersionDoToBaseDto(publicationVersion);
+        publicationVersionDto = this.publicationDo2DtoMapper.publicationVersionDoToBaseDto(publicationVersion);
 
         return publicationVersionDto;
     }
@@ -1761,13 +1742,13 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         PublicationsSecurityUtils.canVersionPublication(ctx, publicationVersionDto.getStatisticalOperation().getCode());
 
         // Transform
-        PublicationVersion publicationVersion = publicationDto2DoMapper.publicationVersionDtoToDo(publicationVersionDto);
+        PublicationVersion publicationVersion = this.publicationDto2DoMapper.publicationVersionDtoToDo(publicationVersionDto);
 
         // Versioning
-        publicationVersion = publicationLifecycleService.versioning(ctx, publicationVersion.getSiemacMetadataStatisticalResource().getUrn(), versionType);
+        publicationVersion = this.publicationLifecycleService.versioning(ctx, publicationVersion.getSiemacMetadataStatisticalResource().getUrn(), versionType);
 
         // Transform
-        publicationVersionDto = publicationDo2DtoMapper.publicationVersionDoToDto(publicationVersion);
+        publicationVersionDto = this.publicationDo2DtoMapper.publicationVersionDoToDto(publicationVersion);
 
         return publicationVersionDto;
     }
@@ -1778,13 +1759,13 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         PublicationsSecurityUtils.canVersionPublication(ctx, publicationVersionDto.getStatisticalOperation().getCode());
 
         // Check optimistic locking
-        publicationDto2DoMapper.checkOptimisticLocking(publicationVersionDto);
+        this.publicationDto2DoMapper.checkOptimisticLocking(publicationVersionDto);
 
         // Versioning
-        PublicationVersion publicationVersion = publicationLifecycleService.versioning(ctx, publicationVersionDto.getUrn(), versionType);
+        PublicationVersion publicationVersion = this.publicationLifecycleService.versioning(ctx, publicationVersionDto.getUrn(), versionType);
 
         // Transform
-        publicationVersionDto = publicationDo2DtoMapper.publicationVersionDoToBaseDto(publicationVersion);
+        publicationVersionDto = this.publicationDo2DtoMapper.publicationVersionDoToBaseDto(publicationVersion);
 
         return publicationVersionDto;
     }
@@ -1796,76 +1777,76 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     @Override
     public ChapterDto createChapter(ServiceContext ctx, String publicationUrn, ChapterDto chapterDto) throws MetamacException {
         // Transform
-        Chapter chapter = publicationDto2DoMapper.chapterDtoToDo(chapterDto);
+        Chapter chapter = this.publicationDto2DoMapper.chapterDtoToDo(chapterDto);
 
-        PublicationVersion publicationVersion = getPublicationService().retrievePublicationVersionByUrn(ctx, publicationUrn);
+        PublicationVersion publicationVersion = this.getPublicationService().retrievePublicationVersionByUrn(ctx, publicationUrn);
 
         // Security
         PublicationsSecurityUtils.canCreateChapter(ctx, publicationVersion);
 
         // Create
-        chapter = getPublicationService().createChapter(ctx, publicationUrn, chapter);
+        chapter = this.getPublicationService().createChapter(ctx, publicationUrn, chapter);
 
         // Transform to dto
-        chapterDto = publicationDo2DtoMapper.chapterDoToDto(chapter);
+        chapterDto = this.publicationDo2DtoMapper.chapterDoToDto(chapter);
         return chapterDto;
     }
 
     @Override
     public ChapterDto updateChapter(ServiceContext ctx, ChapterDto chapterDto) throws MetamacException {
         // Transform
-        Chapter chapter = publicationDto2DoMapper.chapterDtoToDo(chapterDto);
+        Chapter chapter = this.publicationDto2DoMapper.chapterDtoToDo(chapterDto);
 
         // Security
         PublicationsSecurityUtils.canUpdateChapter(ctx, chapter);
 
         // Update
-        chapter = getPublicationService().updateChapter(ctx, chapter);
+        chapter = this.getPublicationService().updateChapter(ctx, chapter);
 
         // Transform
-        chapterDto = publicationDo2DtoMapper.chapterDoToDto(chapter);
+        chapterDto = this.publicationDo2DtoMapper.chapterDoToDto(chapter);
         return chapterDto;
     }
 
     @Override
     public ChapterDto updateChapterLocation(ServiceContext ctx, String chapterUrn, String parentTargetUrn, Long orderInLevel) throws MetamacException {
         // Retrieve to check security
-        Chapter chapter = getPublicationService().retrieveChapter(ctx, chapterUrn);
+        Chapter chapter = this.getPublicationService().retrieveChapter(ctx, chapterUrn);
 
         // Security
         PublicationsSecurityUtils.canUpdateChapterLocation(ctx, chapter);
 
         // Update
-        chapter = getPublicationService().updateChapterLocation(ctx, chapterUrn, parentTargetUrn, orderInLevel);
+        chapter = this.getPublicationService().updateChapterLocation(ctx, chapterUrn, parentTargetUrn, orderInLevel);
 
         // Transform to dto
-        ChapterDto chapterDto = publicationDo2DtoMapper.chapterDoToDto(chapter);
+        ChapterDto chapterDto = this.publicationDo2DtoMapper.chapterDoToDto(chapter);
         return chapterDto;
     }
 
     @Override
     public ChapterDto retrieveChapter(ServiceContext ctx, String chapterUrn) throws MetamacException {
         // Retrieve
-        Chapter chapter = getPublicationService().retrieveChapter(ctx, chapterUrn);
+        Chapter chapter = this.getPublicationService().retrieveChapter(ctx, chapterUrn);
 
         // Security
         PublicationsSecurityUtils.canRetrieveChapter(ctx, chapter);
 
         // Transform
-        ChapterDto chapterDto = publicationDo2DtoMapper.chapterDoToDto(chapter);
+        ChapterDto chapterDto = this.publicationDo2DtoMapper.chapterDoToDto(chapter);
         return chapterDto;
     }
 
     @Override
     public void deleteChapter(ServiceContext ctx, String chapterUrn) throws MetamacException {
         // Retrieve
-        Chapter chapter = getPublicationService().retrieveChapter(ctx, chapterUrn);
+        Chapter chapter = this.getPublicationService().retrieveChapter(ctx, chapterUrn);
 
         // Security
         PublicationsSecurityUtils.canDeleteChapter(ctx, chapter);
 
         // Delete
-        getPublicationService().deleteChapter(ctx, chapterUrn);
+        this.getPublicationService().deleteChapter(ctx, chapterUrn);
     }
 
     // ------------------------------------------------------------------------
@@ -1875,18 +1856,18 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     @Override
     public CubeDto createCube(ServiceContext ctx, String publicationUrn, CubeDto cubeDto) throws MetamacException {
         // Transform
-        Cube cube = publicationDto2DoMapper.cubeDtoToDo(cubeDto);
+        Cube cube = this.publicationDto2DoMapper.cubeDtoToDo(cubeDto);
 
-        PublicationVersion publicationVersion = getPublicationService().retrievePublicationVersionByUrn(ctx, publicationUrn);
+        PublicationVersion publicationVersion = this.getPublicationService().retrievePublicationVersionByUrn(ctx, publicationUrn);
 
         // Security
         PublicationsSecurityUtils.canCreateCube(ctx, publicationVersion);
 
         // Create
-        cube = getPublicationService().createCube(ctx, publicationUrn, cube);
+        cube = this.getPublicationService().createCube(ctx, publicationUrn, cube);
 
         // Transform
-        cubeDto = publicationDo2DtoMapper.cubeDoToDto(cube);
+        cubeDto = this.publicationDo2DtoMapper.cubeDoToDto(cube);
         return cubeDto;
 
     }
@@ -1894,45 +1875,45 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     @Override
     public CubeDto updateCube(ServiceContext ctx, CubeDto cubeDto) throws MetamacException {
         // Transform
-        Cube cube = publicationDto2DoMapper.cubeDtoToDo(cubeDto);
+        Cube cube = this.publicationDto2DoMapper.cubeDtoToDo(cubeDto);
 
         // Security
         PublicationsSecurityUtils.canUpdateCube(ctx, cube);
 
         // Update
-        cube = getPublicationService().updateCube(ctx, cube);
+        cube = this.getPublicationService().updateCube(ctx, cube);
 
         // Transform
-        cubeDto = publicationDo2DtoMapper.cubeDoToDto(cube);
+        cubeDto = this.publicationDo2DtoMapper.cubeDoToDto(cube);
         return cubeDto;
     }
 
     @Override
     public CubeDto updateCubeLocation(ServiceContext ctx, String cubeUrn, String parentTargetUrn, Long orderInLevel) throws MetamacException {
         // Retrieve cube for security checkings
-        Cube cube = getPublicationService().retrieveCube(ctx, cubeUrn);
+        Cube cube = this.getPublicationService().retrieveCube(ctx, cubeUrn);
 
         // Security
         PublicationsSecurityUtils.canUpdateCubeLocation(ctx, cube);
 
         // Update
-        cube = getPublicationService().updateCubeLocation(ctx, cubeUrn, parentTargetUrn, orderInLevel);
+        cube = this.getPublicationService().updateCubeLocation(ctx, cubeUrn, parentTargetUrn, orderInLevel);
 
         // Transform
-        CubeDto cubeDto = publicationDo2DtoMapper.cubeDoToDto(cube);
+        CubeDto cubeDto = this.publicationDo2DtoMapper.cubeDoToDto(cube);
         return cubeDto;
     }
 
     @Override
     public CubeDto retrieveCube(ServiceContext ctx, String cubeUrn) throws MetamacException {
         // Retrieve
-        Cube cube = getPublicationService().retrieveCube(ctx, cubeUrn);
+        Cube cube = this.getPublicationService().retrieveCube(ctx, cubeUrn);
 
         // Security
         PublicationsSecurityUtils.canRetrieveCube(ctx, cube);
 
         // Transform
-        CubeDto cubeDto = publicationDo2DtoMapper.cubeDoToDto(cube);
+        CubeDto cubeDto = this.publicationDo2DtoMapper.cubeDoToDto(cube);
         return cubeDto;
 
     }
@@ -1940,13 +1921,13 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     @Override
     public void deleteCube(ServiceContext ctx, String cubeUrn) throws MetamacException {
         // Retrieve
-        Cube cube = getPublicationService().retrieveCube(ctx, cubeUrn);
+        Cube cube = this.getPublicationService().retrieveCube(ctx, cubeUrn);
 
         // Security
         PublicationsSecurityUtils.canDeleteCube(ctx, cube);
 
         // Delete
-        getPublicationService().deleteCube(ctx, cubeUrn);
+        this.getPublicationService().deleteCube(ctx, cubeUrn);
     }
 
     // ------------------------------------------------------------------------
@@ -1959,16 +1940,16 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         ConstraintsSecurityUtils.canFindContentConstraintsForArtefact(ctx);
 
         // Find
-        List<ResourceInternal> contentConstraintsForArtefact = constraintsService.findContentConstraintsForArtefact(ctx, artefactUrn);
+        List<ResourceInternal> contentConstraintsForArtefact = this.constraintsService.findContentConstraintsForArtefact(ctx, artefactUrn);
 
         // Transform
-        return constraintRest2DtoMapper.externalItemConstraintToExternalItemDto(contentConstraintsForArtefact);
+        return this.constraintRest2DtoMapper.externalItemConstraintToExternalItemDto(contentConstraintsForArtefact);
     }
 
     @Override
     public ContentConstraintBasicDto createContentConstraint(ServiceContext ctx, ContentConstraintDto contentConstraintDto) throws MetamacException {
         // Security
-        DatasetVersion datasetVersion = obtainDatasetVersionFromContentConstraint(ctx, contentConstraintDto);
+        DatasetVersion datasetVersion = this.obtainDatasetVersionFromContentConstraint(ctx, contentConstraintDto);
         ConstraintsSecurityUtils.canCreateContentConstraint(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode());
 
         // Check that there isn't data sources
@@ -1977,22 +1958,22 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         }
 
         // Transform
-        ContentConstraint contentConstraint = constraintDto2RestMapper.constraintDtoTo(contentConstraintDto);
+        ContentConstraint contentConstraint = this.constraintDto2RestMapper.constraintDtoTo(contentConstraintDto);
 
         // Create
-        contentConstraint = constraintsService.createContentConstraint(ctx, contentConstraint);
+        contentConstraint = this.constraintsService.createContentConstraint(ctx, contentConstraint);
 
         // Transform
-        return constraintRest2DtoMapper.toConstraintBasicDto(contentConstraint);
+        return this.constraintRest2DtoMapper.toConstraintBasicDto(contentConstraint);
     }
 
     @Override
     public ContentConstraintDto retrieveContentConstraintByUrn(ServiceContext ctx, String urn, Boolean includeDraft) throws MetamacException {
         // Retrieve
-        ContentConstraint contentConstraint = constraintsService.retrieveContentConstraintByUrn(ctx, urn, includeDraft);
+        ContentConstraint contentConstraint = this.constraintsService.retrieveContentConstraintByUrn(ctx, urn, includeDraft);
 
         // Security
-        DatasetVersion datasetVersion = obtainDatasetVersionFromContentConstraint(ctx, contentConstraint); // Dataset for extract operation
+        DatasetVersion datasetVersion = this.obtainDatasetVersionFromContentConstraint(ctx, contentConstraint); // Dataset for extract operation
         ProcStatusEnum procStatus = null; // ProcStatus of contentConstraints, null is draft
         if (contentConstraint.getLifeCycle() != null) {
             procStatus = ProcStatusEnum.valueOf(contentConstraint.getLifeCycle().getProcStatus().value());
@@ -2000,16 +1981,16 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         ConstraintsSecurityUtils.canRetrieveContentConstraintByUrn(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode(), procStatus);
 
         // Transform
-        return constraintRest2DtoMapper.toConstraintDto(contentConstraint);
+        return this.constraintRest2DtoMapper.toConstraintDto(contentConstraint);
     }
 
     @Override
     public void deleteContentConstraint(ServiceContext ctx, String urn) throws MetamacException {
         // Retrieve
-        ContentConstraint contentConstraint = constraintsService.retrieveContentConstraintByUrn(ctx, urn, Boolean.TRUE);
+        ContentConstraint contentConstraint = this.constraintsService.retrieveContentConstraintByUrn(ctx, urn, Boolean.TRUE);
 
         // Security
-        DatasetVersion datasetVersion = obtainDatasetVersionFromContentConstraint(ctx, contentConstraint); // Dataset for extract operation
+        DatasetVersion datasetVersion = this.obtainDatasetVersionFromContentConstraint(ctx, contentConstraint); // Dataset for extract operation
         ProcStatusEnum procStatus = null; // ProcStatus of contentConstraints, null is draft
         if (contentConstraint.getLifeCycle() != null) {
             procStatus = ProcStatusEnum.valueOf(contentConstraint.getLifeCycle().getProcStatus().value());
@@ -2017,16 +1998,16 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         ConstraintsSecurityUtils.canDeleteContentConstraint(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode(), procStatus);
 
         // Delete
-        constraintsService.deleteContentConstraint(ctx, urn);
+        this.constraintsService.deleteContentConstraint(ctx, urn);
     }
 
     @Override
     public RegionValueDto saveRegionForContentConstraint(ServiceContext ctx, String contentConstraintUrn, RegionValueDto regionValueDto) throws MetamacException {
         // Retrieve
-        ContentConstraint contentConstraint = constraintsService.retrieveContentConstraintByUrn(ctx, contentConstraintUrn, Boolean.TRUE);
+        ContentConstraint contentConstraint = this.constraintsService.retrieveContentConstraintByUrn(ctx, contentConstraintUrn, Boolean.TRUE);
 
         // Security
-        DatasetVersion datasetVersion = obtainDatasetVersionFromContentConstraint(ctx, contentConstraint); // Dataset for extract operation
+        DatasetVersion datasetVersion = this.obtainDatasetVersionFromContentConstraint(ctx, contentConstraint); // Dataset for extract operation
         ProcStatusEnum procStatus = null; // ProcStatus of contentConstraints, null is draft
         if (contentConstraint.getLifeCycle() != null) {
             procStatus = ProcStatusEnum.valueOf(contentConstraint.getLifeCycle().getProcStatus().value());
@@ -2034,22 +2015,22 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         ConstraintsSecurityUtils.canSaveForContentConstraint(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode(), procStatus);
 
         // Transform
-        RegionReference regionReference = constraintDto2RestMapper.toRegionReference(regionValueDto);
+        RegionReference regionReference = this.constraintDto2RestMapper.toRegionReference(regionValueDto);
 
         // Create
-        regionReference = constraintsService.saveRegionForContentConstraint(ctx, regionReference);
+        regionReference = this.constraintsService.saveRegionForContentConstraint(ctx, regionReference);
 
         // Transform
-        return constraintRest2DtoMapper.toRegionDto(regionReference);
+        return this.constraintRest2DtoMapper.toRegionDto(regionReference);
     }
 
     @Override
     public void deleteRegion(ServiceContext ctx, String contentConstraintUrn, String regionCode) throws MetamacException {
         // Retrieve
-        ContentConstraint contentConstraint = constraintsService.retrieveContentConstraintByUrn(ctx, contentConstraintUrn, Boolean.TRUE);
+        ContentConstraint contentConstraint = this.constraintsService.retrieveContentConstraintByUrn(ctx, contentConstraintUrn, Boolean.TRUE);
 
         // Security
-        DatasetVersion datasetVersion = obtainDatasetVersionFromContentConstraint(ctx, contentConstraint); // Dataset for extract operation
+        DatasetVersion datasetVersion = this.obtainDatasetVersionFromContentConstraint(ctx, contentConstraint); // Dataset for extract operation
         ProcStatusEnum procStatus = null; // ProcStatus of contentConstraints, null is draft
         if (contentConstraint.getLifeCycle() != null) {
             procStatus = ProcStatusEnum.valueOf(contentConstraint.getLifeCycle().getProcStatus().value());
@@ -2057,16 +2038,16 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         ConstraintsSecurityUtils.deleteRegion(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode(), procStatus);
 
         // Delete
-        constraintsService.deleteRegion(ctx, contentConstraintUrn, regionCode);
+        this.constraintsService.deleteRegion(ctx, contentConstraintUrn, regionCode);
     }
 
     @Override
     public RegionValueDto retrieveRegionForContentConstraint(ServiceContext ctx, String contentConstraintUrn, String regionCode) throws MetamacException {
         // Retrieve
-        ContentConstraint contentConstraint = constraintsService.retrieveContentConstraintByUrn(ctx, contentConstraintUrn, Boolean.TRUE);
+        ContentConstraint contentConstraint = this.constraintsService.retrieveContentConstraintByUrn(ctx, contentConstraintUrn, Boolean.TRUE);
 
         // Security
-        DatasetVersion datasetVersion = obtainDatasetVersionFromContentConstraint(ctx, contentConstraint); // Dataset for extract operation
+        DatasetVersion datasetVersion = this.obtainDatasetVersionFromContentConstraint(ctx, contentConstraint); // Dataset for extract operation
         ProcStatusEnum procStatus = null; // ProcStatus of contentConstraints, null is draft
         if (contentConstraint.getLifeCycle() != null) {
             procStatus = ProcStatusEnum.valueOf(contentConstraint.getLifeCycle().getProcStatus().value());
@@ -2074,10 +2055,10 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         ConstraintsSecurityUtils.canRetrieveRegionForContentConstraint(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode(), procStatus);
 
         // Find
-        RegionReference regionReference = constraintsService.retrieveRegionForContentConstraint(ctx, contentConstraintUrn, regionCode);
+        RegionReference regionReference = this.constraintsService.retrieveRegionForContentConstraint(ctx, contentConstraintUrn, regionCode);
 
         // Transform
-        return constraintRest2DtoMapper.toRegionDto(regionReference);
+        return this.constraintRest2DtoMapper.toRegionDto(regionReference);
     }
 
     protected DatasetVersion obtainDatasetVersionFromContentConstraint(ServiceContext ctx, ContentConstraintDto contentConstraintDto) throws MetamacException {
@@ -2090,7 +2071,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         }
 
         // Retrieve
-        DatasetVersion datasetVersion = getDatasetService().retrieveDatasetVersionByUrn(ctx, contentConstraintDto.getConstraintAttachment().getUrn());
+        DatasetVersion datasetVersion = this.getDatasetService().retrieveDatasetVersionByUrn(ctx, contentConstraintDto.getConstraintAttachment().getUrn());
 
         // Security
         DatasetsSecurityUtils.canRetrieveDatasetVersionByUrn(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode(), datasetVersion
@@ -2109,7 +2090,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         }
 
         // Retrieve
-        DatasetVersion datasetVersion = getDatasetService().retrieveDatasetVersionByUrn(ctx, contentConstraint.getConstraintAttachment().getUrn());
+        DatasetVersion datasetVersion = this.getDatasetService().retrieveDatasetVersionByUrn(ctx, contentConstraint.getConstraintAttachment().getUrn());
 
         // Security
         DatasetsSecurityUtils.canRetrieveDatasetVersionByUrn(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode(), datasetVersion

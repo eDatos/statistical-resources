@@ -47,8 +47,6 @@ Application FacadeStatisticalResources {
             @QueryVersionDto updateQueryVersion(@QueryVersionDto queryVersionDto) throws MetamacException;
             "Find queries by criteria"
     		MetamacCriteriaResult<@QueryVersionBaseDto> findQueriesVersionsByCondition(MetamacCriteria criteria)  throws MetamacException;
-    		"Mark query as discontinued because the data is not going to be updated"
-            @QueryVersionDto markQueryVersionAsDiscontinued(@QueryVersionDto queryVersionDto) throws MetamacException;
             "Delete query"
             deleteQueryVersion(String urn) throws MetamacException;
             "Retrieve latest queryVersion providing queryUrn"

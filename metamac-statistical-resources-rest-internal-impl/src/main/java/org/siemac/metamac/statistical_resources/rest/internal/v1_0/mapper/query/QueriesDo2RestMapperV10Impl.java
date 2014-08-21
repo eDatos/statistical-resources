@@ -1,7 +1,5 @@
 package org.siemac.metamac.statistical_resources.rest.internal.v1_0.mapper.query;
 
-import static org.siemac.metamac.core.common.util.GeneratorUrnUtils.generateSiemacStatisticalResourceQueryUrn;
-
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -46,22 +44,24 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import static org.siemac.metamac.core.common.util.GeneratorUrnUtils.generateSiemacStatisticalResourceQueryUrn;
+
 @Component
 public class QueriesDo2RestMapperV10Impl implements QueriesDo2RestMapperV10 {
 
     @Autowired
-    private CommonDo2RestMapperV10   commonDo2RestMapper;
+    private CommonDo2RestMapperV10 commonDo2RestMapper;
 
     @Autowired
     private DatasetsDo2RestMapperV10 datasetsDo2RestMapper;
 
     @Autowired
-    private QueryVersionRepository   queryVersionRepository;
+    private QueryVersionRepository queryVersionRepository;
 
     @Autowired
     private DatasetVersionRepository datasetVersionRepository;
 
-    private static final Logger      logger = LoggerFactory.getLogger(QueriesDo2RestMapperV10Impl.class);
+    private static final Logger logger = LoggerFactory.getLogger(QueriesDo2RestMapperV10Impl.class);
 
     @Override
     public Queries toQueries(PagedResult<QueryVersion> sources, String agencyID, String query, String orderBy, Integer limit, List<String> selectedLanguages) {
@@ -70,12 +70,12 @@ public class QueriesDo2RestMapperV10Impl implements QueriesDo2RestMapperV10 {
         targets.setKind(StatisticalResourcesRestInternalConstants.KIND_QUERIES);
 
         // Pagination
-        String baseLink = toQueriesLink(agencyID, null);
+        String baseLink = this.toQueriesLink(agencyID, null);
         SculptorCriteria2RestCriteria.toPagedResult(sources, targets, query, orderBy, limit, baseLink);
 
         // Values
         for (QueryVersion source : sources.getValues()) {
-            ResourceInternal target = toResource(source, selectedLanguages);
+            ResourceInternal target = this.toResource(source, selectedLanguages);
             targets.getQueries().add(target);
         }
         return targets;
@@ -89,24 +89,24 @@ public class QueriesDo2RestMapperV10Impl implements QueriesDo2RestMapperV10 {
         Query target = new Query();
         target.setKind(StatisticalResourcesRestInternalConstants.KIND_QUERY);
         target.setId(source.getLifeCycleStatisticalResource().getCode());
-        target.setUrn(toQueryUrn(source));
-        target.setSelfLink(toQuerySelfLink(source));
-        target.setName(commonDo2RestMapper.toInternationalString(source.getLifeCycleStatisticalResource().getTitle(), selectedLanguages));
-        target.setDescription(commonDo2RestMapper.toInternationalString(source.getLifeCycleStatisticalResource().getDescription(), selectedLanguages));
-        target.setParentLink(toQueryParentLink(source));
-        target.setChildLinks(toQueryChildLinks(source));
-        target.setSelectedLanguages(commonDo2RestMapper.toLanguages(selectedLanguages));
+        target.setUrn(this.toQueryUrn(source));
+        target.setSelfLink(this.toQuerySelfLink(source));
+        target.setName(this.commonDo2RestMapper.toInternationalString(source.getLifeCycleStatisticalResource().getTitle(), selectedLanguages));
+        target.setDescription(this.commonDo2RestMapper.toInternationalString(source.getLifeCycleStatisticalResource().getDescription(), selectedLanguages));
+        target.setParentLink(this.toQueryParentLink(source));
+        target.setChildLinks(this.toQueryChildLinks(source));
+        target.setSelectedLanguages(this.commonDo2RestMapper.toLanguages(selectedLanguages));
         DsdProcessorResult dsdProcessorResult = null;
         DatasetVersion relatedDatasetEffective = null;
         if (includeMetadata || includeData) {
-            relatedDatasetEffective = getQueryRelatedDatasetVersionEffective(source);
-            dsdProcessorResult = commonDo2RestMapper.processDataStructure(relatedDatasetEffective.getRelatedDsd().getUrn());
+            relatedDatasetEffective = this.getQueryRelatedDatasetVersionEffective(source);
+            dsdProcessorResult = this.commonDo2RestMapper.processDataStructure(relatedDatasetEffective.getRelatedDsd().getUrn());
         }
         if (includeMetadata) {
-            target.setMetadata(toQueryMetadata(source, relatedDatasetEffective, dsdProcessorResult, selectedLanguages));
+            target.setMetadata(this.toQueryMetadata(source, relatedDatasetEffective, dsdProcessorResult, selectedLanguages));
         }
         if (includeData) {
-            target.setData(toQueryData(source, relatedDatasetEffective, dsdProcessorResult, selectedLanguages));
+            target.setData(this.toQueryData(source, relatedDatasetEffective, dsdProcessorResult, selectedLanguages));
         }
         return target;
     }
@@ -116,9 +116,9 @@ public class QueriesDo2RestMapperV10Impl implements QueriesDo2RestMapperV10 {
             return source.getFixedDatasetVersion();
         } else {
             if (StatisticalResourcesRestInternalConstants.IS_INTERNAL_API) {
-                return datasetVersionRepository.retrieveLastVersion(source.getDataset().getIdentifiableStatisticalResource().getUrn());
+                return this.datasetVersionRepository.retrieveLastVersion(source.getDataset().getIdentifiableStatisticalResource().getUrn());
             } else {
-                return datasetVersionRepository.retrieveLastPublishedVersion(source.getDataset().getIdentifiableStatisticalResource().getUrn());
+                return this.datasetVersionRepository.retrieveLastPublishedVersion(source.getDataset().getIdentifiableStatisticalResource().getUrn());
             }
         }
     }
@@ -130,11 +130,11 @@ public class QueriesDo2RestMapperV10Impl implements QueriesDo2RestMapperV10 {
         }
         ResourceInternal target = new ResourceInternal();
         target.setId(source.getLifeCycleStatisticalResource().getCode());
-        target.setUrn(toQueryUrn(source));
+        target.setUrn(this.toQueryUrn(source));
         target.setKind(StatisticalResourcesRestInternalConstants.KIND_QUERY);
-        target.setSelfLink(toQuerySelfLink(source));
-        target.setName(commonDo2RestMapper.toInternationalString(source.getLifeCycleStatisticalResource().getTitle(), selectedLanguages));
-        target.setManagementAppLink(toQueryVersionManagementApplicationLink(source));
+        target.setSelfLink(this.toQuerySelfLink(source));
+        target.setName(this.commonDo2RestMapper.toInternationalString(source.getLifeCycleStatisticalResource().getTitle(), selectedLanguages));
+        target.setManagementAppLink(this.toQueryVersionManagementApplicationLink(source));
 
         return target;
     }
@@ -152,11 +152,11 @@ public class QueriesDo2RestMapperV10Impl implements QueriesDo2RestMapperV10 {
 
         ResourceInternal target = new ResourceInternal();
         target.setId(source.getCode());
-        target.setUrn(toQueryUrn(source.getMaintainerNestedCode(), source.getCode()));
+        target.setUrn(this.toQueryUrn(source.getMaintainerNestedCode(), source.getCode()));
         target.setKind(StatisticalResourcesRestInternalConstants.KIND_QUERY);
-        target.setSelfLink(toQuerySelfLink(source));
-        target.setName(commonDo2RestMapper.toInternationalString(source.getTitle(), selectedLanguages));
-        target.setManagementAppLink(toQueryVersionManagementApplicationLink(source));
+        target.setSelfLink(this.toQuerySelfLink(source));
+        target.setName(this.commonDo2RestMapper.toInternationalString(source.getTitle(), selectedLanguages));
+        target.setManagementAppLink(this.toQueryVersionManagementApplicationLink(source));
 
         return target;
     }
@@ -167,41 +167,41 @@ public class QueriesDo2RestMapperV10Impl implements QueriesDo2RestMapperV10 {
         }
         QueryMetadata target = new QueryMetadata();
 
-        Map<String, List<String>> effectiveDimensionValuesToDataByDimension = calculateEffectiveDimensionValuesToQuery(source, datasetVersion);
+        Map<String, List<String>> effectiveDimensionValuesToDataByDimension = this.calculateEffectiveDimensionValuesToQuery(source, datasetVersion);
 
-        target.setRelatedDsd(commonDo2RestMapper.toDataStructureDefinition(datasetVersion.getRelatedDsd(), dsdProcessorResult.getDataStructure(), selectedLanguages));
-        target.setDimensions(commonDo2RestMapper.toDimensions(datasetVersion.getSiemacMetadataStatisticalResource().getUrn(), dsdProcessorResult, effectiveDimensionValuesToDataByDimension,
+        target.setRelatedDsd(this.commonDo2RestMapper.toDataStructureDefinition(datasetVersion.getRelatedDsd(), dsdProcessorResult.getDataStructure(), selectedLanguages));
+        target.setDimensions(this.commonDo2RestMapper.toDimensions(datasetVersion.getSiemacMetadataStatisticalResource().getUrn(), dsdProcessorResult, effectiveDimensionValuesToDataByDimension,
                 selectedLanguages));
-        target.setAttributes(commonDo2RestMapper.toAttributes(datasetVersion.getSiemacMetadataStatisticalResource().getUrn(), dsdProcessorResult, selectedLanguages));
+        target.setAttributes(this.commonDo2RestMapper.toAttributes(datasetVersion.getSiemacMetadataStatisticalResource().getUrn(), dsdProcessorResult, selectedLanguages));
 
         ResourceInternal relatedDataset = null;
         if (source.getDataset() != null) {
-            relatedDataset = datasetsDo2RestMapper.toResourceAsLatest(datasetVersion, selectedLanguages);
+            relatedDataset = this.datasetsDo2RestMapper.toResourceAsLatest(datasetVersion, selectedLanguages);
         } else {
-            relatedDataset = datasetsDo2RestMapper.toResource(datasetVersion, selectedLanguages);
+            relatedDataset = this.datasetsDo2RestMapper.toResource(datasetVersion, selectedLanguages);
         }
         target.setRelatedDataset(relatedDataset);
-        target.setStatus(toQueryStatus(source.getStatus()));
-        target.setType(toQueryType(source.getType()));
+        target.setStatus(this.toQueryStatus(source.getStatus()));
+        target.setType(this.toQueryType(source.getType()));
         target.setLatestDataNumber(source.getLatestDataNumber());
-        target.setStatisticalOperation(commonDo2RestMapper.toResourceExternalItemStatisticalOperations(source.getLifeCycleStatisticalResource().getStatisticalOperation(), selectedLanguages));
-        target.setMaintainer(commonDo2RestMapper.toResourceExternalItemSrm(source.getLifeCycleStatisticalResource().getMaintainer(), selectedLanguages));
-        target.setValidFrom(commonDo2RestMapper.toDate(source.getLifeCycleStatisticalResource().getValidFrom()));
-        target.setValidTo(commonDo2RestMapper.toDate(StatisticalResourcesRestInternalUtils.isDateAfterNowSetNull(source.getLifeCycleStatisticalResource().getValidTo())));
-        target.setRequires(datasetsDo2RestMapper.toResource(datasetVersion, selectedLanguages));
-        target.setIsPartOf(toQueryIsPartOf(source, selectedLanguages));
-        target.setNextVersion(commonDo2RestMapper.toNextVersionType(source.getLifeCycleStatisticalResource().getNextVersion(), selectedLanguages));
-        target.setNextVersionDate(commonDo2RestMapper.toDate(source.getLifeCycleStatisticalResource().getNextVersionDate()));
-        target.setProcStatus(commonDo2RestMapper.toProcStatusType(source.getLifeCycleStatisticalResource().getProcStatus(), selectedLanguages));
-        target.setCreationDate(commonDo2RestMapper.toDate(source.getLifeCycleStatisticalResource().getCreationDate()));
+        target.setStatisticalOperation(this.commonDo2RestMapper.toResourceExternalItemStatisticalOperations(source.getLifeCycleStatisticalResource().getStatisticalOperation(), selectedLanguages));
+        target.setMaintainer(this.commonDo2RestMapper.toResourceExternalItemSrm(source.getLifeCycleStatisticalResource().getMaintainer(), selectedLanguages));
+        target.setValidFrom(this.commonDo2RestMapper.toDate(source.getLifeCycleStatisticalResource().getValidFrom()));
+        target.setValidTo(this.commonDo2RestMapper.toDate(StatisticalResourcesRestInternalUtils.isDateAfterNowSetNull(source.getLifeCycleStatisticalResource().getValidTo())));
+        target.setRequires(this.datasetsDo2RestMapper.toResource(datasetVersion, selectedLanguages));
+        target.setIsPartOf(this.toQueryIsPartOf(source, selectedLanguages));
+        target.setNextVersion(this.commonDo2RestMapper.toNextVersionType(source.getLifeCycleStatisticalResource().getNextVersion(), selectedLanguages));
+        target.setNextVersionDate(this.commonDo2RestMapper.toDate(source.getLifeCycleStatisticalResource().getNextVersionDate()));
+        target.setProcStatus(this.commonDo2RestMapper.toProcStatusType(source.getLifeCycleStatisticalResource().getProcStatus(), selectedLanguages));
+        target.setCreationDate(this.commonDo2RestMapper.toDate(source.getLifeCycleStatisticalResource().getCreationDate()));
         target.setCreationUser(source.getLifeCycleStatisticalResource().getCreationUser());
-        target.setProductionValidationDate(commonDo2RestMapper.toDate(source.getLifeCycleStatisticalResource().getCreationDate()));
+        target.setProductionValidationDate(this.commonDo2RestMapper.toDate(source.getLifeCycleStatisticalResource().getCreationDate()));
         target.setProductionValidationUser(source.getLifeCycleStatisticalResource().getPublicationUser());
-        target.setDiffusionValidationDate(commonDo2RestMapper.toDate(source.getLifeCycleStatisticalResource().getDiffusionValidationDate()));
+        target.setDiffusionValidationDate(this.commonDo2RestMapper.toDate(source.getLifeCycleStatisticalResource().getDiffusionValidationDate()));
         target.setDiffusionValidationUser(source.getLifeCycleStatisticalResource().getDiffusionValidationUser());
-        target.setRejectValidationDate(commonDo2RestMapper.toDate(source.getLifeCycleStatisticalResource().getRejectValidationDate()));
+        target.setRejectValidationDate(this.commonDo2RestMapper.toDate(source.getLifeCycleStatisticalResource().getRejectValidationDate()));
         target.setRejectValidationUser(source.getLifeCycleStatisticalResource().getRejectValidationUser());
-        target.setPublicationDate(commonDo2RestMapper.toDate(source.getLifeCycleStatisticalResource().getPublicationDate()));
+        target.setPublicationDate(this.commonDo2RestMapper.toDate(source.getLifeCycleStatisticalResource().getPublicationDate()));
         target.setPublicationUser(source.getLifeCycleStatisticalResource().getPublicationUser());
 
         return target;
@@ -211,9 +211,9 @@ public class QueriesDo2RestMapperV10Impl implements QueriesDo2RestMapperV10 {
         List<RelatedResourceResult> relatedResourceIsPartOf = null;
 
         if (StatisticalResourcesRestInternalConstants.IS_INTERNAL_API) {
-            relatedResourceIsPartOf = queryVersionRepository.retrieveIsPartOf(source);
+            relatedResourceIsPartOf = this.queryVersionRepository.retrieveIsPartOf(source);
         } else {
-            relatedResourceIsPartOf = queryVersionRepository.retrieveIsPartOfOnlyLastPublished(source);
+            relatedResourceIsPartOf = this.queryVersionRepository.retrieveIsPartOfOnlyLastPublished(source);
         }
 
         if (CollectionUtils.isEmpty(relatedResourceIsPartOf)) {
@@ -221,7 +221,7 @@ public class QueriesDo2RestMapperV10Impl implements QueriesDo2RestMapperV10 {
         }
         ResourcesInternal targets = new ResourcesInternal();
         for (RelatedResourceResult relatedResourceResult : relatedResourceIsPartOf) {
-            targets.getResources().add(commonDo2RestMapper.toResource(relatedResourceResult, selectedLanguages));
+            targets.getResources().add(this.commonDo2RestMapper.toResource(relatedResourceResult, selectedLanguages));
         }
         targets.setTotal(BigInteger.valueOf(targets.getResources().size()));
         return targets;
@@ -231,12 +231,12 @@ public class QueriesDo2RestMapperV10Impl implements QueriesDo2RestMapperV10 {
         if (source == null) {
             return null;
         }
-        Map<String, List<String>> effectiveDimensionValuesToDataByDimension = calculateEffectiveDimensionValuesToQuery(source, datasetVersion);
-        return commonDo2RestMapper.toData(datasetVersion, dsdProcessorResult, effectiveDimensionValuesToDataByDimension, selectedLanguages);
+        Map<String, List<String>> effectiveDimensionValuesToDataByDimension = this.calculateEffectiveDimensionValuesToQuery(source, datasetVersion);
+        return this.commonDo2RestMapper.toData(datasetVersion, dsdProcessorResult, effectiveDimensionValuesToDataByDimension, selectedLanguages);
     }
 
     private ResourceLink toQueryParentLink(QueryVersion source) {
-        return toQueriesSelfLink(null, null);
+        return this.toQueriesSelfLink(null, null);
     }
 
     private ChildLinks toQueryChildLinks(QueryVersion source) {
@@ -245,42 +245,42 @@ public class QueriesDo2RestMapperV10Impl implements QueriesDo2RestMapperV10 {
     }
 
     private ResourceLink toQueriesSelfLink(String agencyID, String resourceID) {
-        return commonDo2RestMapper.toResourceLink(StatisticalResourcesRestInternalConstants.KIND_QUERIES, toQueriesLink(agencyID, resourceID));
+        return this.commonDo2RestMapper.toResourceLink(StatisticalResourcesRestInternalConstants.KIND_QUERIES, this.toQueriesLink(agencyID, resourceID));
     }
 
     private String toQueriesLink(String agencyID, String resourceID) {
         String resourceSubpath = StatisticalResourcesRestInternalConstants.LINK_SUBPATH_QUERIES;
-        return commonDo2RestMapper.toResourceLink(resourceSubpath, agencyID, resourceID, null);
+        return this.commonDo2RestMapper.toResourceLink(resourceSubpath, agencyID, resourceID, null);
     }
 
     private ResourceLink toQuerySelfLink(QueryVersion source) {
         String agencyID = source.getLifeCycleStatisticalResource().getMaintainer().getCodeNested();
         String resourceID = source.getLifeCycleStatisticalResource().getCode();
-        return toQuerySelfLink(agencyID, resourceID);
+        return this.toQuerySelfLink(agencyID, resourceID);
     }
 
     private ResourceLink toQuerySelfLink(RelatedResourceResult source) {
         String agencyID = source.getMaintainerNestedCode();
         String resourceID = source.getCode();
-        return toQuerySelfLink(agencyID, resourceID);
+        return this.toQuerySelfLink(agencyID, resourceID);
     }
 
     private ResourceLink toQuerySelfLink(String agencyID, String resourceID) {
-        String link = toQueryLink(agencyID, resourceID);
-        return commonDo2RestMapper.toResourceLink(StatisticalResourcesRestInternalConstants.KIND_QUERY, link);
+        String link = this.toQueryLink(agencyID, resourceID);
+        return this.commonDo2RestMapper.toResourceLink(StatisticalResourcesRestInternalConstants.KIND_QUERY, link);
     }
 
     private String toQueryLink(String agencyID, String resourceID) {
         String resourceSubpath = StatisticalResourcesRestInternalConstants.LINK_SUBPATH_QUERIES;
         String version = null; // do not return version
-        return commonDo2RestMapper.toResourceLink(resourceSubpath, agencyID, resourceID, version);
+        return this.commonDo2RestMapper.toResourceLink(resourceSubpath, agencyID, resourceID, version);
     }
 
     /**
      * Retrieve urn to API, without version
      */
     private String toQueryUrn(QueryVersion source) {
-        return toQueryUrn(source.getLifeCycleStatisticalResource().getMaintainer().getCodeNested(), source.getLifeCycleStatisticalResource().getCode());
+        return this.toQueryUrn(source.getLifeCycleStatisticalResource().getMaintainer().getCodeNested(), source.getLifeCycleStatisticalResource().getCode());
     }
     private String toQueryUrn(String maintainerNestedCode, String code) {
         return generateSiemacStatisticalResourceQueryUrn(new String[]{maintainerNestedCode}, code); // global urn without version
@@ -295,8 +295,6 @@ public class QueriesDo2RestMapperV10Impl implements QueriesDo2RestMapperV10 {
                 return org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.QueryStatus.ACTIVE;
             case DISCONTINUED:
                 return org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.QueryStatus.DISCONTINUED;
-            case PENDING_REVIEW:
-                return org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.QueryStatus.ACTIVE; // This is not an error. PENDING_REVIEW is not provided in API
             default:
                 logger.error("QueryStatusEnum unsupported: " + source);
                 org.siemac.metamac.rest.common.v1_0.domain.Exception exception = RestExceptionUtils.getException(RestServiceExceptionType.UNKNOWN);
@@ -325,7 +323,7 @@ public class QueriesDo2RestMapperV10Impl implements QueriesDo2RestMapperV10 {
     public Map<String, List<String>> calculateEffectiveDimensionValuesToQuery(QueryVersion source, DatasetVersion datasetVersion) {
         Map<String, List<String>> dimensionValuesSelected = new HashMap<String, List<String>>(source.getSelection().size());
         for (QuerySelectionItem selection : source.getSelection()) {
-            List<String> dimensionValues = calculateEffectiveDimensionValuesToQuery(source, datasetVersion, selection);
+            List<String> dimensionValues = this.calculateEffectiveDimensionValuesToQuery(source, datasetVersion, selection);
             dimensionValuesSelected.put(selection.getDimension(), dimensionValues);
         }
         return dimensionValuesSelected;
@@ -334,20 +332,20 @@ public class QueriesDo2RestMapperV10Impl implements QueriesDo2RestMapperV10 {
     private List<String> calculateEffectiveDimensionValuesToQuery(QueryVersion source, DatasetVersion datasetVersion, QuerySelectionItem selection) {
         QueryTypeEnum type = source.getType();
         String dimensionId = selection.getDimension();
-        List<String> selectionCodes = commonDo2RestMapper.codeItemToString(selection.getCodes());
+        List<String> selectionCodes = this.commonDo2RestMapper.codeItemToString(selection.getCodes());
 
         if (QueryTypeEnum.FIXED.equals(type)) {
             // return exactly
             return selectionCodes;
         } else if (QueryTypeEnum.AUTOINCREMENTAL.equals(type)) {
-            if (isTemporalDimension(dimensionId)) {
+            if (this.isTemporalDimension(dimensionId)) {
                 List<String> effectiveDimensionValues = new ArrayList<String>();
-                List<String> temporalCoverageCodes = commonDo2RestMapper.temporalCoverageToString(datasetVersion.getTemporalCoverage());
+                List<String> temporalCoverageCodes = this.commonDo2RestMapper.temporalCoverageToString(datasetVersion.getTemporalCoverage());
                 int indexLatestTemporalCodeInCreation = temporalCoverageCodes.indexOf(source.getLatestTemporalCodeInCreation());
                 if (indexLatestTemporalCodeInCreation != 0) {
                     // add codes added after query creation
                     List<TemporalCode> temporalCodesAddedAfterQueryCreation = datasetVersion.getTemporalCoverage().subList(0, indexLatestTemporalCodeInCreation);
-                    List<String> temporalCodesAddedAfterQueryCreationString = commonDo2RestMapper.temporalCoverageToString(temporalCodesAddedAfterQueryCreation);
+                    List<String> temporalCodesAddedAfterQueryCreationString = this.commonDo2RestMapper.temporalCoverageToString(temporalCodesAddedAfterQueryCreation);
                     for (String code : temporalCodesAddedAfterQueryCreationString) {
                         effectiveDimensionValues.add(code);
                     }
@@ -359,7 +357,7 @@ public class QueriesDo2RestMapperV10Impl implements QueriesDo2RestMapperV10 {
                 return selectionCodes;
             }
         } else if (QueryTypeEnum.LATEST_DATA.equals(type)) {
-            if (isTemporalDimension(dimensionId)) {
+            if (this.isTemporalDimension(dimensionId)) {
                 // return N data
                 int codeLastIndexToReturn = -1;
                 if (datasetVersion.getTemporalCoverage().size() < source.getLatestDataNumber()) {
@@ -368,7 +366,7 @@ public class QueriesDo2RestMapperV10Impl implements QueriesDo2RestMapperV10 {
                     codeLastIndexToReturn = source.getLatestDataNumber();
                 }
                 List<TemporalCode> temporalCodesLatestDataNumber = datasetVersion.getTemporalCoverage().subList(0, codeLastIndexToReturn);
-                return commonDo2RestMapper.temporalCoverageToString(temporalCodesLatestDataNumber);
+                return this.commonDo2RestMapper.temporalCoverageToString(temporalCodesLatestDataNumber);
             } else {
                 // return exactly
                 return selectionCodes;
@@ -385,10 +383,10 @@ public class QueriesDo2RestMapperV10Impl implements QueriesDo2RestMapperV10 {
     }
 
     private String toQueryVersionManagementApplicationLink(QueryVersion source) {
-        return commonDo2RestMapper.getInternalWebApplicationNavigation().buildQueryVersionUrl(source);
+        return this.commonDo2RestMapper.getInternalWebApplicationNavigation().buildQueryVersionUrl(source);
     }
 
     private String toQueryVersionManagementApplicationLink(RelatedResourceResult source) {
-        return commonDo2RestMapper.getInternalWebApplicationNavigation().buildQueryVersionUrl(source);
+        return this.commonDo2RestMapper.getInternalWebApplicationNavigation().buildQueryVersionUrl(source);
     }
 }

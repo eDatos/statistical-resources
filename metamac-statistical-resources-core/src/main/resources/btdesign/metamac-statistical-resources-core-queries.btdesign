@@ -27,8 +27,6 @@ Application QueriesStatisticalResources {
             @QueryVersion createQueryVersion(@QueryVersion queryVersion, @ExternalItem statisticalOperation) throws MetamacException;
             "Update query"
             @QueryVersion updateQueryVersion(@QueryVersion queryVersion) throws MetamacException;
-            "Mark query as discontinued because the data is not going to be updated"
-            @QueryVersion markQueryVersionAsDiscontinued(@QueryVersion query) throws MetamacException;
             "Delete query"
             deleteQueryVersion(String urn) throws MetamacException;
             "Retrieves last query version by query urn"

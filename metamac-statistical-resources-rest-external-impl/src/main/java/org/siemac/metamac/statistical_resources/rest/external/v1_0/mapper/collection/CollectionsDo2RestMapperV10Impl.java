@@ -51,24 +51,24 @@ import org.springframework.stereotype.Component;
 public class CollectionsDo2RestMapperV10Impl implements CollectionsDo2RestMapperV10 {
 
     @Autowired
-    private CommonDo2RestMapperV10       commonDo2RestMapper;
+    private CommonDo2RestMapperV10 commonDo2RestMapper;
 
     @Autowired
-    private DatasetsDo2RestMapperV10     datasetsDo2RestMapper;
+    private DatasetsDo2RestMapperV10 datasetsDo2RestMapper;
 
     @Autowired
-    private DatasetVersionRepository     datasetVersionRepository;
+    private DatasetVersionRepository datasetVersionRepository;
 
     @Autowired
-    private QueryVersionRepository       queryVersionRepository;
+    private QueryVersionRepository queryVersionRepository;
 
     @Autowired
-    private QueriesDo2RestMapperV10      queriesDo2RestMapper;
+    private QueriesDo2RestMapperV10 queriesDo2RestMapper;
 
     @Autowired
     private PublicationVersionRepository publicationVersionRepository;
 
-    private static final Logger          logger = LoggerFactory.getLogger(CollectionsDo2RestMapperV10.class);
+    private static final Logger logger = LoggerFactory.getLogger(CollectionsDo2RestMapperV10.class);
 
     @Override
     public Collections toCollections(PagedResult<PublicationVersion> sources, String agencyID, String resourceID, String query, String orderBy, Integer limit, List<String> selectedLanguages) {
@@ -196,9 +196,11 @@ public class CollectionsDo2RestMapperV10Impl implements CollectionsDo2RestMapper
         List<RelatedResource> hasPart = null;
 
         if (StatisticalResourcesRestExternalConstants.IS_INTERNAL_API) {
-            hasPart = PublicationsUtils.computeHasPart(source); // Is necessary to calculate the has part
+            // Is necessary to calculate the has part
+            hasPart = PublicationsUtils.computeHasPart(source);
         } else {
-            hasPart = source.getHasPart(); // All has part resources are already published
+            // All has part resources are already published
+            hasPart = source.getHasPart();
         }
         return commonDo2RestMapper.toResources(hasPart, selectedLanguages);
     }

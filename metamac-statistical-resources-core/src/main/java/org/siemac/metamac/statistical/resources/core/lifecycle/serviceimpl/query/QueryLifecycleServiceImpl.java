@@ -1,7 +1,5 @@
 package org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.query;
 
-import static org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConstants.METHOD_NOT_IMPLEMENT_IN_THIS_VERSION;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,6 +29,8 @@ import org.siemac.metamac.statistical.resources.core.query.utils.QueryVersioning
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import static org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConstants.METHOD_NOT_IMPLEMENT_IN_THIS_VERSION;
+
 @Service("queryLifecycleService")
 public class QueryLifecycleServiceImpl extends LifecycleTemplateService<QueryVersion> implements QueryLifecycleService {
 
@@ -38,16 +38,16 @@ public class QueryLifecycleServiceImpl extends LifecycleTemplateService<QueryVer
     private LifecycleCommonMetadataChecker lifecycleCommonMetadataChecker;
 
     @Autowired
-    private QueryVersionRepository         queryVersionRepository;
+    private QueryVersionRepository queryVersionRepository;
 
     @Autowired
-    private PublicationVersionRepository   publicationVersionRepository;
+    private PublicationVersionRepository publicationVersionRepository;
 
     @Autowired
-    private QueryService                   queryService;
+    private QueryService queryService;
 
     @Autowired
-    private DatasetVersionRepository       datasetVersionRepository;
+    private DatasetVersionRepository datasetVersionRepository;
 
     @Override
     protected String getResourceMetadataName() throws MetamacException {
@@ -101,6 +101,23 @@ public class QueryLifecycleServiceImpl extends LifecycleTemplateService<QueryVer
     // ------------------------------------------------------------------------------------------------------
 
     @Override
+    protected void checkSendToPublishedResource(ServiceContext ctx, QueryVersion resource, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
+        if (!QueryStatusEnum.ACTIVE.equals(resource.getStatus()) && !QueryStatusEnum.DISCONTINUED.equals(resource.getStatus())) {
+            exceptionItems.add(new MetamacExceptionItem(ServiceExceptionType.QUERY_VERSION_PUBLISH_INVALID_STATUS, resource.getLifeCycleStatisticalResource().getUrn()));
+        }
+        this.checkLinkedDatasetOrDatasetVersionPublishedForQuery(ctx, resource, exceptionItems);
+    }
+
+    @Override
+    public void checkLinkedDatasetOrDatasetVersionPublishedBeforeQuery(ServiceContext ctx, QueryVersion resource) throws MetamacException {
+        if (ProcStatusEnumUtils.isInAnyProcStatus(resource, ProcStatusEnum.PUBLISHED, ProcStatusEnum.PUBLISHED_NOT_VISIBLE)) {
+            List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
+            this.checkLinkedDatasetOrDatasetVersionPublishedForQuery(ctx, resource, exceptionItems);
+            ExceptionUtils.throwIfException(exceptionItems);
+        }
+    }
+
+    @Override
     protected void applySendToPublishedCurrentResource(ServiceContext ctx, QueryVersion resource, QueryVersion previousResource) throws MetamacException {
         // nothing to do
     }
@@ -110,28 +127,11 @@ public class QueryLifecycleServiceImpl extends LifecycleTemplateService<QueryVer
         throw new UnsupportedOperationException("Can not publish a query with previous published version");
     }
 
-    @Override
-    protected void checkSendToPublishedResource(ServiceContext ctx, QueryVersion resource, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
-        if (!QueryStatusEnum.ACTIVE.equals(resource.getStatus()) && !QueryStatusEnum.DISCONTINUED.equals(resource.getStatus())) {
-            exceptionItems.add(new MetamacExceptionItem(ServiceExceptionType.QUERY_VERSION_PUBLISH_INVALID_STATUS, resource.getLifeCycleStatisticalResource().getUrn()));
-        }
-        checkLinkedDatasetOrDatasetVersionPublishedForQuery(ctx, resource, exceptionItems);
-    }
-
-    @Override
-    public void checkLinkedDatasetOrDatasetVersionPublishedBeforeQuery(ServiceContext ctx, QueryVersion resource) throws MetamacException {
-        if (ProcStatusEnumUtils.isInAnyProcStatus(resource, ProcStatusEnum.PUBLISHED, ProcStatusEnum.PUBLISHED_NOT_VISIBLE)) {
-            List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
-            checkLinkedDatasetOrDatasetVersionPublishedForQuery(ctx, resource, exceptionItems);
-            ExceptionUtils.throwIfException(exceptionItems);
-        }
-    }
-
     private void checkLinkedDatasetOrDatasetVersionPublishedForQuery(ServiceContext ctx, QueryVersion resource, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
         if (resource.getDataset() != null) {
-            checkLinkedDatasetPublishedOrVisibleBeforeQuery(ctx, resource, exceptionItems);
+            this.checkLinkedDatasetPublishedOrVisibleBeforeQuery(ctx, resource, exceptionItems);
         } else if (resource.getFixedDatasetVersion() != null) {
-            checkLinkedDatasetVersionPublishedOrVisibleForQuery(resource, exceptionItems);
+            this.checkLinkedDatasetVersionPublishedOrVisibleForQuery(resource, exceptionItems);
         } else {
             exceptionItems.add(new MetamacExceptionItem(ServiceExceptionType.QUERY_VERSION_PUBLISH_MUST_LINK_TO_DATASET, resource.getLifeCycleStatisticalResource().getUrn()));
         }
@@ -139,12 +139,12 @@ public class QueryLifecycleServiceImpl extends LifecycleTemplateService<QueryVer
 
     private void checkLinkedDatasetPublishedOrVisibleBeforeQuery(ServiceContext ctx, QueryVersion resource, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
         String datasetUrn = resource.getDataset().getIdentifiableStatisticalResource().getUrn();
-        DatasetVersion lastVersion = datasetVersionRepository.retrieveLastVersion(datasetUrn);
+        DatasetVersion lastVersion = this.datasetVersionRepository.retrieveLastVersion(datasetUrn);
 
-        if (!isDatasetVersionPublishedAndVisibleBeforeOrEqualDate(lastVersion, resource.getLifeCycleStatisticalResource().getValidFrom())) {
-            DatasetVersion lastPublishedVersion = datasetVersionRepository.retrieveLastPublishedVersion(datasetUrn);
+        if (!this.isDatasetVersionPublishedAndVisibleBeforeOrEqualDate(lastVersion, resource.getLifeCycleStatisticalResource().getValidFrom())) {
+            DatasetVersion lastPublishedVersion = this.datasetVersionRepository.retrieveLastPublishedVersion(datasetUrn);
             if (lastPublishedVersion != null) {
-                if (!queryService.checkQueryCompatibility(ctx, resource, lastPublishedVersion)) {
+                if (!this.queryService.checkQueryCompatibility(ctx, resource, lastPublishedVersion)) {
                     exceptionItems.add(new MetamacExceptionItem(ServiceExceptionType.QUERY_VERSION_NOT_COMPATIBLE_WITH_LAST_PUBLISHED_DATASET_VERSION, datasetUrn));
                 }
             } else {
@@ -157,7 +157,7 @@ public class QueryLifecycleServiceImpl extends LifecycleTemplateService<QueryVer
         String datasetVersionUrn = resource.getFixedDatasetVersion().getSiemacMetadataStatisticalResource().getUrn();
         DatasetVersion datasetVersion = resource.getFixedDatasetVersion();
 
-        if (!isDatasetVersionPublishedAndVisibleBeforeOrEqualDate(datasetVersion, resource.getLifeCycleStatisticalResource().getValidFrom())) {
+        if (!this.isDatasetVersionPublishedAndVisibleBeforeOrEqualDate(datasetVersion, resource.getLifeCycleStatisticalResource().getValidFrom())) {
             exceptionItems.add(new MetamacExceptionItem(ServiceExceptionType.QUERY_VERSION_DATASET_VERSION_MUST_BE_PUBLISHED, datasetVersionUrn));
         }
     }
@@ -179,14 +179,14 @@ public class QueryLifecycleServiceImpl extends LifecycleTemplateService<QueryVer
     // ------------------------------------------------------------------------------------------------------
     @Override
     protected void checkCancelPublicationResource(ServiceContext ctx, QueryVersion resource, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
-        checkPublicationsThatHasPart(ctx, resource, exceptionItems);
+        this.checkPublicationsThatHasPart(resource, exceptionItems);
     }
 
-    private void checkPublicationsThatHasPart(ServiceContext ctx, QueryVersion resource, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
-        List<RelatedResourceResult> publications = queryVersionRepository.retrieveIsPartOf(resource);
+    private void checkPublicationsThatHasPart(QueryVersion resource, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
+        List<RelatedResourceResult> publications = this.queryVersionRepository.retrieveIsPartOf(resource);
         if (!publications.isEmpty()) {
             for (RelatedResourceResult publicationResult : publications) {
-                PublicationVersion publicationVersion = publicationVersionRepository.retrieveByUrn(publicationResult.getUrn());
+                PublicationVersion publicationVersion = this.publicationVersionRepository.retrieveByUrn(publicationResult.getUrn());
                 if (ProcStatusEnum.PUBLISHED_NOT_VISIBLE.equals(publicationVersion.getSiemacMetadataStatisticalResource().getEffectiveProcStatus())) {
                     exceptionItems.add(new MetamacExceptionItem(ServiceExceptionType.QUERY_VERSION_IS_PART_OF_NOT_VISIBLE_PUBLICATION, publicationVersion.getSiemacMetadataStatisticalResource()
                             .getUrn()));
@@ -244,27 +244,27 @@ public class QueryLifecycleServiceImpl extends LifecycleTemplateService<QueryVer
 
     @Override
     protected QueryVersion saveResource(QueryVersion resource) {
-        return queryVersionRepository.save(resource);
+        return this.queryVersionRepository.save(resource);
     }
 
     @Override
     protected QueryVersion retrieveResourceByUrn(String urn) throws MetamacException {
-        return queryVersionRepository.retrieveByUrn(urn);
+        return this.queryVersionRepository.retrieveByUrn(urn);
     }
 
     @Override
     protected QueryVersion retrieveResourceByResource(QueryVersion resource) throws MetamacException {
-        return queryVersionRepository.retrieveByUrn(resource.getLifeCycleStatisticalResource().getUrn());
+        return this.queryVersionRepository.retrieveByUrn(resource.getLifeCycleStatisticalResource().getUrn());
     }
 
     @Override
     protected QueryVersion retrievePreviousPublishedResourceByResource(QueryVersion resource) throws MetamacException {
-        return queryVersionRepository.retrieveLastPublishedVersion(resource.getQuery().getIdentifiableStatisticalResource().getUrn());
+        return this.queryVersionRepository.retrieveLastPublishedVersion(resource.getQuery().getIdentifiableStatisticalResource().getUrn());
     }
 
     @Override
     protected void checkResourceMetadataAllActions(ServiceContext ctx, QueryVersion resource, List<MetamacExceptionItem> exceptions) throws MetamacException {
-        lifecycleCommonMetadataChecker.checkQueryVersionCommonMetadata(resource, ServiceExceptionParameters.QUERY_VERSION, exceptions);
+        this.lifecycleCommonMetadataChecker.checkQueryVersionCommonMetadata(resource, ServiceExceptionParameters.QUERY_VERSION, exceptions);
     }
 
     @Override

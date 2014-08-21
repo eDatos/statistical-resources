@@ -20,21 +20,21 @@ public class QueryStatusEnumUtilsTest extends StatisticalResourcesBaseTest {
 
     @Test
     public void testCheckPossibleQueryStatus() throws Exception {
-        QueryVersion resource = persistedDoMocks.mockQueryVersionWithGeneratedDatasetVersion();
+        QueryVersion resource = this.persistedDoMocks.mockQueryVersionWithGeneratedDatasetVersion();
         resource.setStatus(QueryStatusEnum.DISCONTINUED);
-        QueryStatusEnumUtils.checkPossibleQueryStatus(resource, QueryStatusEnum.DISCONTINUED, QueryStatusEnum.ACTIVE, QueryStatusEnum.PENDING_REVIEW);
+        QueryStatusEnumUtils.checkPossibleQueryStatus(resource, QueryStatusEnum.DISCONTINUED, QueryStatusEnum.ACTIVE);
     }
 
     @Test
     public void testCheckPossibleQueryStatusExpectingException() throws Exception {
         String urn = "URN_DUMMY";
-        expectedMetamacException(new MetamacException(ServiceExceptionType.LIFE_CYCLE_WRONG_PROC_STATUS, urn, "DISCONTINUED, PENDING_REVIEW"));
+        this.expectedMetamacException(new MetamacException(ServiceExceptionType.LIFE_CYCLE_WRONG_PROC_STATUS, urn, "DISCONTINUED"));
 
-        QueryVersion resource = persistedDoMocks.mockQueryVersionWithGeneratedDatasetVersion();
+        QueryVersion resource = this.persistedDoMocks.mockQueryVersionWithGeneratedDatasetVersion();
         resource.setStatus(QueryStatusEnum.ACTIVE);
         resource.getLifeCycleStatisticalResource().setUrn(urn);
 
-        QueryStatusEnumUtils.checkPossibleQueryStatus(resource, QueryStatusEnum.DISCONTINUED, QueryStatusEnum.PENDING_REVIEW);
+        QueryStatusEnumUtils.checkPossibleQueryStatus(resource, QueryStatusEnum.DISCONTINUED);
     }
 
 }
