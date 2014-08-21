@@ -16,7 +16,10 @@ import org.siemac.metamac.statistical.resources.core.publication.domain.ElementL
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
 import org.siemac.metamac.statistical.resources.core.query.domain.Query;
 
-public class PublicationsUtils {
+public final class PublicationsUtils {
+
+    private PublicationsUtils() {
+    }
 
     public static List<RelatedResource> computeHasPart(PublicationVersion resource) {
         Map<String, Dataset> datasetsByUrn = new HashMap<String, Dataset>();
