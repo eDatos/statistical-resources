@@ -602,9 +602,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         queryVersion = queryLifecycleService.versioning(ctx, queryVersion.getLifeCycleStatisticalResource().getUrn(), versionType);
 
         // Transform
-        queryVersionDto = queryDo2DtoMapper.queryVersionDoToDto(queryVersion);
-
-        return queryVersionDto;
+        return queryDo2DtoMapper.queryVersionDoToDto(queryVersion);
     }
 
     @Override
