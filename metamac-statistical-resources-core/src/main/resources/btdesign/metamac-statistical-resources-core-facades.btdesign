@@ -244,7 +244,7 @@ Application FacadeStatisticalResources {
 	    	"Create content constraint"
     		@ContentConstraintBasicDto createContentConstraint(@ContentConstraintDto contentConstraint) throws MetamacException;
     		"Retrieves categorisation by urn"
-    		@ContentConstraintDto retrieveContentConstraintByUrn(String urn, Boolean includeDraft) throws MetamacException;
+    		@ContentConstraintDto retrieveContentConstraintByUrn(String urn) throws MetamacException;
     		"Deletes content constraint"
     		deleteContentConstraint(String urn) throws MetamacException;
     		

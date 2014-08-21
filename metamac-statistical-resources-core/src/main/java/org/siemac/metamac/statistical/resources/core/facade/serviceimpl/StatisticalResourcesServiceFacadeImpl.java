@@ -1968,9 +1968,9 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     }
 
     @Override
-    public ContentConstraintDto retrieveContentConstraintByUrn(ServiceContext ctx, String urn, Boolean includeDraft) throws MetamacException {
+    public ContentConstraintDto retrieveContentConstraintByUrn(ServiceContext ctx, String urn) throws MetamacException {
         // Retrieve
-        ContentConstraint contentConstraint = this.constraintsService.retrieveContentConstraintByUrn(ctx, urn, includeDraft);
+        ContentConstraint contentConstraint = this.constraintsService.retrieveContentConstraintByUrn(ctx, urn, true);
 
         // Security
         DatasetVersion datasetVersion = this.obtainDatasetVersionFromContentConstraint(ctx, contentConstraint); // Dataset for extract operation
