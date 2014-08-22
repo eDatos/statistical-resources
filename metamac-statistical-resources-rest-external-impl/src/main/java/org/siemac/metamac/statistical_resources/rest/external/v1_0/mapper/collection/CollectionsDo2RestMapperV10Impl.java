@@ -51,24 +51,24 @@ import org.springframework.stereotype.Component;
 public class CollectionsDo2RestMapperV10Impl implements CollectionsDo2RestMapperV10 {
 
     @Autowired
-    private CommonDo2RestMapperV10 commonDo2RestMapper;
+    private CommonDo2RestMapperV10       commonDo2RestMapper;
 
     @Autowired
-    private DatasetsDo2RestMapperV10 datasetsDo2RestMapper;
+    private DatasetsDo2RestMapperV10     datasetsDo2RestMapper;
 
     @Autowired
-    private DatasetVersionRepository datasetVersionRepository;
+    private DatasetVersionRepository     datasetVersionRepository;
 
     @Autowired
-    private QueryVersionRepository queryVersionRepository;
+    private QueryVersionRepository       queryVersionRepository;
 
     @Autowired
-    private QueriesDo2RestMapperV10 queriesDo2RestMapper;
+    private QueriesDo2RestMapperV10      queriesDo2RestMapper;
 
     @Autowired
     private PublicationVersionRepository publicationVersionRepository;
 
-    private static final Logger logger = LoggerFactory.getLogger(CollectionsDo2RestMapperV10.class);
+    private static final Logger          logger = LoggerFactory.getLogger(CollectionsDo2RestMapperV10.class);
 
     @Override
     public Collections toCollections(PagedResult<PublicationVersion> sources, String agencyID, String resourceID, String query, String orderBy, Integer limit, List<String> selectedLanguages) {
@@ -316,7 +316,10 @@ public class CollectionsDo2RestMapperV10Impl implements CollectionsDo2RestMapper
 
     private String toCollectionLink(String agencyID, String resourceID) {
         String resourceSubpath = StatisticalResourcesRestExternalConstants.LINK_SUBPATH_COLLECTIONS;
-        String version = null; // do not return version
+
+        // do not return version
+        String version = null;
+
         return commonDo2RestMapper.toResourceLink(resourceSubpath, agencyID, resourceID, version);
     }
 
@@ -327,7 +330,8 @@ public class CollectionsDo2RestMapperV10Impl implements CollectionsDo2RestMapper
         return toCollectionUrn(source.getLifeCycleStatisticalResource().getMaintainer().getCodeNested(), source.getLifeCycleStatisticalResource().getCode());
     }
     private String toCollectionUrn(String maintainerNestedCode, String code) {
-        return generateSiemacStatisticalResourceCollectionUrn(new String[]{maintainerNestedCode}, code); // global urn without version
+        // global urn without version
+        return generateSiemacStatisticalResourceCollectionUrn(new String[]{maintainerNestedCode}, code);
     }
 
 }
