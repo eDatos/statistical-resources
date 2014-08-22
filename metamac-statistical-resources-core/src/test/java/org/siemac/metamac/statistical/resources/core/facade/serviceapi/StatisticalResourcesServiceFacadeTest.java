@@ -706,9 +706,7 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
     @Test
     @MetamacMock({QUERY_VERSION_02_BASIC_ORDERED_01_NAME, QUERY_VERSION_03_BASIC_ORDERED_02_NAME, QUERY_VERSION_04_BASIC_ORDERED_03_NAME})
     public void testFindQueriesVersionsByConditionCheckLastUpdatedIsDefaultOrder() throws Exception {
-        String urnQueryVersion02 = queryVersionMockFactory.retrieveMock(QUERY_VERSION_02_BASIC_ORDERED_01_NAME).getLifeCycleStatisticalResource().getUrn();
         String urnQueryVersion03 = queryVersionMockFactory.retrieveMock(QUERY_VERSION_03_BASIC_ORDERED_02_NAME).getLifeCycleStatisticalResource().getUrn();
-        String urnQueryVersion04 = queryVersionMockFactory.retrieveMock(QUERY_VERSION_04_BASIC_ORDERED_03_NAME).getLifeCycleStatisticalResource().getUrn();
 
         MetamacCriteria metamacCriteria = new MetamacCriteria();
 
@@ -720,11 +718,13 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         assertTrue(queriesPagedResult.getResults().get(0) instanceof QueryVersionBaseDto);
 
         int i = 0;
-        assertEquals(urnQueryVersion02, queriesPagedResult.getResults().get(i++).getUrn());
-        assertEquals(urnQueryVersion03, queriesPagedResult.getResults().get(i++).getUrn());
-        assertEquals(urnQueryVersion04, queriesPagedResult.getResults().get(i++).getUrn());
+        Date lastUpdated01 = queriesPagedResult.getResults().get(i++).getLastUpdated();
+        Date lastUpdated02 = queriesPagedResult.getResults().get(i++).getLastUpdated();
+        Date lastUpdated03 = queriesPagedResult.getResults().get(i++).getLastUpdated();
+        assertTrue(lastUpdated01.before(lastUpdated02));
+        assertTrue(lastUpdated02.before(lastUpdated03));
 
-        // Update queryVersion 02
+        // Update queryVersion 03
         QueryVersionDto queryVersionDto03 = statisticalResourcesServiceFacade.retrieveQueryVersionByUrn(getServiceContextAdministrador(), urnQueryVersion03);
         statisticalResourcesServiceFacade.updateQueryVersion(getServiceContextAdministrador(), queryVersionDto03);
 
@@ -737,11 +737,14 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         assertTrue(queriesPagedResult.getResults().get(0) instanceof QueryVersionBaseDto);
 
         i = 0;
-        assertEquals(urnQueryVersion02, queriesPagedResult.getResults().get(i++).getUrn());
-        assertEquals(urnQueryVersion04, queriesPagedResult.getResults().get(i++).getUrn());
-        assertEquals(urnQueryVersion03, queriesPagedResult.getResults().get(i++).getUrn());
-    }
+        lastUpdated01 = queriesPagedResult.getResults().get(i++).getLastUpdated();
+        lastUpdated02 = queriesPagedResult.getResults().get(i++).getLastUpdated();
+        lastUpdated03 = queriesPagedResult.getResults().get(i++).getLastUpdated();
+        assertTrue(lastUpdated01.before(lastUpdated02));
+        assertTrue(lastUpdated02.before(lastUpdated03));
 
+        assertEquals(queryVersionDto03.getUrn(), queriesPagedResult.getResults().get(2).getUrn());
+    }
     @Test
     @MetamacMock({QUERY_VERSION_06_BASIC_ACTIVE_NAME, QUERY_VERSION_07_BASIC_ACTIVE_NAME, QUERY_VERSION_08_BASIC_DISCONTINUED_NAME})
     public void testFindQueriesVersionsByConditionUsingStatus() throws Exception {
@@ -2785,11 +2788,7 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
     @Test
     @MetamacMock({PUBLICATION_VERSION_05_OPERATION_0001_CODE_000001_NAME, PUBLICATION_VERSION_06_OPERATION_0001_CODE_000002_NAME, PUBLICATION_VERSION_07_OPERATION_0001_CODE_000003_NAME})
     public void testFindPublicationsVersionsByConditionCheckLastUpdatedIsDefaultOrder() throws Exception {
-        String publicationVersionOperation1Code1Urn = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_05_OPERATION_0001_CODE_000001_NAME).getSiemacMetadataStatisticalResource()
-                .getUrn();
         String publicationVersionOperation1Code2Urn = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_06_OPERATION_0001_CODE_000002_NAME).getSiemacMetadataStatisticalResource()
-                .getUrn();
-        String publicationVersionOperation1Code3Urn = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_07_OPERATION_0001_CODE_000003_NAME).getSiemacMetadataStatisticalResource()
                 .getUrn();
 
         MetamacCriteria metamacCriteria = new MetamacCriteria();
@@ -2803,9 +2802,11 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         assertTrue(publicationsPagedResult.getResults().get(0) instanceof PublicationVersionBaseDto);
 
         int i = 0;
-        assertEquals(publicationVersionOperation1Code1Urn, publicationsPagedResult.getResults().get(i++).getUrn());
-        assertEquals(publicationVersionOperation1Code2Urn, publicationsPagedResult.getResults().get(i++).getUrn());
-        assertEquals(publicationVersionOperation1Code3Urn, publicationsPagedResult.getResults().get(i++).getUrn());
+        Date lastUpdated01 = publicationsPagedResult.getResults().get(i++).getLastUpdated();
+        Date lastUpdated02 = publicationsPagedResult.getResults().get(i++).getLastUpdated();
+        Date lastUpdated03 = publicationsPagedResult.getResults().get(i++).getLastUpdated();
+        assertTrue(lastUpdated01.before(lastUpdated02));
+        assertTrue(lastUpdated02.before(lastUpdated03));
 
         // Update
         PublicationVersionDto publicationVersionOperation1Code2 = statisticalResourcesServiceFacade.retrievePublicationVersionByUrn(getServiceContextAdministrador(),
@@ -2821,9 +2822,13 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         assertTrue(publicationsPagedResult.getResults().get(0) instanceof PublicationVersionBaseDto);
 
         i = 0;
-        assertEquals(publicationVersionOperation1Code1Urn, publicationsPagedResult.getResults().get(i++).getUrn());
-        assertEquals(publicationVersionOperation1Code3Urn, publicationsPagedResult.getResults().get(i++).getUrn());
-        assertEquals(publicationVersionOperation1Code2Urn, publicationsPagedResult.getResults().get(i++).getUrn());
+        lastUpdated01 = publicationsPagedResult.getResults().get(i++).getLastUpdated();
+        lastUpdated02 = publicationsPagedResult.getResults().get(i++).getLastUpdated();
+        lastUpdated03 = publicationsPagedResult.getResults().get(i++).getLastUpdated();
+        assertTrue(lastUpdated01.before(lastUpdated02));
+        assertTrue(lastUpdated02.before(lastUpdated03));
+
+        assertEquals(publicationVersionOperation1Code2.getUrn(), publicationsPagedResult.getResults().get(2).getUrn());
     }
 
     @Test
