@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -446,10 +447,11 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
 
     }
 
+    @Ignore
     @Override
+    @Test
     public void testProgramPublicationQueryVersion() throws Exception {
         // TODO: Implement (METAMAC-2143)
-
     }
 
     @Override
