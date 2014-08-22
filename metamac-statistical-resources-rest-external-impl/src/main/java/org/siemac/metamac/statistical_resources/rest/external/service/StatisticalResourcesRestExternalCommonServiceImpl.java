@@ -42,19 +42,19 @@ import static org.siemac.metamac.statistical_resources.rest.external.service.uti
 @Service("statisticalResourcesRestExternalCommonService")
 public class StatisticalResourcesRestExternalCommonServiceImpl implements StatisticalResourcesRestExternalCommonService {
 
-    private final PagingParameter pagingParameterOneResult = PagingParameter.pageAccess(1, 1, false);
+    private final PagingParameter        pagingParameterOneResult = PagingParameter.pageAccess(1, 1, false);
 
     @Autowired
-    private DatasetService datasetService;
+    private DatasetService               datasetService;
 
     @Autowired
-    private PublicationService publicationService;
+    private PublicationService           publicationService;
 
     @Autowired
-    private QueryService queryService;
+    private QueryService                 queryService;
 
     @Autowired
-    private QueryVersionRepository queryVersionRepository;
+    private QueryVersionRepository       queryVersionRepository;
 
     @Autowired
     private PublicationVersionRepository publicationVersionRepository;
@@ -68,7 +68,7 @@ public class StatisticalResourcesRestExternalCommonServiceImpl implements Statis
             checkParameterNotWildcardAll(StatisticalResourcesRestExternalConstants.PARAMETER_VERSION, version);
 
             // Retrieve
-            PagedResult<DatasetVersion> entitiesPagedResult = this.findDatasetVersionsCommon(agencyID, resourceID, version, null, this.pagingParameterOneResult);
+            PagedResult<DatasetVersion> entitiesPagedResult = findDatasetVersionsCommon(agencyID, resourceID, version, null, pagingParameterOneResult);
             if (entitiesPagedResult.getValues().size() != 1) {
                 org.siemac.metamac.rest.common.v1_0.domain.Exception exception = RestExceptionUtils.getException(RestServiceExceptionType.DATASET_NOT_FOUND, resourceID, version, agencyID);
                 throw new RestException(exception, Status.NOT_FOUND);
@@ -83,7 +83,7 @@ public class StatisticalResourcesRestExternalCommonServiceImpl implements Statis
     @Override
     public PagedResult<DatasetVersion> findDatasetVersions(String agencyID, String resourceID, String version, List<ConditionalCriteria> conditionalCriteria, PagingParameter pagingParameter) {
         try {
-            return this.findDatasetVersionsCommon(agencyID, resourceID, version, conditionalCriteria, pagingParameter);
+            return findDatasetVersionsCommon(agencyID, resourceID, version, conditionalCriteria, pagingParameter);
         } catch (Exception e) {
             throw manageException(e);
         }
@@ -97,7 +97,7 @@ public class StatisticalResourcesRestExternalCommonServiceImpl implements Statis
             checkParameterNotWildcardAll(StatisticalResourcesRestExternalConstants.PARAMETER_RESOURCE_ID, resourceID);
 
             // Retrieve
-            PagedResult<PublicationVersion> entitiesPagedResult = this.findPublicationVersionsCommon(agencyID, resourceID, null, this.pagingParameterOneResult);
+            PagedResult<PublicationVersion> entitiesPagedResult = findPublicationVersionsCommon(agencyID, resourceID, null, pagingParameterOneResult);
             if (entitiesPagedResult.getValues().size() != 1) {
                 org.siemac.metamac.rest.common.v1_0.domain.Exception exception = RestExceptionUtils.getException(RestServiceExceptionType.COLLECTION_NOT_FOUND, resourceID, agencyID);
                 throw new RestException(exception, Status.NOT_FOUND);
@@ -111,7 +111,7 @@ public class StatisticalResourcesRestExternalCommonServiceImpl implements Statis
     @Override
     public PagedResult<PublicationVersion> findPublicationVersions(String agencyID, List<ConditionalCriteria> conditionalCriteria, PagingParameter pagingParameter) {
         try {
-            return this.findPublicationVersionsCommon(agencyID, null, conditionalCriteria, pagingParameter);
+            return findPublicationVersionsCommon(agencyID, null, conditionalCriteria, pagingParameter);
         } catch (Exception e) {
             throw manageException(e);
         }
@@ -125,7 +125,7 @@ public class StatisticalResourcesRestExternalCommonServiceImpl implements Statis
             checkParameterNotWildcardAll(StatisticalResourcesRestExternalConstants.PARAMETER_RESOURCE_ID, resourceID);
 
             // Retrieve
-            PagedResult<QueryVersion> entitiesPagedResult = this.findQueryVersionsCommon(agencyID, resourceID, null, this.pagingParameterOneResult);
+            PagedResult<QueryVersion> entitiesPagedResult = findQueryVersionsCommon(agencyID, resourceID, null, pagingParameterOneResult);
             if (entitiesPagedResult.getValues().size() != 1) {
                 org.siemac.metamac.rest.common.v1_0.domain.Exception exception = RestExceptionUtils.getException(RestServiceExceptionType.QUERY_NOT_FOUND, resourceID, agencyID);
                 throw new RestException(exception, Status.NOT_FOUND);
@@ -140,7 +140,7 @@ public class StatisticalResourcesRestExternalCommonServiceImpl implements Statis
     @Override
     public PagedResult<QueryVersion> findQueryVersions(String agencyID, List<ConditionalCriteria> conditionalCriteria, PagingParameter pagingParameter) {
         try {
-            return this.findQueryVersionsCommon(agencyID, null, conditionalCriteria, pagingParameter);
+            return findQueryVersionsCommon(agencyID, null, conditionalCriteria, pagingParameter);
         } catch (Exception e) {
             throw manageException(e);
         }
@@ -156,12 +156,12 @@ public class StatisticalResourcesRestExternalCommonServiceImpl implements Statis
         } else {
             conditionalCriteria.addAll(ConditionalCriteriaBuilder.criteriaFor(DatasetVersion.class).distinctRoot().build());
         }
-        this.addConditionalCriteriaAgencyIfApplicable(agencyID, DatasetVersion.class, DatasetVersionProperties.siemacMetadataStatisticalResource(), conditionalCriteria);
-        this.addConditionalCriteriaResourceIfApplicable(resourceID, DatasetVersion.class, DatasetVersionProperties.siemacMetadataStatisticalResource(), conditionalCriteria);
-        this.addConditionalCriteriaVersionIfApplicable(version, DatasetVersion.class, DatasetVersionProperties.siemacMetadataStatisticalResource(), conditionalCriteria);
+        addConditionalCriteriaAgencyIfApplicable(agencyID, DatasetVersion.class, DatasetVersionProperties.siemacMetadataStatisticalResource(), conditionalCriteria);
+        addConditionalCriteriaResourceIfApplicable(resourceID, DatasetVersion.class, DatasetVersionProperties.siemacMetadataStatisticalResource(), conditionalCriteria);
+        addConditionalCriteriaVersionIfApplicable(version, DatasetVersion.class, DatasetVersionProperties.siemacMetadataStatisticalResource(), conditionalCriteria);
 
         // Find
-        PagedResult<DatasetVersion> entitiesPagedResult = this.datasetService.findDatasetVersionsByCondition(SERVICE_CONTEXT, conditionalCriteria, pagingParameter);
+        PagedResult<DatasetVersion> entitiesPagedResult = datasetService.findDatasetVersionsByCondition(SERVICE_CONTEXT, conditionalCriteria, pagingParameter);
         return entitiesPagedResult;
     }
 
@@ -175,13 +175,12 @@ public class StatisticalResourcesRestExternalCommonServiceImpl implements Statis
         } else {
             conditionalCriteria.addAll(ConditionalCriteriaBuilder.criteriaFor(PublicationVersion.class).distinctRoot().build());
         }
-        this.addConditionalCriteriaAgencyIfApplicable(agencyID, PublicationVersion.class, PublicationVersionProperties.siemacMetadataStatisticalResource(), conditionalCriteria);
-        this.addConditionalCriteriaResourceIfApplicable(resourceID, PublicationVersion.class, PublicationVersionProperties.siemacMetadataStatisticalResource(), conditionalCriteria);
-        this.addConditionalCriteriaVersionIfApplicable(SrmRestConstants.WILDCARD_LATEST, PublicationVersion.class, PublicationVersionProperties.siemacMetadataStatisticalResource(),
-                conditionalCriteria);
+        addConditionalCriteriaAgencyIfApplicable(agencyID, PublicationVersion.class, PublicationVersionProperties.siemacMetadataStatisticalResource(), conditionalCriteria);
+        addConditionalCriteriaResourceIfApplicable(resourceID, PublicationVersion.class, PublicationVersionProperties.siemacMetadataStatisticalResource(), conditionalCriteria);
+        addConditionalCriteriaVersionIfApplicable(SrmRestConstants.WILDCARD_LATEST, PublicationVersion.class, PublicationVersionProperties.siemacMetadataStatisticalResource(), conditionalCriteria);
 
         // Find
-        PagedResult<PublicationVersion> entitiesPagedResult = this.publicationService.findPublicationVersionsByCondition(SERVICE_CONTEXT, conditionalCriteria, pagingParameter);
+        PagedResult<PublicationVersion> entitiesPagedResult = publicationService.findPublicationVersionsByCondition(SERVICE_CONTEXT, conditionalCriteria, pagingParameter);
         return entitiesPagedResult;
     }
 
@@ -195,12 +194,12 @@ public class StatisticalResourcesRestExternalCommonServiceImpl implements Statis
         } else {
             conditionalCriteria.addAll(ConditionalCriteriaBuilder.criteriaFor(QueryVersion.class).distinctRoot().build());
         }
-        this.addConditionalCriteriaAgencyIfApplicable(agencyID, QueryVersion.class, QueryVersionProperties.lifeCycleStatisticalResource(), conditionalCriteria);
-        this.addConditionalCriteriaResourceIfApplicable(resourceID, QueryVersion.class, QueryVersionProperties.lifeCycleStatisticalResource(), conditionalCriteria);
-        this.addConditionalCriteriaVersionIfApplicable(SrmRestConstants.WILDCARD_LATEST, QueryVersion.class, QueryVersionProperties.lifeCycleStatisticalResource(), conditionalCriteria);
+        addConditionalCriteriaAgencyIfApplicable(agencyID, QueryVersion.class, QueryVersionProperties.lifeCycleStatisticalResource(), conditionalCriteria);
+        addConditionalCriteriaResourceIfApplicable(resourceID, QueryVersion.class, QueryVersionProperties.lifeCycleStatisticalResource(), conditionalCriteria);
+        addConditionalCriteriaVersionIfApplicable(SrmRestConstants.WILDCARD_LATEST, QueryVersion.class, QueryVersionProperties.lifeCycleStatisticalResource(), conditionalCriteria);
 
         // Find
-        PagedResult<QueryVersion> entitiesPagedResult = this.queryService.findQueryVersionsByCondition(SERVICE_CONTEXT, conditionalCriteria, pagingParameter);
+        PagedResult<QueryVersion> entitiesPagedResult = queryService.findQueryVersionsByCondition(SERVICE_CONTEXT, conditionalCriteria, pagingParameter);
         return entitiesPagedResult;
     }
     @SuppressWarnings({"unchecked", "rawtypes"})
