@@ -22,7 +22,7 @@ import org.slf4j.LoggerFactory;
 
 public abstract class BaseRest2DoMapperV10Impl {
 
-    private final Logger logger = LoggerFactory.getLogger(BaseRest2DoMapperV10Impl.class);
+    private final Logger                                    logger                                 = LoggerFactory.getLogger(BaseRest2DoMapperV10Impl.class);
 
     private PropertyValueRestToPropertyValueEntityInterface propertyValueRestToPropertyValueEntity = null;
 
@@ -31,19 +31,19 @@ public abstract class BaseRest2DoMapperV10Impl {
     }
 
     public BaseRest2DoMapperV10Impl() {
-        this.propertyValueRestToPropertyValueEntity = new PropertyValueRestToPropertyValueEntity();
+        propertyValueRestToPropertyValueEntity = new PropertyValueRestToPropertyValueEntity();
     }
 
     @SuppressWarnings("rawtypes")
     protected SculptorPropertyCriteria buildSculptorPropertyCriteria(Property propertyEntity, PropertyTypeEnum propertyEntityType, MetamacRestQueryPropertyRestriction restPropertyRestriction) {
-        return CriteriaUtils.buildSculptorPropertyCriteria(propertyEntity, propertyEntityType.name(), restPropertyRestriction, this.propertyValueRestToPropertyValueEntity);
+        return CriteriaUtils.buildSculptorPropertyCriteria(propertyEntity, propertyEntityType.name(), restPropertyRestriction, propertyValueRestToPropertyValueEntity);
     }
 
     @SuppressWarnings({"rawtypes"})
     protected SculptorPropertyCriteriaDisjunction buildSculptorPropertyCriteriaDisjunctionForUrnProperty(MetamacRestQueryPropertyRestriction propertyRestriction,
             ExternalItemProperty externalItemProperty) {
-        SculptorPropertyCriteria propertyCriteria1Urn = this.buildSculptorPropertyCriteria(externalItemProperty.urn(), PropertyTypeEnum.STRING, propertyRestriction);
-        SculptorPropertyCriteria propertyCriteria2UrnProvider = this.buildSculptorPropertyCriteria(externalItemProperty.urnProvider(), PropertyTypeEnum.STRING, propertyRestriction);
+        SculptorPropertyCriteria propertyCriteria1Urn = buildSculptorPropertyCriteria(externalItemProperty.urn(), PropertyTypeEnum.STRING, propertyRestriction);
+        SculptorPropertyCriteria propertyCriteria2UrnProvider = buildSculptorPropertyCriteria(externalItemProperty.urnProvider(), PropertyTypeEnum.STRING, propertyRestriction);
         return new SculptorPropertyCriteriaDisjunction(propertyCriteria1Urn, propertyCriteria2UrnProvider);
     }
 
@@ -65,18 +65,18 @@ public abstract class BaseRest2DoMapperV10Impl {
                     case BOOLEAN:
                         return Boolean.valueOf(value);
                     case QUERY_TYPE:
-                        return BaseRest2DoMapperV10Impl.this.toQueryType(value);
+                        return toQueryType(value);
                     case QUERY_STATUS:
-                        return BaseRest2DoMapperV10Impl.this.toQueryStatus(value);
+                        return toQueryStatus(value);
                     default:
-                        throw BaseRest2DoMapperV10Impl.this.toRestExceptionParameterIncorrect(propertyName);
+                        throw toRestExceptionParameterIncorrect(propertyName);
                 }
             } catch (Exception e) {
-                BaseRest2DoMapperV10Impl.this.logger.error("Error parsing Rest query", e);
+                logger.error("Error parsing Rest query", e);
                 if (e instanceof RestException) {
                     throw (RestException) e;
                 } else {
-                    throw BaseRest2DoMapperV10Impl.this.toRestExceptionParameterIncorrect(propertyName);
+                    throw toRestExceptionParameterIncorrect(propertyName);
                 }
             }
         }
@@ -90,7 +90,7 @@ public abstract class BaseRest2DoMapperV10Impl {
         } else {
             propertyName = propertyEntity.getName();
         }
-        return this.buildSculptorPropertyCriteria(new LeafProperty(propertyName, CoreCommonConstants.CRITERIA_DATETIME_COLUMN_DATETIME, true, entity), PropertyTypeEnum.DATE, propertyRestriction);
+        return buildSculptorPropertyCriteria(new LeafProperty(propertyName, CoreCommonConstants.CRITERIA_DATETIME_COLUMN_DATETIME, true, entity), PropertyTypeEnum.DATE, propertyRestriction);
     }
 
     protected RestException toRestExceptionParameterIncorrect(String parameter) {
