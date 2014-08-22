@@ -994,13 +994,14 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
     @MetamacMock(QUERY_VERSION_15_PUBLISHED_NAME)
     public void testVersioningQueryVersion() throws Exception {
         String queryVersionUrn = queryVersionMockFactory.retrieveMock(QUERY_VERSION_15_PUBLISHED_NAME).getLifeCycleStatisticalResource().getUrn();
-        QueryVersionDto queryVersionDto = statisticalResourcesServiceFacade.retrieveQueryVersionByUrn(getServiceContextAdministrador(), queryVersionUrn);
+        QueryVersionDto previousQueryVersionDto = statisticalResourcesServiceFacade.retrieveQueryVersionByUrn(getServiceContextAdministrador(), queryVersionUrn);
 
-        QueryVersionDto newQueryVersion = statisticalResourcesServiceFacade.versioningQueryVersion(getServiceContextAdministrador(), queryVersionDto, VersionTypeEnum.MAJOR);
+        QueryVersionDto newQueryVersion = statisticalResourcesServiceFacade.versioningQueryVersion(getServiceContextAdministrador(), previousQueryVersionDto, VersionTypeEnum.MAJOR);
         assertNotNull(newQueryVersion);
         assertEquals(ProcStatusEnum.DRAFT, newQueryVersion.getProcStatus());
         assertEquals(getServiceContextAdministrador().getUserId(), newQueryVersion.getCreationUser());
         assertEqualsDay(new DateTime().toDateTime(), new DateTime(newQueryVersion.getCreationDate()));
+        assertEqualsQuerySelection(previousQueryVersionDto.getSelection(), newQueryVersion.getSelection());
     }
 
     // ------------------------------------------------------------------------

@@ -34,7 +34,9 @@ public interface LifecycleServiceBaseTest {
     // ------------------------------------------------------------------------------------------------------
     public void testCheckSendToPublishedResource() throws Exception;
 
-    public void testApplySendToPublishedResource() throws Exception;
+    public void testApplySendToPublishedCurrentResource() throws Exception;
+
+    public void testApplySendToPublishedPreviousResource() throws Exception;
 
     // ------------------------------------------------------------------------------------------------------
     // VERSIONING

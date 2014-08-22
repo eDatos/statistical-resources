@@ -1,12 +1,13 @@
 package org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.publication;
 
-import static org.junit.Assert.fail;
-import static org.siemac.metamac.statistical.resources.core.utils.asserts.CommonAsserts.assertEmptyMethod;
-
 import org.junit.Ignore;
 import org.junit.Test;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceapi.LifecycleServiceBaseTest;
+
+import static org.junit.Assert.fail;
+
+import static org.siemac.metamac.statistical.resources.core.utils.asserts.CommonAsserts.assertEmptyMethod;
 
 public class PublicationLifecycleServiceTest extends StatisticalResourcesBaseTest implements LifecycleServiceBaseTest {
 
@@ -79,11 +80,19 @@ public class PublicationLifecycleServiceTest extends StatisticalResourcesBaseTes
     @Ignore
     @Override
     @Test
-    public void testApplySendToPublishedResource() throws Exception {
+    public void testApplySendToPublishedCurrentResource() throws Exception {
         // TODO: Implementar (METAMAC-2143)
-        // - cumplimentar format_extent_resources
-
         fail("not implemented");
+
+    }
+
+    @Ignore
+    @Override
+    @Test
+    public void testApplySendToPublishedPreviousResource() throws Exception {
+        // TODO: Implementar (METAMAC-2143)
+        fail("not implemented");
+
     }
 
     // ------------------------------------------------------------------------------------------------------

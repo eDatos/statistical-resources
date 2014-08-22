@@ -30,8 +30,6 @@ import org.siemac.metamac.statistical.resources.core.query.utils.QueryVersioning
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import static org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConstants.METHOD_NOT_IMPLEMENT_IN_THIS_VERSION;
-
 @Service("queryLifecycleService")
 public class QueryLifecycleServiceImpl extends LifecycleTemplateService<QueryVersion> implements QueryLifecycleService {
 
@@ -103,9 +101,7 @@ public class QueryLifecycleServiceImpl extends LifecycleTemplateService<QueryVer
 
     @Override
     protected void checkSendToPublishedResource(ServiceContext ctx, QueryVersion resource, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
-        if (!QueryStatusEnum.ACTIVE.equals(resource.getStatus()) && !QueryStatusEnum.DISCONTINUED.equals(resource.getStatus())) {
-            exceptionItems.add(new MetamacExceptionItem(ServiceExceptionType.QUERY_VERSION_PUBLISH_INVALID_STATUS, resource.getLifeCycleStatisticalResource().getUrn()));
-        }
+        QueryStatusEnumUtils.checkPossibleQueryStatus(resource, QueryStatusEnum.ACTIVE, QueryStatusEnum.DISCONTINUED);
         this.checkLinkedDatasetOrDatasetVersionPublishedForQuery(ctx, resource, exceptionItems);
     }
 
@@ -125,7 +121,7 @@ public class QueryLifecycleServiceImpl extends LifecycleTemplateService<QueryVer
 
     @Override
     protected void applySendToPublishedPreviousResource(ServiceContext ctx, QueryVersion resource) throws MetamacException {
-        throw new UnsupportedOperationException("Can not publish a query with previous published version");
+        // nothing to do
     }
 
     private void checkLinkedDatasetOrDatasetVersionPublishedForQuery(ServiceContext ctx, QueryVersion resource, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
@@ -210,7 +206,7 @@ public class QueryLifecycleServiceImpl extends LifecycleTemplateService<QueryVer
 
     @Override
     protected void checkVersioningResource(QueryVersion resource, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
-        throw new UnsupportedOperationException(METHOD_NOT_IMPLEMENT_IN_THIS_VERSION);
+        // nothing specific to check
     }
 
     @Override
@@ -220,12 +216,12 @@ public class QueryLifecycleServiceImpl extends LifecycleTemplateService<QueryVer
 
     @Override
     protected void applyVersioningNewResource(ServiceContext ctx, QueryVersion resource, QueryVersion previous) throws MetamacException {
-        throw new UnsupportedOperationException(METHOD_NOT_IMPLEMENT_IN_THIS_VERSION);
+        // nothing specific to apply
     }
 
     @Override
     protected void applyVersioningPreviousResource(ServiceContext ctx, QueryVersion resource) throws MetamacException {
-        throw new UnsupportedOperationException(METHOD_NOT_IMPLEMENT_IN_THIS_VERSION);
+        // nothing specific to apply
     }
 
     @Override

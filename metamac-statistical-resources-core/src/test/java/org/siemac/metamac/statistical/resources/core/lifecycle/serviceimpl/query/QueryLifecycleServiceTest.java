@@ -1,14 +1,14 @@
 package org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.query;
 
-import static org.junit.Assert.fail;
-import static org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConstants.METHOD_NOT_IMPLEMENT_IN_THIS_VERSION;
-import static org.siemac.metamac.statistical.resources.core.utils.asserts.CommonAsserts.assertEmptyMethod;
-
 import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceapi.LifecycleServiceBaseTest;
+
+import static org.junit.Assert.fail;
+
+import static org.siemac.metamac.statistical.resources.core.utils.asserts.CommonAsserts.assertEmptyMethod;
 
 public class QueryLifecycleServiceTest extends StatisticalResourcesBaseTest implements LifecycleServiceBaseTest {
 
@@ -79,11 +79,15 @@ public class QueryLifecycleServiceTest extends StatisticalResourcesBaseTest impl
 
     @Ignore
     @Override
-    @Test
-    public void testApplySendToPublishedResource() throws Exception {
+    public void testApplySendToPublishedCurrentResource() throws Exception {
         // TODO: Implementar (METAMAC-2143)
-        // - cumplimentar format_extent_resources
+        fail("not implemented");
+    }
 
+    @Ignore
+    @Override
+    public void testApplySendToPublishedPreviousResource() throws Exception {
+        // TODO: Implementar (METAMAC-2143)
         fail("not implemented");
     }
 
@@ -94,34 +98,26 @@ public class QueryLifecycleServiceTest extends StatisticalResourcesBaseTest impl
     @Override
     @Test
     public void testCheckVersioningResource() throws Exception {
-        thrown.expect(UnsupportedOperationException.class);
-        thrown.expectMessage(METHOD_NOT_IMPLEMENT_IN_THIS_VERSION);
-
-        queryLifecycleService.checkVersioningResource(null, null);
-
+        assertEmptyMethod(TESTING_CLASS, "checkVersioningResource");
     }
 
     @Override
     @Test
     public void testApplyVersioningNewResource() throws Exception {
-        thrown.expect(UnsupportedOperationException.class);
-        thrown.expectMessage(METHOD_NOT_IMPLEMENT_IN_THIS_VERSION);
-
-        queryLifecycleService.applyVersioningNewResource(null, null, null);
+        assertEmptyMethod(TESTING_CLASS, "applyVersioningNewResource");
     }
 
     @Override
     @Test
     public void testApplyVersioningPreviousResource() throws Exception {
-        thrown.expect(UnsupportedOperationException.class);
-        thrown.expectMessage(METHOD_NOT_IMPLEMENT_IN_THIS_VERSION);
-
-        queryLifecycleService.applyVersioningPreviousResource(null, null);
+        assertEmptyMethod(TESTING_CLASS, "applyVersioningPreviousResource");
     }
 
+    @Ignore
     @Override
     @Test
     public void testCopyResourceForVersioning() throws Exception {
-        // QUERY can not be versioned
+        // TODO: Implementar (METAMAC-2143)
+        fail("not implemented");
     }
 }

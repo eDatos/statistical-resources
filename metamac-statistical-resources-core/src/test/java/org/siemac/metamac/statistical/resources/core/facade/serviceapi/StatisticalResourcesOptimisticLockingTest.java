@@ -489,11 +489,16 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
         assertEquals(Long.valueOf(0), queryVersionDtoSession02.getOptimisticLockingVersion());
 
         // Versioning - session 1 --> OK
-        QueryVersionDto queryVersionDtoSession1AfterUpdate01 = statisticalResourcesServiceFacade.versioningQueryVersion(getServiceContextAdministrador(), queryVersionDtoSession01,
-                VersionTypeEnum.MAJOR);
+        QueryVersionDto queryVersionDtoSession1NewResource = statisticalResourcesServiceFacade
+                .versioningQueryVersion(getServiceContextAdministrador(), queryVersionDtoSession01, VersionTypeEnum.MAJOR);
+        assertEquals(Long.valueOf(0), queryVersionDtoSession1NewResource.getOptimisticLockingVersion());
+
+        QueryVersionDto queryVersionDtoSession1AfterUpdate01 = statisticalResourcesServiceFacade.retrieveQueryVersionByUrn(getServiceContextAdministrador(),
+                queryVersionMockFactory.retrieveMock(QUERY_VERSION_15_PUBLISHED_NAME).getLifeCycleStatisticalResource().getUrn());
+
         assertTrue(queryVersionDtoSession1AfterUpdate01.getOptimisticLockingVersion() > queryVersionDtoSession01.getOptimisticLockingVersion());
 
-        // Send to validation rejected - session 2 --> FAIL
+        // Versioning - session 2 --> FAIL
         try {
             statisticalResourcesServiceFacade.versioningQueryVersion(getServiceContextAdministrador(), queryVersionDtoSession02, VersionTypeEnum.MAJOR);
             fail("optimistic locking");
@@ -501,10 +506,10 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
             assertEqualsMetamacExceptionItem(ServiceExceptionType.OPTIMISTIC_LOCKING, 0, null, e.getExceptionItems().get(0));
         }
 
-        // Update query - session 1 --> OK
-        queryVersionDtoSession1AfterUpdate01.setTitle(StatisticalResourcesDtoMocks.mockInternationalStringDto());
-        QueryVersionDto queryVersionDtoSession1AfterUpdate02 = statisticalResourcesServiceFacade.updateQueryVersion(getServiceContextAdministrador(), queryVersionDtoSession1AfterUpdate01);
-        assertTrue(queryVersionDtoSession1AfterUpdate02.getOptimisticLockingVersion() > queryVersionDtoSession1AfterUpdate01.getOptimisticLockingVersion());
+        // Update query versioned --> OK
+        queryVersionDtoSession1NewResource.setTitle(StatisticalResourcesDtoMocks.mockInternationalStringDto());
+        QueryVersionDto queryVersionDtoSession1AfterUpdate02 = statisticalResourcesServiceFacade.updateQueryVersion(getServiceContextAdministrador(), queryVersionDtoSession1NewResource);
+        assertTrue(queryVersionDtoSession1AfterUpdate02.getOptimisticLockingVersion() > queryVersionDtoSession1NewResource.getOptimisticLockingVersion());
     }
 
     @Test
@@ -521,12 +526,17 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
         QueryVersionBaseDto queryVersionDtoSession02 = queries.get(0);
         assertEquals(Long.valueOf(0), queryVersionDtoSession02.getOptimisticLockingVersion());
 
-        // Send to validation rejected - session 1 --> OK
-        QueryVersionBaseDto queryVersionDtoSession1AfterUpdate01 = statisticalResourcesServiceFacade.versioningQueryVersion(getServiceContextAdministrador(), queryVersionDtoSession01,
+        // Versioning - session 1 --> OK
+        QueryVersionBaseDto queryVersionDtoSession1NewResource = statisticalResourcesServiceFacade.versioningQueryVersion(getServiceContextAdministrador(), queryVersionDtoSession01,
                 VersionTypeEnum.MAJOR);
+        assertEquals(Long.valueOf(0), queryVersionDtoSession1NewResource.getOptimisticLockingVersion());
+
+        QueryVersionDto queryVersionDtoSession1AfterUpdate01 = statisticalResourcesServiceFacade.retrieveQueryVersionByUrn(getServiceContextAdministrador(),
+                queryVersionMockFactory.retrieveMock(QUERY_VERSION_15_PUBLISHED_NAME).getLifeCycleStatisticalResource().getUrn());
+
         assertTrue(queryVersionDtoSession1AfterUpdate01.getOptimisticLockingVersion() > queryVersionDtoSession01.getOptimisticLockingVersion());
 
-        // Send to validation rejected - session 2 --> FAIL
+        // Versioning - session 2 --> FAIL
         try {
             statisticalResourcesServiceFacade.versioningQueryVersion(getServiceContextAdministrador(), queryVersionDtoSession02, VersionTypeEnum.MAJOR);
             fail("optimistic locking");
@@ -1311,8 +1321,8 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
             assertEqualsMetamacExceptionItem(ServiceExceptionType.OPTIMISTIC_LOCKING, 0, null, e.getExceptionItems().get(0));
         }
 
-        // Update dataset - session 1 --> OK
-        datasetVersionDtoSession1AfterUpdate01.setTitle(StatisticalResourcesDtoMocks.mockInternationalStringDto());
+        // Update dataset versioned --> OK
+        datasetVersionDtoSession1NewResource.setTitle(StatisticalResourcesDtoMocks.mockInternationalStringDto());
         DatasetVersionDto datasetVersionDtoSession1AfterUpdate02 = statisticalResourcesServiceFacade.updateDatasetVersion(getServiceContextAdministrador(), datasetVersionDtoSession1NewResource);
         assertTrue(datasetVersionDtoSession1AfterUpdate02.getOptimisticLockingVersion() > datasetVersionDtoSession1NewResource.getOptimisticLockingVersion());
     }

@@ -1,7 +1,5 @@
 package org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl;
 
-import static org.siemac.metamac.statistical.resources.core.error.utils.ServiceExceptionParametersUtils.addParameter;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,7 +23,21 @@ import org.siemac.metamac.statistical.resources.core.lifecycle.serviceapi.Lifecy
 import org.siemac.metamac.statistical.resources.core.task.serviceapi.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import static org.siemac.metamac.statistical.resources.core.error.utils.ServiceExceptionParametersUtils.addParameter;
+
 public abstract class LifecycleTemplateService<E extends Object> implements LifecycleService<E> {
+
+    private static final String      ERROR_FOUND_AN_UNKNOWN_RESOURCE_TYPE_CANCELLING_PUBLICATION           = "Found an unknown resource type cancelling publication";
+
+    private static final String      ERROR_FOUND_AN_UNKNOWN_RESOURCE_TYPE_SENDING_TO_PUBLISHED             = "Found an unknown resource type sending to published";
+
+    private static final String      ERROR_FOUND_AN_UNKNOWN_RESOURCE_TYPE_SENDING_TO_VALIDATION_REJECTED   = "Found an unknown resource type sending to validation rejected";
+
+    private static final String      ERROR_FOUND_AN_UNKNOWN_RESOURCE_TYPE_SENDING_TO_DIFFUSION_VALIDATION  = "Found an unknown resource type sending to diffusion validation";
+
+    private static final String      ERROR_FOUND_AN_UNKNOWN_RESOURCE_TYPE_SENDING_TO_PRODUCTION_VALIDATION = "Found an unknown resource type sending to production validation";
+
+    private static final String      ERROR_FOUND_AN_UNKNOWN_RESOURCE_TYPE_FOR_VERSIONING                   = "Found an unknown resource type for versioning";
 
     @Autowired
     LifecycleInvocationValidatorBase lifecycleInvocationValidatorBase;
@@ -87,7 +99,7 @@ public abstract class LifecycleTemplateService<E extends Object> implements Life
         } else if (resource instanceof HasLifecycle) {
             lifecycleChecker.checkSendToProductionValidation((HasLifecycle) resource, getResourceMetadataName(), exceptionItems);
         } else {
-            throw new MetamacException(ServiceExceptionType.UNKNOWN, "Found an unknown resource type sending to production validation");
+            throw new MetamacException(ServiceExceptionType.UNKNOWN, ERROR_FOUND_AN_UNKNOWN_RESOURCE_TYPE_SENDING_TO_PRODUCTION_VALIDATION);
         }
     }
 
@@ -97,7 +109,7 @@ public abstract class LifecycleTemplateService<E extends Object> implements Life
         } else if (resource instanceof HasLifecycle) {
             lifecycleFiller.applySendToProductionValidationActions(ctx, (HasLifecycle) resource);
         } else {
-            throw new MetamacException(ServiceExceptionType.UNKNOWN, "Found an unknown resource type sending to production validation");
+            throw new MetamacException(ServiceExceptionType.UNKNOWN, ERROR_FOUND_AN_UNKNOWN_RESOURCE_TYPE_SENDING_TO_PRODUCTION_VALIDATION);
         }
     }
 
@@ -147,7 +159,7 @@ public abstract class LifecycleTemplateService<E extends Object> implements Life
         } else if (resource instanceof HasLifecycle) {
             lifecycleChecker.checkSendToDiffusionValidation((HasLifecycle) resource, getResourceMetadataName(), exceptionItems);
         } else {
-            throw new MetamacException(ServiceExceptionType.UNKNOWN, "Found an unknown resource type sending to diffusion validation");
+            throw new MetamacException(ServiceExceptionType.UNKNOWN, ERROR_FOUND_AN_UNKNOWN_RESOURCE_TYPE_SENDING_TO_DIFFUSION_VALIDATION);
         }
     }
 
@@ -157,7 +169,7 @@ public abstract class LifecycleTemplateService<E extends Object> implements Life
         } else if (resource instanceof HasLifecycle) {
             lifecycleFiller.applySendToDiffusionValidationActions(ctx, (HasLifecycle) resource);
         } else {
-            throw new MetamacException(ServiceExceptionType.UNKNOWN, "Found an unknown resource type sending to diffusion validation");
+            throw new MetamacException(ServiceExceptionType.UNKNOWN, ERROR_FOUND_AN_UNKNOWN_RESOURCE_TYPE_SENDING_TO_DIFFUSION_VALIDATION);
         }
     }
 
@@ -207,7 +219,7 @@ public abstract class LifecycleTemplateService<E extends Object> implements Life
         } else if (resource instanceof HasLifecycle) {
             lifecycleChecker.checkSendToValidationRejected((HasLifecycle) resource, getResourceMetadataName(), exceptionItems);
         } else {
-            throw new MetamacException(ServiceExceptionType.UNKNOWN, "Found an unknown resource type sending to validation rejected");
+            throw new MetamacException(ServiceExceptionType.UNKNOWN, ERROR_FOUND_AN_UNKNOWN_RESOURCE_TYPE_SENDING_TO_VALIDATION_REJECTED);
         }
     }
 
@@ -217,7 +229,7 @@ public abstract class LifecycleTemplateService<E extends Object> implements Life
         } else if (resource instanceof HasLifecycle) {
             lifecycleFiller.applySendToValidationRejectedActions(ctx, (HasLifecycle) resource);
         } else {
-            throw new MetamacException(ServiceExceptionType.UNKNOWN, "Found an unknown resource type sending to validation rejected");
+            throw new MetamacException(ServiceExceptionType.UNKNOWN, ERROR_FOUND_AN_UNKNOWN_RESOURCE_TYPE_SENDING_TO_VALIDATION_REJECTED);
         }
     }
 
@@ -279,7 +291,7 @@ public abstract class LifecycleTemplateService<E extends Object> implements Life
             lifecycleChecker.checkSendToPublished((HasLifecycle) resource, (HasLifecycle) previousResource,
                     addParameter(getResourceMetadataName(), ServiceExceptionSingleParameters.LIFE_CYCLE_STATISTICAL_RESOURCE), exceptionItems);
         } else {
-            throw new MetamacException(ServiceExceptionType.UNKNOWN, "Found an unknown resource type sending to published");
+            throw new MetamacException(ServiceExceptionType.UNKNOWN, ERROR_FOUND_AN_UNKNOWN_RESOURCE_TYPE_SENDING_TO_PUBLISHED);
         }
     }
 
@@ -289,7 +301,7 @@ public abstract class LifecycleTemplateService<E extends Object> implements Life
         } else if (resource instanceof HasLifecycle) {
             lifecycleFiller.applySendToPublishedCurrentResourceActions(ctx, (HasLifecycle) resource, (HasLifecycle) previousResource);
         } else {
-            throw new MetamacException(ServiceExceptionType.UNKNOWN, "Found an unknown resource type sending to published");
+            throw new MetamacException(ServiceExceptionType.UNKNOWN, ERROR_FOUND_AN_UNKNOWN_RESOURCE_TYPE_SENDING_TO_PUBLISHED);
         }
     }
 
@@ -301,7 +313,7 @@ public abstract class LifecycleTemplateService<E extends Object> implements Life
             lifecycleFiller.applySendToPublishedPreviousResourceActions(ctx, (HasLifecycle) resource, (HasLifecycle) previousResource,
                     RelatedResourceUtils.createRelatedResourceForHasLifecycleResource((HasLifecycle) resource));
         } else {
-            throw new MetamacException(ServiceExceptionType.UNKNOWN, "Found an unknown resource type sending to published");
+            throw new MetamacException(ServiceExceptionType.UNKNOWN, ERROR_FOUND_AN_UNKNOWN_RESOURCE_TYPE_SENDING_TO_PUBLISHED);
         }
     }
 
@@ -364,7 +376,7 @@ public abstract class LifecycleTemplateService<E extends Object> implements Life
             lifecycleChecker.checkCancelPublication((HasLifecycle) resource, (HasLifecycle) previousResource,
                     addParameter(getResourceMetadataName(), ServiceExceptionSingleParameters.LIFE_CYCLE_STATISTICAL_RESOURCE), exceptionItems);
         } else {
-            throw new MetamacException(ServiceExceptionType.UNKNOWN, "Found an unknown resource type cancelling publication");
+            throw new MetamacException(ServiceExceptionType.UNKNOWN, ERROR_FOUND_AN_UNKNOWN_RESOURCE_TYPE_CANCELLING_PUBLICATION);
         }
     }
 
@@ -374,7 +386,7 @@ public abstract class LifecycleTemplateService<E extends Object> implements Life
         } else if (resource instanceof HasLifecycle) {
             lifecycleFiller.applyCancelPublicationCurrentResourceActions(ctx, (HasLifecycle) resource, (HasLifecycle) previousResource);
         } else {
-            throw new MetamacException(ServiceExceptionType.UNKNOWN, "Found an unknown resource type cancelling publication");
+            throw new MetamacException(ServiceExceptionType.UNKNOWN, ERROR_FOUND_AN_UNKNOWN_RESOURCE_TYPE_CANCELLING_PUBLICATION);
         }
     }
 
@@ -386,7 +398,7 @@ public abstract class LifecycleTemplateService<E extends Object> implements Life
             lifecycleFiller.applyCancelPublicationPreviousResourceActions(ctx, (HasLifecycle) resource, (HasLifecycle) previousResource,
                     RelatedResourceUtils.createRelatedResourceForHasLifecycleResource((HasLifecycle) resource));
         } else {
-            throw new MetamacException(ServiceExceptionType.UNKNOWN, "Found an unknown resource type sending to published");
+            throw new MetamacException(ServiceExceptionType.UNKNOWN, ERROR_FOUND_AN_UNKNOWN_RESOURCE_TYPE_CANCELLING_PUBLICATION);
         }
     }
 
@@ -451,7 +463,7 @@ public abstract class LifecycleTemplateService<E extends Object> implements Life
         } else if (resource instanceof HasLifecycle) {
             lifecycleChecker.checkVersioning((HasLifecycle) resource, getResourceMetadataName(), exceptionItems);
         } else {
-            throw new MetamacException(ServiceExceptionType.UNKNOWN, "Found an unknown resource type for versioning");
+            throw new MetamacException(ServiceExceptionType.UNKNOWN, ERROR_FOUND_AN_UNKNOWN_RESOURCE_TYPE_FOR_VERSIONING);
         }
     }
 
@@ -459,9 +471,9 @@ public abstract class LifecycleTemplateService<E extends Object> implements Life
         if (resource instanceof HasSiemacMetadata) {
             siemacLifecycleFiller.applyVersioningNewResourceActions(ctx, (HasSiemacMetadata) resource, (HasSiemacMetadata) previousResource, versionType);
         } else if (resource instanceof HasLifecycle) {
-            lifecycleFiller.applyVersioningNewResourceActions(ctx, (HasLifecycle) resource, (HasSiemacMetadata) previousResource, versionType);
+            lifecycleFiller.applyVersioningNewResourceActions(ctx, (HasLifecycle) resource, (HasLifecycle) previousResource, versionType);
         } else {
-            throw new MetamacException(ServiceExceptionType.UNKNOWN, "Found an unknown resource type for versioning");
+            throw new MetamacException(ServiceExceptionType.UNKNOWN, ERROR_FOUND_AN_UNKNOWN_RESOURCE_TYPE_FOR_VERSIONING);
         }
     }
 
@@ -469,9 +481,9 @@ public abstract class LifecycleTemplateService<E extends Object> implements Life
         if (resource instanceof HasSiemacMetadata) {
             siemacLifecycleFiller.applyVersioningPreviousResourceActions(ctx, (HasSiemacMetadata) resource, (HasSiemacMetadata) previousResource, versionType);
         } else if (resource instanceof HasLifecycle) {
-            lifecycleFiller.applyVersioningPreviousResourceActions(ctx, (HasLifecycle) resource, (HasSiemacMetadata) previousResource, versionType);
+            lifecycleFiller.applyVersioningPreviousResourceActions(ctx, (HasLifecycle) resource, (HasLifecycle) previousResource, versionType);
         } else {
-            throw new MetamacException(ServiceExceptionType.UNKNOWN, "Found an unknown resource type for versioning");
+            throw new MetamacException(ServiceExceptionType.UNKNOWN, ERROR_FOUND_AN_UNKNOWN_RESOURCE_TYPE_FOR_VERSIONING);
         }
     }
 

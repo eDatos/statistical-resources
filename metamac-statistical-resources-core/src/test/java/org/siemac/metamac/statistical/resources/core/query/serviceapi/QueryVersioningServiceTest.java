@@ -1,20 +1,5 @@
 package org.siemac.metamac.statistical.resources.core.query.serviceapi;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConstants.METHOD_NOT_IMPLEMENT_IN_THIS_VERSION;
-import static org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts.assertEqualsDataset;
-import static org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts.assertEqualsDatasetVersion;
-import static org.siemac.metamac.statistical.resources.core.utils.asserts.QueryAsserts.assertEqualsQuery;
-import static org.siemac.metamac.statistical.resources.core.utils.asserts.QueryAsserts.assertEqualsSelection;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_11_DRAFT_NAME;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_12_PRODUCTION_VALIDATION_NAME;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_13_DIFFUSION_VALIDATION_NAME;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_14_VALIDATION_REJECTED_NAME;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_15_PUBLISHED_NAME;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_28_V2_PUBLISHED_NO_VISIBLE_FOR_QUERY_06_NAME;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.siemac.metamac.core.common.enume.domain.VersionPatternEnum;
@@ -36,6 +21,20 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+
+import static org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts.assertEqualsDataset;
+import static org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts.assertEqualsDatasetVersion;
+import static org.siemac.metamac.statistical.resources.core.utils.asserts.QueryAsserts.assertEqualsSelection;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_11_DRAFT_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_12_PRODUCTION_VALIDATION_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_13_DIFFUSION_VALIDATION_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_14_VALIDATION_REJECTED_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_15_PUBLISHED_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_28_V2_PUBLISHED_NO_VISIBLE_FOR_QUERY_06_NAME;
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:spring/statistical-resources/include/dataset-repository-mockito.xml", "classpath:spring/statistical-resources/include/rest-services-mockito.xml",
         "classpath:spring/statistical-resources/applicationContext-test.xml"})
@@ -53,9 +52,6 @@ public class QueryVersioningServiceTest extends StatisticalResourcesBaseTest {
     @Test
     @MetamacMock(QUERY_VERSION_15_PUBLISHED_NAME)
     public void testVersioningQueryVersion() throws Exception {
-        thrown.expect(UnsupportedOperationException.class);
-        thrown.expectMessage(METHOD_NOT_IMPLEMENT_IN_THIS_VERSION);
-
         QueryVersion queryVersion = queryVersionMockFactory.retrieveMock(QUERY_VERSION_15_PUBLISHED_NAME);
 
         QueryVersion queryNewVersion = queryVersionLifecycleService.versioning(getServiceContextWithoutPrincipal(), queryVersion.getLifeCycleStatisticalResource().getUrn(), VersionTypeEnum.MINOR);
@@ -67,9 +63,6 @@ public class QueryVersioningServiceTest extends StatisticalResourcesBaseTest {
     @Test
     @MetamacMock(QUERY_VERSION_15_PUBLISHED_NAME)
     public void testVersioningQueryVersionCheckUrnIsCorrectForMinorChange() throws Exception {
-        thrown.expect(UnsupportedOperationException.class);
-        thrown.expectMessage(METHOD_NOT_IMPLEMENT_IN_THIS_VERSION);
-
         QueryVersion queryVersion = queryVersionMockFactory.retrieveMock(QUERY_VERSION_15_PUBLISHED_NAME);
 
         // Necessary data for construct URN
@@ -86,16 +79,13 @@ public class QueryVersioningServiceTest extends StatisticalResourcesBaseTest {
         String versionAfter = VersionUtil.createNextVersion(versionBefore, VersionPatternEnum.XXX_YYY, versionType);
 
         // Compare URNS
-        String expectedUrn = GeneratorUrnUtils.generateSiemacStatisticalResourceCollectionVersionUrn(maintainer, queryVersionCode, versionAfter);
+        String expectedUrn = GeneratorUrnUtils.generateSiemacStatisticalResourceQueryVersionUrn(maintainer, queryVersionCode, versionAfter);
         assertEquals(expectedUrn, newQueryVersion.getLifeCycleStatisticalResource().getUrn());
     }
 
     @Test
     @MetamacMock(QUERY_VERSION_15_PUBLISHED_NAME)
     public void testVersioningQueryVersionCheckUrnIsCorrectForMayorChange() throws Exception {
-        thrown.expect(UnsupportedOperationException.class);
-        thrown.expectMessage(METHOD_NOT_IMPLEMENT_IN_THIS_VERSION);
-
         QueryVersion queryVersion = queryVersionMockFactory.retrieveMock(QUERY_VERSION_15_PUBLISHED_NAME);
 
         // Necessary data for construct URN
@@ -112,16 +102,13 @@ public class QueryVersioningServiceTest extends StatisticalResourcesBaseTest {
         String versionAfter = VersionUtil.createNextVersion(versionBefore, VersionPatternEnum.XXX_YYY, versionType);
 
         // Compare URNS
-        String expectedUrn = GeneratorUrnUtils.generateSiemacStatisticalResourceCollectionVersionUrn(maintainer, queryVersionCode, versionAfter);
+        String expectedUrn = GeneratorUrnUtils.generateSiemacStatisticalResourceQueryVersionUrn(maintainer, queryVersionCode, versionAfter);
         assertEquals(expectedUrn, newQueryVersion.getLifeCycleStatisticalResource().getUrn());
     }
 
     @Test
     @MetamacMock(QUERY_VERSION_15_PUBLISHED_NAME)
     public void testVersioningQueryVersionCheckUrnIsCorrectForANonRootAgency() throws Exception {
-        thrown.expect(UnsupportedOperationException.class);
-        thrown.expectMessage(METHOD_NOT_IMPLEMENT_IN_THIS_VERSION);
-
         QueryVersion queryVersion = queryVersionMockFactory.retrieveMock(QUERY_VERSION_15_PUBLISHED_NAME);
 
         // Necessary data for construct URN
@@ -138,7 +125,7 @@ public class QueryVersioningServiceTest extends StatisticalResourcesBaseTest {
         String versionAfter = VersionUtil.createNextVersion(versionBefore, VersionPatternEnum.XXX_YYY, versionType);
 
         // Compare URNS
-        String expectedUrn = GeneratorUrnUtils.generateSiemacStatisticalResourceCollectionVersionUrn(maintainer, queryVersionCode, versionAfter);
+        String expectedUrn = GeneratorUrnUtils.generateSiemacStatisticalResourceQueryVersionUrn(maintainer, queryVersionCode, versionAfter);
         assertEquals(expectedUrn, newQueryVersion.getLifeCycleStatisticalResource().getUrn());
     }
 
@@ -204,7 +191,7 @@ public class QueryVersioningServiceTest extends StatisticalResourcesBaseTest {
         } else if (previous.getDataset() != null) {
             assertEqualsDataset(previous.getDataset(), next.getDataset());
         }
-        assertEqualsQuery(previous.getQuery(), next.getQuery());
+        assertEquals(previous.getQuery().getId(), next.getQuery().getId());
         assertEquals(previous.getStatus(), next.getStatus());
         assertEquals(previous.getType(), next.getType());
         assertEqualsSelection(previous.getSelection(), next.getSelection());

@@ -1,7 +1,5 @@
 package org.siemac.metamac.statistical.resources.core.query.utils;
 
-import static org.siemac.metamac.statistical.resources.core.base.utils.BaseVersioningCopyUtils.copyLifeCycleStatisticalResource;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,6 +7,8 @@ import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatis
 import org.siemac.metamac.statistical.resources.core.query.domain.CodeItem;
 import org.siemac.metamac.statistical.resources.core.query.domain.QuerySelectionItem;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
+
+import static org.siemac.metamac.statistical.resources.core.base.utils.BaseVersioningCopyUtils.copyLifeCycleStatisticalResource;
 
 public class QueryVersioningCopyUtils {
 
@@ -62,26 +62,27 @@ public class QueryVersioningCopyUtils {
         QuerySelectionItem target = new QuerySelectionItem();
 
         target.setDimension(source.getDimension());
+        target.setQuery(source.getQuery());
 
         target.getCodes().clear();
-        target.getCodes().addAll(copyListCodeItem(source.getCodes()));
+        target.getCodes().addAll(copyListCodeItem(source.getCodes(), target));
 
         return target;
     }
 
-    private static List<CodeItem> copyListCodeItem(List<CodeItem> source) {
+    private static List<CodeItem> copyListCodeItem(List<CodeItem> source, QuerySelectionItem targetQuerySelectionItem) {
         if (source.isEmpty()) {
             return new ArrayList<CodeItem>();
         }
 
         List<CodeItem> target = new ArrayList<CodeItem>();
         for (CodeItem item : source) {
-            target.add(copyCodeItem(item));
+            target.add(copyCodeItem(item, targetQuerySelectionItem));
         }
         return target;
     }
 
-    private static CodeItem copyCodeItem(CodeItem source) {
+    private static CodeItem copyCodeItem(CodeItem source, QuerySelectionItem targetQuerySelectionItem) {
         if (source == null) {
             return null;
         }
@@ -89,6 +90,7 @@ public class QueryVersioningCopyUtils {
         CodeItem target = new CodeItem();
         target.setCode(source.getCode());
         target.setTitle(source.getTitle());
+        target.setQuerySelectionItem(targetQuerySelectionItem);
 
         return target;
     }
