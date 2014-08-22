@@ -8,7 +8,7 @@ import com.gwtplatform.dispatch.annotation.Optional;
 import com.gwtplatform.dispatch.annotation.Out;
 
 @GenDispatch(isSecure = false)
-public class GetDatasetVersionContentConstraint {
+public class GetDatasetVersionConstraint {
 
     @In(1)
     String               datasetVersionUrn;

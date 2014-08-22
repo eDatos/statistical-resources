@@ -2,7 +2,11 @@ package org.siemac.metamac.statistical.resources.web.client.dataset.view;
 
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
 
+import java.util.List;
+
 import org.siemac.metamac.statistical.resources.core.dto.constraint.ContentConstraintDto;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdDimensionDto;
 import org.siemac.metamac.statistical.resources.web.client.dataset.presenter.DatasetConstraintsTabPresenter.DatasetConstraintsTabView;
 import org.siemac.metamac.statistical.resources.web.client.dataset.view.handlers.DatasetConstraintsTabUiHandlers;
 import org.siemac.metamac.web.common.client.widgets.CustomListGrid;
@@ -70,7 +74,7 @@ public class DatasetConstraintsTabViewImpl extends ViewWithUiHandlers<DatasetCon
 
                 @Override
                 public void onClick(ClickEvent event) {
-                    // TODO METAMAC-1985
+                    getUiHandlers().createConstraint();
                 }
             });
             return deleteDatasourceButton;
@@ -87,5 +91,11 @@ public class DatasetConstraintsTabViewImpl extends ViewWithUiHandlers<DatasetCon
             });
             return importDatasourcesButton;
         }
+    }
+
+    @Override
+    public void setDatasetAndDimensions(DatasetVersionDto datasetVersion, List<DsdDimensionDto> dimensions) {
+        // TODO METAMAC-1985 Auto-generated method stub
+
     }
 }

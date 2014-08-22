@@ -4,4 +4,5 @@ import com.gwtplatform.mvp.client.UiHandlers;
 
 public interface DatasetConstraintsTabUiHandlers extends UiHandlers {
 
+    void createConstraint();
 }

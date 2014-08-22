@@ -2,8 +2,12 @@ package org.siemac.metamac.statistical.resources.web.client.dataset.presenter;
 
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
 
+import java.util.List;
+
 import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.statistical.resources.core.dto.constraint.ContentConstraintDto;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdDimensionDto;
 import org.siemac.metamac.statistical.resources.navigation.shared.NameTokens;
 import org.siemac.metamac.statistical.resources.web.client.LoggedInGatekeeper;
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesDefaults;
@@ -15,10 +19,12 @@ import org.siemac.metamac.statistical.resources.web.client.events.SetDatasetEven
 import org.siemac.metamac.statistical.resources.web.client.events.ShowUnauthorizedDatasetWarningMessageEvent;
 import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.PlaceRequestUtils;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.CreateDatasetConstraintAction;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.CreateDatasetConstraintResult;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetDimensionsAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetDimensionsResult;
-import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetVersionContentConstraintAction;
-import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetVersionContentConstraintResult;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetVersionConstraintAction;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetVersionConstraintResult;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationAction;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationResult;
 import org.siemac.metamac.web.common.client.utils.CommonErrorUtils;
@@ -47,8 +53,11 @@ public class DatasetConstraintsTabPresenter extends Presenter<DatasetConstraints
     private DispatchAsync dispatcher;
     private PlaceManager  placeManager;
 
+    private String        datasetVersionUrn;
+
     public interface DatasetConstraintsTabView extends View, HasUiHandlers<DatasetConstraintsTabUiHandlers> {
 
+        void setDatasetAndDimensions(DatasetVersionDto datasetVersion, List<DsdDimensionDto> dimensions);
         void setConstraint(ContentConstraintDto contentConstraintDto);
     }
 
@@ -114,14 +123,14 @@ public class DatasetConstraintsTabPresenter extends Presenter<DatasetConstraints
     }
 
     private void loadInitialData() {
-        String datasetCode = PlaceRequestUtils.getDatasetParamFromUrl(placeManager);
-        String datasetUrn = CommonUtils.generateDatasetUrn(datasetCode);
+        String datasetVersionCode = PlaceRequestUtils.getDatasetParamFromUrl(placeManager);
+        datasetVersionUrn = CommonUtils.generateDatasetUrn(datasetVersionCode);
 
-        retrieveConstraint(datasetUrn);
+        retrieveConstraint(datasetVersionUrn);
     }
 
     private void retrieveConstraint(final String datasetVersionUrn) {
-        dispatcher.execute(new GetDatasetVersionContentConstraintAction(datasetVersionUrn), new WaitingAsyncCallbackHandlingError<GetDatasetVersionContentConstraintResult>(this) {
+        dispatcher.execute(new GetDatasetVersionConstraintAction(datasetVersionUrn), new WaitingAsyncCallbackHandlingError<GetDatasetVersionConstraintResult>(this) {
 
             @Override
             public void onWaitFailure(Throwable caught) {
@@ -132,8 +141,11 @@ public class DatasetConstraintsTabPresenter extends Presenter<DatasetConstraints
                 }
             }
             @Override
-            public void onWaitSuccess(GetDatasetVersionContentConstraintResult result) {
-                retrieveDimensions(datasetVersionUrn);
+            public void onWaitSuccess(GetDatasetVersionConstraintResult result) {
+                if (result.getContentConstraint() != null) {
+                    // Load dimensions only if the constraint is enable
+                    retrieveDimensions(datasetVersionUrn);
+                }
                 getView().setConstraint(result.getContentConstraint());
             }
         });
@@ -153,6 +165,17 @@ public class DatasetConstraintsTabPresenter extends Presenter<DatasetConstraints
             @Override
             public void onWaitSuccess(GetDatasetDimensionsResult result) {
                 SetDatasetEvent.fire(DatasetConstraintsTabPresenter.this, result.getDatasetVersion());
+            }
+        });
+    }
+
+    @Override
+    public void createConstraint() {
+        dispatcher.execute(new CreateDatasetConstraintAction(datasetVersionUrn), new WaitingAsyncCallbackHandlingError<CreateDatasetConstraintResult>(this) {
+
+            @Override
+            public void onWaitSuccess(CreateDatasetConstraintResult result) {
+                // TODO METAMAC-1985 Auto-generated method stub
             }
         });
     }
