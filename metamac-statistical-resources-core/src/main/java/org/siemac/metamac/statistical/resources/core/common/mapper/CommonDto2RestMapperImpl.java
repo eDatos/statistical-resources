@@ -32,11 +32,16 @@ public class CommonDto2RestMapperImpl implements CommonDto2RestMapper {
     @Override
     public org.siemac.metamac.rest.common.v1_0.domain.InternationalString internationalStringDtoToRest(InternationalStringDto source,
             org.siemac.metamac.rest.common.v1_0.domain.InternationalString target, String metadataName) throws MetamacException {
+
+        if (source == null) {
+            return null;
+        }
+
         // Check it is valid
         checkInternationalStringDtoValid(source, metadataName);
 
         // Transform
-        if (source != null && ValidationUtils.isEmpty(source)) {
+        if (ValidationUtils.isEmpty(source)) {
             throw new MetamacException(ServiceExceptionType.METADATA_REQUIRED, metadataName);
         }
 
