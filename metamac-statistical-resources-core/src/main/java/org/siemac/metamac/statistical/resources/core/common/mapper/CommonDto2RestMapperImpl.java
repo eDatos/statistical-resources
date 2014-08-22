@@ -6,17 +6,25 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import org.siemac.metamac.core.common.conf.ConfigurationService;
+import org.siemac.metamac.core.common.constants.CoreCommonConstants;
 import org.siemac.metamac.core.common.dto.InternationalStringDto;
 import org.siemac.metamac.core.common.dto.LocalisedStringDto;
+import org.siemac.metamac.core.common.exception.CommonServiceExceptionType;
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.core.common.exception.MetamacExceptionBuilder;
 import org.siemac.metamac.core.common.serviceimpl.utils.ValidationUtils;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Annotation;
 import org.siemac.metamac.statistical.resources.core.dto.constraint.AnnotationDto;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionSingleParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @org.springframework.stereotype.Component("commonDto2RestMapper")
 public class CommonDto2RestMapperImpl implements CommonDto2RestMapper {
+
+    @Autowired
+    ConfigurationService configurationService;
 
     // ------------------------------------------------------------
     // INTERNATIONAL STRINGS
@@ -25,10 +33,10 @@ public class CommonDto2RestMapperImpl implements CommonDto2RestMapper {
     public org.siemac.metamac.rest.common.v1_0.domain.InternationalString internationalStringDtoToRest(InternationalStringDto source,
             org.siemac.metamac.rest.common.v1_0.domain.InternationalString target, String metadataName) throws MetamacException {
         // Check it is valid
-        // checkInternationalStringDtoValid(source, metadataName);
+        checkInternationalStringDtoValid(source, metadataName);
 
         // Transform
-        if (ValidationUtils.isEmpty(source)) {
+        if (source != null && ValidationUtils.isEmpty(source)) {
             throw new MetamacException(ServiceExceptionType.METADATA_REQUIRED, metadataName);
         }
 
@@ -41,6 +49,44 @@ public class CommonDto2RestMapperImpl implements CommonDto2RestMapper {
         target.getTexts().addAll(localisedStringEntities);
 
         return target;
+    }
+
+    public void checkInternationalStringDtoValid(InternationalStringDto source, String metadataName) throws MetamacException {
+        if (source == null) {
+            return;
+        }
+        if (ValidationUtils.isEmpty(source)) {
+            throw MetamacExceptionBuilder.builder().withExceptionItems(CommonServiceExceptionType.METADATA_REQUIRED).withMessageParameters(metadataName).build();
+        }
+        checkInternationalStringDtoLength(source, metadataName);
+        checkInternationalStringDtoTranslations(source, metadataName);
+    }
+
+    private void checkInternationalStringDtoTranslations(InternationalStringDto source, String metadataName) throws MetamacException {
+        if (source == null) {
+            return;
+        }
+        String locale = configurationService.retrieveLanguageDefault();
+        if (locale == null) {
+            return;
+        }
+        LocalisedStringDto localisedString = source.getLocalised(locale);
+        if (localisedString == null) {
+            throw MetamacExceptionBuilder.builder().withExceptionItems(CommonServiceExceptionType.METADATA_WITHOUT_DEFAULT_LANGUAGE).withMessageParameters(metadataName).build();
+        }
+    }
+
+    private void checkInternationalStringDtoLength(InternationalStringDto source, String metadataName) throws MetamacException {
+        if (source == null) {
+            return;
+        }
+        int maximumLength = CoreCommonConstants.LOCALISED_STRING_MAXIMUM_LENGTH;
+        for (LocalisedStringDto localisedStringDto : source.getTexts()) {
+            if (localisedStringDto.getLabel() != null && localisedStringDto.getLabel().length() > maximumLength) {
+                throw MetamacExceptionBuilder.builder().withExceptionItems(CommonServiceExceptionType.METADATA_MAXIMUM_LENGTH).withMessageParameters(metadataName, String.valueOf(maximumLength))
+                        .build();
+            }
+        }
     }
 
     @Override
