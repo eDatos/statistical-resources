@@ -17,6 +17,8 @@ public class ServiceExceptionUtils {
 
         if (e instanceof ServerWebApplicationException) {
             return manageMetamacServerWebApplicationException((ServerWebApplicationException) e, apiName, clientProxy);
+        } else if (e instanceof MetamacException) {
+            return (MetamacException) e;
         } else {
             return new MetamacException(e, ServiceExceptionType.UNKNOWN, e.getMessage());
         }

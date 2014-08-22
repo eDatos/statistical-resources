@@ -13,6 +13,7 @@ import org.apache.commons.lang.StringUtils;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.core.common.exception.MetamacExceptionBuilder;
 import org.siemac.metamac.core.common.util.GeneratorUrnUtils;
 import org.siemac.metamac.core.common.util.shared.UrnUtils;
 import org.siemac.metamac.rest.api.constants.RestApiConstants;
@@ -730,11 +731,13 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
     @Override
     public ContentConstraint saveContentConstraint(ServiceContext serviceContext, ContentConstraint contentConstraint) throws MetamacException {
         try {
-            Response createContentConstraint = restApiLocator.getSrmRestInternalFacadeV10().createContentConstraint(contentConstraint, serviceContext.getUserId());
+            Response response = restApiLocator.getSrmRestInternalFacadeV10().createContentConstraint(contentConstraint, serviceContext.getUserId());
 
             ContentConstraint result = null;
-            if (Response.Status.CREATED.equals(createContentConstraint.getStatus())) {
-                result = (ContentConstraint) createContentConstraint.getEntity();
+            if (Response.Status.CREATED.equals(response.getStatus())) {
+                result = (ContentConstraint) response.getEntity();
+            } else {
+                throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.REST_API_INVOCATION_ERROR_UNEXPECTED_STATUS).withMessageParameters(response.getStatus()).build();
             }
 
             return result;
@@ -750,7 +753,9 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
             String agencyId = contentConstraintComponents[0];
             String resourceId = contentConstraintComponents[1];
             String version = contentConstraintComponents[2];
-            restApiLocator.getSrmRestInternalFacadeV10().deleteContentConstraintByUrn(agencyId, resourceId, version, forceDeleteFinal, serviceContext.getUserId());
+            Response response = restApiLocator.getSrmRestInternalFacadeV10().deleteContentConstraintByUrn(agencyId, resourceId, version, forceDeleteFinal, serviceContext.getUserId());
+
+            checkStatusOk(response);
         } catch (Exception e) {
             throw manageSrmInternalRestException(e);
         }
@@ -763,7 +768,9 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
             String agencyId = contentConstraintComponents[0];
             String resourceId = contentConstraintComponents[1];
             String version = contentConstraintComponents[2];
-            restApiLocator.getSrmRestInternalFacadeV10().versioningContentConstraint(agencyId, resourceId, version, serviceContext.getUserId(), versionTypeEnum.getName());
+            Response response = restApiLocator.getSrmRestInternalFacadeV10().versioningContentConstraint(agencyId, resourceId, version, serviceContext.getUserId(), versionTypeEnum.getName());
+
+            checkStatusOk(response);
         } catch (Exception e) {
             throw manageSrmInternalRestException(e);
         }
@@ -776,7 +783,9 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
             String agencyId = contentConstraintComponents[0];
             String resourceId = contentConstraintComponents[1];
             String version = contentConstraintComponents[2];
-            restApiLocator.getSrmRestInternalFacadeV10().publishContentConstraint(agencyId, resourceId, version, alsoMarkAsPublic, serviceContext.getUserId());
+            Response response = restApiLocator.getSrmRestInternalFacadeV10().publishContentConstraint(agencyId, resourceId, version, alsoMarkAsPublic, serviceContext.getUserId());
+
+            checkStatusOk(response);
         } catch (Exception e) {
             throw manageSrmInternalRestException(e);
         }
@@ -803,12 +812,13 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
             String resourceId = contentConstraintComponents[1];
             String version = contentConstraintComponents[2];
 
-            Response saveRegionForContentConstraint = restApiLocator.getSrmRestInternalFacadeV10().saveRegionForContentConstraint(agencyId, resourceId, version, regionReference,
-                    serviceContext.getUserId());
+            Response response = restApiLocator.getSrmRestInternalFacadeV10().saveRegionForContentConstraint(agencyId, resourceId, version, regionReference, serviceContext.getUserId());
 
             RegionReference result = null;
-            if (Response.Status.CREATED.equals(saveRegionForContentConstraint.getStatus())) {
-                result = (RegionReference) saveRegionForContentConstraint.getEntity();
+            if (Response.Status.CREATED.equals(response.getStatus())) {
+                result = (RegionReference) response.getEntity();
+            } else {
+                throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.REST_API_INVOCATION_ERROR_UNEXPECTED_STATUS).withMessageParameters(response.getStatus()).build();
             }
 
             return result;
@@ -825,7 +835,9 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
             String resourceId = contentConstraintComponents[1];
             String version = contentConstraintComponents[2];
 
-            restApiLocator.getSrmRestInternalFacadeV10().deleteRegion(agencyId, resourceId, version, regionCode, serviceContext.getUserId());
+            Response response = restApiLocator.getSrmRestInternalFacadeV10().deleteRegion(agencyId, resourceId, version, regionCode, serviceContext.getUserId());
+
+            checkStatusOk(response);
         } catch (Exception e) {
             throw manageSrmInternalRestException(e);
         }
@@ -837,5 +849,11 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
 
     private MetamacException manageSrmInternalRestException(Exception e) throws MetamacException {
         return ServiceExceptionUtils.manageMetamacRestException(e, ServiceExceptionParameters.API_SRM_INTERNAL, restApiLocator.getSrmRestInternalFacadeV10());
+    }
+
+    private void checkStatusOk(Response response) throws MetamacException {
+        if (!Response.Status.OK.equals(response.getStatus())) {
+            throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.REST_API_INVOCATION_ERROR_UNEXPECTED_STATUS).withMessageParameters(response.getStatus()).build();
+        }
     }
 }
