@@ -134,7 +134,7 @@ public class QueryVersionRepositoryTest extends StatisticalResourcesBaseTest imp
 
         // QuerySelectionItem 01
         QuerySelectionItem querySelectionItem01 = new QuerySelectionItem();
-        querySelectionItem01.setQuery(queryVersion);
+        querySelectionItem01.setQueryVersion(queryVersion);
 
         CodeItem codeItem011 = new CodeItem();
         codeItem011.setCode("CODE_01");
@@ -152,7 +152,7 @@ public class QueryVersionRepositoryTest extends StatisticalResourcesBaseTest imp
 
         // QuerySelectionItem 02
         QuerySelectionItem querySelectionItem02 = new QuerySelectionItem();
-        querySelectionItem02.setQuery(queryVersion);
+        querySelectionItem02.setQueryVersion(queryVersion);
 
         CodeItem codeItem021 = new CodeItem();
         codeItem021.setCode("CODE_03");
@@ -198,7 +198,7 @@ public class QueryVersionRepositoryTest extends StatisticalResourcesBaseTest imp
 
         // QuerySelectionItem 01
         QuerySelectionItem querySelectionItem01 = new QuerySelectionItem();
-        querySelectionItem01.setQuery(queryVersion);
+        querySelectionItem01.setQueryVersion(queryVersion);
 
         CodeItem codeItem011 = new CodeItem();
         codeItem011.setCode("CODE_01");
@@ -216,7 +216,7 @@ public class QueryVersionRepositoryTest extends StatisticalResourcesBaseTest imp
 
         // QuerySelectionItem 02
         QuerySelectionItem querySelectionItem02 = new QuerySelectionItem();
-        querySelectionItem02.setQuery(queryVersion);
+        querySelectionItem02.setQueryVersion(queryVersion);
 
         CodeItem codeItem021 = new CodeItem();
         codeItem021.setCode("CODE_01");

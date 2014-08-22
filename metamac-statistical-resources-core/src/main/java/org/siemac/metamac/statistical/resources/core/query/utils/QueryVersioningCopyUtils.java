@@ -40,29 +40,29 @@ public class QueryVersioningCopyUtils {
         target.setLatestTemporalCodeInCreation(source.getLatestTemporalCodeInCreation());
 
         target.getSelection().clear();
-        target.getSelection().addAll(copyListQuerySelectionItem(source.getSelection()));
+        target.getSelection().addAll(copyListQuerySelectionItem(source.getSelection(), target));
     }
 
-    private static List<QuerySelectionItem> copyListQuerySelectionItem(List<QuerySelectionItem> source) {
+    private static List<QuerySelectionItem> copyListQuerySelectionItem(List<QuerySelectionItem> source, QueryVersion targetQueryVersion) {
         if (source.isEmpty()) {
             return new ArrayList<QuerySelectionItem>();
         }
 
         List<QuerySelectionItem> target = new ArrayList<QuerySelectionItem>();
         for (QuerySelectionItem item : source) {
-            target.add(copyQuerySelectionItem(item));
+            target.add(copyQuerySelectionItem(item, targetQueryVersion));
         }
         return target;
     }
 
-    private static QuerySelectionItem copyQuerySelectionItem(QuerySelectionItem source) {
+    private static QuerySelectionItem copyQuerySelectionItem(QuerySelectionItem source, QueryVersion targetQueryVersion) {
         if (source == null) {
             return null;
         }
         QuerySelectionItem target = new QuerySelectionItem();
 
         target.setDimension(source.getDimension());
-        target.setQuery(source.getQuery());
+        target.setQueryVersion(targetQueryVersion);
 
         target.getCodes().clear();
         target.getCodes().addAll(copyListCodeItem(source.getCodes(), target));

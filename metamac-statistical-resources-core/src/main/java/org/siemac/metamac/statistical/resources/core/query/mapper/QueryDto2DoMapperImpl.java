@@ -172,7 +172,7 @@ public class QueryDto2DoMapperImpl extends BaseDto2DoMapperImpl implements Query
     }
 
     private QuerySelectionItem querySelectionItemDto2Do(Entry<String, List<CodeItemDto>> sourceItem, QuerySelectionItem targetItem, QueryVersion queryTarget) {
-        targetItem.setQuery(queryTarget);
+        targetItem.setQueryVersion(queryTarget);
         targetItem.setDimension(sourceItem.getKey());
 
         // Set codes

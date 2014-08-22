@@ -73,7 +73,7 @@ Application QueriesStatisticalResources {
 			
 			String dimension not nullable;
 			- Bag<@CodeItem> codes inverse <-> querySelectionItem not nullable cascade="all-delete-orphan"; 
-			- @QueryVersion query not nullable cascade="none" databaseColumn="QUERY_FK" <-> selection;
+			- @QueryVersion queryVersion not nullable cascade="none" databaseColumn="QUERY_FK" <-> selection;
 			
 			Repository QuerySelectionItemRepository {
 				findAll;
@@ -117,7 +117,7 @@ Application QueriesStatisticalResources {
 			- @DatasetVersion fixedDatasetVersion databaseColumn="DATASET_VERSION_FK" nullable;
 			- @Dataset dataset databaseColumn="DATASET_FK" nullable;
 			- @QueryStatusEnum status not nullable;
-			- Bag<@QuerySelectionItem> selection inverse <-> query cascade="all-delete-orphan";
+			- Bag<@QuerySelectionItem> selection inverse <-> queryVersion cascade="all-delete-orphan";
 			- @QueryTypeEnum type not nullable;
 			Integer latestDataNumber nullable;
 			String latestTemporalCodeInCreation nullable databaseColumn="LATEST_TEMPORAL_CODE_CREATION";
