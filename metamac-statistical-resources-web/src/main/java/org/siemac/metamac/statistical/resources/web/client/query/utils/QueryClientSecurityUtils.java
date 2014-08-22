@@ -142,8 +142,9 @@ public class QueryClientSecurityUtils extends LifecycleClientSecurityUtils {
     }
 
     private static boolean canVersionQueryVersion(ProcStatusEnum procStatus) {
-        // QUERY VERSIONS CAN NOT BE VERSIONED
-        return false;
+        if (!canVersion(procStatus)) {
+            return false;
+        }
+        return SharedQueriesSecurityUtils.canVersionQueryVersion(getMetamacPrincipal(), getCurrentStatisticalOperationCode());
     }
-
 }

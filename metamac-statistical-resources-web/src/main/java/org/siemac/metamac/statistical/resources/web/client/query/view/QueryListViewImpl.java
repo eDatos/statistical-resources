@@ -248,8 +248,7 @@ public class QueryListViewImpl extends LifeCycleBaseListViewImpl<QueryListUiHand
 
     @Override
     protected boolean canVersion(ListGridRecord record) {
-        // Can not be versioned
-        return false;
+        return QueryClientSecurityUtils.canVersionQueryVersion(getDtoFromRecord(record));
     }
 
     //

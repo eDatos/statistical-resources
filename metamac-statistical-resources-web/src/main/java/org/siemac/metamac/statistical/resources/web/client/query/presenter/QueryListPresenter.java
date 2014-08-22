@@ -152,6 +152,11 @@ public class QueryListPresenter extends LifeCycleBaseListPresenter<QueryListPres
         dispatcher.execute(new DeleteQueryVersionsAction(urnsFromSelected), new WaitingAsyncCallbackHandlingError<DeleteQueryVersionsResult>(this) {
 
             @Override
+            public void onWaitFailure(Throwable caught) {
+                super.onWaitFailure(caught);
+                retrieveQueries(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, getView().getQueryVersionWebCriteria());
+            }
+            @Override
             public void onWaitSuccess(DeleteQueryVersionsResult result) {
                 fireSuccessMessage(getMessages().queryDeleted());
                 retrieveQueries(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, getView().getQueryVersionWebCriteria());
@@ -214,10 +219,11 @@ public class QueryListPresenter extends LifeCycleBaseListPresenter<QueryListPres
             @Override
             public void onWaitSuccess(UpdateQueryVersionsProcStatusResult result) {
                 fireSuccessMessage(successMessage);
+                retrieveQueries(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, getView().getQueryVersionWebCriteria());
             }
-
             @Override
-            protected void afterResult() {
+            public void onWaitFailure(Throwable caught) {
+                super.onWaitFailure(caught);
                 retrieveQueries(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, getView().getQueryVersionWebCriteria());
             }
         });

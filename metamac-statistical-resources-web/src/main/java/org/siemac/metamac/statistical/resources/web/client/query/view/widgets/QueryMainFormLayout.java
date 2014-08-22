@@ -57,7 +57,6 @@ public class QueryMainFormLayout extends LifecycleMainFormLayout {
 
     @Override
     protected boolean canVersion() {
-        // Queries can not be versioned
         return QueryClientSecurityUtils.canVersionQueryVersion(queryVersionDto);
     }
 

@@ -60,8 +60,11 @@ public class UpdateQueryVersionsProcStatusActionHandler extends UpdateResourcePr
                     case CANCEL_PROGRAMMED_PUBLICATION:
                         statisticalResourcesServiceFacade.cancelPublicationQueryVersion(ServiceContextHolder.getCurrentServiceContext(), queryVersionBaseDto);
                         break;
+                    case VERSION:
+                        statisticalResourcesServiceFacade.versioningQueryVersion(ServiceContextHolder.getCurrentServiceContext(), queryVersionBaseDto, action.getVersionType());
+                        break;
                     default:
-                        throw new UnsupportedOperationException("Lifecycle operation unsupported " + lifeCycleAction);
+                        break;
                 }
 
             } catch (MetamacException e) {
