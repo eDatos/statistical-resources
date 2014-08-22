@@ -98,6 +98,7 @@ public class CollectionsDo2RestMapperV10Impl implements CollectionsDo2RestMapper
         target.setId(source.getSiemacMetadataStatisticalResource().getCode());
         target.setUrn(toCollectionUrn(source));
         target.setSelfLink(toCollectionSelfLink(source));
+        target.setManagementAppLink(toPublicationVersionManagementApplicationLink(source));
         target.setName(commonDo2RestMapper.toInternationalString(source.getSiemacMetadataStatisticalResource().getTitle(), selectedLanguages));
         target.setDescription(commonDo2RestMapper.toInternationalString(source.getSiemacMetadataStatisticalResource().getDescription(), selectedLanguages));
         target.setParentLink(toCollectionParentLink(source));

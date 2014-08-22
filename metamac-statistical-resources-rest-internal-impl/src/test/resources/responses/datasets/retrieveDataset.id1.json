@@ -9,6 +9,7 @@
     "kind": "statisticalResources#datasets",
     "href": "http://data.istac.es/apis/statistical-resources/v1.0/datasets"
   },
+  "managementAppLink": "http://localhost:8080/statistical-resources-internal/#operations/operation;id=5yaFS5j67I/datasets/dataset;id=agency1:dataset1(01.000)",
   "name": {
     "text": [
       {
@@ -20,7 +21,7 @@
   "description": {
     "text": [
       {
-        "value": "description-zSkyltQlOn_000001 en Espanol",
+        "value": "description-5yaFS5j67I_000001 en Espanol",
         "lang": "es"
       }
     ]
@@ -1797,17 +1798,17 @@
       "total": 2
     },
     "statisticalOperation": {
-      "managementAppLink": "http://localhost:8080/statistical-operations-internal/zSkyltQlOn",
-      "id": "zSkyltQlOn",
-      "urn": "urn:siemac:org.siemac.metamac.infomodel.statisticaloperations.Operation=zSkyltQlOn",
+      "managementAppLink": "http://localhost:8080/statistical-operations-internal/5yaFS5j67I",
+      "id": "5yaFS5j67I",
+      "urn": "urn:siemac:org.siemac.metamac.infomodel.statisticaloperations.Operation=5yaFS5j67I",
       "selfLink": {
         "kind": "statisticalOperations#operation",
-        "href": "http://data.istac.es/apis/operations/latest/zSkyltQlOn"
+        "href": "http://data.istac.es/apis/operations/latest/5yaFS5j67I"
       },
       "name": {
         "text": [
           {
-            "value": "title-zSkyltQlOn en Espanol",
+            "value": "title-5yaFS5j67I en Espanol",
             "lang": "es"
           }
         ]
@@ -1858,7 +1859,7 @@
     "subtitle": {
       "text": [
         {
-          "value": "subtitle-zSkyltQlOn_000001 en Espanol",
+          "value": "subtitle-5yaFS5j67I_000001 en Espanol",
           "lang": "es"
         }
       ]
@@ -1866,7 +1867,7 @@
     "titleAlternative": {
       "text": [
         {
-          "value": "titleAlternative-zSkyltQlOn_000001 en Espanol",
+          "value": "titleAlternative-5yaFS5j67I_000001 en Espanol",
           "lang": "es"
         }
       ]
@@ -1874,7 +1875,7 @@
     "keywords": {
       "text": [
         {
-          "value": "keyword1 keyword2 keyword3-zSkyltQlOn_000001 en Espanol",
+          "value": "keyword1 keyword2 keyword3-5yaFS5j67I_000001 en Espanol",
           "lang": "es"
         }
       ]
@@ -1944,7 +1945,7 @@
     "conformsTo": {
       "text": [
         {
-          "value": "conformsTo-zSkyltQlOn_000001 en Espanol",
+          "value": "conformsTo-5yaFS5j67I_000001 en Espanol",
           "lang": "es"
         }
       ]
@@ -2074,7 +2075,7 @@
     },
     "newnessUntilDate": "2013-09-02T15:04:05+01:00",
     "replaces": {
-      "managementAppLink": "http://localhost:8080/statistical-resources-internal/#operations/operation;id=oPPEPHpVY6/datasets/dataset;id=agency1:replace01(01.000)",
+      "managementAppLink": "http://localhost:8080/statistical-resources-internal/#operations/operation;id=SAMIdLlsRt/datasets/dataset;id=agency1:replace01(01.000)",
       "id": "replace01",
       "urn": "urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Dataset=agency1:replace01(01.000)",
       "selfLink": {
@@ -2174,24 +2175,24 @@
     "accessRights": {
       "text": [
         {
-          "value": "accessRights-zSkyltQlOn_000001 en Espanol",
+          "value": "accessRights-5yaFS5j67I_000001 en Espanol",
           "lang": "es"
         }
       ]
     },
     "maintainer": {
-      "managementAppLink": "http://localhost:8080/metamac-srm-web/kxvP8j0wXw",
-      "id": "kxvP8j0wXw",
+      "managementAppLink": "http://localhost:8080/metamac-srm-web/kRil63qice",
+      "id": "kRil63qice",
       "nestedId": "agency1",
-      "urn": "urn:sdmx:org.sdmx.infomodel.base.Agency=MaintainerMock:AgencySchemeMock(1.0).kxvP8j0wXw",
+      "urn": "urn:sdmx:org.sdmx.infomodel.base.Agency=MaintainerMock:AgencySchemeMock(1.0).kRil63qice",
       "selfLink": {
         "kind": "structuralResources#agency",
-        "href": "http://data.istac.es/apis/srm/latest/kxvP8j0wXw"
+        "href": "http://data.istac.es/apis/srm/latest/kRil63qice"
       },
       "name": {
         "text": [
           {
-            "value": "title-kxvP8j0wXw en Espanol",
+            "value": "title-kRil63qice en Espanol",
             "lang": "es"
           }
         ]
@@ -2225,7 +2226,7 @@
     "conformsToInternal": {
       "text": [
         {
-          "value": "conformsToInternal-zSkyltQlOn_000001 en Espanol",
+          "value": "conformsToInternal-5yaFS5j67I_000001 en Espanol",
           "lang": "es"
         }
       ]
@@ -2233,7 +2234,7 @@
     "abstract": {
       "text": [
         {
-          "value": "abstract-zSkyltQlOn_000001 en Espanol",
+          "value": "abstract-5yaFS5j67I_000001 en Espanol",
           "lang": "es"
         }
       ]

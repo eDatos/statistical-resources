@@ -91,6 +91,7 @@ public class QueriesDo2RestMapperV10Impl implements QueriesDo2RestMapperV10 {
         target.setId(source.getLifeCycleStatisticalResource().getCode());
         target.setUrn(toQueryUrn(source));
         target.setSelfLink(toQuerySelfLink(source));
+        target.setManagementAppLink(toQueryVersionManagementApplicationLink(source));
         target.setName(commonDo2RestMapper.toInternationalString(source.getLifeCycleStatisticalResource().getTitle(), selectedLanguages));
         target.setDescription(commonDo2RestMapper.toInternationalString(source.getLifeCycleStatisticalResource().getDescription(), selectedLanguages));
         target.setParentLink(toQueryParentLink(source));

@@ -86,6 +86,7 @@ public class DatasetsDo2RestMapperV10Impl implements DatasetsDo2RestMapperV10 {
         target.setId(source.getSiemacMetadataStatisticalResource().getCode());
         target.setUrn(source.getSiemacMetadataStatisticalResource().getUrn());
         target.setSelfLink(toDatasetSelfLink(source, false));
+        target.setManagementAppLink(toDatasetVersionManagementApplicationLink(source));
         target.setName(commonDo2RestMapper.toInternationalString(source.getSiemacMetadataStatisticalResource().getTitle(), selectedLanguages));
         target.setDescription(commonDo2RestMapper.toInternationalString(source.getSiemacMetadataStatisticalResource().getDescription(), selectedLanguages));
         target.setParentLink(toDatasetParentLink(source));

@@ -11,6 +11,7 @@
             <xs:element name="selfLink" type="common:ResourceLink" />
             <xs:element name="parentLink" type="common:ResourceLink" />
             <xs:element name="childLinks" type="common:ChildLinks" minOccurs="1" />
+            <xs:element name="managementAppLink" type="xs:string" />
             <xs:element name="name" type="common:InternationalString" />
             <xs:element name="description" type="common:InternationalString" minOccurs="0" />
             <xs:element name="selectedLanguages" type="tns:SelectedLanguages" minOccurs="1" />
@@ -27,6 +28,7 @@
             <xs:element name="selfLink" type="common:ResourceLink" />
             <xs:element name="parentLink" type="common:ResourceLink" />
             <xs:element name="childLinks" type="common:ChildLinks" minOccurs="1" />
+            <xs:element name="managementAppLink" type="xs:string" />
             <xs:element name="name" type="common:InternationalString" />
             <xs:element name="description" type="common:InternationalString" minOccurs="0" />
             <xs:element name="selectedLanguages" type="tns:SelectedLanguages" minOccurs="1" />
@@ -43,6 +45,7 @@
             <xs:element name="selfLink" type="common:ResourceLink" />
             <xs:element name="parentLink" type="common:ResourceLink" />
             <xs:element name="childLinks" type="common:ChildLinks" minOccurs="1" />
+            <xs:element name="managementAppLink" type="xs:string" />
             <xs:element name="name" type="common:InternationalString" />
             <xs:element name="description" type="common:InternationalString" minOccurs="0" />
             <xs:element name="selectedLanguages" type="tns:SelectedLanguages" minOccurs="1" />
