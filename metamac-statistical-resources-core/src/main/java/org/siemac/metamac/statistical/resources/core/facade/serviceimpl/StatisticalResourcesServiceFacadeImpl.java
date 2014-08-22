@@ -49,7 +49,6 @@ import org.siemac.metamac.statistical.resources.core.dataset.mapper.DatasetDto2D
 import org.siemac.metamac.statistical.resources.core.dataset.mapper.StatRepoDto2StatisticalResourcesDtoMapper;
 import org.siemac.metamac.statistical.resources.core.dataset.mapper.StatisticalResourcesDto2StatRepoDtoMapper;
 import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
-import org.siemac.metamac.statistical.resources.core.dto.constraint.ContentConstraintBasicDto;
 import org.siemac.metamac.statistical.resources.core.dto.constraint.ContentConstraintDto;
 import org.siemac.metamac.statistical.resources.core.dto.constraint.RegionValueDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.CategorisationDto;
@@ -1945,7 +1944,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     }
 
     @Override
-    public ContentConstraintBasicDto createContentConstraint(ServiceContext ctx, ContentConstraintDto contentConstraintDto) throws MetamacException {
+    public ContentConstraintDto createContentConstraint(ServiceContext ctx, ContentConstraintDto contentConstraintDto) throws MetamacException {
         // Security
         DatasetVersion datasetVersion = obtainDatasetVersionFromContentConstraint(ctx, contentConstraintDto);
         ConstraintsSecurityUtils.canCreateContentConstraint(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode());
@@ -1962,7 +1961,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         contentConstraint = constraintsService.createContentConstraint(ctx, contentConstraint);
 
         // Transform
-        return constraintRest2DtoMapper.toConstraintBasicDto(contentConstraint);
+        return constraintRest2DtoMapper.toConstraintDto(contentConstraint);
     }
 
     @Override
