@@ -734,7 +734,7 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
             Response response = restApiLocator.getSrmRestInternalFacadeV10().createContentConstraint(contentConstraint, serviceContext.getUserId());
 
             ContentConstraint result = null;
-            if (Response.Status.CREATED.equals(response.getStatus())) {
+            if (Response.Status.CREATED.getStatusCode() == response.getStatus()) {
                 result = (ContentConstraint) response.getEntity();
             } else {
                 throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.REST_API_INVOCATION_ERROR_UNEXPECTED_STATUS).withMessageParameters(response.getStatus()).build();
@@ -815,7 +815,7 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
             Response response = restApiLocator.getSrmRestInternalFacadeV10().saveRegionForContentConstraint(agencyId, resourceId, version, regionReference, serviceContext.getUserId());
 
             RegionReference result = null;
-            if (Response.Status.CREATED.equals(response.getStatus())) {
+            if (Response.Status.CREATED.getStatusCode() == response.getStatus()) {
                 result = (RegionReference) response.getEntity();
             } else {
                 throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.REST_API_INVOCATION_ERROR_UNEXPECTED_STATUS).withMessageParameters(response.getStatus()).build();
@@ -852,7 +852,7 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
     }
 
     private void checkStatusOk(Response response) throws MetamacException {
-        if (!Response.Status.OK.equals(response.getStatus())) {
+        if (Response.Status.OK.getStatusCode() != response.getStatus()) {
             throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.REST_API_INVOCATION_ERROR_UNEXPECTED_STATUS).withMessageParameters(response.getStatus()).build();
         }
     }
