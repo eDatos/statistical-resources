@@ -13,6 +13,7 @@ public interface QueryUiHandlers extends BaseUiHandlers {
 
     void goToQueries();
 
+    void retrieveQuery(String urn);
     void saveQuery(QueryVersionDto query);
     void deleteQuery(String urn);
 

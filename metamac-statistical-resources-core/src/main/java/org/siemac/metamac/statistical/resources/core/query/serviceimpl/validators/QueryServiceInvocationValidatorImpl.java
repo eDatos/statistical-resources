@@ -36,6 +36,10 @@ public class QueryServiceInvocationValidatorImpl extends BaseInvocationValidator
         StatisticalResourcesValidationUtils.checkParameterRequired(queryUrn, ServiceExceptionParameters.QUERY_URN, exceptions);
     }
 
+    public static void checkRetrieveQueryVersions(String queryVersionUrn, List<MetamacExceptionItem> exceptions) throws MetamacException {
+        StatisticalResourcesValidationUtils.checkParameterRequired(queryVersionUrn, ServiceExceptionParameters.QUERY_VERSION_URN, exceptions);
+    }
+
     public static void checkRetrieveQueryVersions(List<MetamacExceptionItem> exceptions) throws MetamacException {
         // NOTHING
     }

@@ -16,13 +16,13 @@ import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.GetC
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.GetDatasetAttributeInstancesActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.GetDatasetAttributesActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.GetDatasetCategorisationsActionHandler;
+import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.GetDatasetConstraintActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.GetDatasetDimensionCoverageActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.GetDatasetDimensionsActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.GetDatasetDimensionsCoverageActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.GetDatasetDimensionsIdsActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.GetDatasetDimensionsVariableMappingActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.GetDatasetVersionActionHandler;
-import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.GetDatasetConstraintActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.GetDatasetVersionMainCoveragesActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.GetDatasetVersionsActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.GetDatasetsActionHandler;
@@ -65,6 +65,7 @@ import org.siemac.metamac.statistical.resources.web.server.handlers.query.Delete
 import org.siemac.metamac.statistical.resources.web.server.handlers.query.GetQueriesActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.query.GetQueryVersionActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.query.GetQueryVersionsActionHandler;
+import org.siemac.metamac.statistical.resources.web.server.handlers.query.GetVersionsOfQueryActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.query.SaveQueryVersionActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.query.UpdateQueryVersionProcStatusActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.query.UpdateQueryVersionsProcStatusActionHandler;
@@ -83,13 +84,13 @@ import org.siemac.metamac.statistical.resources.web.shared.dataset.GetCodelistsW
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetAttributeInstancesAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetAttributesAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetCategorisationsAction;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetConstraintAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetDimensionCoverageAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetDimensionsAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetDimensionsCoverageAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetDimensionsIdsAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetDimensionsVariableMappingAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetVersionAction;
-import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetConstraintAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetVersionMainCoveragesAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetVersionsAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetsAction;
@@ -132,6 +133,7 @@ import org.siemac.metamac.statistical.resources.web.shared.query.DeleteQueryVers
 import org.siemac.metamac.statistical.resources.web.shared.query.GetQueriesAction;
 import org.siemac.metamac.statistical.resources.web.shared.query.GetQueryVersionAction;
 import org.siemac.metamac.statistical.resources.web.shared.query.GetQueryVersionsAction;
+import org.siemac.metamac.statistical.resources.web.shared.query.GetVersionsOfQueryAction;
 import org.siemac.metamac.statistical.resources.web.shared.query.SaveQueryVersionAction;
 import org.siemac.metamac.statistical.resources.web.shared.query.UpdateQueryVersionProcStatusAction;
 import org.siemac.metamac.statistical.resources.web.shared.query.UpdateQueryVersionsProcStatusAction;
@@ -237,6 +239,7 @@ public class ServerModule extends HandlerModule {
         bindHandler(DeleteQueryVersionsAction.class, DeleteQueryVersionsActionHandler.class);
         bindHandler(UpdateQueryVersionsProcStatusAction.class, UpdateQueryVersionsProcStatusActionHandler.class);
         bindHandler(UpdateQueryVersionProcStatusAction.class, UpdateQueryVersionProcStatusActionHandler.class);
+        bindHandler(GetVersionsOfQueryAction.class, GetVersionsOfQueryActionHandler.class);
 
         // COMMON
         bindHandler(GetLatestResourceVersionAction.class, GetLatestResourceVersionActionHandler.class);

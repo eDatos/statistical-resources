@@ -249,6 +249,22 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     }
 
     @Override
+    public List<QueryVersionBaseDto> retrieveQueriesVersions(ServiceContext ctx, String queryVersionUrn) throws MetamacException {
+        // Security
+        QueriesSecurityUtils.canRetrieveQueriesVersions(ctx);
+
+        // Retrieve
+        List<QueryVersion> queryVersions = getQueryService().retrieveQueryVersions(ctx, queryVersionUrn);
+
+        // Transform
+        List<QueryVersionBaseDto> queries = new ArrayList<QueryVersionBaseDto>();
+        for (QueryVersion version : queryVersions) {
+            queries.add(queryDo2DtoMapper.queryVersionDoToBaseDto(version));
+        }
+        return queries;
+    }
+
+    @Override
     public QueryVersionDto retrieveLatestQueryVersion(ServiceContext ctx, String queryUrn) throws MetamacException {
         // Retrieve
         QueryVersion query = getQueryService().retrieveLatestQueryVersionByQueryUrn(ctx, queryUrn);

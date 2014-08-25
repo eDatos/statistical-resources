@@ -1,5 +1,8 @@
 package org.siemac.metamac.statistical.resources.core.query.serviceimpl;
 
+import static org.siemac.metamac.core.common.util.MetamacCollectionUtils.find;
+import static org.siemac.metamac.statistical.resources.core.base.domain.utils.RelatedResourceResultUtils.getUrnsFromRelatedResourceResults;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -48,9 +51,6 @@ import org.siemac.metamac.statistical.resources.core.utils.transformers.CodeItem
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import static org.siemac.metamac.core.common.util.MetamacCollectionUtils.find;
-import static org.siemac.metamac.statistical.resources.core.base.domain.utils.RelatedResourceResultUtils.getUrnsFromRelatedResourceResults;
-
 /**
  * Implementation of QueryService.
  */
@@ -94,6 +94,17 @@ public class QueryServiceImpl extends QueryServiceImplBase {
 
         // Retrieve
         return getQueryVersionRepository().findAll();
+    }
+
+    @Override
+    public List<QueryVersion> retrieveQueryVersions(ServiceContext ctx, String queryVersionUrn) throws MetamacException {
+        // Validations
+        queryServiceInvocationValidator.checkRetrieveQueryVersions(ctx, queryVersionUrn);
+
+        // Retrieve
+        List<QueryVersion> queryVersions = getQueryVersionRepository().retrieveByUrn(queryVersionUrn).getQuery().getVersions();
+
+        return queryVersions;
     }
 
     @Override

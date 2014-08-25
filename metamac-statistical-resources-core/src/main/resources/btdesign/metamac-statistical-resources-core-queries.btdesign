@@ -21,6 +21,8 @@ Application QueriesStatisticalResources {
     		@QueryVersion retrieveQueryVersionByUrn(String urn) throws MetamacException;
     		"Retrieve all queries"
     		List<@QueryVersion> retrieveQueryVersions() throws MetamacException;
+    	    "Retrieves all query versions of one query"
+    		List<@QueryVersion> retrieveQueryVersions(String queryVersionUrn) throws MetamacException;
     		"Find queries by criteria"
     		PagedResult<@QueryVersion> findQueryVersionsByCondition(List<ConditionalCriteria> conditions, PagingParameter pagingParameter)  throws MetamacException;
     		"Create query"

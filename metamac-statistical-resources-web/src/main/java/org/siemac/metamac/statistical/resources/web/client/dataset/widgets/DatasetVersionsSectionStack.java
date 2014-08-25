@@ -21,7 +21,7 @@ public class DatasetVersionsSectionStack extends VersionableResourceSectionStack
         for (DatasetVersionBaseDto datasetDto : datasetVersionBaseDtos) {
             listGrid.addData(StatisticalResourcesRecordUtils.getDatasetRecord(datasetDto));
         }
-        listGrid.sort(DatasetDS.VERSION, SortDirection.ASCENDING);
+        listGrid.sort(DatasetDS.VERSION, SortDirection.DESCENDING);
     }
 
     public void selectDatasetVersion(String currentDatasetVersionUrn) {

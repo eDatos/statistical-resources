@@ -9,13 +9,16 @@ import java.util.List;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.CodeItemDto;
+import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionBaseDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionDto;
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesDefaults;
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb;
 import org.siemac.metamac.statistical.resources.web.client.base.utils.RequiredFieldUtils;
+import org.siemac.metamac.statistical.resources.web.client.query.model.record.QueryRecord;
 import org.siemac.metamac.statistical.resources.web.client.query.presenter.QueryPresenter;
 import org.siemac.metamac.statistical.resources.web.client.query.view.handlers.QueryUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.query.view.widgets.QueryMainFormLayout;
+import org.siemac.metamac.statistical.resources.web.client.query.view.widgets.QueryVersionsSectionStack;
 import org.siemac.metamac.statistical.resources.web.client.query.view.widgets.forms.QueryIdentifiersCreationForm;
 import org.siemac.metamac.statistical.resources.web.client.query.view.widgets.forms.QueryProductionDescriptorsEditionForm;
 import org.siemac.metamac.statistical.resources.web.client.query.view.widgets.forms.QueryProductionDescriptorsForm;
@@ -45,19 +48,37 @@ import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.Overflow;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
+import com.smartgwt.client.widgets.grid.events.RecordClickEvent;
+import com.smartgwt.client.widgets.grid.events.RecordClickHandler;
 import com.smartgwt.client.widgets.layout.VLayout;
 
 public class QueryViewImpl extends ViewWithUiHandlers<QueryUiHandlers> implements QueryPresenter.QueryView {
 
-    private VLayout        panel;
+    private VLayout                   panel;
 
-    private QueryFormPanel queryFormPanel;
+    private QueryVersionsSectionStack versionsSectionStack;
+    private QueryFormPanel            queryFormPanel;
 
-    private WarningLabel   warningLabel;
+    private WarningLabel              warningLabel;
 
     @Inject
     public QueryViewImpl() {
         super();
+
+        // QUERY VERSIONS
+
+        versionsSectionStack = new QueryVersionsSectionStack(getConstants().queryVersions());
+        versionsSectionStack.getListGrid().addRecordClickHandler(new RecordClickHandler() {
+
+            @Override
+            public void onRecordClick(RecordClickEvent event) {
+                String urn = ((QueryRecord) event.getRecord()).getUrn();
+                getUiHandlers().retrieveQuery(urn);
+            }
+        });
+
+        // QUERY
+
         panel = new VLayout();
         panel.setHeight100();
 
@@ -70,10 +91,11 @@ public class QueryViewImpl extends ViewWithUiHandlers<QueryUiHandlers> implement
         VLayout subPanel = new VLayout();
         subPanel.setOverflow(Overflow.SCROLL);
         subPanel.setMembersMargin(5);
-        subPanel.setMargin(15);
+        subPanel.addMember(versionsSectionStack);
         subPanel.addMember(warningLabel);
 
         queryFormPanel = new QueryFormPanel();
+        queryFormPanel.setMargin(15);
         queryFormPanel.setWidth("99%");
         subPanel.addMember(queryFormPanel);
 
@@ -115,6 +137,12 @@ public class QueryViewImpl extends ViewWithUiHandlers<QueryUiHandlers> implement
         clearWarningLabel();
         queryFormPanel.createQuery();
         queryFormPanel.show();
+    }
+
+    @Override
+    public void setQueryVersionsAndSelectCurrent(String currentQueryUrn, List<QueryVersionBaseDto> queryVersionBaseDtos) {
+        versionsSectionStack.setQueryVersions(queryVersionBaseDtos);
+        versionsSectionStack.selectQueryVersion(currentQueryUrn);
     }
 
     @Override

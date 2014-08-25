@@ -11,6 +11,7 @@ import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.core.common.util.shared.UrnUtils;
 import org.siemac.metamac.statistical.resources.core.dto.query.CodeItemDto;
+import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionBaseDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionDto;
 import org.siemac.metamac.statistical.resources.navigation.shared.NameTokens;
 import org.siemac.metamac.statistical.resources.web.client.LoggedInGatekeeper;
@@ -40,6 +41,8 @@ import org.siemac.metamac.statistical.resources.web.shared.query.DeleteQueryVers
 import org.siemac.metamac.statistical.resources.web.shared.query.DeleteQueryVersionsResult;
 import org.siemac.metamac.statistical.resources.web.shared.query.GetQueryVersionAction;
 import org.siemac.metamac.statistical.resources.web.shared.query.GetQueryVersionResult;
+import org.siemac.metamac.statistical.resources.web.shared.query.GetVersionsOfQueryAction;
+import org.siemac.metamac.statistical.resources.web.shared.query.GetVersionsOfQueryResult;
 import org.siemac.metamac.statistical.resources.web.shared.query.SaveQueryVersionAction;
 import org.siemac.metamac.statistical.resources.web.shared.query.SaveQueryVersionResult;
 import org.siemac.metamac.statistical.resources.web.shared.query.UpdateQueryVersionProcStatusAction;
@@ -88,6 +91,8 @@ public class QueryPresenter extends Presenter<QueryPresenter.QueryView, QueryPre
     public interface QueryView extends View, HasUiHandlers<QueryUiHandlers> {
 
         void setQueryDto(QueryVersionDto queryDto);
+
+        void setQueryVersionsAndSelectCurrent(String currentQueryUrn, List<QueryVersionBaseDto> queryVersionBaseDtos);
 
         void newQueryDto();
 
@@ -152,12 +157,14 @@ public class QueryPresenter extends Presenter<QueryPresenter.QueryView, QueryPre
         if (StringUtils.isBlank(queryCode)) {
             getView().newQueryDto();
         } else {
-            retrieveQuery(queryCode);
+            String urn = UrnUtils.generateUrn(UrnConstants.URN_SIEMAC_CLASS_QUERY_PREFIX, queryCode);
+            retrieveQuery(urn);
+            retrieveQueryVersions(urn);
         }
     }
 
-    public void retrieveQuery(String queryCode) {
-        String urn = UrnUtils.generateUrn(UrnConstants.URN_SIEMAC_CLASS_QUERY_PREFIX, queryCode);
+    @Override
+    public void retrieveQuery(String urn) {
         dispatcher.execute(new GetQueryVersionAction(urn), new WaitingAsyncCallbackHandlingError<GetQueryVersionResult>(this) {
 
             @Override
@@ -385,6 +392,16 @@ public class QueryPresenter extends Presenter<QueryPresenter.QueryView, QueryPre
         } catch (MetamacWebException e) {
             ShowMessageEvent.fireErrorMessage(this, e);
         }
+    }
+
+    private void retrieveQueryVersions(final String urn) {
+        dispatcher.execute(new GetVersionsOfQueryAction(urn), new WaitingAsyncCallbackHandlingError<GetVersionsOfQueryResult>(this) {
+
+            @Override
+            public void onWaitSuccess(GetVersionsOfQueryResult result) {
+                getView().setQueryVersionsAndSelectCurrent(urn, result.getQueryVersionBaseDtos());
+            }
+        });
     }
 
     //

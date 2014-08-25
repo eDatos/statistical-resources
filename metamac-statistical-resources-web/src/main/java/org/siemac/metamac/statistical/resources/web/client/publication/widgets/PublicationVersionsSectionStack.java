@@ -21,7 +21,7 @@ public class PublicationVersionsSectionStack extends VersionableResourceSectionS
         for (PublicationVersionBaseDto publicationVersionDto : publicationVersionBaseDtos) {
             listGrid.addData(StatisticalResourcesRecordUtils.getPublicationRecord(publicationVersionDto));
         }
-        listGrid.sort(PublicationDS.VERSION, SortDirection.ASCENDING);
+        listGrid.sort(PublicationDS.VERSION, SortDirection.DESCENDING);
     }
 
     public void selectPublicationVersion(String urn) {
