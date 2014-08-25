@@ -188,7 +188,7 @@ public class ConstraintRest2DtoMapperImpl extends BaseRest2DtoMapperImpl impleme
 
     @Override
     public List<ExternalItemDto> externalItemConstraintToExternalItemDto(List<ResourceInternal> sources) throws MetamacException {
-        if (sources != null) {
+        if (sources == null) {
             return new ArrayList<ExternalItemDto>();
         }
 
