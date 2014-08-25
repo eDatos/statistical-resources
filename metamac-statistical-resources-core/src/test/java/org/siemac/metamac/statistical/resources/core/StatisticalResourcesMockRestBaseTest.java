@@ -215,20 +215,18 @@ public class StatisticalResourcesMockRestBaseTest extends StatisticalResourcesBa
     }
 
     protected List<MetamacExceptionItem> getExceptionItemsForExternalItemNotPublishedSiemac(SiemacMetadataStatisticalResource siemacResource, String baseField) {
-        String prefix = buildField(baseField, "siemac_metadata_statistical_resource");
-
         List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
 
-        exceptionItems.addAll(getExceptionItemsForExternalItemNotPublishedLifecycle(siemacResource, prefix, true));
-        exceptionItems.add(buildExternalItemNotPublishedException(siemacResource.getLanguage(), prefix, "language"));
-        exceptionItems.addAll(buildExternalItemsNotPublishedExceptions(siemacResource.getLanguages(), prefix, "languages"));
-        exceptionItems.addAll(buildExternalItemsNotPublishedExceptions(siemacResource.getStatisticalOperationInstances(), prefix, "statistical_operation_instances"));
-        exceptionItems.add(buildExternalItemNotPublishedException(siemacResource.getCreator(), prefix, "creator"));
-        exceptionItems.addAll(buildExternalItemsNotPublishedExceptions(siemacResource.getContributor(), prefix, "contributor"));
-        exceptionItems.addAll(buildExternalItemsNotPublishedExceptions(siemacResource.getPublisher(), prefix, "publisher"));
-        exceptionItems.addAll(buildExternalItemsNotPublishedExceptions(siemacResource.getPublisherContributor(), prefix, "publisher_contributor"));
-        exceptionItems.addAll(buildExternalItemsNotPublishedExceptions(siemacResource.getMediator(), prefix, "mediator"));
-        exceptionItems.add(buildExternalItemNotPublishedException(siemacResource.getCommonMetadata(), prefix, "common_metadata"));
+        exceptionItems.addAll(getExceptionItemsForExternalItemNotPublishedLifecycle(siemacResource, baseField, true));
+        exceptionItems.add(buildExternalItemNotPublishedException(siemacResource.getLanguage(), baseField, "language"));
+        exceptionItems.addAll(buildExternalItemsNotPublishedExceptions(siemacResource.getLanguages(), baseField, "languages"));
+        exceptionItems.addAll(buildExternalItemsNotPublishedExceptions(siemacResource.getStatisticalOperationInstances(), baseField, "statistical_operation_instances"));
+        exceptionItems.add(buildExternalItemNotPublishedException(siemacResource.getCreator(), baseField, "creator"));
+        exceptionItems.addAll(buildExternalItemsNotPublishedExceptions(siemacResource.getContributor(), baseField, "contributor"));
+        exceptionItems.addAll(buildExternalItemsNotPublishedExceptions(siemacResource.getPublisher(), baseField, "publisher"));
+        exceptionItems.addAll(buildExternalItemsNotPublishedExceptions(siemacResource.getPublisherContributor(), baseField, "publisher_contributor"));
+        exceptionItems.addAll(buildExternalItemsNotPublishedExceptions(siemacResource.getMediator(), baseField, "mediator"));
+        exceptionItems.add(buildExternalItemNotPublishedException(siemacResource.getCommonMetadata(), baseField, "common_metadata"));
 
         return exceptionItems;
     }

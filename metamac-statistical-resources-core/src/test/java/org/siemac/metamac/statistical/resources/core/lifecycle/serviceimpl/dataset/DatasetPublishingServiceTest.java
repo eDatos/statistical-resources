@@ -1,24 +1,5 @@
 package org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.dataset;
 
-import static org.junit.Assert.assertNull;
-import static org.siemac.metamac.statistical.resources.core.utils.asserts.LifecycleAsserts.assertNotNullAutomaticallyFilledMetadataSiemacSendToPublished;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetMockFactory.DATASET_30_LAST_VERSION_NOT_VISIBLE_WITH_PUBLICATION_AND_QUERIES_NOT_VISIBLE_BOTH_NOT_COMPATIBLE_NAME;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetMockFactory.DATASET_31_LAST_VERSION_NOT_VISIBLE_WITH_PUBLICATION_AND_QUERIES_NOT_VISIBLE_BOTH_COMPATIBLE_NAME;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetMockFactory.DATASET_32_LAST_VERSION_NOT_VISIBLE_WITH_PUBLICATION_AND_QUERY_NOT_VISIBLE_COMPATIBLE_NAME;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_70_PREPARED_TO_PUBLISH_EXTERNAL_ITEM_FULL_NAME;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_71_RELATED_RESOURCES_UNPUBLISHED_NAME;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_72_PREPARED_TO_PUBLISH_WITH_PREVIOUS_VERSION_NAME;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_91_SINGLE_VERSION_PUBLISHED_NOT_VISIBLE_IN_NOT_VISIBLE_PUB_AND_USED_BY_NOT_VISIBLE_QUERY_NAME;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_92_NOT_VISIBLE_FOR_DATASET_30_NAME;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_94_NOT_VISIBLE_FOR_DATASET_31_NAME;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_95_PUBLISHED_FOR_DATASET_32;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_96_NOT_VISIBLE_FOR_DATASET_32_NAME;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_97_NOT_VISIBLE_REPLACED_BY_DATASET_98_NOT_VISIBLE_NAME;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_98_NOT_VISIBLE_REPLACES_DATASET_97_NOT_VISIBLE_NAME;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_99_NOT_VISIBLE_SINGLE_VERSION_NAME;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_93_NOT_VISIBLE_HAS_PART_NOT_VISIBLE_DATASET_VERSION_NAME;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_51_NOT_VISIBLE_REQUIRES_FIXED_DATASET_VERSION_NOT_VISIBLE_NAME;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,6 +34,26 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceFacade;
+
+import static org.junit.Assert.assertNull;
+
+import static org.siemac.metamac.statistical.resources.core.utils.asserts.LifecycleAsserts.assertNotNullAutomaticallyFilledMetadataSiemacSendToPublished;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetMockFactory.DATASET_30_LAST_VERSION_NOT_VISIBLE_WITH_PUBLICATION_AND_QUERIES_NOT_VISIBLE_BOTH_NOT_COMPATIBLE_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetMockFactory.DATASET_31_LAST_VERSION_NOT_VISIBLE_WITH_PUBLICATION_AND_QUERIES_NOT_VISIBLE_BOTH_COMPATIBLE_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetMockFactory.DATASET_32_LAST_VERSION_NOT_VISIBLE_WITH_PUBLICATION_AND_QUERY_NOT_VISIBLE_COMPATIBLE_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_70_PREPARED_TO_PUBLISH_EXTERNAL_ITEM_FULL_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_71_RELATED_RESOURCES_UNPUBLISHED_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_72_PREPARED_TO_PUBLISH_WITH_PREVIOUS_VERSION_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_91_SINGLE_VERSION_PUBLISHED_NOT_VISIBLE_IN_NOT_VISIBLE_PUB_AND_USED_BY_NOT_VISIBLE_QUERY_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_92_NOT_VISIBLE_FOR_DATASET_30_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_94_NOT_VISIBLE_FOR_DATASET_31_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_95_PUBLISHED_FOR_DATASET_32;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_96_NOT_VISIBLE_FOR_DATASET_32_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_97_NOT_VISIBLE_REPLACED_BY_DATASET_98_NOT_VISIBLE_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_98_NOT_VISIBLE_REPLACES_DATASET_97_NOT_VISIBLE_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_99_NOT_VISIBLE_SINGLE_VERSION_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_93_NOT_VISIBLE_HAS_PART_NOT_VISIBLE_DATASET_VERSION_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_51_NOT_VISIBLE_REQUIRES_FIXED_DATASET_VERSION_NOT_VISIBLE_NAME;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:spring/statistical-resources/include/dataset-repository-mockito.xml", "classpath:spring/statistical-resources/include/task-mockito.xml",
@@ -177,7 +178,7 @@ public class DatasetPublishingServiceTest extends StatisticalResourcesMockRestBa
         mockSiemacExternalItemsPublished(siemacResource);
         mockDatasetVersionExternalItemsPublished(datasetVersion);
 
-        String prefix = ServiceExceptionParameters.DATASET_VERSION__SIEMAC_METADATA_STATISTICAL_RESOURCE;
+        String prefix = ServiceExceptionParameters.DATASET_VERSION;
 
         List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
         exceptionItems.add(buildRelatedResourceNotPublishedException(siemacResource.getReplaces(), prefix, "replaces"));
