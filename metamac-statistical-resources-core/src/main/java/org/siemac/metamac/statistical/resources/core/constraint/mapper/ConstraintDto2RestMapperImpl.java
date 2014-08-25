@@ -6,7 +6,6 @@ import java.util.List;
 import org.apache.commons.lang.BooleanUtils;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ContentConstraint;
-import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ContentConstraintType;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Key;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.KeyPart;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.KeyParts;
@@ -35,8 +34,6 @@ public class ConstraintDto2RestMapperImpl extends BaseDto2RestMapperImpl impleme
 
         // Extension
         maintainableArtefactDtoToRest(source, target, ServiceExceptionParameters.CONTENT_CONSTRAINT);
-
-        target.setType(ContentConstraintType.fromValue(source.getType().name()));
 
         // "constraintAttachment",
         target.setConstraintAttachment(externalItemToExternalItemRest(source.getConstraintAttachment(), target.getConstraintAttachment(), ServiceExceptionParameters.CONTENT_CONSTRAINT_ATTACHMENT));
