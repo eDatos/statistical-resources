@@ -46,6 +46,7 @@ import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersionRepository;
 import org.siemac.metamac.statistical.resources.core.query.serviceapi.validators.QueryServiceInvocationValidator;
 import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesCollectionUtils;
+import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesVersionUtils;
 import org.siemac.metamac.statistical.resources.core.utils.transformers.CodeDimensionToCodeStringTransformer;
 import org.siemac.metamac.statistical.resources.core.utils.transformers.CodeItemToCodeStringTransformer;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -200,18 +201,26 @@ public class QueryServiceImpl extends QueryServiceImplBase {
     private void checkCanQueryVersionBeDeleted(QueryVersion queryVersion) throws MetamacException {
         List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
 
-        List<RelatedResourceResult> resourcesIsPartOf = queryVersionRepository.retrieveIsPartOf(queryVersion);
-        if (!resourcesIsPartOf.isEmpty()) {
-            List<String> urns = getUrnsFromRelatedResourceResults(resourcesIsPartOf);
-            Collections.sort(urns);
-            String parameter = StringUtils.join(urns, ", ");
-            exceptionItems.add(new MetamacExceptionItem(ServiceExceptionType.QUERY_VERSION_IS_PART_OF_OTHER_RESOURCES, parameter));
+        boolean isOnlyVersion = StatisticalResourcesVersionUtils.isInitialVersion(queryVersion.getLifeCycleStatisticalResource().getVersionLogic());
+
+        if (isOnlyVersion) {
+            checkQueryVersionIsPartOfSomePublication(queryVersion, exceptionItems);
         }
 
         if (exceptionItems.size() > 0) {
             MetamacExceptionItem item = new MetamacExceptionItem(ServiceExceptionType.QUERY_VERSION_CANT_BE_DELETED, queryVersion.getLifeCycleStatisticalResource().getUrn());
             item.setExceptionItems(exceptionItems);
             throw new MetamacException(Arrays.asList(item));
+        }
+    }
+
+    protected void checkQueryVersionIsPartOfSomePublication(QueryVersion queryVersion, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
+        List<RelatedResourceResult> resourcesIsPartOf = queryVersionRepository.retrieveIsPartOf(queryVersion);
+        if (!resourcesIsPartOf.isEmpty()) {
+            List<String> urns = getUrnsFromRelatedResourceResults(resourcesIsPartOf);
+            Collections.sort(urns);
+            String parameter = StringUtils.join(urns, ", ");
+            exceptionItems.add(new MetamacExceptionItem(ServiceExceptionType.QUERY_VERSION_IS_PART_OF_OTHER_RESOURCES, parameter));
         }
     }
 
