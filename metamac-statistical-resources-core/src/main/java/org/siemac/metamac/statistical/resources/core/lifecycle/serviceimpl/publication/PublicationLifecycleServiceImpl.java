@@ -127,22 +127,18 @@ public class PublicationLifecycleServiceImpl extends LifecycleTemplateService<Pu
 
     private void checkAllLeafChaptersMustHaveCubes(PublicationVersion resource, List<MetamacExceptionItem> exceptionItems) {
         for (ElementLevel elementLevel : resource.getChildrenAllLevels()) {
-            if (elementLevel.isChapter()) {
-                if (elementLevel.getChildren().isEmpty()) {
-                    exceptionItems.add(new MetamacExceptionItem(ServiceExceptionType.PUBLICATION_VERSION_CHAPTER_MUST_HAVE_AT_LEAST_ONE_CUBE, elementLevel.getChapter()
-                            .getNameableStatisticalResource().getUrn()));
-                }
+            if (elementLevel.isChapter() && elementLevel.getChildren().isEmpty()) {
+                exceptionItems.add(new MetamacExceptionItem(ServiceExceptionType.PUBLICATION_VERSION_CHAPTER_MUST_HAVE_AT_LEAST_ONE_CUBE, elementLevel.getChapter().getNameableStatisticalResource()
+                        .getUrn()));
             }
         }
     }
 
     private void checkAllCubesLinkToDatasetOrQuery(PublicationVersion resource, List<MetamacExceptionItem> exceptionItems) {
         for (ElementLevel elementLevel : resource.getChildrenAllLevels()) {
-            if (elementLevel.isCube()) {
-                if (elementLevel.getCube().getDataset() == null && elementLevel.getCube().getQuery() == null) {
-                    exceptionItems.add(new MetamacExceptionItem(ServiceExceptionType.PUBLICATION_VERSION_CUBE_MUST_LINK_TO_DATASET_OR_QUERY, elementLevel.getCube().getNameableStatisticalResource()
-                            .getUrn()));
-                }
+            if (elementLevel.isCube() && elementLevel.getCube().getDataset() == null && elementLevel.getCube().getQuery() == null) {
+                exceptionItems.add(new MetamacExceptionItem(ServiceExceptionType.PUBLICATION_VERSION_CUBE_MUST_LINK_TO_DATASET_OR_QUERY, elementLevel.getCube().getNameableStatisticalResource()
+                        .getUrn()));
             }
         }
     }
