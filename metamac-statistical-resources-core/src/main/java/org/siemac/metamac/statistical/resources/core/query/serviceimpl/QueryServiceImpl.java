@@ -1,8 +1,5 @@
 package org.siemac.metamac.statistical.resources.core.query.serviceimpl;
 
-import static org.siemac.metamac.core.common.util.MetamacCollectionUtils.find;
-import static org.siemac.metamac.statistical.resources.core.base.domain.utils.RelatedResourceResultUtils.getUrnsFromRelatedResourceResults;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -29,6 +26,7 @@ import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableSta
 import org.siemac.metamac.statistical.resources.core.base.utils.FillMetadataForCreateResourceUtils;
 import org.siemac.metamac.statistical.resources.core.base.validators.ProcStatusValidator;
 import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
+import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResource;
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResourceResult;
 import org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConstants;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.CodeDimension;
@@ -51,6 +49,9 @@ import org.siemac.metamac.statistical.resources.core.utils.transformers.CodeDime
 import org.siemac.metamac.statistical.resources.core.utils.transformers.CodeItemToCodeStringTransformer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import static org.siemac.metamac.core.common.util.MetamacCollectionUtils.find;
+import static org.siemac.metamac.statistical.resources.core.base.domain.utils.RelatedResourceResultUtils.getUrnsFromRelatedResourceResults;
 
 /**
  * Implementation of QueryService.
@@ -193,7 +194,16 @@ public class QueryServiceImpl extends QueryServiceImplBase {
             Query query = queryVersion.getQuery();
             getQueryRepository().delete(query);
         } else {
-            // Delete
+            // Previous version
+            RelatedResource previousResource = queryVersion.getLifeCycleStatisticalResource().getReplacesVersion();
+            if (previousResource.getQueryVersion() != null) {
+                QueryVersion previousVersion = previousResource.getQueryVersion();
+                previousVersion.getLifeCycleStatisticalResource().setLastVersion(Boolean.TRUE);
+                getQueryVersionRepository().save(previousVersion);
+            }
+            // Delete version
+            Query query = queryVersion.getQuery();
+            query.getVersions().remove(queryVersion);
             getQueryVersionRepository().delete(queryVersion);
         }
     }
