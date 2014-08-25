@@ -8,6 +8,7 @@ import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.Crea
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.CreateDatasetConstraintActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.DeleteCategorisationsActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.DeleteDatasetAttributeInstancesActionHandler;
+import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.DeleteDatasetConstraintActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.DeleteDatasetVersionsActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.DeleteDatasourcesActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.EndCategorisationsValidityActionHandler;
@@ -21,7 +22,7 @@ import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.GetD
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.GetDatasetDimensionsIdsActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.GetDatasetDimensionsVariableMappingActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.GetDatasetVersionActionHandler;
-import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.GetDatasetVersionConstraintActionHandler;
+import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.GetDatasetConstraintActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.GetDatasetVersionMainCoveragesActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.GetDatasetVersionsActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.GetDatasetsActionHandler;
@@ -74,6 +75,7 @@ import org.siemac.metamac.statistical.resources.web.shared.dataset.CreateDataset
 import org.siemac.metamac.statistical.resources.web.shared.dataset.CreateDatasetConstraintAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.DeleteCategorisationsAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.DeleteDatasetAttributeInstancesAction;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.DeleteDatasetConstraintAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.DeleteDatasetVersionsAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.DeleteDatasourcesAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.EndCategorisationsValidityAction;
@@ -87,7 +89,7 @@ import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetDim
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetDimensionsIdsAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetDimensionsVariableMappingAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetVersionAction;
-import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetVersionConstraintAction;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetConstraintAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetVersionMainCoveragesAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetVersionsAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetsAction;
@@ -210,8 +212,9 @@ public class ServerModule extends HandlerModule {
         bindHandler(CreateDatasetCategorisationsAction.class, CreateDatasetCategorisationsActionHandler.class);
         bindHandler(DeleteCategorisationsAction.class, DeleteCategorisationsActionHandler.class);
         bindHandler(EndCategorisationsValidityAction.class, EndCategorisationsValidityActionHandler.class);
-        bindHandler(GetDatasetVersionConstraintAction.class, GetDatasetVersionConstraintActionHandler.class);
+        bindHandler(GetDatasetConstraintAction.class, GetDatasetConstraintActionHandler.class);
         bindHandler(CreateDatasetConstraintAction.class, CreateDatasetConstraintActionHandler.class);
+        bindHandler(DeleteDatasetConstraintAction.class, DeleteDatasetConstraintActionHandler.class);
 
         // PUBLICATIONS
         bindHandler(GetPublicationVersionsAction.class, GetPublicationVersionsActionHandler.class);

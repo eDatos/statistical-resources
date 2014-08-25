@@ -1,16 +1,20 @@
 package org.siemac.metamac.statistical.resources.web.client.dataset.view;
 
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
+import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getMessages;
 
 import java.util.List;
 
 import org.siemac.metamac.statistical.resources.core.dto.constraint.ContentConstraintDto;
+import org.siemac.metamac.statistical.resources.core.dto.constraint.RegionValueDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdDimensionDto;
 import org.siemac.metamac.statistical.resources.web.client.dataset.presenter.DatasetConstraintsTabPresenter.DatasetConstraintsTabView;
+import org.siemac.metamac.statistical.resources.web.client.dataset.utils.ConstraintsClientSecurityUtils;
 import org.siemac.metamac.statistical.resources.web.client.dataset.view.handlers.DatasetConstraintsTabUiHandlers;
 import org.siemac.metamac.web.common.client.widgets.CustomListGrid;
 import org.siemac.metamac.web.common.client.widgets.CustomToolStripButton;
+import org.siemac.metamac.web.common.client.widgets.DeleteConfirmationWindow;
 
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
@@ -21,14 +25,19 @@ import com.smartgwt.client.widgets.toolbar.ToolStrip;
 
 public class DatasetConstraintsTabViewImpl extends ViewWithUiHandlers<DatasetConstraintsTabUiHandlers> implements DatasetConstraintsTabView {
 
-    private VLayout panel;
+    private VLayout              panel;
+    private ConstraintsPanel     constraintsPanel;
+
+    private DatasetVersionDto    datasetVersionDto;
+    private ContentConstraintDto contentConstraintDto;
+    private RegionValueDto       regionValueDto;
 
     public DatasetConstraintsTabViewImpl() {
         panel = new VLayout();
         panel.setMargin(5);
         panel.setHeight100();
 
-        ConstraintsPanel constraintsPanel = new ConstraintsPanel();
+        constraintsPanel = new ConstraintsPanel();
         panel.addMember(constraintsPanel);
     }
 
@@ -38,24 +47,42 @@ public class DatasetConstraintsTabViewImpl extends ViewWithUiHandlers<DatasetCon
     }
 
     @Override
-    public void setConstraint(ContentConstraintDto contentConstraintDto) {
-        // TODO METAMAC-1985
+    public void setConstraint(DatasetVersionDto datasetVersionDto, ContentConstraintDto contentConstraintDto, RegionValueDto regionValueDto) {
+        this.datasetVersionDto = datasetVersionDto;
+        this.contentConstraintDto = contentConstraintDto;
+        constraintsPanel.updateVisibility(datasetVersionDto, contentConstraintDto);
 
+        // TODO METAMAC-1985
+    }
+
+    @Override
+    public void setRelatedDsdDimensions(List<DsdDimensionDto> dimensions) {
+        constraintsPanel.setDimensions(dimensions);
     }
 
     private class ConstraintsPanel extends VLayout {
 
+        private ToolStrip             toolStrip;
         private CustomToolStripButton enableConstraintsButton;
         private CustomToolStripButton disableConstraintsButton;
         private CustomListGrid        constraintsList;
 
         public ConstraintsPanel() {
 
-            addMember(createToolStrip());
+            createToolStrip();
+            createConstraintsList();
+
+            addMember(toolStrip);
+            addMember(constraintsList);
         }
 
-        private ToolStrip createToolStrip() {
-            ToolStrip toolStrip = new ToolStrip();
+        public void setDimensions(List<DsdDimensionDto> dimensions) {
+            // TODO METAMAC-1985
+            constraintsList.setVisible(true);
+        }
+
+        private void createToolStrip() {
+            toolStrip = new ToolStrip();
             toolStrip.setWidth100();
 
             enableConstraintsButton = createEnableConstraintsButton();
@@ -63,39 +90,55 @@ public class DatasetConstraintsTabViewImpl extends ViewWithUiHandlers<DatasetCon
 
             disableConstraintsButton = createDisableConstraintsButton();
             toolStrip.addButton(disableConstraintsButton);
+        }
 
-            return toolStrip;
-
+        private void createConstraintsList() {
+            constraintsList = new CustomListGrid();
         }
 
         private CustomToolStripButton createEnableConstraintsButton() {
-            CustomToolStripButton deleteDatasourceButton = new CustomToolStripButton(getConstants().actionEnableDatasetConstraints());
-            deleteDatasourceButton.addClickHandler(new ClickHandler() {
+            CustomToolStripButton enableConstraintButton = new CustomToolStripButton(getConstants().actionEnableDatasetConstraints());
+            enableConstraintButton.addClickHandler(new ClickHandler() {
 
                 @Override
                 public void onClick(ClickEvent event) {
                     getUiHandlers().createConstraint();
                 }
             });
-            return deleteDatasourceButton;
+            return enableConstraintButton;
         }
 
         private CustomToolStripButton createDisableConstraintsButton() {
-            CustomToolStripButton importDatasourcesButton = new CustomToolStripButton(getConstants().actionDisableDatasetConstraints());
-            importDatasourcesButton.addClickHandler(new ClickHandler() {
+            CustomToolStripButton disableConstraintButton = new CustomToolStripButton(getConstants().actionDisableDatasetConstraints());
+            disableConstraintButton.addClickHandler(new ClickHandler() {
 
                 @Override
                 public void onClick(ClickEvent event) {
-                    // TODO METAMAC-1985
+                    DeleteConfirmationWindow deleteConfirmationWindow = new DeleteConfirmationWindow(getMessages().datasetConstraintDisableConfirmationTitle(), getMessages()
+                            .datasetConstraintDisableConfirmation());
+                    deleteConfirmationWindow.show();
+                    deleteConfirmationWindow.getYesButton().addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
+
+                        @Override
+                        public void onClick(ClickEvent event) {
+                            getUiHandlers().deleteConstraint(contentConstraintDto, regionValueDto);
+                        }
+                    });
                 }
             });
-            return importDatasourcesButton;
+            return disableConstraintButton;
         }
-    }
 
-    @Override
-    public void setDatasetAndDimensions(DatasetVersionDto datasetVersion, List<DsdDimensionDto> dimensions) {
-        // TODO METAMAC-1985 Auto-generated method stub
-
+        private void updateVisibility(DatasetVersionDto datasetVersionDto, ContentConstraintDto contentConstraintDto) {
+            constraintsList.setVisible(false);
+            if (contentConstraintDto == null) {
+                enableConstraintsButton.setVisible(ConstraintsClientSecurityUtils.canCreateContentConstraint(datasetVersionDto.getStatisticalOperation().getCode()));
+                disableConstraintsButton.setVisible(false);
+            } else {
+                enableConstraintsButton.setVisible(false);
+                disableConstraintsButton
+                        .setVisible(ConstraintsClientSecurityUtils.canDeleteContentConstraint(datasetVersionDto.getStatisticalOperation().getCode(), datasetVersionDto.getProcStatus()));
+            }
+        }
     }
 }

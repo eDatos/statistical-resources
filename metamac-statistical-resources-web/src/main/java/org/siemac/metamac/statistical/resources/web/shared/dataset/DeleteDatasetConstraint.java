@@ -1,19 +1,17 @@
 package org.siemac.metamac.statistical.resources.web.shared.dataset;
 
 import org.siemac.metamac.statistical.resources.core.dto.constraint.ContentConstraintDto;
+import org.siemac.metamac.statistical.resources.core.dto.constraint.RegionValueDto;
 
 import com.gwtplatform.dispatch.annotation.GenDispatch;
 import com.gwtplatform.dispatch.annotation.In;
-import com.gwtplatform.dispatch.annotation.Optional;
-import com.gwtplatform.dispatch.annotation.Out;
 
 @GenDispatch(isSecure = false)
-public class GetDatasetVersionConstraint {
+public class DeleteDatasetConstraint {
 
     @In(1)
-    String               datasetVersionUrn;
+    ContentConstraintDto constraintDto;
 
-    @Optional
-    @Out(1)
-    ContentConstraintDto contentConstraint;
+    @In(2)
+    RegionValueDto       regionValueDto;
 }

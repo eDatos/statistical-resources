@@ -5,7 +5,6 @@ import org.siemac.metamac.core.common.enume.domain.TypeExternalArtefactsEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.dto.constraint.ContentConstraintDto;
 import org.siemac.metamac.statistical.resources.core.dto.constraint.RegionValueDto;
-import org.siemac.metamac.statistical.resources.core.enume.constraint.domain.ContentConstraintTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.constraint.domain.RegionValueTypeEnum;
 import org.siemac.metamac.statistical.resources.core.facade.serviceapi.StatisticalResourcesServiceFacade;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.CreateDatasetConstraintAction;
@@ -38,24 +37,21 @@ public class CreateDatasetConstraintActionHandler extends SecurityActionHandler<
             datasetVersion.setUrn(action.getDatasetVersionUrn());
 
             ContentConstraintDto contentConstraintDto = new ContentConstraintDto();
-            contentConstraintDto.setType(ContentConstraintTypeEnum.ALLOWED);
             contentConstraintDto.setConstraintAttachment(datasetVersion);
+            contentConstraintDto.setAgencyID(action.getMaintainer() != null ? action.getMaintainer().getCode() : null);
 
             ContentConstraintDto createdConstraint = statisticalResourcesServiceFacade.createContentConstraint(ServiceContextHolder.getCurrentServiceContext(), contentConstraintDto);
-
-            if (createdConstraint == null) {
-
-            }
 
             RegionValueDto regionValueDto = new RegionValueDto();
             regionValueDto.setContentConstraintUrn(createdConstraint.getUrn());
             regionValueDto.setRegionValueTypeEnum(RegionValueTypeEnum.CUBE);
 
-            statisticalResourcesServiceFacade.saveRegionForContentConstraint(ServiceContextHolder.getCurrentServiceContext(), createdConstraint.getUrn(), regionValueDto);
+            RegionValueDto createdRegion = statisticalResourcesServiceFacade
+                    .saveRegionForContentConstraint(ServiceContextHolder.getCurrentServiceContext(), createdConstraint.getUrn(), regionValueDto);
 
             createdConstraint = statisticalResourcesServiceFacade.retrieveContentConstraintByUrn(ServiceContextHolder.getCurrentServiceContext(), createdConstraint.getUrn());
 
-            return new CreateDatasetConstraintResult(createdConstraint);
+            return new CreateDatasetConstraintResult(createdConstraint, createdRegion);
         } catch (MetamacException e) {
             throw WebExceptionUtils.createMetamacWebException(e);
         }
