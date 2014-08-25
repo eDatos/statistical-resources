@@ -1,9 +1,5 @@
 package org.siemac.metamac.statistical.resources.core.lifecycle;
 
-import static org.siemac.metamac.core.common.serviceimpl.utils.ValidationUtils.checkMetadataRequired;
-import static org.siemac.metamac.core.common.serviceimpl.utils.ValidationUtils.checkParameterRequired;
-import static org.siemac.metamac.statistical.resources.core.error.utils.ServiceExceptionParametersUtils.addParameter;
-
 import java.util.List;
 
 import org.siemac.metamac.core.common.exception.CommonServiceExceptionType;
@@ -19,6 +15,10 @@ import org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.check
 import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesVersionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import static org.siemac.metamac.core.common.serviceimpl.utils.ValidationUtils.checkMetadataRequired;
+import static org.siemac.metamac.core.common.serviceimpl.utils.ValidationUtils.checkParameterRequired;
+import static org.siemac.metamac.statistical.resources.core.error.utils.ServiceExceptionParametersUtils.addParameter;
 
 @Component
 public class LifecycleChecker {
@@ -123,6 +123,11 @@ public class LifecycleChecker {
     // ------------------------------------------------------------------------------------------------------
 
     public void checkVersioning(HasLifecycle resource, String metadataName, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
+        // We have to check that if it already exists a posterior version, we can not versioning.
+        // A simple way to do this checking is verify that this is the last version of the resource.
+        if (!resource.getLifeCycleStatisticalResource().getLastVersion()) {
+            exceptionItems.add(new MetamacExceptionItem(ServiceExceptionType.METADATA_INCORRECT, addParameter(metadataName, ServiceExceptionSingleParameters.LAST_VERSION)));
+        }
     }
 
     // ------------------------------------------------------------------------------------------------------

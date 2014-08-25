@@ -57,6 +57,7 @@ import org.siemac.metamac.statistical.resources.core.enume.domain.NextVersionTyp
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.VersionRationaleTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryStatusEnum;
+import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.invocation.service.SrmRestInternalService;
 import org.siemac.metamac.statistical.resources.core.publication.domain.Chapter;
@@ -1005,6 +1006,22 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         assertEquals(getServiceContextAdministrador().getUserId(), newQueryVersion.getCreationUser());
         assertEqualsDay(new DateTime().toDateTime(), new DateTime(newQueryVersion.getCreationDate()));
         assertEqualsQuerySelection(previousQueryVersionDto.getSelection(), newQueryVersion.getSelection());
+    }
+
+    @Test
+    @MetamacMock(QUERY_VERSION_15_PUBLISHED_NAME)
+    public void testVersioningQueryVersionErrorAlreadyExistsAVersion() throws Exception {
+        expectedMetamacException(new MetamacException(ServiceExceptionType.METADATA_INCORRECT, ServiceExceptionParameters.QUERY_VERSION__LIFE_CYCLE_STATISTICAL_RESOURCE__LAST_VERSION));
+
+        String queryVersionUrn = queryVersionMockFactory.retrieveMock(QUERY_VERSION_15_PUBLISHED_NAME).getLifeCycleStatisticalResource().getUrn();
+        QueryVersionDto originalQueryVersion = statisticalResourcesServiceFacade.retrieveQueryVersionByUrn(getServiceContextAdministrador(), queryVersionUrn);
+
+        QueryVersionDto newQueryVersion = statisticalResourcesServiceFacade.versioningQueryVersion(getServiceContextAdministrador(), originalQueryVersion, VersionTypeEnum.MAJOR);
+        assertNotNull(newQueryVersion);
+
+        // We have to retrieve query version to avoid optimistic locking error
+        QueryVersionDto originalQueryVersionV2 = statisticalResourcesServiceFacade.retrieveQueryVersionByUrn(getServiceContextAdministrador(), queryVersionUrn);
+        statisticalResourcesServiceFacade.versioningQueryVersion(getServiceContextAdministrador(), originalQueryVersionV2, VersionTypeEnum.MINOR);
     }
 
     // ------------------------------------------------------------------------

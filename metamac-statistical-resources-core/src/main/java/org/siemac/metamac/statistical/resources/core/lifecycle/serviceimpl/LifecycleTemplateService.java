@@ -461,7 +461,7 @@ public abstract class LifecycleTemplateService<E extends Object> implements Life
         if (resource instanceof HasSiemacMetadata) {
             siemacLifecycleChecker.checkVersioning((HasSiemacMetadata) resource, getResourceMetadataName(), exceptionItems);
         } else if (resource instanceof HasLifecycle) {
-            lifecycleChecker.checkVersioning((HasLifecycle) resource, getResourceMetadataName(), exceptionItems);
+            lifecycleChecker.checkVersioning((HasLifecycle) resource, addParameter(getResourceMetadataName(), ServiceExceptionSingleParameters.LIFE_CYCLE_STATISTICAL_RESOURCE), exceptionItems);
         } else {
             throw new MetamacException(ServiceExceptionType.UNKNOWN, ERROR_FOUND_AN_UNKNOWN_RESOURCE_TYPE_FOR_VERSIONING);
         }
