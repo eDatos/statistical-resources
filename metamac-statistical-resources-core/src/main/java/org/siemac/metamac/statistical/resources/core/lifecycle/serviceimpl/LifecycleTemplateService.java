@@ -95,9 +95,11 @@ public abstract class LifecycleTemplateService<E extends Object> implements Life
 
     protected void checkSendToProductionValidationLinkedStatisticalResource(E resource, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
         if (resource instanceof HasSiemacMetadata) {
-            siemacLifecycleChecker.checkSendToProductionValidation((HasSiemacMetadata) resource, getResourceMetadataName(), exceptionItems);
+            siemacLifecycleChecker.checkSendToProductionValidation((HasSiemacMetadata) resource,
+                    addParameter(getResourceMetadataName(), ServiceExceptionSingleParameters.SIEMAC_METADATA_STATISTICAL_RESOURCE), exceptionItems);
         } else if (resource instanceof HasLifecycle) {
-            lifecycleChecker.checkSendToProductionValidation((HasLifecycle) resource, getResourceMetadataName(), exceptionItems);
+            lifecycleChecker.checkSendToProductionValidation((HasLifecycle) resource, addParameter(getResourceMetadataName(), ServiceExceptionSingleParameters.LIFE_CYCLE_STATISTICAL_RESOURCE),
+                    exceptionItems);
         } else {
             throw new MetamacException(ServiceExceptionType.UNKNOWN, ERROR_FOUND_AN_UNKNOWN_RESOURCE_TYPE_SENDING_TO_PRODUCTION_VALIDATION);
         }
@@ -155,9 +157,11 @@ public abstract class LifecycleTemplateService<E extends Object> implements Life
 
     protected void checkSendToDiffusionValidationLinkedStatisticalResource(E resource, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
         if (resource instanceof HasSiemacMetadata) {
-            siemacLifecycleChecker.checkSendToDiffusionValidation((HasSiemacMetadata) resource, getResourceMetadataName(), exceptionItems);
+            siemacLifecycleChecker.checkSendToDiffusionValidation((HasSiemacMetadata) resource,
+                    addParameter(getResourceMetadataName(), ServiceExceptionSingleParameters.SIEMAC_METADATA_STATISTICAL_RESOURCE), exceptionItems);
         } else if (resource instanceof HasLifecycle) {
-            lifecycleChecker.checkSendToDiffusionValidation((HasLifecycle) resource, getResourceMetadataName(), exceptionItems);
+            lifecycleChecker.checkSendToDiffusionValidation((HasLifecycle) resource, addParameter(getResourceMetadataName(), ServiceExceptionSingleParameters.LIFE_CYCLE_STATISTICAL_RESOURCE),
+                    exceptionItems);
         } else {
             throw new MetamacException(ServiceExceptionType.UNKNOWN, ERROR_FOUND_AN_UNKNOWN_RESOURCE_TYPE_SENDING_TO_DIFFUSION_VALIDATION);
         }
@@ -215,9 +219,11 @@ public abstract class LifecycleTemplateService<E extends Object> implements Life
 
     protected void checkSendToValidationRejectedLinkedStatisticalResource(E resource, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
         if (resource instanceof HasSiemacMetadata) {
-            siemacLifecycleChecker.checkSendToValidationRejected((HasSiemacMetadata) resource, getResourceMetadataName(), exceptionItems);
+            siemacLifecycleChecker.checkSendToValidationRejected((HasSiemacMetadata) resource,
+                    addParameter(getResourceMetadataName(), ServiceExceptionSingleParameters.SIEMAC_METADATA_STATISTICAL_RESOURCE), exceptionItems);
         } else if (resource instanceof HasLifecycle) {
-            lifecycleChecker.checkSendToValidationRejected((HasLifecycle) resource, getResourceMetadataName(), exceptionItems);
+            lifecycleChecker.checkSendToValidationRejected((HasLifecycle) resource, addParameter(getResourceMetadataName(), ServiceExceptionSingleParameters.LIFE_CYCLE_STATISTICAL_RESOURCE),
+                    exceptionItems);
         } else {
             throw new MetamacException(ServiceExceptionType.UNKNOWN, ERROR_FOUND_AN_UNKNOWN_RESOURCE_TYPE_SENDING_TO_VALIDATION_REJECTED);
         }
@@ -286,7 +292,8 @@ public abstract class LifecycleTemplateService<E extends Object> implements Life
 
     protected void checkSendToPublishedLinkedStatisticalResource(E resource, E previousResource, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
         if (resource instanceof HasSiemacMetadata) {
-            siemacLifecycleChecker.checkSendToPublished((HasSiemacMetadata) resource, (HasSiemacMetadata) previousResource, getResourceMetadataName(), exceptionItems);
+            siemacLifecycleChecker.checkSendToPublished((HasSiemacMetadata) resource, (HasSiemacMetadata) previousResource,
+                    addParameter(getResourceMetadataName(), ServiceExceptionSingleParameters.SIEMAC_METADATA_STATISTICAL_RESOURCE), exceptionItems);
         } else if (resource instanceof HasLifecycle) {
             lifecycleChecker.checkSendToPublished((HasLifecycle) resource, (HasLifecycle) previousResource,
                     addParameter(getResourceMetadataName(), ServiceExceptionSingleParameters.LIFE_CYCLE_STATISTICAL_RESOURCE), exceptionItems);
@@ -371,7 +378,8 @@ public abstract class LifecycleTemplateService<E extends Object> implements Life
 
     protected void checkCancelPublicationLinkedStatisticalResource(E resource, E previousResource, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
         if (resource instanceof HasSiemacMetadata) {
-            siemacLifecycleChecker.checkCancelPublication((HasSiemacMetadata) resource, (HasSiemacMetadata) previousResource, getResourceMetadataName(), exceptionItems);
+            siemacLifecycleChecker.checkCancelPublication((HasSiemacMetadata) resource, (HasSiemacMetadata) previousResource,
+                    addParameter(getResourceMetadataName(), ServiceExceptionSingleParameters.SIEMAC_METADATA_STATISTICAL_RESOURCE), exceptionItems);
         } else if (resource instanceof HasLifecycle) {
             lifecycleChecker.checkCancelPublication((HasLifecycle) resource, (HasLifecycle) previousResource,
                     addParameter(getResourceMetadataName(), ServiceExceptionSingleParameters.LIFE_CYCLE_STATISTICAL_RESOURCE), exceptionItems);
@@ -459,7 +467,8 @@ public abstract class LifecycleTemplateService<E extends Object> implements Life
 
     protected void checkVersioningLinkedStatisticalResource(E resource, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
         if (resource instanceof HasSiemacMetadata) {
-            siemacLifecycleChecker.checkVersioning((HasSiemacMetadata) resource, getResourceMetadataName(), exceptionItems);
+            siemacLifecycleChecker.checkVersioning((HasSiemacMetadata) resource, addParameter(getResourceMetadataName(), ServiceExceptionSingleParameters.SIEMAC_METADATA_STATISTICAL_RESOURCE),
+                    exceptionItems);
         } else if (resource instanceof HasLifecycle) {
             lifecycleChecker.checkVersioning((HasLifecycle) resource, addParameter(getResourceMetadataName(), ServiceExceptionSingleParameters.LIFE_CYCLE_STATISTICAL_RESOURCE), exceptionItems);
         } else {
