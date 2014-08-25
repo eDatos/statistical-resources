@@ -731,15 +731,7 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
     @Override
     public ContentConstraint saveContentConstraint(ServiceContext serviceContext, ContentConstraint contentConstraint) throws MetamacException {
         try {
-            Response response = restApiLocator.getSrmRestInternalFacadeV10().createContentConstraint(contentConstraint, serviceContext.getUserId());
-
-            ContentConstraint result = null;
-            if (Response.Status.CREATED.getStatusCode() == response.getStatus()) {
-                result = (ContentConstraint) response.getEntity();
-            } else {
-                throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.REST_API_INVOCATION_ERROR_UNEXPECTED_STATUS).withMessageParameters(response.getStatus()).build();
-            }
-
+            ContentConstraint result = restApiLocator.getSrmRestInternalFacadeV10().createContentConstraint(contentConstraint, serviceContext.getUserId());
             return result;
         } catch (Exception e) {
             throw manageSrmInternalRestException(e);
@@ -812,14 +804,7 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
             String resourceId = contentConstraintComponents[1];
             String version = contentConstraintComponents[2];
 
-            Response response = restApiLocator.getSrmRestInternalFacadeV10().saveRegionForContentConstraint(agencyId, resourceId, version, regionReference, serviceContext.getUserId());
-
-            RegionReference result = null;
-            if (Response.Status.CREATED.getStatusCode() == response.getStatus()) {
-                result = (RegionReference) response.getEntity();
-            } else {
-                throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.REST_API_INVOCATION_ERROR_UNEXPECTED_STATUS).withMessageParameters(response.getStatus()).build();
-            }
+            RegionReference result = restApiLocator.getSrmRestInternalFacadeV10().saveRegionForContentConstraint(agencyId, resourceId, version, regionReference, serviceContext.getUserId());
 
             return result;
         } catch (Exception e) {
