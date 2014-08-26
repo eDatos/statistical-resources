@@ -158,7 +158,6 @@ public class LifecycleTestUtils {
         LifeCycleStatisticalResource lifeCycleStatisticalResource = resource.getLifeCycleStatisticalResource();
 
         lifeCycleStatisticalResource.setProcStatus(ProcStatusEnum.PUBLISHED);
-        lifeCycleStatisticalResource.setLastVersion(Boolean.TRUE);
 
         if (lifeCycleStatisticalResource.getValidFrom() == null) {
             lifeCycleStatisticalResource.setValidFrom(new DateTime());
