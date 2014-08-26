@@ -625,10 +625,9 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
             assertEquals(3, queriesPagedResult.getResults().size());
             assertTrue(queriesPagedResult.getResults().get(0) instanceof QueryVersionBaseDto);
 
-            int i = 0;
-            assertEquals(queryVersionMockFactory.retrieveMock(QUERY_VERSION_02_BASIC_ORDERED_01_NAME).getLifeCycleStatisticalResource().getUrn(), queriesPagedResult.getResults().get(i++).getUrn());
-            assertEquals(queryVersionMockFactory.retrieveMock(QUERY_VERSION_03_BASIC_ORDERED_02_NAME).getLifeCycleStatisticalResource().getUrn(), queriesPagedResult.getResults().get(i++).getUrn());
-            assertEquals(queryVersionMockFactory.retrieveMock(QUERY_VERSION_04_BASIC_ORDERED_03_NAME).getLifeCycleStatisticalResource().getUrn(), queriesPagedResult.getResults().get(i++).getUrn());
+            assertEquals(queryVersionMockFactory.retrieveMock(QUERY_VERSION_02_BASIC_ORDERED_01_NAME).getLifeCycleStatisticalResource().getUrn(), queriesPagedResult.getResults().get(0).getUrn());
+            assertEquals(queryVersionMockFactory.retrieveMock(QUERY_VERSION_03_BASIC_ORDERED_02_NAME).getLifeCycleStatisticalResource().getUrn(), queriesPagedResult.getResults().get(1).getUrn());
+            assertEquals(queryVersionMockFactory.retrieveMock(QUERY_VERSION_04_BASIC_ORDERED_03_NAME).getLifeCycleStatisticalResource().getUrn(), queriesPagedResult.getResults().get(2).getUrn());
         }
 
         // Find code
@@ -649,8 +648,7 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
             assertEquals(1, queriesPagedResult.getResults().size());
             assertTrue(queriesPagedResult.getResults().get(0) instanceof QueryVersionBaseDto);
 
-            int i = 0;
-            assertEquals(queryVersionMockFactory.retrieveMock(QUERY_VERSION_02_BASIC_ORDERED_01_NAME).getLifeCycleStatisticalResource().getUrn(), queriesPagedResult.getResults().get(i++).getUrn());
+            assertEquals(queryVersionMockFactory.retrieveMock(QUERY_VERSION_02_BASIC_ORDERED_01_NAME).getLifeCycleStatisticalResource().getUrn(), queriesPagedResult.getResults().get(0).getUrn());
         }
 
         // Find URN
@@ -671,8 +669,7 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
             assertEquals(1, queriesPagedResult.getResults().size());
             assertTrue(queriesPagedResult.getResults().get(0) instanceof QueryVersionBaseDto);
 
-            int i = 0;
-            assertEquals(queryVersionMockFactory.retrieveMock(QUERY_VERSION_02_BASIC_ORDERED_01_NAME).getLifeCycleStatisticalResource().getUrn(), queriesPagedResult.getResults().get(i++).getUrn());
+            assertEquals(queryVersionMockFactory.retrieveMock(QUERY_VERSION_02_BASIC_ORDERED_01_NAME).getLifeCycleStatisticalResource().getUrn(), queriesPagedResult.getResults().get(0).getUrn());
         }
 
         // Find title
@@ -693,8 +690,7 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
             assertEquals(1, queriesPagedResult.getResults().size());
             assertTrue(queriesPagedResult.getResults().get(0) instanceof QueryVersionBaseDto);
 
-            int i = 0;
-            assertEquals(queryVersionMockFactory.retrieveMock(QUERY_VERSION_02_BASIC_ORDERED_01_NAME).getLifeCycleStatisticalResource().getUrn(), queriesPagedResult.getResults().get(i++).getUrn());
+            assertEquals(queryVersionMockFactory.retrieveMock(QUERY_VERSION_02_BASIC_ORDERED_01_NAME).getLifeCycleStatisticalResource().getUrn(), queriesPagedResult.getResults().get(0).getUrn());
         }
     }
 
@@ -718,10 +714,9 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         assertEquals(3, queriesPagedResult.getResults().size());
         assertTrue(queriesPagedResult.getResults().get(0) instanceof QueryVersionBaseDto);
 
-        int i = 0;
-        Date lastUpdated01 = queriesPagedResult.getResults().get(i++).getLastUpdated();
-        Date lastUpdated02 = queriesPagedResult.getResults().get(i++).getLastUpdated();
-        Date lastUpdated03 = queriesPagedResult.getResults().get(i++).getLastUpdated();
+        Date lastUpdated01 = queriesPagedResult.getResults().get(0).getLastUpdated();
+        Date lastUpdated02 = queriesPagedResult.getResults().get(1).getLastUpdated();
+        Date lastUpdated03 = queriesPagedResult.getResults().get(2).getLastUpdated();
         assertTrue(lastUpdated01.before(lastUpdated02));
         assertTrue(lastUpdated02.before(lastUpdated03));
 
@@ -737,10 +732,9 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         assertEquals(3, queriesPagedResult.getResults().size());
         assertTrue(queriesPagedResult.getResults().get(0) instanceof QueryVersionBaseDto);
 
-        i = 0;
-        lastUpdated01 = queriesPagedResult.getResults().get(i++).getLastUpdated();
-        lastUpdated02 = queriesPagedResult.getResults().get(i++).getLastUpdated();
-        lastUpdated03 = queriesPagedResult.getResults().get(i++).getLastUpdated();
+        lastUpdated01 = queriesPagedResult.getResults().get(0).getLastUpdated();
+        lastUpdated02 = queriesPagedResult.getResults().get(1).getLastUpdated();
+        lastUpdated03 = queriesPagedResult.getResults().get(2).getLastUpdated();
         assertTrue(lastUpdated01.before(lastUpdated02));
         assertTrue(lastUpdated02.before(lastUpdated03));
 
@@ -1624,10 +1618,9 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         assertEquals(3, datasetsPagedResult.getResults().size());
         assertTrue(datasetsPagedResult.getResults().get(0) instanceof DatasetVersionBaseDto);
 
-        int i = 0;
-        Date lastUpdated01 = datasetsPagedResult.getResults().get(i++).getLastUpdated();
-        Date lastUpdated02 = datasetsPagedResult.getResults().get(i++).getLastUpdated();
-        Date lastUpdated03 = datasetsPagedResult.getResults().get(i++).getLastUpdated();
+        Date lastUpdated01 = datasetsPagedResult.getResults().get(0).getLastUpdated();
+        Date lastUpdated02 = datasetsPagedResult.getResults().get(1).getLastUpdated();
+        Date lastUpdated03 = datasetsPagedResult.getResults().get(2).getLastUpdated();
         assertTrue(lastUpdated01.before(lastUpdated02));
         assertTrue(lastUpdated02.before(lastUpdated03));
 
@@ -1643,10 +1636,9 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         assertEquals(3, datasetsPagedResult.getResults().size());
         assertTrue(datasetsPagedResult.getResults().get(0) instanceof DatasetVersionBaseDto);
 
-        i = 0;
-        lastUpdated01 = datasetsPagedResult.getResults().get(i++).getLastUpdated();
-        lastUpdated02 = datasetsPagedResult.getResults().get(i++).getLastUpdated();
-        lastUpdated03 = datasetsPagedResult.getResults().get(i++).getLastUpdated();
+        lastUpdated01 = datasetsPagedResult.getResults().get(0).getLastUpdated();
+        lastUpdated02 = datasetsPagedResult.getResults().get(1).getLastUpdated();
+        lastUpdated03 = datasetsPagedResult.getResults().get(2).getLastUpdated();
         assertTrue(lastUpdated01.before(lastUpdated02));
         assertTrue(lastUpdated02.before(lastUpdated03));
 
@@ -2818,10 +2810,9 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         assertEquals(3, publicationsPagedResult.getResults().size());
         assertTrue(publicationsPagedResult.getResults().get(0) instanceof PublicationVersionBaseDto);
 
-        int i = 0;
-        Date lastUpdated01 = publicationsPagedResult.getResults().get(i++).getLastUpdated();
-        Date lastUpdated02 = publicationsPagedResult.getResults().get(i++).getLastUpdated();
-        Date lastUpdated03 = publicationsPagedResult.getResults().get(i++).getLastUpdated();
+        Date lastUpdated01 = publicationsPagedResult.getResults().get(0).getLastUpdated();
+        Date lastUpdated02 = publicationsPagedResult.getResults().get(1).getLastUpdated();
+        Date lastUpdated03 = publicationsPagedResult.getResults().get(2).getLastUpdated();
         assertTrue(lastUpdated01.before(lastUpdated02));
         assertTrue(lastUpdated02.before(lastUpdated03));
 
@@ -2838,10 +2829,9 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         assertEquals(3, publicationsPagedResult.getResults().size());
         assertTrue(publicationsPagedResult.getResults().get(0) instanceof PublicationVersionBaseDto);
 
-        i = 0;
-        lastUpdated01 = publicationsPagedResult.getResults().get(i++).getLastUpdated();
-        lastUpdated02 = publicationsPagedResult.getResults().get(i++).getLastUpdated();
-        lastUpdated03 = publicationsPagedResult.getResults().get(i++).getLastUpdated();
+        lastUpdated01 = publicationsPagedResult.getResults().get(0).getLastUpdated();
+        lastUpdated02 = publicationsPagedResult.getResults().get(1).getLastUpdated();
+        lastUpdated03 = publicationsPagedResult.getResults().get(2).getLastUpdated();
         assertTrue(lastUpdated01.before(lastUpdated02));
         assertTrue(lastUpdated02.before(lastUpdated03));
 
