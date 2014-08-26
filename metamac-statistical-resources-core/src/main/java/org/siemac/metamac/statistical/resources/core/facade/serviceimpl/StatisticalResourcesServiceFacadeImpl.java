@@ -2098,7 +2098,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
             throw new MetamacException(ServiceExceptionType.METADATA_REQUIRED, ServiceExceptionParameters.CONTENT_CONSTRAINT_ATTACHMENT);
         }
 
-        if (TypeExternalArtefactsEnum.DATASET.getValue().equals(contentConstraint.getConstraintAttachment().getKind())) {
+        if (!TypeExternalArtefactsEnum.DATASET.getValue().equals(contentConstraint.getConstraintAttachment().getKind())) {
             throw new MetamacException(ServiceExceptionType.METADATA_INCORRECT, ServiceExceptionParameters.CONTENT_CONSTRAINT_ATTACHMENT);
         }
 

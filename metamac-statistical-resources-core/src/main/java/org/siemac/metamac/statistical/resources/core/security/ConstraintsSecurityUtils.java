@@ -21,7 +21,7 @@ public class ConstraintsSecurityUtils extends SecurityUtils {
     }
 
     public static void canRetrieveContentConstraintByUrn(ServiceContext ctx, String operationCode, ProcStatusEnum procStatus) throws MetamacException {
-        if (SharedConstraintsSecurityUtils.canRetrieveContentConstraintByUrn(getMetamacPrincipal(ctx), operationCode, procStatus)) {
+        if (!SharedConstraintsSecurityUtils.canRetrieveContentConstraintByUrn(getMetamacPrincipal(ctx), operationCode, procStatus)) {
             throwExceptionIfOperationNotAllowed(ctx);
         }
     }
@@ -49,5 +49,4 @@ public class ConstraintsSecurityUtils extends SecurityUtils {
             throwExceptionIfOperationNotAllowed(ctx);
         }
     }
-
 }
