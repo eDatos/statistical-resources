@@ -25,7 +25,9 @@ public class DeleteDatasetConstraintActionHandler extends SecurityActionHandler<
     @Override
     public DeleteDatasetConstraintResult executeSecurityAction(DeleteDatasetConstraintAction action) throws ActionException {
         try {
-            statisticalResourcesServiceFacade.deleteRegion(ServiceContextHolder.getCurrentServiceContext(), action.getConstraintDto().getUrn(), action.getRegionValueDto().getCode());
+            if (action.getRegionValueDto() != null) {
+                statisticalResourcesServiceFacade.deleteRegion(ServiceContextHolder.getCurrentServiceContext(), action.getConstraintDto().getUrn(), action.getRegionValueDto().getCode());
+            }
             statisticalResourcesServiceFacade.deleteContentConstraint(ServiceContextHolder.getCurrentServiceContext(), action.getConstraintDto().getUrn());
             return new DeleteDatasetConstraintResult();
         } catch (MetamacException e) {
