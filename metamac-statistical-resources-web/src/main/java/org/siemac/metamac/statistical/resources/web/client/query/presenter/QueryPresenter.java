@@ -379,6 +379,7 @@ public class QueryPresenter extends Presenter<QueryPresenter.QueryView, QueryPre
             @Override
             public void onWaitSuccess(UpdateQueryVersionProcStatusResult result) {
                 fireSuccessMessage(getMessages().lifeCycleResourceVersion());
+                retrieveQueryVersions(result.getQueryVersionDto().getUrn());
                 getView().setQueryDto(result.getQueryVersionDto());
             }
         });
