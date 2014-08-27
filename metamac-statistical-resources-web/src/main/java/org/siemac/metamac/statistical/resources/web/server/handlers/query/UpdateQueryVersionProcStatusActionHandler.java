@@ -47,6 +47,10 @@ public class UpdateQueryVersionProcStatusActionHandler extends UpdateResourcePro
                 case REJECT_VALIDATION:
                     queryVersionDto = statisticalResourcesServiceFacade.sendQueryVersionToValidationRejected(ServiceContextHolder.getCurrentServiceContext(),
                             action.getQueryVersionToUpdateProcStatus());
+
+                    String reasonOfRejection = action.getReasonOfRejection();
+                    // TODO METAMAC-2112
+
                     break;
 
                 case PUBLISH:

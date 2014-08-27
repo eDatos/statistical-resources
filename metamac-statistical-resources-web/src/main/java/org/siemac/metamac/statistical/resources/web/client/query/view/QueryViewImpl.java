@@ -34,6 +34,7 @@ import org.siemac.metamac.statistical.resources.web.client.widgets.forms.Nameabl
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.NameableResourceIdentifiersForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourceThematicContentClassifiersEditionForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourceThematicContentClassifiersForm;
+import org.siemac.metamac.statistical.resources.web.client.widgets.windows.ValidationRejectionWindow;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetVersionsResult;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetAgenciesPaginatedListResult;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetAgencySchemesPaginatedListResult;
@@ -321,7 +322,18 @@ public class QueryViewImpl extends ViewWithUiHandlers<QueryUiHandlers> implement
 
                 @Override
                 public void onClick(ClickEvent event) {
-                    getUiHandlers().rejectValidation(queryVersionDto);
+
+                    final ValidationRejectionWindow window = new ValidationRejectionWindow(getConstants().lifeCycleRejectValidation());
+                    window.show();
+                    window.getSave().addClickHandler(new com.smartgwt.client.widgets.form.fields.events.ClickHandler() {
+
+                        @Override
+                        public void onClick(com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
+                            String reasonOfRejection = window.getReasonOfRejection();
+                            window.markForDestroy();
+                            getUiHandlers().rejectValidation(queryVersionDto, reasonOfRejection);
+                        }
+                    });
                 }
             });
             mainFormLayout.getPublishButton().addClickHandler(new ClickHandler() {

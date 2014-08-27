@@ -181,9 +181,9 @@ public class QueryListPresenter extends LifeCycleBaseListPresenter<QueryListPres
     }
 
     @Override
-    public void rejectValidation(List<QueryVersionBaseDto> queryVersionDtos) {
-        UpdateQueryVersionsProcStatusAction action = new UpdateQueryVersionsProcStatusAction(queryVersionDtos, LifeCycleActionEnum.REJECT_VALIDATION);
-        updateQueryProcStatus(action, getMessages().lifeCycleResourcesRejectValidation());
+    public void rejectValidation(List<QueryVersionBaseDto> queryVersionDtos, String reasonOfRejection) {
+        UpdateQueryVersionsProcStatusAction.Builder actionBuilder = new Builder(queryVersionDtos, LifeCycleActionEnum.REJECT_VALIDATION).reasonOfRejection(reasonOfRejection);
+        updateQueryProcStatus(actionBuilder.build(), getMessages().lifeCycleResourcesRejectValidation());
     }
 
     @Override

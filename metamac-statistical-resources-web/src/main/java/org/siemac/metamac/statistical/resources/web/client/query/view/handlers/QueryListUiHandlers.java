@@ -22,7 +22,7 @@ public interface QueryListUiHandlers extends BaseUiHandlers {
 
     void sendToProductionValidation(List<QueryVersionBaseDto> queryVersionBaseDtos);
     void sendToDiffusionValidation(List<QueryVersionBaseDto> queryVersionBaseDtos);
-    void rejectValidation(List<QueryVersionBaseDto> queryVersionBaseDtos);
+    void rejectValidation(List<QueryVersionBaseDto> queryVersionBaseDtos, String reasonOfRejection);
     void publish(List<QueryVersionBaseDto> queryVersionBaseDtos);
     void programPublication(List<QueryVersionBaseDto> queryVersionBaseDtos, Date validFrom);
     void cancelProgrammedPublication(List<QueryVersionBaseDto> queryVersionBaseDtos);

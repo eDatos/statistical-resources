@@ -319,8 +319,9 @@ public class QueryPresenter extends Presenter<QueryPresenter.QueryView, QueryPre
     }
 
     @Override
-    public void rejectValidation(QueryVersionDto query) {
-        dispatcher.execute(new UpdateQueryVersionProcStatusAction(query, LifeCycleActionEnum.REJECT_VALIDATION), new WaitingAsyncCallbackHandlingError<UpdateQueryVersionProcStatusResult>(this) {
+    public void rejectValidation(QueryVersionDto query, String reasonOfRejection) {
+        UpdateQueryVersionProcStatusAction.Builder builder = new Builder(query, LifeCycleActionEnum.REJECT_VALIDATION).reasonOfRejection(reasonOfRejection);
+        dispatcher.execute(builder.build(), new WaitingAsyncCallbackHandlingError<UpdateQueryVersionProcStatusResult>(this) {
 
             @Override
             public void onWaitSuccess(UpdateQueryVersionProcStatusResult result) {

@@ -196,9 +196,9 @@ public class PublicationListPresenter extends StatisticalResourceBaseListPresent
     }
 
     @Override
-    public void rejectValidation(List<PublicationVersionBaseDto> publicationVersionBaseDtos) {
-        UpdatePublicationVersionsProcStatusAction action = new UpdatePublicationVersionsProcStatusAction(publicationVersionBaseDtos, LifeCycleActionEnum.REJECT_VALIDATION);
-        updatePublicationVersionProcStatus(action, getMessages().lifeCycleResourcesRejectValidation());
+    public void rejectValidation(List<PublicationVersionBaseDto> publicationVersionBaseDtos, String reasonOfRejection) {
+        UpdatePublicationVersionsProcStatusAction.Builder actionBuilder = new Builder(publicationVersionBaseDtos, LifeCycleActionEnum.REJECT_VALIDATION).reasonOfRejection(reasonOfRejection);
+        updatePublicationVersionProcStatus(actionBuilder.build(), getMessages().lifeCycleResourcesRejectValidation());
     }
 
     @Override

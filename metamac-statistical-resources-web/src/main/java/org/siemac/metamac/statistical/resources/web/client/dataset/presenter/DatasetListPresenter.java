@@ -229,9 +229,9 @@ public class DatasetListPresenter extends StatisticalResourceBaseListPresenter<D
     }
 
     @Override
-    public void rejectValidation(List<DatasetVersionBaseDto> datasetVersionBaseDtos) {
-        UpdateDatasetVersionsProcStatusAction action = new UpdateDatasetVersionsProcStatusAction(datasetVersionBaseDtos, LifeCycleActionEnum.REJECT_VALIDATION);
-        updateDatasetVersionProcStatus(action, getMessages().lifeCycleResourcesRejectValidation());
+    public void rejectValidation(List<DatasetVersionBaseDto> datasetVersionBaseDtos, String reasonOfRejection) {
+        UpdateDatasetVersionsProcStatusAction.Builder actionbuilder = new Builder(datasetVersionBaseDtos, LifeCycleActionEnum.REJECT_VALIDATION).reasonOfRejection(reasonOfRejection);
+        updateDatasetVersionProcStatus(actionbuilder.build(), getMessages().lifeCycleResourcesRejectValidation());
     }
 
     @Override

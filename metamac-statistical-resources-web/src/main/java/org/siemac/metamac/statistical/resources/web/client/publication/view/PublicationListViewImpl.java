@@ -19,6 +19,7 @@ import org.siemac.metamac.statistical.resources.web.client.publication.widgets.N
 import org.siemac.metamac.statistical.resources.web.client.publication.widgets.PublicationVersionSearchSectionStack;
 import org.siemac.metamac.statistical.resources.web.client.utils.ResourceFieldUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.StatisticalResourcesRecordUtils;
+import org.siemac.metamac.statistical.resources.web.client.widgets.windows.ValidationRejectionWindow;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.PublicationVersionWebCriteria;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationsPaginatedListResult;
 import org.siemac.metamac.web.common.client.widgets.BaseAdvancedSearchSectionStack;
@@ -170,8 +171,20 @@ public class PublicationListViewImpl extends StatisticalResourceBaseListViewImpl
 
             @Override
             public void onClick(ClickEvent event) {
-                List<PublicationVersionBaseDto> publicationVersionDtos = StatisticalResourcesRecordUtils.getPublicationVersionBaseDtosFromListGridRecords(listGrid.getListGrid().getSelectedRecords());
-                getUiHandlers().rejectValidation(publicationVersionDtos);
+                final List<PublicationVersionBaseDto> publicationVersionDtos = StatisticalResourcesRecordUtils.getPublicationVersionBaseDtosFromListGridRecords(listGrid.getListGrid()
+                        .getSelectedRecords());
+                final ValidationRejectionWindow window = new ValidationRejectionWindow(getConstants().lifeCycleRejectValidation());
+                window.show();
+                window.getSave().addClickHandler(new com.smartgwt.client.widgets.form.fields.events.ClickHandler() {
+
+                    @Override
+                    public void onClick(com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
+                        String reasonOfRejection = window.getReasonOfRejection();
+                        window.markForDestroy();
+                        getUiHandlers().rejectValidation(publicationVersionDtos, reasonOfRejection);
+                    }
+                });
+
             }
         };
     }

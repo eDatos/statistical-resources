@@ -48,6 +48,10 @@ public class UpdatePublicationVersionsProcStatusActionHandler extends UpdateReso
 
                     case REJECT_VALIDATION:
                         statisticalResourcesServiceFacade.sendPublicationVersionToValidationRejected(ServiceContextHolder.getCurrentServiceContext(), publicationVersionDto);
+
+                        String reasonOfRejection = action.getReasonOfRejection();
+                        // TODO METAMAC-2112
+
                         break;
 
                     case PUBLISH:

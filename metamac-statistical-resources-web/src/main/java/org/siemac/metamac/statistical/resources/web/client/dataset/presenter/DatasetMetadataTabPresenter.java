@@ -244,8 +244,9 @@ public class DatasetMetadataTabPresenter extends StatisticalResourceMetadataBase
     }
 
     @Override
-    public void rejectValidation(DatasetVersionDto dataset) {
-        dispatcher.execute(new UpdateDatasetVersionProcStatusAction(dataset, LifeCycleActionEnum.REJECT_VALIDATION), new WaitingAsyncCallbackHandlingError<UpdateDatasetVersionProcStatusResult>(this) {
+    public void rejectValidation(DatasetVersionDto dataset, String reasonOfRejection) {
+        Builder builder = new Builder(dataset, LifeCycleActionEnum.REJECT_VALIDATION).reasonOfRejection(reasonOfRejection);
+        dispatcher.execute(builder.build(), new WaitingAsyncCallbackHandlingError<UpdateDatasetVersionProcStatusResult>(this) {
 
             @Override
             public void onWaitSuccess(UpdateDatasetVersionProcStatusResult result) {

@@ -38,6 +38,7 @@ import org.siemac.metamac.statistical.resources.web.client.widgets.forms.SiemacM
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.SiemacMetadataPublicationDescriptorsForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.SiemacMetadataThematicContentClassifiersEditionForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.SiemacMetadataThematicContentClassifiersForm;
+import org.siemac.metamac.statistical.resources.web.client.widgets.windows.ValidationRejectionWindow;
 import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublicationVersionsResult;
 import org.siemac.metamac.statistical.resources.web.shared.utils.RelatedResourceUtils;
 
@@ -204,7 +205,18 @@ public class PublicationMetadataTabViewImpl extends StatisticalResourceMetadataB
 
             @Override
             public void onClick(ClickEvent event) {
-                getUiHandlers().rejectValidation(publicationVersionDto);
+
+                final ValidationRejectionWindow window = new ValidationRejectionWindow(getConstants().lifeCycleRejectValidation());
+                window.show();
+                window.getSave().addClickHandler(new com.smartgwt.client.widgets.form.fields.events.ClickHandler() {
+
+                    @Override
+                    public void onClick(com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
+                        String reasonOfRejection = window.getReasonOfRejection();
+                        window.markForDestroy();
+                        getUiHandlers().rejectValidation(publicationVersionDto, reasonOfRejection);
+                    }
+                });
             }
         });
         mainFormLayout.getPublishButton().addClickHandler(new ClickHandler() {

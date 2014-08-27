@@ -27,4 +27,8 @@ public class UpdateQueryVersionsProcStatus {
     @Optional
     @In(4)
     Date                      validFrom;
+
+    @Optional
+    @In(5)
+    String                    reasonOfRejection;
 }

@@ -211,16 +211,16 @@ public class PublicationMetadataTabPresenter
     }
 
     @Override
-    public void rejectValidation(PublicationVersionDto publicationVersionDto) {
-        dispatcher.execute(new UpdatePublicationVersionProcStatusAction(publicationVersionDto, LifeCycleActionEnum.REJECT_VALIDATION),
-                new WaitingAsyncCallbackHandlingError<UpdatePublicationVersionProcStatusResult>(this) {
+    public void rejectValidation(PublicationVersionDto publicationVersionDto, String reasonOfRejection) {
+        UpdatePublicationVersionProcStatusAction.Builder builder = new Builder(publicationVersionDto, LifeCycleActionEnum.REJECT_VALIDATION).reasonOfRejection(reasonOfRejection);
+        dispatcher.execute(builder.build(), new WaitingAsyncCallbackHandlingError<UpdatePublicationVersionProcStatusResult>(this) {
 
-                    @Override
-                    public void onWaitSuccess(UpdatePublicationVersionProcStatusResult result) {
-                        fireSuccessMessage(getMessages().lifeCycleResourceRejectValidation());
-                        getView().setPublication(result.getPublicationVersionDto());
-                    }
-                });
+            @Override
+            public void onWaitSuccess(UpdatePublicationVersionProcStatusResult result) {
+                fireSuccessMessage(getMessages().lifeCycleResourceRejectValidation());
+                getView().setPublication(result.getPublicationVersionDto());
+            }
+        });
     }
 
     @Override

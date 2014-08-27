@@ -28,6 +28,10 @@ public class UpdateQueryVersionProcStatus {
     @In(4)
     Date                validFrom;
 
+    @Optional
+    @In(5)
+    String              reasonOfRejection;
+
     @Out(1)
     QueryVersionDto     queryVersionDto;
 }

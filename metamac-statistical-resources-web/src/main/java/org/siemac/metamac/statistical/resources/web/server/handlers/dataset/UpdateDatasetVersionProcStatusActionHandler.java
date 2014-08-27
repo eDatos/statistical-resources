@@ -45,8 +45,12 @@ public class UpdateDatasetVersionProcStatusActionHandler extends UpdateResourceP
                     break;
 
                 case REJECT_VALIDATION:
+
                     datasetVersionDto = statisticalResourcesServiceFacade.sendDatasetVersionToValidationRejected(ServiceContextHolder.getCurrentServiceContext(),
                             action.getDatasetVersionToUpdateProcStatus());
+
+                    String reasonOfRejection = action.getReasonOfRejection();
+                    // TODO METAMAC-2112
                     break;
 
                 case PUBLISH:

@@ -48,6 +48,10 @@ public class UpdateDatasetVersionsProcStatusActionHandler extends UpdateResource
 
                     case REJECT_VALIDATION:
                         statisticalResourcesServiceFacade.sendDatasetVersionToValidationRejected(ServiceContextHolder.getCurrentServiceContext(), datasetVersionBaseDto);
+
+                        String reasonOfRejection = action.getReasonOfRejection();
+                        // TODO METAMAC-2112
+
                         break;
 
                     case PUBLISH:
