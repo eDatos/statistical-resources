@@ -183,7 +183,7 @@ public class DatasetConstraintsTabPresenter extends Presenter<DatasetConstraints
                     @Override
                     public void onWaitSuccess(CreateDatasetConstraintResult result) {
                         fireSuccessMessage(getMessages().datasetConstraintEnabled());
-                        getView().setConstraint(datasetVersionDto, result.getContentConstraint(), result.getRegionValueDto());
+                        getView().setConstraint(datasetVersionDto, result.getContentConstraint(), null);
                     }
                 });
     }

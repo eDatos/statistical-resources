@@ -42,10 +42,12 @@ public class GetDatasetConstraintActionHandler extends SecurityActionHandler<Get
                 ContentConstraintDto contentConstraint = statisticalResourcesServiceFacade.retrieveContentConstraintByUrn(ServiceContextHolder.getCurrentServiceContext(), urn);
 
                 // In METAMAC, a constraint only have one region
-                RegionValueBasicDto regionValueBasicDto = contentConstraint.getRegions().get(0);
-                RegionValueDto region = statisticalResourcesServiceFacade.retrieveRegionForContentConstraint(ServiceContextHolder.getCurrentServiceContext(), contentConstraint.getUrn(),
-                        regionValueBasicDto.getCode());
-
+                RegionValueDto region = null;
+                if (!contentConstraint.getRegions().isEmpty()) {
+                    RegionValueBasicDto regionValueBasicDto = contentConstraint.getRegions().get(0);
+                    region = statisticalResourcesServiceFacade.retrieveRegionForContentConstraint(ServiceContextHolder.getCurrentServiceContext(), contentConstraint.getUrn(),
+                            regionValueBasicDto.getCode());
+                }
                 return new GetDatasetConstraintResult.Builder(datasetVersionDto).contentConstraint(contentConstraint).region(region).build();
             }
 

@@ -15,11 +15,14 @@ import org.siemac.metamac.statistical.resources.core.dto.SiemacMetadataStatistic
 import org.siemac.metamac.statistical.resources.core.dto.VersionRationaleTypeDto;
 import org.siemac.metamac.statistical.resources.core.dto.VersionableStatisticalResourceBaseDto;
 import org.siemac.metamac.statistical.resources.core.dto.VersionableStatisticalResourceDto;
+import org.siemac.metamac.statistical.resources.core.dto.constraint.KeyValueDto;
+import org.siemac.metamac.statistical.resources.core.dto.constraint.RegionValueDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.CategorisationDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionBaseDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdAttributeDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdAttributeInstanceDto;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdDimensionDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.TemporalCodeDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.ChapterDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.CubeDto;
@@ -29,6 +32,7 @@ import org.siemac.metamac.statistical.resources.core.dto.query.CodeItemDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionBaseDto;
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.record.DatasetRecord;
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.record.DatasourceRecord;
+import org.siemac.metamac.statistical.resources.web.client.dataset.model.record.DimensionConstraintsRecord;
 import org.siemac.metamac.statistical.resources.web.client.model.record.CategorisationRecord;
 import org.siemac.metamac.statistical.resources.web.client.model.record.CodeItemRecord;
 import org.siemac.metamac.statistical.resources.web.client.model.record.DsdAttributeInstanceRecord;
@@ -176,6 +180,21 @@ public class StatisticalResourcesRecordUtils extends RecordUtils {
         int index = 0;
         for (CategorisationDto categorisationDto : categorisationDtos) {
             records[index++] = getCategorisationRecord(categorisationDto);
+        }
+        return records;
+    }
+
+    public static DimensionConstraintsRecord[] getDimensionConstraintsRecords(List<DsdDimensionDto> dimensions, RegionValueDto regionValueDto) {
+        if (regionValueDto != null) {
+            List<KeyValueDto> keyValues = regionValueDto.getKeys();
+            // TODO METAMAC-1985
+        }
+        DimensionConstraintsRecord[] records = new DimensionConstraintsRecord[dimensions.size()];
+        for (int i = 0; i < dimensions.size(); i++) {
+            DimensionConstraintsRecord record = new DimensionConstraintsRecord();
+            record.setDimensionId(dimensions.get(i).getDimensionId());
+            // TODO METAMAC-1985
+            records[i] = record;
         }
         return records;
     }

@@ -2,7 +2,6 @@ package org.siemac.metamac.statistical.resources.web.shared.dataset;
 
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.statistical.resources.core.dto.constraint.ContentConstraintDto;
-import org.siemac.metamac.statistical.resources.core.dto.constraint.RegionValueDto;
 
 import com.gwtplatform.dispatch.annotation.GenDispatch;
 import com.gwtplatform.dispatch.annotation.In;
@@ -19,7 +18,4 @@ public class CreateDatasetConstraint {
 
     @Out(1)
     ContentConstraintDto contentConstraint;
-
-    @Out(2)
-    RegionValueDto       regionValueDto;
 }
