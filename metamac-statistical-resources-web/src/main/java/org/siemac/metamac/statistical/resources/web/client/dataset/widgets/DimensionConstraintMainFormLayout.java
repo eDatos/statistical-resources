@@ -9,7 +9,10 @@ import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdDimensionDt
 import org.siemac.metamac.statistical.resources.core.dto.datasets.ItemDto;
 import org.siemac.metamac.statistical.resources.core.enume.dataset.domain.DimensionTypeEnum;
 import org.siemac.metamac.statistical.resources.web.client.dataset.view.handlers.DatasetConstraintsTabUiHandlers;
-import org.siemac.metamac.web.common.client.widgets.form.GroupDynamicForm;
+import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.forms.ConstraintEnumeratedValuesSelectionEditionForm;
+import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.forms.ConstraintEnumeratedValuesSelectionForm;
+import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.forms.ConstraintNonEnumeratedValuesSelectionEditionForm;
+import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.forms.ConstraintNonEnumeratedValuesSelectionForm;
 import org.siemac.metamac.web.common.client.widgets.form.MainFormLayout;
 import org.siemac.metamac.web.common.client.widgets.form.utils.FormUtils;
 
@@ -18,33 +21,35 @@ import com.smartgwt.client.widgets.events.ClickHandler;
 
 public class DimensionConstraintMainFormLayout extends MainFormLayout {
 
-    private DatasetConstraintsTabUiHandlers uiHandlers;
+    private DatasetConstraintsTabUiHandlers                   uiHandlers;
 
-    private GroupDynamicForm                enumeratedValuesSelectionForm;
-    private GroupDynamicForm                enumeratedValuesSelectionEditionForm;
+    private ConstraintEnumeratedValuesSelectionForm           enumeratedValuesSelectionForm;
+    private ConstraintEnumeratedValuesSelectionEditionForm    enumeratedValuesSelectionEditionForm;
 
-    private GroupDynamicForm                nonEnumeratedValuesSelectionForm;
-    private GroupDynamicForm                nonEnumeratedValuesSelectionEditionForm;
+    private ConstraintNonEnumeratedValuesSelectionForm        nonEnumeratedValuesSelectionForm;
+    private ConstraintNonEnumeratedValuesSelectionEditionForm nonEnumeratedValuesSelectionEditionForm;
 
-    private RegionValueDto                  regionValueDto;
+    private RegionValueDto                                    regionValueDto;
+
+    private static final String                               GROUP_FORM_DEFAULT_NAME = "DIMENSION";
 
     public DimensionConstraintMainFormLayout() {
         setCanEdit(true);
 
         // ENUMERATED VALUES SELECTION FORMS
 
-        enumeratedValuesSelectionForm = new GroupDynamicForm(StringUtils.EMPTY);
+        enumeratedValuesSelectionForm = new ConstraintEnumeratedValuesSelectionForm(GROUP_FORM_DEFAULT_NAME);
         addViewCanvas(enumeratedValuesSelectionForm);
 
-        enumeratedValuesSelectionEditionForm = new GroupDynamicForm(StringUtils.EMPTY);
+        enumeratedValuesSelectionEditionForm = new ConstraintEnumeratedValuesSelectionEditionForm(GROUP_FORM_DEFAULT_NAME);
         addEditionCanvas(enumeratedValuesSelectionEditionForm);
 
         // NON ENUMERATED VALUES SELECTION FORMS
 
-        nonEnumeratedValuesSelectionForm = new GroupDynamicForm(StringUtils.EMPTY);
+        nonEnumeratedValuesSelectionForm = new ConstraintNonEnumeratedValuesSelectionForm(GROUP_FORM_DEFAULT_NAME);
         addViewCanvas(nonEnumeratedValuesSelectionForm);
 
-        nonEnumeratedValuesSelectionEditionForm = new GroupDynamicForm(StringUtils.EMPTY);
+        nonEnumeratedValuesSelectionEditionForm = new ConstraintNonEnumeratedValuesSelectionEditionForm(GROUP_FORM_DEFAULT_NAME);
         addEditionCanvas(nonEnumeratedValuesSelectionEditionForm);
 
         // Bind events

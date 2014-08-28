@@ -32,6 +32,7 @@ import org.siemac.metamac.statistical.resources.core.enume.domain.VersionRationa
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryTypeEnum;
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesDefaults;
+import org.siemac.metamac.statistical.resources.web.client.enums.DatasetConstraintInclusionTypeEnum;
 import org.siemac.metamac.web.common.client.utils.CommonWebUtils;
 
 public class CommonUtils {
@@ -230,6 +231,22 @@ public class CommonUtils {
 
     public static String getVersionTypeName(VersionTypeEnum versionTypeEnum) {
         return versionTypeEnum != null ? getCoreMessages().getString(getCoreMessages().versionTypeEnum() + versionTypeEnum.name()) : null;
+    }
+
+    // -----------------------------------------------------------------------------------------
+    // DATASET CONSTRAINT INCLUSION TYPE
+    // -----------------------------------------------------------------------------------------
+
+    public static LinkedHashMap<String, String> getConstraintInclusionTypeHashMap() {
+        LinkedHashMap<String, String> typeHashMap = new LinkedHashMap<String, String>();
+        for (DatasetConstraintInclusionTypeEnum type : DatasetConstraintInclusionTypeEnum.values()) {
+            typeHashMap.put(type.toString(), getConstraintInclusionTypeName(type));
+        }
+        return typeHashMap;
+    }
+
+    public static String getConstraintInclusionTypeName(DatasetConstraintInclusionTypeEnum typeEnum) {
+        return typeEnum != null ? getCoreMessages().getString(getCoreMessages().datasetConstraintInclusionTypeEnum() + typeEnum.name()) : null;
     }
 
     // -----------------------------------------------------------------------------------------
