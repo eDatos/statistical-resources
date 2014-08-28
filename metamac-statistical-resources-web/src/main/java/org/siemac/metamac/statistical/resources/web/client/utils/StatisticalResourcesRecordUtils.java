@@ -194,6 +194,7 @@ public class StatisticalResourcesRecordUtils extends RecordUtils {
             DimensionConstraintsRecord record = new DimensionConstraintsRecord();
             record.setDimensionId(dimensions.get(i).getDimensionId());
             // TODO METAMAC-1985
+            record.setDsdDimensionDto(dimensions.get(i));
             records[i] = record;
         }
         return records;

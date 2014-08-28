@@ -5,11 +5,13 @@ import static org.siemac.metamac.statistical.resources.web.client.StatisticalRes
 
 import java.util.List;
 
+import org.siemac.metamac.core.common.enume.domain.TypeExternalArtefactsEnum;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.statistical.resources.core.dto.constraint.ContentConstraintDto;
 import org.siemac.metamac.statistical.resources.core.dto.constraint.RegionValueDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdDimensionDto;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.ItemDto;
 import org.siemac.metamac.statistical.resources.navigation.shared.NameTokens;
 import org.siemac.metamac.statistical.resources.web.client.LoggedInGatekeeper;
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesDefaults;
@@ -29,6 +31,8 @@ import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetCon
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetConstraintResult;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetDimensionsAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetDimensionsResult;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.GetItemsAction;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.GetItemsResult;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationAction;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationResult;
 import org.siemac.metamac.web.common.client.utils.CommonErrorUtils;
@@ -63,6 +67,8 @@ public class DatasetConstraintsTabPresenter extends Presenter<DatasetConstraints
 
         void setConstraint(DatasetVersionDto datasetVersionDto, ContentConstraintDto contentConstraintDto, RegionValueDto regionValueDto);
         void setRelatedDsdDimensions(List<DsdDimensionDto> dimensions);
+        void setCodes(DsdDimensionDto dsdDimensionDto, List<ItemDto> itemDtos);
+        void setConcepts(DsdDimensionDto dsdDimensionDto, List<ItemDto> itemDtos);
     }
 
     @ProxyCodeSplit
@@ -196,6 +202,30 @@ public class DatasetConstraintsTabPresenter extends Presenter<DatasetConstraints
             public void onWaitSuccess(DeleteDatasetConstraintResult result) {
                 fireSuccessMessage(getMessages().datasetConstraintDisabled());
                 getView().setConstraint(datasetVersionDto, null, null);
+            }
+        });
+    }
+
+    @Override
+    public void retrieveCodes(DsdDimensionDto dsdDimensionDto) {
+        retrieveItems(dsdDimensionDto, dsdDimensionDto.getCodelistRepresentationUrn(), TypeExternalArtefactsEnum.CODELIST);
+    }
+
+    @Override
+    public void retrieveConcepts(DsdDimensionDto dsdDimensionDto) {
+        retrieveItems(dsdDimensionDto, dsdDimensionDto.getConceptSchemeRepresentationUrn(), TypeExternalArtefactsEnum.CONCEPT_SCHEME);
+    }
+
+    private void retrieveItems(final DsdDimensionDto dsdDimensionDto, String itemSchemeUrn, final TypeExternalArtefactsEnum itemSchemeType) {
+        dispatcher.execute(new GetItemsAction(itemSchemeUrn, itemSchemeType), new WaitingAsyncCallbackHandlingError<GetItemsResult>(this) {
+
+            @Override
+            public void onWaitSuccess(GetItemsResult result) {
+                if (TypeExternalArtefactsEnum.CODELIST.equals(itemSchemeType)) {
+                    getView().setCodes(dsdDimensionDto, result.getItemDtos());
+                } else if (TypeExternalArtefactsEnum.CONCEPT_SCHEME.equals(itemSchemeType)) {
+                    getView().setConcepts(dsdDimensionDto, result.getItemDtos());
+                }
             }
         });
     }

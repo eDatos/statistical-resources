@@ -43,6 +43,7 @@ import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor.D
 import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor.DsdDimension;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdAttributeDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdDimensionDto;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.ItemDto;
 import org.siemac.metamac.statistical.resources.core.invocation.service.SrmRestInternalService;
 import org.siemac.metamac.statistical.resources.web.server.utils.ExternalItemWebUtils;
 import org.siemac.metamac.statistical.resources.web.server.utils.MetamacWebRestCriteriaUtils;
@@ -291,6 +292,16 @@ public class SrmRestInternalFacadeImpl implements SrmRestInternalFacade {
         }
     }
 
+    @Override
+    public List<ItemDto> retrieveCodes(String codelistUrn) throws MetamacWebException {
+        try {
+            Codes codes = srmRestInternalService.retrieveCodesOfCodelistEfficiently(codelistUrn);
+            return restMapper.buildItemDtosFromCodes(codes);
+        } catch (MetamacException e) {
+            throw WebExceptionUtils.createMetamacWebException(e);
+        }
+    }
+
     // CONCEPTS
 
     @Override
@@ -326,6 +337,16 @@ public class SrmRestInternalFacadeImpl implements SrmRestInternalFacade {
                 conceptsExternalItems.add(ExternalItemWebUtils.buildExternalItemDtoFromResource(resource, TypeExternalArtefactsEnum.CONCEPT));
             }
             return ExternalItemWebUtils.createExternalItemsResultFromListBase(concepts, conceptsExternalItems);
+        } catch (MetamacException e) {
+            throw WebExceptionUtils.createMetamacWebException(e);
+        }
+    }
+
+    @Override
+    public List<ItemDto> retrieveConcepts(String conceptSchemeUrn) throws MetamacWebException {
+        try {
+            Concepts concepts = srmRestInternalService.retrieveConceptsOfConceptSchemeEfficiently(conceptSchemeUrn);
+            return restMapper.buildItemDtosFromConcepts(concepts);
         } catch (MetamacException e) {
             throw WebExceptionUtils.createMetamacWebException(e);
         }

@@ -9,12 +9,14 @@ import org.siemac.metamac.statistical.resources.core.dto.constraint.ContentConst
 import org.siemac.metamac.statistical.resources.core.dto.constraint.RegionValueDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdDimensionDto;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.ItemDto;
 import org.siemac.metamac.statistical.resources.web.client.constants.StatisticalResourceWebConstants;
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.ds.DimensionConstraintsDS;
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.record.DimensionConstraintsRecord;
 import org.siemac.metamac.statistical.resources.web.client.dataset.presenter.DatasetConstraintsTabPresenter.DatasetConstraintsTabView;
 import org.siemac.metamac.statistical.resources.web.client.dataset.utils.ConstraintsClientSecurityUtils;
 import org.siemac.metamac.statistical.resources.web.client.dataset.view.handlers.DatasetConstraintsTabUiHandlers;
+import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.DimensionConstraintMainFormLayout;
 import org.siemac.metamac.statistical.resources.web.client.utils.StatisticalResourcesRecordUtils;
 import org.siemac.metamac.web.common.client.widgets.CustomListGrid;
 import org.siemac.metamac.web.common.client.widgets.CustomToolStripButton;
@@ -69,25 +71,28 @@ public class DatasetConstraintsTabViewImpl extends ViewWithUiHandlers<DatasetCon
         constraintsPanel.setDimensions(dimensions, regionValueDto);
     }
 
+    @Override
+    public void setCodes(DsdDimensionDto dsdDimensionDto, List<ItemDto> itemDtos) {
+        // TODO METAMAC-1985
+    }
+
+    @Override
+    public void setConcepts(DsdDimensionDto dsdDimensionDto, List<ItemDto> itemDtos) {
+        // TODO METAMAC-1985
+    }
+
     private class ConstraintsPanel extends VLayout {
 
-        private ToolStrip             toolStrip;
-        private CustomToolStripButton enableConstraintsButton;
-        private CustomToolStripButton disableConstraintsButton;
-        private CustomListGrid        constraintsList;
+        private ToolStrip                         toolStrip;
+        private CustomToolStripButton             enableConstraintsButton;
+        private CustomToolStripButton             disableConstraintsButton;
+        private CustomListGrid                    constraintsList;
+        private DimensionConstraintMainFormLayout dimensionConstraintMainFormLayout;
 
         public ConstraintsPanel() {
-
             createToolStrip();
             createConstraintsList();
-
-            addMember(toolStrip);
-            addMember(constraintsList);
-        }
-
-        public void setDimensions(List<DsdDimensionDto> dimensions, RegionValueDto regionValueDto) {
-            DimensionConstraintsRecord[] records = StatisticalResourcesRecordUtils.getDimensionConstraintsRecords(dimensions, regionValueDto);
-            constraintsList.setData(records);
+            createDimensionConstraintMainFormLayout();
         }
 
         private void createToolStrip() {
@@ -99,6 +104,7 @@ public class DatasetConstraintsTabViewImpl extends ViewWithUiHandlers<DatasetCon
 
             disableConstraintsButton = createDisableConstraintsButton();
             toolStrip.addButton(disableConstraintsButton);
+            addMember(toolStrip);
         }
 
         private void createConstraintsList() {
@@ -120,9 +126,25 @@ public class DatasetConstraintsTabViewImpl extends ViewWithUiHandlers<DatasetCon
 
                 @Override
                 public void onSelectionChanged(SelectionEvent event) {
-                    // TODO METAMAC-1985
+                    if (event.getSelectedRecord() instanceof DimensionConstraintsRecord) {
+                        DsdDimensionDto dsdDimensionDto = ((DimensionConstraintsRecord) event.getSelectedRecord()).getDimensionDto();
+                        dimensionConstraintMainFormLayout.showDimensionConstraints(regionValueDto, dsdDimensionDto);
+                    }
                 }
             });
+
+            addMember(constraintsList);
+        }
+
+        private void createDimensionConstraintMainFormLayout() {
+            dimensionConstraintMainFormLayout = new DimensionConstraintMainFormLayout();
+            dimensionConstraintMainFormLayout.setVisible(false);
+            addMember(dimensionConstraintMainFormLayout);
+        }
+
+        public void setDimensions(List<DsdDimensionDto> dimensions, RegionValueDto regionValueDto) {
+            DimensionConstraintsRecord[] records = StatisticalResourcesRecordUtils.getDimensionConstraintsRecords(dimensions, regionValueDto);
+            constraintsList.setData(records);
         }
 
         private CustomToolStripButton createEnableConstraintsButton() {

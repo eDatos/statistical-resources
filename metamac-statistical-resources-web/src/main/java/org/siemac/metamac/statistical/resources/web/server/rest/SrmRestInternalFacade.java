@@ -7,6 +7,7 @@ import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.enume.domain.TypeExternalArtefactsEnum;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdAttributeDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdDimensionDto;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.ItemDto;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.DsdWebCriteria;
 import org.siemac.metamac.web.common.shared.criteria.MetamacWebCriteria;
 import org.siemac.metamac.web.common.shared.criteria.SrmExternalResourceRestCriteria;
@@ -24,7 +25,8 @@ public interface SrmRestInternalFacade {
     public Map<String, List<String>> retrieveDsdGroupDimensionsIds(String dsdUrn) throws MetamacWebException;
     public List<DsdAttributeDto> retrieveDsdAttributes(String dsdUrn) throws MetamacWebException;
 
-    // CODE LISTS
+    // CODELISTS
+
     public Map<String, String> findMappeableDimensionsInDsdWithVariables(String dsdUrn) throws MetamacWebException;
     public ExternalItemsResult findCodelistsWithVariable(String variableUrn, int firstResult, int maxResult, SrmExternalResourceRestCriteria srmExternalResourceRestCriteria)
             throws MetamacWebException;
@@ -34,11 +36,13 @@ public interface SrmRestInternalFacade {
     public ExternalItemsResult findCodesInCodelist(String codelistUrn, int firstResult, int maxResult, MetamacWebCriteria condition) throws MetamacWebException;
     public ExternalItemsResult findCodes(int firstResult, int maxResult, SrmItemRestCriteria condition) throws MetamacWebException;
     public ExternalItemDto retrieveCodeByUrn(String urn) throws MetamacWebException;
+    public List<ItemDto> retrieveCodes(String codelistUrn) throws MetamacWebException;
 
     // CONCEPTS
 
     public ExternalItemsResult findConceptSchemes(int firstResult, int maxResult, MetamacWebCriteria condition) throws MetamacWebException;
     public ExternalItemsResult findConcepts(int firstResult, int maxResult, SrmItemRestCriteria condition) throws MetamacWebException;
+    public List<ItemDto> retrieveConcepts(String conceptSchemeUrn) throws MetamacWebException;
 
     // ORGANISATIONS
 
@@ -51,6 +55,7 @@ public interface SrmRestInternalFacade {
     public ExternalItemsResult findCategorySchemes(int firstResult, int maxResult, MetamacWebCriteria criteria) throws MetamacWebException;
 
     // CATEGORIES
+
     public ExternalItemDto retrieveCategoryByUrn(String urn) throws MetamacWebException;
     public ExternalItemsResult findCategories(int firstResult, int maxResult, SrmItemRestCriteria condition) throws MetamacWebException;
 }

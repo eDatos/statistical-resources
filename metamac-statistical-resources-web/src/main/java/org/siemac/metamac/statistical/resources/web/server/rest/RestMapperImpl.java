@@ -6,10 +6,15 @@ import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.AttributeRelationship;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.CodeResourceInternal;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codes;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Concepts;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ItemResourceInternal;
 import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor.DsdAttribute;
 import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor.DsdDimension;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdAttributeDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdDimensionDto;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.ItemDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.RelationshipDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.RepresentationDto;
 import org.siemac.metamac.statistical.resources.core.enume.dataset.domain.AttributeRelationshipTypeEnum;
@@ -56,6 +61,32 @@ public class RestMapperImpl implements RestMapper {
         dsdAttributeDto.setAttributeRelationship(buildRelationShipDtoFromAttributeRelationship(dsdAttribute.getAttributeRelationship(), dsdGgroupDimensions));
         dsdAttributeDto.setAttributeRepresentation(buildRepresentationDtoFromDsdAttribute(dsdAttribute));
         return dsdAttributeDto;
+    }
+
+    @Override
+    public List<ItemDto> buildItemDtosFromCodes(Codes codes) throws MetamacWebException {
+        List<ItemDto> itemDtos = new ArrayList<ItemDto>();
+        for (CodeResourceInternal codeResourceInternal : codes.getCodes()) {
+            itemDtos.add(buildItemDto(codeResourceInternal));
+        }
+        return itemDtos;
+    }
+
+    @Override
+    public List<ItemDto> buildItemDtosFromConcepts(Concepts concepts) throws MetamacWebException {
+        List<ItemDto> itemDtos = new ArrayList<ItemDto>();
+        for (ItemResourceInternal conceptResourceInternal : concepts.getConcepts()) {
+            itemDtos.add(buildItemDto(conceptResourceInternal));
+        }
+        return itemDtos;
+    }
+
+    private ItemDto buildItemDto(ItemResourceInternal itemResourceInternal) {
+        ItemDto itemDto = new ItemDto();
+        itemDto.setItemId(itemResourceInternal.getId());
+        itemDto.setUrn(itemResourceInternal.getUrn());
+        itemDto.setItemParentUrn(itemResourceInternal.getParent());
+        return itemDto;
     }
 
     private RelationshipDto buildRelationShipDtoFromAttributeRelationship(AttributeRelationship attributeRelationship, Map<String, List<String>> dsdGgroupDimensions) throws MetamacWebException {

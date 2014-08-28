@@ -90,6 +90,12 @@ Application DatasetsStatisticalResourcesDto {
         	String conceptSchemeRepresentationUrn;
         }
 
+         DataTransferObject ItemDto extends @IdentityDto {
+        	String itemId;
+        	String urn;
+        	String itemParentUrn;
+        }
+
         DataTransferObject DsdAttributeDto extends @IdentityDto {
         	String identifier;
         	- @RelationshipDto attributeRelationship;

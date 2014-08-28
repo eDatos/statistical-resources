@@ -3,7 +3,6 @@ package org.siemac.metamac.statistical.resources.web.server.handlers.dataset;
 import java.util.List;
 
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdDimensionDto;
-import org.siemac.metamac.statistical.resources.core.facade.serviceapi.StatisticalResourcesServiceFacade;
 import org.siemac.metamac.statistical.resources.web.server.rest.SrmRestInternalFacade;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetDimensionsAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetDimensionsResult;
@@ -15,10 +14,7 @@ import org.springframework.stereotype.Component;
 public class GetDatasetDimensionsActionHandler extends SecurityActionHandler<GetDatasetDimensionsAction, GetDatasetDimensionsResult> {
 
     @Autowired
-    private StatisticalResourcesServiceFacade statisticalResourcesServiceFacade;
-
-    @Autowired
-    private SrmRestInternalFacade             srmRestInternalFacade;
+    private SrmRestInternalFacade srmRestInternalFacade;
 
     public GetDatasetDimensionsActionHandler() {
         super(GetDatasetDimensionsAction.class);
