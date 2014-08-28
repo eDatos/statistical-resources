@@ -2,6 +2,7 @@ package org.siemac.metamac.statistical.resources.web.client.dataset.widgets;
 
 import java.util.List;
 
+import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.statistical.resources.core.dto.constraint.RegionValueDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdDimensionDto;
@@ -77,22 +78,28 @@ public class DimensionConstraintMainFormLayout extends MainFormLayout {
         }
     }
 
-    public void setCodes(DsdDimensionDto dsdDimensionDto, List<ItemDto> itemDtos) {
+    public void setCodes(DsdDimensionDto dsdDimensionDto, ExternalItemDto itemScheme, List<ItemDto> itemDtos) {
         FormUtils.setGroupTitle(dsdDimensionDto.getDimensionId(), enumeratedValuesSelectionForm, enumeratedValuesSelectionEditionForm);
         // TODO METAMAC-1985
+        showEnumeratedValuesSelectionForms();
     }
 
-    public void setConcepts(DsdDimensionDto dsdDimensionDto, List<ItemDto> itemDtos) {
+    public void setConcepts(DsdDimensionDto dsdDimensionDto, ExternalItemDto itemScheme, List<ItemDto> itemDtos) {
         FormUtils.setGroupTitle(dsdDimensionDto.getDimensionId(), enumeratedValuesSelectionForm, enumeratedValuesSelectionEditionForm);
         // TODO METAMAC-1985
+        showEnumeratedValuesSelectionForms();
     }
 
     private void showEnumeratedValuesSelectionForms() {
-        // TODO METAMAC-1985
+        enumeratedValuesSelectionForm.show();
+        enumeratedValuesSelectionEditionForm.show();
+        show();
     }
 
     private void showNonEnumeratedValuesSelectionForms() {
-        // TODO METAMAC-1985
+        nonEnumeratedValuesSelectionForm.show();
+        nonEnumeratedValuesSelectionEditionForm.show();
+        show();
     }
 
     private void hideAllForms() {

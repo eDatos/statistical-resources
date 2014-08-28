@@ -90,9 +90,7 @@ Application DatasetsStatisticalResourcesDto {
         	String conceptSchemeRepresentationUrn;
         }
 
-         DataTransferObject ItemDto extends @IdentityDto {
-        	String itemId;
-        	String urn;
+         DataTransferObject ItemDto extends @ExternalItemDto {
         	String itemParentUrn;
         }
 

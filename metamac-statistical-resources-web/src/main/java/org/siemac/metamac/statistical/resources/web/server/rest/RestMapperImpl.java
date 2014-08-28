@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
+import org.siemac.metamac.core.common.enume.domain.TypeExternalArtefactsEnum;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.AttributeRelationship;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.CodeResourceInternal;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codes;
@@ -20,6 +21,7 @@ import org.siemac.metamac.statistical.resources.core.dto.datasets.Representation
 import org.siemac.metamac.statistical.resources.core.enume.dataset.domain.AttributeRelationshipTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.dataset.domain.AttributeRepresentationTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.dataset.domain.DimensionTypeEnum;
+import org.siemac.metamac.statistical.resources.web.server.utils.ExternalItemWebUtils;
 import org.siemac.metamac.web.common.shared.exception.MetamacWebException;
 import org.springframework.stereotype.Component;
 
@@ -40,7 +42,7 @@ public class RestMapperImpl implements RestMapper {
         DsdDimensionDto dsdDimensionDto = new DsdDimensionDto();
         dsdDimensionDto.setDimensionId(dsdDimension.getComponentId());
         dsdDimensionDto.setType(getDimensionType(dsdDimension));
-        dsdDimensionDto.setCodelistRepresentationUrn(dsdDimension.getEnumeratedRepresentationUrn());
+        dsdDimensionDto.setCodelistRepresentationUrn(dsdDimension.getCodelistRepresentationUrn());
         dsdDimensionDto.setConceptSchemeRepresentationUrn(dsdDimension.getConceptSchemeRepresentationUrn());
         return dsdDimensionDto;
     }
@@ -67,7 +69,7 @@ public class RestMapperImpl implements RestMapper {
     public List<ItemDto> buildItemDtosFromCodes(Codes codes) throws MetamacWebException {
         List<ItemDto> itemDtos = new ArrayList<ItemDto>();
         for (CodeResourceInternal codeResourceInternal : codes.getCodes()) {
-            itemDtos.add(buildItemDto(codeResourceInternal));
+            itemDtos.add(buildItemDto(codeResourceInternal, TypeExternalArtefactsEnum.CODE));
         }
         return itemDtos;
     }
@@ -76,15 +78,14 @@ public class RestMapperImpl implements RestMapper {
     public List<ItemDto> buildItemDtosFromConcepts(Concepts concepts) throws MetamacWebException {
         List<ItemDto> itemDtos = new ArrayList<ItemDto>();
         for (ItemResourceInternal conceptResourceInternal : concepts.getConcepts()) {
-            itemDtos.add(buildItemDto(conceptResourceInternal));
+            itemDtos.add(buildItemDto(conceptResourceInternal, TypeExternalArtefactsEnum.CONCEPT));
         }
         return itemDtos;
     }
 
-    private ItemDto buildItemDto(ItemResourceInternal itemResourceInternal) {
+    private ItemDto buildItemDto(ItemResourceInternal itemResourceInternal, TypeExternalArtefactsEnum type) {
         ItemDto itemDto = new ItemDto();
-        itemDto.setItemId(itemResourceInternal.getId());
-        itemDto.setUrn(itemResourceInternal.getUrn());
+        ExternalItemWebUtils.buildExternalItemDtoFromResource(itemDto, itemResourceInternal, type);
         itemDto.setItemParentUrn(itemResourceInternal.getParent());
         return itemDto;
     }

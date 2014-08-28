@@ -8,7 +8,10 @@ import org.siemac.metamac.rest.common.v1_0.domain.ListBase;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Agency;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Category;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Code;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codelist;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ConceptScheme;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Item;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ItemScheme;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Organisation;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ResourceInternal;
 import org.siemac.metamac.web.common.server.utils.DtoUtils;
@@ -28,6 +31,11 @@ public class ExternalItemWebUtils extends org.siemac.metamac.web.common.client.u
 
     public static ExternalItemDto buildExternalItemDtoFromResource(ResourceInternal resource, TypeExternalArtefactsEnum type) {
         ExternalItemDto externalItemDto = new ExternalItemDto();
+        buildExternalItemDtoFromResource(externalItemDto, resource, type);
+        return externalItemDto;
+    }
+
+    public static void buildExternalItemDtoFromResource(ExternalItemDto externalItemDto, ResourceInternal resource, TypeExternalArtefactsEnum type) {
         externalItemDto.setCode(resource.getId());
         externalItemDto.setCodeNested(resource.getNestedId());
         externalItemDto.setUri(resource.getSelfLink().getHref());
@@ -36,6 +44,38 @@ public class ExternalItemWebUtils extends org.siemac.metamac.web.common.client.u
         externalItemDto.setType(type);
         externalItemDto.setTitle(DtoUtils.getInternationalStringDtoFromInternationalString(resource.getName()));
         externalItemDto.setManagementAppUrl(resource.getManagementAppLink());
+    }
+
+    public static ExternalItemDto buildExternalItemDtoFromAgency(Agency agency) {
+        return buildExternalItemDtoFromOrganisation(agency, TypeExternalArtefactsEnum.AGENCY);
+    }
+
+    public static ExternalItemDto buildExternalItemDtoFromCode(Code code) {
+        return buildExternalItemDtoFromItem(code, TypeExternalArtefactsEnum.CODE);
+    }
+
+    public static ExternalItemDto buildExternalItemDtoFromCategory(Category category) {
+        return buildExternalItemDtoFromItem(category, TypeExternalArtefactsEnum.CATEGORY);
+    }
+
+    public static ExternalItemDto buildExternalItemDtoFromCodelist(Codelist codelist) {
+        return buildExternalItemDtoFromItemScheme(codelist, TypeExternalArtefactsEnum.CODELIST);
+    }
+
+    public static ExternalItemDto buildExternalItemDtoFromConceptScheme(ConceptScheme conceptScheme) {
+        return buildExternalItemDtoFromItemScheme(conceptScheme, TypeExternalArtefactsEnum.CONCEPT_SCHEME);
+    }
+
+    private static ExternalItemDto buildExternalItemDtoFromItemScheme(ItemScheme itemScheme, TypeExternalArtefactsEnum type) {
+        ExternalItemDto externalItemDto = new ExternalItemDto();
+        externalItemDto.setCode(itemScheme.getId());
+        externalItemDto.setCodeNested(itemScheme.getNestedId());
+        externalItemDto.setUri(itemScheme.getSelfLink().getHref());
+        externalItemDto.setUrn(itemScheme.getUrn());
+        externalItemDto.setUrnProvider(itemScheme.getUrnProvider());
+        externalItemDto.setType(type);
+        externalItemDto.setTitle(DtoUtils.getInternationalStringDtoFromInternationalString(itemScheme.getName()));
+        externalItemDto.setManagementAppUrl(itemScheme.getManagementAppLink());
         return externalItemDto;
     }
 
@@ -54,17 +94,5 @@ public class ExternalItemWebUtils extends org.siemac.metamac.web.common.client.u
 
     private static ExternalItemDto buildExternalItemDtoFromOrganisation(Organisation organisation, TypeExternalArtefactsEnum type) {
         return buildExternalItemDtoFromItem(organisation, type);
-    }
-
-    public static ExternalItemDto buildExternalItemDtoFromAgency(Agency agency) {
-        return buildExternalItemDtoFromOrganisation(agency, TypeExternalArtefactsEnum.AGENCY);
-    }
-
-    public static ExternalItemDto buildExternalItemDtoFromCode(Code code) {
-        return buildExternalItemDtoFromItem(code, TypeExternalArtefactsEnum.CODE);
-    }
-
-    public static ExternalItemDto buildExternalItemDtoFromCategory(Category category) {
-        return buildExternalItemDtoFromItem(category, TypeExternalArtefactsEnum.CATEGORY);
     }
 }

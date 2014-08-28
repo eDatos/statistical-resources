@@ -2,6 +2,7 @@ package org.siemac.metamac.statistical.resources.web.shared.dataset;
 
 import java.util.List;
 
+import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.enume.domain.TypeExternalArtefactsEnum;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.ItemDto;
 
@@ -19,5 +20,8 @@ public class GetItems {
     TypeExternalArtefactsEnum itemSchemeType;
 
     @Out(1)
-    List<ItemDto>             itemDtos;
+    ExternalItemDto           itemScheme;
+
+    @Out(2)
+    List<ItemDto>             items;
 }

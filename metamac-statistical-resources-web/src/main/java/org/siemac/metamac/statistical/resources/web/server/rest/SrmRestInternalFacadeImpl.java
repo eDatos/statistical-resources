@@ -24,6 +24,7 @@ import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Code;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codelist;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codelists;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codes;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ConceptScheme;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ConceptSchemes;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Concepts;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructure;
@@ -203,7 +204,17 @@ public class SrmRestInternalFacadeImpl implements SrmRestInternalFacade {
         }
     }
 
-    // CODE LISTS
+    // CODELISTS
+
+    @Override
+    public ExternalItemDto retrieveCodelist(String urn) throws MetamacWebException {
+        try {
+            Codelist codelist = srmRestInternalService.retrieveCodelistByUrn(urn);
+            return ExternalItemWebUtils.buildExternalItemDtoFromCodelist(codelist);
+        } catch (MetamacException e) {
+            throw WebExceptionUtils.createMetamacWebException(e);
+        }
+    }
 
     @Override
     public Map<String, String> findMappeableDimensionsInDsdWithVariables(String dsdUrn) throws MetamacWebException {
@@ -303,6 +314,16 @@ public class SrmRestInternalFacadeImpl implements SrmRestInternalFacade {
     }
 
     // CONCEPTS
+
+    @Override
+    public ExternalItemDto retrieveConceptScheme(String urn) throws MetamacWebException {
+        try {
+            ConceptScheme conceptScheme = srmRestInternalService.retrieveConceptSchemeByUrn(urn);
+            return ExternalItemWebUtils.buildExternalItemDtoFromConceptScheme(conceptScheme);
+        } catch (MetamacException e) {
+            throw WebExceptionUtils.createMetamacWebException(e);
+        }
+    }
 
     @Override
     public ExternalItemsResult findConceptSchemes(int firstResult, int maxResult, MetamacWebCriteria criteria) throws MetamacWebException {

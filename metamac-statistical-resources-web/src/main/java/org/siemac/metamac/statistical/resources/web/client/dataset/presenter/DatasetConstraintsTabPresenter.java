@@ -5,6 +5,7 @@ import static org.siemac.metamac.statistical.resources.web.client.StatisticalRes
 
 import java.util.List;
 
+import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.enume.domain.TypeExternalArtefactsEnum;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.statistical.resources.core.dto.constraint.ContentConstraintDto;
@@ -67,8 +68,8 @@ public class DatasetConstraintsTabPresenter extends Presenter<DatasetConstraints
 
         void setConstraint(DatasetVersionDto datasetVersionDto, ContentConstraintDto contentConstraintDto, RegionValueDto regionValueDto);
         void setRelatedDsdDimensions(List<DsdDimensionDto> dimensions);
-        void setCodes(DsdDimensionDto dsdDimensionDto, List<ItemDto> itemDtos);
-        void setConcepts(DsdDimensionDto dsdDimensionDto, List<ItemDto> itemDtos);
+        void setCodes(DsdDimensionDto dsdDimensionDto, ExternalItemDto itemScheme, List<ItemDto> itemDtos);
+        void setConcepts(DsdDimensionDto dsdDimensionDto, ExternalItemDto itemScheme, List<ItemDto> itemDtos);
     }
 
     @ProxyCodeSplit
@@ -222,9 +223,9 @@ public class DatasetConstraintsTabPresenter extends Presenter<DatasetConstraints
             @Override
             public void onWaitSuccess(GetItemsResult result) {
                 if (TypeExternalArtefactsEnum.CODELIST.equals(itemSchemeType)) {
-                    getView().setCodes(dsdDimensionDto, result.getItemDtos());
+                    getView().setCodes(dsdDimensionDto, result.getItemScheme(), result.getItems());
                 } else if (TypeExternalArtefactsEnum.CONCEPT_SCHEME.equals(itemSchemeType)) {
-                    getView().setConcepts(dsdDimensionDto, result.getItemDtos());
+                    getView().setConcepts(dsdDimensionDto, result.getItemScheme(), result.getItems());
                 }
             }
         });

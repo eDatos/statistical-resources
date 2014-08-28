@@ -27,6 +27,7 @@ public interface SrmRestInternalFacade {
 
     // CODELISTS
 
+    public ExternalItemDto retrieveCodelist(String urn) throws MetamacWebException;
     public Map<String, String> findMappeableDimensionsInDsdWithVariables(String dsdUrn) throws MetamacWebException;
     public ExternalItemsResult findCodelistsWithVariable(String variableUrn, int firstResult, int maxResult, SrmExternalResourceRestCriteria srmExternalResourceRestCriteria)
             throws MetamacWebException;
@@ -40,6 +41,7 @@ public interface SrmRestInternalFacade {
 
     // CONCEPTS
 
+    public ExternalItemDto retrieveConceptScheme(String urn) throws MetamacWebException;
     public ExternalItemsResult findConceptSchemes(int firstResult, int maxResult, MetamacWebCriteria condition) throws MetamacWebException;
     public ExternalItemsResult findConcepts(int firstResult, int maxResult, SrmItemRestCriteria condition) throws MetamacWebException;
     public List<ItemDto> retrieveConcepts(String conceptSchemeUrn) throws MetamacWebException;
