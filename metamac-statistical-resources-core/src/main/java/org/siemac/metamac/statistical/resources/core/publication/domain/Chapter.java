@@ -23,7 +23,7 @@ public class Chapter extends ChapterBase {
     public void fillCodeAndUrn() {
         String code = RandomStringUtils.randomAlphanumeric(CODE_MAX_LENGTH);
         this.getNameableStatisticalResource().setCode(code);
-        this.getNameableStatisticalResource().setUrn(GeneratorUrnUtils.generateSiemacStatisticalResourceCollectionCubeUrn(code));
+        this.getNameableStatisticalResource().setUrn(GeneratorUrnUtils.generateSiemacStatisticalResourceCollectionChapterUrn(code));
     }
 
 }
