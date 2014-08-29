@@ -86,12 +86,14 @@ public class DimensionConstraintMainFormLayout extends MainFormLayout {
     public void setCodes(DsdDimensionDto dsdDimensionDto, ExternalItemDto itemScheme, List<ItemDto> itemDtos) {
         FormUtils.setGroupTitle(dsdDimensionDto.getDimensionId(), enumeratedValuesSelectionForm, enumeratedValuesSelectionEditionForm);
         // TODO METAMAC-1985
+        enumeratedValuesSelectionEditionForm.setItemNodes(itemScheme, itemDtos);
         showEnumeratedValuesSelectionForms();
     }
 
     public void setConcepts(DsdDimensionDto dsdDimensionDto, ExternalItemDto itemScheme, List<ItemDto> itemDtos) {
         FormUtils.setGroupTitle(dsdDimensionDto.getDimensionId(), enumeratedValuesSelectionForm, enumeratedValuesSelectionEditionForm);
         // TODO METAMAC-1985
+        enumeratedValuesSelectionEditionForm.setItemNodes(itemScheme, itemDtos);
         showEnumeratedValuesSelectionForms();
     }
 
