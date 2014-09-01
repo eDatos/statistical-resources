@@ -10,7 +10,6 @@ import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.ItemDto;
 import org.siemac.metamac.web.common.client.resources.StyleUtils;
-import org.siemac.metamac.web.common.client.widgets.form.fields.CustomCheckboxItem;
 
 import com.google.web.bindery.event.shared.HandlerRegistration;
 import com.smartgwt.client.data.DataSource;
@@ -19,8 +18,13 @@ import com.smartgwt.client.types.Autofit;
 import com.smartgwt.client.types.SelectionAppearance;
 import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.types.TreeModelType;
+import com.smartgwt.client.widgets.form.fields.CheckboxItem;
+import com.smartgwt.client.widgets.grid.HoverCustomizer;
+import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.grid.events.FilterEditorSubmitEvent;
 import com.smartgwt.client.widgets.grid.events.FilterEditorSubmitHandler;
+import com.smartgwt.client.widgets.grid.events.SelectionChangedHandler;
+import com.smartgwt.client.widgets.grid.events.SelectionEvent;
 import com.smartgwt.client.widgets.tree.Tree;
 import com.smartgwt.client.widgets.tree.TreeGrid;
 import com.smartgwt.client.widgets.tree.TreeGridField;
@@ -28,12 +32,18 @@ import com.smartgwt.client.widgets.tree.TreeNode;
 
 public class ItemsTreeGrid extends TreeGrid {
 
-    protected static final String SCHEME_NODE_NAME = "scheme-node";
+    protected static final String SCHEME_NODE_NAME  = "scheme-node";
 
     protected Tree                tree;
     protected TreeGridField       codeField;
     protected TreeGridField       nameField;
     protected TreeGridField       cascadeField;
+
+    /**
+     * Stores <code>true</code> when a filtering in the {@link TreeGrid} is being executed.
+     */
+    protected boolean             isFilteringActive = false;
+    protected ListGridRecord[]    selectedTreeNodes = null;
 
     protected HandlerRegistration filterEditionHandler;
 
@@ -64,10 +74,19 @@ public class ItemsTreeGrid extends TreeGrid {
         setSelectionAppearance(SelectionAppearance.CHECKBOX);
         createTreeFields(editionMode);
         createFilterEditionHandlers();
+        addSelectionChangedHandler(new SelectionChangedHandler() {
+
+            @Override
+            public void onSelectionChanged(SelectionEvent event) {
+                if (!isFilteringActive) {
+                    selectedTreeNodes = ItemsTreeGrid.this.getSelectedRecords();
+                }
+            }
+        });
     }
 
     public void setItems(ExternalItemDto itemScheme, List<ItemDto> items) {
-        clearFilterEditor();
+        resetFilterAndSelection();
 
         TreeNode[] treeNodes = new TreeNode[items.size() + 1];
         treeNodes[0] = createItemSchemeTreeNode(itemScheme);
@@ -87,20 +106,40 @@ public class ItemsTreeGrid extends TreeGrid {
         setFilterEditorCriteria(null);
     }
 
+    private void clearSelectedTreeNodes() {
+        selectedTreeNodes = null;
+    }
+
+    private void resetFilterAndSelection() {
+        clearFilterEditor();
+        clearSelectedTreeNodes();
+        isFilteringActive = false;
+    }
+
     private void createTreeFields(boolean editionMode) {
         codeField = new TreeGridField(ItemDS.CODE, getConstants().identifiableStatisticalResourceCode());
         codeField.setWidth("30%");
         codeField.setCanFilter(true);
+        codeField.setCanEdit(false);
+        codeField.setHoverCustomizer(new HoverCustomizer() {
+
+            @Override
+            public String hoverHTML(Object value, ListGridRecord record, int rowNum, int colNum) {
+                return record.getAttribute(ItemDS.CODE);
+            }
+        });
 
         nameField = new TreeGridField(ItemDS.NAME, getConstants().nameableStatisticalResourceTitle());
         nameField.setCanFilter(true);
+        nameField.setCanEdit(false);
 
         cascadeField = new TreeGridField(ItemDS.CASCADE, getConstants().datasetConstraintInCascade());
         cascadeField.setWidth("20%");
         cascadeField.setCanEdit(editionMode);
         cascadeField.setCanFilter(false);
-        cascadeField.setEditorType(new CustomCheckboxItem(ItemDS.CASCADE, getConstants().datasetConstraintInCascade()));
+        cascadeField.setEditorType(new CheckboxItem());
         cascadeField.setAlign(Alignment.CENTER);
+        cascadeField.setShowHover(false);
 
         setFields(codeField, nameField, cascadeField);
     }
@@ -110,6 +149,9 @@ public class ItemsTreeGrid extends TreeGrid {
 
             @Override
             public void onFilterEditorSubmit(FilterEditorSubmitEvent event) {
+
+                isFilteringActive = true;
+
                 event.cancel();
                 TreeNode[] treeNodes = tree.getAllNodes();
 
@@ -118,7 +160,6 @@ public class ItemsTreeGrid extends TreeGrid {
 
                 if (StringUtils.isBlank(codeCriteria) && StringUtils.isBlank(nameCriteria)) {
                     setData(tree);
-                    return;
                 } else {
                     List<TreeNode> matchingNodes = new ArrayList<TreeNode>();
                     for (TreeNode treeNode : treeNodes) {
@@ -142,6 +183,9 @@ public class ItemsTreeGrid extends TreeGrid {
                     resultTree.setData(matchingNodes.toArray(new TreeNode[0]));
                     setData(resultTree);
                 }
+                selectRecords(selectedTreeNodes);
+
+                isFilteringActive = false;
             }
         });
     }
@@ -152,6 +196,7 @@ public class ItemsTreeGrid extends TreeGrid {
         node.setAttribute(ItemDS.URN, itemScheme.getUrn());
         node.setAttribute(ItemDS.CODE, itemScheme.getCode());
         node.setAttribute(ItemDS.NAME, getLocalisedString(itemScheme.getTitle()));
+        node.setEnabled(false);
         return node;
     }
 

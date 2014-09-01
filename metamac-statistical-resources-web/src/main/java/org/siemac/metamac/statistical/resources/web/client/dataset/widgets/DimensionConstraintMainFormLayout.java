@@ -81,6 +81,7 @@ public class DimensionConstraintMainFormLayout extends MainFormLayout {
         } else if (DimensionTypeEnum.TEMPORAL.equals(dimension.getType())) {
             // TODO METAMAC-1985
         }
+        setViewMode();
     }
 
     public void setCodes(DsdDimensionDto dsdDimensionDto, ExternalItemDto itemScheme, List<ItemDto> itemDtos) {
