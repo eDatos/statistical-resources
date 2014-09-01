@@ -232,6 +232,7 @@ public class QueryPresenter extends Presenter<QueryPresenter.QueryView, QueryPre
 
             @Override
             public void onWaitSuccess(DeleteQueryVersionsResult result) {
+                fireSuccessMessage(getMessages().queryDeleted());
                 goToQueries();
             }
         });

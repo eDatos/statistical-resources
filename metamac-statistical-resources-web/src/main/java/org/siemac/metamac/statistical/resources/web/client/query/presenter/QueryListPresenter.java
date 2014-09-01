@@ -158,7 +158,7 @@ public class QueryListPresenter extends LifeCycleBaseListPresenter<QueryListPres
             }
             @Override
             public void onWaitSuccess(DeleteQueryVersionsResult result) {
-                fireSuccessMessage(getMessages().queryDeleted());
+                fireSuccessMessage(getMessages().queriesDeleted());
                 retrieveQueries(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, getView().getQueryVersionWebCriteria());
             }
         });

@@ -208,6 +208,7 @@ public class DatasetMetadataTabPresenter extends StatisticalResourceMetadataBase
 
             @Override
             public void onWaitSuccess(DeleteDatasetVersionsResult result) {
+                fireSuccessMessage(getMessages().datasetDeleted());
                 goToDatasetList();
             }
         });

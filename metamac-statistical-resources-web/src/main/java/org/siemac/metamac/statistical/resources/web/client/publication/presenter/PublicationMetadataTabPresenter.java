@@ -175,6 +175,7 @@ public class PublicationMetadataTabPresenter
 
             @Override
             public void onWaitSuccess(DeletePublicationVersionsResult result) {
+                fireSuccessMessage(getMessages().publicationDeleted());
                 goToPublicationList();
             }
         });

@@ -167,7 +167,7 @@ public class PublicationListPresenter extends StatisticalResourceBaseListPresent
 
             @Override
             public void onWaitSuccess(DeletePublicationVersionsResult result) {
-                fireSuccessMessage(getMessages().publicationDeleted());
+                fireSuccessMessage(getMessages().publicationsDeleted());
                 retrievePublications(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, getView().getPublicationVersionWebCriteria());
             };
 

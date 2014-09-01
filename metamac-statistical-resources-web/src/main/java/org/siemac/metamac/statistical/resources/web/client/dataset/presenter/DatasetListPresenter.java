@@ -179,7 +179,7 @@ public class DatasetListPresenter extends StatisticalResourceBaseListPresenter<D
 
             @Override
             public void onWaitSuccess(DeleteDatasetVersionsResult result) {
-                fireSuccessMessage(getMessages().datasetDeleted());
+                fireSuccessMessage(getMessages().datasetsDeleted());
                 retrieveDatasets(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, getView().getDatasetVersionWebCriteria());
             }
             @Override
