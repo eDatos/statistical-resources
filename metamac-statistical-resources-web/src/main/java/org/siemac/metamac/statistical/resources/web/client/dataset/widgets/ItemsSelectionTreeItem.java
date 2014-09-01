@@ -25,4 +25,8 @@ public class ItemsSelectionTreeItem extends CustomCanvasItem {
     public void setItems(ExternalItemDto itemScheme, List<ItemDto> items) {
         itemsTreeGrid.setItems(itemScheme, items);
     }
+
+    public List<String> getSelectedItemsCodes() {
+        return itemsTreeGrid.getSelectedItemsCodes();
+    }
 }

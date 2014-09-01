@@ -15,7 +15,7 @@ import org.siemac.metamac.web.common.shared.exception.MetamacWebException;
 public interface RestMapper {
 
     public List<DsdDimensionDto> buildDsdDimensionDtosFromDsdDimensions(List<DsdDimension> dsdDimensions) throws MetamacWebException;
-    public DsdDimensionDto buildDsdDimemsionDtoFromDsdDimension(DsdDimension dsdDimension) throws MetamacWebException;
+    public DsdDimensionDto buildDsdDimemsionDtoFromDsdDimension(int position, DsdDimension dsdDimension) throws MetamacWebException;
     public List<DsdAttributeDto> buildDsdAttributeDtosFromDsdAttributes(List<DsdAttribute> dsdAttributes, Map<String, List<String>> dsdGgroupDimensions) throws MetamacWebException;
     public DsdAttributeDto buildDsdAttributeDtoFromDsdAttribute(DsdAttribute dsdAttribute, Map<String, List<String>> dsdGgroupDimensions) throws MetamacWebException;
     public List<ItemDto> buildItemDtosFromCodes(Codes codes) throws MetamacWebException;

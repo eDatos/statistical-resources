@@ -31,17 +31,18 @@ public class RestMapperImpl implements RestMapper {
     @Override
     public List<DsdDimensionDto> buildDsdDimensionDtosFromDsdDimensions(List<DsdDimension> dsdDimensions) throws MetamacWebException {
         List<DsdDimensionDto> dsdDimensionDtos = new ArrayList<DsdDimensionDto>();
-        for (DsdDimension dsdDimension : dsdDimensions) {
-            dsdDimensionDtos.add(buildDsdDimemsionDtoFromDsdDimension(dsdDimension));
+        for (int i = 0; i < dsdDimensions.size(); i++) {
+            dsdDimensionDtos.add(buildDsdDimemsionDtoFromDsdDimension(i, dsdDimensions.get(i)));
         }
         return dsdDimensionDtos;
     }
 
     @Override
-    public DsdDimensionDto buildDsdDimemsionDtoFromDsdDimension(DsdDimension dsdDimension) throws MetamacWebException {
+    public DsdDimensionDto buildDsdDimemsionDtoFromDsdDimension(int position, DsdDimension dsdDimension) throws MetamacWebException {
         DsdDimensionDto dsdDimensionDto = new DsdDimensionDto();
         dsdDimensionDto.setDimensionId(dsdDimension.getComponentId());
         dsdDimensionDto.setType(getDimensionType(dsdDimension));
+        dsdDimensionDto.setPosition(position);
         dsdDimensionDto.setCodelistRepresentationUrn(dsdDimension.getCodelistRepresentationUrn());
         dsdDimensionDto.setConceptSchemeRepresentationUrn(dsdDimension.getConceptSchemeRepresentationUrn());
         return dsdDimensionDto;

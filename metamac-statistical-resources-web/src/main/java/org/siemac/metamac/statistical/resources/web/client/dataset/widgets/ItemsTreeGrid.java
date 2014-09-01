@@ -102,6 +102,14 @@ public class ItemsTreeGrid extends TreeGrid {
         getData().openAll();
     }
 
+    public List<String> getSelectedItemsCodes() {
+        List<String> selectedItemsCodes = new ArrayList<String>();
+        for (ListGridRecord record : selectedTreeNodes) {
+            selectedItemsCodes.add(record.getAttribute(ItemDS.CODE));
+        }
+        return selectedItemsCodes;
+    }
+
     private void clearFilterEditor() {
         setFilterEditorCriteria(null);
     }

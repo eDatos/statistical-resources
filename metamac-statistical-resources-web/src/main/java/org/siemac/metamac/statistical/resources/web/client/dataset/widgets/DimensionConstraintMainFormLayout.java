@@ -4,9 +4,11 @@ import java.util.List;
 
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
+import org.siemac.metamac.statistical.resources.core.dto.constraint.ContentConstraintDto;
 import org.siemac.metamac.statistical.resources.core.dto.constraint.RegionValueDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdDimensionDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.ItemDto;
+import org.siemac.metamac.statistical.resources.core.enume.constraint.domain.RegionValueTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.dataset.domain.DimensionTypeEnum;
 import org.siemac.metamac.statistical.resources.web.client.dataset.view.handlers.DatasetConstraintsTabUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.forms.ConstraintEnumeratedValuesSelectionEditionForm;
@@ -29,6 +31,7 @@ public class DimensionConstraintMainFormLayout extends MainFormLayout {
     private ConstraintNonEnumeratedValuesSelectionForm        nonEnumeratedValuesSelectionForm;
     private ConstraintNonEnumeratedValuesSelectionEditionForm nonEnumeratedValuesSelectionEditionForm;
 
+    private ContentConstraintDto                              contentConstraintDto;
     private RegionValueDto                                    regionValueDto;
 
     private static final String                               GROUP_FORM_DEFAULT_NAME = "DIMENSION";
@@ -60,7 +63,11 @@ public class DimensionConstraintMainFormLayout extends MainFormLayout {
             public void onClick(ClickEvent event) {
                 if (enumeratedValuesSelectionEditionForm.isVisible()) {
                     if (enumeratedValuesSelectionEditionForm.validate(false)) {
-                        // TODO METAMAC-1985
+                        if (regionValueDto == null) {
+                            regionValueDto = createRegion();
+                        }
+                        regionValueDto = enumeratedValuesSelectionEditionForm.updateRegionDto(regionValueDto);
+                        getUiHandlers().saveRegion(contentConstraintDto.getUrn(), regionValueDto);
                     }
                 } else if (nonEnumeratedValuesSelectionEditionForm.isVisible()) {
                     if (nonEnumeratedValuesSelectionEditionForm.validate(false)) {
@@ -71,8 +78,12 @@ public class DimensionConstraintMainFormLayout extends MainFormLayout {
         });
     }
 
-    public void showDimensionConstraints(RegionValueDto regionValueDto, DsdDimensionDto dimension) {
+    public void setConstraint(ContentConstraintDto contentConstraintDto, RegionValueDto regionValueDto) {
+        this.contentConstraintDto = contentConstraintDto;
         this.regionValueDto = regionValueDto;
+    }
+
+    public void showDimensionConstraints(DsdDimensionDto dimension) {
         hideAllForms();
         if (!StringUtils.isBlank(dimension.getCodelistRepresentationUrn())) {
             getUiHandlers().retrieveCodes(dimension);
@@ -87,14 +98,14 @@ public class DimensionConstraintMainFormLayout extends MainFormLayout {
     public void setCodes(DsdDimensionDto dsdDimensionDto, ExternalItemDto itemScheme, List<ItemDto> itemDtos) {
         FormUtils.setGroupTitle(dsdDimensionDto.getDimensionId(), enumeratedValuesSelectionForm, enumeratedValuesSelectionEditionForm);
         // TODO METAMAC-1985
-        enumeratedValuesSelectionEditionForm.setItemNodes(itemScheme, itemDtos);
+        enumeratedValuesSelectionEditionForm.setValues(dsdDimensionDto, itemScheme, itemDtos);
         showEnumeratedValuesSelectionForms();
     }
 
     public void setConcepts(DsdDimensionDto dsdDimensionDto, ExternalItemDto itemScheme, List<ItemDto> itemDtos) {
         FormUtils.setGroupTitle(dsdDimensionDto.getDimensionId(), enumeratedValuesSelectionForm, enumeratedValuesSelectionEditionForm);
         // TODO METAMAC-1985
-        enumeratedValuesSelectionEditionForm.setItemNodes(itemScheme, itemDtos);
+        enumeratedValuesSelectionEditionForm.setValues(dsdDimensionDto, itemScheme, itemDtos);
         showEnumeratedValuesSelectionForms();
     }
 
@@ -116,6 +127,13 @@ public class DimensionConstraintMainFormLayout extends MainFormLayout {
         nonEnumeratedValuesSelectionForm.hide();
         nonEnumeratedValuesSelectionEditionForm.hide();
         hide();
+    }
+
+    private RegionValueDto createRegion() {
+        RegionValueDto regionValueDto = new RegionValueDto();
+        regionValueDto.setContentConstraintUrn(contentConstraintDto.getUrn());
+        regionValueDto.setRegionValueTypeEnum(RegionValueTypeEnum.CUBE);
+        return regionValueDto;
     }
 
     public void setUiHandlers(DatasetConstraintsTabUiHandlers uiHandlers) {

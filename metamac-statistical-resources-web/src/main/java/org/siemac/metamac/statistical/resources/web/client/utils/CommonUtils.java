@@ -249,6 +249,16 @@ public class CommonUtils {
         return typeEnum != null ? getCoreMessages().getString(getCoreMessages().datasetConstraintInclusionTypeEnum() + typeEnum.name()) : null;
     }
 
+    public static DatasetConstraintInclusionTypeEnum getDatasetConstraintInclusionTypeEnum(String value) {
+        if (!StringUtils.isBlank(value)) {
+            try {
+                return DatasetConstraintInclusionTypeEnum.valueOf(value);
+            } catch (Exception e) {
+            }
+        }
+        return null;
+    }
+
     // -----------------------------------------------------------------------------------------
     // STATISTICAL RESOURCE NEXT VERSION
     // -----------------------------------------------------------------------------------------

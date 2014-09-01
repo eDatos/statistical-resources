@@ -34,6 +34,8 @@ import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetDim
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetDimensionsResult;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetItemsAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetItemsResult;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.SaveRegionAction;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.SaveRegionResult;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationAction;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationResult;
 import org.siemac.metamac.web.common.client.utils.CommonErrorUtils;
@@ -59,10 +61,11 @@ public class DatasetConstraintsTabPresenter extends Presenter<DatasetConstraints
         implements
             DatasetConstraintsTabUiHandlers {
 
-    private DispatchAsync     dispatcher;
-    private PlaceManager      placeManager;
+    private DispatchAsync        dispatcher;
+    private PlaceManager         placeManager;
 
-    private DatasetVersionDto datasetVersionDto;
+    private DatasetVersionDto    datasetVersionDto;
+    private ContentConstraintDto contentConstraintDto;
 
     public interface DatasetConstraintsTabView extends View, HasUiHandlers<DatasetConstraintsTabUiHandlers> {
 
@@ -154,6 +157,7 @@ public class DatasetConstraintsTabPresenter extends Presenter<DatasetConstraints
             @Override
             public void onWaitSuccess(GetDatasetConstraintResult result) {
                 DatasetConstraintsTabPresenter.this.datasetVersionDto = result.getDatasetVersion();
+                DatasetConstraintsTabPresenter.this.contentConstraintDto = result.getContentConstraint();
                 SetDatasetEvent.fire(DatasetConstraintsTabPresenter.this, result.getDatasetVersion());
                 getView().setConstraint(result.getDatasetVersion(), result.getContentConstraint(), result.getRegion());
                 if (result.getContentConstraint() != null) {
@@ -227,6 +231,18 @@ public class DatasetConstraintsTabPresenter extends Presenter<DatasetConstraints
                 } else if (TypeExternalArtefactsEnum.CONCEPT_SCHEME.equals(itemSchemeType)) {
                     getView().setConcepts(dsdDimensionDto, result.getItemScheme(), result.getItems());
                 }
+            }
+        });
+    }
+
+    @Override
+    public void saveRegion(String contentConstraintUrn, RegionValueDto regionToSave) {
+        dispatcher.execute(new SaveRegionAction(contentConstraintUrn, regionToSave), new WaitingAsyncCallbackHandlingError<SaveRegionResult>(this) {
+
+            @Override
+            public void onWaitSuccess(SaveRegionResult result) {
+                fireSuccessMessage(getMessages().datasetConstraintSaved());
+                getView().setConstraint(datasetVersionDto, contentConstraintDto, result.getSavedRegion());
             }
         });
     }

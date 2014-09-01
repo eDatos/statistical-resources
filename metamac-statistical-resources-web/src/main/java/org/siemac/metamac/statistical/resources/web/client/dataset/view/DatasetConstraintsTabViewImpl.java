@@ -60,9 +60,8 @@ public class DatasetConstraintsTabViewImpl extends ViewWithUiHandlers<DatasetCon
     @Override
     public void setConstraint(DatasetVersionDto datasetVersionDto, ContentConstraintDto contentConstraintDto, RegionValueDto regionValueDto) {
         this.contentConstraintDto = contentConstraintDto;
-        constraintsPanel.updateVisibility(datasetVersionDto, contentConstraintDto);
-
-        // TODO METAMAC-1985
+        this.regionValueDto = regionValueDto;
+        this.constraintsPanel.setConstraint(datasetVersionDto, contentConstraintDto, regionValueDto);
     }
 
     @Override
@@ -79,7 +78,7 @@ public class DatasetConstraintsTabViewImpl extends ViewWithUiHandlers<DatasetCon
     public void setConcepts(DsdDimensionDto dsdDimensionDto, ExternalItemDto itemScheme, List<ItemDto> itemDtos) {
         constraintsPanel.setConcepts(dsdDimensionDto, itemScheme, itemDtos);
     }
-    
+
     @Override
     public void setUiHandlers(DatasetConstraintsTabUiHandlers uiHandlers) {
         super.setUiHandlers(uiHandlers);
@@ -133,7 +132,7 @@ public class DatasetConstraintsTabViewImpl extends ViewWithUiHandlers<DatasetCon
                 public void onSelectionChanged(SelectionEvent event) {
                     if (event.getSelectedRecord() instanceof DimensionConstraintsRecord) {
                         DsdDimensionDto dsdDimensionDto = ((DimensionConstraintsRecord) event.getSelectedRecord()).getDimensionDto();
-                        mainFormLayout.showDimensionConstraints(regionValueDto, dsdDimensionDto);
+                        mainFormLayout.showDimensionConstraints(dsdDimensionDto);
                     }
                 }
             });
@@ -193,6 +192,11 @@ public class DatasetConstraintsTabViewImpl extends ViewWithUiHandlers<DatasetCon
             return disableConstraintButton;
         }
 
+        private void setConstraint(DatasetVersionDto datasetVersionDto, ContentConstraintDto contentConstraintDto, RegionValueDto regionValueDto) {
+            updateVisibility(datasetVersionDto, contentConstraintDto);
+            mainFormLayout.setConstraint(contentConstraintDto, regionValueDto);
+        }
+
         private void updateVisibility(DatasetVersionDto datasetVersionDto, ContentConstraintDto contentConstraintDto) {
             constraintsList.setVisible(false);
             if (contentConstraintDto == null) {
@@ -205,7 +209,7 @@ public class DatasetConstraintsTabViewImpl extends ViewWithUiHandlers<DatasetCon
                 constraintsList.setVisible(true);
             }
         }
-        
+
         public void setUiHandlers(DatasetConstraintsTabUiHandlers uiHandlers) {
             mainFormLayout.setUiHandlers(uiHandlers);
         }
