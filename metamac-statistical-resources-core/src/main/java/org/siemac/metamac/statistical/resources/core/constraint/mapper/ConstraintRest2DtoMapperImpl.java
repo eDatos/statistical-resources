@@ -77,7 +77,7 @@ public class ConstraintRest2DtoMapperImpl extends BaseRest2DtoMapperImpl impleme
 
         RegionValueBasicDto target = new RegionValueBasicDto();
         target.setCode(source.getCode());
-        target.setRegionValueTypeEnum(RegionValueTypeEnum.valueOf(source.getCode()));
+        target.setRegionValueTypeEnum(RegionValueTypeEnum.valueOf(source.getRegionValueType().value()));
 
         return target;
     }
