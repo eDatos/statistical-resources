@@ -72,13 +72,11 @@ public class ConstraintsServiceImpl implements ConstraintsService {
 
     @Override
     public RegionReference saveRegionForContentConstraint(ServiceContext ctx, RegionReference regionReference) throws MetamacException {
-        srmRestInternalService.saveRegionForContentConstraint(ctx, regionReference);
-        return regionReference;
+        return srmRestInternalService.saveRegionForContentConstraint(ctx, regionReference);
     }
 
     @Override
     public void deleteRegion(ServiceContext ctx, String contentConstraintUrn, String regionCode) throws MetamacException {
         srmRestInternalService.deleteRegion(ctx, contentConstraintUrn, regionCode);
     }
-
 }
