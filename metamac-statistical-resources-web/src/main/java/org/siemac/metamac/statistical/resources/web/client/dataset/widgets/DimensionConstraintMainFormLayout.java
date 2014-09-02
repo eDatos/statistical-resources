@@ -67,7 +67,7 @@ public class DimensionConstraintMainFormLayout extends MainFormLayout {
                             regionValueDto = createRegion();
                         }
                         regionValueDto = enumeratedValuesSelectionEditionForm.updateRegionDto(regionValueDto);
-                        getUiHandlers().saveRegion(contentConstraintDto.getUrn(), regionValueDto);
+                        getUiHandlers().saveRegion(contentConstraintDto.getUrn(), regionValueDto, enumeratedValuesSelectionEditionForm.getSelectedDimension());
                     }
                 } else if (nonEnumeratedValuesSelectionEditionForm.isVisible()) {
                     if (nonEnumeratedValuesSelectionEditionForm.validate(false)) {
@@ -96,16 +96,17 @@ public class DimensionConstraintMainFormLayout extends MainFormLayout {
     }
 
     public void setCodes(DsdDimensionDto dsdDimensionDto, ExternalItemDto itemScheme, List<ItemDto> itemDtos) {
-        FormUtils.setGroupTitle(dsdDimensionDto.getDimensionId(), enumeratedValuesSelectionForm, enumeratedValuesSelectionEditionForm);
-        // TODO METAMAC-1985
-        enumeratedValuesSelectionEditionForm.setValues(dsdDimensionDto, itemScheme, itemDtos);
-        showEnumeratedValuesSelectionForms();
+        setItems(dsdDimensionDto, itemScheme, itemDtos);
     }
 
     public void setConcepts(DsdDimensionDto dsdDimensionDto, ExternalItemDto itemScheme, List<ItemDto> itemDtos) {
+        setItems(dsdDimensionDto, itemScheme, itemDtos);
+    }
+
+    public void setItems(DsdDimensionDto dsdDimensionDto, ExternalItemDto itemScheme, List<ItemDto> itemDtos) {
         FormUtils.setGroupTitle(dsdDimensionDto.getDimensionId(), enumeratedValuesSelectionForm, enumeratedValuesSelectionEditionForm);
-        // TODO METAMAC-1985
-        enumeratedValuesSelectionEditionForm.setValues(dsdDimensionDto, itemScheme, itemDtos);
+        enumeratedValuesSelectionForm.setValues(regionValueDto, dsdDimensionDto, itemScheme, itemDtos);
+        enumeratedValuesSelectionEditionForm.setValues(regionValueDto, dsdDimensionDto, itemScheme, itemDtos);
         showEnumeratedValuesSelectionForms();
     }
 

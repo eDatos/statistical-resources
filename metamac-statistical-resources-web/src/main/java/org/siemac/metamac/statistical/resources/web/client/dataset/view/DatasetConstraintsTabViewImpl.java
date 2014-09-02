@@ -85,6 +85,11 @@ public class DatasetConstraintsTabViewImpl extends ViewWithUiHandlers<DatasetCon
         constraintsPanel.setUiHandlers(uiHandlers);
     }
 
+    @Override
+    public void showDimensionConstraints(DsdDimensionDto dsdDimensionDto) {
+        constraintsPanel.showDimensionConstraints(dsdDimensionDto);
+    }
+
     private class ConstraintsPanel extends VLayout {
 
         private ToolStrip                         toolStrip;
@@ -97,6 +102,10 @@ public class DatasetConstraintsTabViewImpl extends ViewWithUiHandlers<DatasetCon
             createToolStrip();
             createConstraintsList();
             createDimensionConstraintMainFormLayout();
+        }
+
+        public void showDimensionConstraints(DsdDimensionDto dsdDimensionDto) {
+            mainFormLayout.showDimensionConstraints(dsdDimensionDto);
         }
 
         private void createToolStrip() {
@@ -132,7 +141,7 @@ public class DatasetConstraintsTabViewImpl extends ViewWithUiHandlers<DatasetCon
                 public void onSelectionChanged(SelectionEvent event) {
                     if (event.getSelectedRecord() instanceof DimensionConstraintsRecord) {
                         DsdDimensionDto dsdDimensionDto = ((DimensionConstraintsRecord) event.getSelectedRecord()).getDimensionDto();
-                        mainFormLayout.showDimensionConstraints(dsdDimensionDto);
+                        showDimensionConstraints(dsdDimensionDto);
                     }
                 }
             });

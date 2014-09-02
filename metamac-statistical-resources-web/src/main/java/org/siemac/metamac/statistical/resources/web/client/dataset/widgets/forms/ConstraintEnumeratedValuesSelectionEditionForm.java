@@ -4,28 +4,21 @@ import static org.siemac.metamac.statistical.resources.web.client.StatisticalRes
 
 import java.util.List;
 
-import org.siemac.metamac.core.common.dto.ExternalItemDto;
-import org.siemac.metamac.core.common.util.shared.StringUtils;
+import org.siemac.metamac.core.common.util.shared.BooleanUtils;
 import org.siemac.metamac.statistical.resources.core.dto.constraint.KeyPartDto;
 import org.siemac.metamac.statistical.resources.core.dto.constraint.KeyValueDto;
 import org.siemac.metamac.statistical.resources.core.dto.constraint.RegionValueDto;
-import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdDimensionDto;
-import org.siemac.metamac.statistical.resources.core.dto.datasets.ItemDto;
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.ds.DimensionConstraintsDS;
 import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.ItemsSelectionTreeItem;
 import org.siemac.metamac.statistical.resources.web.client.enums.DatasetConstraintInclusionTypeEnum;
 import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
-import org.siemac.metamac.web.common.client.widgets.form.GroupDynamicForm;
 import org.siemac.metamac.web.common.client.widgets.form.fields.CustomSelectItem;
 
 import com.smartgwt.client.types.Alignment;
 
-public class ConstraintEnumeratedValuesSelectionEditionForm extends GroupDynamicForm {
+public class ConstraintEnumeratedValuesSelectionEditionForm extends ConstraintEnumeratedValuesSelectionBaseForm {
 
-    private CustomSelectItem       inclusionTypeField;
-    private ItemsSelectionTreeItem treeItem;
-
-    private DsdDimensionDto        dsdDimensionDto;
+    private CustomSelectItem inclusionTypeField;
 
     public ConstraintEnumeratedValuesSelectionEditionForm(String groupTitle) {
         super(groupTitle);
@@ -42,11 +35,6 @@ public class ConstraintEnumeratedValuesSelectionEditionForm extends GroupDynamic
         treeItem.setColSpan(4);
 
         setFields(inclusionTypeField, treeItem);
-    }
-
-    public void setValues(DsdDimensionDto dsdDimensionDto, ExternalItemDto itemScheme, List<ItemDto> items) {
-        this.dsdDimensionDto = dsdDimensionDto;
-        treeItem.setItems(itemScheme, items);
     }
 
     /**
@@ -74,23 +62,14 @@ public class ConstraintEnumeratedValuesSelectionEditionForm extends GroupDynamic
             keyPartDto.setPosition(dsdDimensionDto.getPosition());
             keyValueDto.addPart(keyPartDto);
         }
+        if (keyValueDto.getParts().isEmpty()) {
+            regionValueDto.removeKey(keyValueDto);
+        }
         return regionValueDto;
     }
 
-    /**
-     * Returns the {@link KeyValueDto} of the selected dimension (all the {@link KeyPartDto} in a {@link KeyValueDto} belongs to the same dimension).
-     * 
-     * @param keyValueDto
-     * @return
-     */
-    private KeyValueDto getKeyValueOfSelectedDimension(RegionValueDto regionValueDto) {
-        for (KeyValueDto keyValueDto : regionValueDto.getKeys()) {
-            for (KeyPartDto keyPartDto : keyValueDto.getParts()) {
-                if (StringUtils.equals(dsdDimensionDto.getDimensionId(), keyPartDto.getIdentifier())) {
-                    return keyValueDto;
-                }
-            }
-        }
-        return null;
+    @Override
+    protected void setInclusionTypeValue(Boolean isIncluded) {
+        setValue(DimensionConstraintsDS.INCLUSION_TYPE, BooleanUtils.isTrue(isIncluded) ? DatasetConstraintInclusionTypeEnum.INCLUSION.name() : DatasetConstraintInclusionTypeEnum.EXCLUSION.name());
     }
 }

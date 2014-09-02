@@ -70,6 +70,7 @@ public class DatasetConstraintsTabPresenter extends Presenter<DatasetConstraints
     public interface DatasetConstraintsTabView extends View, HasUiHandlers<DatasetConstraintsTabUiHandlers> {
 
         void setConstraint(DatasetVersionDto datasetVersionDto, ContentConstraintDto contentConstraintDto, RegionValueDto regionValueDto);
+        void showDimensionConstraints(DsdDimensionDto dsdDimensionDto);
         void setRelatedDsdDimensions(List<DsdDimensionDto> dimensions);
         void setCodes(DsdDimensionDto dsdDimensionDto, ExternalItemDto itemScheme, List<ItemDto> itemDtos);
         void setConcepts(DsdDimensionDto dsdDimensionDto, ExternalItemDto itemScheme, List<ItemDto> itemDtos);
@@ -156,16 +157,28 @@ public class DatasetConstraintsTabPresenter extends Presenter<DatasetConstraints
             }
             @Override
             public void onWaitSuccess(GetDatasetConstraintResult result) {
-                DatasetConstraintsTabPresenter.this.datasetVersionDto = result.getDatasetVersion();
-                DatasetConstraintsTabPresenter.this.contentConstraintDto = result.getContentConstraint();
                 SetDatasetEvent.fire(DatasetConstraintsTabPresenter.this, result.getDatasetVersion());
-                getView().setConstraint(result.getDatasetVersion(), result.getContentConstraint(), result.getRegion());
+                setConstraint(result.getDatasetVersion(), result.getContentConstraint(), result.getRegion());
                 if (result.getContentConstraint() != null) {
                     // Load dimensions only if the constraint is enabled
                     retrieveDimensions(result.getDatasetVersion());
                 }
             }
         });
+    }
+
+    @Override
+    public void createConstraint() {
+        dispatcher.execute(new CreateDatasetConstraintAction(datasetVersionDto.getUrn(), StatisticalResourcesDefaults.defaultAgency),
+                new WaitingAsyncCallbackHandlingError<CreateDatasetConstraintResult>(this) {
+
+                    @Override
+                    public void onWaitSuccess(CreateDatasetConstraintResult result) {
+                        fireSuccessMessage(getMessages().datasetConstraintEnabled());
+                        setConstraint(datasetVersionDto, result.getContentConstraint(), null);
+                        retrieveDimensions(datasetVersionDto);
+                    }
+                });
     }
 
     private void retrieveDimensions(final DatasetVersionDto datasetVersionDto) {
@@ -186,17 +199,10 @@ public class DatasetConstraintsTabPresenter extends Presenter<DatasetConstraints
         });
     }
 
-    @Override
-    public void createConstraint() {
-        dispatcher.execute(new CreateDatasetConstraintAction(datasetVersionDto.getUrn(), StatisticalResourcesDefaults.defaultAgency),
-                new WaitingAsyncCallbackHandlingError<CreateDatasetConstraintResult>(this) {
-
-                    @Override
-                    public void onWaitSuccess(CreateDatasetConstraintResult result) {
-                        fireSuccessMessage(getMessages().datasetConstraintEnabled());
-                        getView().setConstraint(datasetVersionDto, result.getContentConstraint(), null);
-                    }
-                });
+    private void setConstraint(DatasetVersionDto datasetVersionDto, ContentConstraintDto contentConstraintDto, RegionValueDto regionValueDto) {
+        DatasetConstraintsTabPresenter.this.datasetVersionDto = datasetVersionDto;
+        DatasetConstraintsTabPresenter.this.contentConstraintDto = contentConstraintDto;
+        getView().setConstraint(datasetVersionDto, contentConstraintDto, regionValueDto);
     }
 
     @Override
@@ -236,13 +242,14 @@ public class DatasetConstraintsTabPresenter extends Presenter<DatasetConstraints
     }
 
     @Override
-    public void saveRegion(String contentConstraintUrn, RegionValueDto regionToSave) {
+    public void saveRegion(String contentConstraintUrn, RegionValueDto regionToSave, final DsdDimensionDto selectedDimension) {
         dispatcher.execute(new SaveRegionAction(contentConstraintUrn, regionToSave), new WaitingAsyncCallbackHandlingError<SaveRegionResult>(this) {
 
             @Override
             public void onWaitSuccess(SaveRegionResult result) {
                 fireSuccessMessage(getMessages().datasetConstraintSaved());
                 getView().setConstraint(datasetVersionDto, contentConstraintDto, result.getSavedRegion());
+                getView().showDimensionConstraints(selectedDimension);
             }
         });
     }

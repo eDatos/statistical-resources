@@ -26,9 +26,14 @@ public class SaveRegionActionHandler extends SecurityActionHandler<SaveRegionAct
     @Override
     public SaveRegionResult executeSecurityAction(SaveRegionAction action) throws ActionException {
         try {
-            RegionValueDto createdRegion = statisticalResourcesServiceFacade.saveRegionForContentConstraint(ServiceContextHolder.getCurrentServiceContext(), action.getContentConstraintUrn(),
-                    action.getRegionToSave());
-            return new SaveRegionResult(createdRegion);
+            RegionValueDto region = null;
+            if (action.getRegionToSave().getKeys().isEmpty()) {
+                // A region cannot be saved if it does not have keys. If the key list is empty, the region will be deleted.
+                statisticalResourcesServiceFacade.deleteRegion(ServiceContextHolder.getCurrentServiceContext(), action.getContentConstraintUrn(), action.getRegionToSave().getCode());
+            } else {
+                region = statisticalResourcesServiceFacade.saveRegionForContentConstraint(ServiceContextHolder.getCurrentServiceContext(), action.getContentConstraintUrn(), action.getRegionToSave());
+            }
+            return new SaveRegionResult(region);
         } catch (MetamacException e) {
             throw WebExceptionUtils.createMetamacWebException(e);
         }

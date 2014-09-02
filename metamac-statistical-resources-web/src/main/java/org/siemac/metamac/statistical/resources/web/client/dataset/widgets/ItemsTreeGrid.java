@@ -5,9 +5,11 @@ import static org.siemac.metamac.web.common.client.utils.InternationalStringUtil
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
+import org.siemac.metamac.statistical.resources.core.dto.constraint.KeyPartDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.ItemDto;
 import org.siemac.metamac.web.common.client.resources.StyleUtils;
 
@@ -15,6 +17,7 @@ import com.google.web.bindery.event.shared.HandlerRegistration;
 import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.Autofit;
+import com.smartgwt.client.types.ListGridEditEvent;
 import com.smartgwt.client.types.SelectionAppearance;
 import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.types.TreeModelType;
@@ -72,6 +75,7 @@ public class ItemsTreeGrid extends TreeGrid {
         setShowFilterEditor(true);
         setSelectionType(SelectionStyle.SIMPLE);
         setSelectionAppearance(SelectionAppearance.CHECKBOX);
+        setEditEvent(ListGridEditEvent.CLICK);
         createTreeFields(editionMode);
         createFilterEditionHandlers();
         addSelectionChangedHandler(new SelectionChangedHandler() {
@@ -100,6 +104,18 @@ public class ItemsTreeGrid extends TreeGrid {
         tree.linkNodes(treeNodes);
         setData(tree);
         getData().openAll();
+    }
+
+    public void selectItems(Map<String, KeyPartDto> keyParts) {
+        ListGridRecord[] records = getRecords();
+        for (ListGridRecord record : records) {
+            String code = record.getAttribute(ItemDS.CODE);
+            if (keyParts.containsKey(code)) {
+                selectRecord(record);
+                // TODO METAMAC-1985
+            }
+        }
+        selectedTreeNodes = ItemsTreeGrid.this.getSelectedRecords();
     }
 
     public List<String> getSelectedItemsCodes() {
