@@ -8,6 +8,7 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ContentConstraint;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Key;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.KeyPart;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.KeyPartType;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.KeyParts;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Keys;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Region;
@@ -137,6 +138,7 @@ public class ConstraintDto2RestMapperImpl extends BaseDto2RestMapperImpl impleme
 
         org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.KeyPart keyPart = new org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.KeyPart();
         keyPart.setIdentifier(source.getIdentifier());
+        keyPart.setType(KeyPartType.fromValue(source.getType().getName()));
         keyPart.setValue(source.getValue());
         keyPart.setCascadeValues(BooleanUtils.toBoolean(source.getCascadeValues()));
         keyPart.setPosition(source.getPosition());

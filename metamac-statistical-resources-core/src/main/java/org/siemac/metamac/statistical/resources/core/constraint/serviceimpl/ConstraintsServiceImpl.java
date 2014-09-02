@@ -56,8 +56,8 @@ public class ConstraintsServiceImpl implements ConstraintsService {
     }
 
     @Override
-    public void versioningContentConstraint(ServiceContext ctx, String urn, VersionTypeEnum versionTypeEnum) throws MetamacException {
-        srmRestInternalService.versioningContentConstraint(ctx, urn, versionTypeEnum);
+    public void versioningContentConstraintsForArtefact(ServiceContext ctx, String artefactUrn, VersionTypeEnum versionTypeEnum) throws MetamacException {
+        srmRestInternalService.versioningContentConstraintsForArtefact(ctx, artefactUrn, versionTypeEnum);
     }
 
     @Override

@@ -15,5 +15,11 @@ Application ContentConstraintsEnums {
     		KEY_SET,
     		CUBE
     	}
+    	
+    	"Type of KeyPart. Non SDMX"
+		enum KeyPartTypeEnum {
+    		TIME_RANGE,
+    		NORMAL
+    	}
     }
 }

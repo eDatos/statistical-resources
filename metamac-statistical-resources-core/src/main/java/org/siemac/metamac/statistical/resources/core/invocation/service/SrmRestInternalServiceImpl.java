@@ -754,13 +754,9 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
     }
 
     @Override
-    public void versioningContentConstraint(ServiceContext serviceContext, String urn, VersionTypeEnum versionTypeEnum) throws MetamacException {
+    public void versioningContentConstraintsForArtefact(ServiceContext serviceContext, String artefactUrn, VersionTypeEnum versionTypeEnum) throws MetamacException {
         try {
-            String[] contentConstraintComponents = GeneratorUrnUtils.extractVersionableArtefactParts(urn);
-            String agencyId = contentConstraintComponents[0];
-            String resourceId = contentConstraintComponents[1];
-            String version = contentConstraintComponents[2];
-            Response response = restApiLocator.getSrmRestInternalFacadeV10().versioningContentConstraint(agencyId, resourceId, version, serviceContext.getUserId(), versionTypeEnum.getName());
+            Response response = restApiLocator.getSrmRestInternalFacadeV10().versioningContentConstraintsForArtefact(artefactUrn, serviceContext.getUserId(), versionTypeEnum.getName());
 
             checkStatusOk(response);
         } catch (Exception e) {

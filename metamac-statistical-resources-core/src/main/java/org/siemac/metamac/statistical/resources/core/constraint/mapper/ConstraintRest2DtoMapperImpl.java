@@ -22,6 +22,7 @@ import org.siemac.metamac.statistical.resources.core.dto.constraint.KeyPartDto;
 import org.siemac.metamac.statistical.resources.core.dto.constraint.KeyValueDto;
 import org.siemac.metamac.statistical.resources.core.dto.constraint.RegionValueBasicDto;
 import org.siemac.metamac.statistical.resources.core.dto.constraint.RegionValueDto;
+import org.siemac.metamac.statistical.resources.core.enume.constraint.domain.KeyPartTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.constraint.domain.RegionValueTypeEnum;
 
 @org.springframework.stereotype.Component("constraintRest2DtoMapper")
@@ -152,6 +153,7 @@ public class ConstraintRest2DtoMapperImpl extends BaseRest2DtoMapperImpl impleme
 
         KeyPartDto keyPart = new KeyPartDto();
         keyPart.setIdentifier(source.getIdentifier());
+        keyPart.setType(KeyPartTypeEnum.valueOf(source.getType().value()));
         keyPart.setValue(source.getValue());
         keyPart.setCascadeValues(BooleanUtils.toBoolean(source.isCascadeValues()));
         keyPart.setPosition(source.getPosition());

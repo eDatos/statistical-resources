@@ -127,6 +127,7 @@ Application ContentConstraintsEnumsDto {
 	    DataTransferObject KeyPartDto extends @IdentityDto {
 	    
 	    	String identifier;
+	    	-@KeyPartTypeEnum type not nullable;
 			String value;
 			Boolean cascadeValues nullable;
 			Integer position;

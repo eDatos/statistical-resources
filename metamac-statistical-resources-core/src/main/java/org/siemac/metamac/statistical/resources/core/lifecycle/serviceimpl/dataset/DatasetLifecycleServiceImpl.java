@@ -1,5 +1,7 @@
 package org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.dataset;
 
+import static org.siemac.metamac.statistical.resources.core.error.utils.ServiceExceptionParametersUtils.addParameter;
+
 import java.util.List;
 
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
@@ -35,8 +37,6 @@ import org.siemac.metamac.statistical.resources.core.task.serviceapi.TaskService
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import static org.siemac.metamac.statistical.resources.core.error.utils.ServiceExceptionParametersUtils.addParameter;
-
 @Service("datasetLifecycleService")
 public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<DatasetVersion> {
 
@@ -44,28 +44,28 @@ public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<Datase
     private LifecycleCommonMetadataChecker lifecycleCommonMetadataChecker;
 
     @Autowired
-    private ExternalItemChecker externalItemChecker;
+    private ExternalItemChecker            externalItemChecker;
 
     @Autowired
-    private DatasetService datasetService;
+    private DatasetService                 datasetService;
 
     @Autowired
-    private DatasetVersionRepository datasetVersionRepository;
+    private DatasetVersionRepository       datasetVersionRepository;
 
     @Autowired
-    private QueryVersionRepository queryVersionRepository;
+    private QueryVersionRepository         queryVersionRepository;
 
     @Autowired
-    private PublicationVersionRepository publicationVersionRepository;
+    private PublicationVersionRepository   publicationVersionRepository;
 
     @Autowired
-    private QueryService queryService;
+    private QueryService                   queryService;
 
     @Autowired
-    private TaskService taskService;
+    private TaskService                    taskService;
 
     @Autowired
-    private ConstraintsService constraintsService;
+    private ConstraintsService             constraintsService;
 
     @Override
     protected String getResourceMetadataName() throws MetamacException {
@@ -293,7 +293,7 @@ public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<Datase
     protected void applyVersioningNewResource(ServiceContext ctx, DatasetVersion resource, DatasetVersion previous) throws MetamacException {
 
         // Versioning the content constraints associated
-        this.constraintsService.versioningContentConstraint(ctx, previous.getLifeCycleStatisticalResource().getUrn(), this.guessVersionTypeEnum(resource, previous));
+        this.constraintsService.versioningContentConstraintsForArtefact(ctx, previous.getLifeCycleStatisticalResource().getUrn(), this.guessVersionTypeEnum(resource, previous));
 
         resource.setUserModifiedDateNextUpdate(Boolean.FALSE);
         String oldDatasetRepositoryId = previous.getDatasetRepositoryId();

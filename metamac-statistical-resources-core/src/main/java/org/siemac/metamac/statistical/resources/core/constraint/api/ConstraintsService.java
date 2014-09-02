@@ -18,7 +18,7 @@ public interface ConstraintsService {
     public ContentConstraint retrieveContentConstraintByUrn(ServiceContext ctx, String urn, Boolean includeDraft) throws MetamacException;
     public void deleteContentConstraint(ServiceContext ctx, String urn) throws MetamacException;
     public void deleteContentConstraintsForArtefactUrn(ServiceContext ctx, String artefactUrn) throws MetamacException;
-    public void versioningContentConstraint(ServiceContext ctx, String urn, VersionTypeEnum versionTypeEnum) throws MetamacException;
+    public void versioningContentConstraintsForArtefact(ServiceContext ctx, String artefactUrn, VersionTypeEnum versionTypeEnum) throws MetamacException;
     public void publishContentConstraint(ServiceContext ctx, String urn, Boolean alsoMarkAsPublic) throws MetamacException;
 
     public RegionReference retrieveRegionForContentConstraint(ServiceContext ctx, String contentConstraintUrn, String regionCode) throws MetamacException;
