@@ -2,12 +2,13 @@ package org.siemac.metamac.statistical.resources.web.client.dataset.widgets.form
 
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
 
-import java.util.List;
+import java.util.Map;
 
 import org.siemac.metamac.core.common.util.shared.BooleanUtils;
 import org.siemac.metamac.statistical.resources.core.dto.constraint.KeyPartDto;
 import org.siemac.metamac.statistical.resources.core.dto.constraint.KeyValueDto;
 import org.siemac.metamac.statistical.resources.core.dto.constraint.RegionValueDto;
+import org.siemac.metamac.statistical.resources.core.enume.constraint.domain.KeyPartTypeEnum;
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.ds.DimensionConstraintsDS;
 import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.ItemsSelectionTreeItem;
 import org.siemac.metamac.statistical.resources.web.client.enums.DatasetConstraintInclusionTypeEnum;
@@ -44,7 +45,7 @@ public class ConstraintEnumeratedValuesSelectionEditionForm extends ConstraintEn
      */
     public RegionValueDto updateRegionDto(RegionValueDto regionValueDto) {
         Boolean included = DatasetConstraintInclusionTypeEnum.INCLUSION.equals(CommonUtils.getDatasetConstraintInclusionTypeEnum(inclusionTypeField.getValueAsString()));
-        List<String> selectedItemaCodes = treeItem.getSelectedItemsCodes();
+        Map<String, Boolean> selectedItems = treeItem.getSelectedItems();
 
         KeyValueDto keyValueDto = getKeyValueOfSelectedDimension(regionValueDto);
         if (keyValueDto == null) {
@@ -54,11 +55,12 @@ public class ConstraintEnumeratedValuesSelectionEditionForm extends ConstraintEn
         }
         keyValueDto.setIncluded(included);
         keyValueDto.removeAllParts();
-        for (String itemCode : selectedItemaCodes) {
+        for (String itemCode : selectedItems.keySet()) {
             KeyPartDto keyPartDto = new KeyPartDto();
+            keyPartDto.setType(KeyPartTypeEnum.NORMAL);
             keyPartDto.setIdentifier(dsdDimensionDto.getDimensionId());
             keyPartDto.setValue(itemCode);
-            keyPartDto.setCascadeValues(false); // FIXME METAMAC-1985
+            keyPartDto.setCascadeValues(selectedItems.get(itemCode));
             keyPartDto.setPosition(dsdDimensionDto.getPosition());
             keyValueDto.addPart(keyPartDto);
         }

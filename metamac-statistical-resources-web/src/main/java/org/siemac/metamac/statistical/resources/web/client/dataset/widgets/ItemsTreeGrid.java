@@ -4,13 +4,16 @@ import static org.siemac.metamac.statistical.resources.web.client.StatisticalRes
 import static org.siemac.metamac.web.common.client.utils.InternationalStringUtils.getLocalisedString;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
+import org.siemac.metamac.core.common.util.shared.BooleanUtils;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.statistical.resources.core.dto.constraint.KeyPartDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.ItemDto;
+import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
 import org.siemac.metamac.web.common.client.resources.StyleUtils;
 
 import com.google.web.bindery.event.shared.HandlerRegistration;
@@ -21,7 +24,7 @@ import com.smartgwt.client.types.ListGridEditEvent;
 import com.smartgwt.client.types.SelectionAppearance;
 import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.types.TreeModelType;
-import com.smartgwt.client.widgets.form.fields.CheckboxItem;
+import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.grid.HoverCustomizer;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.grid.events.FilterEditorSubmitEvent;
@@ -42,6 +45,8 @@ public class ItemsTreeGrid extends TreeGrid {
     protected TreeGridField       nameField;
     protected TreeGridField       cascadeField;
 
+    protected boolean             editionMode;
+
     /**
      * Stores <code>true</code> when a filtering in the {@link TreeGrid} is being executed.
      */
@@ -51,6 +56,7 @@ public class ItemsTreeGrid extends TreeGrid {
     protected HandlerRegistration filterEditionHandler;
 
     public ItemsTreeGrid(boolean editionMode) {
+        this.editionMode = editionMode;
         setCanFocus(false); // To avoid scrolling when a record is clicked
         setCanDragSelectText(true); // To allow text selection
         setHeight(175);
@@ -74,9 +80,9 @@ public class ItemsTreeGrid extends TreeGrid {
         setShowHeaderContextMenu(false); // do not show context menu in trees (avoid to show columns that should not be shown)
         setShowFilterEditor(true);
         setSelectionType(SelectionStyle.SIMPLE);
-        setSelectionAppearance(SelectionAppearance.CHECKBOX);
+        setSelectionAppearance(editionMode ? SelectionAppearance.CHECKBOX : SelectionAppearance.ROW_STYLE);
         setEditEvent(ListGridEditEvent.CLICK);
-        createTreeFields(editionMode);
+        createTreeFields();
         createFilterEditionHandlers();
         addSelectionChangedHandler(new SelectionChangedHandler() {
 
@@ -111,19 +117,27 @@ public class ItemsTreeGrid extends TreeGrid {
         for (ListGridRecord record : records) {
             String code = record.getAttribute(ItemDS.CODE);
             if (keyParts.containsKey(code)) {
+                record.setAttribute(ItemDS.CASCADE, BooleanUtils.isTrue(keyParts.get(code).getCascadeValues()) ? Boolean.TRUE.toString() : Boolean.FALSE.toString());
+                updateData(record);
                 selectRecord(record);
-                // TODO METAMAC-1985
             }
         }
         selectedTreeNodes = ItemsTreeGrid.this.getSelectedRecords();
     }
 
-    public List<String> getSelectedItemsCodes() {
-        List<String> selectedItemsCodes = new ArrayList<String>();
-        for (ListGridRecord record : selectedTreeNodes) {
-            selectedItemsCodes.add(record.getAttribute(ItemDS.CODE));
+    /**
+     * Returns a {@link Map} with the selected codes and a {@link Boolean} value indicating if the cascade option has been selected.
+     * 
+     * @return
+     */
+    public Map<String, Boolean> getSelectedItems() {
+        Map<String, Boolean> selectedItems = new HashMap<String, Boolean>();
+        if (selectedTreeNodes != null) {
+            for (ListGridRecord record : selectedTreeNodes) {
+                selectedItems.put(record.getAttribute(ItemDS.CODE), Boolean.parseBoolean(record.getAttribute(ItemDS.CASCADE)));
+            }
         }
-        return selectedItemsCodes;
+        return selectedItems;
     }
 
     private void clearFilterEditor() {
@@ -140,7 +154,7 @@ public class ItemsTreeGrid extends TreeGrid {
         isFilteringActive = false;
     }
 
-    private void createTreeFields(boolean editionMode) {
+    private void createTreeFields() {
         codeField = new TreeGridField(ItemDS.CODE, getConstants().identifiableStatisticalResourceCode());
         codeField.setWidth("30%");
         codeField.setCanFilter(true);
@@ -161,7 +175,8 @@ public class ItemsTreeGrid extends TreeGrid {
         cascadeField.setWidth("20%");
         cascadeField.setCanEdit(editionMode);
         cascadeField.setCanFilter(false);
-        cascadeField.setEditorType(new CheckboxItem());
+        cascadeField.setEditorType(new SelectItem("inclusion-type", "inclusion type"));
+        cascadeField.setValueMap(CommonUtils.getBooleanHashMap());
         cascadeField.setAlign(Alignment.CENTER);
         cascadeField.setShowHover(false);
 
@@ -214,7 +229,7 @@ public class ItemsTreeGrid extends TreeGrid {
         });
     }
 
-    private static TreeNode createItemSchemeTreeNode(ExternalItemDto itemScheme) {
+    private TreeNode createItemSchemeTreeNode(ExternalItemDto itemScheme) {
         TreeNode node = new TreeNode(SCHEME_NODE_NAME);
         node.setID(SCHEME_NODE_NAME);
         node.setAttribute(ItemDS.URN, itemScheme.getUrn());
@@ -224,7 +239,7 @@ public class ItemsTreeGrid extends TreeGrid {
         return node;
     }
 
-    private static TreeNode createItemTreeNode(ItemDto itemDto) {
+    private TreeNode createItemTreeNode(ItemDto itemDto) {
         String parentUrn = !StringUtils.isBlank(itemDto.getItemParentUrn()) ? itemDto.getItemParentUrn() : SCHEME_NODE_NAME;
         TreeNode node = new TreeNode();
         node.setID(itemDto.getUrn());
@@ -232,6 +247,9 @@ public class ItemsTreeGrid extends TreeGrid {
         node.setAttribute(ItemDS.CODE, itemDto.getCode());
         node.setAttribute(ItemDS.NAME, getLocalisedString(itemDto.getTitle()));
         node.setAttribute(ItemDS.URN, itemDto.getUrn());
+        if (editionMode) {
+            node.setAttribute(ItemDS.CASCADE, Boolean.FALSE.toString());
+        }
         return node;
     }
 

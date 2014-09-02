@@ -207,10 +207,11 @@ public class DatasetConstraintsTabViewImpl extends ViewWithUiHandlers<DatasetCon
         }
 
         private void updateVisibility(DatasetVersionDto datasetVersionDto, ContentConstraintDto contentConstraintDto) {
-            constraintsList.setVisible(false);
             if (contentConstraintDto == null) {
                 enableConstraintsButton.setVisible(ConstraintsClientSecurityUtils.canCreateContentConstraint(datasetVersionDto.getStatisticalOperation().getCode()));
                 disableConstraintsButton.setVisible(false);
+                constraintsList.setVisible(false);
+                mainFormLayout.setVisible(false);
             } else {
                 enableConstraintsButton.setVisible(false);
                 disableConstraintsButton

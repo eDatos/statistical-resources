@@ -33,6 +33,7 @@ import org.siemac.metamac.statistical.resources.core.enume.query.domain.QuerySta
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryTypeEnum;
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesDefaults;
 import org.siemac.metamac.statistical.resources.web.client.enums.DatasetConstraintInclusionTypeEnum;
+import org.siemac.metamac.web.common.client.MetamacWebCommon;
 import org.siemac.metamac.web.common.client.utils.CommonWebUtils;
 
 public class CommonUtils {
@@ -392,6 +393,13 @@ public class CommonUtils {
     //
     // COMMON UTILITIES
     //
+
+    public static LinkedHashMap<String, String> getBooleanHashMap() {
+        LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
+        map.put(Boolean.TRUE.toString(), MetamacWebCommon.getConstants().yes());
+        map.put(Boolean.FALSE.toString(), MetamacWebCommon.getConstants().no());
+        return map;
+    }
 
     public static boolean isResourceInProductionValidationOrGreaterProcStatus(ProcStatusEnum procStatus) {
         return ProcStatusEnum.PRODUCTION_VALIDATION.equals(procStatus) || ProcStatusEnum.DIFFUSION_VALIDATION.equals(procStatus) || ProcStatusEnum.PUBLISHED.equals(procStatus);

@@ -32,7 +32,7 @@ public class ItemsSelectionTreeItem extends CustomCanvasItem {
         itemsTreeGrid.selectItems(keyParts);
     }
 
-    public List<String> getSelectedItemsCodes() {
-        return itemsTreeGrid.getSelectedItemsCodes();
+    public Map<String, Boolean> getSelectedItems() {
+        return itemsTreeGrid.getSelectedItems();
     }
 }
