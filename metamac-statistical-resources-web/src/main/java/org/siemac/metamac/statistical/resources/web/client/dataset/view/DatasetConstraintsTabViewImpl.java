@@ -158,6 +158,7 @@ public class DatasetConstraintsTabViewImpl extends ViewWithUiHandlers<DatasetCon
         public void setDimensions(List<DsdDimensionDto> dimensions, RegionValueDto regionValueDto) {
             DimensionConstraintsRecord[] records = StatisticalResourcesRecordUtils.getDimensionConstraintsRecords(dimensions, regionValueDto);
             constraintsList.setData(records);
+            mainFormLayout.hide();
         }
 
         public void setCodes(DsdDimensionDto dsdDimensionDto, ExternalItemDto itemScheme, List<ItemDto> itemDtos) {
