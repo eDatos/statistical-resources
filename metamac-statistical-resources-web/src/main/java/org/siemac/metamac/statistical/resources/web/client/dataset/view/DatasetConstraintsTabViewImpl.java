@@ -19,12 +19,13 @@ import org.siemac.metamac.statistical.resources.web.client.dataset.utils.Constra
 import org.siemac.metamac.statistical.resources.web.client.dataset.view.handlers.DatasetConstraintsTabUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.DimensionConstraintMainFormLayout;
 import org.siemac.metamac.statistical.resources.web.client.utils.StatisticalResourcesRecordUtils;
-import org.siemac.metamac.web.common.client.widgets.CustomListGrid;
+import org.siemac.metamac.web.common.client.widgets.BaseCustomListGrid;
 import org.siemac.metamac.web.common.client.widgets.CustomToolStripButton;
 import org.siemac.metamac.web.common.client.widgets.DeleteConfirmationWindow;
 
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
+import com.smartgwt.client.data.Record;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.Autofit;
 import com.smartgwt.client.widgets.events.ClickEvent;
@@ -37,11 +38,12 @@ import com.smartgwt.client.widgets.toolbar.ToolStrip;
 
 public class DatasetConstraintsTabViewImpl extends ViewWithUiHandlers<DatasetConstraintsTabUiHandlers> implements DatasetConstraintsTabView {
 
-    private VLayout              panel;
-    private ConstraintsPanel     constraintsPanel;
+    private VLayout               panel;
+    private ConstraintsPanel      constraintsPanel;
 
-    private ContentConstraintDto contentConstraintDto;
-    private RegionValueDto       regionValueDto;
+    private List<DsdDimensionDto> dsdDimensionDtos;
+    private ContentConstraintDto  contentConstraintDto;
+    private RegionValueDto        regionValueDto;
 
     public DatasetConstraintsTabViewImpl() {
         panel = new VLayout();
@@ -66,6 +68,7 @@ public class DatasetConstraintsTabViewImpl extends ViewWithUiHandlers<DatasetCon
 
     @Override
     public void setRelatedDsdDimensions(List<DsdDimensionDto> dimensions) {
+        this.dsdDimensionDtos = dimensions;
         constraintsPanel.setDimensions(dimensions, regionValueDto);
     }
 
@@ -80,14 +83,19 @@ public class DatasetConstraintsTabViewImpl extends ViewWithUiHandlers<DatasetCon
     }
 
     @Override
-    public void setUiHandlers(DatasetConstraintsTabUiHandlers uiHandlers) {
-        super.setUiHandlers(uiHandlers);
-        constraintsPanel.setUiHandlers(uiHandlers);
+    public void showDimensionConstraints(DsdDimensionDto dsdDimensionDto) {
+        constraintsPanel.showDimensionConstraints(dsdDimensionDto);
     }
 
     @Override
-    public void showDimensionConstraints(DsdDimensionDto dsdDimensionDto) {
-        constraintsPanel.showDimensionConstraints(dsdDimensionDto);
+    public void updateDimensionsList(RegionValueDto regionValueDto) {
+        constraintsPanel.setDimensions(dsdDimensionDtos, regionValueDto);
+    }
+
+    @Override
+    public void setUiHandlers(DatasetConstraintsTabUiHandlers uiHandlers) {
+        super.setUiHandlers(uiHandlers);
+        constraintsPanel.setUiHandlers(uiHandlers);
     }
 
     private class ConstraintsPanel extends VLayout {
@@ -95,7 +103,7 @@ public class DatasetConstraintsTabViewImpl extends ViewWithUiHandlers<DatasetCon
         private ToolStrip                         toolStrip;
         private CustomToolStripButton             enableConstraintsButton;
         private CustomToolStripButton             disableConstraintsButton;
-        private CustomListGrid                    constraintsList;
+        private BaseCustomListGrid                constraintsList;
         private DimensionConstraintMainFormLayout mainFormLayout;
 
         public ConstraintsPanel() {
@@ -105,7 +113,15 @@ public class DatasetConstraintsTabViewImpl extends ViewWithUiHandlers<DatasetCon
         }
 
         public void showDimensionConstraints(DsdDimensionDto dsdDimensionDto) {
+            selectRowInConstraintList(dsdDimensionDto);
             mainFormLayout.showDimensionConstraints(dsdDimensionDto);
+        }
+
+        private void selectRowInConstraintList(DsdDimensionDto dsdDimensionDto) {
+            if (constraintsList.getRecordList() != null) {
+                Record dimensionRecord = constraintsList.getRecordList().find(DimensionConstraintsDS.DIMENSION_ID, dsdDimensionDto.getDimensionId());
+                constraintsList.selectRecord(dimensionRecord);
+            }
         }
 
         private void createToolStrip() {
@@ -121,16 +137,22 @@ public class DatasetConstraintsTabViewImpl extends ViewWithUiHandlers<DatasetCon
         }
 
         private void createConstraintsList() {
-            constraintsList = new CustomListGrid();
+            constraintsList = new BaseCustomListGrid();
             constraintsList.setVisible(true);
             constraintsList.setAutoFitMaxRecords(StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS);
             constraintsList.setAutoFitData(Autofit.VERTICAL);
             constraintsList.setDataSource(new DimensionConstraintsDS());
             constraintsList.setUseAllDataSourceFields(false);
+            constraintsList.setWrapCells(true);
+            constraintsList.setFixedRecordHeights(false);
+            constraintsList.setAutoFitMaxHeight(250);
+            constraintsList.setAutoFitData(Autofit.VERTICAL);
 
             ListGridField dimensionIdField = new ListGridField(DimensionConstraintsDS.DIMENSION_ID, getConstants().datasetConstraintDimensionId());
             dimensionIdField.setAlign(Alignment.LEFT);
+            dimensionIdField.setWidth("20%");
             ListGridField inclusionTypeField = new ListGridField(DimensionConstraintsDS.INCLUSION_TYPE, getConstants().datasetConstraintInclusionType());
+            inclusionTypeField.setWidth(90);
             ListGridField valuesField = new ListGridField(DimensionConstraintsDS.VALUES, getConstants().datasetConstraintValues());
 
             constraintsList.setFields(dimensionIdField, inclusionTypeField, valuesField);

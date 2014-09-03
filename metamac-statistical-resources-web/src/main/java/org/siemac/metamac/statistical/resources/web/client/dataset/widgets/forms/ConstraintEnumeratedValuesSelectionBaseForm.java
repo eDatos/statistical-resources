@@ -13,6 +13,7 @@ import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdDimensionDt
 import org.siemac.metamac.statistical.resources.core.dto.datasets.ItemDto;
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.ds.DimensionConstraintsDS;
 import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.ItemsSelectionTreeItem;
+import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
 import org.siemac.metamac.web.common.client.widgets.form.GroupDynamicForm;
 
 public abstract class ConstraintEnumeratedValuesSelectionBaseForm extends GroupDynamicForm {
@@ -33,7 +34,7 @@ public abstract class ConstraintEnumeratedValuesSelectionBaseForm extends GroupD
     }
 
     public void setSavedValues(RegionValueDto regionValueDto) {
-        KeyValueDto selectedDimensionKeyValue = getKeyValueOfSelectedDimension(regionValueDto);
+        KeyValueDto selectedDimensionKeyValue = CommonUtils.getKeyValueOfDimension(dsdDimensionDto, regionValueDto);
 
         if (selectedDimensionKeyValue == null) {
             setValue(DimensionConstraintsDS.INCLUSION_TYPE, StringUtils.EMPTY);
@@ -45,25 +46,6 @@ public abstract class ConstraintEnumeratedValuesSelectionBaseForm extends GroupD
 
     public DsdDimensionDto getSelectedDimension() {
         return dsdDimensionDto;
-    }
-
-    /**
-     * Returns the {@link KeyValueDto} of the selected dimension (all the {@link KeyPartDto} in a {@link KeyValueDto} belongs to the same dimension).
-     * 
-     * @param keyValueDto
-     * @return
-     */
-    protected KeyValueDto getKeyValueOfSelectedDimension(RegionValueDto regionValueDto) {
-        if (regionValueDto != null) {
-            for (KeyValueDto keyValueDto : regionValueDto.getKeys()) {
-                for (KeyPartDto keyPartDto : keyValueDto.getParts()) {
-                    if (StringUtils.equals(dsdDimensionDto.getDimensionId(), keyPartDto.getIdentifier())) {
-                        return keyValueDto;
-                    }
-                }
-            }
-        }
-        return null;
     }
 
     private Map<String, KeyPartDto> buildMap(List<KeyPartDto> keyPartDtos) {

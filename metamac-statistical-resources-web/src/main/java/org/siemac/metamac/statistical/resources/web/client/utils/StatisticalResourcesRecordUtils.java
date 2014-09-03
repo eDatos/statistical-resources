@@ -185,19 +185,23 @@ public class StatisticalResourcesRecordUtils extends RecordUtils {
     }
 
     public static DimensionConstraintsRecord[] getDimensionConstraintsRecords(List<DsdDimensionDto> dimensions, RegionValueDto regionValueDto) {
-        if (regionValueDto != null) {
-            List<KeyValueDto> keyValues = regionValueDto.getKeys();
-            // TODO METAMAC-1985
-        }
         DimensionConstraintsRecord[] records = new DimensionConstraintsRecord[dimensions.size()];
         for (int i = 0; i < dimensions.size(); i++) {
             DimensionConstraintsRecord record = new DimensionConstraintsRecord();
             record.setDimensionId(dimensions.get(i).getDimensionId());
-            // TODO METAMAC-1985
             record.setDsdDimensionDto(dimensions.get(i));
+            updateRecordWithKeyPartsValues(record, dimensions.get(i), regionValueDto);
             records[i] = record;
         }
         return records;
+    }
+
+    public static void updateRecordWithKeyPartsValues(DimensionConstraintsRecord record, DsdDimensionDto dsdDimensionDto, RegionValueDto regionValueDto) {
+        KeyValueDto keyValueDto = CommonUtils.getKeyValueOfDimension(dsdDimensionDto, regionValueDto);
+        if (keyValueDto != null) {
+            record.setInclusionType(keyValueDto.getIncluded());
+            record.setValues(keyValueDto.getParts());
+        }
     }
 
     //

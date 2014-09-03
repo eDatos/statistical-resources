@@ -17,8 +17,12 @@ import org.siemac.metamac.core.common.util.shared.UrnUtils;
 import org.siemac.metamac.statistical.resources.core.dto.LifeCycleStatisticalResourceBaseDto;
 import org.siemac.metamac.statistical.resources.core.dto.LifeCycleStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.VersionRationaleTypeDto;
+import org.siemac.metamac.statistical.resources.core.dto.constraint.KeyPartDto;
+import org.siemac.metamac.statistical.resources.core.dto.constraint.KeyValueDto;
+import org.siemac.metamac.statistical.resources.core.dto.constraint.RegionValueDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdAttributeDto;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdDimensionDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.StatisticOfficialityDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.TemporalCodeDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionBaseDto;
@@ -40,6 +44,29 @@ public class CommonUtils {
 
     private static String                               metamacPortalBaseUrl;
     private static Map<String, StatisticOfficialityDto> statisticOfficialitiesMap;
+
+    // -----------------------------------------------------------------------------------------
+    // DATASET CONSTRAINTS
+    // -----------------------------------------------------------------------------------------
+
+    /**
+     * Returns the {@link KeyValueDto} of the selected dimension (all the {@link KeyPartDto} in a {@link KeyValueDto} belongs to the same dimension).
+     * 
+     * @param keyValueDto
+     * @return
+     */
+    public static KeyValueDto getKeyValueOfDimension(DsdDimensionDto dsdDimensionDto, RegionValueDto regionValueDto) {
+        if (regionValueDto != null) {
+            for (KeyValueDto keyValueDto : regionValueDto.getKeys()) {
+                for (KeyPartDto keyPartDto : keyValueDto.getParts()) {
+                    if (StringUtils.equals(dsdDimensionDto.getDimensionId(), keyPartDto.getIdentifier())) {
+                        return keyValueDto;
+                    }
+                }
+            }
+        }
+        return null;
+    }
 
     // -----------------------------------------------------------------------------------------
     // PROC STATUS

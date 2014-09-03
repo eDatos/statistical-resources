@@ -74,6 +74,7 @@ public class DatasetConstraintsTabPresenter extends Presenter<DatasetConstraints
         void setRelatedDsdDimensions(List<DsdDimensionDto> dimensions);
         void setCodes(DsdDimensionDto dsdDimensionDto, ExternalItemDto itemScheme, List<ItemDto> itemDtos);
         void setConcepts(DsdDimensionDto dsdDimensionDto, ExternalItemDto itemScheme, List<ItemDto> itemDtos);
+        void updateDimensionsList(RegionValueDto regionValueDto);
     }
 
     @ProxyCodeSplit
@@ -249,6 +250,7 @@ public class DatasetConstraintsTabPresenter extends Presenter<DatasetConstraints
             public void onWaitSuccess(SaveRegionResult result) {
                 fireSuccessMessage(getMessages().datasetConstraintSaved());
                 getView().setConstraint(datasetVersionDto, contentConstraintDto, result.getSavedRegion());
+                getView().updateDimensionsList(result.getSavedRegion());
                 getView().showDimensionConstraints(selectedDimension);
             }
         });

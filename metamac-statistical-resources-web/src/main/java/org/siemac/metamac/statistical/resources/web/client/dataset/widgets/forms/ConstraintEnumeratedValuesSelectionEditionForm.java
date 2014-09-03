@@ -47,7 +47,7 @@ public class ConstraintEnumeratedValuesSelectionEditionForm extends ConstraintEn
         Boolean included = DatasetConstraintInclusionTypeEnum.INCLUSION.equals(CommonUtils.getDatasetConstraintInclusionTypeEnum(inclusionTypeField.getValueAsString()));
         Map<String, Boolean> selectedItems = treeItem.getSelectedItems();
 
-        KeyValueDto keyValueDto = getKeyValueOfSelectedDimension(regionValueDto);
+        KeyValueDto keyValueDto = CommonUtils.getKeyValueOfDimension(dsdDimensionDto, regionValueDto);
         if (keyValueDto == null) {
             keyValueDto = new KeyValueDto();
             keyValueDto.setRegion(regionValueDto);
