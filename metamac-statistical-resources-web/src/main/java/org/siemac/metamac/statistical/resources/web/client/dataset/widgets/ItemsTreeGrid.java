@@ -13,6 +13,7 @@ import org.siemac.metamac.core.common.util.shared.BooleanUtils;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.statistical.resources.core.dto.constraint.KeyPartDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.ItemDto;
+import org.siemac.metamac.statistical.resources.web.client.base.widgets.NavigableExternalItemTreeGrid;
 import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
 import org.siemac.metamac.web.common.client.resources.StyleUtils;
 
@@ -21,6 +22,7 @@ import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.Autofit;
 import com.smartgwt.client.types.ListGridEditEvent;
+import com.smartgwt.client.types.ListGridFieldType;
 import com.smartgwt.client.types.SelectionAppearance;
 import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.types.TreeModelType;
@@ -36,7 +38,7 @@ import com.smartgwt.client.widgets.tree.TreeGrid;
 import com.smartgwt.client.widgets.tree.TreeGridField;
 import com.smartgwt.client.widgets.tree.TreeNode;
 
-public class ItemsTreeGrid extends TreeGrid {
+public class ItemsTreeGrid extends NavigableExternalItemTreeGrid {
 
     protected static final String SCHEME_NODE_NAME  = "scheme-node";
 
@@ -156,6 +158,7 @@ public class ItemsTreeGrid extends TreeGrid {
 
     private void createTreeFields() {
         codeField = new TreeGridField(ItemDS.CODE, getConstants().identifiableStatisticalResourceCode());
+        codeField.setType(ListGridFieldType.LINK);
         codeField.setWidth("30%");
         codeField.setCanFilter(true);
         codeField.setCanEdit(false);
@@ -233,7 +236,8 @@ public class ItemsTreeGrid extends TreeGrid {
         TreeNode node = new TreeNode(SCHEME_NODE_NAME);
         node.setID(SCHEME_NODE_NAME);
         node.setAttribute(ItemDS.URN, itemScheme.getUrn());
-        node.setAttribute(ItemDS.CODE, itemScheme.getCode());
+        node.setAttribute(ItemDS.CODE, itemScheme.getManagementAppUrl());
+        node.setLinkText(itemScheme.getCode());
         node.setAttribute(ItemDS.NAME, getLocalisedString(itemScheme.getTitle()));
         node.setEnabled(false);
         return node;
@@ -244,9 +248,11 @@ public class ItemsTreeGrid extends TreeGrid {
         TreeNode node = new TreeNode();
         node.setID(itemDto.getUrn());
         node.setParentID(parentUrn);
-        node.setAttribute(ItemDS.CODE, itemDto.getCode());
+        node.setAttribute(ItemDS.CODE, itemDto.getManagementAppUrl());
+        node.setLinkText(itemDto.getCode());
         node.setAttribute(ItemDS.NAME, getLocalisedString(itemDto.getTitle()));
         node.setAttribute(ItemDS.URN, itemDto.getUrn());
+
         if (editionMode) {
             node.setAttribute(ItemDS.CASCADE, Boolean.FALSE.toString());
         }
