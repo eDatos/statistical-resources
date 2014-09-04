@@ -10,6 +10,7 @@ public class VersionableResourceDS extends NameableResourceDS {
     public static final String VALID_FROM                   = "ver-valid-from";
     public static final String VALID_TO                     = "ver-valid-to";
     public static final String NEXT_VERSION                 = "ver-next-ver";
+    public static final String NEXT_VERSION_VIEW            = "ver-next-ver-view";
     public static final String DATE_NEXT_VERSION            = "ver-date-next-ver";
 
     public static final String LAST_VERSION                 = "ver-last-version";
