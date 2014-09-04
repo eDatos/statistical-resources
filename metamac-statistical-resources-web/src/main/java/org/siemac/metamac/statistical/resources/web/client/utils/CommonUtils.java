@@ -27,6 +27,7 @@ import org.siemac.metamac.statistical.resources.core.dto.datasets.StatisticOffic
 import org.siemac.metamac.statistical.resources.core.dto.datasets.TemporalCodeDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionBaseDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionDto;
+import org.siemac.metamac.statistical.resources.core.enume.constraint.domain.KeyPartTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.dataset.domain.AttributeRelationshipTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.dataset.domain.AttributeRepresentationTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.NextVersionTypeEnum;
@@ -66,6 +67,29 @@ public class CommonUtils {
             }
         }
         return null;
+    }
+
+    /**
+     * Returns the {@link KeyPartTypeEnum} of the {@link KeyValueDto}. All the {@link KeyPartDto} of a {@link KeyValueDto} have the save type.
+     * 
+     * @param keyValueDto
+     * @return
+     */
+    public static KeyPartTypeEnum getKeyPartTypeOfKeyValue(KeyValueDto keyValueDto) {
+        for (KeyPartDto keyPartDto : keyValueDto.getParts()) {
+            return keyPartDto.getType();
+        }
+        return null;
+    }
+
+    public static List<String> getValuesOfKeyValue(KeyValueDto keyValueDto) {
+        List<String> values = new ArrayList<String>();
+        for (KeyPartDto keyPartDto : keyValueDto.getParts()) {
+            if (KeyPartTypeEnum.NORMAL.equals(keyPartDto.getType())) {
+                values.add(keyPartDto.getValue());
+            }
+        }
+        return values;
     }
 
     // -----------------------------------------------------------------------------------------
@@ -281,6 +305,32 @@ public class CommonUtils {
         if (!StringUtils.isBlank(value)) {
             try {
                 return DatasetConstraintInclusionTypeEnum.valueOf(value);
+            } catch (Exception e) {
+            }
+        }
+        return null;
+    }
+
+    // -----------------------------------------------------------------------------------------
+    // DATASET CONSTRAINT KEY PART TYPE
+    // -----------------------------------------------------------------------------------------
+
+    public static LinkedHashMap<String, String> getConstraintKeyPartTypeHashMap() {
+        LinkedHashMap<String, String> typeHashMap = new LinkedHashMap<String, String>();
+        for (KeyPartTypeEnum type : KeyPartTypeEnum.values()) {
+            typeHashMap.put(type.toString(), getConstraintKeyPartTypeName(type));
+        }
+        return typeHashMap;
+    }
+
+    public static String getConstraintKeyPartTypeName(KeyPartTypeEnum typeEnum) {
+        return typeEnum != null ? getCoreMessages().getString(getCoreMessages().keyPartTypeEnum() + typeEnum.name()) : null;
+    }
+
+    public static KeyPartTypeEnum getDatasetConstraintKeyPartTypeEnum(String value) {
+        if (!StringUtils.isBlank(value)) {
+            try {
+                return KeyPartTypeEnum.valueOf(value);
             } catch (Exception e) {
             }
         }

@@ -71,7 +71,11 @@ public class DimensionConstraintMainFormLayout extends MainFormLayout {
                     }
                 } else if (nonEnumeratedValuesSelectionEditionForm.isVisible()) {
                     if (nonEnumeratedValuesSelectionEditionForm.validate(false)) {
-                        // TODO METAMAC-1985
+                        if (regionValueDto == null) {
+                            regionValueDto = createRegion();
+                        }
+                        regionValueDto = nonEnumeratedValuesSelectionEditionForm.updateRegionDto(regionValueDto);
+                        getUiHandlers().saveRegion(contentConstraintDto.getUrn(), regionValueDto, nonEnumeratedValuesSelectionEditionForm.getSelectedDimension());
                     }
                 }
             }
@@ -90,24 +94,31 @@ public class DimensionConstraintMainFormLayout extends MainFormLayout {
         } else if (!StringUtils.isBlank(dimension.getConceptSchemeRepresentationUrn())) {
             getUiHandlers().retrieveConcepts(dimension);
         } else if (DimensionTypeEnum.TEMPORAL.equals(dimension.getType())) {
-            // TODO METAMAC-1985
+            setNonEnumeratedValues(dimension);
         }
         setViewMode();
     }
 
     public void setCodes(DsdDimensionDto dsdDimensionDto, ExternalItemDto itemScheme, List<ItemDto> itemDtos) {
-        setItems(dsdDimensionDto, itemScheme, itemDtos);
+        setEnumeratedValues(dsdDimensionDto, itemScheme, itemDtos);
     }
 
     public void setConcepts(DsdDimensionDto dsdDimensionDto, ExternalItemDto itemScheme, List<ItemDto> itemDtos) {
-        setItems(dsdDimensionDto, itemScheme, itemDtos);
+        setEnumeratedValues(dsdDimensionDto, itemScheme, itemDtos);
     }
 
-    public void setItems(DsdDimensionDto dsdDimensionDto, ExternalItemDto itemScheme, List<ItemDto> itemDtos) {
+    public void setEnumeratedValues(DsdDimensionDto dsdDimensionDto, ExternalItemDto itemScheme, List<ItemDto> itemDtos) {
         FormUtils.setGroupTitle(dsdDimensionDto.getDimensionId(), enumeratedValuesSelectionForm, enumeratedValuesSelectionEditionForm);
-        enumeratedValuesSelectionForm.setValues(regionValueDto, dsdDimensionDto, itemScheme, itemDtos);
-        enumeratedValuesSelectionEditionForm.setValues(regionValueDto, dsdDimensionDto, itemScheme, itemDtos);
+        enumeratedValuesSelectionForm.setRegionValues(regionValueDto, dsdDimensionDto, itemScheme, itemDtos);
+        enumeratedValuesSelectionEditionForm.setRegionValues(regionValueDto, dsdDimensionDto, itemScheme, itemDtos);
         showEnumeratedValuesSelectionForms();
+    }
+
+    public void setNonEnumeratedValues(DsdDimensionDto dsdDimensionDto) {
+        FormUtils.setGroupTitle(dsdDimensionDto.getDimensionId(), nonEnumeratedValuesSelectionForm, nonEnumeratedValuesSelectionEditionForm);
+        nonEnumeratedValuesSelectionForm.setRegionValues(regionValueDto, dsdDimensionDto);
+        nonEnumeratedValuesSelectionEditionForm.setRegionValues(regionValueDto, dsdDimensionDto);
+        showNonEnumeratedValuesSelectionForms();
     }
 
     private void showEnumeratedValuesSelectionForms() {

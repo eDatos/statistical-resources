@@ -26,14 +26,14 @@ public abstract class ConstraintEnumeratedValuesSelectionBaseForm extends GroupD
         super(groupTitle);
     }
 
-    public void setValues(RegionValueDto regionValueDto, DsdDimensionDto dsdDimensionDto, ExternalItemDto itemScheme, List<ItemDto> items) {
+    public void setRegionValues(RegionValueDto regionValueDto, DsdDimensionDto dsdDimensionDto, ExternalItemDto itemScheme, List<ItemDto> items) {
         this.dsdDimensionDto = dsdDimensionDto;
         treeItem.setItems(itemScheme, items);
 
-        setSavedValues(regionValueDto);
+        setSavedRegionValues(regionValueDto);
     }
 
-    public void setSavedValues(RegionValueDto regionValueDto) {
+    public void setSavedRegionValues(RegionValueDto regionValueDto) {
         KeyValueDto selectedDimensionKeyValue = CommonUtils.getKeyValueOfDimension(dsdDimensionDto, regionValueDto);
 
         if (selectedDimensionKeyValue == null) {

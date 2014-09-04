@@ -39,7 +39,7 @@ public class ConstraintEnumeratedValuesSelectionEditionForm extends ConstraintEn
     }
 
     /**
-     * Updates the region with the specified values. Each {@link RegionValueDto} has a list of {@link KeyValueDto}. All the {@link KeyPartDto} of a {@link KeyValueDto} belongs to the same dimesion.
+     * Updates the region with the specified values. Each {@link RegionValueDto} has a list of {@link KeyValueDto}. All the {@link KeyPartDto} of a {@link KeyValueDto} belongs to the same dimension.
      * 
      * @param regionValueDto
      */
