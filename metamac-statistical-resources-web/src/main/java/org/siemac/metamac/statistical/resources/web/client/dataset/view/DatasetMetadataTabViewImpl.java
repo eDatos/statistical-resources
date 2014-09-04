@@ -444,7 +444,7 @@ public class DatasetMetadataTabViewImpl extends StatisticalResourceMetadataBaseV
         lifeCycleForm.setLifeCycleStatisticalResourceDto(datasetDto);
 
         // Version
-        versionForm.setLifeCycleStatisticalResourceDto(datasetDto);
+        versionForm.setDatasetVersionDto(datasetDto);
 
         // Intellectual property descriptors
         intellectualPropertyDescriptorsForm.setSiemacMetadataStatisticalResourceDto(datasetDto);
@@ -496,7 +496,7 @@ public class DatasetMetadataTabViewImpl extends StatisticalResourceMetadataBaseV
         lifeCycleEditionForm.setRequiredTitleSuffix(requiredFieldsToNextProcStatus);
 
         // Version
-        versionEditionForm.setLifeCycleStatisticalResourceDto(datasetDto);
+        versionEditionForm.setDatasetVersionDto(datasetDto);
         versionEditionForm.setRequiredTitleSuffix(requiredFieldsToNextProcStatus);
 
         // Intellectual property descriptors
@@ -533,7 +533,7 @@ public class DatasetMetadataTabViewImpl extends StatisticalResourceMetadataBaseV
         datasetVersionDto = publicationDescriptorsEditionForm.getDatasetVersionDto(datasetVersionDto);
 
         // Version
-        datasetVersionDto = (DatasetVersionDto) versionEditionForm.getLifeCycleStatisticalResourceDto(datasetVersionDto);
+        datasetVersionDto = versionEditionForm.getDatasetVersionDto(datasetVersionDto);
 
         // Intellectual property descriptors
         datasetVersionDto = (DatasetVersionDto) intellectualPropertyDescriptorsEditionForm.getSiemacMetadataStatisticalResourceDto(datasetVersionDto);
