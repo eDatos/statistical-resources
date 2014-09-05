@@ -136,7 +136,8 @@ public class ItemsTreeGrid extends NavigableExternalItemTreeGrid {
         Map<String, Boolean> selectedItems = new HashMap<String, Boolean>();
         if (selectedTreeNodes != null) {
             for (ListGridRecord record : selectedTreeNodes) {
-                selectedItems.put(record.getAttribute(ItemDS.CODE), Boolean.parseBoolean(record.getAttribute(ItemDS.CASCADE)));
+                // the link text contains the code of the resource
+                selectedItems.put(record.getLinkText(), Boolean.parseBoolean(record.getAttribute(ItemDS.CASCADE)));
             }
         }
         return selectedItems;

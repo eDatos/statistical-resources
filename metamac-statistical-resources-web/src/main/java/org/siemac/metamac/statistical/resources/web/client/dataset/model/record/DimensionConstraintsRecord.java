@@ -59,7 +59,8 @@ public class DimensionConstraintsRecord extends ListGridRecord {
             value.append(getConstants().datasetConstraintRangeFrom()).append(" ").append(rangeDto.getFromValue()).append(" ");
         }
         if (!StringUtils.isBlank(rangeDto.getToValue())) {
-            value.append(getConstants().datasetConstraintRangeTo()).append(" ").append(rangeDto.getToValue()).append(" ");
+            value.append(value.length() > 0 ? getConstants().datasetConstraintRangeTo().toLowerCase() : getConstants().datasetConstraintRangeTo());
+            value.append(" ").append(rangeDto.getToValue()).append(" ");
         }
         return value.toString();
     }
