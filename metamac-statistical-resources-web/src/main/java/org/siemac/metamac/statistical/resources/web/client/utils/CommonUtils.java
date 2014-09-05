@@ -38,6 +38,7 @@ import org.siemac.metamac.statistical.resources.core.enume.query.domain.QuerySta
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryTypeEnum;
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesDefaults;
 import org.siemac.metamac.statistical.resources.web.client.enums.DatasetConstraintInclusionTypeEnum;
+import org.siemac.metamac.statistical.resources.web.shared.dtos.RangeDto;
 import org.siemac.metamac.web.common.client.MetamacWebCommon;
 import org.siemac.metamac.web.common.client.utils.CommonWebUtils;
 
@@ -90,6 +91,36 @@ public class CommonUtils {
             }
         }
         return values;
+    }
+
+    public static RangeDto buildRangeDto(KeyPartDto keyPartDto) {
+        RangeDto rangeDto = new RangeDto();
+        if (!StringUtils.isBlank(keyPartDto.getBeforePeriod())) {
+            rangeDto.setToValue(keyPartDto.getBeforePeriod());
+        }
+        if (!StringUtils.isBlank(keyPartDto.getAfterPeriod())) {
+            rangeDto.setFromValue(keyPartDto.getAfterPeriod());
+        }
+        if (!StringUtils.isBlank(keyPartDto.getStartPeriod())) {
+            rangeDto.setFromValue(keyPartDto.getStartPeriod());
+        }
+        if (!StringUtils.isBlank(keyPartDto.getEndPeriod())) {
+            rangeDto.setToValue(keyPartDto.getEndPeriod());
+        }
+        return rangeDto;
+    }
+
+    public static KeyPartDto buildKeyPartDto(RangeDto rangeDto) {
+        KeyPartDto keyPartDto = new KeyPartDto();
+        if (!StringUtils.isBlank(rangeDto.getFromValue())) {
+            keyPartDto.setStartPeriod(rangeDto.getFromValue());
+            keyPartDto.setStartPeriodInclusive(true);
+        }
+        if (!StringUtils.isBlank(rangeDto.getToValue())) {
+            keyPartDto.setEndPeriod(rangeDto.getToValue());
+            keyPartDto.setEndPeriodInclusive(true);
+        }
+        return keyPartDto;
     }
 
     // -----------------------------------------------------------------------------------------

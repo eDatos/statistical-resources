@@ -27,6 +27,8 @@ public abstract class ConstraintEnumeratedValuesSelectionBaseForm extends GroupD
     }
 
     public void setRegionValues(RegionValueDto regionValueDto, DsdDimensionDto dsdDimensionDto, ExternalItemDto itemScheme, List<ItemDto> items) {
+        clearErrors(true);
+
         this.dsdDimensionDto = dsdDimensionDto;
         treeItem.setItems(itemScheme, items);
 

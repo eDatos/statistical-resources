@@ -15,6 +15,8 @@ import org.siemac.metamac.statistical.resources.core.enume.constraint.domain.Key
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.ds.DimensionConstraintsDS;
 import org.siemac.metamac.statistical.resources.web.client.enums.DatasetConstraintInclusionTypeEnum;
 import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
+import org.siemac.metamac.statistical.resources.web.client.widgets.RangeItem;
+import org.siemac.metamac.statistical.resources.web.shared.dtos.RangeDto;
 import org.siemac.metamac.web.common.client.widgets.form.GroupDynamicForm;
 import org.siemac.metamac.web.common.client.widgets.form.fields.CustomSelectItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.MultiTextItem;
@@ -61,18 +63,24 @@ public class ConstraintNonEnumeratedValuesSelectionEditionForm extends GroupDyna
                 return value != null && !StringUtils.isBlank((String) value);
             }
         });
-        valuesField.setShowIfCondition(new FormItemIfFunction() {
-
-            @Override
-            public boolean execute(FormItem item, Object value, DynamicForm form) {
-                String keyPartType = form.getValueAsString(DimensionConstraintsDS.KEY_PART_TYPE);
-                return KeyPartTypeEnum.NORMAL.name().equals(keyPartType);
-            }
-        });
+        valuesField.setShowIfCondition(getValuesFormItemIfFunction());
         valuesField.setTitleStyle("staticFormItemTitle");
         valuesField.setVisible(false);
 
-        setFields(inclusionTypeField, keyPartTypeField, valuesField);
+        RangeItem rangeItem = new RangeItem(DimensionConstraintsDS.TIME_RANGE, getConstants().datasetConstraintTimeRange(), true);
+        rangeItem.setValidators(new CustomValidator() {
+
+            @Override
+            protected boolean condition(Object value) {
+                RangeDto rangeDto = ((RangeItem) ConstraintNonEnumeratedValuesSelectionEditionForm.this.getItem(DimensionConstraintsDS.TIME_RANGE)).getValue();
+                return !(StringUtils.isBlank(rangeDto.getFromValue()) && StringUtils.isBlank(rangeDto.getToValue()));
+            }
+        });
+        rangeItem.setShowIfCondition(getTimeRangeFormItemIfFunction());
+        rangeItem.setTitleStyle("staticFormItemTitle");
+        rangeItem.setVisible(false);
+
+        setFields(inclusionTypeField, keyPartTypeField, valuesField, rangeItem);
     }
 
     public void setRegionValues(RegionValueDto regionValueDto, DsdDimensionDto dsdDimensionDto) {
@@ -89,7 +97,9 @@ public class ConstraintNonEnumeratedValuesSelectionEditionForm extends GroupDyna
                 List<String> values = CommonUtils.getValuesOfKeyValue(keyValueDto);
                 ((MultiTextItem) getItem(DimensionConstraintsDS.VALUES)).setValues(values);
             } else if (KeyPartTypeEnum.TIME_RANGE.equals(keyPartType)) {
-                // TODO METAMAC-1985
+                // KeyValues with TIME_RANGE type only have one KeyPart
+                RangeDto rangeDto = CommonUtils.buildRangeDto(keyValueDto.getParts().get(0));
+                ((RangeItem) getItem(DimensionConstraintsDS.TIME_RANGE)).setValue(rangeDto);
             }
         }
         markForRedraw();
@@ -125,7 +135,12 @@ public class ConstraintNonEnumeratedValuesSelectionEditionForm extends GroupDyna
                 keyValueDto.addPart(keyPartDto);
             }
         } else {
-            // TODO METAMAC-1985
+            RangeDto rangeDto = ((RangeItem) getItem(DimensionConstraintsDS.TIME_RANGE)).getValue();
+            KeyPartDto keyPartDto = CommonUtils.buildKeyPartDto(rangeDto);
+            keyPartDto.setType(keyPartType);
+            keyPartDto.setIdentifier(dsdDimensionDto.getDimensionId());
+            keyPartDto.setPosition(dsdDimensionDto.getPosition());
+            keyValueDto.addPart(keyPartDto);
         }
 
         if (keyValueDto.getParts().isEmpty()) {
@@ -139,9 +154,32 @@ public class ConstraintNonEnumeratedValuesSelectionEditionForm extends GroupDyna
     }
 
     private void clearFormValues() {
+        clearErrors(true);
         setValue(DimensionConstraintsDS.INCLUSION_TYPE, StringUtils.EMPTY);
         setValue(DimensionConstraintsDS.KEY_PART_TYPE, StringUtils.EMPTY);
         ((MultiTextItem) getItem(DimensionConstraintsDS.VALUES)).setValues(new ArrayList<String>());
-        // TODO METAMAC-1985
+        ((RangeItem) getItem(DimensionConstraintsDS.TIME_RANGE)).setValue(new RangeDto());
+    }
+
+    private FormItemIfFunction getValuesFormItemIfFunction() {
+        return new FormItemIfFunction() {
+
+            @Override
+            public boolean execute(FormItem item, Object value, DynamicForm form) {
+                String keyPartType = form.getValueAsString(DimensionConstraintsDS.KEY_PART_TYPE);
+                return KeyPartTypeEnum.NORMAL.name().equals(keyPartType);
+            }
+        };
+    }
+
+    private FormItemIfFunction getTimeRangeFormItemIfFunction() {
+        return new FormItemIfFunction() {
+
+            @Override
+            public boolean execute(FormItem item, Object value, DynamicForm form) {
+                String keyPartType = form.getValueAsString(DimensionConstraintsDS.KEY_PART_TYPE);
+                return KeyPartTypeEnum.TIME_RANGE.name().equals(keyPartType);
+            }
+        };
     }
 }
