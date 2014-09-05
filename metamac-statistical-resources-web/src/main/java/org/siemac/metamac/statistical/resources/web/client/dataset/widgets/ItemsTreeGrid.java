@@ -236,9 +236,10 @@ public class ItemsTreeGrid extends NavigableExternalItemTreeGrid {
         TreeNode node = new TreeNode(SCHEME_NODE_NAME);
         node.setID(SCHEME_NODE_NAME);
         node.setAttribute(ItemDS.URN, itemScheme.getUrn());
-        node.setAttribute(ItemDS.CODE, itemScheme.getManagementAppUrl());
-        node.setLinkText(itemScheme.getCode());
+        node.setAttribute(ItemDS.CODE, itemScheme.getCode());
+        node.setAttribute(ItemDS.MANAGEMENT_APP_URL, itemScheme.getManagementAppUrl());
         node.setAttribute(ItemDS.NAME, getLocalisedString(itemScheme.getTitle()));
+        node.setLinkText(itemScheme.getCode());
         node.setEnabled(false);
         return node;
     }

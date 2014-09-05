@@ -72,8 +72,11 @@ public class ConstraintNonEnumeratedValuesSelectionEditionForm extends GroupDyna
 
             @Override
             protected boolean condition(Object value) {
-                RangeDto rangeDto = ((RangeItem) ConstraintNonEnumeratedValuesSelectionEditionForm.this.getItem(DimensionConstraintsDS.TIME_RANGE)).getValue();
-                return !(StringUtils.isBlank(rangeDto.getFromValue()) && StringUtils.isBlank(rangeDto.getToValue()));
+                if (ConstraintNonEnumeratedValuesSelectionEditionForm.this.getItem(DimensionConstraintsDS.TIME_RANGE).isVisible()) {
+                    RangeDto rangeDto = ((RangeItem) ConstraintNonEnumeratedValuesSelectionEditionForm.this.getItem(DimensionConstraintsDS.TIME_RANGE)).getValue();
+                    return !(StringUtils.isBlank(rangeDto.getFromValue()) && StringUtils.isBlank(rangeDto.getToValue()));
+                }
+                return true;
             }
         });
         rangeItem.setShowIfCondition(getTimeRangeFormItemIfFunction());
