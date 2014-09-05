@@ -136,8 +136,7 @@ public class ItemsTreeGrid extends NavigableExternalItemTreeGrid {
         Map<String, Boolean> selectedItems = new HashMap<String, Boolean>();
         if (selectedTreeNodes != null) {
             for (ListGridRecord record : selectedTreeNodes) {
-                // the link text contains the code of the resource
-                selectedItems.put(record.getLinkText(), Boolean.parseBoolean(record.getAttribute(ItemDS.CASCADE)));
+                selectedItems.put(record.getAttribute(ItemDS.CODE), Boolean.parseBoolean(record.getAttribute(ItemDS.CASCADE)));
             }
         }
         return selectedItems;
@@ -158,7 +157,7 @@ public class ItemsTreeGrid extends NavigableExternalItemTreeGrid {
     }
 
     private void createTreeFields() {
-        codeField = new TreeGridField(ItemDS.CODE, getConstants().identifiableStatisticalResourceCode());
+        codeField = new TreeGridField(ItemDS.MANAGEMENT_APP_URL, getConstants().identifiableStatisticalResourceCode());
         codeField.setType(ListGridFieldType.LINK);
         codeField.setWidth("30%");
         codeField.setCanFilter(true);
@@ -249,10 +248,11 @@ public class ItemsTreeGrid extends NavigableExternalItemTreeGrid {
         TreeNode node = new TreeNode();
         node.setID(itemDto.getUrn());
         node.setParentID(parentUrn);
-        node.setAttribute(ItemDS.CODE, itemDto.getManagementAppUrl());
-        node.setLinkText(itemDto.getCode());
+        node.setAttribute(ItemDS.CODE, itemDto.getCode());
+        node.setAttribute(ItemDS.MANAGEMENT_APP_URL, itemDto.getManagementAppUrl());
         node.setAttribute(ItemDS.NAME, getLocalisedString(itemDto.getTitle()));
         node.setAttribute(ItemDS.URN, itemDto.getUrn());
+        node.setLinkText(itemDto.getCode());
 
         if (editionMode) {
             node.setAttribute(ItemDS.CASCADE, Boolean.FALSE.toString());
@@ -262,9 +262,10 @@ public class ItemsTreeGrid extends NavigableExternalItemTreeGrid {
 
     private class ItemDS extends DataSource {
 
-        public static final String CODE    = "item-code";
-        public static final String NAME    = "item-name";
-        public static final String URN     = "item-urn";
-        public static final String CASCADE = "item-cascade";
+        public static final String CODE               = "item-code";
+        public static final String MANAGEMENT_APP_URL = "item-url";
+        public static final String NAME               = "item-name";
+        public static final String URN                = "item-urn";
+        public static final String CASCADE            = "item-cascade";
     }
 }

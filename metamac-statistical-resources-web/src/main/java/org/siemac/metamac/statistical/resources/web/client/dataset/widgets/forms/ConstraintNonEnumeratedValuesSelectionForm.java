@@ -24,6 +24,8 @@ import com.smartgwt.client.types.Alignment;
 
 public class ConstraintNonEnumeratedValuesSelectionForm extends GroupDynamicForm {
 
+    private DsdDimensionDto dsdDimensionDto;
+
     public ConstraintNonEnumeratedValuesSelectionForm(String groupTitle) {
         super(groupTitle);
 
@@ -44,6 +46,7 @@ public class ConstraintNonEnumeratedValuesSelectionForm extends GroupDynamicForm
 
     public void setRegionValues(RegionValueDto regionValueDto, DsdDimensionDto dsdDimensionDto) {
         clearFormValues();
+        this.dsdDimensionDto = dsdDimensionDto;
         KeyValueDto keyValueDto = CommonUtils.getKeyValueOfDimension(dsdDimensionDto, regionValueDto);
         if (keyValueDto != null) {
             KeyPartTypeEnum keyPartType = CommonUtils.getKeyPartTypeOfKeyValue(keyValueDto);
@@ -62,6 +65,10 @@ public class ConstraintNonEnumeratedValuesSelectionForm extends GroupDynamicForm
                 getItem(DimensionConstraintsDS.TIME_RANGE).show();
             }
         }
+    }
+
+    public DsdDimensionDto getSelectedDimension() {
+        return dsdDimensionDto;
     }
 
     private void clearFormValues() {

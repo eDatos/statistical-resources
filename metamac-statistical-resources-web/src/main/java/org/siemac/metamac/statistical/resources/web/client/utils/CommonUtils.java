@@ -58,10 +58,14 @@ public class CommonUtils {
      * @return
      */
     public static KeyValueDto getKeyValueOfDimension(DsdDimensionDto dsdDimensionDto, RegionValueDto regionValueDto) {
+        return getKeyValueOfDimension(dsdDimensionDto.getDimensionId(), regionValueDto);
+    }
+
+    private static KeyValueDto getKeyValueOfDimension(String dimensionId, RegionValueDto regionValueDto) {
         if (regionValueDto != null) {
             for (KeyValueDto keyValueDto : regionValueDto.getKeys()) {
                 for (KeyPartDto keyPartDto : keyValueDto.getParts()) {
-                    if (StringUtils.equals(dsdDimensionDto.getDimensionId(), keyPartDto.getIdentifier())) {
+                    if (StringUtils.equals(dimensionId, keyPartDto.getIdentifier())) {
                         return keyValueDto;
                     }
                 }
@@ -121,6 +125,16 @@ public class CommonUtils {
             keyPartDto.setEndPeriodInclusive(true);
         }
         return keyPartDto;
+    }
+
+    public static RegionValueDto removeKeyValueOfDimension(RegionValueDto regionValueDto, DsdDimensionDto dsdDimensionDto) {
+        if (regionValueDto != null) {
+            KeyValueDto keyValueDto = getKeyValueOfDimension(dsdDimensionDto.getDimensionId(), regionValueDto);
+            if (keyValueDto != null) {
+                regionValueDto.removeKey(keyValueDto);
+            }
+        }
+        return regionValueDto;
     }
 
     // -----------------------------------------------------------------------------------------

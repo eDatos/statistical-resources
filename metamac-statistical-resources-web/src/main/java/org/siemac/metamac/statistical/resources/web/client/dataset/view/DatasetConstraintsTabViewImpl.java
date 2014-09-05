@@ -226,7 +226,7 @@ public class DatasetConstraintsTabViewImpl extends ViewWithUiHandlers<DatasetCon
 
         private void setConstraint(DatasetVersionDto datasetVersionDto, ContentConstraintDto contentConstraintDto, RegionValueDto regionValueDto) {
             updateVisibility(datasetVersionDto, contentConstraintDto);
-            mainFormLayout.setConstraint(contentConstraintDto, regionValueDto);
+            mainFormLayout.setConstraint(datasetVersionDto, contentConstraintDto, regionValueDto);
         }
 
         private void updateVisibility(DatasetVersionDto datasetVersionDto, ContentConstraintDto contentConstraintDto) {

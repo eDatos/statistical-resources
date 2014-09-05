@@ -5,16 +5,20 @@ import java.util.List;
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.statistical.resources.core.dto.constraint.ContentConstraintDto;
+import org.siemac.metamac.statistical.resources.core.dto.constraint.KeyValueDto;
 import org.siemac.metamac.statistical.resources.core.dto.constraint.RegionValueDto;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdDimensionDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.ItemDto;
 import org.siemac.metamac.statistical.resources.core.enume.constraint.domain.RegionValueTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.dataset.domain.DimensionTypeEnum;
+import org.siemac.metamac.statistical.resources.web.client.dataset.utils.ConstraintsClientSecurityUtils;
 import org.siemac.metamac.statistical.resources.web.client.dataset.view.handlers.DatasetConstraintsTabUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.forms.ConstraintEnumeratedValuesSelectionEditionForm;
 import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.forms.ConstraintEnumeratedValuesSelectionForm;
 import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.forms.ConstraintNonEnumeratedValuesSelectionEditionForm;
 import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.forms.ConstraintNonEnumeratedValuesSelectionForm;
+import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
 import org.siemac.metamac.web.common.client.widgets.form.MainFormLayout;
 import org.siemac.metamac.web.common.client.widgets.form.utils.FormUtils;
 
@@ -31,13 +35,13 @@ public class DimensionConstraintMainFormLayout extends MainFormLayout {
     private ConstraintNonEnumeratedValuesSelectionForm        nonEnumeratedValuesSelectionForm;
     private ConstraintNonEnumeratedValuesSelectionEditionForm nonEnumeratedValuesSelectionEditionForm;
 
+    private DatasetVersionDto                                 datasetVersionDto;
     private ContentConstraintDto                              contentConstraintDto;
     private RegionValueDto                                    regionValueDto;
 
     private static final String                               GROUP_FORM_DEFAULT_NAME = "DIMENSION";
 
     public DimensionConstraintMainFormLayout() {
-        setCanEdit(true);
 
         // ENUMERATED VALUES SELECTION FORMS
 
@@ -80,9 +84,24 @@ public class DimensionConstraintMainFormLayout extends MainFormLayout {
                 }
             }
         });
+
+        getDeleteConfirmationWindow().getYesButton().addClickHandler(new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                if (enumeratedValuesSelectionForm.isVisible()) {
+                    regionValueDto = CommonUtils.removeKeyValueOfDimension(regionValueDto, enumeratedValuesSelectionForm.getSelectedDimension());
+                    getUiHandlers().saveRegion(contentConstraintDto.getUrn(), regionValueDto, enumeratedValuesSelectionForm.getSelectedDimension());
+                } else if (nonEnumeratedValuesSelectionForm.isVisible()) {
+                    regionValueDto = CommonUtils.removeKeyValueOfDimension(regionValueDto, nonEnumeratedValuesSelectionForm.getSelectedDimension());
+                    getUiHandlers().saveRegion(contentConstraintDto.getUrn(), regionValueDto, nonEnumeratedValuesSelectionForm.getSelectedDimension());
+                }
+            }
+        });
     }
 
-    public void setConstraint(ContentConstraintDto contentConstraintDto, RegionValueDto regionValueDto) {
+    public void setConstraint(DatasetVersionDto datasetVersionDto, ContentConstraintDto contentConstraintDto, RegionValueDto regionValueDto) {
+        this.datasetVersionDto = datasetVersionDto;
         this.contentConstraintDto = contentConstraintDto;
         this.regionValueDto = regionValueDto;
     }
@@ -97,6 +116,7 @@ public class DimensionConstraintMainFormLayout extends MainFormLayout {
             setNonEnumeratedValues(dimension);
         }
         setViewMode();
+        updateButtonsVisibility(dimension);
     }
 
     public void setCodes(DsdDimensionDto dsdDimensionDto, ExternalItemDto itemScheme, List<ItemDto> itemDtos) {
@@ -146,6 +166,14 @@ public class DimensionConstraintMainFormLayout extends MainFormLayout {
         regionValueDto.setContentConstraintUrn(contentConstraintDto.getUrn());
         regionValueDto.setRegionValueTypeEnum(RegionValueTypeEnum.CUBE);
         return regionValueDto;
+    }
+
+    private void updateButtonsVisibility(DsdDimensionDto selectedDimension) {
+        boolean canModifyConstraint = ConstraintsClientSecurityUtils.canSaveForContentConstraint(datasetVersionDto.getStatisticalOperation().getCode(), datasetVersionDto.getProcStatus());
+        KeyValueDto keyValueDto = CommonUtils.getKeyValueOfDimension(selectedDimension, regionValueDto);
+        boolean existsKeyValueOfDimension = keyValueDto != null;
+        setCanEdit(canModifyConstraint);
+        setCanDelete(canModifyConstraint && existsKeyValueOfDimension);
     }
 
     public void setUiHandlers(DatasetConstraintsTabUiHandlers uiHandlers) {
