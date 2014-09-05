@@ -8,7 +8,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -30,10 +29,8 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionBuilder;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.core.common.exception.utils.ExceptionUtils;
-import org.siemac.metamac.core.common.time.TimeSdmx;
 import org.siemac.metamac.core.common.util.GeneratorUrnUtils;
 import org.siemac.metamac.core.common.util.SdmxTimeUtils;
-import org.siemac.metamac.core.common.util.TimeSdmxComparator;
 import org.siemac.metamac.core.common.util.shared.VersionUtil;
 import org.siemac.metamac.core.common.util.transformers.MetamacTransformer;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.CodeResourceInternal;
@@ -1205,7 +1202,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
             }
 
             if (DsdComponentType.TEMPORAL.equals(dimension.getType())) {
-                sortTemporalCodeDimensions(codes);
+                DatasetVersionUtils.sortTemporalCodeDimensions(codes);
             }
 
             resource.getDimensionsCoverage().addAll(codes);
@@ -1234,7 +1231,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         }
         if (resource.getTemporalCoverage().isEmpty()) {
             List<CodeDimension> codeItems = processCodeFromAttributeByType(resource, dataStructure, DsdComponentType.TEMPORAL);
-            sortTemporalCodeDimensions(codeItems);
+            DatasetVersionUtils.sortTemporalCodeDimensions(codeItems);
             resource.getTemporalCoverage().addAll(buildTemporalCodeFromCodeDimensions(codeItems));
         }
         if (resource.getMeasureCoverage().isEmpty()) {
@@ -1247,18 +1244,6 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         List<String> identifiers = new ArrayList<String>();
         StatisticalResourcesCollectionUtils.mapCollection(codes, identifiers, new CodeDimensionToCodeStringTransformer());
         return identifiers;
-    }
-
-    private void sortTemporalCodeDimensions(List<CodeDimension> codes) {
-        Collections.sort(codes, new Comparator<CodeDimension>() {
-
-            private final TimeSdmxComparator sdmxComparator = new TimeSdmxComparator();
-
-            @Override
-            public int compare(CodeDimension o1, CodeDimension o2) {
-                return sdmxComparator.compare(new TimeSdmx(o2.getIdentifier()), new TimeSdmx(o1.getIdentifier()));
-            }
-        });
     }
 
     private void addTranslationsToCodesFromExternalItems(List<CodeDimension> codeDimensions, List<ExternalItem> externalItems) throws MetamacException {
