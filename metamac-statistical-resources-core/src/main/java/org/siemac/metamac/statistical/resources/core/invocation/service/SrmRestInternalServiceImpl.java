@@ -765,13 +765,9 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
     }
 
     @Override
-    public void publishContentConstraint(ServiceContext serviceContext, String urn, Boolean alsoMarkAsPublic) throws MetamacException {
+    public void publishContentConstraint(ServiceContext serviceContext, String artefactUrn, Boolean alsoMarkAsPublic) throws MetamacException {
         try {
-            String[] contentConstraintComponents = GeneratorUrnUtils.extractVersionableArtefactParts(urn);
-            String agencyId = contentConstraintComponents[0];
-            String resourceId = contentConstraintComponents[1];
-            String version = contentConstraintComponents[2];
-            Response response = restApiLocator.getSrmRestInternalFacadeV10().publishContentConstraint(agencyId, resourceId, version, alsoMarkAsPublic, serviceContext.getUserId());
+            Response response = restApiLocator.getSrmRestInternalFacadeV10().publishContentConstraintsForArtefact(artefactUrn, alsoMarkAsPublic, serviceContext.getUserId());
 
             checkStatusOk(response);
         } catch (Exception e) {
