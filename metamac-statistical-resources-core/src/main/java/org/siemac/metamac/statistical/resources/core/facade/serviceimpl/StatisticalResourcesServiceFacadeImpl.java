@@ -66,7 +66,6 @@ import org.siemac.metamac.statistical.resources.core.dto.publication.Publication
 import org.siemac.metamac.statistical.resources.core.dto.query.CodeItemDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionBaseDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionDto;
-import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.invocation.service.SrmRestInternalService;
@@ -1987,13 +1986,10 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
 
         // Security
         DatasetVersion datasetVersion = obtainDatasetVersionFromContentConstraint(ctx, contentConstraint); // Dataset for extract operation
-        ProcStatusEnum procStatus = null; // ProcStatus of contentConstraints, null is draft
-        if (contentConstraint.getLifeCycle() != null) {
-            procStatus = ProcStatusEnum.valueOf(contentConstraint.getLifeCycle().getProcStatus().value());
-        }
-        ConstraintsSecurityUtils.canRetrieveContentConstraintByUrn(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode(), procStatus);
+        ConstraintsSecurityUtils.canRetrieveContentConstraintByUrn(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode(), datasetVersion
+                .getLifeCycleStatisticalResource().getProcStatus());
 
-        // Transform
+       // Transform
         return constraintRest2DtoMapper.toConstraintDto(contentConstraint);
     }
 
@@ -2004,11 +2000,8 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
 
         // Security
         DatasetVersion datasetVersion = obtainDatasetVersionFromContentConstraint(ctx, contentConstraint); // Dataset for extract operation
-        ProcStatusEnum procStatus = null; // ProcStatus of contentConstraints, null is draft
-        if (contentConstraint.getLifeCycle() != null) {
-            procStatus = ProcStatusEnum.valueOf(contentConstraint.getLifeCycle().getProcStatus().value());
-        }
-        ConstraintsSecurityUtils.canDeleteContentConstraint(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode(), procStatus);
+        ConstraintsSecurityUtils.canDeleteContentConstraint(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode(), datasetVersion
+                .getLifeCycleStatisticalResource().getProcStatus());
 
         // Delete
         constraintsService.deleteContentConstraint(ctx, urn);
@@ -2021,11 +2014,8 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
 
         // Security
         DatasetVersion datasetVersion = obtainDatasetVersionFromContentConstraint(ctx, contentConstraint); // Dataset for extract operation
-        ProcStatusEnum procStatus = null; // ProcStatus of contentConstraints, null is draft
-        if (contentConstraint.getLifeCycle() != null) {
-            procStatus = ProcStatusEnum.valueOf(contentConstraint.getLifeCycle().getProcStatus().value());
-        }
-        ConstraintsSecurityUtils.canSaveForContentConstraint(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode(), procStatus);
+        ConstraintsSecurityUtils.canSaveForContentConstraint(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode(), datasetVersion
+                .getLifeCycleStatisticalResource().getProcStatus());
 
         // Transform
         RegionReference regionReference = constraintDto2RestMapper.toRegionReference(regionValueDto);
@@ -2044,11 +2034,8 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
 
         // Security
         DatasetVersion datasetVersion = obtainDatasetVersionFromContentConstraint(ctx, contentConstraint); // Dataset for extract operation
-        ProcStatusEnum procStatus = null; // ProcStatus of contentConstraints, null is draft
-        if (contentConstraint.getLifeCycle() != null) {
-            procStatus = ProcStatusEnum.valueOf(contentConstraint.getLifeCycle().getProcStatus().value());
-        }
-        ConstraintsSecurityUtils.deleteRegion(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode(), procStatus);
+        ConstraintsSecurityUtils.canDeleteRegion(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode(), datasetVersion.getLifeCycleStatisticalResource()
+                .getProcStatus());
 
         // Delete
         constraintsService.deleteRegion(ctx, contentConstraintUrn, regionCode);
@@ -2061,11 +2048,8 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
 
         // Security
         DatasetVersion datasetVersion = obtainDatasetVersionFromContentConstraint(ctx, contentConstraint); // Dataset for extract operation
-        ProcStatusEnum procStatus = null; // ProcStatus of contentConstraints, null is draft
-        if (contentConstraint.getLifeCycle() != null) {
-            procStatus = ProcStatusEnum.valueOf(contentConstraint.getLifeCycle().getProcStatus().value());
-        }
-        ConstraintsSecurityUtils.canRetrieveRegionForContentConstraint(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode(), procStatus);
+        ConstraintsSecurityUtils.canRetrieveRegionForContentConstraint(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode(), datasetVersion
+                .getLifeCycleStatisticalResource().getProcStatus());
 
         // Find
         RegionReference regionReference = constraintsService.retrieveRegionForContentConstraint(ctx, contentConstraintUrn, regionCode);

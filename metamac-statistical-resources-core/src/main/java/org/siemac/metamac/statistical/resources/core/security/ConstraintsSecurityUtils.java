@@ -38,7 +38,7 @@ public class ConstraintsSecurityUtils extends SecurityUtils {
         }
     }
 
-    public static void deleteRegion(ServiceContext ctx, String operationCode, ProcStatusEnum procStatus) throws MetamacException {
+    public static void canDeleteRegion(ServiceContext ctx, String operationCode, ProcStatusEnum procStatus) throws MetamacException {
         if (!SharedConstraintsSecurityUtils.canDeleteContentConstraint(getMetamacPrincipal(ctx), operationCode, procStatus)) {
             throwExceptionIfOperationNotAllowed(ctx);
         }
