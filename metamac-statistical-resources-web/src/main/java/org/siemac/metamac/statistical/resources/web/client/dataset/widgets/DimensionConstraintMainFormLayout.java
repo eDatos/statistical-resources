@@ -169,7 +169,7 @@ public class DimensionConstraintMainFormLayout extends MainFormLayout {
     }
 
     private void updateButtonsVisibility(DsdDimensionDto selectedDimension) {
-        boolean canModifyConstraint = ConstraintsClientSecurityUtils.canSaveForContentConstraint(datasetVersionDto.getStatisticalOperation().getCode(), datasetVersionDto.getProcStatus());
+        boolean canModifyConstraint = ConstraintsClientSecurityUtils.canSaveForContentConstraint(datasetVersionDto);
         KeyValueDto keyValueDto = CommonUtils.getKeyValueOfDimension(selectedDimension, regionValueDto);
         boolean existsKeyValueOfDimension = keyValueDto != null;
         setCanEdit(canModifyConstraint);

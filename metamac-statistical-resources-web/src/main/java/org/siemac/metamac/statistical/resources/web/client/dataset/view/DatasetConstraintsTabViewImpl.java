@@ -231,14 +231,14 @@ public class DatasetConstraintsTabViewImpl extends ViewWithUiHandlers<DatasetCon
 
         private void updateVisibility(DatasetVersionDto datasetVersionDto, ContentConstraintDto contentConstraintDto) {
             if (contentConstraintDto == null) {
-                enableConstraintsButton.setVisible(ConstraintsClientSecurityUtils.canCreateContentConstraint(datasetVersionDto.getStatisticalOperation().getCode()));
+                enableConstraintsButton.setVisible(ConstraintsClientSecurityUtils.canCreateContentConstraint(datasetVersionDto));
                 disableConstraintsButton.setVisible(false);
                 constraintsList.setVisible(false);
                 mainFormLayout.setVisible(false);
             } else {
                 enableConstraintsButton.setVisible(false);
                 disableConstraintsButton
-                        .setVisible(ConstraintsClientSecurityUtils.canDeleteContentConstraint(datasetVersionDto.getStatisticalOperation().getCode(), datasetVersionDto.getProcStatus()));
+                        .setVisible(ConstraintsClientSecurityUtils.canDeleteContentConstraint(datasetVersionDto));
                 constraintsList.setVisible(true);
             }
         }

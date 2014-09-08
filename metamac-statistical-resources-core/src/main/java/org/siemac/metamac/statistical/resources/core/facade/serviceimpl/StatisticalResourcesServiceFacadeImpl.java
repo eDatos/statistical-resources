@@ -1962,7 +1962,8 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     public ContentConstraintDto createContentConstraint(ServiceContext ctx, ContentConstraintDto contentConstraintDto) throws MetamacException {
         // Security
         DatasetVersion datasetVersion = obtainDatasetVersionFromContentConstraint(ctx, contentConstraintDto);
-        ConstraintsSecurityUtils.canCreateContentConstraint(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode());
+        ConstraintsSecurityUtils.canCreateContentConstraint(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode(), datasetVersion
+                .getLifeCycleStatisticalResource().getProcStatus());
 
         // Check that there isn't data sources
         if (!datasetVersion.getDatasources().isEmpty()) {
@@ -1989,7 +1990,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         ConstraintsSecurityUtils.canRetrieveContentConstraintByUrn(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode(), datasetVersion
                 .getLifeCycleStatisticalResource().getProcStatus());
 
-       // Transform
+        // Transform
         return constraintRest2DtoMapper.toConstraintDto(contentConstraint);
     }
 

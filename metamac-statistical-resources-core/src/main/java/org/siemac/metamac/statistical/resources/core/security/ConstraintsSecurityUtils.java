@@ -14,8 +14,8 @@ public class ConstraintsSecurityUtils extends SecurityUtils {
         }
     }
 
-    public static void canCreateContentConstraint(ServiceContext ctx, String operationCode) throws MetamacException {
-        if (!SharedConstraintsSecurityUtils.canCreateContentConstraint(getMetamacPrincipal(ctx), operationCode)) {
+    public static void canCreateContentConstraint(ServiceContext ctx, String operationCode, ProcStatusEnum datasetProcStatusEnum) throws MetamacException {
+        if (!SharedConstraintsSecurityUtils.canCreateContentConstraint(getMetamacPrincipal(ctx), operationCode, datasetProcStatusEnum)) {
             throwExceptionIfOperationNotAllowed(ctx);
         }
     }
