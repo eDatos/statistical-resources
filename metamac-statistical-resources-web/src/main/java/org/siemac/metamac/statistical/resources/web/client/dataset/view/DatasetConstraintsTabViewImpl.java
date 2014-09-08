@@ -11,6 +11,7 @@ import org.siemac.metamac.statistical.resources.core.dto.constraint.RegionValueD
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdDimensionDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.ItemDto;
+import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb;
 import org.siemac.metamac.statistical.resources.web.client.constants.StatisticalResourceWebConstants;
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.ds.DimensionConstraintsDS;
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.record.DimensionConstraintsRecord;
@@ -22,6 +23,7 @@ import org.siemac.metamac.statistical.resources.web.client.utils.StatisticalReso
 import org.siemac.metamac.web.common.client.widgets.BaseCustomListGrid;
 import org.siemac.metamac.web.common.client.widgets.CustomToolStripButton;
 import org.siemac.metamac.web.common.client.widgets.DeleteConfirmationWindow;
+import org.siemac.metamac.web.common.client.widgets.InformationLabel;
 
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
@@ -103,11 +105,13 @@ public class DatasetConstraintsTabViewImpl extends ViewWithUiHandlers<DatasetCon
         private ToolStrip                         toolStrip;
         private CustomToolStripButton             enableConstraintsButton;
         private CustomToolStripButton             disableConstraintsButton;
+        private InformationLabel                  informationLabel;
         private BaseCustomListGrid                constraintsList;
         private DimensionConstraintMainFormLayout mainFormLayout;
 
         public ConstraintsPanel() {
             createToolStrip();
+            createInformationLabel();
             createConstraintsList();
             createDimensionConstraintMainFormLayout();
         }
@@ -134,6 +138,13 @@ public class DatasetConstraintsTabViewImpl extends ViewWithUiHandlers<DatasetCon
             disableConstraintsButton = createDisableConstraintsButton();
             toolStrip.addButton(disableConstraintsButton);
             addMember(toolStrip);
+        }
+
+        private void createInformationLabel() {
+            informationLabel = new InformationLabel(StatisticalResourcesWeb.getMessages().datasetConstraintNotExists());
+            informationLabel.setMargin(10);
+            informationLabel.setVisible(false);
+            addMember(informationLabel);
         }
 
         private void createConstraintsList() {
@@ -233,13 +244,14 @@ public class DatasetConstraintsTabViewImpl extends ViewWithUiHandlers<DatasetCon
             if (contentConstraintDto == null) {
                 enableConstraintsButton.setVisible(ConstraintsClientSecurityUtils.canCreateContentConstraint(datasetVersionDto));
                 disableConstraintsButton.setVisible(false);
+                informationLabel.show();
                 constraintsList.setVisible(false);
                 mainFormLayout.setVisible(false);
             } else {
                 enableConstraintsButton.setVisible(false);
-                disableConstraintsButton
-                        .setVisible(ConstraintsClientSecurityUtils.canDeleteContentConstraint(datasetVersionDto));
+                disableConstraintsButton.setVisible(ConstraintsClientSecurityUtils.canDeleteContentConstraint(datasetVersionDto));
                 constraintsList.setVisible(true);
+                informationLabel.hide();
             }
         }
 
