@@ -91,7 +91,12 @@ public class ItemsTreeGrid extends NavigableExternalItemTreeGrid {
             @Override
             public void onSelectionChanged(SelectionEvent event) {
                 if (!isFilteringActive) {
-                    selectedTreeNodes = ItemsTreeGrid.this.getSelectedRecords();
+                    if (ItemsTreeGrid.this.getFilterEditorCriteria().getValues().isEmpty()) {
+                        selectedTreeNodes = ItemsTreeGrid.this.getSelectedRecords();
+                    } else {
+                        ListGridRecord selectedRecord = ((ListGridRecord) event.getRecord());
+                        selectedTreeNodes = modifyRecordList(selectedTreeNodes, selectedRecord, event.getState());
+                    }
                 }
             }
         });
@@ -197,7 +202,7 @@ public class ItemsTreeGrid extends NavigableExternalItemTreeGrid {
                 event.cancel();
                 TreeNode[] treeNodes = tree.getAllNodes();
 
-                String codeCriteria = event.getCriteria().getAttribute(ItemDS.CODE);
+                String codeCriteria = event.getCriteria().getAttribute(ItemDS.MANAGEMENT_APP_URL);
                 String nameCriteria = event.getCriteria().getAttribute(ItemDS.NAME);
 
                 if (StringUtils.isBlank(codeCriteria) && StringUtils.isBlank(nameCriteria)) {
@@ -268,5 +273,34 @@ public class ItemsTreeGrid extends NavigableExternalItemTreeGrid {
         public static final String NAME               = "item-name";
         public static final String URN                = "item-urn";
         public static final String CASCADE            = "item-cascade";
+    }
+
+    /**
+     * Modify the record list adding or deleting the specified record. If the state is <code>true</code>, the record is added. If the state is <code>false</code>, is removed.
+     * 
+     * @param records
+     * @param record
+     * @param state
+     * @return
+     */
+    private ListGridRecord[] modifyRecordList(ListGridRecord[] records, ListGridRecord record, boolean state) {
+        int length = state ? records.length + 1 : records.length - 1;
+        ListGridRecord[] result = new ListGridRecord[length];
+        int j = 0;
+        for (int i = 0; i < records.length; i++) {
+            if (!state) {
+                if (!StringUtils.equals(records[i].getAttributeAsString(ItemDS.URN), record.getAttributeAsString(ItemDS.URN))) {
+                    result[j] = records[i];
+                    j++;
+                }
+            } else {
+                result[j] = records[i];
+                j++;
+            }
+        }
+        if (state) {
+            result[j] = record;
+        }
+        return result;
     }
 }
