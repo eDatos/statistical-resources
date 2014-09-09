@@ -5,7 +5,12 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
+import org.siemac.metamac.core.common.dto.InternationalStringDto;
+import org.siemac.metamac.core.common.dto.LocalisedStringDto;
 import org.siemac.metamac.core.common.enume.domain.TypeExternalArtefactsEnum;
+import org.siemac.metamac.rest.common.v1_0.domain.InternationalString;
+import org.siemac.metamac.rest.common.v1_0.domain.LocalisedString;
+import org.siemac.metamac.rest.notices.v1_0.domain.ResourceInternal;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.AttributeRelationship;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.CodeResourceInternal;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codes;
@@ -13,6 +18,7 @@ import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Concept
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ItemResourceInternal;
 import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor.DsdAttribute;
 import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor.DsdDimension;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdAttributeDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdDimensionDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.ItemDto;
@@ -22,11 +28,17 @@ import org.siemac.metamac.statistical.resources.core.enume.dataset.domain.Attrib
 import org.siemac.metamac.statistical.resources.core.enume.dataset.domain.AttributeRepresentationTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.dataset.domain.DimensionTypeEnum;
 import org.siemac.metamac.statistical.resources.web.server.utils.ExternalItemWebUtils;
+import org.siemac.metamac.statistical_resources.rest.common.StatisticalResourcesRestConstants;
+import org.siemac.metamac.statistical_resources.rest.internal.v1_0.mapper.dataset.DatasetsDo2RestMapperV10;
 import org.siemac.metamac.web.common.shared.exception.MetamacWebException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class RestMapperImpl implements RestMapper {
+
+    @Autowired
+    protected DatasetsDo2RestMapperV10 datasetsDo2RestMapperV10;
 
     @Override
     public List<DsdDimensionDto> buildDsdDimensionDtosFromDsdDimensions(List<DsdDimension> dsdDimensions) throws MetamacWebException {
@@ -144,5 +156,37 @@ public class RestMapperImpl implements RestMapper {
             }
         }
         return null;
+    }
+
+    //
+    // NOTIFICATIONS
+    //
+
+    @Override
+    public ResourceInternal buildResourceInternalFromDatasetVersion(DatasetVersionDto datasetVersionDto) throws MetamacWebException {
+        ResourceInternal resourceInternal = new ResourceInternal();
+        if (datasetVersionDto != null) {
+            resourceInternal.setId(datasetVersionDto.getCode());
+            resourceInternal.setUrn(datasetVersionDto.getUrn());
+            resourceInternal.setKind(StatisticalResourcesRestConstants.KIND_DATASET);
+            resourceInternal.setName(toInternationalString(datasetVersionDto.getTitle()));
+            resourceInternal.setManagementAppLink(datasetsDo2RestMapperV10.toDatasetVersionManagementApplicationLink(datasetVersionDto));
+            resourceInternal.setSelfLink(datasetsDo2RestMapperV10.toDatasetSelfLink(datasetVersionDto));
+        }
+        return resourceInternal;
+    }
+
+    private InternationalString toInternationalString(InternationalStringDto sources) {
+        if (sources == null) {
+            return null;
+        }
+        InternationalString targets = new InternationalString();
+        for (LocalisedStringDto source : sources.getTexts()) {
+            LocalisedString target = new LocalisedString();
+            target.setValue(source.getLabel());
+            target.setLang(source.getLocale());
+            targets.getTexts().add(target);
+        }
+        return targets;
     }
 }

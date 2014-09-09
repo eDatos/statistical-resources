@@ -33,6 +33,8 @@
         <property name="bundleName" value="messages-statistical_resources-web"/>
     </bean>
     
+    <bean id="restExceptionUtils" class="org.siemac.metamac.web.common.server.rest.utils.RestExceptionUtils" />
+    
     <!-- Logger aspect for logging exceptions thrown by actionHandlers -->
     <bean id="logAspect" class="org.siemac.metamac.web.common.server.aspects.ActionHandlerLoggerAspect" />
 
@@ -50,8 +52,6 @@
     <bean id="loggingSetup" class="org.siemac.metamac.core.common.logging.LoggingSetup">
         <property name="logConfigurationFile" value="${environment.metamac.data}/statistical-resources/conf/logback-statistical-resources-web.xml" />
     </bean>
-
-
 
     <!-- Core -->
     <import resource="classpath:/spring/statistical-resources/applicationContext.xml" />

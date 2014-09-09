@@ -5,10 +5,12 @@ import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersion
 import org.siemac.metamac.statistical.resources.core.facade.serviceapi.StatisticalResourcesServiceFacade;
 import org.siemac.metamac.statistical.resources.web.client.enums.LifeCycleActionEnum;
 import org.siemac.metamac.statistical.resources.web.server.handlers.UpdateResourceProcStatusBaseActionHandler;
+import org.siemac.metamac.statistical.resources.web.server.rest.NoticesRestInternalFacade;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.UpdateDatasetVersionProcStatusAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.UpdateDatasetVersionProcStatusResult;
 import org.siemac.metamac.web.common.server.ServiceContextHolder;
 import org.siemac.metamac.web.common.server.utils.WebExceptionUtils;
+import org.siemac.metamac.web.common.shared.exception.MetamacWebException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -19,6 +21,9 @@ public class UpdateDatasetVersionProcStatusActionHandler extends UpdateResourceP
 
     @Autowired
     private StatisticalResourcesServiceFacade statisticalResourcesServiceFacade;
+
+    @Autowired
+    private NoticesRestInternalFacade         noticesRestInternalFacade;
 
     public UpdateDatasetVersionProcStatusActionHandler() {
         super(UpdateDatasetVersionProcStatusAction.class);
@@ -69,9 +74,12 @@ public class UpdateDatasetVersionProcStatusActionHandler extends UpdateResourceP
                     datasetVersionDto = statisticalResourcesServiceFacade.versioningDatasetVersion(ServiceContextHolder.getCurrentServiceContext(), action.getDatasetVersionToUpdateProcStatus(),
                             action.getVersionType());
                     break;
+            }
 
-                default:
-                    break;
+            try {
+                noticesRestInternalFacade.createLifeCycleNotification(ServiceContextHolder.getCurrentServiceContext(), lifeCycleAction, datasetVersionDto);
+            } catch (MetamacWebException e) {
+                return new UpdateDatasetVersionProcStatusResult.Builder(datasetVersionDto).notificationException(e).build();
             }
 
             return new UpdateDatasetVersionProcStatusResult(datasetVersionDto);

@@ -6,6 +6,7 @@ import java.util.Map;
 import org.siemac.metamac.core.common.util.shared.UrnUtils;
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResourceResult;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
 import org.siemac.metamac.statistical.resources.navigation.shared.NameTokens;
@@ -62,16 +63,21 @@ public class InternalWebApplicationNavigation {
 
     // DATASETS
     public String buildDatasetVersionUrl(DatasetVersion source) {
-        Map<String, String> parameters = new HashMap<String, String>(1);
-        parameters.put(OPERATION_ID_PARAMETER, source.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode());
-        parameters.put(DATASET_ID_PARAMETER, UrnUtils.removePrefix(source.getLifeCycleStatisticalResource().getUrn()));
-        return datasetVersionTemplate.expand(parameters).toString();
+        return buildDatasetVersionUrl(source.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode(), source.getLifeCycleStatisticalResource().getUrn());
     }
 
     public String buildDatasetVersionUrl(RelatedResourceResult source) {
-        Map<String, String> parameters = new HashMap<String, String>(1);
-        parameters.put(OPERATION_ID_PARAMETER, source.getStatisticalOperationCode());
-        parameters.put(DATASET_ID_PARAMETER, UrnUtils.removePrefix(source.getUrn()));
+        return buildDatasetVersionUrl(source.getStatisticalOperationCode(), source.getUrn());
+    }
+
+    public String buildDatasetVersionUrl(DatasetVersionDto source) {
+        return buildDatasetVersionUrl(source.getStatisticalOperation().getCode(), source.getUrn());
+    }
+
+    public String buildDatasetVersionUrl(String statisticalOperationCode, String datasetVersionUrn) {
+        Map<String, String> parameters = new HashMap<String, String>(2);
+        parameters.put(OPERATION_ID_PARAMETER, statisticalOperationCode);
+        parameters.put(DATASET_ID_PARAMETER, UrnUtils.removePrefix(datasetVersionUrn));
         return datasetVersionTemplate.expand(parameters).toString();
     }
 

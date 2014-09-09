@@ -225,7 +225,7 @@ public class DatasetMetadataTabPresenter extends StatisticalResourceMetadataBase
 
                     @Override
                     public void onWaitSuccess(UpdateDatasetVersionProcStatusResult result) {
-                        fireSuccessMessage(getMessages().lifeCycleResourceSentToProductionValidation());
+                        showMessageAfterLifeCycleUpdate(result, getMessages().lifeCycleResourceSentToProductionValidation());
                         getView().setDataset(result.getDatasetVersionDto());
                     }
                 });
@@ -238,7 +238,7 @@ public class DatasetMetadataTabPresenter extends StatisticalResourceMetadataBase
 
                     @Override
                     public void onWaitSuccess(UpdateDatasetVersionProcStatusResult result) {
-                        fireSuccessMessage(getMessages().lifeCycleResourceSentToDiffusionValidation());
+                        showMessageAfterLifeCycleUpdate(result, getMessages().lifeCycleResourceSentToDiffusionValidation());
                         getView().setDataset(result.getDatasetVersionDto());
                     }
                 });
@@ -251,7 +251,7 @@ public class DatasetMetadataTabPresenter extends StatisticalResourceMetadataBase
 
             @Override
             public void onWaitSuccess(UpdateDatasetVersionProcStatusResult result) {
-                fireSuccessMessage(getMessages().lifeCycleResourceRejectValidation());
+                showMessageAfterLifeCycleUpdate(result, getMessages().lifeCycleResourceRejectValidation());
                 getView().setDataset(result.getDatasetVersionDto());
             }
         });
@@ -265,7 +265,7 @@ public class DatasetMetadataTabPresenter extends StatisticalResourceMetadataBase
 
             @Override
             public void onWaitSuccess(UpdateDatasetVersionProcStatusResult result) {
-                fireSuccessMessage(getMessages().lifeCycleResourceProgramPublication());
+                showMessageAfterLifeCycleUpdate(result, getMessages().lifeCycleResourceProgramPublication());
                 getView().setDataset(result.getDatasetVersionDto());
             }
         });
@@ -277,7 +277,7 @@ public class DatasetMetadataTabPresenter extends StatisticalResourceMetadataBase
 
             @Override
             public void onWaitSuccess(UpdateDatasetVersionProcStatusResult result) {
-                fireSuccessMessage(getMessages().lifeCycleResourcePublish());
+                showMessageAfterLifeCycleUpdate(result, getMessages().lifeCycleResourcePublish());
                 getView().setDataset(result.getDatasetVersionDto());
             }
         });
@@ -290,7 +290,7 @@ public class DatasetMetadataTabPresenter extends StatisticalResourceMetadataBase
 
                     @Override
                     public void onWaitSuccess(UpdateDatasetVersionProcStatusResult result) {
-                        fireSuccessMessage(getMessages().lifeCycleResourceCancelProgrammedPublication());
+                        showMessageAfterLifeCycleUpdate(result, getMessages().lifeCycleResourceCancelProgrammedPublication());
                         getView().setDataset(result.getDatasetVersionDto());
                     }
                 });
@@ -304,6 +304,7 @@ public class DatasetMetadataTabPresenter extends StatisticalResourceMetadataBase
 
             @Override
             public void onWaitSuccess(UpdateDatasetVersionProcStatusResult result) {
+                // TODO METAMAC-1991
                 getView().showInformationMessage(getMessages().datasetVersioning(), getMessages().datasetBackgroundVersionInProgress());
                 RequestDatasetVersionsReloadEvent.fire(DatasetMetadataTabPresenter.this, result.getDatasetVersionDto().getUrn());
             }
@@ -317,6 +318,15 @@ public class DatasetMetadataTabPresenter extends StatisticalResourceMetadataBase
             Window.open(url, "_blank", "");
         } catch (MetamacWebException e) {
             ShowMessageEvent.fireErrorMessage(this, e);
+        }
+    }
+
+    private void showMessageAfterLifeCycleUpdate(UpdateDatasetVersionProcStatusResult result, String message) {
+        if (result.getNotificationException() == null) {
+            ShowMessageEvent.fireSuccessMessage(this, message);
+        } else {
+            String warningMessage = message + StatisticalResourcesWeb.getMessages().notificationsSendingError();
+            ShowMessageEvent.fireWarningMessageWithError(this, warningMessage, result.getNotificationException());
         }
     }
 
