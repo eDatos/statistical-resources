@@ -53,9 +53,6 @@ public class UpdateDatasetVersionProcStatusActionHandler extends UpdateResourceP
 
                     datasetVersionDto = statisticalResourcesServiceFacade.sendDatasetVersionToValidationRejected(ServiceContextHolder.getCurrentServiceContext(),
                             action.getDatasetVersionToUpdateProcStatus());
-
-                    String reasonOfRejection = action.getReasonOfRejection();
-                    // TODO METAMAC-2112
                     break;
 
                 case PUBLISH:
@@ -77,7 +74,7 @@ public class UpdateDatasetVersionProcStatusActionHandler extends UpdateResourceP
             }
 
             try {
-                noticesRestInternalFacade.createLifeCycleNotification(ServiceContextHolder.getCurrentServiceContext(), lifeCycleAction, datasetVersionDto);
+                noticesRestInternalFacade.createLifeCycleNotification(ServiceContextHolder.getCurrentServiceContext(), lifeCycleAction, datasetVersionDto, action.getReasonOfRejection());
             } catch (MetamacWebException e) {
                 return new UpdateDatasetVersionProcStatusResult.Builder(datasetVersionDto).notificationException(e).build();
             }

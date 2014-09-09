@@ -304,7 +304,6 @@ public class DatasetMetadataTabPresenter extends StatisticalResourceMetadataBase
 
             @Override
             public void onWaitSuccess(UpdateDatasetVersionProcStatusResult result) {
-                // TODO METAMAC-1991
                 getView().showInformationMessage(getMessages().datasetVersioning(), getMessages().datasetBackgroundVersionInProgress());
                 RequestDatasetVersionsReloadEvent.fire(DatasetMetadataTabPresenter.this, result.getDatasetVersionDto().getUrn());
             }
