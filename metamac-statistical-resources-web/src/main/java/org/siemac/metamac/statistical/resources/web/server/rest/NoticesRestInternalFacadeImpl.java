@@ -109,8 +109,8 @@ public class NoticesRestInternalFacadeImpl implements NoticesRestInternalFacade 
 
     private void createNotificationWithStatisticalOperationAndRoles(ServiceContext serviceContext, LifeCycleActionEnum lifeCycleAction, DatasetVersionDto datasetVersionDto) throws MetamacWebException {
         ResourceInternal resourceInternal = restMapper.buildResourceInternalFromDatasetVersion(datasetVersionDto);
-        String actionCode = actionCodes.containsKey(lifeCycleAction) ? actionCodes.get(lifeCycleAction) : StringUtils.EMPTY;
-        String messageCode = messageCodes.containsKey(lifeCycleAction) ? messageCodes.get(lifeCycleAction) : StringUtils.EMPTY;
+        String actionCode = getActionCode(lifeCycleAction);
+        String messageCode = getMessageCode(lifeCycleAction);
         MetamacRolesEnum[] diffusionValidationRoles = roles.containsKey(lifeCycleAction) ? roles.get(lifeCycleAction) : null;
         String statisticalOperationUrn = datasetVersionDto.getStatisticalOperation().getUrn();
         String reasonOfRejection = null;
@@ -120,14 +120,13 @@ public class NoticesRestInternalFacadeImpl implements NoticesRestInternalFacade 
     private void createNotificationWithReceivers(ServiceContext serviceContext, LifeCycleActionEnum lifeCycleAction, DatasetVersionDto datasetVersionDto, String reasonOfRejection)
             throws MetamacWebException {
         ResourceInternal resourceInternal = restMapper.buildResourceInternalFromDatasetVersion(datasetVersionDto);
-        String actionCode = actionCodes.containsKey(lifeCycleAction) ? actionCodes.get(lifeCycleAction) : StringUtils.EMPTY;
-        String messageCode = messageCodes.containsKey(lifeCycleAction) ? messageCodes.get(lifeCycleAction) : StringUtils.EMPTY;
+        String actionCode = getActionCode(lifeCycleAction);
+        String messageCode = getMessageCode(lifeCycleAction);
         MetamacRolesEnum[] cancelValidationRoles = null;
         String statisticalOperationUrn = null;
         createNotification(serviceContext, actionCode, messageCode, new ResourceInternal[]{resourceInternal}, cancelValidationRoles, statisticalOperationUrn, reasonOfRejection,
                 datasetVersionDto.getCreationUser());
     }
-
     private void createNotification(ServiceContext ctx, String actionCode, String messageCode, ResourceInternal[] resources, MetamacRolesEnum[] roles, String statisticalOperationUrn,
             String reasonOfRejection, String... receiversUsernames) throws MetamacWebException {
 
@@ -166,6 +165,14 @@ public class NoticesRestInternalFacadeImpl implements NoticesRestInternalFacade 
         Locale locale = ServiceContextUtils.getLocale(ctx);
         String localisedAction = LocaleUtil.getMessageForCode(actionCode, locale);
         return "[" + getSendingApp() + "] " + localisedAction;
+    }
+
+    private String getActionCode(LifeCycleActionEnum lifeCycleAction) {
+        return actionCodes.containsKey(lifeCycleAction) ? actionCodes.get(lifeCycleAction) : StringUtils.EMPTY;
+    }
+
+    private String getMessageCode(LifeCycleActionEnum lifeCycleAction) {
+        return messageCodes.containsKey(lifeCycleAction) ? messageCodes.get(lifeCycleAction) : StringUtils.EMPTY;
     }
 
     private String getSendingApp() {
