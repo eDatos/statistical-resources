@@ -77,6 +77,8 @@ public class ServiceExceptionType extends CommonServiceExceptionType {
 
     // Constraints
     public static final CommonServiceExceptionType CONSTRAINTS_CREATE_DATASET_WITH_DATASOURCES                              = create("exception.resources.constraints.create.dataset_with_datasources");
+    public static final CommonServiceExceptionType CONSTRAINTS_DELETE_FINAL                                                 = create("exception.resources.constraints.delete.final");
+    public static final CommonServiceExceptionType CONSTRAINTS_UPDATE_FINAL                                                 = create("exception.resources.constraints.update.final");
 
     // Identifiable Statistical Resource
     public static final CommonServiceExceptionType IDENTIFIABLE_STATISTICAL_RESOURCE_NOT_FOUND                              = create("exception.resources.identifiable_statistical_resource.not_found");

@@ -2004,6 +2004,12 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         ConstraintsSecurityUtils.canDeleteContentConstraint(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode(), datasetVersion
                 .getLifeCycleStatisticalResource().getProcStatus());
 
+        if (contentConstraint.isIsFinal()) {
+            // Can not delete final constraint
+            throw MetamacExceptionBuilder.builder()
+                    .withPrincipalException(new MetamacExceptionItem(ServiceExceptionType.CONSTRAINTS_DELETE_FINAL, contentConstraint.getConstraintAttachment().getUrn())).build();
+        }
+
         // Delete
         constraintsService.deleteContentConstraint(ctx, urn);
     }
@@ -2017,6 +2023,12 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         DatasetVersion datasetVersion = obtainDatasetVersionFromContentConstraint(ctx, contentConstraint); // Dataset for extract operation
         ConstraintsSecurityUtils.canSaveForContentConstraint(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode(), datasetVersion
                 .getLifeCycleStatisticalResource().getProcStatus());
+
+        if (contentConstraint.isIsFinal()) {
+            // Can not update final constraint
+            throw MetamacExceptionBuilder.builder()
+                    .withPrincipalException(new MetamacExceptionItem(ServiceExceptionType.CONSTRAINTS_UPDATE_FINAL, contentConstraint.getConstraintAttachment().getUrn())).build();
+        }
 
         // Transform
         RegionReference regionReference = constraintDto2RestMapper.toRegionReference(regionValueDto);
@@ -2037,6 +2049,12 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         DatasetVersion datasetVersion = obtainDatasetVersionFromContentConstraint(ctx, contentConstraint); // Dataset for extract operation
         ConstraintsSecurityUtils.canDeleteRegion(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode(), datasetVersion.getLifeCycleStatisticalResource()
                 .getProcStatus());
+
+        if (contentConstraint.isIsFinal()) {
+            // Can not update final constraint
+            throw MetamacExceptionBuilder.builder()
+                    .withPrincipalException(new MetamacExceptionItem(ServiceExceptionType.CONSTRAINTS_UPDATE_FINAL, contentConstraint.getConstraintAttachment().getUrn())).build();
+        }
 
         // Delete
         constraintsService.deleteRegion(ctx, contentConstraintUrn, regionCode);
