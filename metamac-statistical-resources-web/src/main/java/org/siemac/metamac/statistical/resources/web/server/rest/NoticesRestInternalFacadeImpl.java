@@ -24,6 +24,7 @@ import org.siemac.metamac.rest.notices.v1_0.domain.enume.MetamacApplicationsEnum
 import org.siemac.metamac.rest.notices.v1_0.domain.enume.MetamacRolesEnum;
 import org.siemac.metamac.rest.notices.v1_0.domain.utils.MessageBuilder;
 import org.siemac.metamac.rest.notices.v1_0.domain.utils.NoticeBuilder;
+import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.invocation.service.MetamacApisLocator;
 import org.siemac.metamac.statistical.resources.core.notices.ServiceNoticeAction;
 import org.siemac.metamac.statistical.resources.core.notices.ServiceNoticeMessage;
@@ -106,9 +107,9 @@ public class NoticesRestInternalFacadeImpl implements NoticesRestInternalFacade 
     public void createPublicationErrorNotification(ServiceContext serviceContext, NotificationDto notificationDto) throws MetamacWebException {
         String actionCode = ServiceNoticeAction.RESOURCE_PUBLICATION_ERROR;
         String messageCode = ServiceNoticeMessage.RESOURCE_PUBLICATION_ERROR_OK;
-        String[] receiversUsernames = new String[]{};
-        // TODO METAMAC-1991
-        createNotificationWithReceivers(serviceContext, actionCode, messageCode, notificationDto, receiversUsernames);
+        String creatorUsername = notificationDto.getDatasetVersionDto().getCreationUser();
+        String publisherUsername = serviceContext.getUserId();
+        createNotificationWithReceivers(serviceContext, actionCode, messageCode, notificationDto, new String[]{creatorUsername, publisherUsername});
     }
 
     private void createSendToProductionValidationNotification(ServiceContext serviceContext, NotificationDto notificationDto) throws MetamacWebException {
@@ -120,9 +121,10 @@ public class NoticesRestInternalFacadeImpl implements NoticesRestInternalFacade 
     }
 
     private void createCancelValidationNotification(ServiceContext serviceContext, NotificationDto notificationDto) throws MetamacWebException {
-        String[] receiversUsernames = new String[]{};
-        // TODO METAMAC-1991
-        createNotificationWithReceivers(serviceContext, notificationDto, receiversUsernames);
+        ProcStatusEnum previousProcStatusEnum = notificationDto.getPreviousDatasetVersionDto().getProcStatus();
+        String receiverUsername = ProcStatusEnum.PRODUCTION_VALIDATION.equals(previousProcStatusEnum) ? notificationDto.getPreviousDatasetVersionDto().getProductionValidationUser() : notificationDto
+                .getPreviousDatasetVersionDto().getDiffusionValidationUser();
+        createNotificationWithReceivers(serviceContext, notificationDto, new String[]{receiverUsername});
     }
 
     private void createPublicationNotification(ServiceContext serviceContext, NotificationDto notificationDto) throws MetamacWebException {
@@ -134,9 +136,9 @@ public class NoticesRestInternalFacadeImpl implements NoticesRestInternalFacade 
     }
 
     private void createCancelProgrammedPublicationNotification(ServiceContext serviceContext, NotificationDto notificationDto) throws MetamacWebException {
-        String[] receiversUsernames = new String[]{};
-        // TODO METAMAC-1991
-        createNotificationWithReceivers(serviceContext, notificationDto, receiversUsernames);
+        String creatorUsername = notificationDto.getDatasetVersionDto().getCreationUser();
+        String publisherUsername = notificationDto.getPreviousDatasetVersionDto().getPublicationUser();
+        createNotificationWithReceivers(serviceContext, notificationDto, new String[]{creatorUsername, publisherUsername});
     }
 
     private void createNotificationWithStatisticalOperationAndRoles(ServiceContext serviceContext, NotificationDto notificationDto) throws MetamacWebException {
