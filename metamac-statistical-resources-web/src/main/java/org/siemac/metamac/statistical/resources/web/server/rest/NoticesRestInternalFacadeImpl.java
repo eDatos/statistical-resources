@@ -1,6 +1,8 @@
 package org.siemac.metamac.statistical.resources.web.server.rest;
 
+import static org.siemac.metamac.statistical.resources.web.client.enums.LifeCycleActionEnum.PROGRAM_PUBLICATION;
 import static org.siemac.metamac.statistical.resources.web.client.enums.LifeCycleActionEnum.PUBLISH;
+import static org.siemac.metamac.statistical.resources.web.client.enums.LifeCycleActionEnum.REJECT_VALIDATION;
 import static org.siemac.metamac.statistical.resources.web.client.enums.LifeCycleActionEnum.SEND_TO_DIFFUSION_VALIDATION;
 import static org.siemac.metamac.statistical.resources.web.client.enums.LifeCycleActionEnum.SEND_TO_PRODUCTION_VALIDATION;
 
@@ -53,18 +55,21 @@ public class NoticesRestInternalFacadeImpl implements NoticesRestInternalFacade 
         roles.put(SEND_TO_PRODUCTION_VALIDATION, new MetamacRolesEnum[]{MetamacRolesEnum.TECNICO_PRODUCCION});
         roles.put(SEND_TO_DIFFUSION_VALIDATION, new MetamacRolesEnum[]{MetamacRolesEnum.TECNICO_DIFUSION, MetamacRolesEnum.TECNICO_APOYO_DIFUSION});
         roles.put(PUBLISH, new MetamacRolesEnum[]{MetamacRolesEnum.JEFE_PRODUCCION, MetamacRolesEnum.TECNICO_PRODUCCION, MetamacRolesEnum.TECNICO_APOYO_PRODUCCION});
+        roles.put(PROGRAM_PUBLICATION, new MetamacRolesEnum[]{MetamacRolesEnum.JEFE_PRODUCCION, MetamacRolesEnum.TECNICO_PRODUCCION, MetamacRolesEnum.TECNICO_APOYO_PRODUCCION});
 
         actionCodes = new HashMap<LifeCycleActionEnum, String>();
         actionCodes.put(SEND_TO_PRODUCTION_VALIDATION, ServiceNoticeAction.RESOURCE_SEND_PRODUCTION_VALIDATION);
         actionCodes.put(SEND_TO_DIFFUSION_VALIDATION, ServiceNoticeAction.RESOURCE_SEND_DIFFUSION_VALIDATION);
-        actionCodes.put(LifeCycleActionEnum.REJECT_VALIDATION, ServiceNoticeAction.RESOURCE_CANCEL_VALIDATION);
+        actionCodes.put(REJECT_VALIDATION, ServiceNoticeAction.RESOURCE_CANCEL_VALIDATION);
         actionCodes.put(PUBLISH, ServiceNoticeAction.RESOURCE_PUBLICATION);
+        actionCodes.put(PROGRAM_PUBLICATION, ServiceNoticeAction.RESOURCE_PUBLICATION_PROGRAMMED);
 
         messageCodes = new HashMap<LifeCycleActionEnum, String>();
         messageCodes.put(SEND_TO_PRODUCTION_VALIDATION, ServiceNoticeMessage.RESOURCE_SEND_PRODUCTION_VALIDATION_OK);
         messageCodes.put(SEND_TO_DIFFUSION_VALIDATION, ServiceNoticeMessage.RESOURCE_SEND_DIFFUSION_VALIDATION_OK);
-        messageCodes.put(LifeCycleActionEnum.REJECT_VALIDATION, ServiceNoticeMessage.RESOURCE_CANCEL_VALIDATION_OK);
+        messageCodes.put(REJECT_VALIDATION, ServiceNoticeMessage.RESOURCE_CANCEL_VALIDATION_OK);
         messageCodes.put(PUBLISH, ServiceNoticeMessage.RESOURCE_PUBLICATION_OK);
+        messageCodes.put(PROGRAM_PUBLICATION, ServiceNoticeMessage.RESOURCE_PUBLICATION_PROGRAMMED_OK);
     }
 
     @Override
@@ -82,6 +87,9 @@ public class NoticesRestInternalFacadeImpl implements NoticesRestInternalFacade 
                 break;
             case PUBLISH:
                 createPublicationNotification(serviceContext, lifeCycleAction, datasetVersionDto);
+                break;
+            case PROGRAM_PUBLICATION:
+                createProgrammedPublicationNotification(serviceContext, lifeCycleAction, datasetVersionDto);
                 break;
             case CANCEL_PROGRAMMED_PUBLICATION:
                 break;
@@ -107,14 +115,18 @@ public class NoticesRestInternalFacadeImpl implements NoticesRestInternalFacade 
         createNotificationWithStatisticalOperationAndRoles(serviceContext, lifeCycleAction, datasetVersionDto);
     }
 
+    private void createProgrammedPublicationNotification(ServiceContext serviceContext, LifeCycleActionEnum lifeCycleAction, DatasetVersionDto datasetVersionDto) throws MetamacWebException {
+        createNotificationWithStatisticalOperationAndRoles(serviceContext, lifeCycleAction, datasetVersionDto);
+    }
+
     private void createNotificationWithStatisticalOperationAndRoles(ServiceContext serviceContext, LifeCycleActionEnum lifeCycleAction, DatasetVersionDto datasetVersionDto) throws MetamacWebException {
         ResourceInternal resourceInternal = restMapper.buildResourceInternalFromDatasetVersion(datasetVersionDto);
         String actionCode = getActionCode(lifeCycleAction);
         String messageCode = getMessageCode(lifeCycleAction);
-        MetamacRolesEnum[] diffusionValidationRoles = roles.containsKey(lifeCycleAction) ? roles.get(lifeCycleAction) : null;
+        MetamacRolesEnum[] notificationRoles = roles.containsKey(lifeCycleAction) ? roles.get(lifeCycleAction) : null;
         String statisticalOperationUrn = datasetVersionDto.getStatisticalOperation().getUrn();
         String reasonOfRejection = null;
-        createNotification(serviceContext, actionCode, messageCode, new ResourceInternal[]{resourceInternal}, diffusionValidationRoles, statisticalOperationUrn, reasonOfRejection);
+        createNotification(serviceContext, actionCode, messageCode, new ResourceInternal[]{resourceInternal}, notificationRoles, statisticalOperationUrn, reasonOfRejection);
     }
 
     private void createNotificationWithReceivers(ServiceContext serviceContext, LifeCycleActionEnum lifeCycleAction, DatasetVersionDto datasetVersionDto, String reasonOfRejection)
@@ -127,6 +139,7 @@ public class NoticesRestInternalFacadeImpl implements NoticesRestInternalFacade 
         createNotification(serviceContext, actionCode, messageCode, new ResourceInternal[]{resourceInternal}, cancelValidationRoles, statisticalOperationUrn, reasonOfRejection,
                 datasetVersionDto.getCreationUser());
     }
+
     private void createNotification(ServiceContext ctx, String actionCode, String messageCode, ResourceInternal[] resources, MetamacRolesEnum[] roles, String statisticalOperationUrn,
             String reasonOfRejection, String... receiversUsernames) throws MetamacWebException {
 
