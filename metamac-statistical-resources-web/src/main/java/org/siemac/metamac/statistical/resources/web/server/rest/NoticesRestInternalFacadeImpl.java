@@ -22,7 +22,6 @@ import org.siemac.metamac.rest.notices.v1_0.domain.enume.MetamacRolesEnum;
 import org.siemac.metamac.rest.notices.v1_0.domain.utils.MessageBuilder;
 import org.siemac.metamac.rest.notices.v1_0.domain.utils.NoticeBuilder;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
-import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.invocation.service.MetamacApisLocator;
 import org.siemac.metamac.statistical.resources.core.notices.ServiceNoticeAction;
 import org.siemac.metamac.statistical.resources.core.notices.ServiceNoticeMessage;
@@ -46,12 +45,26 @@ public class NoticesRestInternalFacadeImpl implements NoticesRestInternalFacade 
     private RestMapper                                          restMapper;
 
     private static Map<LifeCycleActionEnum, MetamacRolesEnum[]> roles;
+    private static Map<LifeCycleActionEnum, String>             actionCodes;
+    private static Map<LifeCycleActionEnum, String>             messageCodes;
 
     static {
         roles = new HashMap<LifeCycleActionEnum, MetamacRolesEnum[]>();
         roles.put(SEND_TO_PRODUCTION_VALIDATION, new MetamacRolesEnum[]{MetamacRolesEnum.TECNICO_PRODUCCION});
         roles.put(SEND_TO_DIFFUSION_VALIDATION, new MetamacRolesEnum[]{MetamacRolesEnum.TECNICO_DIFUSION, MetamacRolesEnum.TECNICO_APOYO_DIFUSION});
         roles.put(PUBLISH, new MetamacRolesEnum[]{MetamacRolesEnum.JEFE_PRODUCCION, MetamacRolesEnum.TECNICO_PRODUCCION, MetamacRolesEnum.TECNICO_APOYO_PRODUCCION});
+
+        actionCodes = new HashMap<LifeCycleActionEnum, String>();
+        actionCodes.put(SEND_TO_PRODUCTION_VALIDATION, ServiceNoticeAction.RESOURCE_SEND_PRODUCTION_VALIDATION);
+        actionCodes.put(SEND_TO_DIFFUSION_VALIDATION, ServiceNoticeAction.RESOURCE_SEND_DIFFUSION_VALIDATION);
+        actionCodes.put(LifeCycleActionEnum.REJECT_VALIDATION, ServiceNoticeAction.RESOURCE_CANCEL_VALIDATION);
+        actionCodes.put(PUBLISH, ServiceNoticeAction.RESOURCE_PUBLICATION);
+
+        messageCodes = new HashMap<LifeCycleActionEnum, String>();
+        messageCodes.put(SEND_TO_PRODUCTION_VALIDATION, ServiceNoticeMessage.RESOURCE_SEND_PRODUCTION_VALIDATION_OK);
+        messageCodes.put(SEND_TO_DIFFUSION_VALIDATION, ServiceNoticeMessage.RESOURCE_SEND_DIFFUSION_VALIDATION_OK);
+        messageCodes.put(LifeCycleActionEnum.REJECT_VALIDATION, ServiceNoticeMessage.RESOURCE_CANCEL_VALIDATION_OK);
+        messageCodes.put(PUBLISH, ServiceNoticeMessage.RESOURCE_PUBLICATION_OK);
     }
 
     @Override
@@ -65,13 +78,12 @@ public class NoticesRestInternalFacadeImpl implements NoticesRestInternalFacade 
                 createSendToDiffusionValidationNotification(serviceContext, lifeCycleAction, datasetVersionDto);
                 break;
             case REJECT_VALIDATION:
-                createCancelValidationNotification(serviceContext, datasetVersionDto, reasonOfRejection);
+                createCancelValidationNotification(serviceContext, lifeCycleAction, datasetVersionDto, reasonOfRejection);
                 break;
             case PUBLISH:
-                // TODO METAMAC-1991
+                createPublicationNotification(serviceContext, lifeCycleAction, datasetVersionDto);
                 break;
             case CANCEL_PROGRAMMED_PUBLICATION:
-                // TODO METAMAC-1991
                 break;
             case VERSION:
                 break;
@@ -79,33 +91,37 @@ public class NoticesRestInternalFacadeImpl implements NoticesRestInternalFacade 
     }
 
     private void createSendToProductionValidationNotification(ServiceContext serviceContext, LifeCycleActionEnum lifeCycleAction, DatasetVersionDto datasetVersionDto) throws MetamacWebException {
-        ResourceInternal resourceInternal = restMapper.buildResourceInternalFromDatasetVersion(datasetVersionDto);
-        String actionCode = ServiceNoticeAction.RESOURCE_SEND_PRODUCTION_VALIDATION;
-        String messageCode = ServiceNoticeMessage.RESOURCE_SEND_PRODUCTION_VALIDATION_OK;
-        MetamacRolesEnum[] productionValidationRoles = roles.containsKey(lifeCycleAction) ? roles.get(lifeCycleAction) : null;
-        String statisticalOperationUrn = datasetVersionDto.getStatisticalOperation().getUrn();
-        String reasonOfRejection = null;
-        createNotification(serviceContext, actionCode, messageCode, new ResourceInternal[]{resourceInternal}, productionValidationRoles, statisticalOperationUrn, reasonOfRejection);
+        createNotificationWithStatisticalOperationAndRoles(serviceContext, lifeCycleAction, datasetVersionDto);
     }
 
     private void createSendToDiffusionValidationNotification(ServiceContext serviceContext, LifeCycleActionEnum lifeCycleAction, DatasetVersionDto datasetVersionDto) throws MetamacWebException {
+        createNotificationWithStatisticalOperationAndRoles(serviceContext, lifeCycleAction, datasetVersionDto);
+    }
+
+    private void createCancelValidationNotification(ServiceContext serviceContext, LifeCycleActionEnum lifeCycleAction, DatasetVersionDto datasetVersionDto, String reasonOfRejection)
+            throws MetamacWebException {
+        createNotificationWithReceivers(serviceContext, lifeCycleAction, datasetVersionDto, reasonOfRejection);
+    }
+
+    private void createPublicationNotification(ServiceContext serviceContext, LifeCycleActionEnum lifeCycleAction, DatasetVersionDto datasetVersionDto) throws MetamacWebException {
+        createNotificationWithStatisticalOperationAndRoles(serviceContext, lifeCycleAction, datasetVersionDto);
+    }
+
+    private void createNotificationWithStatisticalOperationAndRoles(ServiceContext serviceContext, LifeCycleActionEnum lifeCycleAction, DatasetVersionDto datasetVersionDto) throws MetamacWebException {
         ResourceInternal resourceInternal = restMapper.buildResourceInternalFromDatasetVersion(datasetVersionDto);
-        String actionCode = ServiceNoticeAction.RESOURCE_SEND_DIFFUSION_VALIDATION;
-        String messageCode = ServiceNoticeMessage.RESOURCE_SEND_DIFFUSION_VALIDATION_OK;
+        String actionCode = actionCodes.containsKey(lifeCycleAction) ? actionCodes.get(lifeCycleAction) : StringUtils.EMPTY;
+        String messageCode = messageCodes.containsKey(lifeCycleAction) ? messageCodes.get(lifeCycleAction) : StringUtils.EMPTY;
         MetamacRolesEnum[] diffusionValidationRoles = roles.containsKey(lifeCycleAction) ? roles.get(lifeCycleAction) : null;
         String statisticalOperationUrn = datasetVersionDto.getStatisticalOperation().getUrn();
         String reasonOfRejection = null;
         createNotification(serviceContext, actionCode, messageCode, new ResourceInternal[]{resourceInternal}, diffusionValidationRoles, statisticalOperationUrn, reasonOfRejection);
     }
 
-    private void createCancelValidationNotification(ServiceContext serviceContext, DatasetVersionDto datasetVersionDto, String reasonOfRejection) throws MetamacWebException {
+    private void createNotificationWithReceivers(ServiceContext serviceContext, LifeCycleActionEnum lifeCycleAction, DatasetVersionDto datasetVersionDto, String reasonOfRejection)
+            throws MetamacWebException {
         ResourceInternal resourceInternal = restMapper.buildResourceInternalFromDatasetVersion(datasetVersionDto);
-        String actionCode = ProcStatusEnum.PRODUCTION_VALIDATION.equals(datasetVersionDto.getProcStatus())
-                ? ServiceNoticeAction.RESOURCE_CANCEL_PRODUCTION_VALIDATION
-                : ServiceNoticeAction.RESOURCE_CANCEL_DIFFUSION_VALIDATION;
-        String messageCode = ProcStatusEnum.PRODUCTION_VALIDATION.equals(datasetVersionDto.getProcStatus())
-                ? ServiceNoticeMessage.RESOURCE_CANCEL_PRODUCTION_VALIDATION_OK
-                : ServiceNoticeMessage.RESOURCE_CANCEL_DIFFUSION_VALIDATION_OK;
+        String actionCode = actionCodes.containsKey(lifeCycleAction) ? actionCodes.get(lifeCycleAction) : StringUtils.EMPTY;
+        String messageCode = messageCodes.containsKey(lifeCycleAction) ? messageCodes.get(lifeCycleAction) : StringUtils.EMPTY;
         MetamacRolesEnum[] cancelValidationRoles = null;
         String statisticalOperationUrn = null;
         createNotification(serviceContext, actionCode, messageCode, new ResourceInternal[]{resourceInternal}, cancelValidationRoles, statisticalOperationUrn, reasonOfRejection,
