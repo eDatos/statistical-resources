@@ -10,5 +10,6 @@ public class ServiceNoticeAction {
     public static final String RESOURCE_CANCEL_VALIDATION                     = "notice_message.resources.action.cancel_validation";
     public static final String RESOURCE_PUBLICATION                           = "notice_message.resources.action.publication";
     public static final String RESOURCE_PUBLICATION_PROGRAMMED                = "notice_message.resources.action.publication_programmed";
+    public static final String RESOURCE_CANCEL_PROGRAMMED_PUBLICATION         = "notice_message.resources.action.cancel_programmed_publication";
     public static final String RESOURCE_PUBLICATION_ERROR                     = "notice_message.resources.action.publication_error";
 }
