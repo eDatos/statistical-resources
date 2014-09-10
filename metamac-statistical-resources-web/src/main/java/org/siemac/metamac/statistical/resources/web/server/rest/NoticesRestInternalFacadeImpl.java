@@ -7,6 +7,7 @@ import static org.siemac.metamac.statistical.resources.web.client.enums.LifeCycl
 import static org.siemac.metamac.statistical.resources.web.client.enums.LifeCycleActionEnum.SEND_TO_DIFFUSION_VALIDATION;
 import static org.siemac.metamac.statistical.resources.web.client.enums.LifeCycleActionEnum.SEND_TO_PRODUCTION_VALIDATION;
 
+import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -103,15 +104,6 @@ public class NoticesRestInternalFacadeImpl implements NoticesRestInternalFacade 
         }
     }
 
-    @Override
-    public void createPublicationErrorNotification(ServiceContext serviceContext, NotificationDto notificationDto) throws MetamacWebException {
-        String actionCode = ServiceNoticeAction.RESOURCE_PUBLICATION_ERROR;
-        String messageCode = ServiceNoticeMessage.RESOURCE_PUBLICATION_ERROR_OK;
-        String creatorUsername = notificationDto.getDatasetVersionDto().getCreationUser();
-        String publisherUsername = serviceContext.getUserId();
-        createNotificationWithReceivers(serviceContext, actionCode, messageCode, notificationDto, new String[]{creatorUsername, publisherUsername});
-    }
-
     private void createSendToProductionValidationNotification(ServiceContext serviceContext, NotificationDto notificationDto) throws MetamacWebException {
         createNotificationWithStatisticalOperationAndRoles(serviceContext, notificationDto);
     }
@@ -193,6 +185,9 @@ public class NoticesRestInternalFacadeImpl implements NoticesRestInternalFacade 
         String localisedMessage = LocaleUtil.getMessageForCode(messageCode, locale);
         if (StringUtils.isNotBlank(notificationDto.getReasonOfRejection())) {
             localisedMessage = localisedMessage + " (" + notificationDto.getReasonOfRejection() + ")";
+        }
+        if (LifeCycleActionEnum.PROGRAM_PUBLICATION.equals(notificationDto.getLifeCycleAction()) && notificationDto.getProgrammedPublicationDate() != null) {
+            localisedMessage = MessageFormat.format(localisedMessage, notificationDto.getProgrammedPublicationDate());
         }
         return MessageBuilder.message().withText(localisedMessage).withResources(resources).build();
     }

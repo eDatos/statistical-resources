@@ -51,7 +51,6 @@ public class UpdateDatasetVersionProcStatusActionHandler extends UpdateResourceP
                     break;
 
                 case REJECT_VALIDATION:
-
                     datasetVersionDto = statisticalResourcesServiceFacade.sendDatasetVersionToValidationRejected(ServiceContextHolder.getCurrentServiceContext(),
                             action.getDatasetVersionToUpdateProcStatus());
                     break;
@@ -86,15 +85,6 @@ public class UpdateDatasetVersionProcStatusActionHandler extends UpdateResourceP
             return new UpdateDatasetVersionProcStatusResult(datasetVersionDto);
 
         } catch (MetamacException e) {
-            if (LifeCycleActionEnum.PUBLISH.equals(lifeCycleAction) || LifeCycleActionEnum.PROGRAM_PUBLICATION.equals(lifeCycleAction)) {
-                try {
-                    NotificationDto notificationDto = new NotificationDto.Builder(action.getDatasetVersionToUpdateProcStatus(), lifeCycleAction).programmedPublicationDate(action.getValidFrom())
-                            .build();
-                    noticesRestInternalFacade.createPublicationErrorNotification(ServiceContextHolder.getCurrentServiceContext(), notificationDto);
-                } catch (MetamacWebException e1) {
-                    // TODO METAMAC-1991 do something?
-                }
-            }
             throw WebExceptionUtils.createMetamacWebException(e);
         }
     }

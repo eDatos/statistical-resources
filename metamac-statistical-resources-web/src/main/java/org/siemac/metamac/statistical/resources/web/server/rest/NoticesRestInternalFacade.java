@@ -9,5 +9,4 @@ public interface NoticesRestInternalFacade {
     public static final String BEAN_ID = "NoticesRestInternalFacade";
 
     void createLifeCycleNotification(ServiceContext serviceContext, NotificationDto notificationDto) throws MetamacWebException;
-    void createPublicationErrorNotification(ServiceContext serviceContext, NotificationDto notificationDto) throws MetamacWebException;
 }
