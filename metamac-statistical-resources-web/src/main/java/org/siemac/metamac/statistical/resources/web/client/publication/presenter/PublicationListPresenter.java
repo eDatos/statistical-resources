@@ -209,7 +209,7 @@ public class PublicationListPresenter extends StatisticalResourceBaseListPresent
 
     @Override
     public void programPublication(List<PublicationVersionBaseDto> publicationVersionBaseDtos, Date validFrom) {
-        UpdatePublicationVersionsProcStatusAction.Builder builder = new Builder(publicationVersionBaseDtos, LifeCycleActionEnum.PUBLISH);
+        UpdatePublicationVersionsProcStatusAction.Builder builder = new Builder(publicationVersionBaseDtos, LifeCycleActionEnum.PROGRAM_PUBLICATION);
         builder.validFrom(validFrom);
         updatePublicationVersionProcStatus(builder.build(), getMessages().lifeCycleResourcesProgramPublication());
     }

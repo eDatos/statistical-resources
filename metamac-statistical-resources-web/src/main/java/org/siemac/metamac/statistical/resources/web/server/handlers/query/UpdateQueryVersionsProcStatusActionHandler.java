@@ -55,15 +55,17 @@ public class UpdateQueryVersionsProcStatusActionHandler extends UpdateResourcePr
                         break;
 
                     case PUBLISH:
-                        if (action.getValidFrom() != null) {
-                            statisticalResourcesServiceFacade.programPublicationQueryVersion(ServiceContextHolder.getCurrentServiceContext(), queryVersionBaseDto, action.getValidFrom());
-                        } else {
-                            statisticalResourcesServiceFacade.publishQueryVersion(ServiceContextHolder.getCurrentServiceContext(), queryVersionBaseDto);
-                        }
+                        statisticalResourcesServiceFacade.publishQueryVersion(ServiceContextHolder.getCurrentServiceContext(), queryVersionBaseDto);
                         break;
+
+                    case PROGRAM_PUBLICATION:
+                        statisticalResourcesServiceFacade.programPublicationQueryVersion(ServiceContextHolder.getCurrentServiceContext(), queryVersionBaseDto, action.getValidFrom());
+                        break;
+
                     case CANCEL_PROGRAMMED_PUBLICATION:
                         statisticalResourcesServiceFacade.cancelPublicationQueryVersion(ServiceContextHolder.getCurrentServiceContext(), queryVersionBaseDto);
                         break;
+
                     case VERSION:
                         statisticalResourcesServiceFacade.versioningQueryVersion(ServiceContextHolder.getCurrentServiceContext(), queryVersionBaseDto, action.getVersionType());
                         break;

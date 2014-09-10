@@ -71,6 +71,8 @@ public abstract class UpdateResourceProcStatusBaseActionHandler<A extends Action
                 return WebMessageExceptionsConstants.ERROR_REJECT_VALIDATION;
             case PUBLISH:
                 return WebMessageExceptionsConstants.ERROR_PUBLISH_RESOURCE;
+            case PROGRAM_PUBLICATION:
+                return WebMessageExceptionsConstants.ERROR_PUBLISH_RESOURCE;
             case CANCEL_PROGRAMMED_PUBLICATION:
                 return WebMessageExceptionsConstants.ERROR_CANCEL_PROGRAMMED_PUBLICATION_RESOURCE;
             case VERSION:

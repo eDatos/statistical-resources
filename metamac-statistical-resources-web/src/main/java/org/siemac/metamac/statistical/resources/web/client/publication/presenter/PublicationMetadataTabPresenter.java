@@ -239,7 +239,7 @@ public class PublicationMetadataTabPresenter
 
     @Override
     public void programPublication(PublicationVersionDto publication, Date validFrom) {
-        UpdatePublicationVersionProcStatusAction.Builder builder = new Builder(publication, LifeCycleActionEnum.PUBLISH);
+        UpdatePublicationVersionProcStatusAction.Builder builder = new Builder(publication, LifeCycleActionEnum.PROGRAM_PUBLICATION);
         builder.validFrom(validFrom);
         dispatcher.execute(builder.build(), new WaitingAsyncCallbackHandlingError<UpdatePublicationVersionProcStatusResult>(this) {
 

@@ -259,7 +259,7 @@ public class DatasetMetadataTabPresenter extends StatisticalResourceMetadataBase
 
     @Override
     public void programPublication(DatasetVersionDto dataset, Date validFrom) {
-        Builder builder = new Builder(dataset, LifeCycleActionEnum.PUBLISH);
+        Builder builder = new Builder(dataset, LifeCycleActionEnum.PROGRAM_PUBLICATION);
         builder.validFrom(validFrom);
         dispatcher.execute(builder.build(), new WaitingAsyncCallbackHandlingError<UpdateDatasetVersionProcStatusResult>(this) {
 

@@ -194,7 +194,7 @@ public class QueryListPresenter extends LifeCycleBaseListPresenter<QueryListPres
 
     @Override
     public void programPublication(List<QueryVersionBaseDto> queryVersionDtos, Date validFrom) {
-        UpdateQueryVersionsProcStatusAction.Builder builder = new Builder(queryVersionDtos, LifeCycleActionEnum.PUBLISH);
+        UpdateQueryVersionsProcStatusAction.Builder builder = new Builder(queryVersionDtos, LifeCycleActionEnum.PROGRAM_PUBLICATION);
         builder.validFrom(validFrom);
         updateQueryProcStatus(builder.build(), getMessages().lifeCycleResourcesProgramPublication());
     }

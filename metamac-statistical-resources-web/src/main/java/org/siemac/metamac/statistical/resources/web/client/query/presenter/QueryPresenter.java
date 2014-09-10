@@ -334,7 +334,7 @@ public class QueryPresenter extends Presenter<QueryPresenter.QueryView, QueryPre
 
     @Override
     public void programPublication(QueryVersionDto query, Date validFrom) {
-        UpdateQueryVersionProcStatusAction.Builder builder = new Builder(query, LifeCycleActionEnum.PUBLISH);
+        UpdateQueryVersionProcStatusAction.Builder builder = new Builder(query, LifeCycleActionEnum.PROGRAM_PUBLICATION);
         builder.validFrom(validFrom);
         dispatcher.execute(builder.build(), new WaitingAsyncCallbackHandlingError<UpdateQueryVersionProcStatusResult>(this) {
 
