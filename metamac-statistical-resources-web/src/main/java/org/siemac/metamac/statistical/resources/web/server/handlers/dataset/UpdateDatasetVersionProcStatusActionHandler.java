@@ -78,8 +78,7 @@ public class UpdateDatasetVersionProcStatusActionHandler extends UpdateResourceP
             try {
                 NotificationDto notificationDto = new NotificationDto.Builder(action.getDatasetVersionToUpdateProcStatus(), lifeCycleAction).datasetVersionDto(datasetVersionDto)
                         .reasonOfRejection(action.getReasonOfRejection()).programmedPublicationDate(action.getValidFrom()).build();
-
-                noticesRestInternalFacade.createLifeCycleNotification(ServiceContextHolder.getCurrentServiceContext(), lifeCycleAction, datasetVersionDto, action.getReasonOfRejection());
+                noticesRestInternalFacade.createLifeCycleNotification(ServiceContextHolder.getCurrentServiceContext(), notificationDto);
             } catch (MetamacWebException e) {
                 return new UpdateDatasetVersionProcStatusResult.Builder(datasetVersionDto).notificationException(e).build();
             }
@@ -89,7 +88,9 @@ public class UpdateDatasetVersionProcStatusActionHandler extends UpdateResourceP
         } catch (MetamacException e) {
             if (LifeCycleActionEnum.PUBLISH.equals(lifeCycleAction) || LifeCycleActionEnum.PROGRAM_PUBLICATION.equals(lifeCycleAction)) {
                 try {
-                    noticesRestInternalFacade.createPublicationErrorNotification(ServiceContextHolder.getCurrentServiceContext(), action.getDatasetVersionToUpdateProcStatus());
+                    NotificationDto notificationDto = new NotificationDto.Builder(action.getDatasetVersionToUpdateProcStatus(), lifeCycleAction).programmedPublicationDate(action.getValidFrom())
+                            .build();
+                    noticesRestInternalFacade.createPublicationErrorNotification(ServiceContextHolder.getCurrentServiceContext(), notificationDto);
                 } catch (MetamacWebException e1) {
                     // TODO METAMAC-1991 do something?
                 }
