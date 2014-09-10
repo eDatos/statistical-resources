@@ -8,6 +8,7 @@ import org.siemac.metamac.statistical.resources.web.server.handlers.UpdateResour
 import org.siemac.metamac.statistical.resources.web.server.rest.NoticesRestInternalFacade;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.UpdateDatasetVersionProcStatusAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.UpdateDatasetVersionProcStatusResult;
+import org.siemac.metamac.statistical.resources.web.shared.dtos.NotificationDto;
 import org.siemac.metamac.web.common.server.ServiceContextHolder;
 import org.siemac.metamac.web.common.server.utils.WebExceptionUtils;
 import org.siemac.metamac.web.common.shared.exception.MetamacWebException;
@@ -75,6 +76,9 @@ public class UpdateDatasetVersionProcStatusActionHandler extends UpdateResourceP
             }
 
             try {
+                NotificationDto notificationDto = new NotificationDto.Builder(action.getDatasetVersionToUpdateProcStatus(), lifeCycleAction).datasetVersionDto(datasetVersionDto)
+                        .reasonOfRejection(action.getReasonOfRejection()).programmedPublicationDate(action.getValidFrom()).build();
+
                 noticesRestInternalFacade.createLifeCycleNotification(ServiceContextHolder.getCurrentServiceContext(), lifeCycleAction, datasetVersionDto, action.getReasonOfRejection());
             } catch (MetamacWebException e) {
                 return new UpdateDatasetVersionProcStatusResult.Builder(datasetVersionDto).notificationException(e).build();
@@ -83,6 +87,13 @@ public class UpdateDatasetVersionProcStatusActionHandler extends UpdateResourceP
             return new UpdateDatasetVersionProcStatusResult(datasetVersionDto);
 
         } catch (MetamacException e) {
+            if (LifeCycleActionEnum.PUBLISH.equals(lifeCycleAction) || LifeCycleActionEnum.PROGRAM_PUBLICATION.equals(lifeCycleAction)) {
+                try {
+                    noticesRestInternalFacade.createPublicationErrorNotification(ServiceContextHolder.getCurrentServiceContext(), action.getDatasetVersionToUpdateProcStatus());
+                } catch (MetamacWebException e1) {
+                    // TODO METAMAC-1991 do something?
+                }
+            }
             throw WebExceptionUtils.createMetamacWebException(e);
         }
     }
