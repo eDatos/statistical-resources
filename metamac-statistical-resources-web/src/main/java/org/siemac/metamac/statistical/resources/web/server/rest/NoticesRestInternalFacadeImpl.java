@@ -9,6 +9,7 @@ import static org.siemac.metamac.statistical.resources.web.client.enums.LifeCycl
 
 import java.text.MessageFormat;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -30,7 +31,7 @@ import org.siemac.metamac.statistical.resources.core.invocation.service.MetamacA
 import org.siemac.metamac.statistical.resources.core.notices.ServiceNoticeAction;
 import org.siemac.metamac.statistical.resources.core.notices.ServiceNoticeMessage;
 import org.siemac.metamac.statistical.resources.web.client.enums.LifeCycleActionEnum;
-import org.siemac.metamac.statistical.resources.web.shared.dtos.NotificationDto;
+import org.siemac.metamac.statistical.resources.web.shared.dtos.ResourceNotificationDto;
 import org.siemac.metamac.web.common.server.rest.utils.RestExceptionUtils;
 import org.siemac.metamac.web.common.server.utils.WebExceptionUtils;
 import org.siemac.metamac.web.common.shared.exception.MetamacWebException;
@@ -78,7 +79,7 @@ public class NoticesRestInternalFacadeImpl implements NoticesRestInternalFacade 
     }
 
     @Override
-    public void createLifeCycleNotification(ServiceContext serviceContext, NotificationDto notificationDto) throws MetamacWebException {
+    public void createLifeCycleNotification(ServiceContext serviceContext, ResourceNotificationDto notificationDto) throws MetamacWebException {
         switch (notificationDto.getLifeCycleAction()) {
             case SEND_TO_PRODUCTION_VALIDATION:
                 createSendToProductionValidationNotification(serviceContext, notificationDto);
@@ -104,36 +105,41 @@ public class NoticesRestInternalFacadeImpl implements NoticesRestInternalFacade 
         }
     }
 
-    private void createSendToProductionValidationNotification(ServiceContext serviceContext, NotificationDto notificationDto) throws MetamacWebException {
+    @Override
+    public void createLifeCycleNotifications(ServiceContext serviceContext, List<ResourceNotificationDto> notificationDtos) throws MetamacWebException {
+        // TODO METAMAC-1991
+    }
+
+    private void createSendToProductionValidationNotification(ServiceContext serviceContext, ResourceNotificationDto notificationDto) throws MetamacWebException {
         createNotificationWithStatisticalOperationAndRoles(serviceContext, notificationDto);
     }
 
-    private void createSendToDiffusionValidationNotification(ServiceContext serviceContext, NotificationDto notificationDto) throws MetamacWebException {
+    private void createSendToDiffusionValidationNotification(ServiceContext serviceContext, ResourceNotificationDto notificationDto) throws MetamacWebException {
         createNotificationWithStatisticalOperationAndRoles(serviceContext, notificationDto);
     }
 
-    private void createCancelValidationNotification(ServiceContext serviceContext, NotificationDto notificationDto) throws MetamacWebException {
+    private void createCancelValidationNotification(ServiceContext serviceContext, ResourceNotificationDto notificationDto) throws MetamacWebException {
         ProcStatusEnum previousProcStatusEnum = notificationDto.getPreviousDatasetVersionDto().getProcStatus();
         String receiverUsername = ProcStatusEnum.PRODUCTION_VALIDATION.equals(previousProcStatusEnum) ? notificationDto.getPreviousDatasetVersionDto().getProductionValidationUser() : notificationDto
                 .getPreviousDatasetVersionDto().getDiffusionValidationUser();
         createNotificationWithReceivers(serviceContext, notificationDto, new String[]{receiverUsername});
     }
 
-    private void createPublicationNotification(ServiceContext serviceContext, NotificationDto notificationDto) throws MetamacWebException {
+    private void createPublicationNotification(ServiceContext serviceContext, ResourceNotificationDto notificationDto) throws MetamacWebException {
         createNotificationWithStatisticalOperationAndRoles(serviceContext, notificationDto);
     }
 
-    private void createProgrammedPublicationNotification(ServiceContext serviceContext, NotificationDto notificationDto) throws MetamacWebException {
+    private void createProgrammedPublicationNotification(ServiceContext serviceContext, ResourceNotificationDto notificationDto) throws MetamacWebException {
         createNotificationWithStatisticalOperationAndRoles(serviceContext, notificationDto);
     }
 
-    private void createCancelProgrammedPublicationNotification(ServiceContext serviceContext, NotificationDto notificationDto) throws MetamacWebException {
+    private void createCancelProgrammedPublicationNotification(ServiceContext serviceContext, ResourceNotificationDto notificationDto) throws MetamacWebException {
         String creatorUsername = notificationDto.getDatasetVersionDto().getCreationUser();
         String publisherUsername = notificationDto.getPreviousDatasetVersionDto().getPublicationUser();
         createNotificationWithReceivers(serviceContext, notificationDto, new String[]{creatorUsername, publisherUsername});
     }
 
-    private void createNotificationWithStatisticalOperationAndRoles(ServiceContext serviceContext, NotificationDto notificationDto) throws MetamacWebException {
+    private void createNotificationWithStatisticalOperationAndRoles(ServiceContext serviceContext, ResourceNotificationDto notificationDto) throws MetamacWebException {
         ResourceInternal resourceInternal = restMapper.buildResourceInternalFromDatasetVersion(notificationDto.getDatasetVersionDto());
         String actionCode = getActionCode(notificationDto.getLifeCycleAction());
         String messageCode = getMessageCode(notificationDto.getLifeCycleAction());
@@ -142,20 +148,20 @@ public class NoticesRestInternalFacadeImpl implements NoticesRestInternalFacade 
         createNotification(serviceContext, notificationDto, actionCode, messageCode, new ResourceInternal[]{resourceInternal}, notificationRoles, receiversUsernames);
     }
 
-    private void createNotificationWithReceivers(ServiceContext serviceContext, NotificationDto notificationDto, String[] receiversUsernames) throws MetamacWebException {
+    private void createNotificationWithReceivers(ServiceContext serviceContext, ResourceNotificationDto notificationDto, String[] receiversUsernames) throws MetamacWebException {
         String actionCode = getActionCode(notificationDto.getLifeCycleAction());
         String messageCode = getMessageCode(notificationDto.getLifeCycleAction());
         createNotificationWithReceivers(serviceContext, actionCode, messageCode, notificationDto, receiversUsernames);
     }
 
-    private void createNotificationWithReceivers(ServiceContext serviceContext, String actionCode, String messageCode, NotificationDto notificationDto, String[] receiversUsernames)
+    private void createNotificationWithReceivers(ServiceContext serviceContext, String actionCode, String messageCode, ResourceNotificationDto notificationDto, String[] receiversUsernames)
             throws MetamacWebException {
         ResourceInternal resourceInternal = restMapper.buildResourceInternalFromDatasetVersion(notificationDto.getDatasetVersionDto());
         MetamacRolesEnum[] cancelValidationRoles = null;
         createNotification(serviceContext, notificationDto, actionCode, messageCode, new ResourceInternal[]{resourceInternal}, cancelValidationRoles, receiversUsernames);
     }
 
-    private void createNotification(ServiceContext ctx, NotificationDto notificationDto, String actionCode, String messageCode, ResourceInternal[] resources, MetamacRolesEnum[] roles,
+    private void createNotification(ServiceContext ctx, ResourceNotificationDto notificationDto, String actionCode, String messageCode, ResourceInternal[] resources, MetamacRolesEnum[] roles,
             String[] receiversUsernames) throws MetamacWebException {
 
         String subject = buildSubject(ctx, actionCode);
@@ -180,7 +186,7 @@ public class NoticesRestInternalFacadeImpl implements NoticesRestInternalFacade 
         }
     }
 
-    private Message buildMessage(ServiceContext ctx, String messageCode, NotificationDto notificationDto, ResourceInternal[] resources) {
+    private Message buildMessage(ServiceContext ctx, String messageCode, ResourceNotificationDto notificationDto, ResourceInternal[] resources) {
         Locale locale = ServiceContextUtils.getLocale(ctx);
         String localisedMessage = LocaleUtil.getMessageForCode(messageCode, locale);
         if (StringUtils.isNotBlank(notificationDto.getReasonOfRejection())) {

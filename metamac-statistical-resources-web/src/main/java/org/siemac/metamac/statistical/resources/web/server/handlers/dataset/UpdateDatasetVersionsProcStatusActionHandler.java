@@ -1,5 +1,6 @@
 package org.siemac.metamac.statistical.resources.web.server.handlers.dataset;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.siemac.metamac.core.common.exception.MetamacException;
@@ -9,6 +10,7 @@ import org.siemac.metamac.statistical.resources.web.client.enums.LifeCycleAction
 import org.siemac.metamac.statistical.resources.web.server.handlers.UpdateResourceProcStatusBaseActionHandler;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.UpdateDatasetVersionsProcStatusAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.UpdateDatasetVersionsProcStatusResult;
+import org.siemac.metamac.statistical.resources.web.shared.dtos.ResourceNotificationBaseDto;
 import org.siemac.metamac.web.common.server.ServiceContextHolder;
 import org.siemac.metamac.web.common.server.utils.WebExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,47 +35,54 @@ public class UpdateDatasetVersionsProcStatusActionHandler extends UpdateResource
         LifeCycleActionEnum lifeCycleAction = action.getLifeCycleAction();
 
         MetamacException metamacException = new MetamacException();
+        List<ResourceNotificationBaseDto> notificationsToSend = new ArrayList<ResourceNotificationBaseDto>();
 
-        for (DatasetVersionBaseDto datasetVersionBaseDto : datasetVersionsToUpdateProcStatus) {
+        for (DatasetVersionBaseDto datasetVersionToUpdate : datasetVersionsToUpdateProcStatus) {
             try {
+
+                DatasetVersionBaseDto updatedDatasetVersionBaseDto = null;
 
                 switch (lifeCycleAction) {
                     case SEND_TO_PRODUCTION_VALIDATION:
-                        statisticalResourcesServiceFacade.sendDatasetVersionToProductionValidation(ServiceContextHolder.getCurrentServiceContext(), datasetVersionBaseDto);
+                        updatedDatasetVersionBaseDto = statisticalResourcesServiceFacade.sendDatasetVersionToProductionValidation(ServiceContextHolder.getCurrentServiceContext(),
+                                datasetVersionToUpdate);
                         break;
 
                     case SEND_TO_DIFFUSION_VALIDATION:
-                        statisticalResourcesServiceFacade.sendDatasetVersionToDiffusionValidation(ServiceContextHolder.getCurrentServiceContext(), datasetVersionBaseDto);
+                        updatedDatasetVersionBaseDto = statisticalResourcesServiceFacade.sendDatasetVersionToDiffusionValidation(ServiceContextHolder.getCurrentServiceContext(),
+                                datasetVersionToUpdate);
                         break;
 
                     case REJECT_VALIDATION:
-                        statisticalResourcesServiceFacade.sendDatasetVersionToValidationRejected(ServiceContextHolder.getCurrentServiceContext(), datasetVersionBaseDto);
-
-                        String reasonOfRejection = action.getReasonOfRejection();
-                        // TODO METAMAC-2112
-
+                        updatedDatasetVersionBaseDto = statisticalResourcesServiceFacade
+                                .sendDatasetVersionToValidationRejected(ServiceContextHolder.getCurrentServiceContext(), datasetVersionToUpdate);
                         break;
 
                     case PUBLISH:
-                        statisticalResourcesServiceFacade.publishDatasetVersion(ServiceContextHolder.getCurrentServiceContext(), datasetVersionBaseDto);
+                        updatedDatasetVersionBaseDto = statisticalResourcesServiceFacade.publishDatasetVersion(ServiceContextHolder.getCurrentServiceContext(), datasetVersionToUpdate);
                         break;
 
                     case PROGRAM_PUBLICATION:
-                        statisticalResourcesServiceFacade.programPublicationDatasetVersion(ServiceContextHolder.getCurrentServiceContext(), datasetVersionBaseDto, action.getValidFrom());
+                        updatedDatasetVersionBaseDto = statisticalResourcesServiceFacade.programPublicationDatasetVersion(ServiceContextHolder.getCurrentServiceContext(), datasetVersionToUpdate,
+                                action.getValidFrom());
                         break;
 
                     case CANCEL_PROGRAMMED_PUBLICATION:
-                        statisticalResourcesServiceFacade.cancelPublicationDatasetVersion(ServiceContextHolder.getCurrentServiceContext(), datasetVersionBaseDto);
+                        updatedDatasetVersionBaseDto = statisticalResourcesServiceFacade.cancelPublicationDatasetVersion(ServiceContextHolder.getCurrentServiceContext(), datasetVersionToUpdate);
                         break;
                     case VERSION:
-                        statisticalResourcesServiceFacade.versioningDatasetVersion(ServiceContextHolder.getCurrentServiceContext(), datasetVersionBaseDto, action.getVersionType());
+                        updatedDatasetVersionBaseDto = statisticalResourcesServiceFacade.versioningDatasetVersion(ServiceContextHolder.getCurrentServiceContext(), datasetVersionToUpdate,
+                                action.getVersionType());
                         break;
                     default:
                         break;
                 }
 
+                ResourceNotificationBaseDto notification = new ResourceNotificationBaseDto.Builder(datasetVersionToUpdate, lifeCycleAction).build();
+                notificationsToSend.add(notification);
+
             } catch (MetamacException e) {
-                addExceptionsItemToMetamacException(lifeCycleAction, datasetVersionBaseDto, metamacException, e);
+                addExceptionsItemToMetamacException(lifeCycleAction, datasetVersionToUpdate, metamacException, e);
             }
         }
 
