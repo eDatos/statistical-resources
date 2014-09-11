@@ -8,6 +8,8 @@ import static org.siemac.metamac.statistical.resources.web.client.enums.LifeCycl
 import static org.siemac.metamac.statistical.resources.web.client.enums.LifeCycleActionEnum.SEND_TO_PRODUCTION_VALIDATION;
 
 import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -31,6 +33,7 @@ import org.siemac.metamac.statistical.resources.core.invocation.service.MetamacA
 import org.siemac.metamac.statistical.resources.core.notices.ServiceNoticeAction;
 import org.siemac.metamac.statistical.resources.core.notices.ServiceNoticeMessage;
 import org.siemac.metamac.statistical.resources.web.client.enums.LifeCycleActionEnum;
+import org.siemac.metamac.statistical.resources.web.server.dtos.GroupedNotificationDto;
 import org.siemac.metamac.statistical.resources.web.shared.dtos.ResourceNotificationBaseDto;
 import org.siemac.metamac.statistical.resources.web.shared.dtos.ResourceNotificationDto;
 import org.siemac.metamac.web.common.server.rest.utils.RestExceptionUtils;
@@ -142,8 +145,9 @@ public class NoticesRestInternalFacadeImpl implements NoticesRestInternalFacade 
     }
 
     private void createSendToProductionValidationNotification(ServiceContext serviceContext, List<ResourceNotificationBaseDto> notifications) throws MetamacWebException {
-        Map<String, ResourceNotificationBaseDto> notificationsByStatisticalOperation = groupNotificationsByStatisticalOperation(notifications);
-        // TODO METAMAC-1991
+        LifeCycleActionEnum lifeCycleAction = getLifeCycleAction(notifications);
+        MetamacRolesEnum[] notificationRoles = roles.get(lifeCycleAction);
+        createNotificationWithStatisticalOperationAndRoles(serviceContext, notifications, notificationRoles);
     }
 
     //
@@ -195,43 +199,72 @@ public class NoticesRestInternalFacadeImpl implements NoticesRestInternalFacade 
     // NOTIFICATIONS
     //
 
+    /**
+     * Creates a notification specifying the statistical operation, the roles and the application
+     * 
+     * @param serviceContext
+     * @param notification
+     * @throws MetamacWebException
+     */
     private void createNotificationWithStatisticalOperationAndRoles(ServiceContext serviceContext, ResourceNotificationDto notification) throws MetamacWebException {
-        ResourceInternal resourceInternal = restMapper.buildResourceInternal(notification.getUpdatedResource(), notification.getStatisticalResourceType());
-        String actionCode = getActionCode(notification.getLifeCycleAction());
-        String messageCode = getMessageCode(notification.getLifeCycleAction());
         MetamacRolesEnum[] notificationRoles = roles.containsKey(notification.getLifeCycleAction()) ? roles.get(notification.getLifeCycleAction()) : null;
-        String[] receiversUsernames = null;
-        createNotification(serviceContext, notification, actionCode, messageCode, new ResourceInternal[]{resourceInternal}, notificationRoles, receiversUsernames);
+        GroupedNotificationDto groupedNotificationDto = createGroupedNotification(notification);
+        groupedNotificationDto.setRoles(notificationRoles);
+        createNotification(serviceContext, groupedNotificationDto);
     }
 
-    private void createNotificationWithReceivers(ServiceContext serviceContext, ResourceNotificationDto notificationDto, String[] receiversUsernames) throws MetamacWebException {
-        String actionCode = getActionCode(notificationDto.getLifeCycleAction());
-        String messageCode = getMessageCode(notificationDto.getLifeCycleAction());
-        createNotificationWithReceivers(serviceContext, actionCode, messageCode, notificationDto, receiversUsernames);
-    }
-
-    private void createNotificationWithReceivers(ServiceContext serviceContext, String actionCode, String messageCode, ResourceNotificationDto notification, String[] receiversUsernames)
+    /**
+     * Creates a notification specifying the statistical operation, the roles and the application
+     * 
+     * @param serviceContext
+     * @param notifications
+     * @param notificationRoles
+     * @throws MetamacWebException
+     */
+    private void createNotificationWithStatisticalOperationAndRoles(ServiceContext serviceContext, List<ResourceNotificationBaseDto> notifications, MetamacRolesEnum[] notificationRoles)
             throws MetamacWebException {
-        ResourceInternal resourceInternal = restMapper.buildResourceInternal(notification.getUpdatedResource(), notification.getStatisticalResourceType());
-        MetamacRolesEnum[] cancelValidationRoles = null;
-        createNotification(serviceContext, notification, actionCode, messageCode, new ResourceInternal[]{resourceInternal}, cancelValidationRoles, receiversUsernames);
+        Map<String, List<ResourceNotificationBaseDto>> notificationsByStatisticalOperation = groupNotificationsByStatisticalOperation(notifications);
+        for (Map.Entry<String, List<ResourceNotificationBaseDto>> entry : notificationsByStatisticalOperation.entrySet()) {
+            GroupedNotificationDto groupedNotificationDto = createGroupedNotification(entry.getKey(), entry.getValue());
+            groupedNotificationDto.setRoles(notificationRoles);
+            createNotification(serviceContext, groupedNotificationDto);
+        }
     }
 
-    private void createNotification(ServiceContext ctx, ResourceNotificationDto notificationDto, String actionCode, String messageCode, ResourceInternal[] resources, MetamacRolesEnum[] roles,
-            String[] receiversUsernames) throws MetamacWebException {
+    /**
+     * Creates a notification specifying the receivers
+     * 
+     * @param serviceContext
+     * @param actionCode
+     * @param messageCode
+     * @param notification
+     * @param receiversUsernames
+     * @throws MetamacWebException
+     */
+    private void createNotificationWithReceivers(ServiceContext serviceContext, ResourceNotificationDto notification, String[] receiversUsernames) throws MetamacWebException {
+        GroupedNotificationDto groupedNotificationDto = createGroupedNotification(notification);
+        groupedNotificationDto.setReceiversUsernames(receiversUsernames);
+        createNotification(serviceContext, groupedNotificationDto);
+    }
+
+    private void createNotification(ServiceContext ctx, GroupedNotificationDto groupedNotificationDto) throws MetamacWebException {
+
+        String actionCode = getActionCode(groupedNotificationDto.getLifeCycleAction());
+        String messageCode = getMessageCode(groupedNotificationDto.getLifeCycleAction());
 
         String subject = buildSubject(ctx, actionCode);
-        Message message = buildMessage(ctx, messageCode, notificationDto, resources);
+        Message message = buildMessage(ctx, messageCode, groupedNotificationDto.getResources(), groupedNotificationDto.getReasonOfRejection(), groupedNotificationDto.getLifeCycleAction(),
+                groupedNotificationDto.getProgrammedPublicationDate());
 
         NoticeBuilder noticeBuilder = NoticeBuilder.notification().withMessages(message).withSendingApplication(getSendingApp()).withSendingUser(ctx.getUserId()).withSubject(subject);
-        if (roles != null) {
-            noticeBuilder = noticeBuilder.withRoles(roles);
+        if (groupedNotificationDto.getRoles() != null) {
+            noticeBuilder = noticeBuilder.withRoles(groupedNotificationDto.getRoles());
         }
-        if (StringUtils.isNotBlank(notificationDto.getUpdatedResource().getStatisticalOperation().getUrn())) {
-            noticeBuilder = noticeBuilder.withStatisticalOperations(notificationDto.getUpdatedResource().getStatisticalOperation().getUrn());
+        if (StringUtils.isNotBlank(groupedNotificationDto.getStatisticalOperationUrn())) {
+            noticeBuilder = noticeBuilder.withStatisticalOperations(groupedNotificationDto.getStatisticalOperationUrn());
         }
-        if (receiversUsernames != null) {
-            noticeBuilder = noticeBuilder.withReceivers(receiversUsernames);
+        if (groupedNotificationDto.getReceiversUsernames() != null) {
+            noticeBuilder = noticeBuilder.withReceivers(groupedNotificationDto.getReceiversUsernames());
         }
 
         try {
@@ -242,14 +275,14 @@ public class NoticesRestInternalFacadeImpl implements NoticesRestInternalFacade 
         }
     }
 
-    private Message buildMessage(ServiceContext ctx, String messageCode, ResourceNotificationDto notificationDto, ResourceInternal[] resources) {
+    private Message buildMessage(ServiceContext ctx, String messageCode, ResourceInternal[] resources, String reasonOfRejection, LifeCycleActionEnum lifeCycleAction, Date programmedPublicationDate) {
         Locale locale = ServiceContextUtils.getLocale(ctx);
         String localisedMessage = LocaleUtil.getMessageForCode(messageCode, locale);
-        if (StringUtils.isNotBlank(notificationDto.getReasonOfRejection())) {
-            localisedMessage = localisedMessage + " (" + notificationDto.getReasonOfRejection() + ")";
+        if (StringUtils.isNotBlank(reasonOfRejection)) {
+            localisedMessage = localisedMessage + " (" + reasonOfRejection + ")";
         }
-        if (LifeCycleActionEnum.PROGRAM_PUBLICATION.equals(notificationDto.getLifeCycleAction()) && notificationDto.getProgrammedPublicationDate() != null) {
-            localisedMessage = MessageFormat.format(localisedMessage, notificationDto.getProgrammedPublicationDate());
+        if (LifeCycleActionEnum.PROGRAM_PUBLICATION.equals(lifeCycleAction) && programmedPublicationDate != null) {
+            localisedMessage = MessageFormat.format(localisedMessage, programmedPublicationDate);
         }
         return MessageBuilder.message().withText(localisedMessage).withResources(resources).build();
     }
@@ -272,12 +305,38 @@ public class NoticesRestInternalFacadeImpl implements NoticesRestInternalFacade 
         return MetamacApplicationsEnum.GESTOR_RECURSOS_ESTADISTICOS.getName();
     }
 
-    private Map<String, ResourceNotificationBaseDto> groupNotificationsByStatisticalOperation(List<ResourceNotificationBaseDto> notifications) {
-        Map<String, ResourceNotificationBaseDto> result = new HashMap<String, ResourceNotificationBaseDto>();
+    private Map<String, List<ResourceNotificationBaseDto>> groupNotificationsByStatisticalOperation(List<ResourceNotificationBaseDto> notifications) {
+        Map<String, List<ResourceNotificationBaseDto>> result = new HashMap<String, List<ResourceNotificationBaseDto>>();
         for (ResourceNotificationBaseDto notification : notifications) {
-            result.put(notification.getUpdatedResource().getStatisticalOperation().getUrn(), notification);
+            String statisticalOperationUrn = notification.getUpdatedResource().getStatisticalOperation().getUrn();
+            if (!result.containsKey(statisticalOperationUrn)) {
+                result.put(statisticalOperationUrn, new ArrayList<ResourceNotificationBaseDto>());
+            }
+            result.get(statisticalOperationUrn).add(notification);
         }
         return result;
+    }
+
+    private ResourceInternal[] getResourceInternals(List<ResourceNotificationBaseDto> resources) throws MetamacWebException {
+        ResourceInternal[] result = new ResourceInternal[resources.size()];
+        for (int i = 0; i < resources.size(); i++) {
+            result[i] = restMapper.buildResourceInternal(resources.get(i).getUpdatedResource(), resources.get(i).getStatisticalResourceType());
+        }
+        return result;
+    }
+
+    private GroupedNotificationDto createGroupedNotification(String statisticalOperatonUrn, List<ResourceNotificationBaseDto> resources) throws MetamacWebException {
+        ResourceInternal[] resourceInternals = getResourceInternals(resources);
+        String reasonOfRejection = getReasonOfRejection(resources);
+        Date programmedPublicationDate = getProgrammedPublicationDate(resources);
+        return new GroupedNotificationDto.Builder(statisticalOperatonUrn, resourceInternals, getLifeCycleAction(resources)).reasonOfRejection(reasonOfRejection)
+                .programmedPublicationDate(programmedPublicationDate).build();
+    }
+
+    private GroupedNotificationDto createGroupedNotification(ResourceNotificationDto resource) throws MetamacWebException {
+        ResourceInternal resourceInternal = restMapper.buildResourceInternal(resource.getUpdatedResource(), resource.getStatisticalResourceType());
+        return new GroupedNotificationDto.Builder(resource.getUpdatedResource().getStatisticalOperation().getUrn(), new ResourceInternal[]{resourceInternal}, resource.getLifeCycleAction())
+                .reasonOfRejection(resource.getReasonOfRejection()).programmedPublicationDate(resource.getProgrammedPublicationDate()).build();
     }
 
     /**
@@ -288,5 +347,26 @@ public class NoticesRestInternalFacadeImpl implements NoticesRestInternalFacade 
      */
     private LifeCycleActionEnum getLifeCycleAction(List<ResourceNotificationBaseDto> notifications) {
         return notifications.get(0).getLifeCycleAction();
+    }
+
+    /**
+     * Returns the reason of rejection of the notifications. When a group of resources update their {@link ProcStatusEnum} at the same time, all of them have the same reason of rejection.
+     * 
+     * @param notifications
+     * @return
+     */
+    private String getReasonOfRejection(List<ResourceNotificationBaseDto> notifications) {
+        return notifications.get(0).getReasonOfRejection();
+    }
+
+    /**
+     * Returns the programmed publication date of the notifications. When a group of resources update their {@link ProcStatusEnum} at the same time, all of them have the same programmed publication
+     * date.
+     * 
+     * @param notifications
+     * @return
+     */
+    private Date getProgrammedPublicationDate(List<ResourceNotificationBaseDto> notifications) {
+        return notifications.get(0).getProgrammedPublicationDate();
     }
 }
