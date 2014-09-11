@@ -21,7 +21,7 @@ public class GroupedNotificationDto implements Serializable {
 
     public static class Builder {
 
-        private final String              statisticalOperationUrn;
+        private String                    statisticalOperationUrn;
         private final ResourceInternal[]  resources;
         private final LifeCycleActionEnum lifeCycleAction;
         private MetamacRolesEnum[]        roles;
@@ -29,10 +29,14 @@ public class GroupedNotificationDto implements Serializable {
         private String                    reasonOfRejection;
         private Date                      programmedPublicationDate;
 
-        public Builder(String statisticalOperationUrn, ResourceInternal[] resources, LifeCycleActionEnum lifeCycleAction) {
-            this.statisticalOperationUrn = statisticalOperationUrn;
+        public Builder(ResourceInternal[] resources, LifeCycleActionEnum lifeCycleAction) {
             this.resources = resources;
             this.lifeCycleAction = lifeCycleAction;
+        }
+        
+        public Builder statisticalOperationUrn(String statisticalOperationUrn) {
+            this.statisticalOperationUrn = statisticalOperationUrn;
+            return this;
         }
 
         public Builder roles(MetamacRolesEnum[] roles) {

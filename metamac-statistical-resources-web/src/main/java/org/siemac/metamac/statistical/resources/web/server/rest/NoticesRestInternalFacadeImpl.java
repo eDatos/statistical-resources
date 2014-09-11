@@ -111,28 +111,30 @@ public class NoticesRestInternalFacadeImpl implements NoticesRestInternalFacade 
 
     @Override
     public void createLifeCycleNotifications(ServiceContext serviceContext, List<ResourceNotificationBaseDto> notifications) throws MetamacWebException {
-        switch (getLifeCycleAction(notifications)) {
-            case SEND_TO_PRODUCTION_VALIDATION:
-                createSendToProductionValidationNotification(serviceContext, notifications);
-                break;
-            case SEND_TO_DIFFUSION_VALIDATION:
-                // TODO METAMAC-1991
-                break;
-            case REJECT_VALIDATION:
-                // TODO METAMAC-1991
-                break;
-            case PUBLISH:
-                // TODO METAMAC-1991
-                break;
-            case PROGRAM_PUBLICATION:
-                // TODO METAMAC-1991
-                break;
-            case CANCEL_PROGRAMMED_PUBLICATION:
-                // TODO METAMAC-1991
-                break;
-            case VERSION:
-                // Do not send notifications
-                break;
+        if (!notifications.isEmpty()) {
+            switch (getLifeCycleAction(notifications)) {
+                case SEND_TO_PRODUCTION_VALIDATION:
+                    createSendToProductionValidationNotification(serviceContext, notifications);
+                    break;
+                case SEND_TO_DIFFUSION_VALIDATION:
+                    createSendToDiffusionValidationNotification(serviceContext, notifications);
+                    break;
+                case REJECT_VALIDATION:
+                    createCancelValidationNotification(serviceContext, notifications);
+                    break;
+                case PUBLISH:
+                    createPublicationNotification(serviceContext, notifications);
+                    break;
+                case PROGRAM_PUBLICATION:
+                    createProgrammedPublicationNotification(serviceContext, notifications);
+                    break;
+                case CANCEL_PROGRAMMED_PUBLICATION:
+                    createCancelProgrammedPublicationNotification(serviceContext, notifications);
+                    break;
+                case VERSION:
+                    // Do not send notifications
+                    break;
+            }
         }
     }
 
@@ -140,14 +142,12 @@ public class NoticesRestInternalFacadeImpl implements NoticesRestInternalFacade 
     // SEND TO PRODUCTION VALIDATION
     //
 
-    private void createSendToProductionValidationNotification(ServiceContext serviceContext, ResourceNotificationDto notificationDto) throws MetamacWebException {
-        createNotificationWithStatisticalOperationAndRoles(serviceContext, notificationDto);
+    private void createSendToProductionValidationNotification(ServiceContext serviceContext, ResourceNotificationDto notification) throws MetamacWebException {
+        createNotificationWithStatisticalOperationAndRoles(serviceContext, notification);
     }
 
     private void createSendToProductionValidationNotification(ServiceContext serviceContext, List<ResourceNotificationBaseDto> notifications) throws MetamacWebException {
-        LifeCycleActionEnum lifeCycleAction = getLifeCycleAction(notifications);
-        MetamacRolesEnum[] notificationRoles = roles.get(lifeCycleAction);
-        createNotificationWithStatisticalOperationAndRoles(serviceContext, notifications, notificationRoles);
+        createNotificationWithStatisticalOperationAndRoles(serviceContext, notifications);
     }
 
     //
@@ -156,6 +156,10 @@ public class NoticesRestInternalFacadeImpl implements NoticesRestInternalFacade 
 
     private void createSendToDiffusionValidationNotification(ServiceContext serviceContext, ResourceNotificationDto notificationDto) throws MetamacWebException {
         createNotificationWithStatisticalOperationAndRoles(serviceContext, notificationDto);
+    }
+
+    private void createSendToDiffusionValidationNotification(ServiceContext serviceContext, List<ResourceNotificationBaseDto> notifications) throws MetamacWebException {
+        createNotificationWithStatisticalOperationAndRoles(serviceContext, notifications);
     }
 
     //
@@ -169,12 +173,27 @@ public class NoticesRestInternalFacadeImpl implements NoticesRestInternalFacade 
         createNotificationWithReceivers(serviceContext, notificationDto, new String[]{receiverUsername});
     }
 
+    private void createCancelValidationNotification(ServiceContext serviceContext, List<ResourceNotificationBaseDto> notifications) throws MetamacWebException {
+        Map<ResourceNotificationBaseDto, String[]> notificationsWithReceivers = new HashMap<ResourceNotificationBaseDto, String[]>();
+        for (ResourceNotificationBaseDto notification : notifications) {
+            ProcStatusEnum previousProcStatusEnum = notification.getPreviousResource().getProcStatus();
+            String receiverUsername = ProcStatusEnum.PRODUCTION_VALIDATION.equals(previousProcStatusEnum) ? notification.getPreviousResource().getProductionValidationUser() : notification
+                    .getPreviousResource().getDiffusionValidationUser();
+            notificationsWithReceivers.put(notification, new String[]{receiverUsername});
+        }
+        createNotificationWithReceivers(serviceContext, notificationsWithReceivers);
+    }
+
     //
     // PUBLISH
     //
 
     private void createPublicationNotification(ServiceContext serviceContext, ResourceNotificationDto notificationDto) throws MetamacWebException {
         createNotificationWithStatisticalOperationAndRoles(serviceContext, notificationDto);
+    }
+
+    private void createPublicationNotification(ServiceContext serviceContext, List<ResourceNotificationBaseDto> notifications) throws MetamacWebException {
+        createNotificationWithStatisticalOperationAndRoles(serviceContext, notifications);
     }
 
     //
@@ -185,6 +204,10 @@ public class NoticesRestInternalFacadeImpl implements NoticesRestInternalFacade 
         createNotificationWithStatisticalOperationAndRoles(serviceContext, notificationDto);
     }
 
+    private void createProgrammedPublicationNotification(ServiceContext serviceContext, List<ResourceNotificationBaseDto> notifications) throws MetamacWebException {
+        createNotificationWithStatisticalOperationAndRoles(serviceContext, notifications);
+    }
+
     //
     // CANCEL PROGRAMMED PUBLICATION
     //
@@ -193,6 +216,16 @@ public class NoticesRestInternalFacadeImpl implements NoticesRestInternalFacade 
         String creatorUsername = notificationDto.getUpdatedResource().getCreationUser();
         String publisherUsername = notificationDto.getPreviousResource().getPublicationUser();
         createNotificationWithReceivers(serviceContext, notificationDto, new String[]{creatorUsername, publisherUsername});
+    }
+
+    private void createCancelProgrammedPublicationNotification(ServiceContext serviceContext, List<ResourceNotificationBaseDto> notifications) throws MetamacWebException {
+        Map<ResourceNotificationBaseDto, String[]> notificationsWithReceivers = new HashMap<ResourceNotificationBaseDto, String[]>();
+        for (ResourceNotificationBaseDto notification : notifications) {
+            String creatorUsername = notification.getUpdatedResource().getCreationUser();
+            String publisherUsername = notification.getPreviousResource().getPublicationUser();
+            notificationsWithReceivers.put(notification, new String[]{creatorUsername, publisherUsername});
+        }
+        createNotificationWithReceivers(serviceContext, notificationsWithReceivers);
     }
 
     //
@@ -221,11 +254,11 @@ public class NoticesRestInternalFacadeImpl implements NoticesRestInternalFacade 
      * @param notificationRoles
      * @throws MetamacWebException
      */
-    private void createNotificationWithStatisticalOperationAndRoles(ServiceContext serviceContext, List<ResourceNotificationBaseDto> notifications, MetamacRolesEnum[] notificationRoles)
-            throws MetamacWebException {
+    private void createNotificationWithStatisticalOperationAndRoles(ServiceContext serviceContext, List<ResourceNotificationBaseDto> notifications) throws MetamacWebException {
+        MetamacRolesEnum[] notificationRoles = roles.get(getLifeCycleAction(notifications));
         Map<String, List<ResourceNotificationBaseDto>> notificationsByStatisticalOperation = groupNotificationsByStatisticalOperation(notifications);
         for (Map.Entry<String, List<ResourceNotificationBaseDto>> entry : notificationsByStatisticalOperation.entrySet()) {
-            GroupedNotificationDto groupedNotificationDto = createGroupedNotification(entry.getKey(), entry.getValue());
+            GroupedNotificationDto groupedNotificationDto = createGroupedNotificationWithStatisticalOperation(entry.getKey(), entry.getValue());
             groupedNotificationDto.setRoles(notificationRoles);
             createNotification(serviceContext, groupedNotificationDto);
         }
@@ -245,6 +278,18 @@ public class NoticesRestInternalFacadeImpl implements NoticesRestInternalFacade 
         GroupedNotificationDto groupedNotificationDto = createGroupedNotification(notification);
         groupedNotificationDto.setReceiversUsernames(receiversUsernames);
         createNotification(serviceContext, groupedNotificationDto);
+    }
+
+    private void createNotificationWithReceivers(ServiceContext serviceContext, Map<ResourceNotificationBaseDto, String[]> notificationsWithReceivers) throws MetamacWebException {
+        Map<String, List<ResourceNotificationBaseDto>> groupedNotificationsByReceiver = groupNotificationsByReceiver(notificationsWithReceivers);
+        for (Map.Entry<String, List<ResourceNotificationBaseDto>> entry : groupedNotificationsByReceiver.entrySet()) {
+            ResourceInternal[] resourceInternals = getResourceInternals(entry.getValue());
+            String receiverUserName = entry.getKey();
+            GroupedNotificationDto groupedNotificationDto = new GroupedNotificationDto.Builder(resourceInternals, getLifeCycleAction(entry.getValue()))
+                    .reasonOfRejection(getReasonOfRejection(entry.getValue())).programmedPublicationDate(getProgrammedPublicationDate(entry.getValue()))
+                    .receiversUsernames(new String[]{receiverUserName}).build();
+            createNotification(serviceContext, groupedNotificationDto);
+        }
     }
 
     private void createNotification(ServiceContext ctx, GroupedNotificationDto groupedNotificationDto) throws MetamacWebException {
@@ -317,6 +362,19 @@ public class NoticesRestInternalFacadeImpl implements NoticesRestInternalFacade 
         return result;
     }
 
+    private Map<String, List<ResourceNotificationBaseDto>> groupNotificationsByReceiver(Map<ResourceNotificationBaseDto, String[]> notificationsWithReceivers) {
+        Map<String, List<ResourceNotificationBaseDto>> result = new HashMap<String, List<ResourceNotificationBaseDto>>();
+        for (Map.Entry<ResourceNotificationBaseDto, String[]> entry : notificationsWithReceivers.entrySet()) {
+            for (String receiverUserName : entry.getValue()) {
+                if (!result.containsKey(receiverUserName)) {
+                    result.put(receiverUserName, new ArrayList<ResourceNotificationBaseDto>());
+                }
+                result.get(receiverUserName).add(entry.getKey());
+            }
+        }
+        return result;
+    }
+
     private ResourceInternal[] getResourceInternals(List<ResourceNotificationBaseDto> resources) throws MetamacWebException {
         ResourceInternal[] result = new ResourceInternal[resources.size()];
         for (int i = 0; i < resources.size(); i++) {
@@ -325,18 +383,19 @@ public class NoticesRestInternalFacadeImpl implements NoticesRestInternalFacade 
         return result;
     }
 
-    private GroupedNotificationDto createGroupedNotification(String statisticalOperatonUrn, List<ResourceNotificationBaseDto> resources) throws MetamacWebException {
+    private GroupedNotificationDto createGroupedNotificationWithStatisticalOperation(String statisticalOperatonUrn, List<ResourceNotificationBaseDto> resources) throws MetamacWebException {
         ResourceInternal[] resourceInternals = getResourceInternals(resources);
         String reasonOfRejection = getReasonOfRejection(resources);
         Date programmedPublicationDate = getProgrammedPublicationDate(resources);
-        return new GroupedNotificationDto.Builder(statisticalOperatonUrn, resourceInternals, getLifeCycleAction(resources)).reasonOfRejection(reasonOfRejection)
+        return new GroupedNotificationDto.Builder(resourceInternals, getLifeCycleAction(resources)).statisticalOperationUrn(statisticalOperatonUrn).reasonOfRejection(reasonOfRejection)
                 .programmedPublicationDate(programmedPublicationDate).build();
     }
 
-    private GroupedNotificationDto createGroupedNotification(ResourceNotificationDto resource) throws MetamacWebException {
-        ResourceInternal resourceInternal = restMapper.buildResourceInternal(resource.getUpdatedResource(), resource.getStatisticalResourceType());
-        return new GroupedNotificationDto.Builder(resource.getUpdatedResource().getStatisticalOperation().getUrn(), new ResourceInternal[]{resourceInternal}, resource.getLifeCycleAction())
-                .reasonOfRejection(resource.getReasonOfRejection()).programmedPublicationDate(resource.getProgrammedPublicationDate()).build();
+    private GroupedNotificationDto createGroupedNotification(ResourceNotificationDto notification) throws MetamacWebException {
+        ResourceInternal resourceInternal = restMapper.buildResourceInternal(notification.getUpdatedResource(), notification.getStatisticalResourceType());
+        return new GroupedNotificationDto.Builder(new ResourceInternal[]{resourceInternal}, notification.getLifeCycleAction())
+                .statisticalOperationUrn(notification.getUpdatedResource().getStatisticalOperation().getUrn()).reasonOfRejection(notification.getReasonOfRejection())
+                .programmedPublicationDate(notification.getProgrammedPublicationDate()).build();
     }
 
     /**
