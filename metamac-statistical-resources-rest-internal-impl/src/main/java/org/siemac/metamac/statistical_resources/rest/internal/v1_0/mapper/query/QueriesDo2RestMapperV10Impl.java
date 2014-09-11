@@ -1,5 +1,7 @@
 package org.siemac.metamac.statistical_resources.rest.internal.v1_0.mapper.query;
 
+import static org.siemac.metamac.core.common.util.GeneratorUrnUtils.generateSiemacStatisticalResourceQueryUrn;
+
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,6 +29,8 @@ import org.siemac.metamac.statistical.resources.core.constants.StatisticalResour
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionRepository;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.TemporalCode;
+import org.siemac.metamac.statistical.resources.core.dto.LifeCycleStatisticalResourceBaseDto;
+import org.siemac.metamac.statistical.resources.core.dto.LifeCycleStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryTypeEnum;
@@ -43,8 +47,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import static org.siemac.metamac.core.common.util.GeneratorUrnUtils.generateSiemacStatisticalResourceQueryUrn;
 
 @Component
 public class QueriesDo2RestMapperV10Impl implements QueriesDo2RestMapperV10 {
@@ -160,6 +162,20 @@ public class QueriesDo2RestMapperV10Impl implements QueriesDo2RestMapperV10 {
         target.setManagementAppLink(toQueryVersionManagementApplicationLink(source));
 
         return target;
+    }
+
+    @Override
+    public ResourceLink toQuerySelfLink(LifeCycleStatisticalResourceDto source) {
+        String agencyID = source.getMaintainer().getCodeNested();
+        String resourceID = source.getCode();
+        return toQuerySelfLink(agencyID, resourceID);
+    }
+
+    @Override
+    public ResourceLink toQuerySelfLink(LifeCycleStatisticalResourceBaseDto source) {
+        String agencyID = source.getMaintainerCodeNested();
+        String resourceID = source.getCode();
+        return toQuerySelfLink(agencyID, resourceID);
     }
 
     private QueryMetadata toQueryMetadata(QueryVersion source, DatasetVersion datasetVersion, DsdProcessorResult dsdProcessorResult, List<String> selectedLanguages) throws MetamacException {

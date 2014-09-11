@@ -33,7 +33,8 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersi
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionRepository;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.StatisticOfficiality;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.TemporalCode;
-import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
+import org.siemac.metamac.statistical.resources.core.dto.LifeCycleStatisticalResourceBaseDto;
+import org.siemac.metamac.statistical.resources.core.dto.LifeCycleStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical_resources.rest.internal.StatisticalResourcesRestInternalConstants;
@@ -108,13 +109,16 @@ public class DatasetsDo2RestMapperV10Impl implements DatasetsDo2RestMapperV10 {
     }
 
     @Override
-    public String toDatasetVersionManagementApplicationLink(DatasetVersionDto source) {
-        return commonDo2RestMapper.getInternalWebApplicationNavigation().buildDatasetVersionUrl(source);
+    public ResourceLink toDatasetSelfLink(LifeCycleStatisticalResourceDto source) {
+        String agencyID = source.getMaintainer().getCodeNested();
+        String resourceID = source.getCode();
+        String version = source.getVersionLogic();
+        return toDatasetSelfLink(agencyID, resourceID, version);
     }
 
     @Override
-    public ResourceLink toDatasetSelfLink(DatasetVersionDto source) {
-        String agencyID = source.getMaintainer().getCodeNested();
+    public ResourceLink toDatasetSelfLink(LifeCycleStatisticalResourceBaseDto source) {
+        String agencyID = source.getMaintainerCodeNested();
         String resourceID = source.getCode();
         String version = source.getVersionLogic();
         return toDatasetSelfLink(agencyID, resourceID, version);

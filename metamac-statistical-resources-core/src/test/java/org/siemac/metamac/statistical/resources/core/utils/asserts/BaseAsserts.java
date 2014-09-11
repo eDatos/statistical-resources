@@ -396,6 +396,13 @@ public class BaseAsserts extends CommonAsserts {
 
                 assertEqualsDate(entity.getCreationDate(), dto.getCreationDate());
                 assertEqualsDate(entity.getPublicationDate(), dto.getPublicationDate());
+
+                assertEquals(entity.getCreationUser(), dto.getCreationUser());
+                assertEquals(entity.getProductionValidationUser(), dto.getProductionValidationUser());
+                assertEquals(entity.getDiffusionValidationUser(), dto.getDiffusionValidationUser());
+                assertEquals(entity.getPublicationUser(), dto.getPublicationUser());
+
+                assertEquals(entity.getMaintainer().getCodeNested(), dto.getMaintainerCodeNested());
                 break;
         }
         assertEqualsVersionableStatisticalResourceBase(entity, dto, mapperEnum);

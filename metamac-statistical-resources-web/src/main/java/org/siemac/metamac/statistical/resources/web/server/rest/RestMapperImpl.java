@@ -10,6 +10,7 @@ import org.siemac.metamac.core.common.dto.LocalisedStringDto;
 import org.siemac.metamac.core.common.enume.domain.TypeExternalArtefactsEnum;
 import org.siemac.metamac.rest.common.v1_0.domain.InternationalString;
 import org.siemac.metamac.rest.common.v1_0.domain.LocalisedString;
+import org.siemac.metamac.rest.common.v1_0.domain.ResourceLink;
 import org.siemac.metamac.rest.notices.v1_0.domain.ResourceInternal;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.AttributeRelationship;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.CodeResourceInternal;
@@ -18,7 +19,8 @@ import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Concept
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ItemResourceInternal;
 import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor.DsdAttribute;
 import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor.DsdDimension;
-import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
+import org.siemac.metamac.statistical.resources.core.dto.LifeCycleStatisticalResourceBaseDto;
+import org.siemac.metamac.statistical.resources.core.dto.LifeCycleStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdAttributeDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdDimensionDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.ItemDto;
@@ -27,9 +29,13 @@ import org.siemac.metamac.statistical.resources.core.dto.datasets.Representation
 import org.siemac.metamac.statistical.resources.core.enume.dataset.domain.AttributeRelationshipTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.dataset.domain.AttributeRepresentationTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.dataset.domain.DimensionTypeEnum;
+import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
 import org.siemac.metamac.statistical.resources.web.server.utils.ExternalItemWebUtils;
 import org.siemac.metamac.statistical_resources.rest.common.StatisticalResourcesRestConstants;
+import org.siemac.metamac.statistical_resources.rest.internal.v1_0.mapper.base.CommonDo2RestMapperV10;
+import org.siemac.metamac.statistical_resources.rest.internal.v1_0.mapper.collection.CollectionsDo2RestMapperV10;
 import org.siemac.metamac.statistical_resources.rest.internal.v1_0.mapper.dataset.DatasetsDo2RestMapperV10;
+import org.siemac.metamac.statistical_resources.rest.internal.v1_0.mapper.query.QueriesDo2RestMapperV10;
 import org.siemac.metamac.web.common.shared.exception.MetamacWebException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -38,7 +44,16 @@ import org.springframework.stereotype.Component;
 public class RestMapperImpl implements RestMapper {
 
     @Autowired
-    protected DatasetsDo2RestMapperV10 datasetsDo2RestMapperV10;
+    protected CommonDo2RestMapperV10      commonDo2RestMapperV10;
+
+    @Autowired
+    protected DatasetsDo2RestMapperV10    datasetsDo2RestMapperV10;
+
+    @Autowired
+    protected CollectionsDo2RestMapperV10 collectionsDo2RestMapperV10;
+
+    @Autowired
+    protected QueriesDo2RestMapperV10     queriesDo2RestMapperV10;
 
     @Override
     public List<DsdDimensionDto> buildDsdDimensionDtosFromDsdDimensions(List<DsdDimension> dsdDimensions) throws MetamacWebException {
@@ -163,17 +178,57 @@ public class RestMapperImpl implements RestMapper {
     //
 
     @Override
-    public ResourceInternal buildResourceInternalFromDatasetVersion(DatasetVersionDto datasetVersionDto) throws MetamacWebException {
+    public ResourceInternal buildResourceInternal(LifeCycleStatisticalResourceDto resource, StatisticalResourceTypeEnum resourceType) throws MetamacWebException {
         ResourceInternal resourceInternal = new ResourceInternal();
-        if (datasetVersionDto != null) {
-            resourceInternal.setId(datasetVersionDto.getCode());
-            resourceInternal.setUrn(datasetVersionDto.getUrn());
+        if (resource != null) {
+            resourceInternal.setId(resource.getCode());
+            resourceInternal.setUrn(resource.getUrn());
             resourceInternal.setKind(StatisticalResourcesRestConstants.KIND_DATASET);
-            resourceInternal.setName(toInternationalString(datasetVersionDto.getTitle()));
-            resourceInternal.setManagementAppLink(datasetsDo2RestMapperV10.toDatasetVersionManagementApplicationLink(datasetVersionDto));
-            resourceInternal.setSelfLink(datasetsDo2RestMapperV10.toDatasetSelfLink(datasetVersionDto));
+            resourceInternal.setName(toInternationalString(resource.getTitle()));
+            resourceInternal.setManagementAppLink(commonDo2RestMapperV10.getInternalWebApplicationNavigation().buildResourceUrl(resource, resourceType));
+            resourceInternal.setSelfLink(getResourceLink(resource, resourceType));
         }
         return resourceInternal;
+    }
+
+    @Override
+    public ResourceInternal buildResourceInternal(LifeCycleStatisticalResourceBaseDto resource, StatisticalResourceTypeEnum resourceType) throws MetamacWebException {
+        ResourceInternal resourceInternal = new ResourceInternal();
+        if (resource != null) {
+            resourceInternal.setId(resource.getCode());
+            resourceInternal.setUrn(resource.getUrn());
+            resourceInternal.setKind(StatisticalResourcesRestConstants.KIND_DATASET);
+            resourceInternal.setName(toInternationalString(resource.getTitle()));
+            resourceInternal.setManagementAppLink(commonDo2RestMapperV10.getInternalWebApplicationNavigation().buildResourceUrl(resource, resourceType));
+            resourceInternal.setSelfLink(getResourceLink(resource, resourceType));
+        }
+        return resourceInternal;
+    }
+
+    private ResourceLink getResourceLink(LifeCycleStatisticalResourceDto resource, StatisticalResourceTypeEnum resourceType) {
+        switch (resourceType) {
+            case DATASET:
+                return datasetsDo2RestMapperV10.toDatasetSelfLink(resource);
+            case COLLECTION:
+                return collectionsDo2RestMapperV10.toCollectionSelfLink(resource);
+            case QUERY:
+                return queriesDo2RestMapperV10.toQuerySelfLink(resource);
+            default:
+                throw new RuntimeException("Invalid value for statistical resource type " + resourceType);
+        }
+    }
+
+    private ResourceLink getResourceLink(LifeCycleStatisticalResourceBaseDto resource, StatisticalResourceTypeEnum resourceType) {
+        switch (resourceType) {
+            case DATASET:
+                return datasetsDo2RestMapperV10.toDatasetSelfLink(resource);
+            case COLLECTION:
+                return collectionsDo2RestMapperV10.toCollectionSelfLink(resource);
+            case QUERY:
+                return queriesDo2RestMapperV10.toQuerySelfLink(resource);
+            default:
+                throw new RuntimeException("Invalid value for statistical resource type " + resourceType);
+        }
     }
 
     private InternationalString toInternationalString(InternationalStringDto sources) {

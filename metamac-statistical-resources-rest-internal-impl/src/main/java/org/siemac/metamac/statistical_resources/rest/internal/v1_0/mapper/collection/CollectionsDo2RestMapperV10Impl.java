@@ -28,6 +28,8 @@ import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResour
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResourceResult;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionRepository;
+import org.siemac.metamac.statistical.resources.core.dto.LifeCycleStatisticalResourceBaseDto;
+import org.siemac.metamac.statistical.resources.core.dto.LifeCycleStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.publication.domain.Cube;
@@ -128,6 +130,7 @@ public class CollectionsDo2RestMapperV10Impl implements CollectionsDo2RestMapper
 
         return target;
     }
+
     @Override
     public ResourceInternal toResource(RelatedResourceResult source, List<String> selectedLanguages) {
         if (source == null) {
@@ -148,6 +151,20 @@ public class CollectionsDo2RestMapperV10Impl implements CollectionsDo2RestMapper
 
         target.setManagementAppLink(toPublicationVersionManagementApplicationLink(source));
         return target;
+    }
+
+    @Override
+    public ResourceLink toCollectionSelfLink(LifeCycleStatisticalResourceDto source) {
+        String agencyID = source.getMaintainer().getCodeNested();
+        String resourceID = source.getCode();
+        return toCollectionSelfLink(agencyID, resourceID);
+    }
+
+    @Override
+    public ResourceLink toCollectionSelfLink(LifeCycleStatisticalResourceBaseDto source) {
+        String agencyID = source.getMaintainerCodeNested();
+        String resourceID = source.getCode();
+        return toCollectionSelfLink(agencyID, resourceID);
     }
 
     private CollectionMetadata toCollectionMetadata(PublicationVersion source, List<String> selectedLanguages) throws MetamacException {

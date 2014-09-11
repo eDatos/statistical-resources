@@ -4,17 +4,19 @@ import java.io.Serializable;
 import java.util.Date;
 
 import org.siemac.metamac.statistical.resources.core.dto.IdentifiableStatisticalResourceDto;
+import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
 import org.siemac.metamac.statistical.resources.web.client.enums.LifeCycleActionEnum;
 
 public class BaseResourceNotificationDto<T extends IdentifiableStatisticalResourceDto> implements Serializable {
 
-    private static final long     serialVersionUID = 2830084867900779273L;
+    private static final long             serialVersionUID = 2830084867900779273L;
 
-    protected LifeCycleActionEnum lifeCycleAction;
-    protected T                   datasetVersionDto;
-    protected T                   previousDatasetVersionDto;
-    protected String              reasonOfRejection;
-    protected Date                programmedPublicationDate;
+    protected LifeCycleActionEnum         lifeCycleAction;
+    protected StatisticalResourceTypeEnum statisticalResourceType;
+    protected T                           updatedResource;
+    protected T                           previousResource;
+    protected String                      reasonOfRejection;
+    protected Date                        programmedPublicationDate;
 
     public LifeCycleActionEnum getLifeCycleAction() {
         return lifeCycleAction;
@@ -24,20 +26,28 @@ public class BaseResourceNotificationDto<T extends IdentifiableStatisticalResour
         this.lifeCycleAction = lifeCycleAction;
     }
 
-    public T getDatasetVersionDto() {
-        return datasetVersionDto;
+    public StatisticalResourceTypeEnum getStatisticalResourceType() {
+        return statisticalResourceType;
     }
 
-    public void setDatasetVersionDto(T datasetVersionDto) {
-        this.datasetVersionDto = datasetVersionDto;
+    public void setStatisticalResourceType(StatisticalResourceTypeEnum statisticalResourceType) {
+        this.statisticalResourceType = statisticalResourceType;
     }
 
-    public T getPreviousDatasetVersionDto() {
-        return previousDatasetVersionDto;
+    public T getUpdatedResource() {
+        return updatedResource;
     }
 
-    public void setPreviousDatasetVersionDto(T previousDatasetVersionDto) {
-        this.previousDatasetVersionDto = previousDatasetVersionDto;
+    public void setUpdatedResource(T updatedResource) {
+        this.updatedResource = updatedResource;
+    }
+
+    public T getPreviousResource() {
+        return previousResource;
+    }
+
+    public void setPreviousResource(T previousResource) {
+        this.previousResource = previousResource;
     }
 
     public String getReasonOfRejection() {

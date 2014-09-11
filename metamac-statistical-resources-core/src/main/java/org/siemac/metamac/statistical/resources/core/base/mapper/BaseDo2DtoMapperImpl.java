@@ -123,6 +123,11 @@ public class BaseDo2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Base
         target.setProcStatus(source.getEffectiveProcStatus());
         target.setCreationDate(dateDoToDto(source.getCreationDate()));
         target.setPublicationDate(dateDoToDto(source.getPublicationDate()));
+        target.setCreationUser(source.getCreationUser());
+        target.setProductionValidationUser(source.getProductionValidationUser());
+        target.setDiffusionValidationUser(source.getDiffusionValidationUser());
+        target.setPublicationUser(source.getPublicationUser());
+        target.setMaintainerCodeNested(source.getMaintainer().getCodeNested());
     }
 
     @Override

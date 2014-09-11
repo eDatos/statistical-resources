@@ -31,6 +31,7 @@ import org.siemac.metamac.statistical.resources.core.invocation.service.MetamacA
 import org.siemac.metamac.statistical.resources.core.notices.ServiceNoticeAction;
 import org.siemac.metamac.statistical.resources.core.notices.ServiceNoticeMessage;
 import org.siemac.metamac.statistical.resources.web.client.enums.LifeCycleActionEnum;
+import org.siemac.metamac.statistical.resources.web.shared.dtos.ResourceNotificationBaseDto;
 import org.siemac.metamac.statistical.resources.web.shared.dtos.ResourceNotificationDto;
 import org.siemac.metamac.web.common.server.rest.utils.RestExceptionUtils;
 import org.siemac.metamac.web.common.server.utils.WebExceptionUtils;
@@ -79,25 +80,25 @@ public class NoticesRestInternalFacadeImpl implements NoticesRestInternalFacade 
     }
 
     @Override
-    public void createLifeCycleNotification(ServiceContext serviceContext, ResourceNotificationDto notificationDto) throws MetamacWebException {
-        switch (notificationDto.getLifeCycleAction()) {
+    public void createLifeCycleNotification(ServiceContext serviceContext, ResourceNotificationDto notification) throws MetamacWebException {
+        switch (notification.getLifeCycleAction()) {
             case SEND_TO_PRODUCTION_VALIDATION:
-                createSendToProductionValidationNotification(serviceContext, notificationDto);
+                createSendToProductionValidationNotification(serviceContext, notification);
                 break;
             case SEND_TO_DIFFUSION_VALIDATION:
-                createSendToDiffusionValidationNotification(serviceContext, notificationDto);
+                createSendToDiffusionValidationNotification(serviceContext, notification);
                 break;
             case REJECT_VALIDATION:
-                createCancelValidationNotification(serviceContext, notificationDto);
+                createCancelValidationNotification(serviceContext, notification);
                 break;
             case PUBLISH:
-                createPublicationNotification(serviceContext, notificationDto);
+                createPublicationNotification(serviceContext, notification);
                 break;
             case PROGRAM_PUBLICATION:
-                createProgrammedPublicationNotification(serviceContext, notificationDto);
+                createProgrammedPublicationNotification(serviceContext, notification);
                 break;
             case CANCEL_PROGRAMMED_PUBLICATION:
-                createCancelProgrammedPublicationNotification(serviceContext, notificationDto);
+                createCancelProgrammedPublicationNotification(serviceContext, notification);
                 break;
             case VERSION:
                 // Do not send notifications
@@ -106,46 +107,101 @@ public class NoticesRestInternalFacadeImpl implements NoticesRestInternalFacade 
     }
 
     @Override
-    public void createLifeCycleNotifications(ServiceContext serviceContext, List<ResourceNotificationDto> notificationDtos) throws MetamacWebException {
-        // TODO METAMAC-1991
+    public void createLifeCycleNotifications(ServiceContext serviceContext, List<ResourceNotificationBaseDto> notifications) throws MetamacWebException {
+        switch (getLifeCycleAction(notifications)) {
+            case SEND_TO_PRODUCTION_VALIDATION:
+                createSendToProductionValidationNotification(serviceContext, notifications);
+                break;
+            case SEND_TO_DIFFUSION_VALIDATION:
+                // TODO METAMAC-1991
+                break;
+            case REJECT_VALIDATION:
+                // TODO METAMAC-1991
+                break;
+            case PUBLISH:
+                // TODO METAMAC-1991
+                break;
+            case PROGRAM_PUBLICATION:
+                // TODO METAMAC-1991
+                break;
+            case CANCEL_PROGRAMMED_PUBLICATION:
+                // TODO METAMAC-1991
+                break;
+            case VERSION:
+                // Do not send notifications
+                break;
+        }
     }
+
+    //
+    // SEND TO PRODUCTION VALIDATION
+    //
 
     private void createSendToProductionValidationNotification(ServiceContext serviceContext, ResourceNotificationDto notificationDto) throws MetamacWebException {
         createNotificationWithStatisticalOperationAndRoles(serviceContext, notificationDto);
     }
 
+    private void createSendToProductionValidationNotification(ServiceContext serviceContext, List<ResourceNotificationBaseDto> notifications) throws MetamacWebException {
+        Map<String, ResourceNotificationBaseDto> notificationsByStatisticalOperation = groupNotificationsByStatisticalOperation(notifications);
+        // TODO METAMAC-1991
+    }
+
+    //
+    // SEND TO DIFFUSION VALIDATION
+    //
+
     private void createSendToDiffusionValidationNotification(ServiceContext serviceContext, ResourceNotificationDto notificationDto) throws MetamacWebException {
         createNotificationWithStatisticalOperationAndRoles(serviceContext, notificationDto);
     }
 
+    //
+    // CANCEL VALIDATION
+    //
+
     private void createCancelValidationNotification(ServiceContext serviceContext, ResourceNotificationDto notificationDto) throws MetamacWebException {
-        ProcStatusEnum previousProcStatusEnum = notificationDto.getPreviousDatasetVersionDto().getProcStatus();
-        String receiverUsername = ProcStatusEnum.PRODUCTION_VALIDATION.equals(previousProcStatusEnum) ? notificationDto.getPreviousDatasetVersionDto().getProductionValidationUser() : notificationDto
-                .getPreviousDatasetVersionDto().getDiffusionValidationUser();
+        ProcStatusEnum previousProcStatusEnum = notificationDto.getPreviousResource().getProcStatus();
+        String receiverUsername = ProcStatusEnum.PRODUCTION_VALIDATION.equals(previousProcStatusEnum) ? notificationDto.getPreviousResource().getProductionValidationUser() : notificationDto
+                .getPreviousResource().getDiffusionValidationUser();
         createNotificationWithReceivers(serviceContext, notificationDto, new String[]{receiverUsername});
     }
+
+    //
+    // PUBLISH
+    //
 
     private void createPublicationNotification(ServiceContext serviceContext, ResourceNotificationDto notificationDto) throws MetamacWebException {
         createNotificationWithStatisticalOperationAndRoles(serviceContext, notificationDto);
     }
 
+    //
+    // PROGRAMMED PUBLICATION
+    //
+
     private void createProgrammedPublicationNotification(ServiceContext serviceContext, ResourceNotificationDto notificationDto) throws MetamacWebException {
         createNotificationWithStatisticalOperationAndRoles(serviceContext, notificationDto);
     }
 
+    //
+    // CANCEL PROGRAMMED PUBLICATION
+    //
+
     private void createCancelProgrammedPublicationNotification(ServiceContext serviceContext, ResourceNotificationDto notificationDto) throws MetamacWebException {
-        String creatorUsername = notificationDto.getDatasetVersionDto().getCreationUser();
-        String publisherUsername = notificationDto.getPreviousDatasetVersionDto().getPublicationUser();
+        String creatorUsername = notificationDto.getUpdatedResource().getCreationUser();
+        String publisherUsername = notificationDto.getPreviousResource().getPublicationUser();
         createNotificationWithReceivers(serviceContext, notificationDto, new String[]{creatorUsername, publisherUsername});
     }
 
-    private void createNotificationWithStatisticalOperationAndRoles(ServiceContext serviceContext, ResourceNotificationDto notificationDto) throws MetamacWebException {
-        ResourceInternal resourceInternal = restMapper.buildResourceInternalFromDatasetVersion(notificationDto.getDatasetVersionDto());
-        String actionCode = getActionCode(notificationDto.getLifeCycleAction());
-        String messageCode = getMessageCode(notificationDto.getLifeCycleAction());
-        MetamacRolesEnum[] notificationRoles = roles.containsKey(notificationDto.getLifeCycleAction()) ? roles.get(notificationDto.getLifeCycleAction()) : null;
+    //
+    // NOTIFICATIONS
+    //
+
+    private void createNotificationWithStatisticalOperationAndRoles(ServiceContext serviceContext, ResourceNotificationDto notification) throws MetamacWebException {
+        ResourceInternal resourceInternal = restMapper.buildResourceInternal(notification.getUpdatedResource(), notification.getStatisticalResourceType());
+        String actionCode = getActionCode(notification.getLifeCycleAction());
+        String messageCode = getMessageCode(notification.getLifeCycleAction());
+        MetamacRolesEnum[] notificationRoles = roles.containsKey(notification.getLifeCycleAction()) ? roles.get(notification.getLifeCycleAction()) : null;
         String[] receiversUsernames = null;
-        createNotification(serviceContext, notificationDto, actionCode, messageCode, new ResourceInternal[]{resourceInternal}, notificationRoles, receiversUsernames);
+        createNotification(serviceContext, notification, actionCode, messageCode, new ResourceInternal[]{resourceInternal}, notificationRoles, receiversUsernames);
     }
 
     private void createNotificationWithReceivers(ServiceContext serviceContext, ResourceNotificationDto notificationDto, String[] receiversUsernames) throws MetamacWebException {
@@ -154,11 +210,11 @@ public class NoticesRestInternalFacadeImpl implements NoticesRestInternalFacade 
         createNotificationWithReceivers(serviceContext, actionCode, messageCode, notificationDto, receiversUsernames);
     }
 
-    private void createNotificationWithReceivers(ServiceContext serviceContext, String actionCode, String messageCode, ResourceNotificationDto notificationDto, String[] receiversUsernames)
+    private void createNotificationWithReceivers(ServiceContext serviceContext, String actionCode, String messageCode, ResourceNotificationDto notification, String[] receiversUsernames)
             throws MetamacWebException {
-        ResourceInternal resourceInternal = restMapper.buildResourceInternalFromDatasetVersion(notificationDto.getDatasetVersionDto());
+        ResourceInternal resourceInternal = restMapper.buildResourceInternal(notification.getUpdatedResource(), notification.getStatisticalResourceType());
         MetamacRolesEnum[] cancelValidationRoles = null;
-        createNotification(serviceContext, notificationDto, actionCode, messageCode, new ResourceInternal[]{resourceInternal}, cancelValidationRoles, receiversUsernames);
+        createNotification(serviceContext, notification, actionCode, messageCode, new ResourceInternal[]{resourceInternal}, cancelValidationRoles, receiversUsernames);
     }
 
     private void createNotification(ServiceContext ctx, ResourceNotificationDto notificationDto, String actionCode, String messageCode, ResourceInternal[] resources, MetamacRolesEnum[] roles,
@@ -171,8 +227,8 @@ public class NoticesRestInternalFacadeImpl implements NoticesRestInternalFacade 
         if (roles != null) {
             noticeBuilder = noticeBuilder.withRoles(roles);
         }
-        if (StringUtils.isNotBlank(notificationDto.getDatasetVersionDto().getStatisticalOperation().getUrn())) {
-            noticeBuilder = noticeBuilder.withStatisticalOperations(notificationDto.getDatasetVersionDto().getStatisticalOperation().getUrn());
+        if (StringUtils.isNotBlank(notificationDto.getUpdatedResource().getStatisticalOperation().getUrn())) {
+            noticeBuilder = noticeBuilder.withStatisticalOperations(notificationDto.getUpdatedResource().getStatisticalOperation().getUrn());
         }
         if (receiversUsernames != null) {
             noticeBuilder = noticeBuilder.withReceivers(receiversUsernames);
@@ -214,5 +270,23 @@ public class NoticesRestInternalFacadeImpl implements NoticesRestInternalFacade 
 
     private String getSendingApp() {
         return MetamacApplicationsEnum.GESTOR_RECURSOS_ESTADISTICOS.getName();
+    }
+
+    private Map<String, ResourceNotificationBaseDto> groupNotificationsByStatisticalOperation(List<ResourceNotificationBaseDto> notifications) {
+        Map<String, ResourceNotificationBaseDto> result = new HashMap<String, ResourceNotificationBaseDto>();
+        for (ResourceNotificationBaseDto notification : notifications) {
+            result.put(notification.getUpdatedResource().getStatisticalOperation().getUrn(), notification);
+        }
+        return result;
+    }
+
+    /**
+     * Returns the lifecycle action of the notifications. When a group of resources update their {@link ProcStatusEnum} at the same time, all of them have the same {@link LifeCycleActionEnum}.
+     * 
+     * @param notifications
+     * @return
+     */
+    private LifeCycleActionEnum getLifeCycleAction(List<ResourceNotificationBaseDto> notifications) {
+        return notifications.get(0).getLifeCycleAction();
     }
 }

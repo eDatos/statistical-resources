@@ -2,6 +2,7 @@ package org.siemac.metamac.statistical.resources.web.server.handlers.dataset;
 
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
+import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
 import org.siemac.metamac.statistical.resources.core.facade.serviceapi.StatisticalResourcesServiceFacade;
 import org.siemac.metamac.statistical.resources.web.client.enums.LifeCycleActionEnum;
 import org.siemac.metamac.statistical.resources.web.server.handlers.UpdateResourceProcStatusBaseActionHandler;
@@ -75,8 +76,8 @@ public class UpdateDatasetVersionProcStatusActionHandler extends UpdateResourceP
             }
 
             try {
-                ResourceNotificationDto notificationDto = new ResourceNotificationDto.Builder(action.getDatasetVersionToUpdateProcStatus(), lifeCycleAction).datasetVersionDto(datasetVersionDto)
-                        .reasonOfRejection(action.getReasonOfRejection()).programmedPublicationDate(action.getValidFrom()).build();
+                ResourceNotificationDto notificationDto = new ResourceNotificationDto.Builder(action.getDatasetVersionToUpdateProcStatus(), StatisticalResourceTypeEnum.DATASET, lifeCycleAction)
+                        .updatedResource(datasetVersionDto).reasonOfRejection(action.getReasonOfRejection()).programmedPublicationDate(action.getValidFrom()).build();
                 noticesRestInternalFacade.createLifeCycleNotification(ServiceContextHolder.getCurrentServiceContext(), notificationDto);
             } catch (MetamacWebException e) {
                 return new UpdateDatasetVersionProcStatusResult.Builder(datasetVersionDto).notificationException(e).build();

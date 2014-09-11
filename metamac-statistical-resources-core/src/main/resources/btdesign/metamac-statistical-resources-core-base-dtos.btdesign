@@ -52,6 +52,11 @@ Application StatisticalResourcesDto {
 			- @ProcStatusEnum procStatus;
 			JAVADATE creationDate;
 			JAVADATE publicationDate;
+			String creationUser;
+			String productionValidationUser;
+			String diffusionValidationUser;
+			String publicationUser;
+			String maintainerCodeNested;
 		}
 
 		DataTransferObject LifeCycleStatisticalResourceDto extends @VersionableStatisticalResourceDto {

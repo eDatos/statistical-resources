@@ -6,7 +6,8 @@ import java.util.Map;
 import org.siemac.metamac.core.common.util.shared.UrnUtils;
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResourceResult;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
-import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
+import org.siemac.metamac.statistical.resources.core.dto.IdentifiableStatisticalResourceDto;
+import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
 import org.siemac.metamac.statistical.resources.navigation.shared.NameTokens;
@@ -46,32 +47,48 @@ public class InternalWebApplicationNavigation {
         // @formatter:on
     }
 
+    public String buildResourceUrl(IdentifiableStatisticalResourceDto source, StatisticalResourceTypeEnum type) {
+        switch (type) {
+            case DATASET:
+                return buildDatasetVersionUrl(source.getStatisticalOperation().getCode(), source.getUrn());
+            case COLLECTION:
+                return buildPublicationVersionUrl(source.getStatisticalOperation().getCode(), source.getUrn());
+            case QUERY:
+                return buildQueryVersionUrl(source.getStatisticalOperation().getCode(), source.getUrn());
+            default:
+                throw new RuntimeException("Invalid value for statistical resource type " + type);
+        }
+    }
+
+    //
     // PUBLICATIONS
+    //
+
     public String buildPublicationVersionUrl(PublicationVersion source) {
-        Map<String, String> parameters = new HashMap<String, String>(1);
-        parameters.put(OPERATION_ID_PARAMETER, source.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode());
-        parameters.put(PUBLICATION_ID_PARAMETER, UrnUtils.removePrefix(source.getLifeCycleStatisticalResource().getUrn()));
-        return publicationVersionTemplate.expand(parameters).toString();
+        return buildPublicationVersionUrl(source.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode(), source.getLifeCycleStatisticalResource().getUrn());
     }
 
     public String buildRelatedResourcePublicationVersionUrl(RelatedResourceResult source) {
-        Map<String, String> parameters = new HashMap<String, String>(1);
-        parameters.put(OPERATION_ID_PARAMETER, source.getStatisticalOperationCode());
-        parameters.put(PUBLICATION_ID_PARAMETER, UrnUtils.removePrefix(source.getUrn()));
+        return buildPublicationVersionUrl(source.getStatisticalOperationCode(), source.getUrn());
+    }
+
+    public String buildPublicationVersionUrl(String statisticalOperationCode, String publicationVersionUrn) {
+        Map<String, String> parameters = new HashMap<String, String>(2);
+        parameters.put(OPERATION_ID_PARAMETER, statisticalOperationCode);
+        parameters.put(PUBLICATION_ID_PARAMETER, UrnUtils.removePrefix(publicationVersionUrn));
         return publicationVersionTemplate.expand(parameters).toString();
     }
 
+    //
     // DATASETS
+    //
+
     public String buildDatasetVersionUrl(DatasetVersion source) {
         return buildDatasetVersionUrl(source.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode(), source.getLifeCycleStatisticalResource().getUrn());
     }
 
     public String buildDatasetVersionUrl(RelatedResourceResult source) {
         return buildDatasetVersionUrl(source.getStatisticalOperationCode(), source.getUrn());
-    }
-
-    public String buildDatasetVersionUrl(DatasetVersionDto source) {
-        return buildDatasetVersionUrl(source.getStatisticalOperation().getCode(), source.getUrn());
     }
 
     public String buildDatasetVersionUrl(String statisticalOperationCode, String datasetVersionUrn) {
@@ -81,19 +98,22 @@ public class InternalWebApplicationNavigation {
         return datasetVersionTemplate.expand(parameters).toString();
     }
 
+    //
     // QUERY
+    //
+
     public String buildQueryVersionUrl(QueryVersion source) {
-        Map<String, String> parameters = new HashMap<String, String>(1);
-        parameters.put(OPERATION_ID_PARAMETER, source.getLifeCycleStatisticalResource().getStatisticalOperation().getCode());
-        parameters.put(QUERY_ID_PARAMETER, UrnUtils.removePrefix(source.getLifeCycleStatisticalResource().getUrn()));
-        return queryTemplate.expand(parameters).toString();
+        return buildQueryVersionUrl(source.getLifeCycleStatisticalResource().getStatisticalOperation().getCode(), source.getLifeCycleStatisticalResource().getUrn());
     }
 
     public String buildQueryVersionUrl(RelatedResourceResult source) {
-        Map<String, String> parameters = new HashMap<String, String>(1);
-        parameters.put(OPERATION_ID_PARAMETER, source.getCode());
-        parameters.put(QUERY_ID_PARAMETER, UrnUtils.removePrefix(source.getUrn()));
-        return queryTemplate.expand(parameters).toString();
+        return buildQueryVersionUrl(source.getStatisticalOperationCode(), source.getUrn());
     }
 
+    public String buildQueryVersionUrl(String statisticalOperationCode, String queryVersionUrn) {
+        Map<String, String> parameters = new HashMap<String, String>(2);
+        parameters.put(OPERATION_ID_PARAMETER, statisticalOperationCode);
+        parameters.put(QUERY_ID_PARAMETER, UrnUtils.removePrefix(queryVersionUrn));
+        return queryTemplate.expand(parameters).toString();
+    }
 }

@@ -5,14 +5,17 @@ import java.util.List;
 
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionBaseDto;
+import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
 import org.siemac.metamac.statistical.resources.core.facade.serviceapi.StatisticalResourcesServiceFacade;
 import org.siemac.metamac.statistical.resources.web.client.enums.LifeCycleActionEnum;
 import org.siemac.metamac.statistical.resources.web.server.handlers.UpdateResourceProcStatusBaseActionHandler;
+import org.siemac.metamac.statistical.resources.web.server.rest.NoticesRestInternalFacade;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.UpdateDatasetVersionsProcStatusAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.UpdateDatasetVersionsProcStatusResult;
 import org.siemac.metamac.statistical.resources.web.shared.dtos.ResourceNotificationBaseDto;
 import org.siemac.metamac.web.common.server.ServiceContextHolder;
 import org.siemac.metamac.web.common.server.utils.WebExceptionUtils;
+import org.siemac.metamac.web.common.shared.exception.MetamacWebException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -23,6 +26,9 @@ public class UpdateDatasetVersionsProcStatusActionHandler extends UpdateResource
 
     @Autowired
     private StatisticalResourcesServiceFacade statisticalResourcesServiceFacade;
+
+    @Autowired
+    private NoticesRestInternalFacade         noticesRestInternalFacade;
 
     public UpdateDatasetVersionsProcStatusActionHandler() {
         super(UpdateDatasetVersionsProcStatusAction.class);
@@ -78,13 +84,24 @@ public class UpdateDatasetVersionsProcStatusActionHandler extends UpdateResource
                         break;
                 }
 
-                ResourceNotificationBaseDto notification = new ResourceNotificationBaseDto.Builder(datasetVersionToUpdate, lifeCycleAction).build();
+                ResourceNotificationBaseDto notification = new ResourceNotificationBaseDto.Builder(datasetVersionToUpdate, StatisticalResourceTypeEnum.DATASET, lifeCycleAction)
+                        .updatedResource(updatedDatasetVersionBaseDto).reasonOfRejection(action.getReasonOfRejection()).programmedPublicationDate(action.getValidFrom()).build();
                 notificationsToSend.add(notification);
 
             } catch (MetamacException e) {
                 addExceptionsItemToMetamacException(lifeCycleAction, datasetVersionToUpdate, metamacException, e);
             }
         }
+
+        // SEND NOTIFICATIONS
+
+        try {
+            noticesRestInternalFacade.createLifeCycleNotifications(ServiceContextHolder.getCurrentServiceContext(), notificationsToSend);
+        } catch (MetamacWebException e) {
+            // TODO METAMAC-1991
+        }
+
+        // MANAGE EXCEPTION
 
         if (metamacException.getExceptionItems() == null || metamacException.getExceptionItems().isEmpty()) {
             return new UpdateDatasetVersionsProcStatusResult();
