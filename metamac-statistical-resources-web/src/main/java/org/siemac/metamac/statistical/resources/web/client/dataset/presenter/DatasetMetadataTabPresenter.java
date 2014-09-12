@@ -225,7 +225,7 @@ public class DatasetMetadataTabPresenter extends StatisticalResourceMetadataBase
 
                     @Override
                     public void onWaitSuccess(UpdateDatasetVersionProcStatusResult result) {
-                        showMessageAfterLifeCycleUpdate(result, getMessages().lifeCycleResourceSentToProductionValidation());
+                        showMessageAfterResourceLifeCycleUpdate(result, getMessages().lifeCycleResourceSentToProductionValidation());
                         getView().setDataset(result.getDatasetVersionDto());
                     }
                 });
@@ -238,7 +238,7 @@ public class DatasetMetadataTabPresenter extends StatisticalResourceMetadataBase
 
                     @Override
                     public void onWaitSuccess(UpdateDatasetVersionProcStatusResult result) {
-                        showMessageAfterLifeCycleUpdate(result, getMessages().lifeCycleResourceSentToDiffusionValidation());
+                        showMessageAfterResourceLifeCycleUpdate(result, getMessages().lifeCycleResourceSentToDiffusionValidation());
                         getView().setDataset(result.getDatasetVersionDto());
                     }
                 });
@@ -251,7 +251,7 @@ public class DatasetMetadataTabPresenter extends StatisticalResourceMetadataBase
 
             @Override
             public void onWaitSuccess(UpdateDatasetVersionProcStatusResult result) {
-                showMessageAfterLifeCycleUpdate(result, getMessages().lifeCycleResourceRejectValidation());
+                showMessageAfterResourceLifeCycleUpdate(result, getMessages().lifeCycleResourceRejectValidation());
                 getView().setDataset(result.getDatasetVersionDto());
             }
         });
@@ -265,7 +265,7 @@ public class DatasetMetadataTabPresenter extends StatisticalResourceMetadataBase
 
             @Override
             public void onWaitSuccess(UpdateDatasetVersionProcStatusResult result) {
-                showMessageAfterLifeCycleUpdate(result, getMessages().lifeCycleResourceProgramPublication());
+                showMessageAfterResourceLifeCycleUpdate(result, getMessages().lifeCycleResourceProgramPublication());
                 getView().setDataset(result.getDatasetVersionDto());
             }
         });
@@ -277,7 +277,7 @@ public class DatasetMetadataTabPresenter extends StatisticalResourceMetadataBase
 
             @Override
             public void onWaitSuccess(UpdateDatasetVersionProcStatusResult result) {
-                showMessageAfterLifeCycleUpdate(result, getMessages().lifeCycleResourcePublish());
+                showMessageAfterResourceLifeCycleUpdate(result, getMessages().lifeCycleResourcePublish());
                 getView().setDataset(result.getDatasetVersionDto());
             }
         });
@@ -290,7 +290,7 @@ public class DatasetMetadataTabPresenter extends StatisticalResourceMetadataBase
 
                     @Override
                     public void onWaitSuccess(UpdateDatasetVersionProcStatusResult result) {
-                        showMessageAfterLifeCycleUpdate(result, getMessages().lifeCycleResourceCancelProgrammedPublication());
+                        showMessageAfterResourceLifeCycleUpdate(result, getMessages().lifeCycleResourceCancelProgrammedPublication());
                         getView().setDataset(result.getDatasetVersionDto());
                     }
                 });
@@ -320,13 +320,8 @@ public class DatasetMetadataTabPresenter extends StatisticalResourceMetadataBase
         }
     }
 
-    private void showMessageAfterLifeCycleUpdate(UpdateDatasetVersionProcStatusResult result, String message) {
-        if (result.getNotificationException() == null) {
-            ShowMessageEvent.fireSuccessMessage(this, message);
-        } else {
-            String warningMessage = message + StatisticalResourcesWeb.getMessages().notificationsSendingError();
-            ShowMessageEvent.fireWarningMessageWithError(this, warningMessage, result.getNotificationException());
-        }
+    private void showMessageAfterResourceLifeCycleUpdate(UpdateDatasetVersionProcStatusResult result, String message) {
+        CommonUtils.showMessageAfterResourceLifeCycleUpdate(DatasetMetadataTabPresenter.this, result.getNotificationException(), message);
     }
 
     //

@@ -2,6 +2,7 @@ package org.siemac.metamac.statistical.resources.web.client.publication.presente
 
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getMessages;
+import static org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils.showMessageAfterMultipleResourcesLifeCycleUpdate;
 
 import java.util.Date;
 import java.util.List;
@@ -232,7 +233,7 @@ public class PublicationListPresenter extends StatisticalResourceBaseListPresent
 
             @Override
             public void onWaitSuccess(UpdatePublicationVersionsProcStatusResult result) {
-                fireSuccessMessage(successMessage);
+                showMessageAfterMultipleResourcesLifeCycleUpdate(PublicationListPresenter.this, result.getNotificationException(), successMessage);
                 retrievePublications(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, getView().getPublicationVersionWebCriteria());
             }
             @Override

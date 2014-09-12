@@ -5,6 +5,7 @@ import java.util.Date;
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionDto;
 import org.siemac.metamac.statistical.resources.web.client.enums.LifeCycleActionEnum;
+import org.siemac.metamac.web.common.shared.exception.MetamacWebException;
 
 import com.gwtplatform.dispatch.annotation.GenDispatch;
 import com.gwtplatform.dispatch.annotation.In;
@@ -34,4 +35,8 @@ public class UpdatePublicationVersionProcStatus {
 
     @Out(1)
     PublicationVersionDto publicationVersionDto;
+
+    @Optional
+    @Out(2)
+    MetamacWebException   notificationException;
 }

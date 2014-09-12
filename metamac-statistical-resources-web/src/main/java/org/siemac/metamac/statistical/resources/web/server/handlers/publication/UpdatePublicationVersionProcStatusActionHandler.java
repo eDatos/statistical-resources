@@ -2,13 +2,17 @@ package org.siemac.metamac.statistical.resources.web.server.handlers.publication
 
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionDto;
+import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
 import org.siemac.metamac.statistical.resources.core.facade.serviceapi.StatisticalResourcesServiceFacade;
 import org.siemac.metamac.statistical.resources.web.client.enums.LifeCycleActionEnum;
+import org.siemac.metamac.statistical.resources.web.server.dtos.ResourceNotificationDto;
 import org.siemac.metamac.statistical.resources.web.server.handlers.UpdateResourceProcStatusBaseActionHandler;
+import org.siemac.metamac.statistical.resources.web.server.rest.NoticesRestInternalFacade;
 import org.siemac.metamac.statistical.resources.web.shared.publication.UpdatePublicationVersionProcStatusAction;
 import org.siemac.metamac.statistical.resources.web.shared.publication.UpdatePublicationVersionProcStatusResult;
 import org.siemac.metamac.web.common.server.ServiceContextHolder;
 import org.siemac.metamac.web.common.server.utils.WebExceptionUtils;
+import org.siemac.metamac.web.common.shared.exception.MetamacWebException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -19,6 +23,9 @@ public class UpdatePublicationVersionProcStatusActionHandler extends UpdateResou
 
     @Autowired
     private StatisticalResourcesServiceFacade statisticalResourcesServiceFacade;
+
+    @Autowired
+    private NoticesRestInternalFacade         noticesRestInternalFacade;
 
     public UpdatePublicationVersionProcStatusActionHandler() {
         super(UpdatePublicationVersionProcStatusAction.class);
@@ -47,10 +54,6 @@ public class UpdatePublicationVersionProcStatusActionHandler extends UpdateResou
                 case REJECT_VALIDATION:
                     publicationVersionDto = statisticalResourcesServiceFacade.sendPublicationVersionToValidationRejected(ServiceContextHolder.getCurrentServiceContext(),
                             action.getPublicationVersionToUpdateProcStatus());
-
-                    String reasonOfRejection = action.getReasonOfRejection();
-                    // TODO METAMAC-2112
-
                     break;
 
                 case PUBLISH:
@@ -75,6 +78,14 @@ public class UpdatePublicationVersionProcStatusActionHandler extends UpdateResou
 
                 default:
                     break;
+            }
+
+            try {
+                ResourceNotificationDto notificationDto = new ResourceNotificationDto.Builder(action.getPublicationVersionToUpdateProcStatus(), StatisticalResourceTypeEnum.COLLECTION, lifeCycleAction)
+                        .updatedResource(publicationVersionDto).reasonOfRejection(action.getReasonOfRejection()).programmedPublicationDate(action.getValidFrom()).build();
+                noticesRestInternalFacade.createLifeCycleNotification(ServiceContextHolder.getCurrentServiceContext(), notificationDto);
+            } catch (MetamacWebException e) {
+                return new UpdatePublicationVersionProcStatusResult.Builder(publicationVersionDto).notificationException(e).build();
             }
 
             return new UpdatePublicationVersionProcStatusResult(publicationVersionDto);

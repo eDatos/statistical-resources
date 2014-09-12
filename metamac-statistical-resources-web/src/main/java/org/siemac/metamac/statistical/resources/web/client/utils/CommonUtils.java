@@ -37,10 +37,15 @@ import org.siemac.metamac.statistical.resources.core.enume.domain.VersionRationa
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryTypeEnum;
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesDefaults;
+import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb;
 import org.siemac.metamac.statistical.resources.web.client.enums.DatasetConstraintInclusionTypeEnum;
 import org.siemac.metamac.statistical.resources.web.shared.dtos.RangeDto;
 import org.siemac.metamac.web.common.client.MetamacWebCommon;
+import org.siemac.metamac.web.common.client.events.ShowMessageEvent;
 import org.siemac.metamac.web.common.client.utils.CommonWebUtils;
+import org.siemac.metamac.web.common.shared.exception.MetamacWebException;
+
+import com.google.gwt.event.shared.HasHandlers;
 
 public class CommonUtils {
 
@@ -553,4 +558,20 @@ public class CommonUtils {
         return UrnUtils.generateUrn(UrnConstants.URN_SIEMAC_CLASS_QUERY_PREFIX, queryIdentifier);
     }
 
+    public static void showMessageAfterResourceLifeCycleUpdate(HasHandlers source, MetamacWebException notificationException, String message) {
+        if (notificationException == null) {
+            ShowMessageEvent.fireSuccessMessage(source, message);
+        } else {
+            String warningMessage = message + StatisticalResourcesWeb.getMessages().notificationsSendingError();
+            ShowMessageEvent.fireWarningMessageWithError(source, warningMessage, notificationException);
+        }
+    }
+
+    public static void showMessageAfterMultipleResourcesLifeCycleUpdate(HasHandlers source, MetamacWebException notificationException, String message) {
+        if (notificationException == null) {
+            ShowMessageEvent.fireSuccessMessage(source, message);
+        } else {
+            ShowMessageEvent.fireWarningMessageWithError(source, message, notificationException);
+        }
+    }
 }

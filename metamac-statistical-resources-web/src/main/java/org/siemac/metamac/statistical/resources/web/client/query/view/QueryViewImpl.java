@@ -3,6 +3,7 @@ package org.siemac.metamac.statistical.resources.web.client.query.view;
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getMessages;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -136,6 +137,7 @@ public class QueryViewImpl extends ViewWithUiHandlers<QueryUiHandlers> implement
     @Override
     public void newQueryDto() {
         clearWarningLabel();
+        clearQueryVersions();
         queryFormPanel.createQuery();
         queryFormPanel.show();
     }
@@ -186,6 +188,10 @@ public class QueryViewImpl extends ViewWithUiHandlers<QueryUiHandlers> implement
     private void clearWarningLabel() {
         warningLabel.setContents(StringUtils.EMPTY);
         warningLabel.hide();
+    }
+
+    private void clearQueryVersions() {
+        versionsSectionStack.setQueryVersions(new ArrayList<QueryVersionBaseDto>());
     }
 
     private class QueryFormPanel extends VLayout {

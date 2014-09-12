@@ -2,6 +2,7 @@ package org.siemac.metamac.statistical.resources.web.client.dataset.presenter;
 
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getMessages;
+import static org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils.showMessageAfterMultipleResourcesLifeCycleUpdate;
 
 import java.util.Date;
 import java.util.List;
@@ -266,7 +267,7 @@ public class DatasetListPresenter extends StatisticalResourceBaseListPresenter<D
 
             @Override
             public void onWaitSuccess(UpdateDatasetVersionsProcStatusResult result) {
-                showMessageAfterLifeCycleUpdate(result, successMessage);
+                showMessageAfterMultipleResourcesLifeCycleUpdate(DatasetListPresenter.this, result.getNotificationException(), successMessage);
                 retrieveDatasets(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, getView().getDatasetVersionWebCriteria());
             }
 
@@ -276,14 +277,6 @@ public class DatasetListPresenter extends StatisticalResourceBaseListPresenter<D
                 retrieveDatasets(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, getView().getDatasetVersionWebCriteria());
             }
         });
-    }
-
-    private void showMessageAfterLifeCycleUpdate(UpdateDatasetVersionsProcStatusResult result, String message) {
-        if (result.getNotificationException() == null) {
-            ShowMessageEvent.fireSuccessMessage(this, message);
-        } else {
-            ShowMessageEvent.fireWarningMessageWithError(this, message, result.getNotificationException());
-        }
     }
 
     //
