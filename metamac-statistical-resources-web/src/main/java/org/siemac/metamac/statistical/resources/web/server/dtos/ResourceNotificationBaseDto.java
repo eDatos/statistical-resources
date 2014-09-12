@@ -1,7 +1,9 @@
-package org.siemac.metamac.statistical.resources.web.shared.dtos;
+package org.siemac.metamac.statistical.resources.web.server.dtos;
 
 import java.util.Date;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.siemac.metamac.statistical.resources.core.dto.LifeCycleStatisticalResourceBaseDto;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
 import org.siemac.metamac.statistical.resources.web.client.enums.LifeCycleActionEnum;
@@ -52,5 +54,21 @@ public class ResourceNotificationBaseDto extends BaseResourceNotificationDto<Lif
         previousResource = builder.previousResource;
         reasonOfRejection = builder.reasonOfRejection;
         programmedPublicationDate = builder.programmedPublicationDate;
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 31).append(previousResource).append(updatedResource).toHashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof ResourceNotificationBaseDto))
+            return false;
+        if (obj == this)
+            return true;
+
+        ResourceNotificationBaseDto r = (ResourceNotificationBaseDto) obj;
+        return new EqualsBuilder().append(previousResource, r.previousResource).append(updatedResource, r.updatedResource).isEquals();
     }
 }

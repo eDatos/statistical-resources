@@ -8,11 +8,11 @@ import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersion
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
 import org.siemac.metamac.statistical.resources.core.facade.serviceapi.StatisticalResourcesServiceFacade;
 import org.siemac.metamac.statistical.resources.web.client.enums.LifeCycleActionEnum;
+import org.siemac.metamac.statistical.resources.web.server.dtos.ResourceNotificationBaseDto;
 import org.siemac.metamac.statistical.resources.web.server.handlers.UpdateResourceProcStatusBaseActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.rest.NoticesRestInternalFacade;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.UpdateDatasetVersionsProcStatusAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.UpdateDatasetVersionsProcStatusResult;
-import org.siemac.metamac.statistical.resources.web.shared.dtos.ResourceNotificationBaseDto;
 import org.siemac.metamac.web.common.server.ServiceContextHolder;
 import org.siemac.metamac.web.common.server.utils.WebExceptionUtils;
 import org.siemac.metamac.web.common.shared.exception.MetamacWebException;
@@ -95,18 +95,23 @@ public class UpdateDatasetVersionsProcStatusActionHandler extends UpdateResource
 
         // SEND NOTIFICATIONS
 
+        MetamacWebException notificationException = null;
         try {
             noticesRestInternalFacade.createLifeCycleNotifications(ServiceContextHolder.getCurrentServiceContext(), notificationsToSend);
         } catch (MetamacWebException e) {
-            // TODO METAMAC-1991
+            notificationException = e;
         }
 
         // MANAGE EXCEPTION
 
         if (metamacException.getExceptionItems() == null || metamacException.getExceptionItems().isEmpty()) {
-            return new UpdateDatasetVersionsProcStatusResult();
+            return new UpdateDatasetVersionsProcStatusResult.Builder().notificationException(notificationException).build();
         } else {
-            throw WebExceptionUtils.createMetamacWebException(metamacException);
+            MetamacWebException metamacWebException = WebExceptionUtils.createMetamacWebException(metamacException);
+            if (notificationException != null) {
+                metamacWebException.getWebExceptionItems().addAll(notificationException.getWebExceptionItems());
+            }
+            throw metamacWebException;
         }
     }
 }

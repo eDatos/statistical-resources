@@ -266,7 +266,7 @@ public class DatasetListPresenter extends StatisticalResourceBaseListPresenter<D
 
             @Override
             public void onWaitSuccess(UpdateDatasetVersionsProcStatusResult result) {
-                fireSuccessMessage(successMessage);
+                showMessageAfterLifeCycleUpdate(result, successMessage);
                 retrieveDatasets(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, getView().getDatasetVersionWebCriteria());
             }
 
@@ -276,6 +276,14 @@ public class DatasetListPresenter extends StatisticalResourceBaseListPresenter<D
                 retrieveDatasets(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, getView().getDatasetVersionWebCriteria());
             }
         });
+    }
+
+    private void showMessageAfterLifeCycleUpdate(UpdateDatasetVersionsProcStatusResult result, String message) {
+        if (result.getNotificationException() == null) {
+            ShowMessageEvent.fireSuccessMessage(this, message);
+        } else {
+            ShowMessageEvent.fireWarningMessageWithError(this, message, result.getNotificationException());
+        }
     }
 
     //

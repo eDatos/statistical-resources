@@ -19,8 +19,10 @@ import javax.ws.rs.core.Response;
 
 import org.apache.commons.lang.StringUtils;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
+import org.siemac.metamac.core.common.exception.CommonServiceExceptionType;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.lang.LocaleUtil;
+import org.siemac.metamac.core.common.lang.shared.LocaleConstants;
 import org.siemac.metamac.core.common.util.ServiceContextUtils;
 import org.siemac.metamac.rest.notices.v1_0.domain.Message;
 import org.siemac.metamac.rest.notices.v1_0.domain.ResourceInternal;
@@ -32,12 +34,15 @@ import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum
 import org.siemac.metamac.statistical.resources.core.invocation.service.MetamacApisLocator;
 import org.siemac.metamac.statistical.resources.core.notices.ServiceNoticeAction;
 import org.siemac.metamac.statistical.resources.core.notices.ServiceNoticeMessage;
+import org.siemac.metamac.statistical.resources.web.client.WebMessageExceptionsConstants;
 import org.siemac.metamac.statistical.resources.web.client.enums.LifeCycleActionEnum;
 import org.siemac.metamac.statistical.resources.web.server.dtos.GroupedNotificationDto;
-import org.siemac.metamac.statistical.resources.web.shared.dtos.ResourceNotificationBaseDto;
-import org.siemac.metamac.statistical.resources.web.shared.dtos.ResourceNotificationDto;
+import org.siemac.metamac.statistical.resources.web.server.dtos.ResourceNotificationBaseDto;
+import org.siemac.metamac.statistical.resources.web.server.dtos.ResourceNotificationDto;
+import org.siemac.metamac.web.common.server.ServiceContextHolder;
 import org.siemac.metamac.web.common.server.rest.utils.RestExceptionUtils;
 import org.siemac.metamac.web.common.server.utils.WebExceptionUtils;
+import org.siemac.metamac.web.common.server.utils.WebTranslateExceptions;
 import org.siemac.metamac.web.common.shared.exception.MetamacWebException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -53,6 +58,9 @@ public class NoticesRestInternalFacadeImpl implements NoticesRestInternalFacade 
 
     @Autowired
     private RestMapper                                          restMapper;
+
+    @Autowired
+    private WebTranslateExceptions                              webTranslateExceptions;
 
     private static Map<LifeCycleActionEnum, MetamacRolesEnum[]> roles;
     private static Map<LifeCycleActionEnum, String>             actionCodes;
@@ -255,12 +263,20 @@ public class NoticesRestInternalFacadeImpl implements NoticesRestInternalFacade 
      * @throws MetamacWebException
      */
     private void createNotificationWithStatisticalOperationAndRoles(ServiceContext serviceContext, List<ResourceNotificationBaseDto> notifications) throws MetamacWebException {
+        boolean isErrorInNotification = false;
         MetamacRolesEnum[] notificationRoles = roles.get(getLifeCycleAction(notifications));
         Map<String, List<ResourceNotificationBaseDto>> notificationsByStatisticalOperation = groupNotificationsByStatisticalOperation(notifications);
         for (Map.Entry<String, List<ResourceNotificationBaseDto>> entry : notificationsByStatisticalOperation.entrySet()) {
             GroupedNotificationDto groupedNotificationDto = createGroupedNotificationWithStatisticalOperation(entry.getKey(), entry.getValue());
             groupedNotificationDto.setRoles(notificationRoles);
-            createNotification(serviceContext, groupedNotificationDto);
+            try {
+                createNotification(serviceContext, groupedNotificationDto);
+            } catch (MetamacWebException e) {
+                isErrorInNotification = true;
+            }
+        }
+        if (isErrorInNotification) {
+            throw WebExceptionUtils.createMetamacWebException(CommonServiceExceptionType.REST_API_NOTICES_ERROR_SENDING_NOTIFICATION, getTranslatedNotificationErrorMessage());
         }
     }
 
@@ -281,6 +297,7 @@ public class NoticesRestInternalFacadeImpl implements NoticesRestInternalFacade 
     }
 
     private void createNotificationWithReceivers(ServiceContext serviceContext, Map<ResourceNotificationBaseDto, String[]> notificationsWithReceivers) throws MetamacWebException {
+        boolean isErrorInNotification = false;
         Map<String, List<ResourceNotificationBaseDto>> groupedNotificationsByReceiver = groupNotificationsByReceiver(notificationsWithReceivers);
         for (Map.Entry<String, List<ResourceNotificationBaseDto>> entry : groupedNotificationsByReceiver.entrySet()) {
             ResourceInternal[] resourceInternals = getResourceInternals(entry.getValue());
@@ -288,7 +305,14 @@ public class NoticesRestInternalFacadeImpl implements NoticesRestInternalFacade 
             GroupedNotificationDto groupedNotificationDto = new GroupedNotificationDto.Builder(resourceInternals, getLifeCycleAction(entry.getValue()))
                     .reasonOfRejection(getReasonOfRejection(entry.getValue())).programmedPublicationDate(getProgrammedPublicationDate(entry.getValue()))
                     .receiversUsernames(new String[]{receiverUserName}).build();
-            createNotification(serviceContext, groupedNotificationDto);
+            try {
+                createNotification(serviceContext, groupedNotificationDto);
+            } catch (MetamacWebException e) {
+                isErrorInNotification = true;
+            }
+        }
+        if (isErrorInNotification) {
+            throw WebExceptionUtils.createMetamacWebException(CommonServiceExceptionType.REST_API_NOTICES_ERROR_SENDING_NOTIFICATION, getTranslatedNotificationErrorMessage());
         }
     }
 
@@ -427,5 +451,10 @@ public class NoticesRestInternalFacadeImpl implements NoticesRestInternalFacade 
      */
     private Date getProgrammedPublicationDate(List<ResourceNotificationBaseDto> notifications) {
         return notifications.get(0).getProgrammedPublicationDate();
+    }
+
+    private String getTranslatedNotificationErrorMessage() {
+        Locale locale = (Locale) ServiceContextHolder.getCurrentServiceContext().getProperty(LocaleConstants.locale);
+        return webTranslateExceptions.getTranslatedMessage(WebMessageExceptionsConstants.ERROR_SENDING_NOTIFICATIONS, locale);
     }
 }

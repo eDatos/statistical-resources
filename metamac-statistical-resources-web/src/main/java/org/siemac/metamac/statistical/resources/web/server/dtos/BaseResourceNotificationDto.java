@@ -1,4 +1,4 @@
-package org.siemac.metamac.statistical.resources.web.shared.dtos;
+package org.siemac.metamac.statistical.resources.web.server.dtos;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -22,47 +22,23 @@ public class BaseResourceNotificationDto<T extends IdentifiableStatisticalResour
         return lifeCycleAction;
     }
 
-    public void setLifeCycleAction(LifeCycleActionEnum lifeCycleAction) {
-        this.lifeCycleAction = lifeCycleAction;
-    }
-
     public StatisticalResourceTypeEnum getStatisticalResourceType() {
         return statisticalResourceType;
-    }
-
-    public void setStatisticalResourceType(StatisticalResourceTypeEnum statisticalResourceType) {
-        this.statisticalResourceType = statisticalResourceType;
     }
 
     public T getUpdatedResource() {
         return updatedResource;
     }
 
-    public void setUpdatedResource(T updatedResource) {
-        this.updatedResource = updatedResource;
-    }
-
     public T getPreviousResource() {
         return previousResource;
-    }
-
-    public void setPreviousResource(T previousResource) {
-        this.previousResource = previousResource;
     }
 
     public String getReasonOfRejection() {
         return reasonOfRejection;
     }
 
-    public void setReasonOfRejection(String reasonOfRejection) {
-        this.reasonOfRejection = reasonOfRejection;
-    }
-
     public Date getProgrammedPublicationDate() {
         return programmedPublicationDate;
-    }
-
-    public void setProgrammedPublicationDate(Date programmedPublicationDate) {
-        this.programmedPublicationDate = programmedPublicationDate;
     }
 }

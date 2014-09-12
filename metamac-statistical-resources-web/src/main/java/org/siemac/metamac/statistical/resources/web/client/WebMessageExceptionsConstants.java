@@ -8,4 +8,5 @@ public class WebMessageExceptionsConstants {
     public static final String ERROR_PUBLISH_RESOURCE                       = "exception.resources.life_cycle.publish";
     public static final String ERROR_CANCEL_PROGRAMMED_PUBLICATION_RESOURCE = "exception.resources.life_cycle.cancel_programmed_resource";
     public static final String ERROR_VERSION_RESOURCE                       = "exception.resources.life_cycle.version";
+    public static final String ERROR_SENDING_NOTIFICATIONS                  = "exception.resources.life_cycle.notification";
 }

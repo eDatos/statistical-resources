@@ -1,4 +1,4 @@
-package org.siemac.metamac.statistical.resources.web.shared.dtos;
+package org.siemac.metamac.statistical.resources.web.server.dtos;
 
 import java.util.Date;
 
