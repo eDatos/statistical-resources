@@ -5,6 +5,9 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
+import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.Response;
+
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Assert;
 import org.junit.Before;
@@ -279,6 +282,10 @@ public class StatisticalResourcesMockRestBaseTest extends StatisticalResourcesBa
         mockExternalItemPublished(lifecycleResource.getMaintainer());
     }
 
+    protected void mockConstraintsResponses() {
+        Mockito.when(srmRestInternalFacadeV10.publishContentConstraintsForArtefact(Mockito.anyString(), Mockito.anyBoolean(), Mockito.anyString())).thenReturn(new MyResponse());
+    }
+
     protected void mockSiemacExternalItemsPublished(SiemacMetadataStatisticalResource siemacResource) {
         // Lifecycle
         mockLifecycleExternalItemsPublished(siemacResource);
@@ -338,4 +345,22 @@ public class StatisticalResourcesMockRestBaseTest extends StatisticalResourcesBa
         }
         return urns;
     }
+
+    class MyResponse extends Response {
+
+        private final int status = Response.Status.OK.getStatusCode();
+
+        @Override
+        public Object getEntity() {
+            return null;
+        }
+        @Override
+        public int getStatus() {
+            return status;
+        }
+        @Override
+        public MultivaluedMap<String, Object> getMetadata() {
+            return null;
+        }
+    };
 }
