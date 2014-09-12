@@ -2,13 +2,17 @@ package org.siemac.metamac.statistical.resources.web.server.handlers.query;
 
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionDto;
+import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
 import org.siemac.metamac.statistical.resources.core.facade.serviceapi.StatisticalResourcesServiceFacade;
 import org.siemac.metamac.statistical.resources.web.client.enums.LifeCycleActionEnum;
+import org.siemac.metamac.statistical.resources.web.server.dtos.ResourceNotificationDto;
 import org.siemac.metamac.statistical.resources.web.server.handlers.UpdateResourceProcStatusBaseActionHandler;
+import org.siemac.metamac.statistical.resources.web.server.rest.NoticesRestInternalFacade;
 import org.siemac.metamac.statistical.resources.web.shared.query.UpdateQueryVersionProcStatusAction;
 import org.siemac.metamac.statistical.resources.web.shared.query.UpdateQueryVersionProcStatusResult;
 import org.siemac.metamac.web.common.server.ServiceContextHolder;
 import org.siemac.metamac.web.common.server.utils.WebExceptionUtils;
+import org.siemac.metamac.web.common.shared.exception.MetamacWebException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -19,6 +23,9 @@ public class UpdateQueryVersionProcStatusActionHandler extends UpdateResourcePro
 
     @Autowired
     private StatisticalResourcesServiceFacade statisticalResourcesServiceFacade;
+
+    @Autowired
+    private NoticesRestInternalFacade         noticesRestInternalFacade;
 
     public UpdateQueryVersionProcStatusActionHandler() {
         super(UpdateQueryVersionProcStatusAction.class);
@@ -47,10 +54,6 @@ public class UpdateQueryVersionProcStatusActionHandler extends UpdateResourcePro
                 case REJECT_VALIDATION:
                     queryVersionDto = statisticalResourcesServiceFacade.sendQueryVersionToValidationRejected(ServiceContextHolder.getCurrentServiceContext(),
                             action.getQueryVersionToUpdateProcStatus());
-
-                    String reasonOfRejection = action.getReasonOfRejection();
-                    // TODO METAMAC-2112
-
                     break;
 
                 case PUBLISH:
@@ -72,6 +75,14 @@ public class UpdateQueryVersionProcStatusActionHandler extends UpdateResourcePro
                     break;
                 default:
                     break;
+            }
+
+            try {
+                ResourceNotificationDto notificationDto = new ResourceNotificationDto.Builder(action.getQueryVersionToUpdateProcStatus(), StatisticalResourceTypeEnum.QUERY, lifeCycleAction)
+                        .updatedResource(queryVersionDto).reasonOfRejection(action.getReasonOfRejection()).programmedPublicationDate(action.getValidFrom()).build();
+                noticesRestInternalFacade.createLifeCycleNotification(ServiceContextHolder.getCurrentServiceContext(), notificationDto);
+            } catch (MetamacWebException e) {
+                return new UpdateQueryVersionProcStatusResult.Builder(queryVersionDto).notificationException(e).build();
             }
 
             return new UpdateQueryVersionProcStatusResult(queryVersionDto);

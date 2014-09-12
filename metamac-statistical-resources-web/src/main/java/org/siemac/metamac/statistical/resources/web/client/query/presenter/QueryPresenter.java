@@ -300,7 +300,7 @@ public class QueryPresenter extends Presenter<QueryPresenter.QueryView, QueryPre
 
             @Override
             public void onWaitSuccess(UpdateQueryVersionProcStatusResult result) {
-                fireSuccessMessage(getMessages().lifeCycleResourceSentToProductionValidation());
+                showMessageAfterResourceLifeCycleUpdate(result, getMessages().lifeCycleResourceSentToProductionValidation());
                 getView().setQueryDto(result.getQueryVersionDto());
             }
         });
@@ -313,7 +313,7 @@ public class QueryPresenter extends Presenter<QueryPresenter.QueryView, QueryPre
 
             @Override
             public void onWaitSuccess(UpdateQueryVersionProcStatusResult result) {
-                fireSuccessMessage(getMessages().lifeCycleResourceSentToDiffusionValidation());
+                showMessageAfterResourceLifeCycleUpdate(result, getMessages().lifeCycleResourceSentToDiffusionValidation());
                 getView().setQueryDto(result.getQueryVersionDto());
             }
         });
@@ -326,7 +326,7 @@ public class QueryPresenter extends Presenter<QueryPresenter.QueryView, QueryPre
 
             @Override
             public void onWaitSuccess(UpdateQueryVersionProcStatusResult result) {
-                fireSuccessMessage(getMessages().lifeCycleResourceRejectValidation());
+                showMessageAfterResourceLifeCycleUpdate(result, getMessages().lifeCycleResourceRejectValidation());
                 getView().setQueryDto(result.getQueryVersionDto());
             }
         });
@@ -340,7 +340,7 @@ public class QueryPresenter extends Presenter<QueryPresenter.QueryView, QueryPre
 
             @Override
             public void onWaitSuccess(UpdateQueryVersionProcStatusResult result) {
-                fireSuccessMessage(getMessages().lifeCycleResourcesProgramPublication());
+                showMessageAfterResourceLifeCycleUpdate(result, getMessages().lifeCycleResourcesProgramPublication());
                 getView().setQueryDto(result.getQueryVersionDto());
             }
         });
@@ -353,7 +353,7 @@ public class QueryPresenter extends Presenter<QueryPresenter.QueryView, QueryPre
 
             @Override
             public void onWaitSuccess(UpdateQueryVersionProcStatusResult result) {
-                fireSuccessMessage(getMessages().lifeCycleResourcePublish());
+                showMessageAfterResourceLifeCycleUpdate(result, getMessages().lifeCycleResourcePublish());
                 getView().setQueryDto(result.getQueryVersionDto());
             }
         });
@@ -366,7 +366,7 @@ public class QueryPresenter extends Presenter<QueryPresenter.QueryView, QueryPre
 
             @Override
             public void onWaitSuccess(UpdateQueryVersionProcStatusResult result) {
-                fireSuccessMessage(getMessages().lifeCycleResourceCancelProgrammedPublication());
+                showMessageAfterResourceLifeCycleUpdate(result, getMessages().lifeCycleResourceCancelProgrammedPublication());
                 getView().setQueryDto(result.getQueryVersionDto());
             }
         });
@@ -395,6 +395,10 @@ public class QueryPresenter extends Presenter<QueryPresenter.QueryView, QueryPre
         } catch (MetamacWebException e) {
             ShowMessageEvent.fireErrorMessage(this, e);
         }
+    }
+
+    private void showMessageAfterResourceLifeCycleUpdate(UpdateQueryVersionProcStatusResult result, String message) {
+        CommonUtils.showMessageAfterResourceLifeCycleUpdate(QueryPresenter.this, result.getNotificationException(), message);
     }
 
     private void retrieveQueryVersions(final String urn) {

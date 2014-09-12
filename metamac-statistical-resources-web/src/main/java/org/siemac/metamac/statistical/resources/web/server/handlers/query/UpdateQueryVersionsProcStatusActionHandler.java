@@ -1,16 +1,21 @@
 package org.siemac.metamac.statistical.resources.web.server.handlers.query;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionBaseDto;
+import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
 import org.siemac.metamac.statistical.resources.core.facade.serviceapi.StatisticalResourcesServiceFacade;
 import org.siemac.metamac.statistical.resources.web.client.enums.LifeCycleActionEnum;
+import org.siemac.metamac.statistical.resources.web.server.dtos.ResourceNotificationBaseDto;
 import org.siemac.metamac.statistical.resources.web.server.handlers.UpdateResourceProcStatusBaseActionHandler;
+import org.siemac.metamac.statistical.resources.web.server.rest.NoticesRestInternalFacade;
 import org.siemac.metamac.statistical.resources.web.shared.query.UpdateQueryVersionsProcStatusAction;
 import org.siemac.metamac.statistical.resources.web.shared.query.UpdateQueryVersionsProcStatusResult;
 import org.siemac.metamac.web.common.server.ServiceContextHolder;
 import org.siemac.metamac.web.common.server.utils.WebExceptionUtils;
+import org.siemac.metamac.web.common.shared.exception.MetamacWebException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -21,6 +26,9 @@ public class UpdateQueryVersionsProcStatusActionHandler extends UpdateResourcePr
 
     @Autowired
     private StatisticalResourcesServiceFacade statisticalResourcesServiceFacade;
+
+    @Autowired
+    private NoticesRestInternalFacade         noticesRestInternalFacade;
 
     public UpdateQueryVersionsProcStatusActionHandler() {
         super(UpdateQueryVersionsProcStatusAction.class);
@@ -33,55 +41,75 @@ public class UpdateQueryVersionsProcStatusActionHandler extends UpdateResourcePr
         LifeCycleActionEnum lifeCycleAction = action.getLifeCycleAction();
 
         MetamacException metamacException = new MetamacException();
+        List<ResourceNotificationBaseDto> notificationsToSend = new ArrayList<ResourceNotificationBaseDto>();
 
-        for (QueryVersionBaseDto queryVersionBaseDto : queryVersionsToUpdateProcStatus) {
+        for (QueryVersionBaseDto queryVersionToUpdate : queryVersionsToUpdateProcStatus) {
             try {
+
+                QueryVersionBaseDto updatedQueryVersionBaseDto = null;
 
                 switch (lifeCycleAction) {
                     case SEND_TO_PRODUCTION_VALIDATION:
-                        statisticalResourcesServiceFacade.sendQueryVersionToProductionValidation(ServiceContextHolder.getCurrentServiceContext(), queryVersionBaseDto);
+                        updatedQueryVersionBaseDto = statisticalResourcesServiceFacade.sendQueryVersionToProductionValidation(ServiceContextHolder.getCurrentServiceContext(), queryVersionToUpdate);
                         break;
 
                     case SEND_TO_DIFFUSION_VALIDATION:
-                        statisticalResourcesServiceFacade.sendQueryVersionToDiffusionValidation(ServiceContextHolder.getCurrentServiceContext(), queryVersionBaseDto);
+                        updatedQueryVersionBaseDto = statisticalResourcesServiceFacade.sendQueryVersionToDiffusionValidation(ServiceContextHolder.getCurrentServiceContext(), queryVersionToUpdate);
                         break;
 
                     case REJECT_VALIDATION:
-                        statisticalResourcesServiceFacade.sendQueryVersionToValidationRejected(ServiceContextHolder.getCurrentServiceContext(), queryVersionBaseDto);
-
-                        String reasonOfRejection = action.getReasonOfRejection();
-                        // TODO METAMAC-2112
-
+                        updatedQueryVersionBaseDto = statisticalResourcesServiceFacade.sendQueryVersionToValidationRejected(ServiceContextHolder.getCurrentServiceContext(), queryVersionToUpdate);
                         break;
 
                     case PUBLISH:
-                        statisticalResourcesServiceFacade.publishQueryVersion(ServiceContextHolder.getCurrentServiceContext(), queryVersionBaseDto);
+                        updatedQueryVersionBaseDto = statisticalResourcesServiceFacade.publishQueryVersion(ServiceContextHolder.getCurrentServiceContext(), queryVersionToUpdate);
                         break;
 
                     case PROGRAM_PUBLICATION:
-                        statisticalResourcesServiceFacade.programPublicationQueryVersion(ServiceContextHolder.getCurrentServiceContext(), queryVersionBaseDto, action.getValidFrom());
+                        updatedQueryVersionBaseDto = statisticalResourcesServiceFacade.programPublicationQueryVersion(ServiceContextHolder.getCurrentServiceContext(), queryVersionToUpdate,
+                                action.getValidFrom());
                         break;
 
                     case CANCEL_PROGRAMMED_PUBLICATION:
-                        statisticalResourcesServiceFacade.cancelPublicationQueryVersion(ServiceContextHolder.getCurrentServiceContext(), queryVersionBaseDto);
+                        updatedQueryVersionBaseDto = statisticalResourcesServiceFacade.cancelPublicationQueryVersion(ServiceContextHolder.getCurrentServiceContext(), queryVersionToUpdate);
                         break;
 
                     case VERSION:
-                        statisticalResourcesServiceFacade.versioningQueryVersion(ServiceContextHolder.getCurrentServiceContext(), queryVersionBaseDto, action.getVersionType());
+                        updatedQueryVersionBaseDto = statisticalResourcesServiceFacade.versioningQueryVersion(ServiceContextHolder.getCurrentServiceContext(), queryVersionToUpdate,
+                                action.getVersionType());
                         break;
                     default:
                         break;
                 }
 
+                ResourceNotificationBaseDto notification = new ResourceNotificationBaseDto.Builder(queryVersionToUpdate, StatisticalResourceTypeEnum.QUERY, lifeCycleAction)
+                        .updatedResource(updatedQueryVersionBaseDto).reasonOfRejection(action.getReasonOfRejection()).programmedPublicationDate(action.getValidFrom()).build();
+                notificationsToSend.add(notification);
+
             } catch (MetamacException e) {
-                addExceptionsItemToMetamacException(lifeCycleAction, queryVersionBaseDto, metamacException, e);
+                addExceptionsItemToMetamacException(lifeCycleAction, queryVersionToUpdate, metamacException, e);
             }
         }
 
+        // SEND NOTIFICATIONS
+
+        MetamacWebException notificationException = null;
+        try {
+            noticesRestInternalFacade.createLifeCycleNotifications(ServiceContextHolder.getCurrentServiceContext(), notificationsToSend);
+        } catch (MetamacWebException e) {
+            notificationException = e;
+        }
+
+        // MANAGE EXCEPTION
+
         if (metamacException.getExceptionItems() == null || metamacException.getExceptionItems().isEmpty()) {
-            return new UpdateQueryVersionsProcStatusResult();
+            return new UpdateQueryVersionsProcStatusResult.Builder().notificationException(notificationException).build();
         } else {
-            throw WebExceptionUtils.createMetamacWebException(metamacException);
+            MetamacWebException metamacWebException = WebExceptionUtils.createMetamacWebException(metamacException);
+            if (notificationException != null) {
+                metamacWebException.getWebExceptionItems().addAll(notificationException.getWebExceptionItems());
+            }
+            throw metamacWebException;
         }
     }
 }

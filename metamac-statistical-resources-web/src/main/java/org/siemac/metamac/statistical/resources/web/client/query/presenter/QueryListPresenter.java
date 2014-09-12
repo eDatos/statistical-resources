@@ -2,6 +2,7 @@ package org.siemac.metamac.statistical.resources.web.client.query.presenter;
 
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getMessages;
+import static org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils.showMessageAfterMultipleResourcesLifeCycleUpdate;
 
 import java.util.Date;
 import java.util.List;
@@ -218,7 +219,7 @@ public class QueryListPresenter extends LifeCycleBaseListPresenter<QueryListPres
 
             @Override
             public void onWaitSuccess(UpdateQueryVersionsProcStatusResult result) {
-                fireSuccessMessage(successMessage);
+                showMessageAfterMultipleResourcesLifeCycleUpdate(QueryListPresenter.this, result.getNotificationException(), successMessage);
                 retrieveQueries(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, getView().getQueryVersionWebCriteria());
             }
             @Override
