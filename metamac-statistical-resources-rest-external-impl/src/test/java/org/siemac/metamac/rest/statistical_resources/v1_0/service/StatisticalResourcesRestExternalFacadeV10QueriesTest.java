@@ -183,8 +183,8 @@ public class StatisticalResourcesRestExternalFacadeV10QueriesTest extends Statis
             {
                 NonEnumeratedDimensionValues dimensionValues = (NonEnumeratedDimensionValues) dimension.getDimensionValues();
                 assertEquals(2, dimensionValues.getValues().size());
-                assertEquals("2011", dimensionValues.getValues().get(0).getId());
-                assertEquals("2013", dimensionValues.getValues().get(1).getId());
+                assertEquals("2013", dimensionValues.getValues().get(0).getId());
+                assertEquals("2011", dimensionValues.getValues().get(1).getId());
             }
         }
         {
@@ -300,9 +300,10 @@ public class StatisticalResourcesRestExternalFacadeV10QueriesTest extends Statis
             {
                 NonEnumeratedDimensionValues dimensionValues = (NonEnumeratedDimensionValues) dimension.getDimensionValues();
                 assertEquals(3, dimensionValues.getValues().size());
-                assertEquals("2011", dimensionValues.getValues().get(0).getId());
+                assertEquals("2014", dimensionValues.getValues().get(0).getId());
                 assertEquals("2013", dimensionValues.getValues().get(1).getId());
-                assertEquals("2014", dimensionValues.getValues().get(2).getId());
+                assertEquals("2011", dimensionValues.getValues().get(2).getId());
+
             }
         }
         {
@@ -335,8 +336,8 @@ public class StatisticalResourcesRestExternalFacadeV10QueriesTest extends Statis
             {
                 NonEnumeratedDimensionValues dimensionValues = (NonEnumeratedDimensionValues) dimension.getDimensionValues();
                 assertEquals(2, dimensionValues.getValues().size());
-                assertEquals("2013", dimensionValues.getValues().get(0).getId());
-                assertEquals("2014", dimensionValues.getValues().get(1).getId());
+                assertEquals("2014", dimensionValues.getValues().get(0).getId());
+                assertEquals("2013", dimensionValues.getValues().get(1).getId());
             }
         }
         {
