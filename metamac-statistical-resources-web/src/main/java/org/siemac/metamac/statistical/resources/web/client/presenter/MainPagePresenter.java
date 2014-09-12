@@ -8,8 +8,6 @@ import java.util.logging.Logger;
 import org.siemac.metamac.statistical.resources.navigation.shared.NameTokens;
 import org.siemac.metamac.statistical.resources.web.client.enums.StatisticalResourcesToolStripButtonEnum;
 import org.siemac.metamac.statistical.resources.web.client.enums.StatisticalResourcesToolStripLayoutEnum;
-import org.siemac.metamac.statistical.resources.web.client.events.ChangeWaitPopupVisibilityEvent;
-import org.siemac.metamac.statistical.resources.web.client.events.ChangeWaitPopupVisibilityEvent.ChangeWaitPopupVisibilityHandler;
 import org.siemac.metamac.statistical.resources.web.client.events.DeselectMenuButtonsEvent;
 import org.siemac.metamac.statistical.resources.web.client.events.DeselectMenuButtonsEvent.DeselectMenuButtonHandler;
 import org.siemac.metamac.statistical.resources.web.client.events.SelectMenuButtonEvent;
@@ -21,6 +19,8 @@ import org.siemac.metamac.statistical.resources.web.client.view.handlers.MainPag
 import org.siemac.metamac.statistical.resources.web.shared.base.GetUserGuideUrlAction;
 import org.siemac.metamac.statistical.resources.web.shared.base.GetUserGuideUrlResult;
 import org.siemac.metamac.web.common.client.enums.MessageTypeEnum;
+import org.siemac.metamac.web.common.client.events.ChangeWaitPopupVisibilityEvent;
+import org.siemac.metamac.web.common.client.events.ChangeWaitPopupVisibilityEvent.ChangeWaitPopupVisibilityHandler;
 import org.siemac.metamac.web.common.client.events.HideMessageEvent;
 import org.siemac.metamac.web.common.client.events.HideMessageEvent.HideMessageHandler;
 import org.siemac.metamac.web.common.client.events.SetTitleEvent;
