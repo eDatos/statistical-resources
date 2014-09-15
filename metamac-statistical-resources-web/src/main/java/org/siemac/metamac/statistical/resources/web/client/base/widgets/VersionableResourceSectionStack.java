@@ -2,6 +2,7 @@ package org.siemac.metamac.statistical.resources.web.client.base.widgets;
 
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
 
+import org.siemac.metamac.statistical.resources.web.client.model.ds.LifeCycleResourceDS;
 import org.siemac.metamac.statistical.resources.web.client.model.ds.VersionableResourceDS;
 import org.siemac.metamac.web.common.client.widgets.BaseCustomListGrid;
 import org.siemac.metamac.web.common.client.widgets.CustomListGridSectionStack;
@@ -20,9 +21,10 @@ public class VersionableResourceSectionStack extends CustomListGridSectionStack 
         ListGridField codeField = new ListGridField(VersionableResourceDS.CODE, getConstants().identifiableStatisticalResourceCode());
         codeField.setWidth("30%");
         ListGridField nameField = new ListGridField(VersionableResourceDS.TITLE, getConstants().nameableStatisticalResourceTitle());
+        ListGridField procStatusField = new ListGridField(LifeCycleResourceDS.PROC_STATUS, getConstants().lifeCycleStatisticalResourceProcStatus());
         ListGridField versionField = new ListGridField(VersionableResourceDS.VERSION, getConstants().versionableStatisticalResourceVersionLogic());
         versionField.setWidth("15%");
-        listGrid.setFields(codeField, nameField, versionField);
+        listGrid.setFields(codeField, nameField, procStatusField, versionField);
 
         // Add listGrid to sectionStack
         defaultSection.setItems(listGrid);
