@@ -231,4 +231,9 @@ public class ImportDatasourcesWindow extends ImportResourceWindow {
     public String getRelativeURL(String url) {
         return StatisticalResourcesWeb.getRelativeURL(url);
     }
+    
+    @Override
+    public void showWaitPopup() {
+        // no need to show the waitPopup here
+    }
 }
