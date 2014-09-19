@@ -754,9 +754,10 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
     }
 
     @Override
-    public void versioningContentConstraintsForArtefact(ServiceContext serviceContext, String artefactUrn, VersionTypeEnum versionTypeEnum) throws MetamacException {
+    public void versioningContentConstraintsForArtefact(ServiceContext serviceContext, String artefactUrn, String newAttachmentConstraintUrn, VersionTypeEnum versionTypeEnum) throws MetamacException {
         try {
-            Response response = restApiLocator.getSrmRestInternalFacadeV10().versioningContentConstraintsForArtefact(artefactUrn, serviceContext.getUserId(), versionTypeEnum.getName());
+            Response response = restApiLocator.getSrmRestInternalFacadeV10().versioningContentConstraintsForArtefact(artefactUrn, newAttachmentConstraintUrn, serviceContext.getUserId(),
+                    versionTypeEnum.getName());
 
             checkStatusOk(response);
         } catch (Exception e) {
@@ -768,6 +769,17 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
     public void publishContentConstraint(ServiceContext serviceContext, String artefactUrn, Boolean alsoMarkAsPublic) throws MetamacException {
         try {
             Response response = restApiLocator.getSrmRestInternalFacadeV10().publishContentConstraintsForArtefact(artefactUrn, alsoMarkAsPublic, serviceContext.getUserId());
+
+            checkStatusOk(response);
+        } catch (Exception e) {
+            throw manageSrmInternalRestException(e);
+        }
+    }
+
+    @Override
+    public void revertContentConstraintsForArtefactToDraft(ServiceContext serviceContext, String artefactUrn) throws MetamacException {
+        try {
+            Response response = restApiLocator.getSrmRestInternalFacadeV10().revertToDraft(artefactUrn, serviceContext.getUserId());
 
             checkStatusOk(response);
         } catch (Exception e) {
@@ -833,4 +845,5 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
             throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.REST_API_INVOCATION_ERROR_UNEXPECTED_STATUS).withMessageParameters(response.getStatus()).build();
         }
     }
+
 }

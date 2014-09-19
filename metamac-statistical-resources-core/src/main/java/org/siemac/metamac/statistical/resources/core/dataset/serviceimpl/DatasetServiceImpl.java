@@ -236,6 +236,12 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         computeDataRelatedMetadata(datasetVersion);
 
         getDatasetVersionRepository().save(datasetVersion);
+
+        if (datasetVersion.getDatasources().isEmpty()) {
+            // Revert to draft if there aren't datasources. This is possible because one will never be published without constraints datasources. And if you can delete datasources, then it is because
+            // it has not been released datasetversion. Therefore, you can remove the constraint.
+            this.constraintsService.revertContentConstraintsForArtefactToDraft(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getUrn());
+        }
     }
 
     private void deleteAttributeInstancesLowerThanDatasetLevel(DatasetVersion datasetVersion) throws MetamacException {

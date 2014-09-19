@@ -11,6 +11,7 @@ import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Content
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.RegionReference;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ResourceInternal;
 import org.siemac.metamac.statistical.resources.core.constraint.api.ConstraintsService;
+import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.invocation.service.SrmRestInternalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -56,13 +57,21 @@ public class ConstraintsServiceImpl implements ConstraintsService {
     }
 
     @Override
-    public void versioningContentConstraintsForArtefact(ServiceContext ctx, String artefactUrn, VersionTypeEnum versionTypeEnum) throws MetamacException {
-        srmRestInternalService.versioningContentConstraintsForArtefact(ctx, artefactUrn, versionTypeEnum);
+    public void versioningContentConstraintsForArtefact(ServiceContext ctx, String artefactUrn, String newAttachmentConstraintUrn, VersionTypeEnum versionTypeEnum) throws MetamacException {
+        if (artefactUrn.equals(newAttachmentConstraintUrn)) {
+            throw new MetamacException(ServiceExceptionType.UNKNOWN, "The urn of source artifact can not be equal to the target artifact");
+        }
+        srmRestInternalService.versioningContentConstraintsForArtefact(ctx, artefactUrn, newAttachmentConstraintUrn, versionTypeEnum);
     }
 
     @Override
     public void publishContentConstraint(ServiceContext ctx, String urn, Boolean alsoMarkAsPublic) throws MetamacException {
         srmRestInternalService.publishContentConstraint(ctx, urn, alsoMarkAsPublic);
+    }
+
+    @Override
+    public void revertContentConstraintsForArtefactToDraft(ServiceContext ctx, String artefactUrn) throws MetamacException {
+        srmRestInternalService.revertContentConstraintsForArtefactToDraft(ctx, artefactUrn);
     }
 
     @Override

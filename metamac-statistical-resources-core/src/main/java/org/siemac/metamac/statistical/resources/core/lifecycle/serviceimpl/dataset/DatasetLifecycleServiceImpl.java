@@ -293,7 +293,8 @@ public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<Datase
     protected void applyVersioningNewResource(ServiceContext ctx, DatasetVersion resource, DatasetVersion previous) throws MetamacException {
 
         // Versioning the content constraints associated
-        this.constraintsService.versioningContentConstraintsForArtefact(ctx, previous.getLifeCycleStatisticalResource().getUrn(), this.guessVersionTypeEnum(resource, previous));
+        this.constraintsService.versioningContentConstraintsForArtefact(ctx, previous.getLifeCycleStatisticalResource().getUrn(), resource.getLifeCycleStatisticalResource().getUrn(),
+                this.guessVersionTypeEnum(resource, previous));
 
         resource.setUserModifiedDateNextUpdate(Boolean.FALSE);
         String oldDatasetRepositoryId = previous.getDatasetRepositoryId();

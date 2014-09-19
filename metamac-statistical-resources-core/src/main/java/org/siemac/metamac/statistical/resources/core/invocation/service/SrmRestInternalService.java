@@ -105,7 +105,8 @@ public interface SrmRestInternalService {
     public RegionReference saveRegionForContentConstraint(ServiceContext serviceContext, RegionReference regionReference) throws MetamacException;
     public void deleteContentConstraint(ServiceContext serviceContext, String urn, Boolean forceDeleteFinal) throws MetamacException;
     public void publishContentConstraint(ServiceContext serviceContext, String urn, Boolean alsoMarkAsPublic) throws MetamacException;
-    public void versioningContentConstraintsForArtefact(ServiceContext serviceContext, String artefactUrn, VersionTypeEnum versionTypeEnum) throws MetamacException;
+    public void versioningContentConstraintsForArtefact(ServiceContext serviceContext, String artefactUrn, String newAttachmentConstraintUrn, VersionTypeEnum versionTypeEnum) throws MetamacException;
+    public void revertContentConstraintsForArtefactToDraft(ServiceContext serviceContext, String artefactUrn) throws MetamacException;
 
     public ContentConstraint retrieveContentConstraintByUrn(String urn, Boolean includeDraft) throws MetamacException;
     public void deleteRegion(ServiceContext serviceContext, String contentConstraintUrn, String regionCode) throws MetamacException;

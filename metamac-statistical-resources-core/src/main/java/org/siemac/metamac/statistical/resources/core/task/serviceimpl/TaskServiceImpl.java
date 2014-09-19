@@ -660,7 +660,7 @@ public class TaskServiceImpl extends TaskServiceImplBase {
             result.add(contentConstraint);
 
             if (!contentConstraint.isIsFinal()) {
-                constraintsService.publishContentConstraint(ctx, contentConstraint.getUrn(), Boolean.FALSE); // mark as final logic, no mark as public
+                constraintsService.publishContentConstraint(ctx, datasetVersionUrn, Boolean.FALSE); // mark as final logic, no mark as public
             }
         }
 
