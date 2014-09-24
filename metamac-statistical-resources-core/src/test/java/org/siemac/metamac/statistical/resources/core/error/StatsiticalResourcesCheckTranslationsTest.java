@@ -1,9 +1,15 @@
 package org.siemac.metamac.statistical.resources.core.error;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
 import org.junit.Test;
 import org.siemac.metamac.common.test.translations.CheckTranslationsTestBase;
+import org.siemac.metamac.core.common.lang.LocaleUtil;
+import org.siemac.metamac.core.common.util.MetamacReflectionUtils;
 import org.siemac.metamac.statistical.resources.core.notices.ServiceNoticeAction;
 import org.siemac.metamac.statistical.resources.core.notices.ServiceNoticeMessage;
 
@@ -31,6 +37,43 @@ public class StatsiticalResourcesCheckTranslationsTest extends CheckTranslations
     @SuppressWarnings("rawtypes")
     public Class[] getServiceNoticeMessagesClasses() {
         return new Class[]{ServiceNoticeMessage.class};
+    }
+
+    @Test
+    public void testGenerateAutomaticParameterTranslationsThatAreMissing() throws Exception {
+        List<String> missingTranslations = new ArrayList<String>();
+
+        for (Class serviceExceptionTypeClass : getServiceExceptionParameterClasses()) {
+            Set<String> codes = MetamacReflectionUtils.getFieldsValueWithType(serviceExceptionTypeClass, String.class);
+            for (String code : codes) {
+                for (Locale locale : getLocalesToTranslate()) {
+                    try {
+                        String translation = LocaleUtil.getMessageForCode(code, locale);
+
+                        if (StringUtils.isBlank(translation) || StringUtils.equals(code, translation)) {
+                            missingTranslations.add(createMissingTranslation(code));
+                        }
+                    } catch (Exception e) {
+                        missingTranslations.add(createMissingTranslation(code));
+                    }
+                }
+            }
+        }
+        printInConsoleMissingTranslations(missingTranslations);
+    }
+
+    private void printInConsoleMissingTranslations(List<String> missingTranslations) {
+        if (!missingTranslations.isEmpty()) {
+            System.out.println("------------------------------- Missing translations -------------------------------");
+            for (String missingTranslation : missingTranslations) {
+                System.out.println(missingTranslation);
+            }
+            System.out.println("------------------------------------------------------------------------------------");
+        }
+    }
+
+    private String createMissingTranslation(String parameter) {
+        return parameter + " = " + parameter.replace("parameter.resources.", "");
     }
 
     // ----------------------------------------------------------------------------------------
