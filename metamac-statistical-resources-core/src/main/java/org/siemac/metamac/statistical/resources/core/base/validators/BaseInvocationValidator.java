@@ -216,8 +216,8 @@ public abstract class BaseInvocationValidator {
             return;
         }
 
-        checkSiemacMetadataStatisticalResource(resource, addParameter(metadataName, ServiceExceptionSingleParameters.SIEMAC_METADATA_STATISTICAL_RESOURCE), exceptions);
-        checkNewLifeCycleStatisticalResource(resource, addParameter(metadataName, ServiceExceptionSingleParameters.SIEMAC_METADATA_STATISTICAL_RESOURCE), exceptions);
+        checkSiemacMetadataStatisticalResource(resource, metadataName, exceptions);
+        checkNewLifeCycleStatisticalResource(resource, metadataName, exceptions);
     }
 
     protected static void checkExistingSiemacMetadataStatisticalResource(SiemacMetadataStatisticalResource resource, TypeRelatedResourceEnum typeRelatedResource, String metadataName,
@@ -227,8 +227,8 @@ public abstract class BaseInvocationValidator {
             return;
         }
 
-        checkSiemacMetadataStatisticalResource(resource, addParameter(metadataName, ServiceExceptionSingleParameters.SIEMAC_METADATA_STATISTICAL_RESOURCE), exceptions);
-        checkExistingLifeCycleStatisticalResource(resource, typeRelatedResource, addParameter(metadataName, ServiceExceptionSingleParameters.SIEMAC_METADATA_STATISTICAL_RESOURCE), exceptions);
+        checkSiemacMetadataStatisticalResource(resource, metadataName, exceptions);
+        checkExistingLifeCycleStatisticalResource(resource, typeRelatedResource, metadataName, exceptions);
     }
 
     private static void checkSiemacMetadataStatisticalResource(SiemacMetadataStatisticalResource resource, String metadataName, List<MetamacExceptionItem> exceptions) {
