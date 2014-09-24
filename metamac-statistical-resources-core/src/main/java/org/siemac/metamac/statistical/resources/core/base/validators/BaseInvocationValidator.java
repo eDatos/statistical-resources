@@ -1,7 +1,5 @@
 package org.siemac.metamac.statistical.resources.core.base.validators;
 
-import static org.siemac.metamac.statistical.resources.core.error.utils.ServiceExceptionParametersUtils.addParameter;
-
 import java.util.List;
 
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
@@ -16,7 +14,12 @@ import org.siemac.metamac.statistical.resources.core.enume.utils.TypeRelatedReso
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionSingleParameters;
 import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesValidationUtils;
 
+import static org.siemac.metamac.statistical.resources.core.error.utils.ServiceExceptionParametersUtils.addParameter;
+
 public abstract class BaseInvocationValidator {
+
+    private BaseInvocationValidator() {
+    }
 
     // ------------------------------------------------------------------------------------
     // STATISTICAL RESOURCE
