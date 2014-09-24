@@ -18,9 +18,6 @@ import static org.siemac.metamac.statistical.resources.core.error.utils.ServiceE
 
 public abstract class BaseInvocationValidator {
 
-    private BaseInvocationValidator() {
-    }
-
     // ------------------------------------------------------------------------------------
     // STATISTICAL RESOURCE
     // ------------------------------------------------------------------------------------
