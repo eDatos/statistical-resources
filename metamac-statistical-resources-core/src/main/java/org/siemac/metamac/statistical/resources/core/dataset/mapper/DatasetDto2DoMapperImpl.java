@@ -245,12 +245,10 @@ public class DatasetDto2DoMapperImpl extends BaseDto2DoMapperImpl implements Dat
             return null;
         }
 
-        if (target == null) {
-            try {
-                target = statisticOfficialityRepository.findById(source.getId());
-            } catch (StatisticOfficialityNotFoundException e) {
-                throw new MetamacException(ServiceExceptionType.STATISTIC_OFFICIALITY_NOT_FOUND, source.getId());
-            }
+        try {
+            target = statisticOfficialityRepository.findById(source.getId());
+        } catch (StatisticOfficialityNotFoundException e) {
+            throw new MetamacException(ServiceExceptionType.STATISTIC_OFFICIALITY_NOT_FOUND, source.getId());
         }
 
         return target;

@@ -1,5 +1,32 @@
 package org.siemac.metamac.statistical.resources.core.utils.mocks.factories;
 
+import org.joda.time.DateTime;
+import org.siemac.metamac.core.common.test.utils.mocks.configuration.MockDescriptor;
+import org.siemac.metamac.core.common.test.utils.mocks.configuration.MockProvider;
+import org.siemac.metamac.statistical.resources.core.base.domain.VersionRationaleType;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.AttributeValue;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.CodeDimension;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.StatisticOfficiality;
+import org.siemac.metamac.statistical.resources.core.enume.domain.NextVersionTypeEnum;
+import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
+import org.siemac.metamac.statistical.resources.core.enume.domain.VersionRationaleTypeEnum;
+import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryTypeEnum;
+import org.siemac.metamac.statistical.resources.core.publication.domain.ElementLevel;
+import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
+import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
+import org.siemac.metamac.statistical.resources.core.utils.DatasetLifecycleTestUtils;
+import org.siemac.metamac.statistical.resources.core.utils.LifecycleTestUtils;
+import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesVersionUtils;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.DatasetMock;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.DatasetVersionMock;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.PublicationMock;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.PublicationVersionMock;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.QueryVersionMock;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesDoMocks;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesPersistedDoMocks;
+
 import static org.siemac.metamac.statistical.resources.core.utils.DatasetLifecycleTestUtils.fillAsProductionValidation;
 import static org.siemac.metamac.statistical.resources.core.utils.DatasetLifecycleTestUtils.fillAsPublished;
 import static org.siemac.metamac.statistical.resources.core.utils.DatasetLifecycleTestUtils.prepareToDiffusionValidation;
@@ -23,32 +50,6 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.buildQueryVersionMockSimpleWithFixedDatasetVersion;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.buildSelectionItemWithDimensionAndCodes;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.createQueryVersionFromTemplate;
-
-import org.joda.time.DateTime;
-import org.siemac.metamac.core.common.test.utils.mocks.configuration.MockDescriptor;
-import org.siemac.metamac.core.common.test.utils.mocks.configuration.MockProvider;
-import org.siemac.metamac.statistical.resources.core.base.domain.VersionRationaleType;
-import org.siemac.metamac.statistical.resources.core.dataset.domain.AttributeValue;
-import org.siemac.metamac.statistical.resources.core.dataset.domain.CodeDimension;
-import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
-import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
-import org.siemac.metamac.statistical.resources.core.enume.domain.NextVersionTypeEnum;
-import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
-import org.siemac.metamac.statistical.resources.core.enume.domain.VersionRationaleTypeEnum;
-import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryTypeEnum;
-import org.siemac.metamac.statistical.resources.core.publication.domain.ElementLevel;
-import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
-import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
-import org.siemac.metamac.statistical.resources.core.utils.DatasetLifecycleTestUtils;
-import org.siemac.metamac.statistical.resources.core.utils.LifecycleTestUtils;
-import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesVersionUtils;
-import org.siemac.metamac.statistical.resources.core.utils.mocks.DatasetMock;
-import org.siemac.metamac.statistical.resources.core.utils.mocks.DatasetVersionMock;
-import org.siemac.metamac.statistical.resources.core.utils.mocks.PublicationMock;
-import org.siemac.metamac.statistical.resources.core.utils.mocks.PublicationVersionMock;
-import org.siemac.metamac.statistical.resources.core.utils.mocks.QueryVersionMock;
-import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesDoMocks;
-import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesPersistedDoMocks;
 
 @MockProvider
 @SuppressWarnings("unused")
@@ -245,6 +246,8 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
     public static final String               DATASET_VERSION_98_NOT_VISIBLE_REPLACES_DATASET_97_NOT_VISIBLE_NAME                                           = "DATASET_VERSION_98_NOT_VISIBLE_REPLACES_DATASET_97_NOT_VISIBLE";
 
     public static final String               DATASET_VERSION_99_NOT_VISIBLE_SINGLE_VERSION_NAME                                                            = "DATASET_VERSION_99_NOT_VISIBLE_SINGLE_VERSION";
+
+    public static final String               DATASET_VERSION_100_WITH_STATISTIC_OFFICIALITY_NAME                                                           = "DATASET_VERSION_100_WITH_STATISTIC_OFFICIALITY";
 
     private static final String              INIT_VERSION                                                                                                  = "001.000";
     private static final String              SECOND_VERSION                                                                                                = "002.000";
@@ -1062,6 +1065,17 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
         datasetVersion.getSiemacMetadataStatisticalResource().setValidFrom(datasetValidFrom);
         getStatisticalResourcesPersistedDoMocks().mockDatasetVersion(datasetVersion);
         fillDatasetVersionInStatusWithGeneratedDatasource(datasetVersion, ProcStatusEnum.PUBLISHED);
+        return datasetVersion;
+    }
+
+    public static DatasetVersion getDatasetVersion100WithStatisticOfficiality() {
+        DatasetVersion datasetVersion = createDatasetVersionWithSequence(1);
+
+        StatisticOfficiality statisticOfficiality = new StatisticOfficiality();
+        statisticOfficiality.setDescription(StatisticalResourcesDoMocks.mockInternationalString());
+        statisticOfficiality.setIdentifier("STAT_OFFICIALITY_PRIVATE");
+
+        datasetVersion.setStatisticOfficiality(statisticOfficiality);
         return datasetVersion;
     }
 

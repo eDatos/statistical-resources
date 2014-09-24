@@ -451,7 +451,7 @@ public class StatisticalResourcesDtoMocks extends MetamacMocks {
 
     // STATISTIC OFFICIALITY DTOs
 
-    private static StatisticOfficialityDto createStatisticOfficialityDtoFromDo(StatisticOfficiality officiality) {
+    public static StatisticOfficialityDto createStatisticOfficialityDtoFromDo(StatisticOfficiality officiality) {
         if (officiality != null) {
             StatisticOfficialityDto dto = new StatisticOfficialityDto();
             dto.setIdentifier(officiality.getIdentifier());

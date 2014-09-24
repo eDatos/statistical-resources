@@ -1,30 +1,5 @@
 package org.siemac.metamac.statistical.resources.core.dataset.mapper;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts.assertEqualsCategorisation;
-import static org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts.assertEqualsDatasetVersion;
-import static org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts.assertEqualsDatasource;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.CategorisationMockFactory.CATEGORISATION_01_DATASET_VERSION_01_NAME;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_01_BASIC_NAME;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_02_BASIC_NAME;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_49_WITH_DATASOURCE_FROM_PX_WITH_NEXT_UPDATE_IN_ONE_MONTH_NAME;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_57_DRAFT_INITIAL_VERSION_NAME;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_58_PRODUCTION_VALIDATION_INITIAL_VERSION_NAME;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_59_DIFFUSION_VALIDATION_INITIAL_VERSION_NAME;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_60_VALIDATION_REJECTED_INITIAL_VERSION_NAME;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_61_PUBLISHED_INITIAL_VERSION_NAME;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_62_DRAFT_NOT_INITIAL_VERSION_NAME;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_63_PRODUCTION_VALIDATION_NOT_INITIAL_VERSION_NAME;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_64_DIFFUSION_VALIDATION_NOT_INITIAL_VERSION_NAME;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_65_VALIDATION_REJECTED_NOT_INITIAL_VERSION_NAME;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_66_PUBLISHED_NOT_INITIAL_VERSION_NAME;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_77_NO_PUB_REPLACES_DATASET_78_NAME;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_78_PUB_IS_REPLACED_BY_DATASET_77_NAME;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.StatisticOfficialityMockFactory.STATISTIC_OFFICIALITY_01_BASIC_NAME;
-
 import java.util.Date;
 
 import org.joda.time.DateTime;
@@ -55,6 +30,35 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+
+import static org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts.assertEqualsCategorisation;
+import static org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts.assertEqualsDatasetVersion;
+import static org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts.assertEqualsDatasource;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.CategorisationMockFactory.CATEGORISATION_01_DATASET_VERSION_01_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_01_BASIC_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_02_BASIC_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_100_WITH_STATISTIC_OFFICIALITY_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_49_WITH_DATASOURCE_FROM_PX_WITH_NEXT_UPDATE_IN_ONE_MONTH_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_57_DRAFT_INITIAL_VERSION_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_58_PRODUCTION_VALIDATION_INITIAL_VERSION_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_59_DIFFUSION_VALIDATION_INITIAL_VERSION_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_60_VALIDATION_REJECTED_INITIAL_VERSION_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_61_PUBLISHED_INITIAL_VERSION_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_62_DRAFT_NOT_INITIAL_VERSION_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_63_PRODUCTION_VALIDATION_NOT_INITIAL_VERSION_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_64_DIFFUSION_VALIDATION_NOT_INITIAL_VERSION_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_65_VALIDATION_REJECTED_NOT_INITIAL_VERSION_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_66_PUBLISHED_NOT_INITIAL_VERSION_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_77_NO_PUB_REPLACES_DATASET_78_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_78_PUB_IS_REPLACED_BY_DATASET_77_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.StatisticOfficialityMockFactory.STATISTIC_OFFICIALITY_01_BASIC_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.StatisticOfficialityMockFactory.STATISTIC_OFFICIALITY_02_BASIC_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesDtoMocks.createStatisticOfficialityDtoFromDo;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:spring/statistical-resources/include/rest-services-mockito.xml", "classpath:spring/statistical-resources/applicationContext-test.xml"})
@@ -214,6 +218,34 @@ public class DatasetDto2DoMapperTest extends StatisticalResourcesBaseTest {
         expectedMetamacException(new MetamacException(ServiceExceptionType.DATASET_VERSION_CANT_REPLACE_ITSELF, source.getSiemacMetadataStatisticalResource().getUrn()));
 
         datasetDto2DoMapper.datasetVersionDtoToDo(dto);
+    }
+
+    @Test
+    @MetamacMock({DATASET_VERSION_01_BASIC_NAME, STATISTIC_OFFICIALITY_02_BASIC_NAME})
+    public void testDatasetDtoToDoUpdatesStatisticOfficiality() throws MetamacException {
+        DatasetVersion source = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_01_BASIC_NAME);
+        DatasetVersionDto dto = buildDatasetVersionDtoFromDo(source);
+
+        StatisticOfficiality statisticOfficiality = statisticOfficialityMockFactory.retrieveMock(STATISTIC_OFFICIALITY_02_BASIC_NAME);
+        dto.setStatisticOfficiality(createStatisticOfficialityDtoFromDo(statisticOfficiality));
+
+        DatasetVersion entity = datasetDto2DoMapper.datasetVersionDtoToDo(dto);
+        assertEquals(statisticOfficiality.getId(), entity.getStatisticOfficiality().getId());
+        assertEquals(statisticOfficiality.getIdentifier(), entity.getStatisticOfficiality().getIdentifier());
+    }
+
+    @Test
+    @MetamacMock({DATASET_VERSION_100_WITH_STATISTIC_OFFICIALITY_NAME, STATISTIC_OFFICIALITY_02_BASIC_NAME})
+    public void testDatasetDtoToDoUpdatesStatisticOfficialityForDatasetThatAlreadyHaveStatisticOfficiality() throws MetamacException {
+        DatasetVersion source = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_100_WITH_STATISTIC_OFFICIALITY_NAME);
+        DatasetVersionDto dto = buildDatasetVersionDtoFromDo(source);
+
+        StatisticOfficiality statisticOfficiality = statisticOfficialityMockFactory.retrieveMock(STATISTIC_OFFICIALITY_02_BASIC_NAME);
+        dto.setStatisticOfficiality(createStatisticOfficialityDtoFromDo(statisticOfficiality));
+
+        DatasetVersion entity = datasetDto2DoMapper.datasetVersionDtoToDo(dto);
+        assertEquals(statisticOfficiality.getId(), entity.getStatisticOfficiality().getId());
+        assertEquals(statisticOfficiality.getIdentifier(), entity.getStatisticOfficiality().getIdentifier());
     }
 
     @Test

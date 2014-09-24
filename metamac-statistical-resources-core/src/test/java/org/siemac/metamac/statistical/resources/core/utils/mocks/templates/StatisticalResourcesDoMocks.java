@@ -1,8 +1,5 @@
 package org.siemac.metamac.statistical.resources.core.utils.mocks.templates;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -44,6 +41,9 @@ import org.siemac.metamac.statistical.resources.core.query.domain.Query;
 import org.siemac.metamac.statistical.resources.core.query.domain.QuerySelectionItem;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.DatasetVersionMock;
+
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 
 public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
 
