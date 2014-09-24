@@ -1,7 +1,5 @@
 package org.siemac.metamac.statistical.resources.core.dataset.serviceimpl.validators;
 
-import static org.siemac.metamac.statistical.resources.core.error.utils.ServiceExceptionParametersUtils.addParameter;
-
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +22,8 @@ import org.siemac.metamac.statistical.resources.core.task.domain.FileDescriptorR
 import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesValidationUtils;
 
 import com.arte.statistic.dataset.repository.dto.AttributeInstanceDto;
+
+import static org.siemac.metamac.statistical.resources.core.error.utils.ServiceExceptionParametersUtils.addParameter;
 
 public class DatasetServiceInvocationValidatorImpl extends BaseInvocationValidator {
 

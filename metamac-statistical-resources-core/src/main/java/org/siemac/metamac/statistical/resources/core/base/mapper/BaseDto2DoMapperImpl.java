@@ -1,7 +1,5 @@
 package org.siemac.metamac.statistical.resources.core.base.mapper;
 
-import static org.siemac.metamac.statistical.resources.core.error.utils.ServiceExceptionParametersUtils.addParameter;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -48,6 +46,8 @@ import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionSingl
 import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesCollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import static org.siemac.metamac.statistical.resources.core.error.utils.ServiceExceptionParametersUtils.addParameter;
+
 @org.springframework.stereotype.Component("baseDto2DoMapper")
 public class BaseDto2DoMapperImpl extends CommonDto2DoMapperImpl implements BaseDto2DoMapper {
 
@@ -84,6 +84,8 @@ public class BaseDto2DoMapperImpl extends CommonDto2DoMapperImpl implements Base
             target.setLanguage(externalItemDtoToDo(source.getLanguage(), target.getLanguage(), addParameter(metadataName, ServiceExceptionSingleParameters.LANGUAGE)));
         }
         // Always Modifiable
+        target.setLastUpdate(new DateTime());
+
         languagesDtoListToDoListEnsuringLanguageIsContained(source.getLanguages(), target.getLanguages(), target.getLanguage(), addParameter(metadataName, ServiceExceptionSingleParameters.LANGUAGES));
 
         externalItemDtoCollectionToDoList(source.getStatisticalOperationInstances(), target.getStatisticalOperationInstances(),
