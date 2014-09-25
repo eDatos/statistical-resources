@@ -189,7 +189,7 @@ public class PublicationPublishingServiceTest extends StatisticalResourcesMockRe
 
         mockSiemacExternalItemsPublished(siemacResource);
 
-        String prefix = ServiceExceptionParameters.PUBLICATION_VERSION__SIEMAC_METADATA_STATISTICAL_RESOURCE;
+        String prefix = ServiceExceptionParameters.PUBLICATION_VERSION;
 
         List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
         exceptionItems.add(buildRelatedResourceNotPublishedException(siemacResource.getReplaces(), prefix, "replaces"));

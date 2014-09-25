@@ -1,7 +1,6 @@
 package org.siemac.metamac.statistical.resources.core.error;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
 
@@ -39,9 +38,10 @@ public class StatsiticalResourcesCheckTranslationsTest extends CheckTranslations
         return new Class[]{ServiceNoticeMessage.class};
     }
 
+    @SuppressWarnings("rawtypes")
     @Test
     public void testGenerateAutomaticParameterTranslationsThatAreMissing() throws Exception {
-        List<String> missingTranslations = new ArrayList<String>();
+        HashSet<String> missingTranslations = new HashSet<String>();
 
         for (Class serviceExceptionTypeClass : getServiceExceptionParameterClasses()) {
             Set<String> codes = MetamacReflectionUtils.getFieldsValueWithType(serviceExceptionTypeClass, String.class);
@@ -62,7 +62,7 @@ public class StatsiticalResourcesCheckTranslationsTest extends CheckTranslations
         printInConsoleMissingTranslations(missingTranslations);
     }
 
-    private void printInConsoleMissingTranslations(List<String> missingTranslations) {
+    private void printInConsoleMissingTranslations(HashSet<String> missingTranslations) {
         if (!missingTranslations.isEmpty()) {
             System.out.println("------------------------------- Missing translations -------------------------------");
             for (String missingTranslation : missingTranslations) {

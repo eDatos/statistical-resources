@@ -1,10 +1,50 @@
 package org.siemac.metamac.statistical.resources.core.publication.serviceapi;
 
+import java.util.Arrays;
+import java.util.List;
+
+import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
+import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteriaBuilder;
+import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
+import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.siemac.metamac.common.test.utils.MetamacAsserts;
+import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
+import org.siemac.metamac.core.common.test.utils.mocks.configuration.MetamacMock;
+import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
+import org.siemac.metamac.statistical.resources.core.base.constants.ProcStatusForActionsConstants;
+import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
+import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
+import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
+import org.siemac.metamac.statistical.resources.core.publication.domain.Chapter;
+import org.siemac.metamac.statistical.resources.core.publication.domain.Cube;
+import org.siemac.metamac.statistical.resources.core.publication.domain.ElementLevel;
+import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
+import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersionProperties;
+import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersionRepository;
+import org.siemac.metamac.statistical.resources.core.query.domain.Query;
+import org.siemac.metamac.statistical.resources.core.utils.asserts.CommonAsserts;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesNotPersistedDoMocks;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.transaction.TransactionConfiguration;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionDefinition;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.DefaultTransactionDefinition;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.PublicationsAsserts.assertEqualsPublicationVersion;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.PublicationsAsserts.assertEqualsPublicationVersionCollection;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.PublicationsAsserts.assertEqualsPublicationVersionNotChecksPublication;
@@ -44,45 +84,6 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_91_REPLACES_PUBLICATION_92_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_92_IS_REPLACED_BY_PUBLICATION_91_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryMockFactory.QUERY_01_SIMPLE_NAME;
-
-import java.util.Arrays;
-import java.util.List;
-
-import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
-import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteriaBuilder;
-import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
-import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.siemac.metamac.common.test.utils.MetamacAsserts;
-import org.siemac.metamac.core.common.exception.MetamacException;
-import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
-import org.siemac.metamac.core.common.test.utils.mocks.configuration.MetamacMock;
-import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
-import org.siemac.metamac.statistical.resources.core.base.constants.ProcStatusForActionsConstants;
-import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
-import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
-import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
-import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
-import org.siemac.metamac.statistical.resources.core.publication.domain.Chapter;
-import org.siemac.metamac.statistical.resources.core.publication.domain.Cube;
-import org.siemac.metamac.statistical.resources.core.publication.domain.ElementLevel;
-import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
-import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersionProperties;
-import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersionRepository;
-import org.siemac.metamac.statistical.resources.core.query.domain.Query;
-import org.siemac.metamac.statistical.resources.core.utils.asserts.CommonAsserts;
-import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesNotPersistedDoMocks;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.transaction.TransactionConfiguration;
-import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.TransactionDefinition;
-import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:spring/statistical-resources/include/rest-services-mockito.xml", "classpath:spring/statistical-resources/applicationContext-test.xml"})
@@ -194,7 +195,7 @@ public class PublicationServiceTest extends StatisticalResourcesBaseTest impleme
 
     @Test
     public void testCreatePublicationVersionErrorMetadataSiemacStatisticalResourceRequired() throws Exception {
-        expectedMetamacException(new MetamacException(ServiceExceptionType.METADATA_REQUIRED, ServiceExceptionParameters.PUBLICATION_VERSION__SIEMAC_METADATA_STATISTICAL_RESOURCE));
+        expectedMetamacException(new MetamacException(ServiceExceptionType.METADATA_REQUIRED, ServiceExceptionParameters.PUBLICATION_VERSION));
 
         ExternalItem statisticalOperation = StatisticalResourcesNotPersistedDoMocks.mockStatisticalOperationExternalItem();
         PublicationVersion expected = notPersistedDoMocks.mockPublicationVersionWithNullableSiemacStatisticalResource();
@@ -235,7 +236,7 @@ public class PublicationServiceTest extends StatisticalResourcesBaseTest impleme
     @Test
     @MetamacMock({PUBLICATION_03_BASIC_WITH_2_PUBLICATION_VERSIONS_NAME})
     public void testUpdatePublicationVersionErrorIncorrectCode() throws Exception {
-        expectedMetamacException(new MetamacException(ServiceExceptionType.METADATA_INCORRECT, ServiceExceptionParameters.PUBLICATION_VERSION__SIEMAC_METADATA_STATISTICAL_RESOURCE__CODE));
+        expectedMetamacException(new MetamacException(ServiceExceptionType.METADATA_INCORRECT, ServiceExceptionParameters.PUBLICATION_VERSION__CODE));
 
         PublicationVersion publication = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_04_FOR_PUBLICATION_03_AND_LAST_VERSION_NAME);
         publication.getSiemacMetadataStatisticalResource().setCode("@12345");
@@ -705,7 +706,7 @@ public class PublicationServiceTest extends StatisticalResourcesBaseTest impleme
     @Test
     @MetamacMock({PUBLICATION_VERSION_01_BASIC_NAME})
     public void testCreateChapterErrorMetadataIncorrectOrderInLevelNegative() throws Exception {
-        expectedMetamacException(new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, ServiceExceptionParameters.CHAPTER__ELEMENT_LEVEL__ORDER_IN_LEVEL));
+        expectedMetamacException(new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, ServiceExceptionParameters.CHAPTER__ORDER_IN_LEVEL));
 
         Chapter expected = notPersistedDoMocks.mockChapter();
         expected.getElementLevel().setOrderInLevel(Long.valueOf(-1));
@@ -716,7 +717,7 @@ public class PublicationServiceTest extends StatisticalResourcesBaseTest impleme
     @Test
     @MetamacMock({PUBLICATION_VERSION_01_BASIC_NAME})
     public void testCreateChapterErrorMetadataIncorrectOrderInLevelMaxValue() throws Exception {
-        expectedMetamacException(new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, ServiceExceptionParameters.CHAPTER__ELEMENT_LEVEL__ORDER_IN_LEVEL));
+        expectedMetamacException(new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, ServiceExceptionParameters.CHAPTER__ORDER_IN_LEVEL));
 
         Chapter expected = notPersistedDoMocks.mockChapter();
         expected.getElementLevel().setOrderInLevel(Long.MAX_VALUE);
@@ -727,7 +728,7 @@ public class PublicationServiceTest extends StatisticalResourcesBaseTest impleme
     @Test
     @MetamacMock({PUBLICATION_VERSION_01_BASIC_NAME})
     public void testCreateChapterErrorMetadataRequiredOrderInLevel() throws Exception {
-        expectedMetamacException(new MetamacException(ServiceExceptionType.METADATA_REQUIRED, ServiceExceptionParameters.CHAPTER__ELEMENT_LEVEL__ORDER_IN_LEVEL));
+        expectedMetamacException(new MetamacException(ServiceExceptionType.METADATA_REQUIRED, ServiceExceptionParameters.CHAPTER__ORDER_IN_LEVEL));
 
         Chapter expected = notPersistedDoMocks.mockChapter();
         expected.getElementLevel().setOrderInLevel(null);
@@ -1201,7 +1202,7 @@ public class PublicationServiceTest extends StatisticalResourcesBaseTest impleme
     @Test
     @MetamacMock({PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME})
     public void testUpdateChapterLocationErrorParentIsChild() throws Exception {
-        expectedMetamacException(new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, ServiceExceptionParameters.CHAPTER__ELEMENT_LEVEL__PARENT));
+        expectedMetamacException(new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, ServiceExceptionParameters.CHAPTER__PARENT));
 
         PublicationVersion publicationVersion = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME);
         Chapter chapter = publicationVersion.getChildrenFirstLevel().get(0).getChapter();
@@ -1238,7 +1239,7 @@ public class PublicationServiceTest extends StatisticalResourcesBaseTest impleme
     @Test
     @MetamacMock(PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME)
     public void testUpdateChapterLocationErrorOrderIncorrect() throws Exception {
-        expectedMetamacException(new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, ServiceExceptionParameters.CHAPTER__ELEMENT_LEVEL__ORDER_IN_LEVEL));
+        expectedMetamacException(new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, ServiceExceptionParameters.CHAPTER__ORDER_IN_LEVEL));
 
         String chapterUrn = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME).getChildrenFirstLevel().get(0).getChapter()
                 .getNameableStatisticalResource().getUrn();
@@ -1500,7 +1501,7 @@ public class PublicationServiceTest extends StatisticalResourcesBaseTest impleme
     @Test
     @MetamacMock({PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME, DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME})
     public void testCreateCubeErrorMetadataUnexpectedChildren() throws Exception {
-        expectedMetamacException(new MetamacException(ServiceExceptionType.METADATA_UNEXPECTED, ServiceExceptionParameters.CUBE__ELEMENT_LEVEL__CHILDREN));
+        expectedMetamacException(new MetamacException(ServiceExceptionType.METADATA_UNEXPECTED, ServiceExceptionParameters.CUBE__CHILDREN));
 
         Dataset dataset = datasetMockFactory.retrieveMock(DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME);
         String publicationVersionUrn = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME).getSiemacMetadataStatisticalResource().getUrn();
@@ -1569,7 +1570,7 @@ public class PublicationServiceTest extends StatisticalResourcesBaseTest impleme
     @Test
     @MetamacMock({PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME, DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME, QUERY_01_SIMPLE_NAME})
     public void testCreateCubeErrorMetadataRequiredDatasetUrn() throws Exception {
-        expectedMetamacException(new MetamacException(ServiceExceptionType.METADATA_REQUIRED, ServiceExceptionParameters.CUBE__DATASET__IDENTIFIABLE_STATISTICAL_RESOURCE__URN));
+        expectedMetamacException(new MetamacException(ServiceExceptionType.METADATA_REQUIRED, ServiceExceptionParameters.CUBE__DATASET__URN));
 
         String publicationVersionUrn = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME).getSiemacMetadataStatisticalResource().getUrn();
         Dataset dataset = datasetMockFactory.retrieveMock(DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME);
@@ -1581,7 +1582,7 @@ public class PublicationServiceTest extends StatisticalResourcesBaseTest impleme
     @Test
     @MetamacMock({PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME, DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME, QUERY_01_SIMPLE_NAME})
     public void testCreateCubeErrorMetadataRequiredQueryUrn() throws Exception {
-        expectedMetamacException(new MetamacException(ServiceExceptionType.METADATA_REQUIRED, ServiceExceptionParameters.CUBE__QUERY__IDENTIFIABLE_STATISTICAL_RESOURCE__URN));
+        expectedMetamacException(new MetamacException(ServiceExceptionType.METADATA_REQUIRED, ServiceExceptionParameters.CUBE__QUERY__URN));
 
         String publicationVersionUrn = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME).getSiemacMetadataStatisticalResource().getUrn();
         Query query = queryMockFactory.retrieveMock(QUERY_01_SIMPLE_NAME);
@@ -1734,7 +1735,7 @@ public class PublicationServiceTest extends StatisticalResourcesBaseTest impleme
     @Test
     @MetamacMock({PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME, DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME, QUERY_01_SIMPLE_NAME})
     public void testCreateCubeErrorMetadataIncorrectOrderInLevelNegative() throws Exception {
-        expectedMetamacException(new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, ServiceExceptionParameters.CUBE__ELEMENT_LEVEL__ORDER_IN_LEVEL));
+        expectedMetamacException(new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, ServiceExceptionParameters.CUBE__ORDER_IN_LEVEL));
 
         String publicationVersionUrn = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME).getSiemacMetadataStatisticalResource().getUrn();
         Query query = queryMockFactory.retrieveMock(QUERY_01_SIMPLE_NAME);
@@ -1747,7 +1748,7 @@ public class PublicationServiceTest extends StatisticalResourcesBaseTest impleme
     @Test
     @MetamacMock({PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME, DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME, QUERY_01_SIMPLE_NAME})
     public void testCreateCubeErrorMetadataIncorrectOrderInLevelMaxValue() throws Exception {
-        expectedMetamacException(new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, ServiceExceptionParameters.CUBE__ELEMENT_LEVEL__ORDER_IN_LEVEL));
+        expectedMetamacException(new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, ServiceExceptionParameters.CUBE__ORDER_IN_LEVEL));
 
         String publicationVersionUrn = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME).getSiemacMetadataStatisticalResource().getUrn();
         Query query = queryMockFactory.retrieveMock(QUERY_01_SIMPLE_NAME);
@@ -1760,7 +1761,7 @@ public class PublicationServiceTest extends StatisticalResourcesBaseTest impleme
     @Test
     @MetamacMock({PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME, DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME, QUERY_01_SIMPLE_NAME})
     public void testCreateCubeErrorMetadataRequiredOrderInLevel() throws Exception {
-        expectedMetamacException(new MetamacException(ServiceExceptionType.METADATA_REQUIRED, ServiceExceptionParameters.CUBE__ELEMENT_LEVEL__ORDER_IN_LEVEL));
+        expectedMetamacException(new MetamacException(ServiceExceptionType.METADATA_REQUIRED, ServiceExceptionParameters.CUBE__ORDER_IN_LEVEL));
 
         String publicationVersionUrn = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME).getSiemacMetadataStatisticalResource().getUrn();
         Query query = queryMockFactory.retrieveMock(QUERY_01_SIMPLE_NAME);
@@ -1902,7 +1903,7 @@ public class PublicationServiceTest extends StatisticalResourcesBaseTest impleme
     @Test
     @MetamacMock({PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME})
     public void testUpdateCubeErrorMetadataUnexpectedChildren() throws Exception {
-        expectedMetamacException(new MetamacException(ServiceExceptionType.METADATA_UNEXPECTED, ServiceExceptionParameters.CUBE__ELEMENT_LEVEL__CHILDREN));
+        expectedMetamacException(new MetamacException(ServiceExceptionType.METADATA_UNEXPECTED, ServiceExceptionParameters.CUBE__CHILDREN));
 
         PublicationVersion publicationVersion = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME);
         Cube expected = publicationVersion.getChildrenFirstLevel().get(3).getCube();
@@ -2238,7 +2239,7 @@ public class PublicationServiceTest extends StatisticalResourcesBaseTest impleme
     @Test
     @MetamacMock(PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME)
     public void testUpdateCubeLocationErrorOrderIncorrect() throws Exception {
-        expectedMetamacException(new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, ServiceExceptionParameters.CUBE__ELEMENT_LEVEL__ORDER_IN_LEVEL));
+        expectedMetamacException(new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, ServiceExceptionParameters.CUBE__ORDER_IN_LEVEL));
 
         String cubeUrn = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME).getChildrenFirstLevel().get(3).getCube().getNameableStatisticalResource()
                 .getUrn();

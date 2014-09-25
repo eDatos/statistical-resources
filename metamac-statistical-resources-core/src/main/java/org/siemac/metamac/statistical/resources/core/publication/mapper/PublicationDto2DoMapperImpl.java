@@ -107,7 +107,7 @@ public class PublicationDto2DoMapperImpl extends BaseDto2DoMapperImpl implements
         checkCanPublicationReplacesOtherPublication(source);
 
         // Hierarchy
-        siemacMetadataStatisticalResourceDtoToDo(source, target.getSiemacMetadataStatisticalResource(), ServiceExceptionParameters.PUBLICATION_VERSION__SIEMAC_METADATA_STATISTICAL_RESOURCE);
+        siemacMetadataStatisticalResourceDtoToDo(source, target.getSiemacMetadataStatisticalResource(), ServiceExceptionParameters.PUBLICATION_VERSION);
 
         // Other
         // We don't copy formatExtentResources because it is a calculated metadata
@@ -118,7 +118,7 @@ public class PublicationDto2DoMapperImpl extends BaseDto2DoMapperImpl implements
     protected void checkCanPublicationReplacesOtherPublication(PublicationVersionDto source) throws MetamacException {
         if (source.getReplaces() != null) {
             String currentUrn = source.getUrn();
-            RelatedResource resourceReplaced = relatedResourceDtoToDo(source.getReplaces(), null, ServiceExceptionParameters.PUBLICATION_VERSION__SIEMAC_METADATA_STATISTICAL_RESOURCE__REPLACES);
+            RelatedResource resourceReplaced = relatedResourceDtoToDo(source.getReplaces(), null, ServiceExceptionParameters.PUBLICATION_VERSION__REPLACES);
             if (currentUrn.equals(resourceReplaced.getPublicationVersion().getSiemacMetadataStatisticalResource().getUrn())) {
                 throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.PUBLICATION_VERSION_CANT_REPLACE_ITSELF).withMessageParameters(currentUrn).build();
             } else {
@@ -157,13 +157,10 @@ public class PublicationDto2DoMapperImpl extends BaseDto2DoMapperImpl implements
             // Metadata unmodifiable
             List<MetamacExceptionItem> exceptions = new ArrayList<MetamacExceptionItem>();
             // Modified in specific operation
-            ValidationUtils.checkMetadataUnmodifiable(source.getParentChapterUrn(), target.getElementLevel().getParentUrn(), ServiceExceptionParameters.CHAPTER__ELEMENT_LEVEL__PARENT, exceptions);
-            ValidationUtils.checkMetadataUnmodifiable(source.getOrderInLevel(), target.getElementLevel().getOrderInLevel(), ServiceExceptionParameters.CHAPTER__ELEMENT_LEVEL__ORDER_IN_LEVEL,
-                    exceptions);
-            ValidationUtils.checkMetadataUnmodifiable(source.getCode(), target.getNameableStatisticalResource().getCode(), ServiceExceptionParameters.CHAPTER__NAMEABLE_STATISTICAL_RESOURCE__CODE,
-                    exceptions);
-            ValidationUtils.checkMetadataUnmodifiable(source.getUrn(), target.getNameableStatisticalResource().getUrn(), ServiceExceptionParameters.CHAPTER__NAMEABLE_STATISTICAL_RESOURCE__URN,
-                    exceptions);
+            ValidationUtils.checkMetadataUnmodifiable(source.getParentChapterUrn(), target.getElementLevel().getParentUrn(), ServiceExceptionParameters.CHAPTER__PARENT, exceptions);
+            ValidationUtils.checkMetadataUnmodifiable(source.getOrderInLevel(), target.getElementLevel().getOrderInLevel(), ServiceExceptionParameters.CHAPTER__ORDER_IN_LEVEL, exceptions);
+            ValidationUtils.checkMetadataUnmodifiable(source.getCode(), target.getNameableStatisticalResource().getCode(), ServiceExceptionParameters.CHAPTER__CODE, exceptions);
+            ValidationUtils.checkMetadataUnmodifiable(source.getUrn(), target.getNameableStatisticalResource().getUrn(), ServiceExceptionParameters.CHAPTER__URN, exceptions);
             ExceptionUtils.throwIfException(exceptions);
         }
 
@@ -178,7 +175,7 @@ public class PublicationDto2DoMapperImpl extends BaseDto2DoMapperImpl implements
         }
 
         // Hierarchy
-        nameableStatisticalResourceDtoToDo(source, target.getNameableStatisticalResource(), ServiceExceptionParameters.CHAPTER__NAMEABLE_STATISTICAL_RESOURCE);
+        nameableStatisticalResourceDtoToDo(source, target.getNameableStatisticalResource(), ServiceExceptionParameters.CHAPTER);
 
         // Related entities
         if (source.getParentChapterUrn() != null) {
@@ -215,12 +212,10 @@ public class PublicationDto2DoMapperImpl extends BaseDto2DoMapperImpl implements
             // Metadata unmodifiable
             List<MetamacExceptionItem> exceptions = new ArrayList<MetamacExceptionItem>();
             // Modified in specific operation
-            ValidationUtils.checkMetadataUnmodifiable(source.getParentChapterUrn(), target.getElementLevel().getParentUrn(), ServiceExceptionParameters.CUBE__ELEMENT_LEVEL__PARENT, exceptions);
-            ValidationUtils.checkMetadataUnmodifiable(source.getOrderInLevel(), target.getElementLevel().getOrderInLevel(), ServiceExceptionParameters.CUBE__ELEMENT_LEVEL__ORDER_IN_LEVEL, exceptions);
-            ValidationUtils.checkMetadataUnmodifiable(source.getCode(), target.getNameableStatisticalResource().getCode(), ServiceExceptionParameters.CUBE__NAMEABLE_STATISTICAL_RESOURCE__CODE,
-                    exceptions);
-            ValidationUtils.checkMetadataUnmodifiable(source.getUrn(), target.getNameableStatisticalResource().getUrn(), ServiceExceptionParameters.CUBE__NAMEABLE_STATISTICAL_RESOURCE__URN,
-                    exceptions);
+            ValidationUtils.checkMetadataUnmodifiable(source.getParentChapterUrn(), target.getElementLevel().getParentUrn(), ServiceExceptionParameters.CUBE__PARENT, exceptions);
+            ValidationUtils.checkMetadataUnmodifiable(source.getOrderInLevel(), target.getElementLevel().getOrderInLevel(), ServiceExceptionParameters.CUBE__ORDER_IN_LEVEL, exceptions);
+            ValidationUtils.checkMetadataUnmodifiable(source.getCode(), target.getNameableStatisticalResource().getCode(), ServiceExceptionParameters.CUBE__CODE, exceptions);
+            ValidationUtils.checkMetadataUnmodifiable(source.getUrn(), target.getNameableStatisticalResource().getUrn(), ServiceExceptionParameters.CUBE__URN, exceptions);
             ExceptionUtils.throwIfException(exceptions);
         }
 
@@ -231,7 +226,7 @@ public class PublicationDto2DoMapperImpl extends BaseDto2DoMapperImpl implements
 
     private Cube cubeDtoToDo(CubeDto source, Cube target) throws MetamacException {
         // Hierarchy
-        nameableStatisticalResourceDtoToDo(source, target.getNameableStatisticalResource(), ServiceExceptionParameters.CUBE__NAMEABLE_STATISTICAL_RESOURCE);
+        nameableStatisticalResourceDtoToDo(source, target.getNameableStatisticalResource(), ServiceExceptionParameters.CUBE);
 
         // Related entities
         if (source.getParentChapterUrn() != null) {

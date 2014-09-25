@@ -71,14 +71,13 @@ public class QueryServiceInvocationValidatorImpl extends BaseInvocationValidator
             return;
         }
 
-        checkNewLifeCycleStatisticalResource(queryVersion.getLifeCycleStatisticalResource(), ServiceExceptionParameters.QUERY_VERSION__LIFE_CYCLE_STATISTICAL_RESOURCE, exceptions);
+        checkNewLifeCycleStatisticalResource(queryVersion.getLifeCycleStatisticalResource(), ServiceExceptionParameters.QUERY_VERSION, exceptions);
 
         if (queryVersion.getLifeCycleStatisticalResource() != null) {
             // Check code
-            StatisticalResourcesValidationUtils.checkMetadataRequired(queryVersion.getLifeCycleStatisticalResource().getCode(),
-                    ServiceExceptionParameters.QUERY_VERSION__LIFE_CYCLE_STATISTICAL_RESOURCE__CODE, exceptions);
-            StatisticalResourcesValidationUtils.checkSemanticIdentifierAsMetamacID(queryVersion.getLifeCycleStatisticalResource().getCode(),
-                    ServiceExceptionParameters.QUERY_VERSION__LIFE_CYCLE_STATISTICAL_RESOURCE__CODE, exceptions);
+            StatisticalResourcesValidationUtils.checkMetadataRequired(queryVersion.getLifeCycleStatisticalResource().getCode(), ServiceExceptionParameters.QUERY_VERSION__CODE, exceptions);
+            StatisticalResourcesValidationUtils
+                    .checkSemanticIdentifierAsMetamacID(queryVersion.getLifeCycleStatisticalResource().getCode(), ServiceExceptionParameters.QUERY_VERSION__CODE, exceptions);
         }
         checkQueryVersion(queryVersion, exceptions);
 

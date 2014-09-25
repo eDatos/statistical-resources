@@ -57,6 +57,8 @@ public class LifecycleCheckerTest extends StatisticalResourcesBaseTest {
     @Mock
     private RelatedResourceChecker         relatedResourceChecker;
 
+    private static String                  baseMetadata     = ServiceExceptionSingleParameters.DATASET_VERSION;
+
     // ------------------------------------------------------------------------------------------------------
     // >> PRODUCTION VALIDATION
     // ------------------------------------------------------------------------------------------------------
@@ -66,7 +68,6 @@ public class LifecycleCheckerTest extends StatisticalResourcesBaseTest {
         HasLifecycle mockedResource = mockHasLifecycleStatisticalResourcePrepareToProductionValidation();
 
         List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
-        String baseMetadata = ServiceExceptionSingleParameters.LIFE_CYCLE_STATISTICAL_RESOURCE;
 
         lifecycleChecker.checkSendToProductionValidation(mockedResource, baseMetadata, exceptionItems);
 
@@ -88,7 +89,6 @@ public class LifecycleCheckerTest extends StatisticalResourcesBaseTest {
             mockedResource.getLifeCycleStatisticalResource().addVersionRationaleType(new VersionRationaleType(versionRationaleType2Test));
 
             List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
-            String baseMetadata = ServiceExceptionSingleParameters.LIFE_CYCLE_STATISTICAL_RESOURCE;
 
             lifecycleChecker.checkSendToProductionValidation(mockedResource, baseMetadata, exceptionItems);
 
@@ -104,7 +104,6 @@ public class LifecycleCheckerTest extends StatisticalResourcesBaseTest {
 
     @Test
     public void testLifeCycleResourceCheckSendToProductionValidationProcStatus() throws Exception {
-        String baseMetadata = ServiceExceptionSingleParameters.LIFE_CYCLE_STATISTICAL_RESOURCE;
 
         String validStatus = ProcStatusEnum.DRAFT.name() + ", " + ProcStatusEnum.VALIDATION_REJECTED.name();
 
@@ -137,7 +136,6 @@ public class LifecycleCheckerTest extends StatisticalResourcesBaseTest {
 
     @Test
     public void testLifeCycleResourceCheckSendToDiffusionValidationProcStatus() throws Exception {
-        String baseMetadata = ServiceExceptionSingleParameters.LIFE_CYCLE_STATISTICAL_RESOURCE;
 
         for (ProcStatusEnum procStatus : ProcStatusEnum.values()) {
             HasLifecycle mockedResource = mockHasLifecycleStatisticalResourcePrepareToDiffusionValidation();
@@ -168,7 +166,6 @@ public class LifecycleCheckerTest extends StatisticalResourcesBaseTest {
 
     @Test
     public void testLifeCycleResourceCheckSendToValidationRejectedProcStatus() throws Exception {
-        String baseMetadata = ServiceExceptionSingleParameters.LIFE_CYCLE_STATISTICAL_RESOURCE;
 
         for (ProcStatusEnum procStatus : ProcStatusEnum.values()) {
             HasLifecycle mockedResource = mockHasLifecycleStatisticalResourcePrepareToValidationRejected();
@@ -200,7 +197,6 @@ public class LifecycleCheckerTest extends StatisticalResourcesBaseTest {
 
     @Test
     public void testLifeCycleResourceCheckSendToPublishedProcStatus() throws Exception {
-        String baseMetadata = ServiceExceptionSingleParameters.LIFE_CYCLE_STATISTICAL_RESOURCE;
 
         for (ProcStatusEnum procStatus : ProcStatusEnum.values()) {
             HasLifecycle mockedResource = mockHasLifecycleStatisticalResourcePrepareToPublished();
@@ -234,7 +230,6 @@ public class LifecycleCheckerTest extends StatisticalResourcesBaseTest {
 
     @Test
     public void testLifeCycleResourceCheckSendToPublishedProcStatusErrorRequiredValidFrom() throws Exception {
-        String baseMetadata = ServiceExceptionSingleParameters.LIFE_CYCLE_STATISTICAL_RESOURCE;
 
         HasLifecycle mockedResource = mockHasLifecycleStatisticalResourcePrepareToPublished();
         mockedResource.getLifeCycleStatisticalResource().setValidFrom(null);
@@ -255,7 +250,6 @@ public class LifecycleCheckerTest extends StatisticalResourcesBaseTest {
 
     @Test
     public void testLifeCycleResourceCheckSendToPublishedProcStatusErrorIncorrectValidFrom() throws Exception {
-        String baseMetadata = ServiceExceptionSingleParameters.LIFE_CYCLE_STATISTICAL_RESOURCE;
 
         HasLifecycle mockedResource = mockHasLifecycleStatisticalResourcePrepareToPublished();
         mockedResource.getLifeCycleStatisticalResource().setValidFrom(new DateTime().minusMinutes(40));
@@ -271,7 +265,6 @@ public class LifecycleCheckerTest extends StatisticalResourcesBaseTest {
 
     @Test
     public void testLifeCycleResourceCheckSendToPublishedProcStatusOkFutureValidFrom() throws Exception {
-        String baseMetadata = ServiceExceptionSingleParameters.LIFE_CYCLE_STATISTICAL_RESOURCE;
 
         HasLifecycle mockedResource = mockHasLifecycleStatisticalResourcePrepareToPublished();
         mockedResource.getLifeCycleStatisticalResource().setValidFrom(new DateTime().plusMinutes(120));
@@ -285,7 +278,6 @@ public class LifecycleCheckerTest extends StatisticalResourcesBaseTest {
 
     @Test
     public void testLifeCycleResourceCheckSendToPublishedProcStatusOkValidFromDelayTime() throws Exception {
-        String baseMetadata = ServiceExceptionSingleParameters.LIFE_CYCLE_STATISTICAL_RESOURCE;
 
         HasLifecycle mockedResource = mockHasLifecycleStatisticalResourcePrepareToPublished();
         mockedResource.getLifeCycleStatisticalResource().setValidFrom(new DateTime().minusMinutes(10));
@@ -299,7 +291,6 @@ public class LifecycleCheckerTest extends StatisticalResourcesBaseTest {
 
     @Test
     public void testLifeCycleResourceCheckSendToPublishedProcStatusErrorRequiredPreviousVersion() throws Exception {
-        String baseMetadata = ServiceExceptionSingleParameters.LIFE_CYCLE_STATISTICAL_RESOURCE;
 
         HasLifecycle mockedResource = mockHasLifecycleStatisticalResourcePrepareToPublished();
         mockedResource.getLifeCycleStatisticalResource().setVersionLogic("002.000");
@@ -312,7 +303,6 @@ public class LifecycleCheckerTest extends StatisticalResourcesBaseTest {
 
     @Test
     public void testLifeCycleResourceCheckSendToPublishedProcStatusWithPreviousVersionNullInAnInitialVersion() throws Exception {
-        String baseMetadata = ServiceExceptionSingleParameters.LIFE_CYCLE_STATISTICAL_RESOURCE;
 
         HasLifecycle mockedResource = mockHasLifecycleStatisticalResourcePrepareToPublished();
         mockedResource.getLifeCycleStatisticalResource().setVersionLogic(VersionUtil.createInitialVersion(VersionPatternEnum.XXX_YYY));
@@ -329,7 +319,6 @@ public class LifecycleCheckerTest extends StatisticalResourcesBaseTest {
 
     @Test
     public void testLifeCycleResourceCheckVersioning() throws Exception {
-        String baseMetadata = ServiceExceptionSingleParameters.LIFE_CYCLE_STATISTICAL_RESOURCE;
 
         for (ProcStatusEnum procStatus : ProcStatusEnum.values()) {
             HasLifecycle mockedResource = mockHasLifecycleStatisticalResourcePublished();

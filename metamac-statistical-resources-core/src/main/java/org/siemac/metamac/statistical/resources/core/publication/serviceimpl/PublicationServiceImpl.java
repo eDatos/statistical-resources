@@ -482,9 +482,9 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
         // Checks orders
         if (!orders.isEmpty()) {
             if (elementToAdd.isChapter()) {
-                throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, ServiceExceptionParameters.CHAPTER__ELEMENT_LEVEL__ORDER_IN_LEVEL);
+                throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, ServiceExceptionParameters.CHAPTER__ORDER_IN_LEVEL);
             } else {
-                throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, ServiceExceptionParameters.CUBE__ELEMENT_LEVEL__ORDER_IN_LEVEL);
+                throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, ServiceExceptionParameters.CUBE__ORDER_IN_LEVEL);
             }
         }
     }
@@ -589,7 +589,7 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
 
         while (chapterParentElementLevel != null) {
             if (chapterParentElementLevel.isChapter() && chapterParentElementLevel.getChapter().getNameableStatisticalResource().getUrn().equals(chapter.getNameableStatisticalResource().getUrn())) {
-                throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, ServiceExceptionParameters.CHAPTER__ELEMENT_LEVEL__PARENT);
+                throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, ServiceExceptionParameters.CHAPTER__PARENT);
             }
             chapterParentElementLevel = chapterParentElementLevel.getParent();
         }
@@ -622,9 +622,9 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
         // Checks orders
         if (orderAfterUpdate > elementsAtLevel.size()) {
             if (elementToChangeOrder.isChapter()) {
-                throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, ServiceExceptionParameters.CHAPTER__ELEMENT_LEVEL__ORDER_IN_LEVEL);
+                throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, ServiceExceptionParameters.CHAPTER__ORDER_IN_LEVEL);
             } else {
-                throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, ServiceExceptionParameters.CUBE__ELEMENT_LEVEL__ORDER_IN_LEVEL);
+                throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, ServiceExceptionParameters.CUBE__ORDER_IN_LEVEL);
             }
         }
 

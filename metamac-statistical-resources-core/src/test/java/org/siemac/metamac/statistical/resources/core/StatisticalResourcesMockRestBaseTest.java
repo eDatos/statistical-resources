@@ -206,13 +206,9 @@ public class StatisticalResourcesMockRestBaseTest extends StatisticalResourcesBa
     }
 
     protected List<MetamacExceptionItem> getExceptionItemsForExternalItemNotPublishedLifecycle(LifeCycleStatisticalResource lifecycleResource, String baseField, boolean fromSiemac) {
-        String prefix = baseField;
-        if (!fromSiemac) {
-            prefix = buildField(baseField, "life_cycle_statistical_resource");
-        }
         List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
-        exceptionItems.add(buildExternalItemNotPublishedException(lifecycleResource.getStatisticalOperation(), prefix, "statistical_operation"));
-        exceptionItems.add(buildExternalItemNotPublishedException(lifecycleResource.getMaintainer(), prefix, "maintainer"));
+        exceptionItems.add(buildExternalItemNotPublishedException(lifecycleResource.getStatisticalOperation(), baseField, "statistical_operation"));
+        exceptionItems.add(buildExternalItemNotPublishedException(lifecycleResource.getMaintainer(), baseField, "maintainer"));
 
         return exceptionItems;
     }

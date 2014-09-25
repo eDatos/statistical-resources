@@ -35,11 +35,11 @@ public class PublicationServiceInvocationValidatorImpl extends BaseInvocationVal
     public static void checkRetrievePublicationVersionByUrn(String publicationVersionUrn, List<MetamacExceptionItem> exceptions) throws MetamacException {
         StatisticalResourcesValidationUtils.checkParameterRequired(publicationVersionUrn, ServiceExceptionParameters.PUBLICATION_VERSION_URN, exceptions);
     }
-    
+
     public static void checkRetrieveLatestPublicationVersionByPublicationUrn(String publicationUrn, List<MetamacExceptionItem> exceptions) throws MetamacException {
         StatisticalResourcesValidationUtils.checkParameterRequired(publicationUrn, ServiceExceptionParameters.PUBLICATION_URN, exceptions);
     }
-    
+
     public static void checkRetrieveLatestPublishedPublicationVersionByPublicationUrn(String publicationUrn, List<MetamacExceptionItem> exceptions) throws MetamacException {
         StatisticalResourcesValidationUtils.checkParameterRequired(publicationUrn, ServiceExceptionParameters.PUBLICATION_URN, exceptions);
     }
@@ -68,8 +68,7 @@ public class PublicationServiceInvocationValidatorImpl extends BaseInvocationVal
             return;
         }
 
-        checkNewSiemacMetadataStatisticalResource(publicationVersion.getSiemacMetadataStatisticalResource(), ServiceExceptionParameters.PUBLICATION_VERSION__SIEMAC_METADATA_STATISTICAL_RESOURCE,
-                exceptions);
+        checkNewSiemacMetadataStatisticalResource(publicationVersion.getSiemacMetadataStatisticalResource(), ServiceExceptionParameters.PUBLICATION_VERSION, exceptions);
         checkPublicationVersion(publicationVersion, exceptions);
 
         // Metadata that must be empty for new entities
@@ -85,7 +84,8 @@ public class PublicationServiceInvocationValidatorImpl extends BaseInvocationVal
             return;
         }
 
-        checkExistingSiemacMetadataStatisticalResource(publicationVersion.getSiemacMetadataStatisticalResource(), TypeRelatedResourceEnum.PUBLICATION_VERSION, ServiceExceptionParameters.PUBLICATION_VERSION, exceptions);
+        checkExistingSiemacMetadataStatisticalResource(publicationVersion.getSiemacMetadataStatisticalResource(), TypeRelatedResourceEnum.PUBLICATION_VERSION,
+                ServiceExceptionParameters.PUBLICATION_VERSION, exceptions);
         checkPublicationVersion(publicationVersion, exceptions);
 
         // Metadata that must be filled for existing entities
@@ -132,8 +132,8 @@ public class PublicationServiceInvocationValidatorImpl extends BaseInvocationVal
         }
 
         checkChapter(chapter, exceptions);
-        checkNewNameableStatisticalResource(chapter.getNameableStatisticalResource(), ServiceExceptionParameters.CHAPTER__NAMEABLE_STATISTICAL_RESOURCE, exceptions);
-        StatisticalResourcesValidationUtils.checkMetadataRequired(chapter.getElementLevel().getOrderInLevel(), ServiceExceptionParameters.CHAPTER__ELEMENT_LEVEL__ORDER_IN_LEVEL, exceptions);
+        checkNewNameableStatisticalResource(chapter.getNameableStatisticalResource(), ServiceExceptionParameters.CHAPTER, exceptions);
+        StatisticalResourcesValidationUtils.checkMetadataRequired(chapter.getElementLevel().getOrderInLevel(), ServiceExceptionParameters.CHAPTER__ORDER_IN_LEVEL, exceptions);
 
         // Metadata that must be empty for new entities
         StatisticalResourcesValidationUtils.checkMetadataEmpty(chapter.getId(), ServiceExceptionParameters.CHAPTER__ID, exceptions);
@@ -151,7 +151,7 @@ public class PublicationServiceInvocationValidatorImpl extends BaseInvocationVal
         checkExistingNameableStatisticalResource(chapter.getNameableStatisticalResource(), TypeRelatedResourceEnum.CHAPTER, ServiceExceptionParameters.CHAPTER, exceptions);
 
         // Metadata that must be filled for existing entities
-        StatisticalResourcesValidationUtils.checkMetadataRequired(chapter.getElementLevel(), ServiceExceptionParameters.CHAPTER__ELEMENT_LEVEL, exceptions);
+        StatisticalResourcesValidationUtils.checkMetadataRequired(chapter.getElementLevel(), ServiceExceptionParameters.CHAPTER, exceptions);
         StatisticalResourcesValidationUtils.checkMetadataRequired(chapter.getId(), ServiceExceptionParameters.CHAPTER__ID, exceptions);
         StatisticalResourcesValidationUtils.checkMetadataRequired(chapter.getVersion(), ServiceExceptionParameters.CHAPTER__VERSION, exceptions);
     }
@@ -196,7 +196,7 @@ public class PublicationServiceInvocationValidatorImpl extends BaseInvocationVal
 
         checkCube(cube, exceptions);
         checkNewNameableStatisticalResource(cube.getNameableStatisticalResource(), ServiceExceptionParameters.CUBE, exceptions);
-        StatisticalResourcesValidationUtils.checkMetadataRequired(cube.getElementLevel().getOrderInLevel(), ServiceExceptionParameters.CUBE__ELEMENT_LEVEL__ORDER_IN_LEVEL, exceptions);
+        StatisticalResourcesValidationUtils.checkMetadataRequired(cube.getElementLevel().getOrderInLevel(), ServiceExceptionParameters.CUBE__ORDER_IN_LEVEL, exceptions);
     }
 
     private static void checkExistingCube(Cube cube, List<MetamacExceptionItem> exceptions) {
@@ -208,7 +208,7 @@ public class PublicationServiceInvocationValidatorImpl extends BaseInvocationVal
 
         checkCube(cube, exceptions);
         checkExistingNameableStatisticalResource(cube.getNameableStatisticalResource(), TypeRelatedResourceEnum.CUBE, ServiceExceptionParameters.CUBE, exceptions);
-        StatisticalResourcesValidationUtils.checkMetadataRequired(cube.getElementLevel(), ServiceExceptionParameters.CUBE__ELEMENT_LEVEL, exceptions);
+        StatisticalResourcesValidationUtils.checkMetadataRequired(cube.getElementLevel(), ServiceExceptionParameters.CUBE, exceptions);
     }
 
     private static void checkCube(Cube cube, List<MetamacExceptionItem> exceptions) {
@@ -219,13 +219,13 @@ public class PublicationServiceInvocationValidatorImpl extends BaseInvocationVal
         }
 
         if (cube.getDataset() != null) {
-            StatisticalResourcesValidationUtils.checkMetadataRequired(cube.getDatasetUrn(), ServiceExceptionParameters.CUBE__DATASET__IDENTIFIABLE_STATISTICAL_RESOURCE__URN, exceptions);
+            StatisticalResourcesValidationUtils.checkMetadataRequired(cube.getDatasetUrn(), ServiceExceptionParameters.CUBE__DATASET__URN, exceptions);
         }
 
         if (cube.getQuery() != null) {
-            StatisticalResourcesValidationUtils.checkMetadataRequired(cube.getQueryUrn(), ServiceExceptionParameters.CUBE__QUERY__IDENTIFIABLE_STATISTICAL_RESOURCE__URN, exceptions);
+            StatisticalResourcesValidationUtils.checkMetadataRequired(cube.getQueryUrn(), ServiceExceptionParameters.CUBE__QUERY__URN, exceptions);
         }
 
-        StatisticalResourcesValidationUtils.checkMetadataEmpty(cube.getElementLevel().getChildren(), ServiceExceptionParameters.CUBE__ELEMENT_LEVEL__CHILDREN, exceptions);
+        StatisticalResourcesValidationUtils.checkMetadataEmpty(cube.getElementLevel().getChildren(), ServiceExceptionParameters.CUBE__CHILDREN, exceptions);
     }
 }

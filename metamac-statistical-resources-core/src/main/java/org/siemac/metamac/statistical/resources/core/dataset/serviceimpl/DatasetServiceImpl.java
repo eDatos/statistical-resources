@@ -1,8 +1,5 @@
 package org.siemac.metamac.statistical.resources.core.dataset.serviceimpl;
 
-import static org.siemac.metamac.core.common.util.MetamacCollectionUtils.isInCollection;
-import static org.siemac.metamac.statistical.resources.core.base.domain.utils.RelatedResourceResultUtils.getUrnsFromRelatedResourceResults;
-
 import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
@@ -100,6 +97,9 @@ import com.arte.statistic.dataset.repository.dto.DatasetRepositoryDto;
 import com.arte.statistic.dataset.repository.dto.InternationalStringDto;
 import com.arte.statistic.dataset.repository.dto.LocalisedStringDto;
 import com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceFacade;
+
+import static org.siemac.metamac.core.common.util.MetamacCollectionUtils.isInCollection;
+import static org.siemac.metamac.statistical.resources.core.base.domain.utils.RelatedResourceResultUtils.getUrnsFromRelatedResourceResults;
 
 /**
  * Implementation of DatasetService.
@@ -936,7 +936,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
     @Override
     public void initializeCategorisationMetadataForCreation(ServiceContext ctx, Categorisation categorisation) throws MetamacException {
         if (categorisation.getVersionableStatisticalResource().getCode() != null) {
-            throw new MetamacException(ServiceExceptionType.METADATA_UNEXPECTED, ServiceExceptionParameters.CATEGORISATION__VERSIONABLE_STATISTICAL_RESOURCE__CODE);
+            throw new MetamacException(ServiceExceptionType.METADATA_UNEXPECTED, ServiceExceptionParameters.CATEGORISATION__CODE);
         }
         String code = siemacStatisticalResourceGeneratedCode.fillGeneratedCodeForCreateCategorisation(categorisation);
         String[] maintainerCodes = new String[]{categorisation.getMaintainer().getCodeNested()};

@@ -100,22 +100,22 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 public class QueryServiceTest extends StatisticalResourcesBaseTest implements QueryServiceTestBase {
 
     @Autowired
-    private QueryService queryService;
+    private QueryService                  queryService;
 
     @Autowired
-    private DatasetService datasetService;
+    private DatasetService                datasetService;
 
     @Autowired
     private StatisticalResourceRepository statisticalResourceRepository;
 
     @Autowired
-    private DatasetVersionRepository datasetVersionRepository;
+    private DatasetVersionRepository      datasetVersionRepository;
 
     @Autowired
-    private QuerySelectionItemRepository querySelectionItemRepository;
+    private QuerySelectionItemRepository  querySelectionItemRepository;
 
     @Autowired
-    private QueryRepository queryRepository;
+    private QueryRepository               queryRepository;
 
     @Override
     @Test
@@ -421,7 +421,7 @@ public class QueryServiceTest extends StatisticalResourcesBaseTest implements Qu
     @Test
     @MetamacMock(DATASET_VERSION_04_FOR_DATASET_03_AND_LAST_VERSION_NAME)
     public void testCreateQueryVersionErrorMetadataProcStatusMustBeNull() throws Exception {
-        this.expectedMetamacException(new MetamacException(ServiceExceptionType.METADATA_UNEXPECTED, ServiceExceptionParameters.QUERY_VERSION__LIFE_CYCLE_STATISTICAL_RESOURCE__PROC_STATUS));
+        this.expectedMetamacException(new MetamacException(ServiceExceptionType.METADATA_UNEXPECTED, ServiceExceptionParameters.QUERY_VERSION__PROC_STATUS));
 
         ExternalItem statisticalOperation = StatisticalResourcesNotPersistedDoMocks.mockStatisticalOperationExternalItem();
         QueryVersion expected = this.notPersistedDoMocks.mockQueryVersionWithDatasetVersion(this.datasetVersionMockFactory.retrieveMock(DATASET_VERSION_04_FOR_DATASET_03_AND_LAST_VERSION_NAME), true);
@@ -450,7 +450,7 @@ public class QueryServiceTest extends StatisticalResourcesBaseTest implements Qu
     @Test
     @MetamacMock({DATASET_VERSION_04_FOR_DATASET_03_AND_LAST_VERSION_NAME, DATASET_VERSION_03_FOR_DATASET_03_NAME})
     public void testCreateQueryVersionErrorMetadataCodeRequired() throws Exception {
-        this.expectedMetamacException(new MetamacException(ServiceExceptionType.METADATA_REQUIRED, ServiceExceptionParameters.QUERY_VERSION__LIFE_CYCLE_STATISTICAL_RESOURCE__CODE));
+        this.expectedMetamacException(new MetamacException(ServiceExceptionType.METADATA_REQUIRED, ServiceExceptionParameters.QUERY_VERSION__CODE));
 
         ExternalItem statisticalOperation = StatisticalResourcesNotPersistedDoMocks.mockStatisticalOperationExternalItem();
         QueryVersion expected = this.notPersistedDoMocks.mockQueryVersionWithDatasetVersion(this.datasetVersionMockFactory.retrieveMock(DATASET_VERSION_04_FOR_DATASET_03_AND_LAST_VERSION_NAME), true);
@@ -492,7 +492,7 @@ public class QueryServiceTest extends StatisticalResourcesBaseTest implements Qu
     @Test
     @MetamacMock(DATASET_VERSION_06_FOR_QUERIES_NAME)
     public void testCreateQueryVersionErrorNameableResourceRequired() throws Exception {
-        this.expectedMetamacException(new MetamacException(ServiceExceptionType.METADATA_REQUIRED, ServiceExceptionParameters.QUERY_VERSION__LIFE_CYCLE_STATISTICAL_RESOURCE));
+        this.expectedMetamacException(new MetamacException(ServiceExceptionType.METADATA_REQUIRED, ServiceExceptionParameters.QUERY_VERSION));
 
         ExternalItem statisticalOperation = StatisticalResourcesNotPersistedDoMocks.mockStatisticalOperationExternalItem();
         QueryVersion query = this.notPersistedDoMocks.mockQueryVersionWithStatisticalResourceNull(this.datasetVersionMockFactory.retrieveMock(DATASET_VERSION_06_FOR_QUERIES_NAME));

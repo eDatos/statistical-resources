@@ -162,12 +162,11 @@ public class DatasetServiceInvocationValidatorImpl extends BaseInvocationValidat
             return;
         }
 
-        checkNewIdentifiableStatisticalResource(datasource.getIdentifiableStatisticalResource(), ServiceExceptionParameters.DATASOURCE__IDENTIFIABLE_STATISTICAL_RESOURCE, exceptions);
+        checkNewIdentifiableStatisticalResource(datasource.getIdentifiableStatisticalResource(), ServiceExceptionParameters.DATASOURCE, exceptions);
 
         // CODE
         if (datasource.getIdentifiableStatisticalResource() != null) {
-            StatisticalResourcesValidationUtils.checkMetadataRequired(datasource.getIdentifiableStatisticalResource().getCode(),
-                    ServiceExceptionParameters.DATASOURCE__IDENTIFIABLE_STATISTICAL_RESOURCE__CODE, exceptions);
+            StatisticalResourcesValidationUtils.checkMetadataRequired(datasource.getIdentifiableStatisticalResource().getCode(), ServiceExceptionParameters.DATASOURCE__CODE, exceptions);
         }
 
         checkDatasource(datasource, ServiceExceptionParameters.DATASOURCE, exceptions);
@@ -207,7 +206,7 @@ public class DatasetServiceInvocationValidatorImpl extends BaseInvocationValidat
             return;
         }
 
-        checkNewSiemacMetadataStatisticalResource(datasetVersion.getSiemacMetadataStatisticalResource(), ServiceExceptionParameters.DATASET_VERSION__SIEMAC_METADATA_STATISTICAL_RESOURCE, exceptions);
+        checkNewSiemacMetadataStatisticalResource(datasetVersion.getSiemacMetadataStatisticalResource(), ServiceExceptionParameters.DATASET_VERSION, exceptions);
         checkDatasetVersion(datasetVersion, ServiceExceptionParameters.DATASET_VERSION, exceptions);
 
         // Metadata that must be empty for new entities

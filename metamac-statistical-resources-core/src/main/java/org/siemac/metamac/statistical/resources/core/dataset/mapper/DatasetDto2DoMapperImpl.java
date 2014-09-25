@@ -137,7 +137,7 @@ public class DatasetDto2DoMapperImpl extends BaseDto2DoMapperImpl implements Dat
         checkCanDatasetReplacesOtherDataset(source);
 
         // Hierarchy
-        siemacMetadataStatisticalResourceDtoToDo(source, target.getSiemacMetadataStatisticalResource(), ServiceExceptionParameters.DATASET_VERSION__SIEMAC_METADATA_STATISTICAL_RESOURCE);
+        siemacMetadataStatisticalResourceDtoToDo(source, target.getSiemacMetadataStatisticalResource(), ServiceExceptionParameters.DATASET_VERSION);
 
         // modifiable
         externalItemDtoCollectionToDoList(source.getGeographicGranularities(), target.getGeographicGranularities(), ServiceExceptionParameters.DATASET_VERSION__GEOGRAPHIC_GRANULARITIES);
@@ -170,7 +170,7 @@ public class DatasetDto2DoMapperImpl extends BaseDto2DoMapperImpl implements Dat
     protected void checkCanDatasetReplacesOtherDataset(DatasetVersionDto source) throws MetamacException {
         if (source.getReplaces() != null) {
             String currentUrn = source.getUrn();
-            RelatedResource resourceReplaced = relatedResourceDtoToDo(source.getReplaces(), null, ServiceExceptionParameters.DATASET_VERSION__SIEMAC_METADATA_STATISTICAL_RESOURCE__REPLACES);
+            RelatedResource resourceReplaced = relatedResourceDtoToDo(source.getReplaces(), null, ServiceExceptionParameters.DATASET_VERSION__REPLACES);
             if (currentUrn.equals(resourceReplaced.getDatasetVersion().getSiemacMetadataStatisticalResource().getUrn())) {
                 throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.DATASET_VERSION_CANT_REPLACE_ITSELF).withMessageParameters(currentUrn).build();
             } else {
