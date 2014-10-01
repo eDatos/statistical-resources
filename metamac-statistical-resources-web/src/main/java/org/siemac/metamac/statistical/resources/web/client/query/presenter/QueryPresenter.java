@@ -301,6 +301,7 @@ public class QueryPresenter extends Presenter<QueryPresenter.QueryView, QueryPre
             @Override
             public void onWaitSuccess(UpdateQueryVersionProcStatusResult result) {
                 showMessageAfterResourceLifeCycleUpdate(result, getMessages().lifeCycleResourceSentToProductionValidation());
+                retrieveQueryVersions(result.getQueryVersionDto().getUrn());
                 getView().setQueryDto(result.getQueryVersionDto());
             }
         });
@@ -314,6 +315,7 @@ public class QueryPresenter extends Presenter<QueryPresenter.QueryView, QueryPre
             @Override
             public void onWaitSuccess(UpdateQueryVersionProcStatusResult result) {
                 showMessageAfterResourceLifeCycleUpdate(result, getMessages().lifeCycleResourceSentToDiffusionValidation());
+                retrieveQueryVersions(result.getQueryVersionDto().getUrn());
                 getView().setQueryDto(result.getQueryVersionDto());
             }
         });
@@ -327,6 +329,7 @@ public class QueryPresenter extends Presenter<QueryPresenter.QueryView, QueryPre
             @Override
             public void onWaitSuccess(UpdateQueryVersionProcStatusResult result) {
                 showMessageAfterResourceLifeCycleUpdate(result, getMessages().lifeCycleResourceRejectValidation());
+                retrieveQueryVersions(result.getQueryVersionDto().getUrn());
                 getView().setQueryDto(result.getQueryVersionDto());
             }
         });
@@ -341,6 +344,7 @@ public class QueryPresenter extends Presenter<QueryPresenter.QueryView, QueryPre
             @Override
             public void onWaitSuccess(UpdateQueryVersionProcStatusResult result) {
                 showMessageAfterResourceLifeCycleUpdate(result, getMessages().lifeCycleResourcesProgramPublication());
+                retrieveQueryVersions(result.getQueryVersionDto().getUrn());
                 getView().setQueryDto(result.getQueryVersionDto());
             }
         });
@@ -354,6 +358,7 @@ public class QueryPresenter extends Presenter<QueryPresenter.QueryView, QueryPre
             @Override
             public void onWaitSuccess(UpdateQueryVersionProcStatusResult result) {
                 showMessageAfterResourceLifeCycleUpdate(result, getMessages().lifeCycleResourcePublish());
+                retrieveQueryVersions(result.getQueryVersionDto().getUrn());
                 getView().setQueryDto(result.getQueryVersionDto());
             }
         });
@@ -367,6 +372,7 @@ public class QueryPresenter extends Presenter<QueryPresenter.QueryView, QueryPre
             @Override
             public void onWaitSuccess(UpdateQueryVersionProcStatusResult result) {
                 showMessageAfterResourceLifeCycleUpdate(result, getMessages().lifeCycleResourceCancelProgrammedPublication());
+                retrieveQueryVersions(result.getQueryVersionDto().getUrn());
                 getView().setQueryDto(result.getQueryVersionDto());
             }
         });
