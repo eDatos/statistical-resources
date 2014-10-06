@@ -27,6 +27,7 @@ import org.siemac.metamac.rest.common.v1_0.domain.ResourceLink;
 import org.siemac.metamac.rest.common_metadata.v1_0.domain.Configuration;
 import org.siemac.metamac.rest.exception.RestException;
 import org.siemac.metamac.rest.exception.utils.RestExceptionUtils;
+import org.siemac.metamac.rest.statistical_operations_internal.v1_0.domain.Operation;
 import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.Attribute;
 import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.AttributeAttachmentLevelType;
 import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.AttributeDimension;
@@ -106,6 +107,7 @@ import org.siemac.metamac.statistical_resources.rest.internal.StatisticalResourc
 import org.siemac.metamac.statistical_resources.rest.internal.exception.RestServiceExceptionType;
 import org.siemac.metamac.statistical_resources.rest.internal.invocation.CommonMetadataRestExternalFacade;
 import org.siemac.metamac.statistical_resources.rest.internal.invocation.SrmRestInternalFacade;
+import org.siemac.metamac.statistical_resources.rest.internal.invocation.StatisticalOperationsRestInternalFacade;
 import org.siemac.metamac.statistical_resources.rest.internal.service.utils.InternalWebApplicationNavigation;
 import org.siemac.metamac.statistical_resources.rest.internal.service.utils.LookupUtil;
 import org.siemac.metamac.statistical_resources.rest.internal.service.utils.StatisticalResourcesRestInternalUtils;
@@ -128,48 +130,51 @@ import com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceF
 @Component
 public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
 
-    private static final Logger               logger = LoggerFactory.getLogger(CommonDo2RestMapperV10.class);
+    private static final Logger                     logger = LoggerFactory.getLogger(CommonDo2RestMapperV10.class);
 
     @Autowired
-    private StatisticalResourcesConfiguration configurationService;
+    private StatisticalResourcesConfiguration       configurationService;
 
     @Autowired
-    private DatasetService                    datasetService;
+    private StatisticalOperationsRestInternalFacade statisticalOperationsRestInternalFacade;
 
     @Autowired
-    private QueryService                      queryService;
+    private DatasetService                          datasetService;
 
     @Autowired
-    private TranslationService                translationService;
+    private QueryService                            queryService;
 
     @Autowired
-    private DatasetRepositoriesServiceFacade  datasetRepositoriesServiceFacade;
+    private TranslationService                      translationService;
 
     @Autowired
-    private SrmRestInternalFacade             srmRestExternalFacade;
+    private DatasetRepositoriesServiceFacade        datasetRepositoriesServiceFacade;
 
     @Autowired
-    private CommonMetadataRestExternalFacade  commonMetadataRestExternalFacade;
+    private SrmRestInternalFacade                   srmRestExternalFacade;
 
     @Autowired
-    private DatasetsDo2RestMapperV10          datasetsDo2RestMapper;
+    private CommonMetadataRestExternalFacade        commonMetadataRestExternalFacade;
 
     @Autowired
-    private CollectionsDo2RestMapperV10       collectionsDo2RestMapper;
+    private DatasetsDo2RestMapperV10                datasetsDo2RestMapper;
 
     @Autowired
-    private QueriesDo2RestMapperV10           queriesDo2RestMapper;
+    private CollectionsDo2RestMapperV10             collectionsDo2RestMapper;
 
-    private String                            statisticalResourcesApiInternalEndpointV10;
-    private String                            srmApiInternalEndpoint;
-    private String                            statisticalOperationsApiInternalEndpoint;
-    private String                            statisticalResourcesInternalWebApplication;
-    private String                            srmInternalWebApplication;
-    private String                            commonMetadataInternalWebApplication;
-    private String                            statisticalOperationsWebApplication;
-    private String                            defaultLanguage;
+    @Autowired
+    private QueriesDo2RestMapperV10                 queriesDo2RestMapper;
 
-    private InternalWebApplicationNavigation  internalWebApplicationNavigation;
+    private String                                  statisticalResourcesApiInternalEndpointV10;
+    private String                                  srmApiInternalEndpoint;
+    private String                                  statisticalOperationsApiInternalEndpoint;
+    private String                                  statisticalResourcesInternalWebApplication;
+    private String                                  srmInternalWebApplication;
+    private String                                  commonMetadataInternalWebApplication;
+    private String                                  statisticalOperationsWebApplication;
+    private String                                  defaultLanguage;
+
+    private InternalWebApplicationNavigation        internalWebApplicationNavigation;
 
     @PostConstruct
     public void init() throws Exception {
@@ -403,6 +408,7 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
         }
         ResourceInternal target = new ResourceInternal();
         toResourceExternalItem(source, statisticalOperationsApiInternalEndpoint, statisticalOperationsWebApplication, target, selectedLanguages);
+        target.setName(getUpdatedStatisticalOperationName(source.getCode()));
         return target;
     }
 
@@ -1689,4 +1695,8 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
         return dataSize;
     }
 
+    private InternationalString getUpdatedStatisticalOperationName(String operationCode) {
+        Operation operation = statisticalOperationsRestInternalFacade.retrieveOperation(operationCode);
+        return operation.getName();
+    }
 }

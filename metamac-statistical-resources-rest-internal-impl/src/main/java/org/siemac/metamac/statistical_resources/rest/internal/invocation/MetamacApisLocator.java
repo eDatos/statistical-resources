@@ -7,6 +7,7 @@ import org.apache.cxf.jaxrs.client.WebClient;
 import org.siemac.metamac.common_metadata.rest.external.v1_0.service.CommonMetadataV1_0;
 import org.siemac.metamac.srm.rest.internal.v1_0.service.SrmRestInternalFacadeV10;
 import org.siemac.metamac.statistical.resources.core.conf.StatisticalResourcesConfiguration;
+import org.siemac.metamac.statistical_operations.rest.internal.v1_0.service.StatisticalOperationsRestInternalFacadeV10;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -14,11 +15,13 @@ import org.springframework.stereotype.Component;
 public class MetamacApisLocator {
 
     @Autowired
-    private StatisticalResourcesConfiguration configurationService;
+    private StatisticalResourcesConfiguration          configurationService;
 
-    private SrmRestInternalFacadeV10          srmRestInternalFacadeV10            = null;
+    private SrmRestInternalFacadeV10                   srmRestInternalFacadeV10                    = null;
 
-    private CommonMetadataV1_0                commonMetadataRestExternalFacadeV10 = null;
+    private CommonMetadataV1_0                         commonMetadataRestExternalFacadeV10         = null;
+
+    private StatisticalOperationsRestInternalFacadeV10 statisticalOperationsRestInternalFacadeV1_0 = null;
 
     @PostConstruct
     public void initService() throws Exception {
@@ -28,6 +31,9 @@ public class MetamacApisLocator {
 
         String commonMetadataExternalApi = configurationService.retrieveCommonMetadataExternalApiUrlBase();
         commonMetadataRestExternalFacadeV10 = JAXRSClientFactory.create(commonMetadataExternalApi, CommonMetadataV1_0.class, null, true); // true to do thread safe
+
+        String statisticalOperationsInternalApi = configurationService.retrieveStatisticalOperationsInternalApiUrlBase();
+        statisticalOperationsRestInternalFacadeV1_0 = JAXRSClientFactory.create(statisticalOperationsInternalApi, StatisticalOperationsRestInternalFacadeV10.class, null, true);
     }
 
     public SrmRestInternalFacadeV10 getSrmRestExternalFacadeV10() {
@@ -44,5 +50,13 @@ public class MetamacApisLocator {
         WebClient.client(commonMetadataRestExternalFacadeV10).accept("application/xml");
 
         return commonMetadataRestExternalFacadeV10;
+    }
+
+    public StatisticalOperationsRestInternalFacadeV10 getStatisticalOperationsRestInternalFacadeV10() {
+        // reset thread context
+        WebClient.client(statisticalOperationsRestInternalFacadeV1_0).reset();
+        WebClient.client(statisticalOperationsRestInternalFacadeV1_0).accept("application/xml");
+
+        return statisticalOperationsRestInternalFacadeV1_0;
     }
 }
