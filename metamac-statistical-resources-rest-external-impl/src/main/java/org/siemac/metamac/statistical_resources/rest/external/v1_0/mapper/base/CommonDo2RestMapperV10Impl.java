@@ -29,6 +29,7 @@ import org.siemac.metamac.rest.common.v1_0.domain.Resources;
 import org.siemac.metamac.rest.common_metadata.v1_0.domain.Configuration;
 import org.siemac.metamac.rest.exception.RestException;
 import org.siemac.metamac.rest.exception.utils.RestExceptionUtils;
+import org.siemac.metamac.rest.statistical_operations.v1_0.domain.Operation;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Attribute;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.AttributeAttachmentLevelType;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.AttributeDimension;
@@ -100,6 +101,7 @@ import org.siemac.metamac.statistical_resources.rest.external.StatisticalResourc
 import org.siemac.metamac.statistical_resources.rest.external.exception.RestServiceExceptionType;
 import org.siemac.metamac.statistical_resources.rest.external.invocation.CommonMetadataRestExternalFacade;
 import org.siemac.metamac.statistical_resources.rest.external.invocation.SrmRestExternalFacade;
+import org.siemac.metamac.statistical_resources.rest.external.invocation.StatisticalOperationsRestExternalFacade;
 import org.siemac.metamac.statistical_resources.rest.external.service.utils.DsdExternalProcessor;
 import org.siemac.metamac.statistical_resources.rest.external.service.utils.DsdExternalProcessor.DsdAttribute;
 import org.siemac.metamac.statistical_resources.rest.external.service.utils.DsdExternalProcessor.DsdComponentType;
@@ -125,42 +127,45 @@ import com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceF
 @Component
 public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
 
-    private static final Logger               logger = LoggerFactory.getLogger(CommonDo2RestMapperV10.class);
+    private static final Logger                     logger = LoggerFactory.getLogger(CommonDo2RestMapperV10.class);
 
     @Autowired
-    private StatisticalResourcesConfiguration configurationService;
+    private StatisticalResourcesConfiguration       configurationService;
 
     @Autowired
-    private DatasetService                    datasetService;
+    private StatisticalOperationsRestExternalFacade statisticalOperationsRestExternalFacade;
 
     @Autowired
-    private QueryService                      queryService;
+    private DatasetService                          datasetService;
 
     @Autowired
-    private TranslationService                translationService;
+    private QueryService                            queryService;
 
     @Autowired
-    private DatasetRepositoriesServiceFacade  datasetRepositoriesServiceFacade;
+    private TranslationService                      translationService;
 
     @Autowired
-    private SrmRestExternalFacade             srmRestExternalFacade;
+    private DatasetRepositoriesServiceFacade        datasetRepositoriesServiceFacade;
 
     @Autowired
-    private CommonMetadataRestExternalFacade  commonMetadataRestExternalFacade;
+    private SrmRestExternalFacade                   srmRestExternalFacade;
 
     @Autowired
-    private DatasetsDo2RestMapperV10          datasetsDo2RestMapper;
+    private CommonMetadataRestExternalFacade        commonMetadataRestExternalFacade;
 
     @Autowired
-    private CollectionsDo2RestMapperV10       collectionsDo2RestMapper;
+    private DatasetsDo2RestMapperV10                datasetsDo2RestMapper;
 
     @Autowired
-    private QueriesDo2RestMapperV10           queriesDo2RestMapper;
+    private CollectionsDo2RestMapperV10             collectionsDo2RestMapper;
 
-    private String                            statisticalResourcesApiExternalEndpointV10;
-    private String                            srmApiExternalEndpoint;
-    private String                            statisticalOperationsApiExternalEndpoint;
-    private String                            defaultLanguage;
+    @Autowired
+    private QueriesDo2RestMapperV10                 queriesDo2RestMapper;
+
+    private String                                  statisticalResourcesApiExternalEndpointV10;
+    private String                                  srmApiExternalEndpoint;
+    private String                                  statisticalOperationsApiExternalEndpoint;
+    private String                                  defaultLanguage;
 
     @PostConstruct
     public void init() throws Exception {
@@ -386,6 +391,7 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
         }
         Resource target = new Resource();
         toResourceExternalItem(source, statisticalOperationsApiExternalEndpoint, target, selectedLanguages);
+        target.setName(getUpdatedStatisticalOperationName(source.getCode()));
         return target;
     }
 
@@ -1579,4 +1585,10 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
         }
         return dataSize;
     }
+
+    private InternationalString getUpdatedStatisticalOperationName(String operationCode) {
+        Operation operation = statisticalOperationsRestExternalFacade.retrieveOperation(operationCode);
+        return operation.getName();
+    }
+
 }
