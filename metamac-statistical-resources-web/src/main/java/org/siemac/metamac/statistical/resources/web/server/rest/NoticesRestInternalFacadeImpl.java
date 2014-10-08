@@ -358,8 +358,7 @@ public class NoticesRestInternalFacadeImpl implements NoticesRestInternalFacade 
 
     private String buildSubject(ServiceContext ctx, String actionCode) {
         Locale locale = ServiceContextUtils.getLocale(ctx);
-        String localisedAction = LocaleUtil.getMessageForCode(actionCode, locale);
-        return "[" + getSendingApp() + "] " + localisedAction;
+        return LocaleUtil.getMessageForCode(actionCode, locale);
     }
 
     private String getActionCode(LifeCycleActionEnum lifeCycleAction) {
