@@ -1697,6 +1697,6 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
 
     private InternationalString getUpdatedStatisticalOperationName(String operationCode) {
         Operation operation = statisticalOperationsRestInternalFacade.retrieveOperation(operationCode);
-        return operation.getName();
+        return operation != null ? operation.getName() : null;
     }
 }

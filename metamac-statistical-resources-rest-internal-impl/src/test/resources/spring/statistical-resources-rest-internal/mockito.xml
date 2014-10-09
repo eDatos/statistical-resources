@@ -45,5 +45,9 @@
     <bean id="commonMetadataRestExternalFacade" class="org.mockito.Mockito" factory-method="mock">
         <constructor-arg value="org.siemac.metamac.statistical_resources.rest.internal.invocation.CommonMetadataRestExternalFacade" />
     </bean>
+
+    <bean id="statisticalOperationsInternalFacade" class="org.mockito.Mockito" factory-method="mock">
+        <constructor-arg value="org.siemac.metamac.statistical_resources.rest.internal.invocation.StatisticalOperationsRestInternalFacade" />
+    </bean>
     
 </beans>
