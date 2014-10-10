@@ -63,6 +63,7 @@ public class StatisticalResourcesRestExternalFacadeV10CollectionsTest extends St
             testRequestWithoutJaxbTransformation(requestUri, APPLICATION_XML, Status.OK, responseExpected);
         }
     }
+
     @Test
     public void testRetrieveCollectionJson() throws Exception {
         String requestBase = getRetrieveCollectionUri(AGENCY_1, COLLECTION_1_CODE, null, null);

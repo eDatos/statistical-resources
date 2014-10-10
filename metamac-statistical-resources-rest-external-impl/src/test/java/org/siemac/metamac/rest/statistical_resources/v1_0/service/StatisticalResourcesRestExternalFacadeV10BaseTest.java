@@ -61,6 +61,7 @@ import org.siemac.metamac.rest.common.test.MetamacRestBaseTest;
 import org.siemac.metamac.rest.common.test.ServerResource;
 import org.siemac.metamac.rest.common_metadata.v1_0.domain.Configuration;
 import org.siemac.metamac.rest.constants.RestConstants;
+import org.siemac.metamac.rest.statistical_operations.v1_0.domain.Operation;
 import org.siemac.metamac.rest.statistical_resources.v1_0.mockito.MockitoMockConfig;
 import org.siemac.metamac.rest.structural_resources.v1_0.domain.Codelist;
 import org.siemac.metamac.rest.structural_resources.v1_0.domain.Codes;
@@ -70,6 +71,7 @@ import org.siemac.metamac.rest.structural_resources.v1_0.domain.DataStructure;
 import org.siemac.metamac.rest.structural_resources.v1_0.utils.CommonMetadataRestMocks;
 import org.siemac.metamac.rest.structural_resources.v1_0.utils.RestDoMocks;
 import org.siemac.metamac.rest.structural_resources.v1_0.utils.SrmRestMocks;
+import org.siemac.metamac.rest.structural_resources.v1_0.utils.StatisticalOperationsRestMocks;
 import org.siemac.metamac.rest.utils.RestUtils;
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResourceResult;
 import org.siemac.metamac.statistical.resources.core.common.serviceapi.TranslationService;
@@ -92,6 +94,7 @@ import org.siemac.metamac.statistical.resources.core.utils.shared.StatisticalRes
 import org.siemac.metamac.statistical_resources.rest.external.StatisticalResourcesRestExternalConstants;
 import org.siemac.metamac.statistical_resources.rest.external.invocation.CommonMetadataRestExternalFacade;
 import org.siemac.metamac.statistical_resources.rest.external.invocation.SrmRestExternalFacade;
+import org.siemac.metamac.statistical_resources.rest.external.invocation.StatisticalOperationsRestExternalFacade;
 import org.siemac.metamac.statistical_resources.rest.external.v1_0.service.StatisticalResourcesV1_0;
 import org.springframework.context.ApplicationContext;
 
@@ -101,29 +104,30 @@ import com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceF
 
 public abstract class StatisticalResourcesRestExternalFacadeV10BaseTest extends MetamacRestBaseTest {
 
-    private static String                     jaxrsServerAddress = "http://localhost:" + ServerResource.PORT + "/apis/statistical-resources";
-    protected String                          baseApi            = jaxrsServerAddress + "/v1.0";
-    protected static ApplicationContext       applicationContext = null;
-    protected static StatisticalResourcesV1_0 statisticalResourcesRestExternalFacadeClientXml;
-    private static String                     apiEndpointv10;
+    private static String                           jaxrsServerAddress = "http://localhost:" + ServerResource.PORT + "/apis/statistical-resources";
+    protected String                                baseApi            = jaxrsServerAddress + "/v1.0";
+    protected static ApplicationContext             applicationContext = null;
+    protected static StatisticalResourcesV1_0       statisticalResourcesRestExternalFacadeClientXml;
+    private static String                           apiEndpointv10;
 
-    protected static RestDoMocks              restDoMocks;
+    protected static RestDoMocks                    restDoMocks;
 
-    private DatasetService                    datasetService;
-    private QueryService                      queryService;
-    private PublicationService                publicationService;
-    private TranslationService                translationService;
-    private DatasetVersionRepository          datasetVersionRepository;
-    private QueryVersionRepository            queryVersionRepository;
-    private PublicationVersionRepository      publicationVersionRepository;
+    private DatasetService                          datasetService;
+    private QueryService                            queryService;
+    private PublicationService                      publicationService;
+    private TranslationService                      translationService;
+    private DatasetVersionRepository                datasetVersionRepository;
+    private QueryVersionRepository                  queryVersionRepository;
+    private PublicationVersionRepository            publicationVersionRepository;
 
-    private SrmRestExternalFacade             srmRestExternalFacade;
-    private CommonMetadataRestExternalFacade  commonMetadataRestExternalFacade;
-    private DatasetRepositoriesServiceFacade  datasetRepositoriesServiceFacade;
+    private SrmRestExternalFacade                   srmRestExternalFacade;
+    private CommonMetadataRestExternalFacade        commonMetadataRestExternalFacade;
+    private DatasetRepositoriesServiceFacade        datasetRepositoriesServiceFacade;
+    private StatisticalOperationsRestExternalFacade statisticalOperationsRestExternalFacade;
 
-    protected static MockitoMockConfig        mockitoMockConfig;
+    protected static MockitoMockConfig              mockitoMockConfig;
 
-    protected static List<String>             defaultLanguages   = Arrays.asList("es");
+    protected static List<String>                   defaultLanguages   = Arrays.asList("es");
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     @BeforeClass
@@ -849,6 +853,16 @@ public abstract class StatisticalResourcesRestExternalFacadeV10BaseTest extends 
         });
     }
 
+    private void mockRetrieveStatisticalOperationById() throws MetamacException {
+        when(statisticalOperationsRestExternalFacade.retrieveOperation(any(String.class))).thenAnswer(new Answer<Operation>() {
+
+            @Override
+            public Operation answer(InvocationOnMock invocation) throws Throwable {
+                return StatisticalOperationsRestMocks.mockOperation("Tn2JaF3RSI");
+            };
+        });
+    }
+
     private void mockTranslationService() throws MetamacException {
         when(translationService.translateTime(any(ServiceContext.class), any(String.class))).thenAnswer(new Answer<Map<String, String>>() {
 
@@ -945,6 +959,9 @@ public abstract class StatisticalResourcesRestExternalFacadeV10BaseTest extends 
         commonMetadataRestExternalFacade = applicationContext.getBean(CommonMetadataRestExternalFacade.class);
         reset(commonMetadataRestExternalFacade);
 
+        statisticalOperationsRestExternalFacade = applicationContext.getBean(StatisticalOperationsRestExternalFacade.class);
+        reset(statisticalOperationsRestExternalFacade);
+
         mockFindDatasetsByCondition();
         mockRetrieveDatasetVersionDimensionsIds();
         mockRetrieveCoverageForDatasetVersionDimension();
@@ -969,6 +986,8 @@ public abstract class StatisticalResourcesRestExternalFacadeV10BaseTest extends 
         mockTranslationService();
 
         mockRetrieveConfigurationById();
+
+        mockRetrieveStatisticalOperationById();
     }
 
     protected QueryVersion mockQueryVersionRepositoryRetrieveLastVersionAnswer(InvocationOnMock invocation) {
