@@ -12,7 +12,7 @@ public class RestMocks {
         return internationalString;
     }
 
-    private static LocalisedString mockLocalisedString(String lang, String value) {
+    public static LocalisedString mockLocalisedString(String lang, String value) {
         LocalisedString localisedString = new LocalisedString();
         localisedString.setLang(lang);
         localisedString.setValue(value);
