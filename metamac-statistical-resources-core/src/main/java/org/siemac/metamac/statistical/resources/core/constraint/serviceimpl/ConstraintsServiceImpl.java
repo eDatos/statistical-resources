@@ -45,7 +45,7 @@ public class ConstraintsServiceImpl implements ConstraintsService {
 
     @Override
     public void deleteContentConstraint(ServiceContext ctx, String urn) throws MetamacException {
-        srmRestInternalService.deleteContentConstraint(ctx, urn, Boolean.FALSE);
+        srmRestInternalService.deleteContentConstraint(ctx, urn, Boolean.TRUE);
     }
 
     @Override

@@ -1967,7 +1967,9 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
 
         // Check that there isn't data sources
         if (!datasetVersion.getDatasources().isEmpty()) {
-            throw MetamacExceptionBuilder.builder().withPrincipalException(new MetamacExceptionItem(ServiceExceptionType.CONSTRAINTS_CREATE_DATASET_WITH_DATASOURCES)).build();
+            throw MetamacExceptionBuilder.builder()
+                    .withPrincipalException(new MetamacExceptionItem(ServiceExceptionType.CONSTRAINTS_CREATE_DATASET_WITH_DATASOURCES, datasetVersion.getSiemacMetadataStatisticalResource().getUrn()))
+                    .build();
         }
 
         // Transform
@@ -2004,12 +2006,6 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         ConstraintsSecurityUtils.canDeleteContentConstraint(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode(), datasetVersion
                 .getLifeCycleStatisticalResource().getProcStatus());
 
-        if (contentConstraint.isIsFinal()) {
-            // Can not delete final constraint
-            throw MetamacExceptionBuilder.builder()
-                    .withPrincipalException(new MetamacExceptionItem(ServiceExceptionType.CONSTRAINTS_DELETE_FINAL, contentConstraint.getConstraintAttachment().getUrn())).build();
-        }
-
         // Delete
         constraintsService.deleteContentConstraint(ctx, urn);
     }
@@ -2028,6 +2024,14 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
             // Can not update final constraint
             throw MetamacExceptionBuilder.builder()
                     .withPrincipalException(new MetamacExceptionItem(ServiceExceptionType.CONSTRAINTS_UPDATE_FINAL, contentConstraint.getConstraintAttachment().getUrn())).build();
+        }
+
+        // Check not exists datasources
+        if (!datasetVersion.getDatasources().isEmpty()) {
+            // Can not update final constraint
+            throw MetamacExceptionBuilder.builder()
+                    .withPrincipalException(new MetamacExceptionItem(ServiceExceptionType.CONSTRAINTS_UPDATE_DATASOURCES_NO_EMPTY, datasetVersion.getSiemacMetadataStatisticalResource().getUrn()))
+                    .build();
         }
 
         // Transform
@@ -2053,7 +2057,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         if (contentConstraint.isIsFinal()) {
             // Can not update final constraint
             throw MetamacExceptionBuilder.builder()
-                    .withPrincipalException(new MetamacExceptionItem(ServiceExceptionType.CONSTRAINTS_UPDATE_FINAL, contentConstraint.getConstraintAttachment().getUrn())).build();
+                    .withPrincipalException(new MetamacExceptionItem(ServiceExceptionType.CONSTRAINTS_UPDATE_FINAL, datasetVersion.getSiemacMetadataStatisticalResource().getUrn())).build();
         }
 
         // Delete

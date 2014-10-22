@@ -290,7 +290,7 @@ public class ValidateDataVersusDsd {
                         for (Key key : keies) {
                             if (!ConstraintsValidator.checkObservationAgaintsConstraintsKey(overExtendedDto, key, this.codeHierarchyMap)) {
                                 exceptions.add(new MetamacExceptionItem(ServiceExceptionType.IMPORTATION_OBSERVATION_MANDATORY_CONTENT_CONSTRAINT_FAIL, ManipulateDataUtils
-                                        .toStringUnorderedKeyForObservation(overExtendedDto.getCodesDimension()), contentConstraint.getUrn()));
+                                        .toStringUnorderedKeyForObservation(overExtendedDto.getCodesDimension()), taskInfoDataset.getDatasetVersionId()));
                             }
                         }
                     }
