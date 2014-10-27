@@ -1,5 +1,6 @@
 package org.siemac.metamac.statistical.resources.core.io.serviceimpl.validators;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -14,45 +15,83 @@ import com.arte.statistic.dataset.repository.dto.ObservationExtendedDto;
 
 public class ConstraintsValidator {
 
-    public static boolean checkObservationAgaintsConstraintsKey(ObservationExtendedDto oservation, Key constraintKey, Map<String, CodeHierarchy> codeHierarchyMap) {
+    public static boolean checkObservationAgaintsConstraintsKey(ObservationExtendedDto oservation, List<Key> constraintKeys, Map<String, CodeHierarchy> codeHierarchyMap) {
+        Map<String, CodeDimensionDto> mapOfCodesDimension = createMapOfCodesDimension(oservation.getCodesDimension());
 
-        List<KeyPart> keyParts = constraintKey.getKeyParts().getKeyParts();
-        int i = 0;
-        boolean match = constraintKey.isIncluded();
-        for (CodeDimensionDto codeDimensionDto : oservation.getCodesDimension()) {
-            // If there are remaining parts
-            if (keyParts.size() > i) {
-                KeyPart keyPart = keyParts.get(i);
-                // If match a dimension (Not wild card)
-                if (codeDimensionDto.getDimensionId().equals(keyPart.getIdentifier())) {
-                    i++;
+        // Check all keys definition from a restriction region
+        Boolean keyPass = null;
+        for (Key constraintKey : constraintKeys) {
+            List<KeyPart> constraintKeyParts = constraintKey.getKeyParts().getKeyParts();
+            String constraintKeyPartIdentifier = obtainDimensionPartidentification(constraintKeyParts);
+
+            CodeDimensionDto codeDimensionDto = mapOfCodesDimension.get(constraintKeyPartIdentifier); // Current Key instance
+            boolean match = constraintKey.isIncluded();
+
+            if (codeDimensionDto == null) {
+                // Wildcard
+                match = true;
+            } else {
+                // Match a dimension (Not wild card)
+                // Check if the dimension f
+                boolean innerMatch = false;
+                for (KeyPart keyPart : constraintKeyParts) {
                     if (KeyPartType.NORMAL.equals(keyPart.getType())) {
                         if (keyPart.isCascadeValues()) {
                             // Cascade Value
-                            match = checkCodeInCascadeHirarchy(codeDimensionDto, keyPart, codeHierarchyMap);
+                            innerMatch = checkCodeInCascadeHirarchy(codeDimensionDto, keyPart, codeHierarchyMap);
                         } else if (codeDimensionDto.getCodeDimensionId().equals(keyPart.getValue())) {
-                            match = true;
+                            innerMatch = true;
                         } else {
-                            match = false;
+                            innerMatch = false;
                         }
                     } else if (KeyPartType.TIME_RANGE.equals(keyPart.getType())) {
-                        match = checkTimeRangeValueAgaintsConstraint(codeDimensionDto, keyPart);
+                        innerMatch = checkTimeRangeValueAgaintsConstraint(codeDimensionDto, keyPart);
                     }
-                } else {
-                    // If not, it is a partial key. It is a wild card.
-                    match = true;
+
+                    if (innerMatch) {
+                        break;
+                    }
                 }
+                match = innerMatch;
+            }
+
+            // Update validation result against isIncluded flag
+            if (constraintKey.isIncluded()) {
+                keyPass = match;
             } else {
-                // If not, it is a partial key. It is a wild card.
-                match = true;
+                keyPass = !match;
+            }
+
+            // If the current key constraint is not met, then fails validation.
+            if (!keyPass) {
+                return keyPass;
             }
         }
 
-        if (constraintKey.isIncluded()) {
-            return match;
-        } else {
-            return !match;
+        return keyPass;
+    }
+
+    private static String obtainDimensionPartidentification(List<KeyPart> constraintKeyParts) {
+        // All identifiers in KeyyPartes list are equal
+        String keyPartIdentifier = null;
+        for (KeyPart keyPart : constraintKeyParts) {
+            if (keyPartIdentifier == null) {
+                keyPartIdentifier = keyPart.getIdentifier();
+
+            }
+            if (!keyPartIdentifier.equals(keyPart.getIdentifier())) {
+                throw new RuntimeException("The information model of constraint is corrupted!");
+            }
         }
+        return keyPartIdentifier;
+    }
+
+    private static Map<String, CodeDimensionDto> createMapOfCodesDimension(List<CodeDimensionDto> codesDimension) {
+        Map<String, CodeDimensionDto> dimensionCodeMap = new HashMap<String, CodeDimensionDto>();
+        for (CodeDimensionDto codeDimensionDto : codesDimension) {
+            dimensionCodeMap.put(codeDimensionDto.getDimensionId(), codeDimensionDto);
+        }
+        return dimensionCodeMap;
     }
 
     private static boolean checkCodeInCascadeHirarchy(CodeDimensionDto codeDimensionDto, KeyPart keyPart, Map<String, CodeHierarchy> codeHierarchyMap) {
@@ -75,6 +114,7 @@ public class ConstraintsValidator {
         }
         return match;
     }
+
     private static boolean checkCodeInCascadeHirarchy(CodeHierarchy codeHierarchy, CodeDimensionDto codeDimensionDto, Map<String, CodeHierarchy> codeHierarchyMap) {
         if (codeHierarchy == null) {
             return false;
@@ -134,4 +174,5 @@ public class ConstraintsValidator {
 
         return false;
     }
+
 }

@@ -101,7 +101,7 @@ public class ValidateDataVersusDsd {
         this.serviceContext = serviceContext;
         this.srmRestInternalService = srmRestInternalService;
         this.dataStructure = dataStructure;
-        this.contentConstraints = new LinkedList<ContentConstraint>();
+        this.contentConstraints = contentConstraints;
         this.translationEnumRepresentationsMap = new HashMap<String, Map<String, String>>();
         this.taskInfoDataset = taskInfoDataset;
 
@@ -287,11 +287,9 @@ public class ValidateDataVersusDsd {
                 for (Region region : regions) {
                     if (region.getKeys() != null) {
                         List<Key> keies = region.getKeys().getKeies();
-                        for (Key key : keies) {
-                            if (!ConstraintsValidator.checkObservationAgaintsConstraintsKey(overExtendedDto, key, this.codeHierarchyMap)) {
-                                exceptions.add(new MetamacExceptionItem(ServiceExceptionType.IMPORTATION_OBSERVATION_MANDATORY_CONTENT_CONSTRAINT_FAIL, ManipulateDataUtils
-                                        .toStringUnorderedKeyForObservation(overExtendedDto.getCodesDimension()), taskInfoDataset.getDatasetVersionId()));
-                            }
+                        if (!ConstraintsValidator.checkObservationAgaintsConstraintsKey(overExtendedDto, keies, this.codeHierarchyMap)) {
+                            exceptions.add(new MetamacExceptionItem(ServiceExceptionType.IMPORTATION_OBSERVATION_MANDATORY_CONTENT_CONSTRAINT_FAIL, ManipulateDataUtils
+                                    .toStringUnorderedKeyForObservation(overExtendedDto.getCodesDimension()), taskInfoDataset.getDatasetVersionId()));
                         }
                     }
                 }
