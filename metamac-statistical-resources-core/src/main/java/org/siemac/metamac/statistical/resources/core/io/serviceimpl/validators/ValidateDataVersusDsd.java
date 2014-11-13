@@ -106,7 +106,7 @@ public class ValidateDataVersusDsd {
         this.taskInfoDataset = taskInfoDataset;
 
         if (taskInfoDataset == null || taskInfoDataset.getDatasetVersionId() == null) {
-            throw new IllegalArgumentException("The Urn of datasetVersion is neccesary");
+            throw new IllegalArgumentException("The Urn of datasetVersion is necessary");
         }
 
         // Alternative representations
