@@ -1,5 +1,8 @@
 package org.siemac.metamac.statistical.resources.core.utils.mocks.templates;
 
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -28,8 +31,10 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.CodeDimensio
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.DimensionRepresentationMapping;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.StatisticOfficiality;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.TemporalCode;
+import org.siemac.metamac.statistical.resources.core.dataset.utils.DatasetVersionUtils;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
 import org.siemac.metamac.statistical.resources.core.publication.domain.Chapter;
@@ -41,9 +46,6 @@ import org.siemac.metamac.statistical.resources.core.query.domain.Query;
 import org.siemac.metamac.statistical.resources.core.query.domain.QuerySelectionItem;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.DatasetVersionMock;
-
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
 
 public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
 
@@ -480,6 +482,23 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
 
         setSpecialCasesStatisticOfficialityMock(mock);
 
+        return mock;
+    }
+
+    // -----------------------------------------------------------------
+    // DIMENSION REPRESENTATION MAPPING
+    // -----------------------------------------------------------------
+
+    public DimensionRepresentationMapping mockDimensionRepresentationMapping(String datasourceFilename) {
+        DimensionRepresentationMapping mock = new DimensionRepresentationMapping();
+        mock.setDatasourceFilename(datasourceFilename);
+        return mock;
+    }
+
+    public DimensionRepresentationMapping mockDimensionRepresentationMapping(String datasourceFilename, Map<String, String> mapping) {
+        DimensionRepresentationMapping mock = new DimensionRepresentationMapping();
+        mock.setDatasourceFilename(datasourceFilename);
+        mock.setMapping(DatasetVersionUtils.dimensionRepresentationMapToString(mapping));
         return mock;
     }
 

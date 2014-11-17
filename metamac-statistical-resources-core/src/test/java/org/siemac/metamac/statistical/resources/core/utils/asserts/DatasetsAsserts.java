@@ -24,6 +24,7 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.CodeDimensio
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.DimensionRepresentationMapping;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.TemporalCode;
 import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.AttributeValueDto;
@@ -269,7 +270,7 @@ public class DatasetsAsserts extends BaseAsserts {
             case DO2DTO:
                 assertEquals(entity.getId(), dto.getId());
                 assertEquals(entity.getVersion(), dto.getVersion());
-                
+
                 assertEquals(entity.getDatasetRepositoryId(), dto.getDatasetRepositoryId());
 
                 assertEqualsExternalItemCollectionMapper(entity.getTemporalGranularities(), dto.getTemporalGranularities());
@@ -316,6 +317,10 @@ public class DatasetsAsserts extends BaseAsserts {
             case DO2DTO:
                 assertEquals(entity.getId(), dto.getId());
                 assertEquals(entity.getVersion(), dto.getVersion());
+                break;
+            case DTO2DO:
+                break;
+            default:
                 break;
         }
     }
@@ -520,5 +525,14 @@ public class DatasetsAsserts extends BaseAsserts {
         } else {
             assertNull(entities);
         }
+    }
+
+    // -----------------------------------------------------------------
+    // DIMENSION REPRESENTATION MAPPING
+    // -----------------------------------------------------------------
+
+    public static void assertEqualsDimensionRepresentationMapping(DimensionRepresentationMapping expected, DimensionRepresentationMapping actual) throws MetamacException {
+        assertEquals(expected.getDatasourceFilename(), actual.getDatasourceFilename());
+        assertEquals(expected.getMapping(), actual.getMapping());
     }
 }

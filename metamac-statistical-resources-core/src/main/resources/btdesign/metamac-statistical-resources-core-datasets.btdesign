@@ -25,6 +25,7 @@ Application DatasetsStatisticalResources {
 			> @TaskService
  			> @CategorisationRepository
  			> @CategorisationSequenceRepository
+ 			> @DimensionRepresentationMappingRepository
 			
 			// Datasources
 			@Datasource createDatasource(String datasetVersionUrn, @Datasource datasource) throws MetamacException;
@@ -54,11 +55,11 @@ Application DatasetsStatisticalResources {
     		proccessDatasetFileImportationResult(String datasetImportationId, List<@FileDescriptorResult> fileDescriptors) throws MetamacException;
     		importDatasourcesInDatasetVersion(String datasetVersionUrn, List<URL> fileUrls,  Map<String,String> dimensionRepresentationMapping) throws MetamacException; 
     		importDatasourcesInStatisticalOperation(String statisticalOperationUrn, List<URL> fileUrls) throws MetamacException; 
-    		
+
     		// Datasets
     		"Finds datasets by criteria"
     		PagedResult<@Dataset> findDatasetsByCondition(List<ConditionalCriteria> conditions, PagingParameter pagingParameter)  throws MetamacException;
-    		
+
     		//Data related actions
     		"Retrieve Dataset version dimensions ids"
     		List<String> retrieveDatasetVersionDimensionsIds(String datasetVersionUrn) throws MetamacException;
@@ -66,7 +67,9 @@ Application DatasetsStatisticalResources {
     		List<@CodeDimension> retrieveCoverageForDatasetVersionDimension(String datasetVersionUrn, String dsdDimensionId) throws MetamacException;
     		"Retrieve the coverage for a given dimension"
     		List<@CodeDimension> filterCoverageForDatasetVersionDimension(String datasetVersionUrn, String dsdDimensionId, String filter) throws MetamacException;
-    		
+			"Save a mapping between dimensions and representations for a datasource"
+			@DimensionRepresentationMapping saveDimensionRepresentationMapping(String datasourceFilename, Map<String, String> mapping) throws MetamacException;
+
     		"Create attribute instances"
     		AttributeInstanceDto createAttributeInstance(String datasetVersionUrn, AttributeInstanceDto attributeInstanceDto) throws MetamacException;
     		"Update attribute instances"
@@ -369,5 +372,24 @@ Application DatasetsStatisticalResources {
 				findByQuery(String query, Map<String, Object> parameters, int maxResult);
 			}
 		}
+
+		"Mapping between the DSD dimensions and the representation between each dimension"
+		Entity DimensionRepresentationMapping {
+    		databaseTable="TB_DIM_REPR_MAPPING"
+    		hint="idSequence=DIM_REPR_MAPPING"
+    		!auditable
+
+    		"Added explicitly to avoid that Sculptor generate UUID"
+			Long id key;
+
+    		String datasourceFilename not nullable;
+    		String mapping length="4000";
+    		
+    		Repository DimensionRepresentationMappingRepository {
+				save;
+				findByCondition;
+				@DimensionRepresentationMapping findByDatasourceFilename(String datasourceFilename) throws MetamacException;
+			}
+    	}
 	}
 }

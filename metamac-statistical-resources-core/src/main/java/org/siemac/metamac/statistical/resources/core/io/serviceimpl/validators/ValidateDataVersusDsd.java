@@ -57,7 +57,6 @@ import com.arte.statistic.parser.sdmx.v2_1.domain.IdValuePair;
 
 public class ValidateDataVersusDsd {
 
-    private ServiceContext                         serviceContext                                = null;
     private DataStructure                          dataStructure                                 = null;
     private TaskInfoDataset                        taskInfoDataset                               = null;
     private SrmRestInternalService                 srmRestInternalService                        = null;
@@ -98,7 +97,6 @@ public class ValidateDataVersusDsd {
 
     private void initValidateDataVersusDsd(ServiceContext serviceContext, DataStructure dataStructure, SrmRestInternalService srmRestInternalService, List<ContentConstraint> contentConstraints,
             TaskInfoDataset taskInfoDataset) throws MetamacException {
-        this.serviceContext = serviceContext;
         this.srmRestInternalService = srmRestInternalService;
         this.dataStructure = dataStructure;
         this.contentConstraints = contentConstraints;
@@ -119,9 +117,9 @@ public class ValidateDataVersusDsd {
         calculateCacheInfo();
     }
 
-    /**************************************************************************
-     * PUBLIC
-     **************************************************************************/
+    // ------------------------------------------------------------------------------------
+    // PUBLIC
+    // ------------------------------------------------------------------------------------
 
     public List<ComponentInfo> retrieveDimensionsInfo() throws Exception {
         return dimensionsInfoList;
@@ -155,9 +153,14 @@ public class ValidateDataVersusDsd {
         return groupDimensionMapInfo;
     }
 
-    /**************************************************************************
-     * VALIDATORS
-     **************************************************************************/
+    public Map<String, String> getAlternativeSourceEnumerationRepresentationMap() {
+        return alternativeSourceEnumerationRepresentationMap;
+    }
+
+    // ------------------------------------------------------------------------------------
+    // VALIDATORS
+    // ------------------------------------------------------------------------------------
+
     public void checkObservation(List<ObservationExtendedDto> dataDtos) throws Exception {
         List<MetamacExceptionItem> exceptions = new LinkedList<MetamacExceptionItem>();
         List<ComponentInfo> dimensionsInfos = retrieveDimensionsInfo();
@@ -526,9 +529,10 @@ public class ValidateDataVersusDsd {
         }
     }
 
-    /**************************************************************************
-     * PROCESSORS
-     **************************************************************************/
+    // ------------------------------------------------------------------------------------
+    // PROCESSORS
+    // ------------------------------------------------------------------------------------
+
     private void calculateCacheInfo() throws MetamacException {
         MultiMap enumerationRepresentationsMultimap = MultiValueMap.decorate(new HashMap<String, Set<String>>(), HashSet.class);
 

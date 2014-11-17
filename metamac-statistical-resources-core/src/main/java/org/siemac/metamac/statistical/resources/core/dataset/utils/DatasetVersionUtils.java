@@ -5,8 +5,11 @@ import static org.siemac.metamac.statistical.resources.core.constants.Statistica
 
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.siemac.metamac.core.common.time.TimeSdmx;
 import org.siemac.metamac.core.common.util.TimeSdmxComparator;
 import org.siemac.metamac.core.common.util.shared.VersionUtil;
@@ -36,4 +39,24 @@ public class DatasetVersionUtils {
         });
     }
 
+    public static String dimensionRepresentationMapToString(Map<String, String> map) {
+        if (map == null) {
+            return null;
+        }
+        return StringUtils.substringBetween(map.toString(), "{", "}");
+    }
+
+    public static Map<String, String> dimensionRepresentationMapFromString(String mapping) {
+        Map<String, String> map = new HashMap<String, String>();
+        if (StringUtils.isNotBlank(mapping)) {
+            String[] pairs = StringUtils.split(mapping, ",");
+            for (String pair : pairs) {
+                String[] splitItem = pair.split("=");
+                if (splitItem != null && splitItem.length == 2) {
+                    map.put(splitItem[0].trim(), splitItem[1].trim());
+                }
+            }
+        }
+        return map;
+    }
 }

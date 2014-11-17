@@ -1,5 +1,7 @@
 package org.siemac.metamac.statistical.resources.core.dataset.serviceimpl.validators;
 
+import static org.siemac.metamac.statistical.resources.core.error.utils.ServiceExceptionParametersUtils.addParameter;
+
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
@@ -22,8 +24,6 @@ import org.siemac.metamac.statistical.resources.core.task.domain.FileDescriptorR
 import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesValidationUtils;
 
 import com.arte.statistic.dataset.repository.dto.AttributeInstanceDto;
-
-import static org.siemac.metamac.statistical.resources.core.error.utils.ServiceExceptionParametersUtils.addParameter;
 
 public class DatasetServiceInvocationValidatorImpl extends BaseInvocationValidator {
 
@@ -115,6 +115,10 @@ public class DatasetServiceInvocationValidatorImpl extends BaseInvocationValidat
     public static void checkFilterCoverageForDatasetVersionDimension(String datasetVersionUrn, String dsdDimensionId, String filter, List<MetamacExceptionItem> exceptions) {
         StatisticalResourcesValidationUtils.checkMetadataRequired(datasetVersionUrn, ServiceExceptionParameters.URN, exceptions);
         StatisticalResourcesValidationUtils.checkMetadataRequired(dsdDimensionId, ServiceExceptionParameters.DSD_DIMENSION_ID, exceptions);
+    }
+
+    public static void checkSaveDimensionRepresentationMapping(String datasourceUrn, Map<String, String> mapping, List<MetamacExceptionItem> exceptions) {
+        StatisticalResourcesValidationUtils.checkMetadataRequired(datasourceUrn, ServiceExceptionParameters.DATASOURCE__URN, exceptions);
     }
 
     // ATTRIBUTES

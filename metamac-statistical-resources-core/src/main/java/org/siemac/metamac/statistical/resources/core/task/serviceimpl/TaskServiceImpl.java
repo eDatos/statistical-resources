@@ -630,6 +630,7 @@ public class TaskServiceImpl extends TaskServiceImplBase {
             fileDescriptorResult.setFileName(fileDescriptor.getFileName());
             fileDescriptorResult.setDatasourceId(dataSourceId);
             fileDescriptorResult.setNextUpdate(nextUpdate);
+            fileDescriptorResult.setDimensionRepresentationMapping(validateDataVersusDsd.getAlternativeSourceEnumerationRepresentationMap());
 
             filesResult.add(fileDescriptorResult);
         }

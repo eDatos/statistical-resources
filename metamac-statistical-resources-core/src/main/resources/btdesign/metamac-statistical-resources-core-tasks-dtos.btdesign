@@ -5,7 +5,7 @@ Application DatasetsStatisticalResourcesDto {
 
 	Module dtos_tasks {
 		basePackage=org.siemac.metamac.statistical.resources.core.task.domain
-		
+
 		// TASK INFO DATASET
 		DataTransferObject TaskInfoDataset {
 			- List<@FileDescriptor> files;
@@ -13,19 +13,20 @@ Application DatasetsStatisticalResourcesDto {
 			String dataStructureUrn; 
 			String datasetVersionId;
 		}
-		
+
 		DataTransferObject FileDescriptor {
 			gap
 			java.io.File file;
 			String fileName;
 			- @DatasetFileFormatEnum datasetFileFormatEnum;
 		}
-		
+
 		DataTransferObject FileDescriptorResult extends @FileDescriptor {
 			String datasourceId;
 			JAVADATE nextUpdate;
+			StringMap dimensionRepresentationMapping;
 		}
-		
+
 		DataTransferObject AlternativeEnumeratedRepresentation {
 			String componentId;
 			String urn;

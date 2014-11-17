@@ -1,5 +1,8 @@
 package org.siemac.metamac.statistical.resources.core.dataset.serviceimpl;
 
+import static org.siemac.metamac.core.common.util.MetamacCollectionUtils.isInCollection;
+import static org.siemac.metamac.statistical.resources.core.base.domain.utils.RelatedResourceResultUtils.getUrnsFromRelatedResourceResults;
+
 import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
@@ -61,6 +64,7 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionRepository;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.DimensionRepresentationMapping;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.StatisticOfficiality;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.TemporalCode;
 import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.validators.DatasetServiceInvocationValidator;
@@ -97,9 +101,6 @@ import com.arte.statistic.dataset.repository.dto.DatasetRepositoryDto;
 import com.arte.statistic.dataset.repository.dto.InternationalStringDto;
 import com.arte.statistic.dataset.repository.dto.LocalisedStringDto;
 import com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceFacade;
-
-import static org.siemac.metamac.core.common.util.MetamacCollectionUtils.isInCollection;
-import static org.siemac.metamac.statistical.resources.core.base.domain.utils.RelatedResourceResultUtils.getUrnsFromRelatedResourceResults;
 
 /**
  * Implementation of DatasetService.
@@ -729,7 +730,8 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
             if (DatasetFileFormatEnum.PX.equals(fileDescriptor.getDatasetFileFormatEnum())) {
                 datasource.setDateNextUpdate(new DateTime(fileDescriptor.getNextUpdate()));
             }
-            createDatasource(ctx, datasetImportationId, datasource);
+            Datasource createdDatasource = createDatasource(ctx, datasetImportationId, datasource);
+            saveDimensionRepresentationMapping(ctx, createdDatasource.getFilename(), fileDescriptor.getDimensionRepresentationMapping());
         }
     }
 
@@ -769,6 +771,21 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         checkNotTasksInProgress(ctx, datasetVersionUrn);
 
         return getCodeDimensionRepository().findCodesForDatasetVersionByDimensionId(datasetVersion.getId(), dimensionId, filter);
+    }
+
+    @Override
+    public DimensionRepresentationMapping saveDimensionRepresentationMapping(ServiceContext ctx, String datasourceFilename, Map<String, String> mapping) throws MetamacException {
+
+        datasetServiceInvocationValidator.checkSaveDimensionRepresentationMapping(ctx, datasourceFilename, mapping);
+
+        DimensionRepresentationMapping dimensionRepresentationMapping = getDimensionRepresentationMappingRepository().findByDatasourceFilename(datasourceFilename);
+        if (dimensionRepresentationMapping == null) {
+            dimensionRepresentationMapping = new DimensionRepresentationMapping();
+            dimensionRepresentationMapping.setDatasourceFilename(datasourceFilename);
+        }
+        dimensionRepresentationMapping.setMapping(DatasetVersionUtils.dimensionRepresentationMapToString(mapping));
+
+        return getDimensionRepresentationMappingRepository().save(dimensionRepresentationMapping);
     }
 
     // ------------------------------------------------------------------------
@@ -1226,6 +1243,10 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
                 case TEMPORAL:
                     List<TemporalCode> temporalCodes = buildTemporalCodeFromCodeDimensions(codes);
                     resource.getTemporalCoverage().addAll(temporalCodes);
+                    break;
+                case OTHER:
+                    break;
+                default:
                     break;
             }
         }
