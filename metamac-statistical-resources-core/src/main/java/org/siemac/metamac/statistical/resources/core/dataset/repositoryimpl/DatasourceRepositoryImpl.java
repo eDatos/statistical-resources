@@ -16,24 +16,29 @@ import org.springframework.stereotype.Repository;
  */
 @Repository("datasourceRepository")
 public class DatasourceRepositoryImpl extends DatasourceRepositoryBase {
+
     public DatasourceRepositoryImpl() {
     }
 
     @Override
     public Datasource retrieveByUrn(String urn) throws MetamacException {
         List<ConditionalCriteria> condition = criteriaFor(Datasource.class).withProperty(DatasourceProperties.identifiableStatisticalResource().urn()).eq(urn).distinctRoot().build();
-        
+
         List<Datasource> result = findByCondition(condition);
-        
+
         if (result.size() == 0) {
             throw new MetamacException(ServiceExceptionType.DATASOURCE_NOT_FOUND, urn);
         } else if (result.size() > 1) {
             // Exists a database constraint that makes URN unique
             throw new MetamacException(ServiceExceptionType.UNKNOWN, "More than one datasource with urn " + urn);
         }
-        
+
         return result.get(0);
     }
 
-
+    @Override
+    public List<Datasource> findByFilename(String filename) {
+        List<ConditionalCriteria> condition = criteriaFor(Datasource.class).withProperty(DatasourceProperties.filename()).eq(filename).distinctRoot().build();
+        return findByCondition(condition);
+    }
 }

@@ -117,7 +117,8 @@ public class DatasetServiceInvocationValidatorImpl extends BaseInvocationValidat
         StatisticalResourcesValidationUtils.checkMetadataRequired(dsdDimensionId, ServiceExceptionParameters.DSD_DIMENSION_ID, exceptions);
     }
 
-    public static void checkSaveDimensionRepresentationMapping(String datasourceUrn, Map<String, String> mapping, List<MetamacExceptionItem> exceptions) {
+    public static void checkSaveDimensionRepresentationMapping(DatasetVersion datasetVersion, String datasourceUrn, Map<String, String> mapping, List<MetamacExceptionItem> exceptions) {
+        StatisticalResourcesValidationUtils.checkMetadataRequired(datasetVersion, ServiceExceptionParameters.DATASET_VERSION, exceptions);
         StatisticalResourcesValidationUtils.checkMetadataRequired(datasourceUrn, ServiceExceptionParameters.DATASOURCE__URN, exceptions);
     }
 

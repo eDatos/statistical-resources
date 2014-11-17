@@ -230,6 +230,8 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
 
         datasetVersion = deleteDatasourceToDataset(datasource);
 
+        deleteDatasourceDimensionRepresentationMappings(datasource);
+
         deleteDatasourceData(datasetVersion.getDatasetRepositoryId(), datasource);
 
         deleteAttributeInstancesLowerThanDatasetLevel(datasetVersion);
@@ -242,6 +244,18 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
             // Revert to draft if there aren't datasources. This is possible because one will never be published without constraints datasources. And if you can delete datasources, then it is because
             // it has not been released datasetversion. Therefore, you can remove the constraint.
             this.constraintsService.revertContentConstraintsForArtefactToDraft(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getUrn());
+        }
+    }
+
+    private void deleteDatasourceDimensionRepresentationMappings(Datasource datasource) throws MetamacException {
+        String filename = datasource.getFilename();
+        List<Datasource> datasources = getDatasourceRepository().findByFilename(filename);
+        // The dimension representation mapping is only deleted if there is no more datasources associated with the same file
+        if (datasources.isEmpty()) {
+            DimensionRepresentationMapping dimensionRepresentationMapping = getDimensionRepresentationMappingRepository().findByDatasourceFilename(filename);
+            if (dimensionRepresentationMapping != null) {
+                getDimensionRepresentationMappingRepository().delete(dimensionRepresentationMapping);
+            }
         }
     }
 
@@ -731,7 +745,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
                 datasource.setDateNextUpdate(new DateTime(fileDescriptor.getNextUpdate()));
             }
             Datasource createdDatasource = createDatasource(ctx, datasetImportationId, datasource);
-            saveDimensionRepresentationMapping(ctx, createdDatasource.getFilename(), fileDescriptor.getDimensionRepresentationMapping());
+            saveDimensionRepresentationMapping(ctx, datasetVersion, createdDatasource.getFilename(), fileDescriptor.getDimensionRepresentationMapping());
         }
     }
 
@@ -774,18 +788,23 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
     }
 
     @Override
-    public DimensionRepresentationMapping saveDimensionRepresentationMapping(ServiceContext ctx, String datasourceFilename, Map<String, String> mapping) throws MetamacException {
+    public void saveDimensionRepresentationMapping(ServiceContext ctx, DatasetVersion datasetVersion, String datasourceFilename, Map<String, String> mapping) throws MetamacException {
 
-        datasetServiceInvocationValidator.checkSaveDimensionRepresentationMapping(ctx, datasourceFilename, mapping);
+        datasetServiceInvocationValidator.checkSaveDimensionRepresentationMapping(ctx, datasetVersion, datasourceFilename, mapping);
 
         DimensionRepresentationMapping dimensionRepresentationMapping = getDimensionRepresentationMappingRepository().findByDatasourceFilename(datasourceFilename);
         if (dimensionRepresentationMapping == null) {
             dimensionRepresentationMapping = new DimensionRepresentationMapping();
+            dimensionRepresentationMapping.setDatasetVersion(datasetVersion);
             dimensionRepresentationMapping.setDatasourceFilename(datasourceFilename);
         }
         dimensionRepresentationMapping.setMapping(DatasetVersionUtils.dimensionRepresentationMapToString(mapping));
 
-        return getDimensionRepresentationMappingRepository().save(dimensionRepresentationMapping);
+        if ((mapping == null || mapping.isEmpty()) && dimensionRepresentationMapping.getId() != null) {
+            getDimensionRepresentationMappingRepository().delete(dimensionRepresentationMapping);
+        } else {
+            getDimensionRepresentationMappingRepository().save(dimensionRepresentationMapping);
+        }
     }
 
     // ------------------------------------------------------------------------

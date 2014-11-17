@@ -68,7 +68,7 @@ Application DatasetsStatisticalResources {
     		"Retrieve the coverage for a given dimension"
     		List<@CodeDimension> filterCoverageForDatasetVersionDimension(String datasetVersionUrn, String dsdDimensionId, String filter) throws MetamacException;
 			"Save a mapping between dimensions and representations for a datasource"
-			@DimensionRepresentationMapping saveDimensionRepresentationMapping(String datasourceFilename, Map<String, String> mapping) throws MetamacException;
+			saveDimensionRepresentationMapping(@DatasetVersion datasetVersion, String datasourceFilename, Map<String, String> mapping) throws MetamacException;
 
     		"Create attribute instances"
     		AttributeInstanceDto createAttributeInstance(String datasetVersionUrn, AttributeInstanceDto attributeInstanceDto) throws MetamacException;
@@ -133,6 +133,7 @@ Application DatasetsStatisticalResources {
 				findByCondition(PagingParameter pagingParameter);
 				findByQuery(String query, Map<String, Object> parameters, int maxResult);
 				@Datasource retrieveByUrn(String urn) throws MetamacException;
+				List<@Datasource> findByFilename(String filename);
 			}
 		}
 
@@ -225,6 +226,8 @@ Application DatasetsStatisticalResources {
 			- Bag<@Datasource> datasources cascade="all-delete-orphan" fetch="lazy" inverse orderby="id asc" <-> datasetVersion;
 			"Categorisations"
 			- Bag<@Categorisation> categorisations cascade="all-delete-orphan" fetch="lazy" inverse <-> datasetVersion;
+			"Dimension representation mappings"
+			- Bag<@DimensionRepresentationMapping> dimensionRepresentationMappings cascade="all-delete-orphan" fetch="lazy" inverse orderby="id asc" <-> datasetVersion;
 
 			Repository DatasetVersionRepository {
 				save;
@@ -382,11 +385,14 @@ Application DatasetsStatisticalResources {
     		"Added explicitly to avoid that Sculptor generate UUID"
 			Long id key;
 
+			
+			- @DatasetVersion datasetVersion cascade="none" fetch="lazy" nullable databaseColumn="DATASET_VERSION_FK" <-> dimensionRepresentationMappings;
     		String datasourceFilename not nullable;
     		String mapping length="4000";
     		
     		Repository DimensionRepresentationMappingRepository {
 				save;
+				delete;
 				findByCondition;
 				@DimensionRepresentationMapping findByDatasourceFilename(String datasourceFilename) throws MetamacException;
 			}

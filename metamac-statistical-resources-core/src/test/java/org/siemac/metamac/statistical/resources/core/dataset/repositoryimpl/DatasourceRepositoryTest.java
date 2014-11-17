@@ -50,4 +50,9 @@ public class DatasourceRepositoryTest extends StatisticalResourcesBaseTest imple
 
         datasourceRepository.retrieveByUrn(URN_NOT_EXISTS);
     }
+
+    @Override
+    public void testFindByFilename() throws Exception {
+        // TODO METAMAC-1979
+    }
 }
