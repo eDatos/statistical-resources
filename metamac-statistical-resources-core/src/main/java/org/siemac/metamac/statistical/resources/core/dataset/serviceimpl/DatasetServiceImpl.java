@@ -230,7 +230,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
 
         datasetVersion = deleteDatasourceToDataset(datasource);
 
-        deleteDatasourceDimensionRepresentationMappings(datasource);
+        deleteDatasourceDimensionRepresentationMappings(datasetVersion, datasource);
 
         deleteDatasourceData(datasetVersion.getDatasetRepositoryId(), datasource);
 
@@ -247,12 +247,13 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         }
     }
 
-    private void deleteDatasourceDimensionRepresentationMappings(Datasource datasource) throws MetamacException {
+    private void deleteDatasourceDimensionRepresentationMappings(DatasetVersion datasetVersion, Datasource datasource) throws MetamacException {
         String filename = datasource.getFilename();
-        List<Datasource> datasources = getDatasourceRepository().findByFilename(filename);
+        List<Datasource> datasources = getDatasourceRepository().findByDatasetAndDatasourceFilename(datasetVersion.getSiemacMetadataStatisticalResource().getUrn(), filename);
         // The dimension representation mapping is only deleted if there is no more datasources associated with the same file
         if (datasources.isEmpty()) {
-            DimensionRepresentationMapping dimensionRepresentationMapping = getDimensionRepresentationMappingRepository().findByDatasourceFilename(filename);
+            DimensionRepresentationMapping dimensionRepresentationMapping = getDimensionRepresentationMappingRepository().findByDatasetAndDatasourceFilename(
+                    datasetVersion.getSiemacMetadataStatisticalResource().getUrn(), filename);
             if (dimensionRepresentationMapping != null) {
                 getDimensionRepresentationMappingRepository().delete(dimensionRepresentationMapping);
             }
@@ -792,7 +793,8 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
 
         datasetServiceInvocationValidator.checkSaveDimensionRepresentationMapping(ctx, datasetVersion, datasourceFilename, mapping);
 
-        DimensionRepresentationMapping dimensionRepresentationMapping = getDimensionRepresentationMappingRepository().findByDatasourceFilename(datasourceFilename);
+        DimensionRepresentationMapping dimensionRepresentationMapping = getDimensionRepresentationMappingRepository().findByDatasetAndDatasourceFilename(
+                datasetVersion.getSiemacMetadataStatisticalResource().getUrn(), datasourceFilename);
         if (dimensionRepresentationMapping == null) {
             dimensionRepresentationMapping = new DimensionRepresentationMapping();
             dimensionRepresentationMapping.setDatasetVersion(datasetVersion);

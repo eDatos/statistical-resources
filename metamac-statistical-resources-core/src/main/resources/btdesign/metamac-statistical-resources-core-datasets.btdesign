@@ -133,7 +133,7 @@ Application DatasetsStatisticalResources {
 				findByCondition(PagingParameter pagingParameter);
 				findByQuery(String query, Map<String, Object> parameters, int maxResult);
 				@Datasource retrieveByUrn(String urn) throws MetamacException;
-				List<@Datasource> findByFilename(String filename);
+				List<@Datasource> findByDatasetAndDatasourceFilename(String datasetVersionUrn, String filename);
 			}
 		}
 
@@ -394,7 +394,7 @@ Application DatasetsStatisticalResources {
 				save;
 				delete;
 				findByCondition;
-				@DimensionRepresentationMapping findByDatasourceFilename(String datasourceFilename) throws MetamacException;
+				@DimensionRepresentationMapping findByDatasetAndDatasourceFilename(String datasetVersionUrn, String datasourceFilename) throws MetamacException;
 			}
     	}
 	}

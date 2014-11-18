@@ -52,7 +52,7 @@ public class DatasourceRepositoryTest extends StatisticalResourcesBaseTest imple
     }
 
     @Override
-    public void testFindByFilename() throws Exception {
+    public void testFindByDatasetAndDatasourceFilename() throws Exception {
         // TODO METAMAC-1979
     }
 }

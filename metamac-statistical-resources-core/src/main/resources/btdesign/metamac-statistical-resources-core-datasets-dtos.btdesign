@@ -130,5 +130,11 @@ Application DatasetsStatisticalResourcesDto {
         	- @ExternalItemDto maintainer not nullable;
         	- @RelatedResourceDto datasetVersion not nullable;
         }
+
+        DataTransferObject DimensionRepresentationDto extends @IdentityDto {
+        	- @RelatedResourceDto datasetVersion not nullable;
+        	String datasourceFilename;
+        	StringMap mapping;
+        }
 	}
 }

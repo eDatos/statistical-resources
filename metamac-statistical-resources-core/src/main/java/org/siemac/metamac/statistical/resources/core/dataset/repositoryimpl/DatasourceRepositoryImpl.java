@@ -37,8 +37,9 @@ public class DatasourceRepositoryImpl extends DatasourceRepositoryBase {
     }
 
     @Override
-    public List<Datasource> findByFilename(String filename) {
-        List<ConditionalCriteria> condition = criteriaFor(Datasource.class).withProperty(DatasourceProperties.filename()).eq(filename).distinctRoot().build();
+    public List<Datasource> findByDatasetAndDatasourceFilename(String datasetVersionUrn, String filename) {
+        List<ConditionalCriteria> condition = criteriaFor(Datasource.class).withProperty(DatasourceProperties.datasetVersion().siemacMetadataStatisticalResource().urn()).eq(datasetVersionUrn).and()
+                .withProperty(DatasourceProperties.filename()).eq(filename).distinctRoot().build();
         return findByCondition(condition);
     }
 }

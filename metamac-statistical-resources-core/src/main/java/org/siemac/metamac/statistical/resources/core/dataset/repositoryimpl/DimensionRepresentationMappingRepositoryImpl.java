@@ -19,9 +19,9 @@ public class DimensionRepresentationMappingRepositoryImpl extends DimensionRepre
     }
 
     @Override
-    public DimensionRepresentationMapping findByDatasourceFilename(String datasourceFilename) {
+    public DimensionRepresentationMapping findByDatasetAndDatasourceFilename(String datasetVersionUrn, String datasourceFilename) {
         List<ConditionalCriteria> condition = criteriaFor(DimensionRepresentationMapping.class).withProperty(DimensionRepresentationMappingProperties.datasourceFilename()).eq(datasourceFilename)
-                .distinctRoot().build();
+                .and().withProperty(DimensionRepresentationMappingProperties.datasetVersion().siemacMetadataStatisticalResource().urn()).eq(datasetVersionUrn).distinctRoot().build();
 
         List<DimensionRepresentationMapping> result = findByCondition(condition);
 
