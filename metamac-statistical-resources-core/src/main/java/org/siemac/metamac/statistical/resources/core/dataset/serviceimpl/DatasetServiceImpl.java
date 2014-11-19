@@ -247,6 +247,16 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         }
     }
 
+    @Override
+    public List<DimensionRepresentationMapping> retrieveDimensionRepresentationMappings(ServiceContext ctx, String datasetVersionUrn, List<String> filenames) throws MetamacException {
+
+        // Validation
+        datasetServiceInvocationValidator.checkRetrieveDimensionRepresentationMappings(ctx, datasetVersionUrn, filenames);
+
+        // Retrieve
+        return getDimensionRepresentationMappingRepository().findByDatasetAndDatasourceFilenames(datasetVersionUrn, filenames);
+    }
+
     private void deleteDatasourceDimensionRepresentationMappings(DatasetVersion datasetVersion, Datasource datasource) throws MetamacException {
         String filename = datasource.getFilename();
         List<Datasource> datasources = getDatasourceRepository().findByDatasetAndDatasourceFilename(datasetVersion.getSiemacMetadataStatisticalResource().getUrn(), filename);

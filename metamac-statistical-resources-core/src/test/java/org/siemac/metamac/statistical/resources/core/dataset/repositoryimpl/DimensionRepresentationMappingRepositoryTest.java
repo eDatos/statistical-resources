@@ -35,4 +35,9 @@ public class DimensionRepresentationMappingRepositoryTest extends StatisticalRes
                 .getUrn(), expected.getDatasourceFilename());
         assertEqualsDimensionRepresentationMapping(expected, actual);
     }
+
+    @Override
+    public void testFindByDatasetAndDatasourceFilenames() throws Exception {
+        // TODO METAMAC-1979
+    }
 }

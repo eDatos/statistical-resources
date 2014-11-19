@@ -26,6 +26,7 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersi
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DimensionRepresentationMapping;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.TemporalCode;
+import org.siemac.metamac.statistical.resources.core.dataset.utils.DatasetVersionUtils;
 import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.AttributeValueDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.CategorisationDto;
@@ -33,6 +34,7 @@ import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersion
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionMainCoveragesDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasourceDto;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.DimensionRepresentationMappingDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdAttributeInstanceDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.CodeItemDto;
 import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
@@ -532,7 +534,16 @@ public class DatasetsAsserts extends BaseAsserts {
     // -----------------------------------------------------------------
 
     public static void assertEqualsDimensionRepresentationMapping(DimensionRepresentationMapping expected, DimensionRepresentationMapping actual) throws MetamacException {
+        assertEquals(expected.getId(), actual.getId());
+        assertEquals(expected.getDatasetVersion().getSiemacMetadataStatisticalResource().getUrn(), actual.getDatasetVersion().getSiemacMetadataStatisticalResource().getUrn());
         assertEquals(expected.getDatasourceFilename(), actual.getDatasourceFilename());
         assertEquals(expected.getMapping(), actual.getMapping());
+    }
+
+    public static void assertEqualsDimensionRepresentationMapping(DimensionRepresentationMapping expected, DimensionRepresentationMappingDto actual) throws MetamacException {
+        assertEquals(expected.getId(), actual.getId());
+        assertEquals(expected.getDatasetVersion().getSiemacMetadataStatisticalResource().getUrn(), actual.getDatasetVersion().getUrn());
+        assertEquals(expected.getDatasourceFilename(), actual.getDatasourceFilename());
+        assertEquals(DatasetVersionUtils.dimensionRepresentationMapFromString(expected.getMapping()), actual.getMapping());
     }
 }

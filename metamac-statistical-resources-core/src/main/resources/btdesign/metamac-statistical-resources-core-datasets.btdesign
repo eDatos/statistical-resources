@@ -67,6 +67,8 @@ Application DatasetsStatisticalResources {
     		List<@CodeDimension> retrieveCoverageForDatasetVersionDimension(String datasetVersionUrn, String dsdDimensionId) throws MetamacException;
     		"Retrieve the coverage for a given dimension"
     		List<@CodeDimension> filterCoverageForDatasetVersionDimension(String datasetVersionUrn, String dsdDimensionId, String filter) throws MetamacException;
+			"Retrieve the dimension representation mappings of the dataset for the filenames"
+			List<@DimensionRepresentationMapping> retrieveDimensionRepresentationMappings(String datasetVersionUrn, List<String> filenames) throws MetamacException;
 			"Save a mapping between dimensions and representations for a datasource"
 			saveDimensionRepresentationMapping(@DatasetVersion datasetVersion, String datasourceFilename, Map<String, String> mapping) throws MetamacException;
 
@@ -385,7 +387,6 @@ Application DatasetsStatisticalResources {
     		"Added explicitly to avoid that Sculptor generate UUID"
 			Long id key;
 
-			
 			- @DatasetVersion datasetVersion cascade="none" fetch="lazy" nullable databaseColumn="DATASET_VERSION_FK" <-> dimensionRepresentationMappings;
     		String datasourceFilename not nullable;
     		String mapping length="4000";
@@ -395,6 +396,7 @@ Application DatasetsStatisticalResources {
 				delete;
 				findByCondition;
 				@DimensionRepresentationMapping findByDatasetAndDatasourceFilename(String datasetVersionUrn, String datasourceFilename) throws MetamacException;
+				List<@DimensionRepresentationMapping> findByDatasetAndDatasourceFilenames(String datasetVersionUrn, List<String> datasourceFilenames) throws MetamacException;
 			}
     	}
 	}

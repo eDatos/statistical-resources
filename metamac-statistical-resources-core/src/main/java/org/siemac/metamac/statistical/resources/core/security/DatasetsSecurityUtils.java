@@ -46,6 +46,12 @@ public class DatasetsSecurityUtils extends SecurityUtils {
         }
     }
 
+    public static void canRetrieveDatasourceDimensionRepresentationMappings(ServiceContext ctx, String operationCode) throws MetamacException {
+        if (!SharedDatasetsSecurityUtils.canRetrieveDatasourceDimensionRepresentationMappings(getMetamacPrincipal(ctx), operationCode)) {
+            throwExceptionIfOperationNotAllowed(ctx);
+        }
+    }
+
     // ------------------------------------------------------------------------
     // DATASETS
     // ------------------------------------------------------------------------

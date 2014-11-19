@@ -43,6 +43,7 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersi
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionProperties;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionRepository;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.DimensionRepresentationMapping;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.StatisticOfficiality;
 import org.siemac.metamac.statistical.resources.core.dataset.mapper.DatasetDo2DtoMapper;
 import org.siemac.metamac.statistical.resources.core.dataset.mapper.DatasetDto2DoMapper;
@@ -56,6 +57,7 @@ import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersion
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionMainCoveragesDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasourceDto;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.DimensionRepresentationMappingDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdAttributeInstanceDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.StatisticOfficialityDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.ChapterDto;
@@ -713,6 +715,23 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         List<DatasourceDto> datasourcesDto = datasetDo2DtoMapper.datasourceDoListToDtoList(datasources);
 
         return datasourcesDto;
+    }
+
+    @Override
+    public List<DimensionRepresentationMappingDto> retrieveDimensionRepresentationMappings(ServiceContext ctx, String datasetVersionUrn, List<String> filenames) throws MetamacException {
+
+        // Retrieve
+        DatasetVersion datasetVersion = getDatasetService().retrieveDatasetVersionByUrn(ctx, datasetVersionUrn);
+        String operationCode = datasetVersion.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode();
+
+        // Security
+        DatasetsSecurityUtils.canRetrieveDatasourceDimensionRepresentationMappings(ctx, operationCode);
+
+        // Retrieve
+        List<DimensionRepresentationMapping> mappings = getDatasetService().retrieveDimensionRepresentationMappings(ctx, datasetVersionUrn, filenames);
+
+        // Transform
+        return datasetDo2DtoMapper.dimensionRepresentationMappingDoToDtoList(mappings);
     }
 
     // ------------------------------------------------------------------------

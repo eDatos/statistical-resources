@@ -92,11 +92,13 @@ Application FacadeStatisticalResources {
 	    	deleteDatasource(String urn) throws MetamacException;
 	    	"Retrieves all datasources of a dataset version"
 	    	List<@DatasourceDto> retrieveDatasourcesByDatasetVersion(String urnDatasetVersion) throws MetamacException;
-	    	
+	    	"Retrieves all the dimension representation mappings of the datasetVersion for the filenames"
+	    	List<@DimensionRepresentationMappingDto> retrieveDimensionRepresentationMappings(String datasetVersionUrn, List<String> filenames) throws MetamacException;
+
 	    	// DATASETS 
 	   		"Find all datasets"
 	   		MetamacCriteriaResult<@RelatedResourceDto> findDatasetsByCondition(MetamacCriteria criteria) throws MetamacException; 
-	    	
+
 	    	// DATASET VERSION
 	    	"Creates dataset"
 	   		@DatasetVersionDto createDataset(@DatasetVersionDto datasetVersionDto, @ExternalItemDto statisticalOperation) throws MetamacException;

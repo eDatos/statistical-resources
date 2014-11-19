@@ -53,7 +53,6 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_79_NO_PUB_REPLACES_DATASET_80_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_80_NO_PUB_IS_REPLACED_BY_DATASET_79_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_85_LAST_VERSION_NOT_PUBLISHED__IS_PART_OF_PUBLICATIONS_NAME;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasourceMockFactory.DATASOURCE_01_BASIC_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DimensionRepresentationMappingMockFactory.DIMENSION_REPRESENTATION_MAPPING_01_DATASOURCE_01_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_43_DRAFT_HAS_PART_DATASET_VERSION_85_FIRST_LEVEL_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_44_DRAFT_HAS_PART_DATASET_VERSION_85_NO_FIRST_LEVEL_NAME;
@@ -1619,12 +1618,17 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
         DimensionRepresentationMapping expected = dimensionRepresentationMappingMockFactory.retrieveMock(DIMENSION_REPRESENTATION_MAPPING_01_DATASOURCE_01_NAME);
         expected.setMapping(DatasetVersionUtils.dimensionRepresentationMapToString(mapping));
 
-        DimensionRepresentationMapping mockedMapping = this.notPersistedDoMocks.mockDimensionRepresentationMapping(DATASOURCE_01_BASIC_NAME, mapping);
         // TODO METAMAC-1979
+        // DimensionRepresentationMapping mockedMapping = this.notPersistedDoMocks.mockDimensionRepresentationMapping(DATASOURCE_01_BASIC_NAME, mapping);
         // datasetService.saveDimensionRepresentationMapping(getServiceContextWithoutPrincipal(), mockedMapping.getDatasourceFilename(), mapping);
         // DimensionRepresentationMapping actual = dimensionRepresentationMappingRepository.findByDatasourceFilename(mockedMapping.getDatasourceFilename());
         //
         // assertEqualsDimensionRepresentationMapping(expected, actual);
+    }
+
+    @Override
+    public void testRetrieveDimensionRepresentationMappings() throws Exception {
+        // TODO METAMAC-1979
     }
 
     // ------------------------------------------------------------------------

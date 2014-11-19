@@ -491,7 +491,9 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
 
     public DimensionRepresentationMapping mockDimensionRepresentationMapping(String datasourceFilename) {
         DimensionRepresentationMapping mock = new DimensionRepresentationMapping();
+        mock.setDatasetVersion(mockDatasetVersion());
         mock.setDatasourceFilename(datasourceFilename);
+        mock.setMapping("DIM1=urn");
         return mock;
     }
 

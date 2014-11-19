@@ -12,12 +12,15 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.CodeDimensio
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionRepository;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.DimensionRepresentationMapping;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.StatisticOfficiality;
+import org.siemac.metamac.statistical.resources.core.dataset.utils.DatasetVersionUtils;
 import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.CategorisationDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionBaseDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasourceDto;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.DimensionRepresentationMappingDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.StatisticOfficialityDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.CodeItemDto;
 import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
@@ -74,6 +77,30 @@ public class DatasetDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements Dat
         return target;
     }
 
+    @Override
+    public DimensionRepresentationMappingDto dimensionRepresentationMappingDoToDto(DimensionRepresentationMapping source) throws MetamacException {
+        if (source == null) {
+            return null;
+        }
+
+        DimensionRepresentationMappingDto target = new DimensionRepresentationMappingDto();
+        target.setId(source.getId());
+        target.setDatasourceFilename(source.getDatasourceFilename());
+        target.setMapping(DatasetVersionUtils.dimensionRepresentationMapFromString(source.getMapping()));
+        target.setDatasetVersion(datasetVersionDoToDatasetVersionRelatedResourceDto(source.getDatasetVersion()));
+
+        return target;
+    }
+
+    @Override
+    public List<DimensionRepresentationMappingDto> dimensionRepresentationMappingDoToDtoList(List<DimensionRepresentationMapping> sources) throws MetamacException {
+        List<DimensionRepresentationMappingDto> targets = new ArrayList<DimensionRepresentationMappingDto>();
+        for (DimensionRepresentationMapping source : sources) {
+            targets.add(dimensionRepresentationMappingDoToDto(source));
+        }
+        return targets;
+    }
+
     // ---------------------------------------------------------------------------------------------------------
     // DATASETS
     // ---------------------------------------------------------------------------------------------------------
@@ -85,6 +112,16 @@ public class DatasetDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements Dat
         }
         RelatedResourceDto target = new RelatedResourceDto();
         datasetVersionDoToDatasetRelatedResourceDto(source, target);
+        return target;
+    }
+
+    @Override
+    public RelatedResourceDto datasetVersionDoToDatasetVersionRelatedResourceDto(DatasetVersion source) throws MetamacException {
+        if (source == null) {
+            return null;
+        }
+        RelatedResourceDto target = new RelatedResourceDto();
+        datasetVersionDoToDatasetVersionRelatedResourceDto(source, target);
         return target;
     }
 
@@ -104,6 +141,29 @@ public class DatasetDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements Dat
         target.setCode(source.getDataset().getIdentifiableStatisticalResource().getCode());
         target.setCodeNested(null);
         target.setUrn(source.getDataset().getIdentifiableStatisticalResource().getUrn());
+
+        // Nameable Fields
+        target.setTitle(internationalStringDoToDto(source.getSiemacMetadataStatisticalResource().getTitle()));
+
+        return target;
+    }
+
+    private RelatedResourceDto datasetVersionDoToDatasetVersionRelatedResourceDto(DatasetVersion source, RelatedResourceDto target) {
+        if (source == null) {
+            return null;
+        }
+
+        // Identity
+        target.setId(source.getId());
+        target.setVersion(source.getVersion());
+
+        // Type
+        target.setType(TypeRelatedResourceEnum.DATASET_VERSION);
+
+        // Identifiable Fields
+        target.setCode(source.getSiemacMetadataStatisticalResource().getCode());
+        target.setCodeNested(null);
+        target.setUrn(source.getSiemacMetadataStatisticalResource().getUrn());
 
         // Nameable Fields
         target.setTitle(internationalStringDoToDto(source.getSiemacMetadataStatisticalResource().getTitle()));
@@ -172,7 +232,7 @@ public class DatasetDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements Dat
         // Identity
         target.setId(source.getId());
         target.setVersion(source.getVersion());
-        
+
         target.setDatasetRepositoryId(source.getDatasetRepositoryId());
 
         target.getGeographicGranularities().clear();

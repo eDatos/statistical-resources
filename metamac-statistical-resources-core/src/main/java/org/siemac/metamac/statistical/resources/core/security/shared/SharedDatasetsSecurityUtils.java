@@ -32,6 +32,10 @@ public class SharedDatasetsSecurityUtils extends SharedSecurityUtils {
         return isOperationAllowed(metamacPrincipal, operationCode, PRODUCTION_ROLES);
     }
 
+    public static boolean canRetrieveDatasourceDimensionRepresentationMappings(MetamacPrincipal metamacPrincipal, String operationCode) {
+        return isOperationAllowed(metamacPrincipal, operationCode, PRODUCTION_ROLES);
+    }
+
     // ------------------------------------------------------------------------
     // DATASETS
     // ------------------------------------------------------------------------
