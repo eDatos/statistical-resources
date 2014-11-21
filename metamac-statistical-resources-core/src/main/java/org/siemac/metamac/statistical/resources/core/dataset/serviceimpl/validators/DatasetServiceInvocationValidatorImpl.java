@@ -15,6 +15,7 @@ import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.statistical.resources.core.base.validators.BaseInvocationValidator;
 import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Categorisation;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
 import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
@@ -55,8 +56,8 @@ public class DatasetServiceInvocationValidatorImpl extends BaseInvocationValidat
         StatisticalResourcesValidationUtils.checkParameterRequired(datasetVersionUrn, ServiceExceptionParameters.DATASET_VERSION_URN, exceptions);
     }
 
-    public static void checkRetrieveDimensionRepresentationMappings(String datasetVersionUrn, List<String> filenames, List<MetamacExceptionItem> exceptions) throws MetamacException {
-        StatisticalResourcesValidationUtils.checkParameterRequired(datasetVersionUrn, ServiceExceptionParameters.DATASET_VERSION_URN, exceptions);
+    public static void checkRetrieveDimensionRepresentationMapping(String datasetUrn, String filename, List<MetamacExceptionItem> exceptions) throws MetamacException {
+        StatisticalResourcesValidationUtils.checkParameterRequired(datasetUrn, ServiceExceptionParameters.DATASET_URN, exceptions);
     }
 
     // DATASETS
@@ -121,8 +122,8 @@ public class DatasetServiceInvocationValidatorImpl extends BaseInvocationValidat
         StatisticalResourcesValidationUtils.checkMetadataRequired(dsdDimensionId, ServiceExceptionParameters.DSD_DIMENSION_ID, exceptions);
     }
 
-    public static void checkSaveDimensionRepresentationMapping(DatasetVersion datasetVersion, String datasourceUrn, Map<String, String> mapping, List<MetamacExceptionItem> exceptions) {
-        StatisticalResourcesValidationUtils.checkMetadataRequired(datasetVersion, ServiceExceptionParameters.DATASET_VERSION, exceptions);
+    public static void checkSaveDimensionRepresentationMapping(Dataset dataset, String datasourceUrn, Map<String, String> mapping, List<MetamacExceptionItem> exceptions) {
+        StatisticalResourcesValidationUtils.checkMetadataRequired(dataset, ServiceExceptionParameters.DATASET, exceptions);
         StatisticalResourcesValidationUtils.checkMetadataRequired(datasourceUrn, ServiceExceptionParameters.DATASOURCE__URN, exceptions);
     }
 

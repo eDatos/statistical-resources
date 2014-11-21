@@ -87,7 +87,6 @@ public class DatasetDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements Dat
         target.setId(source.getId());
         target.setDatasourceFilename(source.getDatasourceFilename());
         target.setMapping(DatasetVersionUtils.dimensionRepresentationMapFromString(source.getMapping()));
-        target.setDatasetVersion(datasetVersionDoToDatasetVersionRelatedResourceDto(source.getDatasetVersion()));
 
         return target;
     }

@@ -1627,7 +1627,7 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
     }
 
     @Override
-    public void testRetrieveDimensionRepresentationMappings() throws Exception {
+    public void testRetrieveDimensionRepresentationMapping() throws Exception {
         // TODO METAMAC-1979
     }
 

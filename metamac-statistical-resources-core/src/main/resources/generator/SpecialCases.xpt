@@ -75,7 +75,7 @@
 	«IF name != "InternationalString" && name != "LocalisedString" && name != "ExternalItem" && name != "RelatedResource" && name != "Translation" && name != "VersionRationaleType"
 	&& name != "StatisticalResource" && name != "RelatedResource" && name != "Datasource" && name != "Dataset" && name != "DatasetVersion" && name != "StatisticOfficiality" && name != "CodeDimension" && name != "AttributeValue" 
 	&& name != "TemporalCode" && name != "Publication" && name != "PublicationVersion" && name != "ElementLevel" && name != "Chapter" && name != "Cube" && name != "CodeItem"  
-	&& name != "QuerySelectionItem" && name != "Query" && name != "QueryVersion" && name != "Categorisation" && name != "CategorisationSequence"
+	&& name != "QuerySelectionItem" && name != "Query" && name != "QueryVersion" && name != "Categorisation" && name != "CategorisationSequence" && name != "DimensionRepresentationMapping"
 	-»
 		«targetDef.proceed() -»
 	«ENDIF -»

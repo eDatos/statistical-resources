@@ -718,7 +718,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     }
 
     @Override
-    public List<DimensionRepresentationMappingDto> retrieveDimensionRepresentationMappings(ServiceContext ctx, String datasetVersionUrn, List<String> filenames) throws MetamacException {
+    public DimensionRepresentationMappingDto retrieveDimensionRepresentationMappings(ServiceContext ctx, String datasetVersionUrn, String filename) throws MetamacException {
 
         // Retrieve
         DatasetVersion datasetVersion = getDatasetService().retrieveDatasetVersionByUrn(ctx, datasetVersionUrn);
@@ -728,10 +728,10 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         DatasetsSecurityUtils.canRetrieveDatasourceDimensionRepresentationMappings(ctx, operationCode);
 
         // Retrieve
-        List<DimensionRepresentationMapping> mappings = getDatasetService().retrieveDimensionRepresentationMappings(ctx, datasetVersionUrn, filenames);
+        DimensionRepresentationMapping mapping = getDatasetService().retrieveDimensionRepresentationMapping(ctx, datasetVersion.getDataset().getIdentifiableStatisticalResource().getUrn(), filename);
 
         // Transform
-        return datasetDo2DtoMapper.dimensionRepresentationMappingDoToDtoList(mappings);
+        return datasetDo2DtoMapper.dimensionRepresentationMappingDoToDto(mapping);
     }
 
     // ------------------------------------------------------------------------

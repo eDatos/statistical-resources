@@ -282,7 +282,7 @@ public class DatasetListViewImpl extends StatisticalResourceBaseListViewImpl<Dat
     // Import datasources
 
     private CustomToolStripButton createImportDatasourcesButton() {
-        CustomToolStripButton importDatasourcesButton = new CustomToolStripButton(getConstants().actionLoadDatasources(), org.siemac.metamac.web.common.client.resources.GlobalResources.RESOURCE
+        CustomToolStripButton importDatasourcesButton = new CustomToolStripButton(getConstants().actionLoadDatasourcesZip(), org.siemac.metamac.web.common.client.resources.GlobalResources.RESOURCE
                 .importResource().getURL());
         importDatasourcesButton.setVisible(DatasetClientSecurityUtils.canImportDatasourcesInStatisticalOperation());
         importDatasourcesButton.addClickHandler(new ClickHandler() {

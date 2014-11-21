@@ -71,7 +71,16 @@
         <servlet-name>upload</servlet-name>
         <url-pattern>/files/upload/*</url-pattern>
     </servlet-mapping>
-    
+
+    <servlet>
+        <servlet-name>uploadPreview</servlet-name>
+        <servlet-class>org.siemac.metamac.statistical.resources.web.server.servlet.DatasourceImportationPreviewServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>uploadPreview</servlet-name>
+        <url-pattern>/files/upload-preview/*</url-pattern>
+    </servlet-mapping>
+
     <servlet>
         <servlet-name>download</servlet-name>
         <servlet-class>org.siemac.metamac.statistical.resources.web.server.servlet.FileDownloadServlet</servlet-class>

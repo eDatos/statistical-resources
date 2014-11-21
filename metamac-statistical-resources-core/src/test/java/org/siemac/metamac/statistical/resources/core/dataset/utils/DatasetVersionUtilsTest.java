@@ -31,7 +31,7 @@ public class DatasetVersionUtilsTest {
             map.put("DIMENSION01", "urn:repr01");
             map.put("DIMENSION02", "urn:repr02");
 
-            String expected = "DIMENSION01=urn:repr01, DIMENSION02=urn:repr02";
+            String expected = "DIMENSION01#urn:repr01,DIMENSION02#urn:repr02";
             String actual = DatasetVersionUtils.dimensionRepresentationMapToString(map);
             assertEquals(expected, actual);
         }
@@ -39,7 +39,7 @@ public class DatasetVersionUtilsTest {
             Map<String, String> map = new HashMap<String, String>();
             map.put("DIMENSION01", "urn:repr01");
 
-            String expected = "DIMENSION01=urn:repr01";
+            String expected = "DIMENSION01#urn:repr01";
             String actual = DatasetVersionUtils.dimensionRepresentationMapToString(map);
             assertEquals(expected, actual);
         }
@@ -56,19 +56,19 @@ public class DatasetVersionUtilsTest {
     @Test
     public void testDimensionRepresentationMapFromString() {
         {
-            String serializedMap = "DIMENSION01=urn:repr01, DIMENSION02=urn:repr02";
+            String serializedMap = "DIMENSION01#urn:repr01=code1,DIMENSION02#urn:repr02=code2";
             Map<String, String> expected = new HashMap<String, String>();
-            expected.put("DIMENSION01", "urn:repr01");
-            expected.put("DIMENSION02", "urn:repr02");
+            expected.put("DIMENSION01", "urn:repr01=code1");
+            expected.put("DIMENSION02", "urn:repr02=code2");
 
             Map<String, String> actual = DatasetVersionUtils.dimensionRepresentationMapFromString(serializedMap);
 
             assertEquals(expected, actual);
         }
         {
-            String serializedMap = "DIMENSION01=urn:repr01";
+            String serializedMap = "DIMENSION01#urn:repr01=code2";
             Map<String, String> expected = new HashMap<String, String>();
-            expected.put("DIMENSION01", "urn:repr01");
+            expected.put("DIMENSION01", "urn:repr01=code2");
 
             Map<String, String> actual = DatasetVersionUtils.dimensionRepresentationMapFromString(serializedMap);
 

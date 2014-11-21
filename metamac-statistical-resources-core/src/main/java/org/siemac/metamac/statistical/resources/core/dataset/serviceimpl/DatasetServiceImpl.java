@@ -248,13 +248,13 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
     }
 
     @Override
-    public List<DimensionRepresentationMapping> retrieveDimensionRepresentationMappings(ServiceContext ctx, String datasetVersionUrn, List<String> filenames) throws MetamacException {
+    public DimensionRepresentationMapping retrieveDimensionRepresentationMapping(ServiceContext ctx, String datasetUrn, String filename) throws MetamacException {
 
         // Validation
-        datasetServiceInvocationValidator.checkRetrieveDimensionRepresentationMappings(ctx, datasetVersionUrn, filenames);
+        datasetServiceInvocationValidator.checkRetrieveDimensionRepresentationMapping(ctx, datasetUrn, filename);
 
         // Retrieve
-        return getDimensionRepresentationMappingRepository().findByDatasetAndDatasourceFilenames(datasetVersionUrn, filenames);
+        return getDimensionRepresentationMappingRepository().findByDatasetAndDatasourceFilename(datasetUrn, filename);
     }
 
     private void deleteDatasourceDimensionRepresentationMappings(DatasetVersion datasetVersion, Datasource datasource) throws MetamacException {
@@ -756,7 +756,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
                 datasource.setDateNextUpdate(new DateTime(fileDescriptor.getNextUpdate()));
             }
             Datasource createdDatasource = createDatasource(ctx, datasetImportationId, datasource);
-            saveDimensionRepresentationMapping(ctx, datasetVersion, createdDatasource.getFilename(), fileDescriptor.getDimensionRepresentationMapping());
+            saveDimensionRepresentationMapping(ctx, datasetVersion.getDataset(), createdDatasource.getFilename(), fileDescriptor.getDimensionRepresentationMapping());
         }
     }
 
@@ -799,15 +799,15 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
     }
 
     @Override
-    public void saveDimensionRepresentationMapping(ServiceContext ctx, DatasetVersion datasetVersion, String datasourceFilename, Map<String, String> mapping) throws MetamacException {
+    public void saveDimensionRepresentationMapping(ServiceContext ctx, Dataset dataset, String datasourceFilename, Map<String, String> mapping) throws MetamacException {
 
-        datasetServiceInvocationValidator.checkSaveDimensionRepresentationMapping(ctx, datasetVersion, datasourceFilename, mapping);
+        datasetServiceInvocationValidator.checkSaveDimensionRepresentationMapping(ctx, dataset, datasourceFilename, mapping);
 
         DimensionRepresentationMapping dimensionRepresentationMapping = getDimensionRepresentationMappingRepository().findByDatasetAndDatasourceFilename(
-                datasetVersion.getSiemacMetadataStatisticalResource().getUrn(), datasourceFilename);
+                dataset.getIdentifiableStatisticalResource().getUrn(), datasourceFilename);
         if (dimensionRepresentationMapping == null) {
             dimensionRepresentationMapping = new DimensionRepresentationMapping();
-            dimensionRepresentationMapping.setDatasetVersion(datasetVersion);
+            dimensionRepresentationMapping.setDataset(dataset);
             dimensionRepresentationMapping.setDatasourceFilename(datasourceFilename);
         }
         dimensionRepresentationMapping.setMapping(DatasetVersionUtils.dimensionRepresentationMapToString(mapping));

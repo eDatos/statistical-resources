@@ -31,13 +31,8 @@ public class DimensionRepresentationMappingRepositoryTest extends StatisticalRes
     @MetamacMock({DIMENSION_REPRESENTATION_MAPPING_01_DATASOURCE_01_NAME, DATASET_VERSION_01_BASIC_NAME})
     public void testFindByDatasetAndDatasourceFilename() throws MetamacException {
         DimensionRepresentationMapping expected = dimensionRepresentationMappingMockFactory.retrieveMock(DIMENSION_REPRESENTATION_MAPPING_01_DATASOURCE_01_NAME);
-        DimensionRepresentationMapping actual = dimensionRepresentationMappingRepository.findByDatasetAndDatasourceFilename(expected.getDatasetVersion().getSiemacMetadataStatisticalResource()
+        DimensionRepresentationMapping actual = dimensionRepresentationMappingRepository.findByDatasetAndDatasourceFilename(expected.getDataset().getIdentifiableStatisticalResource()
                 .getUrn(), expected.getDatasourceFilename());
         assertEqualsDimensionRepresentationMapping(expected, actual);
-    }
-
-    @Override
-    public void testFindByDatasetAndDatasourceFilenames() throws Exception {
-        // TODO METAMAC-1979
     }
 }

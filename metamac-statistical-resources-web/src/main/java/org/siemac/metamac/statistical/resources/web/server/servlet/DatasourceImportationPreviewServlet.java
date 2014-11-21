@@ -2,13 +2,9 @@ package org.siemac.metamac.statistical.resources.web.server.servlet;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -21,23 +17,23 @@ import org.apache.commons.fileupload.disk.DiskFileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.lang.StringEscapeUtils;
-import org.apache.commons.lang.StringUtils;
+import org.json.simple.JSONObject;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.util.ApplicationContextProvider;
-import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.DimensionRepresentationMappingDto;
 import org.siemac.metamac.statistical.resources.core.facade.serviceapi.StatisticalResourcesServiceFacade;
+import org.siemac.metamac.statistical.resources.web.shared.ds.DimensionRepresentationMappingDS;
 import org.siemac.metamac.statistical.resources.web.shared.utils.StatisticalResourcesSharedTokens;
 import org.siemac.metamac.web.common.server.ServiceContextHolder;
 import org.siemac.metamac.web.common.server.utils.WebExceptionUtils;
-import org.siemac.metamac.web.common.server.utils.ZipUtils;
 
 import com.google.inject.Singleton;
 
 @Singleton
 @SuppressWarnings("serial")
-public class DatasourceImportationServlet extends BaseHttpServlet {
+public class DatasourceImportationPreviewServlet extends BaseHttpServlet {
 
-    private static Logger logger = Logger.getLogger(DatasourceImportationServlet.class.getName());
+    private static Logger logger = Logger.getLogger(DatasourceImportationPreviewServlet.class.getName());
 
     @Override
     public void init(ServletConfig config) throws ServletException {
@@ -62,8 +58,7 @@ public class DatasourceImportationServlet extends BaseHttpServlet {
 
         HashMap<String, String> args = new HashMap<String, String>();
 
-        String fileName = new String();
-        InputStream inputStream = null;
+        String filename = new String();
 
         try {
             StatisticalResourcesServiceFacade statisticalResourcesServiceFacade = (StatisticalResourcesServiceFacade) ApplicationContextProvider.getApplicationContext().getBean(
@@ -86,36 +81,16 @@ public class DatasourceImportationServlet extends BaseHttpServlet {
                 if (item.isFormField()) {
                     args.put(item.getFieldName(), item.getString());
                 } else {
-                    fileName = item.getName();
-                    inputStream = item.getInputStream();
+                    filename = item.getName();
                 }
             }
 
-            String tempZipFilePathName = inputStreamToTempFile(fileName, inputStream);
-            File outputFolder = (File) getServletContext().getAttribute("javax.servlet.context.tempdir");
-            File uploadedFile = new File(tempZipFilePathName);
-
-            List<File> filesToImport = new ArrayList<File>();
-
-            if (isZip(uploadedFile)) {
-                filesToImport = ZipUtils.unzipArchive(uploadedFile, outputFolder);
-            } else {
-                filesToImport.add(uploadedFile);
-            }
-
-            List<URL> fileUrls = getURLsFromFiles(filesToImport);
-
-            String statisticalOperationCode = args.get(StatisticalResourcesSharedTokens.UPLOAD_PARAM_OPERATION_CODE);
             String datasetVersionUrn = args.get(StatisticalResourcesSharedTokens.UPLOAD_PARAM_DATASET_VERSION_URN);
 
-            if (StringUtils.isNotBlank(datasetVersionUrn)) {
-                Map<String, String> dimensionMapping = buildDimensionsMappings(args);
-                DatasetVersionDto datasetVersionDto = statisticalResourcesServiceFacade.retrieveDatasetVersionByUrn(ServiceContextHolder.getCurrentServiceContext(), datasetVersionUrn);
-                statisticalResourcesServiceFacade.importDatasourcesInDatasetVersion(ServiceContextHolder.getCurrentServiceContext(), datasetVersionDto, fileUrls, dimensionMapping);
-            } else if (StringUtils.isNotBlank(statisticalOperationCode)) {
-                statisticalResourcesServiceFacade.importDatasourcesInStatisticalOperation(ServiceContextHolder.getCurrentServiceContext(), statisticalOperationCode, fileUrls);
-            }
-            sendSuccessImportationResponse(response, fileName);
+            DimensionRepresentationMappingDto mapping = statisticalResourcesServiceFacade.retrieveDimensionRepresentationMappings(ServiceContextHolder.getCurrentServiceContext(), datasetVersionUrn,
+                    filename);
+            String message = serializeResourceJson(mapping).toJSONString();
+            sendSuccessImportationResponse(response, message);
 
         } catch (Exception e) {
 
@@ -127,25 +102,11 @@ public class DatasourceImportationServlet extends BaseHttpServlet {
                 errorMessage = StringEscapeUtils.escapeJavaScript(errorMessage);
             }
 
-            logger.log(Level.SEVERE, "Error importing file = " + fileName + ". " + e.getMessage());
+            logger.log(Level.SEVERE, "Error importing file = " + filename + ". " + e.getMessage());
             logger.log(Level.SEVERE, e.getMessage());
 
             sendFailedImportationResponse(response, errorMessage);
         }
-    }
-
-    private Map<String, String> buildDimensionsMappings(HashMap<String, String> args) {
-        Map<String, String> mapping = new HashMap<String, String>();
-        for (String itemId : args.keySet()) {
-            if (itemId.startsWith(StatisticalResourcesSharedTokens.UPLOAD_PARAM_DIM_PREFIX)) {
-                String dimensionId = itemId.substring(StatisticalResourcesSharedTokens.UPLOAD_PARAM_DIM_PREFIX.length());
-                String codelistUrn = args.get(itemId);
-                if (!StringUtils.isEmpty(codelistUrn)) {
-                    mapping.put(dimensionId, codelistUrn);
-                }
-            }
-        }
-        return mapping;
     }
 
     private void processQuery(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -155,6 +116,29 @@ public class DatasourceImportationServlet extends BaseHttpServlet {
     // UTILITY METHODS
     //
 
+    // TODO METAMAC-1979
+    // @SuppressWarnings("unchecked")
+    // private String serializeResourcesJson(List<DimensionRepresentationMappingDto> mappings) {
+    // JSONArray list = new JSONArray();
+    // JSONObject obj = new JSONObject();
+    // obj.put("1", "convocatoria1");
+    // list.add(obj);
+    // list.toJSONString();
+    //
+    // for (DimensionRepresentationMappingDto mapping : mappings) {
+    // list.add(serializeResourceJson(mapping));
+    // }
+    // return list.toJSONString();
+    // }
+
+    @SuppressWarnings("unchecked")
+    private JSONObject serializeResourceJson(DimensionRepresentationMappingDto dimensionRepresentationMapping) {
+        JSONObject obj = new JSONObject();
+        obj.put(DimensionRepresentationMappingDS.FILENAME, dimensionRepresentationMapping.getDatasourceFilename());
+        // TODO METAMAC-1979
+        return obj;
+    }
+
     private void sendSuccessImportationResponse(HttpServletResponse response, String message) throws IOException {
         String action = "if (parent.uploadComplete) parent.uploadComplete('" + message + "');";
         sendResponse(response, action);
@@ -163,13 +147,5 @@ public class DatasourceImportationServlet extends BaseHttpServlet {
     private void sendFailedImportationResponse(HttpServletResponse response, String errorMessage) throws IOException {
         String action = "if (parent.uploadFailed) parent.uploadFailed('" + errorMessage + "');";
         sendResponse(response, action);
-    }
-
-    private boolean isZip(File file) {
-        if (file != null) {
-            // return org.springframework.http.MediaType.APPLICATION_OCTET_STREAM.toString().equals(contentType) || "application/zip".equals(contentType);
-            return file.getName().endsWith("zip");
-        }
-        return false;
     }
 }

@@ -15,6 +15,7 @@ import org.siemac.metamac.statistical.resources.web.client.dataset.model.record.
 import org.siemac.metamac.statistical.resources.web.client.dataset.presenter.DatasetDatasourcesTabPresenter.DatasetDatasourcesTabView;
 import org.siemac.metamac.statistical.resources.web.client.dataset.utils.DatasetClientSecurityUtils;
 import org.siemac.metamac.statistical.resources.web.client.dataset.view.handlers.DatasetDatasourcesTabUiHandlers;
+import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.ImportDatasourceWithMappingWindow;
 import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.ImportDatasourcesWindow;
 import org.siemac.metamac.statistical.resources.web.client.utils.StatisticalResourcesRecordUtils;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetCodelistsWithVariableResult;
@@ -103,12 +104,14 @@ public class DatasetDatasourcesTabViewImpl extends ViewWithUiHandlers<DatasetDat
 
     private class DatasourcesListPanel extends VLayout {
 
-        private CustomToolStripButton    deleteDatasourceButton;
-        private CustomToolStripButton    importDatasourcesButton;
-        private CustomListGrid           datasourcesList;
+        private CustomToolStripButton             deleteDatasourceButton;
+        private CustomToolStripButton             importZipDatasourcesButton;
+        private CustomToolStripButton             importDatasourceButton;
+        private CustomListGrid                    datasourcesList;
 
-        private DeleteConfirmationWindow deleteConfirmationWindow;
-        private ImportDatasourcesWindow  importDatasourcesWindow;
+        private DeleteConfirmationWindow          deleteConfirmationWindow;
+        private ImportDatasourcesWindow           importDatasourcesWindow;
+        private ImportDatasourceWithMappingWindow importDatasourceWithMappingWindow;
 
         public DatasourcesListPanel() {
             // Toolstrip
@@ -119,8 +122,11 @@ public class DatasetDatasourcesTabViewImpl extends ViewWithUiHandlers<DatasetDat
             deleteDatasourceButton = createDeleteDatasourcesButton();
             toolStrip.addButton(deleteDatasourceButton);
 
-            importDatasourcesButton = createImportDatasourcesButton();
-            toolStrip.addButton(importDatasourcesButton);
+            importDatasourceButton = createImportDatasourceButton();
+            toolStrip.addButton(importDatasourceButton);
+
+            importZipDatasourcesButton = createImportZipDatasourcesButton();
+            toolStrip.addButton(importZipDatasourcesButton);
 
             // List
 
@@ -164,10 +170,13 @@ public class DatasetDatasourcesTabViewImpl extends ViewWithUiHandlers<DatasetDat
             if (importDatasourcesWindow != null) {
                 importDatasourcesWindow.setUiHandlers(uiHandlers);
             }
+            if (importDatasourceWithMappingWindow != null) {
+                importDatasourcesWindow.setUiHandlers(uiHandlers);
+            }
         }
 
         public void setCodeListsInVariable(String dimensionId, GetCodelistsWithVariableResult result) {
-            importDatasourcesWindow.setCodelistsForDimension(dimensionId, result.getCodelists(), result.getFirstResultOut(), result.getTotalResults());
+            importDatasourceWithMappingWindow.setCodelistsForDimension(dimensionId, result.getCodelists(), result.getFirstResultOut(), result.getTotalResults());
         }
 
         private CustomToolStripButton createDeleteDatasourcesButton() {
@@ -183,15 +192,30 @@ public class DatasetDatasourcesTabViewImpl extends ViewWithUiHandlers<DatasetDat
             return deleteDatasourceButton;
         }
 
-        private CustomToolStripButton createImportDatasourcesButton() {
-            CustomToolStripButton importDatasourcesButton = new CustomToolStripButton(getConstants().actionLoadDatasources(), org.siemac.metamac.web.common.client.resources.GlobalResources.RESOURCE
-                    .importResource().getURL());
+        private CustomToolStripButton createImportZipDatasourcesButton() {
+            CustomToolStripButton importDatasourcesButton = new CustomToolStripButton(getConstants().actionLoadDatasourcesZip(),
+                    org.siemac.metamac.web.common.client.resources.GlobalResources.RESOURCE.importResource().getURL());
             importDatasourcesButton.addClickHandler(new ClickHandler() {
 
                 @Override
                 public void onClick(ClickEvent event) {
                     if (importDatasourcesWindow != null) {
                         importDatasourcesWindow.show();
+                    }
+                }
+            });
+            return importDatasourcesButton;
+        }
+
+        private CustomToolStripButton createImportDatasourceButton() {
+            CustomToolStripButton importDatasourcesButton = new CustomToolStripButton(getConstants().actionLoadDatasource(), org.siemac.metamac.web.common.client.resources.GlobalResources.RESOURCE
+                    .importResource().getURL());
+            importDatasourcesButton.addClickHandler(new ClickHandler() {
+
+                @Override
+                public void onClick(ClickEvent event) {
+                    if (importDatasourceWithMappingWindow != null) {
+                        importDatasourceWithMappingWindow.show();
                     }
                 }
             });
@@ -226,13 +250,26 @@ public class DatasetDatasourcesTabViewImpl extends ViewWithUiHandlers<DatasetDat
             }
         }
 
-        public void setDatasetUrn(String urn) {
-            getUiHandlers().retrieveDimensionVariablesForDataset(urn);
-
+        public void setDatasetUrn(String datasetVersionUrn) {
+            getUiHandlers().retrieveDimensionVariablesForDataset(datasetVersionUrn);
+            createImportDatasourcesWindow(datasetVersionUrn);
         }
 
-        public void setDimensionVariablesForDataset(String datasetUrn, Map<String, String> dimensionsMapping) {
-            importDatasourcesWindow = new ImportDatasourcesWindow(dimensionsMapping);
+        public void setDimensionVariablesForDataset(String datasetVersionUrn, Map<String, String> dimensionsMapping) {
+            createImportDatasourceWithMappingWindow(datasetVersionUrn, dimensionsMapping);
+        }
+
+        public void setDatasources(List<DatasourceDto> datasources) {
+            DatasourceRecord[] records = new DatasourceRecord[datasources.size()];
+            int index = 0;
+            for (DatasourceDto datasourceDto : datasources) {
+                records[index++] = StatisticalResourcesRecordUtils.getDatasourceRecord(datasourceDto);
+            }
+            datasourcesList.setData(records);
+        }
+
+        private void createImportDatasourcesWindow(String datasetVersionUrn) {
+            importDatasourcesWindow = new ImportDatasourcesWindow();
             importDatasourcesWindow.setUploadListener(new UploadListener() {
 
                 @Override
@@ -245,23 +282,31 @@ public class DatasetDatasourcesTabViewImpl extends ViewWithUiHandlers<DatasetDat
                     getUiHandlers().datasourcesImportationSucceed(fileName);
                 }
             });
-            importDatasourcesWindow.setDatasetVersion(datasetUrn);
+            importDatasourcesWindow.setDatasetVersion(datasetVersionUrn);
             importDatasourcesWindow.setUiHandlers(getUiHandlers());
         }
 
-        public void setDatasources(List<DatasourceDto> datasources) {
-            DatasourceRecord[] records = new DatasourceRecord[datasources.size()];
-            int index = 0;
-            for (DatasourceDto datasourceDto : datasources) {
-                records[index++] = StatisticalResourcesRecordUtils.getDatasourceRecord(datasourceDto);
-            }
-            datasourcesList.setData(records);
+        private void createImportDatasourceWithMappingWindow(String datasetVersionUrn, Map<String, String> dimensionsMapping) {
+            importDatasourceWithMappingWindow = new ImportDatasourceWithMappingWindow(dimensionsMapping) {
+
+                @Override
+                protected void uploadSuccess(String message) {
+                    getUiHandlers().datasourcesImportationSucceed(message);
+                }
+
+                @Override
+                protected void uploadFailed(String error) {
+                    getUiHandlers().datasourcesImportationFailed(error);
+                }
+            };
+            importDatasourceWithMappingWindow.setDatasetVersion(datasetVersionUrn);
+            importDatasourceWithMappingWindow.setUiHandlers(getUiHandlers());
         }
 
         private void updateButtonsVisibility() {
-            importDatasourcesButton.setVisible(DatasetClientSecurityUtils.canImportDatasourcesInDatasetVersion(datasetVersionDto));
+            importZipDatasourcesButton.setVisible(DatasetClientSecurityUtils.canImportDatasourcesInDatasetVersion(datasetVersionDto));
+            importDatasourceButton.setVisible(DatasetClientSecurityUtils.canImportDatasourcesInDatasetVersion(datasetVersionDto));
             updateListGridButtonsVisibilityBasedOnSelection(datasourcesList.getSelectedRecords());
         }
     }
-
 }

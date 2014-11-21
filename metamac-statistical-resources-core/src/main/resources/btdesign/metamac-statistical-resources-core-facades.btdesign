@@ -92,8 +92,8 @@ Application FacadeStatisticalResources {
 	    	deleteDatasource(String urn) throws MetamacException;
 	    	"Retrieves all datasources of a dataset version"
 	    	List<@DatasourceDto> retrieveDatasourcesByDatasetVersion(String urnDatasetVersion) throws MetamacException;
-	    	"Retrieves all the dimension representation mappings of the datasetVersion for the filenames"
-	    	List<@DimensionRepresentationMappingDto> retrieveDimensionRepresentationMappings(String datasetVersionUrn, List<String> filenames) throws MetamacException;
+	    	"Retrieves the dimension representation mapping of the datasetVersion for the filename specified"
+	    	@DimensionRepresentationMappingDto retrieveDimensionRepresentationMappings(String datasetVersionUrn, String filename) throws MetamacException;
 
 	    	// DATASETS 
 	   		"Find all datasets"

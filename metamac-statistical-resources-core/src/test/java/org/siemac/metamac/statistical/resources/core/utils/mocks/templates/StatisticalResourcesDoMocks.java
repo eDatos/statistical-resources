@@ -132,7 +132,6 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
     // -----------------------------------------------------------------
     // DATASET VERSION
     // -----------------------------------------------------------------
-
     public abstract DatasetVersion mockDatasetVersion();
 
     public abstract DatasetVersion mockDatasetVersion(DatasetVersionMock datasetVersion);
@@ -491,7 +490,7 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
 
     public DimensionRepresentationMapping mockDimensionRepresentationMapping(String datasourceFilename) {
         DimensionRepresentationMapping mock = new DimensionRepresentationMapping();
-        mock.setDatasetVersion(mockDatasetVersion());
+        // TODO METAMAC-1979 mock.setDataset(mockDataset());
         mock.setDatasourceFilename(datasourceFilename);
         mock.setMapping("DIM1=urn");
         return mock;

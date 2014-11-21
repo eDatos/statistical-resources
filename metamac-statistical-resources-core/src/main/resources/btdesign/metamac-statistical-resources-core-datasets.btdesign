@@ -67,10 +67,10 @@ Application DatasetsStatisticalResources {
     		List<@CodeDimension> retrieveCoverageForDatasetVersionDimension(String datasetVersionUrn, String dsdDimensionId) throws MetamacException;
     		"Retrieve the coverage for a given dimension"
     		List<@CodeDimension> filterCoverageForDatasetVersionDimension(String datasetVersionUrn, String dsdDimensionId, String filter) throws MetamacException;
-			"Retrieve the dimension representation mappings of the dataset for the filenames"
-			List<@DimensionRepresentationMapping> retrieveDimensionRepresentationMappings(String datasetVersionUrn, List<String> filenames) throws MetamacException;
+			"Retrieve the dimension representation mapping of the dataset for the filename specified"
+			@DimensionRepresentationMapping retrieveDimensionRepresentationMapping(String datasetUrn, String filename) throws MetamacException;
 			"Save a mapping between dimensions and representations for a datasource"
-			saveDimensionRepresentationMapping(@DatasetVersion datasetVersion, String datasourceFilename, Map<String, String> mapping) throws MetamacException;
+			saveDimensionRepresentationMapping(@Dataset dataset, String datasourceFilename, Map<String, String> mapping) throws MetamacException;
 
     		"Create attribute instances"
     		AttributeInstanceDto createAttributeInstance(String datasetVersionUrn, AttributeInstanceDto attributeInstanceDto) throws MetamacException;
@@ -151,6 +151,8 @@ Application DatasetsStatisticalResources {
 			- @IdentifiableStatisticalResource identifiableStatisticalResource databaseColumn="IDENTIFIABLE_RESOURCE_FK" not nullable cascade="all";
 			"All versions"
 			- Bag<@DatasetVersion> versions cascade="all-delete-orphan" fetch="lazy" inverse <-> dataset;
+			"Dimension representation mappings"
+			- Bag<@DimensionRepresentationMapping> dimensionRepresentationMappings cascade="all-delete-orphan" fetch="lazy" inverse orderby="id asc" <-> dataset;
 
 			Repository DatasetRepository {
 				findByCondition;
@@ -228,8 +230,6 @@ Application DatasetsStatisticalResources {
 			- Bag<@Datasource> datasources cascade="all-delete-orphan" fetch="lazy" inverse orderby="id asc" <-> datasetVersion;
 			"Categorisations"
 			- Bag<@Categorisation> categorisations cascade="all-delete-orphan" fetch="lazy" inverse <-> datasetVersion;
-			"Dimension representation mappings"
-			- Bag<@DimensionRepresentationMapping> dimensionRepresentationMappings cascade="all-delete-orphan" fetch="lazy" inverse orderby="id asc" <-> datasetVersion;
 
 			Repository DatasetVersionRepository {
 				save;
@@ -387,16 +387,15 @@ Application DatasetsStatisticalResources {
     		"Added explicitly to avoid that Sculptor generate UUID"
 			Long id key;
 
-			- @DatasetVersion datasetVersion cascade="none" fetch="lazy" nullable databaseColumn="DATASET_VERSION_FK" <-> dimensionRepresentationMappings;
+			- @@Dataset dataset cascade="none" fetch="lazy" nullable databaseColumn="DATASET_FK" <-> dimensionRepresentationMappings;
     		String datasourceFilename not nullable;
     		String mapping length="4000";
-    		
+
     		Repository DimensionRepresentationMappingRepository {
 				save;
 				delete;
 				findByCondition;
-				@DimensionRepresentationMapping findByDatasetAndDatasourceFilename(String datasetVersionUrn, String datasourceFilename) throws MetamacException;
-				List<@DimensionRepresentationMapping> findByDatasetAndDatasourceFilenames(String datasetVersionUrn, List<String> datasourceFilenames) throws MetamacException;
+				@DimensionRepresentationMapping findByDatasetAndDatasourceFilename(String datasetUrn, String datasourceFilename) throws MetamacException;
 			}
     	}
 	}
