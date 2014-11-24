@@ -20,6 +20,7 @@ import org.apache.commons.lang.StringEscapeUtils;
 import org.json.simple.JSONObject;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.util.ApplicationContextProvider;
+import org.siemac.metamac.statistical.resources.core.dataset.utils.shared.DatasetVersionSharedUtils;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DimensionRepresentationMappingDto;
 import org.siemac.metamac.statistical.resources.core.facade.serviceapi.StatisticalResourcesServiceFacade;
 import org.siemac.metamac.statistical.resources.web.shared.ds.DimensionRepresentationMappingDS;
@@ -116,26 +117,13 @@ public class DatasourceImportationPreviewServlet extends BaseHttpServlet {
     // UTILITY METHODS
     //
 
-    // TODO METAMAC-1979
-    // @SuppressWarnings("unchecked")
-    // private String serializeResourcesJson(List<DimensionRepresentationMappingDto> mappings) {
-    // JSONArray list = new JSONArray();
-    // JSONObject obj = new JSONObject();
-    // obj.put("1", "convocatoria1");
-    // list.add(obj);
-    // list.toJSONString();
-    //
-    // for (DimensionRepresentationMappingDto mapping : mappings) {
-    // list.add(serializeResourceJson(mapping));
-    // }
-    // return list.toJSONString();
-    // }
-
     @SuppressWarnings("unchecked")
     private JSONObject serializeResourceJson(DimensionRepresentationMappingDto dimensionRepresentationMapping) {
         JSONObject obj = new JSONObject();
-        obj.put(DimensionRepresentationMappingDS.FILENAME, dimensionRepresentationMapping.getDatasourceFilename());
-        // TODO METAMAC-1979
+        if (dimensionRepresentationMapping != null) {
+            obj.put(DimensionRepresentationMappingDS.FILENAME, dimensionRepresentationMapping.getDatasourceFilename());
+            obj.put(DimensionRepresentationMappingDS.MAPPING, DatasetVersionSharedUtils.dimensionRepresentationMapToString(dimensionRepresentationMapping.getMapping()));
+        }
         return obj;
     }
 

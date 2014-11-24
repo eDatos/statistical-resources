@@ -10,10 +10,12 @@ import java.util.Map;
 
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
+import org.siemac.metamac.statistical.resources.core.dataset.utils.shared.DatasetVersionSharedUtils;
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb;
 import org.siemac.metamac.statistical.resources.web.client.constants.StatisticalResourceWebConstants;
 import org.siemac.metamac.statistical.resources.web.client.dataset.view.handlers.DatasetDatasourcesTabUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.widgets.windows.search.SearchSingleSrmItemSchemeWindow;
+import org.siemac.metamac.statistical.resources.web.shared.ds.DimensionRepresentationMappingDS;
 import org.siemac.metamac.statistical.resources.web.shared.utils.StatisticalResourcesSharedTokens;
 import org.siemac.metamac.web.common.client.MetamacWebCommon;
 import org.siemac.metamac.web.common.client.utils.RecordUtils;
@@ -25,6 +27,9 @@ import org.siemac.metamac.web.common.client.widgets.form.fields.external.SearchE
 import org.siemac.metamac.web.common.shared.criteria.SrmExternalResourceRestCriteria;
 
 import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONParser;
+import com.google.gwt.json.client.JSONValue;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.fields.FormItem;
 import com.smartgwt.client.widgets.form.fields.HiddenItem;
@@ -119,8 +124,23 @@ public abstract class ImportDatasourceWithMappingWindow extends UploadResourceWi
     protected void onPreviewComplete(String response) {
         extraForm.clearValues();
         clearExtraFormValues();
-        // TODO METAMAC-1979 set values in extraForm
+        Map<String, String> mapping = parseResponse(response);
+        // TODO METAMAC-1979 set mapping in extraForm
         extraForm.setVisible(true);
+    }
+
+    private Map<String, String> parseResponse(String response) {
+        JSONValue json = JSONParser.parseStrict(response);
+        JSONObject jsonObject = json.isObject();
+        String mapping = getJsonStringValue(jsonObject, DimensionRepresentationMappingDS.MAPPING);
+        return DatasetVersionSharedUtils.dimensionRepresentationMapFromString(mapping);
+    }
+
+    private String getJsonStringValue(JSONObject json, String field) {
+        if (json.get(field) != null && json.get(field).isString() != null) {
+            return json.get(field).isString().stringValue();
+        }
+        return null;
     }
 
     @Override

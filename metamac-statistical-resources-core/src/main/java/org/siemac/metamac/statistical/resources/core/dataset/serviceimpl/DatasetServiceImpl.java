@@ -263,7 +263,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         // The dimension representation mapping is only deleted if there is no more datasources associated with the same file
         if (datasources.isEmpty()) {
             DimensionRepresentationMapping dimensionRepresentationMapping = getDimensionRepresentationMappingRepository().findByDatasetAndDatasourceFilename(
-                    datasetVersion.getSiemacMetadataStatisticalResource().getUrn(), filename);
+                    datasetVersion.getDataset().getIdentifiableStatisticalResource().getUrn(), filename);
             if (dimensionRepresentationMapping != null) {
                 getDimensionRepresentationMappingRepository().delete(dimensionRepresentationMapping);
             }
