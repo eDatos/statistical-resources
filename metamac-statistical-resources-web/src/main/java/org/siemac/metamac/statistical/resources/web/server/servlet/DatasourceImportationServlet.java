@@ -97,9 +97,13 @@ public class DatasourceImportationServlet extends BaseHttpServlet {
 
             List<File> filesToImport = new ArrayList<File>();
 
+            Boolean storeDimensionsMapping = null;
+
             if (isZip(uploadedFile)) {
+                storeDimensionsMapping = false;
                 filesToImport = ZipUtils.unzipArchive(uploadedFile, outputFolder);
             } else {
+                storeDimensionsMapping = true;
                 filesToImport.add(uploadedFile);
             }
 
@@ -111,7 +115,8 @@ public class DatasourceImportationServlet extends BaseHttpServlet {
             if (StringUtils.isNotBlank(datasetVersionUrn)) {
                 Map<String, String> dimensionMapping = buildDimensionsMappings(args);
                 DatasetVersionDto datasetVersionDto = statisticalResourcesServiceFacade.retrieveDatasetVersionByUrn(ServiceContextHolder.getCurrentServiceContext(), datasetVersionUrn);
-                statisticalResourcesServiceFacade.importDatasourcesInDatasetVersion(ServiceContextHolder.getCurrentServiceContext(), datasetVersionDto, fileUrls, dimensionMapping);
+                statisticalResourcesServiceFacade.importDatasourcesInDatasetVersion(ServiceContextHolder.getCurrentServiceContext(), datasetVersionDto, fileUrls, dimensionMapping,
+                        storeDimensionsMapping);
             } else if (StringUtils.isNotBlank(statisticalOperationCode)) {
                 statisticalResourcesServiceFacade.importDatasourcesInStatisticalOperation(ServiceContextHolder.getCurrentServiceContext(), statisticalOperationCode, fileUrls);
             }

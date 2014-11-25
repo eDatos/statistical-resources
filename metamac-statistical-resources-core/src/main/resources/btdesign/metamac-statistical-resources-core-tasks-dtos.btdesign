@@ -12,6 +12,7 @@ Application DatasetsStatisticalResourcesDto {
 			- List<@AlternativeEnumeratedRepresentation> alternativeRepresentations;
 			String dataStructureUrn; 
 			String datasetVersionId;
+			Boolean storeAlternativeRepresentations
 		}
 
 		DataTransferObject FileDescriptor {
@@ -25,6 +26,7 @@ Application DatasetsStatisticalResourcesDto {
 			String datasourceId;
 			JAVADATE nextUpdate;
 			StringMap dimensionRepresentationMapping;
+			Boolean storeDimensionRepresentationMapping;
 		}
 
 		DataTransferObject AlternativeEnumeratedRepresentation {

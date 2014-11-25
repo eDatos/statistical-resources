@@ -81,7 +81,7 @@ public class DatasetServiceImportationTest extends StatisticalResourcesBaseTest 
         Map<String, String> mappings = new HashMap<String, String>();
         mappings.put("dimension01", "urn01");
         mappings.put("dimension02", "urn02");
-        datasetService.importDatasourcesInDatasetVersion(getServiceContextWithoutPrincipal(), datasetVersionUrn, urls, mappings);
+        datasetService.importDatasourcesInDatasetVersion(getServiceContextWithoutPrincipal(), datasetVersionUrn, urls, mappings, false);
 
         ArgumentCaptor<TaskInfoDataset> argument = ArgumentCaptor.forClass(TaskInfoDataset.class);
         verify(taskService).planifyImportationDataset(any(ServiceContext.class), argument.capture());
@@ -103,7 +103,7 @@ public class DatasetServiceImportationTest extends StatisticalResourcesBaseTest 
 
         List<URL> urls = Arrays.asList(buildFileUrl(filename));
         HashMap<String, String> mappings = new HashMap<String, String>();
-        datasetService.importDatasourcesInDatasetVersion(getServiceContextWithoutPrincipal(), datasetVersionUrn, urls, mappings);
+        datasetService.importDatasourcesInDatasetVersion(getServiceContextWithoutPrincipal(), datasetVersionUrn, urls, mappings, false);
     }
 
     @Test

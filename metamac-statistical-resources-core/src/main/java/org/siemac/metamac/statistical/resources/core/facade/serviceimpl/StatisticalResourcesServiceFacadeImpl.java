@@ -1202,8 +1202,8 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     }
 
     @Override
-    public void importDatasourcesInDatasetVersion(ServiceContext ctx, DatasetVersionDto datasetVersionDto, List<URL> fileUrls, Map<String, String> dimensionRepresentationMapping)
-            throws MetamacException {
+    public void importDatasourcesInDatasetVersion(ServiceContext ctx, DatasetVersionDto datasetVersionDto, List<URL> fileUrls, Map<String, String> dimensionRepresentationMapping,
+            boolean storeDimensionRepresentationMapping) throws MetamacException {
         // Security
         DatasetsSecurityUtils.canImportDatasourcesInDatasetVersion(ctx, datasetVersionDto.getStatisticalOperation().getCode());
 
@@ -1211,7 +1211,8 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         DatasetVersion datasetVersion = datasetDto2DoMapper.datasetVersionDtoToDo(datasetVersionDto);
 
         // Service
-        getDatasetService().importDatasourcesInDatasetVersion(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getUrn(), fileUrls, dimensionRepresentationMapping);
+        getDatasetService().importDatasourcesInDatasetVersion(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getUrn(), fileUrls, dimensionRepresentationMapping,
+                storeDimensionRepresentationMapping);
     }
 
     @Override

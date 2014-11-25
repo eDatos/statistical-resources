@@ -194,6 +194,7 @@ public class TaskServiceImpl extends TaskServiceImplBase {
             JobDetail job = newJob(ImportDatasetJob.class).withIdentity(jobKey).usingJobData(ImportDatasetJob.FILE_PATHS, filePaths.toString())
                     .usingJobData(ImportDatasetJob.FILE_FORMATS, fileFormats.toString()).usingJobData(ImportDatasetJob.FILE_NAMES, fileNames.toString())
                     .usingJobData(ImportDatasetJob.ALTERNATIVE_REPRESENTATIONS, alternativeRepresentations.toString())
+                    .usingJobData(ImportDatasetJob.STORE_ALTERNATIVE_REPRESENTATIONS, taskInfoDataset.getStoreAlternativeRepresentations())
                     .usingJobData(ImportDatasetJob.DATA_STRUCTURE_URN, taskInfoDataset.getDataStructureUrn()).usingJobData(ImportDatasetJob.DATASET_VERSION_ID, taskInfoDataset.getDatasetVersionId())
                     .usingJobData(ImportDatasetJob.USER, ctx.getUserId()).requestRecovery().build();
 
@@ -630,6 +631,7 @@ public class TaskServiceImpl extends TaskServiceImplBase {
             fileDescriptorResult.setFileName(fileDescriptor.getFileName());
             fileDescriptorResult.setDatasourceId(dataSourceId);
             fileDescriptorResult.setNextUpdate(nextUpdate);
+            fileDescriptorResult.setStoreDimensionRepresentationMapping(taskInfoDataset.getStoreAlternativeRepresentations());
             fileDescriptorResult.setDimensionRepresentationMapping(validateDataVersusDsd.getAlternativeSourceEnumerationRepresentationMap());
 
             filesResult.add(fileDescriptorResult);

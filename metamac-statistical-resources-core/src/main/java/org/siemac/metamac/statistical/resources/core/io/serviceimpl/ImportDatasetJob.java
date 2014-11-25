@@ -36,17 +36,18 @@ import org.slf4j.LoggerFactory;
 
 public class ImportDatasetJob implements Job {
 
-    private static Logger      logger                      = LoggerFactory.getLogger(ImportDatasetJob.class);
+    private static Logger      logger                            = LoggerFactory.getLogger(ImportDatasetJob.class);
 
-    public static final String USER                        = "user";
-    public static final String FILE_PATHS                  = "filePaths";
-    public static final String FILE_NAMES                  = "fileNames";
-    public static final String FILE_FORMATS                = "fileFormats";
-    public static final String DATA_STRUCTURE_URN          = "dataStructureUrn";
-    public static final String DATASET_VERSION_ID          = "datasetVersionId";
-    public static final String ALTERNATIVE_REPRESENTATIONS = "alternativeRepresentations";
+    public static final String USER                              = "user";
+    public static final String FILE_PATHS                        = "filePaths";
+    public static final String FILE_NAMES                        = "fileNames";
+    public static final String FILE_FORMATS                      = "fileFormats";
+    public static final String DATA_STRUCTURE_URN                = "dataStructureUrn";
+    public static final String DATASET_VERSION_ID                = "datasetVersionId";
+    public static final String ALTERNATIVE_REPRESENTATIONS       = "alternativeRepresentations";
+    public static final String STORE_ALTERNATIVE_REPRESENTATIONS = "storeAlternativeRepresentations";
 
-    private TaskServiceFacade  taskServiceFacade           = null;
+    private TaskServiceFacade  taskServiceFacade                 = null;
 
     /**
      * Quartz requires a public empty constructor so that the scheduler can instantiate the class whenever it needs.
@@ -75,6 +76,7 @@ public class ImportDatasetJob implements Job {
         String fileFormats = data.getString(FILE_FORMATS);
         String datasetVersionId = data.getString(DATASET_VERSION_ID);
         String alternativeRepresentations = data.getString(ALTERNATIVE_REPRESENTATIONS);
+        Boolean storeAlternativeRepresentations = data.getBoolean(STORE_ALTERNATIVE_REPRESENTATIONS);
         String user = data.getString(USER);
 
         // Execution
@@ -88,6 +90,7 @@ public class ImportDatasetJob implements Job {
             taskInfoDataset.getFiles().addAll(inflateFileDescriptors(filePaths, fileNames, fileFormats));
             taskInfoDataset.setDatasetVersionId(datasetVersionId);
             taskInfoDataset.getAlternativeRepresentations().addAll(inflateAlternativeRepresentations(alternativeRepresentations));
+            taskInfoDataset.setStoreAlternativeRepresentations(storeAlternativeRepresentations);
 
             getTaskServiceFacade().executeImportationTask(serviceContext, jobKey.getName(), taskInfoDataset);
             logger.info("ImportationJob: " + jobKey + " finished at " + new Date());

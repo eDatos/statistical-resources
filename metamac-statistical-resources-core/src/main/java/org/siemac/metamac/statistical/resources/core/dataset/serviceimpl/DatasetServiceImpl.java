@@ -616,8 +616,9 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
     }
 
     @Override
-    public void importDatasourcesInDatasetVersion(ServiceContext ctx, String datasetVersionUrn, List<URL> fileUrls, Map<String, String> dimensionRepresentationMapping) throws MetamacException {
-        datasetServiceInvocationValidator.checkImportDatasourcesInDatasetVersion(ctx, datasetVersionUrn, fileUrls, dimensionRepresentationMapping);
+    public void importDatasourcesInDatasetVersion(ServiceContext ctx, String datasetVersionUrn, List<URL> fileUrls, Map<String, String> dimensionRepresentationMapping,
+            boolean storeDimensionRepresentationMapping) throws MetamacException {
+        datasetServiceInvocationValidator.checkImportDatasourcesInDatasetVersion(ctx, datasetVersionUrn, fileUrls, dimensionRepresentationMapping, storeDimensionRepresentationMapping);
 
         DatasetVersion datasetVersion = getDatasetVersionRepository().retrieveByUrn(datasetVersionUrn);
 
@@ -629,17 +630,18 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
 
         checkFilesCanBeAssociatedWithDataset(datasetUrn, datasetVersionUrn, fileUrls);
 
-        TaskInfoDataset taskInfo = buildImportationTaskInfo(datasetVersion, fileUrls, dimensionRepresentationMapping);
+        TaskInfoDataset taskInfo = buildImportationTaskInfo(datasetVersion, fileUrls, dimensionRepresentationMapping, storeDimensionRepresentationMapping);
 
         getTaskService().planifyImportationDataset(ctx, taskInfo);
     }
 
-    private TaskInfoDataset buildImportationTaskInfo(DatasetVersion datasetVersion, List<URL> fileUrls, Map<String, String> dimensionRepresentationMapping) {
+    private TaskInfoDataset buildImportationTaskInfo(DatasetVersion datasetVersion, List<URL> fileUrls, Map<String, String> dimensionRepresentationMapping, boolean storeDimensionRepresentationMapping) {
         String datasetVersionUrn = datasetVersion.getSiemacMetadataStatisticalResource().getUrn();
 
         TaskInfoDataset taskInfo = new TaskInfoDataset();
         taskInfo.setDatasetVersionId(datasetVersionUrn);
         taskInfo.setDataStructureUrn(datasetVersion.getRelatedDsd().getUrn());
+        taskInfo.setStoreAlternativeRepresentations(storeDimensionRepresentationMapping);
 
         for (String dimensionId : dimensionRepresentationMapping.keySet()) {
             AlternativeEnumeratedRepresentation representation = new AlternativeEnumeratedRepresentation();
@@ -702,8 +704,9 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
             try {
                 List<URL> urls = datasetVersionsForFiles.get(datasetVersionUrn);
                 HashMap<String, String> dimensionRepresentationMapping = new HashMap<String, String>();
+                boolean storeDimensionRepresentationMapping = false;
 
-                importDatasourcesInDatasetVersion(ctx, datasetVersionUrn, urls, dimensionRepresentationMapping);
+                importDatasourcesInDatasetVersion(ctx, datasetVersionUrn, urls, dimensionRepresentationMapping, storeDimensionRepresentationMapping);
             } catch (MetamacException e) {
                 MetamacExceptionItem item = new MetamacExceptionItem(ServiceExceptionType.IMPORTATION_DATASET_VERSION_ERROR, datasetVersionUrn);
                 item.setExceptionItems(e.getExceptionItems());
@@ -756,7 +759,9 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
                 datasource.setDateNextUpdate(new DateTime(fileDescriptor.getNextUpdate()));
             }
             Datasource createdDatasource = createDatasource(ctx, datasetImportationId, datasource);
-            saveDimensionRepresentationMapping(ctx, datasetVersion.getDataset(), createdDatasource.getFilename(), fileDescriptor.getDimensionRepresentationMapping());
+            if (BooleanUtils.isTrue(fileDescriptor.getStoreDimensionRepresentationMapping())) {
+                saveDimensionRepresentationMapping(ctx, datasetVersion.getDataset(), createdDatasource.getFilename(), fileDescriptor.getDimensionRepresentationMapping());
+            }
         }
     }
 

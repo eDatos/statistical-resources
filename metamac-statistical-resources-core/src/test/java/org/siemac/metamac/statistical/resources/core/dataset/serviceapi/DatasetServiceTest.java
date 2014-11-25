@@ -925,7 +925,7 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
 
         List<URL> urls = Arrays.asList(new File("prueba.px").toURI().toURL());
         HashMap<String, String> mappings = new HashMap<String, String>();
-        datasetService.importDatasourcesInDatasetVersion(getServiceContextWithoutPrincipal(), urn, urls, mappings);
+        datasetService.importDatasourcesInDatasetVersion(getServiceContextWithoutPrincipal(), urn, urls, mappings, false);
     }
 
     @Test
@@ -935,7 +935,7 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
         String urn = datasetVersion.getSiemacMetadataStatisticalResource().getUrn();
 
         List<URL> urls = Arrays.asList(new File("prueba.px").toURI().toURL());
-        datasetService.importDatasourcesInDatasetVersion(getServiceContextWithoutPrincipal(), urn, urls, new HashMap<String, String>());
+        datasetService.importDatasourcesInDatasetVersion(getServiceContextWithoutPrincipal(), urn, urls, new HashMap<String, String>(), false);
     }
 
     @Test
@@ -945,7 +945,7 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
         String urn = datasetVersion.getSiemacMetadataStatisticalResource().getUrn();
 
         List<URL> urls = Arrays.asList(new File("prueba.px").toURI().toURL());
-        datasetService.importDatasourcesInDatasetVersion(getServiceContextWithoutPrincipal(), urn, urls, new HashMap<String, String>());
+        datasetService.importDatasourcesInDatasetVersion(getServiceContextWithoutPrincipal(), urn, urls, new HashMap<String, String>(), false);
     }
 
     @Test
@@ -957,7 +957,7 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
         List<URL> urls = Arrays.asList(new File("prueba.px").toURI().toURL());
 
         expectedMetamacException(new MetamacException(ServiceExceptionType.LIFE_CYCLE_WRONG_PROC_STATUS, urn, ProcStatusForActionsConstants.PROC_STATUS_FOR_IMPORT_DATASOURCES_IN_DATASET_VERSION));
-        datasetService.importDatasourcesInDatasetVersion(getServiceContextWithoutPrincipal(), urn, urls, new HashMap<String, String>());
+        datasetService.importDatasourcesInDatasetVersion(getServiceContextWithoutPrincipal(), urn, urls, new HashMap<String, String>(), false);
     }
 
     @Test
@@ -969,7 +969,7 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
         List<URL> urls = Arrays.asList(new File("prueba.px").toURI().toURL());
 
         expectedMetamacException(new MetamacException(ServiceExceptionType.LIFE_CYCLE_WRONG_PROC_STATUS, urn, ProcStatusForActionsConstants.PROC_STATUS_FOR_IMPORT_DATASOURCES_IN_DATASET_VERSION));
-        datasetService.importDatasourcesInDatasetVersion(getServiceContextWithoutPrincipal(), urn, urls, new HashMap<String, String>());
+        datasetService.importDatasourcesInDatasetVersion(getServiceContextWithoutPrincipal(), urn, urls, new HashMap<String, String>(), false);
     }
 
     @Test
@@ -981,7 +981,7 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
         List<URL> urls = Arrays.asList(new File("prueba.px").toURI().toURL());
 
         expectedMetamacException(new MetamacException(ServiceExceptionType.LIFE_CYCLE_WRONG_PROC_STATUS, urn, ProcStatusForActionsConstants.PROC_STATUS_FOR_IMPORT_DATASOURCES_IN_DATASET_VERSION));
-        datasetService.importDatasourcesInDatasetVersion(getServiceContextWithoutPrincipal(), urn, urls, new HashMap<String, String>());
+        datasetService.importDatasourcesInDatasetVersion(getServiceContextWithoutPrincipal(), urn, urls, new HashMap<String, String>(), false);
     }
 
     @Test
@@ -993,7 +993,7 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
         List<URL> urls = Arrays.asList(new File("prueba.px").toURI().toURL());
 
         expectedMetamacException(new MetamacException(ServiceExceptionType.LIFE_CYCLE_WRONG_PROC_STATUS, urn, ProcStatusForActionsConstants.PROC_STATUS_FOR_IMPORT_DATASOURCES_IN_DATASET_VERSION));
-        datasetService.importDatasourcesInDatasetVersion(getServiceContextWithoutPrincipal(), urn, urls, new HashMap<String, String>());
+        datasetService.importDatasourcesInDatasetVersion(getServiceContextWithoutPrincipal(), urn, urls, new HashMap<String, String>(), false);
     }
 
     @Test
@@ -1007,7 +1007,7 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
 
         List<URL> urls = Arrays.asList(new File("prueba.px").toURI().toURL());
         HashMap<String, String> mappings = new HashMap<String, String>();
-        datasetService.importDatasourcesInDatasetVersion(getServiceContextWithoutPrincipal(), urn, urls, mappings);
+        datasetService.importDatasourcesInDatasetVersion(getServiceContextWithoutPrincipal(), urn, urls, mappings, false);
     }
 
     @Test
@@ -1020,7 +1020,7 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
 
         List<URL> urls = Arrays.asList(new File("datasource_06.px").toURI().toURL());
         HashMap<String, String> mappings = new HashMap<String, String>();
-        datasetService.importDatasourcesInDatasetVersion(getServiceContextWithoutPrincipal(), urn, urls, mappings);
+        datasetService.importDatasourcesInDatasetVersion(getServiceContextWithoutPrincipal(), urn, urls, mappings, false);
     }
 
     @Override

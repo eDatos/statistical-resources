@@ -2325,7 +2325,7 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         URL url = new URL("file", null, "myfile.px");
 
         HashMap<String, String> mappings = new HashMap<String, String>();
-        statisticalResourcesServiceFacade.importDatasourcesInDatasetVersion(getServiceContextAdministrador(), datasetVersionDto, Arrays.asList(url), mappings);
+        statisticalResourcesServiceFacade.importDatasourcesInDatasetVersion(getServiceContextAdministrador(), datasetVersionDto, Arrays.asList(url), mappings, false);
     }
 
     @Override

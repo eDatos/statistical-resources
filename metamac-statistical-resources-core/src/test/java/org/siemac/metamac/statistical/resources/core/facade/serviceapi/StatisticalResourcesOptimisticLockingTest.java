@@ -1388,7 +1388,7 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
         try {
             List<URL> urls = Arrays.asList(new URL("file", null, "prueba.px"));
             Map<String, String> mappings = new HashMap<String, String>();
-            statisticalResourcesServiceFacade.importDatasourcesInDatasetVersion(getServiceContextAdministrador(), datasetVersionDtoSession02, urls, mappings);
+            statisticalResourcesServiceFacade.importDatasourcesInDatasetVersion(getServiceContextAdministrador(), datasetVersionDtoSession02, urls, mappings, false);
             fail("optimistic locking");
         } catch (MetamacException e) {
             assertEqualsMetamacExceptionItem(ServiceExceptionType.OPTIMISTIC_LOCKING, 0, null, e.getExceptionItems().get(0));

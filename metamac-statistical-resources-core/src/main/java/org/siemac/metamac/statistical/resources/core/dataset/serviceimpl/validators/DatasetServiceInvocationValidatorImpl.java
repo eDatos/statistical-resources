@@ -253,7 +253,8 @@ public class DatasetServiceInvocationValidatorImpl extends BaseInvocationValidat
         StatisticalResourcesValidationUtils.checkParameterRequired(fileDescriptors, ServiceExceptionParameters.FILE_DESCRIPTORS, exceptions);
     }
 
-    public static void checkImportDatasourcesInDatasetVersion(String datasetVersionUrn, List<URL> fileUrls, Map<String, String> dimensionRepresentationMapping, List<MetamacExceptionItem> exceptions) {
+    public static void checkImportDatasourcesInDatasetVersion(String datasetVersionUrn, List<URL> fileUrls, Map<String, String> dimensionRepresentationMapping,
+            boolean storeDimensionRepresentationMapping, List<MetamacExceptionItem> exceptions) {
         StatisticalResourcesValidationUtils.checkParameterRequired(datasetVersionUrn, ServiceExceptionParameters.DATASET_VERSION_URN, exceptions);
         StatisticalResourcesValidationUtils.checkParameterRequired(fileUrls, ServiceExceptionParameters.FILE_URLS, exceptions);
         if (dimensionRepresentationMapping == null) {
