@@ -7,10 +7,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
+import org.siemac.metamac.core.common.dto.InternationalStringDto;
+import org.siemac.metamac.core.common.dto.LocalisedStringDto;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
-import org.siemac.metamac.statistical.resources.core.dataset.utils.shared.DatasetVersionSharedUtils;
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb;
 import org.siemac.metamac.statistical.resources.web.client.constants.StatisticalResourceWebConstants;
 import org.siemac.metamac.statistical.resources.web.client.dataset.view.handlers.DatasetDatasourcesTabUiHandlers;
@@ -27,6 +29,7 @@ import org.siemac.metamac.web.common.client.widgets.form.fields.external.SearchE
 import org.siemac.metamac.web.common.shared.criteria.SrmExternalResourceRestCriteria;
 
 import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
@@ -110,7 +113,7 @@ public abstract class ImportDatasourceWithMappingWindow extends UploadResourceWi
 
     @Override
     protected void copyHiddenValuesToMainForm(UploadForm mainForm, DynamicForm extraForm) {
-        for (String dimensionId : dimensionWindowsMap.keySet()) {
+        for (String dimensionId : dimensionsMapping.keySet()) {
             SearchExternalItemLinkItem item = (SearchExternalItemLinkItem) extraForm.getItem(getDimensionSelectionFieldName(dimensionId));
             if (item.getExternalItemDto() != null) {
                 mainForm.setValue(getDimensionHiddenFieldName(dimensionId), item.getExternalItemDto().getUrn());
@@ -124,16 +127,67 @@ public abstract class ImportDatasourceWithMappingWindow extends UploadResourceWi
     protected void onPreviewComplete(String response) {
         extraForm.clearValues();
         clearExtraFormValues();
-        Map<String, String> mapping = parseResponse(response);
-        // TODO METAMAC-1979 set mapping in extraForm
+        Map<String, ExternalItemDto> mappings = parseResponse(response);
+        setValuesInExtraForm(mappings);
         extraForm.setVisible(true);
     }
 
-    private Map<String, String> parseResponse(String response) {
+    private void setValuesInExtraForm(Map<String, ExternalItemDto> mappings) {
+        for (Entry<String, ExternalItemDto> mapping : mappings.entrySet()) {
+            String dimensionFieldName = getDimensionSelectionFieldName(mapping.getKey());
+            FormItem field = extraForm.getField(dimensionFieldName);
+            if (field != null && field instanceof SearchExternalItemLinkItem) {
+                extraForm.setValue(dimensionFieldName, RecordUtils.getExternalItemRecord(mapping.getValue()));
+            }
+        }
+    }
+
+    private Map<String, ExternalItemDto> parseResponse(String response) {
+        Map<String, ExternalItemDto> mappings = new HashMap<String, ExternalItemDto>();
         JSONValue json = JSONParser.parseStrict(response);
         JSONObject jsonObject = json.isObject();
-        String mapping = getJsonStringValue(jsonObject, DimensionRepresentationMappingDS.MAPPING);
-        return DatasetVersionSharedUtils.dimensionRepresentationMapFromString(mapping);
+        JSONValue jsonMapping = jsonObject.get(DimensionRepresentationMappingDS.MAPPING);
+        if (jsonMapping != null) {
+            JSONArray jsonMappingArray = jsonMapping.isArray();
+            for (int i = 0; i < jsonMappingArray.size(); i++) {
+                JSONObject mapping = jsonMappingArray.get(i).isObject();
+                String dimensionId = getJsonStringValue(mapping, DimensionRepresentationMappingDS.DIMENSION_ID);
+                JSONValue jsonValueExternalItem = mapping.get(DimensionRepresentationMappingDS.EXTERNAL_ITEM);
+                JSONObject jsonObjectExternalItem = jsonValueExternalItem.isObject();
+                ExternalItemDto externalItemDto = buildExternalItemDto(jsonObjectExternalItem);
+                mappings.put(dimensionId, externalItemDto);
+            }
+        }
+        return mappings;
+    }
+
+    private ExternalItemDto buildExternalItemDto(JSONObject json) {
+        if (json == null) {
+            return null;
+        }
+        ExternalItemDto dto = new ExternalItemDto();
+        dto.setUrn(getJsonStringValue(json, DimensionRepresentationMappingDS.EXTERNAL_ITEM_URN));
+        dto.setCode(getJsonStringValue(json, DimensionRepresentationMappingDS.EXTERNAL_ITEM_CODE));
+        dto.setTitle(getJsonInternationalStringValue(json, DimensionRepresentationMappingDS.EXTERNAL_ITEM_TITLE));
+        if (dto.getUrn() == null) {
+            dto.setUrn(dto.getUrnProvider());
+        }
+        return dto;
+    }
+
+    private InternationalStringDto getJsonInternationalStringValue(JSONObject json, String field) {
+        if (json.get(field) != null && json.get(field).isObject() != null) {
+            JSONObject intStringJson = json.get(field).isObject();
+            InternationalStringDto dto = new InternationalStringDto();
+            for (String locale : intStringJson.keySet()) {
+                LocalisedStringDto localised = new LocalisedStringDto();
+                localised.setLocale(locale);
+                localised.setLabel(getJsonStringValue(intStringJson, locale));
+                dto.addText(localised);
+            }
+            return dto;
+        }
+        return null;
     }
 
     private String getJsonStringValue(JSONObject json, String field) {

@@ -1,10 +1,15 @@
 package org.siemac.metamac.statistical.resources.web.server.servlet;
 
+import static org.siemac.metamac.core.common.enume.domain.TypeExternalArtefactsEnum.CODELIST;
+
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -17,16 +22,24 @@ import org.apache.commons.fileupload.disk.DiskFileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.lang.StringEscapeUtils;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.siemac.metamac.core.common.dto.ExternalItemDto;
+import org.siemac.metamac.core.common.dto.InternationalStringDto;
+import org.siemac.metamac.core.common.dto.LocalisedStringDto;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.util.ApplicationContextProvider;
-import org.siemac.metamac.statistical.resources.core.dataset.utils.shared.DatasetVersionSharedUtils;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DimensionRepresentationMappingDto;
 import org.siemac.metamac.statistical.resources.core.facade.serviceapi.StatisticalResourcesServiceFacade;
+import org.siemac.metamac.statistical.resources.web.server.rest.SrmRestInternalFacadeImpl;
 import org.siemac.metamac.statistical.resources.web.shared.ds.DimensionRepresentationMappingDS;
+import org.siemac.metamac.statistical.resources.web.shared.dtos.DimensionRepresentationMappingWebDto;
 import org.siemac.metamac.statistical.resources.web.shared.utils.StatisticalResourcesSharedTokens;
 import org.siemac.metamac.web.common.server.ServiceContextHolder;
 import org.siemac.metamac.web.common.server.utils.WebExceptionUtils;
+import org.siemac.metamac.web.common.shared.criteria.SrmExternalResourceRestCriteria;
+import org.siemac.metamac.web.common.shared.domain.ExternalItemsResult;
+import org.siemac.metamac.web.common.shared.exception.MetamacWebException;
 
 import com.google.inject.Singleton;
 
@@ -90,7 +103,9 @@ public class DatasourceImportationPreviewServlet extends BaseHttpServlet {
 
             DimensionRepresentationMappingDto mapping = statisticalResourcesServiceFacade.retrieveDimensionRepresentationMappings(ServiceContextHolder.getCurrentServiceContext(), datasetVersionUrn,
                     filename);
-            String message = serializeResourceJson(mapping).toJSONString();
+            DimensionRepresentationMappingWebDto mappingExternalItem = dimensionRepresentationMappingDto2WebDto(mapping);
+
+            String message = serializeResourceJson(mappingExternalItem).toJSONString();
             sendSuccessImportationResponse(response, message);
 
         } catch (Exception e) {
@@ -118,11 +133,42 @@ public class DatasourceImportationPreviewServlet extends BaseHttpServlet {
     //
 
     @SuppressWarnings("unchecked")
-    private JSONObject serializeResourceJson(DimensionRepresentationMappingDto dimensionRepresentationMapping) {
+    private JSONObject serializeResourceJson(DimensionRepresentationMappingWebDto dimensionRepresentationMapping) {
         JSONObject obj = new JSONObject();
         if (dimensionRepresentationMapping != null) {
             obj.put(DimensionRepresentationMappingDS.FILENAME, dimensionRepresentationMapping.getDatasourceFilename());
-            obj.put(DimensionRepresentationMappingDS.MAPPING, DatasetVersionSharedUtils.dimensionRepresentationMapToString(dimensionRepresentationMapping.getMapping()));
+            obj.put(DimensionRepresentationMappingDS.MAPPING, serializeMap(dimensionRepresentationMapping.getMapping()));
+        }
+        return obj;
+    }
+
+    @SuppressWarnings("unchecked")
+    private JSONArray serializeMap(Map<String, ExternalItemDto> mapping) {
+        JSONArray list = new JSONArray();
+        for (Entry<String, ExternalItemDto> entry : mapping.entrySet()) {
+            JSONObject representation = new JSONObject();
+            representation.put(DimensionRepresentationMappingDS.DIMENSION_ID, entry.getKey());
+            representation.put(DimensionRepresentationMappingDS.EXTERNAL_ITEM, serializeExternalItemDto(entry.getValue()));
+            list.add(representation);
+        }
+        return list;
+    }
+
+    @SuppressWarnings("unchecked")
+    private JSONObject serializeExternalItemDto(ExternalItemDto externalItemDto) {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put(DimensionRepresentationMappingDS.EXTERNAL_ITEM_CODE, externalItemDto.getCode());
+        jsonObject.put(DimensionRepresentationMappingDS.EXTERNAL_ITEM_URN, externalItemDto.getUrn());
+        jsonObject.put(DimensionRepresentationMappingDS.EXTERNAL_ITEM_TITLE, serializeInternationalString(externalItemDto.getTitle()));
+        return jsonObject;
+    }
+
+    @SuppressWarnings("unchecked")
+    private JSONObject serializeInternationalString(InternationalStringDto title) {
+        JSONObject obj = new JSONObject();
+        for (LocalisedStringDto localised : title.getTexts()) {
+            String clean = JSONObject.escape(localised.getLabel());
+            obj.put(localised.getLocale(), clean);
         }
         return obj;
     }
@@ -135,5 +181,45 @@ public class DatasourceImportationPreviewServlet extends BaseHttpServlet {
     private void sendFailedImportationResponse(HttpServletResponse response, String errorMessage) throws IOException {
         String action = "if (parent.uploadFailed) parent.uploadFailed('" + errorMessage + "');";
         sendResponse(response, action);
+    }
+
+    private DimensionRepresentationMappingWebDto dimensionRepresentationMappingDto2WebDto(DimensionRepresentationMappingDto dto) throws MetamacWebException {
+        if (dto == null) {
+            return null;
+        }
+        DimensionRepresentationMappingWebDto webDto = new DimensionRepresentationMappingWebDto();
+        webDto.setDatasourceFilename(dto.getDatasourceFilename());
+        webDto.setMapping(buildRepresentationMap(dto.getMapping()));
+        return webDto;
+    }
+
+    private Map<String, ExternalItemDto> buildRepresentationMap(Map<String, String> mappings) throws MetamacWebException {
+        Map<String, ExternalItemDto> externalItemMappings = new HashMap<String, ExternalItemDto>();
+        if (mappings != null && !mappings.isEmpty()) {
+            List<String> urns = new ArrayList<String>(mappings.values());
+            Map<String, ExternalItemDto> codelistMap = getCodelists(urns);
+            for (String dimension : mappings.keySet()) {
+                String codelistRepresentationUrn = mappings.get(dimension);
+                externalItemMappings.put(dimension, codelistMap.get(codelistRepresentationUrn));
+            }
+        }
+        return externalItemMappings;
+    }
+
+    private Map<String, ExternalItemDto> getCodelists(List<String> urns) throws MetamacWebException {
+
+        SrmRestInternalFacadeImpl srmRestInternalFacade = (SrmRestInternalFacadeImpl) ApplicationContextProvider.getApplicationContext().getBean("srmRestInternalFacadeImpl");
+
+        Map<String, ExternalItemDto> codelistMap = new HashMap<String, ExternalItemDto>(urns.size());
+
+        SrmExternalResourceRestCriteria criteria = new SrmExternalResourceRestCriteria(CODELIST);
+        criteria.setUrns(urns);
+
+        ExternalItemsResult result = srmRestInternalFacade.findCodelists(criteria);
+        for (ExternalItemDto externalItemDto : result.getExternalItemDtos()) {
+            codelistMap.put(externalItemDto.getUrn(), externalItemDto);
+        }
+
+        return codelistMap;
     }
 }

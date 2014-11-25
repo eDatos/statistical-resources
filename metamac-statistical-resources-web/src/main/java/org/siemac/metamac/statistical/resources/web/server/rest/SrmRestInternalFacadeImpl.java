@@ -243,11 +243,27 @@ public class SrmRestInternalFacadeImpl implements SrmRestInternalFacade {
 
             Codelists codelists = srmRestInternalService.findCodelists(firstResult, maxResult, query);
 
-            List<ExternalItemDto> codeistsExternalItems = new ArrayList<ExternalItemDto>();
+            List<ExternalItemDto> codelistsExternalItems = new ArrayList<ExternalItemDto>();
             for (ResourceInternal resource : codelists.getCodelists()) {
-                codeistsExternalItems.add(ExternalItemWebUtils.buildExternalItemDtoFromResource(resource, TypeExternalArtefactsEnum.CODE));
+                codelistsExternalItems.add(ExternalItemWebUtils.buildExternalItemDtoFromResource(resource, TypeExternalArtefactsEnum.CODE));
             }
-            return ExternalItemWebUtils.createExternalItemsResultFromListBase(codelists, codeistsExternalItems);
+            return ExternalItemWebUtils.createExternalItemsResultFromListBase(codelists, codelistsExternalItems);
+        } catch (MetamacException e) {
+            throw WebExceptionUtils.createMetamacWebException(e);
+        }
+    }
+
+    public ExternalItemsResult findCodelists(SrmExternalResourceRestCriteria criteria) throws MetamacWebException {
+        try {
+            String query = buildQueryCodelist(criteria, null);
+
+            List<ResourceInternal> codelists = srmRestInternalService.findCodelists(query);
+
+            List<ExternalItemDto> codelistsExternalItems = new ArrayList<ExternalItemDto>();
+            for (ResourceInternal resource : codelists) {
+                codelistsExternalItems.add(ExternalItemWebUtils.buildExternalItemDtoFromResource(resource, TypeExternalArtefactsEnum.CODE));
+            }
+            return new ExternalItemsResult(codelistsExternalItems, 0, codelistsExternalItems.size());
         } catch (MetamacException e) {
             throw WebExceptionUtils.createMetamacWebException(e);
         }

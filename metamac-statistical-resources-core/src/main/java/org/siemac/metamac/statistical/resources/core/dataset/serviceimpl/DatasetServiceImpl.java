@@ -812,8 +812,10 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         }
         dimensionRepresentationMapping.setMapping(DatasetVersionUtils.dimensionRepresentationMapToString(mapping));
 
-        if ((mapping == null || mapping.isEmpty()) && dimensionRepresentationMapping.getId() != null) {
-            getDimensionRepresentationMappingRepository().delete(dimensionRepresentationMapping);
+        if (mapping == null || mapping.isEmpty()) {
+            if (dimensionRepresentationMapping.getId() != null) {
+                getDimensionRepresentationMappingRepository().delete(dimensionRepresentationMapping);
+            }
         } else {
             getDimensionRepresentationMappingRepository().save(dimensionRepresentationMapping);
         }
