@@ -167,11 +167,8 @@ public class DatasetDatasourcesTabViewImpl extends ViewWithUiHandlers<DatasetDat
         }
 
         private void setUiHandlers(DatasetDatasourcesTabUiHandlers uiHandlers) {
-            if (importDatasourcesWindow != null) {
-                importDatasourcesWindow.setUiHandlers(uiHandlers);
-            }
             if (importDatasourceWithMappingWindow != null) {
-                importDatasourcesWindow.setUiHandlers(uiHandlers);
+                importDatasourceWithMappingWindow.setUiHandlers(uiHandlers);
             }
         }
 
@@ -283,7 +280,6 @@ public class DatasetDatasourcesTabViewImpl extends ViewWithUiHandlers<DatasetDat
                 }
             });
             importDatasourcesWindow.setDatasetVersion(datasetVersionUrn);
-            importDatasourcesWindow.setUiHandlers(getUiHandlers());
         }
 
         private void createImportDatasourceWithMappingWindow(String datasetVersionUrn, Map<String, String> dimensionsMapping) {

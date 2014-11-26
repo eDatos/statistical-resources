@@ -50,7 +50,6 @@ public class DatasetServiceImportationTest extends StatisticalResourcesBaseTest 
     @InjectMocks
     private DatasetService                    datasetService   = new DatasetServiceImpl();
 
-    @SuppressWarnings("unused")
     @Mock
     private DatasetServiceInvocationValidator datasetServiceInvocationValidator;
 

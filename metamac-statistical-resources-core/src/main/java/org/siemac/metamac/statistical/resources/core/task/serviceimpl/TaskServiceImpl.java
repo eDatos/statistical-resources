@@ -10,12 +10,15 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import javax.annotation.PostConstruct;
 
+import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteriaBuilder;
@@ -44,7 +47,9 @@ import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStr
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ResourceInternal;
 import org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConstants;
 import org.siemac.metamac.statistical.resources.core.constraint.api.ConstraintsService;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
+import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.DatasetService;
 import org.siemac.metamac.statistical.resources.core.enume.task.domain.DatasetFileFormatEnum;
 import org.siemac.metamac.statistical.resources.core.enume.task.domain.TaskStatusTypeEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
@@ -118,6 +123,9 @@ public class TaskServiceImpl extends TaskServiceImplBase {
 
     @Autowired
     private ConstraintsService               constraintsService;
+
+    @Autowired
+    private DatasetService                   datasetService;
 
     @PostConstruct
     public void afterPropertiesSet() throws Exception {
@@ -594,6 +602,10 @@ public class TaskServiceImpl extends TaskServiceImplBase {
     private void processDatasets(ServiceContext ctx, TaskInfoDataset taskInfoDataset, DateTime dateTime) throws Exception {
         DataStructure dataStructure = srmRestInternalService.retrieveDsdByUrn(taskInfoDataset.getDataStructureUrn());
 
+        if (BooleanUtils.isTrue(taskInfoDataset.getStoreAlternativeRepresentations())) {
+            saveAlternativeEnumeratedRepresetation(ctx, taskInfoDataset);
+        }
+
         // Fetch and marks as final the Dataset's content constraints
         List<ContentConstraint> calculateConstraints = calculateConstraints(ctx, taskInfoDataset.getDatasetVersionId());
 
@@ -606,6 +618,9 @@ public class TaskServiceImpl extends TaskServiceImplBase {
         List<FileDescriptorResult> filesResult = new ArrayList<FileDescriptorResult>(taskInfoDataset.getFiles().size());
 
         for (FileDescriptor fileDescriptor : taskInfoDataset.getFiles()) {
+
+            validateDataVersusDsd.setCurrentFilename(fileDescriptor.getFileName());
+
             String dataSourceId = Datasource.generateDataSourceId(fileDescriptor.getFileName(), dateTime);
             Date nextUpdate = null;
             if (DatasetFileFormatEnum.SDMX_2_1.equals(fileDescriptor.getDatasetFileFormatEnum())) {
@@ -632,9 +647,11 @@ public class TaskServiceImpl extends TaskServiceImplBase {
             fileDescriptorResult.setDatasourceId(dataSourceId);
             fileDescriptorResult.setNextUpdate(nextUpdate);
             fileDescriptorResult.setStoreDimensionRepresentationMapping(taskInfoDataset.getStoreAlternativeRepresentations());
-            fileDescriptorResult.setDimensionRepresentationMapping(validateDataVersusDsd.getAlternativeSourceEnumerationRepresentationMap());
+            fileDescriptorResult.setDimensionRepresentationMapping(validateDataVersusDsd.getAlternativeSourceEnumerationRepresentationMap().get(fileDescriptor.getFileName()));
 
             filesResult.add(fileDescriptorResult);
+
+            validateDataVersusDsd.setCurrentFilename(null);
         }
 
         // Callback
@@ -668,5 +685,21 @@ public class TaskServiceImpl extends TaskServiceImplBase {
         }
 
         return result;
+    }
+
+    private void saveAlternativeEnumeratedRepresetation(ServiceContext ctx, TaskInfoDataset taskInfoDataset) throws MetamacException {
+        DatasetVersion datasetVersion = datasetService.retrieveDatasetVersionByUrn(ctx, taskInfoDataset.getDatasetVersionId());
+        for (FileDescriptor fileDescriptor : taskInfoDataset.getFiles()) {
+            Map<String, String> mappings = alternativeEnumeratedRepresentationToMap(taskInfoDataset.getAlternativeRepresentations());
+            datasetService.saveDimensionRepresentationMapping(ctx, datasetVersion.getDataset(), fileDescriptor.getFileName(), mappings);
+        }
+    }
+
+    private Map<String, String> alternativeEnumeratedRepresentationToMap(List<AlternativeEnumeratedRepresentation> alternativeEnumeratedRepresentations) {
+        Map<String, String> mappings = new HashMap<String, String>();
+        for (AlternativeEnumeratedRepresentation representation : alternativeEnumeratedRepresentations) {
+            mappings.put(representation.getComponentId(), representation.getUrn());
+        }
+        return mappings;
     }
 }

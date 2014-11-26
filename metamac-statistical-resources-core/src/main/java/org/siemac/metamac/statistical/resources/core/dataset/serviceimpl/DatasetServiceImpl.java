@@ -758,10 +758,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
             if (DatasetFileFormatEnum.PX.equals(fileDescriptor.getDatasetFileFormatEnum())) {
                 datasource.setDateNextUpdate(new DateTime(fileDescriptor.getNextUpdate()));
             }
-            Datasource createdDatasource = createDatasource(ctx, datasetImportationId, datasource);
-            if (BooleanUtils.isTrue(fileDescriptor.getStoreDimensionRepresentationMapping())) {
-                saveDimensionRepresentationMapping(ctx, datasetVersion.getDataset(), createdDatasource.getFilename(), fileDescriptor.getDimensionRepresentationMapping());
-            }
+            createDatasource(ctx, datasetImportationId, datasource);
         }
     }
 
