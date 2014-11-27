@@ -64,6 +64,7 @@ public class DatasourceImportationServlet extends BaseHttpServlet {
 
         String fileName = new String();
         InputStream inputStream = null;
+        boolean isUploadedFileZip = false;
 
         try {
             StatisticalResourcesServiceFacade statisticalResourcesServiceFacade = (StatisticalResourcesServiceFacade) ApplicationContextProvider.getApplicationContext().getBean(
@@ -98,8 +99,10 @@ public class DatasourceImportationServlet extends BaseHttpServlet {
             List<File> filesToImport = new ArrayList<File>();
 
             Boolean storeDimensionsMapping = null;
+            isUploadedFileZip = isZip(uploadedFile);
 
-            if (isZip(uploadedFile)) {
+            if (isUploadedFileZip) {
+                // If the uploaded file is a zip, the mapping cannot be set by the user. That's why the mappings are not stored in this case.
                 storeDimensionsMapping = false;
                 filesToImport = ZipUtils.unzipArchive(uploadedFile, outputFolder);
             } else {
@@ -120,7 +123,7 @@ public class DatasourceImportationServlet extends BaseHttpServlet {
             } else if (StringUtils.isNotBlank(statisticalOperationCode)) {
                 statisticalResourcesServiceFacade.importDatasourcesInStatisticalOperation(ServiceContextHolder.getCurrentServiceContext(), statisticalOperationCode, fileUrls);
             }
-            sendSuccessImportationResponse(response, fileName);
+            sendSuccessImportationResponse(response, fileName, isUploadedFileZip);
 
         } catch (Exception e) {
 
@@ -135,7 +138,7 @@ public class DatasourceImportationServlet extends BaseHttpServlet {
             logger.log(Level.SEVERE, "Error importing file = " + fileName + ". " + e.getMessage());
             logger.log(Level.SEVERE, e.getMessage());
 
-            sendFailedImportationResponse(response, errorMessage);
+            sendFailedImportationResponse(response, errorMessage, isUploadedFileZip);
         }
     }
 
@@ -160,13 +163,18 @@ public class DatasourceImportationServlet extends BaseHttpServlet {
     // UTILITY METHODS
     //
 
-    private void sendSuccessImportationResponse(HttpServletResponse response, String message) throws IOException {
-        String action = "if (parent.uploadComplete) parent.uploadComplete('" + message + "');";
-        sendResponse(response, action);
+    private void sendSuccessImportationResponse(HttpServletResponse response, String message, boolean isUploadedFileZip) throws IOException {
+        String functionName = isUploadedFileZip ? "uploadZipComplete" : "uploadComplete";
+        sendImportationResponse(response, message, functionName);
     }
 
-    private void sendFailedImportationResponse(HttpServletResponse response, String errorMessage) throws IOException {
-        String action = "if (parent.uploadFailed) parent.uploadFailed('" + errorMessage + "');";
+    private void sendFailedImportationResponse(HttpServletResponse response, String errorMessage, boolean isUploadedFileZip) throws IOException {
+        String functionName = isUploadedFileZip ? "uploadZipFailed" : "uploadFailed";
+        sendImportationResponse(response, errorMessage, functionName);
+    }
+
+    private void sendImportationResponse(HttpServletResponse response, String message, String functionName) throws IOException {
+        String action = "if (parent." + functionName + ") parent." + functionName + "('" + message + "');";
         sendResponse(response, action);
     }
 
