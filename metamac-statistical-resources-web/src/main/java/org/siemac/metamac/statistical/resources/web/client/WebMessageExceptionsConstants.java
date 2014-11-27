@@ -9,4 +9,7 @@ public class WebMessageExceptionsConstants {
     public static final String ERROR_CANCEL_PROGRAMMED_PUBLICATION_RESOURCE = "exception.resources.life_cycle.cancel_programmed_resource";
     public static final String ERROR_VERSION_RESOURCE                       = "exception.resources.life_cycle.version";
     public static final String ERROR_SENDING_NOTIFICATIONS                  = "exception.resources.life_cycle.notification";
+
+    public static final String ERROR_IMPORT_IS_NOT_ZIP                      = "exception.resources.importation.is_zip";
+    public static final String ERROR_IMPORT_IS_ZIP                          = "exception.resources.importation.is_not_zip";
 }

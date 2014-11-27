@@ -10,11 +10,19 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.siemac.metamac.core.common.lang.shared.LocaleConstants;
+import org.siemac.metamac.core.common.util.ApplicationContextProvider;
+import org.siemac.metamac.web.common.server.ServiceContextHolder;
+import org.siemac.metamac.web.common.server.utils.WebTranslateExceptions;
+import org.siemac.metamac.web.common.shared.exception.MetamacWebException;
+import org.siemac.metamac.web.common.shared.exception.MetamacWebExceptionItem;
 
 public abstract class BaseHttpServlet extends HttpServlet {
 
@@ -98,5 +106,26 @@ public abstract class BaseHttpServlet extends HttpServlet {
         out.println("</body>");
         out.println("</html>");
         out.flush();
+    }
+
+    protected String getMessageFromMetamacWebException(MetamacWebException e) {
+        List<MetamacWebExceptionItem> items = e.getWebExceptionItems();
+        if (items != null && !items.isEmpty()) {
+            return items.get(0).getMessage(); // only return the first message error
+        }
+        return null;
+    }
+
+    protected void throwMetamacWebException(String exceptionCode) throws MetamacWebException {
+        String exceptionMessage = getTranslatedMessage(exceptionCode);
+        throw new MetamacWebException(exceptionCode, exceptionMessage);
+    }
+
+    private String getTranslatedMessage(String messageCode) {
+
+        WebTranslateExceptions webTranslateExceptions = (WebTranslateExceptions) ApplicationContextProvider.getApplicationContext().getBean("webTranslateExceptions");
+
+        Locale locale = (Locale) ServiceContextHolder.getCurrentServiceContext().getProperty(LocaleConstants.locale);
+        return webTranslateExceptions.getTranslatedMessage(messageCode, locale);
     }
 }

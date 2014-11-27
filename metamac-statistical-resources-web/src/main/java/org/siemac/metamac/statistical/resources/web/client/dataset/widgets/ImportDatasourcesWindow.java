@@ -5,7 +5,6 @@ import static org.siemac.metamac.statistical.resources.web.client.StatisticalRes
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesDefaults;
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb;
@@ -26,7 +25,7 @@ public class ImportDatasourcesWindow extends ImportResourceWindow {
         informationLabel.setMargin(5);
         body.addMember(informationLabel);
 
-        UploadDatasourceForm form = new UploadDatasourceForm(null);
+        UploadDatasourceForm form = new UploadDatasourceForm();
         setForm(form);
     }
 
@@ -41,25 +40,20 @@ public class ImportDatasourcesWindow extends ImportResourceWindow {
 
     private class UploadDatasourceForm extends UploadForm {
 
-        public UploadDatasourceForm(Map<String, String> dimensionsMapping) {
+        public UploadDatasourceForm() {
             super(getConstants().datasources());
 
             HiddenItem datasetVersionUrnItem = new HiddenItem(StatisticalResourcesSharedTokens.UPLOAD_PARAM_DATASET_VERSION_URN);
             HiddenItem operationUrnItem = new HiddenItem(StatisticalResourcesSharedTokens.UPLOAD_PARAM_OPERATION_CODE);
+            HiddenItem mustBeZip = new HiddenItem(StatisticalResourcesSharedTokens.UPLOAD_MUST_BE_ZIP_FILE);
+            mustBeZip.setValue(true);
 
             List<FormItem> itemsToAdd = new ArrayList<FormItem>();
             itemsToAdd.add(datasetVersionUrnItem);
             itemsToAdd.add(operationUrnItem);
+            itemsToAdd.add(mustBeZip);
 
-            if (dimensionsMapping != null && !dimensionsMapping.isEmpty()) {
-                for (String dimensionId : dimensionsMapping.keySet()) {
-                    itemsToAdd.add(new HiddenItem(getDimensionHiddenFieldName(dimensionId)));
-                }
-                setFields(uploadItem);
-                addFields(itemsToAdd.toArray(new FormItem[itemsToAdd.size()]));
-            } else {
-                addFieldsInThePenultimePosition(itemsToAdd.toArray(new FormItem[itemsToAdd.size()]));
-            }
+            addFieldsInThePenultimePosition(itemsToAdd.toArray(new FormItem[itemsToAdd.size()]));
         }
     }
 

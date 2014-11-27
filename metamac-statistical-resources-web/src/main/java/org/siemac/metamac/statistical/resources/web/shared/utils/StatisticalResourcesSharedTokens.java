@@ -15,7 +15,8 @@ public class StatisticalResourcesSharedTokens extends org.siemac.metamac.web.com
     // FILE UPLOAD PARAMETERS
     //
 
-    public static final String UPLOAD_PARAM_OPERATION_CODE       = "operation-urn";
+    public static final String UPLOAD_PARAM_OPERATION_CODE      = "operation-urn";
     public static final String UPLOAD_PARAM_DATASET_VERSION_URN = "dataset-version-urn";
     public static final String UPLOAD_PARAM_DIM_PREFIX          = "dim-";
+    public static final String UPLOAD_MUST_BE_ZIP_FILE          = "importation-zip-file";
 }

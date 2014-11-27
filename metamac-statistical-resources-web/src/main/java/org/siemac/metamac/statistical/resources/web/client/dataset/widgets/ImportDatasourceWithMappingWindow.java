@@ -71,7 +71,13 @@ public abstract class ImportDatasourceWithMappingWindow extends UploadResourceWi
     }
 
     private void addDimensionFieldsInMainForm() {
+
         List<FormItem> itemsToAdd = new ArrayList<FormItem>();
+
+        HiddenItem mustBeZip = new HiddenItem(StatisticalResourcesSharedTokens.UPLOAD_MUST_BE_ZIP_FILE);
+        mustBeZip.setValue(false);
+        itemsToAdd.add(mustBeZip);
+
         if (dimensionsMapping != null && !dimensionsMapping.isEmpty()) {
             for (String dimensionId : dimensionsMapping.keySet()) {
                 itemsToAdd.add(new HiddenItem(getDimensionHiddenFieldName(dimensionId)));

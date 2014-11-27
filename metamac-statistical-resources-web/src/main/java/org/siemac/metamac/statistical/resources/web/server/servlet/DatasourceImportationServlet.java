@@ -20,16 +20,19 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.fileupload.disk.DiskFileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.util.ApplicationContextProvider;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.core.facade.serviceapi.StatisticalResourcesServiceFacade;
+import org.siemac.metamac.statistical.resources.web.client.WebMessageExceptionsConstants;
 import org.siemac.metamac.statistical.resources.web.shared.utils.StatisticalResourcesSharedTokens;
 import org.siemac.metamac.web.common.server.ServiceContextHolder;
 import org.siemac.metamac.web.common.server.utils.WebExceptionUtils;
 import org.siemac.metamac.web.common.server.utils.ZipUtils;
+import org.siemac.metamac.web.common.shared.exception.MetamacWebException;
 
 import com.google.inject.Singleton;
 
@@ -64,7 +67,7 @@ public class DatasourceImportationServlet extends BaseHttpServlet {
 
         String fileName = new String();
         InputStream inputStream = null;
-        boolean isUploadedFileZip = false;
+        Boolean mustBeZip = false;
 
         try {
             StatisticalResourcesServiceFacade statisticalResourcesServiceFacade = (StatisticalResourcesServiceFacade) ApplicationContextProvider.getApplicationContext().getBean(
@@ -99,9 +102,9 @@ public class DatasourceImportationServlet extends BaseHttpServlet {
             List<File> filesToImport = new ArrayList<File>();
 
             Boolean storeDimensionsMapping = null;
-            isUploadedFileZip = isZip(uploadedFile);
+            boolean isFileZip = isZip(uploadedFile);
 
-            if (isUploadedFileZip) {
+            if (isFileZip) {
                 // If the uploaded file is a zip, the mapping cannot be set by the user. That's why the mappings are not stored in this case.
                 storeDimensionsMapping = false;
                 filesToImport = ZipUtils.unzipArchive(uploadedFile, outputFolder);
@@ -114,6 +117,13 @@ public class DatasourceImportationServlet extends BaseHttpServlet {
 
             String statisticalOperationCode = args.get(StatisticalResourcesSharedTokens.UPLOAD_PARAM_OPERATION_CODE);
             String datasetVersionUrn = args.get(StatisticalResourcesSharedTokens.UPLOAD_PARAM_DATASET_VERSION_URN);
+            mustBeZip = BooleanUtils.toBoolean(args.get(StatisticalResourcesSharedTokens.UPLOAD_MUST_BE_ZIP_FILE));
+
+            if (BooleanUtils.isTrue(mustBeZip) && !isFileZip) {
+                throwMetamacWebException(WebMessageExceptionsConstants.ERROR_IMPORT_IS_NOT_ZIP);
+            } else if (BooleanUtils.isFalse(mustBeZip) && isFileZip) {
+                throwMetamacWebException(WebMessageExceptionsConstants.ERROR_IMPORT_IS_ZIP);
+            }
 
             if (StringUtils.isNotBlank(datasetVersionUrn)) {
                 Map<String, String> dimensionMapping = buildDimensionsMappings(args);
@@ -123,13 +133,16 @@ public class DatasourceImportationServlet extends BaseHttpServlet {
             } else if (StringUtils.isNotBlank(statisticalOperationCode)) {
                 statisticalResourcesServiceFacade.importDatasourcesInStatisticalOperation(ServiceContextHolder.getCurrentServiceContext(), statisticalOperationCode, fileUrls);
             }
-            sendSuccessImportationResponse(response, fileName, isUploadedFileZip);
+            sendSuccessImportationResponse(response, fileName, mustBeZip);
 
         } catch (Exception e) {
 
             String errorMessage = null;
             if (e instanceof MetamacException) {
                 errorMessage = WebExceptionUtils.serializeToJson((MetamacException) e);
+            } else if (e instanceof MetamacWebException) {
+                errorMessage = getMessageFromMetamacWebException((MetamacWebException) e);
+                errorMessage = StringEscapeUtils.escapeJavaScript(errorMessage);
             } else {
                 errorMessage = e.getMessage();
                 errorMessage = StringEscapeUtils.escapeJavaScript(errorMessage);
@@ -138,7 +151,7 @@ public class DatasourceImportationServlet extends BaseHttpServlet {
             logger.log(Level.SEVERE, "Error importing file = " + fileName + ". " + e.getMessage());
             logger.log(Level.SEVERE, e.getMessage());
 
-            sendFailedImportationResponse(response, errorMessage, isUploadedFileZip);
+            sendFailedImportationResponse(response, errorMessage, mustBeZip);
         }
     }
 
@@ -163,13 +176,13 @@ public class DatasourceImportationServlet extends BaseHttpServlet {
     // UTILITY METHODS
     //
 
-    private void sendSuccessImportationResponse(HttpServletResponse response, String message, boolean isUploadedFileZip) throws IOException {
-        String functionName = isUploadedFileZip ? "uploadZipComplete" : "uploadComplete";
+    private void sendSuccessImportationResponse(HttpServletResponse response, String message, boolean zipUpload) throws IOException {
+        String functionName = zipUpload ? "uploadZipComplete" : "uploadComplete";
         sendImportationResponse(response, message, functionName);
     }
 
-    private void sendFailedImportationResponse(HttpServletResponse response, String errorMessage, boolean isUploadedFileZip) throws IOException {
-        String functionName = isUploadedFileZip ? "uploadZipFailed" : "uploadFailed";
+    private void sendFailedImportationResponse(HttpServletResponse response, String errorMessage, boolean zipUpload) throws IOException {
+        String functionName = zipUpload ? "uploadZipFailed" : "uploadFailed";
         sendImportationResponse(response, errorMessage, functionName);
     }
 
