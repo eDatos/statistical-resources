@@ -42,7 +42,6 @@ import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor.D
 import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor.DsdDimension;
 import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor.DsdPrimaryMeasure;
 import org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConstants;
-import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DimensionRepresentationMapping;
 import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.DatasetService;
 import org.siemac.metamac.statistical.resources.core.dataset.utils.DatasetVersionUtils;
@@ -147,11 +146,9 @@ public class ValidateDataVersusDsd {
 
     private void loadAlternativeEnumeratedRepresentations(ServiceContext serviceContext, TaskInfoDataset taskInfoDataset) throws MetamacException {
         alternativeSourceEnumerationRepresentationMap = new HashMap<String, Map<String, String>>();
-        DatasetVersion datasetVersion = datasetService.retrieveDatasetVersionByUrn(serviceContext, taskInfoDataset.getDatasetVersionId());
-        String datasetUrn = datasetVersion.getDataset().getIdentifiableStatisticalResource().getUrn();
         for (FileDescriptor fileDescriptor : taskInfoDataset.getFiles()) {
             String filename = fileDescriptor.getFileName();
-            DimensionRepresentationMapping dimensionRepresentationMapping = datasetService.retrieveDimensionRepresentationMapping(serviceContext, datasetUrn, filename);
+            DimensionRepresentationMapping dimensionRepresentationMapping = datasetService.retrieveDimensionRepresentationMapping(serviceContext, taskInfoDataset.getDatasetUrn(), filename);
             if (dimensionRepresentationMapping != null) {
                 Map<String, String> alternativeRepresentationByFilename = getAlternativeRepresentationMap(dimensionRepresentationMapping);
                 alternativeSourceEnumerationRepresentationMap.put(filename, alternativeRepresentationByFilename);

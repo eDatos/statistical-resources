@@ -203,8 +203,8 @@ public class TaskServiceImpl extends TaskServiceImplBase {
                     .usingJobData(ImportDatasetJob.FILE_FORMATS, fileFormats.toString()).usingJobData(ImportDatasetJob.FILE_NAMES, fileNames.toString())
                     .usingJobData(ImportDatasetJob.ALTERNATIVE_REPRESENTATIONS, alternativeRepresentations.toString())
                     .usingJobData(ImportDatasetJob.STORE_ALTERNATIVE_REPRESENTATIONS, taskInfoDataset.getStoreAlternativeRepresentations())
-                    .usingJobData(ImportDatasetJob.DATA_STRUCTURE_URN, taskInfoDataset.getDataStructureUrn()).usingJobData(ImportDatasetJob.DATASET_VERSION_ID, taskInfoDataset.getDatasetVersionId())
-                    .usingJobData(ImportDatasetJob.USER, ctx.getUserId()).requestRecovery().build();
+                    .usingJobData(ImportDatasetJob.DATASET_URN, taskInfoDataset.getDatasetUrn()).usingJobData(ImportDatasetJob.DATA_STRUCTURE_URN, taskInfoDataset.getDataStructureUrn())
+                    .usingJobData(ImportDatasetJob.DATASET_VERSION_ID, taskInfoDataset.getDatasetVersionId()).usingJobData(ImportDatasetJob.USER, ctx.getUserId()).requestRecovery().build();
 
             // No existing Job
             task = new Task(jobKey.getName());

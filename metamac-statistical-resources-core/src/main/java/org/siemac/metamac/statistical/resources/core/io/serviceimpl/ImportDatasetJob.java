@@ -43,6 +43,7 @@ public class ImportDatasetJob implements Job {
     public static final String FILE_NAMES                        = "fileNames";
     public static final String FILE_FORMATS                      = "fileFormats";
     public static final String DATA_STRUCTURE_URN                = "dataStructureUrn";
+    public static final String DATASET_URN                       = "datasetUrn";
     public static final String DATASET_VERSION_ID                = "datasetVersionId";
     public static final String ALTERNATIVE_REPRESENTATIONS       = "alternativeRepresentations";
     public static final String STORE_ALTERNATIVE_REPRESENTATIONS = "storeAlternativeRepresentations";
@@ -74,6 +75,7 @@ public class ImportDatasetJob implements Job {
         String filePaths = data.getString(FILE_PATHS);
         String fileNames = data.getString(FILE_NAMES);
         String fileFormats = data.getString(FILE_FORMATS);
+        String datasetUrn = data.getString(DATASET_URN);
         String datasetVersionId = data.getString(DATASET_VERSION_ID);
         String alternativeRepresentations = data.getString(ALTERNATIVE_REPRESENTATIONS);
         Boolean storeAlternativeRepresentations = data.getBoolean(STORE_ALTERNATIVE_REPRESENTATIONS);
@@ -88,6 +90,7 @@ public class ImportDatasetJob implements Job {
             TaskInfoDataset taskInfoDataset = new TaskInfoDataset();
             taskInfoDataset.setDataStructureUrn(dataStructureUrn);
             taskInfoDataset.getFiles().addAll(inflateFileDescriptors(filePaths, fileNames, fileFormats));
+            taskInfoDataset.setDatasetUrn(datasetUrn);
             taskInfoDataset.setDatasetVersionId(datasetVersionId);
             taskInfoDataset.getAlternativeRepresentations().addAll(inflateAlternativeRepresentations(alternativeRepresentations));
             taskInfoDataset.setStoreAlternativeRepresentations(storeAlternativeRepresentations);

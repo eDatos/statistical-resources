@@ -131,6 +131,7 @@ public class LifecycleCommonMetadataChecker {
         if (resource.getRelatedDsd() != null) {
             try {
                 TaskInfoDataset taskInfoDataset = new TaskInfoDataset();
+                taskInfoDataset.setDatasetUrn(resource.getDataset().getIdentifiableStatisticalResource().getUrn());
                 taskInfoDataset.setDatasetVersionId(resource.getSiemacMetadataStatisticalResource().getUrn());
                 taskInfoDataset.setDataStructureUrn(resource.getRelatedDsd().getUrn());
                 ValidateDataVersusDsd validator = new ValidateDataVersusDsd(ctx, srmRestInternalService, taskInfoDataset);
