@@ -18,7 +18,7 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_16_DRAFT_READY_FOR_PRODUCTION_VALIDATION_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_26_V2_PUBLISHED_NO_VISIBLE_FOR_DATASET_06_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasourceMockFactory.DATASOURCE_01_BASIC_NAME;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DimensionRepresentationMappingMockFactory.DIMENSION_REPRESENTATION_MAPPING_01_DATASOURCE_01_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DimensionRepresentationMappingMockFactory.DIMENSION_REPRESENTATION_MAPPING_01_DATASET_01_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.StatisticOfficialityMockFactory.STATISTIC_OFFICIALITY_01_BASIC_NAME;
 
 import java.util.ArrayList;
@@ -143,17 +143,17 @@ public class DatasetDo2DtoMapperTest extends StatisticalResourcesBaseTest {
     }
 
     @Test
-    @MetamacMock(DIMENSION_REPRESENTATION_MAPPING_01_DATASOURCE_01_NAME)
+    @MetamacMock(DIMENSION_REPRESENTATION_MAPPING_01_DATASET_01_NAME)
     public void testDimensionRepresentationMappingDoToDto() throws Exception {
-        DimensionRepresentationMapping expected = dimensionRepresentationMappingMockFactory.retrieveMock(DIMENSION_REPRESENTATION_MAPPING_01_DATASOURCE_01_NAME);
+        DimensionRepresentationMapping expected = dimensionRepresentationMappingMockFactory.retrieveMock(DIMENSION_REPRESENTATION_MAPPING_01_DATASET_01_NAME);
         DimensionRepresentationMappingDto actual = datasetDo2DtoMapper.dimensionRepresentationMappingDoToDto(expected);
         assertEqualsDimensionRepresentationMapping(expected, actual);
     }
 
     @Test
-    @MetamacMock(DIMENSION_REPRESENTATION_MAPPING_01_DATASOURCE_01_NAME)
+    @MetamacMock(DIMENSION_REPRESENTATION_MAPPING_01_DATASET_01_NAME)
     public void testDimensionRepresentationMappingDoToDtoList() throws Exception {
-        DimensionRepresentationMapping expected = dimensionRepresentationMappingMockFactory.retrieveMock(DIMENSION_REPRESENTATION_MAPPING_01_DATASOURCE_01_NAME);
+        DimensionRepresentationMapping expected = dimensionRepresentationMappingMockFactory.retrieveMock(DIMENSION_REPRESENTATION_MAPPING_01_DATASET_01_NAME);
         List<DimensionRepresentationMapping> expectedList = new ArrayList<DimensionRepresentationMapping>();
         expectedList.add(expected);
         List<DimensionRepresentationMappingDto> actualList = datasetDo2DtoMapper.dimensionRepresentationMappingDoToDtoList(expectedList);

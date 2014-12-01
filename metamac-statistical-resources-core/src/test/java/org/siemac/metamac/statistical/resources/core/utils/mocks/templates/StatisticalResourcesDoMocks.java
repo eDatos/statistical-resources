@@ -45,6 +45,7 @@ import org.siemac.metamac.statistical.resources.core.query.domain.CodeItem;
 import org.siemac.metamac.statistical.resources.core.query.domain.Query;
 import org.siemac.metamac.statistical.resources.core.query.domain.QuerySelectionItem;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.DatasetMock;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.DatasetVersionMock;
 
 public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
@@ -128,6 +129,11 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
 
         return datasource;
     }
+
+    // -----------------------------------------------------------------
+    // DATASET
+    // -----------------------------------------------------------------
+    public abstract void mockDataset(DatasetMock dataset);
 
     // -----------------------------------------------------------------
     // DATASET VERSION
@@ -488,16 +494,28 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
     // DIMENSION REPRESENTATION MAPPING
     // -----------------------------------------------------------------
 
-    public DimensionRepresentationMapping mockDimensionRepresentationMapping(String datasourceFilename) {
+    public DimensionRepresentationMapping mockDimensionRepresentationMapping(Dataset dataset) {
         DimensionRepresentationMapping mock = new DimensionRepresentationMapping();
-        // TODO METAMAC-1979 mock.setDataset(mockDataset());
-        mock.setDatasourceFilename(datasourceFilename);
+        mock.setDataset(dataset);
+        mock.setDatasourceFilename("filename");
         mock.setMapping("DIM1=urn");
         return mock;
     }
 
-    public DimensionRepresentationMapping mockDimensionRepresentationMapping(String datasourceFilename, Map<String, String> mapping) {
+    public DimensionRepresentationMapping mockDimensionRepresentationMapping() {
         DimensionRepresentationMapping mock = new DimensionRepresentationMapping();
+
+        DatasetMock dataset = new DatasetMock();
+        mockDataset(dataset);
+        mock.setDataset(dataset);
+        mock.setDatasourceFilename("filename");
+        mock.setMapping("DIM1=urn");
+        return mock;
+    }
+
+    public DimensionRepresentationMapping mockDimensionRepresentationMapping(Dataset dataset, String datasourceFilename, Map<String, String> mapping) {
+        DimensionRepresentationMapping mock = new DimensionRepresentationMapping();
+        mock.setDataset(dataset);
         mock.setDatasourceFilename(datasourceFilename);
         mock.setMapping(DatasetVersionUtils.dimensionRepresentationMapToString(mapping));
         return mock;

@@ -1,5 +1,6 @@
 package org.siemac.metamac.statistical.resources.core.dataset.serviceimpl;
 
+import static org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteriaBuilder.criteriaFor;
 import static org.siemac.metamac.core.common.util.MetamacCollectionUtils.isInCollection;
 import static org.siemac.metamac.statistical.resources.core.base.domain.utils.RelatedResourceResultUtils.getUrnsFromRelatedResourceResults;
 
@@ -64,6 +65,7 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionRepository;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasourceProperties;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DimensionRepresentationMapping;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.StatisticOfficiality;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.TemporalCode;
@@ -259,7 +261,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
 
     private void deleteDatasourceDimensionRepresentationMappings(DatasetVersion datasetVersion, Datasource datasource) throws MetamacException {
         String filename = datasource.getFilename();
-        List<Datasource> datasources = getDatasourceRepository().findByDatasetAndDatasourceFilename(datasetVersion.getSiemacMetadataStatisticalResource().getUrn(), filename);
+        List<Datasource> datasources = retrieveDatasourcesByDatasetAndFilename(datasetVersion.getSiemacMetadataStatisticalResource().getUrn(), filename);
         // The dimension representation mapping is only deleted if there is no more datasources associated with the same file
         if (datasources.isEmpty()) {
             DimensionRepresentationMapping dimensionRepresentationMapping = getDimensionRepresentationMappingRepository().findByDatasetAndDatasourceFilename(
@@ -268,6 +270,12 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
                 getDimensionRepresentationMappingRepository().delete(dimensionRepresentationMapping);
             }
         }
+    }
+
+    private List<Datasource> retrieveDatasourcesByDatasetAndFilename(String datasetVersionUrn, String filename) {
+        List<ConditionalCriteria> condition = criteriaFor(Datasource.class).withProperty(DatasourceProperties.datasetVersion().siemacMetadataStatisticalResource().urn()).eq(datasetVersionUrn).and()
+                .withProperty(DatasourceProperties.filename()).eq(filename).distinctRoot().build();
+        return getDatasourceRepository().findByCondition(condition);
     }
 
     private void deleteAttributeInstancesLowerThanDatasetLevel(DatasetVersion datasetVersion) throws MetamacException {
@@ -802,7 +810,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
     }
 
     @Override
-    public void saveDimensionRepresentationMapping(ServiceContext ctx, Dataset dataset, String datasourceFilename, Map<String, String> mapping) throws MetamacException {
+    public DimensionRepresentationMapping saveDimensionRepresentationMapping(ServiceContext ctx, Dataset dataset, String datasourceFilename, Map<String, String> mapping) throws MetamacException {
 
         datasetServiceInvocationValidator.checkSaveDimensionRepresentationMapping(ctx, dataset, datasourceFilename, mapping);
 
@@ -819,8 +827,9 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
             if (dimensionRepresentationMapping.getId() != null) {
                 getDimensionRepresentationMappingRepository().delete(dimensionRepresentationMapping);
             }
+            return null;
         } else {
-            getDimensionRepresentationMappingRepository().save(dimensionRepresentationMapping);
+            return getDimensionRepresentationMappingRepository().save(dimensionRepresentationMapping);
         }
     }
 

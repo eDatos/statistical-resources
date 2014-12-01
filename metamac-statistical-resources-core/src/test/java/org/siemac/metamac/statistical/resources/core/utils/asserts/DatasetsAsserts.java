@@ -534,14 +534,12 @@ public class DatasetsAsserts extends BaseAsserts {
     // -----------------------------------------------------------------
 
     public static void assertEqualsDimensionRepresentationMapping(DimensionRepresentationMapping expected, DimensionRepresentationMapping actual) throws MetamacException {
-        assertEquals(expected.getId(), actual.getId());
         assertEquals(expected.getDataset().getIdentifiableStatisticalResource().getUrn(), actual.getDataset().getIdentifiableStatisticalResource().getUrn());
         assertEquals(expected.getDatasourceFilename(), actual.getDatasourceFilename());
         assertEquals(expected.getMapping(), actual.getMapping());
     }
 
     public static void assertEqualsDimensionRepresentationMapping(DimensionRepresentationMapping expected, DimensionRepresentationMappingDto actual) throws MetamacException {
-        assertEquals(expected.getId(), actual.getId());
         assertEquals(expected.getDatasourceFilename(), actual.getDatasourceFilename());
         assertEquals(DatasetVersionUtils.dimensionRepresentationMapFromString(expected.getMapping()), actual.getMapping());
     }

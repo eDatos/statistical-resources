@@ -70,7 +70,7 @@ Application DatasetsStatisticalResources {
 			"Retrieve the dimension representation mapping of the dataset for the filename specified"
 			@DimensionRepresentationMapping retrieveDimensionRepresentationMapping(String datasetUrn, String filename) throws MetamacException;
 			"Save a mapping between dimensions and representations for a datasource"
-			saveDimensionRepresentationMapping(@Dataset dataset, String datasourceFilename, Map<String, String> mapping) throws MetamacException;
+			@DimensionRepresentationMapping saveDimensionRepresentationMapping(@Dataset dataset, String datasourceFilename, Map<String, String> mapping) throws MetamacException;
 
     		"Create attribute instances"
     		AttributeInstanceDto createAttributeInstance(String datasetVersionUrn, AttributeInstanceDto attributeInstanceDto) throws MetamacException;
@@ -135,7 +135,6 @@ Application DatasetsStatisticalResources {
 				findByCondition(PagingParameter pagingParameter);
 				findByQuery(String query, Map<String, Object> parameters, int maxResult);
 				@Datasource retrieveByUrn(String urn) throws MetamacException;
-				List<@Datasource> findByDatasetAndDatasourceFilename(String datasetVersionUrn, String filename);
 			}
 		}
 

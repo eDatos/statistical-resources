@@ -11,6 +11,7 @@ import static org.siemac.metamac.statistical.resources.core.utils.asserts.Datase
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts.assertEqualsDatasetVersion;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts.assertEqualsDatasetVersionCollection;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts.assertEqualsDatasetVersionNotChecksDataset;
+import static org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts.assertEqualsDimensionRepresentationMapping;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.CategorisationMockFactory.CATEGORISATION_01_DATASET_VERSION_01_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.CategorisationMockFactory.CATEGORISATION_01_DATASET_VERSION_02_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.CategorisationMockFactory.CATEGORISATION_01_DATASET_VERSION_03_PUBLISHED_NAME;
@@ -53,7 +54,7 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_79_NO_PUB_REPLACES_DATASET_80_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_80_NO_PUB_IS_REPLACED_BY_DATASET_79_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_85_LAST_VERSION_NOT_PUBLISHED__IS_PART_OF_PUBLICATIONS_NAME;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DimensionRepresentationMappingMockFactory.DIMENSION_REPRESENTATION_MAPPING_01_DATASOURCE_01_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DimensionRepresentationMappingMockFactory.DIMENSION_REPRESENTATION_MAPPING_01_DATASET_01_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_43_DRAFT_HAS_PART_DATASET_VERSION_85_FIRST_LEVEL_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_44_DRAFT_HAS_PART_DATASET_VERSION_85_NO_FIRST_LEVEL_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_45_DRAFT_HAS_PART_DATASET_VERSION_85_MULTI_CUBE_NAME;
@@ -112,7 +113,6 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DimensionRepresentationMapping;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DimensionRepresentationMappingRepository;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.StatisticOfficiality;
-import org.siemac.metamac.statistical.resources.core.dataset.utils.DatasetVersionUtils;
 import org.siemac.metamac.statistical.resources.core.enume.task.domain.DatasetFileFormatEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
@@ -1606,7 +1606,7 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
     // ------------------------------------------------------------------------
 
     @Test
-    @MetamacMock({DIMENSION_REPRESENTATION_MAPPING_01_DATASOURCE_01_NAME})
+    @MetamacMock({DATASET_01_BASIC_NAME})
     @Override
     public void testSaveDimensionRepresentationMapping() throws Exception {
 
@@ -1615,20 +1615,23 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
         mapping.put("DIMENSION02", "urn:conceptScheme");
         mapping.put("DIMENSION03", "urn:codelist");
 
-        DimensionRepresentationMapping expected = dimensionRepresentationMappingMockFactory.retrieveMock(DIMENSION_REPRESENTATION_MAPPING_01_DATASOURCE_01_NAME);
-        expected.setMapping(DatasetVersionUtils.dimensionRepresentationMapToString(mapping));
+        Dataset dataset = datasetMockFactory.retrieveMock(DATASET_01_BASIC_NAME);
 
-        // TODO METAMAC-1979
-        // DimensionRepresentationMapping mockedMapping = this.notPersistedDoMocks.mockDimensionRepresentationMapping(DATASOURCE_01_BASIC_NAME, mapping);
-        // datasetService.saveDimensionRepresentationMapping(getServiceContextWithoutPrincipal(), mockedMapping.getDatasourceFilename(), mapping);
-        // DimensionRepresentationMapping actual = dimensionRepresentationMappingRepository.findByDatasourceFilename(mockedMapping.getDatasourceFilename());
-        //
-        // assertEqualsDimensionRepresentationMapping(expected, actual);
+        DimensionRepresentationMapping expected = notPersistedDoMocks.mockDimensionRepresentationMapping(dataset, "filename", mapping);
+
+        DimensionRepresentationMapping actual = datasetService.saveDimensionRepresentationMapping(getServiceContextWithoutPrincipal(), dataset, "filename", mapping);
+
+        assertEqualsDimensionRepresentationMapping(expected, actual);
     }
 
+    @Test
     @Override
+    @MetamacMock({DIMENSION_REPRESENTATION_MAPPING_01_DATASET_01_NAME})
     public void testRetrieveDimensionRepresentationMapping() throws Exception {
-        // TODO METAMAC-1979
+        DimensionRepresentationMapping expected = dimensionRepresentationMappingMockFactory.retrieveMock(DIMENSION_REPRESENTATION_MAPPING_01_DATASET_01_NAME);
+        DimensionRepresentationMapping actual = datasetService.retrieveDimensionRepresentationMapping(getServiceContextAdministrador(), expected.getDataset().getIdentifiableStatisticalResource()
+                .getUrn(), expected.getDatasourceFilename());
+        assertEqualsDimensionRepresentationMapping(expected, actual);
     }
 
     // ------------------------------------------------------------------------

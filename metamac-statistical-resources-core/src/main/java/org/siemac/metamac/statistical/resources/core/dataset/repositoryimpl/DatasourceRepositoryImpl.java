@@ -35,11 +35,4 @@ public class DatasourceRepositoryImpl extends DatasourceRepositoryBase {
 
         return result.get(0);
     }
-
-    @Override
-    public List<Datasource> findByDatasetAndDatasourceFilename(String datasetVersionUrn, String filename) {
-        List<ConditionalCriteria> condition = criteriaFor(Datasource.class).withProperty(DatasourceProperties.datasetVersion().siemacMetadataStatisticalResource().urn()).eq(datasetVersionUrn).and()
-                .withProperty(DatasourceProperties.filename()).eq(filename).distinctRoot().build();
-        return findByCondition(condition);
-    }
 }

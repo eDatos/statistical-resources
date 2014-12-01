@@ -1,14 +1,13 @@
 package org.siemac.metamac.statistical.resources.core.utils.mocks.factories;
 
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasourceMockFactory.DATASOURCE_01_BASIC_NAME;
-
 import org.siemac.metamac.core.common.test.utils.mocks.configuration.MockProvider;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DimensionRepresentationMapping;
 
 @MockProvider
 public class DimensionRepresentationMappingMockFactory extends StatisticalResourcesMockFactory<DimensionRepresentationMapping> {
 
-    public static final String                               DIMENSION_REPRESENTATION_MAPPING_01_DATASOURCE_01_NAME = "DIMENSION_REPRESENTATION_MAPPING_01_DATASOURCE_01";
+    public static final String                               DIMENSION_REPRESENTATION_MAPPING_01_DATASET_01_NAME = "DIMENSION_REPRESENTATION_MAPPING_01_DATASET_01";
 
     private static DimensionRepresentationMappingMockFactory instance;
 
@@ -22,11 +21,12 @@ public class DimensionRepresentationMappingMockFactory extends StatisticalResour
         return instance;
     }
 
-    protected DimensionRepresentationMapping getDimensionRepresentationMapping01Datasource01() {
-        return createDimensionRepresentationMapping(DATASOURCE_01_BASIC_NAME);
+    protected DimensionRepresentationMapping getDimensionRepresentationMapping01Dataset01() {
+        return createDimensionRepresentationMapping();
     }
 
-    public static DimensionRepresentationMapping createDimensionRepresentationMapping(String datasourceUrn) {
-        return getStatisticalResourcesPersistedDoMocks().mockDimensionRepresentationMapping(datasourceUrn);
+    public static DimensionRepresentationMapping createDimensionRepresentationMapping() {
+        Dataset dataset = getDatasetMock(DatasetMockFactory.DATASET_01_BASIC_NAME);
+        return getStatisticalResourcesPersistedDoMocks().mockDimensionRepresentationMapping(dataset);
     }
 }

@@ -18,6 +18,7 @@ import org.siemac.metamac.statistical.resources.core.publication.domain.Publicat
 import org.siemac.metamac.statistical.resources.core.query.domain.CodeItem;
 import org.siemac.metamac.statistical.resources.core.query.domain.QuerySelectionItem;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.DatasetMock;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.DatasetVersionMock;
 
 public class StatisticalResourcesNotPersistedDoMocks extends StatisticalResourcesDoMocks {
@@ -142,6 +143,13 @@ public class StatisticalResourcesNotPersistedDoMocks extends StatisticalResource
 
     public Datasource mockDatasourceForPersist() {
         return mockDatasource(new Datasource());
+    }
+
+    // -----------------------------------------------------------------
+    // DATASET
+    // -----------------------------------------------------------------
+    @Override
+    public void mockDataset(DatasetMock dataset) {
     }
 
     // -----------------------------------------------------------------

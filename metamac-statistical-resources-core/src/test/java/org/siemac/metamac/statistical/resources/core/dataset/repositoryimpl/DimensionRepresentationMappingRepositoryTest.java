@@ -2,7 +2,7 @@ package org.siemac.metamac.statistical.resources.core.dataset.repositoryimpl;
 
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts.assertEqualsDimensionRepresentationMapping;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_01_BASIC_NAME;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DimensionRepresentationMappingMockFactory.DIMENSION_REPRESENTATION_MAPPING_01_DATASOURCE_01_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DimensionRepresentationMappingMockFactory.DIMENSION_REPRESENTATION_MAPPING_01_DATASET_01_NAME;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,9 +28,9 @@ public class DimensionRepresentationMappingRepositoryTest extends StatisticalRes
 
     @Override
     @Test
-    @MetamacMock({DIMENSION_REPRESENTATION_MAPPING_01_DATASOURCE_01_NAME, DATASET_VERSION_01_BASIC_NAME})
+    @MetamacMock({DIMENSION_REPRESENTATION_MAPPING_01_DATASET_01_NAME, DATASET_VERSION_01_BASIC_NAME})
     public void testFindByDatasetAndDatasourceFilename() throws MetamacException {
-        DimensionRepresentationMapping expected = dimensionRepresentationMappingMockFactory.retrieveMock(DIMENSION_REPRESENTATION_MAPPING_01_DATASOURCE_01_NAME);
+        DimensionRepresentationMapping expected = dimensionRepresentationMappingMockFactory.retrieveMock(DIMENSION_REPRESENTATION_MAPPING_01_DATASET_01_NAME);
         DimensionRepresentationMapping actual = dimensionRepresentationMappingRepository.findByDatasetAndDatasourceFilename(expected.getDataset().getIdentifiableStatisticalResource()
                 .getUrn(), expected.getDatasourceFilename());
         assertEqualsDimensionRepresentationMapping(expected, actual);
