@@ -2,6 +2,8 @@ package org.siemac.metamac.statistical.resources.core.io.serviceapi;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetMockFactory.DATASET_01_BASIC_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_01_BASIC_NAME;
 
 import java.io.File;
 import java.net.URISyntaxException;
@@ -24,12 +26,15 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.core.common.test.utils.mocks.configuration.MetamacMock;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructure;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
 import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor;
 import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor.DsdAttribute;
 import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor.DsdDimension;
 import org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConstants;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
+import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.DatasetService;
 import org.siemac.metamac.statistical.resources.core.enume.task.domain.DatasetFileFormatEnum;
 import org.siemac.metamac.statistical.resources.core.invocation.service.SrmRestInternalService;
 import org.siemac.metamac.statistical.resources.core.io.utils.ManipulateDataUtils;
@@ -59,8 +64,7 @@ import com.arte.statistic.dataset.repository.dto.DatasetRepositoryDto;
 import com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceFacade;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"classpath:spring/statistical-resources/include/dataset-service-mockito.xml", "classpath:spring/statistical-resources/include/rest-services-mockito.xml",
-        "classpath:spring/statistical-resources/applicationContext-test.xml"})
+@ContextConfiguration(locations = {"classpath:spring/statistical-resources/include/rest-services-mockito.xml", "classpath:spring/statistical-resources/applicationContext-test.xml"})
 @TransactionConfiguration(transactionManager = "txManager", defaultRollback = true)
 @Transactional
 public class DataManipulateTest extends StatisticalResourcesBaseTest {
@@ -79,6 +83,9 @@ public class DataManipulateTest extends StatisticalResourcesBaseTest {
 
     @Autowired
     private TaskService                      taskService;
+
+    @Autowired
+    private DatasetService                   datasetService;
 
     public String                            jobKey;
 
@@ -187,9 +194,16 @@ public class DataManipulateTest extends StatisticalResourcesBaseTest {
     }
 
     @Test
+    @MetamacMock({DATASET_01_BASIC_NAME, DATASET_VERSION_01_BASIC_NAME})
     public void testImportSdmx21DatasourceWithTranslation() throws Exception {
+
+        DatasetVersion datasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_01_BASIC_NAME);
+        final String datasetVersionUrn = datasetVersion.getSiemacMetadataStatisticalResource().getUrn();
+        final DatasetVersion resource = datasetService.retrieveDatasetVersionByUrn(getServiceContextAdministrador(), datasetVersionUrn);
+
+        createDatasetRepository(datasetVersionUrn, URN_DSD_ECB_EXR_RG);
+
         // New Transaction: Because the job needs persisted data
-        createDatasetRepository("TESTDATA_STR_ECB_EXR_RG", URN_DSD_ECB_EXR_RG);
         final TransactionTemplate tt = new TransactionTemplate(transactionManager);
         tt.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
         tt.execute(new TransactionCallbackWithoutResult() {
@@ -199,8 +213,10 @@ public class DataManipulateTest extends StatisticalResourcesBaseTest {
                 try {
 
                     TaskInfoDataset taskInfoDataset = new TaskInfoDataset();
+                    taskInfoDataset.setStoreAlternativeRepresentations(true);
                     taskInfoDataset.setDataStructureUrn(URN_DSD_ECB_EXR_RG);
-                    taskInfoDataset.setDatasetVersionId("TESTDATA_STR_ECB_EXR_RG");
+                    taskInfoDataset.setDatasetUrn(resource.getDataset().getIdentifiableStatisticalResource().getUrn());
+                    taskInfoDataset.setDatasetVersionId(datasetVersionUrn);
 
                     {
                         AlternativeEnumeratedRepresentation alternative = new AlternativeEnumeratedRepresentation();
@@ -239,15 +255,22 @@ public class DataManipulateTest extends StatisticalResourcesBaseTest {
         // Wait until the job is finished
         waitUntilJobFinished(true);
 
-        DatasetRepositoryDto datasetRepositoryDto = datasetRepositoriesServiceFacade.retrieveDatasetRepository("TESTDATA_STR_ECB_EXR_RG");
+        DatasetRepositoryDto datasetRepositoryDto = datasetRepositoriesServiceFacade.retrieveDatasetRepository(datasetVersionUrn);
 
         assertNotNull(datasetRepositoryDto);
     }
 
     @Test
+    @MetamacMock({DATASET_01_BASIC_NAME, DATASET_VERSION_01_BASIC_NAME})
     public void testImportSdmx21Datasource_FAIL_WITH_RECOVERY() throws Exception {
+
+        DatasetVersion datasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_01_BASIC_NAME);
+        final String datasetVersionUrn = datasetVersion.getSiemacMetadataStatisticalResource().getUrn();
+        final DatasetVersion resource = datasetService.retrieveDatasetVersionByUrn(getServiceContextAdministrador(), datasetVersionUrn);
+
+        createDatasetRepository(datasetVersionUrn, URN_DSD_ECB_EXR_RG);
+
         // New Transaction: Because the job needs persisted data
-        createDatasetRepository("TESTDATA_STR_ECB_EXR_RG", URN_DSD_ECB_EXR_RG);
         final TransactionTemplate tt = new TransactionTemplate(transactionManager);
         tt.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
         tt.execute(new TransactionCallbackWithoutResult() {
@@ -257,8 +280,10 @@ public class DataManipulateTest extends StatisticalResourcesBaseTest {
                 try {
 
                     TaskInfoDataset taskInfoDataset = new TaskInfoDataset();
+                    taskInfoDataset.setStoreAlternativeRepresentations(true);
                     taskInfoDataset.setDataStructureUrn(URN_DSD_ECB_EXR_RG);
-                    taskInfoDataset.setDatasetVersionId("TESTDATA_STR_ECB_EXR_RG");
+                    taskInfoDataset.setDatasetVersionId(datasetVersionUrn);
+                    taskInfoDataset.setDatasetUrn(resource.getDataset().getIdentifiableStatisticalResource().getUrn());
 
                     // File 01
                     {
@@ -293,7 +318,7 @@ public class DataManipulateTest extends StatisticalResourcesBaseTest {
         waitUntilJobFinished(true);
         Thread.sleep(15 * 1000);
 
-        DatasetRepositoryDto datasetRepositoryDto = datasetRepositoriesServiceFacade.retrieveDatasetRepository("TESTDATA_STR_ECB_EXR_RG");
+        DatasetRepositoryDto datasetRepositoryDto = datasetRepositoriesServiceFacade.retrieveDatasetRepository(datasetVersionUrn);
         assertNotNull(datasetRepositoryDto);
 
         waitUntilJobFinished(false);
@@ -304,11 +329,16 @@ public class DataManipulateTest extends StatisticalResourcesBaseTest {
     }
 
     @Test
+    @MetamacMock({DATASET_01_BASIC_NAME, DATASET_VERSION_01_BASIC_NAME})
     public void testImportPxDatasource() throws Exception {
         // DSD
         Mockito.when(srmRestInternalService.retrieveDsdByUrn(Mockito.anyString())).thenReturn(Mocks.mock_DSD_ECB_EXR_RG_for_PX());
 
-        createDatasetRepository("TESTDATA_STR_ECB_EXR_RG", URN_DSD_ECB_EXR_RG);
+        DatasetVersion datasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_01_BASIC_NAME);
+        final String datasetVersionUrn = datasetVersion.getSiemacMetadataStatisticalResource().getUrn();
+        final DatasetVersion resource = datasetService.retrieveDatasetVersionByUrn(getServiceContextAdministrador(), datasetVersionUrn);
+
+        createDatasetRepository(datasetVersionUrn, URN_DSD_ECB_EXR_RG);
 
         // New Transaction: Because the job needs persisted data
         final TransactionTemplate tt = new TransactionTemplate(transactionManager);
@@ -320,8 +350,10 @@ public class DataManipulateTest extends StatisticalResourcesBaseTest {
                 try {
 
                     TaskInfoDataset taskInfoDataset = new TaskInfoDataset();
+                    taskInfoDataset.setStoreAlternativeRepresentations(true);
                     taskInfoDataset.setDataStructureUrn(URN_DSD_ECB_EXR_RG);
-                    taskInfoDataset.setDatasetVersionId("TESTDATA_STR_ECB_EXR_RG");
+                    taskInfoDataset.setDatasetUrn(resource.getDataset().getIdentifiableStatisticalResource().getUrn());
+                    taskInfoDataset.setDatasetVersionId(datasetVersionUrn);
 
                     // File 01
                     {
@@ -346,15 +378,20 @@ public class DataManipulateTest extends StatisticalResourcesBaseTest {
         // Wait until the job is finished
         waitUntilJobFinished(true);
 
-        DatasetRepositoryDto datasetRepositoryDto = datasetRepositoriesServiceFacade.retrieveDatasetRepository("TESTDATA_STR_ECB_EXR_RG");
+        DatasetRepositoryDto datasetRepositoryDto = datasetRepositoriesServiceFacade.retrieveDatasetRepository(datasetVersionUrn);
 
         assertNotNull(datasetRepositoryDto);
     }
 
     @Test
+    @MetamacMock({DATASET_01_BASIC_NAME, DATASET_VERSION_01_BASIC_NAME})
     public void testImportCsvDatasource() throws Exception {
 
-        createDatasetRepository("TESTDATA_STR_ECB_EXR_RG", URN_DSD_ECB_EXR_RG);
+        DatasetVersion datasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_01_BASIC_NAME);
+        final String datasetVersionUrn = datasetVersion.getSiemacMetadataStatisticalResource().getUrn();
+        final DatasetVersion resource = datasetService.retrieveDatasetVersionByUrn(getServiceContextAdministrador(), datasetVersionUrn);
+
+        createDatasetRepository(datasetVersionUrn, URN_DSD_ECB_EXR_RG);
 
         // New Transaction: Because the job needs persisted data
         final TransactionTemplate tt = new TransactionTemplate(transactionManager);
@@ -366,8 +403,10 @@ public class DataManipulateTest extends StatisticalResourcesBaseTest {
                 try {
 
                     TaskInfoDataset taskInfoDataset = new TaskInfoDataset();
+                    taskInfoDataset.setStoreAlternativeRepresentations(true);
                     taskInfoDataset.setDataStructureUrn(URN_DSD_ECB_EXR_RG);
-                    taskInfoDataset.setDatasetVersionId("TESTDATA_STR_ECB_EXR_RG");
+                    taskInfoDataset.setDatasetVersionId(datasetVersionUrn);
+                    taskInfoDataset.setDatasetUrn(resource.getDataset().getIdentifiableStatisticalResource().getUrn());
 
                     // File 01
                     {
@@ -392,17 +431,22 @@ public class DataManipulateTest extends StatisticalResourcesBaseTest {
         // Wait until the job is finished
         waitUntilJobFinished(true);
 
-        DatasetRepositoryDto datasetRepositoryDto = datasetRepositoriesServiceFacade.retrieveDatasetRepository("TESTDATA_STR_ECB_EXR_RG");
+        DatasetRepositoryDto datasetRepositoryDto = datasetRepositoriesServiceFacade.retrieveDatasetRepository(datasetVersionUrn);
 
         assertNotNull(datasetRepositoryDto);
     }
 
     @Test
+    @MetamacMock({DATASET_01_BASIC_NAME, DATASET_VERSION_01_BASIC_NAME})
     public void testDuplicateDatasource() throws Exception {
+
+        DatasetVersion datasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_01_BASIC_NAME);
+        final String datasetVersionUrn = datasetVersion.getSiemacMetadataStatisticalResource().getUrn();
+        final DatasetVersion resource = datasetService.retrieveDatasetVersionByUrn(getServiceContextAdministrador(), datasetVersionUrn);
+
+        createDatasetRepository(datasetVersionUrn, URN_DSD_ECB_EXR_RG);
+
         // New Transaction: Because the job needs persisted data
-
-        createDatasetRepository("TESTDATA_STR_ECB_EXR_RG", URN_DSD_ECB_EXR_RG);
-
         final TransactionTemplate tt = new TransactionTemplate(transactionManager);
         tt.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
         tt.execute(new TransactionCallbackWithoutResult() {
@@ -412,8 +456,10 @@ public class DataManipulateTest extends StatisticalResourcesBaseTest {
                 try {
 
                     TaskInfoDataset taskInfoDataset = new TaskInfoDataset();
+                    taskInfoDataset.setStoreAlternativeRepresentations(true);
                     taskInfoDataset.setDataStructureUrn(URN_DSD_ECB_EXR_RG);
-                    taskInfoDataset.setDatasetVersionId("TESTDATA_STR_ECB_EXR_RG");
+                    taskInfoDataset.setDatasetVersionId(datasetVersionUrn);
+                    taskInfoDataset.setDatasetUrn(resource.getDataset().getIdentifiableStatisticalResource().getUrn());
 
                     // File 01
                     {
@@ -449,7 +495,7 @@ public class DataManipulateTest extends StatisticalResourcesBaseTest {
 
                     TaskInfoDataset taskInfoDataset = new TaskInfoDataset();
                     taskInfoDataset.setDataStructureUrn(URN_DSD_ECB_EXR_RG);
-                    taskInfoDataset.setDatasetVersionId("TESTDATA_STR_ECB_EXR_RG");
+                    taskInfoDataset.setDatasetVersionId(datasetVersionUrn);
 
                     jobKey = taskService.planifyDuplicationDataset(getServiceContextWithoutPrincipal(), taskInfoDataset, "TESTDATA_STR_ECB_EXR_RG_NEW");
 
