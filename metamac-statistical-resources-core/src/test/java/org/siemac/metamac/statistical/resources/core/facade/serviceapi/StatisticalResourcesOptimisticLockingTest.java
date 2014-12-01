@@ -586,8 +586,7 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
 
     @Override
     public void testRetrieveDimensionRepresentationMappings() throws Exception {
-        // TODO METAMAC-1979
-
+        // no optimistic locking in this operation
     }
 
     // ------------------------------------------------------------
