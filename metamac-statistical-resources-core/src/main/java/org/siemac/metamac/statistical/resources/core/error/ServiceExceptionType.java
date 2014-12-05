@@ -61,6 +61,7 @@ public class ServiceExceptionType extends CommonServiceExceptionType {
     public static final CommonServiceExceptionType PUBLICATION_VERSION_STRUCTURE_IMPORTATION_CUBE_WITHOUT_RELATED_RESOURCE    = create("exception.resources.publication_version.structure.importation.cube_without_related_resource");
     public static final CommonServiceExceptionType PUBLICATION_VERSION_STRUCTURE_IMPORTATION_CUBE_WITH_WRONG_RELATED_RESOURCE = create("exception.resources.publication_version.structure.importation.cube_with_wrong_related_resource");
     public static final CommonServiceExceptionType PUBLICATION_VERSION_STRUCTURE_IMPORTATION_ELEMENT_WITH_EMTPY_NAME          = create("exception.resources.publication_version.structure.importation.element_with_empty_name");
+    public static final CommonServiceExceptionType PUBLICATION_VERSION_STRUCTURE_IMPORTATION_CUBE_WITH_SUBELEMENTS            = create("exception.resources.publication_version.structure.importation.cube_with_subelements");
 
     // Chapter
     public static final CommonServiceExceptionType CHAPTER_NOT_FOUND                                                          = create("exception.resources.chapter.not_found");

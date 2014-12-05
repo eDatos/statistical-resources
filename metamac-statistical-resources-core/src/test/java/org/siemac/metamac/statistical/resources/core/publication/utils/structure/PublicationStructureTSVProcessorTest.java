@@ -1,17 +1,22 @@
 package org.siemac.metamac.statistical.resources.core.publication.utils.structure;
 
 import static junit.framework.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum.CHAPTER;
 import static org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum.CUBE;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.PublicationsAsserts.assertEqualsPublicationStructure;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.core.common.exception.MetamacExceptionBuilder;
+import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
+import org.siemac.metamac.core.common.exception.MetamacExceptionItemBuilder;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
@@ -43,10 +48,9 @@ public class PublicationStructureTSVProcessorTest extends StatisticalResourcesBa
 
     @Test
     public void testParseFileWithOnlyHeader() throws Exception {
+        expectedMetamacException(new MetamacException(ServiceExceptionType.PUBLICATION_VERSION_STRUCTURE_IMPORTATION_FORMAT_NOT_VALID, 2));
         File file = loadFile("publication_structure-only-header.tsv");
-        PublicationStructure publicationStructure = publicationStructureTSVProcessor.parse(file);
-        assertNull(publicationStructure.getPublicationName());
-        assertTrue(publicationStructure.getElements().isEmpty());
+        publicationStructureTSVProcessor.parse(file);
     }
 
     @Test
@@ -67,6 +71,7 @@ public class PublicationStructureTSVProcessorTest extends StatisticalResourcesBa
         File file = loadFile("publication_structure-only-publication.tsv");
         PublicationStructure publicationStructure = publicationStructureTSVProcessor.parse(file);
         assertEquals("Publication01", publicationStructure.getPublicationName());
+        assertTrue(publicationStructure.getElements().isEmpty());
     }
 
     @Test
@@ -74,11 +79,113 @@ public class PublicationStructureTSVProcessorTest extends StatisticalResourcesBa
 
         PublicationStructure expected = createPublicationStructureWithThreeLevels();
 
-        File file = loadFile("publication_structure-publication-3-levels.tsv");
+        File file = loadFile("publication_structure-3-levels.tsv");
         PublicationStructure actual = publicationStructureTSVProcessor.parse(file);
 
         assertEqualsPublicationStructure(expected, actual);
     }
+
+    @Test
+    public void testParseFileWithChaptersWithRelatedResource() throws Exception {
+        List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
+        exceptionItems.add(MetamacExceptionItemBuilder.metamacExceptionItem()
+                .withCommonServiceExceptionType(ServiceExceptionType.PUBLICATION_VERSION_STRUCTURE_IMPORTATION_CHAPTER_WITH_RELATED_RESOURCE).withMessageParameters(5).build());
+        exceptionItems.add(MetamacExceptionItemBuilder.metamacExceptionItem()
+                .withCommonServiceExceptionType(ServiceExceptionType.PUBLICATION_VERSION_STRUCTURE_IMPORTATION_CHAPTER_WITH_RELATED_RESOURCE).withMessageParameters(11).build());
+        expectedMetamacException(MetamacExceptionBuilder.builder().withExceptionItems(exceptionItems).build());
+
+        File file = loadFile("publication_structure-chapters-with-related-resource.tsv");
+        publicationStructureTSVProcessor.parse(file);
+    }
+
+    @Test
+    public void testParseFileWithCubesWithoutRelatedResource() throws Exception {
+        List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
+        exceptionItems.add(MetamacExceptionItemBuilder.metamacExceptionItem()
+                .withCommonServiceExceptionType(ServiceExceptionType.PUBLICATION_VERSION_STRUCTURE_IMPORTATION_CUBE_WITHOUT_RELATED_RESOURCE).withMessageParameters(5).build());
+        exceptionItems.add(MetamacExceptionItemBuilder.metamacExceptionItem()
+                .withCommonServiceExceptionType(ServiceExceptionType.PUBLICATION_VERSION_STRUCTURE_IMPORTATION_CUBE_WITHOUT_RELATED_RESOURCE).withMessageParameters(18).build());
+        expectedMetamacException(MetamacExceptionBuilder.builder().withExceptionItems(exceptionItems).build());
+
+        File file = loadFile("publication_structure-cubes-without-related-resource.tsv");
+        publicationStructureTSVProcessor.parse(file);
+    }
+
+    @Test
+    public void testParseFileWithWrongElements() throws Exception {
+        List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
+        exceptionItems.add(MetamacExceptionItemBuilder.metamacExceptionItem().withCommonServiceExceptionType(ServiceExceptionType.PUBLICATION_VERSION_STRUCTURE_IMPORTATION_FORMAT_NOT_VALID)
+                .withMessageParameters(3).build());
+        exceptionItems.add(MetamacExceptionItemBuilder.metamacExceptionItem().withCommonServiceExceptionType(ServiceExceptionType.PUBLICATION_VERSION_STRUCTURE_IMPORTATION_FORMAT_NOT_VALID)
+                .withMessageParameters(4).build());
+        expectedMetamacException(MetamacExceptionBuilder.builder().withExceptionItems(exceptionItems).build());
+
+        File file = loadFile("publication_structure-wrong-element.tsv");
+        publicationStructureTSVProcessor.parse(file);
+    }
+
+    @Test
+    public void testParseFileWithElementsWithoutName() throws Exception {
+        List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
+        exceptionItems.add(MetamacExceptionItemBuilder.metamacExceptionItem().withCommonServiceExceptionType(ServiceExceptionType.PUBLICATION_VERSION_STRUCTURE_IMPORTATION_ELEMENT_WITH_EMTPY_NAME)
+                .withMessageParameters(7).build());
+        exceptionItems.add(MetamacExceptionItemBuilder.metamacExceptionItem().withCommonServiceExceptionType(ServiceExceptionType.PUBLICATION_VERSION_STRUCTURE_IMPORTATION_ELEMENT_WITH_EMTPY_NAME)
+                .withMessageParameters(15).build());
+        exceptionItems.add(MetamacExceptionItemBuilder.metamacExceptionItem().withCommonServiceExceptionType(ServiceExceptionType.PUBLICATION_VERSION_STRUCTURE_IMPORTATION_FORMAT_NOT_VALID)
+                .withMessageParameters(15).build());
+        expectedMetamacException(MetamacExceptionBuilder.builder().withExceptionItems(exceptionItems).build());
+
+        File file = loadFile("publication_structure-elements-without-names.tsv");
+        publicationStructureTSVProcessor.parse(file);
+    }
+
+    @Test
+    public void testParseFileWithWrongRelatedResources() throws Exception {
+        List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
+        exceptionItems.add(MetamacExceptionItemBuilder.metamacExceptionItem()
+                .withCommonServiceExceptionType(ServiceExceptionType.PUBLICATION_VERSION_STRUCTURE_IMPORTATION_CUBE_WITH_WRONG_RELATED_RESOURCE).withMessageParameters(6).build());
+        exceptionItems.add(MetamacExceptionItemBuilder.metamacExceptionItem()
+                .withCommonServiceExceptionType(ServiceExceptionType.PUBLICATION_VERSION_STRUCTURE_IMPORTATION_CUBE_WITH_WRONG_RELATED_RESOURCE).withMessageParameters(9).build());
+        expectedMetamacException(MetamacExceptionBuilder.builder().withExceptionItems(exceptionItems).build());
+
+        File file = loadFile("publication_structure-wrong-related-resources.tsv");
+        publicationStructureTSVProcessor.parse(file);
+    }
+
+    @Test
+    public void testParseFileWithEmptyLine() throws Exception {
+        File file = loadFile("publication_structure-empty-lines.tsv");
+        PublicationStructure publicationStructure = publicationStructureTSVProcessor.parse(file);
+        Assert.assertNotNull(publicationStructure);
+    }
+
+    @Test
+    public void testParseFileWithCubeWithSubElements() throws Exception {
+        expectedMetamacException(new MetamacException(ServiceExceptionType.PUBLICATION_VERSION_STRUCTURE_IMPORTATION_CUBE_WITH_SUBELEMENTS, 19));
+        File file = loadFile("publication_structure-cubes-with-subelements.tsv");
+        publicationStructureTSVProcessor.parse(file);
+    }
+
+    @Test
+    public void testParseFileWithMultipleErrors() throws Exception {
+        List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
+        exceptionItems.add(MetamacExceptionItemBuilder.metamacExceptionItem().withCommonServiceExceptionType(ServiceExceptionType.PUBLICATION_VERSION_STRUCTURE_IMPORTATION_FORMAT_NOT_VALID)
+                .withMessageParameters(5).build());
+        exceptionItems.add(MetamacExceptionItemBuilder.metamacExceptionItem()
+                .withCommonServiceExceptionType(ServiceExceptionType.PUBLICATION_VERSION_STRUCTURE_IMPORTATION_CHAPTER_WITH_RELATED_RESOURCE).withMessageParameters(7).build());
+        exceptionItems.add(MetamacExceptionItemBuilder.metamacExceptionItem().withCommonServiceExceptionType(ServiceExceptionType.PUBLICATION_VERSION_STRUCTURE_IMPORTATION_FORMAT_NOT_VALID)
+                .withMessageParameters(9).build());
+        exceptionItems.add(MetamacExceptionItemBuilder.metamacExceptionItem()
+                .withCommonServiceExceptionType(ServiceExceptionType.PUBLICATION_VERSION_STRUCTURE_IMPORTATION_CUBE_WITHOUT_RELATED_RESOURCE).withMessageParameters(11).build());
+        expectedMetamacException(MetamacExceptionBuilder.builder().withExceptionItems(exceptionItems).build());
+
+        File file = loadFile("publication_structure-multiple-errors.tsv");
+        publicationStructureTSVProcessor.parse(file);
+    }
+
+    //
+    // UTILITY METHODS
+    //
 
     private PublicationStructure createPublicationStructureWithThreeLevels() {
         PublicationStructure publicationStructure = new PublicationStructure();

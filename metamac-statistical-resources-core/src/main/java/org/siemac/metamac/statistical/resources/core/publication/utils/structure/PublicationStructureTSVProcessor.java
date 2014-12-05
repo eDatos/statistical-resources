@@ -31,20 +31,20 @@ import org.springframework.stereotype.Component;
  * PUBLICATION                                  Publication title        
  * CHAPTER                                      Chapter level 01 - a        
  * CHAPTER                                          Chapter level 02 - a.a  
- * CUBE             C00031A_000002.QUERY                Table level 03 - a.a-a
+ * CUBE             C00031A_000001.QUERY                Table level 03 - a.a-a
  * CUBE             C00031A_000002.DATASET              Table level 03 - a.a-b
- * CUBE             C00031A_000002.QUERY                Table level 03 - a.a-c
+ * CUBE             C00031A_000003.QUERY                Table level 03 - a.a-c
  * CHAPTER                                          Chapter level 02 - a.b  
- * CUBE             C00031A_000002.DATASET              Table level 03 - a.b-a
+ * CUBE             C00031A_000004.DATASET              Table level 03 - a.b-a
  * CHAPTER                                          Chapter level 02 - a.c  
- * CUBE             C00031A_000002.DATASET              Table level 03 - a.c-a
+ * CUBE             C00031A_000005.DATASET              Table level 03 - a.c-a
  * CHAPTER                                      Chapter level 01 - b        
  * CHAPTER                                          Chapter level 02 - b.a  
  * CHAPTER                                          Chapter level 02 - b.b  
  * CHAPTER                                          Chapter level 02 - b.c  
  * CHAPTER                                      Chapter level 01 - c        
- * CUBE             C00031A_000002.QUERY            Table level 2    
- * CUBE             C00031A_000002.QUERY        Table level 1
+ * CUBE             C00031A_000006.QUERY            Table level 2    
+ * CUBE             C00031A_000007.QUERY        Table level 1
  * </pre>
  */
 @Component
@@ -80,6 +80,9 @@ public class PublicationStructureTSVProcessor {
             lineNumber++;
 
             while ((line = lines.readLine()) != null) {
+                if (StringUtils.isBlank(line)) {
+                    continue;
+                }
                 readChaptersAndCubes(publicationStructure, lineNumber, line, exceptions);
                 lineNumber++;
             }
@@ -118,6 +121,9 @@ public class PublicationStructureTSVProcessor {
     }
 
     private void readPublication(PublicationStructure publicationStructure, int lineNumber, String line, List<MetamacExceptionItem> exceptions) throws MetamacException {
+        if (StringUtils.isBlank(line)) {
+            throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.PUBLICATION_VERSION_STRUCTURE_IMPORTATION_FORMAT_NOT_VALID).withMessageParameters(lineNumber).build();
+        }
         try {
             String[] elements = splitLine(line);
             if (!isPublication(elements)) {
@@ -132,37 +138,36 @@ public class PublicationStructureTSVProcessor {
     private void readChaptersAndCubes(PublicationStructure publicationStructure, int lineNumber, String line, List<MetamacExceptionItem> exceptions) {
         String[] splitLine = splitLine(line);
 
-        if (splitLine.length < 3) {
+        try {
+
+            TypeRelatedResourceEnum type = getElementType(splitLine);
+            if (type == null) {
+                addFormatNotValidException(exceptions, lineNumber);
+                return;
+            }
+
+            Element element = new Element();
+            element.setType(type);
+
+            int position = readElementName(splitLine, element, lineNumber, exceptions);
+
+            String relatedResource = splitLine[INDEX_RELATED_RESOURCE];
+            if (isCube(type)) {
+                parseRelatedResource(element, lineNumber, relatedResource, exceptions);
+            } else if (StringUtils.isNotBlank(relatedResource)) {
+                // A related resource code have been specified in a chapter. Only cubes have related resources.
+                addException(exceptions, ServiceExceptionType.PUBLICATION_VERSION_STRUCTURE_IMPORTATION_CHAPTER_WITH_RELATED_RESOURCE, lineNumber);
+                return;
+            }
+
+            addElementoToPublication(publicationStructure, element, position, lineNumber, exceptions);
+        } catch (ArrayIndexOutOfBoundsException e) {
             addFormatNotValidException(exceptions, lineNumber);
-            return;
         }
-
-        TypeRelatedResourceEnum type = getElementType(splitLine);
-        if (type == null) {
-            addFormatNotValidException(exceptions, lineNumber);
-            return;
-        }
-
-        Element element = new Element();
-        element.setType(type);
-
-        String relatedResource = splitLine[INDEX_RELATED_RESOURCE];
-        if (isCube(type)) {
-            parseRelatedResource(element, lineNumber, relatedResource, exceptions);
-        } else if (StringUtils.isNotBlank(relatedResource)) {
-            // A related resource code have been specified in a chapter. Only cubes have related resources.
-            addException(exceptions, ServiceExceptionType.PUBLICATION_VERSION_STRUCTURE_IMPORTATION_CHAPTER_WITH_RELATED_RESOURCE, lineNumber);
-            return;
-        }
-
-        int position = readElementName(splitLine, element, lineNumber, exceptions);
-
-        addElementoToPublication(publicationStructure, element, position, lineNumber, exceptions);
     }
 
     private void addElementoToPublication(PublicationStructure publicationStructure, Element element, int position, int lineNumber, List<MetamacExceptionItem> exceptions) {
         if (position < INDEX_INITIAL_ELEMENT_NAMES) {
-            addFormatNotValidException(exceptions, lineNumber);
             return;
         }
 
@@ -178,11 +183,22 @@ public class PublicationStructureTSVProcessor {
 
         Element elementParent = null;
         for (int i = 0; i < depthLevel; i++) {
+
+            if (elementsInLevel.isEmpty()) {
+                // If there is no elements in this level, the hierarchy of elements is not correctly specified in the file
+                addFormatNotValidException(exceptions, lineNumber);
+                return;
+            }
+
             if (i == parentDepthLevel) {
                 elementParent = elementsInLevel.getLast();
                 break;
             }
             elementsInLevel = elementsInLevel.getLast().getElements();
+        }
+        if (isCube(elementParent.getType())) {
+            addException(exceptions, ServiceExceptionType.PUBLICATION_VERSION_STRUCTURE_IMPORTATION_CUBE_WITH_SUBELEMENTS, lineNumber);
+            return;
         }
         elementParent.addElement(element);
     }

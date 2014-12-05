@@ -1,0 +1,19 @@
+TYPE	RELATED_RESOURCE			
+PUBLICATION		Publication title		
+CHAPTER		Chapter level 01 - a		
+CHAPTER			Chapter level 02 - a.a	
+CUBE	C00031A_000001.QUERY			Table level 03 - a.a-a
+CUBE	C00031A_000002.DATASET			Table level 03 - a.a-b
+CUBE	C00031A_000003.QUERY			Table level 03 - a.a-c
+CHAPTER			Chapter level 02 - a.b	
+CUBE	C00031A_000004.DATASET			Table level 03 - a.b-a
+CHAPTER			Chapter level 02 - a.c	
+CUBE	C00031A_000005.DATASET			Table level 03 - a.c-a
+CHAPTER		Chapter level 01 - b		
+CHAPTER			Chapter level 02 - b.a	
+CHAPTER			Chapter level 02 - b.b	
+CHAPTER			Chapter level 02 - b.c	
+CHAPTER		Chapter level 01 - c		
+CUBE	C00031A_000006.DATASET		Table level 2	
+CUBE	C00031A_000007.QUERY	Table level 1		
+CUBE	C00031A_000008.DATASET		Table level 2
