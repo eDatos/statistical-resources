@@ -25,6 +25,8 @@ import org.siemac.metamac.statistical.resources.core.publication.domain.Cube;
 import org.siemac.metamac.statistical.resources.core.publication.domain.ElementLevel;
 import org.siemac.metamac.statistical.resources.core.publication.domain.Publication;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
+import org.siemac.metamac.statistical.resources.core.publication.utils.structure.Element;
+import org.siemac.metamac.statistical.resources.core.publication.utils.structure.PublicationStructure;
 
 public class PublicationsAsserts extends BaseAsserts {
 
@@ -224,6 +226,23 @@ public class PublicationsAsserts extends BaseAsserts {
             assertEqualsVersionedNameableStatisticalResourceForResourceThatChangesCode(expected.getNameableStatisticalResource(), actual.getNameableStatisticalResource());
             assertNotSame(expected.getCreatedDate(), actual.getCreatedDate());
             assertNotSame(expected.getLastUpdated(), actual.getLastUpdated());
+        }
+    }
+
+    public static void assertEqualsPublicationStructure(PublicationStructure expected, PublicationStructure actual) {
+        assertEquals(expected.getPublicationName(), expected.getPublicationName());
+        assertEquals(expected.getElements().size(), expected.getElements().size());
+        for (int i = 0; i < expected.getElements().size(); i++) {
+            assertEqualsElement(expected.getElements().get(i), actual.getElements().get(i));
+        }
+    }
+
+    private static void assertEqualsElement(Element expected, Element actual) {
+        assertEquals(expected.getName(), actual.getName());
+        assertEquals(expected.getRelatedResourceCode(), actual.getRelatedResourceCode());
+        assertEquals(expected.getRelatedResourceType(), actual.getRelatedResourceType());
+        for (int i = 0; i < expected.getElements().size(); i++) {
+            assertEqualsElement(expected.getElements().get(i), actual.getElements().get(i));
         }
     }
 

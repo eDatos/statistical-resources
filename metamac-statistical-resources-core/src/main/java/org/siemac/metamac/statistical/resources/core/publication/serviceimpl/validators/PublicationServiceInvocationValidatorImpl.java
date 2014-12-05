@@ -1,5 +1,6 @@
 package org.siemac.metamac.statistical.resources.core.publication.serviceimpl.validators;
 
+import java.net.URL;
 import java.util.List;
 
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
@@ -96,6 +97,16 @@ public class PublicationServiceInvocationValidatorImpl extends BaseInvocationVal
 
     private static void checkPublicationVersion(PublicationVersion publicationVersion, List<MetamacExceptionItem> exceptions) {
     }
+
+    // ------------------------------------------------------------------------
+    // STRUCTURE
+    // ------------------------------------------------------------------------
+
+    public static void checkImportPublicationStructure(String publicationVersionUrn, URL fileURL, String language, List<MetamacExceptionItem> exceptions) {
+        StatisticalResourcesValidationUtils.checkParameterRequired(publicationVersionUrn, ServiceExceptionParameters.PUBLICATION_VERSION_URN, exceptions);
+        StatisticalResourcesValidationUtils.checkParameterRequired(fileURL, ServiceExceptionParameters.STRUCTURE_FILE_URL, exceptions);
+        StatisticalResourcesValidationUtils.checkParameterRequired(language, ServiceExceptionParameters.STRUCTURE_FILE_LANGUAGE, exceptions);
+    };
 
     // ------------------------------------------------------------------------
     // CHAPTERS

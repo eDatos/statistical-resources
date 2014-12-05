@@ -33,6 +33,8 @@ public class ServiceExceptionParameters extends ServiceExceptionBaseParameters {
     public static final String       PARENT_CHAPTER_URN                       = "parameter.resources.parent_chapter_urn";
     public static final String       ORDER_IN_LEVEL                           = "parameter.resources.order_in_level";
     public static final String       CUBE_URN                                 = "parameter.resources.cube_urn";
+    public static final String       STRUCTURE_FILE_URL                       = "parameter.resources.structure_file_url";
+    public static final String       STRUCTURE_FILE_LANGUAGE                  = "parameter.resources.structure_file_language";
 
     // Query
     public static final String       QUERY_URN                                = "parameter.resources.query_urn";

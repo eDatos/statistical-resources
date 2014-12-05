@@ -1,50 +1,10 @@
 package org.siemac.metamac.statistical.resources.core.publication.serviceapi;
 
-import java.util.Arrays;
-import java.util.List;
-
-import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
-import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteriaBuilder;
-import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
-import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.siemac.metamac.common.test.utils.MetamacAsserts;
-import org.siemac.metamac.core.common.exception.MetamacException;
-import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
-import org.siemac.metamac.core.common.test.utils.mocks.configuration.MetamacMock;
-import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
-import org.siemac.metamac.statistical.resources.core.base.constants.ProcStatusForActionsConstants;
-import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
-import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
-import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
-import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
-import org.siemac.metamac.statistical.resources.core.publication.domain.Chapter;
-import org.siemac.metamac.statistical.resources.core.publication.domain.Cube;
-import org.siemac.metamac.statistical.resources.core.publication.domain.ElementLevel;
-import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
-import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersionProperties;
-import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersionRepository;
-import org.siemac.metamac.statistical.resources.core.query.domain.Query;
-import org.siemac.metamac.statistical.resources.core.utils.asserts.CommonAsserts;
-import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesNotPersistedDoMocks;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.transaction.TransactionConfiguration;
-import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.TransactionDefinition;
-import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.support.DefaultTransactionDefinition;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.PublicationsAsserts.assertEqualsPublicationVersion;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.PublicationsAsserts.assertEqualsPublicationVersionCollection;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.PublicationsAsserts.assertEqualsPublicationVersionNotChecksPublication;
@@ -84,6 +44,45 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_91_REPLACES_PUBLICATION_92_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_92_IS_REPLACED_BY_PUBLICATION_91_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryMockFactory.QUERY_01_SIMPLE_NAME;
+
+import java.util.Arrays;
+import java.util.List;
+
+import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
+import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteriaBuilder;
+import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
+import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.siemac.metamac.common.test.utils.MetamacAsserts;
+import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
+import org.siemac.metamac.core.common.test.utils.mocks.configuration.MetamacMock;
+import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
+import org.siemac.metamac.statistical.resources.core.base.constants.ProcStatusForActionsConstants;
+import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
+import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
+import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
+import org.siemac.metamac.statistical.resources.core.publication.domain.Chapter;
+import org.siemac.metamac.statistical.resources.core.publication.domain.Cube;
+import org.siemac.metamac.statistical.resources.core.publication.domain.ElementLevel;
+import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
+import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersionProperties;
+import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersionRepository;
+import org.siemac.metamac.statistical.resources.core.query.domain.Query;
+import org.siemac.metamac.statistical.resources.core.utils.asserts.CommonAsserts;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesNotPersistedDoMocks;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.transaction.TransactionConfiguration;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionDefinition;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:spring/statistical-resources/include/rest-services-mockito.xml", "classpath:spring/statistical-resources/applicationContext-test.xml"})
@@ -1463,6 +1462,15 @@ public class PublicationServiceTest extends StatisticalResourcesBaseTest impleme
         expectedMetamacException(new MetamacException(ServiceExceptionType.LIFE_CYCLE_WRONG_PROC_STATUS, publicationVersion.getSiemacMetadataStatisticalResource().getUrn(),
                 "DRAFT, VALIDATION_REJECTED, PRODUCTION_VALIDATION, DIFFUSION_VALIDATION"));
         publicationService.deleteChapter(getServiceContextAdministrador(), chapterUrn);
+    }
+
+    // ------------------------------------------------------------------------
+    // STRUCTURE
+    // ------------------------------------------------------------------------
+
+    @Override
+    public void testImportPublicationStructure() throws Exception {
+        // TODO METAMAC-1982
     }
 
     // ------------------------------------------------------------------------

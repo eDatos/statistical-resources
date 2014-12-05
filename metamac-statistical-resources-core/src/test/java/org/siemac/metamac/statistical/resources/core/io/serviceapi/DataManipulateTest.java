@@ -99,7 +99,7 @@ public class DataManipulateTest extends StatisticalResourcesBaseTest {
 
     public static final String               DATA_PX_ECB_EXR_RG                  = "/px/ecb_exr_rg.px";
 
-    public static final String               DATA_TSV_ECB_EXR_RG                 = "/csv/ecb_exr_rg.tsv";
+    public static final String               DATA_TSV_ECB_EXR_RG                 = "/tsv/ecb_exr_rg.tsv";
 
     public static final String               URN_DSD_ECB_EXR_RG                  = "urn:sdmx:org.sdmx.infomodel.datastructure.DataStructure=ECB:ECB_EXR_RG(1.0)";
 

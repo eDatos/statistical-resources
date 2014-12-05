@@ -38,9 +38,12 @@ Application PublicationsStatisticalResources {
 			"Retrieves all publications versions of one publication"
 			List<@PublicationVersion> retrievePublicationVersions(String publicationVersionUrn) throws MetamacException;
 			"Finds publications by criteria"
-    		PagedResult<@PublicationVersion> findPublicationVersionsByCondition(List<ConditionalCriteria> conditions, PagingParameter pagingParameter)  throws MetamacException;
+    		PagedResult<@PublicationVersion> findPublicationVersionsByCondition(List<ConditionalCriteria> conditions, PagingParameter pagingParameter) throws MetamacException;
 			"Deletes publication version. This must be last version and no published"
     		deletePublicationVersion(String publicationVersionUrn) throws MetamacException;
+    		
+    		// Structure
+    		void importPublicationStructure(String publicationVersionUrn, URL fileURL, String language) throws MetamacException;
     		
     		// Chapters
 	    	@Chapter createChapter(String publicationVersionUrn, @Chapter chapter) throws MetamacException;

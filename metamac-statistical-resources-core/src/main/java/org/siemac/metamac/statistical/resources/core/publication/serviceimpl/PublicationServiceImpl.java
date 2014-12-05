@@ -1,5 +1,6 @@
 package org.siemac.metamac.statistical.resources.core.publication.serviceimpl;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -34,6 +35,8 @@ import org.siemac.metamac.statistical.resources.core.publication.domain.Publicat
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersionRepository;
 import org.siemac.metamac.statistical.resources.core.publication.serviceapi.validators.PublicationServiceInvocationValidator;
+import org.siemac.metamac.statistical.resources.core.publication.utils.structure.PublicationStructure;
+import org.siemac.metamac.statistical.resources.core.publication.utils.structure.PublicationStructureTSVProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -54,6 +57,9 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
 
     @Autowired
     private PublicationVersionRepository              publicationVersionRepository;
+
+    @Autowired
+    private PublicationStructureTSVProcessor          publicationStructureTSVProcessor;
 
     public PublicationServiceImpl() {
     }
@@ -194,6 +200,22 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
             throw new MetamacException(Arrays.asList(item));
         }
     }
+
+    // ------------------------------------------------------------------------
+    // STRUCTURE
+    // ------------------------------------------------------------------------
+
+    @Override
+    public void importPublicationStructure(ServiceContext ctx, String publicationVersionUrn, java.net.URL fileURL, String language) throws MetamacException {
+        // Validations
+        publicationServiceInvocationValidator.checkImportPublicationStructure(ctx, publicationVersionUrn, fileURL, language);
+
+        // Parse
+        PublicationStructure publicationStructure = publicationStructureTSVProcessor.parse(new File(fileURL.getPath()));
+
+        // Save structure
+        // TODO METAMAC-1982
+    };
 
     // ------------------------------------------------------------------------
     // CHAPTERS
