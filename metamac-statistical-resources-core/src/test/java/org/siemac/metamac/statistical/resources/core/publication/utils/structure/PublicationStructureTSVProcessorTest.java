@@ -177,6 +177,10 @@ public class PublicationStructureTSVProcessorTest extends StatisticalResourcesBa
                 .withMessageParameters(9).build());
         exceptionItems.add(MetamacExceptionItemBuilder.metamacExceptionItem()
                 .withCommonServiceExceptionType(ServiceExceptionType.PUBLICATION_VERSION_STRUCTURE_IMPORTATION_CUBE_WITHOUT_RELATED_RESOURCE).withMessageParameters(11).build());
+        exceptionItems.add(MetamacExceptionItemBuilder.metamacExceptionItem().withCommonServiceExceptionType(ServiceExceptionType.PUBLICATION_VERSION_STRUCTURE_IMPORTATION_FORMAT_NOT_VALID)
+                .withMessageParameters(16).build());
+        exceptionItems.add(MetamacExceptionItemBuilder.metamacExceptionItem().withCommonServiceExceptionType(ServiceExceptionType.PUBLICATION_VERSION_STRUCTURE_IMPORTATION_ELEMENT_WITH_EMTPY_NAME)
+                .withMessageParameters(16).build());
         expectedMetamacException(MetamacExceptionBuilder.builder().withExceptionItems(exceptionItems).build());
 
         File file = loadFile("publication_structure-multiple-errors.tsv");
