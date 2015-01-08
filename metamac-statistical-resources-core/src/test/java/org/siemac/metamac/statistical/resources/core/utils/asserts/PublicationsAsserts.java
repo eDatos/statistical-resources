@@ -230,7 +230,7 @@ public class PublicationsAsserts extends BaseAsserts {
     }
 
     public static void assertEqualsPublicationStructure(PublicationStructure expected, PublicationStructure actual) {
-        assertEquals(expected.getPublicationName(), expected.getPublicationName());
+        assertEquals(expected.getPublicationTitle(), expected.getPublicationTitle());
         assertEquals(expected.getElements().size(), expected.getElements().size());
         for (int i = 0; i < expected.getElements().size(); i++) {
             assertEqualsElement(expected.getElements().get(i), actual.getElements().get(i));
@@ -238,7 +238,7 @@ public class PublicationsAsserts extends BaseAsserts {
     }
 
     private static void assertEqualsElement(Element expected, Element actual) {
-        assertEquals(expected.getName(), actual.getName());
+        assertEquals(expected.getTitle(), actual.getTitle());
         assertEquals(expected.getRelatedResourceCode(), actual.getRelatedResourceCode());
         assertEquals(expected.getRelatedResourceType(), actual.getRelatedResourceType());
         for (int i = 0; i < expected.getElements().size(); i++) {

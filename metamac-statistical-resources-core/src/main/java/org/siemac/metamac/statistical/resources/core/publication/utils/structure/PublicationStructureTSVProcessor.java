@@ -129,7 +129,7 @@ public class PublicationStructureTSVProcessor {
             if (!isPublication(elements)) {
                 throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.PUBLICATION_VERSION_STRUCTURE_IMPORTATION_FORMAT_NOT_VALID).withMessageParameters(lineNumber).build();
             }
-            publicationStructure.setPublicationName(elements[INDEX_PUBLICATION_NAME]);
+            publicationStructure.setPublicationTitle(elements[INDEX_PUBLICATION_NAME]);
         } catch (ArrayIndexOutOfBoundsException e) {
             throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.PUBLICATION_VERSION_STRUCTURE_IMPORTATION_FORMAT_NOT_VALID).withMessageParameters(lineNumber).build();
         }
@@ -148,6 +148,7 @@ public class PublicationStructureTSVProcessor {
 
             Element element = new Element();
             element.setType(type);
+            element.setLineNumber(lineNumber);
 
             int position = readElementName(splitLine, element, lineNumber, exceptions);
 
@@ -206,7 +207,7 @@ public class PublicationStructureTSVProcessor {
     private int readElementName(String[] splitLine, Element element, int lineNumber, List<MetamacExceptionItem> exceptions) {
         for (int i = INDEX_INITIAL_ELEMENT_NAMES; i < splitLine.length; i++) {
             if (StringUtils.isNotBlank(splitLine[i])) {
-                element.setName(splitLine[i]);
+                element.setTitle(splitLine[i]);
                 return i;
             }
         }

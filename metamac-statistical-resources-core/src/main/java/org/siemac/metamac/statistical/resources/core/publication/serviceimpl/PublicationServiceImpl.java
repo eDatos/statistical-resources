@@ -7,25 +7,35 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
+import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteriaBuilder;
 import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
 import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.joda.time.DateTime;
 import org.siemac.metamac.core.common.criteria.utils.CriteriaUtils;
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.core.common.exception.MetamacExceptionBuilder;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.core.common.util.GeneratorUrnUtils;
 import org.siemac.metamac.core.common.util.shared.VersionUtil;
 import org.siemac.metamac.statistical.resources.core.base.components.SiemacStatisticalResourceGeneratedCode;
 import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableStatisticalResourceRepository;
+import org.siemac.metamac.statistical.resources.core.base.domain.NameableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.utils.FillMetadataForCreateResourceUtils;
 import org.siemac.metamac.statistical.resources.core.base.validators.ProcStatusValidator;
 import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
+import org.siemac.metamac.statistical.resources.core.common.domain.InternationalString;
+import org.siemac.metamac.statistical.resources.core.common.domain.LocalisedString;
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResource;
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResourceResult;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetProperties;
+import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.DatasetService;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
+import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.publication.domain.Chapter;
@@ -35,8 +45,12 @@ import org.siemac.metamac.statistical.resources.core.publication.domain.Publicat
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersionRepository;
 import org.siemac.metamac.statistical.resources.core.publication.serviceapi.validators.PublicationServiceInvocationValidator;
+import org.siemac.metamac.statistical.resources.core.publication.utils.structure.Element;
 import org.siemac.metamac.statistical.resources.core.publication.utils.structure.PublicationStructure;
 import org.siemac.metamac.statistical.resources.core.publication.utils.structure.PublicationStructureTSVProcessor;
+import org.siemac.metamac.statistical.resources.core.query.domain.Query;
+import org.siemac.metamac.statistical.resources.core.query.domain.QueryProperties;
+import org.siemac.metamac.statistical.resources.core.query.serviceapi.QueryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -60,6 +74,12 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
 
     @Autowired
     private PublicationStructureTSVProcessor          publicationStructureTSVProcessor;
+
+    @Autowired
+    private DatasetService                            datasetService;
+
+    @Autowired
+    private QueryService                              queryService;
 
     public PublicationServiceImpl() {
     }
@@ -206,7 +226,7 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
     // ------------------------------------------------------------------------
 
     @Override
-    public void importPublicationStructure(ServiceContext ctx, String publicationVersionUrn, java.net.URL fileURL, String language) throws MetamacException {
+    public PublicationVersion importPublicationStructure(ServiceContext ctx, String publicationVersionUrn, java.net.URL fileURL, String language) throws MetamacException {
         // Validations
         publicationServiceInvocationValidator.checkImportPublicationStructure(ctx, publicationVersionUrn, fileURL, language);
 
@@ -214,8 +234,107 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
         PublicationStructure publicationStructure = publicationStructureTSVProcessor.parse(new File(fileURL.getPath()));
 
         // Save structure
-        // TODO METAMAC-1982
+        if (StringUtils.isNotBlank(publicationStructure.getPublicationTitle())) {
+            updatePublicationTitle(ctx, publicationVersionUrn, language, publicationStructure.getPublicationTitle());
+        }
+
+        Long orderInLevel = 1L;
+        for (Element element : publicationStructure.getElements()) {
+            savePublicationStructureElement(ctx, publicationVersionUrn, element, language, orderInLevel, null);
+        }
+        return retrievePublicationVersionByUrn(ctx, publicationVersionUrn);
     };
+
+    private void updatePublicationTitle(ServiceContext ctx, String publicationVersionUrn, String language, String newTitle) throws MetamacException {
+        PublicationVersion publicationVersion = retrievePublicationVersionByUrn(ctx, publicationVersionUrn);
+        InternationalString title = publicationVersion.getSiemacMetadataStatisticalResource().getTitle();
+        if (title.getLocales().contains(language)) {
+            for (LocalisedString localisedString : title.getTexts()) {
+                if (language.equals(localisedString.getLocale())) {
+                    localisedString.setLabel(newTitle);
+                }
+            }
+        } else {
+            title.addText(new LocalisedString(language, newTitle));
+        }
+        updatePublicationVersion(ctx, publicationVersion);
+    }
+
+    private void savePublicationStructureElement(ServiceContext ctx, String publicationVersionUrn, Element element, String language, Long orderInLevel, ElementLevel parent) throws MetamacException {
+
+        ElementLevel currentElementLevel = null;
+
+        if (TypeRelatedResourceEnum.CHAPTER.equals(element.getType())) {
+
+            Chapter chapter = createChapter(ctx, publicationVersionUrn, element, language, orderInLevel, parent);
+            currentElementLevel = chapter.getElementLevel();
+
+        } else if (TypeRelatedResourceEnum.CUBE.equals(element.getType())) {
+
+            Cube cube = createCube(ctx, publicationVersionUrn, element, language, orderInLevel, parent);
+            currentElementLevel = cube.getElementLevel();
+        }
+
+        for (Element subelement : element.getElements()) {
+            savePublicationStructureElement(ctx, publicationVersionUrn, subelement, language, orderInLevel++, currentElementLevel);
+        }
+    }
+
+    private Chapter createChapter(ServiceContext ctx, String publicationVersionUrn, Element element, String language, Long orderInLevel, ElementLevel parent) throws MetamacException {
+        Chapter chapter = new Chapter();
+        chapter.setNameableStatisticalResource(new NameableStatisticalResource());
+        chapter.getNameableStatisticalResource().setTitle(new InternationalString(language, element.getTitle()));
+        chapter.setElementLevel(new ElementLevel());
+        chapter.getElementLevel().setChapter(chapter);
+        chapter.getElementLevel().setOrderInLevel(orderInLevel);
+        chapter.getElementLevel().setParent(parent);
+        return createChapter(ctx, publicationVersionUrn, chapter);
+    }
+
+    private Cube createCube(ServiceContext ctx, String publicationVersionUrn, Element element, String language, Long orderInLevel, ElementLevel parent) throws MetamacException {
+        Cube cube = new Cube();
+        cube.setNameableStatisticalResource(new NameableStatisticalResource());
+        cube.getNameableStatisticalResource().setTitle(new InternationalString(language, element.getTitle()));
+        cube.setElementLevel(new ElementLevel());
+        cube.getElementLevel().setCube(cube);
+        cube.getElementLevel().setOrderInLevel(orderInLevel);
+        cube.getElementLevel().setParent(parent);
+        addRelatedResourceToCube(ctx, cube, element);
+        return createCube(ctx, publicationVersionUrn, cube);
+    }
+
+    private void addRelatedResourceToCube(ServiceContext ctx, Cube cube, Element element) throws MetamacException {
+        StatisticalResourceTypeEnum type = element.getRelatedResourceType();
+        if (StatisticalResourceTypeEnum.DATASET.equals(type)) {
+            Dataset dataset = retrieveDatasetByCode(ctx, element.getRelatedResourceCode(), element.getLineNumber());
+            cube.setDataset(dataset);
+
+        } else if (StatisticalResourceTypeEnum.QUERY.equals(type)) {
+            Query query = retrieveQueryByCode(ctx, element.getRelatedResourceCode(), element.getLineNumber());
+            cube.setQuery(query);
+        }
+    }
+
+    private Dataset retrieveDatasetByCode(ServiceContext ctx, String code, int lineNumber) throws MetamacException {
+        List<ConditionalCriteria> conditions = ConditionalCriteriaBuilder.criteriaFor(Dataset.class).withProperty(DatasetProperties.identifiableStatisticalResource().code()).eq(code).build();
+        PagingParameter pagingParameter = PagingParameter.rowAccess(0, 1, true);
+        PagedResult<Dataset> datasets = datasetService.findDatasetsByCondition(ctx, conditions, pagingParameter);
+        if (datasets.getTotalRows() > 0) {
+            return datasets.getValues().get(0);
+        }
+        throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.PUBLICATION_VERSION_STRUCTURE_IMPORTATION_CUBE_WITH_NONEXISTENT_DATASET)
+                .withMessageParameters(lineNumber, code).build();
+    }
+
+    private Query retrieveQueryByCode(ServiceContext ctx, String code, int lineNumber) throws MetamacException {
+        List<ConditionalCriteria> conditions = ConditionalCriteriaBuilder.criteriaFor(Query.class).withProperty(QueryProperties.identifiableStatisticalResource().code()).eq(code).build();
+        List<Query> queries = queryService.findQueriesByCondition(ctx, conditions);
+        if (queries.size() > 0) {
+            return queries.get(0);
+        }
+        throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.PUBLICATION_VERSION_STRUCTURE_IMPORTATION_CUBE_WITH_NONEXISTENT_QUERY).withMessageParameters(lineNumber, code)
+                .build();
+    }
 
     // ------------------------------------------------------------------------
     // CHAPTERS

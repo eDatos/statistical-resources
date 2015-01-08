@@ -40,7 +40,7 @@ public class CubeRepositoryImpl extends CubeRepositoryBase {
     @Override
     public Boolean existAnyCubeInPublication(String publicationCode, String publicationVersionNumber) throws MetamacException {
         List<ConditionalCriteria> conditions = criteriaFor(Cube.class).withProperty(CubeProperties.elementLevel().publicationVersion().publication().identifiableStatisticalResource().code())
-        .eq(publicationCode).and().withProperty(CubeProperties.elementLevel().publicationVersion().siemacMetadataStatisticalResource().versionLogic()).eq(publicationVersionNumber).build();
+                .eq(publicationCode).and().withProperty(CubeProperties.elementLevel().publicationVersion().siemacMetadataStatisticalResource().versionLogic()).eq(publicationVersionNumber).build();
 
         List<Cube> result = findByCondition(conditions);
         return !result.isEmpty();
@@ -49,7 +49,8 @@ public class CubeRepositoryImpl extends CubeRepositoryBase {
     @Override
     @SuppressWarnings("unchecked")
     public List<String> findDatasetsLinkedWithPublicationVersion(String publicationVersionUrn) throws MetamacException {
-        Query query = getEntityManager().createQuery("select distinct(cube.dataset.identifiableStatisticalResource.urn) from Cube cube where cube.elementLevel.publicationVersion.siemacMetadataStatisticalResource.urn = :urn");
+        Query query = getEntityManager().createQuery(
+                "select distinct(cube.dataset.identifiableStatisticalResource.urn) from Cube cube where cube.elementLevel.publicationVersion.siemacMetadataStatisticalResource.urn = :urn");
         query.setParameter("urn", publicationVersionUrn);
         List<String> result = query.getResultList();
         return result;
@@ -58,7 +59,8 @@ public class CubeRepositoryImpl extends CubeRepositoryBase {
     @Override
     @SuppressWarnings("unchecked")
     public List<String> findQueriesLinkedWithPublicationVersion(String publicationVersionUrn) throws MetamacException {
-        Query query = getEntityManager().createQuery("select distinct(cube.query.identifiableStatisticalResource.urn) from Cube cube where cube.elementLevel.publicationVersion.siemacMetadataStatisticalResource.urn = :urn");
+        Query query = getEntityManager().createQuery(
+                "select distinct(cube.query.identifiableStatisticalResource.urn) from Cube cube where cube.elementLevel.publicationVersion.siemacMetadataStatisticalResource.urn = :urn");
         query.setParameter("urn", publicationVersionUrn);
         List<String> result = query.getResultList();
         return result;

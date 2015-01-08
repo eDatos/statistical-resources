@@ -7,18 +7,19 @@ import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedRes
 
 public class Element {
 
-    private String                      name;
+    private String                      title;
     private TypeRelatedResourceEnum     type;
     private StatisticalResourceTypeEnum relatedResourceType;
     private String                      relatedResourceCode;
     private LinkedList<Element>         elements = new LinkedList<Element>();
+    private int                         lineNumber;
 
-    public String getName() {
-        return name;
+    public String getTitle() {
+        return title;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public TypeRelatedResourceEnum getType() {
@@ -51,5 +52,13 @@ public class Element {
 
     public void addElement(Element element) {
         getElements().add(element);
+    }
+
+    public int getLineNumber() {
+        return lineNumber;
+    }
+
+    public void setLineNumber(int lineNumber) {
+        this.lineNumber = lineNumber;
     }
 }

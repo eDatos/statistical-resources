@@ -1,5 +1,8 @@
 package org.siemac.metamac.statistical.resources.core.query.serviceimpl;
 
+import static org.siemac.metamac.core.common.util.MetamacCollectionUtils.find;
+import static org.siemac.metamac.statistical.resources.core.base.domain.utils.RelatedResourceResultUtils.getUrnsFromRelatedResourceResults;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -50,9 +53,6 @@ import org.siemac.metamac.statistical.resources.core.utils.transformers.CodeItem
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import static org.siemac.metamac.core.common.util.MetamacCollectionUtils.find;
-import static org.siemac.metamac.statistical.resources.core.base.domain.utils.RelatedResourceResultUtils.getUrnsFromRelatedResourceResults;
-
 /**
  * Implementation of QueryService.
  */
@@ -79,6 +79,24 @@ public class QueryServiceImpl extends QueryServiceImplBase {
 
     public QueryServiceImpl() {
     }
+
+    //
+    // QUERIES
+    //
+
+    @Override
+    public List<Query> findQueriesByCondition(ServiceContext ctx, List<ConditionalCriteria> conditions) throws MetamacException {
+        // Validations
+        queryServiceInvocationValidator.checkFindQueriesByCondition(ctx, conditions);
+
+        // Find
+        conditions = CriteriaUtils.initConditions(conditions, DatasetVersion.class);
+        return getQueryRepository().findByCondition(conditions);
+    }
+
+    //
+    // QUERY VERSIONS
+    //
 
     @Override
     public QueryVersion retrieveQueryVersionByUrn(ServiceContext ctx, String urn) throws MetamacException {

@@ -37,6 +37,10 @@ Application QueriesStatisticalResources {
     		@QueryVersion retrieveLatestPublishedQueryVersionByQueryUrn(String queryUrn) throws MetamacException;
     		
     		boolean checkQueryCompatibility(@QueryVersion query, @DatasetVersion dataset) throws MetamacException;
+    		
+    		// Queries
+    		"Finds queries by criteria"
+    		List<@Query> findQueriesByCondition(List<ConditionalCriteria> conditions)  throws MetamacException;
 		}  
 
 

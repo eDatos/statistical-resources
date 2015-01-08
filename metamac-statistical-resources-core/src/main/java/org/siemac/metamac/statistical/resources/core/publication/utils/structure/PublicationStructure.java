@@ -4,15 +4,15 @@ import java.util.LinkedList;
 
 public class PublicationStructure {
 
-    private String              publicationName;
+    private String              publicationTitle;
     private LinkedList<Element> elements = new LinkedList<Element>();
 
-    public String getPublicationName() {
-        return publicationName;
+    public String getPublicationTitle() {
+        return publicationTitle;
     }
 
-    public void setPublicationName(String name) {
-        this.publicationName = name;
+    public void setPublicationTitle(String title) {
+        this.publicationTitle = title;
     }
 
     public LinkedList<Element> getElements() {

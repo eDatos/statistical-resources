@@ -48,6 +48,10 @@ public class QueryServiceInvocationValidatorImpl extends BaseInvocationValidator
         // NOTHING
     }
 
+    public static void checkFindQueriesByCondition(List<ConditionalCriteria> conditions, List<MetamacExceptionItem> exceptions) throws MetamacException {
+        // NOTHING
+    }
+
     public static void checkCreateQueryVersion(QueryVersion queryVersion, ExternalItem statisticalOperation, List<MetamacExceptionItem> exceptions) throws MetamacException {
         StatisticalResourcesValidationUtils.checkParameterRequired(statisticalOperation, ServiceExceptionParameters.STATISTICAL_OPERATION, exceptions);
         checkNewQueryVersion(queryVersion, exceptions);

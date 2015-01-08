@@ -1,6 +1,6 @@
 package org.siemac.metamac.statistical.resources.core.publication.serviceapi;
 
-import static org.junit.Assert.assertEquals;
+import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -45,6 +45,8 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_92_IS_REPLACED_BY_PUBLICATION_91_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryMockFactory.QUERY_01_SIMPLE_NAME;
 
+import java.io.File;
+import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
 
@@ -62,6 +64,7 @@ import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTes
 import org.siemac.metamac.statistical.resources.core.base.constants.ProcStatusForActionsConstants;
 import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
+import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.DatasetService;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.publication.domain.Chapter;
@@ -71,6 +74,7 @@ import org.siemac.metamac.statistical.resources.core.publication.domain.Publicat
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersionProperties;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersionRepository;
 import org.siemac.metamac.statistical.resources.core.query.domain.Query;
+import org.siemac.metamac.statistical.resources.core.query.serviceapi.QueryService;
 import org.siemac.metamac.statistical.resources.core.utils.asserts.CommonAsserts;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesNotPersistedDoMocks;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -95,6 +99,12 @@ public class PublicationServiceTest extends StatisticalResourcesBaseTest impleme
 
     @Autowired
     private PublicationService               publicationService;
+
+    @Autowired
+    private DatasetService                   datasetService;
+
+    @Autowired
+    private QueryService                     queryService;
 
     @Autowired
     @Qualifier("txManager")
@@ -1469,8 +1479,19 @@ public class PublicationServiceTest extends StatisticalResourcesBaseTest impleme
     // ------------------------------------------------------------------------
 
     @Override
+    @Test
+    @MetamacMock({PUBLICATION_VERSION_01_BASIC_NAME})
     public void testImportPublicationStructure() throws Exception {
-        // TODO METAMAC-1982
+        expectedMetamacException(new MetamacException(ServiceExceptionType.PUBLICATION_VERSION_STRUCTURE_IMPORTATION_CUBE_WITH_NONEXISTENT_QUERY, 5, "C00031A_000001"));
+
+        PublicationVersion expected = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_01_BASIC_NAME);
+
+        String locale = "es";
+        File file = loadFile("publication_structure-3-levels.tsv");
+        URL fileUrl = file.toURI().toURL();
+
+        PublicationVersion actual = publicationService.importPublicationStructure(getServiceContextAdministrador(), expected.getSiemacMetadataStatisticalResource().getUrn(), fileUrl, locale);
+        assertEquals("Publication title", actual.getSiemacMetadataStatisticalResource().getTitle().getLocalisedLabel(locale));
     }
 
     // ------------------------------------------------------------------------
@@ -2370,4 +2391,11 @@ public class PublicationServiceTest extends StatisticalResourcesBaseTest impleme
         publicationService.deleteCube(getServiceContextAdministrador(), cubeUrn);
     }
 
+    // -------------------------------------------------------------------------------
+    // PRIVATE METHODS
+    // -------------------------------------------------------------------------------
+
+    private File loadFile(String filename) throws Exception {
+        return new File(this.getClass().getResource("/tsv/" + filename).getFile());
+    }
 }

@@ -43,7 +43,7 @@ Application PublicationsStatisticalResources {
     		deletePublicationVersion(String publicationVersionUrn) throws MetamacException;
     		
     		// Structure
-    		void importPublicationStructure(String publicationVersionUrn, URL fileURL, String language) throws MetamacException;
+    		@PublicationVersion importPublicationStructure(String publicationVersionUrn, URL fileURL, String language) throws MetamacException;
     		
     		// Chapters
 	    	@Chapter createChapter(String publicationVersionUrn, @Chapter chapter) throws MetamacException;

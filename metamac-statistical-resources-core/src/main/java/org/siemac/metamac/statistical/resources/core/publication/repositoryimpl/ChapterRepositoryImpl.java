@@ -22,10 +22,11 @@ public class ChapterRepositoryImpl extends ChapterRepositoryBase {
     public ChapterRepositoryImpl() {
     }
 
+    @Override
     public Chapter retrieveChapterByUrn(String urn) throws MetamacException {
-         List<ConditionalCriteria> condition = criteriaFor(Chapter.class).withProperty(ChapterProperties.nameableStatisticalResource().urn()).eq(urn).distinctRoot().build();
-         PagedResult<Chapter> result = findByCondition(condition, PagingParameter.pageAccess(1));
-        
+        List<ConditionalCriteria> condition = criteriaFor(Chapter.class).withProperty(ChapterProperties.nameableStatisticalResource().urn()).eq(urn).distinctRoot().build();
+        PagedResult<Chapter> result = findByCondition(condition, PagingParameter.pageAccess(1));
+
         if (result.getValues().size() == 0) {
             throw new MetamacException(ServiceExceptionType.CHAPTER_NOT_FOUND, urn);
         } else if (result.getValues().size() > 1) {

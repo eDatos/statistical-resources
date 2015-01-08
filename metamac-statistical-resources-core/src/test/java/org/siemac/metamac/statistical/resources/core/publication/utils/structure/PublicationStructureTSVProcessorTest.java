@@ -70,7 +70,7 @@ public class PublicationStructureTSVProcessorTest extends StatisticalResourcesBa
     public void testParseFileWithOnlyPublication() throws Exception {
         File file = loadFile("publication_structure-only-publication.tsv");
         PublicationStructure publicationStructure = publicationStructureTSVProcessor.parse(file);
-        assertEquals("Publication01", publicationStructure.getPublicationName());
+        assertEquals("Publication01", publicationStructure.getPublicationTitle());
         assertTrue(publicationStructure.getElements().isEmpty());
     }
 
@@ -193,7 +193,7 @@ public class PublicationStructureTSVProcessorTest extends StatisticalResourcesBa
 
     private PublicationStructure createPublicationStructureWithThreeLevels() {
         PublicationStructure publicationStructure = new PublicationStructure();
-        publicationStructure.setPublicationName("Publication title");
+        publicationStructure.setPublicationTitle("Publication title");
 
         Element elementA = createChapter("Chapter level 01 - a");
         Element elementAA = createChapter("Chapter level 02 - a.a");
@@ -237,7 +237,7 @@ public class PublicationStructureTSVProcessorTest extends StatisticalResourcesBa
     private Element createElement(TypeRelatedResourceEnum type, String name, String relatedResourceCode, StatisticalResourceTypeEnum relatedResourceType) {
         Element element = new Element();
         element.setType(type);
-        element.setName(name);
+        element.setTitle(name);
         element.setRelatedResourCode(relatedResourceCode);
         element.setRelatedResourceType(relatedResourceType);
         return element;
