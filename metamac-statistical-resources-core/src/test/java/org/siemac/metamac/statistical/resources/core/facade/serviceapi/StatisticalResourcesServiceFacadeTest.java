@@ -128,6 +128,7 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesDtoMocks.mockCodeItemDtosWithIdentifiers;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesDtoMocks.mockQueryVersionDto;
 
+import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -3278,6 +3279,20 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         PublicationStructureDto publicationStructureDto = statisticalResourcesServiceFacade.retrievePublicationVersionStructure(getServiceContextAdministrador(), publicationVersion
                 .getSiemacMetadataStatisticalResource().getUrn());
         assertEqualsPublicationVersionStructure(publicationVersion, publicationStructureDto);
+    }
+
+    @Test
+    @Override
+    @MetamacMock({PUBLICATION_VERSION_01_BASIC_NAME})
+    public void testImportPublicationVersionStructure() throws Exception {
+        expectedMetamacException(new MetamacException(ServiceExceptionType.PUBLICATION_VERSION_STRUCTURE_IMPORTATION_CUBE_WITH_NONEXISTENT_QUERY, 5, "C00031A_000001"));
+        String locale = "es";
+        File file = loadTSVFile("publication_structure-3-levels.tsv");
+        URL fileURL = file.toURI().toURL();
+
+        PublicationVersion expected = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_01_BASIC_NAME);
+
+        statisticalResourcesServiceFacade.importPublicationVersionStructure(getServiceContextAdministrador(), expected.getLifeCycleStatisticalResource().getUrn(), fileURL, locale);
     }
 
     // ------------------------------------------------------------

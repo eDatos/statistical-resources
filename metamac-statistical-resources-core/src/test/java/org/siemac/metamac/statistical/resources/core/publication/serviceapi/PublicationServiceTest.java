@@ -1481,16 +1481,16 @@ public class PublicationServiceTest extends StatisticalResourcesBaseTest impleme
     @Override
     @Test
     @MetamacMock({PUBLICATION_VERSION_01_BASIC_NAME})
-    public void testImportPublicationStructure() throws Exception {
+    public void testImportPublicationVersionStructure() throws Exception {
         expectedMetamacException(new MetamacException(ServiceExceptionType.PUBLICATION_VERSION_STRUCTURE_IMPORTATION_CUBE_WITH_NONEXISTENT_QUERY, 5, "C00031A_000001"));
 
         PublicationVersion expected = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_01_BASIC_NAME);
 
         String locale = "es";
-        File file = loadFile("publication_structure-3-levels.tsv");
+        File file = loadTSVFile("publication_structure-3-levels.tsv");
         URL fileUrl = file.toURI().toURL();
 
-        PublicationVersion actual = publicationService.importPublicationStructure(getServiceContextAdministrador(), expected.getSiemacMetadataStatisticalResource().getUrn(), fileUrl, locale);
+        PublicationVersion actual = publicationService.importPublicationVersionStructure(getServiceContextAdministrador(), expected.getSiemacMetadataStatisticalResource().getUrn(), fileUrl, locale);
         assertEquals("Publication title", actual.getSiemacMetadataStatisticalResource().getTitle().getLocalisedLabel(locale));
     }
 
@@ -2389,13 +2389,5 @@ public class PublicationServiceTest extends StatisticalResourcesBaseTest impleme
         expectedMetamacException(new MetamacException(ServiceExceptionType.LIFE_CYCLE_WRONG_PROC_STATUS, publicationVersion.getSiemacMetadataStatisticalResource().getUrn(),
                 "DRAFT, VALIDATION_REJECTED, PRODUCTION_VALIDATION, DIFFUSION_VALIDATION"));
         publicationService.deleteCube(getServiceContextAdministrador(), cubeUrn);
-    }
-
-    // -------------------------------------------------------------------------------
-    // PRIVATE METHODS
-    // -------------------------------------------------------------------------------
-
-    private File loadFile(String filename) throws Exception {
-        return new File(this.getClass().getResource("/tsv/" + filename).getFile());
     }
 }

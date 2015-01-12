@@ -58,6 +58,10 @@ public class SharedPublicationsSecurityUtils extends SharedSecurityUtils {
         return canRetrieveStatisticalResource(metamacPrincipal, operationCode, procStatus);
     }
 
+    public static boolean canImportPublicationVersionStructure(MetamacPrincipal metamacPrincipal, String operationCode, ProcStatusEnum procStatus) {
+        return canModifyStatisticalResource(metamacPrincipal, operationCode, procStatus);
+    }
+
     public static boolean canSendPublicationVersionToProductionValidation(MetamacPrincipal metamacPrincipal, String operationCode) {
         return isOperationAllowed(metamacPrincipal, operationCode, PRODUCTION_ROLES);
     }

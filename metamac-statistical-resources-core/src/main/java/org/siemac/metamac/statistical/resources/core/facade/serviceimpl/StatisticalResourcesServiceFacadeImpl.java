@@ -1541,6 +1541,19 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     }
 
     @Override
+    public void importPublicationVersionStructure(ServiceContext ctx, String publicationVersionUrn, URL fileURL, String language) throws MetamacException {
+
+        // Retrieve
+        PublicationVersion publicationVersion = getPublicationService().retrievePublicationVersionByUrn(ctx, publicationVersionUrn);
+
+        // Security
+        PublicationsSecurityUtils.canImportPublicationVersionStructure(ctx, publicationVersion);
+
+        // Import
+        getPublicationService().importPublicationVersionStructure(ctx, publicationVersionUrn, fileURL, language);
+    }
+
+    @Override
     public PublicationVersionDto sendPublicationVersionToProductionValidation(ServiceContext ctx, PublicationVersionDto publicationVersionDto) throws MetamacException {
         // Security
         PublicationsSecurityUtils.canSendPublicationVersionToProductionValidation(ctx, publicationVersionDto.getStatisticalOperation().getCode());

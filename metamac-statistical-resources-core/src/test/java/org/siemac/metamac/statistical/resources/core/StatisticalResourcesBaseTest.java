@@ -1,5 +1,6 @@
 package org.siemac.metamac.statistical.resources.core;
 
+import java.io.File;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -182,6 +183,9 @@ public abstract class StatisticalResourcesBaseTest extends MetamacBaseTest {
         {
             this.jdbcTemplateResources.update("truncate table TB_TASKS");
         }
+    }
 
+    protected File loadTSVFile(String filename) throws Exception {
+        return new File(this.getClass().getResource("/tsv/" + filename).getFile());
     }
 }

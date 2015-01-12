@@ -226,9 +226,9 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
     // ------------------------------------------------------------------------
 
     @Override
-    public PublicationVersion importPublicationStructure(ServiceContext ctx, String publicationVersionUrn, java.net.URL fileURL, String language) throws MetamacException {
+    public PublicationVersion importPublicationVersionStructure(ServiceContext ctx, String publicationVersionUrn, java.net.URL fileURL, String language) throws MetamacException {
         // Validations
-        publicationServiceInvocationValidator.checkImportPublicationStructure(ctx, publicationVersionUrn, fileURL, language);
+        publicationServiceInvocationValidator.checkImportPublicationVersionStructure(ctx, publicationVersionUrn, fileURL, language);
 
         // Parse
         PublicationStructure publicationStructure = publicationStructureTSVProcessor.parse(new File(fileURL.getPath()));

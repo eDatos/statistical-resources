@@ -1655,6 +1655,11 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
     }
 
     @Override
+    public void testImportPublicationVersionStructure() throws Exception {
+        // no optimistic locking in this operation
+    }
+
+    @Override
     public void testRetrieveLatestDatasetVersion() throws Exception {
         // no optimistic locking in this operation
     }

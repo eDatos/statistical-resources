@@ -102,7 +102,7 @@ public class PublicationServiceInvocationValidatorImpl extends BaseInvocationVal
     // STRUCTURE
     // ------------------------------------------------------------------------
 
-    public static void checkImportPublicationStructure(String publicationVersionUrn, URL fileURL, String language, List<MetamacExceptionItem> exceptions) {
+    public static void checkImportPublicationVersionStructure(String publicationVersionUrn, URL fileURL, String language, List<MetamacExceptionItem> exceptions) {
         StatisticalResourcesValidationUtils.checkParameterRequired(publicationVersionUrn, ServiceExceptionParameters.PUBLICATION_VERSION_URN, exceptions);
         StatisticalResourcesValidationUtils.checkParameterRequired(fileURL, ServiceExceptionParameters.STRUCTURE_FILE_URL, exceptions);
         StatisticalResourcesValidationUtils.checkParameterRequired(language, ServiceExceptionParameters.STRUCTURE_FILE_LANGUAGE, exceptions);

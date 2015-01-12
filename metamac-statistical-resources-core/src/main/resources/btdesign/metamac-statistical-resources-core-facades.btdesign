@@ -192,6 +192,8 @@ Application FacadeStatisticalResources {
             List<@PublicationVersionBaseDto> retrievePublicationVersions(String publicationVersionUrn) throws MetamacException;
     		"Retrieves publication version structure: chapter and cubes by levels."
 	    	@PublicationStructureDto retrievePublicationVersionStructure(String publicationVersionUrn) throws MetamacException;
+	    	"Import a publication version structure"
+	    	importPublicationVersionStructure(String publicationVersionUrn, URL fileURL, String language) throws MetamacException;
 	    	"Retrieve latest publicationVersion providing publicationUrn"
     		@PublicationVersionDto retrieveLatestPublicationVersion(String publicationUrn) throws MetamacException;
     		"Retrieve latest published publicationVersion providing publicationUrn"
