@@ -42,6 +42,7 @@ import org.siemac.metamac.statistical.resources.web.client.enums.DatasetConstrai
 import org.siemac.metamac.statistical.resources.web.shared.dtos.RangeDto;
 import org.siemac.metamac.web.common.client.MetamacWebCommon;
 import org.siemac.metamac.web.common.client.events.ShowMessageEvent;
+import org.siemac.metamac.web.common.client.utils.ApplicationEditionLanguages;
 import org.siemac.metamac.web.common.client.utils.CommonWebUtils;
 import org.siemac.metamac.web.common.shared.exception.MetamacWebException;
 
@@ -525,6 +526,14 @@ public class CommonUtils {
         LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
         map.put(Boolean.TRUE.toString(), MetamacWebCommon.getConstants().yes());
         map.put(Boolean.FALSE.toString(), MetamacWebCommon.getConstants().no());
+        return map;
+    }
+
+    public static LinkedHashMap<String, String> getEditionLanguagesHashMap() {
+        LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
+        for (String locale : ApplicationEditionLanguages.getLocales()) {
+            map.put(locale, locale);
+        }
         return map;
     }
 

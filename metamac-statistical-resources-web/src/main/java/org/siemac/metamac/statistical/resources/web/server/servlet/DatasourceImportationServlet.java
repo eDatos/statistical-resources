@@ -3,6 +3,7 @@ package org.siemac.metamac.statistical.resources.web.server.servlet;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.zip.ZipException;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -28,6 +30,7 @@ import org.siemac.metamac.core.common.util.ApplicationContextProvider;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.core.facade.serviceapi.StatisticalResourcesServiceFacade;
 import org.siemac.metamac.statistical.resources.web.client.WebMessageExceptionsConstants;
+import org.siemac.metamac.statistical.resources.web.shared.utils.ImportableResourceTypeEnum;
 import org.siemac.metamac.statistical.resources.web.shared.utils.StatisticalResourcesSharedTokens;
 import org.siemac.metamac.web.common.server.ServiceContextHolder;
 import org.siemac.metamac.web.common.server.utils.WebExceptionUtils;
@@ -70,8 +73,6 @@ public class DatasourceImportationServlet extends BaseHttpServlet {
         Boolean mustBeZip = false;
 
         try {
-            StatisticalResourcesServiceFacade statisticalResourcesServiceFacade = (StatisticalResourcesServiceFacade) ApplicationContextProvider.getApplicationContext().getBean(
-                    "statisticalResourcesServiceFacade");
 
             DiskFileItemFactory factory = new DiskFileItemFactory();
             // Get the temporary directory (this is where files that exceed the threshold will be stored)
@@ -98,41 +99,15 @@ public class DatasourceImportationServlet extends BaseHttpServlet {
             String tempZipFilePathName = inputStreamToTempFile(fileName, inputStream);
             File outputFolder = (File) getServletContext().getAttribute("javax.servlet.context.tempdir");
             File uploadedFile = new File(tempZipFilePathName);
-
-            List<File> filesToImport = new ArrayList<File>();
-
-            Boolean storeDimensionsMapping = null;
-            boolean isFileZip = isZip(uploadedFile);
-
-            if (isFileZip) {
-                // If the uploaded file is a zip, the mapping cannot be set by the user. That's why the mappings are not stored in this case.
-                storeDimensionsMapping = false;
-                filesToImport = ZipUtils.unzipArchive(uploadedFile, outputFolder);
-            } else {
-                storeDimensionsMapping = true;
-                filesToImport.add(uploadedFile);
-            }
-
-            List<URL> fileUrls = getURLsFromFiles(filesToImport);
-
-            String statisticalOperationCode = args.get(StatisticalResourcesSharedTokens.UPLOAD_PARAM_OPERATION_CODE);
-            String datasetVersionUrn = args.get(StatisticalResourcesSharedTokens.UPLOAD_PARAM_DATASET_VERSION_URN);
             mustBeZip = BooleanUtils.toBoolean(args.get(StatisticalResourcesSharedTokens.UPLOAD_MUST_BE_ZIP_FILE));
 
-            if (BooleanUtils.isTrue(mustBeZip) && !isFileZip) {
-                throwMetamacWebException(WebMessageExceptionsConstants.ERROR_IMPORT_IS_NOT_ZIP);
-            } else if (BooleanUtils.isFalse(mustBeZip) && isFileZip) {
-                throwMetamacWebException(WebMessageExceptionsConstants.ERROR_IMPORT_IS_ZIP);
+            ImportableResourceTypeEnum importableResourceType = getImportableResourceType(args);
+            if (ImportableResourceTypeEnum.PUBLICATION_VERSION_STRUCTURE.equals(importableResourceType)) {
+                importPublicationVersionStructure(uploadedFile, args);
+            } else {
+                importDatasource(mustBeZip, uploadedFile, outputFolder, args);
             }
 
-            if (StringUtils.isNotBlank(datasetVersionUrn)) {
-                Map<String, String> dimensionMapping = buildDimensionsMappings(args);
-                DatasetVersionDto datasetVersionDto = statisticalResourcesServiceFacade.retrieveDatasetVersionByUrn(ServiceContextHolder.getCurrentServiceContext(), datasetVersionUrn);
-                statisticalResourcesServiceFacade.importDatasourcesInDatasetVersion(ServiceContextHolder.getCurrentServiceContext(), datasetVersionDto, fileUrls, dimensionMapping,
-                        storeDimensionsMapping);
-            } else if (StringUtils.isNotBlank(statisticalOperationCode)) {
-                statisticalResourcesServiceFacade.importDatasourcesInStatisticalOperation(ServiceContextHolder.getCurrentServiceContext(), statisticalOperationCode, fileUrls);
-            }
             sendSuccessImportationResponse(response, fileName, mustBeZip);
 
         } catch (Exception e) {
@@ -152,6 +127,64 @@ public class DatasourceImportationServlet extends BaseHttpServlet {
             logger.log(Level.SEVERE, e.getMessage());
 
             sendFailedImportationResponse(response, errorMessage, mustBeZip);
+        }
+    }
+
+    private void importDatasource(Boolean mustBeZip, File uploadedFile, File outputFolder, HashMap<String, String> args) throws MetamacWebException, ZipException, IOException, MetamacException {
+
+        StatisticalResourcesServiceFacade statisticalResourcesServiceFacade = (StatisticalResourcesServiceFacade) ApplicationContextProvider.getApplicationContext().getBean(
+                StatisticalResourcesServiceFacade.BEAN_ID);
+
+        List<File> filesToImport = new ArrayList<File>();
+
+        Boolean storeDimensionsMapping = null;
+        boolean isFileZip = isZip(uploadedFile);
+
+        if (isFileZip) {
+            // If the uploaded file is a zip, the mapping cannot be set by the user. That's why the mappings are not stored in this case.
+            storeDimensionsMapping = false;
+            filesToImport = ZipUtils.unzipArchive(uploadedFile, outputFolder);
+        } else {
+            storeDimensionsMapping = true;
+            filesToImport.add(uploadedFile);
+        }
+
+        List<URL> fileUrls = getURLsFromFiles(filesToImport);
+
+        String statisticalOperationCode = args.get(StatisticalResourcesSharedTokens.UPLOAD_PARAM_OPERATION_CODE);
+        String datasetVersionUrn = args.get(StatisticalResourcesSharedTokens.UPLOAD_PARAM_DATASET_VERSION_URN);
+
+        if (BooleanUtils.isTrue(mustBeZip) && !isFileZip) {
+            throwMetamacWebException(WebMessageExceptionsConstants.ERROR_IMPORT_IS_NOT_ZIP);
+        } else if (BooleanUtils.isFalse(mustBeZip) && isFileZip) {
+            throwMetamacWebException(WebMessageExceptionsConstants.ERROR_IMPORT_IS_ZIP);
+        }
+
+        if (StringUtils.isNotBlank(datasetVersionUrn)) {
+            Map<String, String> dimensionMapping = buildDimensionsMappings(args);
+            DatasetVersionDto datasetVersionDto = statisticalResourcesServiceFacade.retrieveDatasetVersionByUrn(ServiceContextHolder.getCurrentServiceContext(), datasetVersionUrn);
+            statisticalResourcesServiceFacade.importDatasourcesInDatasetVersion(ServiceContextHolder.getCurrentServiceContext(), datasetVersionDto, fileUrls, dimensionMapping, storeDimensionsMapping);
+        } else if (StringUtils.isNotBlank(statisticalOperationCode)) {
+            statisticalResourcesServiceFacade.importDatasourcesInStatisticalOperation(ServiceContextHolder.getCurrentServiceContext(), statisticalOperationCode, fileUrls);
+        }
+    }
+
+    private void importPublicationVersionStructure(File uploadedFile, HashMap<String, String> args) throws MetamacException, MalformedURLException {
+
+        StatisticalResourcesServiceFacade statisticalResourcesServiceFacade = (StatisticalResourcesServiceFacade) ApplicationContextProvider.getApplicationContext().getBean(
+                StatisticalResourcesServiceFacade.BEAN_ID);
+
+        String publicationVersionUrn = args.get(StatisticalResourcesSharedTokens.UPLOAD_PARAM_PUBLICATION_VERSION_URN);
+        String language = args.get(StatisticalResourcesSharedTokens.UPLOAD_PARAM_LANGUAGE);
+
+        statisticalResourcesServiceFacade.importPublicationVersionStructure(ServiceContextHolder.getCurrentServiceContext(), publicationVersionUrn, uploadedFile.toURI().toURL(), language);
+    }
+
+    private ImportableResourceTypeEnum getImportableResourceType(HashMap<String, String> args) {
+        try {
+            return ImportableResourceTypeEnum.valueOf(args.get(StatisticalResourcesSharedTokens.UPLOAD_RESOURCE_TYPE));
+        } catch (Exception e) {
+            return null;
         }
     }
 

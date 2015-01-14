@@ -40,6 +40,8 @@ import org.siemac.metamac.statistical.resources.web.shared.publication.UpdatePub
 import org.siemac.metamac.statistical.resources.web.shared.publication.UpdatePublicationStructureElementLocationResult;
 import org.siemac.metamac.statistical.resources.web.shared.query.GetQueriesAction;
 import org.siemac.metamac.statistical.resources.web.shared.query.GetQueriesResult;
+import org.siemac.metamac.web.common.client.events.ChangeWaitPopupVisibilityEvent;
+import org.siemac.metamac.web.common.client.events.ShowMessageEvent;
 import org.siemac.metamac.web.common.client.utils.CommonErrorUtils;
 import org.siemac.metamac.web.common.client.utils.WaitingAsyncCallbackHandlingError;
 
@@ -243,6 +245,28 @@ public class PublicationStructureTabPresenter extends Presenter<PublicationStruc
                 getView().setStatisticalOperationsForQuerySelection(result);
             }
         });
+    }
+
+    //
+    // IMPORTATION
+    //
+
+    @Override
+    public void resourceImportationSucceed(String successMessage, String publicationVersionUrn) {
+        ShowMessageEvent.fireSuccessMessage(PublicationStructureTabPresenter.this, successMessage);
+        retrievePublicationStructure(publicationVersionUrn);
+        ChangeWaitPopupVisibilityEvent.fire(this, false);
+    }
+
+    @Override
+    public void resourceImportationFailed(String errorMessage) {
+        ShowMessageEvent.fireErrorMessage(PublicationStructureTabPresenter.this, errorMessage);
+        ChangeWaitPopupVisibilityEvent.fire(this, false);
+    }
+
+    @Override
+    public void showWaitPopup() {
+        ChangeWaitPopupVisibilityEvent.fire(this, true);
     }
 
     //

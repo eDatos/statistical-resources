@@ -159,6 +159,17 @@ public class PublicationClientSecurityUtils extends LifecycleClientSecurityUtils
     }
 
     // ------------------------------------------------------------------------
+    // PUBLICATION STRUCTURE
+    // ------------------------------------------------------------------------
+
+    public static boolean canImportPublicationVersionStructure(ProcStatusEnum publicationProcStatus) {
+        if (isPublished(publicationProcStatus)) {
+            return false;
+        }
+        return SharedPublicationsSecurityUtils.canImportPublicationVersionStructure(getMetamacPrincipal(), getCurrentStatisticalOperationCode(), publicationProcStatus);
+    }
+
+    // ------------------------------------------------------------------------
     // CHAPTERS
     // ------------------------------------------------------------------------
 

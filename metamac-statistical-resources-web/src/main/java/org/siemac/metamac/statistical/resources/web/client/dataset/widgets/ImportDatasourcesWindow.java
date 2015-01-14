@@ -2,12 +2,14 @@ package org.siemac.metamac.statistical.resources.web.client.dataset.widgets;
 
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getMessages;
+import static org.siemac.metamac.statistical.resources.web.shared.utils.StatisticalResourcesSharedTokens.UPLOAD_RESOURCE_TYPE;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesDefaults;
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb;
+import org.siemac.metamac.statistical.resources.web.shared.utils.ImportableResourceTypeEnum;
 import org.siemac.metamac.statistical.resources.web.shared.utils.StatisticalResourcesSharedTokens;
 import org.siemac.metamac.web.common.client.widgets.ImportResourceWindow;
 import org.siemac.metamac.web.common.client.widgets.InformationLabel;
@@ -47,6 +49,9 @@ public class ImportDatasourcesWindow extends ImportResourceWindow {
             HiddenItem operationUrnItem = new HiddenItem(StatisticalResourcesSharedTokens.UPLOAD_PARAM_OPERATION_CODE);
             HiddenItem mustBeZip = new HiddenItem(StatisticalResourcesSharedTokens.UPLOAD_MUST_BE_ZIP_FILE);
             mustBeZip.setValue(true);
+
+            HiddenItem resourceTypeItem = new HiddenItem(UPLOAD_RESOURCE_TYPE);
+            resourceTypeItem.setDefaultValue(ImportableResourceTypeEnum.DATASOURCE.name());
 
             List<FormItem> itemsToAdd = new ArrayList<FormItem>();
             itemsToAdd.add(datasetVersionUrnItem);
