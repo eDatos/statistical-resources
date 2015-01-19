@@ -7,6 +7,7 @@ import org.siemac.metamac.statistical.resources.core.dto.publication.ElementLeve
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationStructureDto;
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb;
 import org.siemac.metamac.statistical.resources.web.client.publication.presenter.PublicationStructureTabPresenter.PublicationStructureTabView;
+import org.siemac.metamac.statistical.resources.web.client.publication.utils.PublicationClientSecurityUtils;
 import org.siemac.metamac.statistical.resources.web.client.publication.view.handlers.PublicationStructureTabUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.publication.widgets.ImportPublicationStructureWindow;
 import org.siemac.metamac.statistical.resources.web.client.publication.widgets.PublicationStructureElementPanel;
@@ -36,7 +37,7 @@ public class PublicationStructureTabViewImpl extends ViewWithUiHandlers<Publicat
     private PublicationStructureTreeGrid           publicationStructureTreeGrid;
     private PublicationStructureElementPanel       publicationStructureElementPanel;
 
-    private final CustomToolStripButton            importPublicationVersionStrucutureButton;
+    private final CustomToolStripButton            importPublicationVersionStructureButton;
     private final ImportPublicationStructureWindow importPublicationStructureWindow;
 
     private PublicationStructureDto                publicationStructureDto;
@@ -55,8 +56,8 @@ public class PublicationStructureTabViewImpl extends ViewWithUiHandlers<Publicat
 
         VLayout treePanel = new VLayout();
         ToolStrip toolStrip = new ToolStrip();
-        importPublicationVersionStrucutureButton = createImportPublicationVersionStructureButton();
-        toolStrip.addButton(importPublicationVersionStrucutureButton);
+        importPublicationVersionStructureButton = createImportPublicationVersionStructureButton();
+        toolStrip.addButton(importPublicationVersionStructureButton);
         treePanel.addMember(toolStrip);
         treePanel.addMember(publicationStructureTreeGrid);
 
@@ -137,7 +138,6 @@ public class PublicationStructureTabViewImpl extends ViewWithUiHandlers<Publicat
     private CustomToolStripButton createImportPublicationVersionStructureButton() {
         CustomToolStripButton importButton = new CustomToolStripButton(StatisticalResourcesWeb.getConstants().actionImport(), org.siemac.metamac.web.common.client.resources.GlobalResources.RESOURCE
                 .importResource().getURL());
-        // TODO METAMAC-1982 importButton.setVisible(PublicationClientSecurityUtils.canImportPublicationVersionStructure(publicationStructureDto.getPublicationVersion().getProcStatus()));
         importButton.addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
 
             @Override
@@ -165,6 +165,7 @@ public class PublicationStructureTabViewImpl extends ViewWithUiHandlers<Publicat
     @Override
     public void setPublicationStructure(PublicationStructureDto publicationStructureDto) {
         this.publicationStructureDto = publicationStructureDto;
+        importPublicationVersionStructureButton.setVisible(PublicationClientSecurityUtils.canImportPublicationVersionStructure(publicationStructureDto.getPublicationVersion().getProcStatus()));
         importPublicationStructureWindow.setPublicationVersionUrn(publicationStructureDto.getPublicationVersion().getUrn());
         publicationStructureTreeGrid.setPublicationStructure(publicationStructureDto);
         publicationStructureElementPanel.setPublicationVersion(publicationStructureDto.getPublicationVersion());

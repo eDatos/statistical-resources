@@ -241,6 +241,7 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
         Long orderInLevel = 1L;
         for (Element element : publicationStructure.getElements()) {
             savePublicationStructureElement(ctx, publicationVersionUrn, element, language, orderInLevel, null);
+            orderInLevel++;
         }
         return retrievePublicationVersionByUrn(ctx, publicationVersionUrn);
     };
@@ -275,8 +276,10 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
             currentElementLevel = cube.getElementLevel();
         }
 
+        Long subElementOrderInLevel = 1L;
         for (Element subelement : element.getElements()) {
-            savePublicationStructureElement(ctx, publicationVersionUrn, subelement, language, orderInLevel++, currentElementLevel);
+            savePublicationStructureElement(ctx, publicationVersionUrn, subelement, language, subElementOrderInLevel, currentElementLevel);
+            subElementOrderInLevel++;
         }
     }
 

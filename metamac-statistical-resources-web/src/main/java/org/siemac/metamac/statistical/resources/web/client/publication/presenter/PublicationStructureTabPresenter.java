@@ -1,6 +1,7 @@
 package org.siemac.metamac.statistical.resources.web.client.publication.presenter;
 
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
+import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getMessages;
 
 import java.util.List;
 
@@ -252,8 +253,8 @@ public class PublicationStructureTabPresenter extends Presenter<PublicationStruc
     //
 
     @Override
-    public void resourceImportationSucceed(String successMessage, String publicationVersionUrn) {
-        ShowMessageEvent.fireSuccessMessage(PublicationStructureTabPresenter.this, successMessage);
+    public void resourceImportationSucceed(String fileName, String publicationVersionUrn) {
+        ShowMessageEvent.fireSuccessMessage(PublicationStructureTabPresenter.this, getMessages().publicationVersionStructureImported(fileName));
         retrievePublicationStructure(publicationVersionUrn);
         ChangeWaitPopupVisibilityEvent.fire(this, false);
     }
