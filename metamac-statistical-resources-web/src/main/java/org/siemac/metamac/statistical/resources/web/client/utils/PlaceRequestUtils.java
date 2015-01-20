@@ -25,7 +25,7 @@ public class PlaceRequestUtils extends CommonPlaceRequestUtils {
     public static String getOperationParamFromUrl(PlaceManager placeManager) {
         for (PlaceRequest request : placeManager.getCurrentPlaceHierarchy()) {
             if (NameTokens.operationPage.equals(request.getNameToken())) {
-                return request.getParameter(PlaceRequestParams.operationParam, null);
+                return getRequestParameter(request, PlaceRequestParams.operationParam);
             }
         }
         return null;
@@ -48,7 +48,7 @@ public class PlaceRequestUtils extends CommonPlaceRequestUtils {
     }
 
     public static String getOperationBreadCrumbTitle(PlaceRequest placeRequest) {
-        String operationCode = placeRequest.getParameter(PlaceRequestParams.operationParam, null);
+        String operationCode = getRequestParameter(placeRequest, PlaceRequestParams.operationParam);
         if (!StringUtils.isBlank(operationCode)) {
             return operationCode;
         }
@@ -62,7 +62,7 @@ public class PlaceRequestUtils extends CommonPlaceRequestUtils {
     public static String getDatasetParamFromUrl(PlaceManager placeManager) {
         for (PlaceRequest request : placeManager.getCurrentPlaceHierarchy()) {
             if (NameTokens.datasetPage.equals(request.getNameToken())) {
-                return request.getParameter(PlaceRequestParams.datasetParam, null);
+                return getRequestParameter(request, PlaceRequestParams.datasetParam);
             }
         }
         return null;
@@ -89,7 +89,7 @@ public class PlaceRequestUtils extends CommonPlaceRequestUtils {
     }
 
     public static String getDatasetBreadCrumbTitle(PlaceRequest placeRequest) {
-        String urnWithoutPrefix = placeRequest.getParameter(PlaceRequestParams.datasetParam, null);
+        String urnWithoutPrefix = getRequestParameter(placeRequest, PlaceRequestParams.datasetParam);
         if (!StringUtils.isBlank(urnWithoutPrefix)) {
             String datasetCode = StatisticalResourcesUrnParserUtils.getDatasetVersionCodeFromUrnWithoutPrefix(urnWithoutPrefix);
             if (!StringUtils.isBlank(datasetCode)) {
@@ -106,7 +106,7 @@ public class PlaceRequestUtils extends CommonPlaceRequestUtils {
     public static String getPublicationParamFromUrl(PlaceManager placeManager) {
         for (PlaceRequest request : placeManager.getCurrentPlaceHierarchy()) {
             if (NameTokens.publicationPage.equals(request.getNameToken())) {
-                return request.getParameter(PlaceRequestParams.publicationParam, null);
+                return getRequestParameter(request, PlaceRequestParams.publicationParam);
             }
         }
         return null;
@@ -133,7 +133,7 @@ public class PlaceRequestUtils extends CommonPlaceRequestUtils {
     }
 
     public static String getPublicationBreadCrumbTitle(PlaceRequest placeRequest) {
-        String urnWithoutPrefix = placeRequest.getParameter(PlaceRequestParams.publicationParam, null);
+        String urnWithoutPrefix = getRequestParameter(placeRequest, PlaceRequestParams.publicationParam);
         if (!StringUtils.isBlank(urnWithoutPrefix)) {
             String publicationCode = StatisticalResourcesUrnParserUtils.getPublicationVersionCodeFromUrnWithoutPrefix(urnWithoutPrefix);
             if (!StringUtils.isBlank(publicationCode)) {
@@ -150,7 +150,7 @@ public class PlaceRequestUtils extends CommonPlaceRequestUtils {
     public static String getQueryParamFromUrl(PlaceManager placeManager) {
         for (PlaceRequest request : placeManager.getCurrentPlaceHierarchy()) {
             if (NameTokens.queryPage.equals(request.getNameToken())) {
-                return request.getParameter(PlaceRequestParams.queryParam, null);
+                return getRequestParameter(request, PlaceRequestParams.queryParam);
             }
         }
         return null;
@@ -177,7 +177,7 @@ public class PlaceRequestUtils extends CommonPlaceRequestUtils {
     }
 
     public static String getQueryBreadCrumbTitle(PlaceRequest placeRequest) {
-        String urnWithoutPrefix = placeRequest.getParameter(PlaceRequestParams.queryParam, null);
+        String urnWithoutPrefix = getRequestParameter(placeRequest, PlaceRequestParams.queryParam);
         if (!StringUtils.isBlank(urnWithoutPrefix)) {
             String queryCode = StatisticalResourcesUrnParserUtils.getQueryVersionCodeFromUrnWithoutPrefix(urnWithoutPrefix);
             if (!StringUtils.isBlank(queryCode)) {
@@ -209,6 +209,22 @@ public class PlaceRequestUtils extends CommonPlaceRequestUtils {
                     if (StatisticalResourcesUrnParserUtils.isQueryUrn(urn)) {
                         return buildAbsoluteQueryPlaceRequest(relatedResourceDto.getStatisticalOperationUrn(), urn);
                     }
+                    break;
+                case CATEGORISATION:
+                    break;
+                case CHAPTER:
+                    break;
+                case CUBE:
+                    break;
+                case DATASET:
+                    break;
+                case DATASOURCE:
+                    break;
+                case PUBLICATION:
+                    break;
+                case QUERY:
+                    break;
+                default:
                     break;
             }
         }
