@@ -9,7 +9,6 @@ import org.siemac.metamac.statistical.resources.web.client.presenter.MainPagePre
 import org.siemac.metamac.statistical.resources.web.client.view.handlers.MainPageUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.widgets.StatisticalResourcesMenu;
 import org.siemac.metamac.web.common.client.enums.MessageTypeEnum;
-import org.siemac.metamac.web.common.client.utils.ApplicationOrganisation;
 import org.siemac.metamac.web.common.client.widgets.BreadCrumbsPanel;
 import org.siemac.metamac.web.common.client.widgets.FooterLayout;
 import org.siemac.metamac.web.common.client.widgets.MasterHead;
@@ -45,7 +44,7 @@ public class MainPageViewImpl extends ViewWithUiHandlers<MainPageUiHandlers> imp
     private VLayout                        panel;
     private VLayout                        northLayout;
     private HLayout                        southLayout;
-    private FooterLayout                        footerLayout;
+    private FooterLayout                   footerLayout;
 
     @Inject
     public MainPageViewImpl(MasterHead masterHead, StatisticalResourcesMenu navigationMenu, BreadCrumbsPanel breadCrumbsPanel, MessagePanel messagePanel) {
@@ -88,7 +87,7 @@ public class MainPageViewImpl extends ViewWithUiHandlers<MainPageUiHandlers> imp
         southLayout = new HLayout();
         southLayout.setHeight100();
 
-        footerLayout = new FooterLayout(this.messagePanel, ApplicationOrganisation.getCurrentOrganisation(), StatisticalResourcesWeb.getProjectVersion());
+        footerLayout = new FooterLayout(this.messagePanel, StatisticalResourcesWeb.getProjectVersion());
 
         // Set user name
         masterHead.getUserNameLabel().setContents(getUserName());
