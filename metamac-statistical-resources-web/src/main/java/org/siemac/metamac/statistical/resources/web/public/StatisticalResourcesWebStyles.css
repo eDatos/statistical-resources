@@ -122,24 +122,9 @@ a:HOVER {
     margin-bottom: 10px;
 }
 
-/****************** HEADER ******************/
-.titleHeaderPanel {
- font-size: 26px;
- font-weight: normal;
- color: #008BD0; /* Azul */
- text-align: center;
-}
-
 /******************** FOOTER ****************/
 .footerPanel {
  background-color: #FFDF61; /* Amarillo */
-}
-
-.footerText {
- font-size: 10px;
- font-weight: normal;
- text-align: right;
- padding-right: 20px;
 }
 
 /******************** TITLE ****************/
