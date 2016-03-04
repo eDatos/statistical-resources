@@ -13,7 +13,7 @@ public interface StatisticalResourcesConfiguration extends ConfigurationService 
 
     public Map<KeyDotEnum, String> retrieveDotCodeMapping() throws MetamacException;
 
-    public String retrieveUserGuideFileName() throws MetamacException;
+    public String retrieveHelpUrl() throws MetamacException;
 
     public String retrieveDocsPath() throws MetamacException;
 }

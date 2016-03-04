@@ -19,8 +19,7 @@ public class StatisticalResourcesConfigurationMockImpl extends ConfigurationServ
     }
 
     @Override
-    public String retrieveUserGuideFileName() throws MetamacException {
+    public String retrieveHelpUrl() throws MetamacException {
         throw new UnsupportedOperationException("Not implemented. Not necessary for mocking purposes");
     }
-
 }

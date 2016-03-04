@@ -3,7 +3,7 @@ package org.siemac.metamac.statistical.resources.web.server;
 import org.siemac.metamac.statistical.resources.web.server.handlers.ValidateTicketActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.base.GetInitialValuesActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.base.GetLatestResourceVersionActionHandler;
-import org.siemac.metamac.statistical.resources.web.server.handlers.base.GetUserGuideUrlActionHandler;
+import org.siemac.metamac.statistical.resources.web.server.handlers.base.GetHelpUrlActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.CreateDatasetCategorisationsActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.CreateDatasetConstraintActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.DeleteCategorisationsActionHandler;
@@ -73,7 +73,7 @@ import org.siemac.metamac.statistical.resources.web.server.handlers.query.Update
 import org.siemac.metamac.statistical.resources.web.server.handlers.query.UpdateQueryVersionsProcStatusActionHandler;
 import org.siemac.metamac.statistical.resources.web.shared.base.GetInitialValuesAction;
 import org.siemac.metamac.statistical.resources.web.shared.base.GetLatestResourceVersionAction;
-import org.siemac.metamac.statistical.resources.web.shared.base.GetUserGuideUrlAction;
+import org.siemac.metamac.statistical.resources.web.shared.base.GetHelpUrlAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.CreateDatasetCategorisationsAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.CreateDatasetConstraintAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.DeleteCategorisationsAction;
@@ -255,7 +255,7 @@ public class ServerModule extends HandlerModule {
         bindHandler(GetLoginPageUrlAction.class, GetLoginPageUrlActionHandler.class);
         bindHandler(CloseSessionAction.class, CloseSessionActionHandler.class);
         bindHandler(GetNavigationBarUrlAction.class, GetNavigationBarUrlActionHandler.class);
-        bindHandler(GetUserGuideUrlAction.class, GetUserGuideUrlActionHandler.class);
+        bindHandler(GetHelpUrlAction.class, GetHelpUrlActionHandler.class);
 
         bindHandler(LoadConfigurationPropertiesAction.class, LoadConfigurationPropertiesActionHandler.class);
 

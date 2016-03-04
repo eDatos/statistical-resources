@@ -8,7 +8,7 @@ public class StatisticalResourcesConfigurationConstants extends ConfigurationCon
 
     // Configuration
 
-    public static final String USER_GUIDE_FILE_NAME      = "metamac.statistical_resources.user_guide.file_name";
+    public static final String HELP_URL                  = "metamac.statistical_resources.help.url";
     public static final String DOCS_PATH                 = "metamac.data.docs.statistical_resources.path";
     public static final String DOT_CODE_MAPPING          = "metamac.statistical_resources.dot_code_mapping";
 

@@ -38,13 +38,12 @@ public class StatisticalResourcesConfigurationImpl extends ConfigurationServiceI
     }
 
     @Override
-    public String retrieveUserGuideFileName() throws MetamacException {
-        return retrieveProperty(StatisticalResourcesConfigurationConstants.USER_GUIDE_FILE_NAME);
+    public String retrieveHelpUrl() throws MetamacException {
+        return retrieveProperty(StatisticalResourcesConfigurationConstants.HELP_URL);
     }
 
     @Override
     public String retrieveDocsPath() throws MetamacException {
         return retrieveProperty(StatisticalResourcesConfigurationConstants.DOCS_PATH);
     }
-
 }

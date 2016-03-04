@@ -49,7 +49,7 @@ public class StatisticalResourcesStartupListener extends InternalApplicationStar
         checkOptionalDefaultCodelistLanguagesUrn();
 
         // Specific
-        checkRequiredProperty(StatisticalResourcesConfigurationConstants.USER_GUIDE_FILE_NAME);
+        checkRequiredProperty(StatisticalResourcesConfigurationConstants.HELP_URL);
     }
 
     @Override
