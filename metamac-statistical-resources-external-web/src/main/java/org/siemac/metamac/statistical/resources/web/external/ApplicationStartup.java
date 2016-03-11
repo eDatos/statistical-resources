@@ -1,10 +1,27 @@
 package org.siemac.metamac.statistical.resources.web.external;
 
+import javax.servlet.ServletContextEvent;
+
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.listener.ApplicationStartupListener;
 import org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConfigurationConstants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ApplicationStartup extends ApplicationStartupListener {
+
+    private static final Logger log = LoggerFactory.getLogger(ApplicationStartup.class);
+
+    @Override
+    public void contextInitialized(ServletContextEvent sce) {
+        super.contextInitialized(sce);
+        try {
+            WebUtils.setOrganisation(configurationService.retrieveOrganisation());
+            WebUtils.setApiBaseURL(configurationService.retrieveStatisticalResourcesExternalApiUrlBase());
+        } catch (MetamacException e) {
+            log.error("Error retrieving application configuration", e);
+        }
+    }
 
     @Override
     public String projectName() {
