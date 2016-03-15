@@ -3,7 +3,7 @@
    "info":{
       "description":"Los recursos de información estadística son los resultados que se obtienen de una operación estadística. El objetivo de esta API es permite consultar todos los recursos de información estadística de la organización.",
       "version":"1.0",
-      "title":"API de recursos estadísticos"
+      "title":"API de recursos estadísticos v1.0"
    },
    "host":"<%=org.siemac.metamac.statistical.resources.web.external.WebUtils.getApiBaseURL()%>",
    "schemes":[
