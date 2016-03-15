@@ -206,7 +206,7 @@ public class StatisticalResourcesRestInternalFacadeV10Impl implements Statistica
 
             targets = new ArrayList<String>();
             if (!CollectionUtils.isEmpty(split)) {
-                targets.addAll(sources);
+                targets.addAll(split);
             }
             String languageDefault = configurationService.retrieveLanguageDefault();
             if (!targets.contains(languageDefault)) {
