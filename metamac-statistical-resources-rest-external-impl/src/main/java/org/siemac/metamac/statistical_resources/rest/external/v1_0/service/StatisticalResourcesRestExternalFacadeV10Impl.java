@@ -6,10 +6,12 @@ import static org.siemac.metamac.statistical_resources.rest.external.service.uti
 import static org.siemac.metamac.statistical_resources.rest.external.service.utils.StatisticalResourcesRestExternalUtils.parseDimensionExpression;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.rest.search.criteria.SculptorCriteria;
@@ -200,8 +202,10 @@ public class StatisticalResourcesRestExternalFacadeV10Impl implements Statistica
             // all languages in DATA
             targets = configurationService.retrieveLanguages();
         } else {
+            List<String> split = splitIfCommaSeparated(sources);
+
             targets = new ArrayList<String>();
-            if (!CollectionUtils.isEmpty(sources)) {
+            if (!CollectionUtils.isEmpty(split)) {
                 targets.addAll(sources);
             }
             String languageDefault = configurationService.retrieveLanguageDefault();
@@ -210,5 +214,14 @@ public class StatisticalResourcesRestExternalFacadeV10Impl implements Statistica
             }
         }
         return targets;
+    }
+
+    private List<String> splitIfCommaSeparated(List<String> sources) {
+        List<String> result = new ArrayList<String>();
+        for (String source : sources) {
+            String[] split = StringUtils.split(source, ",");
+            result.addAll(Arrays.asList(split));
+        }
+        return result;
     }
 }
