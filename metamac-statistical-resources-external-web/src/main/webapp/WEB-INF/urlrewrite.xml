@@ -14,4 +14,8 @@
 		<from>^/apis/statistical-resources/v1.0$</from>
 		<to type="redirect">/statistical-resources/v1.0/</to>
 	</rule>
+    <rule>
+         <from>/apis/statistical-resources/swagger-ui/(.*)$</from>
+         <to type="forward">/swagger-ui/$1</to>
+    </rule>
 </urlrewrite>
