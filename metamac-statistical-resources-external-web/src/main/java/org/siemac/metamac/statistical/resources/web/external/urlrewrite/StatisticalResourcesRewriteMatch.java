@@ -13,9 +13,10 @@ class StatisticalResourcesRewriteMatch extends AbstractRewriteMatch {
     private ConfigurationService configurationService = null;
 
     @Override
-    protected String getApiPrefix() {
-        return "statistical-resources";
+    protected String[] getAcceptedApiPrefixes() {
+        return new String[]{"statistical-resources"};
     }
+
     @Override
     protected String getLatestApiVersion() {
         return StatisticalResourcesRestExternalConstants.API_VERSION_1_0;
