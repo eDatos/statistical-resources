@@ -5,7 +5,7 @@
       "version":"1.0",
       "title":"API de recursos estadísticos v1.0"
    },
-   "host":"<%=org.siemac.metamac.statistical.resources.web.external.WebUtils.getApiBaseURL()%>",
+   "host":"<%=org.siemac.metamac.web.common.server.utils.WebUtils.getApiBaseURL()%>",
    "schemes":[
 
    ],
