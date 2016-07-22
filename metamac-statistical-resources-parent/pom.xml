@@ -11,7 +11,7 @@
 
     <groupId>org.siemac.metamac.metamac-statistical-resources</groupId>
     <artifactId>metamac-statistical-resources-parent</artifactId>
-    <version>1.3.4-SNAPSHOT</version>
+    <version>1.4.0</version>
     <packaging>pom</packaging>
     <name>METAMAC :: STATISTICAL RESOURCES :: PARENT</name>
     <description>METAMAC :: STATISTICAL RESOURCES :: PARENT</description>
@@ -54,4 +54,10 @@
 		<!-- WEB -->
 		<jstl.version>1.2</jstl.version>
     </properties>
+
+  <scm>
+    <connection>scm:svn:http://svn.arte-consultores.com/svn/arte/istac/metamac/metamac-parent/tags/20160722-1353-v1.4.0/metamac-statistical-resources-parent</connection>
+    <developerConnection>scm:svn:http://svn.arte-consultores.com/svn/arte/istac/metamac/metamac-parent/tags/20160722-1353-v1.4.0/metamac-statistical-resources-parent</developerConnection>
+    <url>http://svn.arte-consultores.com/viewvc/arte/istac/metamac/metamac-parent/tags/20160722-1353-v1.4.0/metamac-statistical-resources-parent</url>
+  </scm>
 </project>
