@@ -5,7 +5,7 @@ import javax.servlet.ServletContextEvent;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.listener.ApplicationStartupListener;
 import org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConfigurationConstants;
-import org.siemac.metamac.web.common.server.utils.WebUtils;
+import org.siemac.metamac.core.common.util.WebUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
