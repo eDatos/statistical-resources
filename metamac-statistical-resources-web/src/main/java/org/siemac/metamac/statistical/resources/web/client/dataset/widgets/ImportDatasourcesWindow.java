@@ -37,7 +37,6 @@ public class ImportDatasourcesWindow extends ImportResourceWindow {
         InformationLabel informationLabel = new InformationLabel(getMessages().datasourceImportationInfoMessage());
         informationLabel.setWidth(getWidth());
         informationLabel.setMargin(5);
-        buildWarningLabel();
         body.addMember(informationLabel);
     }
 
