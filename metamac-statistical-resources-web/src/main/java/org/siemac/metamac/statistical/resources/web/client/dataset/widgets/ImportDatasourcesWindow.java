@@ -7,28 +7,46 @@ import static org.siemac.metamac.statistical.resources.web.shared.utils.Statisti
 import java.util.ArrayList;
 import java.util.List;
 
+import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesDefaults;
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb;
 import org.siemac.metamac.statistical.resources.web.shared.utils.ImportableResourceTypeEnum;
 import org.siemac.metamac.statistical.resources.web.shared.utils.StatisticalResourcesSharedTokens;
 import org.siemac.metamac.web.common.client.widgets.ImportResourceWindow;
 import org.siemac.metamac.web.common.client.widgets.InformationLabel;
+import org.siemac.metamac.web.common.client.widgets.WarningLabel;
 
 import com.smartgwt.client.widgets.form.fields.FormItem;
 import com.smartgwt.client.widgets.form.fields.HiddenItem;
 
 public class ImportDatasourcesWindow extends ImportResourceWindow {
 
+    protected WarningLabel warningLabel;
+
     public ImportDatasourcesWindow() {
         super(getConstants().actionLoadDatasources());
 
-        InformationLabel informationLabel = new InformationLabel(getMessages().datasourceImportationInfoMessage());
-        informationLabel.setWidth(getWidth());
-        informationLabel.setMargin(5);
-        body.addMember(informationLabel);
+        buildInformationLabel();
+        buildWarningLabel();
 
         UploadDatasourceForm form = new UploadDatasourceForm();
         setForm(form);
+    }
+
+    private void buildInformationLabel() {
+        InformationLabel informationLabel = new InformationLabel(getMessages().datasourceImportationInfoMessage());
+        informationLabel.setWidth(getWidth());
+        informationLabel.setMargin(5);
+        buildWarningLabel();
+        body.addMember(informationLabel);
+    }
+
+    private void buildWarningLabel() {
+        warningLabel = new WarningLabel(getMessages().errorFileRequired());
+        warningLabel.setWidth(getWidth());
+        warningLabel.setMargin(5);
+        warningLabel.hide();
+        body.addMember(warningLabel, 0);
     }
 
     public void setDatasetVersion(String datasetVersionUrn) {
@@ -59,7 +77,31 @@ public class ImportDatasourcesWindow extends ImportResourceWindow {
             itemsToAdd.add(mustBeZip);
 
             addFieldsInThePenultimePosition(itemsToAdd.toArray(new FormItem[itemsToAdd.size()]));
+
+            prepareRequiredFileCheck();
         }
+
+        private void prepareRequiredFileCheck() {
+            getUploadItem().addChangeHandler(new com.smartgwt.client.widgets.form.fields.events.ChangeHandler() {
+
+                @Override
+                public void onChange(com.smartgwt.client.widgets.form.fields.events.ChangeEvent event) {
+                    warningLabel.hide();
+                }
+            });
+
+            getUploadButton().addClickHandler(new com.smartgwt.client.widgets.form.fields.events.ClickHandler() {
+
+                @Override
+                public void onClick(com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
+                    String displayValue = ImportDatasourcesWindow.this.form.getUploadItem().getDisplayValue();
+                    if (StringUtils.isBlank(displayValue)) {
+                        warningLabel.show();
+                    }
+                }
+            });
+        }
+
     }
 
     private String getDimensionHiddenFieldName(String dimensionId) {
