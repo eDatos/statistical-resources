@@ -3,6 +3,7 @@ package org.siemac.metamac.statistical.resources.core.dataset.utils;
 import static org.junit.Assert.assertEquals;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
@@ -27,7 +28,7 @@ public class DatasetVersionUtilsTest {
     @Test
     public void testDimensionRepresentationMapToString() {
         {
-            Map<String, String> map = new HashMap<String, String>();
+            Map<String, String> map = new LinkedHashMap<String, String>();
             map.put("DIMENSION01", "urn:repr01");
             map.put("DIMENSION02", "urn:repr02");
 

@@ -10,7 +10,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -93,39 +93,39 @@ import com.arte.statistic.parser.sdmx.v2_1.Sdmx21Parser;
 @Service("taskService")
 public class TaskServiceImpl extends TaskServiceImplBase {
 
-    private static Logger                    logger                              = LoggerFactory.getLogger(TaskServiceImpl.class);
+    private static Logger logger = LoggerFactory.getLogger(TaskServiceImpl.class);
 
-    public static final String               SCHEDULER_INSTANCE_NAME             = "StatisticalResourcesScheduler";
-    public static final String               PREFIX_JOB_IMPORT_DATA              = "job_importdata_";
-    public static final String               PREFIX_JOB_RECOVERY_IMPORT_DATA     = "job_recoveryimportdata_";
-    public static final String               PREFIX_JOB_DUPLICATION_DATA         = "job_duplicationdata_";
-    public static final String               PREFIX_TRIGGER_IMPORT_DATA          = "trigger_importdata_";
-    public static final String               PREFIX_TRIGGER_RECOVERY_IMPORT_DATA = "trigger_recoveryimportdata_";
-    public static final String               GROUP_IMPORTATION                   = "importation";
-
-    @Autowired
-    private TaskServiceInvocationValidator   taskServiceInvocationValidator;
+    public static final String SCHEDULER_INSTANCE_NAME = "StatisticalResourcesScheduler";
+    public static final String PREFIX_JOB_IMPORT_DATA = "job_importdata_";
+    public static final String PREFIX_JOB_RECOVERY_IMPORT_DATA = "job_recoveryimportdata_";
+    public static final String PREFIX_JOB_DUPLICATION_DATA = "job_duplicationdata_";
+    public static final String PREFIX_TRIGGER_IMPORT_DATA = "trigger_importdata_";
+    public static final String PREFIX_TRIGGER_RECOVERY_IMPORT_DATA = "trigger_recoveryimportdata_";
+    public static final String GROUP_IMPORTATION = "importation";
 
     @Autowired
-    private MetamacSdmx2StatRepoMapper       metamac2StatRepoMapper;
+    private TaskServiceInvocationValidator taskServiceInvocationValidator;
 
     @Autowired
-    private SrmRestInternalService           srmRestInternalService;
+    private MetamacSdmx2StatRepoMapper metamac2StatRepoMapper;
+
+    @Autowired
+    private SrmRestInternalService srmRestInternalService;
 
     @Autowired
     private DatasetRepositoriesServiceFacade datasetRepositoriesServiceFacade;
 
     @Autowired
-    private ManipulatePxDataService          manipulatePxDataService;
+    private ManipulatePxDataService manipulatePxDataService;
 
     @Autowired
-    private ManipulateCsvDataService         manipulateCsvDataService;
+    private ManipulateCsvDataService manipulateCsvDataService;
 
     @Autowired
-    private ConstraintsService               constraintsService;
+    private ConstraintsService constraintsService;
 
     @Autowired
-    private DatasetService                   datasetService;
+    private DatasetService datasetService;
 
     @PostConstruct
     public void afterPropertiesSet() throws Exception {
@@ -664,7 +664,7 @@ public class TaskServiceImpl extends TaskServiceImplBase {
 
     /**
      * Fetch Dataset's content constraints
-     * 
+     *
      * @param ctx
      * @param datasetVersionUrn
      * @return
@@ -696,7 +696,7 @@ public class TaskServiceImpl extends TaskServiceImplBase {
     }
 
     private Map<String, String> alternativeEnumeratedRepresentationToMap(List<AlternativeEnumeratedRepresentation> alternativeEnumeratedRepresentations) {
-        Map<String, String> mappings = new HashMap<String, String>();
+        Map<String, String> mappings = new LinkedHashMap<String, String>();
         for (AlternativeEnumeratedRepresentation representation : alternativeEnumeratedRepresentations) {
             mappings.put(representation.getComponentId(), representation.getUrn());
         }
