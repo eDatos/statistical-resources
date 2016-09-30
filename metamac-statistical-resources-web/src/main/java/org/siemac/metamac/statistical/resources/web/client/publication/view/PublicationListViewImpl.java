@@ -210,19 +210,6 @@ public class PublicationListViewImpl extends StatisticalResourceBaseListViewImpl
         getUiHandlers().programPublication(publicationVersionDtos, validFrom);
     }
 
-    // Cancel programmed publication
-    @Override
-    protected ClickHandler getCancelProgrammedPublicationClickHandler() {
-        return new ClickHandler() {
-
-            @Override
-            public void onClick(ClickEvent event) {
-                List<PublicationVersionBaseDto> publicationVersionDtos = StatisticalResourcesRecordUtils.getPublicationVersionBaseDtosFromListGridRecords(listGrid.getListGrid().getSelectedRecords());
-                getUiHandlers().cancelProgrammedPublication(publicationVersionDtos);
-            }
-        };
-    }
-
     // Version
 
     @Override
@@ -267,11 +254,6 @@ public class PublicationListViewImpl extends StatisticalResourceBaseListViewImpl
     @Override
     protected boolean canProgramPublication(ListGridRecord record) {
         return PublicationClientSecurityUtils.canProgramPublicationPublicationVersion(getDtoFromRecord(record));
-    }
-
-    @Override
-    protected boolean canCancelProgrammedPublication(ListGridRecord record) {
-        return PublicationClientSecurityUtils.canCancelPublicationPublicationVersion(getDtoFromRecord(record));
     }
 
     @Override

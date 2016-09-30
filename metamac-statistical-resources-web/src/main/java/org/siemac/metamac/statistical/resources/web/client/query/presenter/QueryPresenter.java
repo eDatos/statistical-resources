@@ -365,20 +365,6 @@ public class QueryPresenter extends Presenter<QueryPresenter.QueryView, QueryPre
     }
 
     @Override
-    public void cancelProgrammedPublication(QueryVersionDto query) {
-        dispatcher.execute(new UpdateQueryVersionProcStatusAction(query, LifeCycleActionEnum.CANCEL_PROGRAMMED_PUBLICATION), new WaitingAsyncCallbackHandlingError<UpdateQueryVersionProcStatusResult>(
-                this) {
-
-            @Override
-            public void onWaitSuccess(UpdateQueryVersionProcStatusResult result) {
-                showMessageAfterResourceLifeCycleUpdate(result, getMessages().lifeCycleResourceCancelProgrammedPublication());
-                retrieveQueryVersions(result.getQueryVersionDto().getUrn());
-                getView().setQueryDto(result.getQueryVersionDto());
-            }
-        });
-    }
-
-    @Override
     public void version(QueryVersionDto query, VersionTypeEnum versionType) {
         Builder builder = new Builder(query, LifeCycleActionEnum.VERSION);
         builder.versionType(versionType);

@@ -72,26 +72,6 @@ public class LifecycleFiller {
     }
 
     // ------------------------------------------------------------------------------------------------------
-    // CANCEL PUBLICATION
-    // ------------------------------------------------------------------------------------------------------
-
-    public void applyCancelPublicationCurrentResourceActions(ServiceContext ctx, HasLifecycle resource, HasLifecycle previousVersion) throws MetamacException {
-        if (!StatisticalResourcesVersionUtils.isInitialVersion(resource) && ValidationUtils.isEmpty(previousVersion)) {
-            throw new MetamacException(ServiceExceptionType.PARAMETER_REQUIRED, ServiceExceptionParameters.PREVIOUS_VERSION);
-        }
-
-        resource.getLifeCycleStatisticalResource().setValidFrom(null);
-        resource.getLifeCycleStatisticalResource().setPublicationDate(null);
-        resource.getLifeCycleStatisticalResource().setPublicationUser(null);
-        resource.getLifeCycleStatisticalResource().setProcStatus(ProcStatusEnum.DIFFUSION_VALIDATION);
-    }
-
-    public void applyCancelPublicationPreviousResourceActions(ServiceContext ctx, HasLifecycle resource, HasLifecycle previousVersion, RelatedResource currentAsRelatedResource)
-            throws MetamacException {
-        previousVersion.getLifeCycleStatisticalResource().setValidTo(null);
-    }
-
-    // ------------------------------------------------------------------------------------------------------
     // VERSIONING
     // ------------------------------------------------------------------------------------------------------
 

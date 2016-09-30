@@ -93,10 +93,6 @@ public class SharedDatasetsSecurityUtils extends SharedSecurityUtils {
         return isOperationAllowed(metamacPrincipal, operationCode, DIFFUSION_ROLES);
     }
 
-    public static boolean canCancelPublicationDataset(MetamacPrincipal metamacPrincipal, String operationCode) {
-        return isOperationAllowed(metamacPrincipal, operationCode, DIFFUSION_ROLES);
-    }
-
     public static boolean canRetrieveLatestDatasetVersion(MetamacPrincipal metamacPrincipal, String operationCode, ProcStatusEnum procStatus) {
         return canRetrieveStatisticalResource(metamacPrincipal, operationCode, procStatus);
     }

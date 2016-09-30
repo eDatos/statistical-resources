@@ -28,7 +28,4 @@ public class LifecycleClientSecurityUtils extends BaseClientSecurityUtils {
         return isAnyStatus(procStatus, ProcStatusEnum.PUBLISHED);
     }
 
-    protected static boolean canCancelProgrammedPublication(ProcStatusEnum procStatus) {
-        return isAnyStatus(procStatus, ProcStatusEnum.PUBLISHED_NOT_VISIBLE);
-    }
 }

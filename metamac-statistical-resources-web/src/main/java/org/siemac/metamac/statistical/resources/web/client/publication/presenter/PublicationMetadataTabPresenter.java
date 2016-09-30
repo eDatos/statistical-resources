@@ -257,20 +257,6 @@ public class PublicationMetadataTabPresenter
     }
 
     @Override
-    public void cancelProgrammedPublication(PublicationVersionDto publication) {
-        dispatcher.execute(new UpdatePublicationVersionProcStatusAction(publication, LifeCycleActionEnum.CANCEL_PROGRAMMED_PUBLICATION),
-                new WaitingAsyncCallbackHandlingError<UpdatePublicationVersionProcStatusResult>(this) {
-
-                    @Override
-                    public void onWaitSuccess(UpdatePublicationVersionProcStatusResult result) {
-                        showMessageAfterResourceLifeCycleUpdate(result, getMessages().lifeCycleResourceCancelProgrammedPublication());
-                        RequestPublicationVersionsReloadEvent.fire(PublicationMetadataTabPresenter.this, result.getPublicationVersionDto().getUrn());
-                        getView().setPublication(result.getPublicationVersionDto());
-                    }
-                });
-    }
-
-    @Override
     public void version(PublicationVersionDto publication, VersionTypeEnum versionType) {
         Builder builder = new Builder(publication, LifeCycleActionEnum.VERSION);
         builder.versionType(versionType);

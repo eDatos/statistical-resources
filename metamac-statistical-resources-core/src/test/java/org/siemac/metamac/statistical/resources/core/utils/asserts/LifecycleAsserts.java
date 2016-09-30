@@ -164,53 +164,6 @@ public class LifecycleAsserts extends CommonAsserts {
     }
 
     // ------------------------------------------------------------------------------------------------------
-    // >> CANCEL PUBLICATION
-    // ------------------------------------------------------------------------------------------------------
-
-    public static void assertAutomaticallyFilledMetadataSiemacCancelPublication(HasSiemacMetadata current, HasSiemacMetadata previous) {
-        assertAutomaticallyFilledMetadataLifecycleCancelPublication(current, previous);
-
-        assertFilledMetadataSiemacAfterCancelPublication(current, previous);
-    }
-
-    public static void assertAutomaticallyFilledMetadataLifecycleCancelPublication(HasLifecycle current, HasLifecycle previous) {
-        assertFilledMetadataLifecycleAfterCancelPublication(current, previous);
-    }
-
-    private static void assertFilledMetadataLifecycleAfterCancelPublication(HasLifecycle current, HasLifecycle previous) {
-        assertFilledMetadataLifecycleForACancelledResource(current);
-        if (!StatisticalResourcesVersionUtils.isInitialVersion(current)) {
-            assertFilledMetadataLifecycleForAPreviousResourceForCancelled(previous, current);
-        }
-    }
-
-    private static void assertFilledMetadataLifecycleForACancelledResource(HasLifecycle resource) {
-        assertFilledMetadataLifecycleSendToDiffusionValidation(resource, false);
-
-        LifeCycleStatisticalResource lifeCycleStatisticalResource = resource.getLifeCycleStatisticalResource();
-
-        assertNull(lifeCycleStatisticalResource.getValidFrom());
-        assertNull(lifeCycleStatisticalResource.getPublicationDate());
-        assertNull(lifeCycleStatisticalResource.getPublicationUser());
-        assertEquals(ProcStatusEnum.DIFFUSION_VALIDATION, lifeCycleStatisticalResource.getProcStatus());
-    }
-
-    private static void assertFilledMetadataLifecycleForAPreviousResourceForCancelled(HasLifecycle previous, HasLifecycle current) {
-        LifeCycleStatisticalResource previousLifecycle = previous.getLifeCycleStatisticalResource();
-
-        assertNull(previousLifecycle.getValidTo());
-    }
-
-    private static void assertFilledMetadataSiemacAfterCancelPublication(HasSiemacMetadata current, HasSiemacMetadata previous) {
-        SiemacMetadataStatisticalResource currentSiemac = current.getSiemacMetadataStatisticalResource();
-
-        assertFilledMetadataSiemacSendToDiffusionValidation(current);
-
-        // COPYRIGHTED_DATE
-        assertNull(currentSiemac.getCopyrightedDate());
-    }
-
-    // ------------------------------------------------------------------------------------------------------
     // >> VERSIONING
     // ------------------------------------------------------------------------------------------------------
 

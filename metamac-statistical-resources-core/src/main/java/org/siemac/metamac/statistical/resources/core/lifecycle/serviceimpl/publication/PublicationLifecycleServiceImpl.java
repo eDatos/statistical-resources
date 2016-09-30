@@ -186,33 +186,6 @@ public class PublicationLifecycleServiceImpl extends LifecycleTemplateService<Pu
     }
 
     // ------------------------------------------------------------------------------------------------------
-    // >> CANCEL PUBLICATION
-    // ------------------------------------------------------------------------------------------------------
-
-    @Override
-    protected void checkCancelPublicationResource(ServiceContext ctx, PublicationVersion resource, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
-        checkPublicationThatReplaces(resource, exceptionItems);
-    }
-
-    protected void checkPublicationThatReplaces(PublicationVersion resource, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
-        RelatedResourceResult publicationThatReplaces = publicationVersionRepository.retrieveIsReplacedBy(resource);
-        if (publicationThatReplaces != null) {
-            exceptionItems.add(new MetamacExceptionItem(ServiceExceptionType.PUBLICATION_VERSION_IS_REPLACED_BY_NOT_VISIBLE, publicationThatReplaces.getUrn()));
-        }
-    }
-
-    @Override
-    protected void applyCancelPublicationCurrentResource(ServiceContext ctx, PublicationVersion resource, PublicationVersion previousResource) throws MetamacException {
-        resource.setFormatExtentResources(null);
-        resource.getHasPart().clear();
-    }
-
-    @Override
-    protected void applyCancelPublicationPreviousResource(ServiceContext ctx, PublicationVersion previousResource) throws MetamacException {
-        // NOTHING TO DO
-    }
-
-    // ------------------------------------------------------------------------------------------------------
     // >> VERSIONING
     // ------------------------------------------------------------------------------------------------------
 

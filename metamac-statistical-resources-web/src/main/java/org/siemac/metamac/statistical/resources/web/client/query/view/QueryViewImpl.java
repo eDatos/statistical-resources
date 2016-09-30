@@ -367,14 +367,6 @@ public class QueryViewImpl extends ViewWithUiHandlers<QueryUiHandlers> implement
                     });
                 }
             });
-            mainFormLayout.getCancelProgrammedPublication().addClickHandler(new ClickHandler() {
-
-                @Override
-                public void onClick(ClickEvent event) {
-                    getUiHandlers().cancelProgrammedPublication(queryVersionDto);
-
-                }
-            });
             mainFormLayout.getVersioningButton().addClickHandler(new ClickHandler() {
 
                 @Override

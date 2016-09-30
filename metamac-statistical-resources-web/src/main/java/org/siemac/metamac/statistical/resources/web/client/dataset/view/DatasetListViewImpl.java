@@ -257,20 +257,6 @@ public class DatasetListViewImpl extends StatisticalResourceBaseListViewImpl<Dat
         getUiHandlers().programPublication(datasetVersionDtos, validFrom);
     }
 
-    // Cancel programmed publication
-
-    @Override
-    protected ClickHandler getCancelProgrammedPublicationClickHandler() {
-        return new ClickHandler() {
-
-            @Override
-            public void onClick(ClickEvent event) {
-                List<DatasetVersionBaseDto> datasetVersionDtos = StatisticalResourcesRecordUtils.getDatasetVersionBaseDtosFromListGridRecords(listGrid.getListGrid().getSelectedRecords());
-                getUiHandlers().cancelProgrammedPublication(datasetVersionDtos);
-            }
-        };
-    }
-
     // Version
 
     @Override
@@ -333,11 +319,6 @@ public class DatasetListViewImpl extends StatisticalResourceBaseListViewImpl<Dat
     @Override
     protected boolean canProgramPublication(ListGridRecord record) {
         return DatasetClientSecurityUtils.canPublishDatasetVersion(getDtoFromRecord(record));
-    }
-
-    @Override
-    protected boolean canCancelProgrammedPublication(ListGridRecord record) {
-        return DatasetClientSecurityUtils.canCancelPublicationDatasetVersion(getDtoFromRecord(record));
     }
 
     @Override

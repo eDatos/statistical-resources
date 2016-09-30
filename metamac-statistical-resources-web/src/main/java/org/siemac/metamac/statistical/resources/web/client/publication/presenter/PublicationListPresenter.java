@@ -216,12 +216,6 @@ public class PublicationListPresenter extends StatisticalResourceBaseListPresent
     }
 
     @Override
-    public void cancelProgrammedPublication(List<PublicationVersionBaseDto> publicationVersionBaseDtos) {
-        UpdatePublicationVersionsProcStatusAction action = new UpdatePublicationVersionsProcStatusAction(publicationVersionBaseDtos, LifeCycleActionEnum.CANCEL_PROGRAMMED_PUBLICATION);
-        updatePublicationVersionProcStatus(action, getMessages().lifeCycleResourcesCancelProgrammedPublication());
-    }
-
-    @Override
     public void version(List<PublicationVersionBaseDto> publicationVersionDtos, VersionTypeEnum versionType) {
         Builder builder = new UpdatePublicationVersionsProcStatusAction.Builder(publicationVersionDtos, LifeCycleActionEnum.VERSION);
         builder.versionType(versionType);

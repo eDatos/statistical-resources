@@ -65,10 +65,6 @@ public class UpdateDatasetVersionProcStatusActionHandler extends UpdateResourceP
                     datasetVersionDto = statisticalResourcesServiceFacade.publishDatasetVersion(ServiceContextHolder.getCurrentServiceContext(), action.getDatasetVersionToUpdateProcStatus());
                     break;
 
-                case CANCEL_PROGRAMMED_PUBLICATION:
-                    datasetVersionDto = statisticalResourcesServiceFacade
-                            .cancelPublicationDatasetVersion(ServiceContextHolder.getCurrentServiceContext(), action.getDatasetVersionToUpdateProcStatus());
-                    break;
                 case VERSION:
                     datasetVersionDto = statisticalResourcesServiceFacade.versioningDatasetVersion(ServiceContextHolder.getCurrentServiceContext(), action.getDatasetVersionToUpdateProcStatus(),
                             action.getVersionType());

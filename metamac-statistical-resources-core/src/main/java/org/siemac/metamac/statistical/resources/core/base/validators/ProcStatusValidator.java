@@ -36,9 +36,6 @@ public abstract class ProcStatusValidator extends ProcStatusForActionsConstants 
         ProcStatusEnumUtils.checkPossibleProcStatus(resource, procStatusForSendResourceToPublish);
     }
 
-    public static void checkStatisticalResourceCanPublicationBeCancelled(HasLifecycle resource) throws MetamacException {
-        ProcStatusEnumUtils.checkPossibleProcStatus(resource, procStatusForCancelPublication);
-    }
 
     public static void checkStatisticalResourceCanSendToVersion(HasLifecycle resource) throws MetamacException {
         ProcStatusEnumUtils.checkPossibleProcStatus(resource, procStatusForSendResourceToVersion);

@@ -43,7 +43,6 @@ public abstract class LifeCycleBaseListViewImpl<C extends UiHandlers> extends Vi
     protected CustomToolStripButton                   sendToDiffusionValidationButton;
     protected CustomToolStripButton                   rejectValidationButton;
     protected CustomToolStripButton                   programPublicationButton;
-    protected CustomToolStripButton                   cancelProgrammedPublicationButton;
     protected CustomToolStripButton                   publishButton;
     protected CustomToolStripButton                   versionButton;
 
@@ -79,9 +78,6 @@ public abstract class LifeCycleBaseListViewImpl<C extends UiHandlers> extends Vi
 
         programPublicationButton = createProgramPublicationButton();
         toolStrip.addButton(programPublicationButton);
-
-        cancelProgrammedPublicationButton = createCancelProgrammedPublicationButton();
-        toolStrip.addButton(cancelProgrammedPublicationButton);
 
         versionButton = createVersionButton();
         toolStrip.addButton(versionButton);
@@ -301,27 +297,6 @@ public abstract class LifeCycleBaseListViewImpl<C extends UiHandlers> extends Vi
         }
     }
 
-    // Cancel programmed publication
-
-    private CustomToolStripButton createCancelProgrammedPublicationButton() {
-        CustomToolStripButton button = new CustomToolStripButton(getConstants().lifeCycleCancelProgramedPublication(), GlobalResources.RESOURCE.reject().getURL());
-        button.setVisible(false);
-        button.addClickHandler(getCancelProgrammedPublicationClickHandler());
-        return button;
-    }
-
-    private void showCancelProgrammedPublicationButton(ListGridRecord[] records) {
-        boolean canCancelProgrammedPublication = true;
-        for (ListGridRecord record : records) {
-            if (!canCancelProgrammedPublication(record)) {
-                canCancelProgrammedPublication = false;
-                break;
-            }
-        }
-        if (canCancelProgrammedPublication) {
-            cancelProgrammedPublicationButton.show();
-        }
-    }
     // Version
 
     private CustomToolStripButton createVersionButton() {
@@ -376,7 +351,6 @@ public abstract class LifeCycleBaseListViewImpl<C extends UiHandlers> extends Vi
         showRejectValidationButton(records);
         showPublishButton(records);
         showProgramPublicationButton(records);
-        showCancelProgrammedPublicationButton(records);
         showVersionButton(records);
     }
 
@@ -387,7 +361,6 @@ public abstract class LifeCycleBaseListViewImpl<C extends UiHandlers> extends Vi
         rejectValidationButton.hide();
         publishButton.hide();
         programPublicationButton.hide();
-        cancelProgrammedPublicationButton.hide();
         versionButton.hide();
     }
 
@@ -404,7 +377,7 @@ public abstract class LifeCycleBaseListViewImpl<C extends UiHandlers> extends Vi
     protected abstract ClickHandler getSendToDiffusionValidationClickHandler();
     protected abstract ClickHandler getRejectValidationClickHandler();
     protected abstract ClickHandler getPublishClickHandler();
-    protected abstract ClickHandler getCancelProgrammedPublicationClickHandler();
+
 
     protected abstract boolean canCreate();
     protected abstract boolean canDelete(ListGridRecord record);
@@ -413,7 +386,7 @@ public abstract class LifeCycleBaseListViewImpl<C extends UiHandlers> extends Vi
     protected abstract boolean canRejectValidation(ListGridRecord record);
     protected abstract boolean canPublish(ListGridRecord record);
     protected abstract boolean canProgramPublication(ListGridRecord record);
-    protected abstract boolean canCancelProgrammedPublication(ListGridRecord record);
+
     protected abstract boolean canVersion(ListGridRecord record);
 
     protected abstract void programPublication(Date validFrom);

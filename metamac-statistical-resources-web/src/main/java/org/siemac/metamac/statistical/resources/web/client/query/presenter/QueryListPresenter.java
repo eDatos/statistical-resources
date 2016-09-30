@@ -201,13 +201,6 @@ public class QueryListPresenter extends LifeCycleBaseListPresenter<QueryListPres
     }
 
     @Override
-    public void cancelProgrammedPublication(List<QueryVersionBaseDto> queryVersionDtos) {
-        UpdateQueryVersionsProcStatusAction action = new UpdateQueryVersionsProcStatusAction(queryVersionDtos, LifeCycleActionEnum.CANCEL_PROGRAMMED_PUBLICATION);
-
-        updateQueryProcStatus(action, getMessages().lifeCycleResourcesCancelProgrammedPublication());
-    }
-
-    @Override
     public void version(List<QueryVersionBaseDto> queryVersionDtos, VersionTypeEnum versionType) {
         Builder builder = new Builder(queryVersionDtos, LifeCycleActionEnum.VERSION);
         builder.versionType(versionType);

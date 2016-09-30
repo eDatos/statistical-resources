@@ -66,10 +66,6 @@ public class UpdatePublicationVersionProcStatusActionHandler extends UpdateResou
                             action.getPublicationVersionToUpdateProcStatus(), action.getValidFrom());
                     break;
 
-                case CANCEL_PROGRAMMED_PUBLICATION:
-                    publicationVersionDto = statisticalResourcesServiceFacade.cancelPublicationPublicationVersion(ServiceContextHolder.getCurrentServiceContext(),
-                            action.getPublicationVersionToUpdateProcStatus());
-                    break;
 
                 case VERSION:
                     publicationVersionDto = statisticalResourcesServiceFacade.versioningPublicationVersion(ServiceContextHolder.getCurrentServiceContext(),

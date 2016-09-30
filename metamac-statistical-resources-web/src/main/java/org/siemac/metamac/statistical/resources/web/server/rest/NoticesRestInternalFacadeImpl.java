@@ -1,6 +1,5 @@
 package org.siemac.metamac.statistical.resources.web.server.rest;
 
-import static org.siemac.metamac.statistical.resources.web.client.enums.LifeCycleActionEnum.CANCEL_PROGRAMMED_PUBLICATION;
 import static org.siemac.metamac.statistical.resources.web.client.enums.LifeCycleActionEnum.PROGRAM_PUBLICATION;
 import static org.siemac.metamac.statistical.resources.web.client.enums.LifeCycleActionEnum.PUBLISH;
 import static org.siemac.metamac.statistical.resources.web.client.enums.LifeCycleActionEnum.REJECT_VALIDATION;
@@ -79,7 +78,6 @@ public class NoticesRestInternalFacadeImpl implements NoticesRestInternalFacade 
         actionCodes.put(REJECT_VALIDATION, ServiceNoticeAction.RESOURCE_CANCEL_VALIDATION);
         actionCodes.put(PUBLISH, ServiceNoticeAction.RESOURCE_PUBLICATION);
         actionCodes.put(PROGRAM_PUBLICATION, ServiceNoticeAction.RESOURCE_PUBLICATION_PROGRAMMED);
-        actionCodes.put(CANCEL_PROGRAMMED_PUBLICATION, ServiceNoticeAction.RESOURCE_CANCEL_PROGRAMMED_PUBLICATION);
 
         messageCodes = new HashMap<LifeCycleActionEnum, String>();
         messageCodes.put(SEND_TO_PRODUCTION_VALIDATION, ServiceNoticeMessage.RESOURCE_SEND_PRODUCTION_VALIDATION_OK);
@@ -87,7 +85,6 @@ public class NoticesRestInternalFacadeImpl implements NoticesRestInternalFacade 
         messageCodes.put(REJECT_VALIDATION, ServiceNoticeMessage.RESOURCE_CANCEL_VALIDATION_OK);
         messageCodes.put(PUBLISH, ServiceNoticeMessage.RESOURCE_PUBLICATION_OK);
         messageCodes.put(PROGRAM_PUBLICATION, ServiceNoticeMessage.RESOURCE_PUBLICATION_PROGRAMMED_OK);
-        messageCodes.put(CANCEL_PROGRAMMED_PUBLICATION, ServiceNoticeMessage.RESOURCE_CANCEL_PROGRAMMED_PUBLICATION_OK);
     }
 
     @Override
@@ -99,17 +96,11 @@ public class NoticesRestInternalFacadeImpl implements NoticesRestInternalFacade 
             case SEND_TO_DIFFUSION_VALIDATION:
                 createSendToDiffusionValidationNotification(serviceContext, notification);
                 break;
-            case REJECT_VALIDATION:
-                createCancelValidationNotification(serviceContext, notification);
-                break;
             case PUBLISH:
                 createPublicationNotification(serviceContext, notification);
                 break;
             case PROGRAM_PUBLICATION:
                 createProgrammedPublicationNotification(serviceContext, notification);
-                break;
-            case CANCEL_PROGRAMMED_PUBLICATION:
-                createCancelProgrammedPublicationNotification(serviceContext, notification);
                 break;
             case VERSION:
                 // Do not send notifications
@@ -127,17 +118,11 @@ public class NoticesRestInternalFacadeImpl implements NoticesRestInternalFacade 
                 case SEND_TO_DIFFUSION_VALIDATION:
                     createSendToDiffusionValidationNotification(serviceContext, notifications);
                     break;
-                case REJECT_VALIDATION:
-                    createCancelValidationNotification(serviceContext, notifications);
-                    break;
                 case PUBLISH:
                     createPublicationNotification(serviceContext, notifications);
                     break;
                 case PROGRAM_PUBLICATION:
                     createProgrammedPublicationNotification(serviceContext, notifications);
-                    break;
-                case CANCEL_PROGRAMMED_PUBLICATION:
-                    createCancelProgrammedPublicationNotification(serviceContext, notifications);
                     break;
                 case VERSION:
                     // Do not send notifications
@@ -171,28 +156,6 @@ public class NoticesRestInternalFacadeImpl implements NoticesRestInternalFacade 
     }
 
     //
-    // CANCEL VALIDATION
-    //
-
-    private void createCancelValidationNotification(ServiceContext serviceContext, ResourceNotificationDto notificationDto) throws MetamacWebException {
-        ProcStatusEnum previousProcStatusEnum = notificationDto.getPreviousResource().getProcStatus();
-        String receiverUsername = ProcStatusEnum.PRODUCTION_VALIDATION.equals(previousProcStatusEnum) ? notificationDto.getPreviousResource().getProductionValidationUser() : notificationDto
-                .getPreviousResource().getDiffusionValidationUser();
-        createNotificationWithReceivers(serviceContext, notificationDto, new String[]{receiverUsername});
-    }
-
-    private void createCancelValidationNotification(ServiceContext serviceContext, List<ResourceNotificationBaseDto> notifications) throws MetamacWebException {
-        Map<ResourceNotificationBaseDto, String[]> notificationsWithReceivers = new HashMap<ResourceNotificationBaseDto, String[]>();
-        for (ResourceNotificationBaseDto notification : notifications) {
-            ProcStatusEnum previousProcStatusEnum = notification.getPreviousResource().getProcStatus();
-            String receiverUsername = ProcStatusEnum.PRODUCTION_VALIDATION.equals(previousProcStatusEnum) ? notification.getPreviousResource().getProductionValidationUser() : notification
-                    .getPreviousResource().getDiffusionValidationUser();
-            notificationsWithReceivers.put(notification, new String[]{receiverUsername});
-        }
-        createNotificationWithReceivers(serviceContext, notificationsWithReceivers);
-    }
-
-    //
     // PUBLISH
     //
 
@@ -217,32 +180,12 @@ public class NoticesRestInternalFacadeImpl implements NoticesRestInternalFacade 
     }
 
     //
-    // CANCEL PROGRAMMED PUBLICATION
-    //
-
-    private void createCancelProgrammedPublicationNotification(ServiceContext serviceContext, ResourceNotificationDto notificationDto) throws MetamacWebException {
-        String creatorUsername = notificationDto.getUpdatedResource().getCreationUser();
-        String publisherUsername = notificationDto.getPreviousResource().getPublicationUser();
-        createNotificationWithReceivers(serviceContext, notificationDto, new String[]{creatorUsername, publisherUsername});
-    }
-
-    private void createCancelProgrammedPublicationNotification(ServiceContext serviceContext, List<ResourceNotificationBaseDto> notifications) throws MetamacWebException {
-        Map<ResourceNotificationBaseDto, String[]> notificationsWithReceivers = new HashMap<ResourceNotificationBaseDto, String[]>();
-        for (ResourceNotificationBaseDto notification : notifications) {
-            String creatorUsername = notification.getUpdatedResource().getCreationUser();
-            String publisherUsername = notification.getPreviousResource().getPublicationUser();
-            notificationsWithReceivers.put(notification, new String[]{creatorUsername, publisherUsername});
-        }
-        createNotificationWithReceivers(serviceContext, notificationsWithReceivers);
-    }
-
-    //
     // NOTIFICATIONS
     //
 
     /**
      * Creates a notification specifying the statistical operation, the roles and the application
-     * 
+     *
      * @param serviceContext
      * @param notification
      * @throws MetamacWebException
@@ -256,7 +199,7 @@ public class NoticesRestInternalFacadeImpl implements NoticesRestInternalFacade 
 
     /**
      * Creates a notification specifying the statistical operation, the roles and the application
-     * 
+     *
      * @param serviceContext
      * @param notifications
      * @param notificationRoles
@@ -282,7 +225,7 @@ public class NoticesRestInternalFacadeImpl implements NoticesRestInternalFacade 
 
     /**
      * Creates a notification specifying the receivers
-     * 
+     *
      * @param serviceContext
      * @param actionCode
      * @param messageCode
@@ -338,7 +281,7 @@ public class NoticesRestInternalFacadeImpl implements NoticesRestInternalFacade 
 
         try {
             Response response = metamacApisLocator.getNoticesRestInternalFacadeV10().createNotice(noticeBuilder.build());
-            this.restExceptionUtils.checkSendNotificationRestResponseAndThrowErrorIfApplicable(ctx, response);
+            restExceptionUtils.checkSendNotificationRestResponseAndThrowErrorIfApplicable(ctx, response);
         } catch (MetamacException e) {
             throw WebExceptionUtils.createMetamacWebException(e);
         }
@@ -423,7 +366,7 @@ public class NoticesRestInternalFacadeImpl implements NoticesRestInternalFacade 
 
     /**
      * Returns the lifecycle action of the notifications. When a group of resources update their {@link ProcStatusEnum} at the same time, all of them have the same {@link LifeCycleActionEnum}.
-     * 
+     *
      * @param notifications
      * @return
      */
@@ -433,7 +376,7 @@ public class NoticesRestInternalFacadeImpl implements NoticesRestInternalFacade 
 
     /**
      * Returns the reason of rejection of the notifications. When a group of resources update their {@link ProcStatusEnum} at the same time, all of them have the same reason of rejection.
-     * 
+     *
      * @param notifications
      * @return
      */
@@ -444,7 +387,7 @@ public class NoticesRestInternalFacadeImpl implements NoticesRestInternalFacade 
     /**
      * Returns the programmed publication date of the notifications. When a group of resources update their {@link ProcStatusEnum} at the same time, all of them have the same programmed publication
      * date.
-     * 
+     *
      * @param notifications
      * @return
      */

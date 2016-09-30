@@ -573,40 +573,6 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     }
 
     @Override
-    public QueryVersionDto cancelPublicationQueryVersion(ServiceContext ctx, QueryVersionDto queryVersionDto) throws MetamacException {
-        // Security
-        QueriesSecurityUtils.canCancelPublicationQueryVersion(ctx, queryVersionDto.getStatisticalOperation().getCode());
-
-        // Transform
-        QueryVersion queryVersion = queryDto2DoMapper.queryVersionDtoToDo(queryVersionDto);
-
-        // Send to published
-        queryVersion = queryLifecycleService.cancelPublication(ctx, queryVersion.getLifeCycleStatisticalResource().getUrn());
-
-        // Transform
-        queryVersionDto = queryDo2DtoMapper.queryVersionDoToDto(queryVersion);
-
-        return queryVersionDto;
-    }
-
-    @Override
-    public QueryVersionBaseDto cancelPublicationQueryVersion(ServiceContext ctx, QueryVersionBaseDto queryVersionDto) throws MetamacException {
-        // Security
-        QueriesSecurityUtils.canCancelPublicationQueryVersion(ctx, queryVersionDto.getStatisticalOperation().getCode());
-
-        // Check optimistic locking
-        queryDto2DoMapper.checkOptimisticLocking(queryVersionDto);
-
-        // Send to published
-        QueryVersion queryVersion = queryLifecycleService.cancelPublication(ctx, queryVersionDto.getUrn());
-
-        // Transform
-        queryVersionDto = queryDo2DtoMapper.queryVersionDoToBaseDto(queryVersion);
-
-        return queryVersionDto;
-    }
-
-    @Override
     public QueryVersionDto versioningQueryVersion(ServiceContext ctx, QueryVersionDto queryVersionDto, VersionTypeEnum versionType) throws MetamacException {
         // Security
         QueriesSecurityUtils.canVersionQueryVersion(ctx, queryVersionDto.getStatisticalOperation().getCode());
@@ -1081,37 +1047,37 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         return datasetVersionRepository.save(datasetVersion);
     }
 
-    @Override
-    public DatasetVersionDto cancelPublicationDatasetVersion(ServiceContext ctx, DatasetVersionDto datasetVersionDto) throws MetamacException {
-        // Security
-        DatasetsSecurityUtils.canCancelPublicationDatasetVersion(ctx, datasetVersionDto.getStatisticalOperation().getCode());
-
-        // Transform
-        DatasetVersion datasetVersion = datasetDto2DoMapper.datasetVersionDtoToDo(datasetVersionDto);
-
-        datasetVersion = datasetLifecycleService.cancelPublication(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getUrn());
-
-        // Transform
-        datasetVersionDto = datasetDo2DtoMapper.datasetVersionDoToDto(ctx, datasetVersion);
-
-        return datasetVersionDto;
-    }
-
-    @Override
-    public DatasetVersionBaseDto cancelPublicationDatasetVersion(ServiceContext ctx, DatasetVersionBaseDto datasetVersionDto) throws MetamacException {
-        // Security
-        DatasetsSecurityUtils.canCancelPublicationDatasetVersion(ctx, datasetVersionDto.getStatisticalOperation().getCode());
-
-        // Check optimistic locking
-        datasetDto2DoMapper.checkOptimisticLocking(datasetVersionDto);
-
-        DatasetVersion datasetVersion = datasetLifecycleService.cancelPublication(ctx, datasetVersionDto.getUrn());
-
-        // Transform
-        datasetVersionDto = datasetDo2DtoMapper.datasetVersionDoToBaseDto(ctx, datasetVersion);
-
-        return datasetVersionDto;
-    }
+    // @Override
+    // public DatasetVersionDto cancelPublicationDatasetVersion(ServiceContext ctx, DatasetVersionDto datasetVersionDto) throws MetamacException {
+    // // Security
+    //// DatasetsSecurityUtils.canCancelPublicationDatasetVersion(ctx, datasetVersionDto.getStatisticalOperation().getCode());
+    //
+    // // Transform
+    // DatasetVersion datasetVersion = datasetDto2DoMapper.datasetVersionDtoToDo(datasetVersionDto);
+    //
+    //// datasetVersion = datasetLifecycleService.cancelPublication(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getUrn());
+    //
+    // // Transform
+    // datasetVersionDto = datasetDo2DtoMapper.datasetVersionDoToDto(ctx, datasetVersion);
+    //
+    // return datasetVersionDto;
+    // }
+    //
+    // @Override
+    // public DatasetVersionBaseDto cancelPublicationDatasetVersion(ServiceContext ctx, DatasetVersionBaseDto datasetVersionDto) throws MetamacException {
+    // // Security
+    // DatasetsSecurityUtils.canCancelPublicationDatasetVersion(ctx, datasetVersionDto.getStatisticalOperation().getCode());
+    //
+    // // Check optimistic locking
+    // datasetDto2DoMapper.checkOptimisticLocking(datasetVersionDto);
+    //
+    //// DatasetVersion datasetVersion = datasetLifecycleService.cancelPublication(ctx, datasetVersionDto.getUrn());
+    //
+    // // Transform
+    //// datasetVersionDto = datasetDo2DtoMapper.datasetVersionDoToBaseDto(ctx, datasetVersion);
+    //
+    // return datasetVersionDto;
+    // }
 
     @Override
     public DatasetVersionDto versioningDatasetVersion(ServiceContext ctx, DatasetVersionDto datasetVersionDto, VersionTypeEnum versionType) throws MetamacException {
@@ -1749,37 +1715,37 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         return publicationVersionRepository.save(publicationVersion);
     }
 
-    @Override
-    public PublicationVersionDto cancelPublicationPublicationVersion(ServiceContext ctx, PublicationVersionDto publicationVersionDto) throws MetamacException {
-        // Security
-        PublicationsSecurityUtils.canCancelPublicationPublicationVersion(ctx, publicationVersionDto.getStatisticalOperation().getCode());
+    // @Override
+    // public PublicationVersionDto cancelPublicationPublicationVersion(ServiceContext ctx, PublicationVersionDto publicationVersionDto) throws MetamacException {
+    // // Security
+    //// PublicationsSecurityUtils.canCancelPublicationPublicationVersion(ctx, publicationVersionDto.getStatisticalOperation().getCode());
+    //
+    // // Transform
+    // PublicationVersion publicationVersion = publicationDto2DoMapper.publicationVersionDtoToDo(publicationVersionDto);
+    //
+    //// publicationVersion = publicationLifecycleService.cancelPublication(ctx, publicationVersion.getSiemacMetadataStatisticalResource().getUrn());
+    //
+    // // Transform
+    // publicationVersionDto = publicationDo2DtoMapper.publicationVersionDoToDto(publicationVersion);
+    //
+    // return publicationVersionDto;
+    // }
 
-        // Transform
-        PublicationVersion publicationVersion = publicationDto2DoMapper.publicationVersionDtoToDo(publicationVersionDto);
-
-        publicationVersion = publicationLifecycleService.cancelPublication(ctx, publicationVersion.getSiemacMetadataStatisticalResource().getUrn());
-
-        // Transform
-        publicationVersionDto = publicationDo2DtoMapper.publicationVersionDoToDto(publicationVersion);
-
-        return publicationVersionDto;
-    }
-
-    @Override
-    public PublicationVersionBaseDto cancelPublicationPublicationVersion(ServiceContext ctx, PublicationVersionBaseDto publicationVersionDto) throws MetamacException {
-        // Security
-        PublicationsSecurityUtils.canCancelPublicationPublicationVersion(ctx, publicationVersionDto.getStatisticalOperation().getCode());
-
-        // Check optimistic locking
-        publicationDto2DoMapper.checkOptimisticLocking(publicationVersionDto);
-
-        PublicationVersion publicationVersion = publicationLifecycleService.cancelPublication(ctx, publicationVersionDto.getUrn());
-
-        // Transform
-        publicationVersionDto = publicationDo2DtoMapper.publicationVersionDoToBaseDto(publicationVersion);
-
-        return publicationVersionDto;
-    }
+    // @Override
+    // public PublicationVersionBaseDto cancelPublicationPublicationVersion(ServiceContext ctx, PublicationVersionBaseDto publicationVersionDto) throws MetamacException {
+    // // Security
+    // PublicationsSecurityUtils.canCancelPublicationPublicationVersion(ctx, publicationVersionDto.getStatisticalOperation().getCode());
+    //
+    // // Check optimistic locking
+    // publicationDto2DoMapper.checkOptimisticLocking(publicationVersionDto);
+    //
+    //// PublicationVersion publicationVersion = publicationLifecycleService.cancelPublication(ctx, publicationVersionDto.getUrn());
+    //
+    // // Transform
+    // publicationVersionDto = publicationDo2DtoMapper.publicationVersionDoToBaseDto(publicationVersion);
+    //
+    // return publicationVersionDto;
+    // }
 
     @Override
     public PublicationVersionDto versioningPublicationVersion(ServiceContext ctx, PublicationVersionDto publicationVersionDto, VersionTypeEnum versionType) throws MetamacException {

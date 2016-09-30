@@ -65,9 +65,6 @@ public class UpdateQueryVersionProcStatusActionHandler extends UpdateResourcePro
                             action.getValidFrom());
                     break;
 
-                case CANCEL_PROGRAMMED_PUBLICATION:
-                    queryVersionDto = statisticalResourcesServiceFacade.cancelPublicationQueryVersion(ServiceContextHolder.getCurrentServiceContext(), action.getQueryVersionToUpdateProcStatus());
-                    break;
 
                 case VERSION:
                     queryVersionDto = statisticalResourcesServiceFacade.versioningQueryVersion(ServiceContextHolder.getCurrentServiceContext(), action.getQueryVersionToUpdateProcStatus(),

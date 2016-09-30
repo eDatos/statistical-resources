@@ -49,11 +49,6 @@ public class PublicationMainFormLayout extends LifecycleMainFormLayout {
     }
 
     @Override
-    protected boolean canCancelProgrammedPublication() {
-        return PublicationClientSecurityUtils.canCancelPublicationPublicationVersion(publicationVersionDto);
-    }
-
-    @Override
     protected boolean canVersion() {
         return PublicationClientSecurityUtils.canVersionPublication(publicationVersionDto);
     }

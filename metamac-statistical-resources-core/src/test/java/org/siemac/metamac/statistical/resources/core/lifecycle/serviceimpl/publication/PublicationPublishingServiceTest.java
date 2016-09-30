@@ -252,38 +252,6 @@ public class PublicationPublishingServiceTest extends StatisticalResourcesMockRe
         publicationVersionLifecycleService.sendToPublished(getServiceContextAdministrador(), publicationVersionUrn);
     }
 
-    @Test
-    @MetamacMock(PUBLICATION_VERSION_94_NOT_VISIBLE_NAME)
-    public void testCancelPublicationPublicationVersion() throws Exception {
-        String publicationUrn = getPublicationVersionMockUrn(PUBLICATION_VERSION_94_NOT_VISIBLE_NAME);
-
-        PublicationVersion publicationVersion = publicationVersionLifecycleService.cancelPublication(getServiceContextAdministrador(), publicationUrn);
-
-        assertCancelPublicationPublicationVersion(publicationVersion, null);
-    }
-
-    @Test
-    @MetamacMock(PUBLICATION_VERSION_95_NOT_VISIBLE_IS_REPLACED_BY_PUBLICATION_VERSION_96_NAME)
-    public void testCancelPublicationPublicationVersionIsReplacedByOtherNotVisible() throws Exception {
-        String publicationUrn = getPublicationVersionMockUrn(PUBLICATION_VERSION_95_NOT_VISIBLE_IS_REPLACED_BY_PUBLICATION_VERSION_96_NAME);
-        String publicationUrnThatReplaces = getPublicationVersionMockUrn(PUBLICATION_VERSION_96_NOT_VISIBLE_REPLACES_PUBLICATION_VERSION_95_NAME);
-
-        List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
-        exceptionItems.add(new MetamacExceptionItem(ServiceExceptionType.PUBLICATION_VERSION_IS_REPLACED_BY_NOT_VISIBLE, publicationUrnThatReplaces));
-
-        expectedMetamacException(new MetamacException(exceptionItems));
-
-        publicationVersionLifecycleService.cancelPublication(getServiceContextAdministrador(), publicationUrn);
-
-    }
-
-    private void assertCancelPublicationPublicationVersion(PublicationVersion current, PublicationVersion previous) throws MetamacException {
-        LifecycleAsserts.assertAutomaticallyFilledMetadataSiemacCancelPublication(current, previous);
-
-        assertNull(current.getFormatExtentResources());
-        assertTrue(current.getHasPart().isEmpty());
-    }
-
     private void assertPublishingPublicationVersion(PublicationVersion current, PublicationVersion previous) throws MetamacException {
         assertNotNullAutomaticallyFilledMetadataSiemacSendToPublished(current, previous);
 

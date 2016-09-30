@@ -193,20 +193,6 @@ public class QueryListViewImpl extends LifeCycleBaseListViewImpl<QueryListUiHand
         getUiHandlers().programPublication(queryVersionDtos, validFrom);
     }
 
-    // Cancel programmed publication
-
-    @Override
-    protected ClickHandler getCancelProgrammedPublicationClickHandler() {
-        return new ClickHandler() {
-
-            @Override
-            public void onClick(ClickEvent event) {
-                List<QueryVersionBaseDto> queryVersionDtos = StatisticalResourcesRecordUtils.getQueryVersionDtosFromListGridRecords(listGrid.getListGrid().getSelectedRecords());
-                getUiHandlers().cancelProgrammedPublication(queryVersionDtos);
-            }
-        };
-    }
-
     // Version
 
     @Override
@@ -252,11 +238,6 @@ public class QueryListViewImpl extends LifeCycleBaseListViewImpl<QueryListUiHand
     @Override
     protected boolean canProgramPublication(ListGridRecord record) {
         return QueryClientSecurityUtils.canProgramQueryVersionPublication(getDtoFromRecord(record));
-    }
-
-    @Override
-    protected boolean canCancelProgrammedPublication(ListGridRecord record) {
-        return QueryClientSecurityUtils.canCancelQueryVersionProgrammedPublication(getDtoFromRecord(record));
     }
 
     @Override

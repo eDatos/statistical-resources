@@ -93,14 +93,6 @@ public class PublicationClientSecurityUtils extends LifecycleClientSecurityUtils
         return canProgramPublicationPublicationVersion(dto.getProcStatus());
     }
 
-    public static boolean canCancelPublicationPublicationVersion(PublicationVersionDto dto) {
-        return canCancelPublicationPublicationVersion(dto.getProcStatus());
-    }
-
-    public static boolean canCancelPublicationPublicationVersion(PublicationVersionBaseDto dto) {
-        return canCancelPublicationPublicationVersion(dto.getProcStatus());
-    }
-
     public static boolean canVersionPublication(PublicationVersionDto dto) {
         return canVersionPublication(dto.getProcStatus());
     }
@@ -142,13 +134,6 @@ public class PublicationClientSecurityUtils extends LifecycleClientSecurityUtils
             return false;
         }
         return SharedPublicationsSecurityUtils.canProgramPublicationPublicationVersion(getMetamacPrincipal(), getCurrentStatisticalOperationCode());
-    }
-
-    private static boolean canCancelPublicationPublicationVersion(ProcStatusEnum procStatus) {
-        if (!canCancelProgrammedPublication(procStatus)) {
-            return false;
-        }
-        return SharedPublicationsSecurityUtils.canCancelPublicationPublicationVersion(getMetamacPrincipal(), getCurrentStatisticalOperationCode());
     }
 
     private static boolean canVersionPublication(ProcStatusEnum procStatus) {

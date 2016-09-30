@@ -51,11 +51,6 @@ public class QueryMainFormLayout extends LifecycleMainFormLayout {
     }
 
     @Override
-    protected boolean canCancelProgrammedPublication() {
-        return QueryClientSecurityUtils.canCancelQueryVersionProgrammedPublication(queryVersionDto);
-    }
-
-    @Override
     protected boolean canVersion() {
         return QueryClientSecurityUtils.canVersionQueryVersion(queryVersionDto);
     }

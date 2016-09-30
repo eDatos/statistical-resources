@@ -75,10 +75,6 @@ public class SharedQueriesSecurityUtils extends SharedSecurityUtils {
         return isOperationAllowed(metamacPrincipal, operationCode, DIFFUSION_ROLES);
     }
 
-    public static boolean canCancelPublicationQueryVersion(MetamacPrincipal metamacPrincipal, String operationCode) {
-        return isOperationAllowed(metamacPrincipal, operationCode, DIFFUSION_ROLES);
-    }
-
     public static boolean canVersionQueryVersion(MetamacPrincipal metamacPrincipal, String operationCode) {
         return isOperationAllowed(metamacPrincipal, operationCode, PRODUCTION_ROLES);
     }

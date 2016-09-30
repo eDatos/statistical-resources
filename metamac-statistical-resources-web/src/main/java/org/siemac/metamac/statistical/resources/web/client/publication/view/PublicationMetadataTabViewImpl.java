@@ -244,13 +244,6 @@ public class PublicationMetadataTabViewImpl extends StatisticalResourceMetadataB
                 });
             }
         });
-        mainFormLayout.getCancelProgrammedPublication().addClickHandler(new ClickHandler() {
-
-            @Override
-            public void onClick(ClickEvent event) {
-                getUiHandlers().cancelProgrammedPublication(publicationVersionDto);
-            }
-        });
 
         mainFormLayout.getVersioningButton().addClickHandler(new ClickHandler() {
 

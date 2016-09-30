@@ -289,20 +289,6 @@ public class DatasetMetadataTabPresenter extends StatisticalResourceMetadataBase
     }
 
     @Override
-    public void cancelProgrammedPublication(DatasetVersionDto dataset) {
-        dispatcher.execute(new UpdateDatasetVersionProcStatusAction(dataset, LifeCycleActionEnum.CANCEL_PROGRAMMED_PUBLICATION),
-                new WaitingAsyncCallbackHandlingError<UpdateDatasetVersionProcStatusResult>(this) {
-
-                    @Override
-                    public void onWaitSuccess(UpdateDatasetVersionProcStatusResult result) {
-                        showMessageAfterResourceLifeCycleUpdate(result, getMessages().lifeCycleResourceCancelProgrammedPublication());
-                        RequestDatasetVersionsReloadEvent.fire(DatasetMetadataTabPresenter.this, result.getDatasetVersionDto().getUrn());
-                        getView().setDataset(result.getDatasetVersionDto());
-                    }
-                });
-    }
-
-    @Override
     public void version(DatasetVersionDto dataset, VersionTypeEnum versionType) {
         Builder builder = new Builder(dataset, LifeCycleActionEnum.VERSION);
         builder.versionType(versionType);
