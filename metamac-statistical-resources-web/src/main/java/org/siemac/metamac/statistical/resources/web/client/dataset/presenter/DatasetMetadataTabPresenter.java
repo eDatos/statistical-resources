@@ -4,7 +4,6 @@ import static org.siemac.metamac.statistical.resources.web.client.StatisticalRes
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getMessages;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
@@ -254,21 +253,6 @@ public class DatasetMetadataTabPresenter extends StatisticalResourceMetadataBase
             @Override
             public void onWaitSuccess(UpdateDatasetVersionProcStatusResult result) {
                 showMessageAfterResourceLifeCycleUpdate(result, getMessages().lifeCycleResourceRejectValidation());
-                RequestDatasetVersionsReloadEvent.fire(DatasetMetadataTabPresenter.this, result.getDatasetVersionDto().getUrn());
-                getView().setDataset(result.getDatasetVersionDto());
-            }
-        });
-    }
-
-    @Override
-    public void programPublication(DatasetVersionDto dataset, Date validFrom) {
-        Builder builder = new Builder(dataset, LifeCycleActionEnum.PROGRAM_PUBLICATION);
-        builder.validFrom(validFrom);
-        dispatcher.execute(builder.build(), new WaitingAsyncCallbackHandlingError<UpdateDatasetVersionProcStatusResult>(this) {
-
-            @Override
-            public void onWaitSuccess(UpdateDatasetVersionProcStatusResult result) {
-                showMessageAfterResourceLifeCycleUpdate(result, getMessages().lifeCycleResourceProgramPublication());
                 RequestDatasetVersionsReloadEvent.fire(DatasetMetadataTabPresenter.this, result.getDatasetVersionDto().getUrn());
                 getView().setDataset(result.getDatasetVersionDto());
             }

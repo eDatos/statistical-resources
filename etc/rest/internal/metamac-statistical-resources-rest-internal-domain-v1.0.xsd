@@ -555,7 +555,6 @@
             <xs:enumeration value="PRODUCTION_VALIDATION" />
             <xs:enumeration value="DIFFUSION_VALIDATION" />
             <xs:enumeration value="VALIDATION_REJECTED" />
-            <xs:enumeration value="PUBLISHED_NOT_VISIBLE" />
             <xs:enumeration value="PUBLISHED" />
         </xs:restriction>
     </xs:simpleType>

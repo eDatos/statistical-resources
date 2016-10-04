@@ -60,11 +60,6 @@ public class UpdateQueryVersionProcStatusActionHandler extends UpdateResourcePro
                     queryVersionDto = statisticalResourcesServiceFacade.publishQueryVersion(ServiceContextHolder.getCurrentServiceContext(), action.getQueryVersionToUpdateProcStatus());
                     break;
 
-                case PROGRAM_PUBLICATION:
-                    queryVersionDto = statisticalResourcesServiceFacade.programPublicationQueryVersion(ServiceContextHolder.getCurrentServiceContext(), action.getQueryVersionToUpdateProcStatus(),
-                            action.getValidFrom());
-                    break;
-
 
                 case VERSION:
                     queryVersionDto = statisticalResourcesServiceFacade.versioningQueryVersion(ServiceContextHolder.getCurrentServiceContext(), action.getQueryVersionToUpdateProcStatus(),

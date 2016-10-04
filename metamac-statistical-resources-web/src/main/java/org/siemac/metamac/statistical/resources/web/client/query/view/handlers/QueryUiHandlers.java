@@ -34,7 +34,6 @@ public interface QueryUiHandlers extends BaseUiHandlers {
     void sendToProductionValidation(QueryVersionDto queryVersionDto);
     void sendToDiffusionValidation(QueryVersionDto queryVersionDto);
     void rejectValidation(QueryVersionDto queryVersionDto, String reasonOfRejection);
-    void programPublication(QueryVersionDto queryVersionDto, Date validFrom);
 
 
     void publish(QueryVersionDto queryVersionDto);

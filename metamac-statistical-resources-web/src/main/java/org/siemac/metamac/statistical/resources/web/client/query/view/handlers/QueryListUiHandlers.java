@@ -24,7 +24,6 @@ public interface QueryListUiHandlers extends BaseUiHandlers {
     void sendToDiffusionValidation(List<QueryVersionBaseDto> queryVersionBaseDtos);
     void rejectValidation(List<QueryVersionBaseDto> queryVersionBaseDtos, String reasonOfRejection);
     void publish(List<QueryVersionBaseDto> queryVersionBaseDtos);
-    void programPublication(List<QueryVersionBaseDto> queryVersionBaseDtos, Date validFrom);
 
     void version(List<QueryVersionBaseDto> queryVersionBaseDtos, VersionTypeEnum versionType);
 

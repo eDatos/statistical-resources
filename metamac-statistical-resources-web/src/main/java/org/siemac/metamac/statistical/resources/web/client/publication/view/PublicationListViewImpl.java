@@ -2,7 +2,6 @@ package org.siemac.metamac.statistical.resources.web.client.publication.view;
 
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
 
-import java.util.Date;
 import java.util.List;
 
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
@@ -203,13 +202,6 @@ public class PublicationListViewImpl extends StatisticalResourceBaseListViewImpl
         };
     }
 
-    // Program publication
-    @Override
-    protected void programPublication(Date validFrom) {
-        List<PublicationVersionBaseDto> publicationVersionDtos = StatisticalResourcesRecordUtils.getPublicationVersionBaseDtosFromListGridRecords(listGrid.getListGrid().getSelectedRecords());
-        getUiHandlers().programPublication(publicationVersionDtos, validFrom);
-    }
-
     // Version
 
     @Override
@@ -236,6 +228,7 @@ public class PublicationListViewImpl extends StatisticalResourceBaseListViewImpl
     protected boolean canSendToProductionValidation(ListGridRecord record) {
         return PublicationClientSecurityUtils.canSendPublicationVersionToProductionValidation(getDtoFromRecord(record));
     }
+
     @Override
     protected boolean canSendToDiffusionValidation(ListGridRecord record) {
         return PublicationClientSecurityUtils.canSendPublicationVersionToDiffusionValidation(getDtoFromRecord(record));
@@ -249,11 +242,6 @@ public class PublicationListViewImpl extends StatisticalResourceBaseListViewImpl
     @Override
     protected boolean canPublish(ListGridRecord record) {
         return PublicationClientSecurityUtils.canPublishPublicationVersion(getDtoFromRecord(record));
-    }
-
-    @Override
-    protected boolean canProgramPublication(ListGridRecord record) {
-        return PublicationClientSecurityUtils.canProgramPublicationPublicationVersion(getDtoFromRecord(record));
     }
 
     @Override

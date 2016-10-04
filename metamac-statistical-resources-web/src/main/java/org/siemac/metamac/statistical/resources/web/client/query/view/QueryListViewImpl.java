@@ -2,7 +2,6 @@ package org.siemac.metamac.statistical.resources.web.client.query.view;
 
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
 
-import java.util.Date;
 import java.util.List;
 
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
@@ -185,14 +184,6 @@ public class QueryListViewImpl extends LifeCycleBaseListViewImpl<QueryListUiHand
         };
     }
 
-    // Program publication
-
-    @Override
-    protected void programPublication(Date validFrom) {
-        List<QueryVersionBaseDto> queryVersionDtos = StatisticalResourcesRecordUtils.getQueryVersionDtosFromListGridRecords(listGrid.getListGrid().getSelectedRecords());
-        getUiHandlers().programPublication(queryVersionDtos, validFrom);
-    }
-
     // Version
 
     @Override
@@ -235,10 +226,6 @@ public class QueryListViewImpl extends LifeCycleBaseListViewImpl<QueryListUiHand
         return QueryClientSecurityUtils.canPublishQueryVersion(getDtoFromRecord(record));
     }
 
-    @Override
-    protected boolean canProgramPublication(ListGridRecord record) {
-        return QueryClientSecurityUtils.canProgramQueryVersionPublication(getDtoFromRecord(record));
-    }
 
     @Override
     protected boolean canVersion(ListGridRecord record) {

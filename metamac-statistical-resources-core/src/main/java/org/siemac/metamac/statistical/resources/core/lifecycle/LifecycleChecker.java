@@ -79,11 +79,7 @@ public class LifecycleChecker {
         }
 
         checkLifeCycleMetadataAllActions(resource, metadataName, exceptionItems);
-        checkMetadataRequired(resource.getLifeCycleStatisticalResource().getValidFrom(), addParameter(metadataName, ServiceExceptionSingleParameters.VALID_FROM), exceptionItems);
 
-        if (resource.getLifeCycleStatisticalResource().getValidFrom() != null && (resource.getLifeCycleStatisticalResource().getValidFrom().plusMinutes(PROCESSING_MINUTES_DELAY)).isBeforeNow()) {
-            exceptionItems.add(new MetamacExceptionItem(ServiceExceptionType.METADATA_INCORRECT, addParameter(metadataName, ServiceExceptionSingleParameters.VALID_FROM)));
-        }
 
         // Statistical Operation
         externalItemChecker.checkExternalItemsExternallyPublished(resource.getLifeCycleStatisticalResource().getStatisticalOperation(),

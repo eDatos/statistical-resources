@@ -242,14 +242,6 @@ public class DatasetListPresenter extends StatisticalResourceBaseListPresenter<D
     }
 
     @Override
-    public void programPublication(List<DatasetVersionBaseDto> datasetVersionDtos, Date validFrom) {
-        UpdateDatasetVersionsProcStatusAction.Builder builder = new Builder(datasetVersionDtos, LifeCycleActionEnum.PROGRAM_PUBLICATION);
-        builder.validFrom(validFrom);
-        UpdateDatasetVersionsProcStatusAction action = builder.build();
-        updateDatasetVersionProcStatus(action, getMessages().lifeCycleResourcesProgramPublication());
-    }
-
-    @Override
     public void version(List<DatasetVersionBaseDto> datasetVersionBaseDtos, VersionTypeEnum versionType) {
         Builder builder = new UpdateDatasetVersionsProcStatusAction.Builder(datasetVersionBaseDtos, LifeCycleActionEnum.VERSION);
         builder.versionType(versionType);

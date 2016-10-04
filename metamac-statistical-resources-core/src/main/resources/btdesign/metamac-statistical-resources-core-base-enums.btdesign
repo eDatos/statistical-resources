@@ -11,7 +11,6 @@ Application StatisticalResourcesEnums {
     		PRODUCTION_VALIDATION,
     		DIFFUSION_VALIDATION,
     		VALIDATION_REJECTED,
-    		PUBLISHED_NOT_VISIBLE,
     		PUBLISHED
     	}
     	

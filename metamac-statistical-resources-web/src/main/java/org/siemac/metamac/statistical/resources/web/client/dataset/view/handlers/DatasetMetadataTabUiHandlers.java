@@ -18,7 +18,6 @@ public interface DatasetMetadataTabUiHandlers extends BaseUiHandlers, Statistica
     void sendToProductionValidation(DatasetVersionDto dataset);
     void sendToDiffusionValidation(DatasetVersionDto dataset);
     void rejectValidation(DatasetVersionDto dataset, String reasonOfRejection);
-    void programPublication(DatasetVersionDto dataset, Date selectedDate);
 
     void publish(DatasetVersionDto dataset);
     void version(DatasetVersionDto dataset, VersionTypeEnum versionType);

@@ -72,9 +72,6 @@ public class DatasetMetamacCriteria2SculptorCriteriaMapperImpl implements Datase
                     if (ProcStatusEnum.PUBLISHED.equals(propertyRestriction.getEnumValue())) {
                         return StatisticalResourcesCriteriaUtils.buildPublishedVisibleCondition(DatasetVersionProperties.siemacMetadataStatisticalResource().procStatus(), DatasetVersionProperties
                                 .siemacMetadataStatisticalResource().validFrom(), DatasetVersion.class);
-                    } else if (ProcStatusEnum.PUBLISHED_NOT_VISIBLE.equals(propertyRestriction.getEnumValue())) {
-                        return StatisticalResourcesCriteriaUtils.buildPublishedNotVisibleCondition(DatasetVersionProperties.siemacMetadataStatisticalResource().procStatus(), DatasetVersionProperties
-                                .siemacMetadataStatisticalResource().validFrom(), DatasetVersion.class);
                     } else {
                         return new SculptorPropertyCriteria(DatasetVersionProperties.siemacMetadataStatisticalResource().procStatus(), propertyRestriction.getEnumValue(),
                                 propertyRestriction.getOperationType());

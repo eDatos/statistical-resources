@@ -2,7 +2,6 @@ package org.siemac.metamac.statistical.resources.web.client.dataset.view;
 
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
 
-import java.util.Date;
 import java.util.List;
 
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
@@ -249,14 +248,6 @@ public class DatasetListViewImpl extends StatisticalResourceBaseListViewImpl<Dat
         };
     }
 
-    // Program publication
-
-    @Override
-    protected void programPublication(Date validFrom) {
-        List<DatasetVersionBaseDto> datasetVersionDtos = StatisticalResourcesRecordUtils.getDatasetVersionBaseDtosFromListGridRecords(listGrid.getListGrid().getSelectedRecords());
-        getUiHandlers().programPublication(datasetVersionDtos, validFrom);
-    }
-
     // Version
 
     @Override
@@ -316,10 +307,6 @@ public class DatasetListViewImpl extends StatisticalResourceBaseListViewImpl<Dat
         return DatasetClientSecurityUtils.canPublishDatasetVersion(getDtoFromRecord(record));
     }
 
-    @Override
-    protected boolean canProgramPublication(ListGridRecord record) {
-        return DatasetClientSecurityUtils.canPublishDatasetVersion(getDtoFromRecord(record));
-    }
 
     @Override
     protected boolean canVersion(ListGridRecord record) {

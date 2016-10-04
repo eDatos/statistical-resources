@@ -68,11 +68,6 @@ public class UpdateDatasetVersionsProcStatusActionHandler extends UpdateResource
                         updatedDatasetVersionBaseDto = statisticalResourcesServiceFacade.publishDatasetVersion(ServiceContextHolder.getCurrentServiceContext(), datasetVersionToUpdate);
                         break;
 
-                    case PROGRAM_PUBLICATION:
-                        updatedDatasetVersionBaseDto = statisticalResourcesServiceFacade.programPublicationDatasetVersion(ServiceContextHolder.getCurrentServiceContext(), datasetVersionToUpdate,
-                                action.getValidFrom());
-                        break;
-
                     case VERSION:
                         updatedDatasetVersionBaseDto = statisticalResourcesServiceFacade.versioningDatasetVersion(ServiceContextHolder.getCurrentServiceContext(), datasetVersionToUpdate,
                                 action.getVersionType());

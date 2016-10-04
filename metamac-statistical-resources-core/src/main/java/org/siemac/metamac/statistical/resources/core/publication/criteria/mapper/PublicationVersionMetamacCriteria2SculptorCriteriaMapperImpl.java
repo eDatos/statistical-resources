@@ -81,9 +81,6 @@ public class PublicationVersionMetamacCriteria2SculptorCriteriaMapperImpl implem
                     if (ProcStatusEnum.PUBLISHED.equals(propertyRestriction.getEnumValue())) {
                         return StatisticalResourcesCriteriaUtils.buildPublishedVisibleCondition(PublicationVersionProperties.siemacMetadataStatisticalResource().procStatus(),
                                 PublicationVersionProperties.siemacMetadataStatisticalResource().validFrom(), PublicationVersion.class);
-                    } else if (ProcStatusEnum.PUBLISHED_NOT_VISIBLE.equals(propertyRestriction.getEnumValue())) {
-                        return StatisticalResourcesCriteriaUtils.buildPublishedNotVisibleCondition(PublicationVersionProperties.siemacMetadataStatisticalResource().procStatus(),
-                                PublicationVersionProperties.siemacMetadataStatisticalResource().validFrom(), PublicationVersion.class);
                     } else {
                         return new SculptorPropertyCriteria(PublicationVersionProperties.siemacMetadataStatisticalResource().procStatus(), propertyRestriction.getEnumValue(),
                                 propertyRestriction.getOperationType());

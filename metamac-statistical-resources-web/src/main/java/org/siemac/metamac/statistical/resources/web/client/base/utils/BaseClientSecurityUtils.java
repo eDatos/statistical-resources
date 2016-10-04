@@ -8,7 +8,7 @@ import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesW
 
 public class BaseClientSecurityUtils {
 
-    protected static ProcStatusEnum[] publishedStatus = new ProcStatusEnum[]{ProcStatusEnum.PUBLISHED, ProcStatusEnum.PUBLISHED_NOT_VISIBLE};
+    protected static ProcStatusEnum[] publishedStatus = new ProcStatusEnum[]{ProcStatusEnum.PUBLISHED};
 
     protected static MetamacPrincipal getMetamacPrincipal() {
         return StatisticalResourcesWeb.getCurrentUser();

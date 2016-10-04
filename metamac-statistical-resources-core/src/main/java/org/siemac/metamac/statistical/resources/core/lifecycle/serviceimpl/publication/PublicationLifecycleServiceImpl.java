@@ -161,7 +161,7 @@ public class PublicationLifecycleServiceImpl extends LifecycleTemplateService<Pu
         DatasetVersion lastPublishedVersion = datasetVersionRepository.retrieveLastPublishedVersion(datasetUrn);
         if (lastPublishedVersion == null) {
             DatasetVersion lastVersion = datasetVersionRepository.retrieveLastVersion(datasetUrn);
-            if (ProcStatusEnumUtils.isInAnyProcStatus(lastVersion, ProcStatusEnum.PUBLISHED, ProcStatusEnum.PUBLISHED_NOT_VISIBLE)) {
+            if (ProcStatusEnumUtils.isInAnyProcStatus(lastVersion, ProcStatusEnum.PUBLISHED)) {
                 if (lastVersion.getSiemacMetadataStatisticalResource().getValidFrom().isAfter(resource.getSiemacMetadataStatisticalResource().getValidFrom())) {
                     exceptionItems.add(new MetamacExceptionItem(ServiceExceptionType.PUBLICATION_VERSION_LINKED_TO_NOT_PUBLISHED_DATASET, datasetUrn));
                 }
@@ -175,7 +175,7 @@ public class PublicationLifecycleServiceImpl extends LifecycleTemplateService<Pu
         QueryVersion lastPublishedVersion = queryVersionRepository.retrieveLastPublishedVersion(queryUrn);
         if (lastPublishedVersion == null) {
             QueryVersion lastVersion = queryVersionRepository.retrieveLastVersion(queryUrn);
-            if (ProcStatusEnumUtils.isInAnyProcStatus(lastVersion, ProcStatusEnum.PUBLISHED, ProcStatusEnum.PUBLISHED_NOT_VISIBLE)) {
+            if (ProcStatusEnumUtils.isInAnyProcStatus(lastVersion, ProcStatusEnum.PUBLISHED)) {
                 if (lastVersion.getLifeCycleStatisticalResource().getValidFrom().isAfter(resource.getSiemacMetadataStatisticalResource().getValidFrom())) {
                     exceptionItems.add(new MetamacExceptionItem(ServiceExceptionType.PUBLICATION_VERSION_LINKED_TO_NOT_PUBLISHED_QUERY, queryUrn));
                 }

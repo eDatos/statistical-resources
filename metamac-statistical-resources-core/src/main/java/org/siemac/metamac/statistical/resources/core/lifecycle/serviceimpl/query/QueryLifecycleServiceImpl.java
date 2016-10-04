@@ -107,9 +107,9 @@ public class QueryLifecycleServiceImpl extends LifecycleTemplateService<QueryVer
 
     @Override
     public void checkLinkedDatasetOrDatasetVersionPublishedBeforeQuery(ServiceContext ctx, QueryVersion resource) throws MetamacException {
-        if (ProcStatusEnumUtils.isInAnyProcStatus(resource, ProcStatusEnum.PUBLISHED, ProcStatusEnum.PUBLISHED_NOT_VISIBLE)) {
+        if (ProcStatusEnumUtils.isInAnyProcStatus(resource, ProcStatusEnum.PUBLISHED)) {
             List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
-            this.checkLinkedDatasetOrDatasetVersionPublishedForQuery(ctx, resource, exceptionItems);
+            checkLinkedDatasetOrDatasetVersionPublishedForQuery(ctx, resource, exceptionItems);
             ExceptionUtils.throwIfException(exceptionItems);
         }
     }
@@ -161,9 +161,6 @@ public class QueryLifecycleServiceImpl extends LifecycleTemplateService<QueryVer
 
     private boolean isDatasetVersionPublishedAndVisibleBeforeOrEqualDate(DatasetVersion datasetVersion, DateTime date) {
         if (ProcStatusEnumUtils.isInAnyProcStatus(datasetVersion, ProcStatusEnum.PUBLISHED)) {
-            return true;
-        }
-        if ((ProcStatusEnumUtils.isInAnyProcStatus(datasetVersion, ProcStatusEnum.PUBLISHED_NOT_VISIBLE)) && (!datasetVersion.getSiemacMetadataStatisticalResource().getValidFrom().isAfter(date))) {
             return true;
         }
         return false;

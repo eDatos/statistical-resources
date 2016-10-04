@@ -68,11 +68,6 @@ public class UpdatePublicationVersionsProcStatusActionHandler extends UpdateReso
                         updatedPublicationVersionBaseDto = statisticalResourcesServiceFacade.publishPublicationVersion(ServiceContextHolder.getCurrentServiceContext(), publicationVersionDto);
                         break;
 
-                    case PROGRAM_PUBLICATION:
-                        updatedPublicationVersionBaseDto = statisticalResourcesServiceFacade.programPublicationPublicationVersion(ServiceContextHolder.getCurrentServiceContext(),
-                                publicationVersionDto, action.getValidFrom());
-                        break;
-
                     case VERSION:
                         updatedPublicationVersionBaseDto = statisticalResourcesServiceFacade.versioningPublicationVersion(ServiceContextHolder.getCurrentServiceContext(), publicationVersionDto,
                                 action.getVersionType());

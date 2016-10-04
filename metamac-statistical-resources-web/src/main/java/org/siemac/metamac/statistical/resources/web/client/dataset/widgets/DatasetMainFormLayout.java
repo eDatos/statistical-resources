@@ -48,11 +48,6 @@ public class DatasetMainFormLayout extends LifecycleMainFormLayout {
     }
 
     @Override
-    protected boolean canProgramPublication() {
-        return DatasetClientSecurityUtils.canPublishDatasetVersion(datasetVersionDto);
-    }
-
-    @Override
     protected boolean canVersion() {
         return DatasetClientSecurityUtils.canVersionDataset(datasetVersionDto);
     }

@@ -4,7 +4,6 @@ import static org.siemac.metamac.statistical.resources.web.client.StatisticalRes
 import static org.siemac.metamac.web.common.client.resources.GlobalResources.RESOURCE;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
@@ -13,7 +12,6 @@ import org.siemac.metamac.statistical.resources.web.client.constants.Statistical
 import org.siemac.metamac.statistical.resources.web.client.model.record.LifeCycleResourceRecord;
 import org.siemac.metamac.statistical.resources.web.client.resources.GlobalResources;
 import org.siemac.metamac.statistical.resources.web.client.widgets.LifeCycleResourcePaginatedCheckListGrid;
-import org.siemac.metamac.statistical.resources.web.client.widgets.ProgramPublicationWindow;
 import org.siemac.metamac.statistical.resources.web.client.widgets.VersionWindow;
 import org.siemac.metamac.web.common.client.widgets.BaseAdvancedSearchSectionStack;
 import org.siemac.metamac.web.common.client.widgets.CustomToolStripButton;
@@ -42,7 +40,6 @@ public abstract class LifeCycleBaseListViewImpl<C extends UiHandlers> extends Vi
     protected CustomToolStripButton                   sendToProductionValidationButton;
     protected CustomToolStripButton                   sendToDiffusionValidationButton;
     protected CustomToolStripButton                   rejectValidationButton;
-    protected CustomToolStripButton                   programPublicationButton;
     protected CustomToolStripButton                   publishButton;
     protected CustomToolStripButton                   versionButton;
 
@@ -76,8 +73,6 @@ public abstract class LifeCycleBaseListViewImpl<C extends UiHandlers> extends Vi
         publishButton = createPublishButton();
         toolStrip.addButton(publishButton);
 
-        programPublicationButton = createProgramPublicationButton();
-        toolStrip.addButton(programPublicationButton);
 
         versionButton = createVersionButton();
         toolStrip.addButton(versionButton);
@@ -258,44 +253,6 @@ public abstract class LifeCycleBaseListViewImpl<C extends UiHandlers> extends Vi
         }
     }
 
-    // Program publication
-
-    private CustomToolStripButton createProgramPublicationButton() {
-        CustomToolStripButton button = new CustomToolStripButton(getConstants().lifeCycleProgramPublication(), GlobalResources.RESOURCE.programPublication().getURL());
-        button.setVisible(false);
-        button.addClickHandler(new ClickHandler() {
-
-            @Override
-            public void onClick(ClickEvent event) {
-                final ProgramPublicationWindow window = new ProgramPublicationWindow(getConstants().lifeCycleProgramPublication());
-                window.getSave().addClickHandler(new com.smartgwt.client.widgets.form.fields.events.ClickHandler() {
-
-                    @Override
-                    public void onClick(com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
-                        if (window.validateForm()) {
-                            Date selectedDate = window.getSelectedDate();
-                            programPublication(selectedDate);
-                            window.destroy();
-                        }
-                    }
-                });
-            }
-        });
-        return button;
-    }
-
-    private void showProgramPublicationButton(ListGridRecord[] records) {
-        boolean canProgramPublication = true;
-        for (ListGridRecord record : records) {
-            if (!canProgramPublication(record)) {
-                canProgramPublication = false;
-                break;
-            }
-        }
-        if (canProgramPublication) {
-            programPublicationButton.show();
-        }
-    }
 
     // Version
 
@@ -350,7 +307,6 @@ public abstract class LifeCycleBaseListViewImpl<C extends UiHandlers> extends Vi
         showSendtoDiffusionValidationButton(records);
         showRejectValidationButton(records);
         showPublishButton(records);
-        showProgramPublicationButton(records);
         showVersionButton(records);
     }
 
@@ -360,7 +316,6 @@ public abstract class LifeCycleBaseListViewImpl<C extends UiHandlers> extends Vi
         sendToDiffusionValidationButton.hide();
         rejectValidationButton.hide();
         publishButton.hide();
-        programPublicationButton.hide();
         versionButton.hide();
     }
 
@@ -385,10 +340,8 @@ public abstract class LifeCycleBaseListViewImpl<C extends UiHandlers> extends Vi
     protected abstract boolean canSendToDiffusionValidation(ListGridRecord record);
     protected abstract boolean canRejectValidation(ListGridRecord record);
     protected abstract boolean canPublish(ListGridRecord record);
-    protected abstract boolean canProgramPublication(ListGridRecord record);
 
     protected abstract boolean canVersion(ListGridRecord record);
 
-    protected abstract void programPublication(Date validFrom);
     protected abstract void version(VersionTypeEnum versionType);
 }
