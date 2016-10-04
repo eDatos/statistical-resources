@@ -943,23 +943,6 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         assertEqualsDay(new DateTime().toDateTime(), new DateTime(updatedQueryVersion.getPublicationDate()));
     }
 
-    @Override
-    @Test
-    @MetamacMock(QUERY_VERSION_37_PREPARED_TO_PUBLISH_NAME)
-    public void testProgramPublicationQueryVersion() throws Exception {
-        String urn = queryVersionMockFactory.retrieveMock(QUERY_VERSION_37_PREPARED_TO_PUBLISH_NAME).getLifeCycleStatisticalResource().getUrn();
-
-        QueryVersionDto queryVersionDto = statisticalResourcesServiceFacade.retrieveQueryVersionByUrn(getServiceContextAdministrador(), urn);
-
-        Date validFrom = new DateTime().plusDays(1).toDate();
-
-        QueryVersionDto updatedQueryVersion = statisticalResourcesServiceFacade.programPublicationQueryVersion(getServiceContextAdministrador(), queryVersionDto, validFrom);
-        assertNotNull(updatedQueryVersion);
-        assertEquals(ProcStatusEnum.PUBLISHED_NOT_VISIBLE, updatedQueryVersion.getProcStatus());
-        assertEquals(getServiceContextAdministrador().getUserId(), updatedQueryVersion.getPublicationUser());
-        assertEqualsDay(new DateTime().toDateTime(), new DateTime(updatedQueryVersion.getPublicationDate()));
-        assertEqualsDate(new DateTime(validFrom), new DateTime(updatedQueryVersion.getValidFrom()));
-    }
 
     @Override
     @Test
@@ -2145,22 +2128,6 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         assertEqualsDay(new DateTime().toDateTime(), new DateTime(updatedDatasetVersion.getPublicationDate()));
     }
 
-    @Override
-    @Test
-    @MetamacMock(DATASET_VERSION_70_PREPARED_TO_PUBLISH_EXTERNAL_ITEM_FULL_NAME)
-    public void testProgramPublicationDatasetVersion() throws Exception {
-        String datasetVersionUrn = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_70_PREPARED_TO_PUBLISH_EXTERNAL_ITEM_FULL_NAME).getLifeCycleStatisticalResource().getUrn();
-        DatasetVersionDto datasetVersionDto = statisticalResourcesServiceFacade.retrieveDatasetVersionByUrn(getServiceContextAdministrador(), datasetVersionUrn);
-
-        Date validFrom = new DateTime().plusDays(1).toDate();
-
-        DatasetVersionDto updatedDatasetVersion = statisticalResourcesServiceFacade.programPublicationDatasetVersion(getServiceContextAdministrador(), datasetVersionDto, validFrom);
-        assertNotNull(updatedDatasetVersion);
-        assertEquals(ProcStatusEnum.PUBLISHED_NOT_VISIBLE, updatedDatasetVersion.getProcStatus());
-        assertEquals(getServiceContextAdministrador().getUserId(), updatedDatasetVersion.getPublicationUser());
-        assertEqualsDay(new DateTime().toDateTime(), new DateTime(updatedDatasetVersion.getPublicationDate()));
-        assertEqualsDate(new DateTime(validFrom), new DateTime(updatedDatasetVersion.getValidFrom()));
-    }
 
     @Override
     @Test
@@ -3188,23 +3155,7 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         assertEqualsDay(new DateTime().toDateTime(), new DateTime(updatedPublicationVersion.getPublicationDate()));
     }
 
-    @Override
-    @Test
-    @MetamacMock(PUBLICATION_VERSION_83_PREPARED_TO_PUBLISH_ONLY_VERSION_EXTERNAL_ITEM_FULL_NAME)
-    public void testProgramPublicationPublicationVersion() throws Exception {
-        String urn = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_83_PREPARED_TO_PUBLISH_ONLY_VERSION_EXTERNAL_ITEM_FULL_NAME).getSiemacMetadataStatisticalResource().getUrn();
 
-        PublicationVersionDto publicationVersionDto = statisticalResourcesServiceFacade.retrievePublicationVersionByUrn(getServiceContextAdministrador(), urn);
-
-        Date validFrom = new DateTime().plusDays(1).toDate();
-
-        PublicationVersionDto updatedPublicationVersion = statisticalResourcesServiceFacade.programPublicationPublicationVersion(getServiceContextAdministrador(), publicationVersionDto, validFrom);
-        assertNotNull(updatedPublicationVersion);
-        assertEquals(ProcStatusEnum.PUBLISHED_NOT_VISIBLE, updatedPublicationVersion.getProcStatus());
-        assertEquals(getServiceContextAdministrador().getUserId(), updatedPublicationVersion.getPublicationUser());
-        assertEqualsDay(new DateTime().toDateTime(), new DateTime(updatedPublicationVersion.getPublicationDate()));
-        assertEqualsDate(new DateTime(validFrom), new DateTime(updatedPublicationVersion.getValidFrom()));
-    }
 
     @Override
     @Test

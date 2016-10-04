@@ -65,7 +65,6 @@ public class UpdateQueryVersionsProcStatusActionHandler extends UpdateResourcePr
                         updatedQueryVersionBaseDto = statisticalResourcesServiceFacade.publishQueryVersion(ServiceContextHolder.getCurrentServiceContext(), queryVersionToUpdate);
                         break;
 
-
                     case VERSION:
                         updatedQueryVersionBaseDto = statisticalResourcesServiceFacade.versioningQueryVersion(ServiceContextHolder.getCurrentServiceContext(), queryVersionToUpdate,
                                 action.getVersionType());
@@ -75,7 +74,7 @@ public class UpdateQueryVersionsProcStatusActionHandler extends UpdateResourcePr
                 }
 
                 ResourceNotificationBaseDto notification = new ResourceNotificationBaseDto.Builder(queryVersionToUpdate, StatisticalResourceTypeEnum.QUERY, lifeCycleAction)
-                        .updatedResource(updatedQueryVersionBaseDto).reasonOfRejection(action.getReasonOfRejection()).programmedPublicationDate(action.getValidFrom()).build();
+                        .updatedResource(updatedQueryVersionBaseDto).reasonOfRejection(action.getReasonOfRejection()).build();
                 notificationsToSend.add(notification);
 
             } catch (MetamacException e) {

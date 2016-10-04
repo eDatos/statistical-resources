@@ -71,7 +71,7 @@ public class UpdateQueryVersionProcStatusActionHandler extends UpdateResourcePro
 
             try {
                 ResourceNotificationDto notificationDto = new ResourceNotificationDto.Builder(action.getQueryVersionToUpdateProcStatus(), StatisticalResourceTypeEnum.QUERY, lifeCycleAction)
-                        .updatedResource(queryVersionDto).reasonOfRejection(action.getReasonOfRejection()).programmedPublicationDate(action.getValidFrom()).build();
+                        .updatedResource(queryVersionDto).reasonOfRejection(action.getReasonOfRejection()).build();
                 noticesRestInternalFacade.createLifeCycleNotification(ServiceContextHolder.getCurrentServiceContext(), notificationDto);
             } catch (MetamacWebException e) {
                 return new UpdateQueryVersionProcStatusResult.Builder(queryVersionDto).notificationException(e).build();

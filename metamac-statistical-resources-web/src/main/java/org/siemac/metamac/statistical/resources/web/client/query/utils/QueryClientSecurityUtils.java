@@ -75,14 +75,6 @@ public class QueryClientSecurityUtils extends LifecycleClientSecurityUtils {
         return canPublishQueryVersion(dto.getProcStatus());
     }
 
-    public static boolean canProgramQueryVersionPublication(QueryVersionDto dto) {
-        return canProgramQueryVersionPublication(dto.getProcStatus());
-    }
-
-    public static boolean canProgramQueryVersionPublication(QueryVersionBaseDto dto) {
-        return canProgramQueryVersionPublication(dto.getProcStatus());
-    }
-
     public static boolean canVersionQueryVersion(QueryVersionDto dto) {
         return canVersionQueryVersion(dto.getProcStatus());
     }
@@ -117,13 +109,6 @@ public class QueryClientSecurityUtils extends LifecycleClientSecurityUtils {
             return false;
         }
         return SharedQueriesSecurityUtils.canPublishQueryVersion(getMetamacPrincipal(), getCurrentStatisticalOperationCode());
-    }
-
-    private static boolean canProgramQueryVersionPublication(ProcStatusEnum procStatus) {
-        if (!canProgramPublication(procStatus)) {
-            return false;
-        }
-        return SharedQueriesSecurityUtils.canProgramQueryVersionPublication(getMetamacPrincipal(), getCurrentStatisticalOperationCode());
     }
 
     private static boolean canVersionQueryVersion(ProcStatusEnum procStatus) {

@@ -79,10 +79,6 @@ public class SharedPublicationsSecurityUtils extends SharedSecurityUtils {
         return isOperationAllowed(metamacPrincipal, operationCode, DIFFUSION_ROLES);
     }
 
-    public static boolean canProgramPublicationPublicationVersion(MetamacPrincipal metamacPrincipal, String operationCode) {
-        return canPublishPublicationVersion(metamacPrincipal, operationCode);
-    }
-
     public static boolean canPreviewDataPublicationVersion(MetamacPrincipal metamacPrincipal, String operationCode, ProcStatusEnum procStatus) {
         return canRetrieveStatisticalResource(metamacPrincipal, operationCode, procStatus);
     }

@@ -78,7 +78,7 @@ public class UpdatePublicationVersionsProcStatusActionHandler extends UpdateReso
                 }
 
                 ResourceNotificationBaseDto notification = new ResourceNotificationBaseDto.Builder(publicationVersionDto, StatisticalResourceTypeEnum.COLLECTION, lifeCycleAction)
-                        .updatedResource(updatedPublicationVersionBaseDto).reasonOfRejection(action.getReasonOfRejection()).programmedPublicationDate(action.getValidFrom()).build();
+                        .updatedResource(updatedPublicationVersionBaseDto).reasonOfRejection(action.getReasonOfRejection()).build();
                 notificationsToSend.add(notification);
 
             } catch (MetamacException e) {

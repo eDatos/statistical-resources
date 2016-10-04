@@ -443,13 +443,6 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
 
     }
 
-    @Ignore
-    @Override
-    @Test
-    public void testProgramPublicationQueryVersion() throws Exception {
-        // TODO: Implement (METAMAC-2143)
-    }
-
     @Override
     @Test
     @MetamacMock(QUERY_VERSION_15_PUBLISHED_NAME)
@@ -839,12 +832,6 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
     }
 
     @Override
-    public void testProgramPublicationPublicationVersion() throws Exception {
-        // TODO: Implement (METAMAC-2143)
-
-    }
-
-    @Override
     @Test
     @MetamacMock(PUBLICATION_VERSION_29_V3_PUBLISHED_FOR_PUBLICATION_05_NAME)
     public void testVersioningPublicationVersion() throws Exception {
@@ -1183,12 +1170,6 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
         } catch (MetamacException e) {
             assertEqualsMetamacExceptionItem(ServiceExceptionType.OPTIMISTIC_LOCKING, 0, null, e.getExceptionItems().get(0));
         }
-    }
-
-    @Override
-    public void testProgramPublicationDatasetVersion() throws Exception {
-        // TODO: Implement (METAMAC-2143)
-
     }
 
     @Override

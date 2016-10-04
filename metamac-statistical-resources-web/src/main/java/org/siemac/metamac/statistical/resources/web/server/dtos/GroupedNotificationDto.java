@@ -17,7 +17,6 @@ public class GroupedNotificationDto implements Serializable {
     private String[]            receiversUsernames;
     private String              reasonOfRejection;
     private LifeCycleActionEnum lifeCycleAction;
-    private Date                programmedPublicationDate;
 
     public static class Builder {
 
@@ -54,10 +53,6 @@ public class GroupedNotificationDto implements Serializable {
             return this;
         }
 
-        public Builder programmedPublicationDate(Date programmedPublicationDate) {
-            this.programmedPublicationDate = programmedPublicationDate;
-            return this;
-        }
 
         public GroupedNotificationDto build() {
             return new GroupedNotificationDto(this);
@@ -71,7 +66,6 @@ public class GroupedNotificationDto implements Serializable {
         this.roles = builder.roles;
         this.receiversUsernames = builder.receiversUsernames;
         this.reasonOfRejection = builder.reasonOfRejection;
-        this.programmedPublicationDate = builder.programmedPublicationDate;
     }
 
     public String getStatisticalOperationUrn() {
@@ -120,13 +114,5 @@ public class GroupedNotificationDto implements Serializable {
 
     public void setLifeCycleAction(LifeCycleActionEnum lifeCycleAction) {
         this.lifeCycleAction = lifeCycleAction;
-    }
-
-    public Date getProgrammedPublicationDate() {
-        return programmedPublicationDate;
-    }
-
-    public void setProgrammedPublicationDate(Date programmedPublicationDate) {
-        this.programmedPublicationDate = programmedPublicationDate;
     }
 }

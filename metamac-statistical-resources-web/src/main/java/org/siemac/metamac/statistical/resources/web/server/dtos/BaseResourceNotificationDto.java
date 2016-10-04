@@ -38,7 +38,4 @@ public class BaseResourceNotificationDto<T extends IdentifiableStatisticalResour
         return reasonOfRejection;
     }
 
-    public Date getProgrammedPublicationDate() {
-        return programmedPublicationDate;
-    }
 }

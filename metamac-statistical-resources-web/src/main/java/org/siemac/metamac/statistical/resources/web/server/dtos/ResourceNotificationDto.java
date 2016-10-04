@@ -30,11 +30,6 @@ public class ResourceNotificationDto extends BaseResourceNotificationDto<LifeCyc
             return this;
         }
 
-        public Builder programmedPublicationDate(Date programmedPublicationDate) {
-            this.programmedPublicationDate = programmedPublicationDate;
-            return this;
-        }
-
         public Builder reasonOfRejection(String reasonOfRejection) {
             this.reasonOfRejection = reasonOfRejection;
             return this;

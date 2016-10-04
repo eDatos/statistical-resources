@@ -79,8 +79,4 @@ public class SharedQueriesSecurityUtils extends SharedSecurityUtils {
         return isOperationAllowed(metamacPrincipal, operationCode, PRODUCTION_ROLES);
     }
 
-    public static boolean canProgramQueryVersionPublication(MetamacPrincipal metamacPrincipal, String operationCode) {
-        return canPublishQueryVersion(metamacPrincipal, operationCode);
-    }
-
 }

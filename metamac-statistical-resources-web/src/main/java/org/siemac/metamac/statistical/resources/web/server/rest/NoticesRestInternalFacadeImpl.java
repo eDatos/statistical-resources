@@ -246,7 +246,7 @@ public class NoticesRestInternalFacadeImpl implements NoticesRestInternalFacade 
             ResourceInternal[] resourceInternals = getResourceInternals(entry.getValue());
             String receiverUserName = entry.getKey();
             GroupedNotificationDto groupedNotificationDto = new GroupedNotificationDto.Builder(resourceInternals, getLifeCycleAction(entry.getValue()))
-                    .reasonOfRejection(getReasonOfRejection(entry.getValue())).programmedPublicationDate(getProgrammedPublicationDate(entry.getValue()))
+                    .reasonOfRejection(getReasonOfRejection(entry.getValue()))
                     .receiversUsernames(new String[]{receiverUserName}).build();
             try {
                 createNotification(serviceContext, groupedNotificationDto);
@@ -265,8 +265,7 @@ public class NoticesRestInternalFacadeImpl implements NoticesRestInternalFacade 
         String messageCode = getMessageCode(groupedNotificationDto.getLifeCycleAction());
 
         String subject = buildSubject(ctx, actionCode);
-        Message message = buildMessage(ctx, messageCode, groupedNotificationDto.getResources(), groupedNotificationDto.getReasonOfRejection(), groupedNotificationDto.getLifeCycleAction(),
-                groupedNotificationDto.getProgrammedPublicationDate());
+        Message message = buildMessage(ctx, messageCode, groupedNotificationDto.getResources(), groupedNotificationDto.getReasonOfRejection(), groupedNotificationDto.getLifeCycleAction());
 
         NoticeBuilder noticeBuilder = NoticeBuilder.notification().withMessages(message).withSendingApplication(getSendingApp()).withSendingUser(ctx.getUserId()).withSubject(subject);
         if (groupedNotificationDto.getRoles() != null) {
@@ -287,14 +286,11 @@ public class NoticesRestInternalFacadeImpl implements NoticesRestInternalFacade 
         }
     }
 
-    private Message buildMessage(ServiceContext ctx, String messageCode, ResourceInternal[] resources, String reasonOfRejection, LifeCycleActionEnum lifeCycleAction, Date programmedPublicationDate) {
+    private Message buildMessage(ServiceContext ctx, String messageCode, ResourceInternal[] resources, String reasonOfRejection, LifeCycleActionEnum lifeCycleAction) {
         Locale locale = ServiceContextUtils.getLocale(ctx);
         String localisedMessage = LocaleUtil.getMessageForCode(messageCode, locale);
         if (StringUtils.isNotBlank(reasonOfRejection)) {
             localisedMessage = localisedMessage + " (" + reasonOfRejection + ")";
-        }
-        if (LifeCycleActionEnum.PROGRAM_PUBLICATION.equals(lifeCycleAction) && programmedPublicationDate != null) {
-            localisedMessage = MessageFormat.format(localisedMessage, programmedPublicationDate);
         }
         return MessageBuilder.message().withText(localisedMessage).withResources(resources).build();
     }
@@ -352,16 +348,15 @@ public class NoticesRestInternalFacadeImpl implements NoticesRestInternalFacade 
     private GroupedNotificationDto createGroupedNotificationWithStatisticalOperation(String statisticalOperatonUrn, List<ResourceNotificationBaseDto> resources) throws MetamacWebException {
         ResourceInternal[] resourceInternals = getResourceInternals(resources);
         String reasonOfRejection = getReasonOfRejection(resources);
-        Date programmedPublicationDate = getProgrammedPublicationDate(resources);
         return new GroupedNotificationDto.Builder(resourceInternals, getLifeCycleAction(resources)).statisticalOperationUrn(statisticalOperatonUrn).reasonOfRejection(reasonOfRejection)
-                .programmedPublicationDate(programmedPublicationDate).build();
+                .build();
     }
 
     private GroupedNotificationDto createGroupedNotification(ResourceNotificationDto notification) throws MetamacWebException {
         ResourceInternal resourceInternal = restMapper.buildResourceInternal(notification.getUpdatedResource(), notification.getStatisticalResourceType());
         return new GroupedNotificationDto.Builder(new ResourceInternal[]{resourceInternal}, notification.getLifeCycleAction())
                 .statisticalOperationUrn(notification.getUpdatedResource().getStatisticalOperation().getUrn()).reasonOfRejection(notification.getReasonOfRejection())
-                .programmedPublicationDate(notification.getProgrammedPublicationDate()).build();
+                .build();
     }
 
     /**
@@ -384,16 +379,6 @@ public class NoticesRestInternalFacadeImpl implements NoticesRestInternalFacade 
         return notifications.get(0).getReasonOfRejection();
     }
 
-    /**
-     * Returns the programmed publication date of the notifications. When a group of resources update their {@link ProcStatusEnum} at the same time, all of them have the same programmed publication
-     * date.
-     *
-     * @param notifications
-     * @return
-     */
-    private Date getProgrammedPublicationDate(List<ResourceNotificationBaseDto> notifications) {
-        return notifications.get(0).getProgrammedPublicationDate();
-    }
 
     private String getTranslatedNotificationErrorMessage() {
         Locale locale = (Locale) ServiceContextHolder.getCurrentServiceContext().getProperty(LocaleConstants.locale);

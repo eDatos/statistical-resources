@@ -77,7 +77,7 @@ public class UpdateDatasetVersionsProcStatusActionHandler extends UpdateResource
                 }
 
                 ResourceNotificationBaseDto notification = new ResourceNotificationBaseDto.Builder(datasetVersionToUpdate, StatisticalResourceTypeEnum.DATASET, lifeCycleAction)
-                        .updatedResource(updatedDatasetVersionBaseDto).reasonOfRejection(action.getReasonOfRejection()).programmedPublicationDate(action.getValidFrom()).build();
+                        .updatedResource(updatedDatasetVersionBaseDto).reasonOfRejection(action.getReasonOfRejection()).build();
                 notificationsToSend.add(notification);
 
             } catch (MetamacException e) {

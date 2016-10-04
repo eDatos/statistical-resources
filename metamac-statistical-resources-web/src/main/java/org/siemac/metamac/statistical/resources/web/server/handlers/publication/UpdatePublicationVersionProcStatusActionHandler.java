@@ -72,7 +72,7 @@ public class UpdatePublicationVersionProcStatusActionHandler extends UpdateResou
 
             try {
                 ResourceNotificationDto notificationDto = new ResourceNotificationDto.Builder(action.getPublicationVersionToUpdateProcStatus(), StatisticalResourceTypeEnum.COLLECTION, lifeCycleAction)
-                        .updatedResource(publicationVersionDto).reasonOfRejection(action.getReasonOfRejection()).programmedPublicationDate(action.getValidFrom()).build();
+                        .updatedResource(publicationVersionDto).reasonOfRejection(action.getReasonOfRejection()).build();
                 noticesRestInternalFacade.createLifeCycleNotification(ServiceContextHolder.getCurrentServiceContext(), notificationDto);
             } catch (MetamacWebException e) {
                 return new UpdatePublicationVersionProcStatusResult.Builder(publicationVersionDto).notificationException(e).build();
