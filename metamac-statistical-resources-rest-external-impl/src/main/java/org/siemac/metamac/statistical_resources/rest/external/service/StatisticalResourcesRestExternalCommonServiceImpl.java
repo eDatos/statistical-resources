@@ -245,10 +245,6 @@ public class StatisticalResourcesRestExternalCommonServiceImpl implements Statis
                 DateTime now = new DateTime();
                 //@formatter:off
                 conditionalCriteria.add(ConditionalCriteriaBuilder.criteriaFor(entityClass)
-                        .withProperty(siemacMetadataStatisticalResourceProperty.validFrom()).lessThanOrEqual(now)
-                        .buildSingle());
-
-                conditionalCriteria.add(ConditionalCriteriaBuilder.criteriaFor(entityClass)
                         .withProperty(siemacMetadataStatisticalResourceProperty.procStatus()).eq(ProcStatusEnum.PUBLISHED)
                         .buildSingle());
                 // @formatter:on
@@ -298,10 +294,6 @@ public class StatisticalResourcesRestExternalCommonServiceImpl implements Statis
             if (!StatisticalResourcesRestExternalConstants.IS_INTERNAL_API) {
                 DateTime now = new DateTime();
                 //@formatter:off
-                conditionalCriteria.add(ConditionalCriteriaBuilder.criteriaFor(entityClass)
-                        .withProperty(lifeCycleStatisticalResourceProperty.validFrom()).lessThanOrEqual(now)
-                        .buildSingle());
-
                 conditionalCriteria.add(ConditionalCriteriaBuilder.criteriaFor(entityClass)
                         .withProperty(lifeCycleStatisticalResourceProperty.procStatus()).eq(ProcStatusEnum.PUBLISHED)
                         .buildSingle());

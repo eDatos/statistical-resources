@@ -34,7 +34,6 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_16_DRAFT_READY_FOR_PRODUCTION_VALIDATION_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_20_PRODUCTION_VALIDATION_READY_FOR_DIFFUSION_VALIDATION_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_22_V1_PUBLISHED_FOR_DATASET_05_NAME;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_26_V2_PUBLISHED_NO_VISIBLE_FOR_DATASET_06_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_27_WITH_COVERAGE_FILLED_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_28_WITHOUT_DATASOURCES_IMPORTING_DATA_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_29_WITHOUT_DATASOURCES_NAME;
@@ -404,20 +403,6 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
         datasetService.updateDatasetVersion(getServiceContextWithoutPrincipal(), expected).getSiemacMetadataStatisticalResource().getTitle();
     }
 
-    @SuppressWarnings("static-access")
-    @Test
-    @MetamacMock(DATASET_VERSION_26_V2_PUBLISHED_NO_VISIBLE_FOR_DATASET_06_NAME)
-    public void testUpdateDatasetVersionInPublishedNotVisible() throws Exception {
-        DatasetVersion expected = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_26_V2_PUBLISHED_NO_VISIBLE_FOR_DATASET_06_NAME);
-
-        InternationalString expectedTitle = notPersistedDoMocks.mockInternationalString();
-        expected.getSiemacMetadataStatisticalResource().setTitle(expectedTitle);
-
-        expectedMetamacException(new MetamacException(ServiceExceptionType.LIFE_CYCLE_WRONG_PROC_STATUS, expected.getSiemacMetadataStatisticalResource().getUrn(),
-                ProcStatusForActionsConstants.PROC_STATUS_FOR_EDIT_RESOURCE));
-        datasetService.updateDatasetVersion(getServiceContextWithoutPrincipal(), expected).getSiemacMetadataStatisticalResource().getTitle();
-    }
-
     @Test
     @MetamacMock(QUERY_07_SIMPLE_MULTI_VERSION_NAME)
     public void testUpdateDatasetVersionChangeDsdWithQueriesError() throws Exception {
@@ -716,15 +701,6 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
     }
 
     @Test
-    @MetamacMock(DATASET_VERSION_26_V2_PUBLISHED_NO_VISIBLE_FOR_DATASET_06_NAME)
-    public void testDeleteDatasetVersionProcStatusPublishedNotVisible() throws Exception {
-        String urn = getResourceUrn(datasetVersionMockFactory.retrieveMock(DATASET_VERSION_26_V2_PUBLISHED_NO_VISIBLE_FOR_DATASET_06_NAME));
-
-        expectedMetamacException(new MetamacException(ServiceExceptionType.LIFE_CYCLE_WRONG_PROC_STATUS, urn, ProcStatusForActionsConstants.PROC_STATUS_FOR_DELETE_RESOURCE));
-        datasetService.deleteDatasetVersion(getServiceContextWithoutPrincipal(), urn);
-    }
-
-    @Test
     @MetamacMock(DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME)
     public void testDeleteDatasetVersionMultiVersionClearDatasetRepository() throws Exception {
         String urn = getResourceUrn(datasetVersionMockFactory.retrieveMock(DATASET_VERSION_04_FOR_DATASET_03_AND_LAST_VERSION_NAME));
@@ -977,18 +953,6 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
     @MetamacMock(DATASET_VERSION_55_PUBLISHED_WITH_DATASOURCE_NAME)
     public void testImportDatasourcesInDatasetVersionProcStatusPublished() throws Exception {
         DatasetVersion datasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_55_PUBLISHED_WITH_DATASOURCE_NAME);
-        String urn = datasetVersion.getSiemacMetadataStatisticalResource().getUrn();
-
-        List<URL> urls = Arrays.asList(new File("prueba.px").toURI().toURL());
-
-        expectedMetamacException(new MetamacException(ServiceExceptionType.LIFE_CYCLE_WRONG_PROC_STATUS, urn, ProcStatusForActionsConstants.PROC_STATUS_FOR_IMPORT_DATASOURCES_IN_DATASET_VERSION));
-        datasetService.importDatasourcesInDatasetVersion(getServiceContextWithoutPrincipal(), urn, urls, new HashMap<String, String>(), false);
-    }
-
-    @Test
-    @MetamacMock(DATASET_VERSION_26_V2_PUBLISHED_NO_VISIBLE_FOR_DATASET_06_NAME)
-    public void testImportDatasourcesInDatasetVersionProcStatusPublishedNotVisible() throws Exception {
-        DatasetVersion datasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_26_V2_PUBLISHED_NO_VISIBLE_FOR_DATASET_06_NAME);
         String urn = datasetVersion.getSiemacMetadataStatisticalResource().getUrn();
 
         List<URL> urls = Arrays.asList(new File("prueba.px").toURI().toURL());

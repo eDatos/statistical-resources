@@ -69,13 +69,8 @@ public class PublicationMetamacCriteria2SculptorCriteriaMapperImpl implements Pu
                     return new SculptorPropertyCriteria(PublicationVersionProperties.siemacMetadataStatisticalResource().description().texts().label(), propertyRestriction.getStringValue(),
                             propertyRestriction.getOperationType());
                 case PROC_STATUS:
-                    if (ProcStatusEnum.PUBLISHED.equals(propertyRestriction.getEnumValue())) {
-                        return StatisticalResourcesCriteriaUtils.buildPublishedVisibleCondition(PublicationVersionProperties.siemacMetadataStatisticalResource().procStatus(),
-                                PublicationVersionProperties.siemacMetadataStatisticalResource().validFrom(), PublicationVersion.class);
-                    } else {
-                        return new SculptorPropertyCriteria(PublicationVersionProperties.siemacMetadataStatisticalResource().procStatus(), propertyRestriction.getEnumValue(),
-                                propertyRestriction.getOperationType());
-                    }
+                    return new SculptorPropertyCriteria(PublicationVersionProperties.siemacMetadataStatisticalResource().procStatus(), propertyRestriction.getEnumValue(),
+                            propertyRestriction.getOperationType());
                 default:
                     // LAST_VERSION
                     // QUERY_STATUS

@@ -61,7 +61,7 @@ public class DatasetMetamacCriteria2SculptorCriteriaMapperImpl implements Datase
                     return new SculptorPropertyCriteria(DatasetVersionProperties.dataset().identifiableStatisticalResource().statisticalOperation().urn(), propertyRestriction.getStringValue(),
                             propertyRestriction.getOperationType());
 
-                    // From datasetVersion
+                // From datasetVersion
                 case TITLE:
                     return new SculptorPropertyCriteria(DatasetVersionProperties.siemacMetadataStatisticalResource().title().texts().label(), propertyRestriction.getStringValue(),
                             propertyRestriction.getOperationType());
@@ -95,7 +95,7 @@ public class DatasetMetamacCriteria2SculptorCriteriaMapperImpl implements Datase
                 case STATISTICAL_OPERATION_URN:
                     return DatasetVersionProperties.dataset().identifiableStatisticalResource().statisticalOperation().urn();
 
-                    // From datasetVersion
+                // From datasetVersion
                 case TITLE:
                     return DatasetVersionProperties.siemacMetadataStatisticalResource().title().texts().label();
                 case PROC_STATUS:

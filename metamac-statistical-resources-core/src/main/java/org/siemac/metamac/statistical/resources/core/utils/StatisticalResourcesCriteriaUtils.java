@@ -24,8 +24,6 @@ public class StatisticalResourcesCriteriaUtils {
         return ConditionalCriteriaBuilder.criteriaFor(entityClass)
                 .withProperty(siemacMetadataStatisticalResourceProperty.procStatus()).eq(ProcStatusEnum.PUBLISHED)
                 .and()
-                .withProperty(CriteriaUtils.getDatetimeLeafPropertyEmbedded(siemacMetadataStatisticalResourceProperty.validFrom(), entityClass)).lessThanOrEqual(now)
-                .and()
                     .lbrace()
                         .withProperty(CriteriaUtils.getDatetimeLeafPropertyEmbedded(siemacMetadataStatisticalResourceProperty.validTo(), entityClass)).isNull()
                         .or()
@@ -40,8 +38,6 @@ public class StatisticalResourcesCriteriaUtils {
         //@formatter:off
         return ConditionalCriteriaBuilder.criteriaFor(entityClass)
                 .withProperty(lifeCycleStatisticalResourceProperty.procStatus()).eq(ProcStatusEnum.PUBLISHED)
-                .and()
-                .withProperty(CriteriaUtils.getDatetimeLeafPropertyEmbedded(lifeCycleStatisticalResourceProperty.validFrom(), entityClass)).lessThanOrEqual(now)
                 .and()
                     .lbrace()
                         .withProperty(CriteriaUtils.getDatetimeLeafPropertyEmbedded(lifeCycleStatisticalResourceProperty.validTo(), entityClass)).isNull()

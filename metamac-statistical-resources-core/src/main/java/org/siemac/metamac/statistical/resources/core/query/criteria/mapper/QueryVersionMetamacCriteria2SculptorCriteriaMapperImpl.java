@@ -78,13 +78,8 @@ public class QueryVersionMetamacCriteria2SculptorCriteriaMapperImpl implements Q
                     return new SculptorPropertyCriteria(CriteriaUtils.getDatetimeLeafPropertyEmbedded(QueryVersionProperties.lifeCycleStatisticalResource().nextVersionDate(), QueryVersion.class),
                             propertyRestriction.getDateValue(), propertyRestriction.getOperationType());
                 case PROC_STATUS:
-                    if (ProcStatusEnum.PUBLISHED.equals(propertyRestriction.getEnumValue())) {
-                        return StatisticalResourcesCriteriaUtils.buildPublishedVisibleCondition(QueryVersionProperties.lifeCycleStatisticalResource().procStatus(), QueryVersionProperties
-                                .lifeCycleStatisticalResource().validFrom(), QueryVersion.class);
-                    } else {
-                        return new SculptorPropertyCriteria(QueryVersionProperties.lifeCycleStatisticalResource().procStatus(), propertyRestriction.getEnumValue(),
-                                propertyRestriction.getOperationType());
-                    }
+                    return new SculptorPropertyCriteria(QueryVersionProperties.lifeCycleStatisticalResource().procStatus(), propertyRestriction.getEnumValue(),
+                            propertyRestriction.getOperationType());
                 case QUERY_STATUS:
                     return new SculptorPropertyCriteria(QueryVersionProperties.status(), propertyRestriction.getEnumValue(), propertyRestriction.getOperationType());
                 case QUERY_TYPE:

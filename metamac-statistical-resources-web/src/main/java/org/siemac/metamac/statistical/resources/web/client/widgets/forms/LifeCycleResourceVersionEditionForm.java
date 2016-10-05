@@ -71,8 +71,10 @@ public class LifeCycleResourceVersionEditionForm extends GroupDynamicForm {
         });
 
         ViewTextItem validFrom = new ViewTextItem(VersionableResourceDS.VALID_FROM, getConstants().versionableStatisticalResourceValidFrom());
+        validFrom.setCanEdit(false);
 
         ViewTextItem validTo = new ViewTextItem(VersionableResourceDS.VALID_TO, getConstants().versionableStatisticalResourceValidTo());
+        validTo.setCanEdit(false);
 
         final CustomSelectItem nextVersion = new CustomSelectItem(VersionableResourceDS.NEXT_VERSION, getConstants().versionableStatisticalResourceNextVersion());
         nextVersion.setValueMap(CommonUtils.getStatisticalResourceNextVersionHashMap());

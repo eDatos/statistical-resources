@@ -18,9 +18,7 @@ import org.siemac.metamac.statistical.resources.core.common.criteria.enums.Stati
 import org.siemac.metamac.statistical.resources.core.common.criteria.enums.StatisticalResourcesCriteriaPropertyEnum;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionProperties;
-import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
-import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesCriteriaUtils;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -81,13 +79,8 @@ public class DatasetVersionMetamacCriteria2SculptorCriteriaMapperImpl implements
                     return new SculptorPropertyCriteria(CriteriaUtils.getDatetimeLeafPropertyEmbedded(DatasetVersionProperties.siemacMetadataStatisticalResource().nextVersionDate(),
                             DatasetVersion.class), propertyRestriction.getDateValue(), propertyRestriction.getOperationType());
                 case PROC_STATUS:
-                    if (ProcStatusEnum.PUBLISHED.equals(propertyRestriction.getEnumValue())) {
-                        return StatisticalResourcesCriteriaUtils.buildPublishedVisibleCondition(DatasetVersionProperties.siemacMetadataStatisticalResource().procStatus(), DatasetVersionProperties
-                                .siemacMetadataStatisticalResource().validFrom(), DatasetVersion.class);
-                    } else {
-                        return new SculptorPropertyCriteria(DatasetVersionProperties.siemacMetadataStatisticalResource().procStatus(), propertyRestriction.getEnumValue(),
-                                propertyRestriction.getOperationType());
-                    }
+                    return new SculptorPropertyCriteria(DatasetVersionProperties.siemacMetadataStatisticalResource().procStatus(), propertyRestriction.getEnumValue(),
+                            propertyRestriction.getOperationType());
                 case TITLE_ALTERNATIVE:
                     return new SculptorPropertyCriteria(DatasetVersionProperties.siemacMetadataStatisticalResource().titleAlternative().texts().label(), propertyRestriction.getStringValue(),
                             propertyRestriction.getOperationType());
