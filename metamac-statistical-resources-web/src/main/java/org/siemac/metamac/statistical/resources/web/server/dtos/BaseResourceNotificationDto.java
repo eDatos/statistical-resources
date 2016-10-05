@@ -1,7 +1,6 @@
 package org.siemac.metamac.statistical.resources.web.server.dtos;
 
 import java.io.Serializable;
-import java.util.Date;
 
 import org.siemac.metamac.statistical.resources.core.dto.IdentifiableStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
@@ -16,7 +15,6 @@ public class BaseResourceNotificationDto<T extends IdentifiableStatisticalResour
     protected T                           updatedResource;
     protected T                           previousResource;
     protected String                      reasonOfRejection;
-    protected Date                        programmedPublicationDate;
 
     public LifeCycleActionEnum getLifeCycleAction() {
         return lifeCycleAction;

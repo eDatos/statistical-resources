@@ -74,14 +74,6 @@ public class PublicationDo2DtoMapperTest extends StatisticalResourcesBaseTest {
     }
 
     @Test
-    @MetamacMock({PUBLICATION_VERSION_31_V2_PUBLISHED_NO_VISIBLE_FOR_PUBLICATION_06_NAME})
-    public void testPublicationDoToDtoProcStatusPublishedNotVisible() throws MetamacException {
-        PublicationVersion expected = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_31_V2_PUBLISHED_NO_VISIBLE_FOR_PUBLICATION_06_NAME);
-        PublicationVersionDto actual = publicationDo2DtoMapper.publicationVersionDoToDto(expected);
-        assertEquals(ProcStatusEnum.PUBLISHED_NOT_VISIBLE, actual.getProcStatus());
-    }
-
-    @Test
     @MetamacMock({PUBLICATION_VERSION_27_V1_PUBLISHED_FOR_PUBLICATION_05_NAME})
     public void testPublicationDoToDtoProcStatusPublishedVisible() throws MetamacException {
         PublicationVersion expected = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_27_V1_PUBLISHED_FOR_PUBLICATION_05_NAME);

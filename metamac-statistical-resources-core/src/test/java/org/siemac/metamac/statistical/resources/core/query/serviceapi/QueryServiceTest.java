@@ -1165,15 +1165,6 @@ public class QueryServiceTest extends StatisticalResourcesBaseTest implements Qu
     }
 
     @Test
-    @MetamacMock(QUERY_VERSION_28_V2_PUBLISHED_NO_VISIBLE_FOR_QUERY_06_NAME)
-    public void testDeleteQueryVersionErrorInvalidProcStatusPublishedNotVisible() throws Exception {
-        String urn = this.queryVersionMockFactory.retrieveMock(QUERY_VERSION_28_V2_PUBLISHED_NO_VISIBLE_FOR_QUERY_06_NAME).getLifeCycleStatisticalResource().getUrn();
-        this.expectedMetamacException(new MetamacException(ServiceExceptionType.LIFE_CYCLE_WRONG_PROC_STATUS, urn, ProcStatusForActionsConstants.PROC_STATUS_FOR_DELETE_RESOURCE));
-
-        this.queryService.deleteQueryVersion(this.getServiceContextWithoutPrincipal(), urn);
-    }
-
-    @Test
     @Override
     @MetamacMock(DATASET_VERSION_86_WITH_TEMPORAL_DIMENSION_NAME)
     public void testCheckQueryCompatibility() throws Exception {

@@ -518,8 +518,6 @@ public class QueryMockFactory extends StatisticalResourcesMockFactory<Query> {
             case PUBLISHED:
                 QueryLifecycleTestUtils.fillAsPublished(queryVersion);
                 break;
-            case PUBLISHED_NOT_VISIBLE:
-                throw new IllegalArgumentException("Unsupported status not visible, set first the ValidFrom to the future and use status PUBLISHED");
             case DRAFT:
                 break;
             default:

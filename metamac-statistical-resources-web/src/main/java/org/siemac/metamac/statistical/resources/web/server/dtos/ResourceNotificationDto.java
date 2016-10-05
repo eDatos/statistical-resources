@@ -1,7 +1,5 @@
 package org.siemac.metamac.statistical.resources.web.server.dtos;
 
-import java.util.Date;
-
 import org.siemac.metamac.statistical.resources.core.dto.LifeCycleStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
 import org.siemac.metamac.statistical.resources.web.client.enums.LifeCycleActionEnum;
@@ -17,7 +15,6 @@ public class ResourceNotificationDto extends BaseResourceNotificationDto<LifeCyc
         private LifeCycleStatisticalResourceDto       updatedResource;
         private final LifeCycleStatisticalResourceDto previousResource;
         private String                                reasonOfRejection;
-        private Date                                  programmedPublicationDate;
 
         public Builder(LifeCycleStatisticalResourceDto previousResource, StatisticalResourceTypeEnum statisticalResourceType, LifeCycleActionEnum lifeCycleAction) {
             this.previousResource = previousResource;
@@ -46,6 +43,5 @@ public class ResourceNotificationDto extends BaseResourceNotificationDto<LifeCyc
         updatedResource = builder.updatedResource;
         previousResource = builder.previousResource;
         reasonOfRejection = builder.reasonOfRejection;
-        programmedPublicationDate = builder.programmedPublicationDate;
     }
 }

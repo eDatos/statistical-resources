@@ -1139,13 +1139,6 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
             case PUBLISHED:
                 DatasetLifecycleTestUtils.fillAsPublished(datasetVersion);
                 break;
-            case PUBLISHED_NOT_VISIBLE:
-                DateTime validFrom = datasetVersion.getSiemacMetadataStatisticalResource().getValidFrom();
-                if (validFrom == null || validFrom.isBeforeNow()) {
-                    datasetVersion.getSiemacMetadataStatisticalResource().setValidFrom(new DateTime().plusDays(2));
-                }
-                DatasetLifecycleTestUtils.fillAsPublished(datasetVersion);
-                break;
             default:
                 break;
         }
