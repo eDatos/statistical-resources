@@ -179,15 +179,6 @@ public class DatasetVersioningServiceTest extends StatisticalResourcesBaseTest {
     }
 
     @Test
-    @MetamacMock(DATASET_VERSION_26_V2_PUBLISHED_NO_VISIBLE_FOR_DATASET_06_NAME)
-    public void testVersioningDatasetVersionErrorDatasetVersionNotVisible() throws Exception {
-        String datasetVersionUrn = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_26_V2_PUBLISHED_NO_VISIBLE_FOR_DATASET_06_NAME).getSiemacMetadataStatisticalResource().getUrn();
-
-        expectedMetamacException(new MetamacException(ServiceExceptionType.LIFE_CYCLE_WRONG_PROC_STATUS, datasetVersionUrn, ProcStatusForActionsConstants.PROC_STATUS_FOR_SEND_RESOURCE_TO_VERSION));
-        datasetVersionLifecycleService.versioning(getServiceContextWithoutPrincipal(), datasetVersionUrn, VersionTypeEnum.MAJOR);
-    }
-
-    @Test
     @MetamacMock(DATASET_VERSION_16_DRAFT_READY_FOR_PRODUCTION_VALIDATION_NAME)
     public void testVersioningDatasetVersionErrorDraftProcStatus() throws Exception {
         String datasetVersionUrn = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_16_DRAFT_READY_FOR_PRODUCTION_VALIDATION_NAME).getSiemacMetadataStatisticalResource().getUrn();

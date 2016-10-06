@@ -4,15 +4,12 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_37_PREPARED_TO_PUBLISH_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_38_TO_PUBLISH_WITH_FUTURE_DATE_WITH_DATASET_VERSION_VISIBLE_BEFORE_NAME;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_39_TO_PUBLISH_WITH_FUTURE_DATE_WITH_DATASET_VERSION_VISIBLE_AFTER_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_40_TO_PUBLISH_WITH_DATASET_VERSION_NOT_PUBLISHED_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_41_TO_PUBLISH_WITH_DATASET_WITH_NO_PUBLISHED_VERSION_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_42_TO_PUBLISH_WITH_DATASET_WITH_LAST_VERSION_NOT_PUBLISHED_PREVIOUS_COMPATIBLE_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_43_TO_PUBLISH_WITH_DATASET_WITH_LAST_VERSION_NOT_PUBLISHED_PREVIOUS_INCOMPATIBLE_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_44_TO_PUBLISH_WITH_FUTURE_DATE_WITH_DATASET_WITH_LAST_VERSION_VISIBLE_BEFORE_QUERY_NAME;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_45_TO_PUBLISH_WITH_FUTURE_DATE_WITH_DATASET_WITH_LAST_VERSION_VISIBLE_AFTER_QUERY_NO_PREVIOUS_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_46_TO_PUBLISH_WITH_FUTURE_DATE_WITH_DATASET_WITH_LAST_VERSION_VISIBLE_AFTER_QUERY_PREVIOUS_COMPATIBLE_NAME;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_47_TO_PUBLISH_WITH_FUTURE_DATE_WITH_DATASET_WITH_LAST_VERSION_VISIBLE_AFTER_QUERY_PREVIOUS_INCOMPATIBLE_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_55_PREPARED_TO_PUBLISH_STATUS_ACTIVE_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_56_PREPARED_TO_PUBLISH_STATUS_DISCONTINUED_NAME;
 
@@ -117,21 +114,6 @@ public class QueryPublishingServiceTest extends StatisticalResourcesMockRestBase
     }
 
     @Test
-    @MetamacMock(QUERY_VERSION_39_TO_PUBLISH_WITH_FUTURE_DATE_WITH_DATASET_VERSION_VISIBLE_AFTER_NAME)
-    public void testPublishQueryVersionLinkedPublishedDatasetVersionVisibleAfterQuery() throws Exception {
-        QueryVersion queryVersion = queryVersionMockFactory.retrieveMock(QUERY_VERSION_39_TO_PUBLISH_WITH_FUTURE_DATE_WITH_DATASET_VERSION_VISIBLE_AFTER_NAME);
-
-        LifeCycleStatisticalResource lifeCycleStatisticalResource = queryVersion.getLifeCycleStatisticalResource();
-        String queryVersionUrn = lifeCycleStatisticalResource.getUrn();
-        String datasetVersionUrn = queryVersion.getFixedDatasetVersion().getSiemacMetadataStatisticalResource().getUrn();
-
-        mockLifecycleExternalItemsPublished(lifeCycleStatisticalResource);
-
-        expectedMetamacException(new MetamacException(ServiceExceptionType.QUERY_VERSION_DATASET_VERSION_MUST_BE_PUBLISHED, datasetVersionUrn));
-        queryLifecycleService.sendToPublished(getServiceContextAdministrador(), queryVersionUrn);
-    }
-
-    @Test
     @MetamacMock(QUERY_VERSION_40_TO_PUBLISH_WITH_DATASET_VERSION_NOT_PUBLISHED_NAME)
     public void testPublishQueryVersionLinkedNotPublishedDatasetVersion() throws Exception {
         QueryVersion queryVersion = queryVersionMockFactory.retrieveMock(QUERY_VERSION_40_TO_PUBLISH_WITH_DATASET_VERSION_NOT_PUBLISHED_NAME);
@@ -211,21 +193,6 @@ public class QueryPublishingServiceTest extends StatisticalResourcesMockRestBase
     }
 
     @Test
-    @MetamacMock(QUERY_VERSION_55_PREPARED_TO_PUBLISH_STATUS_ACTIVE_NAME)
-    public void testPublishQueryVersionLinkedDatasetWithLastVersionPublishedVisibleAfterQueryNoPreviousVersion() throws Exception {
-        QueryVersion queryVersion = queryVersionMockFactory.retrieveMock(QUERY_VERSION_55_PREPARED_TO_PUBLISH_STATUS_ACTIVE_NAME);
-
-        LifeCycleStatisticalResource lifeCycleStatisticalResource = queryVersion.getLifeCycleStatisticalResource();
-        String queryVersionUrn = lifeCycleStatisticalResource.getUrn();
-        String datasetUrn = queryVersion.getDataset().getIdentifiableStatisticalResource().getUrn();
-
-        mockLifecycleExternalItemsPublished(lifeCycleStatisticalResource);
-
-        expectedMetamacException(new MetamacException(ServiceExceptionType.QUERY_VERSION_DATASET_WITH_NO_PUBLISHED_VERSION, datasetUrn));
-        queryLifecycleService.sendToPublished(getServiceContextAdministrador(), queryVersionUrn);
-    }
-
-    @Test
     @MetamacMock(QUERY_VERSION_46_TO_PUBLISH_WITH_FUTURE_DATE_WITH_DATASET_WITH_LAST_VERSION_VISIBLE_AFTER_QUERY_PREVIOUS_COMPATIBLE_NAME)
     public void testPublishQueryVersionLinkedDatasetWithLastVersionPublishedVisibleAfterQueryPreviousVersionCompatible() throws Exception {
         QueryVersion queryVersion = queryVersionMockFactory.retrieveMock(QUERY_VERSION_46_TO_PUBLISH_WITH_FUTURE_DATE_WITH_DATASET_WITH_LAST_VERSION_VISIBLE_AFTER_QUERY_PREVIOUS_COMPATIBLE_NAME);
@@ -240,21 +207,6 @@ public class QueryPublishingServiceTest extends StatisticalResourcesMockRestBase
         queryVersion = queryVersionRepository.retrieveByUrn(queryVersionUrn);
 
         assertPublishingQueryVersion(queryVersion, null);
-    }
-
-    @Test
-    @MetamacMock(QUERY_VERSION_55_PREPARED_TO_PUBLISH_STATUS_ACTIVE_NAME)
-    public void testPublishQueryVersionLinkedDatasetWithLastVersionPublishedVisibleAfterQueryPreviousVersionIncompatible() throws Exception {
-        QueryVersion queryVersion = queryVersionMockFactory.retrieveMock(QUERY_VERSION_55_PREPARED_TO_PUBLISH_STATUS_ACTIVE_NAME);
-
-        LifeCycleStatisticalResource lifeCycleStatisticalResource = queryVersion.getLifeCycleStatisticalResource();
-        String queryVersionUrn = lifeCycleStatisticalResource.getUrn();
-        String datasetUrn = queryVersion.getDataset().getIdentifiableStatisticalResource().getUrn();
-
-        mockLifecycleExternalItemsPublished(lifeCycleStatisticalResource);
-
-        expectedMetamacException(new MetamacException(ServiceExceptionType.QUERY_VERSION_NOT_COMPATIBLE_WITH_LAST_PUBLISHED_DATASET_VERSION, datasetUrn));
-        queryLifecycleService.sendToPublished(getServiceContextAdministrador(), queryVersionUrn);
     }
 
     public void testPublishQueryVersionLinkedDatasetWithLastVersionPublished() throws Exception {
