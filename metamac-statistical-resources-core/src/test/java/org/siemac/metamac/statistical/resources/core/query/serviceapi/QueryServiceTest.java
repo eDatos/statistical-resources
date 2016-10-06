@@ -750,9 +750,6 @@ public class QueryServiceTest extends StatisticalResourcesBaseTest implements Qu
     public void testUpdateQueryVersionPublishedNoVisibleProcStatus() throws Exception {
         QueryVersion query = this.queryVersionMockFactory.retrieveMock(QUERY_VERSION_28_V2_PUBLISHED_NO_VISIBLE_FOR_QUERY_06_NAME);
 
-        this.expectedMetamacException(new MetamacException(ServiceExceptionType.LIFE_CYCLE_WRONG_PROC_STATUS, query.getLifeCycleStatisticalResource().getUrn(),
-                ProcStatusForActionsConstants.PROC_STATUS_FOR_EDIT_QUERY_VERSION));
-
         query.getLifeCycleStatisticalResource().setTitle(StatisticalResourcesDoMocks.mockInternationalString());
 
         this.queryService.updateQueryVersion(this.getServiceContextWithoutPrincipal(), query);

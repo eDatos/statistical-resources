@@ -211,9 +211,9 @@ public class QueryPublishingServiceTest extends StatisticalResourcesMockRestBase
     }
 
     @Test
-    @MetamacMock(QUERY_VERSION_45_TO_PUBLISH_WITH_FUTURE_DATE_WITH_DATASET_WITH_LAST_VERSION_VISIBLE_AFTER_QUERY_NO_PREVIOUS_NAME)
+    @MetamacMock(QUERY_VERSION_55_PREPARED_TO_PUBLISH_STATUS_ACTIVE_NAME)
     public void testPublishQueryVersionLinkedDatasetWithLastVersionPublishedVisibleAfterQueryNoPreviousVersion() throws Exception {
-        QueryVersion queryVersion = queryVersionMockFactory.retrieveMock(QUERY_VERSION_45_TO_PUBLISH_WITH_FUTURE_DATE_WITH_DATASET_WITH_LAST_VERSION_VISIBLE_AFTER_QUERY_NO_PREVIOUS_NAME);
+        QueryVersion queryVersion = queryVersionMockFactory.retrieveMock(QUERY_VERSION_55_PREPARED_TO_PUBLISH_STATUS_ACTIVE_NAME);
 
         LifeCycleStatisticalResource lifeCycleStatisticalResource = queryVersion.getLifeCycleStatisticalResource();
         String queryVersionUrn = lifeCycleStatisticalResource.getUrn();
@@ -243,9 +243,9 @@ public class QueryPublishingServiceTest extends StatisticalResourcesMockRestBase
     }
 
     @Test
-    @MetamacMock(QUERY_VERSION_47_TO_PUBLISH_WITH_FUTURE_DATE_WITH_DATASET_WITH_LAST_VERSION_VISIBLE_AFTER_QUERY_PREVIOUS_INCOMPATIBLE_NAME)
+    @MetamacMock(QUERY_VERSION_55_PREPARED_TO_PUBLISH_STATUS_ACTIVE_NAME)
     public void testPublishQueryVersionLinkedDatasetWithLastVersionPublishedVisibleAfterQueryPreviousVersionIncompatible() throws Exception {
-        QueryVersion queryVersion = queryVersionMockFactory.retrieveMock(QUERY_VERSION_47_TO_PUBLISH_WITH_FUTURE_DATE_WITH_DATASET_WITH_LAST_VERSION_VISIBLE_AFTER_QUERY_PREVIOUS_INCOMPATIBLE_NAME);
+        QueryVersion queryVersion = queryVersionMockFactory.retrieveMock(QUERY_VERSION_55_PREPARED_TO_PUBLISH_STATUS_ACTIVE_NAME);
 
         LifeCycleStatisticalResource lifeCycleStatisticalResource = queryVersion.getLifeCycleStatisticalResource();
         String queryVersionUrn = lifeCycleStatisticalResource.getUrn();

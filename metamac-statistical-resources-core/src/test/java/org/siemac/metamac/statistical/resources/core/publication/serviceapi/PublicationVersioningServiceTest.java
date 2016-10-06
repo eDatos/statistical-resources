@@ -149,9 +149,9 @@ public class PublicationVersioningServiceTest extends StatisticalResourcesBaseTe
     }
 
     @Test
-    @MetamacMock(PUBLICATION_VERSION_31_V2_PUBLISHED_NO_VISIBLE_FOR_PUBLICATION_06_NAME)
+    @MetamacMock(PUBLICATION_VERSION_12_DRAFT_NAME)
     public void testVersioningPublicationVersionErrorPublicationVersionNotVisible() throws Exception {
-        String publicationVersionUrn = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_31_V2_PUBLISHED_NO_VISIBLE_FOR_PUBLICATION_06_NAME).getSiemacMetadataStatisticalResource()
+        String publicationVersionUrn = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_12_DRAFT_NAME).getSiemacMetadataStatisticalResource()
                 .getUrn();
 
         expectedMetamacException(new MetamacException(ServiceExceptionType.LIFE_CYCLE_WRONG_PROC_STATUS, publicationVersionUrn, ProcStatusForActionsConstants.PROC_STATUS_FOR_SEND_RESOURCE_TO_VERSION));
