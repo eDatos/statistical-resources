@@ -1,5 +1,6 @@
 package org.siemac.metamac.statistical.resources.web.server.handlers.dataset;
 
+import org.apache.avro.specific.SpecificRecordBase;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
@@ -8,6 +9,8 @@ import org.siemac.metamac.statistical.resources.web.client.enums.LifeCycleAction
 import org.siemac.metamac.statistical.resources.web.server.dtos.ResourceNotificationDto;
 import org.siemac.metamac.statistical.resources.web.server.handlers.UpdateResourceProcStatusBaseActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.rest.NoticesRestInternalFacade;
+import org.siemac.metamac.statistical.resources.web.server.stream.StreamMessagingService;
+import org.siemac.metamac.statistical.resources.web.server.stream.messages.SimpleMessage;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.UpdateDatasetVersionProcStatusAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.UpdateDatasetVersionProcStatusResult;
 import org.siemac.metamac.web.common.server.ServiceContextHolder;
@@ -22,10 +25,13 @@ import com.gwtplatform.dispatch.shared.ActionException;
 public class UpdateDatasetVersionProcStatusActionHandler extends UpdateResourceProcStatusBaseActionHandler<UpdateDatasetVersionProcStatusAction, UpdateDatasetVersionProcStatusResult> {
 
     @Autowired
-    private StatisticalResourcesServiceFacade statisticalResourcesServiceFacade;
+    private StatisticalResourcesServiceFacade                  statisticalResourcesServiceFacade;
 
     @Autowired
-    private NoticesRestInternalFacade         noticesRestInternalFacade;
+    private NoticesRestInternalFacade                          noticesRestInternalFacade;
+
+    @Autowired
+    private StreamMessagingService<String, SpecificRecordBase> streamMessagingService;
 
     public UpdateDatasetVersionProcStatusActionHandler() {
         super(UpdateDatasetVersionProcStatusAction.class);
@@ -74,10 +80,22 @@ public class UpdateDatasetVersionProcStatusActionHandler extends UpdateResourceP
                 return new UpdateDatasetVersionProcStatusResult.Builder(datasetVersionDto).notificationException(e).build();
             }
 
+            // TODO ELiminar esto:
+            pruebasKafkaProducer(datasetVersionDto);
+
             return new UpdateDatasetVersionProcStatusResult(datasetVersionDto);
 
         } catch (MetamacException e) {
             throw WebExceptionUtils.createMetamacWebException(e);
         }
+    }
+
+    // TODO Eliminar este método, no va a producción
+    private void pruebasKafkaProducer(DatasetVersionDto datasetVersionDto) {
+
+        SimpleMessage m1 = SimpleMessage.newBuilder().setAsunto("Actualizado estado dataset").setContenido("Nuevo estado : " + datasetVersionDto.getProcStatus()).setPrioridad(1).build();
+        String topic = "STATISTICAL_RESOURCES_NEW_DATASET";
+        streamMessagingService.sendMessage(m1, topic);
+
     }
 }
