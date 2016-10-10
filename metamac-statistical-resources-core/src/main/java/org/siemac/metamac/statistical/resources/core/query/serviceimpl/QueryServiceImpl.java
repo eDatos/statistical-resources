@@ -217,6 +217,7 @@ public class QueryServiceImpl extends QueryServiceImplBase {
             if (previousResource.getQueryVersion() != null) {
                 QueryVersion previousVersion = previousResource.getQueryVersion();
                 previousVersion.getLifeCycleStatisticalResource().setLastVersion(Boolean.TRUE);
+                previousVersion.getLifeCycleStatisticalResource().setIsReplacedByVersion(null);
                 getQueryVersionRepository().save(previousVersion);
             }
             // Delete version

@@ -247,9 +247,6 @@ Application DatasetsStatisticalResources {
 				//Is required by
 				List<RelatedResourceResult> retrieveIsRequiredBy(@DatasetVersion datasetVersion) throws MetamacException;  
 				List<RelatedResourceResult> retrieveIsRequiredByOnlyLastPublished(@DatasetVersion datasetVersion) throws MetamacException;
-				//Is replaced by version
-				RelatedResourceResult retrieveIsReplacedByVersion(@DatasetVersion datasetVersion) throws MetamacException;  
-				RelatedResourceResult retrieveIsReplacedByVersionOnlyLastPublished(@DatasetVersion datasetVersion) throws MetamacException;
 				//Is replaced by
 				RelatedResourceResult retrieveIsReplacedBy(@DatasetVersion datasetVersion) throws MetamacException;  
 				RelatedResourceResult retrieveIsReplacedByOnlyLastPublished(@DatasetVersion datasetVersion) throws MetamacException;  

@@ -112,11 +112,12 @@ Application BaseStatisticalResources {
 						
 			- @RelatedResource replacesVersion cascade="all" databaseColumn="REPLACES_VERSION_FK" nullable;
 			
+			- @RelatedResource isReplacedByVersion cascade="all" databaseColumn="IS_REPLACED_BY_VERSION_FK" nullable;
+			
 			- @ExternalItem maintainer cascade="all" databaseColumn="MAINTAINER_FK" nullable;
 			
 			Repository LifeCycleStatisticalResourceRepository {
-				RelatedResourceResult retrieveIsReplacedByVersion(Long currentResourceId, @TypeRelatedResourceEnum type) throws MetamacException;  
-				RelatedResourceResult retrieveIsReplacedByVersionOnlyLastPublished(Long currentResourceId, @TypeRelatedResourceEnum type) throws MetamacException;
+				gap
 			}
 		}
 

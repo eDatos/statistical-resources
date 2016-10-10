@@ -125,7 +125,7 @@ public class PublicationDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements
         siemacMetadataStatisticalResourceDoToDto(source.getSiemacMetadataStatisticalResource(), target);
 
         // Siemac metadata that needs to be filled
-        target.setIsReplacedByVersion(relatedResourceResultToDto(publicationVersionRepository.retrieveIsReplacedByVersion(source)));
+        target.setIsReplacedByVersion(relatedResourceDoToDto(source.getLifeCycleStatisticalResource().getIsReplacedByVersion()));
         target.setIsReplacedBy(relatedResourceResultToDto(publicationVersionRepository.retrieveIsReplacedBy(source)));
 
         target.getHasPart().clear();

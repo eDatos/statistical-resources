@@ -110,10 +110,6 @@ public class QueryVersionRepositoryImpl extends QueryVersionRepositoryBase {
         return findByCondition(conditions);
     }
 
-    @Override
-    public RelatedResourceResult retrieveIsReplacedByVersion(QueryVersion queryVersion) throws MetamacException {
-        return lifeCycleStatisticalResourceRepository.retrieveIsReplacedByVersion(queryVersion.getId(), TypeRelatedResourceEnum.QUERY_VERSION);
-    }
 
     @SuppressWarnings("unchecked")
     @Override

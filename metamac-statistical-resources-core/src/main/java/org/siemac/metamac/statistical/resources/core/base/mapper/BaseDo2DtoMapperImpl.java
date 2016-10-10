@@ -109,6 +109,7 @@ public class BaseDo2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Base
         target.setPublicationUser(source.getPublicationUser());
 
         target.setReplacesVersion(relatedResourceDoToDto(source.getReplacesVersion()));
+        target.setIsReplacedByVersion(relatedResourceDoToDto(source.getIsReplacedByVersion()));
 
         target.setMaintainer(externalItemDoToDto(source.getMaintainer()));
     }

@@ -287,15 +287,6 @@ public class DatasetVersionRepositoryImpl extends DatasetVersionRepositoryBase {
         return resources;
     }
 
-    @Override
-    public RelatedResourceResult retrieveIsReplacedByVersionOnlyLastPublished(DatasetVersion datasetVersion) throws MetamacException {
-        return lifeCycleStatisticalResourceRepository.retrieveIsReplacedByVersionOnlyLastPublished(datasetVersion.getId(), TypeRelatedResourceEnum.DATASET_VERSION);
-    }
-
-    @Override
-    public RelatedResourceResult retrieveIsReplacedByVersion(DatasetVersion datasetVersion) throws MetamacException {
-        return lifeCycleStatisticalResourceRepository.retrieveIsReplacedByVersion(datasetVersion.getId(), TypeRelatedResourceEnum.DATASET_VERSION);
-    }
 
     @Override
     public RelatedResourceResult retrieveIsReplacedBy(DatasetVersion datasetVersion) throws MetamacException {

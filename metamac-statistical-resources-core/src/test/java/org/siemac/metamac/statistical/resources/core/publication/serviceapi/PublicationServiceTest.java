@@ -1,10 +1,7 @@
 package org.siemac.metamac.statistical.resources.core.publication.serviceapi;
 
 import static junit.framework.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.PublicationsAsserts.assertEqualsPublicationVersion;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.PublicationsAsserts.assertEqualsPublicationVersionCollection;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.PublicationsAsserts.assertEqualsPublicationVersionNotChecksPublication;
@@ -463,11 +460,9 @@ public class PublicationServiceTest extends StatisticalResourcesBaseTest impleme
         PublicationVersion publicationVersionV1 = publicationService.retrievePublicationVersionByUrn(getServiceContextWithoutPrincipal(), urnV1);
 
         // is replaced_by_version null
-        assertNull(publicationVersionRepository.retrieveIsReplacedByVersion(publicationVersionV1));
+        assertNull(publicationVersionV1.getLifeCycleStatisticalResource().getIsReplacedByVersion());
         // Now is last version
         assertTrue(publicationVersionV1.getSiemacMetadataStatisticalResource().getLastVersion());
-
-        assertNull(publicationVersionRepository.retrieveIsReplacedByVersion(publicationVersionV1));
 
         expectedMetamacException(new MetamacException(ServiceExceptionType.PUBLICATION_VERSION_NOT_FOUND, urnV2));
         publicationService.retrievePublicationVersionByUrn(getServiceContextWithoutPrincipal(), urnV2);

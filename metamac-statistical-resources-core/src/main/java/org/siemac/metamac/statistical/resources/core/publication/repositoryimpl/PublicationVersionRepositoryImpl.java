@@ -161,11 +161,6 @@ public class PublicationVersionRepositoryImpl extends PublicationVersionReposito
     }
 
     @Override
-    public RelatedResourceResult retrieveIsReplacedByVersion(PublicationVersion publicationVersion) throws MetamacException {
-        return lifeCycleStatisticalResourceRepository.retrieveIsReplacedByVersion(publicationVersion.getId(), TypeRelatedResourceEnum.PUBLICATION_VERSION);
-    }
-
-    @Override
     public RelatedResourceResult retrieveIsReplacedBy(PublicationVersion publicationVersion) throws MetamacException {
         return siemacMetadataStatisticalResourceRepository.retrieveIsReplacedBy(publicationVersion.getId(), TypeRelatedResourceEnum.PUBLICATION_VERSION);
     }

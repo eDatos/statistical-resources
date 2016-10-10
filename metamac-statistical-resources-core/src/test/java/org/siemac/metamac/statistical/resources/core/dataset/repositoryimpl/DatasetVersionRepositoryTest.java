@@ -67,6 +67,7 @@ import org.junit.runner.RunWith;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.test.utils.mocks.configuration.MetamacMock;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
+import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResource;
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResourceResult;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
@@ -474,57 +475,26 @@ public class DatasetVersionRepositoryTest extends StatisticalResourcesBaseTest i
         }
     }
 
-    @Override
     @Test
     @MetamacMock(DATASET_13_WITH_PUBLISHED_AND_DRAFT_VERSIONS_WITH_THREE_QUERIES_DRAFT_NOT_VISIBLE_AND_PUBLISHED_LINKED_TO_DATASET_NAME)
-    public void testRetrieveIsReplacedByVersionOnlyLastPublished() throws Exception {
-        Dataset dataset = datasetMockFactory.retrieveMock(DATASET_13_WITH_PUBLISHED_AND_DRAFT_VERSIONS_WITH_THREE_QUERIES_DRAFT_NOT_VISIBLE_AND_PUBLISHED_LINKED_TO_DATASET_NAME);
-        DatasetVersion firstDatasetVersion = dataset.getVersions().get(0);
-        RelatedResourceResult resource = datasetVersionRepository.retrieveIsReplacedByVersionOnlyLastPublished(firstDatasetVersion);
-        assertNull(resource);
-    }
-
-    @Override
-    @Test
-    @MetamacMock(DATASET_13_WITH_PUBLISHED_AND_DRAFT_VERSIONS_WITH_THREE_QUERIES_DRAFT_NOT_VISIBLE_AND_PUBLISHED_LINKED_TO_DATASET_NAME)
-    public void testRetrieveIsReplacedByVersion() throws Exception {
+    public void testGetIsReplacedByVersion() throws Exception {
         Dataset dataset = datasetMockFactory.retrieveMock(DATASET_13_WITH_PUBLISHED_AND_DRAFT_VERSIONS_WITH_THREE_QUERIES_DRAFT_NOT_VISIBLE_AND_PUBLISHED_LINKED_TO_DATASET_NAME);
         DatasetVersion firstDatasetVersion = dataset.getVersions().get(0);
         DatasetVersion secondDatasetVersion = dataset.getVersions().get(1);
-        RelatedResourceResult resource = datasetVersionRepository.retrieveIsReplacedByVersion(firstDatasetVersion);
+        RelatedResource resource = firstDatasetVersion.getSiemacMetadataStatisticalResource().getIsReplacedByVersion();
         assertNotNull(resource);
-        CommonAsserts.assertEqualsRelatedResourceResultDatasetVersion(secondDatasetVersion, resource);
-    }
-
-    @Test
-    @MetamacMock(DATASET_14_WITH_PUBLISHED_AND_NOT_VISIBLE_VERSIONS_WITH_THREE_QUERIES_DRAFT_NOT_VISIBLE_AND_PUBLISHED_LINKED_TO_DATASET_NAME)
-    public void testRetrieveIsReplacedByVersionOnlyLastPublishedSecondVersionNotVisible() throws Exception {
-        Dataset dataset = datasetMockFactory.retrieveMock(DATASET_14_WITH_PUBLISHED_AND_NOT_VISIBLE_VERSIONS_WITH_THREE_QUERIES_DRAFT_NOT_VISIBLE_AND_PUBLISHED_LINKED_TO_DATASET_NAME);
-        DatasetVersion firstDatasetVersion = dataset.getVersions().get(0);
-        RelatedResourceResult resource = datasetVersionRepository.retrieveIsReplacedByVersionOnlyLastPublished(firstDatasetVersion);
-        assertNull(resource);
-    }
-
-    @Test
-    @MetamacMock(DATASET_14_WITH_PUBLISHED_AND_NOT_VISIBLE_VERSIONS_WITH_THREE_QUERIES_DRAFT_NOT_VISIBLE_AND_PUBLISHED_LINKED_TO_DATASET_NAME)
-    public void testRetrieveIsReplacedBySecondVersionNotVisible() throws Exception {
-        Dataset dataset = datasetMockFactory.retrieveMock(DATASET_14_WITH_PUBLISHED_AND_NOT_VISIBLE_VERSIONS_WITH_THREE_QUERIES_DRAFT_NOT_VISIBLE_AND_PUBLISHED_LINKED_TO_DATASET_NAME);
-        DatasetVersion firstDatasetVersion = dataset.getVersions().get(0);
-        DatasetVersion secondDatasetVersion = dataset.getVersions().get(1);
-        RelatedResourceResult resource = datasetVersionRepository.retrieveIsReplacedByVersion(firstDatasetVersion);
-        assertNotNull(resource);
-        CommonAsserts.assertEqualsRelatedResourceResultDatasetVersion(secondDatasetVersion, resource);
+        assertEquals(secondDatasetVersion, resource.getDatasetVersion());
     }
 
     @Test
     @MetamacMock(DATASET_15_WITH_TWO_PUBLISHED_VERSIONS_WITH_THREE_QUERIES_DRAFT_NOT_VISIBLE_AND_PUBLISHED_LINKED_TO_DATASET_NAME)
-    public void testRetrieveIsReplacedByVersionOnlyLastPublishedSecondVersionPublishedAndVisible() throws Exception {
+    public void testGetIsReplacedByVersionOnlyLastPublishedSecondVersionPublishedAndVisible() throws Exception {
         Dataset dataset = datasetMockFactory.retrieveMock(DATASET_15_WITH_TWO_PUBLISHED_VERSIONS_WITH_THREE_QUERIES_DRAFT_NOT_VISIBLE_AND_PUBLISHED_LINKED_TO_DATASET_NAME);
         DatasetVersion firstDatasetVersion = dataset.getVersions().get(0);
         DatasetVersion secondDatasetVersion = dataset.getVersions().get(1);
-        RelatedResourceResult resource = datasetVersionRepository.retrieveIsReplacedByVersionOnlyLastPublished(firstDatasetVersion);
+        DatasetVersion resource = firstDatasetVersion.getSiemacMetadataStatisticalResource().getIsReplacedByVersion().getDatasetVersion();
         assertNotNull(resource);
-        CommonAsserts.assertEqualsRelatedResourceResultDatasetVersion(secondDatasetVersion, resource);
+        assertEquals(secondDatasetVersion, resource);
     }
 
     @Test
@@ -533,9 +503,9 @@ public class DatasetVersionRepositoryTest extends StatisticalResourcesBaseTest i
         Dataset dataset = datasetMockFactory.retrieveMock(DATASET_15_WITH_TWO_PUBLISHED_VERSIONS_WITH_THREE_QUERIES_DRAFT_NOT_VISIBLE_AND_PUBLISHED_LINKED_TO_DATASET_NAME);
         DatasetVersion firstDatasetVersion = dataset.getVersions().get(0);
         DatasetVersion secondDatasetVersion = dataset.getVersions().get(1);
-        RelatedResourceResult resource = datasetVersionRepository.retrieveIsReplacedByVersion(firstDatasetVersion);
+        DatasetVersion resource = firstDatasetVersion.getSiemacMetadataStatisticalResource().getIsReplacedByVersion().getDatasetVersion();
         assertNotNull(resource);
-        CommonAsserts.assertEqualsRelatedResourceResultDatasetVersion(secondDatasetVersion, resource);
+        assertEquals(secondDatasetVersion, resource);
     }
 
     @Override

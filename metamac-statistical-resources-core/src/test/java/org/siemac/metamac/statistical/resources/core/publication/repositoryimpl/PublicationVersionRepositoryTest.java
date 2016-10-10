@@ -142,23 +142,6 @@ public class PublicationVersionRepositoryTest extends StatisticalResourcesBaseTe
         assertEqualsPublicationVersion(publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_04_FOR_PUBLICATION_03_AND_LAST_VERSION_NAME), actual);
     }
 
-    @Test
-    @Override
-    @MetamacMock(PUBLICATION_06_WITH_MULTIPLE_PUBLISHED_VERSIONS_AND_LATEST_NO_VISIBLE_NAME)
-    public void testRetrieveIsReplacedByVersion() throws Exception {
-        PublicationVersion firstVersion = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_30_V1_PUBLISHED_FOR_PUBLICATION_06_NAME);
-        PublicationVersion secondVersion = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_31_V2_PUBLISHED_NO_VISIBLE_FOR_PUBLICATION_06_NAME);
-
-        {
-            RelatedResourceResult resource = publicationVersionRepository.retrieveIsReplacedByVersion(firstVersion);
-            assertNotNull(resource);
-            CommonAsserts.assertEqualsRelatedResourceResultPublicationVersion(secondVersion, resource);
-        }
-        {
-            RelatedResourceResult resource = publicationVersionRepository.retrieveIsReplacedByVersion(secondVersion);
-            assertNull(resource);
-        }
-    }
 
     @Test
     @Override

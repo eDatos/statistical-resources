@@ -197,6 +197,7 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
             if (previousResource.getPublicationVersion() != null) {
                 PublicationVersion previousVersion = previousResource.getPublicationVersion();
                 previousVersion.getSiemacMetadataStatisticalResource().setLastVersion(true);
+                previousVersion.getSiemacMetadataStatisticalResource().setIsReplacedByVersion(null);
                 getPublicationVersionRepository().save(previousVersion);
             }
             // Delete version

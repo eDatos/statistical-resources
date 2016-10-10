@@ -541,6 +541,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
             if (previousResource.getDatasetVersion() != null) {
                 DatasetVersion previousVersion = previousResource.getDatasetVersion();
                 previousVersion.getSiemacMetadataStatisticalResource().setLastVersion(true);
+                previousVersion.getSiemacMetadataStatisticalResource().setIsReplacedByVersion(null);
                 getDatasetVersionRepository().save(previousVersion);
             }
             // Delete version
