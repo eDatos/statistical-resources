@@ -225,7 +225,7 @@ public class DatasetDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements Dat
         // Siemac metadata that needs to be filled
         target.setIsReplacedByVersion(relatedResourceDoToDto(source.getLifeCycleStatisticalResource().getIsReplacedByVersion()));
 
-        target.setIsReplacedBy(relatedResourceResultToDto(datasetVersionRepository.retrieveIsReplacedBy(source)));
+        target.setIsReplacedBy(relatedResourceDoToDto(source.getSiemacMetadataStatisticalResource().getIsReplacedBy()));
         target.getIsPartOf().clear();
         target.getIsPartOf().addAll(relatedResourceResultCollectionToDtoCollection(datasetVersionRepository.retrieveIsPartOf(source)));
 

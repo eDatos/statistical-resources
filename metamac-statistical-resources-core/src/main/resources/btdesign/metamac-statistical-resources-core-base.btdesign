@@ -161,6 +161,7 @@ Application BaseStatisticalResources {
 			
 			//RESOURCE RELATIONS DESCRIPTORS
 			- @RelatedResource replaces cascade="all" databaseColumn="REPLACES_FK" nullable;
+			- @RelatedResource isReplacedBy cascade="all" databaseColumn="IS_REPLACED_BY_FK" nullable;
 
 			//INTELLECTUAL PROPERTY DESCRIPTORS
 			Integer copyrightedDate	nullable;
@@ -168,8 +169,6 @@ Application BaseStatisticalResources {
 			
 			Repository SiemacMetadataStatisticalResourceRepository {
 				String findLastUsedCodeForResourceType(String operationUrn, @StatisticalResourceTypeEnum resourceType);
-				RelatedResourceResult retrieveIsReplacedBy(Long currentResourceId, @TypeRelatedResourceEnum type) throws MetamacException;  
-				RelatedResourceResult retrieveIsReplacedByOnlyLastPublished(Long currentResourceId, @TypeRelatedResourceEnum type) throws MetamacException;
 			}
 			
 		}

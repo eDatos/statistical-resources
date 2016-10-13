@@ -831,6 +831,7 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
         registerDatasetVersionMock(DATASET_VERSION_78_PUB_IS_REPLACED_BY_DATASET_77_NAME, datasetVersionToReplace);
 
         datasetVersion.getSiemacMetadataStatisticalResource().setReplaces(StatisticalResourcesPersistedDoMocks.mockDatasetVersionRelated(datasetVersionToReplace));
+        datasetVersionToReplace.getSiemacMetadataStatisticalResource().setIsReplacedBy(StatisticalResourcesPersistedDoMocks.mockDatasetVersionRelated(datasetVersion));
         return datasetVersion;
     }
 
@@ -841,6 +842,7 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
         registerDatasetVersionMock(DATASET_VERSION_80_NO_PUB_IS_REPLACED_BY_DATASET_79_NAME, datasetVersionToReplace);
 
         datasetVersion.getSiemacMetadataStatisticalResource().setReplaces(StatisticalResourcesPersistedDoMocks.mockDatasetVersionRelated(datasetVersionToReplace));
+        datasetVersionToReplace.getSiemacMetadataStatisticalResource().setIsReplacedBy(StatisticalResourcesPersistedDoMocks.mockDatasetVersionRelated(datasetVersion));
         return datasetVersion;
     }
 
@@ -856,6 +858,7 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
         registerDatasetVersionMock(DATASET_VERSION_82_PUB_IS_REPLACED_BY_DATASET_81_NAME, datasetVersionToReplace);
 
         datasetVersion.getSiemacMetadataStatisticalResource().setReplaces(StatisticalResourcesPersistedDoMocks.mockDatasetVersionRelated(datasetVersionToReplace));
+        datasetVersionToReplace.getSiemacMetadataStatisticalResource().setIsReplacedBy(StatisticalResourcesPersistedDoMocks.mockDatasetVersionRelated(datasetVersion));
         return datasetVersion;
     }
 
@@ -868,6 +871,7 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
         registerDatasetVersionMock(DATASET_VERSION_84_PUB_IS_REPLACED_BY_DATASET_83_NAME, datasetVersionToReplace);
 
         datasetVersion.getSiemacMetadataStatisticalResource().setReplaces(StatisticalResourcesPersistedDoMocks.mockDatasetVersionRelated(datasetVersionToReplace));
+        datasetVersionToReplace.getSiemacMetadataStatisticalResource().setIsReplacedBy(StatisticalResourcesPersistedDoMocks.mockDatasetVersionRelated(datasetVersion));
         return datasetVersion;
     }
 

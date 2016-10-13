@@ -30,7 +30,6 @@ import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
 import org.siemac.metamac.statistical.resources.core.common.domain.InternationalString;
 import org.siemac.metamac.statistical.resources.core.common.domain.LocalisedString;
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResource;
-import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResourceResult;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetProperties;
 import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.DatasetService;
@@ -210,9 +209,10 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
     private void checkCanPublicationVersionBeDeleted(PublicationVersion publicationVersion) throws MetamacException {
         List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
 
-        RelatedResourceResult resourcesIsReplacedBy = publicationVersionRepository.retrieveIsReplacedBy(publicationVersion);
+        RelatedResource resourcesIsReplacedBy = publicationVersion.getSiemacMetadataStatisticalResource().getIsReplacedBy();
         if (resourcesIsReplacedBy != null) {
-            exceptionItems.add(new MetamacExceptionItem(ServiceExceptionType.PUBLICATION_VERSION_IS_REPLACED_BY_OTHER_RESOURCE, resourcesIsReplacedBy.getUrn()));
+            exceptionItems.add(new MetamacExceptionItem(
+                    ServiceExceptionType.PUBLICATION_VERSION_IS_REPLACED_BY_OTHER_RESOURCE, resourcesIsReplacedBy.getDatasetVersion().getLifeCycleStatisticalResource().getUrn()));
         }
 
         if (exceptionItems.size() > 0) {
@@ -573,8 +573,8 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
         // Check chapter parent belongs to publication version
         String publicationVersionUrnOfParentChapter = elementLevelParent.getPublicationVersion().getSiemacMetadataStatisticalResource().getUrn();
         if (!publicationVersion.getSiemacMetadataStatisticalResource().getUrn().equals(publicationVersionUrnOfParentChapter)) {
-            throw new MetamacException(ServiceExceptionType.CHAPTER_NOT_FOUND_IN_PUBLICATION_VERSION, elementLevelParent.getChapter().getNameableStatisticalResource().getUrn(), publicationVersion
-                    .getSiemacMetadataStatisticalResource().getUrn());
+            throw new MetamacException(ServiceExceptionType.CHAPTER_NOT_FOUND_IN_PUBLICATION_VERSION, elementLevelParent.getChapter().getNameableStatisticalResource().getUrn(),
+                    publicationVersion.getSiemacMetadataStatisticalResource().getUrn());
         }
 
         // Create element level in chapter
@@ -744,8 +744,8 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
         // Check if chapter is in the publicationVersion
         if (!elementLevel.getPublicationVersion().getSiemacMetadataStatisticalResource().getUrn()
                 .equals(parentChapter.getElementLevel().getPublicationVersion().getSiemacMetadataStatisticalResource().getUrn())) {
-            throw new MetamacException(ServiceExceptionType.CHAPTER_NOT_FOUND_IN_PUBLICATION_VERSION, parentChapter.getNameableStatisticalResource().getUrn(), elementLevel.getPublicationVersion()
-                    .getSiemacMetadataStatisticalResource().getUrn());
+            throw new MetamacException(ServiceExceptionType.CHAPTER_NOT_FOUND_IN_PUBLICATION_VERSION, parentChapter.getNameableStatisticalResource().getUrn(),
+                    elementLevel.getPublicationVersion().getSiemacMetadataStatisticalResource().getUrn());
         }
     }
 

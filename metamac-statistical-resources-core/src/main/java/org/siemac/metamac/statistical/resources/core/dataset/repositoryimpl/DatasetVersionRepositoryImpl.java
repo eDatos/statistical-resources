@@ -288,16 +288,6 @@ public class DatasetVersionRepositoryImpl extends DatasetVersionRepositoryBase {
     }
 
 
-    @Override
-    public RelatedResourceResult retrieveIsReplacedBy(DatasetVersion datasetVersion) throws MetamacException {
-        return siemacMetadataStatisticalResourceRepository.retrieveIsReplacedBy(datasetVersion.getId(), TypeRelatedResourceEnum.DATASET_VERSION);
-    }
-
-    @Override
-    public RelatedResourceResult retrieveIsReplacedByOnlyLastPublished(DatasetVersion datasetVersion) throws MetamacException {
-        return siemacMetadataStatisticalResourceRepository.retrieveIsReplacedByOnlyLastPublished(datasetVersion.getId(), TypeRelatedResourceEnum.DATASET_VERSION);
-    }
-
     @SuppressWarnings("unchecked")
     @Override
     public List<RelatedResourceResult> retrieveIsPartOf(DatasetVersion datasetVersion) throws MetamacException {

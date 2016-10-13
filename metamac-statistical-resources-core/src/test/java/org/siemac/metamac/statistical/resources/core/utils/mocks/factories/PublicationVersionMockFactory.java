@@ -511,6 +511,7 @@ public class PublicationVersionMockFactory extends StatisticalResourcesMockFacto
         registerPublicationVersionMock(PUBLICATION_VERSION_42_PUB_IS_REPLACED_BY_PUB_VERSION_41_NAME, publicationToReplace);
 
         publicationVersion.getSiemacMetadataStatisticalResource().setReplaces(StatisticalResourcesPersistedDoMocks.mockPublicationVersionRelated(publicationToReplace));
+        publicationToReplace.getSiemacMetadataStatisticalResource().setIsReplacedBy(StatisticalResourcesPersistedDoMocks.mockPublicationVersionRelated(publicationVersion));
         return publicationVersion;
     }
 
