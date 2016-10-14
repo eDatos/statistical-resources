@@ -4,13 +4,14 @@
     <parent>
         <groupId>org.siemac.metamac.metamac-statistical-resources</groupId>
         <artifactId>metamac-statistical-resources-parent</artifactId>
-        <version>1.4.1-SNAPSHOT</version>
+        <version>2.0.1-SNAPSHOT</version>
         <relativePath>metamac-statistical-resources-parent/pom.xml</relativePath>
     </parent>
 
     <artifactId>metamac-statistical-resources</artifactId>
     <packaging>pom</packaging>
     <name>METAMAC :: STATISTICAL RESOURCES</name>
+    <description>METAMAC :: STATISTICAL RESOURCES</description>
 
 	<scm>
         <connection>scm:git:http://git.arte-consultores.com/istac/metamac-statistical-resources</connection>
@@ -36,17 +37,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
-            </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-release-plugin</artifactId>
-                <version>2.2.2</version>
-                <configuration>
-                    <checkModificationExcludes>
-                        <checkModificationExclude>01-statistical-resources-schema-create.sql</checkModificationExclude>
-                    </checkModificationExcludes>
-                </configuration>
             </plugin>
         </plugins>
     </build>
