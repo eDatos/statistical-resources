@@ -35,10 +35,10 @@ public class InternationalStringDo2AvroTest {
         LocalisedString source2 = new LocalisedString();
         source2.setLabel(EXPECTED_LABEL + "2");
         source2.setLocale(EXPECTED_LOCALE + "2");
-        source.addText(source1);
         source.addText(source2);
+        source.addText(source1);
 
         InternationalStringAvro actual = InternationalStringDo2Avro.internationalString2Avro(source);
-        assertThat(actual, is(equalTo(expected)));
+        assertThat(actual.getLocalisedStrings(), is(equalTo(expected.getLocalisedStrings())));
     }
 }

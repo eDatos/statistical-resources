@@ -4,8 +4,8 @@
      "name": "NameableStatisticalResourceAvro",
      "fields" : [
          {"name" : "identifiableStatisticalResource", "type": "IdentifiableStatisticalResourceAvro" },
-         {"name" : "title" , "type" : "string"},
-         {"name" : "description" , "type" : "string"}
+         {"name" : "title" , "type" : "InternationalStringAvro"},
+         {"name" : "description" , "type" : "InternationalStringAvro"}
      ]
  }
  

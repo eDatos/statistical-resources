@@ -86,18 +86,8 @@ public class MappersMockUtils {
         }
         return target;
     }
-    
-    
-    public static NameableStatisticalResource mockNameableStatisticalResource() {
-        NameableStatisticalResource target = new NameableStatisticalResource();
-        target.setCode(EXPECTED_CODE);
-        target.setStatisticalOperation(mockExternalItem());
-        target.setTitle(mockInternationalString());
-        target.setUrn(EXPECTED_URN);
-        return target;
-    }
 
-
+    
     public static RelatedResourceAvro mockRelatedResourceAvro() {
         RelatedResourceAvro target = RelatedResourceAvro.newBuilder()
                 .setCode(EXPECTED_CODE)
@@ -106,7 +96,36 @@ public class MappersMockUtils {
                 .setType(EXPECTED_TYPE.getName())
                 .setUrn(EXPECTED_URN)
                 .build();
-                
+        return target;
+    }
+
+    
+    public static NameableStatisticalResource mockNameableStatisticalResource() {
+        NameableStatisticalResource target = new NameableStatisticalResource();
+        target.setCode(EXPECTED_CODE);
+        target.setStatisticalOperation(mockExternalItem());
+        target.setTitle(mockInternationalString());
+        target.setDescription(mockInternationalString());
+        target.setUrn(EXPECTED_URN);
+        return target;
+    }
+
+    
+    public static NameableStatisticalResourceAvro mockNameableStatisticalResourceAvro() {
+        NameableStatisticalResourceAvro target = NameableStatisticalResourceAvro.newBuilder()
+                .setIdentifiableStatisticalResource(mockIdentifiableStatisticalResourceAvro())
+                .setDescription(InternationalStringDo2Avro.internationalString2Avro(mockInternationalString()))
+                .setTitle(InternationalStringDo2Avro.internationalString2Avro(mockInternationalString()))
+                .build();
+        return target;
+    }
+
+
+    public static IdentifiableStatisticalResourceAvro mockIdentifiableStatisticalResourceAvro() {
+        IdentifiableStatisticalResourceAvro target = IdentifiableStatisticalResourceAvro.newBuilder()
+                .setCode(EXPECTED_CODE)
+                .setUrn(EXPECTED_URN)
+                .build();
         return target;
     }
     
