@@ -1,0 +1,17 @@
+ {
+    "namespace": "org.siemac.metamac.statistical.resources.core.stream.messages",
+     "type": "record",
+     "name": "VersionableStatisticalResourceAvro",
+     "fields" : [
+         {"name" : "nameableStatisticalResource", "type": "NameableStatisticalResourceAvro" },
+         {"name" : "nextVersionDate" , "type" : {"type":"int", "logicalType": "Date"}},
+         {"name" : "validFrom" , "type" : {"type":"int", "logicalType": "Date"}},
+         {"name" : "validTo" , "type" : {"type":"int", "logicalType": "Date"}},
+         {"name" : "versionRationale" , "type" : "string"},
+         {"name" : "nextVersion" , "type" : {"name" : "NextVersionTypeEnumAvro", "type":"enum", "symbols" : ["NO_UPDATES", "NON_SCHEDULED_UPDATE", "SCHEDULED_UPDATE"]}},
+         {"name" : "versionRationaleTypes", "type" : "string"}
+     ]
+ }
+ 
+ 
+ 

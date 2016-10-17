@@ -1,0 +1,12 @@
+{
+    "namespace": "org.siemac.metamac.statistical.resources.core.stream.messages",
+    "type" : "record",
+    "name" : "RelatedResourceAvro",
+    "fields" : [
+        {"name" : "code", "type" : "string"},
+        {"name" : "urn", "type" : "string"},
+        {"name" : "type", "type" : "string"},
+        {"name" : "title", "type" : "InternationalStringAvro"},   
+        {"name" : "statisticalOperationUrn", "type" : "string"}
+    ]
+}

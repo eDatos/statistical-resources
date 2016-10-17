@@ -1,0 +1,34 @@
+  {
+    "namespace": "org.siemac.metamac.statistical.resources.core.stream.messages",
+     "type": "record",
+     "name": "SiemacMetadataStatisticalResourceAvro",
+     "fields" : [
+        {"name" : "lifecycleStatisticalResource", "type": "LifecycleStatisticalResourceAvro" },
+        {"name" : "userModifiedKeywords" , "type" : "boolean"},
+        {"name" : "resourceCreatedDate" , "type" : {"type":"int", "logicalType": "Date"}},
+        {"name" : "lastUpdate" , "type" : {"type":"int", "logicalType": "Date"}},
+        {"name" : "newnessUntilDate" , "type" : {"type":"int", "logicalType": "Date"}},
+        {"name" : "copyrightedDate" , "type" : "int"},
+        {"name" : "language", "type" : "ExternalItemAvro"}, 
+        {"name" : "subtitle", "type" : "InternationalStringAvro"},
+        {"name" : "titleAlternative", "type" : "InternationalStringAvro"},
+        {"name" : "abstractLogic", "type" : "InternationalStringAvro"},
+        {"name" : "keywords", "type" : "InternationalStringAvro"},
+        {"name" : "commonMetadata", "type" : "ExternalItemAvro"}, 
+        {"name" : "type" , "type" : {"name" : "StatisticalResourceTypeEnumAvro", "type":"enum", "symbols" : ["DATASET","COLLECTION","QUERY"]}},
+        {"name" : "creator", "type" : "ExternalItemAvro"}, 
+        {"name" : "conformsTo", "type" : "InternationalStringAvro"}, 
+        {"name" : "conformsToInternational", "type" : "InternationalStringAvro"},
+        {"name" : "replaces", "type" : "RelatedResourceAvro"}, //TODO en java es RelatedResource
+        {"name" : "isReplacedVy", "type" : "RelatedResourceAvro"}, //TODO en java es RelatedResource
+        {"name" : "accessRights", "type" : "InternationalStringAvro"}, 
+        {"name" : "languages", "type" : { "type" : "array", "items": "ExternalItemAvro"}},
+        {"name" : "statisticalOperationInstances", "type" : { "type" : "array", "items": "ExternalItemAvro"}},
+        {"name" : "contributor", "type" : { "type" : "array", "items": "ExternalItemAvro"}},
+        {"name" : "publisher", "type" : { "type" : "array", "items": "ExternalItemAvro"}},
+        {"name" : "publisherContributor", "type" : { "type" : "array", "items": "ExternalItemAvro"}},
+        {"name" : "mediator", "type" : { "type" : "array", "items": "ExternalItemAvro"}} 
+     ]
+ }
+ 
+ 

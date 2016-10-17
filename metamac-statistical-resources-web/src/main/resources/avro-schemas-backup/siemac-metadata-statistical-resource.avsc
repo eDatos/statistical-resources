@@ -1,0 +1,34 @@
+  {
+    "namespace": "org.siemac.metamac.statistical.resources.web.server.stream.messages",
+     "type": "record",
+     "name": "SiemacMetadataStatisticalResource",
+     "fields" : [
+        {"name" : "lifecycleStatisticalResource", "type": "LifecycleStatisticalResource" },
+        {"name" : "userModifiedKeywords" , "type" : "boolean"},
+        {"name" : "resourceCreatedDate" , "type" : {"type":"int", "logicalType": "Date"}},
+        {"name" : "lastUpdate" , "type" : {"type":"int", "logicalType": "Date"}},
+        {"name" : "newnessUntilDate" , "type" : {"type":"int", "logicalType": "Date"}},
+        {"name" : "copyrightedDate" , "type" : "int"},
+        {"name" : "language", "type" : "ExternalItem"}, 
+        {"name" : "subtitle", "type" : "string"}, //TODO en java es InternationalString
+        {"name" : "titleAlternative", "type" : "string"}, //TODO en java es InternationalString
+        {"name" : "abstractLogic", "type" : "string"}, //TODO en java es InternationalString
+        {"name" : "keywords", "type" : "string"}, //TODO en java es InternationalString
+        {"name" : "commonMetadata", "type" : "ExternalItem"}, 
+        {"name" : "type" , "type" : {"name" : "StatisticalResourceTypeEnum", "type":"enum", "symbols" : ["DATASET","COLLECTION","QUERY"]}},
+        {"name" : "creator", "type" : "ExternalItem"}, 
+        {"name" : "conformsTo", "type" : "string"}, //TODO en java es InternationalString
+        {"name" : "conformsToInternational", "type" : "string"}, //TODO en java es InternationalString
+        {"name" : "replaces", "type" : "string"}, //TODO en java es RelatedResource
+        {"name" : "isReplacedVy", "type" : "string"}, //TODO en java es RelatedResource
+        {"name" : "accessRights", "type" : "string"}, //TODO en java es InternationalString     
+        {"name" : "languages", "type" : "string"}, //TODO en java es List<ExternalItem>
+        {"name" : "statisticalOperationInstances", "type" : "string"}, //TODO en java es List<ExternalItem>
+        {"name" : "contributor", "type" : "string"}, //TODO en java es List<ExternalItem>
+        {"name" : "publisher", "type" : "string"}, //TODO en java es List<ExternalItem>
+        {"name" : "publisherContributor", "type" : "string"}, //TODO en java es List<ExternalItem>
+        {"name" : "mediator", "type" : "string"} //TODO en java es List<ExternalItem>
+     ]
+ }
+ 
+ 

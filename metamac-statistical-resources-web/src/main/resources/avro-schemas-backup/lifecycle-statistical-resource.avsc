@@ -1,0 +1,23 @@
+ {
+    "namespace": "org.siemac.metamac.statistical.resources.web.server.stream.messages",
+     "type": "record",
+     "name": "LifecycleStatisticalResource",
+     "fields" : [
+        {"name" : "versionableStatisticalResource", "type": "VersionableStatisticalResource" },
+        {"name" : "creationDate" , "type" : {"type":"int", "logicalType": "Date"}},
+        {"name" : "productionValidationDate" , "type" : {"type":"int", "logicalType": "Date"}},
+        {"name" : "diffusionValidationDate" , "type" : {"type":"int", "logicalType": "Date"}},
+        {"name" : "rejectValidationDate" , "type" : {"type":"int", "logicalType": "Date"}},
+        {"name" : "publicationValidationDate" , "type" : {"type":"int", "logicalType": "Date"}},
+        {"name" : "creationUser" , "type" : "string"},
+        {"name" : "productionValidationUser" , "type" : "string"},
+        {"name" : "publicationValidationUser" , "type" : "string"},
+        {"name" : "publicationnUser" , "type" : "string"},
+        {"name" : "lastVersion", "type" : "boolean"},
+        {"name" : "procStatus" , "type" : {"name" : "ProcStatusEnum", "type":"enum", "symbols" : ["DRAFT", "PRODUCTION_VALIDATION", "DIFFUSION_VALIDATION", "VALIDATION_REJECTED","PUBLISHED"]}},
+        {"name" : "replacesVersion", "type" : "string"}, //TODO Especificar correctamente el tipo, en java es un RelatedResource
+        {"name" : "mantainer", "type" : "string"} //TODO corregir tipo. En java es ExternalItem
+     ]
+ }
+ 
+ 

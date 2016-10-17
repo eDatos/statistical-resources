@@ -1,0 +1,19 @@
+[
+    {    
+        "namespace": "org.siemac.metamac.statistical.resources.core.stream.messages",
+        "type" : "record",
+        "name" : "InternationalStringItemAvro",
+        "fields" : [
+            {"type" : "string", "name" : "locale"},
+            {"type" : "string", "name" : "label"}
+        ]
+    },
+    {
+        "namespace": "org.siemac.metamac.statistical.resources.core.stream.messages",
+        "type" : "record",
+        "name" : "InternationalStringAvro",
+        "fields" : [
+           {"name" : "localisedStrings", "type" : { "type" : "array", "items": "InternationalStringItemAvro"}} 
+        ]    
+    }
+]
