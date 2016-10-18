@@ -4,19 +4,26 @@
      "name": "LifecycleStatisticalResourceAvro",
      "fields" : [
         {"name" : "versionableStatisticalResource", "type": "VersionableStatisticalResourceAvro" },
-        {"name" : "creationDate" , "type" : {"type":"int", "logicalType": "Date"}},
-        {"name" : "productionValidationDate" , "type" : {"type":"int", "logicalType": "Date"}},
-        {"name" : "diffusionValidationDate" , "type" : {"type":"int", "logicalType": "Date"}},
-        {"name" : "rejectValidationDate" , "type" : {"type":"int", "logicalType": "Date"}},
-        {"name" : "publicationValidationDate" , "type" : {"type":"int", "logicalType": "Date"}},
+                
+        {"name" : "creationDate" ,  "type" : {"type":"string", "java-class":"org.joda.time.DateTime"}},
         {"name" : "creationUser" , "type" : "string"},
+        
+        {"name" : "productionValidationDate" ,  "type" : {"type":"string", "java-class":"org.joda.time.DateTime"}},
         {"name" : "productionValidationUser" , "type" : "string"},
-        {"name" : "publicationValidationUser" , "type" : "string"},
-        {"name" : "publicationnUser" , "type" : "string"},
+        
+        {"name" : "diffusionValidationDate" ,  "type" : {"type":"string", "java-class":"org.joda.time.DateTime"}},
+        {"name" : "diffusionValidationUser" , "type" : "string"},
+        
+        {"name" : "rejectValidationDate" , "type" : {"type":"string", "java-class":"org.joda.time.DateTime"}},
+        {"name" : "rejectValidationUser" , "type" : "string"},
+        
+        {"name" : "publicationDate" ,  "type" : {"type":"string", "java-class":"org.joda.time.DateTime"}},
+        {"name" : "publicationUser" , "type" : "string"},
+        
         {"name" : "lastVersion", "type" : "boolean"},
-        {"name" : "procStatus" , "type" : {"name" : "ProcStatusEnumAvro", "type":"enum", "symbols" : ["DRAFT", "PRODUCTION_VALIDATION", "DIFFUSION_VALIDATION", "VALIDATION_REJECTED","PUBLISHED"]}},
+        {"name" : "procStatus" , "type" : {"type" : "string", "java-class" : "org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum"}},
         {"name" : "replacesVersion", "type" : "RelatedResourceAvro"}, //TODO Especificar correctamente el tipo, en java es un RelatedResource
-        {"name" : "mantainer", "type" : "ExternalItemAvro"} 
+        {"name" : "maintainer", "type" : "ExternalItemAvro"} 
      ]
  }
  

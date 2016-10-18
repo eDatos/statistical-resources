@@ -55,7 +55,7 @@ public class RelatedResourceDo2Avro {
                     .setCode(nameableResource.getCode())
                     .setStatisticalOperationUrn(nameableResource.getStatisticalOperation().getUrn())
                     .setTitle(InternationalStringDo2Avro.internationalString2Avro(nameableResource.getTitle()))
-                    .setType(source.getType().getName())
+                    .setType(source.getType())
                     .setUrn(nameableResource.getUrn())
                     .build();
         }

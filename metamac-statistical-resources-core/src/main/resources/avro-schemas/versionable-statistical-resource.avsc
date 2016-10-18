@@ -4,12 +4,13 @@
      "name": "VersionableStatisticalResourceAvro",
      "fields" : [
          {"name" : "nameableStatisticalResource", "type": "NameableStatisticalResourceAvro" },
-         {"name" : "nextVersionDate" , "type" : {"type":"int", "logicalType": "Date"}},
-         {"name" : "validFrom" , "type" : {"type":"int", "logicalType": "Date"}},
-         {"name" : "validTo" , "type" : {"type":"int", "logicalType": "Date"}},
-         {"name" : "versionRationale" , "type" : "string"},
-         {"name" : "nextVersion" , "type" : {"name" : "NextVersionTypeEnumAvro", "type":"enum", "symbols" : ["NO_UPDATES", "NON_SCHEDULED_UPDATE", "SCHEDULED_UPDATE"]}},
-         {"name" : "versionRationaleTypes", "type" : "string"}
+         {"name" : "nextVersionDate" , "type" : {"type":"string", "java-class":"org.joda.time.DateTime"}},
+         {"name" : "validFrom" , "type" :{"type":"string", "java-class":"org.joda.time.DateTime"}},
+         {"name" : "validTo" , "type" : {"type":"string", "java-class":"org.joda.time.DateTime"}},
+         {"name" : "versionRationale" , "type" : "InternationalStringAvro"},
+         {"name" : "nextVersion" , "type" : {"type" : "string", "java-class":"org.siemac.metamac.statistical.resources.core.enume.domain.NextVersionTypeEnum"}},
+         {"name" : "versionLogic", "type" : "string" }
+//         {"name" : "versionRationaleTypes", "type" : "string"} //TODO
      ]
  }
  

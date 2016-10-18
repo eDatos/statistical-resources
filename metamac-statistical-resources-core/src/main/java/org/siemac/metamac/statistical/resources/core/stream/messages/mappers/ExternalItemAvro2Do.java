@@ -10,13 +10,13 @@ public class ExternalItemAvro2Do {
 
     public static ExternalItem externalItemAvro2Do(ExternalItemAvro source) {
         ExternalItem target = new ExternalItem();
-        target.setCode((String) source.getCode());
-        target.setCodeNested((String) source.getCodeNested());
-        target.setManagementAppUrl((String) source.getManagementAppUrl());
+        target.setCode(source.getCode());
+        target.setCodeNested(source.getCodeNested());
+        target.setManagementAppUrl(source.getManagementAppUrl());
         target.setTitle(InternationalStringAvro2Do.internationalStringAvro2Do(source.getTitle()));
-        target.setType(TypeExternalArtefactsEnumMapper.avro2Do(source.getType()));
-        target.setUrn((String) source.getUrn());
-        target.setUrnProvider((String) source.getUrnProvider());
+        target.setType(source.getType());
+        target.setUrn(source.getUrn());
+        target.setUrnProvider(source.getUrnProvider());
         target.setVersion(source.getVersion());
         return target;
 

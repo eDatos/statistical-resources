@@ -551,6 +551,7 @@
                             </imports>
                             <sourceDirectory>${project.basedir}/src/main/resources/avro-schemas/</sourceDirectory>
                             <outputDirectory>${project.basedir}/target/generated-sources/avro/</outputDirectory>
+                            <stringType>String</stringType>
                         </configuration>
                     </execution>
                 </executions>

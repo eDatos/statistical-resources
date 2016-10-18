@@ -29,7 +29,7 @@ public class RelatedResourceAvro2Do {
 
     public static RelatedResource relatedResourceAvro2Do(RelatedResourceAvro source) throws MetamacException {
         RelatedResource target = new RelatedResource();
-        target.setType(TypeRelatedResourceEnum.valueOf((String) source.getType()));
+        target.setType(source.getType());
 
         switch (target.getType()) {
             case DATASET:

@@ -3,7 +3,6 @@ package org.siemac.metamac.statistical.resources.core.stream.messages.mappers;
 import org.siemac.metamac.core.common.enume.domain.TypeExternalArtefactsEnum;
 import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
 import org.siemac.metamac.statistical.resources.core.stream.messages.ExternalItemAvro;
-import org.siemac.metamac.statistical.resources.core.stream.messages.TypeExternalArtefactsEnumAvro;
 
 public class ExternalItemDo2Avro {
 
@@ -16,7 +15,7 @@ public class ExternalItemDo2Avro {
                 .setCodeNested(ei.getCodeNested())
                 .setManagementAppUrl(ei.getManagementAppUrl())
                 .setTitle(InternationalStringDo2Avro.internationalString2Avro(ei.getTitle()))
-                .setType(TypeExternalArtefactsEnumMapper.do2Avro(ei.getType()))
+                .setType(ei.getType())
                 .setUrn(ei.getUrn())
                 .setUrnProvider(ei.getUrnProvider())
                 .setVersion(ei.getVersion())
