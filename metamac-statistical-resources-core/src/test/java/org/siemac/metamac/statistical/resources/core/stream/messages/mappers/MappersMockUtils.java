@@ -1,5 +1,8 @@
 package org.siemac.metamac.statistical.resources.core.stream.messages.mappers;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.joda.time.DateTime;
 import org.siemac.metamac.core.common.enume.domain.TypeExternalArtefactsEnum;
 import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableStatisticalResource;
@@ -15,12 +18,16 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.enume.domain.NextVersionTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
+import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
 import org.siemac.metamac.statistical.resources.core.stream.messages.ExternalItemAvro;
 import org.siemac.metamac.statistical.resources.core.stream.messages.IdentifiableStatisticalResourceAvro;
+import org.siemac.metamac.statistical.resources.core.stream.messages.InternationalStringAvro;
+import org.siemac.metamac.statistical.resources.core.stream.messages.InternationalStringItemAvro;
 import org.siemac.metamac.statistical.resources.core.stream.messages.LifecycleStatisticalResourceAvro;
 import org.siemac.metamac.statistical.resources.core.stream.messages.NameableStatisticalResourceAvro;
 import org.siemac.metamac.statistical.resources.core.stream.messages.RelatedResourceAvro;
+import org.siemac.metamac.statistical.resources.core.stream.messages.SiemacMetadataStatisticalResourceAvro;
 import org.siemac.metamac.statistical.resources.core.stream.messages.VersionableStatisticalResourceAvro;
 
 public class MappersMockUtils {
@@ -43,6 +50,7 @@ public class MappersMockUtils {
     protected static final String                    EXPECTED_MANAGEMENT_APP_URL    = "EXPECTED_MANAGEMENT_APP_URL";
     protected static final String                    EXPECTED_CODE_NESTED           = "EXPECTED_CODE_NESTED";
     protected static final String                    EXPECTED_CODE                  = "EXPECTED_CODE";
+    private static final int EXPECTED_COPYRIGHT = 0;
 
     public static ExternalItem mockExternalItem() {
         ExternalItem source = new ExternalItem();
@@ -77,6 +85,14 @@ public class MappersMockUtils {
         return is;
     }
 
+    private static InternationalStringAvro mockInternationalStringAvro() {
+        List<InternationalStringItemAvro> list = new ArrayList<>();
+        InternationalStringItemAvro item = InternationalStringItemAvro.newBuilder().setLabel(EXPECTED_LABEL).setLocale(EXPECTED_LOCALE).build();
+        list.add(item);
+        InternationalStringAvro target = InternationalStringAvro.newBuilder().setLocalisedStrings(list).build();
+        return target;
+    }
+
     public static RelatedResource mockRelatedResource(TypeRelatedResourceEnum type) {
         RelatedResource target = new RelatedResource();
         target.setVersion(EXPECTED_VERSION);
@@ -89,6 +105,8 @@ public class MappersMockUtils {
             case DATASET_VERSION:
                 DatasetVersion datasetVersion = mockDatasetVersion();
                 target.setDatasetVersion(datasetVersion);
+            default:
+                break;
         }
         return target;
     }
@@ -110,13 +128,19 @@ public class MappersMockUtils {
     }
 
     public static NameableStatisticalResourceAvro mockNameableStatisticalResourceAvro() {
-        NameableStatisticalResourceAvro target = NameableStatisticalResourceAvro.newBuilder().setIdentifiableStatisticalResource(mockIdentifiableStatisticalResourceAvro())
-                .setDescription(InternationalStringAvroMapper.do2Avro(mockInternationalString())).setTitle(InternationalStringAvroMapper.do2Avro(mockInternationalString())).build();
+        NameableStatisticalResourceAvro target = NameableStatisticalResourceAvro.newBuilder()
+                .setIdentifiableStatisticalResource(mockIdentifiableStatisticalResourceAvro())
+                .setDescription(InternationalStringAvroMapper.do2Avro(mockInternationalString()))
+                .setTitle(InternationalStringAvroMapper.do2Avro(mockInternationalString()))
+                .build();
         return target;
     }
 
     public static IdentifiableStatisticalResourceAvro mockIdentifiableStatisticalResourceAvro() {
-        IdentifiableStatisticalResourceAvro target = IdentifiableStatisticalResourceAvro.newBuilder().setCode(EXPECTED_CODE).setUrn(EXPECTED_URN).build();
+        IdentifiableStatisticalResourceAvro target = IdentifiableStatisticalResourceAvro.newBuilder()
+                .setCode(EXPECTED_CODE)
+                .setUrn(EXPECTED_URN)
+                .build();
         return target;
     }
 
@@ -128,9 +152,15 @@ public class MappersMockUtils {
     }
 
     public static VersionableStatisticalResourceAvro mockVersionableStatisticalResourceAvro() {
-        VersionableStatisticalResourceAvro target = VersionableStatisticalResourceAvro.newBuilder().setNameableStatisticalResource(mockNameableStatisticalResourceAvro())
-                .setNextVersion(EXPECTED_NEXT_VERSION_TYPE).setNextVersionDate(EXPECTED_FUTURE_DATE).setValidFrom(EXPECTED_PAST_DATE)
-                .setVersionRationale(InternationalStringAvroMapper.do2Avro(mockInternationalString())).setValidTo(EXPECTED_FUTURE_DATE).setVersionLogic(EXPECTED_VERSION_LOGIC).build();
+        VersionableStatisticalResourceAvro target = VersionableStatisticalResourceAvro.newBuilder()
+                .setNameableStatisticalResource(mockNameableStatisticalResourceAvro())
+                .setNextVersion(EXPECTED_NEXT_VERSION_TYPE)
+                .setNextVersionDate(EXPECTED_FUTURE_DATE)
+                .setValidFrom(EXPECTED_PAST_DATE)
+                .setVersionRationale(InternationalStringAvroMapper.do2Avro(mockInternationalString()))
+                .setValidTo(EXPECTED_FUTURE_DATE)
+                .setVersionLogic(EXPECTED_VERSION_LOGIC)
+                .build();
         return target;
     }
 
@@ -222,4 +252,107 @@ public class MappersMockUtils {
         return d;
     }
 
+    public static SiemacMetadataStatisticalResourceAvro mockSiemacMetadataStatisticalResourceAvro(TypeRelatedResourceEnum type) {
+        List<ExternalItemAvro> listExternalItemAvro = mockListExternalItemAvro();
+        SiemacMetadataStatisticalResourceAvro target = SiemacMetadataStatisticalResourceAvro.newBuilder()
+                .setLifecycleStatisticalResource(mockLifeCycleStatisticalResourceAvro(EXPECTED_RELATED_RESOURCE_TYPE))
+                .setAbstractLogic(mockInternationalStringAvro())
+                .setAccessRights(mockInternationalStringAvro())
+                .setCommonMetadata(mockExternalItemAvro())
+                .setConformsTo(mockInternationalStringAvro())
+                .setConformsToInternal(mockInternationalStringAvro())
+                .setContributors(listExternalItemAvro)
+                .setCopyrightedDate(EXPECTED_COPYRIGHT)
+                .setCreator(mockExternalItemAvro())
+                .setKeywords(mockInternationalStringAvro())
+                .setLanguage(mockExternalItemAvro())
+                .setLanguages(listExternalItemAvro)
+                .setLastUpdate(EXPECTED_PAST_DATE)
+                .setMediators(listExternalItemAvro)
+                .setNewnessUntilDate(EXPECTED_FUTURE_DATE)
+                .setPublisherContributors(listExternalItemAvro)
+                .setPublishers(listExternalItemAvro)
+                .setReplaces(mockRelatedResourceAvro(type))
+                .setResourceCreatedDate(EXPECTED_PAST_DATE)
+                .setStatisticalOperationInstances(listExternalItemAvro)
+                .setSubtitle(mockInternationalStringAvro())
+                .setTitleAlternative(mockInternationalStringAvro())
+                .setType(StatisticalResourceTypeEnum.COLLECTION)
+                .setUserModifiedKeywords(true)
+                .build();
+        return target;
+    }
+
+    public static SiemacMetadataStatisticalResource mockSiemacMetadataStatisticalResource(TypeRelatedResourceEnum type) {
+        List<ExternalItem> listExternalItem = mockListExternalItem();
+        SiemacMetadataStatisticalResource target = new SiemacMetadataStatisticalResource();
+        target.setCode(EXPECTED_CODE);
+        target.setStatisticalOperation(mockExternalItem());
+        target.setTitle(mockInternationalString());
+        target.setDescription(mockInternationalString());
+        target.setUrn(EXPECTED_URN);
+        target.setNextVersionDate(EXPECTED_FUTURE_DATE);
+        target.setValidFrom(EXPECTED_PAST_DATE);
+        target.setValidTo(EXPECTED_FUTURE_DATE);
+        target.setVersionRationale(mockInternationalString());
+        target.setNextVersion(EXPECTED_NEXT_VERSION_TYPE);
+        target.setVersionLogic(EXPECTED_VERSION_LOGIC);
+
+        target.setCreationDate(EXPECTED_PAST_DATE);
+        target.setCreationUser(EXPECTED_USER + "Creation");
+        target.setProductionValidationDate(EXPECTED_PAST_DATE);
+        target.setProductionValidationUser(EXPECTED_USER + "ProductionValidation");
+        target.setDiffusionValidationDate(EXPECTED_PAST_DATE);
+        target.setDiffusionValidationUser(EXPECTED_USER + "DiffusionValidation");
+        target.setRejectValidationDate(EXPECTED_PAST_DATE);
+        target.setRejectValidationUser(EXPECTED_USER + "RejectValidation");
+        target.setPublicationDate(EXPECTED_PAST_DATE);
+        target.setPublicationUser(EXPECTED_USER + "Publication");
+
+        target.setLastVersion(EXPECTED_LAST_VERSION);
+        target.setProcStatus(PRODUCTION_VALIDATION);
+        target.setReplacesVersion(mockRelatedResource(type));
+        target.setMaintainer(mockExternalItem());
+        target.setAbstractLogic(mockInternationalString());
+        target.setAccessRights(mockInternationalString());
+        target.setCommonMetadata(mockExternalItem());
+        target.setConformsTo(mockInternationalString());
+        target.setConformsToInternal(mockInternationalString());
+        target.setCopyrightedDate(EXPECTED_COPYRIGHT);
+        target.setCreator(mockExternalItem());
+        target.setKeywords(mockInternationalString());
+        target.setLanguage(mockExternalItem());
+        target.setLastUpdate(EXPECTED_PAST_DATE);
+        target.setNewnessUntilDate(EXPECTED_FUTURE_DATE);
+        target.setReplaces(mockRelatedResource(type));
+        target.setResourceCreatedDate(EXPECTED_PAST_DATE);
+        target.setSubtitle(mockInternationalString());
+        target.setTitleAlternative(mockInternationalString());
+        target.setType(StatisticalResourceTypeEnum.COLLECTION);
+        target.setUserModifiedKeywords(true);
+        listExternalItem.forEach(item -> {
+            target.addContributor(item);
+            target.addLanguage(item);
+            target.addMediator(item);
+            target.addPublisher(item);
+            target.addPublisherContributor(item);
+            target.addStatisticalOperationInstance(item);
+        });
+
+        return target;
+    }
+
+    public static List<ExternalItem> mockListExternalItem() {
+        List<ExternalItem> listExternalItem = new ArrayList<>();
+        listExternalItem.add(mockExternalItem());
+        listExternalItem.add(mockExternalItem());
+        return listExternalItem;
+    }
+
+    public static List<ExternalItemAvro> mockListExternalItemAvro() {
+        List<ExternalItemAvro> listExternalItemAvro = new ArrayList<>();
+        listExternalItemAvro.add(mockExternalItemAvro());
+        listExternalItemAvro.add(mockExternalItemAvro());
+        return listExternalItemAvro;
+    }
 }

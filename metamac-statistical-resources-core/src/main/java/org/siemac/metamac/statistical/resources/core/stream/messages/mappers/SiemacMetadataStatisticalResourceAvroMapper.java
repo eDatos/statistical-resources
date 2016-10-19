@@ -59,9 +59,9 @@ public class SiemacMetadataStatisticalResourceAvroMapper {
         fillMetadata(source, target);
         return target;
     }
-    
-    
-    public SiemacMetadataStatisticalResourceAvro do2Avro(SiemacMetadataStatisticalResource source) throws MetamacException {
+
+
+    public static SiemacMetadataStatisticalResourceAvro do2Avro(SiemacMetadataStatisticalResource source) throws MetamacException {
         SiemacMetadataStatisticalResourceAvro target = SiemacMetadataStatisticalResourceAvro.newBuilder()
                 .setLifecycleStatisticalResource(LifecycleStatisticalResourceAvroMapper.do2Avro(source))
                 .setUserModifiedKeywords(source.getUserModifiedKeywords())
@@ -93,40 +93,39 @@ public class SiemacMetadataStatisticalResourceAvroMapper {
 
     }
 
-    protected List<ExternalItemAvro> generateListOfLanguages(SiemacMetadataStatisticalResource source) {
+    protected static List<ExternalItemAvro> generateListOfLanguages(SiemacMetadataStatisticalResource source) {
         List<ExternalItemAvro> list = generateListGeneric(source.getLanguages());
         return list;
     }
 
-    protected List<ExternalItemAvro> generateListOfStatisticalOperationInstances(SiemacMetadataStatisticalResource source) {
+    protected static List<ExternalItemAvro> generateListOfStatisticalOperationInstances(SiemacMetadataStatisticalResource source) {
         List<ExternalItemAvro> list = generateListGeneric(source.getStatisticalOperationInstances());
         return list;
     }
 
-    protected List<ExternalItemAvro> generateListOfContributors(SiemacMetadataStatisticalResource source) {
+    protected static List<ExternalItemAvro> generateListOfContributors(SiemacMetadataStatisticalResource source) {
         List<ExternalItemAvro> list = generateListGeneric(source.getContributor());
         return list;
     }
 
-    protected  List<ExternalItemAvro> generateListOfPublishers(SiemacMetadataStatisticalResource source) {
+    protected static List<ExternalItemAvro> generateListOfPublishers(SiemacMetadataStatisticalResource source) {
         List<ExternalItemAvro> list = generateListGeneric(source.getPublisher());
         return list;
     }
 
-    protected List<ExternalItemAvro> generateListOfPublishersContributors(SiemacMetadataStatisticalResource source) {
+    protected static List<ExternalItemAvro> generateListOfPublishersContributors(SiemacMetadataStatisticalResource source) {
         List<ExternalItemAvro> list = generateListGeneric(source.getPublisherContributor());
         return list;
     }
 
-    protected List<ExternalItemAvro> generateListOfMediators(SiemacMetadataStatisticalResource source) {
+    protected static List<ExternalItemAvro> generateListOfMediators(SiemacMetadataStatisticalResource source) {
         List<ExternalItemAvro> list = generateListGeneric(source.getMediator());
         return list;
     }
 
-    private List<ExternalItemAvro> generateListGeneric(List<ExternalItem> source) {
-        List<ExternalItemAvro> list = null;
+    private static List<ExternalItemAvro> generateListGeneric(List<ExternalItem> source) {
+        List<ExternalItemAvro> list = new ArrayList<ExternalItemAvro>();
         for (ExternalItem extItem : source) {
-            list = new ArrayList<ExternalItemAvro>();
             list.add(ExternalItemAvroMapper.do2Avro(extItem));
         }
         return list;

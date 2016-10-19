@@ -38,7 +38,6 @@ public class LifecycleStatisticalResourceAvroMapperTest {
 
     @Test
     public void testLifeCycleStatisticalResourceAvro2Do() throws MetamacException {
-        // when(datasetVersionRepository.retrieveLastVersion(any())).thenReturn(MappersMockUtils.mockDatasetVersion());
         when(datasetVersionRepository.retrieveByUrn(any())).thenReturn(MappersMockUtils.mockDatasetVersion());
 
         LifeCycleStatisticalResource expected = MappersMockUtils.mockLifeCycleStatisticalResource(TypeRelatedResourceEnum.DATASET_VERSION);
