@@ -542,12 +542,14 @@
                             <!-- It's necessary to import the classes to resolve schema dependencies -->
                             <imports>
                                 <import>${project.basedir}/src/main/resources/avro-schemas/international-string.avsc</import>
+                                <import>${project.basedir}/src/main/resources/avro-schemas/statistic-officiality.avsc</import>
                                 <import>${project.basedir}/src/main/resources/avro-schemas/related-resource.avsc</import>
                                 <import>${project.basedir}/src/main/resources/avro-schemas/external-item.avsc</import>
                                 <import>${project.basedir}/src/main/resources/avro-schemas/identifiable-statistical-resource.avsc</import>
                                 <import>${project.basedir}/src/main/resources/avro-schemas/nameable-statistical-resource.avsc</import>
                                 <import>${project.basedir}/src/main/resources/avro-schemas/versionable-statistical-resource.avsc</import>
                                 <import>${project.basedir}/src/main/resources/avro-schemas/lifecycle-statistical-resource.avsc</import>
+                                <import>${project.basedir}/src/main/resources/avro-schemas/siemac-metadata-statistical-resource.avsc</import>
                             </imports>
                             <sourceDirectory>${project.basedir}/src/main/resources/avro-schemas/</sourceDirectory>
                             <outputDirectory>${project.basedir}/target/generated-sources/avro/</outputDirectory>

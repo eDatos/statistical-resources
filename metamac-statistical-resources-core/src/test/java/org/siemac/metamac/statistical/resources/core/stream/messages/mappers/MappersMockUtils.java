@@ -16,6 +16,7 @@ import org.siemac.metamac.statistical.resources.core.common.domain.LocalisedStri
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResource;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.StatisticOfficiality;
 import org.siemac.metamac.statistical.resources.core.enume.domain.NextVersionTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
@@ -28,11 +29,13 @@ import org.siemac.metamac.statistical.resources.core.stream.messages.LifecycleSt
 import org.siemac.metamac.statistical.resources.core.stream.messages.NameableStatisticalResourceAvro;
 import org.siemac.metamac.statistical.resources.core.stream.messages.RelatedResourceAvro;
 import org.siemac.metamac.statistical.resources.core.stream.messages.SiemacMetadataStatisticalResourceAvro;
+import org.siemac.metamac.statistical.resources.core.stream.messages.StatisticOfficialityAvro;
 import org.siemac.metamac.statistical.resources.core.stream.messages.VersionableStatisticalResourceAvro;
 
 public class MappersMockUtils {
 
-    private static final TypeRelatedResourceEnum     EXPECTED_RELATED_RESOURCE_TYPE = TypeRelatedResourceEnum.DATASET;
+    protected static final String                    EXPECTED_IDENTIFIER            = "EXPECTED_IDENTIFIER";
+    protected static final TypeRelatedResourceEnum   EXPECTED_RELATED_RESOURCE_TYPE = TypeRelatedResourceEnum.DATASET;
     protected static final ProcStatusEnum            PRODUCTION_VALIDATION          = ProcStatusEnum.PRODUCTION_VALIDATION;
     protected static final boolean                   EXPECTED_LAST_VERSION          = true;
     protected static final String                    EXPECTED_USER                  = "Expected User Name";
@@ -354,5 +357,18 @@ public class MappersMockUtils {
         listExternalItemAvro.add(mockExternalItemAvro());
         listExternalItemAvro.add(mockExternalItemAvro());
         return listExternalItemAvro;
+    }
+
+    public static StatisticOfficialityAvro mockStatisticOfficialityAvro() {
+        StatisticOfficialityAvro target = StatisticOfficialityAvro.newBuilder().setDescription(mockInternationalStringAvro()).setIdentifier(EXPECTED_IDENTIFIER).setVersion(EXPECTED_VERSION).build();
+        return target;
+    }
+
+    public static StatisticOfficiality mockStatisticOfficiality() {
+        StatisticOfficiality target = new StatisticOfficiality();
+        target.setDescription(mockInternationalString());
+        target.setIdentifier(EXPECTED_IDENTIFIER);
+        target.setVersion(EXPECTED_VERSION);
+        return target;
     }
 }
