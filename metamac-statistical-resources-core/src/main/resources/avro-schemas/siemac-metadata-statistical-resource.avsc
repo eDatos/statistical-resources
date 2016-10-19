@@ -5,9 +5,9 @@
      "fields" : [
         {"name" : "lifecycleStatisticalResource", "type": "LifecycleStatisticalResourceAvro" },
         {"name" : "userModifiedKeywords" , "type" : "boolean"},
-        {"name" : "resourceCreatedDate" , "type" : {"type":"int", "logicalType": "Date"}},
-        {"name" : "lastUpdate" , "type" : {"type":"int", "logicalType": "Date"}},
-        {"name" : "newnessUntilDate" , "type" : {"type":"int", "logicalType": "Date"}},
+        {"name" : "resourceCreatedDate" , "type" : {"type":"string", "java-class" : "org.joda.time.DateTime"}},
+        {"name" : "lastUpdate" , "type" : {"type":"string", "java-class" : "org.joda.time.DateTime"}},
+        {"name" : "newnessUntilDate" , "type" : {"type":"string", "java-class" : "org.joda.time.DateTime"}},
         {"name" : "copyrightedDate" , "type" : "int"},
         {"name" : "language", "type" : "ExternalItemAvro"}, 
         {"name" : "subtitle", "type" : "InternationalStringAvro"},
@@ -15,19 +15,19 @@
         {"name" : "abstractLogic", "type" : "InternationalStringAvro"},
         {"name" : "keywords", "type" : "InternationalStringAvro"},
         {"name" : "commonMetadata", "type" : "ExternalItemAvro"}, 
-        {"name" : "type" , "type" : {"name" : "StatisticalResourceTypeEnumAvro", "type":"enum", "symbols" : ["DATASET","COLLECTION","QUERY"]}},
+        {"name" : "type" , "type" : {"type" : "string", "java-class":"org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum"}},
         {"name" : "creator", "type" : "ExternalItemAvro"}, 
         {"name" : "conformsTo", "type" : "InternationalStringAvro"}, 
-        {"name" : "conformsToInternational", "type" : "InternationalStringAvro"},
+        {"name" : "conformsToInternal", "type" : "InternationalStringAvro"},
         {"name" : "replaces", "type" : "RelatedResourceAvro"}, //TODO en java es RelatedResource
-        {"name" : "isReplacedVy", "type" : "RelatedResourceAvro"}, //TODO en java es RelatedResource
+        //TODO ---> Pendiente de merge de master {"name" : "isReplacedBy", "type" : "RelatedResourceAvro"}, //TODO en java es RelatedResource
         {"name" : "accessRights", "type" : "InternationalStringAvro"}, 
         {"name" : "languages", "type" : { "type" : "array", "items": "ExternalItemAvro"}},
         {"name" : "statisticalOperationInstances", "type" : { "type" : "array", "items": "ExternalItemAvro"}},
-        {"name" : "contributor", "type" : { "type" : "array", "items": "ExternalItemAvro"}},
-        {"name" : "publisher", "type" : { "type" : "array", "items": "ExternalItemAvro"}},
-        {"name" : "publisherContributor", "type" : { "type" : "array", "items": "ExternalItemAvro"}},
-        {"name" : "mediator", "type" : { "type" : "array", "items": "ExternalItemAvro"}} 
+        {"name" : "contributors", "type" : { "type" : "array", "items": "ExternalItemAvro"}},
+        {"name" : "publishers", "type" : { "type" : "array", "items": "ExternalItemAvro"}},
+        {"name" : "publisherContributors", "type" : { "type" : "array", "items": "ExternalItemAvro"}},
+        {"name" : "mediators", "type" : { "type" : "array", "items": "ExternalItemAvro"}} 
      ]
  }
  

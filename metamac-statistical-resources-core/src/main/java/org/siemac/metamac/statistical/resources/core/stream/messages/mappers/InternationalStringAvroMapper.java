@@ -8,13 +8,24 @@ import org.siemac.metamac.statistical.resources.core.common.domain.LocalisedStri
 import org.siemac.metamac.statistical.resources.core.stream.messages.InternationalStringAvro;
 import org.siemac.metamac.statistical.resources.core.stream.messages.InternationalStringItemAvro;
 
-public class InternationalStringDo2Avro {
+public class InternationalStringAvroMapper {
 
-    protected InternationalStringDo2Avro() {
-        // TODO Auto-generated constructor stub
+    protected InternationalStringAvroMapper() {
+    }
+    
+    public static InternationalString avro2Do(InternationalStringAvro source) {
+        InternationalString target = new InternationalString();
+        for (InternationalStringItemAvro s : source.getLocalisedStrings()) {
+            LocalisedString localisedText = new LocalisedString();
+            localisedText.setLabel((String) s.getLabel());
+            localisedText.setLocale((String) s.getLocale());
+            target.addText(localisedText);
+        }
+        return target;
     }
 
-    public static InternationalStringAvro internationalString2Avro(InternationalString src) {
+    
+    public static InternationalStringAvro do2Avro(InternationalString src) {
         List<InternationalStringItemAvro> localisedStrings = new ArrayList<InternationalStringItemAvro>();
         for (LocalisedString s : src.getTexts()) {
             InternationalStringItemAvro isia = InternationalStringItemAvro

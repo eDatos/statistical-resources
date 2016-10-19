@@ -5,8 +5,8 @@
     "fields" : [
         {"name" : "code", "type" : "string"},
         {"name" : "urn", "type" : "string"},
-        {"name" : "type", "type" : {"type" : "string", "java-class" : " org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum"}},
-        {"name" : "title", "type" : "InternationalStringAvro"},   
-        {"name" : "statisticalOperationUrn", "type" : "string"}
+        {"name" : "title", "type" : "InternationalStringAvro"},
+        {"name" : "statisticalOperationUrn", "type" : "string"},
+        {"name" : "type", "type" : {"type" : "string", "java-class" : " org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum"}}
     ]
 }
