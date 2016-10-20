@@ -552,6 +552,7 @@
                                 <import>${project.basedir}/src/main/resources/avro-schemas/versionable-statistical-resource.avsc</import>
                                 <import>${project.basedir}/src/main/resources/avro-schemas/lifecycle-statistical-resource.avsc</import>
                                 <import>${project.basedir}/src/main/resources/avro-schemas/siemac-metadata-statistical-resource.avsc</import>
+                                <import>${project.basedir}/src/main/resources/avro-schemas/categorisation.avsc</import>
                                 <import>${project.basedir}/src/main/resources/avro-schemas/datasource.avsc</import>
                             </imports>
                             <sourceDirectory>${project.basedir}/src/main/resources/avro-schemas/</sourceDirectory>

@@ -1,25 +1,4 @@
   [
-           
-      {
-          "namespace": "org.siemac.metamac.statistical.resources.core.stream.messages",
-          "type" : "record",
-          "name" : "CategorisationAvro",
-          "fields" : [
-              {"name" : "validFromEffective", "type" : {"type":"string", "java-class" : "org.joda.time.DateTime"}},
-              {"name" : "validToEffective", "type" : {"type":"string", "java-class" : "org.joda.time.DateTime"}},
-              {"name" : "createdDate", "type" : {"type":"string", "java-class" : "org.joda.time.DateTime"}},
-              {"name" : "createdBy", "type" : "string" },
-              {"name" : "lastUpdated", "type" : {"type":"string", "java-class" : "org.joda.time.DateTime"}},
-              {"name" : "lastUpdatedBy", "type" : "string" },
-              {"name" : "version", "type" : "long" },
-              {"name" : "category", "type" : "ExternalItemAvro" },
-              {"name" : "datasetVersionUrn", "type" : "string" },//TODO DatasetVersion. String para evitar fallos al compilar schema por no estar definia datasetversionavro
-              {"name" : "versionableStatisticalResource", "type" : "VersionableStatisticalResourceAvro" },
-              {"name" : "mantainer", "type" : "ExternalItemAvro" }
-              
-          ]
-              
-      },
       
       {
           "namespace": "org.siemac.metamac.statistical.resources.core.stream.messages",

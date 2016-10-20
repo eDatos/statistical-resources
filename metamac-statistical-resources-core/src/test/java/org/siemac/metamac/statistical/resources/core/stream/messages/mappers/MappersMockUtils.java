@@ -15,6 +15,7 @@ import org.siemac.metamac.statistical.resources.core.common.domain.International
 import org.siemac.metamac.statistical.resources.core.common.domain.LocalisedString;
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResource;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.AttributeValue;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.Categorisation;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.CodeDimension;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
@@ -25,6 +26,7 @@ import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
 import org.siemac.metamac.statistical.resources.core.stream.messages.AttributeValueAvro;
+import org.siemac.metamac.statistical.resources.core.stream.messages.CategorisationAvro;
 import org.siemac.metamac.statistical.resources.core.stream.messages.CodeDimensionAvro;
 import org.siemac.metamac.statistical.resources.core.stream.messages.DatasourceAvro;
 import org.siemac.metamac.statistical.resources.core.stream.messages.ExternalItemAvro;
@@ -441,6 +443,39 @@ public class MappersMockUtils {
         target.setIdentifier(EXPECTED_IDENTIFIER);
         target.setTitle(EXPECTED_TITLE);
         target.setVersion(EXPECTED_VERSION);
+        return target;
+    }
+
+    public static CategorisationAvro mockCategorisationAvro() {
+        CategorisationAvro target = CategorisationAvro.newBuilder()
+                .setDatasetVersionUrn(EXPECTED_URN)
+                .setCategory(mockExternalItemAvro())
+                .setCreatedBy(EXPECTED_USER)
+                .setCreatedDate(EXPECTED_PAST_DATE)
+                .setVersion(EXPECTED_VERSION)
+                .setLastUpdated(EXPECTED_PAST_DATE)
+                .setLastUpdatedBy(EXPECTED_USER)
+                .setMaintainer(mockExternalItemAvro())
+                .setValidFromEffective(EXPECTED_PAST_DATE)
+                .setValidToEffective(EXPECTED_FUTURE_DATE)
+                .setVersionableStatisticalResource(mockVersionableStatisticalResourceAvro())
+                .build();
+        return target;
+    }
+
+    public static Categorisation mockCategorisation() {
+        Categorisation target = new Categorisation();
+        target.setDatasetVersion(mockDatasetVersion());
+        target.setCategory(mockExternalItem());
+        target.setCreatedBy(EXPECTED_USER);
+        target.setCreatedDate(EXPECTED_PAST_DATE);
+        target.setVersion(EXPECTED_VERSION);
+        target.setLastUpdated(EXPECTED_PAST_DATE);
+        target.setLastUpdatedBy(EXPECTED_USER);
+        target.setMaintainer(mockExternalItem());
+        target.setValidFromEffective(EXPECTED_PAST_DATE);
+        target.setValidToEffective(EXPECTED_FUTURE_DATE);
+        target.setVersionableStatisticalResource(mockVersionableStatisticalResource());
         return target;
     }
 }
