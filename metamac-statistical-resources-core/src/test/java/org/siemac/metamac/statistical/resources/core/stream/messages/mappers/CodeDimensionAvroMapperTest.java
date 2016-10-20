@@ -3,7 +3,6 @@ package org.siemac.metamac.statistical.resources.core.stream.messages.mappers;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 
 import org.junit.Before;
@@ -40,7 +39,7 @@ public class CodeDimensionAvroMapperTest {
 
     @Test
     public void testAvro2Do() throws MetamacException {
-        when(datasetVersionRepository.retrieveLastVersion(any())).thenReturn(MappersMockUtils.mockDatasetVersion());
+        when(datasetVersionRepository.retrieveByUrn(MappersMockUtils.EXPECTED_URN)).thenReturn(MappersMockUtils.mockDatasetVersion());
 
         CodeDimension expected = MappersMockUtils.mockCodeDimension();
         CodeDimensionAvro source = MappersMockUtils.mockCodeDimensionAvro();

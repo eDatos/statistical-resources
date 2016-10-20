@@ -4,7 +4,8 @@
      "name": "IdentifiableStatisticalResourceAvro",
      "fields" : [
          {"name" : "code" , "type" : "string"},
-         {"name" : "urn" , "type" : "string"}
+         {"name" : "urn" , "type" : "string"},
+         {"name" : "statisticalOperation", "type" : "ExternalItemAvro"}
      ]
  }
  

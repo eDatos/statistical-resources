@@ -19,7 +19,7 @@ public class AvroMapperUtils {
     protected static DatasetVersion retrieveDatasetVersion(String datasetVersionUrn) throws MetamacException {
         DatasetVersion target = null;
         try {
-            target = datasetVersionRepository.retrieveLastVersion(datasetVersionUrn);
+            target = datasetVersionRepository.retrieveByUrn(datasetVersionUrn);
         } catch (MetamacException e) {
             throw new MetamacException(ServiceExceptionType.DATASET_VERSION_NOT_FOUND, "DatasetVersion of Datasource not found");
         }

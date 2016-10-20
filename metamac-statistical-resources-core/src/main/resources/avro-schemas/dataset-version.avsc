@@ -1,20 +1,4 @@
-  [
-
-      {
-          "namespace": "org.siemac.metamac.statistical.resources.core.stream.messages",
-          "type" : "record",
-          "name" : "DatasetAvro",
-          "fields" : [
-              {"name" : "identifiableStatisticalResource", "type" : "IdentifiableStatisticalResourceAvro" },
-              {"name" : "versions", "type" : {"type" : "array", "items" : "string"}}, //TODO DatasetVersion. String para evitar fallos al compilar schema por no estar definia datasetversionavro
-              {"name" : "version", "type" : "string" },
-              {"name" : "title", "type" : "string" },
-              {"name" : "dimensionRepresentationMappings", "type" : {"type" : "array", "items" : "DimensionRepresentationMappingAvro"}}
-          ]
-      },
-      
-      
-      {
+ {
     "namespace": "org.siemac.metamac.statistical.resources.core.stream.messages",
     "type" : "record",
     "name" : "DatasetVersionAvro",
@@ -45,5 +29,3 @@
         {"name" : "statisticalUnit", "type" : {"type": "array", "items" : "ExternalItemAvro"}}
     ]
 }
-]
-]

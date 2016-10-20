@@ -11,6 +11,7 @@ public class IdentifiableStatisticalResourceAvroMapper {
     public static void fillMetadata(IdentifiableStatisticalResourceAvro source, IdentifiableStatisticalResource target) {
         target.setCode(source.getCode());
         target.setUrn(source.getUrn());
+        target.setStatisticalOperation(ExternalItemAvroMapper.avro2Do(source.getStatisticalOperation()));
     }
 
     public static IdentifiableStatisticalResource avro2Do(IdentifiableStatisticalResourceAvro source) {
@@ -20,7 +21,11 @@ public class IdentifiableStatisticalResourceAvroMapper {
     }
 
     public static IdentifiableStatisticalResourceAvro do2Avro(IdentifiableStatisticalResource source) {
-        IdentifiableStatisticalResourceAvro target = IdentifiableStatisticalResourceAvro.newBuilder().setCode(source.getCode()).setUrn(source.getUrn()).build();
+        IdentifiableStatisticalResourceAvro target = IdentifiableStatisticalResourceAvro.newBuilder()
+                .setCode(source.getCode())
+                .setUrn(source.getUrn())
+                .setStatisticalOperation(ExternalItemAvroMapper.do2Avro(source.getStatisticalOperation()))
+                .build();
         return target;
     }
 

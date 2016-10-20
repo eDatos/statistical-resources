@@ -3,6 +3,7 @@ package org.siemac.metamac.statistical.resources.core.stream.messages.mappers;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.startsWith;
 import static org.mockito.Mockito.when;
 
 import org.junit.Before;
@@ -39,9 +40,10 @@ public class DimensionRepresentationMappingAvroMapperTest {
 
     @Test
     public void testAvro2Do() throws MetamacException {
-        when(datasetRepository.retrieveByUrn(MappersMockUtils.EXPECTED_URN)).thenReturn(MappersMockUtils.mockDataset());
-
         DimensionRepresentationMapping expected = MappersMockUtils.mockDimensionRepresentationMapping();
+
+        when(datasetRepository.retrieveByUrn(startsWith(MappersMockUtils.EXPECTED_URN))).thenReturn(expected.getDataset());
+
         DimensionRepresentationMappingAvro source = MappersMockUtils.mockDimensionRepresentationMappingAvro();
 
         DimensionRepresentationMapping actual = DimensionRepresentationMappingAvroMapper.avro2Do(source);

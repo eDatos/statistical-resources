@@ -41,7 +41,7 @@ public class DatasourceAvroMapperTest {
 
     @Test
     public void testAvro2Do() throws MetamacException {
-        when(datasetVersionRepository.retrieveLastVersion(any())).thenReturn(MappersMockUtils.mockDatasetVersion());
+        when(datasetVersionRepository.retrieveByUrn(any())).thenReturn(MappersMockUtils.mockDatasetVersion());
 
         Datasource expected = MappersMockUtils.mockDatasource();
         DatasourceAvro source = MappersMockUtils.mockDatasourceAvro();
