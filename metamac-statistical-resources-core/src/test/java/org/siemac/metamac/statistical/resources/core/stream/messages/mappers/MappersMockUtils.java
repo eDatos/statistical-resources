@@ -14,6 +14,7 @@ import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
 import org.siemac.metamac.statistical.resources.core.common.domain.InternationalString;
 import org.siemac.metamac.statistical.resources.core.common.domain.LocalisedString;
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResource;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.AttributeValue;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.CodeDimension;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
@@ -23,6 +24,7 @@ import org.siemac.metamac.statistical.resources.core.enume.domain.NextVersionTyp
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
+import org.siemac.metamac.statistical.resources.core.stream.messages.AttributeValueAvro;
 import org.siemac.metamac.statistical.resources.core.stream.messages.CodeDimensionAvro;
 import org.siemac.metamac.statistical.resources.core.stream.messages.DatasourceAvro;
 import org.siemac.metamac.statistical.resources.core.stream.messages.ExternalItemAvro;
@@ -400,8 +402,13 @@ public class MappersMockUtils {
     }
 
     public static CodeDimensionAvro mockCodeDimensionAvro() {
-        CodeDimensionAvro target = CodeDimensionAvro.newBuilder().setDatasetVersionUrn(EXPECTED_URN).setDsdComponentId(EXPECTED_IDENTIFIER).setIdentifier(EXPECTED_IDENTIFIER).setTitle(EXPECTED_TITLE)
-                .setVersion(EXPECTED_VERSION).build();
+        CodeDimensionAvro target = CodeDimensionAvro.newBuilder()
+                .setDatasetVersionUrn(EXPECTED_URN)
+                .setDsdComponentId(EXPECTED_IDENTIFIER)
+                .setIdentifier(EXPECTED_IDENTIFIER)
+                .setTitle(EXPECTED_TITLE)
+                .setVersion(EXPECTED_VERSION)
+                .build();
         return target;
     }
 
@@ -415,4 +422,25 @@ public class MappersMockUtils {
         return target;
     }
 
+
+    public static AttributeValueAvro mockAttributeValueAvro() {
+        AttributeValueAvro target = AttributeValueAvro.newBuilder()
+                .setDatasetVersionUrn(EXPECTED_URN)
+                .setDsdComponentId(EXPECTED_IDENTIFIER)
+                .setIdentifier(EXPECTED_IDENTIFIER)
+                .setTitle(EXPECTED_TITLE)
+                .setVersion(EXPECTED_VERSION)
+                .build();
+        return target;
+    }
+
+    public static AttributeValue mockAttributeValue() {
+        AttributeValue target = new AttributeValue();
+        target.setDatasetVersion(mockDatasetVersion());
+        target.setDsdComponentId(EXPECTED_IDENTIFIER);
+        target.setIdentifier(EXPECTED_IDENTIFIER);
+        target.setTitle(EXPECTED_TITLE);
+        target.setVersion(EXPECTED_VERSION);
+        return target;
+    }
 }
