@@ -21,6 +21,7 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.StatisticOfficiality;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.TemporalCode;
 import org.siemac.metamac.statistical.resources.core.enume.domain.NextVersionTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
@@ -38,6 +39,7 @@ import org.siemac.metamac.statistical.resources.core.stream.messages.NameableSta
 import org.siemac.metamac.statistical.resources.core.stream.messages.RelatedResourceAvro;
 import org.siemac.metamac.statistical.resources.core.stream.messages.SiemacMetadataStatisticalResourceAvro;
 import org.siemac.metamac.statistical.resources.core.stream.messages.StatisticOfficialityAvro;
+import org.siemac.metamac.statistical.resources.core.stream.messages.TemporalCodeAvro;
 import org.siemac.metamac.statistical.resources.core.stream.messages.VersionableStatisticalResourceAvro;
 
 public class MappersMockUtils {
@@ -476,6 +478,23 @@ public class MappersMockUtils {
         target.setValidFromEffective(EXPECTED_PAST_DATE);
         target.setValidToEffective(EXPECTED_FUTURE_DATE);
         target.setVersionableStatisticalResource(mockVersionableStatisticalResource());
+        return target;
+    }
+    
+    public static TemporalCodeAvro mockTemporalCodeAvro() {
+        TemporalCodeAvro target = TemporalCodeAvro.newBuilder()
+                .setIdentifier(EXPECTED_IDENTIFIER)
+                .setTitle(EXPECTED_TITLE)
+                .setVersion(EXPECTED_VERSION)
+                .build();
+        return target;
+    }
+
+    public static TemporalCode mockTemporalCode() {
+        TemporalCode target = new TemporalCode();
+        target.setIdentifier(EXPECTED_IDENTIFIER);
+        target.setTitle(EXPECTED_TITLE);
+        target.setVersion(EXPECTED_VERSION);
         return target;
     }
 }

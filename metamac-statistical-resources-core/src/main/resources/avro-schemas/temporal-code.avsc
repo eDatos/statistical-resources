@@ -1,0 +1,10 @@
+  {
+      "namespace": "org.siemac.metamac.statistical.resources.core.stream.messages",
+      "type" : "record",
+      "name" : "TemporalCodeAvro",
+      "fields" : [
+          {"name" : "identifier", "type" : "string" },
+          {"name" : "version", "type" : "long" },
+          {"name" : "title", "type" : "string" }
+      ]
+  }
