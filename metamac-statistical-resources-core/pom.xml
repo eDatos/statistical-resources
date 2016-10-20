@@ -543,6 +543,7 @@
                             <imports>
                                 <import>${project.basedir}/src/main/resources/avro-schemas/international-string.avsc</import>
                                 <import>${project.basedir}/src/main/resources/avro-schemas/statistic-officiality.avsc</import>
+                                <import>${project.basedir}/src/main/resources/avro-schemas/code-dimension.avsc</import>
                                 <import>${project.basedir}/src/main/resources/avro-schemas/related-resource.avsc</import>
                                 <import>${project.basedir}/src/main/resources/avro-schemas/external-item.avsc</import>
                                 <import>${project.basedir}/src/main/resources/avro-schemas/identifiable-statistical-resource.avsc</import>

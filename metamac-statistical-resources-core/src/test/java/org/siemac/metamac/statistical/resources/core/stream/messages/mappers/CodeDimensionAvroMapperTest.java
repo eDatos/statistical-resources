@@ -2,7 +2,6 @@ package org.siemac.metamac.statistical.resources.core.stream.messages.mappers;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
@@ -12,13 +11,13 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.CodeDimension;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionRepository;
-import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
-import org.siemac.metamac.statistical.resources.core.stream.messages.DatasourceAvro;
+import org.siemac.metamac.statistical.resources.core.stream.messages.CodeDimensionAvro;
 import org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts;
 
 
-public class DatasourceAvroMapperTest {
+public class CodeDimensionAvroMapperTest {
 
     @Mock
     private static DatasetVersionRepository datasetVersionRepository;
@@ -31,10 +30,10 @@ public class DatasourceAvroMapperTest {
 
     @Test
     public void testDo2Avro() {
-        DatasourceAvro expected = MappersMockUtils.mockDatasourceAvro();
-        Datasource source = MappersMockUtils.mockDatasource();
+        CodeDimensionAvro expected = MappersMockUtils.mockCodeDimensionAvro();
+        CodeDimension source = MappersMockUtils.mockCodeDimension();
 
-        DatasourceAvro actual = DatasourceAvroMapper.do2Avro(source);
+        CodeDimensionAvro actual = CodeDimensionAvroMapper.do2Avro(source);
 
         assertThat(actual, is(equalTo(expected)));
     }
@@ -43,21 +42,20 @@ public class DatasourceAvroMapperTest {
     public void testAvro2Do() throws MetamacException {
         when(datasetVersionRepository.retrieveLastVersion(any())).thenReturn(MappersMockUtils.mockDatasetVersion());
 
-        Datasource expected = MappersMockUtils.mockDatasource();
-        DatasourceAvro source = MappersMockUtils.mockDatasourceAvro();
+        CodeDimension expected = MappersMockUtils.mockCodeDimension();
+        CodeDimensionAvro source = MappersMockUtils.mockCodeDimensionAvro();
 
-        Datasource actual = DatasourceAvroMapper.avro2Do(source);
+        CodeDimension actual = CodeDimensionAvroMapper.avro2Do(source);
 
-        assertEqualDatasourceDo(expected, actual);
-    }
-
-    protected void assertEqualDatasourceDo(Datasource expected, Datasource actual) throws MetamacException {
-        assertThat(actual.getDateNextUpdate(), is(equalTo(expected.getDateNextUpdate())));
-        assertThat(actual.getFilename(), is(equalTo(expected.getFilename())));
-        assertEquals(actual.getIdentifiableStatisticalResource(), actual.getIdentifiableStatisticalResource());
+        assertThat("getId()", actual.getId(), is(equalTo(expected.getId())));
+        assertThat("getDsdComponentId()", actual.getDsdComponentId(), is(equalTo(expected.getDsdComponentId())));
+        assertThat(actual.getIdentifier(), is(equalTo(expected.getIdentifier())));
+        assertThat(actual.getTitle(), is(equalTo(expected.getTitle())));
         assertThat(actual.getVersion(), is(equalTo(expected.getVersion())));
 
         DatasetsAsserts.assertEqualsDatasetVersion(expected.getDatasetVersion(), actual.getDatasetVersion());
+
     }
 
 }
+
