@@ -16,11 +16,13 @@ import org.siemac.metamac.statistical.resources.core.common.domain.LocalisedStri
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResource;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.StatisticOfficiality;
 import org.siemac.metamac.statistical.resources.core.enume.domain.NextVersionTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
+import org.siemac.metamac.statistical.resources.core.stream.messages.DatasourceAvro;
 import org.siemac.metamac.statistical.resources.core.stream.messages.ExternalItemAvro;
 import org.siemac.metamac.statistical.resources.core.stream.messages.IdentifiableStatisticalResourceAvro;
 import org.siemac.metamac.statistical.resources.core.stream.messages.InternationalStringAvro;
@@ -34,6 +36,7 @@ import org.siemac.metamac.statistical.resources.core.stream.messages.Versionable
 
 public class MappersMockUtils {
 
+    protected static final String EXPECTED_FILENAME = "EXPECTED_FILENAME";
     protected static final String                    EXPECTED_IDENTIFIER            = "EXPECTED_IDENTIFIER";
     protected static final TypeRelatedResourceEnum   EXPECTED_RELATED_RESOURCE_TYPE = TypeRelatedResourceEnum.DATASET;
     protected static final ProcStatusEnum            PRODUCTION_VALIDATION          = ProcStatusEnum.PRODUCTION_VALIDATION;
@@ -368,6 +371,27 @@ public class MappersMockUtils {
         StatisticOfficiality target = new StatisticOfficiality();
         target.setDescription(mockInternationalString());
         target.setIdentifier(EXPECTED_IDENTIFIER);
+        target.setVersion(EXPECTED_VERSION);
+        return target;
+    }
+    
+    public static DatasourceAvro mockDatasourceAvro() {
+        DatasourceAvro target = DatasourceAvro.newBuilder()
+                .setDatasetVersionUrn(EXPECTED_URN)
+                .setDateNextUpdate(EXPECTED_FUTURE_DATE)
+                .setFileName(EXPECTED_FILENAME)
+                .setIdentifiableStatisticalResource(mockIdentifiableStatisticalResourceAvro())
+                .setVersion(EXPECTED_VERSION)
+                .build();
+        return target;
+    }
+
+    public static Datasource mockDatasource() {
+        Datasource target = new Datasource();
+        target.setDatasetVersion(mockDatasetVersion());
+        target.setDateNextUpdate(EXPECTED_FUTURE_DATE);
+        target.setFilename(EXPECTED_FILENAME);
+        target.setIdentifiableStatisticalResource(mockIdentifiableStatisticalResource());
         target.setVersion(EXPECTED_VERSION);
         return target;
     }

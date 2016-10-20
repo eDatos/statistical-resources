@@ -25,9 +25,6 @@ public class RelatedResourceAvroMapperTest {
     @Mock
     protected DatasetVersionRepository datasetVersionRepository;
 
-    // @InjectMocks
-    // RelatedResourceAvroMapper mapper;
-
     @Before
     public void setUp() throws MetamacException {
         MockitoAnnotations.initMocks(this);
