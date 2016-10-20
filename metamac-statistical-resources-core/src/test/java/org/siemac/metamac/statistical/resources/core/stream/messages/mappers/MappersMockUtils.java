@@ -20,6 +20,7 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.CodeDimensio
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.DimensionRepresentationMapping;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.StatisticOfficiality;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.TemporalCode;
 import org.siemac.metamac.statistical.resources.core.enume.domain.NextVersionTypeEnum;
@@ -30,6 +31,7 @@ import org.siemac.metamac.statistical.resources.core.stream.messages.AttributeVa
 import org.siemac.metamac.statistical.resources.core.stream.messages.CategorisationAvro;
 import org.siemac.metamac.statistical.resources.core.stream.messages.CodeDimensionAvro;
 import org.siemac.metamac.statistical.resources.core.stream.messages.DatasourceAvro;
+import org.siemac.metamac.statistical.resources.core.stream.messages.DimensionRepresentationMappingAvro;
 import org.siemac.metamac.statistical.resources.core.stream.messages.ExternalItemAvro;
 import org.siemac.metamac.statistical.resources.core.stream.messages.IdentifiableStatisticalResourceAvro;
 import org.siemac.metamac.statistical.resources.core.stream.messages.InternationalStringAvro;
@@ -494,6 +496,25 @@ public class MappersMockUtils {
         TemporalCode target = new TemporalCode();
         target.setIdentifier(EXPECTED_IDENTIFIER);
         target.setTitle(EXPECTED_TITLE);
+        target.setVersion(EXPECTED_VERSION);
+        return target;
+    }
+    
+    public static DimensionRepresentationMappingAvro mockDimensionRepresentationMappingAvro() {
+        DimensionRepresentationMappingAvro target = DimensionRepresentationMappingAvro.newBuilder()
+                .setDatasetUrn(EXPECTED_URN)
+                .setDatasourceFilename(EXPECTED_FILENAME)
+                .setMapping(EXPECTED_LABEL)
+                .setVersion(EXPECTED_VERSION)
+                .build();
+        return target;
+    }
+
+    public static DimensionRepresentationMapping mockDimensionRepresentationMapping() {
+        DimensionRepresentationMapping target = new DimensionRepresentationMapping();
+        target.setDataset(mockDataset());
+        target.setDatasourceFilename(EXPECTED_FILENAME);
+        target.setMapping(EXPECTED_LABEL);
         target.setVersion(EXPECTED_VERSION);
         return target;
     }

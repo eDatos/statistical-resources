@@ -1,18 +1,5 @@
   [
-      
-      {
-          "namespace": "org.siemac.metamac.statistical.resources.core.stream.messages",
-          "type" : "record",
-          "name" : "DimensionRepresentationMappingAvro",
-          "fields" : [
-              {"name" : "datasourceFilename", "type" : "string" },
-              {"name" : "version", "type" : "string" },
-              {"name" : "mapping", "type" : "string" },
-              {"name" : "datasetUrn", "type" : "string" }//TODO Dataset. String para evitar fallos al compilar schema por no estar definia datasetversionavro
-              
-          ]
-      },
-      
+
       {
           "namespace": "org.siemac.metamac.statistical.resources.core.stream.messages",
           "type" : "record",
