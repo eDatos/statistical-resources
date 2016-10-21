@@ -28,13 +28,13 @@ public class RelatedResourceAvroMapperTest {
     @Before
     public void setUp() throws MetamacException {
         MockitoAnnotations.initMocks(this);
-        RelatedResourceAvroMapper.setDatasetRepo(datasetRepository);
-        RelatedResourceAvroMapper.setDatasetVersionRepo(datasetVersionRepository);
+        AvroMapperUtils.setDatasetRepository(datasetRepository);
+        AvroMapperUtils.setDatasetVersionRepository(datasetVersionRepository);
     }
 
     @Test
     public void testRelatedResourceDo2Avro() throws MetamacException {
-        when(datasetVersionRepository.retrieveLastVersion(any())).thenReturn(MappersMockUtils.mockDatasetVersion());
+        when(datasetVersionRepository.retrieveByUrn(MappersMockUtils.EXPECTED_URN)).thenReturn(MappersMockUtils.mockDatasetVersion());
 
         RelatedResourceAvro expected = MappersMockUtils.mockRelatedResourceAvro(TypeRelatedResourceEnum.DATASET);
         RelatedResource source = MappersMockUtils.mockRelatedResource(TypeRelatedResourceEnum.DATASET);

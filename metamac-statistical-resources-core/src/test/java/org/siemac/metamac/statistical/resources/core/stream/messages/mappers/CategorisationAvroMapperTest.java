@@ -39,10 +39,10 @@ public class CategorisationAvroMapperTest {
 
     @Test
     public void testAvro2Do() throws MetamacException {
-        when(datasetVersionRepository.retrieveByUrn(MappersMockUtils.EXPECTED_URN)).thenReturn(MappersMockUtils.mockDatasetVersion());
-
         Categorisation expected = MappersMockUtils.mockCategorisation();
         CategorisationAvro source = MappersMockUtils.mockCategorisationAvro();
+
+        when(datasetVersionRepository.retrieveByUrn(MappersMockUtils.EXPECTED_URN)).thenReturn(expected.getDatasetVersion());
 
         Categorisation actual = CategorisationAvroMapper.avro2Do(source);
 

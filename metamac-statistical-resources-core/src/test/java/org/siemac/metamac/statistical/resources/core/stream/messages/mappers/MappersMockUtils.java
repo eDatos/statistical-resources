@@ -1,10 +1,12 @@
 package org.siemac.metamac.statistical.resources.core.stream.messages.mappers;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.joda.time.DateTime;
 import org.siemac.metamac.core.common.enume.domain.TypeExternalArtefactsEnum;
+import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.NameableStatisticalResource;
@@ -31,6 +33,7 @@ import org.siemac.metamac.statistical.resources.core.stream.messages.AttributeVa
 import org.siemac.metamac.statistical.resources.core.stream.messages.CategorisationAvro;
 import org.siemac.metamac.statistical.resources.core.stream.messages.CodeDimensionAvro;
 import org.siemac.metamac.statistical.resources.core.stream.messages.DatasetAvro;
+import org.siemac.metamac.statistical.resources.core.stream.messages.DatasetVersionAvro;
 import org.siemac.metamac.statistical.resources.core.stream.messages.DatasourceAvro;
 import org.siemac.metamac.statistical.resources.core.stream.messages.DimensionRepresentationMappingAvro;
 import org.siemac.metamac.statistical.resources.core.stream.messages.ExternalItemAvro;
@@ -47,6 +50,8 @@ import org.siemac.metamac.statistical.resources.core.stream.messages.Versionable
 
 public class MappersMockUtils {
 
+    private static final boolean EXPECTED_TRUE = true;
+    protected static final boolean EXPECTED_FALSE = false;
     protected static final String                    EXPECTED_TITLE                 = "EXPECTED_TITLE";
     protected static final String EXPECTED_FILENAME = "EXPECTED_FILENAME";
     protected static final String                    EXPECTED_IDENTIFIER            = "EXPECTED_IDENTIFIER";
@@ -108,6 +113,14 @@ public class MappersMockUtils {
         InternationalStringItemAvro item = InternationalStringItemAvro.newBuilder().setLabel(EXPECTED_LABEL).setLocale(EXPECTED_LOCALE).build();
         list.add(item);
         InternationalStringAvro target = InternationalStringAvro.newBuilder().setLocalisedStrings(list).build();
+        return target;
+    }
+
+    public static RelatedResource mockRelatedResource(DatasetVersion datasetVersion) {
+        RelatedResource target = new RelatedResource();
+        target.setVersion(EXPECTED_VERSION);
+        target.setType(TypeRelatedResourceEnum.DATASET_VERSION);
+        target.setDatasetVersion(datasetVersion);
         return target;
     }
 
@@ -254,25 +267,52 @@ public class MappersMockUtils {
     }
 
     public static Dataset mockDataset() {
+        return mockDataset(null);
+    }
+
+    public static Dataset mockDataset(DatasetVersion datasetVersion) {
         Dataset dataset = new Dataset();
         dataset.setIdentifiableStatisticalResource(mockNameableStatisticalResource());
         dataset.getIdentifiableStatisticalResource().setCode(EXPECTED_CODE);
         dataset.setVersion(EXPECTED_VERSION);
         dataset.addDimensionRepresentationMapping(mockDimensionRepresentationMapping(false));
-        dataset.addVersion(mockDatasetVersion());
-        dataset.addVersion(mockDatasetVersion(EXPECTED_URN + "2"));
-        dataset.addVersion(mockDatasetVersion(EXPECTED_URN + "3"));
+        if (datasetVersion != null) {
+            dataset.addVersion(datasetVersion);
+        } else {
+            dataset.addVersion(mockDatasetVersion());
+            dataset.addVersion(mockDatasetVersion(EXPECTED_URN + "2"));
+            dataset.addVersion(mockDatasetVersion(EXPECTED_URN + "3"));
+        }
         return dataset;
     }
 
     public static DatasetVersion mockDatasetVersion(String expectedUrn) {
         DatasetVersion d = new DatasetVersion();
-        SiemacMetadataStatisticalResource siemac = new SiemacMetadataStatisticalResource();
-        siemac.setCode(EXPECTED_CODE);
-        siemac.setStatisticalOperation(mockExternalItem());
-        siemac.setTitle(mockInternationalString());
-        siemac.setUrn(expectedUrn);
+        SiemacMetadataStatisticalResource siemac = mockSiemacMetadataStatisticalResource(TypeRelatedResourceEnum.DATASET_VERSION, d, expectedUrn);
         d.setSiemacMetadataStatisticalResource(siemac);
+        d.setDateStart(EXPECTED_PAST_DATE);
+        d.setDateEnd(EXPECTED_FUTURE_DATE);
+        d.setRelatedDsdChanged(EXPECTED_TRUE);
+        d.setDatasetRepositoryId(EXPECTED_IDENTIFIER);
+        d.setFormatExtentDimensions(EXPECTED_COPYRIGHT);
+        d.setDateNextUpdate(EXPECTED_FUTURE_DATE);
+        d.setUserModifiedDateNextUpdate(EXPECTED_TRUE);
+        d.setVersion(EXPECTED_VERSION);
+        d.setDataset(mockDataset(d));
+        d.setRelatedDsd(mockExternalItem());
+        d.setUpdateFrequency(mockExternalItem());
+        d.setStatisticOfficiality(mockStatisticOfficiality());
+        d.setBibliographicCitation(mockInternationalString());
+        mockDatasourceList(d);
+        mockCodeDimensionList(d);
+        mockAttributeValueList(d);
+        mockCategorisationList(d);
+        mockExternalItemList(d.getGeographicCoverage());
+        mockTemporalCodeList(d);
+        mockExternalItemList(d.getMeasureCoverage());
+        mockExternalItemList(d.getGeographicGranularities());
+        mockExternalItemList(d.getTemporalGranularities());
+        mockExternalItemList(d.getStatisticalUnit());
         return d;
     }
 
@@ -312,19 +352,28 @@ public class MappersMockUtils {
     }
 
     public static SiemacMetadataStatisticalResource mockSiemacMetadataStatisticalResource(TypeRelatedResourceEnum type) {
+        return mockSiemacMetadataStatisticalResource(type, null);
+    }
+
+    public static SiemacMetadataStatisticalResource mockSiemacMetadataStatisticalResource(TypeRelatedResourceEnum type, DatasetVersion datasetVersion) {
+        return mockSiemacMetadataStatisticalResource(type, datasetVersion, null);
+    }
+
+    public static SiemacMetadataStatisticalResource mockSiemacMetadataStatisticalResource(TypeRelatedResourceEnum type, DatasetVersion datasetVersion, String urn) {
         List<ExternalItem> listExternalItem = mockListExternalItem();
         SiemacMetadataStatisticalResource target = new SiemacMetadataStatisticalResource();
         target.setCode(EXPECTED_CODE);
         target.setStatisticalOperation(mockExternalItem());
         target.setTitle(mockInternationalString());
         target.setDescription(mockInternationalString());
-        target.setUrn(EXPECTED_URN);
+        target.setUrn(urn != null ? urn : EXPECTED_URN);
         target.setNextVersionDate(EXPECTED_FUTURE_DATE);
         target.setValidFrom(EXPECTED_PAST_DATE);
         target.setValidTo(EXPECTED_FUTURE_DATE);
         target.setVersionRationale(mockInternationalString());
         target.setNextVersion(EXPECTED_NEXT_VERSION_TYPE);
         target.setVersionLogic(EXPECTED_VERSION_LOGIC);
+        target.setTitle(mockInternationalString());
 
         target.setCreationDate(EXPECTED_PAST_DATE);
         target.setCreationUser(EXPECTED_USER + "Creation");
@@ -339,7 +388,16 @@ public class MappersMockUtils {
 
         target.setLastVersion(EXPECTED_LAST_VERSION);
         target.setProcStatus(PRODUCTION_VALIDATION);
-        target.setReplacesVersion(mockRelatedResource(type));
+        if (datasetVersion != null) {
+            target.setReplacesVersion(mockRelatedResource(datasetVersion));
+        } else {
+            target.setReplacesVersion(mockRelatedResource(type));
+        }
+        if (datasetVersion != null) {
+            target.setReplaces(mockRelatedResource(datasetVersion));
+        } else {
+            target.setReplaces(mockRelatedResource(type));
+        }
         target.setMaintainer(mockExternalItem());
         target.setAbstractLogic(mockInternationalString());
         target.setAccessRights(mockInternationalString());
@@ -352,7 +410,6 @@ public class MappersMockUtils {
         target.setLanguage(mockExternalItem());
         target.setLastUpdate(EXPECTED_PAST_DATE);
         target.setNewnessUntilDate(EXPECTED_FUTURE_DATE);
-        target.setReplaces(mockRelatedResource(type));
         target.setResourceCreatedDate(EXPECTED_PAST_DATE);
         target.setSubtitle(mockInternationalString());
         target.setTitleAlternative(mockInternationalString());
@@ -409,8 +466,14 @@ public class MappersMockUtils {
     }
 
     public static Datasource mockDatasource() {
+        return mockDatasource(false);
+    }
+
+    public static Datasource mockDatasource(boolean mockDataset) {
         Datasource target = new Datasource();
-        target.setDatasetVersion(mockDatasetVersion());
+        if (mockDataset) {
+            target.setDatasetVersion(mockDatasetVersion());
+        }
         target.setDateNextUpdate(EXPECTED_FUTURE_DATE);
         target.setFilename(EXPECTED_FILENAME);
         target.setIdentifiableStatisticalResource(mockIdentifiableStatisticalResource());
@@ -430,8 +493,12 @@ public class MappersMockUtils {
     }
 
     public static CodeDimension mockCodeDimension() {
+        return mockCodeDimension(null);
+    }
+
+    public static CodeDimension mockCodeDimension(DatasetVersion datasetVersion) {
         CodeDimension target = new CodeDimension();
-        target.setDatasetVersion(mockDatasetVersion());
+        target.setDatasetVersion(datasetVersion != null ? datasetVersion : mockDatasetVersion());
         target.setDsdComponentId(EXPECTED_IDENTIFIER);
         target.setIdentifier(EXPECTED_IDENTIFIER);
         target.setTitle(EXPECTED_TITLE);
@@ -452,8 +519,12 @@ public class MappersMockUtils {
     }
 
     public static AttributeValue mockAttributeValue() {
+        return mockAttributeValue(null);
+    }
+
+    public static AttributeValue mockAttributeValue(DatasetVersion datasetVersion) {
         AttributeValue target = new AttributeValue();
-        target.setDatasetVersion(mockDatasetVersion());
+        target.setDatasetVersion(datasetVersion != null ? datasetVersion : mockDatasetVersion());
         target.setDsdComponentId(EXPECTED_IDENTIFIER);
         target.setIdentifier(EXPECTED_IDENTIFIER);
         target.setTitle(EXPECTED_TITLE);
@@ -479,8 +550,12 @@ public class MappersMockUtils {
     }
 
     public static Categorisation mockCategorisation() {
+        return mockCategorisation(null);
+    }
+
+    public static Categorisation mockCategorisation(DatasetVersion datasetVersion) {
         Categorisation target = new Categorisation();
-        target.setDatasetVersion(mockDatasetVersion());
+        target.setDatasetVersion(datasetVersion != null ? datasetVersion : mockDatasetVersion());
         target.setCategory(mockExternalItem());
         target.setCreatedBy(EXPECTED_USER);
         target.setCreatedDate(EXPECTED_PAST_DATE);
@@ -537,12 +612,16 @@ public class MappersMockUtils {
     }
 
     public static DatasetAvro mockDatasetAvro() {
+        return mockDatasetAvro(1);
+    }
+
+    public static DatasetAvro mockDatasetAvro(int nVersions) {
         List<DimensionRepresentationMappingAvro> dimensions = new ArrayList<DimensionRepresentationMappingAvro>();
         dimensions.add(mockDimensionRepresentationMappingAvro());
         List<String> versions = new ArrayList<String>();
-        versions.add(EXPECTED_URN);
-        versions.add(EXPECTED_URN + "2");
-        versions.add(EXPECTED_URN + "3");
+        for (int i = 1; i <= nVersions; i++) {
+            versions.add(EXPECTED_URN + (i == 1 ? "" : "" + i));
+        }
         DatasetAvro target = DatasetAvro.newBuilder()
                 .setDimensionRepresentationMappings(dimensions)
                 .setIdentifiableStatisticalResource(mockIdentifiableStatisticalResourceAvro())
@@ -550,6 +629,111 @@ public class MappersMockUtils {
                 .setVersionsUrns(versions)
                 .build();
         return target;
+    }
+
+
+
+
+    public static DatasetVersionAvro mockDatasetVersionAvro() throws MetamacException {
+        DatasetVersionAvro target = DatasetVersionAvro.newBuilder()
+                .setSiemacMetadataStatisticalResource(
+                        SiemacMetadataStatisticalResourceAvroMapper.do2Avro(mockSiemacMetadataStatisticalResource(TypeRelatedResourceEnum.DATASET_VERSION)))
+                .setDateStart(EXPECTED_PAST_DATE)
+                .setDateEnd(EXPECTED_FUTURE_DATE)
+                .setRelatedDsdChanged(EXPECTED_TRUE)
+                .setDatasetRepositoryId(EXPECTED_IDENTIFIER)
+                .setFormatExtentDimensions(EXPECTED_COPYRIGHT)
+                .setDateNextUpdate(EXPECTED_FUTURE_DATE)
+                .setUserModifiedDateNextUpdate(EXPECTED_TRUE)
+                .setVersion(EXPECTED_VERSION)
+                .setDataset(mockDatasetAvro())
+                .setRelatedDsd(mockExternalItemAvro())
+                .setUpdateFrequency(mockExternalItemAvro())
+                .setStatisticOfficiality(mockStatisticOfficialityAvro())
+                .setBibliographicCitation(mockInternationalStringAvro())
+                .setDatasources(mockDatasourceAvroList()).setDimensionsCoverage(mockCodeDimensionAvroList()).setAttributesCoverage(mockAttributeValueAvroList())
+                .setCategorisations(mockCategorisationAvroList())
+                .setGeographicCoverage(mockExternalItemAvroList())
+                .setTemporalCoverage(mockTemporalCodeAvroList())
+                .setMeasureCoverage(mockExternalItemAvroList())
+                .setGeographicGranularities(mockExternalItemAvroList())
+                .setTemporalGranularities(mockExternalItemAvroList())
+                .setStatisticalUnit(mockExternalItemAvroList())
+                .build();
+        return target;
+    }
+
+    protected static List<CodeDimensionAvro> mockCodeDimensionAvroList() {
+        List<CodeDimensionAvro> dimensions = new ArrayList<CodeDimensionAvro>();
+        CodeDimensionAvro dimension = mockCodeDimensionAvro();
+        dimensions.add(dimension);
+        return dimensions;
+    }
+
+    protected static List<DatasourceAvro> mockDatasourceAvroList() {
+        List<DatasourceAvro> datasources = new ArrayList<DatasourceAvro>();
+        DatasourceAvro datasourceAvro = mockDatasourceAvro();
+        datasources.add(datasourceAvro);
+        return datasources;
+    }
+
+    protected static List<AttributeValueAvro> mockAttributeValueAvroList() {
+        List<AttributeValueAvro> attributeValueList = new ArrayList<AttributeValueAvro>();
+        AttributeValueAvro attributeValueAvro = mockAttributeValueAvro();
+        attributeValueList.add(attributeValueAvro);
+        return attributeValueList;
+    }
+
+
+    protected static List<CategorisationAvro> mockCategorisationAvroList() {
+        List<CategorisationAvro> categorisations = new ArrayList<CategorisationAvro>();
+        CategorisationAvro categorisationAvro = mockCategorisationAvro();
+        categorisations.add(categorisationAvro);
+        return categorisations;
+    }
+
+    protected static List<ExternalItemAvro> mockExternalItemAvroList() {
+        List<ExternalItemAvro> externalItem = new ArrayList<ExternalItemAvro>();
+        ExternalItemAvro categorisationAvro = mockExternalItemAvro();
+        externalItem.add(categorisationAvro);
+        return externalItem;
+    }
+
+    protected static List<TemporalCodeAvro> mockTemporalCodeAvroList() {
+        List<TemporalCodeAvro> categorisations = new ArrayList<TemporalCodeAvro>();
+        TemporalCodeAvro categorisationAvro = mockTemporalCodeAvro();
+        categorisations.add(categorisationAvro);
+        return categorisations;
+    }
+
+    protected static void mockCodeDimensionList(DatasetVersion datasetVersion) {
+        CodeDimension dimension = mockCodeDimension(datasetVersion);
+        datasetVersion.addDimensionsCoverage(dimension);
+    }
+
+    protected static void mockDatasourceList(DatasetVersion datasetVersion) {
+        Datasource datasource = mockDatasource();
+        datasetVersion.addDatasource(datasource);
+    }
+
+    protected static void mockAttributeValueList(DatasetVersion datasetVersion) {
+        AttributeValue attributeValue = mockAttributeValue(datasetVersion);
+        datasetVersion.addAttributesCoverage(attributeValue);
+    }
+
+    protected static void mockCategorisationList(DatasetVersion datasetVersion) {
+        Categorisation categorisation = mockCategorisation(datasetVersion);
+        datasetVersion.addCategorisation(categorisation);
+    }
+
+    protected static void mockExternalItemList(Collection<ExternalItem> list) {
+        ExternalItem externalItem = mockExternalItem();
+        list.add(externalItem);
+    }
+
+    protected static void mockTemporalCodeList(DatasetVersion datasetVersion) {
+        TemporalCode temporalCode = mockTemporalCode();
+        datasetVersion.addTemporalCoverage(temporalCode);
     }
 
 }

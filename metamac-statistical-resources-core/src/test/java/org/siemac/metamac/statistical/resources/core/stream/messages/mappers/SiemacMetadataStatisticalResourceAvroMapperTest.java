@@ -30,8 +30,8 @@ public class SiemacMetadataStatisticalResourceAvroMapperTest {
     @Before
     public void setUp() throws MetamacException {
         MockitoAnnotations.initMocks(this);
-        RelatedResourceAvroMapper.setDatasetRepo(datasetRepository);
-        RelatedResourceAvroMapper.setDatasetVersionRepo(datasetVersionRepository);
+        AvroMapperUtils.setDatasetRepository(datasetRepository);
+        AvroMapperUtils.setDatasetVersionRepository(datasetVersionRepository);
     }
 
     @Test
@@ -47,7 +47,7 @@ public class SiemacMetadataStatisticalResourceAvroMapperTest {
 
     @Test
     public void testDo2Avro() throws MetamacException {
-        when(datasetVersionRepository.retrieveLastVersion(any())).thenReturn(MappersMockUtils.mockDatasetVersion());
+        when(datasetVersionRepository.retrieveByUrn(MappersMockUtils.EXPECTED_URN)).thenReturn(MappersMockUtils.mockDatasetVersion());
 
         SiemacMetadataStatisticalResourceAvro expected = MappersMockUtils.mockSiemacMetadataStatisticalResourceAvro(TypeRelatedResourceEnum.DATASET);
         SiemacMetadataStatisticalResource source = MappersMockUtils.mockSiemacMetadataStatisticalResource(TypeRelatedResourceEnum.DATASET);

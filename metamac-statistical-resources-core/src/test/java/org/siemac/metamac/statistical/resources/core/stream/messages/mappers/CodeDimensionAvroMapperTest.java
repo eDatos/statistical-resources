@@ -39,10 +39,10 @@ public class CodeDimensionAvroMapperTest {
 
     @Test
     public void testAvro2Do() throws MetamacException {
-        when(datasetVersionRepository.retrieveByUrn(MappersMockUtils.EXPECTED_URN)).thenReturn(MappersMockUtils.mockDatasetVersion());
-
         CodeDimension expected = MappersMockUtils.mockCodeDimension();
         CodeDimensionAvro source = MappersMockUtils.mockCodeDimensionAvro();
+
+        when(datasetVersionRepository.retrieveByUrn(MappersMockUtils.EXPECTED_URN)).thenReturn(expected.getDatasetVersion());
 
         CodeDimension actual = CodeDimensionAvroMapper.avro2Do(source);
 

@@ -40,10 +40,10 @@ public class AttributeValueAvroMapperTest {
 
     @Test
     public void testAvro2Do() throws MetamacException {
-        when(datasetVersionRepository.retrieveByUrn(MappersMockUtils.EXPECTED_URN)).thenReturn(MappersMockUtils.mockDatasetVersion());
-
         AttributeValue expected = MappersMockUtils.mockAttributeValue();
         AttributeValueAvro source = MappersMockUtils.mockAttributeValueAvro();
+
+        when(datasetVersionRepository.retrieveByUrn(MappersMockUtils.EXPECTED_URN)).thenReturn(expected.getDatasetVersion());
 
         AttributeValue actual = AttributeValueAvroMapper.avro2Do(source);
 

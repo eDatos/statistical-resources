@@ -12,11 +12,11 @@
         {"name" : "dateNextUpdate", "type" : {"type":"string", "java-class" : "org.joda.time.DateTime"}},
         {"name" : "userModifiedDateNextUpdate", "type" : "boolean"},
         {"name" : "version", "type" : "long"},
-        {"name" : "dataset", "type": "DatasetAvro"}, //TODO tipo DATASET
+        {"name" : "dataset", "type": "DatasetAvro"},
         {"name" : "relatedDsd", "type" : "ExternalItemAvro"},
         {"name" : "updateFrequency", "type" : "ExternalItemAvro"},
         {"name" : "statisticOfficiality", "type" : "StatisticOfficialityAvro"},
-        {"name" : "bibliograpicCitation", "type" : "InternationalStringAvro"},
+        {"name" : "bibliographicCitation", "type" : "InternationalStringAvro"},
         {"name" : "datasources", "type" : {"type" : "array", "items": "DatasourceAvro"}},
         {"name" : "dimensionsCoverage", "type": {"type" : "array", "items" : "CodeDimensionAvro"}},
         {"name" : "attributesCoverage", "type" : {"type" : "array", "items" : "AttributeValueAvro"}}, 

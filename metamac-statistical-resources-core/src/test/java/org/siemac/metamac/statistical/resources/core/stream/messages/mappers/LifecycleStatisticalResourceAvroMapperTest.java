@@ -32,8 +32,8 @@ public class LifecycleStatisticalResourceAvroMapperTest {
     @Before
     public void setUp() throws MetamacException {
         MockitoAnnotations.initMocks(this);
-        RelatedResourceAvroMapper.setDatasetRepo(datasetRepository);
-        RelatedResourceAvroMapper.setDatasetVersionRepo(datasetVersionRepository);
+        AvroMapperUtils.setDatasetRepository(datasetRepository);
+        AvroMapperUtils.setDatasetVersionRepository(datasetVersionRepository);
     }
 
     @Test
@@ -64,7 +64,7 @@ public class LifecycleStatisticalResourceAvroMapperTest {
     @Test
     public void testLifecycleStatisticalResourceDo2Avro() throws MetamacException {
 
-        when(datasetVersionRepository.retrieveLastVersion(any())).thenReturn(MappersMockUtils.mockDatasetVersion());
+        when(datasetVersionRepository.retrieveByUrn(any())).thenReturn(MappersMockUtils.mockDatasetVersion());
 
         LifecycleStatisticalResourceAvro expected = MappersMockUtils.mockLifeCycleStatisticalResourceAvro(TypeRelatedResourceEnum.DATASET);
         LifeCycleStatisticalResource source = MappersMockUtils.mockLifeCycleStatisticalResource(TypeRelatedResourceEnum.DATASET);

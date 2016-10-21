@@ -17,8 +17,8 @@ public class InternationalStringAvroMapper {
         InternationalString target = new InternationalString();
         for (InternationalStringItemAvro s : source.getLocalisedStrings()) {
             LocalisedString localisedText = new LocalisedString();
-            localisedText.setLabel((String) s.getLabel());
-            localisedText.setLocale((String) s.getLocale());
+            localisedText.setLabel(s.getLabel());
+            localisedText.setLocale(s.getLocale());
             target.addText(localisedText);
         }
         return target;

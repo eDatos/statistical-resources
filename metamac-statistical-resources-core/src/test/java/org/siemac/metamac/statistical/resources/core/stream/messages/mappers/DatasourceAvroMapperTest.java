@@ -32,7 +32,7 @@ public class DatasourceAvroMapperTest {
     @Test
     public void testDo2Avro() {
         DatasourceAvro expected = MappersMockUtils.mockDatasourceAvro();
-        Datasource source = MappersMockUtils.mockDatasource();
+        Datasource source = MappersMockUtils.mockDatasource(true);
 
         DatasourceAvro actual = DatasourceAvroMapper.do2Avro(source);
 
@@ -41,10 +41,10 @@ public class DatasourceAvroMapperTest {
 
     @Test
     public void testAvro2Do() throws MetamacException {
-        when(datasetVersionRepository.retrieveByUrn(any())).thenReturn(MappersMockUtils.mockDatasetVersion());
-
         Datasource expected = MappersMockUtils.mockDatasource();
         DatasourceAvro source = MappersMockUtils.mockDatasourceAvro();
+
+        when(datasetVersionRepository.retrieveByUrn(any())).thenReturn(expected.getDatasetVersion());
 
         Datasource actual = DatasourceAvroMapper.avro2Do(source);
 

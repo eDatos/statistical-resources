@@ -50,17 +50,21 @@ public class DatasetAvroMapper {
 
     protected static List<DimensionRepresentationMappingAvro> dimensionsDo2Avro(Dataset source) {
         List<DimensionRepresentationMappingAvro> dimensions = new ArrayList<DimensionRepresentationMappingAvro>();
-        source.getDimensionRepresentationMappings().forEach(dimension -> {
-            dimensions.add(DimensionRepresentationMappingAvroMapper.do2Avro(dimension));
-        });
+        if (null != source) {
+            source.getDimensionRepresentationMappings().forEach(dimension -> {
+                dimensions.add(DimensionRepresentationMappingAvroMapper.do2Avro(dimension));
+            });
+        }
         return dimensions;
     }
 
     protected static List<String> datasetVersionsDo2Avro(Dataset source) {
         List<String> versions = new ArrayList<String>();
-        source.getVersions().forEach(datasetVersion -> {
-            versions.add(datasetVersion.getSiemacMetadataStatisticalResource().getUrn());
-        });
+        if (null != source) {
+            source.getVersions().forEach(datasetVersion -> {
+                versions.add(datasetVersion.getSiemacMetadataStatisticalResource().getUrn());
+            });
+        }
         return versions;
     }
 
