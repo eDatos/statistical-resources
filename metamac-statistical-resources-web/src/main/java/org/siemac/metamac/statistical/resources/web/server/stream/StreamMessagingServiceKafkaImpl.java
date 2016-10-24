@@ -4,6 +4,7 @@ import java.util.Properties;
 
 import org.apache.avro.specific.SpecificRecordBase;
 import org.apache.kafka.clients.producer.ProducerConfig;
+import org.siemac.metamac.core.common.exception.CommonServiceExceptionType;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.conf.StatisticalResourcesConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,7 +70,7 @@ public class StreamMessagingServiceKafkaImpl<K, V extends SpecificRecordBase> ex
     }
 
     @Override
-    public void sendMessage(V message, String topic) {
+    public void sendMessage(V message, String topic) throws MetamacException {
         MessageBase<V> m = new AvroMessage<V>(message);
 
         // Lazy initialitation
@@ -78,8 +79,7 @@ public class StreamMessagingServiceKafkaImpl<K, V extends SpecificRecordBase> ex
         try {
             producer.sendMessage(m, topic);
         } catch (MetamacException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            throw new MetamacException(e, CommonServiceExceptionType.METADATA_INCORRECT);
         }
 
     }
