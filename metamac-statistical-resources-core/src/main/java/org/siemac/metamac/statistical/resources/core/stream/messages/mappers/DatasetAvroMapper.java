@@ -6,6 +6,7 @@ import java.util.List;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.DimensionRepresentationMapping;
 import org.siemac.metamac.statistical.resources.core.stream.messages.DatasetAvro;
 import org.siemac.metamac.statistical.resources.core.stream.messages.DimensionRepresentationMappingAvro;
 
@@ -51,9 +52,9 @@ public class DatasetAvroMapper {
     protected static List<DimensionRepresentationMappingAvro> dimensionsDo2Avro(Dataset source) {
         List<DimensionRepresentationMappingAvro> dimensions = new ArrayList<DimensionRepresentationMappingAvro>();
         if (null != source) {
-            source.getDimensionRepresentationMappings().forEach(dimension -> {
+            for (DimensionRepresentationMapping dimension : source.getDimensionRepresentationMappings()) {
                 dimensions.add(DimensionRepresentationMappingAvroMapper.do2Avro(dimension));
-            });
+            }
         }
         return dimensions;
     }
@@ -61,9 +62,9 @@ public class DatasetAvroMapper {
     protected static List<String> datasetVersionsDo2Avro(Dataset source) {
         List<String> versions = new ArrayList<String>();
         if (null != source) {
-            source.getVersions().forEach(datasetVersion -> {
+            for (DatasetVersion datasetVersion : source.getVersions()) {
                 versions.add(datasetVersion.getSiemacMetadataStatisticalResource().getUrn());
-            });
+            }
         }
         return versions;
     }

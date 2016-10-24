@@ -6,7 +6,12 @@ import java.util.List;
 
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.AttributeValue;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.Categorisation;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.CodeDimension;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.TemporalCode;
 import org.siemac.metamac.statistical.resources.core.stream.messages.AttributeValueAvro;
 import org.siemac.metamac.statistical.resources.core.stream.messages.CategorisationAvro;
 import org.siemac.metamac.statistical.resources.core.stream.messages.CodeDimensionAvro;
@@ -63,10 +68,10 @@ public class DatasetVersionAvroMapper {
 
     protected static List<ExternalItemAvro> genericExternalItemList2Avro(Collection<ExternalItem> source) {
         List<ExternalItemAvro> measureCoverageList = new ArrayList<ExternalItemAvro>();
-        source.forEach(externalItem -> {
+        for (ExternalItem externalItem : source) {
             ExternalItemAvro externalItemAvro = ExternalItemAvroMapper.do2Avro(externalItem);
             measureCoverageList.add(externalItemAvro);
-        });
+        }
         return measureCoverageList;
     }
 
@@ -88,10 +93,10 @@ public class DatasetVersionAvroMapper {
 
     protected static List<TemporalCodeAvro> temporalCoverageList2Avro(DatasetVersion source) {
         List<TemporalCodeAvro> temporalCoverageList = new ArrayList<TemporalCodeAvro>();
-        source.getTemporalCoverage().forEach(temporalCode -> {
+        for (TemporalCode temporalCode : source.getTemporalCoverage()) {
             TemporalCodeAvro temporalCodeAvro = TemporalCodeAvroMapper.do2Avro(temporalCode);
             temporalCoverageList.add(temporalCodeAvro);
-        });
+        }
         return temporalCoverageList;
     }
 
@@ -101,37 +106,37 @@ public class DatasetVersionAvroMapper {
 
     protected static List<AttributeValueAvro> attributesCoverage2Avro(DatasetVersion source) {
         List<AttributeValueAvro> coverageList = new ArrayList<AttributeValueAvro>();
-        source.getAttributesCoverage().forEach(attribute -> {
+        for (AttributeValue attribute : source.getAttributesCoverage()) {
             AttributeValueAvro attributeAvro = AttributeValueAvroMapper.do2Avro(attribute);
             coverageList.add(attributeAvro);
-        });
+        }
         return coverageList;
     }
 
     protected static List<CodeDimensionAvro> dimensionsCoverage2Avro(DatasetVersion source) {
         List<CodeDimensionAvro> dimensions = new ArrayList<CodeDimensionAvro>();
-        source.getDimensionsCoverage().forEach(dimension -> {
+        for (CodeDimension dimension : source.getDimensionsCoverage()) {
             CodeDimensionAvro dimensionAvro = CodeDimensionAvroMapper.do2Avro(dimension);
             dimensions.add(dimensionAvro);
-        });
+        }
         return dimensions;
     }
 
     protected static List<DatasourceAvro> datasourcesList2Avro(DatasetVersion source) {
         List<DatasourceAvro> datasources = new ArrayList<DatasourceAvro>();
-        source.getDatasources().forEach(datasource -> {
+        for (Datasource datasource : source.getDatasources()) {
             DatasourceAvro datasourceAvro = DatasourceAvroMapper.do2Avro(datasource);
             datasources.add(datasourceAvro);
-        });
+        }
         return datasources;
     }
 
     protected static List<CategorisationAvro> categorisations2Avro(DatasetVersion source) {
         List<CategorisationAvro> categorisations = new ArrayList<CategorisationAvro>();
-        source.getCategorisations().forEach(categorisation -> {
+        for (Categorisation categorisation : source.getCategorisations()) {
             CategorisationAvro categorisationAvro = CategorisationAvroMapper.do2Avro(categorisation);
             categorisations.add(categorisationAvro);
-        });
+        }
         return categorisations;
     }
 
