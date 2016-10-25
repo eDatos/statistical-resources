@@ -43,6 +43,7 @@ import org.siemac.metamac.statistical.resources.web.shared.external.GetStatistic
 import org.siemac.metamac.statistical.resources.web.shared.utils.RelatedResourceUtils;
 import org.siemac.metamac.web.common.client.widgets.WarningLabel;
 
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
@@ -56,12 +57,12 @@ import com.smartgwt.client.widgets.layout.VLayout;
 
 public class QueryViewImpl extends ViewWithUiHandlers<QueryUiHandlers> implements QueryPresenter.QueryView {
 
-    private VLayout                   panel;
+    private VLayout panel;
 
     private QueryVersionsSectionStack versionsSectionStack;
-    private QueryFormPanel            queryFormPanel;
+    private QueryFormPanel queryFormPanel;
 
-    private WarningLabel              warningLabel;
+    private WarningLabel warningLabel;
 
     @Inject
     public QueryViewImpl() {
@@ -196,29 +197,29 @@ public class QueryViewImpl extends ViewWithUiHandlers<QueryUiHandlers> implement
 
     private class QueryFormPanel extends VLayout {
 
-        private QueryMainFormLayout                                      mainFormLayout;
+        private QueryMainFormLayout mainFormLayout;
 
-        private NameableResourceIdentifiersForm                          identifiersForm;
-        private LifeCycleResourceContentDescriptorsForm                  contentDescriptorsForm;
-        private StatisticalResourceThematicContentClassifiersForm        thematicContentClassifiersForm;
-        private QueryProductionDescriptorsForm                           productionDescriptorsForm;
-        private QueryResourceRelationDescriptorsForm                     resourceRelationDescriptorsForm;
-        private LifeCycleResourceLifeCycleForm                           lifeCycleForm;
-        private LifeCycleResourceVersionForm                             versionForm;
+        private NameableResourceIdentifiersForm identifiersForm;
+        private LifeCycleResourceContentDescriptorsForm contentDescriptorsForm;
+        private StatisticalResourceThematicContentClassifiersForm thematicContentClassifiersForm;
+        private QueryProductionDescriptorsForm productionDescriptorsForm;
+        private QueryResourceRelationDescriptorsForm resourceRelationDescriptorsForm;
+        private LifeCycleResourceLifeCycleForm lifeCycleForm;
+        private LifeCycleResourceVersionForm versionForm;
 
         // only creation
-        private QueryIdentifiersCreationForm                             identifiersCreationForm;
+        private QueryIdentifiersCreationForm identifiersCreationForm;
         // Only edition
-        private NameableResourceIdentifiersEditionForm                   identifiersEditionForm;
+        private NameableResourceIdentifiersEditionForm identifiersEditionForm;
 
-        private LifeCycleResourceContentDescriptorsEditionForm           contentDescriptorsEditionForm;
+        private LifeCycleResourceContentDescriptorsEditionForm contentDescriptorsEditionForm;
         private StatisticalResourceThematicContentClassifiersEditionForm thematicContentClassifiersEditionForm;
-        private QueryProductionDescriptorsEditionForm                    productionDescriptorsEditionForm;
-        private QueryResourceRelationDescriptorsForm                     resourceRelationDescriptorsEditionForm;
-        private LifeCycleResourceLifeCycleForm                           lifeCycleEditionForm;
-        private LifeCycleResourceVersionEditionForm                      versionEditionForm;
+        private QueryProductionDescriptorsEditionForm productionDescriptorsEditionForm;
+        private QueryResourceRelationDescriptorsForm resourceRelationDescriptorsEditionForm;
+        private LifeCycleResourceLifeCycleForm lifeCycleEditionForm;
+        private LifeCycleResourceVersionEditionForm versionEditionForm;
 
-        private QueryVersionDto                                          queryVersionDto;
+        private QueryVersionDto queryVersionDto;
 
         public QueryFormPanel() {
             super();
@@ -274,12 +275,32 @@ public class QueryViewImpl extends ViewWithUiHandlers<QueryUiHandlers> implement
                     if (isCreationMode()) {
                         if (identifiersCreationForm.validate(false) && productionDescriptorsEditionForm.validate(false) && versionEditionForm.validate(false)
                                 && contentDescriptorsEditionForm.validate(false)) {
-                            getUiHandlers().saveQuery(getQuery());
+                            // See: METAMAC-2516
+                            // Two invokes to getXXXDto() is needed for Chrome, please don't remove this two call fix.
+                            getQuery();
+                            Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
+
+                                @Override
+                                public void execute() {
+                                    getUiHandlers().saveQuery(getQuery());
+                                }
+                            });
+
                         }
                     } else {
                         if (identifiersEditionForm.validate(false) && productionDescriptorsEditionForm.validate(false) && versionEditionForm.validate(false)
                                 && contentDescriptorsEditionForm.validate(false)) {
-                            getUiHandlers().saveQuery(getQuery());
+                            // See: METAMAC-2516
+                            // Two invokes to getXXXDto() is needed for Chrome, please don't remove this two call fix.
+                            getQuery();
+                            Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
+
+                                @Override
+                                public void execute() {
+                                    getUiHandlers().saveQuery(getQuery());
+                                }
+                            });
+
                         }
                     }
                 }
