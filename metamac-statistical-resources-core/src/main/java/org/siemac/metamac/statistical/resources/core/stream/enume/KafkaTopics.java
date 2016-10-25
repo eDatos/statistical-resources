@@ -1,4 +1,4 @@
-package org.siemac.metamac.statistical.resources.web.server.stream.enume;
+package org.siemac.metamac.statistical.resources.core.stream.enume;
 
 
 public enum KafkaTopics {

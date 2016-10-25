@@ -1,4 +1,4 @@
-package org.siemac.metamac.statistical.resources.web.server.stream.facade;
+package org.siemac.metamac.statistical.resources.core.stream.serviceimpl;
 
 import org.apache.avro.specific.SpecificRecord;
 import org.siemac.metamac.core.common.exception.CommonServiceExceptionType;
@@ -6,15 +6,16 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.mapper.DatasetDto2DoMapper;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
+import org.siemac.metamac.statistical.resources.core.stream.enume.KafkaTopics;
 import org.siemac.metamac.statistical.resources.core.stream.messages.DatasetVersionAvro;
 import org.siemac.metamac.statistical.resources.core.stream.messages.mappers.AvroMapperUtils;
-import org.siemac.metamac.statistical.resources.web.server.stream.StreamMessagingService;
-import org.siemac.metamac.statistical.resources.web.server.stream.enume.KafkaTopics;
+import org.siemac.metamac.statistical.resources.core.stream.serviceapi.StreamMessagingService;
+import org.siemac.metamac.statistical.resources.core.stream.serviceapi.StreamMessagingServiceFacade;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
-@Component
-public class StreamMessagingFacadeKafkaImpl implements StreamMessagingFacade {
+@Service
+public class StreamMessagingKafkaServiceFacadeImpl implements StreamMessagingServiceFacade {
 
     @Autowired
     protected StreamMessagingService<String, SpecificRecord> messagingService;
@@ -22,7 +23,7 @@ public class StreamMessagingFacadeKafkaImpl implements StreamMessagingFacade {
     @Autowired
     protected DatasetDto2DoMapper                            datasetDto2DoMapper;
 
-    public StreamMessagingFacadeKafkaImpl() {
+    public StreamMessagingKafkaServiceFacadeImpl() {
     }
 
     @Override

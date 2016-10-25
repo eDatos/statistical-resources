@@ -4,11 +4,11 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
 import org.siemac.metamac.statistical.resources.core.facade.serviceapi.StatisticalResourcesServiceFacade;
+import org.siemac.metamac.statistical.resources.core.server.stream.serviceapi.StreamMessagingServiceFacade;
 import org.siemac.metamac.statistical.resources.web.client.enums.LifeCycleActionEnum;
 import org.siemac.metamac.statistical.resources.web.server.dtos.ResourceNotificationDto;
 import org.siemac.metamac.statistical.resources.web.server.handlers.UpdateResourceProcStatusBaseActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.rest.NoticesRestInternalFacade;
-import org.siemac.metamac.statistical.resources.web.server.stream.facade.StreamMessagingFacade;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.UpdateDatasetVersionProcStatusAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.UpdateDatasetVersionProcStatusResult;
 import org.siemac.metamac.web.common.server.ServiceContextHolder;
@@ -29,7 +29,7 @@ public class UpdateDatasetVersionProcStatusActionHandler extends UpdateResourceP
     private NoticesRestInternalFacade                          noticesRestInternalFacade;
 
     @Autowired
-    private StreamMessagingFacade             streamMessagingFacade;
+    private StreamMessagingServiceFacade             streamMessagingFacade;
 
     public UpdateDatasetVersionProcStatusActionHandler() {
         super(UpdateDatasetVersionProcStatusAction.class);
@@ -91,6 +91,5 @@ public class UpdateDatasetVersionProcStatusActionHandler extends UpdateResourceP
     // TODO Eliminar este método, no va a producción
     private void pruebasKafkaProducer(DatasetVersionDto datasetVersionDto) throws MetamacException {
         streamMessagingFacade.sendNewDatasetVersionPublished(datasetVersionDto);
-
     }
 }

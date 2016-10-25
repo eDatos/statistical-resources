@@ -1,9 +1,9 @@
-package org.siemac.metamac.statistical.resources.web.server.stream.facade;
+package org.siemac.metamac.statistical.resources.core.stream.serviceapi;
 
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 
-public interface StreamMessagingFacade {
+public interface StreamMessagingServiceFacade {
 
     public void sendNewDatasetVersionPublished(DatasetVersionDto datasetVersionDto) throws MetamacException;
 

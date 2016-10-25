@@ -1,12 +1,13 @@
-package org.siemac.metamac.statistical.resources.web.server.stream;
+package org.siemac.metamac.statistical.resources.core.stream.serviceapi;
 
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.statistical.resources.web.server.stream.ProducerBase;
 
 public abstract class StreamMessagingService<K, V> {
 
     public static final String BEAN_ID = "StreamMessagingService";
 
-    ProducerBase<K, V>         producer;
+    public ProducerBase<K, V>  producer;
 
     protected StreamMessagingService() {
     }
