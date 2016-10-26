@@ -3,7 +3,7 @@
       "type" : "record",
       "name" : "DatasourceAvro",
       "fields" : [
-          {"name" : "dateNextUpdate", "type" : ["null", {"type":"string", "java-class" : "org.joda.time.DateTime"}]},
+          {"name" : "dateNextUpdate", "type" : ["null", "DatetimeAvro"]},
           {"name" : "fileName", "type" : ["null", "string" ]},
           {"name" : "version", "type" : ["null", "long" ]}, 
           {"name" : "identifiableStatisticalResource", "type" : ["null", "IdentifiableStatisticalResourceAvro" ]},

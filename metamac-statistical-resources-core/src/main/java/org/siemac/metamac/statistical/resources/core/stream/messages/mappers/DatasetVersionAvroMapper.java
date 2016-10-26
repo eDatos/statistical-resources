@@ -39,12 +39,11 @@ public class DatasetVersionAvroMapper {
 
         DatasetVersionAvro target = DatasetVersionAvro.newBuilder()
                 .setSiemacMetadataStatisticalResource(SiemacMetadataStatisticalResourceAvroMapper.do2Avro(source.getSiemacMetadataStatisticalResource()))
-                .setDateStart(source.getDateStart())
-                .setDateEnd(source.getDateEnd())
+                .setDateStart(DatetimeAvroMapper.do2Avro(source.getDateStart())).setDateEnd(DatetimeAvroMapper.do2Avro(source.getDateEnd()))
                 .setRelatedDsdChanged(source.isRelatedDsdChanged())
                 .setDatasetRepositoryId(source.getDatasetRepositoryId())
                 .setFormatExtentDimensions(source.getFormatExtentDimensions())
-                .setDateNextUpdate(source.getDateNextUpdate())
+                .setDateNextUpdate(DatetimeAvroMapper.do2Avro(source.getDateNextUpdate()))
                 .setUserModifiedDateNextUpdate(source.getUserModifiedDateNextUpdate())
                 .setVersion(source.getVersion())
                 .setDataset(DatasetAvroMapper.do2Avro(source.getDataset()))
@@ -145,12 +144,12 @@ public class DatasetVersionAvroMapper {
     public static DatasetVersion avro2Do(DatasetVersionAvro source) throws MetamacException {
         DatasetVersion target = new DatasetVersion();
         target.setSiemacMetadataStatisticalResource(SiemacMetadataStatisticalResourceAvroMapper.avro2Do(source.getSiemacMetadataStatisticalResource()));
-        target.setDateStart(source.getDateStart());
-        target.setDateEnd(source.getDateEnd());
+        target.setDateStart(DatetimeAvroMapper.avro2Do(source.getDateStart()));
+        target.setDateEnd(DatetimeAvroMapper.avro2Do(source.getDateEnd()));
         target.setRelatedDsdChanged(source.getRelatedDsdChanged());
         target.setDatasetRepositoryId(source.getDatasetRepositoryId());
         target.setFormatExtentDimensions(source.getFormatExtentDimensions());
-        target.setDateNextUpdate(source.getDateNextUpdate());
+        target.setDateNextUpdate(DatetimeAvroMapper.avro2Do(source.getDateNextUpdate()));
         target.setUserModifiedDateNextUpdate(source.getUserModifiedDateNextUpdate());
         target.setVersion(source.getVersion());
         target.setDataset(DatasetAvroMapper.avro2Do(source.getDataset()));

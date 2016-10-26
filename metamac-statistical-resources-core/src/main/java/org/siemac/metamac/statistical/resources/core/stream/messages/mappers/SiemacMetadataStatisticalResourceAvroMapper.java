@@ -17,9 +17,9 @@ public class SiemacMetadataStatisticalResourceAvroMapper {
     public static void fillMetadata(SiemacMetadataStatisticalResourceAvro source, SiemacMetadataStatisticalResource target) throws MetamacException {
         LifecycleStatisticalResourceAvroMapper.fillMetadata(source.getLifecycleStatisticalResource(), target);
         target.setUserModifiedKeywords(source.getUserModifiedKeywords());
-        target.setResourceCreatedDate(source.getResourceCreatedDate());
-        target.setLastUpdate(source.getLastUpdate());
-        target.setNewnessUntilDate(source.getNewnessUntilDate());
+        target.setResourceCreatedDate(DatetimeAvroMapper.avro2Do(source.getResourceCreatedDate()));
+        target.setLastUpdate(DatetimeAvroMapper.avro2Do(source.getLastUpdate()));
+        target.setNewnessUntilDate(DatetimeAvroMapper.avro2Do(source.getNewnessUntilDate()));
         target.setCopyrightedDate(source.getCopyrightedDate());
         target.setLanguage(ExternalItemAvroMapper.avro2Do(source.getLanguage()));
         target.setSubtitle(InternationalStringAvroMapper.avro2Do(source.getSubtitle()));
@@ -65,9 +65,9 @@ public class SiemacMetadataStatisticalResourceAvroMapper {
         SiemacMetadataStatisticalResourceAvro target = SiemacMetadataStatisticalResourceAvro.newBuilder()
                 .setLifecycleStatisticalResource(LifecycleStatisticalResourceAvroMapper.do2Avro(source))
                 .setUserModifiedKeywords(source.getUserModifiedKeywords())
-                .setResourceCreatedDate(source.getResourceCreatedDate())
-                .setLastUpdate(source.getLastUpdate())
-                .setNewnessUntilDate(source.getNewnessUntilDate())
+                .setResourceCreatedDate(DatetimeAvroMapper.do2Avro(source.getResourceCreatedDate()))
+                .setLastUpdate(DatetimeAvroMapper.do2Avro(source.getLastUpdate()))
+                .setNewnessUntilDate(DatetimeAvroMapper.do2Avro(source.getNewnessUntilDate()))
                 .setCopyrightedDate(source.getCopyrightedDate())
                 .setLanguage(ExternalItemAvroMapper.do2Avro(source.getLanguage()))
                 .setSubtitle(InternationalStringAvroMapper.do2Avro(source.getSubtitle()))

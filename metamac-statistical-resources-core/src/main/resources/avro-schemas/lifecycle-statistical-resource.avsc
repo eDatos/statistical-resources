@@ -19,19 +19,19 @@
      "fields" : [
         {"name" : "versionableStatisticalResource", "type" : ["null", "VersionableStatisticalResourceAvro" ]},
                 
-        {"name" : "creationDate" ,  "type" : ["null", {"type":"string", "java-class":"org.joda.time.DateTime"}]},
+        {"name" : "creationDate" ,  "type" : ["null", "DatetimeAvro"]},
         {"name" : "creationUser" , "type" : ["null", "string"]},
         
-        {"name" : "productionValidationDate" ,  "type" : ["null", {"type":"string", "java-class":"org.joda.time.DateTime"}]},
+        {"name" : "productionValidationDate" ,  "type" : ["null", "DatetimeAvro"]},
         {"name" : "productionValidationUser" , "type" : ["null", "string"]},
         
-        {"name" : "diffusionValidationDate" ,  "type" : ["null", {"type":"string", "java-class":"org.joda.time.DateTime"}]},
+        {"name" : "diffusionValidationDate" ,  "type" : ["null", "DatetimeAvro"]},
         {"name" : "diffusionValidationUser" , "type" : ["null", "string"]},
         
-        {"name" : "rejectValidationDate" , "type" : ["null", {"type":"string", "java-class":"org.joda.time.DateTime"}]},
+        {"name" : "rejectValidationDate" , "type" : ["null", "DatetimeAvro"]},
         {"name" : "rejectValidationUser" , "type" : ["null", "string"]},
         
-        {"name" : "publicationDate" ,  "type" : ["null", {"type":"string", "java-class":"org.joda.time.DateTime"}]},
+        {"name" : "publicationDate" ,  "type" : ["null", "DatetimeAvro"]},
         {"name" : "publicationUser" , "type" : ["null", "string"]},
         
         {"name" : "lastVersion", "type" : ["null", "boolean"]},

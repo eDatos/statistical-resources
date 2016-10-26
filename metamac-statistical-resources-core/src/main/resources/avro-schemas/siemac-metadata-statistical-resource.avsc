@@ -18,9 +18,9 @@
      "fields" : [
         {"name" : "lifecycleStatisticalResource", "type" : ["null", "LifecycleStatisticalResourceAvro" ]},
         {"name" : "userModifiedKeywords" , "type" : ["null", "boolean"]},
-        {"name" : "resourceCreatedDate" , "type" : ["null", {"type":"string", "java-class" : "org.joda.time.DateTime"}]},
-        {"name" : "lastUpdate" , "type" : ["null", {"type":"string", "java-class" : "org.joda.time.DateTime"}]},
-        {"name" : "newnessUntilDate" , "type" : ["null", {"type":"string", "java-class" : "org.joda.time.DateTime"}]},
+        {"name" : "resourceCreatedDate" , "type" : ["null", "DatetimeAvro"]},
+        {"name" : "lastUpdate" , "type" : ["null", "DatetimeAvro"]},
+        {"name" : "newnessUntilDate" , "type" : ["null", "DatetimeAvro"]},
         {"name" : "copyrightedDate" , "type" : ["null", "int"]},
         {"name" : "language", "type" : ["null", "ExternalItemAvro"]}, 
         {"name" : "subtitle", "type" : ["null", "InternationalStringAvro"]},

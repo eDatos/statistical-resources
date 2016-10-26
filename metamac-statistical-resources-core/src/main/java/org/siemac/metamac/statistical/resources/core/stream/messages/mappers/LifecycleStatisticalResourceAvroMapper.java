@@ -11,15 +11,15 @@ public class LifecycleStatisticalResourceAvroMapper {
 
     public static void fillMetadata(LifecycleStatisticalResourceAvro source, LifeCycleStatisticalResource target) throws MetamacException {
         VersionableStatisticalResourceAvroMapper.fillMetadata(source.getVersionableStatisticalResource(), target);
-        target.setCreationDate(source.getCreationDate());
+        target.setCreationDate(DatetimeAvroMapper.avro2Do(source.getCreationDate()));
         target.setCreationUser(source.getCreationUser());
-        target.setProductionValidationDate(source.getProductionValidationDate());
+        target.setProductionValidationDate(DatetimeAvroMapper.avro2Do(source.getProductionValidationDate()));
         target.setProductionValidationUser(source.getProductionValidationUser());
-        target.setDiffusionValidationDate(source.getDiffusionValidationDate());
+        target.setDiffusionValidationDate(DatetimeAvroMapper.avro2Do(source.getDiffusionValidationDate()));
         target.setDiffusionValidationUser(source.getDiffusionValidationUser());
-        target.setRejectValidationDate(source.getRejectValidationDate());
+        target.setRejectValidationDate(DatetimeAvroMapper.avro2Do(source.getRejectValidationDate()));
         target.setRejectValidationUser(source.getRejectValidationUser());
-        target.setPublicationDate(source.getPublicationDate());
+        target.setPublicationDate(DatetimeAvroMapper.avro2Do(source.getPublicationDate()));
         target.setPublicationUser(source.getPublicationUser());
         target.setLastVersion(source.getLastVersion());
         target.setProcStatus(ProcStatusEnumAvroMapper.avro2Do(source.getProcStatus()));
@@ -36,15 +36,15 @@ public class LifecycleStatisticalResourceAvroMapper {
     public static LifecycleStatisticalResourceAvro do2Avro(LifeCycleStatisticalResource source) throws MetamacException {
         LifecycleStatisticalResourceAvro target = LifecycleStatisticalResourceAvro.newBuilder()
                 .setVersionableStatisticalResource(VersionableStatisticalResourceAvroMapper.do2Avro(source))
-                .setCreationDate(source.getCreationDate())
+                .setCreationDate(DatetimeAvroMapper.do2Avro(source.getCreationDate()))
                 .setCreationUser(source.getCreationUser())
-                .setProductionValidationDate(source.getProductionValidationDate())
+                .setProductionValidationDate(DatetimeAvroMapper.do2Avro(source.getProductionValidationDate()))
                 .setProductionValidationUser(source.getProductionValidationUser())
-                .setDiffusionValidationDate(source.getDiffusionValidationDate())
+                .setDiffusionValidationDate(DatetimeAvroMapper.do2Avro(source.getDiffusionValidationDate()))
                 .setDiffusionValidationUser(source.getDiffusionValidationUser())
-                .setRejectValidationDate(source.getRejectValidationDate())
+                .setRejectValidationDate(DatetimeAvroMapper.do2Avro(source.getRejectValidationDate()))
                 .setRejectValidationUser(source.getRejectValidationUser())
-                .setPublicationDate(source.getPublicationDate())
+                .setPublicationDate(DatetimeAvroMapper.do2Avro(source.getPublicationDate()))
                 .setPublicationUser(source.getPublicationUser())
                 .setLastVersion(source.getLastVersion())
                 .setProcStatus(ProcStatusEnumAvroMapper.do2Avro(source.getProcStatus()))

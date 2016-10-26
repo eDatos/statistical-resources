@@ -11,9 +11,9 @@ public class VersionableStatisticalResourceAvroMapper {
 
     public static void fillMetadata(VersionableStatisticalResourceAvro source, VersionableStatisticalResource target) {
         NameableStatisticalResourceAvroMapper.fillMetadata(source.getNameableStatisticalResource(), target);
-        target.setNextVersionDate(source.getNextVersionDate());
-        target.setValidFrom(source.getValidFrom());
-        target.setValidTo(source.getValidTo());
+        target.setNextVersionDate(DatetimeAvroMapper.avro2Do(source.getNextVersionDate()));
+        target.setValidFrom(DatetimeAvroMapper.avro2Do(source.getValidFrom()));
+        target.setValidTo(DatetimeAvroMapper.avro2Do(source.getValidTo()));
         target.setVersionRationale(InternationalStringAvroMapper.avro2Do(source.getVersionRationale()));
         target.setNextVersion(NextVersionTypeEnumAvroMapper.avro2Do(source.getNextVersion()));
         target.setVersionLogic(source.getVersionLogic());
@@ -30,10 +30,9 @@ public class VersionableStatisticalResourceAvroMapper {
         VersionableStatisticalResourceAvro target = VersionableStatisticalResourceAvro.newBuilder()
                 .setNameableStatisticalResource(NameableStatisticalResourceAvroMapper.do2Avro(source))
                 .setNextVersion(NextVersionTypeEnumAvroMapper.do2Avro(source.getNextVersion()))
-                .setNextVersionDate(source.getNextVersionDate())
-                .setValidFrom(source.getValidFrom())
+                .setNextVersionDate(DatetimeAvroMapper.do2Avro(source.getNextVersionDate())).setValidFrom(DatetimeAvroMapper.do2Avro(source.getValidFrom()))
                 .setVersionRationale(InternationalStringAvroMapper.do2Avro(source.getVersionRationale()))
-                .setValidTo(source.getValidTo())
+                .setValidTo(DatetimeAvroMapper.do2Avro(source.getValidTo()))
                 .setVersionLogic(source.getVersionLogic())
                 .build();
 

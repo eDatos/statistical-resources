@@ -16,9 +16,9 @@
      "name": "VersionableStatisticalResourceAvro",
      "fields" : [
          {"name" : "nameableStatisticalResource", "type" : ["null", "NameableStatisticalResourceAvro" ]},
-         {"name" : "nextVersionDate" , "type" : ["null", {"type":"string", "java-class":"org.joda.time.DateTime"}]},
-         {"name" : "validFrom" , "type" : ["null", {"type":"string", "java-class":"org.joda.time.DateTime"}]},
-         {"name" : "validTo" , "type" : ["null", {"type":"string", "java-class":"org.joda.time.DateTime"}]},
+         {"name" : "nextVersionDate" , "type" : ["null", "DatetimeAvro"]},
+         {"name" : "validFrom" , "type" : ["null", "DatetimeAvro"]},
+         {"name" : "validTo" , "type" : ["null", "DatetimeAvro"]},
          {"name" : "versionRationale" , "type" : ["null", "InternationalStringAvro"]},
          {"name" : "nextVersion" , "type" : ["null", "NextVersionTypeEnumAvro"]},
          {"name" : "versionLogic", "type" : ["null", "string" ]}
