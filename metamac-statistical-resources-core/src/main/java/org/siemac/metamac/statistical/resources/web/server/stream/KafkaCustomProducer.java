@@ -46,12 +46,12 @@ public class KafkaCustomProducer<K, V extends SpecificRecordBase> extends Produc
     public void sendMessage(MessageBase<V> m, String topic) throws MetamacException {
 
         checkTopicIsValid(topic);
-
+        // TODO ADD A KEY TO THE MESSAGE
         ProducerRecord<K, V> record = new ProducerRecord<K, V>(topic, m.getContent());
         try {
             producer.send(record);
         } catch (SerializationException e) {
-
+            throw new MetamacException(e.getCause(), null, null);
         } finally {
         }
     }
