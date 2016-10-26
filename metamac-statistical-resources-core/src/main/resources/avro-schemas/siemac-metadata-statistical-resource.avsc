@@ -1,34 +1,47 @@
-  {
+[
+    {
+        "namespace": "org.siemac.metamac.statistical.resources.core.stream.messages",
+        "type" : "enum",
+        "name" : "StatisticalResourceTypeEnumAvro",
+        "symbols" : [
+            "DATASET",
+            "COLLECTION",
+            "QUERY"
+        ]
+    }
+    ,
+    
+ {
     "namespace": "org.siemac.metamac.statistical.resources.core.stream.messages",
      "type": "record",
      "name": "SiemacMetadataStatisticalResourceAvro",
      "fields" : [
-        {"name" : "lifecycleStatisticalResource", "type": "LifecycleStatisticalResourceAvro" },
-        {"name" : "userModifiedKeywords" , "type" : "boolean"},
-        {"name" : "resourceCreatedDate" , "type" : {"type":"string", "java-class" : "org.joda.time.DateTime"}},
-        {"name" : "lastUpdate" , "type" : {"type":"string", "java-class" : "org.joda.time.DateTime"}},
-        {"name" : "newnessUntilDate" , "type" : {"type":"string", "java-class" : "org.joda.time.DateTime"}},
-        {"name" : "copyrightedDate" , "type" : "int"},
-        {"name" : "language", "type" : "ExternalItemAvro"}, 
-        {"name" : "subtitle", "type" : "InternationalStringAvro"},
-        {"name" : "titleAlternative", "type" : "InternationalStringAvro"},
-        {"name" : "abstractLogic", "type" : "InternationalStringAvro"},
-        {"name" : "keywords", "type" : "InternationalStringAvro"},
-        {"name" : "commonMetadata", "type" : "ExternalItemAvro"}, 
-        {"name" : "type" , "type" : {"type" : "string", "java-class":"org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum"}},
-        {"name" : "creator", "type" : "ExternalItemAvro"}, 
-        {"name" : "conformsTo", "type" : "InternationalStringAvro"}, 
-        {"name" : "conformsToInternal", "type" : "InternationalStringAvro"},
-        {"name" : "replaces", "type" : "RelatedResourceAvro"}, //TODO en java es RelatedResource
-        //TODO ---> Pendiente de merge de master {"name" : "isReplacedBy", "type" : "RelatedResourceAvro"}, //TODO en java es RelatedResource
-        {"name" : "accessRights", "type" : "InternationalStringAvro"}, 
-        {"name" : "languages", "type" : { "type" : "array", "items": "ExternalItemAvro"}},
-        {"name" : "statisticalOperationInstances", "type" : { "type" : "array", "items": "ExternalItemAvro"}},
-        {"name" : "contributors", "type" : { "type" : "array", "items": "ExternalItemAvro"}},
-        {"name" : "publishers", "type" : { "type" : "array", "items": "ExternalItemAvro"}},
-        {"name" : "publisherContributors", "type" : { "type" : "array", "items": "ExternalItemAvro"}},
-        {"name" : "mediators", "type" : { "type" : "array", "items": "ExternalItemAvro"}} 
+        {"name" : "lifecycleStatisticalResource", "type" : ["null", "LifecycleStatisticalResourceAvro" ]},
+        {"name" : "userModifiedKeywords" , "type" : ["null", "boolean"]},
+        {"name" : "resourceCreatedDate" , "type" : ["null", {"type":"string", "java-class" : "org.joda.time.DateTime"}]},
+        {"name" : "lastUpdate" , "type" : ["null", {"type":"string", "java-class" : "org.joda.time.DateTime"}]},
+        {"name" : "newnessUntilDate" , "type" : ["null", {"type":"string", "java-class" : "org.joda.time.DateTime"}]},
+        {"name" : "copyrightedDate" , "type" : ["null", "int"]},
+        {"name" : "language", "type" : ["null", "ExternalItemAvro"]}, 
+        {"name" : "subtitle", "type" : ["null", "InternationalStringAvro"]},
+        {"name" : "titleAlternative", "type" : ["null", "InternationalStringAvro"]},
+        {"name" : "abstractLogic", "type" : ["null", "InternationalStringAvro"]},
+        {"name" : "keywords", "type" : ["null", "InternationalStringAvro"]},
+        {"name" : "commonMetadata", "type" : ["null", "ExternalItemAvro"]}, 
+        {"name" : "type" , "type" : ["null", "StatisticalResourceTypeEnumAvro"]},
+        {"name" : "creator", "type" : ["null", "ExternalItemAvro"]}, 
+        {"name" : "conformsTo", "type" : ["null", "InternationalStringAvro"]}, 
+        {"name" : "conformsToInternal", "type" : ["null", "InternationalStringAvro"]},
+        {"name" : "replaces", "type" : ["null", "RelatedResourceAvro"]}, //TODO en java es RelatedResource
+        //TODO ---> Pendiente de merge de master {"name" : "isReplacedBy", "type" : ["null", "RelatedResourceAvro"]}, //TODO en java es RelatedResource
+        {"name" : "accessRights", "type" : ["null", "InternationalStringAvro"]}, 
+        {"name" : "languages", "type" : ["null", {"type" : "array", "items": "ExternalItemAvro"}]},
+        {"name" : "statisticalOperationInstances", "type" : ["null", {"type" : "array", "items": "ExternalItemAvro"}]},
+        {"name" : "contributors", "type" : ["null", {"type" : "array", "items": "ExternalItemAvro"}]},
+        {"name" : "publishers", "type" : ["null", {"type" : "array", "items": "ExternalItemAvro"}]},
+        {"name" : "publisherContributors", "type" : ["null", {"type" : "array", "items": "ExternalItemAvro"}]},
+        {"name" : "mediators", "type" : ["null", {"type" : "array", "items": "ExternalItemAvro"}]} 
      ]
  }
- 
+ ] 
  

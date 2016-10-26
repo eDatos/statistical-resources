@@ -1,6 +1,7 @@
 package org.siemac.metamac.statistical.resources.core.stream.messages.mappers;
 
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 import org.apache.avro.specific.SpecificRecord;
 import org.apache.commons.lang.ClassUtils;
@@ -70,7 +71,8 @@ public class AvroMapperUtils {
         Object target = null;
         try {
             Class<?> avroMapperClazz = getAvroMapperClass(source);
-            target = avroMapperClazz.getMethod(methodName, source.getClass()).invoke(null, source);
+            Method method = avroMapperClazz.getMethod(methodName, source.getClass());
+            target = method.invoke(null, source);
         } catch (ClassNotFoundException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
             throw new MetamacException();
         }

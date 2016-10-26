@@ -46,6 +46,7 @@ import org.siemac.metamac.statistical.resources.core.stream.messages.RelatedReso
 import org.siemac.metamac.statistical.resources.core.stream.messages.SiemacMetadataStatisticalResourceAvro;
 import org.siemac.metamac.statistical.resources.core.stream.messages.StatisticOfficialityAvro;
 import org.siemac.metamac.statistical.resources.core.stream.messages.TemporalCodeAvro;
+import org.siemac.metamac.statistical.resources.core.stream.messages.TypeExternalArtefactsEnumAvro;
 import org.siemac.metamac.statistical.resources.core.stream.messages.VersionableStatisticalResourceAvro;
 
 public class MappersMockUtils {
@@ -68,6 +69,7 @@ public class MappersMockUtils {
     protected static final String                    EXPECTED_URN                   = "EXPECTED_URN";
     protected static final String                    EXPECTED_URN_PROVIDER          = "EXPECTED_URN_PROVIDER";
     protected static final TypeExternalArtefactsEnum EXPECTED_TYPE                  = TypeExternalArtefactsEnum.CONFIGURATION;
+    protected static final TypeExternalArtefactsEnumAvro EXPECTED_TYPE_AVRO             = TypeExternalArtefactsEnumAvro.CONFIGURATION;
     protected static final String                    EXPECTED_LOCALE                = "EXPECTED_LOCALE";
     protected static final String                    EXPECTED_LABEL                 = "EXPECTED_LABEL";
     protected static final String                    EXPECTED_MANAGEMENT_APP_URL    = "EXPECTED_MANAGEMENT_APP_URL";
@@ -94,8 +96,13 @@ public class MappersMockUtils {
 
     public static ExternalItemAvro mockExternalItemAvro() {
         ExternalItemAvro expected = ExternalItemAvro.newBuilder().setCode(MappersMockUtils.EXPECTED_CODE).setCodeNested(MappersMockUtils.EXPECTED_CODE_NESTED)
-                .setManagementAppUrl(MappersMockUtils.EXPECTED_MANAGEMENT_APP_URL).setTitle(InternationalStringAvroMapper.do2Avro(MappersMockUtils.mockInternationalString())).setType(EXPECTED_TYPE)
-                .setUrn(MappersMockUtils.EXPECTED_URN).setVersion(MappersMockUtils.EXPECTED_VERSION).setUrnProvider(MappersMockUtils.EXPECTED_URN_PROVIDER).build();
+                .setManagementAppUrl(MappersMockUtils.EXPECTED_MANAGEMENT_APP_URL)
+                .setTitle(InternationalStringAvroMapper.do2Avro(MappersMockUtils.mockInternationalString()))
+                .setType(EXPECTED_TYPE_AVRO)
+                .setUrn(MappersMockUtils.EXPECTED_URN)
+                .setVersion(MappersMockUtils.EXPECTED_VERSION)
+                .setUrnProvider(MappersMockUtils.EXPECTED_URN_PROVIDER)
+                .build();
         return expected;
     }
 
@@ -143,8 +150,13 @@ public class MappersMockUtils {
     }
 
     public static RelatedResourceAvro mockRelatedResourceAvro(TypeRelatedResourceEnum type) {
-        RelatedResourceAvro target = RelatedResourceAvro.newBuilder().setCode(EXPECTED_CODE).setStatisticalOperationUrn(EXPECTED_URN)
-                .setTitle(InternationalStringAvroMapper.do2Avro(mockInternationalString())).setType(type).setUrn(EXPECTED_URN).build();
+        RelatedResourceAvro target = RelatedResourceAvro.newBuilder()
+                .setCode(EXPECTED_CODE)
+                .setStatisticalOperationUrn(EXPECTED_URN)
+                .setTitle(InternationalStringAvroMapper.do2Avro(mockInternationalString()))
+                .setType(TypeRelatedResourceEnumAvroMapper.do2Avro(type))
+                .setUrn(EXPECTED_URN)
+                .build();
         return target;
     }
 
@@ -187,7 +199,7 @@ public class MappersMockUtils {
     public static VersionableStatisticalResourceAvro mockVersionableStatisticalResourceAvro() {
         VersionableStatisticalResourceAvro target = VersionableStatisticalResourceAvro.newBuilder()
                 .setNameableStatisticalResource(mockNameableStatisticalResourceAvro())
-                .setNextVersion(EXPECTED_NEXT_VERSION_TYPE)
+                .setNextVersion(NextVersionTypeEnumAvroMapper.do2Avro(EXPECTED_NEXT_VERSION_TYPE))
                 .setNextVersionDate(EXPECTED_FUTURE_DATE)
                 .setValidFrom(EXPECTED_PAST_DATE)
                 .setVersionRationale(InternationalStringAvroMapper.do2Avro(mockInternationalString()))
@@ -260,7 +272,7 @@ public class MappersMockUtils {
                 .setPublicationDate(EXPECTED_PAST_DATE)
                 .setPublicationUser(EXPECTED_USER + "Publication")
                 .setLastVersion(EXPECTED_LAST_VERSION)
-                .setProcStatus(PRODUCTION_VALIDATION)
+                .setProcStatus(ProcStatusEnumAvroMapper.do2Avro(PRODUCTION_VALIDATION))
                 .setReplacesVersion(mockRelatedResourceAvro(replacesVersionType))
                 .setMaintainer(mockExternalItemAvro()).build();
         return target;
@@ -345,7 +357,7 @@ public class MappersMockUtils {
                 .setStatisticalOperationInstances(listExternalItemAvro)
                 .setSubtitle(mockInternationalStringAvro())
                 .setTitleAlternative(mockInternationalStringAvro())
-                .setType(StatisticalResourceTypeEnum.COLLECTION)
+                .setType(StatisticalResourceTypeEnumAvroMapper.do2Avro(StatisticalResourceTypeEnum.COLLECTION))
                 .setUserModifiedKeywords(true)
                 .build();
         return target;

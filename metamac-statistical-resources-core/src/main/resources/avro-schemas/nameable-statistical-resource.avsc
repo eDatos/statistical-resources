@@ -3,9 +3,9 @@
      "type": "record",
      "name": "NameableStatisticalResourceAvro",
      "fields" : [
-         {"name" : "identifiableStatisticalResource", "type": "IdentifiableStatisticalResourceAvro" },
-         {"name" : "title" , "type" : "InternationalStringAvro"},
-         {"name" : "description" , "type" : "InternationalStringAvro"}
+         {"name" : "identifiableStatisticalResource", "type" : ["null", "IdentifiableStatisticalResourceAvro" ]},
+         {"name" : "title" , "type" : ["null", "InternationalStringAvro"]},
+         {"name" : "description" , "type" : ["null", "InternationalStringAvro"]}
      ]
  }
  

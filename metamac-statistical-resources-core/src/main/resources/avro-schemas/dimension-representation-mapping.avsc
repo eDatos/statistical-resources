@@ -4,10 +4,10 @@
       "type" : "record",
       "name" : "DimensionRepresentationMappingAvro",
       "fields" : [
-          {"name" : "datasourceFilename", "type" : "string" },
-          {"name" : "version", "type" : "long" },
-          {"name" : "mapping", "type" : "string" },
-          {"name" : "datasetUrn", "type" : "string" }//TODO Dataset. String para evitar fallos al compilar schema por no estar definia datasetversionavro
+          {"name" : "datasourceFilename", "type" : ["null", "string" ]},
+          {"name" : "version", "type" : ["null", "long" ]},
+          {"name" : "mapping", "type" : ["null", "string" ]},
+          {"name" : "datasetUrn", "type" : ["null", "string" ]}//TODO Dataset. String para evitar fallos al compilar schema por no estar definia datasetversionavro
           
       ]
   }

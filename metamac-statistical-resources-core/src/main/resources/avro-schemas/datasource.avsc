@@ -3,10 +3,10 @@
       "type" : "record",
       "name" : "DatasourceAvro",
       "fields" : [
-          {"name" : "dateNextUpdate", "type" : {"type":"string", "java-class" : "org.joda.time.DateTime"}},
-          {"name" : "fileName", "type" : "string" },
-          {"name" : "version", "type" : "long" }, 
-          {"name" : "identifiableStatisticalResource", "type" : "IdentifiableStatisticalResourceAvro" },
-          {"name" : "datasetVersionUrn", "type" : "string" } //TODO DatasetVersion. String para evitar fallos al compilar schema por no estar definia datasetversionavro
+          {"name" : "dateNextUpdate", "type" : ["null", {"type":"string", "java-class" : "org.joda.time.DateTime"}]},
+          {"name" : "fileName", "type" : ["null", "string" ]},
+          {"name" : "version", "type" : ["null", "long" ]}, 
+          {"name" : "identifiableStatisticalResource", "type" : ["null", "IdentifiableStatisticalResourceAvro" ]},
+          {"name" : "datasetVersionUrn", "type" : ["null", "string" ]} //TODO DatasetVersion. String para evitar fallos al compilar schema por no estar definia datasetversionavro
       ]
   }

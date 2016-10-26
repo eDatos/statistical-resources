@@ -14,25 +14,25 @@ public class ExternalItemAvroMapper {
         target.setCodeNested(source.getCodeNested());
         target.setManagementAppUrl(source.getManagementAppUrl());
         target.setTitle(InternationalStringAvroMapper.avro2Do(source.getTitle()));
-        target.setType(source.getType());
+        target.setType(TypeExternalArtefactsEnumAvroMapper.avro2Do(source.getType()));
         target.setUrn(source.getUrn());
         target.setUrnProvider(source.getUrnProvider());
         target.setVersion(source.getVersion());
         return target;
     }
-    
+
     public static ExternalItemAvro do2Avro(ExternalItem ei) {
         ExternalItemAvro target = ExternalItemAvro.newBuilder()
                 .setCode(ei.getCode())
                 .setCodeNested(ei.getCodeNested())
                 .setManagementAppUrl(ei.getManagementAppUrl())
                 .setTitle(InternationalStringAvroMapper.do2Avro(ei.getTitle()))
-                .setType(ei.getType())
+                .setType(TypeExternalArtefactsEnumAvroMapper.do2Avro(ei.getType()))
                 .setUrn(ei.getUrn())
                 .setUrnProvider(ei.getUrnProvider())
                 .setVersion(ei.getVersion())
                 .build();
         return target;
-        
+
     }
 }

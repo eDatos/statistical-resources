@@ -27,7 +27,7 @@ public class SiemacMetadataStatisticalResourceAvroMapper {
         target.setAbstractLogic(InternationalStringAvroMapper.avro2Do(source.getAbstractLogic()));
         target.setKeywords(InternationalStringAvroMapper.avro2Do(source.getKeywords()));
         target.setCommonMetadata(ExternalItemAvroMapper.avro2Do(source.getCommonMetadata()));
-        target.setType(source.getType());
+        target.setType(StatisticalResourceTypeEnumAvroMapper.avro2Do(source.getType()));
         target.setCreator(ExternalItemAvroMapper.avro2Do(source.getCreator()));
         target.setConformsTo(InternationalStringAvroMapper.avro2Do(source.getConformsTo()));
         target.setConformsToInternal(InternationalStringAvroMapper.avro2Do(source.getConformsToInternal()));
@@ -75,7 +75,7 @@ public class SiemacMetadataStatisticalResourceAvroMapper {
                 .setAbstractLogic(InternationalStringAvroMapper.do2Avro(source.getAbstractLogic()))
                 .setKeywords(InternationalStringAvroMapper.do2Avro(source.getKeywords()))
                 .setCommonMetadata(ExternalItemAvroMapper.do2Avro(source.getCommonMetadata()))
-                .setType(source.getType())
+                .setType(StatisticalResourceTypeEnumAvroMapper.do2Avro(source.getType()))
                 .setCreator(ExternalItemAvroMapper.do2Avro(source.getCreator()))
                 .setConformsTo(InternationalStringAvroMapper.do2Avro(source.getConformsTo()))
                 .setConformsToInternal(InternationalStringAvroMapper.do2Avro(source.getConformsToInternal()))

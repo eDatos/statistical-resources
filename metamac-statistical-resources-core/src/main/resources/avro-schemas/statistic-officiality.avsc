@@ -3,8 +3,8 @@
       "type" : "record",
       "name" : "StatisticOfficialityAvro",
       "fields" : [
-          {"name" : "identifier", "type" : "string" },
-          {"name" : "version", "type" : "long" },
-          {"name" : "description", "type" : "InternationalStringAvro" }
+          {"name" : "identifier", "type" : ["null", "string" ]},
+          {"name" : "version", "type" : ["null", "long" ]},
+          {"name" : "description", "type" : ["null", "InternationalStringAvro" ]}
       ]
   }

@@ -3,10 +3,10 @@
       "type" : "record",
       "name" : "DatasetAvro",
       "fields" : [
-          {"name" : "identifiableStatisticalResource", "type" : "IdentifiableStatisticalResourceAvro" },
-          {"name" : "versionsUrns", "type" : {"type" : "array", "items" : "string"}}, //TODO DatasetVersion. String para evitar fallos al compilar schema por no estar definia datasetversionavro
-          {"name" : "version", "type" : "long" },
-          {"name" : "dimensionRepresentationMappings", "type" : {"type" : "array", "items" : "DimensionRepresentationMappingAvro"}}
+          {"name" : "identifiableStatisticalResource", "type" : ["null", "IdentifiableStatisticalResourceAvro" ]},
+          {"name" : "versionsUrns", "type" : ["null", {"type" : "array", "items" : "string"}]}, //TODO DatasetVersion. String para evitar fallos al compilar schema por no estar definia datasetversionavro
+          {"name" : "version", "type" : ["null", "long" ]},
+          {"name" : "dimensionRepresentationMappings", "type" : ["null", {"type" : "array", "items" : "DimensionRepresentationMappingAvro"}]}
       ]
   }
   

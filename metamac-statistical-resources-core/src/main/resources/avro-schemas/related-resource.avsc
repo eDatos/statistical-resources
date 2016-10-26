@@ -1,12 +1,33 @@
+[
+    {
+        "namespace": "org.siemac.metamac.statistical.resources.core.stream.messages",
+        "name" : "TypeRelatedResourceEnumAvro",
+        "type" : "enum",
+        "symbols" : [
+            "DATASET_VERSION",
+            "PUBLICATION_VERSION",
+            "QUERY_VERSION",
+            "DATASET",
+            "QUERY",
+            "PUBLICATION",
+            "CHAPTER",
+            "CUBE",
+            "DATASOURCE",
+            "CATEGORISATION"
+        ]
+    }
+
+,
 {
     "namespace": "org.siemac.metamac.statistical.resources.core.stream.messages",
     "type" : "record",
     "name" : "RelatedResourceAvro",
     "fields" : [
-        {"name" : "code", "type" : "string"},
-        {"name" : "urn", "type" : "string"},
-        {"name" : "title", "type" : "InternationalStringAvro"},
-        {"name" : "statisticalOperationUrn", "type" : "string"},
-        {"name" : "type", "type" : {"type" : "string", "java-class" : " org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum"}}
+        {"name" : "code", "type" : ["null", "string"]},
+        {"name" : "urn", "type" : ["null", "string"]},
+        {"name" : "title", "type" : ["null", "InternationalStringAvro"]},
+        {"name" : "statisticalOperationUrn", "type" : ["null", "string"]},
+        {"name" : "type", "type" : ["null", "TypeRelatedResourceEnumAvro"]}
     ]
 }
+]

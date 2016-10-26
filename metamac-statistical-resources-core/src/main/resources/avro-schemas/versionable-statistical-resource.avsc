@@ -1,18 +1,31 @@
+[
+    {
+        "namespace": "org.siemac.metamac.statistical.resources.core.stream.messages",
+        "name" : "NextVersionTypeEnumAvro",
+        "type" : "enum",
+        "symbols" : [
+            "NO_UPDATES",
+            "NON_SCHEDULED_UPDATE",
+            "SCHEDULED_UPDATE"
+        ]
+    }
+,
  {
     "namespace": "org.siemac.metamac.statistical.resources.core.stream.messages",
      "type": "record",
      "name": "VersionableStatisticalResourceAvro",
      "fields" : [
-         {"name" : "nameableStatisticalResource", "type": "NameableStatisticalResourceAvro" },
-         {"name" : "nextVersionDate" , "type" : {"type":"string", "java-class":"org.joda.time.DateTime"}},
-         {"name" : "validFrom" , "type" :{"type":"string", "java-class":"org.joda.time.DateTime"}},
-         {"name" : "validTo" , "type" : {"type":"string", "java-class":"org.joda.time.DateTime"}},
-         {"name" : "versionRationale" , "type" : "InternationalStringAvro"},
-         {"name" : "nextVersion" , "type" : {"type" : "string", "java-class":"org.siemac.metamac.statistical.resources.core.enume.domain.NextVersionTypeEnum"}},
-         {"name" : "versionLogic", "type" : "string" }
-//         {"name" : "versionRationaleTypes", "type" : "string"} //TODO
+         {"name" : "nameableStatisticalResource", "type" : ["null", "NameableStatisticalResourceAvro" ]},
+         {"name" : "nextVersionDate" , "type" : ["null", {"type":"string", "java-class":"org.joda.time.DateTime"}]},
+         {"name" : "validFrom" , "type" : ["null", {"type":"string", "java-class":"org.joda.time.DateTime"}]},
+         {"name" : "validTo" , "type" : ["null", {"type":"string", "java-class":"org.joda.time.DateTime"}]},
+         {"name" : "versionRationale" , "type" : ["null", "InternationalStringAvro"]},
+         {"name" : "nextVersion" , "type" : ["null", "NextVersionTypeEnumAvro"]},
+         {"name" : "versionLogic", "type" : ["null", "string" ]}
+//         {"name" : "versionRationaleTypes", "type" : ["null", "string"]} //TODO
      ]
  }
+ ]
  
  
  

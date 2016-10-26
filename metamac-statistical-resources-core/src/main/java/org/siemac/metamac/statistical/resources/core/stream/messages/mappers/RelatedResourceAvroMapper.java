@@ -15,32 +15,29 @@ public class RelatedResourceAvroMapper {
     }
 
     public static RelatedResourceAvro do2Avro(RelatedResource source) throws MetamacException {
-        TypeRelatedResourceEnum type = source.getType();
-        NameableStatisticalResource nameableResource = null;
         RelatedResourceAvro target = null;
-        switch (type) {
-            case DATASET:
-                nameableResource = AvroMapperUtils.retrieveDatasetVersion(source.getDataset().getIdentifiableStatisticalResource().getUrn()).getSiemacMetadataStatisticalResource();
-                break;
-            default:
-                nameableResource = RelatedResourceUtils.retrieveNameableResourceLinkedToRelatedResource(source);
+        if (null != source) {
+            NameableStatisticalResource nameableResource = null;
+            TypeRelatedResourceEnum type = source.getType();
+            switch (type) {
+                case DATASET:
+                    nameableResource = AvroMapperUtils.retrieveDatasetVersion(source.getDataset().getIdentifiableStatisticalResource().getUrn()).getSiemacMetadataStatisticalResource();
+                    break;
+                default:
+                    nameableResource = RelatedResourceUtils.retrieveNameableResourceLinkedToRelatedResource(source);
 
-        }
-        if (nameableResource != null) {
-            target = RelatedResourceAvro.newBuilder()
-                    .setCode(nameableResource.getCode())
-                    .setStatisticalOperationUrn(nameableResource.getStatisticalOperation().getUrn())
-                    .setTitle(InternationalStringAvroMapper.do2Avro(nameableResource.getTitle()))
-                    .setType(source.getType())
-                    .setUrn(nameableResource.getUrn())
-                    .build();
+            }
+            if (nameableResource != null) {
+                target = RelatedResourceAvro.newBuilder().setCode(nameableResource.getCode()).setStatisticalOperationUrn(nameableResource.getStatisticalOperation().getUrn())
+                        .setTitle(InternationalStringAvroMapper.do2Avro(nameableResource.getTitle())).setType(TypeRelatedResourceEnumAvroMapper.do2Avro(source.getType())).setUrn(nameableResource.getUrn()).build();
+            }
         }
         return target;
     }
 
     public static RelatedResource avro2Do(RelatedResourceAvro source) throws MetamacException {
         RelatedResource target = new RelatedResource();
-        target.setType(source.getType());
+        target.setType(TypeRelatedResourceEnumAvroMapper.avro2Do(source.getType()));
 
         switch (target.getType()) {
             case DATASET:

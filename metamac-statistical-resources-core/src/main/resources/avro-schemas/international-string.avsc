@@ -4,8 +4,8 @@
         "type" : "record",
         "name" : "InternationalStringItemAvro",
         "fields" : [
-            {"type" : "string", "name" : "locale"},
-            {"type" : "string", "name" : "label"}
+            {"type" : ["null", "string"], "name" : "locale"},
+            {"type" : ["null", "string"], "name" : "label"}
         ]
     },
     {
@@ -13,7 +13,7 @@
         "type" : "record",
         "name" : "InternationalStringAvro",
         "fields" : [
-           {"name" : "localisedStrings", "type" : { "type" : "array", "items": "InternationalStringItemAvro"}} 
+           {"name" : "localisedStrings", "type" : ["null", {"type": "array", "items": "InternationalStringItemAvro"}]} 
         ]    
     }
 ]

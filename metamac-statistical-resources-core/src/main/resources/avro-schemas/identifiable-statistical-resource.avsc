@@ -3,9 +3,9 @@
      "type": "record",
      "name": "IdentifiableStatisticalResourceAvro",
      "fields" : [
-         {"name" : "code" , "type" : "string"},
-         {"name" : "urn" , "type" : "string"},
-         {"name" : "statisticalOperation", "type" : "ExternalItemAvro"}
+         {"name" : "code" , "type" : ["null", "string"]},
+         {"name" : "urn" , "type" : ["null", "string"]},
+         {"name" : "statisticalOperation", "type" : ["null", "ExternalItemAvro"]}
      ]
  }
  

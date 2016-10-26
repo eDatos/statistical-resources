@@ -3,10 +3,10 @@
   "type" : "record",
   "name" : "CodeDimensionAvro",
   "fields" : [
-      {"name" : "dsdComponentId", "type" : "string" },
-      {"name" : "identifier", "type" : "string" },
-      {"name" : "title", "type" : "string" },
-      {"name" : "version", "type" : "long" },
-      {"name" : "datasetVersionUrn", "type" : "string" } //TODO DatasetVersion. String para evitar fallos al compilar schema por no estar definia datasetversionavro
+      {"name" : "dsdComponentId", "type" : ["null", "string" ]},
+      {"name" : "identifier", "type" : ["null", "string" ]},
+      {"name" : "title", "type" : ["null", "string" ]},
+      {"name" : "version", "type" : ["null", "long" ]},
+      {"name" : "datasetVersionUrn", "type" : ["null", "string" ]} //TODO DatasetVersion. String para evitar fallos al compilar schema por no estar definia datasetversionavro
       ]
 }
