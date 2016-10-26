@@ -56,19 +56,10 @@ public class UpdateDatasetVersionProcStatusActionHandler extends UpdateResourceP
                             action.getDatasetVersionToUpdateProcStatus());
                     break;
 
-                case PROGRAM_PUBLICATION:
-                    datasetVersionDto = statisticalResourcesServiceFacade.programPublicationDatasetVersion(ServiceContextHolder.getCurrentServiceContext(),
-                            action.getDatasetVersionToUpdateProcStatus(), action.getValidFrom());
-                    break;
-
                 case PUBLISH:
                     datasetVersionDto = statisticalResourcesServiceFacade.publishDatasetVersion(ServiceContextHolder.getCurrentServiceContext(), action.getDatasetVersionToUpdateProcStatus());
                     break;
 
-                case CANCEL_PROGRAMMED_PUBLICATION:
-                    datasetVersionDto = statisticalResourcesServiceFacade
-                            .cancelPublicationDatasetVersion(ServiceContextHolder.getCurrentServiceContext(), action.getDatasetVersionToUpdateProcStatus());
-                    break;
                 case VERSION:
                     datasetVersionDto = statisticalResourcesServiceFacade.versioningDatasetVersion(ServiceContextHolder.getCurrentServiceContext(), action.getDatasetVersionToUpdateProcStatus(),
                             action.getVersionType());
@@ -77,7 +68,7 @@ public class UpdateDatasetVersionProcStatusActionHandler extends UpdateResourceP
 
             try {
                 ResourceNotificationDto notificationDto = new ResourceNotificationDto.Builder(action.getDatasetVersionToUpdateProcStatus(), StatisticalResourceTypeEnum.DATASET, lifeCycleAction)
-                        .updatedResource(datasetVersionDto).reasonOfRejection(action.getReasonOfRejection()).programmedPublicationDate(action.getValidFrom()).build();
+                        .updatedResource(datasetVersionDto).reasonOfRejection(action.getReasonOfRejection()).build();
                 noticesRestInternalFacade.createLifeCycleNotification(ServiceContextHolder.getCurrentServiceContext(), notificationDto);
             } catch (MetamacWebException e) {
                 return new UpdateDatasetVersionProcStatusResult.Builder(datasetVersionDto).notificationException(e).build();

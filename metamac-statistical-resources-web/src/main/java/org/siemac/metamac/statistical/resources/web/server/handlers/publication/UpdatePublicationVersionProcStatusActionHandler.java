@@ -61,16 +61,6 @@ public class UpdatePublicationVersionProcStatusActionHandler extends UpdateResou
                             action.getPublicationVersionToUpdateProcStatus());
                     break;
 
-                case PROGRAM_PUBLICATION:
-                    publicationVersionDto = statisticalResourcesServiceFacade.programPublicationPublicationVersion(ServiceContextHolder.getCurrentServiceContext(),
-                            action.getPublicationVersionToUpdateProcStatus(), action.getValidFrom());
-                    break;
-
-                case CANCEL_PROGRAMMED_PUBLICATION:
-                    publicationVersionDto = statisticalResourcesServiceFacade.cancelPublicationPublicationVersion(ServiceContextHolder.getCurrentServiceContext(),
-                            action.getPublicationVersionToUpdateProcStatus());
-                    break;
-
                 case VERSION:
                     publicationVersionDto = statisticalResourcesServiceFacade.versioningPublicationVersion(ServiceContextHolder.getCurrentServiceContext(),
                             action.getPublicationVersionToUpdateProcStatus(), action.getVersionType());
@@ -82,7 +72,7 @@ public class UpdatePublicationVersionProcStatusActionHandler extends UpdateResou
 
             try {
                 ResourceNotificationDto notificationDto = new ResourceNotificationDto.Builder(action.getPublicationVersionToUpdateProcStatus(), StatisticalResourceTypeEnum.COLLECTION, lifeCycleAction)
-                        .updatedResource(publicationVersionDto).reasonOfRejection(action.getReasonOfRejection()).programmedPublicationDate(action.getValidFrom()).build();
+                        .updatedResource(publicationVersionDto).reasonOfRejection(action.getReasonOfRejection()).build();
                 noticesRestInternalFacade.createLifeCycleNotification(ServiceContextHolder.getCurrentServiceContext(), notificationDto);
             } catch (MetamacWebException e) {
                 return new UpdatePublicationVersionProcStatusResult.Builder(publicationVersionDto).notificationException(e).build();

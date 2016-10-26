@@ -68,14 +68,6 @@ public class UpdateDatasetVersionsProcStatusActionHandler extends UpdateResource
                         updatedDatasetVersionBaseDto = statisticalResourcesServiceFacade.publishDatasetVersion(ServiceContextHolder.getCurrentServiceContext(), datasetVersionToUpdate);
                         break;
 
-                    case PROGRAM_PUBLICATION:
-                        updatedDatasetVersionBaseDto = statisticalResourcesServiceFacade.programPublicationDatasetVersion(ServiceContextHolder.getCurrentServiceContext(), datasetVersionToUpdate,
-                                action.getValidFrom());
-                        break;
-
-                    case CANCEL_PROGRAMMED_PUBLICATION:
-                        updatedDatasetVersionBaseDto = statisticalResourcesServiceFacade.cancelPublicationDatasetVersion(ServiceContextHolder.getCurrentServiceContext(), datasetVersionToUpdate);
-                        break;
                     case VERSION:
                         updatedDatasetVersionBaseDto = statisticalResourcesServiceFacade.versioningDatasetVersion(ServiceContextHolder.getCurrentServiceContext(), datasetVersionToUpdate,
                                 action.getVersionType());
@@ -85,7 +77,7 @@ public class UpdateDatasetVersionsProcStatusActionHandler extends UpdateResource
                 }
 
                 ResourceNotificationBaseDto notification = new ResourceNotificationBaseDto.Builder(datasetVersionToUpdate, StatisticalResourceTypeEnum.DATASET, lifeCycleAction)
-                        .updatedResource(updatedDatasetVersionBaseDto).reasonOfRejection(action.getReasonOfRejection()).programmedPublicationDate(action.getValidFrom()).build();
+                        .updatedResource(updatedDatasetVersionBaseDto).reasonOfRejection(action.getReasonOfRejection()).build();
                 notificationsToSend.add(notification);
 
             } catch (MetamacException e) {

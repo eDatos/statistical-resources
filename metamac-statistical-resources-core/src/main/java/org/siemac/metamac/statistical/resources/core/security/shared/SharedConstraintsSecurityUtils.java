@@ -10,7 +10,7 @@ public class SharedConstraintsSecurityUtils extends SharedSecurityUtils {
     }
 
     public static boolean canCreateContentConstraint(MetamacPrincipal metamacPrincipal, String operationCode, ProcStatusEnum datasetProcStatusEnum) {
-        if (ProcStatusEnum.PUBLISHED.equals(datasetProcStatusEnum) || ProcStatusEnum.PUBLISHED_NOT_VISIBLE.equals(datasetProcStatusEnum)) {
+        if (ProcStatusEnum.PUBLISHED.equals(datasetProcStatusEnum)) {
             return false;
         } else {
             return isOperationAllowed(metamacPrincipal, operationCode, PRODUCTION_ROLES);
@@ -22,7 +22,7 @@ public class SharedConstraintsSecurityUtils extends SharedSecurityUtils {
     }
 
     public static boolean canDeleteContentConstraint(MetamacPrincipal metamacPrincipal, String operationCode, ProcStatusEnum datasetProcStatusEnum) {
-        if (ProcStatusEnum.PUBLISHED.equals(datasetProcStatusEnum) || ProcStatusEnum.PUBLISHED_NOT_VISIBLE.equals(datasetProcStatusEnum)) {
+        if (ProcStatusEnum.PUBLISHED.equals(datasetProcStatusEnum)) {
             return false;
         } else {
             return canModifyStatisticalResource(metamacPrincipal, operationCode, datasetProcStatusEnum);
@@ -30,7 +30,7 @@ public class SharedConstraintsSecurityUtils extends SharedSecurityUtils {
     }
 
     public static boolean canSaveForContentConstraint(MetamacPrincipal metamacPrincipal, String operationCode, ProcStatusEnum datasetProcStatusEnum) {
-        if (ProcStatusEnum.PUBLISHED.equals(datasetProcStatusEnum) || ProcStatusEnum.PUBLISHED_NOT_VISIBLE.equals(datasetProcStatusEnum)) {
+        if (ProcStatusEnum.PUBLISHED.equals(datasetProcStatusEnum)) {
             return false;
         } else {
             return canModifyStatisticalResource(metamacPrincipal, operationCode, datasetProcStatusEnum);

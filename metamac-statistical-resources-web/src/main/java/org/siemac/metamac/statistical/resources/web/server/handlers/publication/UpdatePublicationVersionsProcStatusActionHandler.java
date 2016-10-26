@@ -68,16 +68,6 @@ public class UpdatePublicationVersionsProcStatusActionHandler extends UpdateReso
                         updatedPublicationVersionBaseDto = statisticalResourcesServiceFacade.publishPublicationVersion(ServiceContextHolder.getCurrentServiceContext(), publicationVersionDto);
                         break;
 
-                    case PROGRAM_PUBLICATION:
-                        updatedPublicationVersionBaseDto = statisticalResourcesServiceFacade.programPublicationPublicationVersion(ServiceContextHolder.getCurrentServiceContext(),
-                                publicationVersionDto, action.getValidFrom());
-                        break;
-
-                    case CANCEL_PROGRAMMED_PUBLICATION:
-                        updatedPublicationVersionBaseDto = statisticalResourcesServiceFacade
-                                .cancelPublicationPublicationVersion(ServiceContextHolder.getCurrentServiceContext(), publicationVersionDto);
-                        break;
-
                     case VERSION:
                         updatedPublicationVersionBaseDto = statisticalResourcesServiceFacade.versioningPublicationVersion(ServiceContextHolder.getCurrentServiceContext(), publicationVersionDto,
                                 action.getVersionType());
@@ -88,7 +78,7 @@ public class UpdatePublicationVersionsProcStatusActionHandler extends UpdateReso
                 }
 
                 ResourceNotificationBaseDto notification = new ResourceNotificationBaseDto.Builder(publicationVersionDto, StatisticalResourceTypeEnum.COLLECTION, lifeCycleAction)
-                        .updatedResource(updatedPublicationVersionBaseDto).reasonOfRejection(action.getReasonOfRejection()).programmedPublicationDate(action.getValidFrom()).build();
+                        .updatedResource(updatedPublicationVersionBaseDto).reasonOfRejection(action.getReasonOfRejection()).build();
                 notificationsToSend.add(notification);
 
             } catch (MetamacException e) {

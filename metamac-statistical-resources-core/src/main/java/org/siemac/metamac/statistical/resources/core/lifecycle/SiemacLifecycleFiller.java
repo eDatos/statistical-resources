@@ -54,20 +54,6 @@ public class SiemacLifecycleFiller {
     }
 
     // ------------------------------------------------------------------------------------------------------
-    // >> CANCEL PUBLICATION
-    // ------------------------------------------------------------------------------------------------------
-
-    public void applyCancelPublicationCurrentResourceActions(ServiceContext ctx, HasSiemacMetadata resource, HasSiemacMetadata previousResource) throws MetamacException {
-        lifecycleFiller.applyCancelPublicationCurrentResourceActions(ctx, resource, previousResource);
-        resource.getSiemacMetadataStatisticalResource().setCopyrightedDate(null);
-    }
-
-    public void applyCancelPublicationPreviousResourceActions(ServiceContext ctx, HasSiemacMetadata resource, HasSiemacMetadata previousResource, RelatedResource currentAsRelatedResource)
-            throws MetamacException {
-        lifecycleFiller.applyCancelPublicationPreviousResourceActions(ctx, resource, previousResource, currentAsRelatedResource);
-    }
-
-    // ------------------------------------------------------------------------------------------------------
     // >> VERSIONING
     // ------------------------------------------------------------------------------------------------------
 

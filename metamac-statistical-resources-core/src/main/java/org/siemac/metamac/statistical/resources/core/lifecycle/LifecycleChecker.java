@@ -26,7 +26,6 @@ public class LifecycleChecker {
 
     private static final int               PROCESSING_MINUTES_DELAY        = 30;
 
-    private static final int               CANCEL_PROCESSING_MINUTES_DELAY = 5;
 
     @Autowired
     private LifecycleCommonMetadataChecker lifecycleCommonMetadataChecker;
@@ -80,11 +79,7 @@ public class LifecycleChecker {
         }
 
         checkLifeCycleMetadataAllActions(resource, metadataName, exceptionItems);
-        checkMetadataRequired(resource.getLifeCycleStatisticalResource().getValidFrom(), addParameter(metadataName, ServiceExceptionSingleParameters.VALID_FROM), exceptionItems);
 
-        if (resource.getLifeCycleStatisticalResource().getValidFrom() != null && (resource.getLifeCycleStatisticalResource().getValidFrom().plusMinutes(PROCESSING_MINUTES_DELAY)).isBeforeNow()) {
-            exceptionItems.add(new MetamacExceptionItem(ServiceExceptionType.METADATA_INCORRECT, addParameter(metadataName, ServiceExceptionSingleParameters.VALID_FROM)));
-        }
 
         // Statistical Operation
         externalItemChecker.checkExternalItemsExternallyPublished(resource.getLifeCycleStatisticalResource().getStatisticalOperation(),
@@ -101,22 +96,6 @@ public class LifecycleChecker {
         }
 
         // Is replaced by version: It can be private. API checks that can be returned.
-    }
-
-    // ------------------------------------------------------------------------------------------------------
-    // PUBLISHED
-    // ------------------------------------------------------------------------------------------------------
-
-    public void checkCancelPublication(HasLifecycle resource, HasLifecycle previousVersion, String metadataName, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
-        if (!StatisticalResourcesVersionUtils.isInitialVersion(resource)) {
-            checkParameterRequired(previousVersion, ServiceExceptionParameters.PREVIOUS_VERSION, exceptionItems);
-        }
-
-        checkLifeCycleMetadataAllActions(resource, metadataName, exceptionItems);
-
-        if (resource.getLifeCycleStatisticalResource().getValidFrom().minusMinutes(CANCEL_PROCESSING_MINUTES_DELAY).isBeforeNow()) {
-            exceptionItems.add(new MetamacExceptionItem(ServiceExceptionType.METADATA_INCORRECT, addParameter(metadataName, ServiceExceptionSingleParameters.VALID_FROM)));
-        }
     }
 
     // ------------------------------------------------------------------------------------------------------

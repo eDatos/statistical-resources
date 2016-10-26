@@ -4,7 +4,6 @@ import static org.siemac.metamac.statistical.resources.web.client.StatisticalRes
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getMessages;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.siemac.metamac.core.common.util.shared.StringUtils;
@@ -24,7 +23,6 @@ import org.siemac.metamac.statistical.resources.web.client.query.view.widgets.fo
 import org.siemac.metamac.statistical.resources.web.client.query.view.widgets.forms.QueryProductionDescriptorsEditionForm;
 import org.siemac.metamac.statistical.resources.web.client.query.view.widgets.forms.QueryProductionDescriptorsForm;
 import org.siemac.metamac.statistical.resources.web.client.query.view.widgets.forms.QueryResourceRelationDescriptorsForm;
-import org.siemac.metamac.statistical.resources.web.client.widgets.ProgramPublicationWindow;
 import org.siemac.metamac.statistical.resources.web.client.widgets.VersionWindow;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.LifeCycleResourceContentDescriptorsEditionForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.LifeCycleResourceContentDescriptorsForm;
@@ -370,32 +368,7 @@ public class QueryViewImpl extends ViewWithUiHandlers<QueryUiHandlers> implement
                     getUiHandlers().publish(queryVersionDto);
                 }
             });
-            mainFormLayout.getProgramPublicationButton().addClickHandler(new ClickHandler() {
 
-                @Override
-                public void onClick(ClickEvent event) {
-                    final ProgramPublicationWindow window = new ProgramPublicationWindow(getConstants().lifeCycleProgramPublication());
-                    window.getSave().addClickHandler(new com.smartgwt.client.widgets.form.fields.events.ClickHandler() {
-
-                        @Override
-                        public void onClick(com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
-                            if (window.validateForm()) {
-                                Date selectedDate = window.getSelectedDate();
-                                getUiHandlers().programPublication(queryVersionDto, selectedDate);
-                                window.destroy();
-                            }
-                        }
-                    });
-                }
-            });
-            mainFormLayout.getCancelProgrammedPublication().addClickHandler(new ClickHandler() {
-
-                @Override
-                public void onClick(ClickEvent event) {
-                    getUiHandlers().cancelProgrammedPublication(queryVersionDto);
-
-                }
-            });
             mainFormLayout.getVersioningButton().addClickHandler(new ClickHandler() {
 
                 @Override

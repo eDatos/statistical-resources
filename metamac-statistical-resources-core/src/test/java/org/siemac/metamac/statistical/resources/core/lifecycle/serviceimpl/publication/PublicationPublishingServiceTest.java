@@ -158,8 +158,7 @@ public class PublicationPublishingServiceTest extends StatisticalResourcesMockRe
         List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
 
         List<String> datasetsNotPublished = getDatasetsMocksUrns(DATASET_25_DRAFT_USED_IN_PUBLICATION_VERSION_86_NAME, DATASET_26_PRODUCTION_VALIDATION_USED_IN_PUBLICATION_VERSION_86_NAME,
-                DATASET_27_DIFFUSION_VALIDATION_USED_IN_PUBLICATION_VERSION_86_NAME, DATASET_28_VALIDATION_REJECTED_USED_IN_PUBLICATION_VERSION_86_NAME,
-                DATASET_29_PUBLISHED_NOT_VISIBLE_USED_IN_PUBLICATION_VERSION_86_NAME);
+                DATASET_27_DIFFUSION_VALIDATION_USED_IN_PUBLICATION_VERSION_86_NAME, DATASET_28_VALIDATION_REJECTED_USED_IN_PUBLICATION_VERSION_86_NAME);
 
         // Datasets errors
         for (String datasetUrn : datasetsNotPublished) {
@@ -168,8 +167,7 @@ public class PublicationPublishingServiceTest extends StatisticalResourcesMockRe
 
         // Queries
         List<String> queryiesNotPublished = getQueryMocksUrns(QUERY_16_DRAFT_USED_IN_PUBLICATION_VERSION_86_NAME, QUERY_17_PRODUCTION_VALIDATION_USED_IN_PUBLICATION_VERSION_86_NAME,
-                QUERY_18_DIFFUSION_VALIDATION_USED_IN_PUBLICATION_VERSION_86_NAME, QUERY_19_VALIDATION_REJECTED_USED_IN_PUBLICATION_VERSION_86_NAME,
-                QUERY_20_PUBLISHED_NOT_VISIBLE_USED_IN_PUBLICATION_VERSION_86_NAME);
+                QUERY_18_DIFFUSION_VALIDATION_USED_IN_PUBLICATION_VERSION_86_NAME, QUERY_19_VALIDATION_REJECTED_USED_IN_PUBLICATION_VERSION_86_NAME);
 
         for (String queryUrn : queryiesNotPublished) {
             exceptionItems.add(new MetamacExceptionItem(ServiceExceptionType.PUBLICATION_VERSION_LINKED_TO_NOT_PUBLISHED_QUERY, queryUrn));
@@ -250,38 +248,6 @@ public class PublicationPublishingServiceTest extends StatisticalResourcesMockRe
         expectedMetamacException(new MetamacException(exceptionItems));
 
         publicationVersionLifecycleService.sendToPublished(getServiceContextAdministrador(), publicationVersionUrn);
-    }
-
-    @Test
-    @MetamacMock(PUBLICATION_VERSION_94_NOT_VISIBLE_NAME)
-    public void testCancelPublicationPublicationVersion() throws Exception {
-        String publicationUrn = getPublicationVersionMockUrn(PUBLICATION_VERSION_94_NOT_VISIBLE_NAME);
-
-        PublicationVersion publicationVersion = publicationVersionLifecycleService.cancelPublication(getServiceContextAdministrador(), publicationUrn);
-
-        assertCancelPublicationPublicationVersion(publicationVersion, null);
-    }
-
-    @Test
-    @MetamacMock(PUBLICATION_VERSION_95_NOT_VISIBLE_IS_REPLACED_BY_PUBLICATION_VERSION_96_NAME)
-    public void testCancelPublicationPublicationVersionIsReplacedByOtherNotVisible() throws Exception {
-        String publicationUrn = getPublicationVersionMockUrn(PUBLICATION_VERSION_95_NOT_VISIBLE_IS_REPLACED_BY_PUBLICATION_VERSION_96_NAME);
-        String publicationUrnThatReplaces = getPublicationVersionMockUrn(PUBLICATION_VERSION_96_NOT_VISIBLE_REPLACES_PUBLICATION_VERSION_95_NAME);
-
-        List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
-        exceptionItems.add(new MetamacExceptionItem(ServiceExceptionType.PUBLICATION_VERSION_IS_REPLACED_BY_NOT_VISIBLE, publicationUrnThatReplaces));
-
-        expectedMetamacException(new MetamacException(exceptionItems));
-
-        publicationVersionLifecycleService.cancelPublication(getServiceContextAdministrador(), publicationUrn);
-
-    }
-
-    private void assertCancelPublicationPublicationVersion(PublicationVersion current, PublicationVersion previous) throws MetamacException {
-        LifecycleAsserts.assertAutomaticallyFilledMetadataSiemacCancelPublication(current, previous);
-
-        assertNull(current.getFormatExtentResources());
-        assertTrue(current.getHasPart().isEmpty());
     }
 
     private void assertPublishingPublicationVersion(PublicationVersion current, PublicationVersion previous) throws MetamacException {

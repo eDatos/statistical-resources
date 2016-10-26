@@ -24,8 +24,6 @@ public class StatisticalResourcesCriteriaUtils {
         return ConditionalCriteriaBuilder.criteriaFor(entityClass)
                 .withProperty(siemacMetadataStatisticalResourceProperty.procStatus()).eq(ProcStatusEnum.PUBLISHED)
                 .and()
-                .withProperty(CriteriaUtils.getDatetimeLeafPropertyEmbedded(siemacMetadataStatisticalResourceProperty.validFrom(), entityClass)).lessThanOrEqual(now)
-                .and()
                     .lbrace()
                         .withProperty(CriteriaUtils.getDatetimeLeafPropertyEmbedded(siemacMetadataStatisticalResourceProperty.validTo(), entityClass)).isNull()
                         .or()
@@ -40,8 +38,6 @@ public class StatisticalResourcesCriteriaUtils {
         //@formatter:off
         return ConditionalCriteriaBuilder.criteriaFor(entityClass)
                 .withProperty(lifeCycleStatisticalResourceProperty.procStatus()).eq(ProcStatusEnum.PUBLISHED)
-                .and()
-                .withProperty(CriteriaUtils.getDatetimeLeafPropertyEmbedded(lifeCycleStatisticalResourceProperty.validFrom(), entityClass)).lessThanOrEqual(now)
                 .and()
                     .lbrace()
                         .withProperty(CriteriaUtils.getDatetimeLeafPropertyEmbedded(lifeCycleStatisticalResourceProperty.validTo(), entityClass)).isNull()
@@ -59,11 +55,5 @@ public class StatisticalResourcesCriteriaUtils {
         return new SculptorCriteriaConjunction(statusPublished, validFromBeforeNow);
     }
 
-    @SuppressWarnings("rawtypes")
-    public static SculptorPropertyCriteriaBase buildPublishedNotVisibleCondition(Property procStatusProperty, Property validFromProperty, Class entityClazz) {
-        SculptorPropertyCriteria statusPublished = new SculptorPropertyCriteria(procStatusProperty, ProcStatusEnum.PUBLISHED, OperationType.EQ);
-        SculptorPropertyCriteria validFromBeforeNow = new SculptorPropertyCriteria(CriteriaUtils.getDatetimeLeafPropertyEmbedded(validFromProperty, entityClazz), new Date(), OperationType.GT);
-        return new SculptorCriteriaConjunction(statusPublished, validFromBeforeNow);
-    }
 
 }

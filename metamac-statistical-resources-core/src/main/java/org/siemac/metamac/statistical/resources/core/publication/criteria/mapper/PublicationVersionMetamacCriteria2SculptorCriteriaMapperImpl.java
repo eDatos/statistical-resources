@@ -78,16 +78,8 @@ public class PublicationVersionMetamacCriteria2SculptorCriteriaMapperImpl implem
                     return new SculptorPropertyCriteria(CriteriaUtils.getDatetimeLeafPropertyEmbedded(PublicationVersionProperties.siemacMetadataStatisticalResource().nextVersionDate(),
                             PublicationVersion.class), propertyRestriction.getDateValue(), propertyRestriction.getOperationType());
                 case PROC_STATUS:
-                    if (ProcStatusEnum.PUBLISHED.equals(propertyRestriction.getEnumValue())) {
-                        return StatisticalResourcesCriteriaUtils.buildPublishedVisibleCondition(PublicationVersionProperties.siemacMetadataStatisticalResource().procStatus(),
-                                PublicationVersionProperties.siemacMetadataStatisticalResource().validFrom(), PublicationVersion.class);
-                    } else if (ProcStatusEnum.PUBLISHED_NOT_VISIBLE.equals(propertyRestriction.getEnumValue())) {
-                        return StatisticalResourcesCriteriaUtils.buildPublishedNotVisibleCondition(PublicationVersionProperties.siemacMetadataStatisticalResource().procStatus(),
-                                PublicationVersionProperties.siemacMetadataStatisticalResource().validFrom(), PublicationVersion.class);
-                    } else {
-                        return new SculptorPropertyCriteria(PublicationVersionProperties.siemacMetadataStatisticalResource().procStatus(), propertyRestriction.getEnumValue(),
-                                propertyRestriction.getOperationType());
-                    }
+                    return new SculptorPropertyCriteria(PublicationVersionProperties.siemacMetadataStatisticalResource().procStatus(), propertyRestriction.getEnumValue(),
+                            propertyRestriction.getOperationType());
                 case TITLE_ALTERNATIVE:
                     return new SculptorPropertyCriteria(PublicationVersionProperties.siemacMetadataStatisticalResource().titleAlternative().texts().label(), propertyRestriction.getStringValue(),
                             propertyRestriction.getOperationType());

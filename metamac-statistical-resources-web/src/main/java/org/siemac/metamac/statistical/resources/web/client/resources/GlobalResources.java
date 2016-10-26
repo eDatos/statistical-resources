@@ -83,10 +83,6 @@ public interface GlobalResources extends ClientBundleWithLookup {
     ImageResource pendingPublication();
 
     @ImageOptions(repeatStyle = RepeatStyle.Both)
-    @Source("images/program_publication.png")
-    ImageResource programPublication();
-
-    @ImageOptions(repeatStyle = RepeatStyle.Both)
     @Source("images/tree_folder.png")
     ImageResource treeFolder();
 

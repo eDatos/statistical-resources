@@ -72,8 +72,6 @@ public class DatasetVersionRepositoryImpl extends DatasetVersionRepositoryBase {
             .withProperty(DatasetVersionProperties.siemacMetadataStatisticalResource().urn()).eq(urn)
             .and()
             .withProperty(DatasetVersionProperties.siemacMetadataStatisticalResource().procStatus()).eq(ProcStatusEnum.PUBLISHED)
-            .and()
-            .withProperty(CriteriaUtils.getDatetimeLeafPropertyEmbedded(DatasetVersionProperties.siemacMetadataStatisticalResource().validFrom(), DatasetVersion.class)).lessThanOrEqual(now)
             .distinctRoot().build();
         // @formatter:on
 
@@ -124,8 +122,6 @@ public class DatasetVersionRepositoryImpl extends DatasetVersionRepositoryBase {
             .withProperty(DatasetVersionProperties.dataset().identifiableStatisticalResource().urn()).eq(datasetUrn)
             .and()
             .withProperty(DatasetVersionProperties.siemacMetadataStatisticalResource().procStatus()).eq(ProcStatusEnum.PUBLISHED)
-            .and()
-            .withProperty(CriteriaUtils.getDatetimeLeafPropertyEmbedded(DatasetVersionProperties.siemacMetadataStatisticalResource().validFrom(), DatasetVersion.class)).lessThanOrEqual(now)
             .and()
                 .lbrace()
                     .withProperty(CriteriaUtils.getDatetimeLeafPropertyEmbedded(DatasetVersionProperties.siemacMetadataStatisticalResource().validTo(), DatasetVersion.class)).isNull()

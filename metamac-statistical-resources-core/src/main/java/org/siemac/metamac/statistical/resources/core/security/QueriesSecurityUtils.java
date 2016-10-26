@@ -105,12 +105,6 @@ public class QueriesSecurityUtils extends SecurityUtils {
         }
     }
 
-    public static void canCancelPublicationQueryVersion(ServiceContext ctx, String operationCode) throws MetamacException {
-        if (!SharedQueriesSecurityUtils.canCancelPublicationQueryVersion(getMetamacPrincipal(ctx), operationCode)) {
-            throwExceptionIfOperationNotAllowed(ctx);
-        }
-    }
-
     public static void canVersionQueryVersion(ServiceContext ctx, String operationCode) throws MetamacException {
         if (!SharedQueriesSecurityUtils.canVersionQueryVersion(getMetamacPrincipal(ctx), operationCode)) {
             throwExceptionIfOperationNotAllowed(ctx);

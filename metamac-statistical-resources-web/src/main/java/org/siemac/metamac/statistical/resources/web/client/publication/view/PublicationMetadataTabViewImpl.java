@@ -2,7 +2,6 @@ package org.siemac.metamac.statistical.resources.web.client.publication.view;
 
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
 
-import java.util.Date;
 import java.util.List;
 
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
@@ -17,7 +16,6 @@ import org.siemac.metamac.statistical.resources.web.client.publication.widgets.f
 import org.siemac.metamac.statistical.resources.web.client.publication.widgets.forms.PublicationClassDescriptorsForm;
 import org.siemac.metamac.statistical.resources.web.client.publication.widgets.forms.PublicationResourceRelationDescriptorsEditionForm;
 import org.siemac.metamac.statistical.resources.web.client.publication.widgets.forms.PublicationResourceRelationDescriptorsForm;
-import org.siemac.metamac.statistical.resources.web.client.widgets.ProgramPublicationWindow;
 import org.siemac.metamac.statistical.resources.web.client.widgets.VersionWindow;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.LifeCycleResourceLifeCycleForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.LifeCycleResourceVersionEditionForm;
@@ -235,31 +233,6 @@ public class PublicationMetadataTabViewImpl extends StatisticalResourceMetadataB
             @Override
             public void onClick(ClickEvent event) {
                 getUiHandlers().publish(publicationVersionDto);
-            }
-        });
-        mainFormLayout.getProgramPublicationButton().addClickHandler(new ClickHandler() {
-
-            @Override
-            public void onClick(ClickEvent event) {
-                final ProgramPublicationWindow window = new ProgramPublicationWindow(getConstants().lifeCycleProgramPublication());
-                window.getSave().addClickHandler(new com.smartgwt.client.widgets.form.fields.events.ClickHandler() {
-
-                    @Override
-                    public void onClick(com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
-                        if (window.validateForm()) {
-                            Date selectedDate = window.getSelectedDate();
-                            getUiHandlers().programPublication(publicationVersionDto, selectedDate);
-                            window.destroy();
-                        }
-                    }
-                });
-            }
-        });
-        mainFormLayout.getCancelProgrammedPublication().addClickHandler(new ClickHandler() {
-
-            @Override
-            public void onClick(ClickEvent event) {
-                getUiHandlers().cancelProgrammedPublication(publicationVersionDto);
             }
         });
 

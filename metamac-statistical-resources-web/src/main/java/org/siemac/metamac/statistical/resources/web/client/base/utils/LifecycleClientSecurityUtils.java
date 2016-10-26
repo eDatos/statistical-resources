@@ -16,10 +16,6 @@ public class LifecycleClientSecurityUtils extends BaseClientSecurityUtils {
         return isAnyStatus(procStatus, ProcStatusEnum.PRODUCTION_VALIDATION, ProcStatusEnum.DIFFUSION_VALIDATION);
     }
 
-    protected static boolean canProgramPublication(ProcStatusEnum procStatus) {
-        return isAnyStatus(procStatus, ProcStatusEnum.DIFFUSION_VALIDATION);
-    }
-
     protected static boolean canPublish(ProcStatusEnum procStatus) {
         return isAnyStatus(procStatus, ProcStatusEnum.DIFFUSION_VALIDATION);
     }
@@ -28,7 +24,4 @@ public class LifecycleClientSecurityUtils extends BaseClientSecurityUtils {
         return isAnyStatus(procStatus, ProcStatusEnum.PUBLISHED);
     }
 
-    protected static boolean canCancelProgrammedPublication(ProcStatusEnum procStatus) {
-        return isAnyStatus(procStatus, ProcStatusEnum.PUBLISHED_NOT_VISIBLE);
-    }
 }

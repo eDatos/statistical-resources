@@ -68,8 +68,6 @@ public class PublicationVersionRepositoryImpl extends PublicationVersionReposito
             .withProperty(PublicationVersionProperties.siemacMetadataStatisticalResource().urn()).eq(urn)
             .and()
             .withProperty(PublicationVersionProperties.siemacMetadataStatisticalResource().procStatus()).eq(ProcStatusEnum.PUBLISHED)
-            .and()
-            .withProperty(CriteriaUtils.getDatetimeLeafPropertyEmbedded(PublicationVersionProperties.siemacMetadataStatisticalResource().validFrom(), PublicationVersion.class)).lessThanOrEqual(now)
             .distinctRoot().build();
         // @formatter:on
 
@@ -121,8 +119,6 @@ public class PublicationVersionRepositoryImpl extends PublicationVersionReposito
                 .withProperty(PublicationVersionProperties.publication().identifiableStatisticalResource().urn()).eq(publicationUrn)
                 .and()
                 .withProperty(PublicationVersionProperties.siemacMetadataStatisticalResource().procStatus()).eq(ProcStatusEnum.PUBLISHED)
-                .and()
-                .withProperty(CriteriaUtils.getDatetimeLeafPropertyEmbedded(PublicationVersionProperties.siemacMetadataStatisticalResource().validFrom(), PublicationVersion.class)).lessThanOrEqual(now)
                 .and()
                     .lbrace()
                         .withProperty(CriteriaUtils.getDatetimeLeafPropertyEmbedded(PublicationVersionProperties.siemacMetadataStatisticalResource().validTo(), PublicationVersion.class)).isNull()

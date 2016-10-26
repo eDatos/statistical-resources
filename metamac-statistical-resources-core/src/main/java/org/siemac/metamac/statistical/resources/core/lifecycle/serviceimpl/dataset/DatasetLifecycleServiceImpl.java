@@ -53,15 +53,6 @@ public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<Datase
     private DatasetVersionRepository       datasetVersionRepository;
 
     @Autowired
-    private QueryVersionRepository         queryVersionRepository;
-
-    @Autowired
-    private PublicationVersionRepository   publicationVersionRepository;
-
-    @Autowired
-    private QueryService                   queryService;
-
-    @Autowired
     private TaskService                    taskService;
 
     @Autowired
@@ -192,83 +183,6 @@ public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<Datase
         } else {
             return internationaString.getLocalisedLabel(locale);
         }
-    }
-
-    // ------------------------------------------------------------------------------------------------------
-    // >> CANCEL PUBLICATION
-    // ------------------------------------------------------------------------------------------------------
-    @Override
-    protected void checkCancelPublicationResource(ServiceContext ctx, DatasetVersion resource, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
-        this.checkDatasetThatReplaces(resource, exceptionItems);
-
-        this.checkQueriesThatRequires(ctx, resource, exceptionItems);
-
-        this.checkPublicationsThatHasPart(ctx, resource, exceptionItems);
-    }
-
-    private void checkPublicationsThatHasPart(ServiceContext ctx, DatasetVersion resource, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
-        List<RelatedResourceResult> publications = this.datasetVersionRepository.retrieveIsPartOf(resource);
-        if (!publications.isEmpty()) {
-            for (RelatedResourceResult publicationResult : publications) {
-                PublicationVersion publicationVersion = this.publicationVersionRepository.retrieveByUrn(publicationResult.getUrn());
-                if (ProcStatusEnum.PUBLISHED_NOT_VISIBLE.equals(publicationVersion.getSiemacMetadataStatisticalResource().getEffectiveProcStatus())) {
-                    this.checkPublicationCanStaryNotVisibleAfterCancelDataset(resource, publicationVersion, exceptionItems);
-                }
-            }
-        }
-    }
-
-    private void checkQueriesThatRequires(ServiceContext ctx, DatasetVersion resource, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
-        List<RelatedResourceResult> queries = this.datasetVersionRepository.retrieveIsRequiredBy(resource);
-        if (!queries.isEmpty()) {
-            for (RelatedResourceResult queryResult : queries) {
-                QueryVersion queryVersion = this.queryVersionRepository.retrieveByUrn(queryResult.getUrn());
-                if (ProcStatusEnum.PUBLISHED_NOT_VISIBLE.equals(queryVersion.getLifeCycleStatisticalResource().getEffectiveProcStatus())) {
-                    this.checkQueryCanStayNotVisibleAfterCancelDataset(ctx, resource, queryVersion, exceptionItems);
-                }
-            }
-        }
-    }
-
-    private void checkQueryCanStayNotVisibleAfterCancelDataset(ServiceContext ctx, DatasetVersion resource, QueryVersion queryVersion, List<MetamacExceptionItem> exceptionItems)
-            throws MetamacException {
-        if (queryVersion.getFixedDatasetVersion() != null) {
-            exceptionItems.add(new MetamacExceptionItem(ServiceExceptionType.DATASET_VERSION_IS_REQUIRED_BY_NOT_VISIBLE_QUERY, queryVersion.getLifeCycleStatisticalResource().getUrn()));
-        } else {
-            DatasetVersion lastPublishedVersion = this.datasetVersionRepository.retrieveLastPublishedVersion(resource.getDataset().getIdentifiableStatisticalResource().getUrn());
-            boolean canStayNotVisible = false;
-            if (lastPublishedVersion != null) {
-                canStayNotVisible = this.queryService.checkQueryCompatibility(ctx, queryVersion, lastPublishedVersion);
-            }
-            if (!canStayNotVisible) {
-                exceptionItems.add(new MetamacExceptionItem(ServiceExceptionType.DATASET_VERSION_IS_REQUIRED_BY_NOT_VISIBLE_QUERY, queryVersion.getLifeCycleStatisticalResource().getUrn()));
-            }
-        }
-    }
-
-    private void checkPublicationCanStaryNotVisibleAfterCancelDataset(DatasetVersion resource, PublicationVersion publicationVersion, List<MetamacExceptionItem> exceptionItems)
-            throws MetamacException {
-        DatasetVersion lastPublishedVersion = this.datasetVersionRepository.retrieveLastPublishedVersion(resource.getDataset().getIdentifiableStatisticalResource().getUrn());
-        if (lastPublishedVersion == null) {
-            exceptionItems.add(new MetamacExceptionItem(ServiceExceptionType.DATASET_VERSION_IS_PART_OF_NOT_VISIBLE_PUBLICATION, publicationVersion.getSiemacMetadataStatisticalResource().getUrn()));
-        }
-    }
-
-    protected void checkDatasetThatReplaces(DatasetVersion resource, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
-        RelatedResourceResult datasetThatReplaces = this.datasetVersionRepository.retrieveIsReplacedBy(resource);
-        if (datasetThatReplaces != null) {
-            exceptionItems.add(new MetamacExceptionItem(ServiceExceptionType.DATASET_VERSION_IS_REPLACED_BY_NOT_VISIBLE, datasetThatReplaces.getUrn()));
-        }
-    }
-
-    @Override
-    protected void applyCancelPublicationCurrentResource(ServiceContext ctx, DatasetVersion resource, DatasetVersion previousResource) throws MetamacException {
-        resource.setBibliographicCitation(null);
-    }
-
-    @Override
-    protected void applyCancelPublicationPreviousResource(ServiceContext ctx, DatasetVersion previousResource) throws MetamacException {
-        // NOTHING
     }
 
     // ------------------------------------------------------------------------------------------------------

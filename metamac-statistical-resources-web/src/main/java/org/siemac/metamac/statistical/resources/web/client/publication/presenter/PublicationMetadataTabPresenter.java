@@ -4,7 +4,6 @@ import static org.siemac.metamac.statistical.resources.web.client.StatisticalRes
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getMessages;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
@@ -235,35 +234,6 @@ public class PublicationMetadataTabPresenter
                     @Override
                     public void onWaitSuccess(UpdatePublicationVersionProcStatusResult result) {
                         showMessageAfterResourceLifeCycleUpdate(result, getMessages().lifeCycleResourcePublish());
-                        RequestPublicationVersionsReloadEvent.fire(PublicationMetadataTabPresenter.this, result.getPublicationVersionDto().getUrn());
-                        getView().setPublication(result.getPublicationVersionDto());
-                    }
-                });
-    }
-
-    @Override
-    public void programPublication(PublicationVersionDto publication, Date validFrom) {
-        UpdatePublicationVersionProcStatusAction.Builder builder = new Builder(publication, LifeCycleActionEnum.PROGRAM_PUBLICATION);
-        builder.validFrom(validFrom);
-        dispatcher.execute(builder.build(), new WaitingAsyncCallbackHandlingError<UpdatePublicationVersionProcStatusResult>(this) {
-
-            @Override
-            public void onWaitSuccess(UpdatePublicationVersionProcStatusResult result) {
-                showMessageAfterResourceLifeCycleUpdate(result, getMessages().lifeCycleResourceProgramPublication());
-                RequestPublicationVersionsReloadEvent.fire(PublicationMetadataTabPresenter.this, result.getPublicationVersionDto().getUrn());
-                getView().setPublication(result.getPublicationVersionDto());
-            }
-        });
-    }
-
-    @Override
-    public void cancelProgrammedPublication(PublicationVersionDto publication) {
-        dispatcher.execute(new UpdatePublicationVersionProcStatusAction(publication, LifeCycleActionEnum.CANCEL_PROGRAMMED_PUBLICATION),
-                new WaitingAsyncCallbackHandlingError<UpdatePublicationVersionProcStatusResult>(this) {
-
-                    @Override
-                    public void onWaitSuccess(UpdatePublicationVersionProcStatusResult result) {
-                        showMessageAfterResourceLifeCycleUpdate(result, getMessages().lifeCycleResourceCancelProgrammedPublication());
                         RequestPublicationVersionsReloadEvent.fire(PublicationMetadataTabPresenter.this, result.getPublicationVersionDto().getUrn());
                         getView().setPublication(result.getPublicationVersionDto());
                     }

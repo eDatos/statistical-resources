@@ -238,7 +238,6 @@ public class StatisticalResourcesRestInternalCommonServiceImpl implements Statis
                 DateTime now = new DateTime();
                 //@formatter:off
                 conditionalCriteria.add(ConditionalCriteriaBuilder.criteriaFor(entityClass)
-                        .withProperty(siemacMetadataStatisticalResourceProperty.validFrom()).lessThanOrEqual(now)
                         .buildSingle());
     
                 conditionalCriteria.add(ConditionalCriteriaBuilder.criteriaFor(entityClass)
@@ -292,7 +291,6 @@ public class StatisticalResourcesRestInternalCommonServiceImpl implements Statis
                 DateTime now = new DateTime();
                 //@formatter:off
                 conditionalCriteria.add(ConditionalCriteriaBuilder.criteriaFor(entityClass)
-                        .withProperty(lifeCycleStatisticalResourceProperty.validFrom()).lessThanOrEqual(now)
                         .buildSingle());
     
                 conditionalCriteria.add(ConditionalCriteriaBuilder.criteriaFor(entityClass)

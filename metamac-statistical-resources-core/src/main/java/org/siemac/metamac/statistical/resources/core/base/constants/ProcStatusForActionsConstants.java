@@ -19,7 +19,6 @@ public class ProcStatusForActionsConstants {
     protected final static ProcStatusEnum[] procStatusForSendResourceToDiffusionValidation    = {ProcStatusEnum.PRODUCTION_VALIDATION};
     protected final static ProcStatusEnum[] procStatusForSendResourceToValidationRejected     = {ProcStatusEnum.PRODUCTION_VALIDATION, ProcStatusEnum.DIFFUSION_VALIDATION};
     protected final static ProcStatusEnum[] procStatusForSendResourceToPublish                = {ProcStatusEnum.DIFFUSION_VALIDATION};
-    protected final static ProcStatusEnum[] procStatusForCancelPublication                    = {ProcStatusEnum.PUBLISHED_NOT_VISIBLE};
     protected final static ProcStatusEnum[] procStatusForSendResourceToVersion                = {ProcStatusEnum.PUBLISHED};
     
     // Query

@@ -60,14 +60,6 @@ public class UpdateQueryVersionProcStatusActionHandler extends UpdateResourcePro
                     queryVersionDto = statisticalResourcesServiceFacade.publishQueryVersion(ServiceContextHolder.getCurrentServiceContext(), action.getQueryVersionToUpdateProcStatus());
                     break;
 
-                case PROGRAM_PUBLICATION:
-                    queryVersionDto = statisticalResourcesServiceFacade.programPublicationQueryVersion(ServiceContextHolder.getCurrentServiceContext(), action.getQueryVersionToUpdateProcStatus(),
-                            action.getValidFrom());
-                    break;
-
-                case CANCEL_PROGRAMMED_PUBLICATION:
-                    queryVersionDto = statisticalResourcesServiceFacade.cancelPublicationQueryVersion(ServiceContextHolder.getCurrentServiceContext(), action.getQueryVersionToUpdateProcStatus());
-                    break;
 
                 case VERSION:
                     queryVersionDto = statisticalResourcesServiceFacade.versioningQueryVersion(ServiceContextHolder.getCurrentServiceContext(), action.getQueryVersionToUpdateProcStatus(),
@@ -79,7 +71,7 @@ public class UpdateQueryVersionProcStatusActionHandler extends UpdateResourcePro
 
             try {
                 ResourceNotificationDto notificationDto = new ResourceNotificationDto.Builder(action.getQueryVersionToUpdateProcStatus(), StatisticalResourceTypeEnum.QUERY, lifeCycleAction)
-                        .updatedResource(queryVersionDto).reasonOfRejection(action.getReasonOfRejection()).programmedPublicationDate(action.getValidFrom()).build();
+                        .updatedResource(queryVersionDto).reasonOfRejection(action.getReasonOfRejection()).build();
                 noticesRestInternalFacade.createLifeCycleNotification(ServiceContextHolder.getCurrentServiceContext(), notificationDto);
             } catch (MetamacWebException e) {
                 return new UpdateQueryVersionProcStatusResult.Builder(queryVersionDto).notificationException(e).build();

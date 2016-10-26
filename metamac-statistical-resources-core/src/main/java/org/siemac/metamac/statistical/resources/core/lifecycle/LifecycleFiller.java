@@ -59,9 +59,9 @@ public class LifecycleFiller {
             throw new MetamacException(ServiceExceptionType.PARAMETER_REQUIRED, ServiceExceptionParameters.PREVIOUS_VERSION);
         }
         DateTime now = new DateTime();
-        DateTime pubDate = resource.getLifeCycleStatisticalResource().getValidFrom().isBefore(now) ? resource.getLifeCycleStatisticalResource().getValidFrom() : now;
-        // We don't need to fill validFrom because it is required for publish
+        DateTime pubDate = now;
         resource.getLifeCycleStatisticalResource().setPublicationDate(pubDate);
+        resource.getLifeCycleStatisticalResource().setValidFrom(now);
         resource.getLifeCycleStatisticalResource().setPublicationUser(ctx.getUserId());
         resource.getLifeCycleStatisticalResource().setProcStatus(ProcStatusEnum.PUBLISHED);
     }
@@ -69,26 +69,6 @@ public class LifecycleFiller {
     public void applySendToPublishedPreviousResourceActions(ServiceContext ctx, HasLifecycle resource, HasLifecycle previousVersion, RelatedResource currentAsRelatedResource) throws MetamacException {
         DateTime publicationDate = resource.getLifeCycleStatisticalResource().getValidFrom();
         previousVersion.getLifeCycleStatisticalResource().setValidTo(publicationDate);
-    }
-
-    // ------------------------------------------------------------------------------------------------------
-    // CANCEL PUBLICATION
-    // ------------------------------------------------------------------------------------------------------
-
-    public void applyCancelPublicationCurrentResourceActions(ServiceContext ctx, HasLifecycle resource, HasLifecycle previousVersion) throws MetamacException {
-        if (!StatisticalResourcesVersionUtils.isInitialVersion(resource) && ValidationUtils.isEmpty(previousVersion)) {
-            throw new MetamacException(ServiceExceptionType.PARAMETER_REQUIRED, ServiceExceptionParameters.PREVIOUS_VERSION);
-        }
-
-        resource.getLifeCycleStatisticalResource().setValidFrom(null);
-        resource.getLifeCycleStatisticalResource().setPublicationDate(null);
-        resource.getLifeCycleStatisticalResource().setPublicationUser(null);
-        resource.getLifeCycleStatisticalResource().setProcStatus(ProcStatusEnum.DIFFUSION_VALIDATION);
-    }
-
-    public void applyCancelPublicationPreviousResourceActions(ServiceContext ctx, HasLifecycle resource, HasLifecycle previousVersion, RelatedResource currentAsRelatedResource)
-            throws MetamacException {
-        previousVersion.getLifeCycleStatisticalResource().setValidTo(null);
     }
 
     // ------------------------------------------------------------------------------------------------------

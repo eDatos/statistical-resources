@@ -107,9 +107,9 @@ public class QueryLifecycleServiceImpl extends LifecycleTemplateService<QueryVer
 
     @Override
     public void checkLinkedDatasetOrDatasetVersionPublishedBeforeQuery(ServiceContext ctx, QueryVersion resource) throws MetamacException {
-        if (ProcStatusEnumUtils.isInAnyProcStatus(resource, ProcStatusEnum.PUBLISHED, ProcStatusEnum.PUBLISHED_NOT_VISIBLE)) {
+        if (ProcStatusEnumUtils.isInAnyProcStatus(resource, ProcStatusEnum.PUBLISHED)) {
             List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
-            this.checkLinkedDatasetOrDatasetVersionPublishedForQuery(ctx, resource, exceptionItems);
+            checkLinkedDatasetOrDatasetVersionPublishedForQuery(ctx, resource, exceptionItems);
             ExceptionUtils.throwIfException(exceptionItems);
         }
     }
@@ -163,41 +163,7 @@ public class QueryLifecycleServiceImpl extends LifecycleTemplateService<QueryVer
         if (ProcStatusEnumUtils.isInAnyProcStatus(datasetVersion, ProcStatusEnum.PUBLISHED)) {
             return true;
         }
-        if ((ProcStatusEnumUtils.isInAnyProcStatus(datasetVersion, ProcStatusEnum.PUBLISHED_NOT_VISIBLE)) && (!datasetVersion.getSiemacMetadataStatisticalResource().getValidFrom().isAfter(date))) {
-            return true;
-        }
         return false;
-    }
-
-    // ------------------------------------------------------------------------------------------------------
-    // >> CANCEL PUBLICATION
-    // ------------------------------------------------------------------------------------------------------
-    @Override
-    protected void checkCancelPublicationResource(ServiceContext ctx, QueryVersion resource, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
-        this.checkPublicationsThatHasPart(resource, exceptionItems);
-    }
-
-    private void checkPublicationsThatHasPart(QueryVersion resource, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
-        List<RelatedResourceResult> publications = this.queryVersionRepository.retrieveIsPartOf(resource);
-        if (!publications.isEmpty()) {
-            for (RelatedResourceResult publicationResult : publications) {
-                PublicationVersion publicationVersion = this.publicationVersionRepository.retrieveByUrn(publicationResult.getUrn());
-                if (ProcStatusEnum.PUBLISHED_NOT_VISIBLE.equals(publicationVersion.getSiemacMetadataStatisticalResource().getEffectiveProcStatus())) {
-                    exceptionItems.add(new MetamacExceptionItem(ServiceExceptionType.QUERY_VERSION_IS_PART_OF_NOT_VISIBLE_PUBLICATION, publicationVersion.getSiemacMetadataStatisticalResource()
-                            .getUrn()));
-                }
-            }
-        }
-    }
-
-    @Override
-    protected void applyCancelPublicationCurrentResource(ServiceContext ctx, QueryVersion resource, QueryVersion previousResource) throws MetamacException {
-        // Nothing
-    }
-
-    @Override
-    protected void applyCancelPublicationPreviousResource(ServiceContext ctx, QueryVersion previousResource) throws MetamacException {
-        // nothing
     }
 
     // ------------------------------------------------------------------------------------------------------

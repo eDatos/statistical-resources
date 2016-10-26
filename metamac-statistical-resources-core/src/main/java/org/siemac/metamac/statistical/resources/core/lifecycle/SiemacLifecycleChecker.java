@@ -118,18 +118,6 @@ public class SiemacLifecycleChecker {
     }
 
     // ------------------------------------------------------------------------------------------------------
-    // >> CANCEL PUBLICATION
-    // ------------------------------------------------------------------------------------------------------
-
-    public void checkCancelPublication(HasSiemacMetadata resource, HasSiemacMetadata previousVersion, String metadataName, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
-        lifecycleChecker.checkCancelPublication(resource, previousVersion, metadataName, exceptionItems);
-
-        checkSiemacMetadataAllActions(resource, metadataName, exceptionItems);
-
-        // Should check relates resources that replaces this resource. But its dependent on resource type. This MUST be DONE in specific Service.
-    }
-
-    // ------------------------------------------------------------------------------------------------------
     // >> VERSIONING
     // ------------------------------------------------------------------------------------------------------
     public void checkVersioning(HasSiemacMetadata resource, String metadataName, List<MetamacExceptionItem> exceptionItems) throws MetamacException {

@@ -10,11 +10,9 @@ import org.siemac.metamac.core.common.criteria.shared.MetamacCriteriaOrder;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.common.criteria.enums.StatisticalResourcesCriteriaOrderEnum;
 import org.siemac.metamac.statistical.resources.core.common.criteria.enums.StatisticalResourcesCriteriaPropertyEnum;
-import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersionProperties;
-import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesCriteriaUtils;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -60,7 +58,7 @@ public class QueryMetamacCriteria2SculptorCriteriaMapperImpl implements QueryMet
                 case STATISTICAL_OPERATION_URN:
                     return new SculptorPropertyCriteria(QueryVersionProperties.query().identifiableStatisticalResource().statisticalOperation().urn(), propertyRestriction.getStringValue(),
                             propertyRestriction.getOperationType());
-                    // From Query Version
+                // From Query Version
                 case TITLE:
                     return new SculptorPropertyCriteria(QueryVersionProperties.lifeCycleStatisticalResource().title().texts().label(), propertyRestriction.getStringValue(),
                             propertyRestriction.getOperationType());
@@ -68,16 +66,7 @@ public class QueryMetamacCriteria2SculptorCriteriaMapperImpl implements QueryMet
                     return new SculptorPropertyCriteria(QueryVersionProperties.lifeCycleStatisticalResource().description().texts().label(), propertyRestriction.getStringValue(),
                             propertyRestriction.getOperationType());
                 case PROC_STATUS:
-                    if (ProcStatusEnum.PUBLISHED.equals(propertyRestriction.getEnumValue())) {
-                        return StatisticalResourcesCriteriaUtils.buildPublishedVisibleCondition(QueryVersionProperties.lifeCycleStatisticalResource().procStatus(), QueryVersionProperties
-                                .lifeCycleStatisticalResource().validFrom(), QueryVersion.class);
-                    } else if (ProcStatusEnum.PUBLISHED_NOT_VISIBLE.equals(propertyRestriction.getEnumValue())) {
-                        return StatisticalResourcesCriteriaUtils.buildPublishedNotVisibleCondition(QueryVersionProperties.lifeCycleStatisticalResource().procStatus(), QueryVersionProperties
-                                .lifeCycleStatisticalResource().validFrom(), QueryVersion.class);
-                    } else {
-                        return new SculptorPropertyCriteria(QueryVersionProperties.lifeCycleStatisticalResource().procStatus(), propertyRestriction.getEnumValue(),
-                                propertyRestriction.getOperationType());
-                    }
+                    return new SculptorPropertyCriteria(QueryVersionProperties.lifeCycleStatisticalResource().procStatus(), propertyRestriction.getEnumValue(), propertyRestriction.getOperationType());
                 case QUERY_STATUS:
                     return new SculptorPropertyCriteria(QueryVersionProperties.status(), propertyRestriction.getEnumValue(), propertyRestriction.getOperationType());
                 default:
@@ -98,7 +87,7 @@ public class QueryMetamacCriteria2SculptorCriteriaMapperImpl implements QueryMet
                 case STATISTICAL_OPERATION_URN:
                     return QueryVersionProperties.lifeCycleStatisticalResource().statisticalOperation().urn();
 
-                    // From Query Version
+                // From Query Version
                 case TITLE:
                     return QueryVersionProperties.lifeCycleStatisticalResource().title().texts().label();
                 case PROC_STATUS:

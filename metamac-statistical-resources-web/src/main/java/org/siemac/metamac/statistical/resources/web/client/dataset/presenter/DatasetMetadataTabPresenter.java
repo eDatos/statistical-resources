@@ -4,7 +4,6 @@ import static org.siemac.metamac.statistical.resources.web.client.StatisticalRes
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getMessages;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
@@ -261,21 +260,6 @@ public class DatasetMetadataTabPresenter extends StatisticalResourceMetadataBase
     }
 
     @Override
-    public void programPublication(DatasetVersionDto dataset, Date validFrom) {
-        Builder builder = new Builder(dataset, LifeCycleActionEnum.PROGRAM_PUBLICATION);
-        builder.validFrom(validFrom);
-        dispatcher.execute(builder.build(), new WaitingAsyncCallbackHandlingError<UpdateDatasetVersionProcStatusResult>(this) {
-
-            @Override
-            public void onWaitSuccess(UpdateDatasetVersionProcStatusResult result) {
-                showMessageAfterResourceLifeCycleUpdate(result, getMessages().lifeCycleResourceProgramPublication());
-                RequestDatasetVersionsReloadEvent.fire(DatasetMetadataTabPresenter.this, result.getDatasetVersionDto().getUrn());
-                getView().setDataset(result.getDatasetVersionDto());
-            }
-        });
-    }
-
-    @Override
     public void publish(DatasetVersionDto dataset) {
         dispatcher.execute(new UpdateDatasetVersionProcStatusAction(dataset, LifeCycleActionEnum.PUBLISH), new WaitingAsyncCallbackHandlingError<UpdateDatasetVersionProcStatusResult>(this) {
 
@@ -286,20 +270,6 @@ public class DatasetMetadataTabPresenter extends StatisticalResourceMetadataBase
                 getView().setDataset(result.getDatasetVersionDto());
             }
         });
-    }
-
-    @Override
-    public void cancelProgrammedPublication(DatasetVersionDto dataset) {
-        dispatcher.execute(new UpdateDatasetVersionProcStatusAction(dataset, LifeCycleActionEnum.CANCEL_PROGRAMMED_PUBLICATION),
-                new WaitingAsyncCallbackHandlingError<UpdateDatasetVersionProcStatusResult>(this) {
-
-                    @Override
-                    public void onWaitSuccess(UpdateDatasetVersionProcStatusResult result) {
-                        showMessageAfterResourceLifeCycleUpdate(result, getMessages().lifeCycleResourceCancelProgrammedPublication());
-                        RequestDatasetVersionsReloadEvent.fire(DatasetMetadataTabPresenter.this, result.getDatasetVersionDto().getUrn());
-                        getView().setDataset(result.getDatasetVersionDto());
-                    }
-                });
     }
 
     @Override

@@ -773,8 +773,6 @@ public class PublicationVersionMockFactory extends StatisticalResourcesMockFacto
             case PUBLISHED:
                 PublicationLifecycleTestUtils.fillAsPublished(publicationVersion);
                 break;
-            case PUBLISHED_NOT_VISIBLE:
-                throw new IllegalArgumentException("Unsupported status not visible, set first the ValidFrom to the future and use status PUBLISHED");
             case DRAFT:
                 break;
             default:

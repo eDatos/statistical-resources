@@ -13,8 +13,6 @@ public abstract class LifecycleMainFormLayout extends InternationalMainFormLayou
     private MainFormLayoutButton productionValidation;
     private MainFormLayoutButton diffusionValidation;
     private MainFormLayoutButton rejectValidation;
-    private MainFormLayoutButton programPublication;
-    private MainFormLayoutButton cancelProgrammedPublication;
     private MainFormLayoutButton publish;
     private MainFormLayoutButton versioning;
     private MainFormLayoutButton preview;
@@ -35,8 +33,6 @@ public abstract class LifecycleMainFormLayout extends InternationalMainFormLayou
         productionValidation = new MainFormLayoutButton(getConstants().lifeCycleSendToProductionValidation(), GlobalResources.RESOURCE.validateProduction().getURL());
         diffusionValidation = new MainFormLayoutButton(getConstants().lifeCycleSendToDiffusionValidation(), GlobalResources.RESOURCE.validateDiffusion().getURL());
         rejectValidation = new MainFormLayoutButton(getConstants().lifeCycleRejectValidation(), GlobalResources.RESOURCE.reject().getURL());
-        programPublication = new MainFormLayoutButton(getConstants().lifeCycleProgramPublication(), GlobalResources.RESOURCE.programPublication().getURL());
-        cancelProgrammedPublication = new MainFormLayoutButton(getConstants().lifeCycleCancelProgramedPublication(), GlobalResources.RESOURCE.reject().getURL());
         publish = new MainFormLayoutButton(getConstants().lifeCyclePublish(), GlobalResources.RESOURCE.publish().getURL());
         versioning = new MainFormLayoutButton(getConstants().lifeCycleVersioning(), GlobalResources.RESOURCE.version().getURL());
         preview = new MainFormLayoutButton(getConstants().actionPreviewData(), GlobalResources.RESOURCE.preview().getURL());
@@ -44,8 +40,6 @@ public abstract class LifecycleMainFormLayout extends InternationalMainFormLayou
         toolStrip.addButton(productionValidation);
         toolStrip.addButton(diffusionValidation);
         toolStrip.addButton(rejectValidation);
-        toolStrip.addButton(programPublication);
-        toolStrip.addButton(cancelProgrammedPublication);
         toolStrip.addButton(publish);
         toolStrip.addButton(versioning);
         toolStrip.addButton(preview);
@@ -80,17 +74,11 @@ public abstract class LifecycleMainFormLayout extends InternationalMainFormLayou
         if (canRejectValidation()) {
             showRejectValidationButton();
         }
-        if (canProgramPublication()) {
-            showProgramPublicationButton();
-        }
         if (canPublish()) {
             showPublishButton();
         }
         if (canVersion() && lastVersion) {
             showVersioningButton();
-        }
-        if (canCancelProgrammedPublication()) {
-            showCancelProgrammedPublication();
         }
 
         showPreviewButton();
@@ -100,8 +88,6 @@ public abstract class LifecycleMainFormLayout extends InternationalMainFormLayou
         productionValidation.hide();
         diffusionValidation.hide();
         rejectValidation.hide();
-        programPublication.hide();
-        cancelProgrammedPublication.hide();
         publish.hide();
         versioning.hide();
         preview.hide();
@@ -122,18 +108,6 @@ public abstract class LifecycleMainFormLayout extends InternationalMainFormLayou
     private void showRejectValidationButton() {
         if (canRejectValidation()) {
             rejectValidation.show();
-        }
-    }
-
-    private void showProgramPublicationButton() {
-        if (canProgramPublication()) {
-            programPublication.show();
-        }
-    }
-
-    private void showCancelProgrammedPublication() {
-        if (canCancelProgrammedPublication()) {
-            cancelProgrammedPublication.show();
         }
     }
 
@@ -167,14 +141,6 @@ public abstract class LifecycleMainFormLayout extends InternationalMainFormLayou
         return rejectValidation;
     }
 
-    public HasClickHandlers getProgramPublicationButton() {
-        return programPublication;
-    }
-
-    public HasClickHandlers getCancelProgrammedPublication() {
-        return cancelProgrammedPublication;
-    }
-
     public HasClickHandlers getPublishButton() {
         return publish;
     }
@@ -195,8 +161,7 @@ public abstract class LifecycleMainFormLayout extends InternationalMainFormLayou
     protected abstract boolean canSendToDiffusionValidation();
     protected abstract boolean canRejectValidation();
     protected abstract boolean canPublish();
-    protected abstract boolean canProgramPublication();
-    protected abstract boolean canCancelProgrammedPublication();
+
     protected abstract boolean canVersion();
     protected abstract boolean canPreviewData();
 }

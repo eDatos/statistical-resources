@@ -4,7 +4,6 @@ import static org.siemac.metamac.statistical.resources.web.client.StatisticalRes
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getMessages;
 import static org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils.showMessageAfterMultipleResourcesLifeCycleUpdate;
 
-import java.util.Date;
 import java.util.List;
 
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
@@ -191,20 +190,6 @@ public class QueryListPresenter extends LifeCycleBaseListPresenter<QueryListPres
     public void publish(List<QueryVersionBaseDto> queryVersionDtos) {
         UpdateQueryVersionsProcStatusAction action = new UpdateQueryVersionsProcStatusAction(queryVersionDtos, LifeCycleActionEnum.PUBLISH);
         updateQueryProcStatus(action, getMessages().lifeCycleResourcesPublish());
-    }
-
-    @Override
-    public void programPublication(List<QueryVersionBaseDto> queryVersionDtos, Date validFrom) {
-        UpdateQueryVersionsProcStatusAction.Builder builder = new Builder(queryVersionDtos, LifeCycleActionEnum.PROGRAM_PUBLICATION);
-        builder.validFrom(validFrom);
-        updateQueryProcStatus(builder.build(), getMessages().lifeCycleResourcesProgramPublication());
-    }
-
-    @Override
-    public void cancelProgrammedPublication(List<QueryVersionBaseDto> queryVersionDtos) {
-        UpdateQueryVersionsProcStatusAction action = new UpdateQueryVersionsProcStatusAction(queryVersionDtos, LifeCycleActionEnum.CANCEL_PROGRAMMED_PUBLICATION);
-
-        updateQueryProcStatus(action, getMessages().lifeCycleResourcesCancelProgrammedPublication());
     }
 
     @Override

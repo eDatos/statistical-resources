@@ -82,8 +82,6 @@ public class FindQueriesByRelatedDatasetUrnMatcher extends ConditionalCriteriasM
               .rbrace()
               .and()
               .lbrace()
-                  .withProperty(QueryVersionProperties.lifeCycleStatisticalResource().validFrom()).lessThanOrEqual(now)
-                  .and()
                   .withProperty(QueryVersionProperties.dataset().versions().siemacMetadataStatisticalResource().procStatus()).eq(ProcStatusEnum.PUBLISHED.toString())
               .rbrace()
             .buildSingle()

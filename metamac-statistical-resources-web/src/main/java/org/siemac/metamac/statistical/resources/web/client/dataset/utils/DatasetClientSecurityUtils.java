@@ -86,14 +86,6 @@ public class DatasetClientSecurityUtils extends LifecycleClientSecurityUtils {
         return canPublishDatasetVersion(dto.getProcStatus(), dto.getIsTaskInBackground());
     }
 
-    public static boolean canCancelPublicationDatasetVersion(DatasetVersionDto dto) {
-        return canCancelPublicationDatasetVersion(dto.getProcStatus(), dto.getIsTaskInBackground());
-    }
-
-    public static boolean canCancelPublicationDatasetVersion(DatasetVersionBaseDto dto) {
-        return canCancelPublicationDatasetVersion(dto.getProcStatus(), dto.getIsTaskInBackground());
-    }
-
     public static boolean canVersionDataset(DatasetVersionDto dto) {
         return canVersionDataset(dto.getProcStatus(), dto.getIsTaskInBackground());
     }
@@ -142,16 +134,6 @@ public class DatasetClientSecurityUtils extends LifecycleClientSecurityUtils {
             return false;
         }
         return SharedDatasetsSecurityUtils.canPublishDataset(getMetamacPrincipal(), getCurrentStatisticalOperationCode());
-    }
-
-    private static boolean canCancelPublicationDatasetVersion(ProcStatusEnum procStatus, Boolean taskInBackground) {
-        if (BooleanUtils.isTrue(taskInBackground)) {
-            return false;
-        }
-        if (!canCancelProgrammedPublication(procStatus)) {
-            return false;
-        }
-        return SharedDatasetsSecurityUtils.canCancelPublicationDataset(getMetamacPrincipal(), getCurrentStatisticalOperationCode());
     }
 
     private static boolean canVersionDataset(ProcStatusEnum procStatus, boolean isTaskInBackground) {

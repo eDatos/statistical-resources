@@ -1,15 +1,11 @@
 package org.siemac.metamac.statistical.resources.web.server.rest;
 
-import static org.siemac.metamac.statistical.resources.web.client.enums.LifeCycleActionEnum.CANCEL_PROGRAMMED_PUBLICATION;
-import static org.siemac.metamac.statistical.resources.web.client.enums.LifeCycleActionEnum.PROGRAM_PUBLICATION;
 import static org.siemac.metamac.statistical.resources.web.client.enums.LifeCycleActionEnum.PUBLISH;
 import static org.siemac.metamac.statistical.resources.web.client.enums.LifeCycleActionEnum.REJECT_VALIDATION;
 import static org.siemac.metamac.statistical.resources.web.client.enums.LifeCycleActionEnum.SEND_TO_DIFFUSION_VALIDATION;
 import static org.siemac.metamac.statistical.resources.web.client.enums.LifeCycleActionEnum.SEND_TO_PRODUCTION_VALIDATION;
 
-import java.text.MessageFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -71,23 +67,18 @@ public class NoticesRestInternalFacadeImpl implements NoticesRestInternalFacade 
         roles.put(SEND_TO_PRODUCTION_VALIDATION, new MetamacRolesEnum[]{MetamacRolesEnum.TECNICO_PRODUCCION});
         roles.put(SEND_TO_DIFFUSION_VALIDATION, new MetamacRolesEnum[]{MetamacRolesEnum.TECNICO_DIFUSION, MetamacRolesEnum.TECNICO_APOYO_DIFUSION});
         roles.put(PUBLISH, new MetamacRolesEnum[]{MetamacRolesEnum.JEFE_PRODUCCION, MetamacRolesEnum.TECNICO_PRODUCCION, MetamacRolesEnum.TECNICO_APOYO_PRODUCCION});
-        roles.put(PROGRAM_PUBLICATION, new MetamacRolesEnum[]{MetamacRolesEnum.JEFE_PRODUCCION, MetamacRolesEnum.TECNICO_PRODUCCION, MetamacRolesEnum.TECNICO_APOYO_PRODUCCION});
 
         actionCodes = new HashMap<LifeCycleActionEnum, String>();
         actionCodes.put(SEND_TO_PRODUCTION_VALIDATION, ServiceNoticeAction.RESOURCE_SEND_PRODUCTION_VALIDATION);
         actionCodes.put(SEND_TO_DIFFUSION_VALIDATION, ServiceNoticeAction.RESOURCE_SEND_DIFFUSION_VALIDATION);
         actionCodes.put(REJECT_VALIDATION, ServiceNoticeAction.RESOURCE_CANCEL_VALIDATION);
         actionCodes.put(PUBLISH, ServiceNoticeAction.RESOURCE_PUBLICATION);
-        actionCodes.put(PROGRAM_PUBLICATION, ServiceNoticeAction.RESOURCE_PUBLICATION_PROGRAMMED);
-        actionCodes.put(CANCEL_PROGRAMMED_PUBLICATION, ServiceNoticeAction.RESOURCE_CANCEL_PROGRAMMED_PUBLICATION);
 
         messageCodes = new HashMap<LifeCycleActionEnum, String>();
         messageCodes.put(SEND_TO_PRODUCTION_VALIDATION, ServiceNoticeMessage.RESOURCE_SEND_PRODUCTION_VALIDATION_OK);
         messageCodes.put(SEND_TO_DIFFUSION_VALIDATION, ServiceNoticeMessage.RESOURCE_SEND_DIFFUSION_VALIDATION_OK);
         messageCodes.put(REJECT_VALIDATION, ServiceNoticeMessage.RESOURCE_CANCEL_VALIDATION_OK);
         messageCodes.put(PUBLISH, ServiceNoticeMessage.RESOURCE_PUBLICATION_OK);
-        messageCodes.put(PROGRAM_PUBLICATION, ServiceNoticeMessage.RESOURCE_PUBLICATION_PROGRAMMED_OK);
-        messageCodes.put(CANCEL_PROGRAMMED_PUBLICATION, ServiceNoticeMessage.RESOURCE_CANCEL_PROGRAMMED_PUBLICATION_OK);
     }
 
     @Override
@@ -99,17 +90,8 @@ public class NoticesRestInternalFacadeImpl implements NoticesRestInternalFacade 
             case SEND_TO_DIFFUSION_VALIDATION:
                 createSendToDiffusionValidationNotification(serviceContext, notification);
                 break;
-            case REJECT_VALIDATION:
-                createCancelValidationNotification(serviceContext, notification);
-                break;
             case PUBLISH:
                 createPublicationNotification(serviceContext, notification);
-                break;
-            case PROGRAM_PUBLICATION:
-                createProgrammedPublicationNotification(serviceContext, notification);
-                break;
-            case CANCEL_PROGRAMMED_PUBLICATION:
-                createCancelProgrammedPublicationNotification(serviceContext, notification);
                 break;
             case VERSION:
                 // Do not send notifications
@@ -127,17 +109,8 @@ public class NoticesRestInternalFacadeImpl implements NoticesRestInternalFacade 
                 case SEND_TO_DIFFUSION_VALIDATION:
                     createSendToDiffusionValidationNotification(serviceContext, notifications);
                     break;
-                case REJECT_VALIDATION:
-                    createCancelValidationNotification(serviceContext, notifications);
-                    break;
                 case PUBLISH:
                     createPublicationNotification(serviceContext, notifications);
-                    break;
-                case PROGRAM_PUBLICATION:
-                    createProgrammedPublicationNotification(serviceContext, notifications);
-                    break;
-                case CANCEL_PROGRAMMED_PUBLICATION:
-                    createCancelProgrammedPublicationNotification(serviceContext, notifications);
                     break;
                 case VERSION:
                     // Do not send notifications
@@ -171,28 +144,6 @@ public class NoticesRestInternalFacadeImpl implements NoticesRestInternalFacade 
     }
 
     //
-    // CANCEL VALIDATION
-    //
-
-    private void createCancelValidationNotification(ServiceContext serviceContext, ResourceNotificationDto notificationDto) throws MetamacWebException {
-        ProcStatusEnum previousProcStatusEnum = notificationDto.getPreviousResource().getProcStatus();
-        String receiverUsername = ProcStatusEnum.PRODUCTION_VALIDATION.equals(previousProcStatusEnum) ? notificationDto.getPreviousResource().getProductionValidationUser() : notificationDto
-                .getPreviousResource().getDiffusionValidationUser();
-        createNotificationWithReceivers(serviceContext, notificationDto, new String[]{receiverUsername});
-    }
-
-    private void createCancelValidationNotification(ServiceContext serviceContext, List<ResourceNotificationBaseDto> notifications) throws MetamacWebException {
-        Map<ResourceNotificationBaseDto, String[]> notificationsWithReceivers = new HashMap<ResourceNotificationBaseDto, String[]>();
-        for (ResourceNotificationBaseDto notification : notifications) {
-            ProcStatusEnum previousProcStatusEnum = notification.getPreviousResource().getProcStatus();
-            String receiverUsername = ProcStatusEnum.PRODUCTION_VALIDATION.equals(previousProcStatusEnum) ? notification.getPreviousResource().getProductionValidationUser() : notification
-                    .getPreviousResource().getDiffusionValidationUser();
-            notificationsWithReceivers.put(notification, new String[]{receiverUsername});
-        }
-        createNotificationWithReceivers(serviceContext, notificationsWithReceivers);
-    }
-
-    //
     // PUBLISH
     //
 
@@ -205,44 +156,12 @@ public class NoticesRestInternalFacadeImpl implements NoticesRestInternalFacade 
     }
 
     //
-    // PROGRAMMED PUBLICATION
-    //
-
-    private void createProgrammedPublicationNotification(ServiceContext serviceContext, ResourceNotificationDto notificationDto) throws MetamacWebException {
-        createNotificationWithStatisticalOperationAndRoles(serviceContext, notificationDto);
-    }
-
-    private void createProgrammedPublicationNotification(ServiceContext serviceContext, List<ResourceNotificationBaseDto> notifications) throws MetamacWebException {
-        createNotificationWithStatisticalOperationAndRoles(serviceContext, notifications);
-    }
-
-    //
-    // CANCEL PROGRAMMED PUBLICATION
-    //
-
-    private void createCancelProgrammedPublicationNotification(ServiceContext serviceContext, ResourceNotificationDto notificationDto) throws MetamacWebException {
-        String creatorUsername = notificationDto.getUpdatedResource().getCreationUser();
-        String publisherUsername = notificationDto.getPreviousResource().getPublicationUser();
-        createNotificationWithReceivers(serviceContext, notificationDto, new String[]{creatorUsername, publisherUsername});
-    }
-
-    private void createCancelProgrammedPublicationNotification(ServiceContext serviceContext, List<ResourceNotificationBaseDto> notifications) throws MetamacWebException {
-        Map<ResourceNotificationBaseDto, String[]> notificationsWithReceivers = new HashMap<ResourceNotificationBaseDto, String[]>();
-        for (ResourceNotificationBaseDto notification : notifications) {
-            String creatorUsername = notification.getUpdatedResource().getCreationUser();
-            String publisherUsername = notification.getPreviousResource().getPublicationUser();
-            notificationsWithReceivers.put(notification, new String[]{creatorUsername, publisherUsername});
-        }
-        createNotificationWithReceivers(serviceContext, notificationsWithReceivers);
-    }
-
-    //
     // NOTIFICATIONS
     //
 
     /**
      * Creates a notification specifying the statistical operation, the roles and the application
-     * 
+     *
      * @param serviceContext
      * @param notification
      * @throws MetamacWebException
@@ -256,7 +175,7 @@ public class NoticesRestInternalFacadeImpl implements NoticesRestInternalFacade 
 
     /**
      * Creates a notification specifying the statistical operation, the roles and the application
-     * 
+     *
      * @param serviceContext
      * @param notifications
      * @param notificationRoles
@@ -282,7 +201,7 @@ public class NoticesRestInternalFacadeImpl implements NoticesRestInternalFacade 
 
     /**
      * Creates a notification specifying the receivers
-     * 
+     *
      * @param serviceContext
      * @param actionCode
      * @param messageCode
@@ -303,7 +222,7 @@ public class NoticesRestInternalFacadeImpl implements NoticesRestInternalFacade 
             ResourceInternal[] resourceInternals = getResourceInternals(entry.getValue());
             String receiverUserName = entry.getKey();
             GroupedNotificationDto groupedNotificationDto = new GroupedNotificationDto.Builder(resourceInternals, getLifeCycleAction(entry.getValue()))
-                    .reasonOfRejection(getReasonOfRejection(entry.getValue())).programmedPublicationDate(getProgrammedPublicationDate(entry.getValue()))
+                    .reasonOfRejection(getReasonOfRejection(entry.getValue()))
                     .receiversUsernames(new String[]{receiverUserName}).build();
             try {
                 createNotification(serviceContext, groupedNotificationDto);
@@ -322,8 +241,7 @@ public class NoticesRestInternalFacadeImpl implements NoticesRestInternalFacade 
         String messageCode = getMessageCode(groupedNotificationDto.getLifeCycleAction());
 
         String subject = buildSubject(ctx, actionCode);
-        Message message = buildMessage(ctx, messageCode, groupedNotificationDto.getResources(), groupedNotificationDto.getReasonOfRejection(), groupedNotificationDto.getLifeCycleAction(),
-                groupedNotificationDto.getProgrammedPublicationDate());
+        Message message = buildMessage(ctx, messageCode, groupedNotificationDto.getResources(), groupedNotificationDto.getReasonOfRejection(), groupedNotificationDto.getLifeCycleAction());
 
         NoticeBuilder noticeBuilder = NoticeBuilder.notification().withMessages(message).withSendingApplication(getSendingApp()).withSendingUser(ctx.getUserId()).withSubject(subject);
         if (groupedNotificationDto.getRoles() != null) {
@@ -338,20 +256,17 @@ public class NoticesRestInternalFacadeImpl implements NoticesRestInternalFacade 
 
         try {
             Response response = metamacApisLocator.getNoticesRestInternalFacadeV10().createNotice(noticeBuilder.build());
-            this.restExceptionUtils.checkSendNotificationRestResponseAndThrowErrorIfApplicable(ctx, response);
+            restExceptionUtils.checkSendNotificationRestResponseAndThrowErrorIfApplicable(ctx, response);
         } catch (MetamacException e) {
             throw WebExceptionUtils.createMetamacWebException(e);
         }
     }
 
-    private Message buildMessage(ServiceContext ctx, String messageCode, ResourceInternal[] resources, String reasonOfRejection, LifeCycleActionEnum lifeCycleAction, Date programmedPublicationDate) {
+    private Message buildMessage(ServiceContext ctx, String messageCode, ResourceInternal[] resources, String reasonOfRejection, LifeCycleActionEnum lifeCycleAction) {
         Locale locale = ServiceContextUtils.getLocale(ctx);
         String localisedMessage = LocaleUtil.getMessageForCode(messageCode, locale);
         if (StringUtils.isNotBlank(reasonOfRejection)) {
             localisedMessage = localisedMessage + " (" + reasonOfRejection + ")";
-        }
-        if (LifeCycleActionEnum.PROGRAM_PUBLICATION.equals(lifeCycleAction) && programmedPublicationDate != null) {
-            localisedMessage = MessageFormat.format(localisedMessage, programmedPublicationDate);
         }
         return MessageBuilder.message().withText(localisedMessage).withResources(resources).build();
     }
@@ -409,21 +324,20 @@ public class NoticesRestInternalFacadeImpl implements NoticesRestInternalFacade 
     private GroupedNotificationDto createGroupedNotificationWithStatisticalOperation(String statisticalOperatonUrn, List<ResourceNotificationBaseDto> resources) throws MetamacWebException {
         ResourceInternal[] resourceInternals = getResourceInternals(resources);
         String reasonOfRejection = getReasonOfRejection(resources);
-        Date programmedPublicationDate = getProgrammedPublicationDate(resources);
         return new GroupedNotificationDto.Builder(resourceInternals, getLifeCycleAction(resources)).statisticalOperationUrn(statisticalOperatonUrn).reasonOfRejection(reasonOfRejection)
-                .programmedPublicationDate(programmedPublicationDate).build();
+                .build();
     }
 
     private GroupedNotificationDto createGroupedNotification(ResourceNotificationDto notification) throws MetamacWebException {
         ResourceInternal resourceInternal = restMapper.buildResourceInternal(notification.getUpdatedResource(), notification.getStatisticalResourceType());
         return new GroupedNotificationDto.Builder(new ResourceInternal[]{resourceInternal}, notification.getLifeCycleAction())
                 .statisticalOperationUrn(notification.getUpdatedResource().getStatisticalOperation().getUrn()).reasonOfRejection(notification.getReasonOfRejection())
-                .programmedPublicationDate(notification.getProgrammedPublicationDate()).build();
+                .build();
     }
 
     /**
      * Returns the lifecycle action of the notifications. When a group of resources update their {@link ProcStatusEnum} at the same time, all of them have the same {@link LifeCycleActionEnum}.
-     * 
+     *
      * @param notifications
      * @return
      */
@@ -433,7 +347,7 @@ public class NoticesRestInternalFacadeImpl implements NoticesRestInternalFacade 
 
     /**
      * Returns the reason of rejection of the notifications. When a group of resources update their {@link ProcStatusEnum} at the same time, all of them have the same reason of rejection.
-     * 
+     *
      * @param notifications
      * @return
      */
@@ -441,16 +355,6 @@ public class NoticesRestInternalFacadeImpl implements NoticesRestInternalFacade 
         return notifications.get(0).getReasonOfRejection();
     }
 
-    /**
-     * Returns the programmed publication date of the notifications. When a group of resources update their {@link ProcStatusEnum} at the same time, all of them have the same programmed publication
-     * date.
-     * 
-     * @param notifications
-     * @return
-     */
-    private Date getProgrammedPublicationDate(List<ResourceNotificationBaseDto> notifications) {
-        return notifications.get(0).getProgrammedPublicationDate();
-    }
 
     private String getTranslatedNotificationErrorMessage() {
         Locale locale = (Locale) ServiceContextHolder.getCurrentServiceContext().getProperty(LocaleConstants.locale);

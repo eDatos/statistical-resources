@@ -130,15 +130,6 @@ public class QueryVersioningServiceTest extends StatisticalResourcesBaseTest {
     }
 
     @Test
-    @MetamacMock(QUERY_VERSION_28_V2_PUBLISHED_NO_VISIBLE_FOR_QUERY_06_NAME)
-    public void testVersioningQueryVersionErrorQueryVersionNotVisible() throws Exception {
-        String queryVersionUrn = queryVersionMockFactory.retrieveMock(QUERY_VERSION_28_V2_PUBLISHED_NO_VISIBLE_FOR_QUERY_06_NAME).getLifeCycleStatisticalResource().getUrn();
-
-        expectedMetamacException(new MetamacException(ServiceExceptionType.LIFE_CYCLE_WRONG_PROC_STATUS, queryVersionUrn, ProcStatusEnum.PUBLISHED.getName()));
-        queryVersionLifecycleService.versioning(getServiceContextWithoutPrincipal(), queryVersionUrn, VersionTypeEnum.MAJOR);
-    }
-
-    @Test
     @MetamacMock(QUERY_VERSION_11_DRAFT_NAME)
     public void testVersioningQueryVersionErrorDraftProcStatus() throws Exception {
         String queryVersionUrn = queryVersionMockFactory.retrieveMock(QUERY_VERSION_11_DRAFT_NAME).getLifeCycleStatisticalResource().getUrn();
