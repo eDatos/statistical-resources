@@ -40,6 +40,7 @@ import org.siemac.metamac.statistical.resources.web.client.widgets.windows.Valid
 import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublicationVersionsResult;
 import org.siemac.metamac.statistical.resources.web.shared.utils.RelatedResourceUtils;
 
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.smartgwt.client.widgets.events.ClickEvent;
@@ -48,37 +49,37 @@ import com.smartgwt.client.widgets.layout.VLayout;
 
 public class PublicationMetadataTabViewImpl extends StatisticalResourceMetadataBaseViewImpl<PublicationMetadataTabUiHandlers> implements PublicationMetadataTabView {
 
-    private VLayout                                                  panel;
+    private VLayout panel;
 
-    private PublicationMainFormLayout                                mainFormLayout;
+    private PublicationMainFormLayout mainFormLayout;
 
-    private NameableResourceIdentifiersForm                          identifiersForm;
-    private SiemacMetadataContentDescriptorsForm                     contentDescriptorsForm;
-    private SiemacMetadataCommonMetadataForm                         commonMetadataForm;
-    private SiemacMetadataThematicContentClassifiersForm             thematicContentClassifiersForm;
-    private SiemacMetadataLanguageForm                               languageForm;
-    private SiemacMetadataProductionDescriptorsForm                  productionDescriptorsForm;
-    private PublicationClassDescriptorsForm                          classDescriptorsForm;
-    private PublicationResourceRelationDescriptorsForm               resourceRelationDescriptorsForm;
-    private SiemacMetadataPublicationDescriptorsForm                 publicationDescriptorsForm;
-    private LifeCycleResourceLifeCycleForm                           lifeCycleForm;
-    private LifeCycleResourceVersionForm                             versionForm;
-    private SiemacMetadataIntellectualPropertyDescriptorsForm        intellectualPropertyDescriptorsForm;
+    private NameableResourceIdentifiersForm identifiersForm;
+    private SiemacMetadataContentDescriptorsForm contentDescriptorsForm;
+    private SiemacMetadataCommonMetadataForm commonMetadataForm;
+    private SiemacMetadataThematicContentClassifiersForm thematicContentClassifiersForm;
+    private SiemacMetadataLanguageForm languageForm;
+    private SiemacMetadataProductionDescriptorsForm productionDescriptorsForm;
+    private PublicationClassDescriptorsForm classDescriptorsForm;
+    private PublicationResourceRelationDescriptorsForm resourceRelationDescriptorsForm;
+    private SiemacMetadataPublicationDescriptorsForm publicationDescriptorsForm;
+    private LifeCycleResourceLifeCycleForm lifeCycleForm;
+    private LifeCycleResourceVersionForm versionForm;
+    private SiemacMetadataIntellectualPropertyDescriptorsForm intellectualPropertyDescriptorsForm;
 
-    private NameableResourceIdentifiersEditionForm                   identifiersEditionForm;
-    private SiemacMetadataContentDescriptorsEditionForm              contentDescriptorsEditionForm;
-    private SiemacMetadataCommonMetadataEditionForm                  commonMetadataEditionForm;
-    private SiemacMetadataThematicContentClassifiersEditionForm      thematicContentClassifiersEditionForm;
-    private SiemacMetadataLanguageEditionForm                        languageEditionForm;
-    private SiemacMetadataProductionDescriptorsEditionForm           productionDescriptorsEditionForm;
-    private PublicationClassDescriptorsEditionForm                   classDescriptorsEditionForm;
-    private PublicationResourceRelationDescriptorsEditionForm        resourceRelationDescriptorsEditionForm;
-    private SiemacMetadataPublicationDescriptorsEditionForm          publicationDescriptorsEditionForm;
-    private LifeCycleResourceLifeCycleForm                           lifeCycleEditionForm;
-    private LifeCycleResourceVersionEditionForm                      versionEditionForm;
+    private NameableResourceIdentifiersEditionForm identifiersEditionForm;
+    private SiemacMetadataContentDescriptorsEditionForm contentDescriptorsEditionForm;
+    private SiemacMetadataCommonMetadataEditionForm commonMetadataEditionForm;
+    private SiemacMetadataThematicContentClassifiersEditionForm thematicContentClassifiersEditionForm;
+    private SiemacMetadataLanguageEditionForm languageEditionForm;
+    private SiemacMetadataProductionDescriptorsEditionForm productionDescriptorsEditionForm;
+    private PublicationClassDescriptorsEditionForm classDescriptorsEditionForm;
+    private PublicationResourceRelationDescriptorsEditionForm resourceRelationDescriptorsEditionForm;
+    private SiemacMetadataPublicationDescriptorsEditionForm publicationDescriptorsEditionForm;
+    private LifeCycleResourceLifeCycleForm lifeCycleEditionForm;
+    private LifeCycleResourceVersionEditionForm versionEditionForm;
     private SiemacMetadataIntellectualPropertyDescriptorsEditionForm intellectualPropertyDescriptorsEditionForm;
 
-    private PublicationVersionDto                                    publicationVersionDto;
+    private PublicationVersionDto publicationVersionDto;
 
     @Inject
     public PublicationMetadataTabViewImpl() {
@@ -169,7 +170,17 @@ public class PublicationMetadataTabViewImpl extends StatisticalResourceMetadataB
                         && productionDescriptorsEditionForm.validate(false) && classDescriptorsEditionForm.validate(false) && versionEditionForm.validate(false)
                         && resourceRelationDescriptorsEditionForm.validate(false) && publicationDescriptorsEditionForm.validate(false) && thematicContentClassifiersEditionForm.validate(false)
                         && languageEditionForm.validate(false) && intellectualPropertyDescriptorsEditionForm.validate(false)) {
-                    getUiHandlers().savePublication(getPublicationDto());
+                    // See: METAMAC-2516
+                    // Two invokes to getXXXDto() is needed for Chrome, please don't remove this two call fix.
+                    getPublicationDto();
+                    Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
+
+                        @Override
+                        public void execute() {
+                            getUiHandlers().savePublication(getPublicationDto());
+                        }
+                    });
+
                 }
             }
         });

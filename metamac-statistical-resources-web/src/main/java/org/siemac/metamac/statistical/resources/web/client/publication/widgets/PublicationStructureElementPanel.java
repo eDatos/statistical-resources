@@ -30,6 +30,7 @@ import org.siemac.metamac.web.common.client.widgets.form.fields.SearchCustomLink
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewMultiLanguageTextItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewTextItem;
 
+import com.google.gwt.core.client.Scheduler;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.form.DynamicForm;
@@ -43,17 +44,17 @@ import com.smartgwt.client.widgets.layout.VLayout;
 
 public class PublicationStructureElementPanel extends VLayout {
 
-    private InternationalMainFormLayout                           mainFormLayout;
-    private GroupDynamicForm                                      form;
-    private GroupDynamicForm                                      editionForm;
+    private InternationalMainFormLayout mainFormLayout;
+    private GroupDynamicForm form;
+    private GroupDynamicForm editionForm;
 
     private SearchSingleStatisticalRelatedResourcePaginatedWindow searchDatasetsWindow;
     private SearchSingleStatisticalRelatedResourcePaginatedWindow searchQueriesWindow;
 
-    private PublicationVersionBaseDto                             publicationVersion;
-    private NameableStatisticalResourceDto                        element;
+    private PublicationVersionBaseDto publicationVersion;
+    private NameableStatisticalResourceDto element;
 
-    private PublicationStructureTabUiHandlers                     uiHandlers;
+    private PublicationStructureTabUiHandlers uiHandlers;
 
     public PublicationStructureElementPanel() {
 
@@ -82,7 +83,17 @@ public class PublicationStructureElementPanel extends VLayout {
             @Override
             public void onClick(ClickEvent event) {
                 if (editionForm.validate(false)) {
-                    getUiHandlers().saveElement(publicationVersion.getUrn(), getSelectedElement());
+                    // See: METAMAC-2516
+                    // Two invokes to getXXXDto() is needed for Chrome, please don't remove this two call fix.
+                    getSelectedElement();
+                    Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
+
+                        @Override
+                        public void execute() {
+                            getUiHandlers().saveElement(publicationVersion.getUrn(), getSelectedElement());
+                        }
+                    });
+
                 }
             }
         });
