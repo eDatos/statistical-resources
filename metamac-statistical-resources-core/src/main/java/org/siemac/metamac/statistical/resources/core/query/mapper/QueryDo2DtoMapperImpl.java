@@ -152,8 +152,7 @@ public class QueryDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements Query
         target.setId(source.getId());
         target.setVersion(source.getVersion());
 
-        RelatedResourceResult isReplacedByVersion = queryVersionRepository.retrieveIsReplacedByVersion(source);
-        target.setIsReplacedByVersion(relatedResourceResultToDto(isReplacedByVersion));
+        target.setIsReplacedByVersion(relatedResourceDoToDto(source.getLifeCycleStatisticalResource().getIsReplacedByVersion()));
 
         List<RelatedResourceResult> isPartOf = queryVersionRepository.retrieveIsPartOf(source);
         target.getIsPartOf().clear();

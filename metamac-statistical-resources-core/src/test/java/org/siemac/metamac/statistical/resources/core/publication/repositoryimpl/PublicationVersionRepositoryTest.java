@@ -1,7 +1,10 @@
 package org.siemac.metamac.statistical.resources.core.publication.repositoryimpl;
 
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.PublicationsAsserts.assertEqualsPublicationVersion;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationMockFactory.PUBLICATION_02_BASIC_WITH_GENERATED_VERSION_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationMockFactory.PUBLICATION_03_BASIC_WITH_2_PUBLICATION_VERSIONS_NAME;
@@ -23,11 +26,11 @@ import org.junit.runner.RunWith;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.test.utils.mocks.configuration.MetamacMock;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
-import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResourceResult;
+import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResource;
+import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersionRepository;
-import org.siemac.metamac.statistical.resources.core.utils.asserts.CommonAsserts;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -143,43 +146,25 @@ public class PublicationVersionRepositoryTest extends StatisticalResourcesBaseTe
     }
 
     @Test
-    @Override
-    @MetamacMock(PUBLICATION_06_WITH_MULTIPLE_PUBLISHED_VERSIONS_AND_LATEST_NO_VISIBLE_NAME)
-    public void testRetrieveIsReplacedByVersion() throws Exception {
-        PublicationVersion firstVersion = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_30_V1_PUBLISHED_FOR_PUBLICATION_06_NAME);
-        PublicationVersion secondVersion = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_31_V2_PUBLISHED_NO_VISIBLE_FOR_PUBLICATION_06_NAME);
-
-        {
-            RelatedResourceResult resource = publicationVersionRepository.retrieveIsReplacedByVersion(firstVersion);
-            assertNotNull(resource);
-            CommonAsserts.assertEqualsRelatedResourceResultPublicationVersion(secondVersion, resource);
-        }
-        {
-            RelatedResourceResult resource = publicationVersionRepository.retrieveIsReplacedByVersion(secondVersion);
-            assertNull(resource);
-        }
-    }
-
-    @Test
-    @Override
     @MetamacMock({PUBLICATION_VERSION_41_PUB_NOT_VISIBLE_REPLACES_PUB_VERSION_42_NAME})
-    public void testRetrieveIsReplacedBy() throws Exception {
+    public void testGetIsReplacedBy() throws Exception {
         PublicationVersion notVisiblePublication = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_41_PUB_NOT_VISIBLE_REPLACES_PUB_VERSION_42_NAME);
         PublicationVersion publishedPublication = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_42_PUB_IS_REPLACED_BY_PUB_VERSION_41_NAME);
 
-        RelatedResourceResult resource = publicationVersionRepository.retrieveIsReplacedBy(publishedPublication);
+        RelatedResource resource = publishedPublication.getSiemacMetadataStatisticalResource().getIsReplacedBy();
         assertNotNull(resource);
-        CommonAsserts.assertEqualsRelatedResourceResultPublicationVersion(notVisiblePublication, resource);
+        assertEqualsPublicationVersion(notVisiblePublication, resource.getPublicationVersion());
     }
 
     @Test
-    @Override
+
     @MetamacMock({PUBLICATION_VERSION_41_PUB_NOT_VISIBLE_REPLACES_PUB_VERSION_42_NAME})
     public void testRetrieveIsReplacedByOnlyLastPublished() throws Exception {
         PublicationVersion publishedPublication = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_42_PUB_IS_REPLACED_BY_PUB_VERSION_41_NAME);
 
-        RelatedResourceResult resource = publicationVersionRepository.retrieveIsReplacedByOnlyLastPublished(publishedPublication);
-        assertNull(resource);
+        RelatedResource resource = publishedPublication.getSiemacMetadataStatisticalResource().getIsReplacedBy();
+        assertNotNull(resource);
+        assertThat(resource.getPublicationVersion().getLifeCycleStatisticalResource().getProcStatus(), is(not(equalTo(ProcStatusEnum.PUBLISHED))));
     }
 
 }

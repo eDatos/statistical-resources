@@ -1,11 +1,14 @@
 package org.siemac.metamac.statistical.resources.core.dataset.repositoryimpl;
 
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
-import static org.siemac.metamac.statistical.resources.core.utils.asserts.CommonAsserts.assertEqualsRelatedResourceResultDatasetVersion;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts.assertEqualsDatasetVersion;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetMockFactory.DATASET_02_BASIC_WITH_GENERATED_VERSION_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetMockFactory.DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME;
@@ -67,10 +70,12 @@ import org.junit.runner.RunWith;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.test.utils.mocks.configuration.MetamacMock;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
+import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResource;
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResourceResult;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionRepository;
+import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
 import org.siemac.metamac.statistical.resources.core.utils.asserts.CommonAsserts;
@@ -474,57 +479,26 @@ public class DatasetVersionRepositoryTest extends StatisticalResourcesBaseTest i
         }
     }
 
-    @Override
     @Test
     @MetamacMock(DATASET_13_WITH_PUBLISHED_AND_DRAFT_VERSIONS_WITH_THREE_QUERIES_DRAFT_NOT_VISIBLE_AND_PUBLISHED_LINKED_TO_DATASET_NAME)
-    public void testRetrieveIsReplacedByVersionOnlyLastPublished() throws Exception {
-        Dataset dataset = datasetMockFactory.retrieveMock(DATASET_13_WITH_PUBLISHED_AND_DRAFT_VERSIONS_WITH_THREE_QUERIES_DRAFT_NOT_VISIBLE_AND_PUBLISHED_LINKED_TO_DATASET_NAME);
-        DatasetVersion firstDatasetVersion = dataset.getVersions().get(0);
-        RelatedResourceResult resource = datasetVersionRepository.retrieveIsReplacedByVersionOnlyLastPublished(firstDatasetVersion);
-        assertNull(resource);
-    }
-
-    @Override
-    @Test
-    @MetamacMock(DATASET_13_WITH_PUBLISHED_AND_DRAFT_VERSIONS_WITH_THREE_QUERIES_DRAFT_NOT_VISIBLE_AND_PUBLISHED_LINKED_TO_DATASET_NAME)
-    public void testRetrieveIsReplacedByVersion() throws Exception {
+    public void testGetIsReplacedByVersion() throws Exception {
         Dataset dataset = datasetMockFactory.retrieveMock(DATASET_13_WITH_PUBLISHED_AND_DRAFT_VERSIONS_WITH_THREE_QUERIES_DRAFT_NOT_VISIBLE_AND_PUBLISHED_LINKED_TO_DATASET_NAME);
         DatasetVersion firstDatasetVersion = dataset.getVersions().get(0);
         DatasetVersion secondDatasetVersion = dataset.getVersions().get(1);
-        RelatedResourceResult resource = datasetVersionRepository.retrieveIsReplacedByVersion(firstDatasetVersion);
+        RelatedResource resource = firstDatasetVersion.getSiemacMetadataStatisticalResource().getIsReplacedByVersion();
         assertNotNull(resource);
-        CommonAsserts.assertEqualsRelatedResourceResultDatasetVersion(secondDatasetVersion, resource);
-    }
-
-    @Test
-    @MetamacMock(DATASET_14_WITH_PUBLISHED_AND_NOT_VISIBLE_VERSIONS_WITH_THREE_QUERIES_DRAFT_NOT_VISIBLE_AND_PUBLISHED_LINKED_TO_DATASET_NAME)
-    public void testRetrieveIsReplacedByVersionOnlyLastPublishedSecondVersionNotVisible() throws Exception {
-        Dataset dataset = datasetMockFactory.retrieveMock(DATASET_14_WITH_PUBLISHED_AND_NOT_VISIBLE_VERSIONS_WITH_THREE_QUERIES_DRAFT_NOT_VISIBLE_AND_PUBLISHED_LINKED_TO_DATASET_NAME);
-        DatasetVersion firstDatasetVersion = dataset.getVersions().get(0);
-        RelatedResourceResult resource = datasetVersionRepository.retrieveIsReplacedByVersionOnlyLastPublished(firstDatasetVersion);
-        assertNull(resource);
-    }
-
-    @Test
-    @MetamacMock(DATASET_14_WITH_PUBLISHED_AND_NOT_VISIBLE_VERSIONS_WITH_THREE_QUERIES_DRAFT_NOT_VISIBLE_AND_PUBLISHED_LINKED_TO_DATASET_NAME)
-    public void testRetrieveIsReplacedBySecondVersionNotVisible() throws Exception {
-        Dataset dataset = datasetMockFactory.retrieveMock(DATASET_14_WITH_PUBLISHED_AND_NOT_VISIBLE_VERSIONS_WITH_THREE_QUERIES_DRAFT_NOT_VISIBLE_AND_PUBLISHED_LINKED_TO_DATASET_NAME);
-        DatasetVersion firstDatasetVersion = dataset.getVersions().get(0);
-        DatasetVersion secondDatasetVersion = dataset.getVersions().get(1);
-        RelatedResourceResult resource = datasetVersionRepository.retrieveIsReplacedByVersion(firstDatasetVersion);
-        assertNotNull(resource);
-        CommonAsserts.assertEqualsRelatedResourceResultDatasetVersion(secondDatasetVersion, resource);
+        assertEquals(secondDatasetVersion, resource.getDatasetVersion());
     }
 
     @Test
     @MetamacMock(DATASET_15_WITH_TWO_PUBLISHED_VERSIONS_WITH_THREE_QUERIES_DRAFT_NOT_VISIBLE_AND_PUBLISHED_LINKED_TO_DATASET_NAME)
-    public void testRetrieveIsReplacedByVersionOnlyLastPublishedSecondVersionPublishedAndVisible() throws Exception {
+    public void testGetIsReplacedByVersionOnlyLastPublishedSecondVersionPublishedAndVisible() throws Exception {
         Dataset dataset = datasetMockFactory.retrieveMock(DATASET_15_WITH_TWO_PUBLISHED_VERSIONS_WITH_THREE_QUERIES_DRAFT_NOT_VISIBLE_AND_PUBLISHED_LINKED_TO_DATASET_NAME);
         DatasetVersion firstDatasetVersion = dataset.getVersions().get(0);
         DatasetVersion secondDatasetVersion = dataset.getVersions().get(1);
-        RelatedResourceResult resource = datasetVersionRepository.retrieveIsReplacedByVersionOnlyLastPublished(firstDatasetVersion);
+        DatasetVersion resource = firstDatasetVersion.getSiemacMetadataStatisticalResource().getIsReplacedByVersion().getDatasetVersion();
         assertNotNull(resource);
-        CommonAsserts.assertEqualsRelatedResourceResultDatasetVersion(secondDatasetVersion, resource);
+        assertEquals(secondDatasetVersion, resource);
     }
 
     @Test
@@ -533,29 +507,28 @@ public class DatasetVersionRepositoryTest extends StatisticalResourcesBaseTest i
         Dataset dataset = datasetMockFactory.retrieveMock(DATASET_15_WITH_TWO_PUBLISHED_VERSIONS_WITH_THREE_QUERIES_DRAFT_NOT_VISIBLE_AND_PUBLISHED_LINKED_TO_DATASET_NAME);
         DatasetVersion firstDatasetVersion = dataset.getVersions().get(0);
         DatasetVersion secondDatasetVersion = dataset.getVersions().get(1);
-        RelatedResourceResult resource = datasetVersionRepository.retrieveIsReplacedByVersion(firstDatasetVersion);
+        DatasetVersion resource = firstDatasetVersion.getSiemacMetadataStatisticalResource().getIsReplacedByVersion().getDatasetVersion();
         assertNotNull(resource);
-        CommonAsserts.assertEqualsRelatedResourceResultDatasetVersion(secondDatasetVersion, resource);
+        assertEquals(secondDatasetVersion, resource);
     }
 
-    @Override
     @Test
     @MetamacMock({DATASET_VERSION_77_NO_PUB_REPLACES_DATASET_78_NAME})
-    public void testRetrieveIsReplacedBy() throws Exception {
+    public void testIsReplacedBy() throws Exception {
         DatasetVersion notPublishedDataset = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_77_NO_PUB_REPLACES_DATASET_78_NAME);
         DatasetVersion publishedDatasetReplaced = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_78_PUB_IS_REPLACED_BY_DATASET_77_NAME);
-        RelatedResourceResult resource = datasetVersionRepository.retrieveIsReplacedBy(publishedDatasetReplaced);
+        RelatedResource resource = publishedDatasetReplaced.getSiemacMetadataStatisticalResource().getIsReplacedBy();
         assertNotNull(resource);
-        CommonAsserts.assertEqualsRelatedResourceResultDatasetVersion(notPublishedDataset, resource);
+        assertThat(resource.getDatasetVersion(), is(equalTo(notPublishedDataset)));
     }
 
-    @Override
     @Test
     @MetamacMock({DATASET_VERSION_77_NO_PUB_REPLACES_DATASET_78_NAME})
     public void testRetrieveIsReplacedByOnlyLastPublished() throws Exception {
         DatasetVersion publishedDatasetReplaced = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_78_PUB_IS_REPLACED_BY_DATASET_77_NAME);
-        RelatedResourceResult resource = datasetVersionRepository.retrieveIsReplacedByOnlyLastPublished(publishedDatasetReplaced);
-        assertNull(resource);
+        RelatedResource resource = publishedDatasetReplaced.getSiemacMetadataStatisticalResource().getIsReplacedBy();
+        assertNotNull(resource);
+        assertThat(ProcStatusEnum.PUBLISHED, is(not(equalTo(resource.getDatasetVersion().getLifeCycleStatisticalResource().getProcStatus()))));
     }
 
     @Test
@@ -563,16 +536,16 @@ public class DatasetVersionRepositoryTest extends StatisticalResourcesBaseTest i
     public void testRetrieveResourceThatReplacesDatasetBothNotPublished() throws Exception {
         DatasetVersion notPublishedDataset = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_79_NO_PUB_REPLACES_DATASET_80_NAME);
         DatasetVersion notPublishedDatasetReplaced = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_80_NO_PUB_IS_REPLACED_BY_DATASET_79_NAME);
-        RelatedResourceResult resource = datasetVersionRepository.retrieveIsReplacedBy(notPublishedDatasetReplaced);
+        RelatedResource resource = notPublishedDatasetReplaced.getSiemacMetadataStatisticalResource().getIsReplacedBy();
         assertNotNull(resource);
-        CommonAsserts.assertEqualsRelatedResourceResultDatasetVersion(notPublishedDataset, resource);
+        assertThat(notPublishedDataset, is(equalTo(resource.getDatasetVersion())));
     }
 
     @Test
     @MetamacMock({DATASET_VERSION_79_NO_PUB_REPLACES_DATASET_80_NAME})
     public void testRetrieveLastPublishedVersionResourceThatReplacesDatasetBothNotPublished() throws Exception {
         DatasetVersion notPublishedDatasetReplaced = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_80_NO_PUB_IS_REPLACED_BY_DATASET_79_NAME);
-        RelatedResourceResult resource = datasetVersionRepository.retrieveIsReplacedByOnlyLastPublished(notPublishedDatasetReplaced);
+        RelatedResource resource = notPublishedDatasetReplaced.getLifeCycleStatisticalResource().getIsReplacedByVersion();
         assertNull(resource);
     }
 
@@ -581,17 +554,18 @@ public class DatasetVersionRepositoryTest extends StatisticalResourcesBaseTest i
     public void testRetrieveResourceThatReplacesDatasetWhichReplacesIsNotVisible() throws Exception {
         DatasetVersion notVisibleDataset = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_81_PUB_NOT_VISIBLE_REPLACES_DATASET_82_NAME);
         DatasetVersion publishedDatasetReplaced = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_82_PUB_IS_REPLACED_BY_DATASET_81_NAME);
-        RelatedResourceResult resource = datasetVersionRepository.retrieveIsReplacedBy(publishedDatasetReplaced);
+        RelatedResource resource = publishedDatasetReplaced.getSiemacMetadataStatisticalResource().getIsReplacedBy();
         assertNotNull(resource);
-        CommonAsserts.assertEqualsRelatedResourceResultDatasetVersion(notVisibleDataset, resource);
+        assertThat(notVisibleDataset, is(equalTo(resource.getDatasetVersion())));
     }
 
     @Test
     @MetamacMock({DATASET_VERSION_81_PUB_NOT_VISIBLE_REPLACES_DATASET_82_NAME})
     public void testRetrieveLastPublishedVersionResourceThatReplacesDatasetWhichReplacesIsNotVisible() throws Exception {
         DatasetVersion publishedDatasetReplaced = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_82_PUB_IS_REPLACED_BY_DATASET_81_NAME);
-        RelatedResourceResult resource = datasetVersionRepository.retrieveIsReplacedByOnlyLastPublished(publishedDatasetReplaced);
-        assertNull(resource);
+        RelatedResource resource = publishedDatasetReplaced.getSiemacMetadataStatisticalResource().getIsReplacedBy();
+        assertNotNull(resource);
+        assertThat(resource.getDatasetVersion().getLifeCycleStatisticalResource().getProcStatus(), is(not(equalTo(ProcStatusEnum.PUBLISHED))));
     }
 
     @Test
@@ -599,9 +573,9 @@ public class DatasetVersionRepositoryTest extends StatisticalResourcesBaseTest i
     public void testRetrieveResourceThatReplacesDatasetBothPublished() throws Exception {
         DatasetVersion publishedDataset = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_83_PUB_REPLACES_DATASET_84_NAME);
         DatasetVersion publishedDatasetReplaced = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_84_PUB_IS_REPLACED_BY_DATASET_83_NAME);
-        RelatedResourceResult resource = datasetVersionRepository.retrieveIsReplacedBy(publishedDatasetReplaced);
+        RelatedResource resource = publishedDatasetReplaced.getSiemacMetadataStatisticalResource().getIsReplacedBy();
         assertNotNull(resource);
-        CommonAsserts.assertEqualsRelatedResourceResultDatasetVersion(publishedDataset, resource);
+        assertThat(publishedDataset, is(equalTo(resource.getDatasetVersion())));
     }
 
     @Test
@@ -609,9 +583,9 @@ public class DatasetVersionRepositoryTest extends StatisticalResourcesBaseTest i
     public void testRetrieveLastPublishedVersionResourceThatReplacesDatasetBothPublished() throws Exception {
         DatasetVersion publishedDataset = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_83_PUB_REPLACES_DATASET_84_NAME);
         DatasetVersion publishedDatasetReplaced = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_84_PUB_IS_REPLACED_BY_DATASET_83_NAME);
-        RelatedResourceResult resource = datasetVersionRepository.retrieveIsReplacedByOnlyLastPublished(publishedDatasetReplaced);
+        RelatedResource resource = publishedDatasetReplaced.getSiemacMetadataStatisticalResource().getIsReplacedBy();
         assertNotNull(resource);
-        assertEqualsRelatedResourceResultDatasetVersion(publishedDataset, resource);
+        assertEqualsDatasetVersion(publishedDataset, resource.getDatasetVersion());
     }
 
     @Override

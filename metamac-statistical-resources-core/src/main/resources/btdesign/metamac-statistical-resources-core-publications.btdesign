@@ -120,9 +120,6 @@ Application PublicationsStatisticalResources {
 				@PublicationVersion retrieveLastVersion(String publicationUrn) throws MetamacException;
 				@PublicationVersion retrieveLastPublishedVersion(String publicationUrn) throws MetamacException;
 				@PublicationVersion retrieveByVersion(Long statisticalResourceId, String versionLogic) throws MetamacException;
-				RelatedResourceResult retrieveIsReplacedByVersion(@PublicationVersion publicationVersion) throws MetamacException;
-				RelatedResourceResult retrieveIsReplacedBy(@PublicationVersion publicationVersion) throws MetamacException;
-				RelatedResourceResult retrieveIsReplacedByOnlyLastPublished(@PublicationVersion publicationVersion) throws MetamacException;
 			}
 		}
 		

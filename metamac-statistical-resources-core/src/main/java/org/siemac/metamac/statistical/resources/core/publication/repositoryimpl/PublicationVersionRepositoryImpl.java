@@ -160,18 +160,4 @@ public class PublicationVersionRepositoryImpl extends PublicationVersionReposito
         return result.get(0);
     }
 
-    @Override
-    public RelatedResourceResult retrieveIsReplacedByVersion(PublicationVersion publicationVersion) throws MetamacException {
-        return lifeCycleStatisticalResourceRepository.retrieveIsReplacedByVersion(publicationVersion.getId(), TypeRelatedResourceEnum.PUBLICATION_VERSION);
-    }
-
-    @Override
-    public RelatedResourceResult retrieveIsReplacedBy(PublicationVersion publicationVersion) throws MetamacException {
-        return siemacMetadataStatisticalResourceRepository.retrieveIsReplacedBy(publicationVersion.getId(), TypeRelatedResourceEnum.PUBLICATION_VERSION);
-    }
-
-    @Override
-    public RelatedResourceResult retrieveIsReplacedByOnlyLastPublished(PublicationVersion publicationVersion) throws MetamacException {
-        return siemacMetadataStatisticalResourceRepository.retrieveIsReplacedByOnlyLastPublished(publicationVersion.getId(), TypeRelatedResourceEnum.PUBLICATION_VERSION);
-    }
 }
