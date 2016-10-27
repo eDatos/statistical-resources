@@ -212,7 +212,7 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
         RelatedResource resourcesIsReplacedBy = publicationVersion.getSiemacMetadataStatisticalResource().getIsReplacedBy();
         if (resourcesIsReplacedBy != null) {
             exceptionItems.add(new MetamacExceptionItem(
-                    ServiceExceptionType.PUBLICATION_VERSION_IS_REPLACED_BY_OTHER_RESOURCE, resourcesIsReplacedBy.getDatasetVersion().getLifeCycleStatisticalResource().getUrn()));
+                    ServiceExceptionType.PUBLICATION_VERSION_IS_REPLACED_BY_OTHER_RESOURCE, resourcesIsReplacedBy.getPublicationVersion().getLifeCycleStatisticalResource().getUrn()));
         }
 
         if (exceptionItems.size() > 0) {

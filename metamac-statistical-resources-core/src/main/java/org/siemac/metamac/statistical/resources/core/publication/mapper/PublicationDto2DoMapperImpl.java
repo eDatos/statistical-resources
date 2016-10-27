@@ -121,8 +121,8 @@ public class PublicationDto2DoMapperImpl extends BaseDto2DoMapperImpl implements
             if (currentUrn.equals(resourceReplaced.getPublicationVersion().getSiemacMetadataStatisticalResource().getUrn())) {
                 throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.PUBLICATION_VERSION_CANT_REPLACE_ITSELF).withMessageParameters(currentUrn).build();
             } else {
-                RelatedResource resourceAlreadyReplacing = resourceReplaced.getDatasetVersion().getSiemacMetadataStatisticalResource().getIsReplacedBy();
-                if (resourceAlreadyReplacing != null && !resourceAlreadyReplacing.getDatasetVersion().getLifeCycleStatisticalResource().getUrn().equals(source.getUrn())) {
+                RelatedResource resourceAlreadyReplacing = resourceReplaced.getPublicationVersion().getSiemacMetadataStatisticalResource().getIsReplacedBy();
+                if (resourceAlreadyReplacing != null && !resourceAlreadyReplacing.getPublicationVersion().getSiemacMetadataStatisticalResource().getUrn().equals(source.getUrn())) {
                     throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.PUBLICATION_VERSION_ALREADY_BEEN_REPLACED_BY_OTHER_PUBLICATION_VERSION)
                             .withMessageParameters(currentUrn, source.getReplaces().getUrn()).build();
                 }
