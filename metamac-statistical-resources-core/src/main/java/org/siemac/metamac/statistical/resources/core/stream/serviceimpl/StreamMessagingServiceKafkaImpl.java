@@ -1,5 +1,7 @@
 package org.siemac.metamac.statistical.resources.core.stream.serviceimpl;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 import org.apache.avro.specific.SpecificRecordBase;
@@ -57,6 +59,13 @@ public class StreamMessagingServiceKafkaImpl<K, V extends SpecificRecordBase> ex
             }
         }
         return producer;
+    }
+
+    public static List<String> getMandatoryConfig() {
+        List<String> props = new ArrayList<String>();
+        props.add(StreamMessagingServiceKafkaImpl.BOOTSTRAP_SERVERS_CONFIG);
+        props.add(StreamMessagingServiceKafkaImpl.SCHEMA_REGISTRY_URL_CONFIG);
+        return props;
     }
 
     private Properties getPropsFromExternalSource() {

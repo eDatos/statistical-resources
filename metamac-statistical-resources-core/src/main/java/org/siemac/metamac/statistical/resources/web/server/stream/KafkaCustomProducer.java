@@ -1,6 +1,9 @@
 package org.siemac.metamac.statistical.resources.web.server.stream;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -11,13 +14,16 @@ import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.errors.SerializationException;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionBuilder;
+import org.siemac.metamac.statistical.resources.core.stream.enume.KafkaTopics;
 
 import io.confluent.kafka.serializers.KafkaAvroDeserializerConfig;
 import io.confluent.kafka.serializers.KafkaAvroSerializer;
 
 public class KafkaCustomProducer<K, V extends SpecificRecordBase> extends ProducerBase<K, V> {
 
-    protected final static String[]            MANDATORY_SETTINGS = {KafkaAvroDeserializerConfig.SCHEMA_REGISTRY_URL_CONFIG, ProducerConfig.BOOTSTRAP_SERVERS_CONFIG};
+    protected final static String[]            MANDATORY_SETTINGS = {
+            KafkaAvroDeserializerConfig.SCHEMA_REGISTRY_URL_CONFIG,
+            ProducerConfig.BOOTSTRAP_SERVERS_CONFIG};
     protected final static Map<String, Object> DEFAULT_SETTINGS   = new HashMap<String, Object>() {
 
                                                                       {
@@ -55,7 +61,7 @@ public class KafkaCustomProducer<K, V extends SpecificRecordBase> extends Produc
     }
 
     protected void checkTopicIsValid(String topic) throws MetamacException {
-        if (topic == null || topic.isEmpty()) {
+        if (topic == null || topic.isEmpty() || !Arrays.asList(KafkaTopics.values()).contains(topic)) {
             throw new MetamacExceptionBuilder().withMessageParameters("Kafka topic is not valid").build();
         }
     }
@@ -73,6 +79,18 @@ public class KafkaCustomProducer<K, V extends SpecificRecordBase> extends Produc
             }
         }
         return props;
+    }
+
+    public static List<String> getRequiredProperties() {
+        List<String> properties = new ArrayList<String>();
+        properties.addAll(Arrays.asList(KafkaCustomProducer.MANDATORY_SETTINGS));
+        return properties;
+    }
+
+    public static List<String> getOptionalProperties() {
+        List<String> properties = new ArrayList<String>();
+        properties.addAll(KafkaCustomProducer.DEFAULT_SETTINGS.keySet());
+        return properties;
     }
 
     protected Properties fillMissingDefaultProperties(Properties props) {
