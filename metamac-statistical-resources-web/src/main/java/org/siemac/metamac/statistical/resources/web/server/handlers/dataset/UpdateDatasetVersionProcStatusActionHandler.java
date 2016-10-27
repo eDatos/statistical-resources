@@ -23,13 +23,13 @@ import com.gwtplatform.dispatch.shared.ActionException;
 public class UpdateDatasetVersionProcStatusActionHandler extends UpdateResourceProcStatusBaseActionHandler<UpdateDatasetVersionProcStatusAction, UpdateDatasetVersionProcStatusResult> {
 
     @Autowired
-    private StatisticalResourcesServiceFacade                  statisticalResourcesServiceFacade;
+    private StatisticalResourcesServiceFacade statisticalResourcesServiceFacade;
 
     @Autowired
-    private NoticesRestInternalFacade                          noticesRestInternalFacade;
+    private NoticesRestInternalFacade         noticesRestInternalFacade;
 
     @Autowired
-    private StreamMessagingServiceFacade             streamMessagingFacade;
+    private StreamMessagingServiceFacade      streamMessagingFacade;
 
     public UpdateDatasetVersionProcStatusActionHandler() {
         super(UpdateDatasetVersionProcStatusAction.class);

@@ -32,10 +32,10 @@ public class KafkaCustomProducer<K, V extends SpecificRecordBase> extends Produc
     public KafkaCustomProducer(Properties props) throws MetamacException {
         super();
         setProperties(props);
-        this.producer = new KafkaProducer<K, V>(props);
+        producer = new KafkaProducer<K, V>(props);
     }
 
-    public void setProperties(Properties props) throws MetamacException {
+    void setProperties(Properties props) throws MetamacException {
         // TODO properties must be injected from config file/db ?
         props = checkForMissingProperties(props);
 
@@ -43,11 +43,9 @@ public class KafkaCustomProducer<K, V extends SpecificRecordBase> extends Produc
     }
 
     @Override
-    public void sendMessage(MessageBase<V> m, String topic) throws MetamacException {
-
+    public void sendMessage(MessageBase<K, V> message, String topic) throws MetamacException {
         checkTopicIsValid(topic);
-        // TODO ADD A KEY TO THE MESSAGE
-        ProducerRecord<K, V> record = new ProducerRecord<K, V>(topic, m.getContent());
+        ProducerRecord<K, V> record = new ProducerRecord<K, V>(topic, message.getKey(), message.getContent());
         try {
             producer.send(record);
         } catch (SerializationException e) {

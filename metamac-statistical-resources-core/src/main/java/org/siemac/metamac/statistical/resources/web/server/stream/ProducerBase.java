@@ -9,8 +9,8 @@ abstract public class ProducerBase<K, V> {
     protected ProducerBase() {
     }
 
-    public void sendMessages(List<MessageBase<V>> messages) {
-        for (MessageBase<V> message : messages) {
+    public void sendMessages(List<MessageBase<K, V>> messages) {
+        for (MessageBase<K, V> message : messages) {
             try {
                 sendMessage(message);
             } catch (MetamacException e) {
@@ -20,9 +20,9 @@ abstract public class ProducerBase<K, V> {
         }
     }
 
-    public abstract void sendMessage(MessageBase<V> m, String topic) throws MetamacException;
+    public abstract void sendMessage(MessageBase<K, V> m, String topic) throws MetamacException;
 
-    public void sendMessage(MessageBase<V> m) throws MetamacException {
+    public void sendMessage(MessageBase<K, V> m) throws MetamacException {
         sendMessage(m, null);
     }
 

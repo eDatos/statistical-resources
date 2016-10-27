@@ -12,6 +12,6 @@ public abstract class StreamMessagingService<K, V> {
     protected StreamMessagingService() {
     }
 
-    public abstract void sendMessage(V message, String topic) throws MetamacException;
+    public abstract void sendMessage(K key, Object message, String topic) throws MetamacException;
 
 }

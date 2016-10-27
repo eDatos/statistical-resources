@@ -7,8 +7,6 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersi
 import org.siemac.metamac.statistical.resources.core.dataset.mapper.DatasetDto2DoMapper;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.core.stream.enume.KafkaTopics;
-import org.siemac.metamac.statistical.resources.core.stream.messages.DatasetVersionAvro;
-import org.siemac.metamac.statistical.resources.core.stream.messages.mappers.AvroMapperUtils;
 import org.siemac.metamac.statistical.resources.core.stream.serviceapi.StreamMessagingService;
 import org.siemac.metamac.statistical.resources.core.stream.serviceapi.StreamMessagingServiceFacade;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,11 +26,12 @@ public class StreamMessagingKafkaServiceFacadeImpl implements StreamMessagingSer
 
     @Override
     public void sendNewDatasetVersionPublished(DatasetVersionDto datasetVersionDto) throws MetamacException {
-        DatasetVersion dv;
+        DatasetVersion datasetVersion;
         try {
-            dv = datasetDto2DoMapper.datasetVersionDtoToDo(datasetVersionDto);
-            DatasetVersionAvro message = (DatasetVersionAvro) AvroMapperUtils.do2Avro(dv);
-            messagingService.sendMessage(message, KafkaTopics.NEW_PUBLISHED_DATASET_VERSION.getTopic());
+            datasetVersion = datasetDto2DoMapper.datasetVersionDtoToDo(datasetVersionDto);
+            // TODO añadir clave única para los mensajes
+            String key = null;
+            messagingService.sendMessage(key, datasetVersion, KafkaTopics.NEW_PUBLISHED_DATASET_VERSION.getTopic());
         } catch (MetamacException e) {
             throw new MetamacException(e, CommonServiceExceptionType.METADATA_UNEXPECTED);
         }

@@ -4,9 +4,9 @@ import java.util.Properties;
 
 import org.apache.avro.specific.SpecificRecordBase;
 import org.apache.kafka.clients.producer.ProducerConfig;
-import org.siemac.metamac.core.common.exception.CommonServiceExceptionType;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.conf.StatisticalResourcesConfiguration;
+import org.siemac.metamac.statistical.resources.core.stream.messages.mappers.AvroMapperUtils;
 import org.siemac.metamac.statistical.resources.core.stream.serviceapi.StreamMessagingService;
 import org.siemac.metamac.statistical.resources.web.server.stream.AvroMessage;
 import org.siemac.metamac.statistical.resources.web.server.stream.KafkaCustomProducer;
@@ -47,14 +47,13 @@ public class StreamMessagingServiceKafkaImpl<K, V extends SpecificRecordBase> ex
         this.statisticalResourcesConfig = statisticalResourcesConfig;
     }
 
-    protected ProducerBase<K, V> createProducer() {
+    protected ProducerBase<K, V> createProducer() throws MetamacException {
         if (null == producer) {
             setProps(null);
             try {
                 producer = new KafkaCustomProducer<>(props);
             } catch (MetamacException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+                throw new MetamacException(e.getCause(), e.getExceptionItems());
             }
         }
         return producer;
@@ -75,8 +74,9 @@ public class StreamMessagingServiceKafkaImpl<K, V extends SpecificRecordBase> ex
     }
 
     @Override
-    public void sendMessage(V message, String topic) throws MetamacException {
-        MessageBase<V> m = new AvroMessage<V>(message);
+    public void sendMessage(K key, Object message, String topic) throws MetamacException {
+        V avroMessage = (V) AvroMapperUtils.do2Avro(message);
+        MessageBase<K, V> m = new AvroMessage<K, V>(key, avroMessage);
 
         // Lazy initialitation
         createProducer();
@@ -84,7 +84,7 @@ public class StreamMessagingServiceKafkaImpl<K, V extends SpecificRecordBase> ex
         try {
             producer.sendMessage(m, topic);
         } catch (MetamacException e) {
-            throw new MetamacException(e, CommonServiceExceptionType.METADATA_INCORRECT);
+            throw new MetamacException(e.getCause(), e.getExceptionItems());
         }
 
     }
