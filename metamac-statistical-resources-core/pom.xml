@@ -18,6 +18,12 @@
     <dependencies>
         <!-- METAMAC -->
         <dependency>
+            <groupId>org.siemac.metamac.metamac-statistical-resources</groupId>
+            <artifactId>metamac-statistical-resources-kafka</artifactId>
+            <version>${project.version}</version>
+            <classifier>client</classifier>
+        </dependency>
+        <dependency>
             <groupId>org.siemac.metamac.metamac-sso</groupId>
             <artifactId>metamac-sso-client</artifactId>
             <version>${metamac-sso.version}</version>
@@ -525,48 +531,6 @@
                 </executions>
             </plugin>
 
-            <!-- Confluent - Avro generate classes -->
-            <plugin>
-                <groupId>org.apache.avro</groupId>
-                <artifactId>avro-maven-plugin</artifactId>
-                <version>1.8.1</version>
-                <executions>
-                    <execution>
-                        <id>schemas</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>schema</goal>
-                        </goals>
-                        <configuration>
-                            <!-- It's necessary to import the classes to resolve schema dependencies -->
-                            <imports>
-                                <import>${project.basedir}/src/main/resources/avro-schemas/datetime.avsc</import>
-                                <import>${project.basedir}/src/main/resources/avro-schemas/international-string.avsc</import>
-                                <import>${project.basedir}/src/main/resources/avro-schemas/statistic-officiality.avsc</import>
-                                <import>${project.basedir}/src/main/resources/avro-schemas/temporal-code.avsc</import>
-                                <import>${project.basedir}/src/main/resources/avro-schemas/attribute-value.avsc</import>
-                                <import>${project.basedir}/src/main/resources/avro-schemas/code-dimension.avsc</import>
-                                <import>${project.basedir}/src/main/resources/avro-schemas/dimension-representation-mapping.avsc</import>
-                                <import>${project.basedir}/src/main/resources/avro-schemas/related-resource.avsc</import>
-                                <import>${project.basedir}/src/main/resources/avro-schemas/external-item.avsc</import>
-                                <import>${project.basedir}/src/main/resources/avro-schemas/identifiable-statistical-resource.avsc</import>
-                                <import>${project.basedir}/src/main/resources/avro-schemas/nameable-statistical-resource.avsc</import>
-                                <import>${project.basedir}/src/main/resources/avro-schemas/versionable-statistical-resource.avsc</import>
-                                <import>${project.basedir}/src/main/resources/avro-schemas/lifecycle-statistical-resource.avsc</import>
-                                <import>${project.basedir}/src/main/resources/avro-schemas/siemac-metadata-statistical-resource.avsc</import>
-                                <import>${project.basedir}/src/main/resources/avro-schemas/categorisation.avsc</import>
-                                <import>${project.basedir}/src/main/resources/avro-schemas/datasource.avsc</import>
-                                <import>${project.basedir}/src/main/resources/avro-schemas/dataset.avsc</import>
-                            </imports>
-                            <sourceDirectory>${project.basedir}/src/main/resources/avro-schemas/</sourceDirectory>
-                            <outputDirectory>${project.basedir}/target/generated-sources/avro/</outputDirectory>
-                            <stringType>String</stringType>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            
-            
         </plugins>
     </build>
 </project>
