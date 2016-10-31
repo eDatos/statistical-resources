@@ -99,6 +99,7 @@ import org.siemac.metamac.statistical.resources.core.security.QueriesSecurityUti
 import org.siemac.metamac.statistical.resources.core.security.shared.SharedDatasetsSecurityUtils;
 import org.siemac.metamac.statistical.resources.core.security.shared.SharedPublicationsSecurityUtils;
 import org.siemac.metamac.statistical.resources.core.security.shared.SharedQueriesSecurityUtils;
+import org.siemac.metamac.statistical.resources.core.stream.serviceapi.StreamMessagingServiceFacade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -200,6 +201,9 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     private PublicationVersionRepository                             publicationVersionRepository;
     @Autowired
     private QueryVersionRepository                                   queryVersionRepository;
+
+    @Autowired
+    private StreamMessagingServiceFacade                             streamMessagingServiceFacade;
 
     public StatisticalResourcesServiceFacadeImpl() {
     }
@@ -920,6 +924,9 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         datasetVersion = changeDatasetVersionValidFromAndSave(datasetVersionUrn, new DateTime());
 
         datasetVersion = datasetLifecycleService.sendToPublished(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getUrn());
+
+        // Send stream message to stream messagin service (like Apache Kafka)
+        streamMessagingServiceFacade.sendNewDatasetVersionPublished(datasetVersion);
 
         // Transform
         datasetVersionDto = datasetDo2DtoMapper.datasetVersionDoToDto(ctx, datasetVersion);

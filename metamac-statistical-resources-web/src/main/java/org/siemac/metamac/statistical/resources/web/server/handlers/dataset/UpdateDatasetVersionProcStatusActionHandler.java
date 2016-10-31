@@ -78,9 +78,6 @@ public class UpdateDatasetVersionProcStatusActionHandler extends UpdateResourceP
                 return new UpdateDatasetVersionProcStatusResult.Builder(datasetVersionDto).notificationException(e).build();
             }
 
-            // TODO ELiminar esto:
-            pruebasKafkaProducer(datasetVersionDto);
-
             return new UpdateDatasetVersionProcStatusResult(datasetVersionDto);
 
         } catch (MetamacException e) {
@@ -88,8 +85,4 @@ public class UpdateDatasetVersionProcStatusActionHandler extends UpdateResourceP
         }
     }
 
-    // TODO Eliminar este método, no va a producción
-    private void pruebasKafkaProducer(DatasetVersionDto datasetVersionDto) throws MetamacException {
-        streamMessagingFacade.sendNewDatasetVersionPublished(datasetVersionDto);
-    }
 }

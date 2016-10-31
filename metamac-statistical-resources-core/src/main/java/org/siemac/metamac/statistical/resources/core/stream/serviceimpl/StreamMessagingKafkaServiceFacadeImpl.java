@@ -5,7 +5,6 @@ import org.siemac.metamac.core.common.exception.CommonServiceExceptionType;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.mapper.DatasetDto2DoMapper;
-import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.core.stream.enume.KafkaTopics;
 import org.siemac.metamac.statistical.resources.core.stream.serviceapi.StreamMessagingService;
 import org.siemac.metamac.statistical.resources.core.stream.serviceapi.StreamMessagingServiceFacade;
@@ -25,15 +24,18 @@ public class StreamMessagingKafkaServiceFacadeImpl implements StreamMessagingSer
     }
 
     @Override
-    public void sendNewDatasetVersionPublished(DatasetVersionDto datasetVersionDto) throws MetamacException {
-        DatasetVersion datasetVersion;
+    public void sendNewDatasetVersionPublished(DatasetVersion datasetVersion) throws MetamacException {
         try {
-            datasetVersion = datasetDto2DoMapper.datasetVersionDtoToDo(datasetVersionDto);
-            // TODO añadir clave única para los mensajes
-            String key = null;
-            messagingService.sendMessage(key, datasetVersion, KafkaTopics.NEW_PUBLISHED_DATASET_VERSION.getTopic());
+            KafkaTopics topic = KafkaTopics.NEW_PUBLISHED_DATASET_VERSION;
+            String key = generateUniqueMessageKeyForMessage(datasetVersion, topic);
+            messagingService.sendMessage(key, datasetVersion, topic.getTopic());
         } catch (MetamacException e) {
             throw new MetamacException(e, CommonServiceExceptionType.METADATA_UNEXPECTED);
         }
+    }
+
+    protected String generateUniqueMessageKeyForMessage(DatasetVersion datasetVersion, KafkaTopics topic) {
+        // TODO añadir clave única para los mensajes
+        return "TODO UNIQUE KEY";
     }
 }
