@@ -14,9 +14,7 @@ import org.siemac.metamac.core.common.criteria.utils.CriteriaUtils;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatisticalResourceRepository;
 import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataStatisticalResourceRepository;
-import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResourceResult;
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
-import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersionProperties;
@@ -125,6 +123,7 @@ public class PublicationVersionRepositoryImpl extends PublicationVersionReposito
                         .or()
                         .withProperty(CriteriaUtils.getDatetimeLeafPropertyEmbedded(PublicationVersionProperties.siemacMetadataStatisticalResource().validTo(), PublicationVersion.class)).greaterThan(now)
                     .rbrace()
+                .orderBy(PublicationVersionProperties.siemacMetadataStatisticalResource().createdDate()).descending()
                 .build();
         // @formatter:on
 
@@ -134,8 +133,8 @@ public class PublicationVersionRepositoryImpl extends PublicationVersionReposito
         PagedResult<PublicationVersion> result = findByCondition(conditions, paging);
 
         // Check for unique result and return
-        if (result.getRowCount() != 0) {
-            return result.getValues().get(0);
+        if (result.getRowCount() > 0) {
+            return result.getValues().get(result.getRowCount() - 1);
         } else {
             return null;
         }
