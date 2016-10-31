@@ -125,8 +125,6 @@ public class DatasetVersionRepositoryImpl extends DatasetVersionRepositoryBase {
             .and()
                 .lbrace()
                     .withProperty(CriteriaUtils.getDatetimeLeafPropertyEmbedded(DatasetVersionProperties.siemacMetadataStatisticalResource().validTo(), DatasetVersion.class)).isNull()
-                    .or()
-                    .withProperty(CriteriaUtils.getDatetimeLeafPropertyEmbedded(DatasetVersionProperties.siemacMetadataStatisticalResource().validTo(), DatasetVersion.class)).greaterThan(now)
                 .rbrace()
             .distinctRoot().build();
         // @formatter:on
