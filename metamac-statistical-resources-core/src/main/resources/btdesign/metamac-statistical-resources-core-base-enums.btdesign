@@ -71,5 +71,14 @@ Application StatisticalResourcesEnums {
     		DATASOURCE,
     		CATEGORISATION
     	}
+    	
+    	enum StreamMessageStatusEnum {
+    	   NONE,
+    	   PENDING,
+    	   SENT,
+    	   RETRIED_AND_FAILED,
+    	   FAILED,
+    	   DISCARDED
+	   }
     }
 }

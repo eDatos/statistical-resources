@@ -109,6 +109,8 @@ Application BaseStatisticalResources {
 			DateTimeTZ publicationDate nullable;
 			String publicationUser nullable;
 			Boolean lastVersion nullable;
+			
+			- @StreamMessageStatusEnum streamMsgStatus nullable;
 						
 			- @RelatedResource replacesVersion cascade="all" databaseColumn="REPLACES_VERSION_FK" nullable;
 			

@@ -68,6 +68,7 @@ import org.siemac.metamac.statistical.resources.core.dto.publication.Publication
 import org.siemac.metamac.statistical.resources.core.dto.query.CodeItemDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionBaseDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionDto;
+import org.siemac.metamac.statistical.resources.core.enume.domain.StreamMessageStatusEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.invocation.service.SrmRestInternalService;
@@ -926,17 +927,24 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         datasetVersion = datasetLifecycleService.sendToPublished(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getUrn());
 
         // Send stream message to stream messagin service (like Apache Kafka)
-        try {
-            streamMessagingServiceFacade.sendNewDatasetVersionPublished(datasetVersion);
-        } catch (MetamacException e) {
-            throw new MetamacException(ServiceExceptionType.UNABLE_TO_SEND_STREAM_MESSAGING_TO_STREAM_MESSAGING_SERVER);
-        }
+        sendPublishedMessageToStreamMessagingService(datasetVersion);
 
         // Transform
         datasetVersionDto = datasetDo2DtoMapper.datasetVersionDoToDto(ctx, datasetVersion);
 
         return datasetVersionDto;
     }
+
+    protected void sendPublishedMessageToStreamMessagingService(DatasetVersion datasetVersion) throws MetamacException {
+        try {
+            streamMessagingServiceFacade.sendNewDatasetVersionPublished(datasetVersion);
+        } catch (MetamacException e) {
+            streamMessagingServiceFacade.updateMessageStatus(datasetVersion, StreamMessageStatusEnum.FAILED);
+            throw new MetamacException(ServiceExceptionType.UNABLE_TO_SEND_STREAM_MESSAGING_TO_STREAM_MESSAGING_SERVER);
+        }
+    }
+
+
 
     @Override
     public DatasetVersionBaseDto publishDatasetVersion(ServiceContext ctx, DatasetVersionBaseDto datasetVersionDto) throws MetamacException {
@@ -959,9 +967,9 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         return datasetVersionDto;
     }
 
-    
 
-    
+
+
     private DatasetVersion changeDatasetVersionValidFromAndSave(String urn, DateTime validFrom) throws MetamacException {
         DatasetVersion datasetVersion = datasetVersionRepository.retrieveByUrn(urn);
         datasetVersion.getSiemacMetadataStatisticalResource().setValidFrom(validFrom);
@@ -1552,7 +1560,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         return publicationVersionDto;
     }
 
-    
+
 
 
     private PublicationVersion changePublicationVersionValidFromAndSave(String urn, DateTime validFrom) throws MetamacException {
@@ -1561,7 +1569,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         return publicationVersionRepository.save(publicationVersion);
     }
 
-    
+
     @Override
     public PublicationVersionDto versioningPublicationVersion(ServiceContext ctx, PublicationVersionDto publicationVersionDto, VersionTypeEnum versionType) throws MetamacException {
         // Security

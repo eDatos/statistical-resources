@@ -111,6 +111,8 @@ public class BaseDo2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Base
         target.setReplacesVersion(relatedResourceDoToDto(source.getReplacesVersion()));
 
         target.setMaintainer(externalItemDoToDto(source.getMaintainer()));
+
+        target.setStreamMsgStatus(source.getStreamMsgStatus());
     }
 
     @Override

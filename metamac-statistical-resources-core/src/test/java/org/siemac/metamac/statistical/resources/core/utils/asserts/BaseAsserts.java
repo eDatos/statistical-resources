@@ -195,6 +195,8 @@ public class BaseAsserts extends CommonAsserts {
 
         assertEqualsExternalItem(expected.getMaintainer(), actual.getMaintainer());
 
+        assertEquals(expected.getStreamMsgStatus(), actual.getStreamMsgStatus());
+
         assertEqualsVersionableStatisticalResource(expected, actual);
     }
 
