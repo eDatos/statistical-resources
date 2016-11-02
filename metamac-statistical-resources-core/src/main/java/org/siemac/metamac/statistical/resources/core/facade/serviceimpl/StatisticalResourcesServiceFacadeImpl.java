@@ -926,7 +926,11 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         datasetVersion = datasetLifecycleService.sendToPublished(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getUrn());
 
         // Send stream message to stream messagin service (like Apache Kafka)
-        streamMessagingServiceFacade.sendNewDatasetVersionPublished(datasetVersion);
+        try {
+            streamMessagingServiceFacade.sendNewDatasetVersionPublished(datasetVersion);
+        } catch (MetamacException e) {
+            throw new MetamacException(ServiceExceptionType.UNABLE_TO_SEND_STREAM_MESSAGING_TO_STREAM_MESSAGING_SERVER);
+        }
 
         // Transform
         datasetVersionDto = datasetDo2DtoMapper.datasetVersionDoToDto(ctx, datasetVersion);
