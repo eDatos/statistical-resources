@@ -159,8 +159,8 @@ public class PublicationVersionRepositoryTest extends StatisticalResourcesBaseTe
         assertEqualsPublicationVersion(notVisiblePublication, resource.getPublicationVersion());
     }
 
+    @Override
     @Test
-
     @MetamacMock({PUBLICATION_VERSION_41_PUB_NOT_VISIBLE_REPLACES_PUB_VERSION_42_NAME})
     public void testRetrieveIsReplacedByOnlyLastPublished() throws Exception {
         PublicationVersion publishedPublication = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_42_PUB_IS_REPLACED_BY_PUB_VERSION_41_NAME);
@@ -168,6 +168,11 @@ public class PublicationVersionRepositoryTest extends StatisticalResourcesBaseTe
         RelatedResource resource = publishedPublication.getSiemacMetadataStatisticalResource().getIsReplacedBy();
         assertNotNull(resource);
         assertThat(resource.getPublicationVersion().getLifeCycleStatisticalResource().getProcStatus(), is(not(equalTo(ProcStatusEnum.PUBLISHED))));
+    }
+
+    @Override
+    public void testRetrieveIsReplacedBy() throws Exception {
+
     }
 
 }

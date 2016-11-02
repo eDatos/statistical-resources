@@ -18,6 +18,7 @@ import org.siemac.metamac.core.common.criteria.utils.CriteriaUtils;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatisticalResourceRepository;
 import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataStatisticalResourceRepository;
+import org.siemac.metamac.statistical.resources.core.base.domain.utils.RelatedResourceResultUtils;
 import org.siemac.metamac.statistical.resources.core.base.domain.utils.RepositoryUtils;
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResourceResult;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
@@ -376,5 +377,48 @@ public class DatasetVersionRepositoryImpl extends DatasetVersionRepositoryBase {
         List<Object> rows = query.getResultList();
         List<RelatedResourceResult> resources = getRelatedResourceResultsFromRows(rows, TypeRelatedResourceEnum.PUBLICATION_VERSION);
         return resources;
+    }
+
+
+    @Override
+    public RelatedResourceResult retrieveIsReplacedByVersionOnlyLastPublished(DatasetVersion datasetVersion) throws MetamacException {
+        DatasetVersion next = datasetVersion;
+        DatasetVersion replacing = null;
+
+        while (next != null && next.getLifeCycleStatisticalResource().getIsReplacedByVersion() != null) {
+            next = next.getLifeCycleStatisticalResource().getIsReplacedByVersion().getDatasetVersion();
+            if (next.getLifeCycleStatisticalResource().getProcStatus() == ProcStatusEnum.PUBLISHED) {
+                replacing = next;
+            }
+        }
+        RelatedResourceResult result = RelatedResourceResultUtils.from(replacing);
+        return result;
+    }
+
+    @Override
+    public RelatedResourceResult retrieveIsReplacedByOnlyLastPublished(DatasetVersion datasetVersion) throws MetamacException {
+        DatasetVersion next = datasetVersion;
+        DatasetVersion replacing = null;
+
+        while (next != null && next.getSiemacMetadataStatisticalResource().getIsReplacedBy() != null) {
+            next = next.getSiemacMetadataStatisticalResource().getIsReplacedBy().getDatasetVersion();
+            if (next.getLifeCycleStatisticalResource().getProcStatus() == ProcStatusEnum.PUBLISHED) {
+                replacing = next;
+            }
+        }
+        RelatedResourceResult result = RelatedResourceResultUtils.from(replacing);
+        return result;
+    }
+
+    @Override
+    public RelatedResourceResult retrieveIsReplacedByVersion(DatasetVersion datasetVersion) throws MetamacException {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public RelatedResourceResult retrieveIsReplacedBy(DatasetVersion datasetVersion) throws MetamacException {
+        // TODO Auto-generated method stub
+        return null;
     }
 }
