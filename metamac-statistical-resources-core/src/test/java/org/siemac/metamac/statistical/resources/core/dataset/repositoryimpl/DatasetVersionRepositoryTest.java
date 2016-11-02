@@ -722,4 +722,22 @@ public class DatasetVersionRepositoryTest extends StatisticalResourcesBaseTest i
         }
     }
 
+    @Override
+    public void testRetrieveIsReplacedByVersionOnlyLastPublished() throws Exception {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void testRetrieveIsReplacedByVersion() throws Exception {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void testRetrieveIsReplacedBy() throws Exception {
+        // TODO Auto-generated method stub
+        
+    }
+
 }

@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.siemac.metamac.statistical.resources.core.base.domain.HasSiemacMetadata;
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResourceResult;
 import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
 
@@ -46,6 +47,24 @@ public class RelatedResourceResultUtils {
         }
         resource.getTitle().put((String) cols[6], (String) cols[7]);
         resource.setType(type);
+    }
+
+
+    public static RelatedResourceResult from(HasSiemacMetadata siemacMetadata) {
+        RelatedResourceResult resource = new RelatedResourceResult();
+        resource.setCode(siemacMetadata.getSiemacMetadataStatisticalResource().getCode());
+        resource.setUrn(siemacMetadata.getSiemacMetadataStatisticalResource().getUrn());
+        resource.setStatisticalOperationCode(siemacMetadata.getLifeCycleStatisticalResource().getStatisticalOperation().getCode());
+        resource.setStatisticalOperationUrn(siemacMetadata.getSiemacMetadataStatisticalResource().getStatisticalOperation().getUrn());
+        resource.setMaintainerNestedCode(siemacMetadata.getSiemacMetadataStatisticalResource().getMaintainer().getCode());
+        resource.setVersion(siemacMetadata.getSiemacMetadataStatisticalResource().getVersionLogic());
+        if (resource.getTitle() == null) {
+            resource.setTitle(new HashMap<String, String>());
+        }
+        for (String locale : siemacMetadata.getSiemacMetadataStatisticalResource().getTitle().getLocales()) {
+            resource.getTitle().put(locale, siemacMetadata.getSiemacMetadataStatisticalResource().getTitle().getLocalisedLabel(locale));
+        }
+        return resource;
     }
 
 }
