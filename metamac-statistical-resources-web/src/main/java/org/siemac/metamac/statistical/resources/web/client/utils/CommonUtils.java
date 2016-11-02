@@ -33,6 +33,7 @@ import org.siemac.metamac.statistical.resources.core.enume.dataset.domain.Attrib
 import org.siemac.metamac.statistical.resources.core.enume.domain.NextVersionTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
+import org.siemac.metamac.statistical.resources.core.enume.domain.StreamMessageStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.VersionRationaleTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryTypeEnum;
@@ -59,7 +60,7 @@ public class CommonUtils {
 
     /**
      * Returns the {@link KeyValueDto} of the selected dimension (all the {@link KeyPartDto} in a {@link KeyValueDto} belongs to the same dimension).
-     * 
+     *
      * @param keyValueDto
      * @return
      */
@@ -82,7 +83,7 @@ public class CommonUtils {
 
     /**
      * Returns the {@link KeyPartTypeEnum} of the {@link KeyValueDto}. All the {@link KeyPartDto} of a {@link KeyValueDto} have the save type.
-     * 
+     *
      * @param keyValueDto
      * @return
      */
@@ -176,6 +177,21 @@ public class CommonUtils {
             }
         }
         return null;
+    }
+
+    // -----------------------------------------------------------------------------------------
+    // STREAM MESSAGE STATUS
+    // -----------------------------------------------------------------------------------------
+    public static String getStreamMsgStatusName(LifeCycleStatisticalResourceDto lifeCycleStatisticalResourceDto) {
+        return lifeCycleStatisticalResourceDto != null ? getStreamMsgStatusName(lifeCycleStatisticalResourceDto.getStreamMsgStatus()) : null;
+    }
+
+    public static String getStreamMsgStatusName(StreamMessageStatusEnum streamMessageStatusEnum) {
+        String name = null;
+        if (streamMessageStatusEnum != null) {
+            name = getCoreMessages().getString(getCoreMessages().statisticalResourceStreamMsgStatus() + streamMessageStatusEnum.getName());
+        }
+        return name;
     }
 
     // -----------------------------------------------------------------------------------------
