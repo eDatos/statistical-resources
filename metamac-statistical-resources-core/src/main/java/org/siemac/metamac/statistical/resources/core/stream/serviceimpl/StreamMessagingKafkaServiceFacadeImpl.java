@@ -29,8 +29,7 @@ public class StreamMessagingKafkaServiceFacadeImpl implements StreamMessagingSer
         try {
             updateMessageStatus(datasetVersion, StreamMessageStatusEnum.PENDING);
             KafkaTopics topic = KafkaTopics.DATASET_PUBLICATIONS;
-            String key = generateUniqueMessageKeyForMessage(datasetVersion, topic);
-            messagingService.sendMessage(key, datasetVersion, topic.getTopic());
+            messagingService.sendMessage(datasetVersion, topic.getTopic());
             updateMessageStatus(datasetVersion, StreamMessageStatusEnum.SENT);
         } catch (MetamacException e) {
             throw new MetamacException(e, CommonServiceExceptionType.METADATA_UNEXPECTED);

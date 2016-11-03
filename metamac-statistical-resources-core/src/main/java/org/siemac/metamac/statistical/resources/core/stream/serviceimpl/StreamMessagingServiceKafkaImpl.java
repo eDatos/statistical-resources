@@ -83,9 +83,9 @@ public class StreamMessagingServiceKafkaImpl<K, V extends SpecificRecordBase> ex
     }
 
     @Override
-    public void sendMessage(K key, Object message, String topic) throws MetamacException {
+    public void sendMessage(Object message, String topic) throws MetamacException {
         V avroMessage = (V) AvroMapperUtils.do2Avro(message);
-        MessageBase<K, V> m = new AvroMessage<K, V>(key, avroMessage);
+        MessageBase<K, V> m = new AvroMessage<K, V>(avroMessage);
 
         // Lazy initialitation
         createProducer();

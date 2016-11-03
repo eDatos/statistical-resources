@@ -6,11 +6,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import org.apache.avro.specific.SpecificRecordBase;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.kafka.clients.producer.RecordMetadata;
 import org.apache.kafka.common.errors.SerializationException;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionBuilder;
@@ -21,6 +26,7 @@ import io.confluent.kafka.serializers.KafkaAvroSerializer;
 
 public class KafkaCustomProducer<K, V extends SpecificRecordBase> extends ProducerBase<K, V> {
 
+    private static final int                   KAFKA_TIMEOUT      = 500;
     protected final static String[]            MANDATORY_SETTINGS = {
             KafkaAvroDeserializerConfig.SCHEMA_REGISTRY_URL_CONFIG,
             ProducerConfig.BOOTSTRAP_SERVERS_CONFIG};
@@ -52,11 +58,12 @@ public class KafkaCustomProducer<K, V extends SpecificRecordBase> extends Produc
     public void sendMessage(MessageBase<K, V> message, String topic) throws MetamacException {
         checkTopicIsValid(topic);
         ProducerRecord<K, V> record = new ProducerRecord<K, V>(topic, message.getKey(), message.getContent());
+        RecordMetadata result = null;
         try {
-            producer.send(record);
-        } catch (SerializationException e) {
-            throw new MetamacException(e.getCause(), null, null);
-        } finally {
+            Future<RecordMetadata> sendResult = producer.send(record);
+            result = sendResult.get(KAFKA_TIMEOUT, TimeUnit.MILLISECONDS);
+        } catch (SerializationException | InterruptedException | ExecutionException | TimeoutException e) {
+            throw MetamacExceptionBuilder.builder().withCause(e).build();
         }
     }
 
