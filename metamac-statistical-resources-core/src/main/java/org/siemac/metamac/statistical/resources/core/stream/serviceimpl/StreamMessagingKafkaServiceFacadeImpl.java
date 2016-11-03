@@ -37,6 +37,7 @@ public class StreamMessagingKafkaServiceFacadeImpl implements StreamMessagingSer
         }
     }
 
+
     protected String generateUniqueMessageKeyForMessage(DatasetVersion datasetVersion, KafkaTopics topic) {
         // TODO añadir clave única para los mensajes
         return "TODO UNIQUE KEY";
@@ -44,6 +45,8 @@ public class StreamMessagingKafkaServiceFacadeImpl implements StreamMessagingSer
 
     @Override
     public void updateMessageStatus(DatasetVersion datasetVersion, StreamMessageStatusEnum status) {
-        datasetVersion.getLifeCycleStatisticalResource().setStreamMsgStatus(status);
+        if (datasetVersion != null) {
+            datasetVersion.getLifeCycleStatisticalResource().setStreamMsgStatus(status);
+        }
     }
 }
