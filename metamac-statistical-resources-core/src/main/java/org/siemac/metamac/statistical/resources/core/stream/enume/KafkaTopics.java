@@ -2,7 +2,7 @@ package org.siemac.metamac.statistical.resources.core.stream.enume;
 
 
 public enum KafkaTopics {
-    NEW_PUBLISHED_DATASET_VERSION("NEW_PUBLISHED_DATASET_VERSION");
+    DATASET_PUBLICATIONS("DATASET_PUBLICATIONS");
 
     private String topic;
 

@@ -73,12 +73,9 @@ Application StatisticalResourcesEnums {
     	}
     	
     	enum StreamMessageStatusEnum {
-    	   NONE,
     	   PENDING,
     	   SENT,
-    	   RETRIED_AND_FAILED,
-    	   FAILED,
-    	   DISCARDED
+    	   FAILED
 	   }
     }
 }

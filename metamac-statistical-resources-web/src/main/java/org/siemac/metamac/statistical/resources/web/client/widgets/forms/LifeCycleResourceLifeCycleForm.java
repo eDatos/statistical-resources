@@ -18,7 +18,7 @@ public class LifeCycleResourceLifeCycleForm extends NavigationEnabledDynamicForm
         super(getConstants().formLifeCycle());
 
         ViewTextItem procStatus = new ViewTextItem(LifeCycleResourceDS.PROC_STATUS, getConstants().lifeCycleStatisticalResourceProcStatus());
-        ViewTextItem streamMsgStatus = new ViewTextItem(LifeCycleResourceDS.STREAM_MSG_STATUS, getConstants().lifeCycleStatisticalResourceStreamMsgStatus());
+        ViewTextItem streamMsgStatus = new ViewTextItem(LifeCycleResourceDS.PUBLICATION_STREAM_STATUS, getConstants().lifeCycleStatisticalResourceStreamMsgStatus());
         ViewTextItem creationDate = new ViewTextItem(LifeCycleResourceDS.CREATION_DATE, getConstants().lifeCycleStatisticalResourceCreationDate());
         ViewTextItem creationUser = new ViewTextItem(LifeCycleResourceDS.CREATION_USER, getConstants().lifeCycleStatisticalResourceCreationUser());
         ViewTextItem productionValidationDate = new ViewTextItem(LifeCycleResourceDS.PRODUCTION_VALIDATION_DATE, getConstants().lifeCycleStatisticalResourceProductionValidationDate());
@@ -40,7 +40,7 @@ public class LifeCycleResourceLifeCycleForm extends NavigationEnabledDynamicForm
 
     public void setLifeCycleStatisticalResourceDto(LifeCycleStatisticalResourceDto lifeCycleStatisticalResourceDto) {
         setValue(LifeCycleResourceDS.PROC_STATUS, CommonUtils.getProcStatusName(lifeCycleStatisticalResourceDto));
-        setValue(LifeCycleResourceDS.STREAM_MSG_STATUS, CommonUtils.getStreamMsgStatusName(lifeCycleStatisticalResourceDto));
+        setValue(LifeCycleResourceDS.PUBLICATION_STREAM_STATUS, CommonUtils.getPublicationStreamStatusName(lifeCycleStatisticalResourceDto));
         setValue(LifeCycleResourceDS.CREATION_DATE, lifeCycleStatisticalResourceDto.getCreationDate());
         setValue(LifeCycleResourceDS.CREATION_USER, lifeCycleStatisticalResourceDto.getCreationUser());
         setValue(LifeCycleResourceDS.PRODUCTION_VALIDATION_DATE, lifeCycleStatisticalResourceDto.getProductionValidationDate());

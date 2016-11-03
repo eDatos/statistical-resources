@@ -110,7 +110,7 @@ Application BaseStatisticalResources {
 			String publicationUser nullable;
 			Boolean lastVersion nullable;
 			
-			- @StreamMessageStatusEnum streamMsgStatus nullable;
+			- @StreamMessageStatusEnum publicationStreamStatus nullable;
 						
 			- @RelatedResource replacesVersion cascade="all" databaseColumn="REPLACES_VERSION_FK" nullable;
 			

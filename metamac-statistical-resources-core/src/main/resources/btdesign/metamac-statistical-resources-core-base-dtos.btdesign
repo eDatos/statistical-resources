@@ -74,7 +74,7 @@ Application StatisticalResourcesDto {
 			String publicationUser;
 			Boolean lastVersion;
 			
-            - @StreamMessageStatusEnum streamMsgStatus;
+            - @StreamMessageStatusEnum publicationStreamStatus;
 			
 			- @RelatedResourceDto replacesVersion;
 			- @RelatedResourceDto isReplacedByVersion;

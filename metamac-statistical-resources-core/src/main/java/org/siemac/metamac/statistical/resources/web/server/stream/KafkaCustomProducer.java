@@ -61,9 +61,20 @@ public class KafkaCustomProducer<K, V extends SpecificRecordBase> extends Produc
     }
 
     protected void checkTopicIsValid(String topic) throws MetamacException {
-        if (topic == null || topic.isEmpty() || !Arrays.asList(KafkaTopics.values()).contains(topic)) {
+        if (topic == null || topic.isEmpty() || !isAKafkaTopic(topic)) {
             throw new MetamacExceptionBuilder().withMessageParameters("Kafka topic is not valid").build();
         }
+    }
+
+    protected boolean isAKafkaTopic(String topic) {
+        if (topic != null) {
+            for (KafkaTopics t : KafkaTopics.values()) {
+                if (t.getTopic().equals(topic)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     protected Properties checkForMissingProperties(Properties props) throws MetamacException {

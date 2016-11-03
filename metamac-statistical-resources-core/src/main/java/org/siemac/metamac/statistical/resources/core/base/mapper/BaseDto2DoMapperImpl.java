@@ -248,7 +248,7 @@ public class BaseDto2DoMapperImpl extends CommonDto2DoMapperImpl implements Base
             target.setMaintainer(externalItemDtoToDo(source.getMaintainer(), target.getMaintainer(), addParameter(metadataName, ServiceExceptionSingleParameters.MAINTAINER)));
         }
 
-        target.setStreamMsgStatus(source.getStreamMsgStatus());
+        target.setPublicationStreamStatus(source.getPublicationStreamStatus());
 
         // Other attributes are automatic, non modifiable
 

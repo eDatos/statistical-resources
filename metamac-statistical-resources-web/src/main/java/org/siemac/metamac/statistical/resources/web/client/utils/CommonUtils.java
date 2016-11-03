@@ -182,11 +182,11 @@ public class CommonUtils {
     // -----------------------------------------------------------------------------------------
     // STREAM MESSAGE STATUS
     // -----------------------------------------------------------------------------------------
-    public static String getStreamMsgStatusName(LifeCycleStatisticalResourceDto lifeCycleStatisticalResourceDto) {
-        return lifeCycleStatisticalResourceDto != null ? getStreamMsgStatusName(lifeCycleStatisticalResourceDto.getStreamMsgStatus()) : null;
+    public static String getPublicationStreamStatusName(LifeCycleStatisticalResourceDto lifeCycleStatisticalResourceDto) {
+        return lifeCycleStatisticalResourceDto != null ? getPublicationsStreamStatusName(lifeCycleStatisticalResourceDto.getPublicationStreamStatus()) : null;
     }
 
-    public static String getStreamMsgStatusName(StreamMessageStatusEnum streamMessageStatusEnum) {
+    public static String getPublicationsStreamStatusName(StreamMessageStatusEnum streamMessageStatusEnum) {
         String name = null;
         if (streamMessageStatusEnum != null) {
             name = getCoreMessages().getString(getCoreMessages().statisticalResourceStreamMsgStatus() + streamMessageStatusEnum.getName());

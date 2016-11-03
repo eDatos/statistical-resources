@@ -28,7 +28,7 @@ public class StreamMessagingKafkaServiceFacadeImpl implements StreamMessagingSer
     public void sendNewDatasetVersionPublished(DatasetVersion datasetVersion) throws MetamacException {
         try {
             updateMessageStatus(datasetVersion, StreamMessageStatusEnum.PENDING);
-            KafkaTopics topic = KafkaTopics.NEW_PUBLISHED_DATASET_VERSION;
+            KafkaTopics topic = KafkaTopics.DATASET_PUBLICATIONS;
             String key = generateUniqueMessageKeyForMessage(datasetVersion, topic);
             messagingService.sendMessage(key, datasetVersion, topic.getTopic());
             updateMessageStatus(datasetVersion, StreamMessageStatusEnum.SENT);
@@ -39,14 +39,14 @@ public class StreamMessagingKafkaServiceFacadeImpl implements StreamMessagingSer
 
 
     protected String generateUniqueMessageKeyForMessage(DatasetVersion datasetVersion, KafkaTopics topic) {
-        // TODO añadir clave única para los mensajes
-        return "TODO UNIQUE KEY";
+        String uniqueKey = datasetVersion.getLifeCycleStatisticalResource().getUrn();
+        return uniqueKey;
     }
 
     @Override
     public void updateMessageStatus(DatasetVersion datasetVersion, StreamMessageStatusEnum status) {
         if (datasetVersion != null) {
-            datasetVersion.getLifeCycleStatisticalResource().setStreamMsgStatus(status);
+            datasetVersion.getLifeCycleStatisticalResource().setPublicationStreamStatus(status);
         }
     }
 }
