@@ -172,6 +172,7 @@
                                 <import>${project.basedir}/src/main/resources/avro-schemas/categorisation.avsc</import>
                                 <import>${project.basedir}/src/main/resources/avro-schemas/datasource.avsc</import>
                                 <import>${project.basedir}/src/main/resources/avro-schemas/dataset.avsc</import>
+                                <import>${project.basedir}/src/main/resources/avro-schemas/publication.avsc</import>
                             </imports>
                             <sourceDirectory>${project.basedir}/src/main/resources/avro-schemas/</sourceDirectory>
                             <outputDirectory>${project.basedir}/target/generated-sources/avro/</outputDirectory>

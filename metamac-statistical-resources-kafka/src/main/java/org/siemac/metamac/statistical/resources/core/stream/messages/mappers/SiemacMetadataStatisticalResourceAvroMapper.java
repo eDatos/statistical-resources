@@ -17,9 +17,9 @@ public class SiemacMetadataStatisticalResourceAvroMapper {
     public static void fillMetadata(SiemacMetadataStatisticalResourceAvro source, SiemacMetadataStatisticalResource target) throws MetamacException {
         LifecycleStatisticalResourceAvroMapper.fillMetadata(source.getLifecycleStatisticalResource(), target);
         target.setUserModifiedKeywords(source.getUserModifiedKeywords());
-        target.setResourceCreatedDate(DatetimeAvroMapper.avro2Do(source.getResourceCreatedDate()));
-        target.setLastUpdate(DatetimeAvroMapper.avro2Do(source.getLastUpdate()));
-        target.setNewnessUntilDate(DatetimeAvroMapper.avro2Do(source.getNewnessUntilDate()));
+        target.setResourceCreatedDate(DateTimeAvroMapper.avro2Do(source.getResourceCreatedDate()));
+        target.setLastUpdate(DateTimeAvroMapper.avro2Do(source.getLastUpdate()));
+        target.setNewnessUntilDate(DateTimeAvroMapper.avro2Do(source.getNewnessUntilDate()));
         target.setCopyrightedDate(source.getCopyrightedDate());
         target.setLanguage(ExternalItemAvroMapper.avro2Do(source.getLanguage()));
         target.setSubtitle(InternationalStringAvroMapper.avro2Do(source.getSubtitle()));
@@ -65,9 +65,9 @@ public class SiemacMetadataStatisticalResourceAvroMapper {
         SiemacMetadataStatisticalResourceAvro target = SiemacMetadataStatisticalResourceAvro.newBuilder()
                 .setLifecycleStatisticalResource(LifecycleStatisticalResourceAvroMapper.do2Avro(source))
                 .setUserModifiedKeywords(source.getUserModifiedKeywords())
-                .setResourceCreatedDate(DatetimeAvroMapper.do2Avro(source.getResourceCreatedDate()))
-                .setLastUpdate(DatetimeAvroMapper.do2Avro(source.getLastUpdate()))
-                .setNewnessUntilDate(DatetimeAvroMapper.do2Avro(source.getNewnessUntilDate()))
+                .setResourceCreatedDate(DateTimeAvroMapper.do2Avro(source.getResourceCreatedDate()))
+                .setLastUpdate(DateTimeAvroMapper.do2Avro(source.getLastUpdate()))
+                .setNewnessUntilDate(DateTimeAvroMapper.do2Avro(source.getNewnessUntilDate()))
                 .setCopyrightedDate(source.getCopyrightedDate())
                 .setLanguage(ExternalItemAvroMapper.do2Avro(source.getLanguage()))
                 .setSubtitle(InternationalStringAvroMapper.do2Avro(source.getSubtitle()))

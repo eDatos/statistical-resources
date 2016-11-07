@@ -11,6 +11,9 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetRepos
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionRepository;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
+import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationRepository;
+import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
+import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class AvroMapperUtils {
@@ -29,7 +32,13 @@ public class AvroMapperUtils {
     private static DatasetVersionRepository datasetVersionRepository;
 
     @Autowired
+    private static PublicationVersionRepository publicationVersionRepository;
+
+    @Autowired
     private static DatasetRepository        datasetRepository;
+
+    @Autowired
+    private static PublicationRepository        publicationRepository;
 
     protected static DatasetVersion retrieveDatasetVersion(String datasetVersionUrn) throws MetamacException {
         DatasetVersion target = null;
@@ -51,12 +60,31 @@ public class AvroMapperUtils {
         return target;
     }
 
+
+    public static PublicationVersion retrievePublicationVersion(String urn) throws MetamacException {
+        PublicationVersion publicationVersion = null;
+        try {
+            publicationVersion = publicationVersionRepository.retrieveByUrn(urn);
+        } catch (MetamacException e) {
+            throw new MetamacException(ServiceExceptionType.PUBLICATION_VERSION_NOT_FOUND);
+        }
+        return publicationVersion;
+    }
+
     protected static void setDatasetVersionRepository(DatasetVersionRepository repository) {
         AvroMapperUtils.datasetVersionRepository = repository;
     }
 
     protected static void setDatasetRepository(DatasetRepository repository) {
         AvroMapperUtils.datasetRepository = repository;
+    }
+
+    public static void setPublicationVersionRepository(PublicationVersionRepository publicationVersionRepository) {
+        AvroMapperUtils.publicationVersionRepository = publicationVersionRepository;
+    }
+
+    public static void setPublicationRepository(PublicationRepository publicationRepository) {
+        AvroMapperUtils.publicationRepository = publicationRepository;
     }
 
     public static Object avro2Do(SpecificRecord source) throws MetamacException {
@@ -94,5 +122,7 @@ public class AvroMapperUtils {
         avroMapperClazzName.append(MAPPER_CLASS_NAME_ENDING);
         return avroMapperClazzName.toString();
     }
+
+
 
 }

@@ -10,7 +10,7 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 
 
-public class DatetimeAvroMapperTest {
+public class DateTimeAvroMapperTest {
 
     @Test
     public void testDo2Avro() {
@@ -18,7 +18,7 @@ public class DatetimeAvroMapperTest {
         DatetimeAvro expected = DatetimeAvro.newBuilder().setInstant(expectedInstant).build();
         DateTime source = new DateTime(expectedInstant);
 
-        DatetimeAvro actual = DatetimeAvroMapper.do2Avro(source);
+        DatetimeAvro actual = DateTimeAvroMapper.do2Avro(source);
 
         assertThat(actual.getInstant(), is(equalTo(expectedInstant)));
 
@@ -30,7 +30,7 @@ public class DatetimeAvroMapperTest {
         DateTime expected = new DateTime(expectedInstant);
         DatetimeAvro source = DatetimeAvro.newBuilder().setInstant(expectedInstant).build();
 
-        DateTime actual = DatetimeAvroMapper.avro2Do(source);
+        DateTime actual = DateTimeAvroMapper.avro2Do(source);
 
         assertThat(actual.getMillis(), is(equalTo(expected.getMillis())));
     }

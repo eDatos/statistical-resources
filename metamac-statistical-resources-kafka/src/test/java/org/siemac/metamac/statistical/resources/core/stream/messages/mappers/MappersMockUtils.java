@@ -29,6 +29,8 @@ import org.siemac.metamac.statistical.resources.core.enume.domain.NextVersionTyp
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
+import org.siemac.metamac.statistical.resources.core.publication.domain.Publication;
+import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
 import org.siemac.metamac.statistical.resources.core.stream.messages.AttributeValueAvro;
 import org.siemac.metamac.statistical.resources.core.stream.messages.CategorisationAvro;
 import org.siemac.metamac.statistical.resources.core.stream.messages.CodeDimensionAvro;
@@ -42,6 +44,8 @@ import org.siemac.metamac.statistical.resources.core.stream.messages.Internation
 import org.siemac.metamac.statistical.resources.core.stream.messages.InternationalStringItemAvro;
 import org.siemac.metamac.statistical.resources.core.stream.messages.LifecycleStatisticalResourceAvro;
 import org.siemac.metamac.statistical.resources.core.stream.messages.NameableStatisticalResourceAvro;
+import org.siemac.metamac.statistical.resources.core.stream.messages.PublicationAvro;
+import org.siemac.metamac.statistical.resources.core.stream.messages.PublicationVersionAvro;
 import org.siemac.metamac.statistical.resources.core.stream.messages.RelatedResourceAvro;
 import org.siemac.metamac.statistical.resources.core.stream.messages.SiemacMetadataStatisticalResourceAvro;
 import org.siemac.metamac.statistical.resources.core.stream.messages.StatisticOfficialityAvro;
@@ -143,6 +147,12 @@ public class MappersMockUtils {
             case DATASET_VERSION:
                 DatasetVersion datasetVersion = mockDatasetVersion();
                 target.setDatasetVersion(datasetVersion);
+            case PUBLICATION_VERSION:
+                PublicationVersion publicationVersion = new PublicationVersion();
+                publicationVersion.setSiemacMetadataStatisticalResource(new SiemacMetadataStatisticalResource());
+                publicationVersion.getSiemacMetadataStatisticalResource().setUrn(EXPECTED_URN);
+                target.setPublicationVersion(publicationVersion);
+                break;
             default:
                 break;
         }
@@ -200,10 +210,10 @@ public class MappersMockUtils {
         VersionableStatisticalResourceAvro target = VersionableStatisticalResourceAvro.newBuilder()
                 .setNameableStatisticalResource(mockNameableStatisticalResourceAvro())
                 .setNextVersion(NextVersionTypeEnumAvroMapper.do2Avro(EXPECTED_NEXT_VERSION_TYPE))
-                .setNextVersionDate(DatetimeAvroMapper.do2Avro(EXPECTED_FUTURE_DATE))
-                .setValidFrom(DatetimeAvroMapper.do2Avro(EXPECTED_PAST_DATE))
+                .setNextVersionDate(DateTimeAvroMapper.do2Avro(EXPECTED_FUTURE_DATE))
+                .setValidFrom(DateTimeAvroMapper.do2Avro(EXPECTED_PAST_DATE))
                 .setVersionRationale(InternationalStringAvroMapper.do2Avro(mockInternationalString()))
-                .setValidTo(DatetimeAvroMapper.do2Avro(EXPECTED_FUTURE_DATE))
+                .setValidTo(DateTimeAvroMapper.do2Avro(EXPECTED_FUTURE_DATE))
                 .setVersionLogic(EXPECTED_VERSION_LOGIC)
                 .build();
         return target;
@@ -261,15 +271,15 @@ public class MappersMockUtils {
     public static LifecycleStatisticalResourceAvro mockLifeCycleStatisticalResourceAvro(TypeRelatedResourceEnum replacesVersionType) {
         LifecycleStatisticalResourceAvro target = LifecycleStatisticalResourceAvro.newBuilder()
                 .setVersionableStatisticalResource(mockVersionableStatisticalResourceAvro())
-                .setCreationDate(DatetimeAvroMapper.do2Avro(EXPECTED_PAST_DATE))
+                .setCreationDate(DateTimeAvroMapper.do2Avro(EXPECTED_PAST_DATE))
                 .setCreationUser(EXPECTED_USER + "Creation")
-                .setProductionValidationDate(DatetimeAvroMapper.do2Avro(EXPECTED_PAST_DATE))
+                .setProductionValidationDate(DateTimeAvroMapper.do2Avro(EXPECTED_PAST_DATE))
                 .setProductionValidationUser(EXPECTED_USER + "ProductionValidation")
-                .setDiffusionValidationDate(DatetimeAvroMapper.do2Avro(EXPECTED_PAST_DATE))
+                .setDiffusionValidationDate(DateTimeAvroMapper.do2Avro(EXPECTED_PAST_DATE))
                 .setDiffusionValidationUser(EXPECTED_USER + "DiffusionValidation")
-                .setRejectValidationDate(DatetimeAvroMapper.do2Avro(EXPECTED_PAST_DATE))
+                .setRejectValidationDate(DateTimeAvroMapper.do2Avro(EXPECTED_PAST_DATE))
                 .setRejectValidationUser(EXPECTED_USER + "RejectValidation")
-                .setPublicationDate(DatetimeAvroMapper.do2Avro(EXPECTED_PAST_DATE))
+                .setPublicationDate(DateTimeAvroMapper.do2Avro(EXPECTED_PAST_DATE))
                 .setPublicationUser(EXPECTED_USER + "Publication")
                 .setLastVersion(EXPECTED_LAST_VERSION)
                 .setProcStatus(ProcStatusEnumAvroMapper.do2Avro(PRODUCTION_VALIDATION))
@@ -335,7 +345,7 @@ public class MappersMockUtils {
     public static SiemacMetadataStatisticalResourceAvro mockSiemacMetadataStatisticalResourceAvro(TypeRelatedResourceEnum type) {
         List<ExternalItemAvro> listExternalItemAvro = mockListExternalItemAvro();
         SiemacMetadataStatisticalResourceAvro target = SiemacMetadataStatisticalResourceAvro.newBuilder()
-                .setLifecycleStatisticalResource(mockLifeCycleStatisticalResourceAvro(EXPECTED_RELATED_RESOURCE_TYPE))
+                .setLifecycleStatisticalResource(mockLifeCycleStatisticalResourceAvro(type))
                 .setAbstractLogic(mockInternationalStringAvro())
                 .setAccessRights(mockInternationalStringAvro())
                 .setCommonMetadata(mockExternalItemAvro())
@@ -347,13 +357,13 @@ public class MappersMockUtils {
                 .setKeywords(mockInternationalStringAvro())
                 .setLanguage(mockExternalItemAvro())
                 .setLanguages(listExternalItemAvro)
-                .setLastUpdate(DatetimeAvroMapper.do2Avro(EXPECTED_PAST_DATE))
+                .setLastUpdate(DateTimeAvroMapper.do2Avro(EXPECTED_PAST_DATE))
                 .setMediators(listExternalItemAvro)
-                .setNewnessUntilDate(DatetimeAvroMapper.do2Avro(EXPECTED_FUTURE_DATE))
+                .setNewnessUntilDate(DateTimeAvroMapper.do2Avro(EXPECTED_FUTURE_DATE))
                 .setPublisherContributors(listExternalItemAvro)
                 .setPublishers(listExternalItemAvro)
                 .setReplaces(mockRelatedResourceAvro(type))
-                .setResourceCreatedDate(DatetimeAvroMapper.do2Avro(EXPECTED_PAST_DATE))
+                .setResourceCreatedDate(DateTimeAvroMapper.do2Avro(EXPECTED_PAST_DATE))
                 .setStatisticalOperationInstances(listExternalItemAvro)
                 .setSubtitle(mockInternationalStringAvro())
                 .setTitleAlternative(mockInternationalStringAvro())
@@ -469,7 +479,7 @@ public class MappersMockUtils {
     public static DatasourceAvro mockDatasourceAvro() {
         DatasourceAvro target = DatasourceAvro.newBuilder()
                 .setDatasetVersionUrn(EXPECTED_URN)
-                .setDateNextUpdate(DatetimeAvroMapper.do2Avro(EXPECTED_FUTURE_DATE))
+                .setDateNextUpdate(DateTimeAvroMapper.do2Avro(EXPECTED_FUTURE_DATE))
                 .setFileName(EXPECTED_FILENAME)
                 .setIdentifiableStatisticalResource(mockIdentifiableStatisticalResourceAvro())
                 .setVersion(EXPECTED_VERSION)
@@ -549,13 +559,13 @@ public class MappersMockUtils {
                 .setDatasetVersionUrn(EXPECTED_URN)
                 .setCategory(mockExternalItemAvro())
                 .setCreatedBy(EXPECTED_USER)
-                .setCreatedDate(DatetimeAvroMapper.do2Avro(EXPECTED_PAST_DATE))
+                .setCreatedDate(DateTimeAvroMapper.do2Avro(EXPECTED_PAST_DATE))
                 .setVersion(EXPECTED_VERSION)
-                .setLastUpdated(DatetimeAvroMapper.do2Avro(EXPECTED_PAST_DATE))
+                .setLastUpdated(DateTimeAvroMapper.do2Avro(EXPECTED_PAST_DATE))
                 .setLastUpdatedBy(EXPECTED_USER)
                 .setMaintainer(mockExternalItemAvro())
-                .setValidFromEffective(DatetimeAvroMapper.do2Avro(EXPECTED_PAST_DATE))
-                .setValidToEffective(DatetimeAvroMapper.do2Avro(EXPECTED_FUTURE_DATE))
+                .setValidFromEffective(DateTimeAvroMapper.do2Avro(EXPECTED_PAST_DATE))
+                .setValidToEffective(DateTimeAvroMapper.do2Avro(EXPECTED_FUTURE_DATE))
                 .setVersionableStatisticalResource(mockVersionableStatisticalResourceAvro())
                 .build();
         return target;
@@ -650,12 +660,12 @@ public class MappersMockUtils {
         DatasetVersionAvro target = DatasetVersionAvro.newBuilder()
                 .setSiemacMetadataStatisticalResource(
                         SiemacMetadataStatisticalResourceAvroMapper.do2Avro(mockSiemacMetadataStatisticalResource(TypeRelatedResourceEnum.DATASET_VERSION)))
-                .setDateStart(DatetimeAvroMapper.do2Avro(EXPECTED_PAST_DATE))
-                .setDateEnd(DatetimeAvroMapper.do2Avro(EXPECTED_FUTURE_DATE))
+                .setDateStart(DateTimeAvroMapper.do2Avro(EXPECTED_PAST_DATE))
+                .setDateEnd(DateTimeAvroMapper.do2Avro(EXPECTED_FUTURE_DATE))
                 .setRelatedDsdChanged(EXPECTED_TRUE)
                 .setDatasetRepositoryId(EXPECTED_IDENTIFIER)
                 .setFormatExtentDimensions(EXPECTED_COPYRIGHT)
-                .setDateNextUpdate(DatetimeAvroMapper.do2Avro(EXPECTED_FUTURE_DATE))
+                .setDateNextUpdate(DateTimeAvroMapper.do2Avro(EXPECTED_FUTURE_DATE))
                 .setUserModifiedDateNextUpdate(EXPECTED_TRUE)
                 .setVersion(EXPECTED_VERSION)
                 .setDataset(mockDatasetAvro())
@@ -747,5 +757,67 @@ public class MappersMockUtils {
         TemporalCode temporalCode = mockTemporalCode();
         datasetVersion.addTemporalCoverage(temporalCode);
     }
+
+
+    public static PublicationVersion mockPublicationVersion() {
+        return mockPublicationVersion(EXPECTED_URN, true);
+    }
+
+    public static PublicationVersion mockPublicationVersion(String urn, boolean shouldMockPublication) {
+        PublicationVersion mock = new PublicationVersion();
+        mock.setVersion(EXPECTED_VERSION);
+        if (shouldMockPublication) {
+            mock.setPublication(mockPublication());
+        }
+        mock.setSiemacMetadataStatisticalResource(mockSiemacMetadataStatisticalResource(TypeRelatedResourceEnum.PUBLICATION_VERSION));
+        if (urn != null) {
+            mock.getSiemacMetadataStatisticalResource().setUrn(urn);
+        }
+        mock.addHasPart(mockRelatedResource(TypeRelatedResourceEnum.PUBLICATION_VERSION));
+        return mock;
+    }
+
+    public static PublicationVersionAvro mockPublicationVersionAvro() {
+        PublicationVersionAvro mock = PublicationVersionAvro.newBuilder()
+                .setPublication(mockPublicationAvro())
+                .setSiemacMetadataStatisticalResource(mockSiemacMetadataStatisticalResourceAvro(TypeRelatedResourceEnum.PUBLICATION_VERSION))
+                .setVersion(EXPECTED_VERSION)
+                .setHasPart(mockRelatedResultAvroList(TypeRelatedResourceEnum.PUBLICATION_VERSION))
+                .build();
+        return mock;
+    }
+
+    private static List<RelatedResourceAvro> mockRelatedResultAvroList(TypeRelatedResourceEnum type) {
+        List<RelatedResourceAvro> list = new ArrayList<RelatedResourceAvro>();
+        list.add(mockRelatedResourceAvro(type));
+        return list;
+    }
+
+    public static Publication mockPublication() {
+        Publication mock = new Publication();
+        mock.setVersion(EXPECTED_VERSION);
+        mock.setIdentifiableStatisticalResource(mockIdentifiableStatisticalResource());
+        for (String urn : mockListUrns()) {
+            mock.addVersion(mockPublicationVersion(urn, false));
+        }
+        return mock;
+    }
+
+    public static PublicationAvro mockPublicationAvro() {
+        PublicationAvro mock = PublicationAvro.newBuilder()
+                .setIdentifiableStatisticalResource(mockIdentifiableStatisticalResourceAvro())
+                .setVersion(EXPECTED_VERSION)
+                .setVersionsUrns(mockListUrns())
+                .build();
+        return mock;
+    }
+
+    private static List<String> mockListUrns() {
+        List<String> list = new ArrayList<String>();
+        list.add(EXPECTED_URN);
+        list.add(EXPECTED_URN + "2");
+        return list;
+    }
+
 
 }
