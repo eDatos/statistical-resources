@@ -305,7 +305,7 @@ public class BaseDto2DoMapperTest extends StatisticalResourcesBaseTest {
     @Test
     public void publishedMessageStatusDto2DoTest() {
         LifeCycleStatisticalResourceDto expected = new LifeCycleStatisticalResourceDto();
-        expected.setStreamMsgStatus(StreamMessageStatusEnum.RETRIED_AND_FAILED);
+        expected.setPublicationStreamStatus(StreamMessageStatusEnum.PENDING);
         LifeCycleStatisticalResource actual = new LifeCycleStatisticalResource();
         try {
             baseDto2DoMapper.lifeCycleStatisticalResourceDtoToDo(expected, actual, METADATA_NAME_TEST);
@@ -313,8 +313,8 @@ public class BaseDto2DoMapperTest extends StatisticalResourcesBaseTest {
             e.printStackTrace();
         }
 
-        assertThat(expected.getStreamMsgStatus(), is(equalTo(StreamMessageStatusEnum.RETRIED_AND_FAILED)));
-        assertThat(actual.getStreamMsgStatus(), is(equalTo(expected.getStreamMsgStatus())));
+        assertThat(expected.getPublicationStreamStatus(), is(equalTo(StreamMessageStatusEnum.PENDING)));
+        assertThat(actual.getPublicationStreamStatus(), is(equalTo(expected.getPublicationStreamStatus())));
 
     }
 

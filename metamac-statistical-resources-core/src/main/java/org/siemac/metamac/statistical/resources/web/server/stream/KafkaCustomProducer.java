@@ -48,9 +48,7 @@ public class KafkaCustomProducer<K, V extends SpecificRecordBase> extends Produc
     }
 
     void setProperties(Properties props) throws MetamacException {
-        // TODO properties must be injected from config file/db ?
         props = checkForMissingProperties(props);
-
         this.props = props;
     }
 

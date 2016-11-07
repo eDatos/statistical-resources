@@ -26,6 +26,7 @@ import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStr
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.RegionReference;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ResourceInternal;
 import org.siemac.metamac.sso.utils.SecurityUtils;
+import org.siemac.metamac.statistical.resources.core.base.domain.HasSiemacMetadata;
 import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
 import org.siemac.metamac.statistical.resources.core.common.mapper.CommonDo2DtoMapper;
 import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor;
@@ -927,24 +928,13 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         datasetVersion = datasetLifecycleService.sendToPublished(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getUrn());
 
         // Send stream message to stream messagin service (like Apache Kafka)
-        sendPublishedMessageToStreamMessagingService(datasetVersion);
+        sendNewVersionPublishedStreamMessage(datasetVersion);
 
         // Transform
         datasetVersionDto = datasetDo2DtoMapper.datasetVersionDoToDto(ctx, datasetVersion);
 
         return datasetVersionDto;
     }
-
-    protected void sendPublishedMessageToStreamMessagingService(DatasetVersion datasetVersion) throws MetamacException {
-        try {
-            streamMessagingServiceFacade.sendNewDatasetVersionPublished(datasetVersion);
-        } catch (MetamacException e) {
-            streamMessagingServiceFacade.updateMessageStatus(datasetVersion, StreamMessageStatusEnum.FAILED);
-            throw new MetamacException(ServiceExceptionType.UNABLE_TO_SEND_STREAM_MESSAGING_TO_STREAM_MESSAGING_SERVER);
-        }
-    }
-
-
 
     @Override
     public DatasetVersionBaseDto publishDatasetVersion(ServiceContext ctx, DatasetVersionBaseDto datasetVersionDto) throws MetamacException {
@@ -1533,10 +1523,21 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
 
         publicationVersion = publicationLifecycleService.sendToPublished(ctx, publicationVersion.getSiemacMetadataStatisticalResource().getUrn());
 
+        // Send stream message to stream messagin service (like Apache Kafka)
+        sendNewVersionPublishedStreamMessage(publicationVersion);
+
         // Transform
         publicationVersionDto = publicationDo2DtoMapper.publicationVersionDoToDto(publicationVersion);
 
         return publicationVersionDto;
+    }
+
+    protected void sendNewVersionPublishedStreamMessage(HasSiemacMetadata version) throws MetamacException {
+        streamMessagingServiceFacade.sendNewVersionPublished(version);
+
+        if (version.getLifeCycleStatisticalResource().getPublicationStreamStatus() == StreamMessageStatusEnum.FAILED) {
+            // TODO NOTIFY
+        }
     }
 
     @Override

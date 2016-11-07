@@ -9,20 +9,25 @@ public class ExternalItemAvroMapper {
     }
 
     public static ExternalItem avro2Do(ExternalItemAvro source) {
-        ExternalItem target = new ExternalItem();
-        target.setCode(source.getCode());
-        target.setCodeNested(source.getCodeNested());
-        target.setManagementAppUrl(source.getManagementAppUrl());
-        target.setTitle(InternationalStringAvroMapper.avro2Do(source.getTitle()));
-        target.setType(TypeExternalArtefactsEnumAvroMapper.avro2Do(source.getType()));
-        target.setUrn(source.getUrn());
-        target.setUrnProvider(source.getUrnProvider());
-        target.setVersion(source.getVersion());
+        ExternalItem target = null;
+        if (source != null) {
+            target = new ExternalItem();
+            target.setCode(source.getCode());
+            target.setCodeNested(source.getCodeNested());
+            target.setManagementAppUrl(source.getManagementAppUrl());
+            target.setTitle(InternationalStringAvroMapper.avro2Do(source.getTitle()));
+            target.setType(TypeExternalArtefactsEnumAvroMapper.avro2Do(source.getType()));
+            target.setUrn(source.getUrn());
+            target.setUrnProvider(source.getUrnProvider());
+            target.setVersion(source.getVersion());
+        }
         return target;
     }
 
     public static ExternalItemAvro do2Avro(ExternalItem ei) {
-        ExternalItemAvro target = ExternalItemAvro.newBuilder()
+        ExternalItemAvro target = null;
+        if (ei != null) {
+            target = ExternalItemAvro.newBuilder()
                 .setCode(ei.getCode())
                 .setCodeNested(ei.getCodeNested())
                 .setManagementAppUrl(ei.getManagementAppUrl())
@@ -32,6 +37,7 @@ public class ExternalItemAvroMapper {
                 .setUrnProvider(ei.getUrnProvider())
                 .setVersion(ei.getVersion())
                 .build();
+        }
         return target;
 
     }
