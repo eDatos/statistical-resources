@@ -97,6 +97,18 @@
             <artifactId>metamac-notifications-rest-internal-api</artifactId>
             <version>${metamac-notifications-rest-internal-api.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.siemac.metamac</groupId>
+            <artifactId>metamac-rest-common</artifactId>
+            <version>${metamac-rest-common.version}</version>
+            <exclusions>
+<!--             This exclusion is needed for Sculptor's generators. But also is for the final WAR deployment. Be sure the antlr-runtime is deployed in the final WAR. -->
+                <exclusion>
+                    <groupId>org.antlr</groupId>
+                    <artifactId>antlr-runtime</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
 
         <!-- STATISTIC -->
         <dependency>

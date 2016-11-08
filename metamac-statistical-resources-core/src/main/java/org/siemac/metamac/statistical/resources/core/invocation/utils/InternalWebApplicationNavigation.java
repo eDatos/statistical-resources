@@ -1,4 +1,4 @@
-package org.siemac.metamac.statistical_resources.rest.internal.service.utils;
+package org.siemac.metamac.statistical.resources.core.invocation.utils;
 
 import java.util.HashMap;
 import java.util.Map;

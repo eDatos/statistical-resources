@@ -2,17 +2,26 @@ package org.siemac.metamac.statistical.resources.core.invocation.service;
 
 import java.io.Serializable;
 import java.text.MessageFormat;
+import java.util.List;
 import java.util.Locale;
+
+import javax.annotation.PostConstruct;
 
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.utils.TranslateExceptions;
 import org.siemac.metamac.core.common.lang.LocaleUtil;
+import org.siemac.metamac.rest.notices.v1_0.domain.Message;
 import org.siemac.metamac.rest.notices.v1_0.domain.Notice;
+import org.siemac.metamac.rest.notices.v1_0.domain.ResourceInternal;
 import org.siemac.metamac.rest.notices.v1_0.domain.enume.MetamacApplicationsEnum;
+import org.siemac.metamac.rest.notices.v1_0.domain.enume.MetamacRolesEnum;
+import org.siemac.metamac.rest.notices.v1_0.domain.utils.MessageBuilder;
 import org.siemac.metamac.rest.notices.v1_0.domain.utils.NoticeBuilder;
+import org.siemac.metamac.statistical.resources.core.base.domain.HasSiemacMetadata;
 import org.siemac.metamac.statistical.resources.core.conf.StatisticalResourcesConfiguration;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionUtils;
+import org.siemac.metamac.statistical.resources.core.invocation.utils.RestMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +34,9 @@ public class NoticesRestInternalServiceImpl implements NoticesRestInternalServic
 
     private static Logger                     logger = LoggerFactory.getLogger(NoticesRestInternalServiceImpl.class);
 
+    private String                            statisticalResourcesInternalWebUrlBase;
+    private String                            statisticalResourcesApiInternalEndpointV10;
+
     @Autowired
     private MetamacApisLocator                restApiLocator;
 
@@ -33,6 +45,15 @@ public class NoticesRestInternalServiceImpl implements NoticesRestInternalServic
 
     @Autowired
     private TranslateExceptions               translateExceptions;
+
+    @Autowired
+    private RestMapper                        restMapper;
+
+    @PostConstruct
+    public void init() throws MetamacException {
+        statisticalResourcesInternalWebUrlBase = configurationService.retrieveStatisticalResourcesInternalWebApplicationUrlBase();
+        statisticalResourcesApiInternalEndpointV10 = configurationService.retrieveStatisticalResourcesInternalApiUrlBase();
+    }
 
     @Override
     public void createErrorBackgroundNotification(String user, String actionCode, MetamacException exception) {
@@ -48,7 +69,6 @@ public class NoticesRestInternalServiceImpl implements NoticesRestInternalServic
         } catch (MetamacException e) {
             logger.error("Error creating createErrorBackgroundNotification:", e);
         }
-
     }
 
     @Override
@@ -83,6 +103,33 @@ public class NoticesRestInternalServiceImpl implements NoticesRestInternalServic
             restApiLocator.getNoticesRestInternalFacadeV10().createNotice(notification);
         } catch (Exception e) {
             throw manageNoticesInternalRestException(e);
+        }
+    }
+
+    @Override
+    public void createErrorOnStreamMessagingService(String user, String actionCode, List<HasSiemacMetadata> affectedResources, String errorMessageCode, Serializable... extraParameters) {
+        try {
+            Locale locale = configurationService.retrieveLanguageDefaultLocale();
+            String subject = LocaleUtil.getMessageForCode(actionCode, locale);
+            List<ResourceInternal> resourceInternalList = restMapper.generateResourceInternalList(affectedResources, statisticalResourcesInternalWebUrlBase,
+                    statisticalResourcesApiInternalEndpointV10);
+            String localisedMessage = LocaleUtil.getMessageForCode(errorMessageCode, locale);
+            String sendingApp = MetamacApplicationsEnum.GESTOR_RECURSOS_ESTADISTICOS.getName();
+
+            Message message = MessageBuilder.message().withText(localisedMessage).withResources(resourceInternalList).build();
+
+            Notice notification = NoticeBuilder.notification()
+                    .withMessages(message)
+                    .withSendingApplication(sendingApp)
+                    .withSubject(subject)
+                    .withSendingUser(user)
+                    .withRoles(MetamacRolesEnum.ADMINISTRADOR)
+                    .build();
+
+            restApiLocator.getNoticesRestInternalFacadeV10().createNotice(notification);
+
+        } catch (MetamacException e) {
+            logger.error("Error creating notification for error on stream messaging service");
         }
     }
 
