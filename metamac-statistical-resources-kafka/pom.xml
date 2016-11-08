@@ -17,19 +17,6 @@
 
     <dependencies>
         <!-- METAMAC -->
-        <dependency>
-            <groupId>org.siemac.metamac.metamac-statistical-resources</groupId>
-            <artifactId>metamac-statistical-resources-core</artifactId>
-            <version>${project.version}</version>
-            <classifier>client</classifier>
-        </dependency>
-        <dependency>
-            <groupId>org.siemac.metamac.metamac-statistical-resources</groupId>
-            <artifactId>metamac-statistical-resources-core</artifactId>
-            <version>${project.version}</version>
-            <classifier>tests</classifier>
-            <scope>test</scope>
-        </dependency>
 
         <dependency>
             <groupId>org.siemac.metamac</groupId>
