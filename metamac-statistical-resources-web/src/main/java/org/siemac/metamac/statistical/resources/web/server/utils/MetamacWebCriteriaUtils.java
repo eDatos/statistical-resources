@@ -63,6 +63,7 @@ public class MetamacWebCriteriaUtils {
             addRestrictionIfExists(criteria, buildTitleAlternativeCriteria(siemacMetadataStatisticalResourceWebCriteria));
             addRestrictionIfExists(criteria, buildKeywordsCriteria(siemacMetadataStatisticalResourceWebCriteria));
             addRestrictionIfExists(criteria, buildNewnessUntilDateCriteria(siemacMetadataStatisticalResourceWebCriteria));
+            addRestrictionIfExists(criteria, buildPublicationStreamStatusCriteria(siemacMetadataStatisticalResourceWebCriteria));
         }
 
         if (webCriteria instanceof DatasetVersionWebCriteria) {
@@ -203,6 +204,13 @@ public class MetamacWebCriteriaUtils {
     private static MetamacCriteriaRestriction buildNewnessUntilDateCriteria(SiemacMetadataStatisticalResourceWebCriteria criteria) {
         if (criteria.getNewnessUtilDate() != null) {
             return new MetamacCriteriaPropertyRestriction(StatisticalResourcesCriteriaPropertyEnum.NEWNESS_UNTIL_DATE.name(), criteria.getNewnessUtilDate(), OperationType.EQ);
+        }
+        return null;
+    }
+
+    private static MetamacCriteriaRestriction buildPublicationStreamStatusCriteria(SiemacMetadataStatisticalResourceWebCriteria criteria) {
+        if (criteria.getPublicationStreamStatus() != null) {
+            return new MetamacCriteriaPropertyRestriction(StatisticalResourcesCriteriaPropertyEnum.PUBLICATION_STREAM_STATUS.name(), criteria.getPublicationStreamStatus(), OperationType.EQ);
         }
         return null;
     }

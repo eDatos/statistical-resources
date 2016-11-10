@@ -57,6 +57,7 @@ Application StatisticalResourcesDto {
 			String diffusionValidationUser;
 			String publicationUser;
 			String maintainerCodeNested;
+			- @StreamMessageStatusEnum publicationStreamStatus;
 		}
 
 		DataTransferObject LifeCycleStatisticalResourceDto extends @VersionableStatisticalResourceDto {

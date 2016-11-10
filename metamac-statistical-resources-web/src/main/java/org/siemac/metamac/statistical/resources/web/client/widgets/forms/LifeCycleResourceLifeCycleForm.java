@@ -18,7 +18,6 @@ public class LifeCycleResourceLifeCycleForm extends NavigationEnabledDynamicForm
         super(getConstants().formLifeCycle());
 
         ViewTextItem procStatus = new ViewTextItem(LifeCycleResourceDS.PROC_STATUS, getConstants().lifeCycleStatisticalResourceProcStatus());
-        ViewTextItem streamMsgStatus = new ViewTextItem(LifeCycleResourceDS.PUBLICATION_STREAM_STATUS, getConstants().lifeCycleStatisticalResourceStreamMsgStatus());
         ViewTextItem creationDate = new ViewTextItem(LifeCycleResourceDS.CREATION_DATE, getConstants().lifeCycleStatisticalResourceCreationDate());
         ViewTextItem creationUser = new ViewTextItem(LifeCycleResourceDS.CREATION_USER, getConstants().lifeCycleStatisticalResourceCreationUser());
         ViewTextItem productionValidationDate = new ViewTextItem(LifeCycleResourceDS.PRODUCTION_VALIDATION_DATE, getConstants().lifeCycleStatisticalResourceProductionValidationDate());
@@ -35,7 +34,7 @@ public class LifeCycleResourceLifeCycleForm extends NavigationEnabledDynamicForm
                 getCustomLinkItemNavigationClickHandler());
 
         addFields(procStatus, creationDate, creationUser, productionValidationDate, productionValidationUser, diffusionValidationDate, diffusionValidationUser, rejectValidationDate,
-                rejectValidationUser, publicationDate, publicationUser, replacesVersion, isReplacedByVersion, streamMsgStatus);
+                rejectValidationUser, publicationDate, publicationUser, replacesVersion, isReplacedByVersion);
     }
 
     public void setLifeCycleStatisticalResourceDto(LifeCycleStatisticalResourceDto lifeCycleStatisticalResourceDto) {

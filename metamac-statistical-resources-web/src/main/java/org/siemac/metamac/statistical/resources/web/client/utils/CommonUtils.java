@@ -43,11 +43,13 @@ import org.siemac.metamac.statistical.resources.web.client.enums.DatasetConstrai
 import org.siemac.metamac.statistical.resources.web.shared.dtos.RangeDto;
 import org.siemac.metamac.web.common.client.MetamacWebCommon;
 import org.siemac.metamac.web.common.client.events.ShowMessageEvent;
+import org.siemac.metamac.web.common.client.resources.GlobalResources;
 import org.siemac.metamac.web.common.client.utils.ApplicationEditionLanguages;
 import org.siemac.metamac.web.common.client.utils.CommonWebUtils;
 import org.siemac.metamac.web.common.shared.exception.MetamacWebException;
 
 import com.google.gwt.event.shared.HasHandlers;
+import com.smartgwt.client.widgets.form.fields.FormItemIcon;
 
 public class CommonUtils {
 
@@ -169,6 +171,7 @@ public class CommonUtils {
         return valueMap;
     }
 
+
     public static ProcStatusEnum getProcStatusEnum(String procStatusName) {
         if (!StringUtils.isBlank(procStatusName)) {
             try {
@@ -186,12 +189,49 @@ public class CommonUtils {
         return lifeCycleStatisticalResourceDto != null ? getPublicationsStreamStatusName(lifeCycleStatisticalResourceDto.getPublicationStreamStatus()) : null;
     }
 
+    public static String getPublicationStreamStatusName(LifeCycleStatisticalResourceBaseDto lifeCycleStatisticalResourceBaseDto) {
+        return lifeCycleStatisticalResourceBaseDto != null ? getPublicationsStreamStatusName(lifeCycleStatisticalResourceBaseDto.getPublicationStreamStatus()) : null;
+    }
+
     public static String getPublicationsStreamStatusName(StreamMessageStatusEnum streamMessageStatusEnum) {
         String name = null;
         if (streamMessageStatusEnum != null) {
             name = getCoreMessages().getString(getCoreMessages().statisticalResourceStreamMsgStatus() + streamMessageStatusEnum.getName());
         }
         return name;
+    }
+
+    public static StreamMessageStatusEnum getPublicationStreamStatusEnum(String valueAsString) {
+        if (!StringUtils.isBlank(valueAsString)) {
+            try {
+                return StreamMessageStatusEnum.valueOf(valueAsString);
+            } catch (Exception e) {
+            }
+        }
+        return null;
+    }
+
+    public static LinkedHashMap<String, String> getPublicationStreamStatusHashMap() {
+        LinkedHashMap<String, String> valueMap = new LinkedHashMap<String, String>();
+        valueMap.put(StringUtils.EMPTY, StringUtils.EMPTY);
+        for (StreamMessageStatusEnum streamMessageStatusEnum : StreamMessageStatusEnum.values()) {
+            valueMap.put(streamMessageStatusEnum.name(), getPublicationsStreamStatusName(streamMessageStatusEnum));
+        }
+        return valueMap;
+    }
+
+    public static FormItemIcon getPublicationStreamStatusIcon(StreamMessageStatusEnum status) {
+        FormItemIcon icon = new FormItemIcon();
+        String iconSrc = null;
+        if (status.equals(StreamMessageStatusEnum.FAILED)) {
+            iconSrc = GlobalResources.RESOURCE.errorSmart().getURL();
+        } else if (status.equals(StreamMessageStatusEnum.PENDING)) {
+            iconSrc = GlobalResources.RESOURCE.warn().getURL();
+        } else if (status.equals(StreamMessageStatusEnum.SENT)) {
+            iconSrc = GlobalResources.RESOURCE.success().getURL();
+        }
+        icon.setSrc(iconSrc);
+        return icon;
     }
 
     // -----------------------------------------------------------------------------------------

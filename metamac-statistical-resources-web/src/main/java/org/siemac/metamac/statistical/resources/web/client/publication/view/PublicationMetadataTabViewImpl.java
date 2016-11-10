@@ -14,6 +14,7 @@ import org.siemac.metamac.statistical.resources.web.client.publication.view.hand
 import org.siemac.metamac.statistical.resources.web.client.publication.widgets.PublicationMainFormLayout;
 import org.siemac.metamac.statistical.resources.web.client.publication.widgets.forms.PublicationClassDescriptorsEditionForm;
 import org.siemac.metamac.statistical.resources.web.client.publication.widgets.forms.PublicationClassDescriptorsForm;
+import org.siemac.metamac.statistical.resources.web.client.publication.widgets.forms.PublicationIdentifiersForm;
 import org.siemac.metamac.statistical.resources.web.client.publication.widgets.forms.PublicationResourceRelationDescriptorsEditionForm;
 import org.siemac.metamac.statistical.resources.web.client.publication.widgets.forms.PublicationResourceRelationDescriptorsForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.VersionWindow;
@@ -21,7 +22,6 @@ import org.siemac.metamac.statistical.resources.web.client.widgets.forms.LifeCyc
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.LifeCycleResourceVersionEditionForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.LifeCycleResourceVersionForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.NameableResourceIdentifiersEditionForm;
-import org.siemac.metamac.statistical.resources.web.client.widgets.forms.NameableResourceIdentifiersForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.SiemacMetadataCommonMetadataEditionForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.SiemacMetadataCommonMetadataForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.SiemacMetadataContentDescriptorsEditionForm;
@@ -52,7 +52,7 @@ public class PublicationMetadataTabViewImpl extends StatisticalResourceMetadataB
 
     private PublicationMainFormLayout                                mainFormLayout;
 
-    private NameableResourceIdentifiersForm                          identifiersForm;
+    private PublicationIdentifiersForm                               identifiersForm;
     private SiemacMetadataContentDescriptorsForm                     contentDescriptorsForm;
     private SiemacMetadataCommonMetadataForm                         commonMetadataForm;
     private SiemacMetadataThematicContentClassifiersForm             thematicContentClassifiersForm;
@@ -256,7 +256,7 @@ public class PublicationMetadataTabViewImpl extends StatisticalResourceMetadataB
 
     private void createViewForm() {
         // Identifiers form
-        identifiersForm = new NameableResourceIdentifiersForm();
+        identifiersForm = new PublicationIdentifiersForm();
         mainFormLayout.addViewCanvas(identifiersForm);
 
         // Content descriptors form
@@ -356,7 +356,7 @@ public class PublicationMetadataTabViewImpl extends StatisticalResourceMetadataB
 
     private void setPublicationViewMode(PublicationVersionDto publicationDto) {
         // Identifiers form
-        identifiersForm.setNameableStatisticalResourceDto(publicationDto);
+        identifiersForm.setPublicationVersionDto(publicationDto);
 
         // Content descriptors form
         contentDescriptorsForm.setSiemacMetadataStatisticalResourceDto(publicationDto);
@@ -447,7 +447,7 @@ public class PublicationMetadataTabViewImpl extends StatisticalResourceMetadataB
 
     @Override
     public void setPublication(PublicationVersionDto publicationDto) {
-        this.publicationVersionDto = publicationDto;
+        publicationVersionDto = publicationDto;
 
         mainFormLayout.setPublicationVersion(publicationDto);
         mainFormLayout.setViewMode();

@@ -108,6 +108,7 @@ public class StatisticalResourcesRecordUtils extends RecordUtils {
         record.setProcStatus(CommonUtils.getProcStatusName(dto));
         record.setCreationDate(DateUtils.getFormattedDate(dto.getCreationDate()));
         record.setPublicationDate(DateUtils.getFormattedDate(dto.getPublicationDate()));
+        record.setPublicationStreamStatus(CommonUtils.getPublicationStreamStatusIcon(dto.getPublicationStreamStatus()));
         return record;
     }
 
@@ -116,6 +117,7 @@ public class StatisticalResourcesRecordUtils extends RecordUtils {
         record.setProcStatus(CommonUtils.getProcStatusName(dto));
         record.setCreationDate(DateUtils.getFormattedDate(dto.getCreationDate()));
         record.setPublicationDate(DateUtils.getFormattedDate(dto.getPublicationDate()));
+        record.setPublicationStreamStatus(CommonUtils.getPublicationStreamStatusIcon(dto.getPublicationStreamStatus()));
         return record;
     }
 
