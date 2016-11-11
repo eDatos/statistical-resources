@@ -14,7 +14,6 @@ public class DimensionRepresentationMappingAvroMapper {
                 .setDatasetUrn(source.getDataset().getIdentifiableStatisticalResource().getUrn())
                 .setDatasourceFilename(source.getDatasourceFilename())
                 .setMapping(source.getMapping())
-                .setVersion(source.getVersion())
                 .build();
         return target;
     }
@@ -24,7 +23,6 @@ public class DimensionRepresentationMappingAvroMapper {
         target.setDataset(AvroMapperUtils.retrieveDataset(source.getDatasetUrn()));
         target.setDatasourceFilename(source.getDatasourceFilename());
         target.setMapping(source.getMapping());
-        target.setVersion(source.getVersion());
         return target;
     }
 

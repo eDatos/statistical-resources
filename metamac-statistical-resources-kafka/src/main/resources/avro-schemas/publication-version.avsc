@@ -4,7 +4,6 @@
     "name" : "PublicationVersionAvro",
     "fields" : [
         {"name" : "siemacMetadataStatisticalResource", "type" : ["null", "SiemacMetadataStatisticalResourceAvro"]},
-        {"name" : "version", "type" : ["null", "long"]},
         {"name" : "publication", "type" : ["null", "PublicationAvro"]},
         {"name" : "hasPart", "type" : ["null", {"type" : "array", "items" : "RelatedResourceAvro"}]}
     ]

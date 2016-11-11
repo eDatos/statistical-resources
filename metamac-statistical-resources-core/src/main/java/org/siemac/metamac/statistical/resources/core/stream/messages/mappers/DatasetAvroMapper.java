@@ -21,8 +21,7 @@ public class DatasetAvroMapper {
         DatasetAvro target = DatasetAvro.newBuilder()
                 .setDimensionRepresentationMappings(dimensions)
                 .setIdentifiableStatisticalResource(IdentifiableStatisticalResourceAvroMapper.do2Avro(source.getIdentifiableStatisticalResource()))
-                .setVersionsUrns(versions)
-                .setVersion(source.getVersion())
+                .setDatasetVersionsUrns(versions)
                 .build();
         return target;
     }
@@ -30,14 +29,13 @@ public class DatasetAvroMapper {
     public static Dataset avro2Do(DatasetAvro source) throws MetamacException {
         Dataset target = new Dataset();
         target.setIdentifiableStatisticalResource(IdentifiableStatisticalResourceAvroMapper.avro2Do(source.getIdentifiableStatisticalResource()));
-        target.setVersion(source.getVersion());
         addDimensionRepresentatations(source, target);
         addDatasetVersions(source, target);
         return target;
     }
 
     protected static void addDatasetVersions(DatasetAvro source, Dataset target) throws MetamacException {
-        for (String version : source.getVersionsUrns()) {
+        for (String version : source.getDatasetVersionsUrns()) {
             DatasetVersion versionElement = AvroMapperUtils.retrieveDatasetVersion(version);
             target.addVersion(versionElement);
         }

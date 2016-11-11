@@ -6,12 +6,10 @@
         {"name" : "siemacMetadataStatisticalResource", "type" : ["null", "SiemacMetadataStatisticalResourceAvro"]},
         {"name" : "dateStart", "type" : ["null", "DatetimeAvro"]},
         {"name" : "dateEnd", "type" : ["null", "DatetimeAvro"]},
-        {"name" : "relatedDsdChanged", "type" : ["null", "boolean"]},
         {"name" : "datasetRepositoryId", "type" : ["null", "string"]},
         {"name" : "formatExtentDimensions" , "type" : ["null", "int"]},
         {"name" : "dateNextUpdate", "type" : ["null", "DatetimeAvro"]},
         {"name" : "userModifiedDateNextUpdate", "type" : ["null", "boolean"]},
-        {"name" : "version", "type" : ["null", "long"]},
         {"name" : "dataset", "type" : ["null", "DatasetAvro"]},
         {"name" : "relatedDsd", "type" : ["null", "ExternalItemAvro"]},
         {"name" : "updateFrequency", "type" : ["null", "ExternalItemAvro"]},
@@ -26,6 +24,8 @@
         {"name" : "measureCoverage", "type" : ["null", {"type": "array", "items" : "ExternalItemAvro"}]},
         {"name" : "geographicGranularities", "type" : ["null", {"type": "array", "items" : "ExternalItemAvro"}]},
         {"name" : "temporalGranularities", "type" : ["null", {"type": "array", "items" : "ExternalItemAvro"}]},
-        {"name" : "statisticalUnit", "type" : ["null", {"type": "array", "items" : "ExternalItemAvro"}]}
+        {"name" : "statisticalUnit", "type" : ["null", {"type": "array", "items" : "ExternalItemAvro"}]},
+        {"name" : "isPartOf", "type" : ["null", {"type" : "array", "items": "RelatedResourceAvro"}]}
+        
     ]
 }

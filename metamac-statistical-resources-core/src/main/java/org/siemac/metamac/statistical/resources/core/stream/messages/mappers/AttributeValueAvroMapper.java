@@ -14,7 +14,6 @@ public class AttributeValueAvroMapper {
                 .setDatasetVersionUrn(source.getDatasetVersion().getSiemacMetadataStatisticalResource().getUrn())
                 .setDsdComponentId(source.getDsdComponentId())
                 .setIdentifier(source.getIdentifier())
-                .setVersion(source.getVersion())
                 .setTitle(source.getTitle())
                 .build();
         return target;
@@ -26,7 +25,6 @@ public class AttributeValueAvroMapper {
         target.setDsdComponentId(source.getDsdComponentId());
         target.setIdentifier(source.getIdentifier());
         target.setTitle(source.getTitle());
-        target.setVersion(source.getVersion());
         return target;
     }
 

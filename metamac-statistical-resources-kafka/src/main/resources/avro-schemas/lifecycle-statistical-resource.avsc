@@ -36,7 +36,9 @@
         
         {"name" : "lastVersion", "type" : ["null", "boolean"]},
         {"name" : "procStatus" , "type" : ["null", "ProcStatusEnumAvro"]},
-        {"name" : "replacesVersion", "type" : ["null", "RelatedResourceAvro"]}, //TODO Especificar correctamente el tipo, en java es un RelatedResource
+        {"name" : "replacesVersion", "type" : ["null", "RelatedResourceAvro"]}, 
+        {"name" : "isReplacedByVersion", "type" : ["null", "RelatedResourceAvro"]},
+        
         {"name" : "maintainer", "type" : ["null", "ExternalItemAvro"]} 
      ]
  }

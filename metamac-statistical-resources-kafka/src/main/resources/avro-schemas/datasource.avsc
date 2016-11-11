@@ -5,8 +5,7 @@
       "fields" : [
           {"name" : "dateNextUpdate", "type" : ["null", "DatetimeAvro"]},
           {"name" : "fileName", "type" : ["null", "string" ]},
-          {"name" : "version", "type" : ["null", "long" ]}, 
           {"name" : "identifiableStatisticalResource", "type" : ["null", "IdentifiableStatisticalResourceAvro" ]},
-          {"name" : "datasetVersionUrn", "type" : ["null", "string" ]} //TODO DatasetVersion. String para evitar fallos al compilar schema por no estar definia datasetversionavro
+          {"name" : "datasetVersionUrn", "type" : ["null", "string" ]} 
       ]
   }

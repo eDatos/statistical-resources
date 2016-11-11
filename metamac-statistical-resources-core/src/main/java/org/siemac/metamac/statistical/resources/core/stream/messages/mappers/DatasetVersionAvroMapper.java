@@ -6,6 +6,9 @@ import java.util.List;
 
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
+import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResource;
+import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResourceResult;
+import org.siemac.metamac.statistical.resources.core.common.utils.RelatedResourceUtils;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.AttributeValue;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Categorisation;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.CodeDimension;
@@ -18,6 +21,7 @@ import org.siemac.metamac.statistical.resources.core.stream.messages.CodeDimensi
 import org.siemac.metamac.statistical.resources.core.stream.messages.DatasetVersionAvro;
 import org.siemac.metamac.statistical.resources.core.stream.messages.DatasourceAvro;
 import org.siemac.metamac.statistical.resources.core.stream.messages.ExternalItemAvro;
+import org.siemac.metamac.statistical.resources.core.stream.messages.RelatedResourceAvro;
 import org.siemac.metamac.statistical.resources.core.stream.messages.TemporalCodeAvro;
 
 public class DatasetVersionAvroMapper {
@@ -40,12 +44,10 @@ public class DatasetVersionAvroMapper {
         DatasetVersionAvro target = DatasetVersionAvro.newBuilder()
                 .setSiemacMetadataStatisticalResource(SiemacMetadataStatisticalResourceAvroMapper.do2Avro(source.getSiemacMetadataStatisticalResource()))
                 .setDateStart(DateTimeAvroMapper.do2Avro(source.getDateStart())).setDateEnd(DateTimeAvroMapper.do2Avro(source.getDateEnd()))
-                .setRelatedDsdChanged(source.isRelatedDsdChanged())
                 .setDatasetRepositoryId(source.getDatasetRepositoryId())
                 .setFormatExtentDimensions(source.getFormatExtentDimensions())
                 .setDateNextUpdate(DateTimeAvroMapper.do2Avro(source.getDateNextUpdate()))
                 .setUserModifiedDateNextUpdate(source.getUserModifiedDateNextUpdate())
-                .setVersion(source.getVersion())
                 .setDataset(DatasetAvroMapper.do2Avro(source.getDataset()))
                 .setRelatedDsd(ExternalItemAvroMapper.do2Avro(source.getRelatedDsd()))
                 .setUpdateFrequency(ExternalItemAvroMapper.do2Avro(source.getUpdateFrequency()))
@@ -60,10 +62,20 @@ public class DatasetVersionAvroMapper {
                 .setMeasureCoverage(measureCoverageList)
                 .setGeographicGranularities(geoGranList)
                 .setTemporalGranularities(temporalGranList).setStatisticalUnit(statisticalUnitList)
+                .setIsPartOf(relatedResourceList2Avro(AvroMapperUtils.getDatasetVersionRepository().retrieveIsPartOf(source)))
                 .build();
         return target;
     }
 
+
+    private static List<RelatedResourceAvro> relatedResourceList2Avro(List<RelatedResourceResult> sourceList) throws MetamacException {
+        List<RelatedResourceAvro> targetList = new ArrayList<RelatedResourceAvro>();
+        for (RelatedResourceResult item : sourceList) {
+            RelatedResource relatedResource = RelatedResourceUtils.createRelatedResourceFromRelatedResourceResult(item);
+            targetList.add(RelatedResourceAvroMapper.do2Avro(relatedResource));
+        }
+        return targetList;
+    }
 
     protected static List<ExternalItemAvro> genericExternalItemList2Avro(Collection<ExternalItem> source) {
         List<ExternalItemAvro> measureCoverageList = new ArrayList<ExternalItemAvro>();
@@ -146,12 +158,10 @@ public class DatasetVersionAvroMapper {
         target.setSiemacMetadataStatisticalResource(SiemacMetadataStatisticalResourceAvroMapper.avro2Do(source.getSiemacMetadataStatisticalResource()));
         target.setDateStart(DateTimeAvroMapper.avro2Do(source.getDateStart()));
         target.setDateEnd(DateTimeAvroMapper.avro2Do(source.getDateEnd()));
-        target.setRelatedDsdChanged(source.getRelatedDsdChanged());
         target.setDatasetRepositoryId(source.getDatasetRepositoryId());
         target.setFormatExtentDimensions(source.getFormatExtentDimensions());
         target.setDateNextUpdate(DateTimeAvroMapper.avro2Do(source.getDateNextUpdate()));
         target.setUserModifiedDateNextUpdate(source.getUserModifiedDateNextUpdate());
-        target.setVersion(source.getVersion());
         target.setDataset(DatasetAvroMapper.avro2Do(source.getDataset()));
         target.setRelatedDsd(ExternalItemAvroMapper.avro2Do(source.getRelatedDsd()));
         target.setUpdateFrequency(ExternalItemAvroMapper.avro2Do(source.getUpdateFrequency()));

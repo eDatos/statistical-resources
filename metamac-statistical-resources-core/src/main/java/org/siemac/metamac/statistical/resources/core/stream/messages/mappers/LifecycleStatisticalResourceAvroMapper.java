@@ -34,7 +34,9 @@ public class LifecycleStatisticalResourceAvroMapper {
     }
 
     public static LifecycleStatisticalResourceAvro do2Avro(LifeCycleStatisticalResource source) throws MetamacException {
-        LifecycleStatisticalResourceAvro target = LifecycleStatisticalResourceAvro.newBuilder()
+        LifecycleStatisticalResourceAvro target = null;
+        if (source != null) {
+            target = LifecycleStatisticalResourceAvro.newBuilder()
                 .setVersionableStatisticalResource(VersionableStatisticalResourceAvroMapper.do2Avro(source))
                 .setCreationDate(DateTimeAvroMapper.do2Avro(source.getCreationDate()))
                 .setCreationUser(source.getCreationUser())
@@ -49,8 +51,10 @@ public class LifecycleStatisticalResourceAvroMapper {
                 .setLastVersion(source.getLastVersion())
                 .setProcStatus(ProcStatusEnumAvroMapper.do2Avro(source.getProcStatus()))
                 .setReplacesVersion(RelatedResourceAvroMapper.do2Avro(source.getReplacesVersion()))
+                .setIsReplacedByVersion(null/* TODO source.getIsReplacedByVersion() */)
                 .setMaintainer(ExternalItemAvroMapper.do2Avro(source.getMaintainer()))
                 .build();
+        }
         return target;
     }
 

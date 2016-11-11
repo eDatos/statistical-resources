@@ -50,7 +50,6 @@ public class PublicationVersionAvroMapperTest {
 
         PublicationVersion actual = PublicationVersionAvroMapper.avro2Do(source);
 
-        assertThat(actual.getVersion(), is(equalTo(expected.getVersion())));
         assertThat(actual.getHasPart().size(), is(equalTo(expected.getHasPart().size())));
         assertThat(actual.getPublication(), is(equalTo(expected.getPublication())));
     }

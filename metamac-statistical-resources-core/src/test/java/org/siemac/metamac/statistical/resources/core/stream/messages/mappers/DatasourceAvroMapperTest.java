@@ -1,7 +1,5 @@
 package org.siemac.metamac.statistical.resources.core.stream.messages.mappers;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
@@ -16,6 +14,9 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersi
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
 import org.siemac.metamac.statistical.resources.core.stream.messages.DatasourceAvro;
 import org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts;
+
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
 
 
 public class DatasourceAvroMapperTest {
@@ -55,7 +56,6 @@ public class DatasourceAvroMapperTest {
         assertThat(actual.getDateNextUpdate(), is(equalTo(expected.getDateNextUpdate())));
         assertThat(actual.getFilename(), is(equalTo(expected.getFilename())));
         assertEquals(actual.getIdentifiableStatisticalResource(), actual.getIdentifiableStatisticalResource());
-        assertThat(actual.getVersion(), is(equalTo(expected.getVersion())));
 
         DatasetsAsserts.assertEqualsDatasetVersion(expected.getDatasetVersion(), actual.getDatasetVersion());
     }

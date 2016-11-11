@@ -10,6 +10,24 @@
         ]
     }
 ,
+    {
+        "namespace": "org.siemac.metamac.statistical.resources.core.stream.messages",
+        "name" : "VersionRationaleTypeEnumAvro",
+        "type" : "enum",
+        "symbols" : [
+            "MAJOR_NEW_RESOURCE",
+            "MAJOR_ESTIMATORS",
+            "MAJOR_CATEGORIES",
+            "MAJOR_VARIABLES",
+            "MAJOR_OTHER",
+            "MINOR_ERRATA",
+            "MINOR_METADATA",
+            "MINOR_DATA_UPDATE",
+            "MINOR_SERIES_UPDATE",
+            "MINOR_OTHER"
+        ]
+    }
+,
  {
     "namespace": "org.siemac.metamac.statistical.resources.core.stream.messages",
      "type": "record",
@@ -21,8 +39,8 @@
          {"name" : "validTo" , "type" : ["null", "DatetimeAvro"]},
          {"name" : "versionRationale" , "type" : ["null", "InternationalStringAvro"]},
          {"name" : "nextVersion" , "type" : ["null", "NextVersionTypeEnumAvro"]},
-         {"name" : "versionLogic", "type" : ["null", "string" ]}
-//         {"name" : "versionRationaleTypes", "type" : ["null", "string"]} //TODO
+         {"name" : "versionLogic", "type" : ["null", "string" ]},
+         {"name" : "versionRationaleTypes", "type" : ["null", { "type" : "array", "items" : ["null", "VersionRationaleTypeEnumAvro"]}]} //TODO
      ]
  }
  ]

@@ -4,8 +4,7 @@
       "name" : "DatasetAvro",
       "fields" : [
           {"name" : "identifiableStatisticalResource", "type" : ["null", "IdentifiableStatisticalResourceAvro" ]},
-          {"name" : "versionsUrns", "type" : ["null", {"type" : "array", "items" : "string"}]}, //TODO DatasetVersion. String para evitar fallos al compilar schema por no estar definia datasetversionavro
-          {"name" : "version", "type" : ["null", "long" ]},
+          {"name" : "datasetVersionsUrns", "type" : ["null", {"type" : "array", "items" : "string"}]},
           {"name" : "dimensionRepresentationMappings", "type" : ["null", {"type" : "array", "items" : "DimensionRepresentationMappingAvro"}]}
       ]
   }

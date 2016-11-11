@@ -12,7 +12,6 @@ public class StatisticOfficialityAvroMapper {
         StatisticOfficialityAvro target = StatisticOfficialityAvro.newBuilder()
                 .setDescription(InternationalStringAvroMapper.do2Avro(source.getDescription()))
                 .setIdentifier(source.getIdentifier())
-                .setVersion(source.getVersion())
                 .build();
         return target;
     }
@@ -21,7 +20,6 @@ public class StatisticOfficialityAvroMapper {
         StatisticOfficiality target = new StatisticOfficiality();
         target.setDescription(InternationalStringAvroMapper.avro2Do(source.getDescription()));
         target.setIdentifier(source.getIdentifier());
-        target.setVersion(source.getVersion());
         return target;
     }
 

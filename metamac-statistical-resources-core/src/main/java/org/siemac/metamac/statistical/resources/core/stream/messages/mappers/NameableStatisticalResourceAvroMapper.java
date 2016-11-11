@@ -19,14 +19,16 @@ public class NameableStatisticalResourceAvroMapper {
         fillMetadata(source, target);
         return target;
     }
-    
+
     public static NameableStatisticalResourceAvro do2Avro(NameableStatisticalResource source) {
-        NameableStatisticalResourceAvro target = NameableStatisticalResourceAvro.newBuilder()
+        NameableStatisticalResourceAvro target = null;
+        if (source != null) {
+            target = NameableStatisticalResourceAvro.newBuilder()
                 .setIdentifiableStatisticalResource(IdentifiableStatisticalResourceAvroMapper.do2Avro(source))
                 .setDescription(InternationalStringAvroMapper.do2Avro(source.getDescription()))
                 .setTitle(InternationalStringAvroMapper.do2Avro(source.getTitle()))
                 .build();
-        
+        }
         return target;
     }
 

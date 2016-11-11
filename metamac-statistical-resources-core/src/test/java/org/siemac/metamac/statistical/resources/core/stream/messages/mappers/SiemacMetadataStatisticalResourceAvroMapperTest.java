@@ -1,7 +1,5 @@
 package org.siemac.metamac.statistical.resources.core.stream.messages.mappers;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
@@ -17,6 +15,9 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersi
 import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
 import org.siemac.metamac.statistical.resources.core.stream.messages.SiemacMetadataStatisticalResourceAvro;
 import org.siemac.metamac.statistical.resources.core.utils.asserts.CommonAsserts;
+
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
 
 
 public class SiemacMetadataStatisticalResourceAvroMapperTest {
@@ -80,7 +81,6 @@ public class SiemacMetadataStatisticalResourceAvroMapperTest {
         CommonAsserts.assertEqualsInternationalString(expected.getSubtitle(), actual.getSubtitle());
         CommonAsserts.assertEqualsInternationalString(expected.getTitleAlternative(), actual.getTitleAlternative());
         assertThat(actual.getType(), is(equalTo(expected.getType())));
-        assertThat(actual.getUserModifiedKeywords(), is(equalTo(expected.getUserModifiedKeywords())));
     }
 
 

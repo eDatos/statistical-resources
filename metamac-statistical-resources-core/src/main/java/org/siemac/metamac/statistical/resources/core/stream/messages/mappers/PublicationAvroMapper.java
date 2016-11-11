@@ -21,8 +21,7 @@ public class PublicationAvroMapper {
     public static PublicationAvro do2Avro(Publication source) throws MetamacException {
         PublicationAvro target = PublicationAvro.newBuilder()
                .setIdentifiableStatisticalResource(IdentifiableStatisticalResourceAvroMapper.do2Avro(source.getIdentifiableStatisticalResource()))
-               .setVersion(source.getVersion())
-                .setVersionsUrns(getVersionsUrns(source.getVersions()))
+                .setPublicationVersionsUrns(getVersionsUrns(source.getVersions()))
                .build();
         return target;
     }
@@ -47,8 +46,7 @@ public class PublicationAvroMapper {
     public static Publication avro2Do(PublicationAvro source) throws MetamacException {
         Publication target = new Publication();
         target.setIdentifiableStatisticalResource(IdentifiableStatisticalResourceAvroMapper.avro2Do(source.getIdentifiableStatisticalResource()));
-        target.setVersion(source.getVersion());
-        for (String urn : source.getVersionsUrns()) {
+        for (String urn : source.getPublicationVersionsUrns()) {
             PublicationVersion publicationVersion = AvroMapperUtils.retrievePublicationVersion(urn);
             System.out.println(publicationVersion);
             if (publicationVersion != null) {

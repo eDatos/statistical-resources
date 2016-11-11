@@ -44,9 +44,9 @@
              {"name" : "urn", "type" : ["null", "string"]},
              {"name" : "urnProvider", "type" : ["null", "string"]},
              {"name" : "managementAppUrl", "type" : ["null", "string"]},
-             {"name" : "version", "type" : ["null", "long" ]},
              {"name" : "type", "type" : ["null", "TypeExternalArtefactsEnumAvro"]},
-             {"name" : "title", "type" : ["null", "InternationalStringAvro"]}
+             {"name" : "title", "type" : ["null", "InternationalStringAvro"]},
+             {"name" : "selfLink", "type" : ["null", "string"]} //TODO
          ]
      }
  ]

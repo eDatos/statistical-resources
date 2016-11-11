@@ -4,7 +4,6 @@
       "name" : "TemporalCodeAvro",
       "fields" : [
           {"name" : "identifier", "type" : ["null", "string" ]},
-          {"name" : "version", "type" : ["null", "long" ]},
           {"name" : "title", "type" : ["null", "string" ]}
       ]
   }

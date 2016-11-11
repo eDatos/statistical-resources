@@ -11,10 +11,8 @@
           {"name" : "lastUpdatedBy", "type" : ["null", "string" ]},
           {"name" : "version", "type" : ["null", "long" ]},
           {"name" : "category", "type" : ["null", "ExternalItemAvro" ]},
-          {"name" : "datasetVersionUrn", "type" : ["null", "string" ]},//TODO DatasetVersion. String para evitar fallos al compilar schema por no estar definia datasetversionavro
+          {"name" : "datasetVersionUrn", "type" : ["null", "string" ]},
           {"name" : "versionableStatisticalResource", "type" : ["null", "VersionableStatisticalResourceAvro" ]},
           {"name" : "maintainer", "type" : ["null", "ExternalItemAvro" ]}
-          
       ]
-          
   }

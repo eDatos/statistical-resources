@@ -12,7 +12,6 @@ public class TemporalCodeAvroMapper {
         TemporalCodeAvro target = TemporalCodeAvro.newBuilder()
                 .setIdentifier(source.getIdentifier())
                 .setTitle(source.getTitle())
-                .setVersion(source.getVersion())
                 .build(); 
         return target;
     }
@@ -21,7 +20,6 @@ public class TemporalCodeAvroMapper {
         TemporalCode target = new TemporalCode();
         target.setIdentifier(source.getIdentifier());
         target.setTitle(source.getTitle());
-        target.setVersion(source.getVersion());
         return target;
     }
 

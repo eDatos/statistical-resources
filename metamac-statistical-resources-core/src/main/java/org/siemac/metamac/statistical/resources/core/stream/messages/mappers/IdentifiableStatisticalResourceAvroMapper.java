@@ -21,11 +21,14 @@ public class IdentifiableStatisticalResourceAvroMapper {
     }
 
     public static IdentifiableStatisticalResourceAvro do2Avro(IdentifiableStatisticalResource source) {
-        IdentifiableStatisticalResourceAvro target = IdentifiableStatisticalResourceAvro.newBuilder()
+        IdentifiableStatisticalResourceAvro target = null;
+        if(source != null) {
+            target = IdentifiableStatisticalResourceAvro.newBuilder()
                 .setCode(source.getCode())
                 .setUrn(source.getUrn())
                 .setStatisticalOperation(ExternalItemAvroMapper.do2Avro(source.getStatisticalOperation()))
                 .build();
+        }
         return target;
     }
 

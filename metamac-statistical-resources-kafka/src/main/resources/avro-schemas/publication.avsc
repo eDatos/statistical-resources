@@ -4,7 +4,6 @@
     "name" : "PublicationAvro",
     "fields" : [
         {"name" : "identifiableStatisticalResource", "type" : ["null", "IdentifiableStatisticalResourceAvro"]},
-        {"name" : "version", "type" : ["null", "long"]},
-        {"name" : "versionsUrns", "type" : ["null", {"type" : "array", "items" : "string"}]} //TODO PublicationVersion. String para evitar fallos al compilar schema por no estar definia datasetversionavro
+        {"name" : "publicationVersionsUrns", "type" : ["null", {"type" : "array", "items" : "string"}]}
     ]
 }

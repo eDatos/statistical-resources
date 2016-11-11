@@ -4,7 +4,6 @@
       "name" : "StatisticOfficialityAvro",
       "fields" : [
           {"name" : "identifier", "type" : ["null", "string" ]},
-          {"name" : "version", "type" : ["null", "long" ]},
           {"name" : "description", "type" : ["null", "InternationalStringAvro" ]}
       ]
   }

@@ -1,13 +1,14 @@
 package org.siemac.metamac.statistical.resources.core.stream.messages.mappers;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 import org.junit.Test;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.StatisticOfficiality;
 import org.siemac.metamac.statistical.resources.core.stream.messages.StatisticOfficialityAvro;
 import org.siemac.metamac.statistical.resources.core.utils.asserts.CommonAsserts;
+
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
 
 
 public class StatisticOfficialityAvroMapperTest {
@@ -30,7 +31,6 @@ public class StatisticOfficialityAvroMapperTest {
         StatisticOfficiality actual = StatisticOfficialityAvroMapper.avro2Do(source);
 
         assertThat(actual.getIdentifier(), is(equalTo(expected.getIdentifier())));
-        assertThat(actual.getVersion(), is(equalTo(expected.getVersion())));
         CommonAsserts.assertEqualsInternationalString(expected.getDescription(), actual.getDescription());
     }
 

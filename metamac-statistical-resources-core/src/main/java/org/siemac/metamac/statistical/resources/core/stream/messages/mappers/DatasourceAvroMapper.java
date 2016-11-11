@@ -15,7 +15,6 @@ public class DatasourceAvroMapper {
                 .setDateNextUpdate(DateTimeAvroMapper.do2Avro(source.getDateNextUpdate()))
                 .setFileName(source.getFilename())
                 .setIdentifiableStatisticalResource(IdentifiableStatisticalResourceAvroMapper.do2Avro(source.getIdentifiableStatisticalResource()))
-                .setVersion(source.getVersion())
                 .build();
         return target;
     }
@@ -26,7 +25,6 @@ public class DatasourceAvroMapper {
         target.setDateNextUpdate(DateTimeAvroMapper.avro2Do(source.getDateNextUpdate()));
         target.setFilename(source.getFileName());
         target.setIdentifiableStatisticalResource(IdentifiableStatisticalResourceAvroMapper.avro2Do(source.getIdentifiableStatisticalResource()));
-        target.setVersion(source.getVersion());
         return target;
     }
 

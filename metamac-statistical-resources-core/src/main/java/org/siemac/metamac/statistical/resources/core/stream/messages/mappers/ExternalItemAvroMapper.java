@@ -1,5 +1,6 @@
 package org.siemac.metamac.statistical.resources.core.stream.messages.mappers;
 
+import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
 import org.siemac.metamac.statistical.resources.core.stream.messages.ExternalItemAvro;
 
@@ -19,26 +20,33 @@ public class ExternalItemAvroMapper {
             target.setType(TypeExternalArtefactsEnumAvroMapper.avro2Do(source.getType()));
             target.setUrn(source.getUrn());
             target.setUrnProvider(source.getUrnProvider());
-            target.setVersion(source.getVersion());
+            try {
+                target.setUri(AvroMapperUtils.selfLink2Uri(source.getSelfLink()));
+            } catch (MetamacException e) {
+            }
         }
         return target;
     }
 
-    public static ExternalItemAvro do2Avro(ExternalItem ei) {
+    public static ExternalItemAvro do2Avro(ExternalItem source)  {
         ExternalItemAvro target = null;
-        if (ei != null) {
-            target = ExternalItemAvro.newBuilder()
-                .setCode(ei.getCode())
-                .setCodeNested(ei.getCodeNested())
-                .setManagementAppUrl(ei.getManagementAppUrl())
-                .setTitle(InternationalStringAvroMapper.do2Avro(ei.getTitle()))
-                .setType(TypeExternalArtefactsEnumAvroMapper.do2Avro(ei.getType()))
-                .setUrn(ei.getUrn())
-                .setUrnProvider(ei.getUrnProvider())
-                .setVersion(ei.getVersion())
-                .build();
+        if (source != null) {
+            try {
+                target = ExternalItemAvro.newBuilder()
+                    .setCode(source.getCode())
+                    .setCodeNested(source.getCodeNested())
+                    .setManagementAppUrl(source.getManagementAppUrl())
+                    .setTitle(InternationalStringAvroMapper.do2Avro(source.getTitle()))
+                    .setType(TypeExternalArtefactsEnumAvroMapper.do2Avro(source.getType()))
+                    .setUrn(source.getUrn())
+                    .setUrnProvider(source.getUrnProvider())
+                    .setSelfLink(AvroMapperUtils.getSelfLink(source))
+                    .build();
+            } catch (MetamacException e) {
+            }
         }
         return target;
 
     }
+
 }

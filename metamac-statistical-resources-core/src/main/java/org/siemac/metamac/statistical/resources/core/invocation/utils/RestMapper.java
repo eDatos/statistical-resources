@@ -3,6 +3,7 @@ package org.siemac.metamac.statistical.resources.core.invocation.utils;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.siemac.metamac.core.common.conf.ConfigurationService;
 import org.siemac.metamac.core.common.enume.domain.TypeExternalArtefactsEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.rest.common.v1_0.domain.ResourceLink;
@@ -35,6 +36,9 @@ public class RestMapper {
     @Autowired
     @Qualifier("commonDto2DoMapper")
     CommonDto2DoMapper dto2DoMapper;
+
+    @Autowired
+    ConfigurationService          configurationService;
 
     public List<ExternalItem> buildExternalItemsFromResourcesInternal(List<ResourceInternal> resources) throws MetamacException {
         List<ExternalItem> externalItems = new ArrayList<ExternalItem>();
@@ -118,6 +122,17 @@ public class RestMapper {
         appendVersionIfNecessary(item, selfLinkSB);
         String selfLink = selfLinkSB.toString();
         return toResourceLink(getKindByType(item), toSiemacMetadataLink(selfLink, statisticalResourcesApiInternalEndpointV10));
+    }
+
+    public String createSelfLink(ExternalItem externalItem) throws MetamacException {
+        return createSelfLink(externalItem, null);
+    }
+
+    public String createSelfLink(ExternalItem externalItem, String statisticalResourcesApiInternalEndpointV10) throws MetamacException {
+        if (statisticalResourcesApiInternalEndpointV10 == null) {
+            statisticalResourcesApiInternalEndpointV10 = configurationService.retrieveStatisticalResourcesInternalApiUrlBase();
+        }
+        return RestUtils.createLink(statisticalResourcesApiInternalEndpointV10, externalItem.getUri());
     }
 
     private void appendVersionIfNecessary(HasSiemacMetadata item, StringBuffer selfLinkSB) {

@@ -17,7 +17,6 @@
      "name": "SiemacMetadataStatisticalResourceAvro",
      "fields" : [
         {"name" : "lifecycleStatisticalResource", "type" : ["null", "LifecycleStatisticalResourceAvro" ]},
-        {"name" : "userModifiedKeywords" , "type" : ["null", "boolean"]},
         {"name" : "resourceCreatedDate" , "type" : ["null", "DatetimeAvro"]},
         {"name" : "lastUpdate" , "type" : ["null", "DatetimeAvro"]},
         {"name" : "newnessUntilDate" , "type" : ["null", "DatetimeAvro"]},
@@ -32,15 +31,15 @@
         {"name" : "creator", "type" : ["null", "ExternalItemAvro"]}, 
         {"name" : "conformsTo", "type" : ["null", "InternationalStringAvro"]}, 
         {"name" : "conformsToInternal", "type" : ["null", "InternationalStringAvro"]},
-        {"name" : "replaces", "type" : ["null", "RelatedResourceAvro"]}, //TODO en java es RelatedResource
-        //TODO ---> Pendiente de merge de master {"name" : "isReplacedBy", "type" : ["null", "RelatedResourceAvro"]}, //TODO en java es RelatedResource
+        {"name" : "replaces", "type" : ["null", "RelatedResourceAvro"]},
+        {"name" : "isReplacedBy", "type" : ["null", "RelatedResourceAvro"]},
         {"name" : "accessRights", "type" : ["null", "InternationalStringAvro"]}, 
         {"name" : "languages", "type" : ["null", {"type" : "array", "items": "ExternalItemAvro"}]},
         {"name" : "statisticalOperationInstances", "type" : ["null", {"type" : "array", "items": "ExternalItemAvro"}]},
         {"name" : "contributors", "type" : ["null", {"type" : "array", "items": "ExternalItemAvro"}]},
         {"name" : "publishers", "type" : ["null", {"type" : "array", "items": "ExternalItemAvro"}]},
         {"name" : "publisherContributors", "type" : ["null", {"type" : "array", "items": "ExternalItemAvro"}]},
-        {"name" : "mediators", "type" : ["null", {"type" : "array", "items": "ExternalItemAvro"}]} 
+        {"name" : "mediators", "type" : ["null", {"type" : "array", "items": "ExternalItemAvro"}]}
      ]
  }
  ] 

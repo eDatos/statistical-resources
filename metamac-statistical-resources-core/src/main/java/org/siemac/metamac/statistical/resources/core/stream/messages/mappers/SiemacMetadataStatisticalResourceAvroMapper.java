@@ -16,7 +16,6 @@ public class SiemacMetadataStatisticalResourceAvroMapper {
 
     public static void fillMetadata(SiemacMetadataStatisticalResourceAvro source, SiemacMetadataStatisticalResource target) throws MetamacException {
         LifecycleStatisticalResourceAvroMapper.fillMetadata(source.getLifecycleStatisticalResource(), target);
-        target.setUserModifiedKeywords(source.getUserModifiedKeywords());
         target.setResourceCreatedDate(DateTimeAvroMapper.avro2Do(source.getResourceCreatedDate()));
         target.setLastUpdate(DateTimeAvroMapper.avro2Do(source.getLastUpdate()));
         target.setNewnessUntilDate(DateTimeAvroMapper.avro2Do(source.getNewnessUntilDate()));
@@ -32,7 +31,7 @@ public class SiemacMetadataStatisticalResourceAvroMapper {
         target.setConformsTo(InternationalStringAvroMapper.avro2Do(source.getConformsTo()));
         target.setConformsToInternal(InternationalStringAvroMapper.avro2Do(source.getConformsToInternal()));
         target.setReplaces(RelatedResourceAvroMapper.avro2Do((source.getReplaces())));
-        // TODO ---> Pendiente de merge de master target.setIsReplacedBy(RelatedResourceAvro2Do.relatedResourceAvro2Do(source.getIsReplacedBy()));
+        // TODO target.setIsReplacedBy(RelatedResourceAvroMapper.avro2Do(source.getIsReplacedBy()));
         target.setAccessRights(InternationalStringAvroMapper.avro2Do(source.getAccessRights()));
         for (ExternalItemAvro extItem : source.getLanguages()) {
             target.addLanguage(ExternalItemAvroMapper.avro2Do(extItem));
@@ -62,9 +61,10 @@ public class SiemacMetadataStatisticalResourceAvroMapper {
 
 
     public static SiemacMetadataStatisticalResourceAvro do2Avro(SiemacMetadataStatisticalResource source) throws MetamacException {
-        SiemacMetadataStatisticalResourceAvro target = SiemacMetadataStatisticalResourceAvro.newBuilder()
+        SiemacMetadataStatisticalResourceAvro target = null;
+        if (source != null) {
+            target = SiemacMetadataStatisticalResourceAvro.newBuilder()
                 .setLifecycleStatisticalResource(LifecycleStatisticalResourceAvroMapper.do2Avro(source))
-                .setUserModifiedKeywords(source.getUserModifiedKeywords())
                 .setResourceCreatedDate(DateTimeAvroMapper.do2Avro(source.getResourceCreatedDate()))
                 .setLastUpdate(DateTimeAvroMapper.do2Avro(source.getLastUpdate()))
                 .setNewnessUntilDate(DateTimeAvroMapper.do2Avro(source.getNewnessUntilDate()))
@@ -81,6 +81,7 @@ public class SiemacMetadataStatisticalResourceAvroMapper {
                 .setConformsToInternal(InternationalStringAvroMapper.do2Avro(source.getConformsToInternal()))
                 .setReplaces(RelatedResourceAvroMapper.do2Avro((source.getReplaces())))
                 // TODO ---> Pendiente de merge de master target.setIsReplacedBy(RelatedResourceAvro2Do.relatedResourceAvro2Do(source.getIsReplacedBy()));
+                .setIsReplacedBy(null) // TODO
                 .setAccessRights(InternationalStringAvroMapper.do2Avro(source.getAccessRights()))
                 .setLanguages(generateListOfLanguages(source))
                 .setStatisticalOperationInstances(generateListOfStatisticalOperationInstances(source))
@@ -89,6 +90,7 @@ public class SiemacMetadataStatisticalResourceAvroMapper {
                 .setPublisherContributors(generateListOfPublishersContributors(source))
                 .setMediators(generateListOfMediators(source))
                 .build();
+        }
         return target;
 
     }

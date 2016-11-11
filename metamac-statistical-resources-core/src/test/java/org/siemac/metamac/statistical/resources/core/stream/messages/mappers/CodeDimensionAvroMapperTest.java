@@ -1,7 +1,5 @@
 package org.siemac.metamac.statistical.resources.core.stream.messages.mappers;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
 
@@ -14,6 +12,9 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.CodeDimensio
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionRepository;
 import org.siemac.metamac.statistical.resources.core.stream.messages.CodeDimensionAvro;
 import org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts;
+
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
 
 
 public class CodeDimensionAvroMapperTest {
@@ -50,7 +51,6 @@ public class CodeDimensionAvroMapperTest {
         assertThat("getDsdComponentId()", actual.getDsdComponentId(), is(equalTo(expected.getDsdComponentId())));
         assertThat(actual.getIdentifier(), is(equalTo(expected.getIdentifier())));
         assertThat(actual.getTitle(), is(equalTo(expected.getTitle())));
-        assertThat(actual.getVersion(), is(equalTo(expected.getVersion())));
 
         DatasetsAsserts.assertEqualsDatasetVersion(expected.getDatasetVersion(), actual.getDatasetVersion());
 

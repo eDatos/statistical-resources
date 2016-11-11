@@ -17,7 +17,6 @@ public class PublicationVersionAvroMapper {
     public static PublicationVersionAvro do2Avro(PublicationVersion source) throws MetamacException {
         PublicationVersionAvro target = PublicationVersionAvro.newBuilder()
                .setSiemacMetadataStatisticalResource(SiemacMetadataStatisticalResourceAvroMapper.do2Avro(source.getSiemacMetadataStatisticalResource()))
-               .setVersion(source.getVersion())
                .setHasPart(RelatedResourceAvroMapper.do2Avro(source.getHasPart()))
                .setPublication(PublicationAvroMapper.do2Avro(source.getPublication()))
                .build();
@@ -35,7 +34,6 @@ public class PublicationVersionAvroMapper {
     public static PublicationVersion avro2Do(PublicationVersionAvro source) throws MetamacException {
         PublicationVersion target = new PublicationVersion();
         target.setSiemacMetadataStatisticalResource(SiemacMetadataStatisticalResourceAvroMapper.avro2Do(source.getSiemacMetadataStatisticalResource()));
-        target.setVersion(source.getVersion());
         for (RelatedResourceAvro children : source.getHasPart()) {
             target.addHasPart(RelatedResourceAvroMapper.avro2Do(children));
         }
