@@ -9,14 +9,9 @@ abstract public class ProducerBase<K, V> {
     protected ProducerBase() {
     }
 
-    public void sendMessages(List<MessageBase<K, V>> messages) {
+    public void sendMessages(List<MessageBase<K, V>> messages) throws MetamacException {
         for (MessageBase<K, V> message : messages) {
-            try {
-                sendMessage(message);
-            } catch (MetamacException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
+            sendMessage(message);
         }
     }
 

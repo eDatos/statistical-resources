@@ -39,27 +39,37 @@ public class AvroMapperUtils {
     protected static ConfigurationService         configurationService;
 
     public static DatasetVersionRepository getDatasetVersionRepository() {
-        datasetVersionRepository = ApplicationContextProvider.getApplicationContext().getBean(DatasetVersionRepository.class);
+        if (datasetVersionRepository == null) {
+            datasetVersionRepository = ApplicationContextProvider.getApplicationContext().getBean(DatasetVersionRepository.class);
+        }
         return datasetVersionRepository;
     }
 
     protected static DatasetRepository getDatasetRepository() {
-        datasetRepository = ApplicationContextProvider.getApplicationContext().getBean(DatasetRepository.class);
+        if (datasetRepository == null) {
+            datasetRepository = ApplicationContextProvider.getApplicationContext().getBean(DatasetRepository.class);
+        }
         return datasetRepository;
     }
 
     protected static PublicationRepository getPublicationRepository() {
-        publicationRepository = ApplicationContextProvider.getApplicationContext().getBean(PublicationRepository.class);
+        if (publicationRepository == null) {
+            publicationRepository = ApplicationContextProvider.getApplicationContext().getBean(PublicationRepository.class);
+        }
         return publicationRepository;
     }
 
     protected static PublicationVersionRepository getPublicationVersionRepository() {
-        publicationVersionRepository = ApplicationContextProvider.getApplicationContext().getBean(PublicationVersionRepository.class);
+        if (publicationVersionRepository == null) {
+            publicationVersionRepository = ApplicationContextProvider.getApplicationContext().getBean(PublicationVersionRepository.class);
+        }
         return publicationVersionRepository;
     }
 
     protected static ConfigurationService getConfigurationService() {
-        configurationService = ApplicationContextProvider.getApplicationContext().getBean(ConfigurationService.class);
+        if (configurationService == null) {
+            configurationService = ApplicationContextProvider.getApplicationContext().getBean(ConfigurationService.class);
+        }
         return configurationService;
     }
 
@@ -94,7 +104,6 @@ public class AvroMapperUtils {
         return publicationVersion;
     }
 
-    // TODO Podrían eliminarse los metodos setter, ya que los getter no hace uso de los campos de la clase
     protected static void setConfiguratinService(ConfigurationService configurationService) {
         AvroMapperUtils.configurationService = configurationService;
     }

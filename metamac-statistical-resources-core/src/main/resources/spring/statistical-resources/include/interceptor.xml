@@ -31,7 +31,8 @@
         <aop:pointcut id="updateServicePointCut" expression="(execution(public * org.siemac.metamac.statistical.resources.core..serviceapi.*Service.*(..)) and not 
                                                                 (execution(public * org.siemac.metamac.statistical.resources.core..serviceapi.*Service.retrieve*(..)) or 
                                                                  execution(public * org.siemac.metamac.statistical.resources.core..serviceapi.*Service.find*(..))))" />
-        <aop:pointcut id="serviceFacadePointCut" expression="execution(public * org.siemac.metamac.statistical.resources.core..serviceapi.*ServiceFacade.*(..))" />
+        <aop:pointcut id="serviceFacadePointCut" expression="(execution(public * org.siemac.metamac.statistical.resources.core..serviceapi.*ServiceFacade.*(..)) 
+            and not (execution(* org.siemac.metamac.statistical.resources.core..serviceapi.*StreamMessagingServiceFacade.*(..))))" />
         <aop:pointcut id="doMapperPointCut" expression="execution(public * org.siemac.metamac.statistical.resources.core.service.dto.*2DoMapper.*(..))" />
 
         <!-- Repeating the expression, since I can't find a way to refer to the other pointcuts. -->

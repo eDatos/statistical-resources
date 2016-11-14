@@ -46,7 +46,7 @@
              {"name" : "managementAppUrl", "type" : ["null", "string"]},
              {"name" : "type", "type" : ["null", "TypeExternalArtefactsEnumAvro"]},
              {"name" : "title", "type" : ["null", "InternationalStringAvro"]},
-             {"name" : "selfLink", "type" : ["null", "string"]} //TODO
+             {"name" : "selfLink", "type" : ["null", "string"]} 
          ]
      }
  ]

@@ -160,5 +160,7 @@ public class ServiceExceptionType extends CommonServiceExceptionType {
 
     // Stream messaging
     public static final CommonServiceExceptionType UNABLE_TO_SEND_STREAM_MESSAGING_TO_STREAM_MESSAGING_SERVER                 = create("stream_message.resources.exception.send_message.fails");
+    public static final CommonServiceExceptionType STREAM_MESSAGING_TOPIC_IS_INVALID                                          = create("stream_message.resources.exception.topic.invalid");
+    public static final CommonServiceExceptionType STREAM_MESSAGING_MISSING_MANDATORY_SETTINGS                                = create("stream_message.resources.exception.config.missing_settings");
 
 }

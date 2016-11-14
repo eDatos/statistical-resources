@@ -70,6 +70,7 @@ import org.siemac.metamac.statistical.resources.core.dto.publication.Publication
 import org.siemac.metamac.statistical.resources.core.dto.query.CodeItemDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionBaseDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionDto;
+import org.siemac.metamac.statistical.resources.core.enume.domain.StreamMessageStatusEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.invocation.service.NoticesRestInternalService;
@@ -1604,13 +1605,16 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         return publicationVersionDto;
     }
 
-    protected void sendNewVersionPublishedStreamMessage(ServiceContext ctx, HasSiemacMetadata version) throws MetamacException {
-        streamMessagingServiceFacade.sendNewVersionPublished(version);
-        createStreamMessageSentNotification(ctx, version);
+    protected void sendNewVersionPublishedStreamMessage(ServiceContext ctx, HasSiemacMetadata version) {
+        try {
+            streamMessagingServiceFacade.sendNewVersionPublished(version);
+        } catch (MetamacException e) {
+            createStreamMessageSentNotification(ctx, version);
+        }
     }
 
     protected void createStreamMessageSentNotification(ServiceContext ctx, HasSiemacMetadata version) {
-        if (version.getLifeCycleStatisticalResource().getPublicationStreamStatus() == StreamMessageStatusEnum.FAILED) {
+        if (version.getLifeCycleStatisticalResource().getPublicationStreamStatus() != StreamMessageStatusEnum.SENT) {
             List<HasSiemacMetadata> affectedVersions = new ArrayList<>();
             affectedVersions.add(version);
             String userId = ctx.getUserId();

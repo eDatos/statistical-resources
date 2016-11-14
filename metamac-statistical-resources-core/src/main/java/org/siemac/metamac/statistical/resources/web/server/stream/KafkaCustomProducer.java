@@ -19,6 +19,7 @@ import org.apache.kafka.clients.producer.RecordMetadata;
 import org.apache.kafka.common.errors.SerializationException;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionBuilder;
+import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.stream.enume.KafkaTopics;
 
 import io.confluent.kafka.serializers.KafkaAvroDeserializerConfig;
@@ -35,6 +36,7 @@ public class KafkaCustomProducer<K, V extends SpecificRecordBase> extends Produc
                                                                       {
                                                                           put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, KafkaAvroSerializer.class);
                                                                           put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, KafkaAvroSerializer.class);
+                                                                          put(ProducerConfig.MAX_BLOCK_MS_CONFIG, 5000); //Time to wait if Kafka cluster is down or buffer is full
                                                                       }
                                                                   };
 
@@ -67,7 +69,7 @@ public class KafkaCustomProducer<K, V extends SpecificRecordBase> extends Produc
 
     protected void checkTopicIsValid(String topic) throws MetamacException {
         if (topic == null || topic.isEmpty() || !isAKafkaTopic(topic)) {
-            throw new MetamacExceptionBuilder().withMessageParameters("Kafka topic is not valid").build();
+            throw new MetamacExceptionBuilder().withMessageParameters(ServiceExceptionType.STREAM_MESSAGING_TOPIC_IS_INVALID.getMessageForReasonType()).build();
         }
     }
 
@@ -91,7 +93,7 @@ public class KafkaCustomProducer<K, V extends SpecificRecordBase> extends Produc
     protected Properties checkMissingMandatoryProperties(Properties props) throws MetamacException {
         for (String prop : KafkaCustomProducer.MANDATORY_SETTINGS) {
             if (!props.containsKey(prop)) {
-                throw new MetamacExceptionBuilder().withMessageParameters("Missing mandatory settings to initialize Kafka Producer").build();
+                throw new MetamacExceptionBuilder().withMessageParameters(ServiceExceptionType.STREAM_MESSAGING_MISSING_MANDATORY_SETTINGS.getMessageForReasonType()).build();
             }
         }
         return props;
