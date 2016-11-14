@@ -742,6 +742,7 @@ public class DatasetMockFactory extends StatisticalResourcesMockFactory<Dataset>
         DatasetVersion datasetVersionLatest = getStatisticalResourcesPersistedDoMocks().mockDatasetVersion(templateLatest);
 
         datasetVersionLatest.getSiemacMetadataStatisticalResource().setReplacesVersion(StatisticalResourcesNotPersistedDoMocks.mockRelatedResourceLinkedToDatasetVersion(datasetVersionPublished));
+        datasetVersionPublished.getSiemacMetadataStatisticalResource().setIsReplacedByVersion(StatisticalResourcesNotPersistedDoMocks.mockRelatedResourceLinkedToDatasetVersion(datasetVersionLatest));
 
         return dataset;
     }
@@ -804,6 +805,7 @@ public class DatasetMockFactory extends StatisticalResourcesMockFactory<Dataset>
         DatasetLifecycleTestUtils.fillAsPublished(datasetVersionLatest);
 
         datasetVersionLatest.getSiemacMetadataStatisticalResource().setReplacesVersion(StatisticalResourcesNotPersistedDoMocks.mockRelatedResourceLinkedToDatasetVersion(datasetVersionPublished));
+        datasetVersionPublished.getSiemacMetadataStatisticalResource().setIsReplacedByVersion(StatisticalResourcesNotPersistedDoMocks.mockRelatedResourceLinkedToDatasetVersion(datasetVersionLatest));
 
         return dataset;
     }

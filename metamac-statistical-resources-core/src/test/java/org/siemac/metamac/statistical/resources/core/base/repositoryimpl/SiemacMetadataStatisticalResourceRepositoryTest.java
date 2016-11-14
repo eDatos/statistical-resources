@@ -83,12 +83,10 @@ public class SiemacMetadataStatisticalResourceRepositoryTest extends Statistical
         assertEquals("000001", code);
     }
 
-    @Override
     public void testRetrieveIsReplacedBy() throws Exception {
         // TESTED somewhere else
     }
 
-    @Override
     public void testRetrieveIsReplacedByOnlyLastPublished() throws Exception {
         // TESTED somewhere else
     }

@@ -48,6 +48,7 @@ import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
 import org.siemac.metamac.statistical.resources.core.common.domain.InternationalString;
 import org.siemac.metamac.statistical.resources.core.common.domain.LocalisedString;
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResource;
+import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResourceRepository;
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResourceResult;
 import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor;
 import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor.DsdAttribute;
@@ -147,6 +148,9 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
 
     @Autowired
     private ConstraintsService                        constraintsService;
+
+    @Autowired
+    private RelatedResourceRepository                 relatedResourceRepository;
 
     // ------------------------------------------------------------------------
     // DATASOURCES
@@ -541,6 +545,9 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
             if (previousResource.getDatasetVersion() != null) {
                 DatasetVersion previousVersion = previousResource.getDatasetVersion();
                 previousVersion.getSiemacMetadataStatisticalResource().setLastVersion(true);
+                RelatedResource isReplacedByVersion = previousVersion.getSiemacMetadataStatisticalResource().getIsReplacedByVersion();
+                relatedResourceRepository.delete(isReplacedByVersion);
+                previousVersion.getSiemacMetadataStatisticalResource().setIsReplacedByVersion(null);
                 getDatasetVersionRepository().save(previousVersion);
             }
             // Delete version
@@ -607,9 +614,9 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
     }
 
     protected void checkDatasetVersionIsReplacedBySomeDataset(DatasetVersion datasetVersion, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
-        RelatedResourceResult resourceIsReplacedBy = datasetVersionRepository.retrieveIsReplacedBy(datasetVersion);
+        RelatedResource resourceIsReplacedBy = datasetVersion.getSiemacMetadataStatisticalResource().getIsReplacedBy();
         if (resourceIsReplacedBy != null) {
-            exceptionItems.add(new MetamacExceptionItem(ServiceExceptionType.DATASET_VERSION_IS_REPLACED_BY_OTHER_RESOURCE, resourceIsReplacedBy.getUrn()));
+            exceptionItems.add(new MetamacExceptionItem(ServiceExceptionType.DATASET_VERSION_IS_REPLACED_BY_OTHER_RESOURCE, resourceIsReplacedBy.getDatasetVersion().getLifeCycleStatisticalResource().getUrn()));
         }
     }
 

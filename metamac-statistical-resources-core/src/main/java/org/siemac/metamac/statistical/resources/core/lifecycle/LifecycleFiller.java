@@ -108,5 +108,8 @@ public class LifecycleFiller {
             throw new MetamacException(ServiceExceptionType.PARAMETER_REQUIRED, ServiceExceptionParameters.PREVIOUS_VERSION);
         }
         previousVersion.getLifeCycleStatisticalResource().setLastVersion(false);
+
+        RelatedResource isReplacedBy = RelatedResourceUtils.createRelatedResourceForHasLifecycleResource(resource);
+        previousVersion.getLifeCycleStatisticalResource().setIsReplacedByVersion(isReplacedBy);
     }
 }

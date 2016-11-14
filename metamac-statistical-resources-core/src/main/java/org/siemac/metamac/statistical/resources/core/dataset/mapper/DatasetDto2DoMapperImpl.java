@@ -174,8 +174,8 @@ public class DatasetDto2DoMapperImpl extends BaseDto2DoMapperImpl implements Dat
             if (currentUrn.equals(resourceReplaced.getDatasetVersion().getSiemacMetadataStatisticalResource().getUrn())) {
                 throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.DATASET_VERSION_CANT_REPLACE_ITSELF).withMessageParameters(currentUrn).build();
             } else {
-                RelatedResourceResult resourceAlreadyReplacing = datasetVersionRepository.retrieveIsReplacedBy(resourceReplaced.getDatasetVersion());
-                if (resourceAlreadyReplacing != null && !resourceAlreadyReplacing.getUrn().equals(source.getUrn())) {
+                RelatedResource resourceAlreadyReplacing = resourceReplaced.getDatasetVersion().getSiemacMetadataStatisticalResource().getIsReplacedBy();
+                if (resourceAlreadyReplacing != null && !resourceAlreadyReplacing.getDatasetVersion().getLifeCycleStatisticalResource().getUrn().equals(source.getUrn())) {
                     throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.DATASET_VERSION_ALREADY_BEEN_REPLACED_BY_OTHER_DATASET_VERSION)
                             .withMessageParameters(currentUrn, source.getReplaces().getUrn()).build();
                 }

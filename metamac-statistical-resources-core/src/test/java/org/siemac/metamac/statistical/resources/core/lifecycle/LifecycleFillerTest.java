@@ -1,5 +1,9 @@
 package org.siemac.metamac.statistical.resources.core.lifecycle;
 
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertThat;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.LifecycleAsserts.assertNotNullAutomaticallyFilledMetadataLifecycleSendToPublished;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.LifecycleAsserts.assertNotNullAutomaticallyFilledMetadataSendToDiffusionValidation;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.LifecycleAsserts.assertNotNullAutomaticallyFilledMetadataSendToProductionValidation;
@@ -20,6 +24,7 @@ import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
 import org.siemac.metamac.statistical.resources.core.base.domain.HasLifecycle;
+import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResource;
 import org.siemac.metamac.statistical.resources.core.common.utils.RelatedResourceUtils;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
@@ -183,5 +188,28 @@ public class LifecycleFillerTest extends StatisticalResourcesBaseTest {
 
         assertNotNullAutomaticallyFilledMetadataVersioningPreviousResource(resource, previousResource);
     }
+
+    @Test
+    public void testReplacesVersionMatchsIsReplacedByVersion() throws MetamacException {
+        PublicationVersion resource = persistedDoMocks.mockPublicationVersion();
+        PublicationVersion previousResource = persistedDoMocks.mockPublicationVersion();
+
+        PublicationLifecycleTestUtils.fillAsVersioned(resource);
+        PublicationLifecycleTestUtils.fillAsPublished(previousResource);
+
+        lifecycleFiller.applyVersioningNewResourceActions(getServiceContextWithoutPrincipal(), resource, previousResource, VersionTypeEnum.MAJOR);
+        lifecycleFiller.applyVersioningPreviousResourceActions(getServiceContextWithoutPrincipal(), resource, previousResource, VersionTypeEnum.MAJOR);
+
+        PublicationVersion newVersion = previousResource.getLifeCycleStatisticalResource().getIsReplacedByVersion().getPublicationVersion();
+        assertThat(newVersion, is(notNullValue()));
+        assertThat(newVersion, is(equalTo(resource)));
+
+        PublicationVersion oldVersion = resource.getLifeCycleStatisticalResource().getReplacesVersion().getPublicationVersion();
+        assertThat(oldVersion, is(notNullValue()));
+        assertThat(oldVersion, is(equalTo(previousResource)));
+
+    }
+    
+
 
 }

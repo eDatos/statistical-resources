@@ -359,15 +359,6 @@ public class QueryVersionRepositoryTest extends StatisticalResourcesBaseTest imp
         assertEqualsQueryVersion(expected, actual);
     }
 
-    @Test
-    @MetamacMock({QUERY_05_WITH_MULTIPLE_PUBLISHED_VERSIONS_NAME, QUERY_03_BASIC_WITH_2_QUERY_VERSIONS_NAME, QUERY_VERSION_11_DRAFT_NAME,
-            QUERY_06_WITH_MULTIPLE_PUBLISHED_VERSIONS_AND_LATEST_NO_VISIBLE_NAME})
-    public void testRetrieveLastPublishedVersionWithLatestVersionNoVisible() throws Exception {
-        String queryUrn = this.queryMockFactory.retrieveMock(QUERY_06_WITH_MULTIPLE_PUBLISHED_VERSIONS_AND_LATEST_NO_VISIBLE_NAME).getIdentifiableStatisticalResource().getUrn();
-        QueryVersion expected = this.queryVersionMockFactory.retrieveMock(QUERY_VERSION_27_V1_PUBLISHED_FOR_QUERY_06_NAME);
-        QueryVersion actual = this.queryVersionRepository.retrieveLastPublishedVersion(queryUrn);
-        assertEqualsQueryVersion(expected, actual);
-    }
 
     @Test
     @Override
@@ -396,24 +387,7 @@ public class QueryVersionRepositoryTest extends StatisticalResourcesBaseTest imp
         QueryAsserts.assertEqualsQueryVersionCollection(Arrays.asList(query01), queryVersions);
     }
 
-    @Test
-    @Override
-    @MetamacMock(QUERY_06_WITH_MULTIPLE_PUBLISHED_VERSIONS_AND_LATEST_NO_VISIBLE_NAME)
-    public void testRetrieveIsReplacedByVersion() throws Exception {
-        QueryVersion firstVersion = this.queryVersionMockFactory.retrieveMock(QUERY_VERSION_27_V1_PUBLISHED_FOR_QUERY_06_NAME);
-        QueryVersion secondVersion = this.queryVersionMockFactory.retrieveMock(QUERY_VERSION_28_V2_PUBLISHED_NO_VISIBLE_FOR_QUERY_06_NAME);
-
-        {
-            RelatedResourceResult resource = this.queryVersionRepository.retrieveIsReplacedByVersion(firstVersion);
-            assertNotNull(resource);
-            CommonAsserts.assertEqualsRelatedResourceResultQueryVersion(secondVersion, resource);
-        }
-        {
-            RelatedResourceResult resource = this.queryVersionRepository.retrieveIsReplacedByVersion(secondVersion);
-            assertNull(resource);
-        }
-    }
-
+ 
     @Test
     @Override
     @MetamacMock(QUERY_10_SINGLE_VERSION_DRAFT_USED_IN_PUBLICATIONS_NAME)

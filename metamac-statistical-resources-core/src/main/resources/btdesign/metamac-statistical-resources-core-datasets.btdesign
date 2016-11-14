@@ -244,15 +244,15 @@ Application DatasetsStatisticalResources {
 				@DatasetVersion retrieveByVersion(Long statisticalResourceId, String versionLogic) throws MetamacException;
 				boolean isLastVersion(String datasetVersionUrn) throws MetamacException;
 				List<String> retrieveDimensionsIds(@DatasetVersion datasetVersion) throws MetamacException;
+                RelatedResourceResult retrieveIsReplacedByVersionOnlyLastPublished(@DatasetVersion datasetVersion) throws MetamacException;
+                RelatedResourceResult retrieveIsReplacedByVersion(@DatasetVersion datasetVersion) throws MetamacException;
+                RelatedResourceResult retrieveIsReplacedByOnlyLastPublished(@DatasetVersion datasetVersion) throws MetamacException;
+                RelatedResourceResult retrieveIsReplacedBy(@DatasetVersion datasetVersion) throws MetamacException;
+                
+				
 				//Is required by
 				List<RelatedResourceResult> retrieveIsRequiredBy(@DatasetVersion datasetVersion) throws MetamacException;  
 				List<RelatedResourceResult> retrieveIsRequiredByOnlyLastPublished(@DatasetVersion datasetVersion) throws MetamacException;
-				//Is replaced by version
-				RelatedResourceResult retrieveIsReplacedByVersion(@DatasetVersion datasetVersion) throws MetamacException;  
-				RelatedResourceResult retrieveIsReplacedByVersionOnlyLastPublished(@DatasetVersion datasetVersion) throws MetamacException;
-				//Is replaced by
-				RelatedResourceResult retrieveIsReplacedBy(@DatasetVersion datasetVersion) throws MetamacException;  
-				RelatedResourceResult retrieveIsReplacedByOnlyLastPublished(@DatasetVersion datasetVersion) throws MetamacException;  
 				//Is part of
 				List<RelatedResourceResult> retrieveIsPartOf(@DatasetVersion datasetVersion) throws MetamacException;  
 				List<RelatedResourceResult> retrieveIsPartOfOnlyLastPublished(@DatasetVersion datasetVersion) throws MetamacException;  

@@ -14,6 +14,8 @@ import org.siemac.metamac.core.common.criteria.utils.CriteriaUtils;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatisticalResourceRepository;
 import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataStatisticalResourceRepository;
+import org.siemac.metamac.statistical.resources.core.base.domain.utils.RelatedResourceResultUtils;
+import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResource;
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResourceResult;
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
@@ -125,6 +127,7 @@ public class PublicationVersionRepositoryImpl extends PublicationVersionReposito
                         .or()
                         .withProperty(CriteriaUtils.getDatetimeLeafPropertyEmbedded(PublicationVersionProperties.siemacMetadataStatisticalResource().validTo(), PublicationVersion.class)).greaterThan(now)
                     .rbrace()
+                .orderBy(PublicationVersionProperties.siemacMetadataStatisticalResource().validFrom()).descending()
                 .build();
         // @formatter:on
 
@@ -134,8 +137,8 @@ public class PublicationVersionRepositoryImpl extends PublicationVersionReposito
         PagedResult<PublicationVersion> result = findByCondition(conditions, paging);
 
         // Check for unique result and return
-        if (result.getRowCount() != 0) {
-            return result.getValues().get(0);
+        if (result.getRowCount() > 0) {
+            return result.getValues().get(result.getRowCount() - 1);
         } else {
             return null;
         }
@@ -161,17 +164,28 @@ public class PublicationVersionRepositoryImpl extends PublicationVersionReposito
     }
 
     @Override
-    public RelatedResourceResult retrieveIsReplacedByVersion(PublicationVersion publicationVersion) throws MetamacException {
-        return lifeCycleStatisticalResourceRepository.retrieveIsReplacedByVersion(publicationVersion.getId(), TypeRelatedResourceEnum.PUBLICATION_VERSION);
+    public RelatedResourceResult retrieveIsReplacedByOnlyLastPublished(PublicationVersion publicationVersion) throws MetamacException {
+        PublicationVersion next = publicationVersion;
+        PublicationVersion replacing = null;
+
+        while (next != null && next.getLifeCycleStatisticalResource().getIsReplacedByVersion() != null) {
+            next = next.getLifeCycleStatisticalResource().getIsReplacedByVersion().getPublicationVersion();
+            if (next.getLifeCycleStatisticalResource().getProcStatus() == ProcStatusEnum.PUBLISHED) {
+                replacing = next;
+            }
+        }
+        return RelatedResourceResultUtils.from(replacing);
     }
 
     @Override
     public RelatedResourceResult retrieveIsReplacedBy(PublicationVersion publicationVersion) throws MetamacException {
-        return siemacMetadataStatisticalResourceRepository.retrieveIsReplacedBy(publicationVersion.getId(), TypeRelatedResourceEnum.PUBLICATION_VERSION);
+        RelatedResource replacingRelated = publicationVersion.getSiemacMetadataStatisticalResource().getIsReplacedBy();
+        RelatedResourceResult replacing = null;
+        if (replacingRelated.getType() == TypeRelatedResourceEnum.DATASET_VERSION) {
+            replacing = RelatedResourceResultUtils.from(replacingRelated.getDatasetVersion());
+        }
+
+        return replacing;
     }
 
-    @Override
-    public RelatedResourceResult retrieveIsReplacedByOnlyLastPublished(PublicationVersion publicationVersion) throws MetamacException {
-        return siemacMetadataStatisticalResourceRepository.retrieveIsReplacedByOnlyLastPublished(publicationVersion.getId(), TypeRelatedResourceEnum.PUBLICATION_VERSION);
-    }
 }

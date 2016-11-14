@@ -511,6 +511,7 @@ public class PublicationVersionMockFactory extends StatisticalResourcesMockFacto
         registerPublicationVersionMock(PUBLICATION_VERSION_42_PUB_IS_REPLACED_BY_PUB_VERSION_41_NAME, publicationToReplace);
 
         publicationVersion.getSiemacMetadataStatisticalResource().setReplaces(StatisticalResourcesPersistedDoMocks.mockPublicationVersionRelated(publicationToReplace));
+        publicationToReplace.getSiemacMetadataStatisticalResource().setIsReplacedBy(StatisticalResourcesPersistedDoMocks.mockPublicationVersionRelated(publicationVersion));
         return publicationVersion;
     }
 
@@ -666,6 +667,7 @@ public class PublicationVersionMockFactory extends StatisticalResourcesMockFacto
         registerPublicationVersionMock(PUBLICATION_VERSION_91_REPLACES_PUBLICATION_92_NAME, publicationVersionReplaces);
 
         publicationVersionReplaces.getSiemacMetadataStatisticalResource().setReplaces(StatisticalResourcesPersistedDoMocks.mockPublicationVersionRelated(publicationReplaced));
+        publicationReplaced.getSiemacMetadataStatisticalResource().setIsReplacedBy(StatisticalResourcesPersistedDoMocks.mockPublicationVersionRelated(publicationVersionReplaces));
 
         return new MockDescriptor(publicationReplaced, publicationVersionReplaces);
     }

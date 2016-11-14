@@ -141,8 +141,6 @@ Application QueriesStatisticalResources {
 				@QueryVersion retrieveLastPublishedVersion(String queryUrn) throws MetamacException;
 				List<@QueryVersion> findLinkedToFixedDatasetVersion(Long datasetVersionId);
 				List<@QueryVersion> findLinkedToDataset(Long datasetId);
-				//Is replaced by
-				RelatedResourceResult retrieveIsReplacedByVersion(@QueryVersion queryVersion) throws MetamacException;
 				//Is part of
 				List<RelatedResourceResult> retrieveIsPartOf(@QueryVersion queryVersion) throws MetamacException;  
 				List<RelatedResourceResult> retrieveIsPartOfOnlyLastPublished(@QueryVersion queryVersion) throws MetamacException;

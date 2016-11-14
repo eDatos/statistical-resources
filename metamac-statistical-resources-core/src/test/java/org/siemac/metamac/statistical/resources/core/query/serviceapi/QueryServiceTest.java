@@ -750,9 +750,6 @@ public class QueryServiceTest extends StatisticalResourcesBaseTest implements Qu
     public void testUpdateQueryVersionPublishedNoVisibleProcStatus() throws Exception {
         QueryVersion query = this.queryVersionMockFactory.retrieveMock(QUERY_VERSION_28_V2_PUBLISHED_NO_VISIBLE_FOR_QUERY_06_NAME);
 
-        this.expectedMetamacException(new MetamacException(ServiceExceptionType.LIFE_CYCLE_WRONG_PROC_STATUS, query.getLifeCycleStatisticalResource().getUrn(),
-                ProcStatusForActionsConstants.PROC_STATUS_FOR_EDIT_QUERY_VERSION));
-
         query.getLifeCycleStatisticalResource().setTitle(StatisticalResourcesDoMocks.mockInternationalString());
 
         this.queryService.updateQueryVersion(this.getServiceContextWithoutPrincipal(), query);
@@ -859,20 +856,6 @@ public class QueryServiceTest extends StatisticalResourcesBaseTest implements Qu
         assertEquals(datasetVersionsBefore, datasetVersionsAfter);
     }
 
-    @Test
-    @MetamacMock({QUERY_VERSION_28_V2_PUBLISHED_NO_VISIBLE_FOR_QUERY_06_NAME, DATASET_VERSION_06_FOR_QUERIES_NAME})
-    public void testUpdateDatasetVersionQueryVersionProcStatusPublishedNotVisible() throws Exception {
-        QueryVersion query = this.queryVersionMockFactory.retrieveMock(QUERY_VERSION_28_V2_PUBLISHED_NO_VISIBLE_FOR_QUERY_06_NAME);
-        query.setDataset(null);
-        query.setFixedDatasetVersion(this.datasetVersionMockFactory.retrieveMock(DATASET_VERSION_06_FOR_QUERIES_NAME));
-        query.getSelection().clear();
-        query.addSelection(buildSelectionItemWithDimensionAndCodes("DIM_01", "CODE_01"));
-        query.addSelection(buildSelectionItemWithDimensionAndCodes("DIM_02", "CODE_12"));
-        String urn = query.getLifeCycleStatisticalResource().getUrn();
-
-        this.expectedMetamacException(new MetamacException(ServiceExceptionType.LIFE_CYCLE_WRONG_PROC_STATUS, urn, ProcStatusForActionsConstants.PROC_STATUS_FOR_EDIT_QUERY_VERSION));
-        this.queryService.updateQueryVersion(this.getServiceContextWithoutPrincipal(), query);
-    }
 
     @Test
     @MetamacMock({QUERY_VERSION_15_PUBLISHED_NAME, DATASET_VERSION_06_FOR_QUERIES_NAME})

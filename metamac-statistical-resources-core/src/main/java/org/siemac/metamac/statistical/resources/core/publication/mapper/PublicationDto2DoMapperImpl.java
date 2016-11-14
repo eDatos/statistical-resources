@@ -14,7 +14,6 @@ import org.siemac.metamac.statistical.resources.core.base.domain.NameableStatist
 import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.mapper.BaseDto2DoMapperImpl;
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResource;
-import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResourceResult;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetRepository;
 import org.siemac.metamac.statistical.resources.core.dto.publication.ChapterDto;
@@ -122,8 +121,8 @@ public class PublicationDto2DoMapperImpl extends BaseDto2DoMapperImpl implements
             if (currentUrn.equals(resourceReplaced.getPublicationVersion().getSiemacMetadataStatisticalResource().getUrn())) {
                 throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.PUBLICATION_VERSION_CANT_REPLACE_ITSELF).withMessageParameters(currentUrn).build();
             } else {
-                RelatedResourceResult resourceAlreadyReplacing = publicationVersionRepository.retrieveIsReplacedBy(resourceReplaced.getPublicationVersion());
-                if (resourceAlreadyReplacing != null && !resourceAlreadyReplacing.getUrn().equals(source.getUrn())) {
+                RelatedResource resourceAlreadyReplacing = resourceReplaced.getPublicationVersion().getSiemacMetadataStatisticalResource().getIsReplacedBy();
+                if (resourceAlreadyReplacing != null && !resourceAlreadyReplacing.getPublicationVersion().getSiemacMetadataStatisticalResource().getUrn().equals(source.getUrn())) {
                     throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.PUBLICATION_VERSION_ALREADY_BEEN_REPLACED_BY_OTHER_PUBLICATION_VERSION)
                             .withMessageParameters(currentUrn, source.getReplaces().getUrn()).build();
                 }
