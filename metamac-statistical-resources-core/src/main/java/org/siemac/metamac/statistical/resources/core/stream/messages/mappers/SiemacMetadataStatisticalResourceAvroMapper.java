@@ -31,7 +31,7 @@ public class SiemacMetadataStatisticalResourceAvroMapper {
         target.setConformsTo(InternationalStringAvroMapper.avro2Do(source.getConformsTo()));
         target.setConformsToInternal(InternationalStringAvroMapper.avro2Do(source.getConformsToInternal()));
         target.setReplaces(RelatedResourceAvroMapper.avro2Do((source.getReplaces())));
-        // TODO target.setIsReplacedBy(RelatedResourceAvroMapper.avro2Do(source.getIsReplacedBy()));
+        target.setIsReplacedBy(RelatedResourceAvroMapper.avro2Do(source.getIsReplacedBy()));
         target.setAccessRights(InternationalStringAvroMapper.avro2Do(source.getAccessRights()));
         for (ExternalItemAvro extItem : source.getLanguages()) {
             target.addLanguage(ExternalItemAvroMapper.avro2Do(extItem));
@@ -80,8 +80,7 @@ public class SiemacMetadataStatisticalResourceAvroMapper {
                 .setConformsTo(InternationalStringAvroMapper.do2Avro(source.getConformsTo()))
                 .setConformsToInternal(InternationalStringAvroMapper.do2Avro(source.getConformsToInternal()))
                 .setReplaces(RelatedResourceAvroMapper.do2Avro((source.getReplaces())))
-                // TODO ---> Pendiente de merge de master target.setIsReplacedBy(RelatedResourceAvro2Do.relatedResourceAvro2Do(source.getIsReplacedBy()));
-                .setIsReplacedBy(null) // TODO
+                .setIsReplacedBy(RelatedResourceAvroMapper.do2Avro(source.getIsReplacedBy()))
                 .setAccessRights(InternationalStringAvroMapper.do2Avro(source.getAccessRights()))
                 .setLanguages(generateListOfLanguages(source))
                 .setStatisticalOperationInstances(generateListOfStatisticalOperationInstances(source))

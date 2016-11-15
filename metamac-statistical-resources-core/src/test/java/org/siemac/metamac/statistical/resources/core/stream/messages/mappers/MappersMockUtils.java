@@ -275,6 +275,7 @@ public class MappersMockUtils {
         target.setLastVersion(EXPECTED_LAST_VERSION);
         target.setProcStatus(PRODUCTION_VALIDATION);
         target.setReplacesVersion(mockRelatedResource(type));
+        target.setIsReplacedByVersion(mockRelatedResource(type));
         target.setMaintainer(mockExternalItem());
         target.addVersionRationaleType(new VersionRationaleType(VersionRationaleTypeEnum.MAJOR_CATEGORIES));
 
@@ -297,8 +298,7 @@ public class MappersMockUtils {
                 .setLastVersion(EXPECTED_LAST_VERSION)
                 .setProcStatus(ProcStatusEnumAvroMapper.do2Avro(PRODUCTION_VALIDATION))
                 .setReplacesVersion(mockRelatedResourceAvro(replacesVersionType))
-                // .setIsReplacedByVersion(mockRelatedResourceAvro(replacesVersionType)) TODO
-                .setIsReplacedByVersion(null)
+                .setIsReplacedByVersion(mockRelatedResourceAvro(replacesVersionType))
                 .setMaintainer(mockExternalItemAvro()).build();
         return target;
     }
@@ -383,8 +383,7 @@ public class MappersMockUtils {
                 .setSubtitle(mockInternationalStringAvro())
                 .setTitleAlternative(mockInternationalStringAvro())
                 .setType(StatisticalResourceTypeEnumAvroMapper.do2Avro(StatisticalResourceTypeEnum.COLLECTION))
-                // .setIsReplacedBy(mockRelatedResourceAvro(type)) //TODO
-                .setIsReplacedBy(null)
+                .setIsReplacedBy(mockRelatedResourceAvro(type))
                 .build();
         return target;
     }
@@ -437,6 +436,17 @@ public class MappersMockUtils {
         } else {
             target.setReplaces(mockRelatedResource(type));
         }
+        if (datasetVersion != null) {
+            target.setIsReplacedBy(mockRelatedResource(datasetVersion));
+        } else {
+            target.setIsReplacedBy(mockRelatedResource(type));
+        }
+        if (datasetVersion != null) {
+            target.setIsReplacedByVersion(mockRelatedResource(datasetVersion));
+        } else {
+            target.setIsReplacedByVersion(mockRelatedResource(type));
+        }
+
         target.setMaintainer(mockExternalItem());
         target.setAbstractLogic(mockInternationalString());
         target.setAccessRights(mockInternationalString());

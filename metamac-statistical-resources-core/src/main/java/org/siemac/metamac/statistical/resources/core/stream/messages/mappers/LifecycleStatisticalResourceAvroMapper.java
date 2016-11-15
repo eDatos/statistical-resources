@@ -51,7 +51,7 @@ public class LifecycleStatisticalResourceAvroMapper {
                 .setLastVersion(source.getLastVersion())
                 .setProcStatus(ProcStatusEnumAvroMapper.do2Avro(source.getProcStatus()))
                 .setReplacesVersion(RelatedResourceAvroMapper.do2Avro(source.getReplacesVersion()))
-                .setIsReplacedByVersion(null/* TODO source.getIsReplacedByVersion() */)
+                .setIsReplacedByVersion(RelatedResourceAvroMapper.do2Avro(source.getIsReplacedByVersion()))
                 .setMaintainer(ExternalItemAvroMapper.do2Avro(source.getMaintainer()))
                 .build();
         }
