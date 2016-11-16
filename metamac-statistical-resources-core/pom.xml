@@ -71,6 +71,12 @@
             <version>${mockito-version}</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.codehaus.jackson</groupId>
+            <artifactId>jackson-jaxrs</artifactId>
+            <version>${jackson.version}</version>
+            <scope>test</scope>
+        </dependency>
 
         <dependency>
             <groupId>org.siemac.metamac.metamac-srm</groupId>
