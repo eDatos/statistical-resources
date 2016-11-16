@@ -464,14 +464,14 @@ public class MappersMockUtils {
         target.setTitleAlternative(mockInternationalString());
         target.setType(StatisticalResourceTypeEnum.COLLECTION);
         target.setUserModifiedKeywords(true);
-        listExternalItem.forEach(item -> {
+        for (ExternalItem item : listExternalItem) {
             target.addContributor(item);
             target.addLanguage(item);
             target.addMediator(item);
             target.addPublisher(item);
             target.addPublisherContributor(item);
             target.addStatisticalOperationInstance(item);
-        });
+        }
 
         return target;
     }

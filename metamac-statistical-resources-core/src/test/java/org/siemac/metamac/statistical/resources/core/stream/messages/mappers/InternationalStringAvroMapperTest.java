@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import org.junit.Test;
 import org.siemac.metamac.statistical.resources.core.common.domain.InternationalString;
@@ -40,10 +39,8 @@ public class InternationalStringAvroMapperTest {
         assertEquals(expected.getLocalisedStrings().size(), actual.getLocalisedStrings().size());
 
         for (InternationalStringItemAvro itemExpected : expected.getLocalisedStrings()) {
-            Optional<InternationalStringItemAvro> equivalentLocale = actual.getLocalisedStrings().stream()
-                    .filter(item -> item.getLocale() == itemExpected.getLocale())
-                    .findFirst();
-            assertEquals(itemExpected.getLabel(), equivalentLocale.get().getLabel());
+            InternationalStringItemAvro equivalentLocale = actual.getLocalisedStrings().get(0);
+            assertEquals(itemExpected.getLabel(), equivalentLocale.getLabel());
         }
     }
 
