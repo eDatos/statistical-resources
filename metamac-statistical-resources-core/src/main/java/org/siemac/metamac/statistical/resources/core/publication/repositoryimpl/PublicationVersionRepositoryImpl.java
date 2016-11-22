@@ -12,8 +12,6 @@ import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
 import org.joda.time.DateTime;
 import org.siemac.metamac.core.common.criteria.utils.CriteriaUtils;
 import org.siemac.metamac.core.common.exception.MetamacException;
-import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatisticalResourceRepository;
-import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataStatisticalResourceRepository;
 import org.siemac.metamac.statistical.resources.core.base.domain.utils.RelatedResourceResultUtils;
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResource;
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResourceResult;
@@ -22,7 +20,6 @@ import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedRes
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersionProperties;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -30,12 +27,6 @@ import org.springframework.stereotype.Repository;
  */
 @Repository("publicationVersionRepository")
 public class PublicationVersionRepositoryImpl extends PublicationVersionRepositoryBase {
-
-    @Autowired
-    private LifeCycleStatisticalResourceRepository      lifeCycleStatisticalResourceRepository;
-
-    @Autowired
-    private SiemacMetadataStatisticalResourceRepository siemacMetadataStatisticalResourceRepository;
 
     public PublicationVersionRepositoryImpl() {
     }
@@ -181,8 +172,8 @@ public class PublicationVersionRepositoryImpl extends PublicationVersionReposito
     public RelatedResourceResult retrieveIsReplacedBy(PublicationVersion publicationVersion) throws MetamacException {
         RelatedResource replacingRelated = publicationVersion.getSiemacMetadataStatisticalResource().getIsReplacedBy();
         RelatedResourceResult replacing = null;
-        if (replacingRelated.getType() == TypeRelatedResourceEnum.DATASET_VERSION) {
-            replacing = RelatedResourceResultUtils.from(replacingRelated.getDatasetVersion());
+        if (replacingRelated != null && TypeRelatedResourceEnum.PUBLICATION_VERSION == replacingRelated.getType()) {
+            replacing = RelatedResourceResultUtils.from(replacingRelated.getPublicationVersion());
         }
 
         return replacing;
