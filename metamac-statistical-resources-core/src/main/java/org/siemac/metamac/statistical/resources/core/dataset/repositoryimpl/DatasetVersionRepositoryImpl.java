@@ -375,9 +375,9 @@ public class DatasetVersionRepositoryImpl extends DatasetVersionRepositoryBase {
         DatasetVersion next = datasetVersion;
         DatasetVersion replacing = null;
 
-        while (next != null && next.getLifeCycleStatisticalResource().getIsReplacedByVersion() != null) {
-            next = next.getLifeCycleStatisticalResource().getIsReplacedByVersion().getDatasetVersion();
-            if (next.getLifeCycleStatisticalResource().getProcStatus() == ProcStatusEnum.PUBLISHED) {
+        while (next != null && next.getSiemacMetadataStatisticalResource().getIsReplacedByVersion() != null) {
+            next = next.getSiemacMetadataStatisticalResource().getIsReplacedByVersion().getDatasetVersion();
+            if (next.getSiemacMetadataStatisticalResource().getProcStatus() == ProcStatusEnum.PUBLISHED) {
                 replacing = next;
             }
         }
@@ -392,7 +392,7 @@ public class DatasetVersionRepositoryImpl extends DatasetVersionRepositoryBase {
 
         while (next != null && next.getSiemacMetadataStatisticalResource().getIsReplacedBy() != null) {
             next = next.getSiemacMetadataStatisticalResource().getIsReplacedBy().getDatasetVersion();
-            if (next.getLifeCycleStatisticalResource().getProcStatus() == ProcStatusEnum.PUBLISHED) {
+            if (next.getSiemacMetadataStatisticalResource().getProcStatus() == ProcStatusEnum.PUBLISHED) {
                 replacing = next;
             }
         }
@@ -402,7 +402,7 @@ public class DatasetVersionRepositoryImpl extends DatasetVersionRepositoryBase {
 
     @Override
     public RelatedResourceResult retrieveIsReplacedByVersion(DatasetVersion datasetVersion) throws MetamacException {
-        RelatedResource replacingRelated = datasetVersion.getLifeCycleStatisticalResource().getIsReplacedByVersion();
+        RelatedResource replacingRelated = datasetVersion.getSiemacMetadataStatisticalResource().getIsReplacedByVersion();
         RelatedResourceResult replacing = null;
         if (replacingRelated != null && TypeRelatedResourceEnum.DATASET_VERSION == replacingRelated.getType()) {
             replacing = RelatedResourceResultUtils.from(replacingRelated.getDatasetVersion());

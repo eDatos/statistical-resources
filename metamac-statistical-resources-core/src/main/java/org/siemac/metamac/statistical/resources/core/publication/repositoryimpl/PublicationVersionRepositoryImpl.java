@@ -172,7 +172,7 @@ public class PublicationVersionRepositoryImpl extends PublicationVersionReposito
     public RelatedResourceResult retrieveIsReplacedBy(PublicationVersion publicationVersion) throws MetamacException {
         RelatedResource replacingRelated = publicationVersion.getSiemacMetadataStatisticalResource().getIsReplacedBy();
         RelatedResourceResult replacing = null;
-        if (replacingRelated != null && TypeRelatedResourceEnum.PUBLICATION_VERSION == replacingRelated.getType()) {
+        if (replacingRelated != null) {
             replacing = RelatedResourceResultUtils.from(replacingRelated.getPublicationVersion());
         }
 

@@ -49,8 +49,11 @@ public class RelatedResourceResultUtils {
         resource.setType(type);
     }
 
-
     public static RelatedResourceResult from(HasSiemacMetadata siemacMetadata) {
+        if (siemacMetadata == null) {
+            return null;
+        }
+
         RelatedResourceResult resource = new RelatedResourceResult();
         resource.setCode(siemacMetadata.getSiemacMetadataStatisticalResource().getCode());
         resource.setUrn(siemacMetadata.getSiemacMetadataStatisticalResource().getUrn());
