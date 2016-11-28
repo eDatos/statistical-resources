@@ -2,6 +2,9 @@ package org.siemac.metamac.statistical.resources.web.shared.criteria;
 
 import java.util.Date;
 
+import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
+import org.siemac.metamac.statistical.resources.core.enume.domain.StreamMessageStatusEnum;
+
 public class SiemacMetadataStatisticalResourceWebCriteria extends LifeCycleStatisticalResourceWebCriteria {
 
     private static final long serialVersionUID = 1L;
@@ -9,6 +12,8 @@ public class SiemacMetadataStatisticalResourceWebCriteria extends LifeCycleStati
     private String            titleAlternative;
     private String            keywords;
     private Date              newnessUtilDate;
+    private ProcStatusEnum    procStatusEnum;
+    private StreamMessageStatusEnum publicationStreamStatus;
 
     public SiemacMetadataStatisticalResourceWebCriteria() {
         super();
@@ -40,5 +45,13 @@ public class SiemacMetadataStatisticalResourceWebCriteria extends LifeCycleStati
 
     public void setNewnessUtilDate(Date newnessUtilDate) {
         this.newnessUtilDate = newnessUtilDate;
+    }
+
+    public StreamMessageStatusEnum getPublicationStreamStatus() {
+        return publicationStreamStatus;
+    }
+
+    public void setPublicationStreamStatus(StreamMessageStatusEnum publicationStreamStatus) {
+        this.publicationStreamStatus = publicationStreamStatus;
     }
 }

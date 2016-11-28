@@ -21,6 +21,9 @@ public enum StatisticalResourcesCriteriaPropertyEnum {
     // LifecyleResource
     PROC_STATUS,
 
+    // Stream Status
+    PUBLICATION_STREAM_STATUS,
+
     // SiemacResource
     TITLE_ALTERNATIVE,
     KEYWORDS,

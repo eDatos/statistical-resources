@@ -10,4 +10,7 @@ public class ServiceNoticeMessage {
     public static final String RESOURCE_CANCEL_VALIDATION_OK             = "notice_message.resources.action.cancel_validation.ok";
     public static final String RESOURCE_PUBLICATION_OK                   = "notice_message.resources.action.publication.ok";
     public static final String RESOURCE_PUBLICATION_ERROR_OK             = "notice_message.resources.action.publication_error.ok";
+
+    // Stream messaging
+    public static final String STREAM_MESSAGE_SEND_ERROR              = "notice_message.resources.stream_messaging.action.send.error";
 }

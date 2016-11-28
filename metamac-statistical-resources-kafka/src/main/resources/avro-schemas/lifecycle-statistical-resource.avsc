@@ -1,0 +1,46 @@
+ [
+     {
+         "namespace" : "org.siemac.metamac.statistical.resources.core.stream.messages",
+         "name" : "ProcStatusEnumAvro",
+         "type" : "enum" ,
+         "symbols" : [
+            "DRAFT",
+            "PRODUCTION_VALIDATION",
+            "DIFFUSION_VALIDATION",
+            "VALIDATION_REJECTED",
+            "PUBLISHED"
+         ]
+     }
+, 
+ {
+    "namespace": "org.siemac.metamac.statistical.resources.core.stream.messages",
+     "type": "record",
+     "name": "LifecycleStatisticalResourceAvro",
+     "fields" : [
+        {"name" : "versionableStatisticalResource", "type" : ["null", "VersionableStatisticalResourceAvro" ]},
+                
+        {"name" : "creationDate" ,  "type" : ["null", "DatetimeAvro"]},
+        {"name" : "creationUser" , "type" : ["null", "string"]},
+        
+        {"name" : "productionValidationDate" ,  "type" : ["null", "DatetimeAvro"]},
+        {"name" : "productionValidationUser" , "type" : ["null", "string"]},
+        
+        {"name" : "diffusionValidationDate" ,  "type" : ["null", "DatetimeAvro"]},
+        {"name" : "diffusionValidationUser" , "type" : ["null", "string"]},
+        
+        {"name" : "rejectValidationDate" , "type" : ["null", "DatetimeAvro"]},
+        {"name" : "rejectValidationUser" , "type" : ["null", "string"]},
+        
+        {"name" : "publicationDate" ,  "type" : ["null", "DatetimeAvro"]},
+        {"name" : "publicationUser" , "type" : ["null", "string"]},
+        
+        {"name" : "lastVersion", "type" : ["null", "boolean"]},
+        {"name" : "procStatus" , "type" : ["null", "ProcStatusEnumAvro"]},
+        {"name" : "replacesVersion", "type" : ["null", "RelatedResourceAvro"]}, 
+        {"name" : "isReplacedByVersion", "type" : ["null", "RelatedResourceAvro"]},
+        
+        {"name" : "maintainer", "type" : ["null", "ExternalItemAvro"]} 
+     ]
+ }
+ ]
+ 

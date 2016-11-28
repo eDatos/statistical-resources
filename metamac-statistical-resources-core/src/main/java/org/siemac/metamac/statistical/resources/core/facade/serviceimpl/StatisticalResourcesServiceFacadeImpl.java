@@ -1,5 +1,6 @@
 package org.siemac.metamac.statistical.resources.core.facade.serviceimpl;
 
+import java.io.Serializable;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
@@ -26,6 +27,7 @@ import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStr
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.RegionReference;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ResourceInternal;
 import org.siemac.metamac.sso.utils.SecurityUtils;
+import org.siemac.metamac.statistical.resources.core.base.domain.HasSiemacMetadata;
 import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
 import org.siemac.metamac.statistical.resources.core.common.mapper.CommonDo2DtoMapper;
 import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor;
@@ -68,10 +70,14 @@ import org.siemac.metamac.statistical.resources.core.dto.publication.Publication
 import org.siemac.metamac.statistical.resources.core.dto.query.CodeItemDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionBaseDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionDto;
+import org.siemac.metamac.statistical.resources.core.enume.domain.StreamMessageStatusEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
+import org.siemac.metamac.statistical.resources.core.invocation.service.NoticesRestInternalService;
 import org.siemac.metamac.statistical.resources.core.invocation.service.SrmRestInternalService;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceapi.LifecycleService;
+import org.siemac.metamac.statistical.resources.core.notices.ServiceNoticeAction;
+import org.siemac.metamac.statistical.resources.core.notices.ServiceNoticeMessage;
 import org.siemac.metamac.statistical.resources.core.publication.criteria.mapper.PublicationMetamacCriteria2SculptorCriteriaMapper;
 import org.siemac.metamac.statistical.resources.core.publication.criteria.mapper.PublicationSculptorCriteria2MetamacCriteriaMapper;
 import org.siemac.metamac.statistical.resources.core.publication.criteria.mapper.PublicationVersionMetamacCriteria2SculptorCriteriaMapper;
@@ -99,6 +105,7 @@ import org.siemac.metamac.statistical.resources.core.security.QueriesSecurityUti
 import org.siemac.metamac.statistical.resources.core.security.shared.SharedDatasetsSecurityUtils;
 import org.siemac.metamac.statistical.resources.core.security.shared.SharedPublicationsSecurityUtils;
 import org.siemac.metamac.statistical.resources.core.security.shared.SharedQueriesSecurityUtils;
+import org.siemac.metamac.statistical.resources.core.stream.serviceapi.StreamMessagingServiceFacade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -200,6 +207,12 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     private PublicationVersionRepository                             publicationVersionRepository;
     @Autowired
     private QueryVersionRepository                                   queryVersionRepository;
+
+    @Autowired
+    private StreamMessagingServiceFacade                             streamMessagingServiceFacade;
+
+    @Autowired
+    private NoticesRestInternalService                               noticesRestInternalService;
 
     public StatisticalResourcesServiceFacadeImpl() {
     }
@@ -921,6 +934,9 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
 
         datasetVersion = datasetLifecycleService.sendToPublished(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getUrn());
 
+        // Send stream message to stream messaging service (like Apache Kafka)
+        sendNewVersionPublishedStreamMessage(ctx, datasetVersion);
+
         // Transform
         datasetVersionDto = datasetDo2DtoMapper.datasetVersionDoToDto(ctx, datasetVersion);
 
@@ -948,9 +964,9 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         return datasetVersionDto;
     }
 
-    
 
-    
+
+
     private DatasetVersion changeDatasetVersionValidFromAndSave(String urn, DateTime validFrom) throws MetamacException {
         DatasetVersion datasetVersion = datasetVersionRepository.retrieveByUrn(urn);
         datasetVersion.getSiemacMetadataStatisticalResource().setValidFrom(validFrom);
@@ -1514,11 +1530,15 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
 
         publicationVersion = publicationLifecycleService.sendToPublished(ctx, publicationVersion.getSiemacMetadataStatisticalResource().getUrn());
 
+        // Send stream message to stream messaging service (like Apache Kafka)
+        sendNewVersionPublishedStreamMessage(ctx, publicationVersion);
+
         // Transform
         publicationVersionDto = publicationDo2DtoMapper.publicationVersionDoToDto(publicationVersion);
 
         return publicationVersionDto;
     }
+
 
     @Override
     public PublicationVersionBaseDto publishPublicationVersion(ServiceContext ctx, PublicationVersionBaseDto publicationVersionDto) throws MetamacException {
@@ -1541,7 +1561,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         return publicationVersionDto;
     }
 
-    
+
 
 
     private PublicationVersion changePublicationVersionValidFromAndSave(String urn, DateTime validFrom) throws MetamacException {
@@ -1550,7 +1570,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         return publicationVersionRepository.save(publicationVersion);
     }
 
-    
+
     @Override
     public PublicationVersionDto versioningPublicationVersion(ServiceContext ctx, PublicationVersionDto publicationVersionDto, VersionTypeEnum versionType) throws MetamacException {
         // Security
@@ -1583,6 +1603,25 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         publicationVersionDto = publicationDo2DtoMapper.publicationVersionDoToBaseDto(publicationVersion);
 
         return publicationVersionDto;
+    }
+
+    protected void sendNewVersionPublishedStreamMessage(ServiceContext ctx, HasSiemacMetadata version) {
+        try {
+            streamMessagingServiceFacade.sendNewVersionPublished(version);
+        } catch (MetamacException e) {
+            createStreamMessageSentNotification(ctx, version);
+        }
+    }
+
+    protected void createStreamMessageSentNotification(ServiceContext ctx, HasSiemacMetadata version) {
+        if (version.getLifeCycleStatisticalResource().getPublicationStreamStatus() != StreamMessageStatusEnum.SENT) {
+            List<HasSiemacMetadata> affectedVersions = new ArrayList<>();
+            affectedVersions.add(version);
+            String userId = ctx.getUserId();
+            String messageCode = ServiceNoticeAction.STREAM_MESSAGE_SEND;
+            String messageText = ServiceNoticeMessage.STREAM_MESSAGE_SEND_ERROR;
+            noticesRestInternalService.createErrorOnStreamMessagingService(userId, messageCode, affectedVersions, messageText, (Serializable[]) null);
+        }
     }
 
     // ------------------------------------------------------------------------

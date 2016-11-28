@@ -3,6 +3,7 @@ package org.siemac.metamac.statistical.resources.core.base.mapper;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
@@ -15,17 +16,24 @@ import org.mockito.Answers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
+import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
 import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItemRepository;
+import org.siemac.metamac.statistical.resources.core.dto.LifeCycleStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.SiemacMetadataStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.VersionRationaleTypeDto;
+import org.siemac.metamac.statistical.resources.core.enume.domain.StreamMessageStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.VersionRationaleTypeEnum;
 import org.siemac.metamac.statistical.resources.core.utils.asserts.BaseAsserts;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.StatisticalResourcesConfigurationMockImpl;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesDoMocks;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesDtoMocks;
+
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
 
 public class BaseDto2DoMapperTest extends StatisticalResourcesBaseTest {
 
@@ -65,6 +73,7 @@ public class BaseDto2DoMapperTest extends StatisticalResourcesBaseTest {
 
         assertFalse(entity.getUserModifiedKeywords());
     }
+
 
     @Test
     public void testCalculateKeywordsCleanDuplicates() throws Exception {
@@ -291,6 +300,22 @@ public class BaseDto2DoMapperTest extends StatisticalResourcesBaseTest {
         List<String> actualKeywords = Arrays.asList(localisedKeywords.split("\\s"));
         assertEquals(keywords.length, actualKeywords.size());
         assertTrue(actualKeywords.containsAll(Arrays.asList(keywords)));
+    }
+
+    @Test
+    public void publishedMessageStatusDto2DoTest() {
+        LifeCycleStatisticalResourceDto expected = new LifeCycleStatisticalResourceDto();
+        expected.setPublicationStreamStatus(StreamMessageStatusEnum.PENDING);
+        LifeCycleStatisticalResource actual = new LifeCycleStatisticalResource();
+        try {
+            baseDto2DoMapper.lifeCycleStatisticalResourceDtoToDo(expected, actual, METADATA_NAME_TEST);
+        } catch (MetamacException e) {
+            e.printStackTrace();
+        }
+
+        assertThat(expected.getPublicationStreamStatus(), is(equalTo(StreamMessageStatusEnum.PENDING)));
+        assertThat(actual.getPublicationStreamStatus(), is(equalTo(expected.getPublicationStreamStatus())));
+
     }
 
 }

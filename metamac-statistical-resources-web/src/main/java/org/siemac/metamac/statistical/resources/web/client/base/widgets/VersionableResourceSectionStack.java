@@ -2,6 +2,10 @@ package org.siemac.metamac.statistical.resources.web.client.base.widgets;
 
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import org.siemac.metamac.statistical.resources.web.client.model.ds.LifeCycleResourceDS;
 import org.siemac.metamac.statistical.resources.web.client.model.ds.VersionableResourceDS;
 import org.siemac.metamac.web.common.client.widgets.BaseCustomListGrid;
@@ -16,18 +20,50 @@ public class VersionableResourceSectionStack extends CustomListGridSectionStack 
 
     public VersionableResourceSectionStack(String title) {
         super(new BaseCustomListGrid(), title, "versionSectionStackStyle");
+    }
 
+    protected void setListGridFields() {
+        setListGridFields(null);
+    }
+    protected void setListGridFields(ListGridField... extraFields) {
+        List<ListGridField> gridFields = new ArrayList<ListGridField>();
         // Add fields to listGrid
-        ListGridField codeField = new ListGridField(VersionableResourceDS.CODE, getConstants().identifiableStatisticalResourceCode());
-        codeField.setWidth("30%");
-        ListGridField nameField = new ListGridField(VersionableResourceDS.TITLE, getConstants().nameableStatisticalResourceTitle());
-        ListGridField procStatusField = new ListGridField(LifeCycleResourceDS.PROC_STATUS, getConstants().lifeCycleStatisticalResourceProcStatus());
-        ListGridField versionField = new ListGridField(VersionableResourceDS.VERSION, getConstants().versionableStatisticalResourceVersionLogic());
-        versionField.setWidth("15%");
-        listGrid.setFields(codeField, nameField, procStatusField, versionField);
-
+        addCodeFieldToListGrid(gridFields);
+        addNameFieldToListGrid(gridFields);
+        addProcStatusFieldToGrid(gridFields);
+        addVersionFieldToListGrid(gridFields);
+        addExtraFieldsToGrid(gridFields, extraFields);
+        listGrid.setFields(gridFields.toArray(new ListGridField[gridFields.size()]));
         // Add listGrid to sectionStack
         defaultSection.setItems(listGrid);
+    }
+
+    protected void addExtraFieldsToGrid(List<ListGridField> gridFields, ListGridField... extraFields) {
+        if (extraFields != null && extraFields.length > 0) {
+            gridFields.addAll(Arrays.asList(extraFields));
+        }
+    }
+
+    protected void addProcStatusFieldToGrid(List<ListGridField> gridFields) {
+        ListGridField procStatusField = new ListGridField(LifeCycleResourceDS.PROC_STATUS, "VResourceSectionStack" + getConstants().lifeCycleStatisticalResourceProcStatus());
+        gridFields.add(procStatusField);
+    }
+
+    protected void addNameFieldToListGrid(List<ListGridField> gridFields) {
+        ListGridField nameField = new ListGridField(VersionableResourceDS.TITLE, getConstants().nameableStatisticalResourceTitle());
+        gridFields.add(nameField);
+    }
+
+    protected void addCodeFieldToListGrid(List<ListGridField> gridFields) {
+        ListGridField codeField = new ListGridField(VersionableResourceDS.CODE, getConstants().identifiableStatisticalResourceCode());
+        codeField.setWidth("30%");
+        gridFields.add(codeField);
+    }
+
+    protected void addVersionFieldToListGrid(List<ListGridField> gridFields) {
+        ListGridField versionField = new ListGridField(VersionableResourceDS.VERSION, getConstants().versionableStatisticalResourceVersionLogic());
+        versionField.setWidth("15%");
+        gridFields.add(versionField);
     }
 
     public void selectRecord(String fieldName, String value) {

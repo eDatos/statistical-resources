@@ -3,16 +3,17 @@ package org.siemac.metamac.statistical.resources.web.client.dataset.widgets;
 import java.util.List;
 
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionBaseDto;
-import org.siemac.metamac.statistical.resources.web.client.base.widgets.VersionableResourceSectionStack;
+import org.siemac.metamac.statistical.resources.web.client.base.widgets.SiemacMetadataResourceSectionStack;
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.ds.DatasetDS;
 import org.siemac.metamac.statistical.resources.web.client.utils.StatisticalResourcesRecordUtils;
 
 import com.smartgwt.client.types.SortDirection;
 
-public class DatasetVersionsSectionStack extends VersionableResourceSectionStack {
+public class DatasetVersionsSectionStack extends SiemacMetadataResourceSectionStack {
 
     public DatasetVersionsSectionStack(String title) {
         super(title);
+        setListGridFields();
     }
 
     public void setDatasetVersions(List<DatasetVersionBaseDto> datasetVersionBaseDtos) {

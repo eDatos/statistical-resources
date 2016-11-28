@@ -57,6 +57,7 @@ Application StatisticalResourcesDto {
 			String diffusionValidationUser;
 			String publicationUser;
 			String maintainerCodeNested;
+			- @StreamMessageStatusEnum publicationStreamStatus;
 		}
 
 		DataTransferObject LifeCycleStatisticalResourceDto extends @VersionableStatisticalResourceDto {
@@ -73,6 +74,8 @@ Application StatisticalResourcesDto {
 			JAVADATE publicationDate;
 			String publicationUser;
 			Boolean lastVersion;
+			
+            - @StreamMessageStatusEnum publicationStreamStatus;
 			
 			- @RelatedResourceDto replacesVersion;
 			- @RelatedResourceDto isReplacedByVersion;

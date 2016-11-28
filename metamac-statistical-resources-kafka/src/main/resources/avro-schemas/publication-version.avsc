@@ -1,0 +1,10 @@
+ {
+    "namespace": "org.siemac.metamac.statistical.resources.core.stream.messages",
+    "type" : "record",
+    "name" : "PublicationVersionAvro",
+    "fields" : [
+        {"name" : "siemacMetadataStatisticalResource", "type" : ["null", "SiemacMetadataStatisticalResourceAvro"]},
+        {"name" : "publication", "type" : ["null", "PublicationAvro"]},
+        {"name" : "hasPart", "type" : ["null", {"type" : "array", "items" : "RelatedResourceAvro"}]}
+    ]
+}

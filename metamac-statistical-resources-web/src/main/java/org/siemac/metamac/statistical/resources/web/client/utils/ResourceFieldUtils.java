@@ -12,6 +12,9 @@ import org.siemac.metamac.web.common.client.utils.ListGridUtils;
 import org.siemac.metamac.web.common.client.widgets.CustomLinkListGridField;
 import org.siemac.metamac.web.common.client.widgets.CustomListGridField;
 
+import com.smartgwt.client.types.Alignment;
+import com.smartgwt.client.types.ListGridFieldType;
+
 public class ResourceFieldUtils {
 
     //
@@ -72,7 +75,11 @@ public class ResourceFieldUtils {
     //
 
     public static CustomListGridField[] getSiemacMetadataListGridFields() {
-        return getLifeCycleListGridFields();
+        CustomListGridField publicationStreamStatus = new CustomListGridField(LifeCycleResourceDS.PUBLICATION_STREAM_STATUS, getConstants().publicationStreamStatus());
+        publicationStreamStatus.setWidth(140);
+        publicationStreamStatus.setType(ListGridFieldType.IMAGE);
+        publicationStreamStatus.setAlign(Alignment.CENTER);
+        return ListGridUtils.addFields(getLifeCycleListGridFields(), publicationStreamStatus);
     }
 
     //

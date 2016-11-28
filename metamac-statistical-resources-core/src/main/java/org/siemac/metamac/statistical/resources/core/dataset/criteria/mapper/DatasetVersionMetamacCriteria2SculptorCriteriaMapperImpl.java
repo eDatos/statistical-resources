@@ -81,6 +81,9 @@ public class DatasetVersionMetamacCriteria2SculptorCriteriaMapperImpl implements
                 case PROC_STATUS:
                     return new SculptorPropertyCriteria(DatasetVersionProperties.siemacMetadataStatisticalResource().procStatus(), propertyRestriction.getEnumValue(),
                             propertyRestriction.getOperationType());
+                case PUBLICATION_STREAM_STATUS:
+                    return new SculptorPropertyCriteria(DatasetVersionProperties.siemacMetadataStatisticalResource().publicationStreamStatus(), propertyRestriction.getEnumValue(),
+                            propertyRestriction.getOperationType());
                 case TITLE_ALTERNATIVE:
                     return new SculptorPropertyCriteria(DatasetVersionProperties.siemacMetadataStatisticalResource().titleAlternative().texts().label(), propertyRestriction.getStringValue(),
                             propertyRestriction.getOperationType());

@@ -13,6 +13,7 @@ public class QueryVersionsSectionStack extends VersionableResourceSectionStack {
 
     public QueryVersionsSectionStack(String title) {
         super(title);
+        setListGridFields(null);
     }
 
     public void setQueryVersions(List<QueryVersionBaseDto> queryVersionBaseDtos) {

@@ -1,0 +1,13 @@
+ {
+    "namespace": "org.siemac.metamac.statistical.resources.core.stream.messages",
+     "type": "record",
+     "name": "NameableStatisticalResourceAvro",
+     "fields" : [
+         {"name" : "identifiableStatisticalResource", "type" : ["null", "IdentifiableStatisticalResourceAvro" ]},
+         {"name" : "title" , "type" : ["null", "InternationalStringAvro"]},
+         {"name" : "description" , "type" : ["null", "InternationalStringAvro"]}
+     ]
+ }
+ 
+ 
+ 

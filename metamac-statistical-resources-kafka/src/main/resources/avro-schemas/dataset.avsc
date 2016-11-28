@@ -1,0 +1,12 @@
+  {
+      "namespace": "org.siemac.metamac.statistical.resources.core.stream.messages",
+      "type" : "record",
+      "name" : "DatasetAvro",
+      "fields" : [
+          {"name" : "identifiableStatisticalResource", "type" : ["null", "IdentifiableStatisticalResourceAvro" ]},
+          {"name" : "datasetVersionsUrns", "type" : ["null", {"type" : "array", "items" : "string"}]},
+          {"name" : "dimensionRepresentationMappings", "type" : ["null", {"type" : "array", "items" : "DimensionRepresentationMappingAvro"}]}
+      ]
+  }
+  
+  

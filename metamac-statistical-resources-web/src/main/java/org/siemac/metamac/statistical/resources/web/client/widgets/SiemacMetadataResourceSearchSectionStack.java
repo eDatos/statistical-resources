@@ -2,10 +2,13 @@ package org.siemac.metamac.statistical.resources.web.client.widgets;
 
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
 
+import org.siemac.metamac.statistical.resources.web.client.model.ds.LifeCycleResourceDS;
 import org.siemac.metamac.statistical.resources.web.client.model.ds.SiemacMetadataDS;
+import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.SiemacMetadataStatisticalResourceWebCriteria;
 import org.siemac.metamac.web.common.client.widgets.form.fields.CustomDateItem;
 
+import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
 
 public abstract class SiemacMetadataResourceSearchSectionStack extends LifeCycleResourceSearchSectionStack {
@@ -19,7 +22,11 @@ public abstract class SiemacMetadataResourceSearchSectionStack extends LifeCycle
         TextItem titleAlternative = new TextItem(SiemacMetadataDS.TITLE_ALTERNATIVE, getConstants().siemacMetadataStatisticalResourceTitleAlternative());
         TextItem keywords = new TextItem(SiemacMetadataDS.KEYWORDS, getConstants().siemacMetadataStatisticalResourceKeywords());
         CustomDateItem newNessUntilDate = new CustomDateItem(SiemacMetadataDS.NEWNESS_UNTIL_DATE, getConstants().siemacMetadataStatisticalResourceNewnessUntilDate());
-        advancedSearchForm.addFieldsInThePenultimePosition(titleAlternative, keywords, newNessUntilDate);
+
+        SelectItem publicationStreamStatus = new SelectItem(LifeCycleResourceDS.PUBLICATION_STREAM_STATUS, getConstants().publicationStreamStatus());
+        publicationStreamStatus.setValueMap(CommonUtils.getPublicationStreamStatusHashMap());
+
+        advancedSearchForm.addFieldsInThePenultimePosition(titleAlternative, keywords, newNessUntilDate, publicationStreamStatus);
     }
 
     public SiemacMetadataStatisticalResourceWebCriteria getSiemacMetadataStatisticalResourceWebCriteria(SiemacMetadataStatisticalResourceWebCriteria siemacMetadataStatisticalResourceWebCriteria) {
@@ -27,6 +34,9 @@ public abstract class SiemacMetadataResourceSearchSectionStack extends LifeCycle
         siemacMetadataStatisticalResourceWebCriteria.setTitleAlternative(advancedSearchForm.getValueAsString(SiemacMetadataDS.TITLE_ALTERNATIVE));
         siemacMetadataStatisticalResourceWebCriteria.setKeywords(advancedSearchForm.getValueAsString(SiemacMetadataDS.KEYWORDS));
         siemacMetadataStatisticalResourceWebCriteria.setNewnessUtilDate(((CustomDateItem) advancedSearchForm.getItem(SiemacMetadataDS.NEWNESS_UNTIL_DATE)).getValueAsDate());
+        siemacMetadataStatisticalResourceWebCriteria
+                .setPublicationStreamStatus(CommonUtils.getPublicationStreamStatusEnum(advancedSearchForm.getValueAsString(LifeCycleResourceDS.PUBLICATION_STREAM_STATUS)));
+
         return siemacMetadataStatisticalResourceWebCriteria;
     }
 }

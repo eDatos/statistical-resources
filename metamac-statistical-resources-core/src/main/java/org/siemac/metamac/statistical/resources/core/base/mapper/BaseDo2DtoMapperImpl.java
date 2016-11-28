@@ -112,6 +112,8 @@ public class BaseDo2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Base
         target.setIsReplacedByVersion(relatedResourceDoToDto(source.getIsReplacedByVersion()));
 
         target.setMaintainer(externalItemDoToDto(source.getMaintainer()));
+
+        target.setPublicationStreamStatus(source.getPublicationStreamStatus());
     }
 
     @Override
@@ -129,6 +131,8 @@ public class BaseDo2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Base
         target.setDiffusionValidationUser(source.getDiffusionValidationUser());
         target.setPublicationUser(source.getPublicationUser());
         target.setMaintainerCodeNested(source.getMaintainer().getCodeNested());
+        target.setPublicationStreamStatus(source.getPublicationStreamStatus());
+
     }
 
     @Override

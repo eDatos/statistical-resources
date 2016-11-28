@@ -1,0 +1,12 @@
+{
+     "namespace": "org.siemac.metamac.statistical.resources.core.stream.messages",
+      "type" : "record",
+      "name" : "AttributeValueAvro",
+      "fields" : [
+          {"name" : "dsdComponentId", "type" : ["null", "string" ]},
+          {"name" : "identifier", "type" : ["null", "string" ]},
+          {"name" : "title", "type" : ["null", "string" ]},
+          {"name" : "datasetVersionUrn", "type" : ["null", "string" ]}
+      ]
+}
+  

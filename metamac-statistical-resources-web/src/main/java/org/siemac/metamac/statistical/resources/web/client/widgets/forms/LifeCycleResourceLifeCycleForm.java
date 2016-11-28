@@ -39,6 +39,7 @@ public class LifeCycleResourceLifeCycleForm extends NavigationEnabledDynamicForm
 
     public void setLifeCycleStatisticalResourceDto(LifeCycleStatisticalResourceDto lifeCycleStatisticalResourceDto) {
         setValue(LifeCycleResourceDS.PROC_STATUS, CommonUtils.getProcStatusName(lifeCycleStatisticalResourceDto));
+        setValue(LifeCycleResourceDS.PUBLICATION_STREAM_STATUS, CommonUtils.getPublicationStreamStatusName(lifeCycleStatisticalResourceDto));
         setValue(LifeCycleResourceDS.CREATION_DATE, lifeCycleStatisticalResourceDto.getCreationDate());
         setValue(LifeCycleResourceDS.CREATION_USER, lifeCycleStatisticalResourceDto.getCreationUser());
         setValue(LifeCycleResourceDS.PRODUCTION_VALIDATION_DATE, lifeCycleStatisticalResourceDto.getProductionValidationDate());

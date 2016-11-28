@@ -1,5 +1,7 @@
 package org.siemac.metamac.statistical.resources.core.base.mapper;
 
+import static org.siemac.metamac.statistical.resources.core.error.utils.ServiceExceptionParametersUtils.addParameter;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -45,8 +47,6 @@ import org.siemac.metamac.statistical.resources.core.enume.domain.VersionRationa
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionSingleParameters;
 import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesCollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import static org.siemac.metamac.statistical.resources.core.error.utils.ServiceExceptionParametersUtils.addParameter;
 
 @org.springframework.stereotype.Component("baseDto2DoMapper")
 public class BaseDto2DoMapperImpl extends CommonDto2DoMapperImpl implements BaseDto2DoMapper {
@@ -248,6 +248,8 @@ public class BaseDto2DoMapperImpl extends CommonDto2DoMapperImpl implements Base
         if (MetadataEditionChecks.canMaintainerBeEdited(target.getId())) {
             target.setMaintainer(externalItemDtoToDo(source.getMaintainer(), target.getMaintainer(), addParameter(metadataName, ServiceExceptionSingleParameters.MAINTAINER)));
         }
+
+        target.setPublicationStreamStatus(source.getPublicationStreamStatus());
 
         // Other attributes are automatic, non modifiable
 
