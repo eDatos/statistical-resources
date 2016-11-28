@@ -1,13 +1,13 @@
 package org.siemac.metamac.statistical.resources.core.stream.messages.mappers;
 
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 import org.junit.Test;
 import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
 import org.siemac.metamac.statistical.resources.core.stream.messages.TypeRelatedResourceEnumAvro;
-
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
+import org.siemac.metamac.statistical.resources.core.stream.messages.mapper.TypeRelatedResourceEnumAvro2DoMapper;
 
 public class TypeRelatedResourceEnumAvroMapperTest {
 
@@ -16,7 +16,7 @@ public class TypeRelatedResourceEnumAvroMapperTest {
         TypeRelatedResourceEnumAvro expected = TypeRelatedResourceEnumAvro.DATASET_VERSION;
         TypeRelatedResourceEnum source = TypeRelatedResourceEnum.DATASET_VERSION;
 
-        TypeRelatedResourceEnumAvro actual = TypeRelatedResourceEnumAvroMapper.do2Avro(source);
+        TypeRelatedResourceEnumAvro actual = TypeRelatedResourceEnumDo2AvroMapper.do2Avro(source);
 
         assertThat(actual, is(equalTo(expected)));
     }
@@ -26,7 +26,7 @@ public class TypeRelatedResourceEnumAvroMapperTest {
         TypeRelatedResourceEnum expected = TypeRelatedResourceEnum.DATASET_VERSION;
         TypeRelatedResourceEnumAvro source = TypeRelatedResourceEnumAvro.DATASET_VERSION;
 
-        TypeRelatedResourceEnum actual = TypeRelatedResourceEnumAvroMapper.avro2Do(source);
+        TypeRelatedResourceEnum actual = TypeRelatedResourceEnumAvro2DoMapper.avro2Do(source);
 
         assertThat(actual, is(equalTo(expected)));
     }

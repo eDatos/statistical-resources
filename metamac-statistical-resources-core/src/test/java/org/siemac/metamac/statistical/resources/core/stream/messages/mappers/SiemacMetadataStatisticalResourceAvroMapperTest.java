@@ -1,5 +1,7 @@
 package org.siemac.metamac.statistical.resources.core.stream.messages.mappers;
 
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
@@ -14,16 +16,14 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetRepos
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionRepository;
 import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
 import org.siemac.metamac.statistical.resources.core.stream.messages.SiemacMetadataStatisticalResourceAvro;
+import org.siemac.metamac.statistical.resources.core.stream.messages.mapper.AvroMapperUtils;
+import org.siemac.metamac.statistical.resources.core.stream.messages.mapper.SiemacMetadataStatisticalResourceAvro2DoMapper;
 import org.siemac.metamac.statistical.resources.core.utils.asserts.CommonAsserts;
-
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-
 
 public class SiemacMetadataStatisticalResourceAvroMapperTest {
 
     @Mock
-    protected DatasetRepository        datasetRepository;
+    protected DatasetRepository datasetRepository;
 
     @Mock
     protected DatasetVersionRepository datasetVersionRepository;
@@ -41,7 +41,7 @@ public class SiemacMetadataStatisticalResourceAvroMapperTest {
 
         SiemacMetadataStatisticalResource expected = MappersMockUtils.mockSiemacMetadataStatisticalResource(TypeRelatedResourceEnum.DATASET_VERSION);
         SiemacMetadataStatisticalResourceAvro source = MappersMockUtils.mockSiemacMetadataStatisticalResourceAvro(TypeRelatedResourceEnum.DATASET_VERSION);
-        SiemacMetadataStatisticalResource actual = SiemacMetadataStatisticalResourceAvroMapper.avro2Do(source);
+        SiemacMetadataStatisticalResource actual = SiemacMetadataStatisticalResourceAvro2DoMapper.avro2Do(source);
 
         assertEqualsSiemacMetadataStatisticalResource(expected, actual);
     }
@@ -53,7 +53,7 @@ public class SiemacMetadataStatisticalResourceAvroMapperTest {
         SiemacMetadataStatisticalResourceAvro expected = MappersMockUtils.mockSiemacMetadataStatisticalResourceAvro(TypeRelatedResourceEnum.DATASET);
         SiemacMetadataStatisticalResource source = MappersMockUtils.mockSiemacMetadataStatisticalResource(TypeRelatedResourceEnum.DATASET);
 
-        SiemacMetadataStatisticalResourceAvro actual = SiemacMetadataStatisticalResourceAvroMapper.do2Avro(source);
+        SiemacMetadataStatisticalResourceAvro actual = SiemacMetadataStatisticalResourceDo2AvroMapper.do2Avro(source);
 
         assertThat(actual, is(equalTo(expected)));
 
@@ -82,6 +82,5 @@ public class SiemacMetadataStatisticalResourceAvroMapperTest {
         CommonAsserts.assertEqualsInternationalString(expected.getTitleAlternative(), actual.getTitleAlternative());
         assertThat(actual.getType(), is(equalTo(expected.getType())));
     }
-
 
 }

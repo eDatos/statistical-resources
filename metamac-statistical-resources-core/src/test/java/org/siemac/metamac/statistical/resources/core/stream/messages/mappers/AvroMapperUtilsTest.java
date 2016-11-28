@@ -1,5 +1,7 @@
 package org.siemac.metamac.statistical.resources.core.stream.messages.mappers;
 
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -19,11 +21,9 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersi
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionRepository;
 import org.siemac.metamac.statistical.resources.core.stream.messages.DatasetVersionAvro;
 import org.siemac.metamac.statistical.resources.core.stream.messages.IdentifiableStatisticalResourceAvro;
+import org.siemac.metamac.statistical.resources.core.stream.messages.mapper.AvroMapperUtils;
 import org.siemac.metamac.statistical.resources.core.utils.asserts.BaseAsserts;
 import org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts;
-
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
 
 public class AvroMapperUtilsTest {
 
@@ -32,7 +32,7 @@ public class AvroMapperUtilsTest {
     @Mock
     DatasetVersionRepository datasetVersionRepository;
     @Mock
-    ConfigurationService     configurationService;
+    ConfigurationService configurationService;
 
     @Before
     public void setUp() throws MetamacException {
@@ -46,7 +46,6 @@ public class AvroMapperUtilsTest {
         } catch (MetamacException e) {
         }
     }
-
 
     @Test
     public void testAvro2DoCallsTheCorrectClass() throws MetamacException {
@@ -86,7 +85,7 @@ public class AvroMapperUtilsTest {
     public void testDo2AvroCallsCorrectClass() throws MetamacException {
         IdentifiableStatisticalResourceAvro expected = MappersMockUtils.mockIdentifiableStatisticalResourceAvro();
         IdentifiableStatisticalResource source = MappersMockUtils.mockIdentifiableStatisticalResource();
-        IdentifiableStatisticalResourceAvro actual = (IdentifiableStatisticalResourceAvro) AvroMapperUtils.do2Avro(source);
+        IdentifiableStatisticalResourceAvro actual = (IdentifiableStatisticalResourceAvro) Avro2DoMapperUtils.do2Avro(source);
 
         assertThat(actual, is(equalTo(expected)));
     }
@@ -96,7 +95,7 @@ public class AvroMapperUtilsTest {
         DatasetVersionAvro expected = MappersMockUtils.mockDatasetVersionAvro();
         DatasetVersion source = MappersMockUtils.mockDatasetVersion();
 
-        DatasetVersionAvro actual = (DatasetVersionAvro) AvroMapperUtils.do2Avro(source);
+        DatasetVersionAvro actual = (DatasetVersionAvro) Avro2DoMapperUtils.do2Avro(source);
 
         assertThat(actual, is(equalTo(expected)));
     }
@@ -105,7 +104,7 @@ public class AvroMapperUtilsTest {
     public void testDo2AvroFailsOnNotFoundClass() {
         String notValidClass = "123";
         try {
-            AvroMapperUtils.do2Avro(notValidClass);
+            Avro2DoMapperUtils.do2Avro(notValidClass);
             fail("The test should not get to here");
         } catch (MetamacException e) {
             assertTrue("Method must launch a MetamacException if something fails", true);

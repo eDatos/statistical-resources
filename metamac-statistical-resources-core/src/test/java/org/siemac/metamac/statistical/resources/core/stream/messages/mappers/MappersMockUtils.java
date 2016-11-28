@@ -107,7 +107,7 @@ public class MappersMockUtils {
     public static ExternalItemAvro mockExternalItemAvro() {
         ExternalItemAvro expected = ExternalItemAvro.newBuilder().setCode(MappersMockUtils.EXPECTED_CODE).setCodeNested(MappersMockUtils.EXPECTED_CODE_NESTED)
                 .setManagementAppUrl(MappersMockUtils.EXPECTED_MANAGEMENT_APP_URL)
-                .setTitle(InternationalStringAvroMapper.do2Avro(MappersMockUtils.mockInternationalString()))
+                .setTitle(InternationalStringDo2AvroMapper.do2Avro(MappersMockUtils.mockInternationalString()))
                 .setType(EXPECTED_TYPE_AVRO)
                 .setUrn(MappersMockUtils.EXPECTED_URN)
                 .setUrnProvider(MappersMockUtils.EXPECTED_URN_PROVIDER)
@@ -169,8 +169,8 @@ public class MappersMockUtils {
         RelatedResourceAvro target = RelatedResourceAvro.newBuilder()
                 .setCode(EXPECTED_CODE)
                 .setStatisticalOperationUrn(EXPECTED_URN)
-                .setTitle(InternationalStringAvroMapper.do2Avro(mockInternationalString()))
-                .setType(TypeRelatedResourceEnumAvroMapper.do2Avro(type))
+                .setTitle(InternationalStringDo2AvroMapper.do2Avro(mockInternationalString()))
+                .setType(TypeRelatedResourceEnumDo2AvroMapper.do2Avro(type))
                 .setUrn(EXPECTED_URN)
                 .build();
         return target;
@@ -189,8 +189,8 @@ public class MappersMockUtils {
     public static NameableStatisticalResourceAvro mockNameableStatisticalResourceAvro() {
         NameableStatisticalResourceAvro target = NameableStatisticalResourceAvro.newBuilder()
                 .setIdentifiableStatisticalResource(mockIdentifiableStatisticalResourceAvro())
-                .setDescription(InternationalStringAvroMapper.do2Avro(mockInternationalString()))
-                .setTitle(InternationalStringAvroMapper.do2Avro(mockInternationalString()))
+                .setDescription(InternationalStringDo2AvroMapper.do2Avro(mockInternationalString()))
+                .setTitle(InternationalStringDo2AvroMapper.do2Avro(mockInternationalString()))
                 .build();
         return target;
     }
@@ -215,11 +215,11 @@ public class MappersMockUtils {
     public static VersionableStatisticalResourceAvro mockVersionableStatisticalResourceAvro() {
         VersionableStatisticalResourceAvro target = VersionableStatisticalResourceAvro.newBuilder()
                 .setNameableStatisticalResource(mockNameableStatisticalResourceAvro())
-                .setNextVersion(NextVersionTypeEnumAvroMapper.do2Avro(EXPECTED_NEXT_VERSION_TYPE))
-                .setNextVersionDate(DateTimeAvroMapper.do2Avro(EXPECTED_FUTURE_DATE))
-                .setValidFrom(DateTimeAvroMapper.do2Avro(EXPECTED_PAST_DATE))
-                .setVersionRationale(InternationalStringAvroMapper.do2Avro(mockInternationalString()))
-                .setValidTo(DateTimeAvroMapper.do2Avro(EXPECTED_FUTURE_DATE))
+                .setNextVersion(NextVersionTypeEnumDo2AvroMapper.do2Avro(EXPECTED_NEXT_VERSION_TYPE))
+                .setNextVersionDate(DateTimeDo2AvroMapper.do2Avro(EXPECTED_FUTURE_DATE))
+                .setValidFrom(DateTimeDo2AvroMapper.do2Avro(EXPECTED_PAST_DATE))
+                .setVersionRationale(InternationalStringDo2AvroMapper.do2Avro(mockInternationalString()))
+                .setValidTo(DateTimeDo2AvroMapper.do2Avro(EXPECTED_FUTURE_DATE))
                 .setVersionLogic(EXPECTED_VERSION_LOGIC)
                 .setVersionRationaleTypes(new ArrayList<VersionRationaleTypeEnumAvro>() {
                     {
@@ -285,18 +285,18 @@ public class MappersMockUtils {
     public static LifecycleStatisticalResourceAvro mockLifeCycleStatisticalResourceAvro(TypeRelatedResourceEnum replacesVersionType) {
         LifecycleStatisticalResourceAvro target = LifecycleStatisticalResourceAvro.newBuilder()
                 .setVersionableStatisticalResource(mockVersionableStatisticalResourceAvro())
-                .setCreationDate(DateTimeAvroMapper.do2Avro(EXPECTED_PAST_DATE))
+                .setCreationDate(DateTimeDo2AvroMapper.do2Avro(EXPECTED_PAST_DATE))
                 .setCreationUser(EXPECTED_USER + "Creation")
-                .setProductionValidationDate(DateTimeAvroMapper.do2Avro(EXPECTED_PAST_DATE))
+                .setProductionValidationDate(DateTimeDo2AvroMapper.do2Avro(EXPECTED_PAST_DATE))
                 .setProductionValidationUser(EXPECTED_USER + "ProductionValidation")
-                .setDiffusionValidationDate(DateTimeAvroMapper.do2Avro(EXPECTED_PAST_DATE))
+                .setDiffusionValidationDate(DateTimeDo2AvroMapper.do2Avro(EXPECTED_PAST_DATE))
                 .setDiffusionValidationUser(EXPECTED_USER + "DiffusionValidation")
-                .setRejectValidationDate(DateTimeAvroMapper.do2Avro(EXPECTED_PAST_DATE))
+                .setRejectValidationDate(DateTimeDo2AvroMapper.do2Avro(EXPECTED_PAST_DATE))
                 .setRejectValidationUser(EXPECTED_USER + "RejectValidation")
-                .setPublicationDate(DateTimeAvroMapper.do2Avro(EXPECTED_PAST_DATE))
+                .setPublicationDate(DateTimeDo2AvroMapper.do2Avro(EXPECTED_PAST_DATE))
                 .setPublicationUser(EXPECTED_USER + "Publication")
                 .setLastVersion(EXPECTED_LAST_VERSION)
-                .setProcStatus(ProcStatusEnumAvroMapper.do2Avro(PRODUCTION_VALIDATION))
+                .setProcStatus(ProcStatusEnumDo2AvroMapper.do2Avro(PRODUCTION_VALIDATION))
                 .setReplacesVersion(mockRelatedResourceAvro(replacesVersionType))
                 .setIsReplacedByVersion(mockRelatedResourceAvro(replacesVersionType))
                 .setMaintainer(mockExternalItemAvro()).build();
@@ -372,17 +372,17 @@ public class MappersMockUtils {
                 .setKeywords(mockInternationalStringAvro())
                 .setLanguage(mockExternalItemAvro())
                 .setLanguages(listExternalItemAvro)
-                .setLastUpdate(DateTimeAvroMapper.do2Avro(EXPECTED_PAST_DATE))
+                .setLastUpdate(DateTimeDo2AvroMapper.do2Avro(EXPECTED_PAST_DATE))
                 .setMediators(listExternalItemAvro)
-                .setNewnessUntilDate(DateTimeAvroMapper.do2Avro(EXPECTED_FUTURE_DATE))
+                .setNewnessUntilDate(DateTimeDo2AvroMapper.do2Avro(EXPECTED_FUTURE_DATE))
                 .setPublisherContributors(listExternalItemAvro)
                 .setPublishers(listExternalItemAvro)
                 .setReplaces(mockRelatedResourceAvro(type))
-                .setResourceCreatedDate(DateTimeAvroMapper.do2Avro(EXPECTED_PAST_DATE))
+                .setResourceCreatedDate(DateTimeDo2AvroMapper.do2Avro(EXPECTED_PAST_DATE))
                 .setStatisticalOperationInstances(listExternalItemAvro)
                 .setSubtitle(mockInternationalStringAvro())
                 .setTitleAlternative(mockInternationalStringAvro())
-                .setType(StatisticalResourceTypeEnumAvroMapper.do2Avro(StatisticalResourceTypeEnum.COLLECTION))
+                .setType(StatisticalResourceTypeEnumDo2AvroMapper.do2Avro(StatisticalResourceTypeEnum.COLLECTION))
                 .setIsReplacedBy(mockRelatedResourceAvro(type))
                 .build();
         return target;
@@ -509,7 +509,7 @@ public class MappersMockUtils {
     public static DatasourceAvro mockDatasourceAvro() {
         DatasourceAvro target = DatasourceAvro.newBuilder()
                 .setDatasetVersionUrn(EXPECTED_URN)
-                .setDateNextUpdate(DateTimeAvroMapper.do2Avro(EXPECTED_FUTURE_DATE))
+                .setDateNextUpdate(DateTimeDo2AvroMapper.do2Avro(EXPECTED_FUTURE_DATE))
                 .setFileName(EXPECTED_FILENAME)
                 .setIdentifiableStatisticalResource(mockIdentifiableStatisticalResourceAvro())
                 .build();
@@ -586,13 +586,13 @@ public class MappersMockUtils {
                 .setDatasetVersionUrn(EXPECTED_URN)
                 .setCategory(mockExternalItemAvro())
                 .setCreatedBy(EXPECTED_USER)
-                .setCreatedDate(DateTimeAvroMapper.do2Avro(EXPECTED_PAST_DATE))
+                .setCreatedDate(DateTimeDo2AvroMapper.do2Avro(EXPECTED_PAST_DATE))
                 .setVersion(EXPECTED_VERSION)
-                .setLastUpdated(DateTimeAvroMapper.do2Avro(EXPECTED_PAST_DATE))
+                .setLastUpdated(DateTimeDo2AvroMapper.do2Avro(EXPECTED_PAST_DATE))
                 .setLastUpdatedBy(EXPECTED_USER)
                 .setMaintainer(mockExternalItemAvro())
-                .setValidFromEffective(DateTimeAvroMapper.do2Avro(EXPECTED_PAST_DATE))
-                .setValidToEffective(DateTimeAvroMapper.do2Avro(EXPECTED_FUTURE_DATE))
+                .setValidFromEffective(DateTimeDo2AvroMapper.do2Avro(EXPECTED_PAST_DATE))
+                .setValidToEffective(DateTimeDo2AvroMapper.do2Avro(EXPECTED_FUTURE_DATE))
                 .setVersionableStatisticalResource(mockVersionableStatisticalResourceAvro())
                 .build();
         return target;
@@ -683,12 +683,12 @@ public class MappersMockUtils {
     public static DatasetVersionAvro mockDatasetVersionAvro() throws MetamacException {
         DatasetVersionAvro target = DatasetVersionAvro.newBuilder()
                 .setSiemacMetadataStatisticalResource(
-                        SiemacMetadataStatisticalResourceAvroMapper.do2Avro(mockSiemacMetadataStatisticalResource(TypeRelatedResourceEnum.DATASET_VERSION)))
-                .setDateStart(DateTimeAvroMapper.do2Avro(EXPECTED_PAST_DATE))
-                .setDateEnd(DateTimeAvroMapper.do2Avro(EXPECTED_FUTURE_DATE))
+                        SiemacMetadataStatisticalResourceDo2AvroMapper.do2Avro(mockSiemacMetadataStatisticalResource(TypeRelatedResourceEnum.DATASET_VERSION)))
+                .setDateStart(DateTimeDo2AvroMapper.do2Avro(EXPECTED_PAST_DATE))
+                .setDateEnd(DateTimeDo2AvroMapper.do2Avro(EXPECTED_FUTURE_DATE))
                 .setDatasetRepositoryId(EXPECTED_IDENTIFIER)
                 .setFormatExtentDimensions(EXPECTED_COPYRIGHT)
-                .setDateNextUpdate(DateTimeAvroMapper.do2Avro(EXPECTED_FUTURE_DATE))
+                .setDateNextUpdate(DateTimeDo2AvroMapper.do2Avro(EXPECTED_FUTURE_DATE))
                 .setUserModifiedDateNextUpdate(EXPECTED_TRUE)
                 .setDataset(mockDatasetAvro())
                 .setRelatedDsd(mockExternalItemAvro())

@@ -1,13 +1,13 @@
 package org.siemac.metamac.statistical.resources.core.stream.messages.mappers;
 
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 import org.junit.Test;
 import org.siemac.metamac.statistical.resources.core.enume.domain.NextVersionTypeEnum;
 import org.siemac.metamac.statistical.resources.core.stream.messages.NextVersionTypeEnumAvro;
-
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
+import org.siemac.metamac.statistical.resources.core.stream.messages.mapper.NextVersionTypeEnumAvro2DoMapper;
 
 public class NextVersionTypeEnumAvroMapperTest {
 
@@ -16,7 +16,7 @@ public class NextVersionTypeEnumAvroMapperTest {
         NextVersionTypeEnumAvro expected = NextVersionTypeEnumAvro.NON_SCHEDULED_UPDATE;
         NextVersionTypeEnum source = NextVersionTypeEnum.NON_SCHEDULED_UPDATE;
 
-        NextVersionTypeEnumAvro actual = NextVersionTypeEnumAvroMapper.do2Avro(source);
+        NextVersionTypeEnumAvro actual = NextVersionTypeEnumDo2AvroMapper.do2Avro(source);
 
         assertThat(actual, is(equalTo(expected)));
     }
@@ -26,7 +26,7 @@ public class NextVersionTypeEnumAvroMapperTest {
         NextVersionTypeEnum expected = NextVersionTypeEnum.NON_SCHEDULED_UPDATE;
         NextVersionTypeEnumAvro source = NextVersionTypeEnumAvro.NON_SCHEDULED_UPDATE;
 
-        NextVersionTypeEnum actual = NextVersionTypeEnumAvroMapper.avro2Do(source);
+        NextVersionTypeEnum actual = NextVersionTypeEnumAvro2DoMapper.avro2Do(source);
 
         assertThat(actual, is(equalTo(expected)));
     }

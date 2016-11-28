@@ -1,14 +1,13 @@
 package org.siemac.metamac.statistical.resources.core.stream.messages.mappers;
 
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 import org.joda.time.DateTime;
 import org.junit.Test;
 import org.siemac.metamac.statistical.resources.core.stream.messages.DatetimeAvro;
-
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-
+import org.siemac.metamac.statistical.resources.core.stream.messages.mapper.DateTimeAvro2DoMapper;
 
 public class DateTimeAvroMapperTest {
 
@@ -18,7 +17,7 @@ public class DateTimeAvroMapperTest {
         DatetimeAvro expected = DatetimeAvro.newBuilder().setInstant(expectedInstant).build();
         DateTime source = new DateTime(expectedInstant);
 
-        DatetimeAvro actual = DateTimeAvroMapper.do2Avro(source);
+        DatetimeAvro actual = DateTimeDo2AvroMapper.do2Avro(source);
 
         assertThat(actual.getInstant(), is(equalTo(expectedInstant)));
 
@@ -30,7 +29,7 @@ public class DateTimeAvroMapperTest {
         DateTime expected = new DateTime(expectedInstant);
         DatetimeAvro source = DatetimeAvro.newBuilder().setInstant(expectedInstant).build();
 
-        DateTime actual = DateTimeAvroMapper.avro2Do(source);
+        DateTime actual = DateTimeAvro2DoMapper.avro2Do(source);
 
         assertThat(actual.getMillis(), is(equalTo(expected.getMillis())));
     }

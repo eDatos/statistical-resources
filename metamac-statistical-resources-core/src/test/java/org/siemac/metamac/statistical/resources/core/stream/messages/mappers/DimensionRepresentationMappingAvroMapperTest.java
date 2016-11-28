@@ -14,8 +14,9 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetRepository;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DimensionRepresentationMapping;
 import org.siemac.metamac.statistical.resources.core.stream.messages.DimensionRepresentationMappingAvro;
+import org.siemac.metamac.statistical.resources.core.stream.messages.mapper.AvroMapperUtils;
+import org.siemac.metamac.statistical.resources.core.stream.messages.mapper.DimensionRepresentationMappingAvro2DoMapper;
 import org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts;
-
 
 public class DimensionRepresentationMappingAvroMapperTest {
 
@@ -33,7 +34,7 @@ public class DimensionRepresentationMappingAvroMapperTest {
         DimensionRepresentationMappingAvro expected = MappersMockUtils.mockDimensionRepresentationMappingAvro();
         DimensionRepresentationMapping source = MappersMockUtils.mockDimensionRepresentationMapping();
 
-        DimensionRepresentationMappingAvro actual = DimensionRepresentationMappingAvroMapper.do2Avro(source);
+        DimensionRepresentationMappingAvro actual = DimensionRepresentationMappingDo2AvroMapper.do2Avro(source);
 
         assertThat(actual, is(equalTo(expected)));
     }
@@ -46,7 +47,7 @@ public class DimensionRepresentationMappingAvroMapperTest {
 
         DimensionRepresentationMappingAvro source = MappersMockUtils.mockDimensionRepresentationMappingAvro();
 
-        DimensionRepresentationMapping actual = DimensionRepresentationMappingAvroMapper.avro2Do(source);
+        DimensionRepresentationMapping actual = DimensionRepresentationMappingAvro2DoMapper.avro2Do(source);
 
         assertThat(actual.getDatasourceFilename(), is(equalTo(expected.getDatasourceFilename())));
         assertThat(actual.getMapping(), is(equalTo(expected.getMapping())));
@@ -54,4 +55,3 @@ public class DimensionRepresentationMappingAvroMapperTest {
     }
 
 }
-

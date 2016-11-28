@@ -16,11 +16,13 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetRepos
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionRepository;
 import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
 import org.siemac.metamac.statistical.resources.core.stream.messages.RelatedResourceAvro;
+import org.siemac.metamac.statistical.resources.core.stream.messages.mapper.AvroMapperUtils;
+import org.siemac.metamac.statistical.resources.core.stream.messages.mapper.RelatedResourceAvro2DoMapper;
 
 public class RelatedResourceAvroMapperTest {
 
     @Mock
-    protected DatasetRepository        datasetRepository;
+    protected DatasetRepository datasetRepository;
 
     @Mock
     protected DatasetVersionRepository datasetVersionRepository;
@@ -39,7 +41,7 @@ public class RelatedResourceAvroMapperTest {
         RelatedResourceAvro expected = MappersMockUtils.mockRelatedResourceAvro(TypeRelatedResourceEnum.DATASET);
         RelatedResource source = MappersMockUtils.mockRelatedResource(TypeRelatedResourceEnum.DATASET);
 
-        RelatedResourceAvro actual = RelatedResourceAvroMapper.do2Avro(source);
+        RelatedResourceAvro actual = RelatedResourceDo2AvroMapper.do2Avro(source);
 
         assertThat(actual, is(equalTo(expected)));
     }
@@ -50,7 +52,7 @@ public class RelatedResourceAvroMapperTest {
 
         RelatedResource expected = MappersMockUtils.mockRelatedResource(TypeRelatedResourceEnum.DATASET);
         RelatedResourceAvro source = MappersMockUtils.mockRelatedResourceAvro(TypeRelatedResourceEnum.DATASET);
-        RelatedResource actual = RelatedResourceAvroMapper.avro2Do(source);
+        RelatedResource actual = RelatedResourceAvro2DoMapper.avro2Do(source);
 
         assertThat(actual.getDataset().getIdentifiableStatisticalResource().getCode(), is(equalTo(expected.getDataset().getIdentifiableStatisticalResource().getCode())));
         assertThat(actual.getDataset().getIdentifiableStatisticalResource().getUrn(), is(equalTo(expected.getDataset().getIdentifiableStatisticalResource().getUrn())));

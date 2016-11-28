@@ -1,5 +1,7 @@
 package org.siemac.metamac.statistical.resources.core.stream.messages.mappers;
 
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
 
@@ -13,11 +15,9 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetRepos
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionRepository;
 import org.siemac.metamac.statistical.resources.core.stream.messages.DatasetVersionAvro;
+import org.siemac.metamac.statistical.resources.core.stream.messages.mapper.AvroMapperUtils;
+import org.siemac.metamac.statistical.resources.core.stream.messages.mapper.DatasetVersionAvro2DoMapper;
 import org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts;
-
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-
 
 public class DatasetVersionAvroMapperTest {
 
@@ -25,10 +25,10 @@ public class DatasetVersionAvroMapperTest {
     private static DatasetVersionRepository datasetVersionRepository;
 
     @Mock
-    private static DatasetRepository        datasetRepository;
+    private static DatasetRepository datasetRepository;
 
     @Mock
-    private static ConfigurationService     configurationService;
+    private static ConfigurationService configurationService;
 
     @Before
     public void setUp() throws MetamacException {
@@ -47,7 +47,7 @@ public class DatasetVersionAvroMapperTest {
         DatasetVersionAvro expected = MappersMockUtils.mockDatasetVersionAvro();
         DatasetVersion source = MappersMockUtils.mockDatasetVersion();
 
-        DatasetVersionAvro actual = DatasetVersionAvroMapper.do2Avro(source);
+        DatasetVersionAvro actual = DatasetVersionDo2AvroMapper.do2Avro(source);
 
         assertEqualDatasetVersionAvro(expected, actual);
     }
@@ -76,7 +76,6 @@ public class DatasetVersionAvroMapperTest {
         assertThat(actual.getDimensionsCoverage(), is(equalTo(expected.getDimensionsCoverage())));
     }
 
-
     @Test
     public void testAvro2Do() throws MetamacException {
 
@@ -86,7 +85,7 @@ public class DatasetVersionAvroMapperTest {
         when(datasetRepository.retrieveByUrn(MappersMockUtils.EXPECTED_URN)).thenReturn(expected.getDataset());
         when(datasetVersionRepository.retrieveByUrn(MappersMockUtils.EXPECTED_URN)).thenReturn(expected);
 
-        DatasetVersion actual = DatasetVersionAvroMapper.avro2Do(source);
+        DatasetVersion actual = DatasetVersionAvro2DoMapper.avro2Do(source);
 
         DatasetsAsserts.assertEqualsDatasetVersion(expected, actual);
     }

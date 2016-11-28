@@ -1,5 +1,7 @@
 package org.siemac.metamac.statistical.resources.core.stream.messages.mappers;
 
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
 
@@ -12,11 +14,9 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Categorisation;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionRepository;
 import org.siemac.metamac.statistical.resources.core.stream.messages.CategorisationAvro;
+import org.siemac.metamac.statistical.resources.core.stream.messages.mapper.AvroMapperUtils;
+import org.siemac.metamac.statistical.resources.core.stream.messages.mapper.CategorisationAvro2DoMapper;
 import org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts;
-
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-
 
 public class CategorisationAvroMapperTest {
 
@@ -42,7 +42,7 @@ public class CategorisationAvroMapperTest {
         CategorisationAvro expected = MappersMockUtils.mockCategorisationAvro();
         Categorisation source = MappersMockUtils.mockCategorisation();
 
-        CategorisationAvro actual = CategorisationAvroMapper.do2Avro(source);
+        CategorisationAvro actual = CategorisationDo2AvroMapper.do2Avro(source);
 
         assertThat(actual, is(equalTo(expected)));
     }
@@ -54,10 +54,9 @@ public class CategorisationAvroMapperTest {
 
         when(datasetVersionRepository.retrieveByUrn(MappersMockUtils.EXPECTED_URN)).thenReturn(expected.getDatasetVersion());
 
-        Categorisation actual = CategorisationAvroMapper.avro2Do(source);
+        Categorisation actual = CategorisationAvro2DoMapper.avro2Do(source);
 
         DatasetsAsserts.assertEqualsDatasetVersion(expected.getDatasetVersion(), actual.getDatasetVersion());
     }
 
 }
-

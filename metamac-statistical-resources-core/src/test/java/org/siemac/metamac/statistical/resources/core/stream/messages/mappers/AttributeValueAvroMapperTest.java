@@ -13,8 +13,9 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.AttributeValue;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionRepository;
 import org.siemac.metamac.statistical.resources.core.stream.messages.AttributeValueAvro;
+import org.siemac.metamac.statistical.resources.core.stream.messages.mapper.AttributeValueAvro2DoMapper;
+import org.siemac.metamac.statistical.resources.core.stream.messages.mapper.AvroMapperUtils;
 import org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts;
-
 
 public class AttributeValueAvroMapperTest {
 
@@ -27,13 +28,12 @@ public class AttributeValueAvroMapperTest {
         AvroMapperUtils.setDatasetVersionRepository(datasetVersionRepository);
     }
 
-
     @Test
     public void testDo2Avro() {
         AttributeValueAvro expected = MappersMockUtils.mockAttributeValueAvro();
         AttributeValue source = MappersMockUtils.mockAttributeValue();
 
-        AttributeValueAvro actual = AttributeValueAvroMapper.do2Avro(source);
+        AttributeValueAvro actual = AttributeValueDo2AvroMapper.do2Avro(source);
 
         assertThat(actual, is(equalTo(expected)));
     }
@@ -45,13 +45,9 @@ public class AttributeValueAvroMapperTest {
 
         when(datasetVersionRepository.retrieveByUrn(MappersMockUtils.EXPECTED_URN)).thenReturn(expected.getDatasetVersion());
 
-        AttributeValue actual = AttributeValueAvroMapper.avro2Do(source);
+        AttributeValue actual = AttributeValueAvro2DoMapper.avro2Do(source);
 
-
-        DatasetsAsserts.assertEqualsDatasetVersion(expected.getDatasetVersion(), actual.getDatasetVersion());    }
+        DatasetsAsserts.assertEqualsDatasetVersion(expected.getDatasetVersion(), actual.getDatasetVersion());
+    }
 
 }
-
-
-
-

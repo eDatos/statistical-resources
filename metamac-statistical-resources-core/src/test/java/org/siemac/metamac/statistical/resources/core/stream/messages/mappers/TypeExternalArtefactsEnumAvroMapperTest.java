@@ -1,13 +1,13 @@
 package org.siemac.metamac.statistical.resources.core.stream.messages.mappers;
 
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 import org.junit.Test;
 import org.siemac.metamac.core.common.enume.domain.TypeExternalArtefactsEnum;
 import org.siemac.metamac.statistical.resources.core.stream.messages.TypeExternalArtefactsEnumAvro;
-
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
+import org.siemac.metamac.statistical.resources.core.stream.messages.mapper.TypeExternalArtefactsEnumAvro2DoMapper;
 
 public class TypeExternalArtefactsEnumAvroMapperTest {
 
@@ -16,7 +16,7 @@ public class TypeExternalArtefactsEnumAvroMapperTest {
         TypeExternalArtefactsEnumAvro expected = TypeExternalArtefactsEnumAvro.DATA_CONSUMER_SCHEME;
         TypeExternalArtefactsEnum source = TypeExternalArtefactsEnum.DATA_CONSUMER_SCHEME;
 
-        TypeExternalArtefactsEnumAvro actual = TypeExternalArtefactsEnumAvroMapper.do2Avro(source);
+        TypeExternalArtefactsEnumAvro actual = TypeExternalArtefactsEnumDo2AvroMapper.do2Avro(source);
 
         assertThat(actual, is(equalTo(expected)));
     }
@@ -26,7 +26,7 @@ public class TypeExternalArtefactsEnumAvroMapperTest {
         TypeExternalArtefactsEnum expected = TypeExternalArtefactsEnum.DATA_CONSUMER_SCHEME;
         TypeExternalArtefactsEnumAvro source = TypeExternalArtefactsEnumAvro.DATA_CONSUMER_SCHEME;
 
-        TypeExternalArtefactsEnum actual = TypeExternalArtefactsEnumAvroMapper.avro2Do(source);
+        TypeExternalArtefactsEnum actual = TypeExternalArtefactsEnumAvro2DoMapper.avro2Do(source);
 
         assertThat(actual, is(equalTo(expected)));
     }

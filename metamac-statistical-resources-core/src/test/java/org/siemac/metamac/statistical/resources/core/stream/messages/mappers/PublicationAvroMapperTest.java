@@ -1,5 +1,7 @@
 package org.siemac.metamac.statistical.resources.core.stream.messages.mappers;
 
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
 
@@ -12,10 +14,9 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.publication.domain.Publication;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersionRepository;
 import org.siemac.metamac.statistical.resources.core.stream.messages.PublicationAvro;
+import org.siemac.metamac.statistical.resources.core.stream.messages.mapper.AvroMapperUtils;
+import org.siemac.metamac.statistical.resources.core.stream.messages.mapper.PublicationAvroDo2Mapper;
 import org.siemac.metamac.statistical.resources.core.utils.asserts.PublicationsAsserts;
-
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
 
 public class PublicationAvroMapperTest {
 
@@ -33,7 +34,7 @@ public class PublicationAvroMapperTest {
         PublicationAvro expected = MappersMockUtils.mockPublicationAvro();
         Publication source = MappersMockUtils.mockPublication();
 
-        PublicationAvro actual = PublicationAvroMapper.do2Avro(source);
+        PublicationAvro actual = PublicationDo2AvroMapper.do2Avro(source);
 
         assertThat(actual, is(equalTo(expected)));
     }
@@ -43,11 +44,9 @@ public class PublicationAvroMapperTest {
         Publication expected = MappersMockUtils.mockPublication();
         PublicationAvro source = MappersMockUtils.mockPublicationAvro();
 
-        when(publicationVersionRepository.retrieveByUrn(Mockito.startsWith(MappersMockUtils.EXPECTED_URN)))
-            .thenReturn(expected.getVersions().get(0))
-            .thenReturn(expected.getVersions().get(1));
+        when(publicationVersionRepository.retrieveByUrn(Mockito.startsWith(MappersMockUtils.EXPECTED_URN))).thenReturn(expected.getVersions().get(0)).thenReturn(expected.getVersions().get(1));
 
-        Publication actual = PublicationAvroMapper.avro2Do(source);
+        Publication actual = PublicationAvroDo2Mapper.avro2Do(source);
 
         PublicationsAsserts.assertEqualsPublication(expected, actual);
     }

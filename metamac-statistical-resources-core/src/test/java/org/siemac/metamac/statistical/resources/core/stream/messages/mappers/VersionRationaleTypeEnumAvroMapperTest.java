@@ -1,13 +1,13 @@
 package org.siemac.metamac.statistical.resources.core.stream.messages.mappers;
 
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 import org.junit.Test;
 import org.siemac.metamac.statistical.resources.core.enume.domain.VersionRationaleTypeEnum;
 import org.siemac.metamac.statistical.resources.core.stream.messages.VersionRationaleTypeEnumAvro;
-
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
+import org.siemac.metamac.statistical.resources.core.stream.messages.mapper.VersionRationaleTypeEnumAvro2DoMapper;
 
 public class VersionRationaleTypeEnumAvroMapperTest {
 
@@ -16,7 +16,7 @@ public class VersionRationaleTypeEnumAvroMapperTest {
         VersionRationaleTypeEnumAvro expected = VersionRationaleTypeEnumAvro.MAJOR_CATEGORIES;
         VersionRationaleTypeEnum source = VersionRationaleTypeEnum.MAJOR_CATEGORIES;
 
-        VersionRationaleTypeEnumAvro actual = VersionRationaleTypeEnumAvroMapper.do2Avro(source);
+        VersionRationaleTypeEnumAvro actual = VersionRationaleTypeEnumDo2AvroMapper.do2Avro(source);
 
         assertThat(actual, is(equalTo(expected)));
     }
@@ -26,7 +26,7 @@ public class VersionRationaleTypeEnumAvroMapperTest {
         VersionRationaleTypeEnum expected = VersionRationaleTypeEnum.MAJOR_CATEGORIES;
         VersionRationaleTypeEnumAvro source = VersionRationaleTypeEnumAvro.MAJOR_CATEGORIES;
 
-        VersionRationaleTypeEnum actual = VersionRationaleTypeEnumAvroMapper.avro2Do(source);
+        VersionRationaleTypeEnum actual = VersionRationaleTypeEnumAvro2DoMapper.avro2Do(source);
 
         assertThat(actual, is(equalTo(expected)));
     }

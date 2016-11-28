@@ -1,13 +1,13 @@
 package org.siemac.metamac.statistical.resources.core.stream.messages.mappers;
 
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 import org.junit.Test;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
 import org.siemac.metamac.statistical.resources.core.stream.messages.StatisticalResourceTypeEnumAvro;
-
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
+import org.siemac.metamac.statistical.resources.core.stream.messages.mapper.StatisticalResourceTypeEnumAvro2DoMapper;
 
 public class StatisticalResourceTypeEnumAvroMapperTest {
 
@@ -16,7 +16,7 @@ public class StatisticalResourceTypeEnumAvroMapperTest {
         StatisticalResourceTypeEnumAvro expected = StatisticalResourceTypeEnumAvro.DATASET;
         StatisticalResourceTypeEnum source = StatisticalResourceTypeEnum.DATASET;
 
-        StatisticalResourceTypeEnumAvro actual = StatisticalResourceTypeEnumAvroMapper.do2Avro(source);
+        StatisticalResourceTypeEnumAvro actual = StatisticalResourceTypeEnumDo2AvroMapper.do2Avro(source);
 
         assertThat(actual, is(equalTo(expected)));
     }
@@ -26,7 +26,7 @@ public class StatisticalResourceTypeEnumAvroMapperTest {
         StatisticalResourceTypeEnum expected = StatisticalResourceTypeEnum.DATASET;
         StatisticalResourceTypeEnumAvro source = StatisticalResourceTypeEnumAvro.DATASET;
 
-        StatisticalResourceTypeEnum actual = StatisticalResourceTypeEnumAvroMapper.avro2Do(source);
+        StatisticalResourceTypeEnum actual = StatisticalResourceTypeEnumAvro2DoMapper.avro2Do(source);
 
         assertThat(actual, is(equalTo(expected)));
     }

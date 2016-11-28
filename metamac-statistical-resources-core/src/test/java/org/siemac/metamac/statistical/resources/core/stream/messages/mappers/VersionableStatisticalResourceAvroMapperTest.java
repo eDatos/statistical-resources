@@ -7,6 +7,7 @@ import static org.junit.Assert.assertThat;
 import org.junit.Test;
 import org.siemac.metamac.statistical.resources.core.base.domain.VersionableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.stream.messages.VersionableStatisticalResourceAvro;
+import org.siemac.metamac.statistical.resources.core.stream.messages.mapper.VersionableStatisticalResourceAvro2DoMapper;
 import org.siemac.metamac.statistical.resources.core.utils.asserts.CommonAsserts;
 
 public class VersionableStatisticalResourceAvroMapperTest {
@@ -16,7 +17,7 @@ public class VersionableStatisticalResourceAvroMapperTest {
         VersionableStatisticalResourceAvro expected = MappersMockUtils.mockVersionableStatisticalResourceAvro();
         VersionableStatisticalResource source = MappersMockUtils.mockVersionableStatisticalResource();
 
-        VersionableStatisticalResourceAvro actual = VersionableStatisticalResourceAvroMapper.do2Avro(source);
+        VersionableStatisticalResourceAvro actual = VersionableStatisticalResourceDo2AvroMapper.do2Avro(source);
 
         assertThat(expected, is(equalTo(actual)));
     }
@@ -26,7 +27,7 @@ public class VersionableStatisticalResourceAvroMapperTest {
         VersionableStatisticalResource expected = MappersMockUtils.mockVersionableStatisticalResource();
         VersionableStatisticalResourceAvro source = MappersMockUtils.mockVersionableStatisticalResourceAvro();
 
-        VersionableStatisticalResource actual = VersionableStatisticalResourceAvroMapper.avro2Do(source);
+        VersionableStatisticalResource actual = VersionableStatisticalResourceAvro2DoMapper.avro2Do(source);
 
         assertThat(expected.getCode(), is(equalTo(actual.getCode())));
         assertThat(expected.getUrn(), is(equalTo(actual.getUrn())));

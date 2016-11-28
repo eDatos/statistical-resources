@@ -1,5 +1,7 @@
 package org.siemac.metamac.statistical.resources.core.stream.messages.mappers;
 
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
@@ -13,11 +15,9 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionRepository;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
 import org.siemac.metamac.statistical.resources.core.stream.messages.DatasourceAvro;
+import org.siemac.metamac.statistical.resources.core.stream.messages.mapper.AvroMapperUtils;
+import org.siemac.metamac.statistical.resources.core.stream.messages.mapper.DatasourceAvro2DoMapper;
 import org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts;
-
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-
 
 public class DatasourceAvroMapperTest {
 
@@ -35,7 +35,7 @@ public class DatasourceAvroMapperTest {
         DatasourceAvro expected = MappersMockUtils.mockDatasourceAvro();
         Datasource source = MappersMockUtils.mockDatasource(true);
 
-        DatasourceAvro actual = DatasourceAvroMapper.do2Avro(source);
+        DatasourceAvro actual = DatasourceDo2AvroMapper.do2Avro(source);
 
         assertThat(actual, is(equalTo(expected)));
     }
@@ -47,7 +47,7 @@ public class DatasourceAvroMapperTest {
 
         when(datasetVersionRepository.retrieveByUrn(any())).thenReturn(expected.getDatasetVersion());
 
-        Datasource actual = DatasourceAvroMapper.avro2Do(source);
+        Datasource actual = DatasourceAvro2DoMapper.avro2Do(source);
 
         assertEqualDatasourceDo(expected, actual);
     }

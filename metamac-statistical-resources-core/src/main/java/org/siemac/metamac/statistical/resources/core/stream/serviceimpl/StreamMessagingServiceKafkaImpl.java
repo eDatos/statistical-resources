@@ -8,7 +8,7 @@ import org.apache.avro.specific.SpecificRecordBase;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.conf.StatisticalResourcesConfiguration;
-import org.siemac.metamac.statistical.resources.core.stream.messages.mappers.AvroMapperUtils;
+import org.siemac.metamac.statistical.resources.core.stream.messages.mappers.Avro2DoMapperUtils;
 import org.siemac.metamac.statistical.resources.core.stream.serviceapi.StreamMessagingService;
 import org.siemac.metamac.statistical.resources.web.server.stream.AvroMessage;
 import org.siemac.metamac.statistical.resources.web.server.stream.KafkaCustomProducer;
@@ -84,7 +84,7 @@ public class StreamMessagingServiceKafkaImpl<K, V extends SpecificRecordBase> ex
 
     @Override
     public void sendMessage(Object message, String topic) throws MetamacException {
-        V avroMessage = (V) AvroMapperUtils.do2Avro(message);
+        V avroMessage = (V) Avro2DoMapperUtils.do2Avro(message);
         MessageBase<K, V> m = new AvroMessage<K, V>(avroMessage);
 
         // Lazy initialitation

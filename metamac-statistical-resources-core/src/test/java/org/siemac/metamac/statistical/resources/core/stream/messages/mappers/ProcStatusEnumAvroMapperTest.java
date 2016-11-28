@@ -1,13 +1,13 @@
 package org.siemac.metamac.statistical.resources.core.stream.messages.mappers;
 
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 import org.junit.Test;
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.stream.messages.ProcStatusEnumAvro;
-
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
+import org.siemac.metamac.statistical.resources.core.stream.messages.mapper.ProcStatusEnumAvroDo2Mapper;
 
 public class ProcStatusEnumAvroMapperTest {
 
@@ -16,7 +16,7 @@ public class ProcStatusEnumAvroMapperTest {
         ProcStatusEnumAvro expected = ProcStatusEnumAvro.DIFFUSION_VALIDATION;
         ProcStatusEnum source = ProcStatusEnum.DIFFUSION_VALIDATION;
 
-        ProcStatusEnumAvro actual = ProcStatusEnumAvroMapper.do2Avro(source);
+        ProcStatusEnumAvro actual = ProcStatusEnumDo2AvroMapper.do2Avro(source);
 
         assertThat(actual, is(equalTo(expected)));
     }
@@ -26,7 +26,7 @@ public class ProcStatusEnumAvroMapperTest {
         ProcStatusEnum expected = ProcStatusEnum.DIFFUSION_VALIDATION;
         ProcStatusEnumAvro source = ProcStatusEnumAvro.DIFFUSION_VALIDATION;
 
-        ProcStatusEnum actual = ProcStatusEnumAvroMapper.avro2Do(source);
+        ProcStatusEnum actual = ProcStatusEnumAvroDo2Mapper.avro2Do(source);
 
         assertThat(actual, is(equalTo(expected)));
     }

@@ -1,5 +1,7 @@
 package org.siemac.metamac.statistical.resources.core.stream.messages.mappers;
 
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
 
@@ -12,9 +14,8 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersionRepository;
 import org.siemac.metamac.statistical.resources.core.stream.messages.PublicationVersionAvro;
-
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
+import org.siemac.metamac.statistical.resources.core.stream.messages.mapper.AvroMapperUtils;
+import org.siemac.metamac.statistical.resources.core.stream.messages.mapper.PublicationVersionAvro2DoMapper;
 
 public class PublicationVersionAvroMapperTest {
 
@@ -36,7 +37,7 @@ public class PublicationVersionAvroMapperTest {
 
         assertThat(source.getPublication().getIdentifiableStatisticalResource().getUrn(), is(equalTo(expected.getPublication().getIdentifiableStatisticalResource().getUrn())));
 
-        PublicationVersionAvro actual = PublicationVersionAvroMapper.do2Avro(source);
+        PublicationVersionAvro actual = PublicationVersionDo2AvroMapper.do2Avro(source);
 
         assertThat(actual, is(equalTo(expected)));
     }
@@ -48,7 +49,7 @@ public class PublicationVersionAvroMapperTest {
 
         when(publicationVersionRepository.retrieveByUrn(Mockito.any())).thenReturn(expected);
 
-        PublicationVersion actual = PublicationVersionAvroMapper.avro2Do(source);
+        PublicationVersion actual = PublicationVersionAvro2DoMapper.avro2Do(source);
 
         assertThat(actual.getHasPart().size(), is(equalTo(expected.getHasPart().size())));
         assertThat(actual.getPublication(), is(equalTo(expected.getPublication())));

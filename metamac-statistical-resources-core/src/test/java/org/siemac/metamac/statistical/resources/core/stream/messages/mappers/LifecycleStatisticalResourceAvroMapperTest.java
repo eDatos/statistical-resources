@@ -1,5 +1,7 @@
 package org.siemac.metamac.statistical.resources.core.stream.messages.mappers;
 
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
@@ -15,15 +17,14 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetRepos
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionRepository;
 import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
 import org.siemac.metamac.statistical.resources.core.stream.messages.LifecycleStatisticalResourceAvro;
+import org.siemac.metamac.statistical.resources.core.stream.messages.mapper.AvroMapperUtils;
+import org.siemac.metamac.statistical.resources.core.stream.messages.mapper.LifecycleStatisticalResourceAvro2DoMapper;
 import org.siemac.metamac.statistical.resources.core.utils.asserts.CommonAsserts;
-
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
 
 public class LifecycleStatisticalResourceAvroMapperTest {
 
     @Mock
-    protected DatasetRepository        datasetRepository;
+    protected DatasetRepository datasetRepository;
 
     @Mock
     protected DatasetVersionRepository datasetVersionRepository;
@@ -50,7 +51,7 @@ public class LifecycleStatisticalResourceAvroMapperTest {
         LifeCycleStatisticalResource expected = MappersMockUtils.mockLifeCycleStatisticalResource(TypeRelatedResourceEnum.DATASET_VERSION);
         LifecycleStatisticalResourceAvro source = MappersMockUtils.mockLifeCycleStatisticalResourceAvro(TypeRelatedResourceEnum.DATASET_VERSION);
 
-        LifeCycleStatisticalResource actual = LifecycleStatisticalResourceAvroMapper.avro2Do(source);
+        LifeCycleStatisticalResource actual = LifecycleStatisticalResourceAvro2DoMapper.avro2Do(source);
 
         assertThat(actual.getCreationDate(), is(equalTo(expected.getCreationDate())));
         assertThat(actual.getCreationUser(), is(equalTo(expected.getCreationUser())));
@@ -76,7 +77,7 @@ public class LifecycleStatisticalResourceAvroMapperTest {
         LifecycleStatisticalResourceAvro expected = MappersMockUtils.mockLifeCycleStatisticalResourceAvro(TypeRelatedResourceEnum.DATASET);
         LifeCycleStatisticalResource source = MappersMockUtils.mockLifeCycleStatisticalResource(TypeRelatedResourceEnum.DATASET);
 
-        LifecycleStatisticalResourceAvro actual = LifecycleStatisticalResourceAvroMapper.do2Avro(source);
+        LifecycleStatisticalResourceAvro actual = LifecycleStatisticalResourceDo2AvroMapper.do2Avro(source);
 
         assertThat(actual, is(equalTo(expected)));
     }

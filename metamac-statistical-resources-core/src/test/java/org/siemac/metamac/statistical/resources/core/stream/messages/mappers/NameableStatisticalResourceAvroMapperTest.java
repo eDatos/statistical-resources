@@ -7,6 +7,7 @@ import static org.junit.Assert.assertThat;
 import org.junit.Test;
 import org.siemac.metamac.statistical.resources.core.base.domain.NameableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.stream.messages.NameableStatisticalResourceAvro;
+import org.siemac.metamac.statistical.resources.core.stream.messages.mapper.NameableStatisticalResourceAvro2DoMapper;
 import org.siemac.metamac.statistical.resources.core.utils.asserts.CommonAsserts;
 
 public class NameableStatisticalResourceAvroMapperTest {
@@ -16,7 +17,7 @@ public class NameableStatisticalResourceAvroMapperTest {
         NameableStatisticalResourceAvro expected = MappersMockUtils.mockNameableStatisticalResourceAvro();
         NameableStatisticalResource source = MappersMockUtils.mockNameableStatisticalResource();
 
-        NameableStatisticalResourceAvro actual = NameableStatisticalResourceAvroMapper.do2Avro(source);
+        NameableStatisticalResourceAvro actual = NameableStatisticalResourceDo2AvroMapper.do2Avro(source);
 
         assertThat(actual, is(equalTo(expected)));
     }
@@ -27,7 +28,7 @@ public class NameableStatisticalResourceAvroMapperTest {
 
         NameableStatisticalResourceAvro source = MappersMockUtils.mockNameableStatisticalResourceAvro();
 
-        NameableStatisticalResource actual = NameableStatisticalResourceAvroMapper.avro2Do(source);
+        NameableStatisticalResource actual = NameableStatisticalResourceAvro2DoMapper.avro2Do(source);
 
         assertThat(expected.getCode(), is(equalTo(actual.getCode())));
         assertThat(expected.getUrn(), is(equalTo(actual.getUrn())));
