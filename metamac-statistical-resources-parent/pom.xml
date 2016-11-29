@@ -37,7 +37,7 @@
         <metamac-rest-common.version>2.0.0</metamac-rest-common.version>
         <metamac-srm-rest-internal-api.version>2.0.0</metamac-srm-rest-internal-api.version>
         <metamac-srm-rest-external-api.version>2.0.0</metamac-srm-rest-external-api.version>
-        <metamac-sso.version>2.0.0</metamac-sso.version>
+        <metamac-sso.version>2.0.1-SNAPSHOT</metamac-sso.version>
         <metamac-statistical-operations-rest-internal-api.version>2.0.0</metamac-statistical-operations-rest-internal-api.version>
         <metamac-statistical-operations-rest-external-api.version>3.0.0</metamac-statistical-operations-rest-external-api.version>
         <metamac-sdmx-data-rest-external-api.version>2.0.0</metamac-sdmx-data-rest-external-api.version>
