@@ -23,6 +23,8 @@ import org.siemac.metamac.statistical.resources.web.client.publication.view.hand
 import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.MetamacPortalWebUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.PlaceRequestUtils;
+import org.siemac.metamac.statistical.resources.web.shared.base.ResendStreamMessageAction;
+import org.siemac.metamac.statistical.resources.web.shared.base.ResendStreamMessageResult;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.PublicationVersionWebCriteria;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.VersionableStatisticalResourceWebCriteria;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationAction;
@@ -238,6 +240,18 @@ public class PublicationMetadataTabPresenter
                         getView().setPublication(result.getPublicationVersionDto());
                     }
                 });
+    }
+
+    @Override
+    public void resendStreamMessage(PublicationVersionDto publicationVersionDto) {
+        dispatcher.execute(new ResendStreamMessageAction(publicationVersionDto), new WaitingAsyncCallbackHandlingError<ResendStreamMessageResult>(this) {
+
+            @Override
+            public void onWaitSuccess(ResendStreamMessageResult result) {
+                RequestPublicationVersionsReloadEvent.fire(PublicationMetadataTabPresenter.this, result.getLifeCycleStatisticalResourceResultDto().getUrn());
+                getView().setPublication((PublicationVersionDto) result.getLifeCycleStatisticalResourceResultDto());
+            }
+        });
     }
 
     @Override

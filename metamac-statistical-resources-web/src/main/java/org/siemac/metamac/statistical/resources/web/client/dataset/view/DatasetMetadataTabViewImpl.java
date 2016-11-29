@@ -244,6 +244,15 @@ public class DatasetMetadataTabViewImpl extends StatisticalResourceMetadataBaseV
                 getUiHandlers().publish(datasetVersionDto);
             }
         });
+
+        mainFormLayout.getResendStreamMessageButton().addClickHandler(new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                getUiHandlers().resendStreamMessage(datasetVersionDto);
+            }
+        });
+
         mainFormLayout.getVersioningButton().addClickHandler(new ClickHandler() {
 
             @Override

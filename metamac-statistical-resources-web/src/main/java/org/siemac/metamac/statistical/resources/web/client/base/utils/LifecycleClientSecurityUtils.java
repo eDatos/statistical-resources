@@ -24,4 +24,8 @@ public class LifecycleClientSecurityUtils extends BaseClientSecurityUtils {
         return isAnyStatus(procStatus, ProcStatusEnum.PUBLISHED);
     }
 
+    protected static boolean canResendStreamMessage(ProcStatusEnum procStatus) {
+        return isAnyStatus(procStatus, ProcStatusEnum.PUBLISHED);
+    }
+
 }

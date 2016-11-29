@@ -230,8 +230,8 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         SculptorCriteria sculptorCriteria = queryMetamacCriteria2SculptorCriteriaMapper.getQueryCriteriaMapper().metamacCriteria2SculptorCriteria(criteria);
 
         // Add condition for latest queryVersion
-        ConditionalCriteria latestQueryVersionRestriction = ConditionalCriteriaBuilder.criteriaFor(QueryVersion.class)
-                .withProperty(QueryVersionProperties.lifeCycleStatisticalResource().lastVersion()).eq(Boolean.TRUE).buildSingle();
+        ConditionalCriteria latestQueryVersionRestriction = ConditionalCriteriaBuilder.criteriaFor(QueryVersion.class).withProperty(QueryVersionProperties.lifeCycleStatisticalResource().lastVersion())
+                .eq(Boolean.TRUE).buildSingle();
         sculptorCriteria.getConditions().add(latestQueryVersionRestriction);
 
         // Find
@@ -284,8 +284,8 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         QueryVersion query = getQueryService().retrieveLatestQueryVersionByQueryUrn(ctx, queryUrn);
 
         // Security
-        if (!SharedQueriesSecurityUtils.canRetrieveLatestQueryVersion(SecurityUtils.getMetamacPrincipal(ctx), query.getLifeCycleStatisticalResource().getStatisticalOperation().getCode(), query
-                .getLifeCycleStatisticalResource().getEffectiveProcStatus())) {
+        if (!SharedQueriesSecurityUtils.canRetrieveLatestQueryVersion(SecurityUtils.getMetamacPrincipal(ctx), query.getLifeCycleStatisticalResource().getStatisticalOperation().getCode(),
+                query.getLifeCycleStatisticalResource().getEffectiveProcStatus())) {
             query = getQueryService().retrieveLatestPublishedQueryVersionByQueryUrn(ctx, queryUrn);
         }
 
@@ -532,6 +532,22 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         return queryVersionDto;
     }
 
+    @Override
+    public QueryVersionBaseDto resendPublishedQueryVersionStreamMessage(ServiceContext ctx, String queryVersionUrn) throws MetamacException {
+
+        // Retrieve Query
+        QueryVersion queryVersion = queryVersionRepository.retrieveByUrn(queryVersionUrn);
+
+        // Security
+        QueriesSecurityUtils.canResendPublishedQueryVersionStreamMessage(ctx, queryVersion.getLifeCycleStatisticalResource().getStatisticalOperation().getCode());
+
+        // Send stream message to stream messaging service (like Apache Kafka)
+        // sendNewVersionPublishedStreamMessage(ctx, queryVersion);
+        // TODO PUBLICACION DE TOPIC DE QUERY
+
+        // Transform
+        return queryDo2DtoMapper.queryVersionDoToBaseDto(queryVersion);
+    }
 
     private QueryVersion changeQueryVersionValidFromAndSave(String urn, DateTime validFrom) throws MetamacException {
         QueryVersion queryVersion = queryVersionRepository.retrieveByUrn(urn);
@@ -767,8 +783,8 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         DatasetVersion datasetVersion = getDatasetService().retrieveDatasetVersionByUrn(ctx, urn);
 
         // Security
-        DatasetsSecurityUtils.canRetrieveDatasetVersionByUrn(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode(), datasetVersion
-                .getSiemacMetadataStatisticalResource().getEffectiveProcStatus());
+        DatasetsSecurityUtils.canRetrieveDatasetVersionByUrn(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode(),
+                datasetVersion.getSiemacMetadataStatisticalResource().getEffectiveProcStatus());
 
         // Transform
         return datasetDo2DtoMapper.datasetVersionDoToDto(ctx, datasetVersion);
@@ -944,6 +960,21 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     }
 
     @Override
+    public DatasetVersionBaseDto resendPublishedDatasetVersionStreamMessage(ServiceContext ctx, String datasetVersionUrn) throws MetamacException {
+        // Retrieve Dataset
+        DatasetVersion datasetVersion = datasetVersionRepository.retrieveByUrn(datasetVersionUrn);
+
+        // Security
+        DatasetsSecurityUtils.canResendPublishedDatasetVersionStreamMessage(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode());
+
+        // Send stream message to stream messaging service (like Apache Kafka)
+        sendNewVersionPublishedStreamMessage(ctx, datasetVersion);
+
+        // Transform
+        return datasetDo2DtoMapper.datasetVersionDoToBaseDto(ctx, datasetVersion);
+    }
+
+    @Override
     public DatasetVersionBaseDto publishDatasetVersion(ServiceContext ctx, DatasetVersionBaseDto datasetVersionDto) throws MetamacException {
         // Security
         DatasetsSecurityUtils.canPublishDatasetVersion(ctx, datasetVersionDto.getStatisticalOperation().getCode());
@@ -964,15 +995,11 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         return datasetVersionDto;
     }
 
-
-
-
     private DatasetVersion changeDatasetVersionValidFromAndSave(String urn, DateTime validFrom) throws MetamacException {
         DatasetVersion datasetVersion = datasetVersionRepository.retrieveByUrn(urn);
         datasetVersion.getSiemacMetadataStatisticalResource().setValidFrom(validFrom);
         return datasetVersionRepository.save(datasetVersion);
     }
-
 
     @Override
     public DatasetVersionDto versioningDatasetVersion(ServiceContext ctx, DatasetVersionDto datasetVersionDto, VersionTypeEnum versionType) throws MetamacException {
@@ -1350,8 +1377,8 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         PublicationVersion publication = getPublicationService().retrieveLatestPublicationVersionByPublicationUrn(ctx, publicationUrn);
 
         // Security
-        if (!SharedPublicationsSecurityUtils.canRetrieveLatestPublicationVersion(SecurityUtils.getMetamacPrincipal(ctx), publication.getSiemacMetadataStatisticalResource().getStatisticalOperation()
-                .getCode(), publication.getSiemacMetadataStatisticalResource().getEffectiveProcStatus())) {
+        if (!SharedPublicationsSecurityUtils.canRetrieveLatestPublicationVersion(SecurityUtils.getMetamacPrincipal(ctx),
+                publication.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode(), publication.getSiemacMetadataStatisticalResource().getEffectiveProcStatus())) {
             publication = getPublicationService().retrieveLatestPublishedPublicationVersionByPublicationUrn(ctx, publicationUrn);
         }
 
@@ -1539,7 +1566,6 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         return publicationVersionDto;
     }
 
-
     @Override
     public PublicationVersionBaseDto publishPublicationVersion(ServiceContext ctx, PublicationVersionBaseDto publicationVersionDto) throws MetamacException {
         // Security
@@ -1561,15 +1587,26 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         return publicationVersionDto;
     }
 
+    @Override
+    public PublicationVersionBaseDto resendPublishedPublicationVersionStreamMessage(ServiceContext ctx, String publicationVersionUrn) throws MetamacException {
+        // Retrieve Publication
+        PublicationVersion publicationVersion = publicationVersionRepository.retrieveByUrn(publicationVersionUrn);
 
+        // Security
+        PublicationsSecurityUtils.canResendPublishedPublicationVersionStreamMessage(ctx, publicationVersion.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode());
 
+        // Send stream message to stream messaging service (like Apache Kafka)
+        sendNewVersionPublishedStreamMessage(ctx, publicationVersion);
+
+        // Transform
+        return publicationDo2DtoMapper.publicationVersionDoToBaseDto(publicationVersion);
+    }
 
     private PublicationVersion changePublicationVersionValidFromAndSave(String urn, DateTime validFrom) throws MetamacException {
         PublicationVersion publicationVersion = publicationVersionRepository.retrieveByUrn(urn);
         publicationVersion.getSiemacMetadataStatisticalResource().setValidFrom(validFrom);
         return publicationVersionRepository.save(publicationVersion);
     }
-
 
     @Override
     public PublicationVersionDto versioningPublicationVersion(ServiceContext ctx, PublicationVersionDto publicationVersionDto, VersionTypeEnum versionType) throws MetamacException {
@@ -1804,8 +1841,8 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     public ContentConstraintDto createContentConstraint(ServiceContext ctx, ContentConstraintDto contentConstraintDto) throws MetamacException {
         // Security
         DatasetVersion datasetVersion = obtainDatasetVersionFromContentConstraint(ctx, contentConstraintDto);
-        ConstraintsSecurityUtils.canCreateContentConstraint(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode(), datasetVersion
-                .getLifeCycleStatisticalResource().getProcStatus());
+        ConstraintsSecurityUtils.canCreateContentConstraint(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode(),
+                datasetVersion.getLifeCycleStatisticalResource().getProcStatus());
 
         // Check that there isn't data sources
         if (!datasetVersion.getDatasources().isEmpty()) {
@@ -1831,8 +1868,8 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
 
         // Security
         DatasetVersion datasetVersion = obtainDatasetVersionFromContentConstraint(ctx, contentConstraint); // Dataset for extract operation
-        ConstraintsSecurityUtils.canRetrieveContentConstraintByUrn(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode(), datasetVersion
-                .getLifeCycleStatisticalResource().getProcStatus());
+        ConstraintsSecurityUtils.canRetrieveContentConstraintByUrn(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode(),
+                datasetVersion.getLifeCycleStatisticalResource().getProcStatus());
 
         // Transform
         return constraintRest2DtoMapper.toConstraintDto(contentConstraint);
@@ -1845,8 +1882,8 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
 
         // Security
         DatasetVersion datasetVersion = obtainDatasetVersionFromContentConstraint(ctx, contentConstraint); // Dataset for extract operation
-        ConstraintsSecurityUtils.canDeleteContentConstraint(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode(), datasetVersion
-                .getLifeCycleStatisticalResource().getProcStatus());
+        ConstraintsSecurityUtils.canDeleteContentConstraint(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode(),
+                datasetVersion.getLifeCycleStatisticalResource().getProcStatus());
 
         // Delete
         constraintsService.deleteContentConstraint(ctx, urn);
@@ -1859,8 +1896,8 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
 
         // Security
         DatasetVersion datasetVersion = obtainDatasetVersionFromContentConstraint(ctx, contentConstraint); // Dataset for extract operation
-        ConstraintsSecurityUtils.canSaveForContentConstraint(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode(), datasetVersion
-                .getLifeCycleStatisticalResource().getProcStatus());
+        ConstraintsSecurityUtils.canSaveForContentConstraint(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode(),
+                datasetVersion.getLifeCycleStatisticalResource().getProcStatus());
 
         if (contentConstraint.isIsFinal()) {
             // Can not update final constraint
@@ -1893,8 +1930,8 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
 
         // Security
         DatasetVersion datasetVersion = obtainDatasetVersionFromContentConstraint(ctx, contentConstraint); // Dataset for extract operation
-        ConstraintsSecurityUtils.canDeleteRegion(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode(), datasetVersion.getLifeCycleStatisticalResource()
-                .getProcStatus());
+        ConstraintsSecurityUtils.canDeleteRegion(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode(),
+                datasetVersion.getLifeCycleStatisticalResource().getProcStatus());
 
         if (contentConstraint.isIsFinal()) {
             // Can not update final constraint
@@ -1913,8 +1950,8 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
 
         // Security
         DatasetVersion datasetVersion = obtainDatasetVersionFromContentConstraint(ctx, contentConstraint); // Dataset for extract operation
-        ConstraintsSecurityUtils.canRetrieveRegionForContentConstraint(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode(), datasetVersion
-                .getLifeCycleStatisticalResource().getProcStatus());
+        ConstraintsSecurityUtils.canRetrieveRegionForContentConstraint(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode(),
+                datasetVersion.getLifeCycleStatisticalResource().getProcStatus());
 
         // Find
         RegionReference regionReference = constraintsService.retrieveRegionForContentConstraint(ctx, contentConstraintUrn, regionCode);
@@ -1936,8 +1973,8 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         DatasetVersion datasetVersion = getDatasetService().retrieveDatasetVersionByUrn(ctx, contentConstraintDto.getConstraintAttachment().getUrn());
 
         // Security
-        DatasetsSecurityUtils.canRetrieveDatasetVersionByUrn(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode(), datasetVersion
-                .getSiemacMetadataStatisticalResource().getEffectiveProcStatus());
+        DatasetsSecurityUtils.canRetrieveDatasetVersionByUrn(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode(),
+                datasetVersion.getSiemacMetadataStatisticalResource().getEffectiveProcStatus());
 
         return datasetVersion;
     }
@@ -1955,8 +1992,8 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         DatasetVersion datasetVersion = getDatasetService().retrieveDatasetVersionByUrn(ctx, contentConstraint.getConstraintAttachment().getUrn());
 
         // Security
-        DatasetsSecurityUtils.canRetrieveDatasetVersionByUrn(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode(), datasetVersion
-                .getSiemacMetadataStatisticalResource().getEffectiveProcStatus());
+        DatasetsSecurityUtils.canRetrieveDatasetVersionByUrn(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode(),
+                datasetVersion.getSiemacMetadataStatisticalResource().getEffectiveProcStatus());
 
         return datasetVersion;
     }

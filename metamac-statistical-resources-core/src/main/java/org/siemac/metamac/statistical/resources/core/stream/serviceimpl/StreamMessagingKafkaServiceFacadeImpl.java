@@ -4,7 +4,6 @@ import org.apache.avro.specific.SpecificRecord;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.base.domain.HasSiemacMetadata;
 import org.siemac.metamac.statistical.resources.core.conf.StatisticalResourcesConfiguration;
-import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.mapper.DatasetDto2DoMapper;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StreamMessageStatusEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
@@ -25,15 +24,11 @@ public class StreamMessagingKafkaServiceFacadeImpl implements StreamMessagingSer
     @Autowired
     protected DatasetDto2DoMapper                            datasetDto2DoMapper;
 
-    public StreamMessagingKafkaServiceFacadeImpl() {
-    }
-
     @Override
     public void sendNewVersionPublished(HasSiemacMetadata version) throws MetamacException {
         try {
             updateMessageStatus(version, StreamMessageStatusEnum.PENDING);
-            String topic = getTopicByType(version);
-            messagingService.sendMessage(version, topic);
+            messagingService.sendMessage(version);
             updateMessageStatus(version, StreamMessageStatusEnum.SENT);
         } catch (MetamacException e) {
             updateMessageStatus(version, StreamMessageStatusEnum.FAILED);
@@ -41,24 +36,7 @@ public class StreamMessagingKafkaServiceFacadeImpl implements StreamMessagingSer
         }
     }
 
-    protected String getTopicByType(HasSiemacMetadata version) throws MetamacException {
-        switch (version.getSiemacMetadataStatisticalResource().getType()) {
-            case DATASET:
-                return statisticalResourcesConfig.retrieveKafkaTopicDatasetsPublication();
-            case COLLECTION:
-                return statisticalResourcesConfig.retrieveKafkaTopicCollectionPublication();
-            default:
-                return null;
-        }
-    }
-
-    protected String generateUniqueMessageKeyForMessage(DatasetVersion datasetVersion) {
-        String uniqueKey = datasetVersion.getLifeCycleStatisticalResource().getUrn();
-        return uniqueKey;
-    }
-
-    @Override
-    public void updateMessageStatus(HasSiemacMetadata version, StreamMessageStatusEnum status) {
+    private void updateMessageStatus(HasSiemacMetadata version, StreamMessageStatusEnum status) {
         if (version != null) {
             version.getLifeCycleStatisticalResource().setPublicationStreamStatus(status);
         }

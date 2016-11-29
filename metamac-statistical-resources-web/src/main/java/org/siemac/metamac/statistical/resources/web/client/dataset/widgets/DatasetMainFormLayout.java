@@ -48,6 +48,11 @@ public class DatasetMainFormLayout extends LifecycleMainFormLayout {
     }
 
     @Override
+    protected boolean canResendStreamMessage() {
+        return DatasetClientSecurityUtils.canResendStreamMessageDatasetVersion(datasetVersionDto);
+    }
+
+    @Override
     protected boolean canVersion() {
         return DatasetClientSecurityUtils.canVersionDataset(datasetVersionDto);
     }
@@ -56,4 +61,5 @@ public class DatasetMainFormLayout extends LifecycleMainFormLayout {
     protected boolean canPreviewData() {
         return DatasetClientSecurityUtils.canPreviewDatasetData(datasetVersionDto);
     }
+
 }

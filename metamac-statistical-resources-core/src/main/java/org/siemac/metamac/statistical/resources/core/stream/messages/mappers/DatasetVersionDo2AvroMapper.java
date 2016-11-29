@@ -8,7 +8,6 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResource;
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResourceResult;
-import org.siemac.metamac.statistical.resources.core.common.utils.RelatedResourceUtils;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.AttributeValue;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Categorisation;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.CodeDimension;
@@ -58,7 +57,7 @@ public class DatasetVersionDo2AvroMapper {
     private static List<RelatedResourceAvro> relatedResourceList2Avro(List<RelatedResourceResult> sourceList) throws MetamacException {
         List<RelatedResourceAvro> targetList = new ArrayList<RelatedResourceAvro>();
         for (RelatedResourceResult item : sourceList) {
-            RelatedResource relatedResource = RelatedResourceUtils.createRelatedResourceFromRelatedResourceResult(item);
+            RelatedResource relatedResource = Avro2DoMapperUtils.createRelatedResourceFromRelatedResourceResult(item);
             targetList.add(RelatedResourceDo2AvroMapper.do2Avro(relatedResource));
         }
         return targetList;

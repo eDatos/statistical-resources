@@ -45,6 +45,10 @@ public class QueryMainFormLayout extends LifecycleMainFormLayout {
         return QueryClientSecurityUtils.canPublishQueryVersion(queryVersionDto);
     }
 
+    @Override
+    protected boolean canResendStreamMessage() {
+        return QueryClientSecurityUtils.canResendStreamMessageQueryVersion(queryVersionDto);
+    }
 
     @Override
     protected boolean canVersion() {

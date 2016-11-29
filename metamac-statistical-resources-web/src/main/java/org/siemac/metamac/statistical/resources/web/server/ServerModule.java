@@ -1,9 +1,10 @@
 package org.siemac.metamac.statistical.resources.web.server;
 
 import org.siemac.metamac.statistical.resources.web.server.handlers.ValidateTicketActionHandler;
+import org.siemac.metamac.statistical.resources.web.server.handlers.base.GetHelpUrlActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.base.GetInitialValuesActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.base.GetLatestResourceVersionActionHandler;
-import org.siemac.metamac.statistical.resources.web.server.handlers.base.GetHelpUrlActionHandler;
+import org.siemac.metamac.statistical.resources.web.server.handlers.base.ResendStreamMessageActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.CreateDatasetCategorisationsActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.CreateDatasetConstraintActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.DeleteCategorisationsActionHandler;
@@ -71,9 +72,10 @@ import org.siemac.metamac.statistical.resources.web.server.handlers.query.GetVer
 import org.siemac.metamac.statistical.resources.web.server.handlers.query.SaveQueryVersionActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.query.UpdateQueryVersionProcStatusActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.query.UpdateQueryVersionsProcStatusActionHandler;
+import org.siemac.metamac.statistical.resources.web.shared.base.GetHelpUrlAction;
 import org.siemac.metamac.statistical.resources.web.shared.base.GetInitialValuesAction;
 import org.siemac.metamac.statistical.resources.web.shared.base.GetLatestResourceVersionAction;
-import org.siemac.metamac.statistical.resources.web.shared.base.GetHelpUrlAction;
+import org.siemac.metamac.statistical.resources.web.shared.base.ResendStreamMessageAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.CreateDatasetCategorisationsAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.CreateDatasetConstraintAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.DeleteCategorisationsAction;
@@ -250,6 +252,7 @@ public class ServerModule extends HandlerModule {
         // COMMON
         bindHandler(GetLatestResourceVersionAction.class, GetLatestResourceVersionActionHandler.class);
         bindHandler(GetInitialValuesAction.class, GetInitialValuesActionHandler.class);
+        bindHandler(ResendStreamMessageAction.class, ResendStreamMessageActionHandler.class);
 
         bindHandler(ValidateTicketAction.class, ValidateTicketActionHandler.class);
         bindHandler(GetLoginPageUrlAction.class, GetLoginPageUrlActionHandler.class);

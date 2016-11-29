@@ -105,6 +105,12 @@ public class QueriesSecurityUtils extends SecurityUtils {
         }
     }
 
+    public static void canResendPublishedQueryVersionStreamMessage(ServiceContext ctx, String operationCode) throws MetamacException {
+        if (!SharedQueriesSecurityUtils.canPublishQueryVersion(getMetamacPrincipal(ctx), operationCode)) {
+            throwExceptionIfOperationNotAllowed(ctx);
+        }
+    }
+
     public static void canVersionQueryVersion(ServiceContext ctx, String operationCode) throws MetamacException {
         if (!SharedQueriesSecurityUtils.canVersionQueryVersion(getMetamacPrincipal(ctx), operationCode)) {
             throwExceptionIfOperationNotAllowed(ctx);

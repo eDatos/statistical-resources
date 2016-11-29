@@ -107,6 +107,12 @@ public class DatasetsSecurityUtils extends SecurityUtils {
             throwExceptionIfOperationNotAllowed(ctx);
         }
     }
+    
+    public static void canResendPublishedDatasetVersionStreamMessage(ServiceContext ctx, String operationCode) throws MetamacException {
+        if (!SharedDatasetsSecurityUtils.canPublishDataset(getMetamacPrincipal(ctx), operationCode)) {
+            throwExceptionIfOperationNotAllowed(ctx);
+        }
+    }
 
     public static void canVersionDataset(ServiceContext ctx, String operationCode) throws MetamacException {
         if (!SharedDatasetsSecurityUtils.canVersionDataset(getMetamacPrincipal(ctx), operationCode)) {
@@ -240,7 +246,8 @@ public class DatasetsSecurityUtils extends SecurityUtils {
     }
 
     public static void canRetrieveCategorisationsByDatasetVersion(ServiceContext ctx, DatasetVersionDto datasetVersionDto) throws MetamacException {
-        if (!SharedDatasetsSecurityUtils.canRetrieveCategorisationsByDatasetVersion(getMetamacPrincipal(ctx), datasetVersionDto.getStatisticalOperation().getCode(), datasetVersionDto.getProcStatus())) {
+        if (!SharedDatasetsSecurityUtils.canRetrieveCategorisationsByDatasetVersion(getMetamacPrincipal(ctx), datasetVersionDto.getStatisticalOperation().getCode(),
+                datasetVersionDto.getProcStatus())) {
             throwExceptionIfOperationNotAllowed(ctx);
         }
     }

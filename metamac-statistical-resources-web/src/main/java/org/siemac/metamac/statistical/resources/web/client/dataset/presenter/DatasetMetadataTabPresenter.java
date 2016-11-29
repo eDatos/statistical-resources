@@ -24,6 +24,8 @@ import org.siemac.metamac.statistical.resources.web.client.events.ShowUnauthoriz
 import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.MetamacPortalWebUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.PlaceRequestUtils;
+import org.siemac.metamac.statistical.resources.web.shared.base.ResendStreamMessageAction;
+import org.siemac.metamac.statistical.resources.web.shared.base.ResendStreamMessageResult;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.DatasetVersionWebCriteria;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.DsdWebCriteria;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.VersionableStatisticalResourceWebCriteria;
@@ -268,6 +270,18 @@ public class DatasetMetadataTabPresenter extends StatisticalResourceMetadataBase
                 showMessageAfterResourceLifeCycleUpdate(result, getMessages().lifeCycleResourcePublish());
                 RequestDatasetVersionsReloadEvent.fire(DatasetMetadataTabPresenter.this, result.getDatasetVersionDto().getUrn());
                 getView().setDataset(result.getDatasetVersionDto());
+            }
+        });
+    }
+
+    @Override
+    public void resendStreamMessage(DatasetVersionDto dataset) {
+        dispatcher.execute(new ResendStreamMessageAction(dataset), new WaitingAsyncCallbackHandlingError<ResendStreamMessageResult>(this) {
+
+            @Override
+            public void onWaitSuccess(ResendStreamMessageResult result) {
+                RequestDatasetVersionsReloadEvent.fire(DatasetMetadataTabPresenter.this, result.getLifeCycleStatisticalResourceResultDto().getUrn());
+                getView().setDataset((DatasetVersionDto) result.getLifeCycleStatisticalResourceResultDto());
             }
         });
     }

@@ -2,7 +2,6 @@ package org.siemac.metamac.statistical.resources.web.server.listener;
 
 import org.siemac.metamac.core.common.constants.shared.ConfigurationConstants;
 import org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConfigurationConstants;
-import org.siemac.metamac.statistical.resources.core.stream.serviceimpl.StreamMessagingServiceKafkaImpl;
 import org.siemac.metamac.web.common.server.listener.InternalApplicationStartupListener;
 
 public class StatisticalResourcesStartupListener extends InternalApplicationStartupListener {
@@ -54,13 +53,11 @@ public class StatisticalResourcesStartupListener extends InternalApplicationStar
 
         // Confluent && Kafka
         checkKafkaProperties();
-
     }
 
     protected void checkKafkaProperties() {
-        for (String kafkaProp : StreamMessagingServiceKafkaImpl.getMandatoryConfig()) {
-            checkRequiredProperty(kafkaProp);
-        }
+        checkRequiredProperty(ConfigurationConstants.KAFKA_BOOTSTRAP_SERVERS);
+        checkRequiredProperty(ConfigurationConstants.KAFKA_SCHEMA_REGISTRY_URL);
     }
 
     @Override

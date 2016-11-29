@@ -1,37 +1,42 @@
 package org.siemac.metamac.statistical.resources.core.stream.messages.mappers;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-
-import org.apache.avro.specific.SpecificRecord;
-import org.apache.commons.lang.ClassUtils;
 import org.siemac.metamac.core.common.conf.ConfigurationService;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.util.ApplicationContextProvider;
 import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
+import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResource;
+import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResourceResult;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetRepository;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionRepository;
+import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.invocation.utils.RestMapper;
+import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationRepository;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersionRepository;
+import org.siemac.metamac.statistical.resources.core.query.domain.QueryRepository;
+import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersionRepository;
 
 public class Avro2DoMapperUtils {
 
-    protected static final String AVRO = "Avro";
+    private static ConfigurationService configurationService;
 
-    protected static final String AVRO_MAPPERS_PACKAGE = "org.siemac.metamac.statistical.resources.core.stream.messages.mappers";
-
-    private static final String MAPPER_CLASS_NAME_ENDING = "Mapper";
-
-    private static final String AVRO_TO_DO_METHOD_NAME = "avro2Do";
-
-    private static final String DO_TO_AVRO_METHOD_NAME = "do2Avro";
-
+    private static DatasetRepository datasetRepository;
     private static DatasetVersionRepository datasetVersionRepository;
 
-    protected static PublicationVersionRepository publicationVersionRepository;
-    private static ConfigurationService configurationService;
+    private static PublicationRepository publicationRepository;
+    private static PublicationVersionRepository publicationVersionRepository;
+
+    private static QueryRepository queryRepository;
+    private static QueryVersionRepository queryVersionRepository;
+
+    public static DatasetRepository getDatasetRepository() {
+        if (datasetRepository == null) {
+            datasetRepository = ApplicationContextProvider.getApplicationContext().getBean(DatasetRepository.class);
+        }
+        return datasetRepository;
+    }
 
     public static DatasetVersionRepository getDatasetVersionRepository() {
         if (datasetVersionRepository == null) {
@@ -40,11 +45,32 @@ public class Avro2DoMapperUtils {
         return datasetVersionRepository;
     }
 
+    protected static PublicationRepository getPublicationRepository() {
+        if (publicationRepository == null) {
+            publicationRepository = ApplicationContextProvider.getApplicationContext().getBean(PublicationRepository.class);
+        }
+        return publicationRepository;
+    }
+
     protected static PublicationVersionRepository getPublicationVersionRepository() {
         if (publicationVersionRepository == null) {
             publicationVersionRepository = ApplicationContextProvider.getApplicationContext().getBean(PublicationVersionRepository.class);
         }
         return publicationVersionRepository;
+    }
+
+    protected static QueryRepository getQueryRepository() {
+        if (queryRepository == null) {
+            queryRepository = ApplicationContextProvider.getApplicationContext().getBean(QueryRepository.class);
+        }
+        return queryRepository;
+    }
+
+    protected static QueryVersionRepository getQueryVersionRepository() {
+        if (queryVersionRepository == null) {
+            queryVersionRepository = ApplicationContextProvider.getApplicationContext().getBean(QueryVersionRepository.class);
+        }
+        return queryVersionRepository;
     }
 
     protected static ConfigurationService getConfigurationService() {
@@ -80,35 +106,36 @@ public class Avro2DoMapperUtils {
         return restMapper.createSelfLink(source, statisticalResourcesApiInternalEndpointV10);
     }
 
-    public static SpecificRecord do2Avro(Object source) throws MetamacException {
-        return (SpecificRecord) genericMapper(source, DO_TO_AVRO_METHOD_NAME);
-    }
-
-    private static Object genericMapper(Object source, String methodName) throws MetamacException {
-        Object target = null;
-        try {
-            Class<?> avroMapperClazz = getAvroMapperClass(source);
-            Method method = avroMapperClazz.getMethod(methodName, source.getClass());
-            target = method.invoke(null, source);
-        } catch (ClassNotFoundException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
-            throw new MetamacException();
+    public static RelatedResource createRelatedResourceFromRelatedResourceResult(RelatedResourceResult source) throws MetamacException {
+        RelatedResource target = new RelatedResource();
+        switch (source.getType()) {
+            case DATASET:
+                target.setDataset(getDatasetRepository().retrieveByUrn(source.getUrn()));
+                target.setType(TypeRelatedResourceEnum.DATASET);
+                break;
+            case DATASET_VERSION:
+                target.setDatasetVersion(getDatasetVersionRepository().retrieveByUrn(source.getUrn()));
+                target.setType(TypeRelatedResourceEnum.DATASET_VERSION);
+                break;
+            case PUBLICATION:
+                target.setPublication(getPublicationRepository().retrieveByUrn(source.getUrn()));
+                target.setType(TypeRelatedResourceEnum.PUBLICATION);
+                break;
+            case PUBLICATION_VERSION:
+                target.setPublicationVersion(getPublicationVersionRepository().retrieveByUrn(source.getUrn()));
+                target.setType(TypeRelatedResourceEnum.PUBLICATION_VERSION);
+                break;
+            case QUERY:
+                target.setQuery(getQueryRepository().retrieveByUrn(source.getUrn()));
+                target.setType(TypeRelatedResourceEnum.QUERY);
+                break;
+            case QUERY_VERSION:
+                target.setQueryVersion(getQueryVersionRepository().retrieveByUrn(source.getUrn()));
+                target.setType(TypeRelatedResourceEnum.QUERY_VERSION);
+                break;
+            default:
+                break;
         }
         return target;
-    }
-
-    private static Class<?> getAvroMapperClass(Object source) throws ClassNotFoundException {
-        String avroMapperClazzName = generateMapperClassName(source);
-        Class<?> avroMapperClazz = Class.forName(avroMapperClazzName);
-        return avroMapperClazz;
-    }
-
-    private static String generateMapperClassName(Object source) {
-        String clazzName = source.getClass().getSimpleName();
-        StringBuffer avroMapperClazzName = new StringBuffer(AVRO_MAPPERS_PACKAGE).append(ClassUtils.PACKAGE_SEPARATOR).append(clazzName);
-        if (!SpecificRecord.class.isAssignableFrom(source.getClass())) {
-            avroMapperClazzName.append(AVRO);
-        }
-        avroMapperClazzName.append(MAPPER_CLASS_NAME_ENDING);
-        return avroMapperClazzName.toString();
     }
 }

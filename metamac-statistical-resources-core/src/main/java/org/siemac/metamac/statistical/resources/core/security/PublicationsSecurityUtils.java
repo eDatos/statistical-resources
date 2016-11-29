@@ -129,6 +129,12 @@ public class PublicationsSecurityUtils extends SecurityUtils {
         }
     }
 
+    public static void canResendPublishedPublicationVersionStreamMessage(ServiceContext ctx, String operationCode) throws MetamacException {
+        if (!SharedPublicationsSecurityUtils.canPublishPublicationVersion(getMetamacPrincipal(ctx), operationCode)) {
+            throwExceptionIfOperationNotAllowed(ctx);
+        }
+    }
+
     // ------------------------------------------------------------------------
     // CHAPTERS
     // ------------------------------------------------------------------------

@@ -1,8 +1,5 @@
 package org.siemac.metamac.statistical.resources.core.stream.messages.mappers;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.when;
@@ -75,36 +72,6 @@ public class AvroMapperUtilsTest {
 
         try {
             AvroMapperUtils.avro2Do(record);
-            fail("The test should not get to here");
-        } catch (MetamacException e) {
-            assertTrue("Method must launch a MetamacException if something fails", true);
-        }
-    }
-
-    @Test
-    public void testDo2AvroCallsCorrectClass() throws MetamacException {
-        IdentifiableStatisticalResourceAvro expected = MappersMockUtils.mockIdentifiableStatisticalResourceAvro();
-        IdentifiableStatisticalResource source = MappersMockUtils.mockIdentifiableStatisticalResource();
-        IdentifiableStatisticalResourceAvro actual = (IdentifiableStatisticalResourceAvro) Avro2DoMapperUtils.do2Avro(source);
-
-        assertThat(actual, is(equalTo(expected)));
-    }
-
-    @Test
-    public void testDo2AvroCallsCorrectClass2() throws MetamacException {
-        DatasetVersionAvro expected = MappersMockUtils.mockDatasetVersionAvro();
-        DatasetVersion source = MappersMockUtils.mockDatasetVersion();
-
-        DatasetVersionAvro actual = (DatasetVersionAvro) Avro2DoMapperUtils.do2Avro(source);
-
-        assertThat(actual, is(equalTo(expected)));
-    }
-
-    @Test
-    public void testDo2AvroFailsOnNotFoundClass() {
-        String notValidClass = "123";
-        try {
-            Avro2DoMapperUtils.do2Avro(notValidClass);
             fail("The test should not get to here");
         } catch (MetamacException e) {
             assertTrue("Method must launch a MetamacException if something fails", true);

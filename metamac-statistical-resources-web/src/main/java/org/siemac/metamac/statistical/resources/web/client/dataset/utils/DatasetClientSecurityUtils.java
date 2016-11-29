@@ -86,6 +86,14 @@ public class DatasetClientSecurityUtils extends LifecycleClientSecurityUtils {
         return canPublishDatasetVersion(dto.getProcStatus(), dto.getIsTaskInBackground());
     }
 
+    public static boolean canResendStreamMessageDatasetVersion(DatasetVersionDto dto) {
+        if (!dto.getLastVersion()) {
+            return false;
+        }
+
+        return canResendStreamMessageDatasetVersion(dto.getProcStatus(), dto.getIsTaskInBackground());
+    }
+
     public static boolean canVersionDataset(DatasetVersionDto dto) {
         return canVersionDataset(dto.getProcStatus(), dto.getIsTaskInBackground());
     }
@@ -133,6 +141,17 @@ public class DatasetClientSecurityUtils extends LifecycleClientSecurityUtils {
         if (!canPublish(procStatus)) {
             return false;
         }
+        return SharedDatasetsSecurityUtils.canPublishDataset(getMetamacPrincipal(), getCurrentStatisticalOperationCode());
+    }
+
+    private static boolean canResendStreamMessageDatasetVersion(ProcStatusEnum procStatus, Boolean isTaskInBackground) {
+        if (BooleanUtils.isTrue(isTaskInBackground)) {
+            return false;
+        }
+        if (!canResendStreamMessage(procStatus)) {
+            return false;
+        }
+
         return SharedDatasetsSecurityUtils.canPublishDataset(getMetamacPrincipal(), getCurrentStatisticalOperationCode());
     }
 

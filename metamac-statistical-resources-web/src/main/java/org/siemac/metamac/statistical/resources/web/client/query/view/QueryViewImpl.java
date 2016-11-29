@@ -55,12 +55,12 @@ import com.smartgwt.client.widgets.layout.VLayout;
 
 public class QueryViewImpl extends ViewWithUiHandlers<QueryUiHandlers> implements QueryPresenter.QueryView {
 
-    private VLayout panel;
+    private VLayout                   panel;
 
     private QueryVersionsSectionStack versionsSectionStack;
-    private QueryFormPanel queryFormPanel;
+    private QueryFormPanel            queryFormPanel;
 
-    private WarningLabel warningLabel;
+    private WarningLabel              warningLabel;
 
     @Inject
     public QueryViewImpl() {
@@ -170,8 +170,8 @@ public class QueryViewImpl extends ViewWithUiHandlers<QueryUiHandlers> implement
 
     @Override
     public void setAgencySchemesForMaintainer(GetAgencySchemesPaginatedListResult result) {
-        queryFormPanel.productionDescriptorsEditionForm
-                .setAgencySchemesForMaintainer(result.getAgencySchemes(), result.getFirstResultOut(), result.getAgencySchemes().size(), result.getTotalResults());
+        queryFormPanel.productionDescriptorsEditionForm.setAgencySchemesForMaintainer(result.getAgencySchemes(), result.getFirstResultOut(), result.getAgencySchemes().size(),
+                result.getTotalResults());
     }
 
     @Override
@@ -195,29 +195,29 @@ public class QueryViewImpl extends ViewWithUiHandlers<QueryUiHandlers> implement
 
     private class QueryFormPanel extends VLayout {
 
-        private QueryMainFormLayout mainFormLayout;
+        private QueryMainFormLayout                                      mainFormLayout;
 
-        private NameableResourceIdentifiersForm identifiersForm;
-        private LifeCycleResourceContentDescriptorsForm contentDescriptorsForm;
-        private StatisticalResourceThematicContentClassifiersForm thematicContentClassifiersForm;
-        private QueryProductionDescriptorsForm productionDescriptorsForm;
-        private QueryResourceRelationDescriptorsForm resourceRelationDescriptorsForm;
-        private LifeCycleResourceLifeCycleForm lifeCycleForm;
-        private LifeCycleResourceVersionForm versionForm;
+        private NameableResourceIdentifiersForm                          identifiersForm;
+        private LifeCycleResourceContentDescriptorsForm                  contentDescriptorsForm;
+        private StatisticalResourceThematicContentClassifiersForm        thematicContentClassifiersForm;
+        private QueryProductionDescriptorsForm                           productionDescriptorsForm;
+        private QueryResourceRelationDescriptorsForm                     resourceRelationDescriptorsForm;
+        private LifeCycleResourceLifeCycleForm                           lifeCycleForm;
+        private LifeCycleResourceVersionForm                             versionForm;
 
         // only creation
-        private QueryIdentifiersCreationForm identifiersCreationForm;
+        private QueryIdentifiersCreationForm                             identifiersCreationForm;
         // Only edition
-        private NameableResourceIdentifiersEditionForm identifiersEditionForm;
+        private NameableResourceIdentifiersEditionForm                   identifiersEditionForm;
 
-        private LifeCycleResourceContentDescriptorsEditionForm contentDescriptorsEditionForm;
+        private LifeCycleResourceContentDescriptorsEditionForm           contentDescriptorsEditionForm;
         private StatisticalResourceThematicContentClassifiersEditionForm thematicContentClassifiersEditionForm;
-        private QueryProductionDescriptorsEditionForm productionDescriptorsEditionForm;
-        private QueryResourceRelationDescriptorsForm resourceRelationDescriptorsEditionForm;
-        private LifeCycleResourceLifeCycleForm lifeCycleEditionForm;
-        private LifeCycleResourceVersionEditionForm versionEditionForm;
+        private QueryProductionDescriptorsEditionForm                    productionDescriptorsEditionForm;
+        private QueryResourceRelationDescriptorsForm                     resourceRelationDescriptorsEditionForm;
+        private LifeCycleResourceLifeCycleForm                           lifeCycleEditionForm;
+        private LifeCycleResourceVersionEditionForm                      versionEditionForm;
 
-        private QueryVersionDto queryVersionDto;
+        private QueryVersionDto                                          queryVersionDto;
 
         public QueryFormPanel() {
             super();
@@ -231,7 +231,7 @@ public class QueryViewImpl extends ViewWithUiHandlers<QueryUiHandlers> implement
             createEditionForm();
 
             bindMainFormLayoutEvents();
-            this.hide();
+            hide();
         }
 
         private void bindMainFormLayoutEvents() {
@@ -322,7 +322,7 @@ public class QueryViewImpl extends ViewWithUiHandlers<QueryUiHandlers> implement
                 public void onClick(ClickEvent event) {
                     if (isCreationMode()) {
                         QueryFormPanel.this.hide();
-                        QueryViewImpl.this.getUiHandlers().goToQueries();
+                        getUiHandlers().goToQueries();
                     }
                 }
             });
@@ -361,11 +361,20 @@ public class QueryViewImpl extends ViewWithUiHandlers<QueryUiHandlers> implement
                     });
                 }
             });
+
             mainFormLayout.getPublishButton().addClickHandler(new ClickHandler() {
 
                 @Override
                 public void onClick(ClickEvent event) {
                     getUiHandlers().publish(queryVersionDto);
+                }
+            });
+
+            mainFormLayout.getResendStreamMessageButton().addClickHandler(new ClickHandler() {
+
+                @Override
+                public void onClick(ClickEvent event) {
+                    getUiHandlers().resendStreamMessage(queryVersionDto);
                 }
             });
 
@@ -435,8 +444,8 @@ public class QueryViewImpl extends ViewWithUiHandlers<QueryUiHandlers> implement
         }
 
         private void createQuery() {
-            this.queryVersionDto = new QueryVersionDto();
-            this.queryVersionDto.setMaintainer(StatisticalResourcesDefaults.defaultAgency);
+            queryVersionDto = new QueryVersionDto();
+            queryVersionDto.setMaintainer(StatisticalResourcesDefaults.defaultAgency);
 
             mainFormLayout.setTitleLabelContents(getConstants().queryNew());
             mainFormLayout.setEditionMode();
@@ -444,7 +453,7 @@ public class QueryViewImpl extends ViewWithUiHandlers<QueryUiHandlers> implement
             fillEditionForm(queryVersionDto);
 
             mainFormLayout.redraw();
-            this.show();
+            show();
         }
 
         private void setQuery(QueryVersionDto queryVersionDto) {
@@ -456,7 +465,7 @@ public class QueryViewImpl extends ViewWithUiHandlers<QueryUiHandlers> implement
             fillViewForm(queryVersionDto);
             fillEditionForm(queryVersionDto);
             mainFormLayout.redraw();
-            this.show();
+            show();
         }
 
         private void fillViewForm(QueryVersionDto queryDto) {
@@ -533,7 +542,7 @@ public class QueryViewImpl extends ViewWithUiHandlers<QueryUiHandlers> implement
         }
 
         private boolean isCreationMode() {
-            return StringUtils.isEmpty(this.queryVersionDto.getUrn());
+            return StringUtils.isEmpty(queryVersionDto.getUrn());
         }
     }
 }

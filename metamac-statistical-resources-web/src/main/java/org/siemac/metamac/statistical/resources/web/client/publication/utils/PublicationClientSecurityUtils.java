@@ -85,6 +85,14 @@ public class PublicationClientSecurityUtils extends LifecycleClientSecurityUtils
         return canPublishPublicationVersion(dto.getProcStatus());
     }
 
+    public static boolean canResendStreamMessageDatasetVersion(PublicationVersionDto dto) {
+        if (!dto.getLastVersion()) {
+            return false;
+        }
+
+        return canResendStreamMessageDatasetVersion(dto.getProcStatus());
+    }
+
     public static boolean canVersionPublication(PublicationVersionDto dto) {
         return canVersionPublication(dto.getProcStatus());
     }
@@ -118,6 +126,14 @@ public class PublicationClientSecurityUtils extends LifecycleClientSecurityUtils
         if (!canPublish(procStatus)) {
             return false;
         }
+        return SharedPublicationsSecurityUtils.canPublishPublicationVersion(getMetamacPrincipal(), getCurrentStatisticalOperationCode());
+    }
+
+    private static boolean canResendStreamMessageDatasetVersion(ProcStatusEnum procStatus) {
+        if (!canResendStreamMessage(procStatus)) {
+            return false;
+        }
+
         return SharedPublicationsSecurityUtils.canPublishPublicationVersion(getMetamacPrincipal(), getCurrentStatisticalOperationCode());
     }
 

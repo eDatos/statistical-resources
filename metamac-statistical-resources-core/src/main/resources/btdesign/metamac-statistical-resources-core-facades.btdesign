@@ -67,6 +67,7 @@ Application FacadeStatisticalResources {
     		"Publishes a new version of a query version"
     		@QueryVersionDto publishQueryVersion(@QueryVersionDto queryVersionDto) throws MetamacException;
     		@QueryVersionBaseDto publishQueryVersion(@QueryVersionBaseDto queryVersionDto) throws MetamacException;
+    		@QueryVersionBaseDto resendPublishedQueryVersionStreamMessage(String queryVersionUrn) throws MetamacException;
     		"Creates a new version of a query version, copying metadata from version with provided urn"
     		@QueryVersionDto versioningQueryVersion(@QueryVersionDto queryVersionDto, @VersionTypeEnum versionType) throws MetamacException;
     		@QueryVersionBaseDto versioningQueryVersion(@QueryVersionBaseDto queryVersionDto, @VersionTypeEnum versionType) throws MetamacException;
@@ -124,6 +125,7 @@ Application FacadeStatisticalResources {
     		"Published a new version of a dataset"
     		@DatasetVersionDto publishDatasetVersion(@DatasetVersionDto datasetVersionDto) throws MetamacException;
     		@DatasetVersionBaseDto publishDatasetVersion(@DatasetVersionBaseDto datasetVersionDto) throws MetamacException;
+    		@DatasetVersionBaseDto resendPublishedDatasetVersionStreamMessage(String datasetVersionUrn) throws MetamacException;
     		"Creates a new version of a dataset, copying metadata from version with provided urn"
     		@DatasetVersionDto versioningDatasetVersion(@DatasetVersionDto datasetVersionDto, @VersionTypeEnum versionType) throws MetamacException;
     		@DatasetVersionBaseDto versioningDatasetVersion(@DatasetVersionBaseDto datasetVersionDto, @VersionTypeEnum versionType) throws MetamacException;
@@ -198,6 +200,7 @@ Application FacadeStatisticalResources {
     		"Publishes a new version of a publication"
     		@PublicationVersionDto publishPublicationVersion(@PublicationVersionDto publicationVersionDto) throws MetamacException;
     		@PublicationVersionBaseDto publishPublicationVersion(@PublicationVersionBaseDto publicationVersionDto) throws MetamacException;
+    		@PublicationVersionBaseDto resendPublishedPublicationVersionStreamMessage(String publicationVersionUrn) throws MetamacException;
     		"Creates a new version of a publication, copying metadata from version with provided urn"
     		@PublicationVersionDto versioningPublicationVersion(@PublicationVersionDto publicationVersionDto, @VersionTypeEnum versionType) throws MetamacException;
     		@PublicationVersionBaseDto versioningPublicationVersion(@PublicationVersionBaseDto publicationVersionDto, @VersionTypeEnum versionType) throws MetamacException;

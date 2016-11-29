@@ -75,6 +75,13 @@ public class QueryClientSecurityUtils extends LifecycleClientSecurityUtils {
         return canPublishQueryVersion(dto.getProcStatus());
     }
 
+    public static boolean canResendStreamMessageQueryVersion(QueryVersionDto dto) {
+        if (!dto.getLastVersion()) {
+            return false;
+        }
+        return canResendStreamMessageQueryVersion(dto.getProcStatus());
+    }
+
     public static boolean canVersionQueryVersion(QueryVersionDto dto) {
         return canVersionQueryVersion(dto.getProcStatus());
     }
@@ -106,6 +113,13 @@ public class QueryClientSecurityUtils extends LifecycleClientSecurityUtils {
 
     private static boolean canPublishQueryVersion(ProcStatusEnum procStatus) {
         if (!canPublish(procStatus)) {
+            return false;
+        }
+        return SharedQueriesSecurityUtils.canPublishQueryVersion(getMetamacPrincipal(), getCurrentStatisticalOperationCode());
+    }
+
+    private static boolean canResendStreamMessageQueryVersion(ProcStatusEnum procStatus) {
+        if (!canResendStreamMessage(procStatus)) {
             return false;
         }
         return SharedQueriesSecurityUtils.canPublishQueryVersion(getMetamacPrincipal(), getCurrentStatisticalOperationCode());

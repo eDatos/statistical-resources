@@ -1,102 +1,91 @@
 package org.siemac.metamac.statistical.resources.core.stream.serviceimpl;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Properties;
 
 import org.apache.avro.specific.SpecificRecordBase;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.statistical.resources.core.base.domain.HasSiemacMetadata;
 import org.siemac.metamac.statistical.resources.core.conf.StatisticalResourcesConfiguration;
 import org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConfigurationConstants;
-import org.siemac.metamac.statistical.resources.core.stream.messages.mappers.Avro2DoMapperUtils;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
+import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
+import org.siemac.metamac.statistical.resources.core.stream.messages.mappers.DatasetVersionDo2AvroMapper;
+import org.siemac.metamac.statistical.resources.core.stream.messages.mappers.PublicationVersionDo2AvroMapper;
 import org.siemac.metamac.statistical.resources.core.stream.serviceapi.StreamMessagingService;
 import org.siemac.metamac.statistical.resources.web.server.stream.AvroMessage;
 import org.siemac.metamac.statistical.resources.web.server.stream.KafkaCustomProducer;
 import org.siemac.metamac.statistical.resources.web.server.stream.MessageBase;
 import org.siemac.metamac.statistical.resources.web.server.stream.ProducerBase;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationListener;
+import org.springframework.context.event.ContextClosedEvent;
 import org.springframework.stereotype.Component;
 
 import io.confluent.kafka.serializers.KafkaAvroDeserializerConfig;
 
 @Component(StreamMessagingService.BEAN_ID)
-public class StreamMessagingServiceKafkaImpl<K, V extends SpecificRecordBase> extends StreamMessagingService<K, V> {
-
-    public static final String                  SCHEMA_REGISTRY_URL_CONFIG = "metamac.statistical.resources.kafka." + KafkaAvroDeserializerConfig.SCHEMA_REGISTRY_URL_CONFIG;
-    public static final String                  BOOTSTRAP_SERVERS_CONFIG   = "metamac.statistical.resources.kafka." + ProducerConfig.BOOTSTRAP_SERVERS_CONFIG;
+public class StreamMessagingServiceKafkaImpl<K, V extends SpecificRecordBase> implements StreamMessagingService<K, V>, ApplicationListener<ContextClosedEvent> {
 
     @Autowired
     protected StatisticalResourcesConfiguration statisticalResourcesConfig;
 
-    protected Properties                        props;
+    private ProducerBase<K, V>                  producer;
 
-    protected StreamMessagingServiceKafkaImpl() {
-        super();
+    @SuppressWarnings("unchecked")
+    @Override
+    public void sendMessage(HasSiemacMetadata message) throws MetamacException {
+        // Serialize message
+        MessageBase<K, V> m = new AvroMessage<K, V>(serializeMessage(message));
+
+        // Topic
+        String topic = getTopicByType(message);
+
+        getProducer().sendMessage(m, topic);
     }
 
-    public StreamMessagingServiceKafkaImpl(Properties props) {
-        setProps(props);
-    }
-
-    protected void setProps(Properties props) {
-        if (null == props) {
-            props = getPropsFromExternalSource();
-        }
-        this.props = props;
-    }
-
-    public void setStatisticalResourcesConfig(StatisticalResourcesConfiguration statisticalResourcesConfig) {
-        this.statisticalResourcesConfig = statisticalResourcesConfig;
-    }
-
-    protected ProducerBase<K, V> createProducer() throws MetamacException {
-        if (null == producer) {
-            setProps(null);
-            try {
-                producer = new KafkaCustomProducer<>(props);
-            } catch (MetamacException e) {
-                throw new MetamacException(e.getCause(), e.getExceptionItems());
-            }
+    private ProducerBase<K, V> getProducer() throws MetamacException {
+        if (producer == null) {
+            producer = new KafkaCustomProducer<>(getProducerProperties());
         }
         return producer;
     }
 
-    public static List<String> getMandatoryConfig() {
-        List<String> props = new ArrayList<String>();
-        props.add(StatisticalResourcesConfigurationConstants.KAFKA_BOOTSTRAP_SERVERS);
-        props.add(StatisticalResourcesConfigurationConstants.KAFKA_SCHEMA_REGISTRY_URL);
+    private Properties getProducerProperties() throws MetamacException {
+        Properties props = new Properties();
+        props.put(KafkaAvroDeserializerConfig.SCHEMA_REGISTRY_URL_CONFIG, statisticalResourcesConfig.retrieveProperty(StatisticalResourcesConfigurationConstants.KAFKA_SCHEMA_REGISTRY_URL));
+        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, statisticalResourcesConfig.retrieveProperty(StatisticalResourcesConfigurationConstants.KAFKA_BOOTSTRAP_SERVERS));
         return props;
     }
 
-    private Properties getPropsFromExternalSource() {
-
-        Properties props;
-        props = new Properties();
-        try {
-            props.put(KafkaAvroDeserializerConfig.SCHEMA_REGISTRY_URL_CONFIG, statisticalResourcesConfig.retrieveProperty(StreamMessagingServiceKafkaImpl.SCHEMA_REGISTRY_URL_CONFIG));
-            props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, statisticalResourcesConfig.retrieveProperty(StreamMessagingServiceKafkaImpl.BOOTSTRAP_SERVERS_CONFIG));
-
-        } catch (MetamacException e) {
-            e.printStackTrace();
+    private String getTopicByType(HasSiemacMetadata version) throws MetamacException {
+        switch (version.getSiemacMetadataStatisticalResource().getType()) {
+            case DATASET:
+                return statisticalResourcesConfig.retrieveKafkaTopicDatasetsPublication();
+            case COLLECTION:
+                return statisticalResourcesConfig.retrieveKafkaTopicCollectionPublication();
+            default:
+                return null;
         }
-        return props;
+    }
+
+    private V serializeMessage(HasSiemacMetadata version) throws MetamacException {
+        switch (version.getSiemacMetadataStatisticalResource().getType()) {
+            case DATASET:
+                return (V) DatasetVersionDo2AvroMapper.do2Avro((DatasetVersion) version);
+            case COLLECTION:
+                return (V) PublicationVersionDo2AvroMapper.do2Avro((PublicationVersion) version);
+            default:
+                return null;
+        }
     }
 
     @Override
-    public void sendMessage(Object message, String topic) throws MetamacException {
-        V avroMessage = (V) Avro2DoMapperUtils.do2Avro(message);
-        MessageBase<K, V> m = new AvroMessage<K, V>(avroMessage);
-
-        // Lazy initialitation
-        createProducer();
-
-        try {
-            producer.sendMessage(m, topic);
-        } catch (MetamacException e) {
-            throw new MetamacException(e.getCause(), e.getExceptionItems());
+    public void onApplicationEvent(ContextClosedEvent event) {
+        if (producer != null) {
+            producer.close();
+            producer = null;
         }
-
     }
 
 }

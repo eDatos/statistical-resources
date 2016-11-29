@@ -1,7 +1,5 @@
 package org.siemac.metamac.statistical.resources.web.client.publication.view.handlers;
 
-import java.util.Date;
-
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionDto;
 import org.siemac.metamac.statistical.resources.web.client.base.view.handlers.StatisticalResourceUiHandlers;
@@ -28,4 +26,5 @@ public interface PublicationMetadataTabUiHandlers extends StatisticalResourceUiH
 
     void publish(PublicationVersionDto publication);
     void version(PublicationVersionDto publication, VersionTypeEnum versionType);
+    void resendStreamMessage(PublicationVersionDto publicationVersionDto);
 }

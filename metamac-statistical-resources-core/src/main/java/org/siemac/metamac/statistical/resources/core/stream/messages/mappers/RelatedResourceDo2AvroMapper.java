@@ -4,12 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.siemac.metamac.core.common.exception.MetamacException;
-import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.NameableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResource;
 import org.siemac.metamac.statistical.resources.core.common.utils.RelatedResourceUtils;
-import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
-import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
 import org.siemac.metamac.statistical.resources.core.stream.messages.RelatedResourceAvro;
 
 public class RelatedResourceDo2AvroMapper {
@@ -18,31 +15,34 @@ public class RelatedResourceDo2AvroMapper {
     }
 
     public static RelatedResourceAvro do2Avro(RelatedResource source) throws MetamacException {
-        RelatedResourceAvro target = null;
-        if (null != source) {
-            NameableStatisticalResource nameableResource = null;
-            TypeRelatedResourceEnum type = source.getType();
-            switch (type) {
-                case DATASET:
-                    nameableResource = Avro2DoMapperUtils.retrieveDatasetVersion(source.getDataset().getIdentifiableStatisticalResource().getUrn()).getSiemacMetadataStatisticalResource();
-                    break;
-                case PUBLICATION_VERSION:
-                    PublicationVersion publication = source.getPublicationVersion();
-                    IdentifiableStatisticalResource identifiableStatisticalResource = publication.getLifeCycleStatisticalResource();
-                    String urn = identifiableStatisticalResource.getUrn();
-                    PublicationVersion publicationVersion = Avro2DoMapperUtils.retrievePublicationVersion(urn);
-                    nameableResource = publicationVersion.getSiemacMetadataStatisticalResource();
-                    break;
-                default:
-                    nameableResource = RelatedResourceUtils.retrieveNameableResourceLinkedToRelatedResource(source);
-
-            }
-            if (nameableResource != null) {
-                target = RelatedResourceAvro.newBuilder().setCode(nameableResource.getCode()).setStatisticalOperationUrn(nameableResource.getStatisticalOperation().getUrn())
-                        .setTitle(InternationalStringDo2AvroMapper.do2Avro(nameableResource.getTitle())).setType(TypeRelatedResourceEnumDo2AvroMapper.do2Avro(source.getType()))
-                        .setUrn(nameableResource.getUrn()).build();
-            }
+        if (source == null) {
+            return null;
         }
+        RelatedResourceAvro target = null;
+
+        NameableStatisticalResource nameableResource = null;
+        switch (source.getType()) {
+            case DATASET:
+                nameableResource = Avro2DoMapperUtils.getDatasetVersionRepository().retrieveLastVersion(source.getDataset().getIdentifiableStatisticalResource().getUrn())
+                        .getSiemacMetadataStatisticalResource();
+                break;
+            case PUBLICATION:
+                nameableResource = Avro2DoMapperUtils.getPublicationVersionRepository().retrieveLastVersion(source.getPublication().getIdentifiableStatisticalResource().getUrn())
+                        .getSiemacMetadataStatisticalResource();
+                break;
+            case QUERY:
+                nameableResource = Avro2DoMapperUtils.getQueryVersionRepository().retrieveLastVersion(source.getQuery().getIdentifiableStatisticalResource().getUrn())
+                        .getLifeCycleStatisticalResource();
+                break;
+            default:
+                nameableResource = RelatedResourceUtils.retrieveNameableResourceLinkedToRelatedResource(source);
+
+        }
+
+        target = RelatedResourceAvro.newBuilder().setCode(nameableResource.getCode()).setStatisticalOperationUrn(nameableResource.getStatisticalOperation().getUrn())
+                .setTitle(InternationalStringDo2AvroMapper.do2Avro(nameableResource.getTitle())).setType(TypeRelatedResourceEnumDo2AvroMapper.do2Avro(source.getType()))
+                .setUrn(nameableResource.getUrn()).build();
+
         return target;
     }
 

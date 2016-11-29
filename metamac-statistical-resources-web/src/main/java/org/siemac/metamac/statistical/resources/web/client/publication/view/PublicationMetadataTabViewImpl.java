@@ -80,7 +80,7 @@ public class PublicationMetadataTabViewImpl extends StatisticalResourceMetadataB
 
     private SiemacMetadataIntellectualPropertyDescriptorsEditionForm intellectualPropertyDescriptorsEditionForm;
 
-    private PublicationVersionDto publicationVersionDto;
+    private PublicationVersionDto                                    publicationVersionDto;
 
     @Inject
     public PublicationMetadataTabViewImpl() {
@@ -234,6 +234,14 @@ public class PublicationMetadataTabViewImpl extends StatisticalResourceMetadataB
             @Override
             public void onClick(ClickEvent event) {
                 getUiHandlers().publish(publicationVersionDto);
+            }
+        });
+
+        mainFormLayout.getResendStreamMessageButton().addClickHandler(new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                getUiHandlers().resendStreamMessage(publicationVersionDto);
             }
         });
 

@@ -43,6 +43,10 @@ public class PublicationMainFormLayout extends LifecycleMainFormLayout {
         return PublicationClientSecurityUtils.canPublishPublicationVersion(publicationVersionDto);
     }
 
+    @Override
+    protected boolean canResendStreamMessage() {
+        return PublicationClientSecurityUtils.canResendStreamMessageDatasetVersion(publicationVersionDto);
+    }
 
     @Override
     protected boolean canVersion() {

@@ -53,7 +53,7 @@ import com.smartgwt.client.widgets.form.fields.FormItemIcon;
 
 public class CommonUtils {
 
-    private static String                               metamacPortalBaseUrl;
+    private static String metamacPortalBaseUrl;
     private static Map<String, StatisticOfficialityDto> statisticOfficialitiesMap;
 
     // -----------------------------------------------------------------------------------------
@@ -171,7 +171,6 @@ public class CommonUtils {
         return valueMap;
     }
 
-
     public static ProcStatusEnum getProcStatusEnum(String procStatusName) {
         if (!StringUtils.isBlank(procStatusName)) {
             try {
@@ -223,11 +222,11 @@ public class CommonUtils {
     public static FormItemIcon getPublicationStreamStatusIcon(StreamMessageStatusEnum status) {
         FormItemIcon icon = new FormItemIcon();
         String iconSrc = null;
-        if (status.equals(StreamMessageStatusEnum.FAILED)) {
+        if (StreamMessageStatusEnum.FAILED.equals(status)) {
             iconSrc = GlobalResources.RESOURCE.errorSmart().getURL();
-        } else if (status.equals(StreamMessageStatusEnum.PENDING)) {
+        } else if (StreamMessageStatusEnum.PENDING.equals(status)) {
             iconSrc = GlobalResources.RESOURCE.warn().getURL();
-        } else if (status.equals(StreamMessageStatusEnum.SENT)) {
+        } else if (StreamMessageStatusEnum.SENT.equals(status)) {
             iconSrc = GlobalResources.RESOURCE.success().getURL();
         }
         icon.setSrc(iconSrc);

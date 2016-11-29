@@ -21,6 +21,8 @@ import org.siemac.metamac.statistical.resources.web.client.query.view.handlers.Q
 import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.MetamacPortalWebUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.PlaceRequestUtils;
+import org.siemac.metamac.statistical.resources.web.shared.base.ResendStreamMessageAction;
+import org.siemac.metamac.statistical.resources.web.shared.base.ResendStreamMessageResult;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.DatasetVersionWebCriteria;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetDimensionCoverageAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetDimensionCoverageResult;
@@ -294,30 +296,30 @@ public class QueryPresenter extends Presenter<QueryPresenter.QueryView, QueryPre
 
     @Override
     public void sendToProductionValidation(QueryVersionDto query) {
-        dispatcher.execute(new UpdateQueryVersionProcStatusAction(query, LifeCycleActionEnum.SEND_TO_PRODUCTION_VALIDATION), new WaitingAsyncCallbackHandlingError<UpdateQueryVersionProcStatusResult>(
-                this) {
+        dispatcher.execute(new UpdateQueryVersionProcStatusAction(query, LifeCycleActionEnum.SEND_TO_PRODUCTION_VALIDATION),
+                new WaitingAsyncCallbackHandlingError<UpdateQueryVersionProcStatusResult>(this) {
 
-            @Override
-            public void onWaitSuccess(UpdateQueryVersionProcStatusResult result) {
-                showMessageAfterResourceLifeCycleUpdate(result, getMessages().lifeCycleResourceSentToProductionValidation());
-                retrieveQueryVersions(result.getQueryVersionDto().getUrn());
-                getView().setQueryDto(result.getQueryVersionDto());
-            }
-        });
+                    @Override
+                    public void onWaitSuccess(UpdateQueryVersionProcStatusResult result) {
+                        showMessageAfterResourceLifeCycleUpdate(result, getMessages().lifeCycleResourceSentToProductionValidation());
+                        retrieveQueryVersions(result.getQueryVersionDto().getUrn());
+                        getView().setQueryDto(result.getQueryVersionDto());
+                    }
+                });
     }
 
     @Override
     public void sendToDiffusionValidation(QueryVersionDto query) {
-        dispatcher.execute(new UpdateQueryVersionProcStatusAction(query, LifeCycleActionEnum.SEND_TO_DIFFUSION_VALIDATION), new WaitingAsyncCallbackHandlingError<UpdateQueryVersionProcStatusResult>(
-                this) {
+        dispatcher.execute(new UpdateQueryVersionProcStatusAction(query, LifeCycleActionEnum.SEND_TO_DIFFUSION_VALIDATION),
+                new WaitingAsyncCallbackHandlingError<UpdateQueryVersionProcStatusResult>(this) {
 
-            @Override
-            public void onWaitSuccess(UpdateQueryVersionProcStatusResult result) {
-                showMessageAfterResourceLifeCycleUpdate(result, getMessages().lifeCycleResourceSentToDiffusionValidation());
-                retrieveQueryVersions(result.getQueryVersionDto().getUrn());
-                getView().setQueryDto(result.getQueryVersionDto());
-            }
-        });
+                    @Override
+                    public void onWaitSuccess(UpdateQueryVersionProcStatusResult result) {
+                        showMessageAfterResourceLifeCycleUpdate(result, getMessages().lifeCycleResourceSentToDiffusionValidation());
+                        retrieveQueryVersions(result.getQueryVersionDto().getUrn());
+                        getView().setQueryDto(result.getQueryVersionDto());
+                    }
+                });
     }
 
     @Override
@@ -344,6 +346,18 @@ public class QueryPresenter extends Presenter<QueryPresenter.QueryView, QueryPre
                 showMessageAfterResourceLifeCycleUpdate(result, getMessages().lifeCycleResourcePublish());
                 retrieveQueryVersions(result.getQueryVersionDto().getUrn());
                 getView().setQueryDto(result.getQueryVersionDto());
+            }
+        });
+    }
+
+    @Override
+    public void resendStreamMessage(QueryVersionDto query) {
+        dispatcher.execute(new ResendStreamMessageAction(query), new WaitingAsyncCallbackHandlingError<ResendStreamMessageResult>(this) {
+
+            @Override
+            public void onWaitSuccess(ResendStreamMessageResult result) {
+                retrieveQueryVersions(result.getLifeCycleStatisticalResourceResultDto().getUrn());
+                getView().setQueryDto((QueryVersionDto) result.getLifeCycleStatisticalResourceResultDto());
             }
         });
     }
