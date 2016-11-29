@@ -20,7 +20,6 @@ import org.apache.kafka.common.errors.SerializationException;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionBuilder;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
-import org.siemac.metamac.statistical.resources.core.stream.enume.KafkaTopics;
 
 import io.confluent.kafka.serializers.KafkaAvroDeserializerConfig;
 import io.confluent.kafka.serializers.KafkaAvroSerializer;
@@ -28,15 +27,16 @@ import io.confluent.kafka.serializers.KafkaAvroSerializer;
 public class KafkaCustomProducer<K, V extends SpecificRecordBase> extends ProducerBase<K, V> {
 
     private static final int                   KAFKA_TIMEOUT      = 500;
-    protected final static String[]            MANDATORY_SETTINGS = {
-            KafkaAvroDeserializerConfig.SCHEMA_REGISTRY_URL_CONFIG,
-            ProducerConfig.BOOTSTRAP_SERVERS_CONFIG};
+    protected final static String[]            MANDATORY_SETTINGS = {KafkaAvroDeserializerConfig.SCHEMA_REGISTRY_URL_CONFIG, ProducerConfig.BOOTSTRAP_SERVERS_CONFIG};
     protected final static Map<String, Object> DEFAULT_SETTINGS   = new HashMap<String, Object>() {
 
                                                                       {
                                                                           put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, KafkaAvroSerializer.class);
                                                                           put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, KafkaAvroSerializer.class);
-                                                                          put(ProducerConfig.MAX_BLOCK_MS_CONFIG, 5000); //Time to wait if Kafka cluster is down or buffer is full
+                                                                          put(ProducerConfig.MAX_BLOCK_MS_CONFIG, 5000);                                                          // Time to wait if
+                                                                                                                                                                                  // Kafka cluster is
+                                                                                                                                                                                  // down or buffer is
+                                                                                                                                                                                  // full
                                                                       }
                                                                   };
 
@@ -56,7 +56,6 @@ public class KafkaCustomProducer<K, V extends SpecificRecordBase> extends Produc
 
     @Override
     public void sendMessage(MessageBase<K, V> message, String topic) throws MetamacException {
-        checkTopicIsValid(topic);
         ProducerRecord<K, V> record = new ProducerRecord<K, V>(topic, message.getKey(), message.getContent());
         RecordMetadata result = null;
         try {
@@ -65,23 +64,6 @@ public class KafkaCustomProducer<K, V extends SpecificRecordBase> extends Produc
         } catch (SerializationException | InterruptedException | ExecutionException | TimeoutException e) {
             throw MetamacExceptionBuilder.builder().withCause(e).build();
         }
-    }
-
-    protected void checkTopicIsValid(String topic) throws MetamacException {
-        if (topic == null || topic.isEmpty() || !isAKafkaTopic(topic)) {
-            throw new MetamacExceptionBuilder().withMessageParameters(ServiceExceptionType.STREAM_MESSAGING_TOPIC_IS_INVALID.getMessageForReasonType()).build();
-        }
-    }
-
-    protected boolean isAKafkaTopic(String topic) {
-        if (topic != null) {
-            for (KafkaTopics t : KafkaTopics.values()) {
-                if (t.getTopic().equals(topic)) {
-                    return true;
-                }
-            }
-        }
-        return false;
     }
 
     protected Properties checkForMissingProperties(Properties props) throws MetamacException {

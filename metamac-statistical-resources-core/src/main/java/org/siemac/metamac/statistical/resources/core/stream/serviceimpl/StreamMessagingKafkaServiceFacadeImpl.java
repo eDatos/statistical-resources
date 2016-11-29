@@ -3,11 +3,11 @@ package org.siemac.metamac.statistical.resources.core.stream.serviceimpl;
 import org.apache.avro.specific.SpecificRecord;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.base.domain.HasSiemacMetadata;
+import org.siemac.metamac.statistical.resources.core.conf.StatisticalResourcesConfiguration;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.mapper.DatasetDto2DoMapper;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StreamMessageStatusEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
-import org.siemac.metamac.statistical.resources.core.stream.enume.KafkaTopics;
 import org.siemac.metamac.statistical.resources.core.stream.serviceapi.StreamMessagingService;
 import org.siemac.metamac.statistical.resources.core.stream.serviceapi.StreamMessagingServiceFacade;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +20,9 @@ public class StreamMessagingKafkaServiceFacadeImpl implements StreamMessagingSer
     protected StreamMessagingService<String, SpecificRecord> messagingService;
 
     @Autowired
+    protected StatisticalResourcesConfiguration              statisticalResourcesConfig;
+
+    @Autowired
     protected DatasetDto2DoMapper                            datasetDto2DoMapper;
 
     public StreamMessagingKafkaServiceFacadeImpl() {
@@ -29,8 +32,8 @@ public class StreamMessagingKafkaServiceFacadeImpl implements StreamMessagingSer
     public void sendNewVersionPublished(HasSiemacMetadata version) throws MetamacException {
         try {
             updateMessageStatus(version, StreamMessageStatusEnum.PENDING);
-            KafkaTopics topic = getTopicByType(version);
-            messagingService.sendMessage(version, topic.getTopic());
+            String topic = getTopicByType(version);
+            messagingService.sendMessage(version, topic);
             updateMessageStatus(version, StreamMessageStatusEnum.SENT);
         } catch (MetamacException e) {
             updateMessageStatus(version, StreamMessageStatusEnum.FAILED);
@@ -38,19 +41,18 @@ public class StreamMessagingKafkaServiceFacadeImpl implements StreamMessagingSer
         }
     }
 
-    protected KafkaTopics getTopicByType(HasSiemacMetadata version) {
+    protected String getTopicByType(HasSiemacMetadata version) throws MetamacException {
         switch (version.getSiemacMetadataStatisticalResource().getType()) {
             case DATASET:
-                return KafkaTopics.DATASET_PUBLICATIONS;
+                return statisticalResourcesConfig.retrieveKafkaTopicDatasetsPublication();
             case COLLECTION:
-                return KafkaTopics.COLLECTION_PUBLICATIONS;
+                return statisticalResourcesConfig.retrieveKafkaTopicCollectionPublication();
             default:
                 return null;
         }
     }
 
-
-    protected String generateUniqueMessageKeyForMessage(DatasetVersion datasetVersion, KafkaTopics topic) {
+    protected String generateUniqueMessageKeyForMessage(DatasetVersion datasetVersion) {
         String uniqueKey = datasetVersion.getLifeCycleStatisticalResource().getUrn();
         return uniqueKey;
     }

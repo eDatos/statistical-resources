@@ -8,6 +8,7 @@ import org.apache.avro.specific.SpecificRecordBase;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.conf.StatisticalResourcesConfiguration;
+import org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConfigurationConstants;
 import org.siemac.metamac.statistical.resources.core.stream.messages.mappers.Avro2DoMapperUtils;
 import org.siemac.metamac.statistical.resources.core.stream.serviceapi.StreamMessagingService;
 import org.siemac.metamac.statistical.resources.web.server.stream.AvroMessage;
@@ -63,8 +64,8 @@ public class StreamMessagingServiceKafkaImpl<K, V extends SpecificRecordBase> ex
 
     public static List<String> getMandatoryConfig() {
         List<String> props = new ArrayList<String>();
-        props.add(StreamMessagingServiceKafkaImpl.BOOTSTRAP_SERVERS_CONFIG);
-        props.add(StreamMessagingServiceKafkaImpl.SCHEMA_REGISTRY_URL_CONFIG);
+        props.add(StatisticalResourcesConfigurationConstants.KAFKA_BOOTSTRAP_SERVERS);
+        props.add(StatisticalResourcesConfigurationConstants.KAFKA_SCHEMA_REGISTRY_URL);
         return props;
     }
 
