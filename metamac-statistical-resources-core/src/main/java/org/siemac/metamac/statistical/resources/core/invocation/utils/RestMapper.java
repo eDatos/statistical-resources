@@ -31,23 +31,23 @@ import org.springframework.stereotype.Component;
 @Component
 public class RestMapper {
 
-    private String                           statisticalResourcesInternalWebUrlBase;
     private String                           statisticalResourcesApiInternalEndpointV10;
     private InternalWebApplicationNavigation internalWebApplicationNavigation;
 
     @Autowired
     @Qualifier("commonDto2DoMapper")
-    private CommonDto2DoMapper               dto2DoMapper;
+    private CommonDto2DoMapper                 dto2DoMapper;
 
     @Autowired
-    private ConfigurationService             configurationService;
+    private ConfigurationService               configurationService;
 
     @PostConstruct
     public void init() throws MetamacException {
-        statisticalResourcesInternalWebUrlBase = configurationService.retrieveStatisticalResourcesInternalWebApplicationUrlBase();
-        // statisticalResourcesApiInternalEndpointV10 = configurationService.retrieveStatisticalResourcesInternalApiUrlBase();
-
+        String statisticalResourcesInternalWebUrlBase = configurationService.retrieveStatisticalResourcesInternalWebApplicationUrlBase();
         internalWebApplicationNavigation = new InternalWebApplicationNavigation(statisticalResourcesInternalWebUrlBase);
+
+        String statisticalResourcesApiInternalEndpoint = configurationService.retrieveStatisticalResourcesInternalApiUrlBase();
+        statisticalResourcesApiInternalEndpointV10 = RestUtils.createLink(statisticalResourcesApiInternalEndpoint, StatisticalResourcesRestConstants.API_VERSION_1_0);
     }
 
     public List<ExternalItem> buildExternalItemsFromResourcesInternal(List<ResourceInternal> resources) throws MetamacException {
