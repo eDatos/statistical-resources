@@ -504,6 +504,9 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         // Send to published
         queryVersion = queryLifecycleService.sendToPublished(ctx, queryVersion.getLifeCycleStatisticalResource().getUrn());
 
+        // Send stream message to stream messaging service (like Apache Kafka)
+        sendNewVersionPublishedStreamMessage(ctx, queryVersion);
+
         // Transform
         queryVersionDto = queryDo2DtoMapper.queryVersionDoToDto(queryVersion);
 
@@ -1650,14 +1653,29 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         }
     }
 
+    protected void sendNewVersionPublishedStreamMessage(ServiceContext ctx, QueryVersion version) {
+        try {
+            streamMessagingServiceFacade.sendNewVersionPublished(version);
+        } catch (MetamacException e) {
+            createStreamMessageSentNotification(ctx, version);
+        }
+    }
+
     protected void createStreamMessageSentNotification(ServiceContext ctx, HasSiemacMetadata version) {
         if (version.getLifeCycleStatisticalResource().getPublicationStreamStatus() != StreamMessageStatusEnum.SENT) {
-            List<HasSiemacMetadata> affectedVersions = new ArrayList<>();
-            affectedVersions.add(version);
             String userId = ctx.getUserId();
             String messageCode = ServiceNoticeAction.STREAM_MESSAGE_SEND;
             String messageText = ServiceNoticeMessage.STREAM_MESSAGE_SEND_ERROR;
-            noticesRestInternalService.createErrorOnStreamMessagingService(userId, messageCode, affectedVersions, messageText, (Serializable[]) null);
+            noticesRestInternalService.createErrorOnStreamMessagingService(userId, messageCode, version, messageText, (Serializable[]) null);
+        }
+    }
+
+    protected void createStreamMessageSentNotification(ServiceContext ctx, QueryVersion version) {
+        if (version.getLifeCycleStatisticalResource().getPublicationStreamStatus() != StreamMessageStatusEnum.SENT) {
+            String userId = ctx.getUserId();
+            String messageCode = ServiceNoticeAction.STREAM_MESSAGE_SEND;
+            String messageText = ServiceNoticeMessage.STREAM_MESSAGE_SEND_ERROR;
+            noticesRestInternalService.createErrorOnStreamMessagingService(userId, messageCode, version, messageText, (Serializable[]) null);
         }
     }
 

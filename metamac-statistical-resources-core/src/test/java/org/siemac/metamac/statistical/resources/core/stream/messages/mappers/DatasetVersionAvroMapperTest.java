@@ -15,9 +15,6 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetRepos
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionRepository;
 import org.siemac.metamac.statistical.resources.core.stream.messages.DatasetVersionAvro;
-import org.siemac.metamac.statistical.resources.core.stream.messages.mapper.AvroMapperUtils;
-import org.siemac.metamac.statistical.resources.core.stream.messages.mapper.DatasetVersionAvro2DoMapper;
-import org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts;
 
 public class DatasetVersionAvroMapperTest {
 
@@ -25,17 +22,17 @@ public class DatasetVersionAvroMapperTest {
     private static DatasetVersionRepository datasetVersionRepository;
 
     @Mock
-    private static DatasetRepository datasetRepository;
+    private static DatasetRepository        datasetRepository;
 
     @Mock
-    private static ConfigurationService configurationService;
+    private static ConfigurationService     configurationService;
 
     @Before
     public void setUp() throws MetamacException {
         MockitoAnnotations.initMocks(this);
-        AvroMapperUtils.setDatasetVersionRepository(datasetVersionRepository);
-        AvroMapperUtils.setDatasetRepository(datasetRepository);
-        AvroMapperUtils.setConfiguratinService(configurationService);
+        AvroMapperUtils.datasetVersionRepository = datasetVersionRepository;
+        AvroMapperUtils.datasetRepository = datasetRepository;
+        AvroMapperUtils.configurationService = configurationService;
         try {
             when(configurationService.retrieveStatisticalResourcesInternalApiUrlBase()).thenReturn(MappersMockUtils.EXPECTED_API_BASE);
         } catch (MetamacException e) {
@@ -74,20 +71,6 @@ public class DatasetVersionAvroMapperTest {
         assertThat(actual.getCategorisations(), is(equalTo(expected.getCategorisations())));
         assertThat(actual.getAttributesCoverage(), is(equalTo(expected.getAttributesCoverage())));
         assertThat(actual.getDimensionsCoverage(), is(equalTo(expected.getDimensionsCoverage())));
-    }
-
-    @Test
-    public void testAvro2Do() throws MetamacException {
-
-        DatasetVersion expected = MappersMockUtils.mockDatasetVersion();
-        DatasetVersionAvro source = MappersMockUtils.mockDatasetVersionAvro();
-
-        when(datasetRepository.retrieveByUrn(MappersMockUtils.EXPECTED_URN)).thenReturn(expected.getDataset());
-        when(datasetVersionRepository.retrieveByUrn(MappersMockUtils.EXPECTED_URN)).thenReturn(expected);
-
-        DatasetVersion actual = DatasetVersionAvro2DoMapper.avro2Do(source);
-
-        DatasetsAsserts.assertEqualsDatasetVersion(expected, actual);
     }
 
 }

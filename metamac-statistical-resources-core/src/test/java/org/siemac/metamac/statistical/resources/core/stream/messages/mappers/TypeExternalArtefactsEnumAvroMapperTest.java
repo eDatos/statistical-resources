@@ -7,7 +7,6 @@ import static org.junit.Assert.assertThat;
 import org.junit.Test;
 import org.siemac.metamac.core.common.enume.domain.TypeExternalArtefactsEnum;
 import org.siemac.metamac.statistical.resources.core.stream.messages.TypeExternalArtefactsEnumAvro;
-import org.siemac.metamac.statistical.resources.core.stream.messages.mapper.TypeExternalArtefactsEnumAvro2DoMapper;
 
 public class TypeExternalArtefactsEnumAvroMapperTest {
 
@@ -17,16 +16,6 @@ public class TypeExternalArtefactsEnumAvroMapperTest {
         TypeExternalArtefactsEnum source = TypeExternalArtefactsEnum.DATA_CONSUMER_SCHEME;
 
         TypeExternalArtefactsEnumAvro actual = TypeExternalArtefactsEnumDo2AvroMapper.do2Avro(source);
-
-        assertThat(actual, is(equalTo(expected)));
-    }
-
-    @Test
-    public void testAvro2Do() {
-        TypeExternalArtefactsEnum expected = TypeExternalArtefactsEnum.DATA_CONSUMER_SCHEME;
-        TypeExternalArtefactsEnumAvro source = TypeExternalArtefactsEnumAvro.DATA_CONSUMER_SCHEME;
-
-        TypeExternalArtefactsEnum actual = TypeExternalArtefactsEnumAvro2DoMapper.avro2Do(source);
 
         assertThat(actual, is(equalTo(expected)));
     }

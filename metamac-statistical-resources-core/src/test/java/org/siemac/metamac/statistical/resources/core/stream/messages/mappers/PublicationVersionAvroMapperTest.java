@@ -10,22 +10,43 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.siemac.metamac.core.common.conf.ConfigurationService;
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionRepository;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersionRepository;
 import org.siemac.metamac.statistical.resources.core.stream.messages.PublicationVersionAvro;
-import org.siemac.metamac.statistical.resources.core.stream.messages.mapper.AvroMapperUtils;
-import org.siemac.metamac.statistical.resources.core.stream.messages.mapper.PublicationVersionAvro2DoMapper;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory;
 
 public class PublicationVersionAvroMapperTest {
 
     @Mock
-    PublicationVersionRepository publicationVersionRepository;
+    PublicationVersionRepository            publicationVersionRepository;
+
+    @Mock
+    DatasetVersionRepository                datasetVersionRepository;
+
+    @Mock
+    ConfigurationService                    configurationService;
+
+    protected DatasetVersionMockFactory     datasetVersionMockFactory     = DatasetVersionMockFactory.getInstance();
+    protected PublicationVersionMockFactory publicationVersionMockFactory = PublicationVersionMockFactory.getInstance();
 
     @Before
     public void setUp() throws MetamacException {
         MockitoAnnotations.initMocks(this);
-        AvroMapperUtils.setPublicationVersionRepository(publicationVersionRepository);
+        AvroMapperUtils.publicationVersionRepository = publicationVersionRepository;
+        AvroMapperUtils.configurationService = configurationService;
+        // DatasetVersion datasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_29_WITHOUT_DATASOURCES_NAME);
+        // PublicationVersion publication01 = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_47_PUBLISHED_V02_FOR_PUBLICATION_07_NAME);
+        try {
+            when(configurationService.retrieveStatisticalResourcesInternalApiUrlBase()).thenReturn(MappersMockUtils.EXPECTED_API_BASE);
+            // Mockito.when(datasetVersionRepository.retrieveLastVersion(Mockito.eq(datasetUrn))).thenReturn(datasetVersion);
+            // Mockito.when(publicationVersionRepository.retrieveLastVersion(Mockito.eq("datasetUrn"))).thenReturn(publication01);
+            // .getPublicationVersionRepository().retrieveLastVersion
+        } catch (MetamacException e) {
+        }
     }
 
     @Test
@@ -40,19 +61,6 @@ public class PublicationVersionAvroMapperTest {
         PublicationVersionAvro actual = PublicationVersionDo2AvroMapper.do2Avro(source);
 
         assertThat(actual, is(equalTo(expected)));
-    }
-
-    @Test
-    public void testAvro2Do() throws Exception {
-        PublicationVersion expected = MappersMockUtils.mockPublicationVersion();
-        PublicationVersionAvro source = MappersMockUtils.mockPublicationVersionAvro();
-
-        when(publicationVersionRepository.retrieveByUrn(Mockito.any())).thenReturn(expected);
-
-        PublicationVersion actual = PublicationVersionAvro2DoMapper.avro2Do(source);
-
-        assertThat(actual.getHasPart().size(), is(equalTo(expected.getHasPart().size())));
-        assertThat(actual.getPublication(), is(equalTo(expected.getPublication())));
     }
 
 }

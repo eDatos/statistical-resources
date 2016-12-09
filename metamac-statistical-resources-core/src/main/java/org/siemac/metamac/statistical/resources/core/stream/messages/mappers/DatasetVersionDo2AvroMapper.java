@@ -50,14 +50,14 @@ public class DatasetVersionDo2AvroMapper {
                 .setBibliographicCitation(InternationalStringDo2AvroMapper.do2Avro(source.getBibliographicCitation())).setDatasources(datasources).setDimensionsCoverage(dimensions)
                 .setAttributesCoverage(coverageList).setCategorisations(categorisations).setGeographicCoverage(geographicCoverageList).setTemporalCoverage(temporalCoverageList)
                 .setMeasureCoverage(measureCoverageList).setGeographicGranularities(geoGranList).setTemporalGranularities(temporalGranList).setStatisticalUnit(statisticalUnitList)
-                .setIsPartOf(relatedResourceList2Avro(Avro2DoMapperUtils.getDatasetVersionRepository().retrieveIsPartOf(source))).build();
+                .setIsPartOf(relatedResourceList2Avro(AvroMapperUtils.getDatasetVersionRepository().retrieveIsPartOf(source))).build();
         return target;
     }
 
     private static List<RelatedResourceAvro> relatedResourceList2Avro(List<RelatedResourceResult> sourceList) throws MetamacException {
         List<RelatedResourceAvro> targetList = new ArrayList<RelatedResourceAvro>();
         for (RelatedResourceResult item : sourceList) {
-            RelatedResource relatedResource = Avro2DoMapperUtils.createRelatedResourceFromRelatedResourceResult(item);
+            RelatedResource relatedResource = AvroMapperUtils.createRelatedResourceFromRelatedResourceResult(item);
             targetList.add(RelatedResourceDo2AvroMapper.do2Avro(relatedResource));
         }
         return targetList;

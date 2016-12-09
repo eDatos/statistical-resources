@@ -7,7 +7,6 @@ import static org.junit.Assert.assertThat;
 import org.junit.Test;
 import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
 import org.siemac.metamac.statistical.resources.core.stream.messages.TypeRelatedResourceEnumAvro;
-import org.siemac.metamac.statistical.resources.core.stream.messages.mapper.TypeRelatedResourceEnumAvro2DoMapper;
 
 public class TypeRelatedResourceEnumAvroMapperTest {
 
@@ -17,16 +16,6 @@ public class TypeRelatedResourceEnumAvroMapperTest {
         TypeRelatedResourceEnum source = TypeRelatedResourceEnum.DATASET_VERSION;
 
         TypeRelatedResourceEnumAvro actual = TypeRelatedResourceEnumDo2AvroMapper.do2Avro(source);
-
-        assertThat(actual, is(equalTo(expected)));
-    }
-
-    @Test
-    public void testAvro2Do() {
-        TypeRelatedResourceEnum expected = TypeRelatedResourceEnum.DATASET_VERSION;
-        TypeRelatedResourceEnumAvro source = TypeRelatedResourceEnumAvro.DATASET_VERSION;
-
-        TypeRelatedResourceEnum actual = TypeRelatedResourceEnumAvro2DoMapper.avro2Do(source);
 
         assertThat(actual, is(equalTo(expected)));
     }

@@ -3,33 +3,34 @@ package org.siemac.metamac.statistical.resources.core.stream.messages.mappers;
 import org.siemac.metamac.core.common.conf.ConfigurationService;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.util.ApplicationContextProvider;
+import org.siemac.metamac.rest.utils.RestUtils;
 import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResource;
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResourceResult;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetRepository;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionRepository;
 import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
-import org.siemac.metamac.statistical.resources.core.invocation.utils.RestMapper;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationRepository;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersionRepository;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryRepository;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersionRepository;
 
-public class Avro2DoMapperUtils {
+public class AvroMapperUtils {
 
-    private static ConfigurationService configurationService;
+    protected static ConfigurationService         configurationService;
 
-    private static DatasetRepository datasetRepository;
-    private static DatasetVersionRepository datasetVersionRepository;
+    protected static DatasetRepository            datasetRepository;
+    protected static DatasetVersionRepository     datasetVersionRepository;
 
-    private static PublicationRepository publicationRepository;
-    private static PublicationVersionRepository publicationVersionRepository;
+    protected static PublicationRepository        publicationRepository;
+    protected static PublicationVersionRepository publicationVersionRepository;
 
-    private static QueryRepository queryRepository;
-    private static QueryVersionRepository queryVersionRepository;
+    protected static QueryRepository              queryRepository;
+    protected static QueryVersionRepository       queryVersionRepository;
 
     public static DatasetRepository getDatasetRepository() {
         if (datasetRepository == null) {
@@ -45,42 +46,52 @@ public class Avro2DoMapperUtils {
         return datasetVersionRepository;
     }
 
-    protected static PublicationRepository getPublicationRepository() {
+    public static PublicationRepository getPublicationRepository() {
         if (publicationRepository == null) {
             publicationRepository = ApplicationContextProvider.getApplicationContext().getBean(PublicationRepository.class);
         }
         return publicationRepository;
     }
 
-    protected static PublicationVersionRepository getPublicationVersionRepository() {
+    public static PublicationVersionRepository getPublicationVersionRepository() {
         if (publicationVersionRepository == null) {
             publicationVersionRepository = ApplicationContextProvider.getApplicationContext().getBean(PublicationVersionRepository.class);
         }
         return publicationVersionRepository;
     }
 
-    protected static QueryRepository getQueryRepository() {
+    public static QueryRepository getQueryRepository() {
         if (queryRepository == null) {
             queryRepository = ApplicationContextProvider.getApplicationContext().getBean(QueryRepository.class);
         }
         return queryRepository;
     }
 
-    protected static QueryVersionRepository getQueryVersionRepository() {
+    public static QueryVersionRepository getQueryVersionRepository() {
         if (queryVersionRepository == null) {
             queryVersionRepository = ApplicationContextProvider.getApplicationContext().getBean(QueryVersionRepository.class);
         }
         return queryVersionRepository;
     }
 
-    protected static ConfigurationService getConfigurationService() {
+    public static ConfigurationService getConfigurationService() {
         if (configurationService == null) {
             configurationService = ApplicationContextProvider.getApplicationContext().getBean(ConfigurationService.class);
         }
         return configurationService;
     }
 
-    protected static DatasetVersion retrieveDatasetVersion(String datasetVersionUrn) throws MetamacException {
+    public static Dataset retrieveDataset(String datasetUrn) throws MetamacException {
+        Dataset target = null;
+        try {
+            target = getDatasetRepository().retrieveByUrn(datasetUrn);
+        } catch (MetamacException e) {
+            throw new MetamacException(ServiceExceptionType.DATASET_VERSION_NOT_FOUND, "Dataset of Datasource not found");
+        }
+        return target;
+    }
+
+    public static DatasetVersion retrieveDatasetVersion(String datasetVersionUrn) throws MetamacException {
         DatasetVersion target = null;
         try {
             target = getDatasetVersionRepository().retrieveByUrn(datasetVersionUrn);
@@ -101,9 +112,8 @@ public class Avro2DoMapperUtils {
     }
 
     public static String getSelfLink(ExternalItem source) throws MetamacException {
-        RestMapper restMapper = new RestMapper();
         String statisticalResourcesApiInternalEndpointV10 = getConfigurationService().retrieveStatisticalResourcesInternalApiUrlBase();
-        return restMapper.createSelfLink(source, statisticalResourcesApiInternalEndpointV10);
+        return RestUtils.createLink(statisticalResourcesApiInternalEndpointV10, source.getUri());
     }
 
     public static RelatedResource createRelatedResourceFromRelatedResourceResult(RelatedResourceResult source) throws MetamacException {

@@ -25,7 +25,7 @@ public class DatasetDo2AvroMapper {
 
     protected static void addDatasetVersions(DatasetAvro source, Dataset target) throws MetamacException {
         for (String version : source.getDatasetVersionsUrns()) {
-            DatasetVersion versionElement = Avro2DoMapperUtils.retrieveDatasetVersion(version);
+            DatasetVersion versionElement = AvroMapperUtils.retrieveDatasetVersion(version);
             target.addVersion(versionElement);
         }
     }

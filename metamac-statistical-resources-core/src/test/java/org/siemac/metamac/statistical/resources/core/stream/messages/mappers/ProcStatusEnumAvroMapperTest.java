@@ -7,7 +7,6 @@ import static org.junit.Assert.assertThat;
 import org.junit.Test;
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.stream.messages.ProcStatusEnumAvro;
-import org.siemac.metamac.statistical.resources.core.stream.messages.mapper.ProcStatusEnumAvroDo2Mapper;
 
 public class ProcStatusEnumAvroMapperTest {
 
@@ -17,16 +16,6 @@ public class ProcStatusEnumAvroMapperTest {
         ProcStatusEnum source = ProcStatusEnum.DIFFUSION_VALIDATION;
 
         ProcStatusEnumAvro actual = ProcStatusEnumDo2AvroMapper.do2Avro(source);
-
-        assertThat(actual, is(equalTo(expected)));
-    }
-
-    @Test
-    public void testAvro2Do() {
-        ProcStatusEnum expected = ProcStatusEnum.DIFFUSION_VALIDATION;
-        ProcStatusEnumAvro source = ProcStatusEnumAvro.DIFFUSION_VALIDATION;
-
-        ProcStatusEnum actual = ProcStatusEnumAvroDo2Mapper.avro2Do(source);
 
         assertThat(actual, is(equalTo(expected)));
     }

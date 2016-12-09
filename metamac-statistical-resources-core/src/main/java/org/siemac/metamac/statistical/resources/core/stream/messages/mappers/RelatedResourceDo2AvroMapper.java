@@ -4,9 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.NameableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResource;
 import org.siemac.metamac.statistical.resources.core.common.utils.RelatedResourceUtils;
+import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
 import org.siemac.metamac.statistical.resources.core.stream.messages.RelatedResourceAvro;
 
 public class RelatedResourceDo2AvroMapper {
@@ -23,16 +25,15 @@ public class RelatedResourceDo2AvroMapper {
         NameableStatisticalResource nameableResource = null;
         switch (source.getType()) {
             case DATASET:
-                nameableResource = Avro2DoMapperUtils.getDatasetVersionRepository().retrieveLastVersion(source.getDataset().getIdentifiableStatisticalResource().getUrn())
+                nameableResource = AvroMapperUtils.getDatasetVersionRepository().retrieveLastVersion(source.getDataset().getIdentifiableStatisticalResource().getUrn())
                         .getSiemacMetadataStatisticalResource();
                 break;
             case PUBLICATION:
-                nameableResource = Avro2DoMapperUtils.getPublicationVersionRepository().retrieveLastVersion(source.getPublication().getIdentifiableStatisticalResource().getUrn())
+                nameableResource = AvroMapperUtils.getPublicationVersionRepository().retrieveLastVersion(source.getPublication().getIdentifiableStatisticalResource().getUrn())
                         .getSiemacMetadataStatisticalResource();
                 break;
             case QUERY:
-                nameableResource = Avro2DoMapperUtils.getQueryVersionRepository().retrieveLastVersion(source.getQuery().getIdentifiableStatisticalResource().getUrn())
-                        .getLifeCycleStatisticalResource();
+                nameableResource = AvroMapperUtils.getQueryVersionRepository().retrieveLastVersion(source.getQuery().getIdentifiableStatisticalResource().getUrn()).getLifeCycleStatisticalResource();
                 break;
             default:
                 nameableResource = RelatedResourceUtils.retrieveNameableResourceLinkedToRelatedResource(source);
@@ -52,6 +53,19 @@ public class RelatedResourceDo2AvroMapper {
             target.add(do2Avro(item));
         }
         return target;
+    }
+
+    public static RelatedResourceAvro lifecycleStatisticalResourceDoToRelatedResourceAvro(LifeCycleStatisticalResource source, TypeRelatedResourceEnum type) {
+
+        // @formatter:off
+        return RelatedResourceAvro.newBuilder()
+                .setCode(source.getCode())
+                .setTitle(InternationalStringDo2AvroMapper.do2Avro(source.getTitle()))
+                .setType(TypeRelatedResourceEnumDo2AvroMapper.do2Avro(type))
+                .setUrn(source.getUrn())
+                .setStatisticalOperationUrn(source.getStatisticalOperation() != null ? source.getStatisticalOperation().getUrn() : null)
+                .build();
+        // @formatter:on
     }
 
 }

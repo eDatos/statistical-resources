@@ -10,8 +10,11 @@ import org.siemac.metamac.statistical.resources.core.conf.StatisticalResourcesCo
 import org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConfigurationConstants;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
+import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
+import org.siemac.metamac.statistical.resources.core.stream.messages.QueryVersionAvro;
 import org.siemac.metamac.statistical.resources.core.stream.messages.mappers.DatasetVersionDo2AvroMapper;
 import org.siemac.metamac.statistical.resources.core.stream.messages.mappers.PublicationVersionDo2AvroMapper;
+import org.siemac.metamac.statistical.resources.core.stream.messages.mappers.QueryVersionDo2AvroMapper;
 import org.siemac.metamac.statistical.resources.core.stream.serviceapi.StreamMessagingService;
 import org.siemac.metamac.statistical.resources.web.server.stream.AvroMessage;
 import org.siemac.metamac.statistical.resources.web.server.stream.KafkaCustomProducer;
@@ -28,11 +31,13 @@ import io.confluent.kafka.serializers.KafkaAvroDeserializerConfig;
 public class StreamMessagingServiceKafkaImpl<K, V extends SpecificRecordBase> implements StreamMessagingService<K, V>, ApplicationListener<ContextClosedEvent> {
 
     @Autowired
-    protected StatisticalResourcesConfiguration statisticalResourcesConfig;
+    private StatisticalResourcesConfiguration statisticalResourcesConfig;
 
-    private ProducerBase<K, V>                  producer;
+    @Autowired
+    private QueryVersionDo2AvroMapper         queryVersionDo2AvroMapper;
 
-    @SuppressWarnings("unchecked")
+    private ProducerBase<K, V>                producer;
+
     @Override
     public void sendMessage(HasSiemacMetadata message) throws MetamacException {
         // Serialize message
@@ -40,6 +45,21 @@ public class StreamMessagingServiceKafkaImpl<K, V extends SpecificRecordBase> im
 
         // Topic
         String topic = getTopicByType(message);
+
+        getProducer().sendMessage(m, topic);
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public void sendMessage(QueryVersion message) throws MetamacException {
+        // To Avro
+        QueryVersionAvro queryVersionAvro = queryVersionDo2AvroMapper.queryVersionDoToAvro(message);
+
+        // Serialize message
+        MessageBase<K, V> m = new AvroMessage<K, V>((V) queryVersionAvro);
+
+        // Topic
+        String topic = statisticalResourcesConfig.retrieveKafkaTopicQueryPublication();
 
         getProducer().sendMessage(m, topic);
     }
@@ -69,6 +89,7 @@ public class StreamMessagingServiceKafkaImpl<K, V extends SpecificRecordBase> im
         }
     }
 
+    @SuppressWarnings("unchecked")
     private V serializeMessage(HasSiemacMetadata version) throws MetamacException {
         switch (version.getSiemacMetadataStatisticalResource().getType()) {
             case DATASET:

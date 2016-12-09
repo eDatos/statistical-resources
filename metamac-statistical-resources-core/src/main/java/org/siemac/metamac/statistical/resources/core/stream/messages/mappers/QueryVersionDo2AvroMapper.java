@@ -1,0 +1,114 @@
+package org.siemac.metamac.statistical.resources.core.stream.messages.mappers;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResource;
+import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResourceResult;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionRepository;
+import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
+import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryStatusEnum;
+import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryTypeEnum;
+import org.siemac.metamac.statistical.resources.core.query.domain.CodeItem;
+import org.siemac.metamac.statistical.resources.core.query.domain.QuerySelectionItem;
+import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
+import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersionRepository;
+import org.siemac.metamac.statistical.resources.core.stream.messages.CodeItemAvro;
+import org.siemac.metamac.statistical.resources.core.stream.messages.QueryStatusEnumAvro;
+import org.siemac.metamac.statistical.resources.core.stream.messages.QueryTypeEnumAvro;
+import org.siemac.metamac.statistical.resources.core.stream.messages.QueryVersionAvro;
+import org.siemac.metamac.statistical.resources.core.stream.messages.RelatedResourceAvro;
+import org.springframework.beans.factory.annotation.Autowired;
+
+@org.springframework.stereotype.Component("queryVersionDo2AvroMapper")
+public class QueryVersionDo2AvroMapper {
+
+    @Autowired
+    private DatasetVersionRepository datasetVersionRepository;
+
+    @Autowired
+    private QueryVersionRepository   queryVersionRepository;
+
+    public QueryVersionAvro queryVersionDoToAvro(QueryVersion source) throws MetamacException {
+        if (source == null) {
+            return null;
+        }
+
+        DatasetVersion relatedDatasetVersion = getCurrentDatasetVersionInQuery(source);
+        RelatedResourceAvro relatedDatasetVersionAvro = RelatedResourceDo2AvroMapper.lifecycleStatisticalResourceDoToRelatedResourceAvro(relatedDatasetVersion.getSiemacMetadataStatisticalResource(),
+                TypeRelatedResourceEnum.DATASET_VERSION);
+
+        // @formatter:off
+        QueryVersionAvro target = QueryVersionAvro.newBuilder()
+                .setLifecycleStatisticalResource(LifecycleStatisticalResourceDo2AvroMapper.do2Avro(source.getLifeCycleStatisticalResource()))
+                .setLatestDataNumber(source.getLatestDataNumber())
+                .setSelection(selectionToAvro(source.getSelection()))
+                .setRelatedDatasetVersion(relatedDatasetVersionAvro)
+                .setStatus(queryStatusEnumDoToAvro(source.getStatus()))
+                .setType(queryTypeEnumDoToAvro(source.getType()))
+                .setIsPartOf(isPartOfAvro(source))
+                .build();
+        // @formatter:on
+
+        return target;
+    }
+
+    private QueryStatusEnumAvro queryStatusEnumDoToAvro(QueryStatusEnum source) {
+        if (source == null) {
+            return null;
+        }
+
+        QueryStatusEnumAvro target = QueryStatusEnumAvro.valueOf(source.getName());
+
+        return target;
+    }
+
+    private QueryTypeEnumAvro queryTypeEnumDoToAvro(QueryTypeEnum source) {
+        if (source == null) {
+            return null;
+        }
+
+        QueryTypeEnumAvro target = QueryTypeEnumAvro.valueOf(source.getName());
+
+        return target;
+    }
+
+    private DatasetVersion getCurrentDatasetVersionInQuery(QueryVersion queryVersion) throws MetamacException {
+        if (queryVersion.getFixedDatasetVersion() != null) {
+            return queryVersion.getFixedDatasetVersion();
+        } else if (queryVersion.getDataset() != null) {
+            return datasetVersionRepository.retrieveLastVersion(queryVersion.getDataset().getIdentifiableStatisticalResource().getUrn());
+        }
+        return null;
+    }
+
+    private List<RelatedResourceAvro> isPartOfAvro(QueryVersion source) throws MetamacException {
+        List<RelatedResourceResult> isPartOfList = queryVersionRepository.retrieveIsPartOf(source);
+
+        List<RelatedResourceAvro> targetList = new ArrayList<RelatedResourceAvro>();
+        for (RelatedResourceResult item : isPartOfList) {
+            RelatedResource relatedResource = AvroMapperUtils.createRelatedResourceFromRelatedResourceResult(item);
+            targetList.add(RelatedResourceDo2AvroMapper.do2Avro(relatedResource));
+        }
+        return targetList;
+    }
+
+    private Map<String, List<CodeItemAvro>> selectionToAvro(List<QuerySelectionItem> source) {
+        Map<String, List<CodeItemAvro>> target = new HashMap<String, List<CodeItemAvro>>();
+
+        for (QuerySelectionItem querySelectionItem : source) {
+            List<CodeItemAvro> codesResult = new ArrayList<CodeItemAvro>();
+            for (CodeItem codeItem : querySelectionItem.getCodes()) {
+                codesResult.add(CodeItemAvro.newBuilder().setCode(codeItem.getCode()).setTitle(codeItem.getTitle()).build());
+            }
+            target.put(querySelectionItem.getDimension(), codesResult);
+        }
+
+        return target;
+    }
+
+}

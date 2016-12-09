@@ -6,7 +6,6 @@ import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedRes
 
 public class RelatedResourceResult {
 
-    private static final long       serialVersionUID = 1L;
     private String                  statisticalOperationUrn;
     private String                  statisticalOperationCode;
     private TypeRelatedResourceEnum type;
@@ -37,7 +36,7 @@ public class RelatedResourceResult {
     }
 
     public void setMaintainerNestedCode(String maintainer) {
-        this.maintainerNestedCode = maintainer;
+        maintainerNestedCode = maintainer;
     }
 
     public String getVersion() {

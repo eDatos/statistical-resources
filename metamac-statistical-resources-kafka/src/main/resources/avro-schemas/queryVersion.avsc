@@ -1,0 +1,108 @@
+[
+  {
+    "namespace": "org.siemac.metamac.statistical.resources.core.stream.messages",
+    "type": "enum",
+    "name": "QueryStatusEnumAvro",
+    "symbols": [
+      "ACTIVE",
+      "DISCONTINUED"
+    ]
+  },
+  {
+    "namespace": "org.siemac.metamac.statistical.resources.core.stream.messages",
+    "type": "enum",
+    "name": "QueryTypeEnumAvro",
+    "symbols": [
+      "AUTOINCREMENTAL",
+      "LATEST_DATA",
+      "FIXED"
+    ]
+  },
+  {
+    "namespace": "org.siemac.metamac.statistical.resources.core.stream.messages",
+    "type": "record",
+    "name": "CodeItemAvro",
+    "fields": [
+      {
+        "name": "code",
+        "type": [
+          "null",
+          "string"
+        ]
+      },
+      {
+        "name": "title",
+        "type": [
+          "null",
+          "string"
+        ]
+      }
+    ]
+  },
+  {
+    "namespace": "org.siemac.metamac.statistical.resources.core.stream.messages",
+    "type": "record",
+    "name": "QueryVersionAvro",
+    "fields": [
+      {
+        "name": "lifecycleStatisticalResource",
+        "type": [
+          "null",
+          "LifecycleStatisticalResourceAvro"
+        ]
+      },
+      {
+        "name": "latestDataNumber",
+        "type": [
+          "null",
+          "int"
+        ]
+      },
+      {
+        "name": "selection",
+        "type": [
+          "null",
+          {
+            "type": "map",
+            "values": 
+            {
+              "type": "array",
+              "items": "CodeItemAvro"
+            }
+          }
+        ]
+      },
+      {
+        "name": "relatedDatasetVersion",
+        "type": [
+          "null",
+          "RelatedResourceAvro"
+        ]
+      },
+      {
+        "name": "status",
+        "type": [
+          "null",
+          "QueryStatusEnumAvro"
+        ]
+      },
+      {
+        "name": "type",
+        "type": [
+          "null",
+          "QueryTypeEnumAvro"
+        ]
+      },
+      {
+        "name": "isPartOf",
+        "type": [
+          "null",
+          {
+            "type": "array",
+            "items": "RelatedResourceAvro"
+          }
+        ]
+      }
+    ]
+  }
+]

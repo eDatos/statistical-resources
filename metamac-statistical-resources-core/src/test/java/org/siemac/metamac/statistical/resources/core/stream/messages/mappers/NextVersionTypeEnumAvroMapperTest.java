@@ -7,7 +7,6 @@ import static org.junit.Assert.assertThat;
 import org.junit.Test;
 import org.siemac.metamac.statistical.resources.core.enume.domain.NextVersionTypeEnum;
 import org.siemac.metamac.statistical.resources.core.stream.messages.NextVersionTypeEnumAvro;
-import org.siemac.metamac.statistical.resources.core.stream.messages.mapper.NextVersionTypeEnumAvro2DoMapper;
 
 public class NextVersionTypeEnumAvroMapperTest {
 
@@ -17,16 +16,6 @@ public class NextVersionTypeEnumAvroMapperTest {
         NextVersionTypeEnum source = NextVersionTypeEnum.NON_SCHEDULED_UPDATE;
 
         NextVersionTypeEnumAvro actual = NextVersionTypeEnumDo2AvroMapper.do2Avro(source);
-
-        assertThat(actual, is(equalTo(expected)));
-    }
-
-    @Test
-    public void testAvro2Do() {
-        NextVersionTypeEnum expected = NextVersionTypeEnum.NON_SCHEDULED_UPDATE;
-        NextVersionTypeEnumAvro source = NextVersionTypeEnumAvro.NON_SCHEDULED_UPDATE;
-
-        NextVersionTypeEnum actual = NextVersionTypeEnumAvro2DoMapper.avro2Do(source);
 
         assertThat(actual, is(equalTo(expected)));
     }

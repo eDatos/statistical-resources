@@ -3,6 +3,8 @@ package org.siemac.metamac.statistical.resources.core.invocation.utils;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
+
 import org.siemac.metamac.core.common.conf.ConfigurationService;
 import org.siemac.metamac.core.common.enume.domain.TypeExternalArtefactsEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
@@ -12,6 +14,7 @@ import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ItemRes
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ResourceInternal;
 import org.siemac.metamac.rest.utils.RestUtils;
 import org.siemac.metamac.statistical.resources.core.base.domain.HasSiemacMetadata;
+import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
 import org.siemac.metamac.statistical.resources.core.common.domain.InternationalString;
 import org.siemac.metamac.statistical.resources.core.common.domain.LocalisedString;
@@ -19,6 +22,8 @@ import org.siemac.metamac.statistical.resources.core.common.mapper.CommonDto2DoM
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
+import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
+import org.siemac.metamac.statistical_resources.rest.common.StatisticalResourcesRestConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -26,19 +31,24 @@ import org.springframework.stereotype.Component;
 @Component
 public class RestMapper {
 
-    private static final String   API_TYPE_DATASETS         = "datasets";
-    private static final String   API_TYPE_COLLECTIONS      = "collections";
-    private static final String   API_APIS                  = "apis";
-    public static final String API_STATISTICAL_RESOURCES = "statistical-resources-internal";
-    protected static final String API_SEPARATOR             = "/";
-    protected static final String API_VERSION_NAME          = "v1.0";
+    private String                           statisticalResourcesInternalWebUrlBase;
+    private String                           statisticalResourcesApiInternalEndpointV10;
+    private InternalWebApplicationNavigation internalWebApplicationNavigation;
 
     @Autowired
     @Qualifier("commonDto2DoMapper")
-    CommonDto2DoMapper dto2DoMapper;
+    private CommonDto2DoMapper               dto2DoMapper;
 
     @Autowired
-    ConfigurationService          configurationService;
+    private ConfigurationService             configurationService;
+
+    @PostConstruct
+    public void init() throws MetamacException {
+        statisticalResourcesInternalWebUrlBase = configurationService.retrieveStatisticalResourcesInternalWebApplicationUrlBase();
+        // statisticalResourcesApiInternalEndpointV10 = configurationService.retrieveStatisticalResourcesInternalApiUrlBase();
+
+        internalWebApplicationNavigation = new InternalWebApplicationNavigation(statisticalResourcesInternalWebUrlBase);
+    }
 
     public List<ExternalItem> buildExternalItemsFromResourcesInternal(List<ResourceInternal> resources) throws MetamacException {
         List<ExternalItem> externalItems = new ArrayList<ExternalItem>();
@@ -81,79 +91,146 @@ public class RestMapper {
         return result;
     }
 
-    public List<org.siemac.metamac.rest.notices.v1_0.domain.ResourceInternal> generateResourceInternalList(List<HasSiemacMetadata> affectedResources, String statisticalResourcesInternalWebUrlBase,
-            String statisticalResourcesApiInternalEndpointV10) {
+    public List<org.siemac.metamac.rest.notices.v1_0.domain.ResourceInternal> generateResourceInternalList(List<HasSiemacMetadata> affectedResources) {
         List<org.siemac.metamac.rest.notices.v1_0.domain.ResourceInternal> list = new ArrayList<org.siemac.metamac.rest.notices.v1_0.domain.ResourceInternal>();
         for (HasSiemacMetadata item : affectedResources) {
-            org.siemac.metamac.rest.notices.v1_0.domain.ResourceInternal resourceInternal = new org.siemac.metamac.rest.notices.v1_0.domain.ResourceInternal();
-            resourceInternal.setUrn(item.getSiemacMetadataStatisticalResource().getUrn());
-            resourceInternal.setKind(getKindByType(item));
-            resourceInternal.setName(toRestInternationalString(item.getSiemacMetadataStatisticalResource().getTitle()));
-            resourceInternal.setId(item.getLifeCycleStatisticalResource().getCode());
-            resourceInternal.setSelfLink(createSelfLink(item, statisticalResourcesApiInternalEndpointV10));
-            resourceInternal.setManagementAppLink(createManagementAppLink(item, statisticalResourcesInternalWebUrlBase));
-            list.add(resourceInternal);
+            org.siemac.metamac.rest.notices.v1_0.domain.ResourceInternal generateResourceInternal = generateResourceInternal(item);
+            list.add(generateResourceInternal);
         }
         return list;
     }
 
-    private String createManagementAppLink(HasSiemacMetadata item, String statisticalResourcesInternalWebUrlBase) {
-        InternalWebApplicationNavigation internalWebApplicationNavigation = new InternalWebApplicationNavigation(statisticalResourcesInternalWebUrlBase);
-        return buildManagementAppLinkByType(item, internalWebApplicationNavigation);
+    public List<org.siemac.metamac.rest.notices.v1_0.domain.ResourceInternal> generateQueryVersionResourceInternalList(List<QueryVersion> affectedResources) {
+        List<org.siemac.metamac.rest.notices.v1_0.domain.ResourceInternal> list = new ArrayList<org.siemac.metamac.rest.notices.v1_0.domain.ResourceInternal>();
+        for (QueryVersion item : affectedResources) {
+            org.siemac.metamac.rest.notices.v1_0.domain.ResourceInternal generateResourceInternal = generateResourceInternal(item);
+            list.add(generateResourceInternal);
+        }
+        return list;
     }
 
-    private String buildManagementAppLinkByType(HasSiemacMetadata item, InternalWebApplicationNavigation internalWebApplicationNavigation) {
+    public org.siemac.metamac.rest.notices.v1_0.domain.ResourceInternal generateResourceInternal(HasSiemacMetadata resource) {
+        org.siemac.metamac.rest.notices.v1_0.domain.ResourceInternal resourceInternal = new org.siemac.metamac.rest.notices.v1_0.domain.ResourceInternal();
+
+        if (resource != null) {
+            LifeCycleStatisticalResource lifeCycleStatisticalResource = resource.getLifeCycleStatisticalResource();
+            StatisticalResourceTypeEnum type = resource.getSiemacMetadataStatisticalResource().getType();
+
+            resourceInternal.setId(lifeCycleStatisticalResource.getCode());
+            resourceInternal.setUrn(lifeCycleStatisticalResource.getUrn());
+            resourceInternal.setKind(getKindByType(type));
+            resourceInternal.setName(toRestInternationalString(lifeCycleStatisticalResource.getTitle()));
+            resourceInternal.setManagementAppLink(buildManagementAppLinkByType(resource));
+            resourceInternal.setSelfLink(createSelfLink(lifeCycleStatisticalResource, type));
+        }
+
+        return resourceInternal;
+    }
+
+    public org.siemac.metamac.rest.notices.v1_0.domain.ResourceInternal generateResourceInternal(QueryVersion resource) {
+        org.siemac.metamac.rest.notices.v1_0.domain.ResourceInternal resourceInternal = new org.siemac.metamac.rest.notices.v1_0.domain.ResourceInternal();
+
+        if (resource != null) {
+            LifeCycleStatisticalResource lifeCycleStatisticalResource = resource.getLifeCycleStatisticalResource();
+            StatisticalResourceTypeEnum type = StatisticalResourceTypeEnum.QUERY;
+
+            resourceInternal.setId(lifeCycleStatisticalResource.getCode());
+            resourceInternal.setUrn(lifeCycleStatisticalResource.getUrn());
+            resourceInternal.setKind(getKindByType(StatisticalResourceTypeEnum.QUERY));
+            resourceInternal.setName(toRestInternationalString(lifeCycleStatisticalResource.getTitle()));
+            resourceInternal.setManagementAppLink(buildManagementAppLinkByType(resource));
+            resourceInternal.setSelfLink(createSelfLink(lifeCycleStatisticalResource, type));
+        }
+        return resourceInternal;
+    }
+
+    private String buildManagementAppLinkByType(HasSiemacMetadata item) {
         switch (item.getSiemacMetadataStatisticalResource().getType()) {
             case DATASET:
                 return internalWebApplicationNavigation.buildDatasetVersionUrl((DatasetVersion) item);
             case COLLECTION:
                 return internalWebApplicationNavigation.buildPublicationVersionUrl((PublicationVersion) item);
             default:
-                return "";
+                throw new RuntimeException("Invalid value for statistical resource type " + item.getSiemacMetadataStatisticalResource().getType());
         }
     }
 
-    private ResourceLink createSelfLink(HasSiemacMetadata item, String statisticalResourcesApiInternalEndpointV10) {
-        StringBuffer selfLinkSB = new StringBuffer()
-                .append(getApiKindByType(item))
-                .append(API_SEPARATOR).append(item.getLifeCycleStatisticalResource().getMaintainer().getCode()).append(API_SEPARATOR)
-                .append(item.getSiemacMetadataStatisticalResource().getCode())
-                .append(API_SEPARATOR);
-        appendVersionIfNecessary(item, selfLinkSB);
-        String selfLink = selfLinkSB.toString();
-        return toResourceLink(getKindByType(item), toSiemacMetadataLink(selfLink, statisticalResourcesApiInternalEndpointV10));
+    private String buildManagementAppLinkByType(QueryVersion item) {
+        return internalWebApplicationNavigation.buildQueryVersionUrl(item);
     }
 
-    public String createSelfLink(ExternalItem externalItem) throws MetamacException {
-        return createSelfLink(externalItem, null);
-    }
+    private ResourceLink createSelfLink(LifeCycleStatisticalResource lifeCycleStatisticalResource, StatisticalResourceTypeEnum type) {
+        String agencyID = lifeCycleStatisticalResource.getMaintainer().getCodeNested();
+        String resourceID = lifeCycleStatisticalResource.getCode();
+        String version = lifeCycleStatisticalResource.getVersionLogic();
 
-    public String createSelfLink(ExternalItem externalItem, String statisticalResourcesApiInternalEndpointV10) throws MetamacException {
-        if (statisticalResourcesApiInternalEndpointV10 == null) {
-            statisticalResourcesApiInternalEndpointV10 = configurationService.retrieveStatisticalResourcesInternalApiUrlBase();
-        }
-        return RestUtils.createLink(statisticalResourcesApiInternalEndpointV10, externalItem.getUri());
-    }
-
-    private void appendVersionIfNecessary(HasSiemacMetadata item, StringBuffer selfLinkSB) {
-        if (item.getSiemacMetadataStatisticalResource().getType() == StatisticalResourceTypeEnum.DATASET) {
-            selfLinkSB.append(item.getSiemacMetadataStatisticalResource().getVersionLogic());
+        switch (type) {
+            case DATASET:
+                return toDatasetSelfLink(agencyID, resourceID, version);
+            case COLLECTION:
+                return toCollectionSelfLink(agencyID, resourceID);
+            case QUERY:
+                return toQuerySelfLink(agencyID, resourceID);
+            default:
+                throw new RuntimeException("Invalid value for statistical resource type " + type);
         }
     }
 
-    private ResourceLink toResourceLink(String kindByType, String siemacMetadataLink) {
-        ResourceLink link = new ResourceLink();
-        link.setKind(kindByType);
-        link.setHref(siemacMetadataLink);
+    private ResourceLink toDatasetSelfLink(String agencyID, String resourceID, String version) {
+        String link = toDatasetLink(agencyID, resourceID, version);
+        return toResourceLink(StatisticalResourcesRestConstants.KIND_DATASET, link);
+    }
+
+    private String toDatasetLink(String agencyID, String resourceID, String version) {
+        String resourceSubpath = StatisticalResourcesRestConstants.LINK_SUBPATH_DATASETS;
+        return toResourceLink(resourceSubpath, agencyID, resourceID, version);
+    }
+
+    private ResourceLink toCollectionSelfLink(String agencyID, String resourceID) {
+        String link = toCollectionLink(agencyID, resourceID);
+        return toResourceLink(StatisticalResourcesRestConstants.KIND_COLLECTION, link);
+    }
+
+    private String toCollectionLink(String agencyID, String resourceID) {
+        String resourceSubpath = StatisticalResourcesRestConstants.LINK_SUBPATH_COLLECTIONS;
+        String version = null; // do not return version
+        return toResourceLink(resourceSubpath, agencyID, resourceID, version);
+    }
+
+    private ResourceLink toQuerySelfLink(String agencyID, String resourceID) {
+        String link = toQueryLink(agencyID, resourceID);
+        return toResourceLink(StatisticalResourcesRestConstants.KIND_QUERY, link);
+    }
+
+    private String toQueryLink(String agencyID, String resourceID) {
+        String resourceSubpath = StatisticalResourcesRestConstants.LINK_SUBPATH_QUERIES;
+        String version = null; // do not return version
+        return toResourceLink(resourceSubpath, agencyID, resourceID, version);
+    }
+
+    public ResourceLink toResourceLink(String kind, String href) {
+        ResourceLink target = new ResourceLink();
+        target.setKind(kind);
+        target.setHref(href);
+        return target;
+    }
+
+    // API/[ARTEFACT_TYPE]
+    // API/[ARTEFACT_TYPE]/{agencyID}
+    // API/[ARTEFACT_TYPE]/{agencyID}/{resourceID}
+    // API/[ARTEFACT_TYPE]/{agencyID}/{resourceID}/{version}
+    public String toResourceLink(String resourceSubpath, String agencyID, String resourceID, String version) {
+        String link = RestUtils.createLink(statisticalResourcesApiInternalEndpointV10, resourceSubpath);
+        if (agencyID != null) {
+            link = RestUtils.createLink(link, agencyID);
+            if (resourceID != null) {
+                link = RestUtils.createLink(link, resourceID);
+                if (version != null) {
+                    link = RestUtils.createLink(link, version);
+                }
+            }
+        }
         return link;
-    }
-
-    private String toSiemacMetadataLink(String code, String statisticalResourcesApiInternalEndpointV10) {
-        return RestUtils.createLink(getApiBaseLink(statisticalResourcesApiInternalEndpointV10), code);
-    }
-
-    private String getApiBaseLink(String statisticalResourcesApiInternalEndpointV10) {
-        return RestUtils.createLink(statisticalResourcesApiInternalEndpointV10, API_SEPARATOR + API_STATISTICAL_RESOURCES + API_SEPARATOR + API_VERSION_NAME);
     }
 
     private org.siemac.metamac.rest.common.v1_0.domain.InternationalString toRestInternationalString(org.siemac.metamac.statistical.resources.core.common.domain.InternationalString source) {
@@ -169,25 +246,16 @@ public class RestMapper {
         return target;
     }
 
-    private String getKindByType(HasSiemacMetadata item) {
-        switch (item.getSiemacMetadataStatisticalResource().getType()) {
+    private String getKindByType(StatisticalResourceTypeEnum type) {
+        switch (type) {
             case DATASET:
                 return TypeExternalArtefactsEnum.DATASET.getValue();
             case COLLECTION:
                 return TypeExternalArtefactsEnum.COLLECTION.getValue();
+            case QUERY:
+                return TypeExternalArtefactsEnum.QUERY.getValue();
             default:
-                return null;
-        }
-    }
-
-    private String getApiKindByType(HasSiemacMetadata item) {
-        switch (item.getSiemacMetadataStatisticalResource().getType()) {
-            case DATASET:
-                return API_TYPE_DATASETS;
-            case COLLECTION:
-                return API_TYPE_COLLECTIONS;
-            default:
-                return null;
+                throw new RuntimeException("Invalid value for statistical resource type " + type);
         }
     }
 

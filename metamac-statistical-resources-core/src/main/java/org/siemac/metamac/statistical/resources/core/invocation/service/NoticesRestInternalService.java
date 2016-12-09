@@ -1,10 +1,10 @@
 package org.siemac.metamac.statistical.resources.core.invocation.service;
 
 import java.io.Serializable;
-import java.util.List;
 
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.base.domain.HasSiemacMetadata;
+import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
 
 public interface NoticesRestInternalService {
 
@@ -16,6 +16,6 @@ public interface NoticesRestInternalService {
     public void createSuccessBackgroundNotification(String user, String actionCode, String successMessageCode, Serializable... successMessageParameters);
 
     // Stream Messaging Notifications
-    public void createErrorOnStreamMessagingService(String user, String actionCode, List<HasSiemacMetadata> affectedResources, String errorMessageCode, Serializable... errorMessageParameters);
-
+    public void createErrorOnStreamMessagingService(String user, String actionCode, HasSiemacMetadata affectedResource, String errorMessageCode, Serializable... extraParameters);
+    public void createErrorOnStreamMessagingService(String user, String actionCode, QueryVersion affectedResource, String errorMessageCode, Serializable... extraParameters);
 }

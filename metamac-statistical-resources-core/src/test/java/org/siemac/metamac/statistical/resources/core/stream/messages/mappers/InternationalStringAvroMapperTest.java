@@ -10,12 +10,10 @@ import org.siemac.metamac.statistical.resources.core.common.domain.International
 import org.siemac.metamac.statistical.resources.core.common.domain.LocalisedString;
 import org.siemac.metamac.statistical.resources.core.stream.messages.InternationalStringAvro;
 import org.siemac.metamac.statistical.resources.core.stream.messages.InternationalStringItemAvro;
-import org.siemac.metamac.statistical.resources.core.stream.messages.mapper.InternationalStringAvro2DoMapper;
-import org.siemac.metamac.statistical.resources.core.utils.asserts.BaseAsserts;
 
 public class InternationalStringAvroMapperTest {
 
-    protected static final String EXPECTED_LABEL = "My String label";
+    protected static final String EXPECTED_LABEL  = "My String label";
     protected static final String EXPECTED_LOCALE = "ES";
 
     @Test
@@ -42,26 +40,5 @@ public class InternationalStringAvroMapperTest {
             InternationalStringItemAvro equivalentLocale = actual.getLocalisedStrings().get(0);
             assertEquals(itemExpected.getLabel(), equivalentLocale.getLabel());
         }
-    }
-
-    @Test
-    public void testIntStringAvro2Do() {
-
-        InternationalString expected = new InternationalString();
-        LocalisedString expected1 = new LocalisedString();
-        expected1.setLabel(EXPECTED_LABEL);
-        expected1.setLocale(EXPECTED_LOCALE);
-        expected.addText(expected1);
-
-        InternationalStringItemAvro itemMock = InternationalStringItemAvro.newBuilder().setLabel(EXPECTED_LABEL).setLocale(EXPECTED_LOCALE).build();
-        List<InternationalStringItemAvro> list = new ArrayList<InternationalStringItemAvro>();
-        list.add(itemMock);
-
-        InternationalStringAvro source = InternationalStringAvro.newBuilder().setLocalisedStrings(list).build();
-
-        InternationalString actual = InternationalStringAvro2DoMapper.avro2Do(source);
-
-        BaseAsserts.assertEqualsInternationalString(actual, expected);
-
     }
 }

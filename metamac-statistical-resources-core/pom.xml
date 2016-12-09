@@ -23,6 +23,11 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
+            <groupId>org.siemac.metamac.metamac-statistical-resources</groupId>
+            <artifactId>metamac-statistical-resources-rest-api-common</artifactId>
+            <version>${metamac-statistical-resources-rest-api-common.version}</version>
+        </dependency>   
+        <dependency>
             <groupId>org.siemac.metamac.metamac-sso</groupId>
             <artifactId>metamac-sso-client</artifactId>
             <version>${metamac-sso.version}</version>

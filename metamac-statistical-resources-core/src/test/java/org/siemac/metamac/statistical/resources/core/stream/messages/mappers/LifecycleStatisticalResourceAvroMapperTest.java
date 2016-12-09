@@ -17,17 +17,14 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetRepos
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionRepository;
 import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
 import org.siemac.metamac.statistical.resources.core.stream.messages.LifecycleStatisticalResourceAvro;
-import org.siemac.metamac.statistical.resources.core.stream.messages.mapper.AvroMapperUtils;
-import org.siemac.metamac.statistical.resources.core.stream.messages.mapper.LifecycleStatisticalResourceAvro2DoMapper;
-import org.siemac.metamac.statistical.resources.core.utils.asserts.CommonAsserts;
 
 public class LifecycleStatisticalResourceAvroMapperTest {
 
     @Mock
-    protected DatasetRepository datasetRepository;
+    protected DatasetRepository         datasetRepository;
 
     @Mock
-    protected DatasetVersionRepository datasetVersionRepository;
+    protected DatasetVersionRepository  datasetVersionRepository;
 
     @Mock
     private static ConfigurationService configurationService;
@@ -35,9 +32,9 @@ public class LifecycleStatisticalResourceAvroMapperTest {
     @Before
     public void setUp() throws MetamacException {
         MockitoAnnotations.initMocks(this);
-        AvroMapperUtils.setDatasetRepository(datasetRepository);
-        AvroMapperUtils.setDatasetVersionRepository(datasetVersionRepository);
-        AvroMapperUtils.setConfiguratinService(configurationService);
+        AvroMapperUtils.datasetRepository = datasetRepository;
+        AvroMapperUtils.datasetVersionRepository = datasetVersionRepository;
+        AvroMapperUtils.configurationService = configurationService;
         try {
             when(configurationService.retrieveStatisticalResourcesInternalApiUrlBase()).thenReturn(MappersMockUtils.EXPECTED_API_BASE);
         } catch (MetamacException e) {
@@ -45,37 +42,12 @@ public class LifecycleStatisticalResourceAvroMapperTest {
     }
 
     @Test
-    public void testLifeCycleStatisticalResourceAvro2Do() throws MetamacException {
-        when(datasetVersionRepository.retrieveByUrn(any())).thenReturn(MappersMockUtils.mockDatasetVersion());
-
-        LifeCycleStatisticalResource expected = MappersMockUtils.mockLifeCycleStatisticalResource(TypeRelatedResourceEnum.DATASET_VERSION);
-        LifecycleStatisticalResourceAvro source = MappersMockUtils.mockLifeCycleStatisticalResourceAvro(TypeRelatedResourceEnum.DATASET_VERSION);
-
-        LifeCycleStatisticalResource actual = LifecycleStatisticalResourceAvro2DoMapper.avro2Do(source);
-
-        assertThat(actual.getCreationDate(), is(equalTo(expected.getCreationDate())));
-        assertThat(actual.getCreationUser(), is(equalTo(expected.getCreationUser())));
-        assertThat(actual.getProductionValidationDate(), is(equalTo(expected.getProductionValidationDate())));
-        assertThat(actual.getProductionValidationUser(), is(equalTo(expected.getProductionValidationUser())));
-        assertThat(actual.getDiffusionValidationDate(), is(equalTo(expected.getDiffusionValidationDate())));
-        assertThat(actual.getDiffusionValidationUser(), is(equalTo(expected.getDiffusionValidationUser())));
-        assertThat(actual.getRejectValidationDate(), is(equalTo(expected.getRejectValidationDate())));
-        assertThat(actual.getRejectValidationUser(), is(equalTo(expected.getRejectValidationUser())));
-        assertThat(actual.getPublicationDate(), is(equalTo(expected.getPublicationDate())));
-        assertThat(actual.getPublicationUser(), is(equalTo(expected.getPublicationUser())));
-        assertThat(actual.getLastVersion(), is(equalTo(expected.getLastVersion())));
-        assertThat(actual.getProcStatus(), is(equalTo(expected.getProcStatus())));
-        CommonAsserts.assertEqualsRelatedResource(expected.getReplacesVersion(), actual.getReplacesVersion());
-        CommonAsserts.assertEqualsExternalItem(expected.getMaintainer(), actual.getMaintainer());
-    }
-
-    @Test
     public void testLifecycleStatisticalResourceDo2Avro() throws MetamacException {
 
         when(datasetVersionRepository.retrieveByUrn(any())).thenReturn(MappersMockUtils.mockDatasetVersion());
 
-        LifecycleStatisticalResourceAvro expected = MappersMockUtils.mockLifeCycleStatisticalResourceAvro(TypeRelatedResourceEnum.DATASET);
-        LifeCycleStatisticalResource source = MappersMockUtils.mockLifeCycleStatisticalResource(TypeRelatedResourceEnum.DATASET);
+        LifecycleStatisticalResourceAvro expected = MappersMockUtils.mockLifeCycleStatisticalResourceAvro(TypeRelatedResourceEnum.DATASET_VERSION);
+        LifeCycleStatisticalResource source = MappersMockUtils.mockLifeCycleStatisticalResource(TypeRelatedResourceEnum.DATASET_VERSION);
 
         LifecycleStatisticalResourceAvro actual = LifecycleStatisticalResourceDo2AvroMapper.do2Avro(source);
 
