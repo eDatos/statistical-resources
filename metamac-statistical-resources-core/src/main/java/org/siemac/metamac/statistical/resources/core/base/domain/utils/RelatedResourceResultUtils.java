@@ -49,7 +49,7 @@ public class RelatedResourceResultUtils {
         resource.setType(type);
     }
 
-    public static RelatedResourceResult from(HasSiemacMetadata siemacMetadata) {
+    protected static RelatedResourceResult from(HasSiemacMetadata siemacMetadata) {
         if (siemacMetadata == null) {
             return null;
         }
@@ -68,6 +68,14 @@ public class RelatedResourceResultUtils {
             resource.getTitle().put(locale, siemacMetadata.getSiemacMetadataStatisticalResource().getTitle().getLocalisedLabel(locale));
         }
         return resource;
+    }
+
+    public static RelatedResourceResult from(HasSiemacMetadata siemacMetadata, TypeRelatedResourceEnum type) {
+        RelatedResourceResult result = RelatedResourceResultUtils.from(siemacMetadata);
+        if (result != null) {
+            result.setType(type);
+        }
+        return result;
     }
 
 }
