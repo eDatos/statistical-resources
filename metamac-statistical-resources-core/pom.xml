@@ -26,7 +26,7 @@
             <groupId>org.siemac.metamac.metamac-statistical-resources</groupId>
             <artifactId>metamac-statistical-resources-rest-api-common</artifactId>
             <version>${metamac-statistical-resources-rest-api-common.version}</version>
-        </dependency>   
+        </dependency>
         <dependency>
             <groupId>org.siemac.metamac.metamac-sso</groupId>
             <artifactId>metamac-sso-client</artifactId>
@@ -342,8 +342,6 @@
 
         <!-- ******* Quartz ******** -->
         <dependency>
-            <groupId>org.quartz-scheduler</groupId>
-            <artifactId>quartz</artifactId>
             <version>${quartz.version}</version>
             <exclusions>
                 <exclusion>
@@ -362,8 +360,6 @@
             <exclusions>
                 <exclusion>
                     <groupId>org.slf4j</groupId>
-                    <artifactId>slf4j-log4j12</artifactId>
-                </exclusion>
             </exclusions>
         </dependency>
         <dependency>
@@ -521,14 +517,14 @@
                         </goals>
                         <configuration>
                             <target>
-                                <copy toDir="${metamac-statistical-resources.etcDir}/db/statistical-resources/01-create">
+                                <copy toDir="${metamac-statistical-resources.etcDir}/db/statistical-resources/oracle/01-create">
                                     <fileset dir="${basedir}/src/generated/resources/dbschema/01-create" />
                                 </copy>
-                                <move file="${metamac-statistical-resources.etcDir}/db/statistical-resources/01-create/01-StatisticalResources-create.sql" tofile="${metamac-statistical-resources.etcDir}/db/statistical-resources/01-create/01-statistical-resources-schema-create.sql" />
-                                <copy toDir="${metamac-statistical-resources.etcDir}/db/statistical-resources/02-drop">
+                                <move file="${metamac-statistical-resources.etcDir}/db/statistical-resources/oracle/01-create/01-StatisticalResources-create.sql" tofile="${metamac-statistical-resources.etcDir}/db/statistical-resources/oracle/01-create/01-statistical-resources-schema-create.sql" />
+                                <copy toDir="${metamac-statistical-resources.etcDir}/db/statistical-resources/oracle/02-drop">
                                     <fileset dir="${basedir}/src/generated/resources/dbschema/02-drop" />
                                 </copy>
-                                <move file="${metamac-statistical-resources.etcDir}/db/statistical-resources/02-drop/01-StatisticalResources-drop.sql" tofile="${metamac-statistical-resources.etcDir}/db/statistical-resources/02-drop/01-statistical-resources-schema-drop.sql" />
+                                <move file="${metamac-statistical-resources.etcDir}/db/statistical-resources/oracle/02-drop/01-StatisticalResources-drop.sql" tofile="${metamac-statistical-resources.etcDir}/db/statistical-resources/oracle/02-drop/01-statistical-resources-schema-drop.sql" />
 
                                 <!-- Delete spring configuration files -->
                                 <delete file="${basedir}/src/main/resources/spring.properties" />
