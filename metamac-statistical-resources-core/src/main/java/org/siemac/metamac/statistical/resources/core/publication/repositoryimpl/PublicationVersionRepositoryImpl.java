@@ -165,7 +165,7 @@ public class PublicationVersionRepositoryImpl extends PublicationVersionReposito
                 replacing = next;
             }
         }
-        return RelatedResourceResultUtils.from(replacing);
+        return RelatedResourceResultUtils.from(replacing, TypeRelatedResourceEnum.PUBLICATION_VERSION);
     }
 
     @Override
@@ -173,7 +173,7 @@ public class PublicationVersionRepositoryImpl extends PublicationVersionReposito
         RelatedResource replacingRelated = publicationVersion.getSiemacMetadataStatisticalResource().getIsReplacedBy();
         RelatedResourceResult replacing = null;
         if (replacingRelated != null) {
-            replacing = RelatedResourceResultUtils.from(replacingRelated.getPublicationVersion());
+            replacing = RelatedResourceResultUtils.from(replacingRelated.getPublicationVersion(), TypeRelatedResourceEnum.PUBLICATION_VERSION);
         }
 
         return replacing;

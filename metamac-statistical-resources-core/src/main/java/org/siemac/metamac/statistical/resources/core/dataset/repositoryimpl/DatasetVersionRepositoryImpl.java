@@ -381,7 +381,7 @@ public class DatasetVersionRepositoryImpl extends DatasetVersionRepositoryBase {
                 replacing = next;
             }
         }
-        RelatedResourceResult result = RelatedResourceResultUtils.from(replacing);
+        RelatedResourceResult result = RelatedResourceResultUtils.from(replacing, TypeRelatedResourceEnum.DATASET_VERSION);
         return result;
     }
 
@@ -396,7 +396,7 @@ public class DatasetVersionRepositoryImpl extends DatasetVersionRepositoryBase {
                 replacing = next;
             }
         }
-        RelatedResourceResult result = RelatedResourceResultUtils.from(replacing);
+        RelatedResourceResult result = RelatedResourceResultUtils.from(replacing, TypeRelatedResourceEnum.DATASET_VERSION);
         return result;
     }
 
@@ -405,7 +405,7 @@ public class DatasetVersionRepositoryImpl extends DatasetVersionRepositoryBase {
         RelatedResource replacingRelated = datasetVersion.getSiemacMetadataStatisticalResource().getIsReplacedByVersion();
         RelatedResourceResult replacing = null;
         if (replacingRelated != null && TypeRelatedResourceEnum.DATASET_VERSION == replacingRelated.getType()) {
-            replacing = RelatedResourceResultUtils.from(replacingRelated.getDatasetVersion());
+            replacing = RelatedResourceResultUtils.from(replacingRelated.getDatasetVersion(), TypeRelatedResourceEnum.DATASET_VERSION);
         }
 
         return replacing;
@@ -416,7 +416,7 @@ public class DatasetVersionRepositoryImpl extends DatasetVersionRepositoryBase {
         RelatedResource replacingRelated = datasetVersion.getSiemacMetadataStatisticalResource().getIsReplacedBy();
         RelatedResourceResult replacing = null;
         if (replacingRelated != null && TypeRelatedResourceEnum.DATASET_VERSION == replacingRelated.getType()) {
-            replacing = RelatedResourceResultUtils.from(replacingRelated.getDatasetVersion());
+            replacing = RelatedResourceResultUtils.from(replacingRelated.getDatasetVersion(), TypeRelatedResourceEnum.DATASET_VERSION);
         }
 
         return replacing;
