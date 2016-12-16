@@ -6,4 +6,17 @@
 
 	<entry key="metamac.statistical_resources.dot_code_mapping">ONE_DOT=CODE_ONE,TWO_DOT=CODE_TWO,THREE_DOT=THREE_DOT,FOUR_DOT=FOUR_CODE,FIVE_DOT=FIVE_CODE,SIX_DOT=SIX_CODE</entry>
 
+
+    <!-- APIS -->
+    <entry key="metamac.common_metadata.rest.external">http://apis.metamac.org/common-metadata-external</entry>
+    <entry key="metamac.statistical_operations.rest.internal">http://apis.metamac.org/statistical-operations-internal</entry>
+    <entry key="metamac.statistical_operations.rest.external">http://apis.metamac.org/statistical-operations-external</entry>
+    <entry key="metamac.srm.rest.internal">http://apis.metamac.org/srm-internal</entry>
+    <entry key="metamac.srm.rest.external">http://apis.metamac.org/srm-external</entry>
+    <entry key="metamac.notices.rest.internal">http://apis.metamac.org/notices-internal</entry>
+    <entry key="metamac.access_control.rest.internal">http://apis.metamac.org/access-control-internal</entry>
+    <entry key="metamac.statistical_resources.rest.internal">http://apis.metamac.org/statistical-resources-internal</entry>
+    <entry key="metamac.statistical_resources.rest.external">http://apis.metamac.org/statistical-resources-external</entry>
+    <entry key="indicators.rest.external">http://apis.metamac.org/indicators</entry> 
+    
 </properties>
