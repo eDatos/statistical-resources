@@ -45,7 +45,7 @@ public class VersionableResourceSectionStack extends CustomListGridSectionStack 
     }
 
     protected void addProcStatusFieldToGrid(List<ListGridField> gridFields) {
-        ListGridField procStatusField = new ListGridField(LifeCycleResourceDS.PROC_STATUS, "VResourceSectionStack" + getConstants().lifeCycleStatisticalResourceProcStatus());
+        ListGridField procStatusField = new ListGridField(LifeCycleResourceDS.PROC_STATUS, getConstants().lifeCycleStatisticalResourceProcStatus());
         gridFields.add(procStatusField);
     }
 

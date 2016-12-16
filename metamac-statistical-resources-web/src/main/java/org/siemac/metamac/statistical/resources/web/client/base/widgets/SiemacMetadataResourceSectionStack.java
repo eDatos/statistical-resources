@@ -27,7 +27,6 @@ public class SiemacMetadataResourceSectionStack extends VersionableResourceSecti
 
     protected void addPublicationStreamStatusToGrid(List<ListGridField> fieldList) {
         ListGridField publicationStreamStatus = new ListGridField(LifeCycleResourceDS.PUBLICATION_STREAM_STATUS, getConstants().publicationStreamStatus());
-        publicationStreamStatus.setWidth(140);
         publicationStreamStatus.setType(ListGridFieldType.IMAGE);
         publicationStreamStatus.setAlign(Alignment.CENTER);
         fieldList.add(publicationStreamStatus);

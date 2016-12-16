@@ -545,8 +545,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         QueriesSecurityUtils.canResendPublishedQueryVersionStreamMessage(ctx, queryVersion.getLifeCycleStatisticalResource().getStatisticalOperation().getCode());
 
         // Send stream message to stream messaging service (like Apache Kafka)
-        // sendNewVersionPublishedStreamMessage(ctx, queryVersion);
-        // TODO PUBLICACION DE TOPIC DE QUERY
+        sendNewVersionPublishedStreamMessage(ctx, queryVersion);
 
         // Transform
         return queryDo2DtoMapper.queryVersionDoToBaseDto(queryVersion);

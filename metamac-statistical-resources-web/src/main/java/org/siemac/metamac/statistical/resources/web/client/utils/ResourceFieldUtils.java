@@ -67,7 +67,11 @@ public class ResourceFieldUtils {
         CustomListGridField publicationDate = new CustomListGridField(LifeCycleResourceDS.PUBLICATION_DATE, getConstants().lifeCycleStatisticalResourcePublicationDate());
         publicationDate.setHidden(true);
 
-        return ListGridUtils.addFields(getVersionableListGridFields(), procStatus, creationDate, publicationDate);
+        CustomListGridField publicationStreamStatus = new CustomListGridField(LifeCycleResourceDS.PUBLICATION_STREAM_STATUS, getConstants().publicationStreamStatus());
+        publicationStreamStatus.setType(ListGridFieldType.IMAGE);
+        publicationStreamStatus.setAlign(Alignment.CENTER);
+
+        return ListGridUtils.addFields(getVersionableListGridFields(), procStatus, creationDate, publicationDate, publicationStreamStatus);
     }
 
     //
@@ -75,11 +79,7 @@ public class ResourceFieldUtils {
     //
 
     public static CustomListGridField[] getSiemacMetadataListGridFields() {
-        CustomListGridField publicationStreamStatus = new CustomListGridField(LifeCycleResourceDS.PUBLICATION_STREAM_STATUS, getConstants().publicationStreamStatus());
-        publicationStreamStatus.setWidth(140);
-        publicationStreamStatus.setType(ListGridFieldType.IMAGE);
-        publicationStreamStatus.setAlign(Alignment.CENTER);
-        return ListGridUtils.addFields(getLifeCycleListGridFields(), publicationStreamStatus);
+        return ListGridUtils.addFields(getLifeCycleListGridFields());
     }
 
     //
