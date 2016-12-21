@@ -188,6 +188,11 @@
             <artifactId>urlrewritefilter</artifactId>
             <version>${urlrewritefilter.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.antlr</groupId>
+            <artifactId>antlr-runtime</artifactId>
+            <version>${antlr-runtime.version}</version>
+        </dependency>
     </dependencies>
 
     <build>
