@@ -64,6 +64,8 @@ public class QueriesRest2DoMapperImpl extends BaseRest2DoMapperV10Impl implement
                     return buildSculptorPropertyCriteriaForDateProperty(propertyRestriction, QueryVersionProperties.lifeCycleStatisticalResource().validTo(), QueryVersion.class, false);
                 case STATISTICAL_OPERATION_URN:
                     return buildSculptorPropertyCriteriaDisjunctionForUrnProperty(propertyRestriction, QueryVersionProperties.lifeCycleStatisticalResource().statisticalOperation());
+                case PROC_STATUS:
+                    return buildSculptorPropertyCriteria(QueryVersionProperties.lifeCycleStatisticalResource().procStatus(), PropertyTypeEnum.PROC_STATUS, propertyRestriction);
                 default:
                     throw toRestExceptionParameterIncorrect(propertyNameCriteria.name());
             }

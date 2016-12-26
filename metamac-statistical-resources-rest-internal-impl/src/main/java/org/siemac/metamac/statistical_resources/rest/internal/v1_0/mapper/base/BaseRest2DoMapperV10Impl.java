@@ -13,7 +13,9 @@ import org.siemac.metamac.rest.search.criteria.SculptorPropertyCriteria;
 import org.siemac.metamac.rest.search.criteria.SculptorPropertyCriteriaDisjunction;
 import org.siemac.metamac.rest.search.criteria.utils.CriteriaUtils;
 import org.siemac.metamac.rest.search.criteria.utils.CriteriaUtils.PropertyValueRestToPropertyValueEntityInterface;
+import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.ProcStatusType;
 import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItemProperties.ExternalItemProperty;
+import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryTypeEnum;
 import org.siemac.metamac.statistical_resources.rest.internal.exception.RestServiceExceptionType;
@@ -27,7 +29,7 @@ public abstract class BaseRest2DoMapperV10Impl {
     private PropertyValueRestToPropertyValueEntityInterface propertyValueRestToPropertyValueEntity = null;
 
     protected enum PropertyTypeEnum {
-        STRING, DATE, BOOLEAN, QUERY_TYPE, QUERY_STATUS
+        STRING, DATE, BOOLEAN, QUERY_TYPE, QUERY_STATUS, PROC_STATUS
     }
 
     public BaseRest2DoMapperV10Impl() {
@@ -68,6 +70,8 @@ public abstract class BaseRest2DoMapperV10Impl {
                         return toQueryType(value);
                     case QUERY_STATUS:
                         return toQueryStatus(value);
+                    case PROC_STATUS:
+                        return propertyRestrictionValueToProcStatusEnum(propertyName, value);
                     default:
                         throw toRestExceptionParameterIncorrect(propertyName);
                 }
@@ -105,6 +109,24 @@ public abstract class BaseRest2DoMapperV10Impl {
 
     private QueryStatusEnum toQueryStatus(String source) {
         return QueryStatusEnum.valueOf(source);
+    }
+
+    private ProcStatusEnum propertyRestrictionValueToProcStatusEnum(String propertyName, String value) {
+        ProcStatusType procStatus = ProcStatusType.valueOf(value);
+        switch (procStatus) {
+            case DIFFUSION_VALIDATION:
+                return ProcStatusEnum.DIFFUSION_VALIDATION;
+            case DRAFT:
+                return ProcStatusEnum.DRAFT;
+            case PRODUCTION_VALIDATION:
+                return ProcStatusEnum.PRODUCTION_VALIDATION;
+            case PUBLISHED:
+                return ProcStatusEnum.PUBLISHED;
+            case VALIDATION_REJECTED:
+                return ProcStatusEnum.VALIDATION_REJECTED;
+            default:
+                throw toRestExceptionParameterIncorrect(propertyName);
+        }
     }
 
 }
