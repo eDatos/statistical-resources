@@ -743,7 +743,7 @@ public class ValidateDataVersusDsd {
                 for (String filename : alternativeSourceEnumerationRepresentationMap.keySet()) {
 
                     // Cache translation if is necessary
-                    if (isTranslationNecessary(filename, dsdComponent.getComponentId())) {
+                    if (isTranslationNecessary(filename, dsdComponent.getComponentId(), codelistRepresentationUrn)) {
                         if (codes == null) {
                             // Retrieve codes if aren't in cached
                             codes = srmRestInternalService.retrieveCodesOfCodelistEfficiently(codelistRepresentationUrn);
@@ -819,9 +819,11 @@ public class ValidateDataVersusDsd {
         codeHierarchyMap.put(codeUrn, CodeHierarchyBuilder.codeHierarchy().withCode(codeId).withUrn(codeUrn).withParent(codeHierarchyParent).build());
     }
 
-    private boolean isTranslationNecessary(String filename, String componentId) {
-        // if there is a alternative representation and is not already cached
-        if (getAlternativeSourceEnumerationRepresentationMap(filename).containsKey(componentId) && !getTranslationEnumRepresentationsMap(filename).containsKey(componentId)) {
+    private boolean isTranslationNecessary(String filename, String componentId, String originaRepresentationUrn) {
+        // if there is a alternative representation and is different than original component representation and is not already cached
+        String alternativeRepresentationUrn = getAlternativeSourceEnumerationRepresentationMap(filename).get(componentId);
+        if (!StringUtils.isEmpty(alternativeRepresentationUrn) && !alternativeRepresentationUrn.toLowerCase().equals(originaRepresentationUrn.toLowerCase())
+                && !getTranslationEnumRepresentationsMap(filename).containsKey(componentId)) {
             return true;
         } else {
             return false;

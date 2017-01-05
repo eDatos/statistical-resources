@@ -1429,7 +1429,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         } else if (component.getConceptSchemeRepresentationUrn() != null) {
             return buildExternalItemsBasedOnCodeDimensionsInConceptScheme(codes, component.getConceptSchemeRepresentationUrn());
         } else {
-            return null;
+            return Collections.emptyList();
         }
     }
 
