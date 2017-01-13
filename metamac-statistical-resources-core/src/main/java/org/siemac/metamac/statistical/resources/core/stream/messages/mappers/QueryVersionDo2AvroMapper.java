@@ -1,5 +1,7 @@
 package org.siemac.metamac.statistical.resources.core.stream.messages.mappers;
 
+import static org.siemac.metamac.core.common.util.GeneratorUrnUtils.generateSiemacStatisticalResourceQueryUrn;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -54,7 +56,15 @@ public class QueryVersionDo2AvroMapper {
                 .build();
         // @formatter:on
 
+        // Replace URN with URN withou Version
+        String queryUrnWithoutVersion = toQueryUrn(source.getLifeCycleStatisticalResource().getMaintainer().getCodeNested(), source.getLifeCycleStatisticalResource().getCode());
+        target.getLifecycleStatisticalResource().getVersionableStatisticalResource().getNameableStatisticalResource().getIdentifiableStatisticalResource().setUrn(queryUrnWithoutVersion);
+
         return target;
+    }
+
+    private String toQueryUrn(String maintainerNestedCode, String code) {
+        return generateSiemacStatisticalResourceQueryUrn(new String[]{maintainerNestedCode}, code); // global urn without version
     }
 
     private QueryStatusEnumAvro queryStatusEnumDoToAvro(QueryStatusEnum source) {
