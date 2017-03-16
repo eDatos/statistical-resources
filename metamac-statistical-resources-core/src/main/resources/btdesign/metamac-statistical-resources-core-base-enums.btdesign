@@ -55,6 +55,7 @@ Application StatisticalResourcesEnums {
     		TECNICO_APOYO_DIFUSION,
     		TECNICO_DIFUSION,
     		JEFE_PRODUCCION,
+    		LECTOR,
     		ADMINISTRADOR,
     		ANY_ROLE_ALLOWED
     	}

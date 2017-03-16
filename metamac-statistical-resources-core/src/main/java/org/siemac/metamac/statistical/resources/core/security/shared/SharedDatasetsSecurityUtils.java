@@ -21,7 +21,7 @@ public class SharedDatasetsSecurityUtils extends SharedSecurityUtils {
     }
 
     public static boolean canRetrieveDatasourceByUrn(MetamacPrincipal metamacPrincipal, String operationCode) {
-        return isOperationAllowed(metamacPrincipal, operationCode, PRODUCTION_ROLES);
+        return isOperationAllowed(metamacPrincipal, operationCode, PRODUCTION_ROLES_WITH_READER);
     }
 
     public static boolean canDeleteDatasource(MetamacPrincipal metamacPrincipal, String operationCode) {
@@ -29,11 +29,11 @@ public class SharedDatasetsSecurityUtils extends SharedSecurityUtils {
     }
 
     public static boolean canRetrieveDatasourcesByDatasetVersion(MetamacPrincipal metamacPrincipal, String operationCode) {
-        return isOperationAllowed(metamacPrincipal, operationCode, PRODUCTION_ROLES);
+        return isOperationAllowed(metamacPrincipal, operationCode, PRODUCTION_ROLES_WITH_READER);
     }
 
     public static boolean canRetrieveDatasourceDimensionRepresentationMappings(MetamacPrincipal metamacPrincipal, String operationCode) {
-        return isOperationAllowed(metamacPrincipal, operationCode, PRODUCTION_ROLES);
+        return isOperationAllowed(metamacPrincipal, operationCode, PRODUCTION_ROLES_WITH_READER);
     }
 
     // ------------------------------------------------------------------------

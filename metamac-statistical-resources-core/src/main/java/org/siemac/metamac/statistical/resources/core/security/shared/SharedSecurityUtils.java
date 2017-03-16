@@ -7,6 +7,7 @@ import static org.siemac.metamac.statistical.resources.core.enume.domain.Statist
 import static org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourcesRoleEnum.TECNICO_APOYO_PRODUCCION;
 import static org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourcesRoleEnum.TECNICO_DIFUSION;
 import static org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourcesRoleEnum.TECNICO_PRODUCCION;
+import static org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourcesRoleEnum.LECTOR;
 
 import org.siemac.metamac.sso.client.MetamacPrincipal;
 import org.siemac.metamac.sso.client.MetamacPrincipalAccess;
@@ -16,10 +17,13 @@ import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalRes
 
 public class SharedSecurityUtils {
 
-    protected static final StatisticalResourcesRoleEnum[] PRODUCTION_ROLES = {StatisticalResourcesRoleEnum.JEFE_PRODUCCION, StatisticalResourcesRoleEnum.TECNICO_PRODUCCION,
-            StatisticalResourcesRoleEnum.TECNICO_APOYO_PRODUCCION          };
+    protected static final StatisticalResourcesRoleEnum[] PRODUCTION_ROLES             = {StatisticalResourcesRoleEnum.JEFE_PRODUCCION, StatisticalResourcesRoleEnum.TECNICO_PRODUCCION,
+            StatisticalResourcesRoleEnum.TECNICO_APOYO_PRODUCCION                      };
 
-    protected static final StatisticalResourcesRoleEnum[] DIFFUSION_ROLES  = {StatisticalResourcesRoleEnum.TECNICO_APOYO_DIFUSION, StatisticalResourcesRoleEnum.TECNICO_DIFUSION};
+    protected static final StatisticalResourcesRoleEnum[] PRODUCTION_ROLES_WITH_READER = {StatisticalResourcesRoleEnum.JEFE_PRODUCCION, StatisticalResourcesRoleEnum.TECNICO_PRODUCCION,
+            StatisticalResourcesRoleEnum.TECNICO_APOYO_PRODUCCION, StatisticalResourcesRoleEnum.LECTOR};
+
+    protected static final StatisticalResourcesRoleEnum[] DIFFUSION_ROLES              = {StatisticalResourcesRoleEnum.TECNICO_APOYO_DIFUSION, StatisticalResourcesRoleEnum.TECNICO_DIFUSION};
 
     /**
      * Checks if logged user has one of the allowed roles
@@ -133,7 +137,7 @@ public class SharedSecurityUtils {
      */
     protected static boolean isAnyStatisticalResourceRole(MetamacPrincipal metamacPrincipal) {
         return isAdministrador(metamacPrincipal) || isTecnicoApoyoDifusion(metamacPrincipal) || isTecnicoDifusion(metamacPrincipal) || isTecnicoApoyoProduccion(metamacPrincipal)
-                || isTecnicoProduccion(metamacPrincipal) || isJefeProduccion(metamacPrincipal);
+                || isTecnicoProduccion(metamacPrincipal) || isJefeProduccion(metamacPrincipal) || isLector(metamacPrincipal);
     }
 
     protected static boolean isTecnicoApoyoProduccion(MetamacPrincipal metamacPrincipal) {
@@ -154,6 +158,10 @@ public class SharedSecurityUtils {
 
     protected static boolean isJefeProduccion(MetamacPrincipal metamacPrincipal) {
         return isRoleInAccesses(metamacPrincipal, JEFE_PRODUCCION);
+    }
+
+    protected static boolean isLector(MetamacPrincipal metamacPrincipal) {
+        return isRoleInAccesses(metamacPrincipal, LECTOR);
     }
 
     // -----------------------------------------------------------------------
