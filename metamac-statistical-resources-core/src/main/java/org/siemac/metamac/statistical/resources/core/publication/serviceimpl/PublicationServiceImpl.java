@@ -44,6 +44,7 @@ import org.siemac.metamac.statistical.resources.core.publication.domain.Publicat
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersionRepository;
 import org.siemac.metamac.statistical.resources.core.publication.serviceapi.validators.PublicationServiceInvocationValidator;
+import org.siemac.metamac.statistical.resources.core.publication.utils.ElementLevelComparator;
 import org.siemac.metamac.statistical.resources.core.publication.utils.structure.Element;
 import org.siemac.metamac.statistical.resources.core.publication.utils.structure.PublicationStructure;
 import org.siemac.metamac.statistical.resources.core.publication.utils.structure.PublicationStructureTSVProcessor;
@@ -605,10 +606,12 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
             orders.add(Long.valueOf(i));
         }
 
+        elementsAtLevel.sort(new ElementLevelComparator());
+
         // Update orders
         for (ElementLevel elementInLevel : elementsAtLevel) {
             // it is possible that element is already added to parent and order is already set
-            if (elementInLevel.getElementId().equals(elementToAdd.getElementId())) {
+            if (elementInLevel.getElementId().equals(elementToAdd.getElementId()) && haveTheSameType(elementInLevel, elementToAdd)) {
                 // nothing
             } else {
                 // Update order
@@ -632,6 +635,10 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
                 throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, ServiceExceptionParameters.CUBE__ORDER_IN_LEVEL);
             }
         }
+    }
+
+    private boolean haveTheSameType(ElementLevel firstElement, ElementLevel secondLevel) {
+        return (firstElement.isChapter() && secondLevel.isChapter()) || (firstElement.isCube() && secondLevel.isCube());
     }
 
     private ElementLevel updateElementLevel(ElementLevel elementLevel) throws MetamacException {
@@ -775,7 +782,7 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
 
         // Update orders
         for (ElementLevel elementAtLevel : elementsAtLevel) {
-            if (elementAtLevel.getElementId().equals(elementToChangeOrder.getElementId())) {
+            if (elementAtLevel.getElementId().equals(elementToChangeOrder.getElementId()) && haveTheSameType(elementAtLevel, elementToChangeOrder)) {
                 continue;
             }
             if (orderAfterUpdate < orderBeforeUpdate) {
