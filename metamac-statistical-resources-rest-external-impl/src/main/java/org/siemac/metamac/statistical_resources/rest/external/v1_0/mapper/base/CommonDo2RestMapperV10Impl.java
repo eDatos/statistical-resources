@@ -827,7 +827,7 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
         target.setVariableElement(toResource(source.getVariableElement(), selectedLanguages));
         if (source.getVariableElement() != null) {
             VariableElementsGeoInfo geoInfo = srmRestExternalFacade.findVariableElementsGeoInfo(source.getVariableElement().getUrn());
-            if (geoInfo.getFeatures() != null && geoInfo.getFeatures().getTotal().signum() == 1) {
+            if (geoInfo != null && geoInfo.getFeatures() != null && geoInfo.getFeatures().getTotal() != null && geoInfo.getFeatures().getTotal().signum() == 1) {
                 VariableElementsGeoInfoFeature feature = geoInfo.getFeatures().getFeatures().get(0);
                 if (feature.getProperties() != null) {
                     target.setGeographicGranularity(toResource(feature.getProperties().getGeographicalGranularity(), selectedLanguages));
