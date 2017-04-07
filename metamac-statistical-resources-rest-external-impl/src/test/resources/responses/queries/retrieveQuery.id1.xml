@@ -212,12 +212,14 @@
                         <stat:name>
                             <cdomain:text xml:lang="es">2011</cdomain:text>
                         </stat:name>
+                        <stat:temporalGranularity>YEARLY</stat:temporalGranularity>
                     </stat:value>
                     <stat:value>
                         <stat:id>2013</stat:id>
                         <stat:name>
                             <cdomain:text xml:lang="es">2013</cdomain:text>
                         </stat:name>
+                        <stat:temporalGranularity>YEARLY</stat:temporalGranularity>
                     </stat:value>
                 </stat:dimensionValues>
             </stat:dimension>

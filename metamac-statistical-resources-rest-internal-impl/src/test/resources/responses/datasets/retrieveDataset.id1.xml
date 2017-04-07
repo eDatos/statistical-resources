@@ -810,24 +810,28 @@
                         <ns2:name>
                             <cdomain:text xml:lang="es">2011</cdomain:text>
                         </ns2:name>
+                        <ns2:temporalGranularity>YEARLY</ns2:temporalGranularity>
                     </ns2:value>
                     <ns2:value>
                         <ns2:id>2012</ns2:id>
                         <ns2:name>
                             <cdomain:text xml:lang="es">2012</cdomain:text>
                         </ns2:name>
+                        <ns2:temporalGranularity>YEARLY</ns2:temporalGranularity>
                     </ns2:value>
                     <ns2:value>
                         <ns2:id>2013</ns2:id>
                         <ns2:name>
                             <cdomain:text xml:lang="es">2013</cdomain:text>
                         </ns2:name>
+                        <ns2:temporalGranularity>YEARLY</ns2:temporalGranularity>
                     </ns2:value>
                     <ns2:value>
                         <ns2:id>2014</ns2:id>
                         <ns2:name>
                             <cdomain:text xml:lang="es">2014</cdomain:text>
                         </ns2:name>
+                        <ns2:temporalGranularity>YEARLY</ns2:temporalGranularity>
                     </ns2:value>
                 </ns2:dimensionValues>
             </ns2:dimension>

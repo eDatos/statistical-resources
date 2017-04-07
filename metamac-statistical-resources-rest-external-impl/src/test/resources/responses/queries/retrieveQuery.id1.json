@@ -409,7 +409,8 @@
                       "lang": "es"
                     }
                   ]
-                }
+                },
+                "temporalGranularity": "YEARLY"
               },
               {
                 "id": "2013",
@@ -420,7 +421,8 @@
                       "lang": "es"
                     }
                   ]
-                }
+                },
+                "temporalGranularity": "YEARLY"
               }
             ],
             "total": 2
