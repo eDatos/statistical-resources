@@ -20,7 +20,9 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
+import org.siemac.metamac.core.common.enume.domain.IstacTimeGranularityEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.core.common.time.IstacTimeUtils;
 import org.siemac.metamac.rest.common.v1_0.domain.InternationalString;
 import org.siemac.metamac.rest.common.v1_0.domain.LocalisedString;
 import org.siemac.metamac.rest.common.v1_0.domain.Resource;
@@ -876,6 +878,8 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
         if (DsdComponentType.TEMPORAL.equals(dimensionType)) {
             Map<String, String> title = translationService.translateTime(SERVICE_CONTEXT, source.getIdentifier());
             target.setName(toInternationalString(title, selectedLanguages));
+            IstacTimeGranularityEnum timeGranularity = IstacTimeUtils.guessTimeGranularity(source.getIdentifier());
+            target.setTemporalGranularity(timeGranularity == null ? null : timeGranularity.name());
         } else {
             target.setName(toInternationalString(source.getTitle(), selectedLanguages));
         }

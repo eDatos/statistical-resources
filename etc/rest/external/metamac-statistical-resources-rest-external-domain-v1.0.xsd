@@ -334,6 +334,7 @@
         <xs:sequence>
             <xs:element name="id" type="xs:string" />
             <xs:element name="name" type="common:InternationalString" />
+            <xs:element name="temporalGranularity" type="xs:string" />
         </xs:sequence>
     </xs:complexType>
 
