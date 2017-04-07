@@ -5,6 +5,7 @@ import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codes;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Concept;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Concepts;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructure;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.VariableElementsGeoInfo;
 
 public interface SrmRestInternalFacade {
 
@@ -15,4 +16,6 @@ public interface SrmRestInternalFacade {
 
     public Concepts retrieveConceptsByConceptSchemeByUrn(String urn);
     public Concept retrieveConceptByUrn(String urn);
+
+    public VariableElementsGeoInfo findVariableElementsGeoInfo(String urn);
 }

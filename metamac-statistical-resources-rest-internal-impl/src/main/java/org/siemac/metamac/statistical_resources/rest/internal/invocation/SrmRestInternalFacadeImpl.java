@@ -9,6 +9,7 @@ import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codes;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Concept;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Concepts;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructure;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.VariableElementsGeoInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -88,6 +89,14 @@ public class SrmRestInternalFacadeImpl implements SrmRestInternalFacade {
         } catch (Exception e) {
             throw toRestException(e);
         }
+    }
+
+    @Override
+    public VariableElementsGeoInfo findVariableElementsGeoInfo(String urn) {
+        String[] urnSplited = UrnUtils.splitUrnByDots(UrnUtils.splitUrnItem(urn)[0]);
+        String variableID = urnSplited[0];
+        String resourceID = urnSplited[1];
+        return restApiLocator.getSrmRestExternalFacadeV10().findVariableElementsGeoInfoXml(variableID, resourceID, null, null, null, null, null);
     }
 
     private RestException toRestException(Exception e) {

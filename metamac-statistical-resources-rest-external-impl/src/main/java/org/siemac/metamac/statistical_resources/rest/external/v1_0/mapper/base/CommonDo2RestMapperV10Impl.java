@@ -75,6 +75,8 @@ import org.siemac.metamac.rest.structural_resources.v1_0.domain.ItemResource;
 import org.siemac.metamac.rest.structural_resources.v1_0.domain.Quantity;
 import org.siemac.metamac.rest.structural_resources.v1_0.domain.ShowDecimalPrecision;
 import org.siemac.metamac.rest.structural_resources.v1_0.domain.TextFormat;
+import org.siemac.metamac.rest.structural_resources.v1_0.domain.VariableElementsGeoInfo;
+import org.siemac.metamac.rest.structural_resources.v1_0.domain.VariableElementsGeoInfoFeature;
 import org.siemac.metamac.rest.utils.RestCommonUtil;
 import org.siemac.metamac.rest.utils.RestUtils;
 import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataStatisticalResource;
@@ -823,6 +825,15 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
             }
         }
         target.setVariableElement(toResource(source.getVariableElement(), selectedLanguages));
+        if (source.getVariableElement() != null) {
+            VariableElementsGeoInfo geoInfo = srmRestExternalFacade.findVariableElementsGeoInfo(source.getVariableElement().getUrn());
+            if (geoInfo.getFeatures() != null && geoInfo.getFeatures().getTotal().signum() == 1) {
+                VariableElementsGeoInfoFeature feature = geoInfo.getFeatures().getFeatures().get(0);
+                if (feature.getProperties() != null) {
+                    target.setGeographicGranularity(toResource(feature.getProperties().getGeographicalGranularity(), selectedLanguages));
+                }
+            }
+        }
         target.setOpen(source.isOpen());
         return target;
     }
