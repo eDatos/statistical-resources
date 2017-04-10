@@ -220,16 +220,19 @@ public class CommonUtils {
     }
 
     public static FormItemIcon getPublicationStreamStatusIcon(StreamMessageStatusEnum status) {
-        FormItemIcon icon = new FormItemIcon();
-        String iconSrc = null;
-        if (StreamMessageStatusEnum.FAILED.equals(status)) {
-            iconSrc = GlobalResources.RESOURCE.errorSmart().getURL();
-        } else if (StreamMessageStatusEnum.PENDING.equals(status)) {
-            iconSrc = GlobalResources.RESOURCE.warn().getURL();
-        } else if (StreamMessageStatusEnum.SENT.equals(status)) {
-            iconSrc = GlobalResources.RESOURCE.success().getURL();
+        if (status == null) {
+            return null;
         }
-        icon.setSrc(iconSrc);
+
+        FormItemIcon icon = new FormItemIcon();
+        if (StreamMessageStatusEnum.FAILED.equals(status)) {
+            icon.setSrc(GlobalResources.RESOURCE.errorSmart().getURL());
+        } else if (StreamMessageStatusEnum.PENDING.equals(status)) {
+            icon.setSrc(GlobalResources.RESOURCE.warn().getURL());
+        } else if (StreamMessageStatusEnum.SENT.equals(status)) {
+            icon.setSrc(GlobalResources.RESOURCE.success().getURL());
+        }
+
         return icon;
     }
 

@@ -25,7 +25,11 @@ public abstract class LifeCycleResourceRecord extends VersionableResourceRecord 
     public abstract ProcStatusEnum getProcStatusEnum();
 
     public void setPublicationStreamStatus(FormItemIcon formItemIcon) {
-        formItemIcon.setShowOver(false);
-        setAttribute(LifeCycleResourceDS.PUBLICATION_STREAM_STATUS, formItemIcon);
+        FormItemIcon publicationStreamStatusIcon = (formItemIcon != null && formItemIcon.getSrc() == null) ? null : formItemIcon;
+
+        if (publicationStreamStatusIcon != null) {
+            publicationStreamStatusIcon.setShowOver(false);
+            setAttribute(LifeCycleResourceDS.PUBLICATION_STREAM_STATUS, publicationStreamStatusIcon);
+        }
     }
 }
