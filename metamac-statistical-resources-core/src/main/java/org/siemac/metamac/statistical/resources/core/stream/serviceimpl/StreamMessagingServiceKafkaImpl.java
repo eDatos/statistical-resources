@@ -41,7 +41,7 @@ public class StreamMessagingServiceKafkaImpl<K, V extends SpecificRecordBase> im
     @Override
     public void sendMessage(HasSiemacMetadata message) throws MetamacException {
         // Serialize message
-        MessageBase<K, V> m = new AvroMessage<K, V>(serializeMessage(message));
+        MessageBase<K, V> m = new AvroMessage<K, V>(serializeKey(message), serializeMessage(message));
 
         // Topic
         String topic = getTopicByType(message);
@@ -54,9 +54,10 @@ public class StreamMessagingServiceKafkaImpl<K, V extends SpecificRecordBase> im
     public void sendMessage(QueryVersion message) throws MetamacException {
         // To Avro
         QueryVersionAvro queryVersionAvro = queryVersionDo2AvroMapper.queryVersionDoToAvro(message);
+        K key = (K) message.getLifeCycleStatisticalResource().getUrn();
 
         // Serialize message
-        MessageBase<K, V> m = new AvroMessage<K, V>((V) queryVersionAvro);
+        MessageBase<K, V> m = new AvroMessage<K, V>((K) key, (V) queryVersionAvro);
 
         // Topic
         String topic = statisticalResourcesConfig.retrieveKafkaTopicQueryPublication();
@@ -99,6 +100,11 @@ public class StreamMessagingServiceKafkaImpl<K, V extends SpecificRecordBase> im
             default:
                 return null;
         }
+    }
+
+    @SuppressWarnings("unchecked")
+    private K serializeKey(HasSiemacMetadata version) throws MetamacException {
+        return (K) version.getSiemacMetadataStatisticalResource().getUrn();
     }
 
     @Override

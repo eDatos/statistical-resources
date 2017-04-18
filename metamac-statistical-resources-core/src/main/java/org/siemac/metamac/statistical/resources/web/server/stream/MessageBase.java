@@ -5,10 +5,6 @@ public abstract class MessageBase<K, V> {
     protected K key;
     protected V content;
 
-    public MessageBase(V messageContent) {
-        this(null, messageContent);
-    }
-
     public MessageBase(K key, V messageContent) {
         super();
         this.content = messageContent;
