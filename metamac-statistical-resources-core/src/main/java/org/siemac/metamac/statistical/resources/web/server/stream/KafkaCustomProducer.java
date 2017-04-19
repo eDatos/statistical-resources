@@ -14,6 +14,7 @@ import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.clients.producer.RecordMetadata;
 import org.apache.kafka.common.errors.SerializationException;
+import org.apache.kafka.common.serialization.StringSerializer;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionBuilder;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
@@ -30,7 +31,7 @@ public class KafkaCustomProducer<K, V extends SpecificRecordBase> implements Pro
 
     static {
         DEFAULT_SETTINGS = new HashMap<String, Object>();
-        DEFAULT_SETTINGS.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, KafkaAvroSerializer.class);
+        DEFAULT_SETTINGS.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         DEFAULT_SETTINGS.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, KafkaAvroSerializer.class);
         DEFAULT_SETTINGS.put(ProducerConfig.MAX_BLOCK_MS_CONFIG, 5000); // Time to wait if Kafka cluster is down or buffer is full
     };
@@ -44,10 +45,9 @@ public class KafkaCustomProducer<K, V extends SpecificRecordBase> implements Pro
     @Override
     public void sendMessage(MessageBase<K, V> message, String topic) throws MetamacException {
         ProducerRecord<K, V> record = new ProducerRecord<K, V>(topic, message.getKey(), message.getContent());
-        RecordMetadata result = null;
         try {
             Future<RecordMetadata> sendResult = producer.send(record);
-            result = sendResult.get(KAFKA_TIMEOUT, TimeUnit.MILLISECONDS);
+            sendResult.get(KAFKA_TIMEOUT, TimeUnit.MILLISECONDS);
         } catch (SerializationException | InterruptedException | ExecutionException | TimeoutException e) {
             throw MetamacExceptionBuilder.builder().withCause(e).build();
         }

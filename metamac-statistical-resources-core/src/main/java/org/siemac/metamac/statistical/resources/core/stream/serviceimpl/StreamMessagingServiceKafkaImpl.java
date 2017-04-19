@@ -38,6 +38,8 @@ public class StreamMessagingServiceKafkaImpl<K, V extends SpecificRecordBase> im
 
     private ProducerBase<K, V>                producer;
 
+    private final String                      CONSUMER_QUERY_1_NAME = "statresources_producer_1";
+
     @Override
     public void sendMessage(HasSiemacMetadata message) throws MetamacException {
         // Serialize message
@@ -74,8 +76,15 @@ public class StreamMessagingServiceKafkaImpl<K, V extends SpecificRecordBase> im
 
     private Properties getProducerProperties() throws MetamacException {
         Properties props = new Properties();
-        props.put(KafkaAvroDeserializerConfig.SCHEMA_REGISTRY_URL_CONFIG, statisticalResourcesConfig.retrieveProperty(StatisticalResourcesConfigurationConstants.KAFKA_SCHEMA_REGISTRY_URL));
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, statisticalResourcesConfig.retrieveProperty(StatisticalResourcesConfigurationConstants.KAFKA_BOOTSTRAP_SERVERS));
+        props.put(ProducerConfig.CLIENT_ID_CONFIG, CONSUMER_QUERY_1_NAME);
+
+        props.put(ProducerConfig.ACKS_CONFIG, "all");
+         props.put(ProducerConfig.COMPRESSION_TYPE_CONFIG, "gzip");
+        props.put(ProducerConfig.RETRIES_CONFIG, 10);
+        props.put(ProducerConfig.MAX_IN_FLIGHT_REQUESTS_PER_CONNECTION, 1);
+
+        props.put(KafkaAvroDeserializerConfig.SCHEMA_REGISTRY_URL_CONFIG, statisticalResourcesConfig.retrieveProperty(StatisticalResourcesConfigurationConstants.KAFKA_SCHEMA_REGISTRY_URL));
         return props;
     }
 
