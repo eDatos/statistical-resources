@@ -245,8 +245,10 @@ Application DatasetsStatisticalResources {
 				boolean isLastVersion(String datasetVersionUrn) throws MetamacException;
 				List<String> retrieveDimensionsIds(@DatasetVersion datasetVersion) throws MetamacException;
                 RelatedResourceResult retrieveIsReplacedByVersionOnlyLastPublished(@DatasetVersion datasetVersion) throws MetamacException;
+                RelatedResourceResult retrieveIsReplacedByVersionOnlyIfPublished(@DatasetVersion datasetVersion) throws MetamacException;
                 RelatedResourceResult retrieveIsReplacedByVersion(@DatasetVersion datasetVersion) throws MetamacException;
                 RelatedResourceResult retrieveIsReplacedByOnlyLastPublished(@DatasetVersion datasetVersion) throws MetamacException;
+                RelatedResourceResult retrieveIsReplacedByOnlyIfPublished(@DatasetVersion datasetVersion) throws MetamacException;
                 RelatedResourceResult retrieveIsReplacedBy(@DatasetVersion datasetVersion) throws MetamacException;
                 
 				

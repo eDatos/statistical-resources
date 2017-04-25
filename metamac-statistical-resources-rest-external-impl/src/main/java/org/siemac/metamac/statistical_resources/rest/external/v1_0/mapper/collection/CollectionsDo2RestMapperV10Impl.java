@@ -29,7 +29,6 @@ import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResour
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionRepository;
 import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
-import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.publication.domain.Cube;
 import org.siemac.metamac.statistical.resources.core.publication.domain.ElementLevel;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
@@ -160,24 +159,8 @@ public class CollectionsDo2RestMapperV10Impl implements CollectionsDo2RestMapper
     }
 
     private Resource toCollectionReplaces(PublicationVersion source, List<String> selectedLanguages) throws MetamacException {
-        RelatedResource replaces = null;
-
-        if (StatisticalResourcesRestExternalConstants.IS_INTERNAL_API) {
-            replaces = source.getSiemacMetadataStatisticalResource().getReplaces();
-        } else {
-            replaces = source.getSiemacMetadataStatisticalResource().getReplaces();
-            // Check if the publication used in "replaces" is published
-            if (replaces != null) {
-                String urn = replaces.getPublicationVersion().getSiemacMetadataStatisticalResource().getUrn();
-                try {
-                    publicationVersionRepository.retrieveByUrnPublished(urn);
-                } catch (MetamacException e) {
-                    if (!e.getExceptionItems().isEmpty() && e.getExceptionItems().iterator().next().getCode().equals(ServiceExceptionType.DATASET_VERSION_NOT_FOUND.getCode())) {
-                        return null;
-                    }
-                }
-            }
-        }
+        // There is no need to check if the replaced resource is published. The "replaces" metadata is always filled with a published collection.
+        RelatedResource replaces = source.getSiemacMetadataStatisticalResource().getReplaces();;
         return commonDo2RestMapper.toResource(replaces, selectedLanguages);
     }
 
@@ -187,7 +170,7 @@ public class CollectionsDo2RestMapperV10Impl implements CollectionsDo2RestMapper
         if (StatisticalResourcesRestExternalConstants.IS_INTERNAL_API) {
             relatedResourceReplacesBy = publicationVersionRepository.retrieveIsReplacedBy(source);
         } else {
-            relatedResourceReplacesBy = publicationVersionRepository.retrieveIsReplacedByOnlyLastPublished(source);
+            relatedResourceReplacesBy = publicationVersionRepository.retrieveIsReplacedByOnlyIfPublished(source);
         }
         return toResource(relatedResourceReplacesBy, selectedLanguages);
     }

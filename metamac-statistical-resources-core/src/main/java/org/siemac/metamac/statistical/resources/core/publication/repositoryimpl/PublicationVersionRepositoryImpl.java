@@ -51,11 +51,9 @@ public class PublicationVersionRepositoryImpl extends PublicationVersionReposito
         return result.get(0);
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public PublicationVersion retrieveByUrnPublished(String urn) throws MetamacException {
         // Prepare criteria
-        Date now = new DateTime().toDate();
         // @formatter:off
         List<ConditionalCriteria> condition = criteriaFor(PublicationVersion.class)
             .withProperty(PublicationVersionProperties.siemacMetadataStatisticalResource().urn()).eq(urn)
@@ -169,6 +167,18 @@ public class PublicationVersionRepositoryImpl extends PublicationVersionReposito
     }
 
     @Override
+    public RelatedResourceResult retrieveIsReplacedByOnlyIfPublished(PublicationVersion publicationVersion) throws MetamacException {
+        RelatedResourceResult result = null;
+        if (publicationVersion != null && publicationVersion.getSiemacMetadataStatisticalResource().getIsReplacedBy() != null) {
+            PublicationVersion replacing = publicationVersion.getSiemacMetadataStatisticalResource().getIsReplacedBy().getPublicationVersion();
+            if (ProcStatusEnum.PUBLISHED == replacing.getLifeCycleStatisticalResource().getProcStatus()) {
+                result = RelatedResourceResultUtils.from(replacing, TypeRelatedResourceEnum.PUBLICATION_VERSION);
+            }
+        }
+        return result;
+    }
+
+    @Override
     public RelatedResourceResult retrieveIsReplacedBy(PublicationVersion publicationVersion) throws MetamacException {
         RelatedResource replacingRelated = publicationVersion.getSiemacMetadataStatisticalResource().getIsReplacedBy();
         RelatedResourceResult replacing = null;
@@ -178,5 +188,4 @@ public class PublicationVersionRepositoryImpl extends PublicationVersionReposito
 
         return replacing;
     }
-
 }

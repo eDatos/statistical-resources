@@ -2,17 +2,15 @@ package org.siemac.metamac.statistical.resources.web.shared.criteria;
 
 import java.util.Date;
 
-import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StreamMessageStatusEnum;
 
 public class SiemacMetadataStatisticalResourceWebCriteria extends LifeCycleStatisticalResourceWebCriteria {
 
-    private static final long serialVersionUID = 1L;
+    private static final long       serialVersionUID = 1L;
 
-    private String            titleAlternative;
-    private String            keywords;
-    private Date              newnessUtilDate;
-    private ProcStatusEnum    procStatusEnum;
+    private String                  titleAlternative;
+    private String                  keywords;
+    private Date                    newnessUtilDate;
     private StreamMessageStatusEnum publicationStreamStatus;
 
     public SiemacMetadataStatisticalResourceWebCriteria() {

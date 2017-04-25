@@ -10,6 +10,7 @@ import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
+import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.navigation.shared.NameTokens;
 import org.siemac.metamac.statistical.resources.web.client.LoggedInGatekeeper;
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesDefaults;
@@ -335,6 +336,7 @@ public class DatasetMetadataTabPresenter extends StatisticalResourceMetadataBase
         DatasetVersionWebCriteria versionableCriteria = new DatasetVersionWebCriteria(criteria.getCriteria());
         versionableCriteria.setOnlyLastVersion(criteria.isOnlyLastVersion());
         versionableCriteria.setStatisticalOperationUrn(criteria.getStatisticalOperationUrn());
+        versionableCriteria.setProcStatus(ProcStatusEnum.PUBLISHED);
 
         dispatcher.execute(new GetDatasetVersionsAction(firstResult, maxResults, versionableCriteria), new WaitingAsyncCallbackHandlingError<GetDatasetVersionsResult>(this) {
 

@@ -10,6 +10,7 @@ import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionDto;
+import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.navigation.shared.NameTokens;
 import org.siemac.metamac.statistical.resources.web.client.LoggedInGatekeeper;
 import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesDefaults;
@@ -292,6 +293,7 @@ public class PublicationMetadataTabPresenter
         PublicationVersionWebCriteria publicationVersionWebCriteria = new PublicationVersionWebCriteria(criteria.getCriteria());
         publicationVersionWebCriteria.setOnlyLastVersion(criteria.isOnlyLastVersion());
         publicationVersionWebCriteria.setStatisticalOperationUrn(criteria.getStatisticalOperationUrn());
+        publicationVersionWebCriteria.setProcStatus(ProcStatusEnum.PUBLISHED);
 
         dispatcher.execute(new GetPublicationVersionsAction(firstResult, maxResults, publicationVersionWebCriteria), new WaitingAsyncCallbackHandlingError<GetPublicationVersionsResult>(this) {
 

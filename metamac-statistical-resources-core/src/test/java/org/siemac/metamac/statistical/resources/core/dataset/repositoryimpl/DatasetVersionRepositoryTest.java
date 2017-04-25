@@ -31,6 +31,7 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_03_FOR_DATASET_03_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_04_FOR_DATASET_03_AND_LAST_VERSION_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_15_DRAFT_NOT_READY_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_22_V1_PUBLISHED_FOR_DATASET_05_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_24_V3_PUBLISHED_FOR_DATASET_05_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_25_V1_PUBLISHED_FOR_DATASET_06_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_26_V2_PUBLISHED_NO_VISIBLE_FOR_DATASET_06_NAME;
@@ -725,19 +726,36 @@ public class DatasetVersionRepositoryTest extends StatisticalResourcesBaseTest i
     @Override
     public void testRetrieveIsReplacedByVersionOnlyLastPublished() throws Exception {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void testRetrieveIsReplacedByVersion() throws Exception {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void testRetrieveIsReplacedBy() throws Exception {
         // TODO Auto-generated method stub
-        
+
     }
 
+    @Override
+    @Test
+    @MetamacMock({DATASET_VERSION_22_V1_PUBLISHED_FOR_DATASET_05_NAME})
+    public void testRetrieveIsReplacedByVersionOnlyIfPublished() throws Exception {
+        DatasetVersion publishedDataset = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_82_PUB_IS_REPLACED_BY_DATASET_81_NAME);
+        RelatedResource resource = publishedDataset.getLifeCycleStatisticalResource().getIsReplacedByVersion();
+        assertNotNull(resource);
+    }
+
+    @Override
+    @Test
+    @MetamacMock({DATASET_VERSION_81_PUB_NOT_VISIBLE_REPLACES_DATASET_82_NAME})
+    public void testRetrieveIsReplacedByOnlyIfPublished() throws Exception {
+        DatasetVersion publishedDataset = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_82_PUB_IS_REPLACED_BY_DATASET_81_NAME);
+        RelatedResource resource = publishedDataset.getSiemacMetadataStatisticalResource().getIsReplacedBy();
+        assertNotNull(resource);
+    }
 }

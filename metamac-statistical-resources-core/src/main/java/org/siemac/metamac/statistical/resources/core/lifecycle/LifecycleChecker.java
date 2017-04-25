@@ -1,5 +1,8 @@
 package org.siemac.metamac.statistical.resources.core.lifecycle;
 
+import static org.siemac.metamac.core.common.serviceimpl.utils.ValidationUtils.checkParameterRequired;
+import static org.siemac.metamac.statistical.resources.core.error.utils.ServiceExceptionParametersUtils.addParameter;
+
 import java.util.List;
 
 import org.siemac.metamac.core.common.exception.CommonServiceExceptionType;
@@ -17,15 +20,8 @@ import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesV
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import static org.siemac.metamac.core.common.serviceimpl.utils.ValidationUtils.checkMetadataRequired;
-import static org.siemac.metamac.core.common.serviceimpl.utils.ValidationUtils.checkParameterRequired;
-import static org.siemac.metamac.statistical.resources.core.error.utils.ServiceExceptionParametersUtils.addParameter;
-
 @Component
 public class LifecycleChecker {
-
-    private static final int               PROCESSING_MINUTES_DELAY        = 30;
-
 
     @Autowired
     private LifecycleCommonMetadataChecker lifecycleCommonMetadataChecker;
@@ -79,7 +75,6 @@ public class LifecycleChecker {
         }
 
         checkLifeCycleMetadataAllActions(resource, metadataName, exceptionItems);
-
 
         // Statistical Operation
         externalItemChecker.checkExternalItemsExternallyPublished(resource.getLifeCycleStatisticalResource().getStatisticalOperation(),

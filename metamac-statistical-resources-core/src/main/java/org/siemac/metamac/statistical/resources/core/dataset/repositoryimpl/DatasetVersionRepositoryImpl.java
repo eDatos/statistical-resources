@@ -55,11 +55,9 @@ public class DatasetVersionRepositoryImpl extends DatasetVersionRepositoryBase {
         return result.get(0);
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public DatasetVersion retrieveByUrnPublished(String urn) throws MetamacException {
         // Prepare criteria
-        Date now = new DateTime().toDate();
         // @formatter:off
         List<ConditionalCriteria> condition = criteriaFor(DatasetVersion.class)
             .withProperty(DatasetVersionProperties.siemacMetadataStatisticalResource().urn()).eq(urn)
@@ -397,6 +395,30 @@ public class DatasetVersionRepositoryImpl extends DatasetVersionRepositoryBase {
             }
         }
         RelatedResourceResult result = RelatedResourceResultUtils.from(replacing, TypeRelatedResourceEnum.DATASET_VERSION);
+        return result;
+    }
+
+    @Override
+    public RelatedResourceResult retrieveIsReplacedByOnlyIfPublished(DatasetVersion datasetVersion) throws MetamacException {
+        RelatedResourceResult result = null;
+        if (datasetVersion != null && datasetVersion.getSiemacMetadataStatisticalResource().getIsReplacedBy() != null) {
+            DatasetVersion replacing = datasetVersion.getSiemacMetadataStatisticalResource().getIsReplacedBy().getDatasetVersion();
+            if (ProcStatusEnum.PUBLISHED == replacing.getSiemacMetadataStatisticalResource().getProcStatus()) {
+                result = RelatedResourceResultUtils.from(replacing, TypeRelatedResourceEnum.DATASET_VERSION);
+            }
+        }
+        return result;
+    }
+
+    @Override
+    public RelatedResourceResult retrieveIsReplacedByVersionOnlyIfPublished(DatasetVersion datasetVersion) throws MetamacException {
+        RelatedResourceResult result = null;
+        if (datasetVersion != null && datasetVersion.getSiemacMetadataStatisticalResource().getIsReplacedByVersion() != null) {
+            DatasetVersion replacing = datasetVersion.getSiemacMetadataStatisticalResource().getIsReplacedByVersion().getDatasetVersion();
+            if (ProcStatusEnum.PUBLISHED == replacing.getSiemacMetadataStatisticalResource().getProcStatus()) {
+                result = RelatedResourceResultUtils.from(replacing, TypeRelatedResourceEnum.DATASET_VERSION);
+            }
+        }
         return result;
     }
 

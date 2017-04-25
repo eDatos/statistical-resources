@@ -34,7 +34,6 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersi
 import org.siemac.metamac.statistical.resources.core.dataset.domain.StatisticOfficiality;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.TemporalCode;
 import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
-import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical_resources.rest.external.StatisticalResourcesRestExternalConstants;
 import org.siemac.metamac.statistical_resources.rest.external.exception.RestServiceExceptionType;
 import org.siemac.metamac.statistical_resources.rest.external.v1_0.domain.DsdProcessorResult;
@@ -214,30 +213,14 @@ public class DatasetsDo2RestMapperV10Impl implements DatasetsDo2RestMapperV10 {
         if (StatisticalResourcesRestExternalConstants.IS_INTERNAL_API) {
             relatedResourceReplacesByVersion = datasetVersionRepository.retrieveIsReplacedByVersion(source);
         } else {
-            relatedResourceReplacesByVersion = datasetVersionRepository.retrieveIsReplacedByVersionOnlyLastPublished(source);
+            relatedResourceReplacesByVersion = datasetVersionRepository.retrieveIsReplacedByVersionOnlyIfPublished(source);
         }
         return toResource(relatedResourceReplacesByVersion, selectedLanguages);
     }
 
     private Resource toDatasetReplaces(DatasetVersion source, List<String> selectedLanguages) throws MetamacException {
-        RelatedResource replaces = null;
-
-        if (StatisticalResourcesRestExternalConstants.IS_INTERNAL_API) {
-            replaces = source.getSiemacMetadataStatisticalResource().getReplaces();
-        } else {
-            replaces = source.getSiemacMetadataStatisticalResource().getReplaces();
-            if (replaces != null) {
-                String urn = replaces.getDatasetVersion().getSiemacMetadataStatisticalResource().getUrn();
-                try {
-                    datasetVersionRepository.retrieveByUrnPublished(urn);
-                } catch (MetamacException e) {
-                    if (!e.getExceptionItems().isEmpty() && e.getExceptionItems().iterator().next().getCode().equals(ServiceExceptionType.DATASET_VERSION_NOT_FOUND.getCode())) {
-                        return null;
-                    }
-                }
-            }
-        }
-
+        // There is no need to check if the replaced resource is published. The "replaces" metadata is always filled with a published dataset.
+        RelatedResource replaces = source.getSiemacMetadataStatisticalResource().getReplaces();
         return commonDo2RestMapper.toResource(replaces, selectedLanguages);
     }
 
@@ -247,7 +230,7 @@ public class DatasetsDo2RestMapperV10Impl implements DatasetsDo2RestMapperV10 {
         if (StatisticalResourcesRestExternalConstants.IS_INTERNAL_API) {
             relatedResourceReplacesBy = datasetVersionRepository.retrieveIsReplacedBy(source);
         } else {
-            relatedResourceReplacesBy = datasetVersionRepository.retrieveIsReplacedByOnlyLastPublished(source);
+            relatedResourceReplacesBy = datasetVersionRepository.retrieveIsReplacedByOnlyIfPublished(source);
         }
         return toResource(relatedResourceReplacesBy, selectedLanguages);
     }

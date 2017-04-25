@@ -121,6 +121,7 @@ Application PublicationsStatisticalResources {
 				@PublicationVersion retrieveLastPublishedVersion(String publicationUrn) throws MetamacException;
 				@PublicationVersion retrieveByVersion(Long statisticalResourceId, String versionLogic) throws MetamacException;
 				RelatedResourceResult retrieveIsReplacedByOnlyLastPublished(@PublicationVersion publicationVersion) throws MetamacException;
+				RelatedResourceResult retrieveIsReplacedByOnlyIfPublished(@PublicationVersion publicationVersion) throws MetamacException;
 				RelatedResourceResult retrieveIsReplacedBy(@PublicationVersion publicationVersion) throws MetamacException;
 				
 				
