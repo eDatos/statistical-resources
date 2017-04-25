@@ -70,6 +70,7 @@ import org.siemac.metamac.statistical.resources.core.dto.publication.Publication
 import org.siemac.metamac.statistical.resources.core.dto.query.CodeItemDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionBaseDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionDto;
+import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StreamMessageStatusEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
@@ -1647,6 +1648,17 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     protected void sendNewVersionPublishedStreamMessage(ServiceContext ctx, HasSiemacMetadata version) {
         try {
             streamMessagingServiceFacade.sendNewVersionPublished(version);
+
+            // Also, if is a new version of DatasetVersion and there are queries with a related dataset associated with this query version, then we send queries messages
+            if (StatisticalResourceTypeEnum.DATASET.equals(version.getSiemacMetadataStatisticalResource().getType())) {
+                
+                List<QueryVersion> queriesDataset = queryVersionRepository.findQueriesPublishedLinkedToDataset(((DatasetVersion) version).getDataset().getId());
+
+                for (QueryVersion queryVersion : queriesDataset) {
+                    sendNewVersionPublishedStreamMessage(ctx, queryVersion);
+                }
+            }
+
         } catch (MetamacException e) {
             createStreamMessageSentNotification(ctx, version);
         }

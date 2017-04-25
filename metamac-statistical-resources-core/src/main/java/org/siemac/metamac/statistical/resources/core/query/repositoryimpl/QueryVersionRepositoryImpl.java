@@ -110,6 +110,14 @@ public class QueryVersionRepositoryImpl extends QueryVersionRepositoryBase {
         return findByCondition(conditions);
     }
 
+    @Override
+    public List<QueryVersion> findQueriesPublishedLinkedToDataset(Long datasetId) {
+        List<ConditionalCriteria> conditions = ConditionalCriteriaBuilder.criteriaFor(QueryVersion.class).withProperty(QueryVersionProperties.dataset().id()).eq(datasetId).and()
+                .withProperty(QueryVersionProperties.lifeCycleStatisticalResource().procStatus()).eq(ProcStatusEnum.PUBLISHED).and()
+                .withProperty(QueryVersionProperties.lifeCycleStatisticalResource().lastVersion()).eq(Boolean.TRUE).build();
+        return findByCondition(conditions);
+    }
+
 
     @SuppressWarnings("unchecked")
     @Override
