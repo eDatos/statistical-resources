@@ -32,23 +32,6 @@
     "total": 1
   },
   "metadata": {
-    "isReplacedByVersion": {
-      "id": "dataset1",
-      "urn": "urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Dataset=agency1:dataset1(02.000)",
-      "selfLink": {
-        "kind": "statisticalResources#dataset",
-        "href": "http://data.istac.es/apis/statistical-resources/v1.0/datasets/agency1/dataset1/02.000"
-      },
-      "name": {
-        "text": [
-          {
-            "value": "título dataset1",
-            "lang": "es"
-          }
-        ]
-      },
-      "kind": "statisticalResources#dataset"
-    },
     "isRequiredBy": {
       "resource": [
         null,
@@ -2046,23 +2029,6 @@
         "text": [
           {
             "value": "title-replace01 en Espanol",
-            "lang": "es"
-          }
-        ]
-      },
-      "kind": "statisticalResources#dataset"
-    },
-    "isReplacedBy": {
-      "id": "dataset99",
-      "urn": "urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Dataset=agency01:dataset99(01.000)",
-      "selfLink": {
-        "kind": "statisticalResources#dataset",
-        "href": "http://data.istac.es/apis/statistical-resources/v1.0/datasets/agency01/dataset99/01.000"
-      },
-      "name": {
-        "text": [
-          {
-            "value": "título dataset99",
             "lang": "es"
           }
         ]

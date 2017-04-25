@@ -173,14 +173,6 @@
                 <cdomain:text xml:lang="es">title-replace01 en Espanol</cdomain:text>
             </cdomain:name>
         </stat:replaces>
-        <stat:isReplacedBy kind="statisticalResources#dataset">
-            <cdomain:id>dataset99</cdomain:id>
-            <cdomain:urn>urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Dataset=agency01:dataset99(01.000)</cdomain:urn>
-            <cdomain:selfLink kind="statisticalResources#dataset" href="http://data.istac.es/apis/statistical-resources/v1.0/datasets/agency01/dataset99/01.000"/>
-            <cdomain:name>
-                <cdomain:text xml:lang="es">título dataset99</cdomain:text>
-            </cdomain:name>
-        </stat:isReplacedBy>
         <stat:isPartOf total="2">
             <cdomain:resource kind="statisticalResources#collection">
                 <cdomain:id>isPartOf01</cdomain:id>
@@ -232,14 +224,6 @@
         <stat:validFrom>2013-01-01T03:04:12Z</stat:validFrom>
         <stat:validTo>2013-02-16T14:04:12Z</stat:validTo>
         <stat:nextVersion>NO_UPDATES</stat:nextVersion>
-        <stat:isReplacedByVersion kind="statisticalResources#dataset">
-            <cdomain:id>dataset1</cdomain:id>
-            <cdomain:urn>urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Dataset=agency1:dataset1(02.000)</cdomain:urn>
-            <cdomain:selfLink kind="statisticalResources#dataset" href="http://data.istac.es/apis/statistical-resources/v1.0/datasets/agency1/dataset1/02.000"/>
-            <cdomain:name>
-                <cdomain:text xml:lang="es">título dataset1</cdomain:text>
-            </cdomain:name>
-        </stat:isReplacedByVersion>
         <stat:isRequiredBy total="2"/>
         <stat:geographicCoverages total="13">
             <cdomain:resource kind="structuralResources#code">

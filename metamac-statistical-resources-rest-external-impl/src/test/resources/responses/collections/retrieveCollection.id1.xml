@@ -209,17 +209,6 @@
 				</cdomain:text>
 			</cdomain:name>
 		</stat:replaces>
-		<stat:isReplacedBy kind="statisticalResources#collection">
-			<cdomain:id>collection99</cdomain:id>
-			<cdomain:urn>urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Collection=agency01:collection99
-			</cdomain:urn>
-			<cdomain:selfLink kind="statisticalResources#collection"
-				href="http://data.istac.es/apis/statistical-resources/v1.0/collections/agency01/collection99" />
-			<cdomain:name>
-				<cdomain:text xml:lang="es">título collection99
-				</cdomain:text>
-			</cdomain:name>
-		</stat:isReplacedBy>
 		<stat:hasPart total="3" />
 		<stat:rightsHolder kind="structuralResources#organisation">
 			<cdomain:id>contact</cdomain:id>

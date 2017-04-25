@@ -80,6 +80,7 @@ import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
 import org.siemac.metamac.statistical.resources.core.utils.asserts.CommonAsserts;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -745,7 +746,7 @@ public class DatasetVersionRepositoryTest extends StatisticalResourcesBaseTest i
     @Test
     @MetamacMock({DATASET_VERSION_22_V1_PUBLISHED_FOR_DATASET_05_NAME})
     public void testRetrieveIsReplacedByVersionOnlyIfPublished() throws Exception {
-        DatasetVersion publishedDataset = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_82_PUB_IS_REPLACED_BY_DATASET_81_NAME);
+        DatasetVersion publishedDataset = datasetVersionMockFactory.retrieveMock(DatasetVersionMockFactory.DATASET_VERSION_23_V2_PUBLISHED_FOR_DATASET_05_NAME);
         RelatedResource resource = publishedDataset.getLifeCycleStatisticalResource().getIsReplacedByVersion();
         assertNotNull(resource);
     }

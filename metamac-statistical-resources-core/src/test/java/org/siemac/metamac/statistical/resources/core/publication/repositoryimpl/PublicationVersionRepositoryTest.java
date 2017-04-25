@@ -181,6 +181,6 @@ public class PublicationVersionRepositoryTest extends StatisticalResourcesBaseTe
     public void testRetrieveIsReplacedByOnlyIfPublished() throws Exception {
         PublicationVersion publishedPublication = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_42_PUB_IS_REPLACED_BY_PUB_VERSION_41_NAME);
         RelatedResource resource = publishedPublication.getSiemacMetadataStatisticalResource().getIsReplacedBy();
-        assertNull(resource);
+        assertNotNull(resource);
     }
 }

@@ -241,7 +241,9 @@ public class DatasetMockFactory extends StatisticalResourcesMockFactory<Dataset>
         registerDatasetVersionMock(DATASET_VERSION_24_V3_PUBLISHED_FOR_DATASET_05_NAME, datasetVersionv3);
 
         // Relations
+        datasetVersionv1.getSiemacMetadataStatisticalResource().setIsReplacedByVersion(StatisticalResourcesNotPersistedDoMocks.mockRelatedResourceLinkedToDatasetVersion(datasetVersionv2));
         datasetVersionv2.getSiemacMetadataStatisticalResource().setReplacesVersion(StatisticalResourcesNotPersistedDoMocks.mockRelatedResourceLinkedToDatasetVersion(datasetVersionv1));
+        datasetVersionv2.getSiemacMetadataStatisticalResource().setIsReplacedByVersion(StatisticalResourcesNotPersistedDoMocks.mockRelatedResourceLinkedToDatasetVersion(datasetVersionv3));
         datasetVersionv3.getSiemacMetadataStatisticalResource().setReplacesVersion(StatisticalResourcesNotPersistedDoMocks.mockRelatedResourceLinkedToDatasetVersion(datasetVersionv2));
 
         return dataset;

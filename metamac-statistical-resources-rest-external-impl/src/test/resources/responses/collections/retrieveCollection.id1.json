@@ -331,23 +331,6 @@
       },
       "kind": "statisticalResources#collection"
     },
-    "isReplacedBy": {
-      "id": "collection99",
-      "urn": "urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Collection=agency01:collection99",
-      "selfLink": {
-        "kind": "statisticalResources#collection",
-        "href": "http://data.istac.es/apis/statistical-resources/v1.0/collections/agency01/collection99"
-      },
-      "name": {
-        "text": [
-          {
-            "value": "título collection99",
-            "lang": "es"
-          }
-        ]
-      },
-      "kind": "statisticalResources#collection"
-    },
     "hasPart": {
       "resource": [
         null,
