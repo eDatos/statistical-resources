@@ -749,6 +749,10 @@
             },
             {
                "properties":{
+               	  "geographicGranularity":{
+                     "description":"",
+                     "$ref":"#/definitions/Resource"
+                  },
                   "measureQuantity":{
                      "description":"",
                      "$ref":"#/definitions/MeasureQuantity"
@@ -994,6 +998,10 @@
             "name":{
                "description":"",
                "$ref":"#/definitions/InternationalString"
+            },
+            "temporalGranularity":{
+               "description":"",
+               "type":"string"
             }
          },
          "description":""
