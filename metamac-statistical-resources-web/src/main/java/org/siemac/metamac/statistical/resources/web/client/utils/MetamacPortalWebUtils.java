@@ -36,7 +36,6 @@ public class MetamacPortalWebUtils {
         builder.append(URL_QUERY_SEPARATOR);
         builder.append(buildQueryParametersForVersionableResource(datasetVersionDto, StatisticalResourceTypeEnum.DATASET));
         builder.append(URL_SINGLEPAGE_SEPARATOR);
-        builder.append(URL_SINGLEPAGE_RESOURCE_DATASETS);
 
         return builder.toString();
     }
@@ -48,7 +47,6 @@ public class MetamacPortalWebUtils {
         builder.append(URL_QUERY_SEPARATOR);
         builder.append(buildQueryParametersForNotVersionableResource(queryVersionDto, StatisticalResourceTypeEnum.QUERY));
         builder.append(URL_SINGLEPAGE_SEPARATOR);
-        builder.append(URL_SINGLEPAGE_RESOURCE_QUERIES);
 
         return builder.toString();
     }
