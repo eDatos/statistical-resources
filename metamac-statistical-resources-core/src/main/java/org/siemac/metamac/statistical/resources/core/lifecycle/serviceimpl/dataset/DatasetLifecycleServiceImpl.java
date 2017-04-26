@@ -2,17 +2,22 @@ package org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.data
 
 import static org.siemac.metamac.statistical.resources.core.error.utils.ServiceExceptionParametersUtils.addParameter;
 
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
+import org.siemac.metamac.core.common.enume.domain.TypeExternalArtefactsEnum;
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.core.common.util.GeneratorUrnUtils;
+import org.siemac.metamac.core.common.util.shared.UrnUtils;
 import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
 import org.siemac.metamac.statistical.resources.core.common.domain.InternationalString;
 import org.siemac.metamac.statistical.resources.core.common.domain.LocalisedString;
-import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResourceResult;
 import org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConstants;
 import org.siemac.metamac.statistical.resources.core.constraint.api.ConstraintsService;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Categorisation;
@@ -20,18 +25,11 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersi
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionRepository;
 import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.DatasetService;
 import org.siemac.metamac.statistical.resources.core.dataset.utils.DatasetVersioningCopyUtils;
-import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionSingleParameters;
-import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.lifecycle.LifecycleCommonMetadataChecker;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.LifecycleTemplateService;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.checker.ExternalItemChecker;
-import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
-import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersionRepository;
-import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
-import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersionRepository;
-import org.siemac.metamac.statistical.resources.core.query.serviceapi.QueryService;
 import org.siemac.metamac.statistical.resources.core.task.domain.TaskInfoDataset;
 import org.siemac.metamac.statistical.resources.core.task.serviceapi.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -118,13 +116,18 @@ public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<Datase
 
     private void checkExternalItemsPreviouslyPublished(ServiceContext ctx, DatasetVersion resource, String metadataName, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
 
-        this.externalItemChecker.checkExternalItemsExternallyPublished(resource.getGeographicCoverage(), addParameter(metadataName, ServiceExceptionSingleParameters.GEOGRAPHIC_COVERAGE),
-                exceptionItems);
-        this.externalItemChecker.checkExternalItemsExternallyPublished(resource.getMeasureCoverage(), addParameter(metadataName, ServiceExceptionSingleParameters.MEASURE_COVERAGE), exceptionItems);
+        this.externalItemChecker.checkExternalItemsExternallyPublished(resource.getRelatedDsd(), addParameter(metadataName, ServiceExceptionSingleParameters.RELATED_DSD), exceptionItems);
 
-        this.externalItemChecker.checkExternalItemsExternallyPublished(resource.getGeographicGranularities(), addParameter(metadataName, ServiceExceptionSingleParameters.GEOGRAPHIC_GRANULARITIES),
+        // Note: For GeographicCoverage the validation of DSD is sufficient because all his values has been validated in the dimension.
+        // Note: For MeasureCoverage the validation of DSD is sufficient because all his values has been validated in the dimension.
+
+        Set<ExternalItem> extractCodelistsUsedInGeographicGranularities = extractCodelistsUsedFromExternalItemCodes(resource.getGeographicGranularities());
+        this.externalItemChecker.checkExternalItemsExternallyPublished(extractCodelistsUsedInGeographicGranularities,
+                addParameter(metadataName, ServiceExceptionSingleParameters.GEOGRAPHIC_GRANULARITIES),
                 exceptionItems);
-        this.externalItemChecker.checkExternalItemsExternallyPublished(resource.getTemporalGranularities(), addParameter(metadataName, ServiceExceptionSingleParameters.TEMPORAL_GRANULARITIES),
+
+        Set<ExternalItem> extractCodelistsUsedInTemporalGranularities = extractCodelistsUsedFromExternalItemCodes(resource.getTemporalGranularities());
+        this.externalItemChecker.checkExternalItemsExternallyPublished(extractCodelistsUsedInTemporalGranularities, addParameter(metadataName, ServiceExceptionSingleParameters.TEMPORAL_GRANULARITIES),
                 exceptionItems);
 
         if (!resource.getStatisticalUnit().isEmpty()) {
@@ -132,7 +135,6 @@ public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<Datase
                     .checkExternalItemsExternallyPublished(resource.getStatisticalUnit(), addParameter(metadataName, ServiceExceptionSingleParameters.STATISTICAL_UNIT), exceptionItems);
         }
 
-        this.externalItemChecker.checkExternalItemsExternallyPublished(resource.getRelatedDsd(), addParameter(metadataName, ServiceExceptionSingleParameters.RELATED_DSD), exceptionItems);
 
         this.externalItemChecker.checkExternalItemsExternallyPublished(resource.getUpdateFrequency(), addParameter(metadataName, ServiceExceptionSingleParameters.UPDATE_FREQUENCY), exceptionItems);
 
@@ -144,6 +146,33 @@ public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<Datase
 
         // Publish associated constraints
         this.constraintsService.publishContentConstraint(ctx, resource.getLifeCycleStatisticalResource().getUrn(), Boolean.TRUE);
+    }
+
+    private Set<ExternalItem> extractCodelistsUsedFromExternalItemCodes(Set<ExternalItem> externalItemList) {
+
+        Map<String, ExternalItem> externalItemsMap = new HashMap<String, ExternalItem>();
+
+        for (ExternalItem externalItem: externalItemList) {
+            if (TypeExternalArtefactsEnum.CODE.equals(externalItem.getType())) {
+                String[] splitUrnItem = UrnUtils.splitUrnItem(externalItem.getUrn());
+                String agencyID = splitUrnItem[0];
+                String[] agenciesID = agencyID.contains(".") ? agencyID.split(".") : new String[]{agencyID};
+                String itemSchemeID = splitUrnItem[1];
+                String version = splitUrnItem[2];
+                String codelistUrn = GeneratorUrnUtils.generateSdmxCodelistUrn(agenciesID, itemSchemeID, version);
+
+                if (!externalItemsMap.containsKey(codelistUrn)) {
+                    ExternalItem aux = new ExternalItem();
+                    aux.setCode(itemSchemeID);
+                    aux.setUrn(codelistUrn);
+                    aux.setType(TypeExternalArtefactsEnum.CODELIST);
+
+                    externalItemsMap.put(codelistUrn, aux);
+                }
+            }
+        }
+
+        return new HashSet<ExternalItem>(externalItemsMap.values());
     }
 
     @Override
