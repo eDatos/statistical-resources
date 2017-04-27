@@ -11,7 +11,7 @@
 
     <groupId>org.siemac.metamac.metamac-statistical-resources</groupId>
     <artifactId>metamac-statistical-resources-parent</artifactId>
-    <version>2.0.1-SNAPSHOT</version>
+    <version>3.0.0</version>
     <packaging>pom</packaging>
     <name>METAMAC :: STATISTICAL RESOURCES :: PARENT</name>
     <description>METAMAC :: STATISTICAL RESOURCES :: PARENT</description>
@@ -54,4 +54,8 @@
 		<!-- WEB -->
 		<jstl.version>1.2</jstl.version>
     </properties>
+
+  <scm>
+    <tag>20170427-1132-v3.0.0</tag>
+  </scm>
 </project>
