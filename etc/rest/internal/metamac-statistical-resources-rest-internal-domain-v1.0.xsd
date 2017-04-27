@@ -543,6 +543,7 @@
         </xs:restriction>
     </xs:simpleType>
 
+    <!-- Remember to add translations on metamac-portal-web-client -->
     <xs:simpleType name="NextVersionType">
         <xs:restriction base="xs:token">
             <xs:enumeration value="NO_UPDATES" />
