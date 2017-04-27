@@ -1,16 +1,23 @@
 package org.siemac.metamac.statistical.resources.core.utils;
 
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.dto.InternationalStringDto;
 import org.siemac.metamac.core.common.dto.LocalisedStringDto;
 import org.siemac.metamac.core.common.enume.domain.TypeExternalArtefactsEnum;
+import org.siemac.metamac.core.common.util.GeneratorUrnUtils;
+import org.siemac.metamac.core.common.util.shared.UrnUtils;
 import org.siemac.metamac.rest.common.v1_0.domain.InternationalString;
 import org.siemac.metamac.rest.common.v1_0.domain.LocalisedString;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Code;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Concept;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Item;
+import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
 
 public class StatisticalResourcesExternalItemUtils {
 
@@ -20,6 +27,33 @@ public class StatisticalResourcesExternalItemUtils {
 
     public static ExternalItemDto buildExternalItemDtoFromConcept(Concept concept) {
         return buildExternalItemDtoFromItem(concept, TypeExternalArtefactsEnum.CONCEPT);
+    }
+
+    public static Set<ExternalItem> extractCodelistsUsedFromExternalItemCodes(Set<ExternalItem> externalItemList) {
+
+        Map<String, ExternalItem> externalItemsMap = new HashMap<String, ExternalItem>();
+
+        for (ExternalItem externalItem : externalItemList) {
+            if (TypeExternalArtefactsEnum.CODE.equals(externalItem.getType())) {
+                String[] splitUrnItem = UrnUtils.splitUrnItem(externalItem.getUrn());
+                String agencyID = splitUrnItem[0];
+                String[] agenciesID = agencyID.contains(".") ? agencyID.split(".") : new String[]{agencyID};
+                String itemSchemeID = splitUrnItem[1];
+                String version = splitUrnItem[2];
+                String codelistUrn = GeneratorUrnUtils.generateSdmxCodelistUrn(agenciesID, itemSchemeID, version);
+
+                if (!externalItemsMap.containsKey(codelistUrn)) {
+                    ExternalItem aux = new ExternalItem();
+                    aux.setCode(itemSchemeID);
+                    aux.setUrn(codelistUrn);
+                    aux.setType(TypeExternalArtefactsEnum.CODELIST);
+
+                    externalItemsMap.put(codelistUrn, aux);
+                }
+            }
+        }
+
+        return new HashSet<ExternalItem>(externalItemsMap.values());
     }
 
     private static ExternalItemDto buildExternalItemDtoFromItem(Item item, TypeExternalArtefactsEnum type) {

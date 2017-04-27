@@ -7,6 +7,7 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -17,6 +18,7 @@ import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.core.common.test.utils.mocks.configuration.MetamacMock;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesMockRestBaseTest;
 import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataStatisticalResource;
+import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
 import org.siemac.metamac.statistical.resources.core.common.domain.InternationalString;
 import org.siemac.metamac.statistical.resources.core.common.domain.LocalisedString;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Categorisation;
@@ -27,6 +29,7 @@ import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceapi.LifecycleService;
 import org.siemac.metamac.statistical.resources.core.task.serviceapi.TaskService;
 import org.siemac.metamac.statistical.resources.core.utils.DataMockUtils;
+import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesExternalItemUtils;
 import org.siemac.metamac.statistical.resources.core.utils.TaskMockUtils;
 import org.siemac.metamac.statistical.resources.core.utils.asserts.BaseAsserts;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -181,10 +184,12 @@ public class DatasetPublishingServiceTest extends StatisticalResourcesMockRestBa
     private List<MetamacExceptionItem> getExceptionItemsForExternalItemNotPublishedDataset(DatasetVersion datasetVersion) {
         String prefix = ServiceExceptionParameters.DATASET_VERSION;
         List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
-        exceptionItems.addAll(buildExternalItemsNotPublishedExceptions(datasetVersion.getGeographicCoverage(), prefix, "geographic_coverage"));
-        exceptionItems.addAll(buildExternalItemsNotPublishedExceptions(datasetVersion.getMeasureCoverage(), prefix, "measure_coverage"));
-        exceptionItems.addAll(buildExternalItemsNotPublishedExceptions(datasetVersion.getGeographicGranularities(), prefix, "geographic_granularities"));
-        exceptionItems.addAll(buildExternalItemsNotPublishedExceptions(datasetVersion.getTemporalGranularities(), prefix, "temporal_granularities"));
+        
+        Set<ExternalItem> geographicGranularities = StatisticalResourcesExternalItemUtils.extractCodelistsUsedFromExternalItemCodes(datasetVersion.getGeographicGranularities());
+        exceptionItems.addAll(buildExternalItemsNotPublishedExceptions(geographicGranularities, prefix, "geographic_granularities"));
+        
+        Set<ExternalItem> measureCoverages = StatisticalResourcesExternalItemUtils.extractCodelistsUsedFromExternalItemCodes(datasetVersion.getTemporalGranularities());
+        exceptionItems.addAll(buildExternalItemsNotPublishedExceptions(measureCoverages, prefix, "temporal_granularities"));
         exceptionItems.addAll(buildExternalItemsNotPublishedExceptions(datasetVersion.getStatisticalUnit(), prefix, "statistical_unit"));
         exceptionItems.add(buildExternalItemNotPublishedException(datasetVersion.getRelatedDsd(), prefix, "related_dsd"));
         exceptionItems.add(buildExternalItemNotPublishedException(datasetVersion.getUpdateFrequency(), prefix, "update_frequency"));
@@ -223,10 +228,8 @@ public class DatasetPublishingServiceTest extends StatisticalResourcesMockRestBa
     // -------------------------------------------------------------------------------------------
 
     private void mockDatasetVersionExternalItemsNotPublished(DatasetVersion datasetVersion) {
-        mockExternalItemsNotPublished(datasetVersion.getGeographicCoverage());
-        mockExternalItemsNotPublished(datasetVersion.getMeasureCoverage());
-        mockExternalItemsNotPublished(datasetVersion.getGeographicGranularities());
-        mockExternalItemsNotPublished(datasetVersion.getTemporalGranularities());
+        mockExternalItemsNotPublished(StatisticalResourcesExternalItemUtils.extractCodelistsUsedFromExternalItemCodes(datasetVersion.getGeographicGranularities()));
+        mockExternalItemsNotPublished(StatisticalResourcesExternalItemUtils.extractCodelistsUsedFromExternalItemCodes(datasetVersion.getTemporalGranularities()));
         mockExternalItemsNotPublished(datasetVersion.getStatisticalUnit());
         mockExternalItemNotPublished(datasetVersion.getRelatedDsd());
         mockExternalItemNotPublished(datasetVersion.getUpdateFrequency());
@@ -239,10 +242,8 @@ public class DatasetPublishingServiceTest extends StatisticalResourcesMockRestBa
     }
 
     private void mockDatasetVersionExternalItemsPublished(DatasetVersion datasetVersion) {
-        mockExternalItemsPublished(datasetVersion.getGeographicCoverage());
-        mockExternalItemsPublished(datasetVersion.getMeasureCoverage());
-        mockExternalItemsPublished(datasetVersion.getGeographicGranularities());
-        mockExternalItemsPublished(datasetVersion.getTemporalGranularities());
+        mockExternalItemsPublished(StatisticalResourcesExternalItemUtils.extractCodelistsUsedFromExternalItemCodes(datasetVersion.getGeographicGranularities()));
+        mockExternalItemsPublished(StatisticalResourcesExternalItemUtils.extractCodelistsUsedFromExternalItemCodes(datasetVersion.getTemporalGranularities()));
         mockExternalItemsPublished(datasetVersion.getStatisticalUnit());
         mockExternalItemPublished(datasetVersion.getRelatedDsd());
         mockExternalItemPublished(datasetVersion.getUpdateFrequency());

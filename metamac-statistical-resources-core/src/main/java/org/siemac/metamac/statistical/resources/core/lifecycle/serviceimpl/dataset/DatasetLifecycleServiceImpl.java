@@ -2,19 +2,14 @@ package org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.data
 
 import static org.siemac.metamac.statistical.resources.core.error.utils.ServiceExceptionParametersUtils.addParameter;
 
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
-import org.siemac.metamac.core.common.enume.domain.TypeExternalArtefactsEnum;
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.core.common.util.GeneratorUrnUtils;
-import org.siemac.metamac.core.common.util.shared.UrnUtils;
 import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
 import org.siemac.metamac.statistical.resources.core.common.domain.InternationalString;
 import org.siemac.metamac.statistical.resources.core.common.domain.LocalisedString;
@@ -32,6 +27,7 @@ import org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.Lifec
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.checker.ExternalItemChecker;
 import org.siemac.metamac.statistical.resources.core.task.domain.TaskInfoDataset;
 import org.siemac.metamac.statistical.resources.core.task.serviceapi.TaskService;
+import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesExternalItemUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -121,12 +117,12 @@ public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<Datase
         // Note: For GeographicCoverage the validation of DSD is sufficient because all his values has been validated in the dimension.
         // Note: For MeasureCoverage the validation of DSD is sufficient because all his values has been validated in the dimension.
 
-        Set<ExternalItem> extractCodelistsUsedInGeographicGranularities = extractCodelistsUsedFromExternalItemCodes(resource.getGeographicGranularities());
+        Set<ExternalItem> extractCodelistsUsedInGeographicGranularities = StatisticalResourcesExternalItemUtils.extractCodelistsUsedFromExternalItemCodes(resource.getGeographicGranularities());
         this.externalItemChecker.checkExternalItemsExternallyPublished(extractCodelistsUsedInGeographicGranularities,
                 addParameter(metadataName, ServiceExceptionSingleParameters.GEOGRAPHIC_GRANULARITIES),
                 exceptionItems);
 
-        Set<ExternalItem> extractCodelistsUsedInTemporalGranularities = extractCodelistsUsedFromExternalItemCodes(resource.getTemporalGranularities());
+        Set<ExternalItem> extractCodelistsUsedInTemporalGranularities = StatisticalResourcesExternalItemUtils.extractCodelistsUsedFromExternalItemCodes(resource.getTemporalGranularities());
         this.externalItemChecker.checkExternalItemsExternallyPublished(extractCodelistsUsedInTemporalGranularities, addParameter(metadataName, ServiceExceptionSingleParameters.TEMPORAL_GRANULARITIES),
                 exceptionItems);
 
@@ -148,32 +144,6 @@ public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<Datase
         this.constraintsService.publishContentConstraint(ctx, resource.getLifeCycleStatisticalResource().getUrn(), Boolean.TRUE);
     }
 
-    private Set<ExternalItem> extractCodelistsUsedFromExternalItemCodes(Set<ExternalItem> externalItemList) {
-
-        Map<String, ExternalItem> externalItemsMap = new HashMap<String, ExternalItem>();
-
-        for (ExternalItem externalItem: externalItemList) {
-            if (TypeExternalArtefactsEnum.CODE.equals(externalItem.getType())) {
-                String[] splitUrnItem = UrnUtils.splitUrnItem(externalItem.getUrn());
-                String agencyID = splitUrnItem[0];
-                String[] agenciesID = agencyID.contains(".") ? agencyID.split(".") : new String[]{agencyID};
-                String itemSchemeID = splitUrnItem[1];
-                String version = splitUrnItem[2];
-                String codelistUrn = GeneratorUrnUtils.generateSdmxCodelistUrn(agenciesID, itemSchemeID, version);
-
-                if (!externalItemsMap.containsKey(codelistUrn)) {
-                    ExternalItem aux = new ExternalItem();
-                    aux.setCode(itemSchemeID);
-                    aux.setUrn(codelistUrn);
-                    aux.setType(TypeExternalArtefactsEnum.CODELIST);
-
-                    externalItemsMap.put(codelistUrn, aux);
-                }
-            }
-        }
-
-        return new HashSet<ExternalItem>(externalItemsMap.values());
-    }
 
     @Override
     protected void applySendToPublishedCurrentResource(ServiceContext ctx, DatasetVersion resource, DatasetVersion previousResource) throws MetamacException {

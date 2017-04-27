@@ -7,6 +7,8 @@ import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Categor
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.CategoryCriteriaPropertyRestriction;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.CodeCriteriaPropertyRestriction;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.CodeResourceInternal;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.CodelistCriteriaPropertyRestriction;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codelists;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codes;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ConceptCriteriaPropertyRestriction;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Concepts;
@@ -38,6 +40,13 @@ public class SrmRestInternalFacadeV10MockUtils extends RestMockUtils {
         dataStructures.getDataStructures().addAll(mockItemResourcesInternalWithOnlyUrns(urns));
         populateListBaseWithResourcesWithOnlyUrns(dataStructures, urns);
         return dataStructures;
+    }
+
+    public static Codelists mockCodelistWithOnlyUrns(List<String> urns) {
+        Codelists codelists = new Codelists();
+        codelists.getCodelists().addAll(mockItemResourcesInternalWithOnlyUrns(urns));
+        populateListBaseWithResourcesWithOnlyUrns(codelists, urns);
+        return codelists;
     }
 
     public static Codes mockCodesWithOnlyUrns(List<String> urns) {
@@ -90,6 +99,10 @@ public class SrmRestInternalFacadeV10MockUtils extends RestMockUtils {
     public static String mockQueryFindPublishedDsdsUrnsAsList(List<String> urns) {
         return mockQueryFindPublishedResourcesUrnsAsList(DataStructureCriteriaPropertyRestriction.URN, DataStructureCriteriaPropertyRestriction.PROC_STATUS,
                 ProcStatus.EXTERNALLY_PUBLISHED.toString(), urns);
+    }
+
+    public static String mockQueryFindPublishedCodelistUrnsAsList(List<String> urns) {
+        return mockQueryFindPublishedResourcesUrnsAsList(CodelistCriteriaPropertyRestriction.URN, CodelistCriteriaPropertyRestriction.PROC_STATUS, ProcStatus.EXTERNALLY_PUBLISHED.toString(), urns);
     }
 
 }

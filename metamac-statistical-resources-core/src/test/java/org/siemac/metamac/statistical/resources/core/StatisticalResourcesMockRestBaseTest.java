@@ -112,6 +112,9 @@ public class StatisticalResourcesMockRestBaseTest extends StatisticalResourcesBa
                 case STATISTICAL_OPERATION_INSTANCE:
                     mockFindPublishedStatisticalOperationInstances(allItems, publishedItems);
                     break;
+                case CODELIST:
+                    mockFindPublishedCodelist(allItems, publishedItems);
+                    break;
                 default:
                     throw new RuntimeException("Found unknown external item type " + typeExternalItem);
             }
@@ -185,6 +188,13 @@ public class StatisticalResourcesMockRestBaseTest extends StatisticalResourcesBa
                 statisticalOperationsRestInternalFacadeV10.findInstances(Mockito.eq(RestApiConstants.WILDCARD_ALL),
                         Mockito.eq(StatisticalOperationsRestInternalFacadeV10MockUtils.mockQueryFindPublishedStatisticalOperationInstancesUrnsAsList(urns)), Mockito.isNull(String.class),
                         Mockito.anyString(), Mockito.anyString())).thenReturn(StatisticalOperationsRestInternalFacadeV10MockUtils.mockStatisticalOperationInstancesWithOnlyUrns(publishedUrns));
+    }
+
+    protected void mockFindPublishedCodelist(Collection<ExternalItem> allItems, Collection<ExternalItem> publishedItems) {
+        List<String> urns = getUrnsFromExternalItems(allItems);
+        List<String> publishedUrns = getUrnsFromExternalItems(publishedItems);
+        Mockito.when(srmRestInternalFacadeV10.findCodelists(Mockito.eq(SrmRestInternalFacadeV10MockUtils.mockQueryFindPublishedCodelistUrnsAsList(urns)), Mockito.isNull(String.class),
+                Mockito.anyString(), Mockito.anyString())).thenReturn(SrmRestInternalFacadeV10MockUtils.mockCodelistWithOnlyUrns(publishedUrns));
     }
 
     protected List<String> getUrnsFromExternalItems(Collection<ExternalItem> items) {
