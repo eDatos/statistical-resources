@@ -42,7 +42,7 @@ Application StatisticalResourcesEnums {
     		MINOR_OTHER
     	}
     	
-    	
+    	// If you modify this enum, remember to update the translations on metamac-portal-web-client/src/main/js/metamac/translations.
     	"Next version enum"
     	enum NextVersionTypeEnum {
     		NO_UPDATES,
