@@ -27,6 +27,7 @@ Application StatisticalResourcesEnums {
     		PDD		// Collection
     	}
     	
+    	// If you modify this enum, remember to update the translations on metamac-portal-web-client/src/main/js/metamac/translations.
     	"Version Rationale Type Enum is used to specify all types of version rationale"
     	enum VersionRationaleTypeEnum {
     		MAJOR_NEW_RESOURCE,
