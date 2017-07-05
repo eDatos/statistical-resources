@@ -8,7 +8,7 @@
     <entry key="metamac.common_metadata.rest.external">http://data.istac.es/apis/cmetadata</entry>
     <entry key="metamac.statistical_operations.rest.internal">http://data.istac.es/apis/operations</entry>
 
-    <entry key="metamac.portal.web.external">http://istac.es/portal-web</entry>
+    <entry key="metamac.portal.web.external.visualizer">http://istac.es/portal-web</entry>
 
     <entry key="metamac.edition.languages">es,en</entry>
     
