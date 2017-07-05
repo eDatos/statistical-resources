@@ -405,7 +405,7 @@ public class DatasetsDo2RestMapperV10Impl implements DatasetsDo2RestMapperV10 {
     }
 
     private String toDatasetPortalLink(DatasetVersion source) throws MetamacException {
-        String portalWeb = configurationService.retrievePortalExternalWebApplicationUrlBase();
+        String portalWeb = configurationService.retrievePortalExternalWebApplicationUrlVisualizer();
         String agencyID = source.getSiemacMetadataStatisticalResource().getMaintainer().getCodeNested();
         String resourceID = source.getSiemacMetadataStatisticalResource().getCode();
         String version = source.getSiemacMetadataStatisticalResource().getVersionLogic();

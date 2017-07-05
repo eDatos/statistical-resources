@@ -55,8 +55,8 @@ public class ApplicationStartup extends ApplicationStartupListener {
         checkRequiredProperty(StatisticalResourcesConfigurationConstants.ENDPOINT_STATISTICAL_OPERATIONS_EXTERNAL_API);
         checkRequiredProperty(StatisticalResourcesConfigurationConstants.ENDPOINT_COMMON_METADATA_EXTERNAL_API);
 
-        // Web application
-        checkRequiredProperty(StatisticalResourcesConfigurationConstants.WEB_APPLICATION_PORTAL_EXTERNAL_WEB);
+        // Web application - for use with bibliographicalCitation
+        checkRequiredProperty(StatisticalResourcesConfigurationConstants.WEB_APPLICATION_PORTAL_EXTERNAL_WEB_VISUALIZER);
 
         // Misc
         checkRequiredProperty(StatisticalResourcesConfigurationConstants.METAMAC_EDITION_LANGUAGES);

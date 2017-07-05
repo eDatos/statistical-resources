@@ -64,13 +64,13 @@ public class StatisticalResourcesWeb extends MetamacSecurityEntryPoint {
 
     @Override
     protected String[] getPropertiesToLoad() {
-        return new String[]{ConfigurationConstants.WEB_APPLICATION_PORTAL_INTERNAL_WEB};
+        return new String[]{ConfigurationConstants.WEB_APPLICATION_PORTAL_INTERNAL_WEB_VISUALIZER};
     }
 
     @Override
     protected void setConfigurationProperties(Map<String, String> propertyValues) {
         super.setConfigurationProperties(propertyValues);
-        String metamacPortalBaseUrl = propertyValues.get(ConfigurationConstants.WEB_APPLICATION_PORTAL_INTERNAL_WEB);
+        String metamacPortalBaseUrl = propertyValues.get(ConfigurationConstants.WEB_APPLICATION_PORTAL_INTERNAL_WEB_VISUALIZER);
         CommonUtils.setMetamacPortalBaseUrl(metamacPortalBaseUrl);
     }
 

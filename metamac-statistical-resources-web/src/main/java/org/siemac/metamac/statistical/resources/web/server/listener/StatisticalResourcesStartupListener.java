@@ -28,8 +28,8 @@ public class StatisticalResourcesStartupListener extends InternalApplicationStar
         checkRequiredProperty(ConfigurationConstants.WEB_APPLICATION_STATISTICAL_OPERATIONS_INTERNAL_WEB);
         checkRequiredProperty(ConfigurationConstants.WEB_APPLICATION_SRM_INTERNAL_WEB);
         checkRequiredProperty(ConfigurationConstants.WEB_APPLICATION_COMMON_METADATA_INTERNAL_WEB);
-        checkRequiredProperty(ConfigurationConstants.WEB_APPLICATION_PORTAL_INTERNAL_WEB);
-        checkRequiredProperty(ConfigurationConstants.WEB_APPLICATION_PORTAL_EXTERNAL_WEB);
+        checkRequiredProperty(ConfigurationConstants.WEB_APPLICATION_PORTAL_INTERNAL_WEB_VISUALIZER);
+        checkRequiredProperty(ConfigurationConstants.WEB_APPLICATION_PORTAL_EXTERNAL_WEB_VISUALIZER);
     }
 
     @Override
