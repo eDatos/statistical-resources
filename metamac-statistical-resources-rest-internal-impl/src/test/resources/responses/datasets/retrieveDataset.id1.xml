@@ -1176,7 +1176,7 @@
             </cdomain:name>
         </ns2:statisticOfficiality>
         <ns2:bibliographicCitation>
-            <cdomain:text xml:lang="es">bibliographicCitation. More info: http://istac.es/portal-web/datasets/agency1/dataset1/01.000</cdomain:text>
+            <cdomain:text xml:lang="es">bibliographicCitation. More info: http://data.istac.es/apis/statistical-resources/v1.0/datasets/agency1/dataset1/01.000</cdomain:text>
         </ns2:bibliographicCitation>
     </ns2:metadata>
     <ns2:data>
