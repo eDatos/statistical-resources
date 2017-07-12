@@ -23,7 +23,6 @@ import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.Datase
 import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.Datasets;
 import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.ResourceInternal;
 import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.ResourcesInternal;
-import org.siemac.metamac.rest.utils.RestUtils;
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResource;
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResourceResult;
 import org.siemac.metamac.statistical.resources.core.conf.StatisticalResourcesConfiguration;
@@ -386,6 +385,14 @@ public class DatasetsDo2RestMapperV10Impl implements DatasetsDo2RestMapperV10 {
         return commonDo2RestMapper.toResourceLink(resourceSubpath, agencyID, resourceID, version);
     }
 
+    private String toDatasetLink(DatasetVersion source) throws MetamacException {
+        String agencyID = source.getSiemacMetadataStatisticalResource().getMaintainer().getCodeNested();
+        String resourceID = source.getSiemacMetadataStatisticalResource().getCode();
+        String version = source.getSiemacMetadataStatisticalResource().getVersionLogic();
+
+        return toDatasetLink(agencyID, resourceID, version);
+    }
+
     private InternationalString toBibliographicCitation(DatasetVersion datasetVersion, org.siemac.metamac.statistical.resources.core.common.domain.InternationalString sources,
             List<String> selectedLanguages) throws MetamacException {
         if (sources == null) {
@@ -396,25 +403,11 @@ public class DatasetsDo2RestMapperV10Impl implements DatasetsDo2RestMapperV10 {
             if (selectedLanguages.contains(source.getLocale())) {
                 LocalisedString target = new LocalisedString();
                 target.setLang(source.getLocale());
-                String datasetPortalLink = toDatasetPortalLink(datasetVersion);
-                target.setValue(source.getLabel().replace(StatisticalResourcesConstants.BIBLIOGRAPHIC_CITATION_URI_TOKEN, datasetPortalLink));
+                target.setValue(source.getLabel().replace(StatisticalResourcesConstants.BIBLIOGRAPHIC_CITATION_URI_TOKEN, toDatasetLink(datasetVersion)));
                 targets.getTexts().add(target);
             }
         }
         return targets;
-    }
-
-    private String toDatasetPortalLink(DatasetVersion source) throws MetamacException {
-        String portalWeb = configurationService.retrievePortalExternalWebApplicationUrlVisualizer();
-        String agencyID = source.getSiemacMetadataStatisticalResource().getMaintainer().getCodeNested();
-        String resourceID = source.getSiemacMetadataStatisticalResource().getCode();
-        String version = source.getSiemacMetadataStatisticalResource().getVersionLogic();
-
-        String link = RestUtils.createLink(portalWeb, StatisticalResourcesRestInternalConstants.PORTAL_PATH_DATASETS);
-        link = RestUtils.createLink(link, agencyID);
-        link = RestUtils.createLink(link, resourceID);
-        link = RestUtils.createLink(link, version);
-        return link;
     }
 
     private String toDatasetVersionManagementApplicationLink(DatasetVersion source) {
