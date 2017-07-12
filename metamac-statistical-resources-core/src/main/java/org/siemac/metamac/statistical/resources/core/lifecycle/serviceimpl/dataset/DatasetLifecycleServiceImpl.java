@@ -105,49 +105,44 @@ public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<Datase
 
     @Override
     protected void checkSendToPublishedResource(ServiceContext ctx, DatasetVersion resource, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
-        this.checkExternalItemsPreviouslyPublished(ctx, resource, ServiceExceptionParameters.DATASET_VERSION, exceptionItems);
+        checkExternalItemsPreviouslyPublished(ctx, resource, ServiceExceptionParameters.DATASET_VERSION, exceptionItems);
 
         // No related resources to check
     }
 
     private void checkExternalItemsPreviouslyPublished(ServiceContext ctx, DatasetVersion resource, String metadataName, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
 
-        this.externalItemChecker.checkExternalItemsExternallyPublished(resource.getRelatedDsd(), addParameter(metadataName, ServiceExceptionSingleParameters.RELATED_DSD), exceptionItems);
+        externalItemChecker.checkExternalItemsExternallyPublished(resource.getRelatedDsd(), addParameter(metadataName, ServiceExceptionSingleParameters.RELATED_DSD), exceptionItems);
 
         // Note: For GeographicCoverage the validation of DSD is sufficient because all his values has been validated in the dimension.
         // Note: For MeasureCoverage the validation of DSD is sufficient because all his values has been validated in the dimension.
 
         Set<ExternalItem> extractCodelistsUsedInGeographicGranularities = StatisticalResourcesExternalItemUtils.extractCodelistsUsedFromExternalItemCodes(resource.getGeographicGranularities());
-        this.externalItemChecker.checkExternalItemsExternallyPublished(extractCodelistsUsedInGeographicGranularities,
-                addParameter(metadataName, ServiceExceptionSingleParameters.GEOGRAPHIC_GRANULARITIES),
+        externalItemChecker.checkExternalItemsExternallyPublished(extractCodelistsUsedInGeographicGranularities, addParameter(metadataName, ServiceExceptionSingleParameters.GEOGRAPHIC_GRANULARITIES),
                 exceptionItems);
 
         Set<ExternalItem> extractCodelistsUsedInTemporalGranularities = StatisticalResourcesExternalItemUtils.extractCodelistsUsedFromExternalItemCodes(resource.getTemporalGranularities());
-        this.externalItemChecker.checkExternalItemsExternallyPublished(extractCodelistsUsedInTemporalGranularities, addParameter(metadataName, ServiceExceptionSingleParameters.TEMPORAL_GRANULARITIES),
+        externalItemChecker.checkExternalItemsExternallyPublished(extractCodelistsUsedInTemporalGranularities, addParameter(metadataName, ServiceExceptionSingleParameters.TEMPORAL_GRANULARITIES),
                 exceptionItems);
 
         if (!resource.getStatisticalUnit().isEmpty()) {
-            this.externalItemChecker
-                    .checkExternalItemsExternallyPublished(resource.getStatisticalUnit(), addParameter(metadataName, ServiceExceptionSingleParameters.STATISTICAL_UNIT), exceptionItems);
+            externalItemChecker.checkExternalItemsExternallyPublished(resource.getStatisticalUnit(), addParameter(metadataName, ServiceExceptionSingleParameters.STATISTICAL_UNIT), exceptionItems);
         }
 
-
-        this.externalItemChecker.checkExternalItemsExternallyPublished(resource.getUpdateFrequency(), addParameter(metadataName, ServiceExceptionSingleParameters.UPDATE_FREQUENCY), exceptionItems);
+        externalItemChecker.checkExternalItemsExternallyPublished(resource.getUpdateFrequency(), addParameter(metadataName, ServiceExceptionSingleParameters.UPDATE_FREQUENCY), exceptionItems);
 
         for (Categorisation categorisation : resource.getCategorisations()) {
-            this.externalItemChecker.checkExternalItemsExternallyPublished(categorisation.getCategory(), addParameter(metadataName, ServiceExceptionSingleParameters.CATEGORISATIONS), exceptionItems);
-            this.externalItemChecker
-                    .checkExternalItemsExternallyPublished(categorisation.getMaintainer(), addParameter(metadataName, ServiceExceptionSingleParameters.CATEGORISATIONS), exceptionItems);
+            externalItemChecker.checkExternalItemsExternallyPublished(categorisation.getCategory(), addParameter(metadataName, ServiceExceptionSingleParameters.CATEGORISATIONS), exceptionItems);
+            externalItemChecker.checkExternalItemsExternallyPublished(categorisation.getMaintainer(), addParameter(metadataName, ServiceExceptionSingleParameters.CATEGORISATIONS), exceptionItems);
         }
 
         // Publish associated constraints
-        this.constraintsService.publishContentConstraint(ctx, resource.getLifeCycleStatisticalResource().getUrn(), Boolean.TRUE);
+        constraintsService.publishContentConstraint(ctx, resource.getLifeCycleStatisticalResource().getUrn(), Boolean.TRUE);
     }
-
 
     @Override
     protected void applySendToPublishedCurrentResource(ServiceContext ctx, DatasetVersion resource, DatasetVersion previousResource) throws MetamacException {
-        resource.setBibliographicCitation(this.buildBibliographicCitation(resource));
+        resource.setBibliographicCitation(buildBibliographicCitation(resource));
     }
 
     @Override
@@ -155,9 +150,14 @@ public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<Datase
     }
 
     private InternationalString buildBibliographicCitation(DatasetVersion resource) {
-        ExternalItem rightsHolder = resource.getSiemacMetadataStatisticalResource().getCreator();
+        // Format: Creator.code (date) Title (vXXX.YYY) [dataset]. Publisher.name (api url)
+        // Example: ISTAC (2017) Índice censal de ocupación (v002.001) [dataset]. Instituto Canario de Estadística (url)
+        // More information in: http://www.dcc.ac.uk/resources/how-guides/cite-datasets#sec:elements
+
+        ExternalItem creator = resource.getSiemacMetadataStatisticalResource().getCreator();
         String version = resource.getSiemacMetadataStatisticalResource().getVersionLogic();
         InternationalString publisherName = resource.getSiemacMetadataStatisticalResource().getPublisher().get(0).getTitle();
+
         // This will be replaced by the API
         String publicUrl = StatisticalResourcesConstants.BIBLIOGRAPHIC_CITATION_URI_TOKEN;
         InternationalString bibliographicInternational = new InternationalString();
@@ -165,9 +165,9 @@ public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<Datase
         for (LocalisedString localisedTitle : resource.getSiemacMetadataStatisticalResource().getTitle().getTexts()) {
             String locale = localisedTitle.getLocale();
             StringBuilder bibliographicCitation = new StringBuilder();
-            bibliographicCitation.append(rightsHolder.getCode()).append(" (").append(pubYear).append(") ");
+            bibliographicCitation.append(creator.getCode()).append(" (").append(pubYear).append(") ");
             bibliographicCitation.append(localisedTitle.getLabel()).append(" (v").append(version).append(") [dataset].");
-            bibliographicCitation.append(" ").append(this.getLocalisedTextInLocaleOrAppDefault(publisherName, locale));
+            bibliographicCitation.append(" ").append(getLocalisedTextInLocaleOrAppDefault(publisherName, locale));
             bibliographicCitation.append(" (").append(publicUrl).append(")");
 
             LocalisedString localised = new LocalisedString(locale, bibliographicCitation.toString());
@@ -197,7 +197,7 @@ public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<Datase
     protected DatasetVersion copyResourceForVersioning(ServiceContext ctx, DatasetVersion previousResource) throws MetamacException {
         DatasetVersion newVersion = DatasetVersioningCopyUtils.copyDatasetVersion(previousResource);
         for (Categorisation categorisation : newVersion.getCategorisations()) {
-            this.datasetService.initializeCategorisationMetadataForCreation(ctx, categorisation);
+            datasetService.initializeCategorisationMetadataForCreation(ctx, categorisation);
         }
         return newVersion;
     }
@@ -206,8 +206,8 @@ public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<Datase
     protected void applyVersioningNewResource(ServiceContext ctx, DatasetVersion resource, DatasetVersion previous) throws MetamacException {
 
         // Versioning the content constraints associated
-        this.constraintsService.versioningContentConstraintsForArtefact(ctx, previous.getLifeCycleStatisticalResource().getUrn(), resource.getLifeCycleStatisticalResource().getUrn(),
-                this.guessVersionTypeEnum(resource, previous));
+        constraintsService.versioningContentConstraintsForArtefact(ctx, previous.getLifeCycleStatisticalResource().getUrn(), resource.getLifeCycleStatisticalResource().getUrn(),
+                guessVersionTypeEnum(resource, previous));
 
         resource.setUserModifiedDateNextUpdate(Boolean.FALSE);
         String oldDatasetRepositoryId = previous.getDatasetRepositoryId();
@@ -215,7 +215,7 @@ public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<Datase
 
         TaskInfoDataset taskInfo = new TaskInfoDataset();
         taskInfo.setDatasetVersionId(oldDatasetRepositoryId);
-        this.taskService.planifyDuplicationDataset(ctx, taskInfo, resource.getDatasetRepositoryId());
+        taskService.planifyDuplicationDataset(ctx, taskInfo, resource.getDatasetRepositoryId());
     }
 
     private VersionTypeEnum guessVersionTypeEnum(DatasetVersion resource, DatasetVersion previous) {
@@ -250,27 +250,27 @@ public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<Datase
 
     @Override
     protected DatasetVersion saveResource(DatasetVersion resource) {
-        return this.datasetVersionRepository.save(resource);
+        return datasetVersionRepository.save(resource);
     }
 
     @Override
     protected DatasetVersion retrieveResourceByUrn(String urn) throws MetamacException {
-        return this.datasetVersionRepository.retrieveByUrn(urn);
+        return datasetVersionRepository.retrieveByUrn(urn);
     }
 
     @Override
     protected DatasetVersion retrieveResourceByResource(DatasetVersion resource) throws MetamacException {
-        return this.datasetVersionRepository.retrieveByUrn(resource.getSiemacMetadataStatisticalResource().getUrn());
+        return datasetVersionRepository.retrieveByUrn(resource.getSiemacMetadataStatisticalResource().getUrn());
     }
 
     @Override
     protected DatasetVersion retrievePreviousPublishedResourceByResource(DatasetVersion resource) throws MetamacException {
-        return this.datasetVersionRepository.retrieveLastPublishedVersion(resource.getDataset().getIdentifiableStatisticalResource().getUrn());
+        return datasetVersionRepository.retrieveLastPublishedVersion(resource.getDataset().getIdentifiableStatisticalResource().getUrn());
     }
 
     @Override
     protected void checkResourceMetadataAllActions(ServiceContext ctx, DatasetVersion resource, List<MetamacExceptionItem> exceptions) throws MetamacException {
-        this.lifecycleCommonMetadataChecker.checkDatasetVersionCommonMetadata(ctx, resource, ServiceExceptionParameters.DATASET_VERSION, exceptions);
+        lifecycleCommonMetadataChecker.checkDatasetVersionCommonMetadata(ctx, resource, ServiceExceptionParameters.DATASET_VERSION, exceptions);
     }
 
     @Override
