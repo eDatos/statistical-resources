@@ -5,6 +5,7 @@ import static org.siemac.metamac.statistical.resources.core.error.utils.ServiceE
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
@@ -13,6 +14,7 @@ import org.siemac.metamac.core.common.util.GeneratorUrnUtils;
 import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
 import org.siemac.metamac.statistical.resources.core.common.domain.InternationalString;
 import org.siemac.metamac.statistical.resources.core.common.domain.LocalisedString;
+import org.siemac.metamac.statistical.resources.core.conf.StatisticalResourcesConfiguration;
 import org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConstants;
 import org.siemac.metamac.statistical.resources.core.constraint.api.ConstraintsService;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Categorisation;
@@ -35,22 +37,25 @@ import org.springframework.stereotype.Service;
 public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<DatasetVersion> {
 
     @Autowired
-    private LifecycleCommonMetadataChecker lifecycleCommonMetadataChecker;
+    private LifecycleCommonMetadataChecker    lifecycleCommonMetadataChecker;
 
     @Autowired
-    private ExternalItemChecker            externalItemChecker;
+    private ExternalItemChecker               externalItemChecker;
 
     @Autowired
-    private DatasetService                 datasetService;
+    private DatasetService                    datasetService;
 
     @Autowired
-    private DatasetVersionRepository       datasetVersionRepository;
+    private DatasetVersionRepository          datasetVersionRepository;
 
     @Autowired
-    private TaskService                    taskService;
+    private TaskService                       taskService;
 
     @Autowired
-    private ConstraintsService             constraintsService;
+    private ConstraintsService                constraintsService;
+
+    @Autowired
+    private StatisticalResourcesConfiguration configurationService;
 
     @Override
     protected String getResourceMetadataName() throws MetamacException {
@@ -149,7 +154,7 @@ public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<Datase
     protected void applySendToPublishedPreviousResource(ServiceContext ctx, DatasetVersion resource) throws MetamacException {
     }
 
-    private InternationalString buildBibliographicCitation(DatasetVersion resource) {
+    private InternationalString buildBibliographicCitation(DatasetVersion resource) throws MetamacException {
         // Format: Creator.code (date) Title (vXXX.YYY) [dataset]. Publisher.name (api url)
         // Example: ISTAC (2017) Índice censal de ocupación (v002.001) [dataset]. Instituto Canario de Estadística (url)
         // More information in: http://www.dcc.ac.uk/resources/how-guides/cite-datasets#sec:elements
@@ -176,11 +181,11 @@ public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<Datase
         return bibliographicInternational;
     }
 
-    private String getLocalisedTextInLocaleOrAppDefault(InternationalString internationaString, String locale) {
-        if (internationaString.getLocalisedLabel(locale) != null) {
+    private String getLocalisedTextInLocaleOrAppDefault(InternationalString internationaString, String locale) throws MetamacException {
+        if (StringUtils.isNotEmpty(internationaString.getLocalisedLabel(locale))) {
             return internationaString.getLocalisedLabel(locale);
         } else {
-            return internationaString.getLocalisedLabel(locale);
+            return internationaString.getLocalisedLabel(configurationService.retrieveLanguageDefault());
         }
     }
 
