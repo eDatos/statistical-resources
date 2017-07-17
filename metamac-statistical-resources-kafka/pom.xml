@@ -5,13 +5,13 @@
     <parent>
         <groupId>org.siemac.metamac.metamac-statistical-resources</groupId>
         <artifactId>metamac-statistical-resources-parent</artifactId>
-        <version>3.0.1-SNAPSHOT</version>
+        <version>3.0.1</version>
         <relativePath>../metamac-statistical-resources-parent/pom.xml</relativePath>
     </parent>
 
     <groupId>org.siemac.metamac.metamac-statistical-resources</groupId>
     <artifactId>metamac-statistical-resources-kafka</artifactId>
-    <version>3.0.1-SNAPSHOT</version>
+    <version>3.0.1</version>
     <name>METAMAC :: STATISTICAL RESOURCES :: KAFKA</name>
 
 
