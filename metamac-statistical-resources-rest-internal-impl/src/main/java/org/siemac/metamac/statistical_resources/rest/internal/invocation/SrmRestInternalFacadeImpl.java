@@ -52,13 +52,13 @@ public class SrmRestInternalFacadeImpl implements SrmRestInternalFacade {
     }
 
     @Override
-    public Codes retrieveCodesByCodelistUrn(String urn, String order, String openness) {
+    public Codes retrieveCodesByCodelistUrn(String urn, String order, String openness, String fields) {
         try {
             String[] urnSplited = UrnUtils.splitUrnItemScheme(urn);
             String agencyID = urnSplited[0];
             String resourceID = urnSplited[1];
             String version = urnSplited[2];
-            return restApiLocator.getSrmRestExternalFacadeV10().findCodes(agencyID, resourceID, version, null, null, null, null, order, openness);
+            return restApiLocator.getSrmRestExternalFacadeV10().findCodes(agencyID, resourceID, version, null, null, null, null, order, openness, fields);
         } catch (Exception e) {
             throw toRestException(e);
         }

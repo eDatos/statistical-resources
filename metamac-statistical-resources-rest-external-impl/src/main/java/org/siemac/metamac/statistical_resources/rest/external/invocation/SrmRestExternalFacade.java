@@ -12,7 +12,7 @@ public interface SrmRestExternalFacade {
     public DataStructure retrieveDataStructureByUrn(String urn);
 
     public Codelist retrieveCodelistByUrn(String urn);
-    public Codes retrieveCodesByCodelistUrn(String urn, String order, String openness);
+    public Codes retrieveCodesByCodelistUrn(String urn, String order, String openness, String fields);
 
     public Concepts retrieveConceptsByConceptSchemeByUrn(String urn);
     public Concept retrieveConceptByUrn(String urn);

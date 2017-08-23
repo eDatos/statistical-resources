@@ -808,7 +808,7 @@ public abstract class StatisticalResourcesRestExternalFacadeV10BaseTest extends 
     }
 
     private void mockRetrieveCodesByCodelistUrn() throws MetamacException {
-        when(srmRestExternalFacade.retrieveCodesByCodelistUrn(any(String.class), any(String.class), any(String.class))).thenAnswer(new Answer<Codes>() {
+        when(srmRestExternalFacade.retrieveCodesByCodelistUrn(any(String.class), any(String.class), any(String.class), any(String.class))).thenAnswer(new Answer<Codes>() {
 
             @Override
             public Codes answer(InvocationOnMock invocation) throws Throwable {

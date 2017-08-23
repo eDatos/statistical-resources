@@ -2,6 +2,7 @@ package org.siemac.metamac.statistical_resources.rest.external.invocation;
 
 import org.apache.cxf.jaxrs.client.WebClient;
 import org.siemac.metamac.core.common.util.shared.UrnUtils;
+import org.siemac.metamac.rest.api.constants.RestApiConstants;
 import org.siemac.metamac.rest.exception.RestException;
 import org.siemac.metamac.rest.exception.utils.RestExceptionUtils;
 import org.siemac.metamac.rest.structural_resources.v1_0.domain.Codelist;
@@ -10,6 +11,7 @@ import org.siemac.metamac.rest.structural_resources.v1_0.domain.Concept;
 import org.siemac.metamac.rest.structural_resources.v1_0.domain.Concepts;
 import org.siemac.metamac.rest.structural_resources.v1_0.domain.DataStructure;
 import org.siemac.metamac.rest.structural_resources.v1_0.domain.VariableElementsGeoInfo;
+import org.siemac.metamac.srm.rest.common.SrmRestConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,9 @@ import org.springframework.stereotype.Component;
 public class SrmRestExternalFacadeImpl implements SrmRestExternalFacade {
 
     private final Logger       logger = LoggerFactory.getLogger(SrmRestExternalFacadeImpl.class);
+    
+    private String             INCLUDE_ALL_FIELDS = SrmRestConstants.FIELD_INCLUDE_OPENNES + RestApiConstants.COMMA + SrmRestConstants.FIELD_INCLUDE_ORDER + RestApiConstants.COMMA
+            + SrmRestConstants.FIELD_INCLUDE_VARIABLE_ELEMENT;
 
     @Autowired
     @Qualifier("metamacApisLocatorRestExternal")
@@ -52,13 +57,13 @@ public class SrmRestExternalFacadeImpl implements SrmRestExternalFacade {
     }
 
     @Override
-    public Codes retrieveCodesByCodelistUrn(String urn, String order, String openness) {
+    public Codes retrieveCodesByCodelistUrn(String urn, String order, String openness, String fields) {
         try {
             String[] urnSplited = UrnUtils.splitUrnItemScheme(urn);
             String agencyID = urnSplited[0];
             String resourceID = urnSplited[1];
             String version = urnSplited[2];
-            return restApiLocator.getSrmRestExternalFacadeV10().findCodes(agencyID, resourceID, version, null, null, null, null, order, openness);
+            return restApiLocator.getSrmRestExternalFacadeV10().findCodes(agencyID, resourceID, version, null, null, null, null, order, openness, fields);
         } catch (Exception e) {
             throw toRestException(e);
         }

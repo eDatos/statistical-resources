@@ -703,7 +703,7 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
         // This map contains nodes that are not in the result. If a child of this nodes is in the result, we use this map to put it inside the nearest parent node in result
         Map<String, String> parentsReplacedToVisualisation = new HashMap<String, String>();
 
-        Codes codes = srmRestExternalFacade.retrieveCodesByCodelistUrn(codelistUrn, null, null); // note: srm api returns codes in order
+        Codes codes = srmRestExternalFacade.retrieveCodesByCodelistUrn(codelistUrn, null, null, null); // note: srm api returns codes in order
         for (CodeResource code : codes.getCodes()) {
             String id = code.getId();
             boolean skip = false;
@@ -995,7 +995,7 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
             return null;
         }
         EnumeratedAttributeValues targets = new EnumeratedAttributeValues();
-        Codes codes = srmRestExternalFacade.retrieveCodesByCodelistUrn(codelistUrn, null, null);
+        Codes codes = srmRestExternalFacade.retrieveCodesByCodelistUrn(codelistUrn, null, null, null);
         for (CodeResource code : codes.getCodes()) {
             String id = code.getId();
             if (!coveragesById.containsKey(id)) {
