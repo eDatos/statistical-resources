@@ -1107,7 +1107,7 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
             return null;
         }
         EnumeratedAttributeValues targets = new EnumeratedAttributeValues();
-        Codes codes = srmRestExternalFacade.retrieveCodesByCodelistUrn(codelistUrn, null, null, INCLUDE_ALL_FIELDS);
+        Codes codes = srmRestExternalFacade.retrieveCodesByCodelistUrn(codelistUrn, null, null, null);
         for (CodeResourceInternal code : codes.getCodes()) {
             String id = code.getId();
             if (!coveragesById.containsKey(id)) {

@@ -23,6 +23,7 @@ import org.joda.time.DateTime;
 import org.siemac.metamac.core.common.enume.domain.IstacTimeGranularityEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.time.IstacTimeUtils;
+import org.siemac.metamac.rest.api.constants.RestApiConstants;
 import org.siemac.metamac.rest.common.v1_0.domain.InternationalString;
 import org.siemac.metamac.rest.common.v1_0.domain.LocalisedString;
 import org.siemac.metamac.rest.common.v1_0.domain.Resource;
@@ -81,6 +82,7 @@ import org.siemac.metamac.rest.structural_resources.v1_0.domain.VariableElements
 import org.siemac.metamac.rest.structural_resources.v1_0.domain.VariableElementsGeoInfoFeature;
 import org.siemac.metamac.rest.utils.RestCommonUtil;
 import org.siemac.metamac.rest.utils.RestUtils;
+import org.siemac.metamac.srm.rest.common.SrmRestConstants;
 import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.VersionRationaleType;
 import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
@@ -131,7 +133,9 @@ import com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceF
 @Component
 public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
 
-    private static final Logger                     logger = LoggerFactory.getLogger(CommonDo2RestMapperV10.class);
+    private static final Logger                     logger             = LoggerFactory.getLogger(CommonDo2RestMapperV10.class);
+    private String                                  INCLUDE_ALL_FIELDS = SrmRestConstants.FIELD_INCLUDE_OPENNES + RestApiConstants.COMMA + SrmRestConstants.FIELD_INCLUDE_ORDER + RestApiConstants.COMMA
+            + SrmRestConstants.FIELD_INCLUDE_VARIABLE_ELEMENT;
 
     @Autowired
     private StatisticalResourcesConfiguration       configurationService;
@@ -703,7 +707,7 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
         // This map contains nodes that are not in the result. If a child of this nodes is in the result, we use this map to put it inside the nearest parent node in result
         Map<String, String> parentsReplacedToVisualisation = new HashMap<String, String>();
 
-        Codes codes = srmRestExternalFacade.retrieveCodesByCodelistUrn(codelistUrn, null, null, null); // note: srm api returns codes in order
+        Codes codes = srmRestExternalFacade.retrieveCodesByCodelistUrn(codelistUrn, null, null, INCLUDE_ALL_FIELDS); // note: srm api returns codes in order
         for (CodeResource code : codes.getCodes()) {
             String id = code.getId();
             boolean skip = false;
