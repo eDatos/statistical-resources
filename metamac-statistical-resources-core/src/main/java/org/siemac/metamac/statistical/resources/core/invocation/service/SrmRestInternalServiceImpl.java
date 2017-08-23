@@ -37,6 +37,7 @@ import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Organis
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Organisations;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.RegionReference;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ResourceInternal;
+import org.siemac.metamac.srm.rest.common.SrmRestConstants;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionUtils;
@@ -45,6 +46,9 @@ import org.springframework.stereotype.Component;
 
 @Component(SrmRestInternalService.BEAN_ID)
 public class SrmRestInternalServiceImpl implements SrmRestInternalService {
+
+    private String             INCLUDE_ALL_FIELDS = SrmRestConstants.FIELD_INCLUDE_OPENNES + RestApiConstants.COMMA + SrmRestConstants.FIELD_INCLUDE_ORDER + RestApiConstants.COMMA
+            + SrmRestConstants.FIELD_INCLUDE_VARIABLE_ELEMENT;
 
     @Autowired
     private MetamacApisLocator restApiLocator;
@@ -339,7 +343,7 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
             String agencyId = params[0];
             String resourceId = params[1];
             String version = params[2];
-            return restApiLocator.getSrmRestInternalFacadeV10().findCodes(agencyId, resourceId, version, null, null, null, null, null, null);
+            return restApiLocator.getSrmRestInternalFacadeV10().findCodes(agencyId, resourceId, version, null, null, null, null, null, null, INCLUDE_ALL_FIELDS);
         } catch (Exception e) {
             throw manageSrmInternalRestException(e);
         }
@@ -369,7 +373,7 @@ public class SrmRestInternalServiceImpl implements SrmRestInternalService {
                 resourceId = params[1];
                 version = params[2];
             }
-            return restApiLocator.getSrmRestInternalFacadeV10().findCodes(agencyId, resourceId, version, query, null, limit, offset, null, null);
+            return restApiLocator.getSrmRestInternalFacadeV10().findCodes(agencyId, resourceId, version, query, null, limit, offset, null, null, INCLUDE_ALL_FIELDS);
         } catch (Exception e) {
             throw manageSrmInternalRestException(e);
         }
