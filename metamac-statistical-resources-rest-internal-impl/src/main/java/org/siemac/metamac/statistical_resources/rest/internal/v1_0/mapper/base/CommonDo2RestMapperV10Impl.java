@@ -1566,7 +1566,7 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
 
         public DataProcessorForAttributeWithDimensionAttachmentLevel(Map<String, AttributeInstanceDto> attributesByCodeDimensions, int dataSize) {
             this.attributesByCodeDimensions = attributesByCodeDimensions;
-            this.targets = new ArrayList<AttributeInstanceDto>(dataSize);
+            targets = new ArrayList<AttributeInstanceDto>(dataSize);
         }
 
         @Override
@@ -1587,8 +1587,8 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
         private final List<ObservationExtendedDto>        targets;
 
         public DataProcessorForObservation(Map<String, ObservationExtendedDto> observations, int dataSize) {
-            this.sources = observations;
-            this.targets = new ArrayList<ObservationExtendedDto>(dataSize);
+            sources = observations;
+            targets = new ArrayList<ObservationExtendedDto>(dataSize);
         }
 
         @Override
@@ -1620,7 +1620,7 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
 
         public DataIterator(List<?> list) {
             this.list = list;
-            this.max = list.size();
+            max = list.size();
         }
 
         @Override

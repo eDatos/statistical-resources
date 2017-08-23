@@ -643,25 +643,25 @@ public abstract class StatisticalResourcesRestInternalFacadeV10BaseTest extends 
 
                 // Attributes
                 int i = 1;
-                observationsMap.get("santa-cruz-tenerife#2011#measure01-conceptScheme01-concept01#dim01-codelist01-code01").addAttribute(
-                        restDoMocks.mockAttributeInstanceObservation(ATTRIBUTE_10_OBSERVATION, "Value " + i++));
-                observationsMap.get("santa-cruz-tenerife#2011#measure01-conceptScheme01-concept01#dim01-codelist01-code03").addAttribute(
-                        restDoMocks.mockAttributeInstanceObservation(ATTRIBUTE_10_OBSERVATION, "Value " + i++));
-                observationsMap.get("tenerife#2011#measure01-conceptScheme01-concept01#dim01-codelist01-code01").addAttribute(
-                        restDoMocks.mockAttributeInstanceObservation(ATTRIBUTE_10_OBSERVATION, "Value " + i++));
-                observationsMap.get("lanzarote#2014#measure01-conceptScheme01-concept05#dim01-codelist01-code04").addAttribute(
-                        restDoMocks.mockAttributeInstanceObservation(ATTRIBUTE_10_OBSERVATION, "Value " + i++));
+                observationsMap.get("santa-cruz-tenerife#2011#measure01-conceptScheme01-concept01#dim01-codelist01-code01")
+                        .addAttribute(restDoMocks.mockAttributeInstanceObservation(ATTRIBUTE_10_OBSERVATION, "Value " + i++));
+                observationsMap.get("santa-cruz-tenerife#2011#measure01-conceptScheme01-concept01#dim01-codelist01-code03")
+                        .addAttribute(restDoMocks.mockAttributeInstanceObservation(ATTRIBUTE_10_OBSERVATION, "Value " + i++));
+                observationsMap.get("tenerife#2011#measure01-conceptScheme01-concept01#dim01-codelist01-code01")
+                        .addAttribute(restDoMocks.mockAttributeInstanceObservation(ATTRIBUTE_10_OBSERVATION, "Value " + i++));
+                observationsMap.get("lanzarote#2014#measure01-conceptScheme01-concept05#dim01-codelist01-code04")
+                        .addAttribute(restDoMocks.mockAttributeInstanceObservation(ATTRIBUTE_10_OBSERVATION, "Value " + i++));
 
-                observationsMap.get("santa-cruz-tenerife#2011#measure01-conceptScheme01-concept01#dim01-codelist01-code01").addAttribute(
-                        restDoMocks.mockAttributeInstanceObservation(ATTRIBUTE_11_OBSERVATION, "Value " + i++));
-                observationsMap.get("tenerife#2011#measure01-conceptScheme01-concept01#dim01-codelist01-code01").addAttribute(
-                        restDoMocks.mockAttributeInstanceObservation(ATTRIBUTE_11_OBSERVATION, "Value " + i++));
-                observationsMap.get("la-laguna#2011#measure01-conceptScheme01-concept01#dim01-codelist01-code01").addAttribute(
-                        restDoMocks.mockAttributeInstanceObservation(ATTRIBUTE_11_OBSERVATION, "Value " + i++));
+                observationsMap.get("santa-cruz-tenerife#2011#measure01-conceptScheme01-concept01#dim01-codelist01-code01")
+                        .addAttribute(restDoMocks.mockAttributeInstanceObservation(ATTRIBUTE_11_OBSERVATION, "Value " + i++));
+                observationsMap.get("tenerife#2011#measure01-conceptScheme01-concept01#dim01-codelist01-code01")
+                        .addAttribute(restDoMocks.mockAttributeInstanceObservation(ATTRIBUTE_11_OBSERVATION, "Value " + i++));
+                observationsMap.get("la-laguna#2011#measure01-conceptScheme01-concept01#dim01-codelist01-code01")
+                        .addAttribute(restDoMocks.mockAttributeInstanceObservation(ATTRIBUTE_11_OBSERVATION, "Value " + i++));
 
                 // internal attribute -> do not return
-                observationsMap.get("la-laguna#2011#measure01-conceptScheme01-concept01#dim01-codelist01-code01").addAttribute(
-                        restDoMocks.mockAttributeInstanceObservation("internalAttribute01", "Value " + i++));
+                observationsMap.get("la-laguna#2011#measure01-conceptScheme01-concept01#dim01-codelist01-code01")
+                        .addAttribute(restDoMocks.mockAttributeInstanceObservation("internalAttribute01", "Value " + i++));
                 return observationsMap;
             };
         });
@@ -690,8 +690,8 @@ public abstract class StatisticalResourcesRestInternalFacadeV10BaseTest extends 
 
     @SuppressWarnings("unchecked")
     private void mockFindAttributesInstancesWithDimensionAttachmentLevelDenormalized() throws Exception {
-        when(datasetRepositoriesServiceFacade.findAttributesInstancesWithDimensionAttachmentLevelDenormalized(any(String.class), any(String.class), any(Map.class))).thenAnswer(
-                new Answer<List<AttributeInstanceDto>>() {
+        when(datasetRepositoriesServiceFacade.findAttributesInstancesWithDimensionAttachmentLevelDenormalized(any(String.class), any(String.class), any(Map.class)))
+                .thenAnswer(new Answer<List<AttributeInstanceDto>>() {
 
                     @Override
                     public List<AttributeInstanceDto> answer(InvocationOnMock invocation) throws Throwable {
@@ -700,8 +700,8 @@ public abstract class StatisticalResourcesRestInternalFacadeV10BaseTest extends 
                         List<AttributeInstanceDto> attributes = new ArrayList<AttributeInstanceDto>();
                         int i = 1;
                         if (ATTRIBUTE_3_DIMENSION.equals(attributeId)) {
-                            attributes.add(restDoMocks.mockAttributeInstanceWithDimensionAttachmentLevelDenormalized(attributeId, value + "-" + i++, "GEO_DIM", "santa-cruz-tenerife", null, null,
-                                    null, null, null, null));
+                            attributes.add(restDoMocks.mockAttributeInstanceWithDimensionAttachmentLevelDenormalized(attributeId, value + "-" + i++, "GEO_DIM", "santa-cruz-tenerife", null, null, null,
+                                    null, null, null));
                             attributes.add(restDoMocks.mockAttributeInstanceWithDimensionAttachmentLevelDenormalized(attributeId, value + "-" + i++, "GEO_DIM", "la-laguna", null, null, null, null,
                                     null, null));
                             attributes.add(restDoMocks.mockAttributeInstanceWithDimensionAttachmentLevelDenormalized(attributeId, value + "-" + i++, "GEO_DIM", "el-hierro", null, null, null, null,
@@ -761,8 +761,8 @@ public abstract class StatisticalResourcesRestInternalFacadeV10BaseTest extends 
                                     "2011", null, null, null, null));
                             attributes.add(restDoMocks.mockAttributeInstanceWithDimensionAttachmentLevelDenormalized(attributeId, value + "-" + i++, "GEO_DIM", "santa-cruz-tenerife", "TIME_PERIOD",
                                     "2014", null, null, null, null));
-                            attributes.add(restDoMocks.mockAttributeInstanceWithDimensionAttachmentLevelDenormalized(attributeId, value + "-" + i++, "GEO_DIM", "tenerife", "TIME_PERIOD", "2012",
-                                    null, null, null, null));
+                            attributes.add(restDoMocks.mockAttributeInstanceWithDimensionAttachmentLevelDenormalized(attributeId, value + "-" + i++, "GEO_DIM", "tenerife", "TIME_PERIOD", "2012", null,
+                                    null, null, null));
                             attributes.add(restDoMocks.mockAttributeInstanceWithDimensionAttachmentLevelDenormalized(attributeId, value + "-" + i++, "GEO_DIM", "la-laguna", "TIME_PERIOD", "2012",
                                     null, null, null, null));
                             attributes.add(restDoMocks.mockAttributeInstanceWithDimensionAttachmentLevelDenormalized(attributeId, value + "-" + i++, "GEO_DIM", "fuerteventura", "TIME_PERIOD", "2014",
@@ -895,43 +895,43 @@ public abstract class StatisticalResourcesRestInternalFacadeV10BaseTest extends 
 
     private String getAgencyIdFromConditionalCriteria(List<ConditionalCriteria> conditions) {
         // can use PublicationVersionProperties or DatasetVersionProperties...
-        ConditionalCriteria conditionalCriteria = ConditionalCriteriaUtils.getConditionalCriteriaByPropertyName(conditions, Operator.Equal, PublicationVersionProperties
-                .siemacMetadataStatisticalResource().maintainer().codeNested());
+        ConditionalCriteria conditionalCriteria = ConditionalCriteriaUtils.getConditionalCriteriaByPropertyName(conditions, Operator.Equal,
+                PublicationVersionProperties.siemacMetadataStatisticalResource().maintainer().codeNested());
         return conditionalCriteria != null ? (String) conditionalCriteria.getFirstOperant() : null;
     }
 
     private String getResourceIdFromConditionalCriteria(List<ConditionalCriteria> conditions) {
         // can use PublicationVersionProperties or DatasetVersionProperties...
-        ConditionalCriteria conditionalCriteria = ConditionalCriteriaUtils.getConditionalCriteriaByPropertyName(conditions, Operator.Equal, PublicationVersionProperties
-                .siemacMetadataStatisticalResource().code());
+        ConditionalCriteria conditionalCriteria = ConditionalCriteriaUtils.getConditionalCriteriaByPropertyName(conditions, Operator.Equal,
+                PublicationVersionProperties.siemacMetadataStatisticalResource().code());
         return conditionalCriteria != null ? (String) conditionalCriteria.getFirstOperant() : null;
     }
 
     private String getVersionFromConditionalCriteria(List<ConditionalCriteria> conditions) {
         // can use PublicationVersionProperties or DatasetVersionProperties...
-        ConditionalCriteria conditionalCriteria = ConditionalCriteriaUtils.getConditionalCriteriaByPropertyName(conditions, Operator.Equal, PublicationVersionProperties
-                .siemacMetadataStatisticalResource().versionLogic());
+        ConditionalCriteria conditionalCriteria = ConditionalCriteriaUtils.getConditionalCriteriaByPropertyName(conditions, Operator.Equal,
+                PublicationVersionProperties.siemacMetadataStatisticalResource().versionLogic());
         return conditionalCriteria != null ? (String) conditionalCriteria.getFirstOperant() : null;
     }
 
     private String getAgencyIdFromConditionalCriteriaForQueryVersionProperties(List<ConditionalCriteria> conditions) {
         // can use QueryVersionProperties...
-        ConditionalCriteria conditionalCriteria = ConditionalCriteriaUtils.getConditionalCriteriaByPropertyName(conditions, Operator.Equal, QueryVersionProperties.lifeCycleStatisticalResource()
-                .maintainer().codeNested());
+        ConditionalCriteria conditionalCriteria = ConditionalCriteriaUtils.getConditionalCriteriaByPropertyName(conditions, Operator.Equal,
+                QueryVersionProperties.lifeCycleStatisticalResource().maintainer().codeNested());
         return conditionalCriteria != null ? (String) conditionalCriteria.getFirstOperant() : null;
     }
 
     private String getResourceIdFromConditionalCriteriaForQueryVersionProperties(List<ConditionalCriteria> conditions) {
         // can use QueryVersionProperties...
-        ConditionalCriteria conditionalCriteria = ConditionalCriteriaUtils.getConditionalCriteriaByPropertyName(conditions, Operator.Equal, QueryVersionProperties.lifeCycleStatisticalResource()
-                .code());
+        ConditionalCriteria conditionalCriteria = ConditionalCriteriaUtils.getConditionalCriteriaByPropertyName(conditions, Operator.Equal,
+                QueryVersionProperties.lifeCycleStatisticalResource().code());
         return conditionalCriteria != null ? (String) conditionalCriteria.getFirstOperant() : null;
     }
 
     private String getVersionFromConditionalCriteriaForQueryVersionProperties(List<ConditionalCriteria> conditions) {
         // can use QueryVersionProperties...
-        ConditionalCriteria conditionalCriteria = ConditionalCriteriaUtils.getConditionalCriteriaByPropertyName(conditions, Operator.Equal, QueryVersionProperties.lifeCycleStatisticalResource()
-                .versionLogic());
+        ConditionalCriteria conditionalCriteria = ConditionalCriteriaUtils.getConditionalCriteriaByPropertyName(conditions, Operator.Equal,
+                QueryVersionProperties.lifeCycleStatisticalResource().versionLogic());
         return conditionalCriteria != null ? (String) conditionalCriteria.getFirstOperant() : null;
     }
 
@@ -1030,8 +1030,8 @@ public abstract class StatisticalResourcesRestInternalFacadeV10BaseTest extends 
 
     protected RelatedResourceResult mockDatasetVersionRepositoryRetrieveIsReplaceByVersionAnswer(InvocationOnMock invocation) {
         DatasetVersion datasetVersion = (DatasetVersion) invocation.getArguments()[0];
-        return restDoMocks.mockDatasetVersionRelatedResourceResult(datasetVersion.getSiemacMetadataStatisticalResource().getMaintainer().getCodeNested(), datasetVersion
-                .getSiemacMetadataStatisticalResource().getCode(), "02.000");
+        return restDoMocks.mockDatasetVersionRelatedResourceResult(datasetVersion.getSiemacMetadataStatisticalResource().getMaintainer().getCodeNested(),
+                datasetVersion.getSiemacMetadataStatisticalResource().getCode(), "02.000");
     }
 
     protected RelatedResourceResult mockDatasetVersionRepositoryRetrieveIsReplacedByAnswer() {
