@@ -112,14 +112,13 @@ public class DataMockUtils {
 
         ResourceInternal conceptSchemeReference = SrmMockUtils.buildConceptSchemeRef("urn:sdmx:org.sdmx.infomodel.conceptscheme.ConceptScheme=TEST:cshm-01(1.0)");
         Concepts concepts = SrmMockUtils.buildConcepts(3);
-        Mockito.when(
-                apisLocator.getSrmRestInternalFacadeV10().findConcepts(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyString(),
-                        Mockito.anyString())).thenReturn(concepts);
+        Mockito.when(apisLocator.getSrmRestInternalFacadeV10().findConcepts(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyString(),
+                Mockito.anyString(), Mockito.anyString())).thenReturn(concepts);
 
         // Create a datastructure with dimensions marked as measure temporal and spatial
 
-        DataStructure dsd = SrmMockUtils.mockDsdWithGeoTimeAndMeasureDimensions("urn:sdmx:org.sdmx.infomodel.datastructure.DataStructure=TFFS:CRED_EXT_DEBT(1.0)", "GEO_DIM", "TIME_PERIOD",
-                "MEAS_DIM", conceptSchemeReference, codelistReference);
+        DataStructure dsd = SrmMockUtils.mockDsdWithGeoTimeAndMeasureDimensions("urn:sdmx:org.sdmx.infomodel.datastructure.DataStructure=TFFS:CRED_EXT_DEBT(1.0)", "GEO_DIM", "TIME_PERIOD", "MEAS_DIM",
+                conceptSchemeReference, codelistReference);
         Mockito.when(apisLocator.getSrmRestInternalFacadeV10().retrieveDataStructure(Mockito.anyString(), Mockito.anyString(), Mockito.anyString())).thenReturn(dsd);
     }
 
@@ -134,8 +133,8 @@ public class DataMockUtils {
 
         // Create a datastructure with dimensions marked as measure temporal and spatial
 
-        DataStructure dsd = SrmMockUtils.mockDsdWithGeoTimeAndMeasureDimensions("urn:sdmx:org.sdmx.infomodel.datastructure.DataStructure=TFFS:CRED_EXT_DEBT(1.0)", "GEO_DIM", "TIME_PERIOD",
-                "MEAS_DIM", conceptSchemeReference, codelistReference);
+        DataStructure dsd = SrmMockUtils.mockDsdWithGeoTimeAndMeasureDimensions("urn:sdmx:org.sdmx.infomodel.datastructure.DataStructure=TFFS:CRED_EXT_DEBT(1.0)", "GEO_DIM", "TIME_PERIOD", "MEAS_DIM",
+                conceptSchemeReference, codelistReference);
         Mockito.when(srmRestInternalService.retrieveDsdByUrn(Mockito.anyString())).thenReturn(dsd);
     }
 
@@ -150,8 +149,8 @@ public class DataMockUtils {
 
         // Create a datastructure with dimensions marked as measure temporal and spatial
 
-        DataStructure dsd = SrmMockUtils.mockDsdWithGeoTimeAndMeasureDimensions("urn:sdmx:org.sdmx.infomodel.datastructure.DataStructure=TFFS:CRED_EXT_DEBT(1.0)", "GEO_DIM", "TIME_PERIOD",
-                "MEAS_DIM", conceptSchemeReference, codelistReference);
+        DataStructure dsd = SrmMockUtils.mockDsdWithGeoTimeAndMeasureDimensions("urn:sdmx:org.sdmx.infomodel.datastructure.DataStructure=TFFS:CRED_EXT_DEBT(1.0)", "GEO_DIM", "TIME_PERIOD", "MEAS_DIM",
+                conceptSchemeReference, codelistReference);
 
         Attributes attributes = new Attributes();
         attributes.getAttributes().add(SrmMockUtils.buildSpatialAttribute("OBS_ATTR01", codelistReference, buildObservationLevelRelationship()));
