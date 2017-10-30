@@ -20,7 +20,7 @@ import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 
 public class NonEnumeratedRepresentationValidator {
 
-    protected static final Pattern PATTERN_VALIDATE_OBS = Pattern.compile(START + "\\d*\\.?\\d*" + END);
+    protected static final Pattern PATTERN_VALIDATE_OBS = Pattern.compile(START + "[\\-]?\\d+\\.?\\d*" + END);
 
     public static void checkTextFormatType(TextFormat textFormat, String key, String value, List<MetamacExceptionItem> exceptions) throws MetamacException {
         checkFacets(textFormat.getTextType(), textFormat, key, value, exceptions);
