@@ -926,8 +926,10 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
         }
         target.setVariableElement(toResource(source.getVariableElement(), selectedLanguages));
         if (source.getVariableElement() != null) {
-            ItemResourceInternal geographicalGranularity = ((VariableElementResourceInternal) source.getVariableElement()).getGeographicalGranularity();
-            target.setGeographicGranularity(toResource(geographicalGranularity, selectedLanguages));
+            if (source.getVariableElement() instanceof VariableElementResourceInternal) {
+                ItemResourceInternal geographicalGranularity = ((VariableElementResourceInternal) source.getVariableElement()).getGeographicalGranularity();
+                target.setGeographicGranularity(toResource(geographicalGranularity, selectedLanguages));
+            }
         }
         target.setOpen(source.isOpen());
         return target;
