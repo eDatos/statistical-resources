@@ -24,7 +24,6 @@ import org.joda.time.DateTime;
 import org.siemac.metamac.core.common.enume.domain.IstacTimeGranularityEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.time.IstacTimeUtils;
-import org.siemac.metamac.rest.api.constants.RestApiConstants;
 import org.siemac.metamac.rest.common.v1_0.domain.InternationalString;
 import org.siemac.metamac.rest.common.v1_0.domain.LocalisedString;
 import org.siemac.metamac.rest.common.v1_0.domain.Resource;
@@ -133,8 +132,6 @@ import com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceF
 public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
 
     private static final Logger                     logger             = LoggerFactory.getLogger(CommonDo2RestMapperV10.class);
-    private String                                  INCLUDE_ALL_FIELDS = SrmRestConstants.FIELD_INCLUDE_OPENNES + RestApiConstants.COMMA + SrmRestConstants.FIELD_INCLUDE_ORDER + RestApiConstants.COMMA
-            + SrmRestConstants.FIELD_INCLUDE_VARIABLE_ELEMENT;
 
     @Autowired
     private StatisticalResourcesConfiguration       configurationService;
@@ -707,11 +704,14 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
 
         // This map contains nodes that are not in the result. If a child of this nodes is in the result, we use this map to put it inside the nearest parent node in result
         Map<String, String> parentsReplacedToVisualisation = new HashMap<String, String>();
+
+        String order = dimensionVisualisation != null ? dimensionVisualisation.getOrder() : null;
+        String openness = dimensionVisualisation != null ? dimensionVisualisation.getOpenness() : null;
         Codes codes = null;
         if (DsdComponentType.SPATIAL.equals(dimension.getType())) {
-            codes = srmRestExternalFacade.retrieveCodesByCodelistUrn(codelistUrn, null, null, SrmRestConstants.FIELD_INCLUDE_VARIABLE_ELEMENT); // note: srm api returns codes in order
+            codes = srmRestExternalFacade.retrieveCodesByCodelistUrn(codelistUrn, order, openness, SrmRestConstants.FIELD_INCLUDE_VARIABLE_ELEMENT); // note: srm api returns codes in order
         } else {
-            codes = srmRestExternalFacade.retrieveCodesByCodelistUrn(codelistUrn, null, null, StringUtils.EMPTY); // note: srm api returns codes in order
+            codes = srmRestExternalFacade.retrieveCodesByCodelistUrn(codelistUrn, order, openness, StringUtils.EMPTY); // note: srm api returns codes in order
         }
 
         for (CodeResource code : codes.getCodes()) {

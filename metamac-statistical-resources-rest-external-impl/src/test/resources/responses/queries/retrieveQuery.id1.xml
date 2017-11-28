@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<stat:query xmlns:stat="http://www.siemac.org/metamac/rest/statistical-resources/v1.0/domain" xmlns:cdomain="http://www.siemac.org/metamac/rest/common/v1.0/domain" kind="statisticalResources#query">
+<stat:query xmlns:cdomain="http://www.siemac.org/metamac/rest/common/v1.0/domain" xmlns:stat="http://www.siemac.org/metamac/rest/statistical-resources/v1.0/domain" kind="statisticalResources#query">
     <stat:id>query1</stat:id>
     <stat:urn>urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Query=agency1:query1</stat:urn>
     <stat:selfLink kind="statisticalResources#query" href="http://data.istac.es/apis/statistical-resources/v1.0/queries/agency1/query1"/>
@@ -8,7 +8,7 @@
         <cdomain:text xml:lang="es">title-query1 en Espanol</cdomain:text>
     </stat:name>
     <stat:description>
-        <cdomain:text xml:lang="es">description-resource-jqp14Iz5ZO en Espanol</cdomain:text>
+        <cdomain:text xml:lang="es">description-resource-jxGjo7dS6Q en Espanol</cdomain:text>
     </stat:description>
     <stat:selectedLanguages total="1">
         <stat:language>es</stat:language>
@@ -47,14 +47,6 @@
                     <cdomain:text xml:lang="es">GEO_DIM-concept01 en Español</cdomain:text>
                 </stat:name>
                 <stat:type>GEOGRAPHIC_DIMENSION</stat:type>
-                <stat:variable kind="structuralResources#variable">
-                    <cdomain:id>variable-GEO_DIM-codelist01</cdomain:id>
-                    <cdomain:urn>urn:siemac:org.siemac.metamac.infomodel.structuralresources.Variable=variable-GEO_DIM-codelist01</cdomain:urn>
-                    <cdomain:selfLink href="http://apis.metamac.org/metamac-srm-web/apis/structural-resources-internal/v1.0/variables/variable-GEO_DIM-codelist01"/>
-                    <cdomain:name>
-                        <cdomain:text xml:lang="es">variable-GEO_DIM-codelist01 en Español</cdomain:text>
-                    </cdomain:name>
-                </stat:variable>
                 <stat:dimensionValues xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="stat:EnumeratedDimensionValues" total="8">
                     <stat:value kind="structuralResources#code">
                         <cdomain:id>santa-cruz-tenerife</cdomain:id>
@@ -208,16 +200,16 @@
                 <stat:type>TIME_DIMENSION</stat:type>
                 <stat:dimensionValues xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="stat:NonEnumeratedDimensionValues" total="2">
                     <stat:value>
-                        <stat:id>2011</stat:id>
+                        <stat:id>2013</stat:id>
                         <stat:name>
-                            <cdomain:text xml:lang="es">2011</cdomain:text>
+                            <cdomain:text xml:lang="es">2013</cdomain:text>
                         </stat:name>
                         <stat:temporalGranularity>YEARLY</stat:temporalGranularity>
                     </stat:value>
                     <stat:value>
-                        <stat:id>2013</stat:id>
+                        <stat:id>2011</stat:id>
                         <stat:name>
-                            <cdomain:text xml:lang="es">2013</cdomain:text>
+                            <cdomain:text xml:lang="es">2011</cdomain:text>
                         </stat:name>
                         <stat:temporalGranularity>YEARLY</stat:temporalGranularity>
                     </stat:value>
@@ -556,20 +548,20 @@
             </cdomain:resource>
         </stat:isPartOf>
         <stat:statisticalOperation kind="statisticalOperations#operation">
-            <cdomain:id>Dg1ujuiUZq</cdomain:id>
-            <cdomain:urn>urn:siemac:org.siemac.metamac.infomodel.statisticaloperations.Operation=Dg1ujuiUZq</cdomain:urn>
-            <cdomain:selfLink kind="statisticalOperations#operation" href="http://data.istac.es/apis/operations/latest/Dg1ujuiUZq"/>
+            <cdomain:id>JPZmYAdrCp</cdomain:id>
+            <cdomain:urn>urn:siemac:org.siemac.metamac.infomodel.statisticaloperations.Operation=JPZmYAdrCp</cdomain:urn>
+            <cdomain:selfLink kind="statisticalOperations#operation" href="http://data.istac.es/apis/operations/latest/JPZmYAdrCp"/>
             <cdomain:name>
-                <cdomain:text xml:lang="es">title-Dg1ujuiUZq en Espanol</cdomain:text>
+                <cdomain:text xml:lang="es">title-Tn2JaF3RSI en Espanol</cdomain:text>
             </cdomain:name>
         </stat:statisticalOperation>
         <stat:maintainer kind="structuralResources#agency">
-            <cdomain:id>j6FElnWmPM</cdomain:id>
+            <cdomain:id>KupAjc2Z9S</cdomain:id>
             <cdomain:nestedId>agency1</cdomain:nestedId>
-            <cdomain:urn>urn:sdmx:org.sdmx.infomodel.base.Agency=MaintainerMock:AgencySchemeMock(1.0).j6FElnWmPM</cdomain:urn>
-            <cdomain:selfLink kind="structuralResources#agency" href="http://data.istac.es/apis/srm/latest/j6FElnWmPM"/>
+            <cdomain:urn>urn:sdmx:org.sdmx.infomodel.base.Agency=MaintainerMock:AgencySchemeMock(1.0).KupAjc2Z9S</cdomain:urn>
+            <cdomain:selfLink kind="structuralResources#agency" href="http://data.istac.es/apis/srm/latest/KupAjc2Z9S"/>
             <cdomain:name>
-                <cdomain:text xml:lang="es">title-j6FElnWmPM en Espanol</cdomain:text>
+                <cdomain:text xml:lang="es">title-KupAjc2Z9S en Espanol</cdomain:text>
             </cdomain:name>
         </stat:maintainer>
         <stat:validFrom>2013-01-01T03:04:12Z</stat:validFrom>
