@@ -198,7 +198,7 @@ Application DatasetsStatisticalResources {
 			- Bag<@ExternalItem> statisticalUnit cascade="all-delete-orphan" fetch="lazy" databaseJoinTable="TB_EI_STATISTICAL_UNIT" databaseColumn="STATISTICAL_UNIT_FK" databaseJoinColumn="DATASET_VERSION_FK";
 
 			//Production descriptor
-			- @ExternalItem relatedDsd nullable cascade="all" databaseColumn="RELATED_DSD_FK"; 
+			- @ExternalItem relatedDsd nullable cascade="all" fetch="lazy" databaseColumn="RELATED_DSD_FK"; 
 			boolean relatedDsdChanged transient;
 			String datasetRepositoryId nullable;
 
@@ -216,11 +216,11 @@ Application DatasetsStatisticalResources {
 			//flag indicating if date next update was modified by user
 			Boolean userModifiedDateNextUpdate nullable;
 			//Frecuency which the data is updated
-			- @ExternalItem updateFrequency nullable databaseColumn="UPDATE_FREQUENCY_FK" cascade="all";
+			- @ExternalItem updateFrequency nullable databaseColumn="UPDATE_FREQUENCY_FK" cascade="all" fetch="lazy";
 			//Official/no official statistic
 			- @StatisticOfficiality statisticOfficiality nullable databaseColumn="STAT_OFFICIALITY_FK" cascade="none";
 			//Bibliographic citation
-			- @InternationalString bibliographicCitation nullable cascade="all" databaseColumn="BIBLIOGRAPHIC_CITATION_FK";
+			- @InternationalString bibliographicCitation nullable cascade="all" fetch="lazy" databaseColumn="BIBLIOGRAPHIC_CITATION_FK";
 
 			// Relations
 			"Parent"

@@ -41,7 +41,7 @@ Application BaseStatisticalResources {
 			Long id key;
 			
 			"Statistical Operation related with the statistical resource"
-			- @ExternalItem statisticalOperation nullable cascade="all" databaseColumn="STAT_OPERATION_FK";
+			- @ExternalItem statisticalOperation nullable cascade="all" fetch="lazy" databaseColumn="STAT_OPERATION_FK";
 			
 			"Last update to optimistic locking"
 			DateTimeTZ updateDate nullable;
@@ -112,11 +112,11 @@ Application BaseStatisticalResources {
 			
 			- @StreamMessageStatusEnum publicationStreamStatus nullable;
 						
-			- @RelatedResource replacesVersion cascade="all" databaseColumn="REPLACES_VERSION_FK" nullable;
+			- @RelatedResource replacesVersion cascade="all" fetch="lazy" databaseColumn="REPLACES_VERSION_FK" nullable;
 			
-			- @RelatedResource isReplacedByVersion cascade="all" databaseColumn="IS_REPLACED_BY_VERSION_FK" nullable;
+			- @RelatedResource isReplacedByVersion cascade="all" fetch="lazy" databaseColumn="IS_REPLACED_BY_VERSION_FK" nullable;
 			
-			- @ExternalItem maintainer cascade="all" databaseColumn="MAINTAINER_FK" nullable;
+			- @ExternalItem maintainer cascade="all" fetch="lazy" databaseColumn="MAINTAINER_FK" nullable;
 			
 			Repository LifeCycleStatisticalResourceRepository {
 				gap
@@ -128,32 +128,32 @@ Application BaseStatisticalResources {
 			discriminatorValue="SIEMAC_RESOURCE"
 			
 			//LANGUAGES
-			- @ExternalItem language nullable cascade="all" databaseColumn="LANGUAGE_FK";
+			- @ExternalItem language nullable cascade="all" databaseColumn="LANGUAGE_FK" fetch="lazy";
 			- Bag<@ExternalItem> languages cascade="all-delete-orphan" fetch="lazy" databaseJoinTable="TB_EI_LANGUAGES" databaseColumn="LANGUAGE_FK" databaseJoinColumn="SIEMAC_RESOURCE_FK";
 			
 			//THEMATIC CONTENT CLASSIFIER
 			- Bag<@ExternalItem> statisticalOperationInstances cascade="all-delete-orphan" fetch="lazy" databaseJoinTable="TB_EI_STAT_OPER_INSTANCES" databaseColumn="STAT_OPERATION_INSTANCE_FK" databaseJoinColumn="SIEMAC_RESOURCE_FK";
 			
 			//CONTENT DESCRIPTORS
-			- @InternationalString subtitle cascade="all" databaseColumn="SUBTITLE_FK" nullable;
-			- @InternationalString titleAlternative cascade="all" databaseColumn="TITLE_ALTERNATIVE_FK" nullable;
-			- @InternationalString abstractLogic cascade="all" databaseColumn="ABSTRACT_FK" nullable;
-			- @InternationalString keywords cascade="all" databaseColumn="KEYWORDS_FK" nullable;
+			- @InternationalString subtitle cascade="all" fetch="lazy" databaseColumn="SUBTITLE_FK" nullable;
+			- @InternationalString titleAlternative cascade="all" fetch="lazy" databaseColumn="TITLE_ALTERNATIVE_FK" nullable;
+			- @InternationalString abstractLogic cascade="all" fetch="lazy" databaseColumn="ABSTRACT_FK" nullable;
+			- @InternationalString keywords cascade="all" fetch="lazy" databaseColumn="KEYWORDS_FK" nullable;
 			Boolean userModifiedKeywords nullable;
 			
 			//COMMON METADATA
-			- @ExternalItem commonMetadata cascade="all" databaseColumn="COMMON_METADATA_FK" nullable;
+			- @ExternalItem commonMetadata cascade="all" databaseColumn="COMMON_METADATA_FK" nullable fetch="lazy";
 			
 			//CLASS DESCRIPTORS
 			- @StatisticalResourceTypeEnum type nullable;
 			
 			//PRODUCTION DESCRIPTORS
-			- @ExternalItem creator cascade="all" databaseColumn="CREATOR_FK" nullable;
+			- @ExternalItem creator cascade="all" databaseColumn="CREATOR_FK" nullable fetch="lazy";
 			- Bag<@ExternalItem> contributor cascade="all-delete-orphan" fetch="lazy" databaseJoinTable="TB_EI_CONTRIBUTORS" databaseColumn="CONTRIBUTOR_FK" databaseJoinColumn="SIEMAC_RESOURCE_FK";
 			DateTimeTZ resourceCreatedDate nullable;
 			DateTimeTZ lastUpdate nullable;
-			- @InternationalString conformsTo cascade="all" databaseColumn="CONFORMS_TO_FK" nullable;
-			- @InternationalString conformsToInternal cascade="all" databaseColumn="CONFORMS_TO_INTERNAL_FK" nullable;
+			- @InternationalString conformsTo cascade="all" fetch="lazy" databaseColumn="CONFORMS_TO_FK" nullable;
+			- @InternationalString conformsToInternal cascade="all" fetch="lazy" databaseColumn="CONFORMS_TO_INTERNAL_FK" nullable;
 			
 			//PUBLISHING DESCRIPTORS
 			- Bag<@ExternalItem> publisher cascade="all-delete-orphan" fetch="lazy" databaseJoinTable="TB_EI_PUBLISHERS" databaseColumn="PUBLISHER_FK" databaseJoinColumn="SIEMAC_RESOURCE_FK";
@@ -162,12 +162,12 @@ Application BaseStatisticalResources {
 			DateTimeTZ newnessUntilDate nullable;
 			
 			//RESOURCE RELATIONS DESCRIPTORS
-			- @RelatedResource replaces cascade="all" databaseColumn="REPLACES_FK" nullable;
-			- @RelatedResource isReplacedBy cascade="all" databaseColumn="IS_REPLACED_BY_FK" nullable;
+			- @RelatedResource replaces cascade="all" fetch="lazy" databaseColumn="REPLACES_FK" nullable;
+			- @RelatedResource isReplacedBy cascade="all"  fetch="lazy" databaseColumn="IS_REPLACED_BY_FK" nullable;
 
 			//INTELLECTUAL PROPERTY DESCRIPTORS
 			Integer copyrightedDate	nullable;
-			- @InternationalString accessRights cascade="all" databaseColumn="ACCESS_RIGHTS_FK" nullable;
+			- @InternationalString accessRights cascade="all" fetch="lazy" databaseColumn="ACCESS_RIGHTS_FK" nullable;
 			
 			Repository SiemacMetadataStatisticalResourceRepository {
 				String findLastUsedCodeForResourceType(String operationUrn, @StatisticalResourceTypeEnum resourceType);

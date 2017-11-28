@@ -9,6 +9,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
@@ -68,7 +69,6 @@ import org.siemac.metamac.rest.statistical_resources.v1_0.domain.StatisticalReso
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.StatisticalResourceType;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.VersionRationaleTypes;
 import org.siemac.metamac.rest.structural_resources.v1_0.domain.CodeResource;
-import org.siemac.metamac.rest.structural_resources.v1_0.domain.Codelist;
 import org.siemac.metamac.rest.structural_resources.v1_0.domain.Codes;
 import org.siemac.metamac.rest.structural_resources.v1_0.domain.Concept;
 import org.siemac.metamac.rest.structural_resources.v1_0.domain.Concepts;
@@ -299,7 +299,12 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
         if (CollectionUtils.isEmpty(sources)) {
             return null;
         }
-        List<String> dimensionsId = datasetService.retrieveDatasetVersionDimensionsIds(SERVICE_CONTEXT, datasetVersionUrn);
+
+        List<String> dimensionsId = new LinkedList<>();
+        for (DsdDimension dsdDimension : dsdProcessorResult.getDimensions()) {
+            dimensionsId.add(dsdDimension.getComponentId());
+        }
+
         if (CollectionUtils.isEmpty(dimensionsId)) {
             return null;
         }
@@ -655,10 +660,6 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
         target.setId(source.getComponentId());
         target.setType(toDimensionType(source.getType()));
         target.setName(toInternationalString(source.getConceptIdentity().getName(), selectedLanguages));
-        if (source.getCodelistRepresentationUrn() != null) {
-            Codelist codelistRepresentation = srmRestExternalFacade.retrieveCodelistByUrn(source.getCodelistRepresentationUrn());
-            target.setVariable(toResource(codelistRepresentation.getVariable(), selectedLanguages));
-        }
 
         // Dimension values
         target.setDimensionValues(toDimensionValues(datasetVersionUrn, dataStructure, source, dimensionVisualisation, effectiveDimensionValuesToData, selectedLanguages));
@@ -681,7 +682,8 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
 
         DimensionValues targets = null;
         if (dimension.getCodelistRepresentationUrn() != null) {
-            targets = toEnumeratedDimensionValuesFromCodelist(coveragesById, dimension.getCodelistRepresentationUrn(), dimensionVisualisation, effectiveDimensionValuesToData, selectedLanguages);
+            targets = toEnumeratedDimensionValuesFromCodelist(coveragesById, dimension.getCodelistRepresentationUrn(), dimensionVisualisation, effectiveDimensionValuesToData, selectedLanguages,
+                    dimension);
         } else if (dimension.getConceptSchemeRepresentationUrn() != null) {
             targets = toEnumeratedDimensionValuesFromConceptScheme(coveragesById, dataStructure, dimension.getType(), dimension.getConceptSchemeRepresentationUrn(), effectiveDimensionValuesToData,
                     selectedLanguages);
@@ -697,7 +699,7 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
     }
 
     private EnumeratedDimensionValues toEnumeratedDimensionValuesFromCodelist(Map<String, CodeDimension> coveragesById, String codelistUrn, DimensionVisualisation dimensionVisualisation,
-            List<String> effectiveDimensionValuesToData, List<String> selectedLanguages) throws MetamacException {
+            List<String> effectiveDimensionValuesToData, List<String> selectedLanguages, DsdDimension dimension) throws MetamacException {
         if (codelistUrn == null) {
             return null;
         }
@@ -705,8 +707,13 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
 
         // This map contains nodes that are not in the result. If a child of this nodes is in the result, we use this map to put it inside the nearest parent node in result
         Map<String, String> parentsReplacedToVisualisation = new HashMap<String, String>();
+        Codes codes = null;
+        if (DsdComponentType.SPATIAL.equals(dimension.getType())) {
+            codes = srmRestExternalFacade.retrieveCodesByCodelistUrn(codelistUrn, null, null, SrmRestConstants.FIELD_INCLUDE_VARIABLE_ELEMENT); // note: srm api returns codes in order
+        } else {
+            codes = srmRestExternalFacade.retrieveCodesByCodelistUrn(codelistUrn, null, null, StringUtils.EMPTY); // note: srm api returns codes in order
+        }
 
-        Codes codes = srmRestExternalFacade.retrieveCodesByCodelistUrn(codelistUrn, null, null, INCLUDE_ALL_FIELDS); // note: srm api returns codes in order
         for (CodeResource code : codes.getCodes()) {
             String id = code.getId();
             boolean skip = false;
