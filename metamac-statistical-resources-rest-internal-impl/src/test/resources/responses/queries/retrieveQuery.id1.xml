@@ -4,12 +4,12 @@
     <ns2:urn>urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Query=agency1:query1</ns2:urn>
     <ns2:selfLink kind="statisticalResources#query" href="http://data.istac.es/apis/statistical-resources/v1.0/queries/agency1/query1"/>
     <ns2:parentLink kind="statisticalResources#queries" href="http://data.istac.es/apis/statistical-resources/v1.0/queries"/>
-    <ns2:managementAppLink>http://localhost:8080/statistical-resources-internal/#operations/operation;id=cuTYjGlvpU/queries/query;id=agency1:query1(01.000)</ns2:managementAppLink>
+    <ns2:managementAppLink>http://localhost:8080/statistical-resources-internal/#operations/operation;id=kpjdBzcopc/queries/query;id=agency1:query1(01.000)</ns2:managementAppLink>
     <ns2:name>
         <cdomain:text xml:lang="es">title-query1 en Espanol</cdomain:text>
     </ns2:name>
     <ns2:description>
-        <cdomain:text xml:lang="es">description-resource-buWZNqXrYY en Espanol</cdomain:text>
+        <cdomain:text xml:lang="es">description-resource-G1YGhbgRZM en Espanol</cdomain:text>
     </ns2:description>
     <ns2:selectedLanguages total="1">
         <ns2:language>es</ns2:language>
@@ -22,7 +22,7 @@
             <cdomain:name>
                 <cdomain:text xml:lang="es">title-dataset01 en Espanol</cdomain:text>
             </cdomain:name>
-            <ns2:managementAppLink>http://localhost:8080/statistical-resources-internal/#operations/operation;id=QS0G7VlseC/datasets/dataset;id=agency1:dataset01(01.000)</ns2:managementAppLink>
+            <ns2:managementAppLink>http://localhost:8080/statistical-resources-internal/#operations/operation;id=pKvfLjuEKq/datasets/dataset;id=agency1:dataset01(01.000)</ns2:managementAppLink>
         </ns2:relatedDataset>
         <ns2:relatedDsd kind="structuralResources#dataStructure">
             <cdomain:id>DSD01</cdomain:id>
@@ -50,14 +50,6 @@
                     <cdomain:text xml:lang="es">GEO_DIM-concept01 en Español</cdomain:text>
                 </ns2:name>
                 <ns2:type>GEOGRAPHIC_DIMENSION</ns2:type>
-                <ns2:variable kind="structuralResources#variable">
-                    <cdomain:id>variable-GEO_DIM-codelist01</cdomain:id>
-                    <cdomain:urn>urn:siemac:org.siemac.metamac.infomodel.structuralresources.Variable=variable-GEO_DIM-codelist01</cdomain:urn>
-                    <cdomain:selfLink href="http://apis.metamac.org/metamac-srm-web/apis/structural-resources-internal/v1.0/variables/variable-GEO_DIM-codelist01"/>
-                    <cdomain:name>
-                        <cdomain:text xml:lang="es">variable-GEO_DIM-codelist01 en Español</cdomain:text>
-                    </cdomain:name>
-                </ns2:variable>
                 <ns2:dimensionValues xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="ns2:EnumeratedDimensionValues" total="8">
                     <ns2:value kind="structuralResources#code">
                         <cdomain:id>santa-cruz-tenerife</cdomain:id>
@@ -211,16 +203,16 @@
                 <ns2:type>TIME_DIMENSION</ns2:type>
                 <ns2:dimensionValues xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="ns2:NonEnumeratedDimensionValues" total="2">
                     <ns2:value>
-                        <ns2:id>2011</ns2:id>
+                        <ns2:id>2013</ns2:id>
                         <ns2:name>
-                            <cdomain:text xml:lang="es">2011</cdomain:text>
+                            <cdomain:text xml:lang="es">2013</cdomain:text>
                         </ns2:name>
                         <ns2:temporalGranularity>YEARLY</ns2:temporalGranularity>
                     </ns2:value>
                     <ns2:value>
-                        <ns2:id>2013</ns2:id>
+                        <ns2:id>2011</ns2:id>
                         <ns2:name>
-                            <cdomain:text xml:lang="es">2013</cdomain:text>
+                            <cdomain:text xml:lang="es">2011</cdomain:text>
                         </ns2:name>
                         <ns2:temporalGranularity>YEARLY</ns2:temporalGranularity>
                     </ns2:value>
@@ -539,7 +531,7 @@
             <cdomain:name>
                 <cdomain:text xml:lang="es">title-dataset01 en Espanol</cdomain:text>
             </cdomain:name>
-            <ns2:managementAppLink>http://localhost:8080/statistical-resources-internal/#operations/operation;id=QS0G7VlseC/datasets/dataset;id=agency1:dataset01(01.000)</ns2:managementAppLink>
+            <ns2:managementAppLink>http://localhost:8080/statistical-resources-internal/#operations/operation;id=pKvfLjuEKq/datasets/dataset;id=agency1:dataset01(01.000)</ns2:managementAppLink>
         </ns2:requires>
         <ns2:isPartOf total="2">
             <ns2:resource kind="statisticalResources#collection">
@@ -562,23 +554,23 @@
             </ns2:resource>
         </ns2:isPartOf>
         <ns2:statisticalOperation kind="statisticalOperations#operation">
-            <cdomain:id>cuTYjGlvpU</cdomain:id>
-            <cdomain:urn>urn:siemac:org.siemac.metamac.infomodel.statisticaloperations.Operation=cuTYjGlvpU</cdomain:urn>
-            <cdomain:selfLink kind="statisticalOperations#operation" href="http://data.istac.es/apis/operations/latest/cuTYjGlvpU"/>
+            <cdomain:id>kpjdBzcopc</cdomain:id>
+            <cdomain:urn>urn:siemac:org.siemac.metamac.infomodel.statisticaloperations.Operation=kpjdBzcopc</cdomain:urn>
+            <cdomain:selfLink kind="statisticalOperations#operation" href="http://data.istac.es/apis/operations/latest/kpjdBzcopc"/>
             <cdomain:name>
-                <cdomain:text xml:lang="es">title-cuTYjGlvpU en Espanol</cdomain:text>
+                <cdomain:text xml:lang="es">title-Txej5iXw9K en Espanol</cdomain:text>
             </cdomain:name>
-            <ns2:managementAppLink>http://localhost:8080/statistical-operations-internal/cuTYjGlvpU</ns2:managementAppLink>
+            <ns2:managementAppLink>http://localhost:8080/statistical-operations-internal/kpjdBzcopc</ns2:managementAppLink>
         </ns2:statisticalOperation>
         <ns2:maintainer kind="structuralResources#agency">
-            <cdomain:id>XY38B1BTpV</cdomain:id>
+            <cdomain:id>TPUXGDYl2F</cdomain:id>
             <cdomain:nestedId>agency1</cdomain:nestedId>
-            <cdomain:urn>urn:sdmx:org.sdmx.infomodel.base.Agency=MaintainerMock:AgencySchemeMock(1.0).XY38B1BTpV</cdomain:urn>
-            <cdomain:selfLink kind="structuralResources#agency" href="http://data.istac.es/apis/srm/latest/XY38B1BTpV"/>
+            <cdomain:urn>urn:sdmx:org.sdmx.infomodel.base.Agency=MaintainerMock:AgencySchemeMock(1.0).TPUXGDYl2F</cdomain:urn>
+            <cdomain:selfLink kind="structuralResources#agency" href="http://data.istac.es/apis/srm/latest/TPUXGDYl2F"/>
             <cdomain:name>
-                <cdomain:text xml:lang="es">title-XY38B1BTpV en Espanol</cdomain:text>
+                <cdomain:text xml:lang="es">title-TPUXGDYl2F en Espanol</cdomain:text>
             </cdomain:name>
-            <ns2:managementAppLink>http://localhost:8080/metamac-srm-web/XY38B1BTpV</ns2:managementAppLink>
+            <ns2:managementAppLink>http://localhost:8080/metamac-srm-web/TPUXGDYl2F</ns2:managementAppLink>
         </ns2:maintainer>
         <ns2:validFrom>2013-01-01T03:04:12Z</ns2:validFrom>
         <ns2:validTo>2013-02-16T14:04:12Z</ns2:validTo>
