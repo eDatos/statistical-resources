@@ -46,7 +46,13 @@
             <groupId>org.siemac.metamac.metamac-statistical-resources</groupId>
             <artifactId>metamac-statistical-resources-rest-api-common</artifactId>
             <version>${metamac-statistical-resources-rest-api-common.version}</version>
-        </dependency>        
+        </dependency>   
+        
+        <dependency>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+            <version>${commons-lang.version}</version>
+        </dependency>     
     </dependencies>
 
     <build>
