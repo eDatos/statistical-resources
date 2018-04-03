@@ -1,0 +1,107 @@
+import "classpath:/btdesign/metamac-statistical-resources-core-base.btdesign"
+import "classpath:/btdesign/metamac-statistical-resources-core-base-enums.btdesign"
+
+import "classpath:/btdesign/metamac-statistical-resources-core-datasets.btdesign"
+
+import "classpath:/btdesign/metamac-statistical-resources-core-queries.btdesign"
+import "classpath:/btdesign/metamac-statistical-resources-core-common.btdesign"
+import "classpath:/btdesign/metamac-core-common-enum.btdesign"
+
+Application MultidatasetsStatisticalResources {
+	basePackage=unused
+
+	Module domain_multidatasets {
+		basePackage=org.siemac.metamac.statistical.resources.core.multidataset
+
+		// ----------------------------------------------------------------
+		// 							SERVICES
+		// ----------------------------------------------------------------
+		
+		Service MultidatasetService {
+			> @MultidatasetRepository
+			> @MultidatasetVersionRepository
+			
+			// Multidatasets
+	    	"Creates multidataset version"
+			@MultidatasetVersion createMultidatasetVersion(@MultidatasetVersion multidatasetVersion, @ExternalItem statisticalOperation) throws MetamacException;
+			"Updates multidataset version"
+			@MultidatasetVersion updateMultidatasetVersion(@MultidatasetVersion multidatasetVersion) throws MetamacException;
+			"Retrieves multidataset version by urn"
+			@MultidatasetVersion retrieveMultidatasetVersionByUrn(String multidatasetVersionUrn) throws MetamacException;
+			"Retrieves latets multidataset version by multidataset urn"
+			@MultidatasetVersion retrieveLatestMultidatasetVersionByMultidatasetUrn(String multidatasetUrn) throws MetamacException;
+			"Retrieve latest published multidatasetVersion providing multidatasetUrn"
+    		@MultidatasetVersion retrieveLatestPublishedMultidatasetVersionByMultidatasetUrn(String multidatasetUrn) throws MetamacException;
+			"Retrieves all multidatasets versions of one multidataset"
+			List<@MultidatasetVersion> retrieveMultidatasetVersions(String multidatasetVersionUrn) throws MetamacException;
+			"Finds multidatasets by criteria"
+    		PagedResult<@MultidatasetVersion> findMultidatasetVersionsByCondition(List<ConditionalCriteria> conditions, PagingParameter pagingParameter) throws MetamacException;
+			"Deletes multidataset version. This must be last version and no published"
+    		deleteMultidatasetVersion(String multidatasetVersionUrn) throws MetamacException; 	
+		}  
+
+
+		// ----------------------------------------------------------------
+		// 							ENTITIES
+		// ---------------------------------------------------------------- 
+
+		Entity Multidataset {
+			databaseTable="TB_MULTIDATASETS"
+			hint="idSequence=MULTIDATASETS"
+			!auditable
+			
+			"Added explicitly to avoid that Sculptor generate UUID"
+			Long id key;
+			
+			"Multidataset will be identifiable to be referenced instead of referencing specific versions"
+			- @IdentifiableStatisticalResource identifiableStatisticalResource databaseColumn="IDENTIFIABLE_RESOURCE_FK" not nullable cascade="all";
+			"All versions"
+			- Bag<@MultidatasetVersion> versions cascade="all-delete-orphan" fetch="lazy" inverse <-> multidataset orderby="id asc";
+			
+			Repository MultidatasetRepository {
+				@Multidataset retrieveByUrn(String urn) throws MetamacException;
+				findByCondition;
+				save;
+				delete;
+			}
+		}
+
+		Entity MultidatasetVersion {
+			databaseTable="TB_MULTIDATASETS_VERSIONS"
+			hint="idSequence=MULTIDATASETS_VERSIONS"
+			!auditable
+			gap
+			
+			"Added explicitly to avoid that Sculptor generate UUID"
+			Long id key;
+
+			- @SiemacMetadataStatisticalResource siemacMetadataStatisticalResource databaseColumn="SIEMAC_RESOURCE_FK" not nullable cascade="all";
+			
+			 // Relations
+            "Datasets"            
+            - Bag<@Dataset> datasets cascade="all-delete-orphan" fetch="lazy" databaseJoinTable="TB_MDV_DATASETS" databaseColumn="DATASET_FK" databaseJoinColumn="MULTIDATASET_VERSION_FK";
+            
+			// Format extent resources: Number of datasets that contains the collection
+			Integer formatExtentResources nullable;
+			
+			"Parent"
+            - @Multidataset multidataset not nullable cascade="none" databaseColumn="MULTIDATASET_FK" <-> versions;
+			
+			Repository MultidatasetVersionRepository {
+				save;
+				delete;
+				findById;
+				findByCondition;
+				findByCondition(PagingParameter pagingParameter);
+				@MultidatasetVersion retrieveByUrn(String urn) throws MetamacException;
+				@MultidatasetVersion retrieveByUrnPublished(String urn) throws MetamacException;
+				@MultidatasetVersion retrieveLastVersion(String multidatasetUrn) throws MetamacException;
+				@MultidatasetVersion retrieveLastPublishedVersion(String multidatasetUrn) throws MetamacException;
+				@MultidatasetVersion retrieveByVersion(Long statisticalResourceId, String versionLogic) throws MetamacException;
+				RelatedResourceResult retrieveIsReplacedByOnlyLastPublished(@MultidatasetVersion multidatasetVersion) throws MetamacException;
+				RelatedResourceResult retrieveIsReplacedByOnlyIfPublished(@MultidatasetVersion multidatasetVersion) throws MetamacException;
+				RelatedResourceResult retrieveIsReplacedBy(@MultidatasetVersion multidatasetVersion) throws MetamacException;						
+			}
+		}              	
+	}
+}

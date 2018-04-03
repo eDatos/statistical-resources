@@ -1,0 +1,20 @@
+package org.siemac.metamac.statistical.resources.core.multidataset.domain;
+
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
+/**
+ * Entity representing MultidatasetVersion.
+ * <p>
+ * This class is responsible for the domain object related
+ * business logic for MultidatasetVersion. Properties and associations are
+ * implemented in the generated base class {@link org.siemac.metamac.statistical.resources.core.multidataset.domain.MultidatasetVersionBase}.
+ */
+@Entity
+@Table(name = "TB_MULTIDATASETS_VERSIONS")
+public class MultidatasetVersion extends MultidatasetVersionBase {
+    private static final long serialVersionUID = 1L;
+
+    public MultidatasetVersion() {
+    }
+}
