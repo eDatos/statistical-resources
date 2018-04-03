@@ -53,7 +53,7 @@ import com.smartgwt.client.widgets.form.fields.FormItemIcon;
 
 public class CommonUtils {
 
-    private static String metamacPortalBaseUrl;
+    private static String                               metamacPortalBaseUrl;
     private static Map<String, StatisticOfficialityDto> statisticOfficialitiesMap;
 
     // -----------------------------------------------------------------------------------------

@@ -22,7 +22,7 @@ public class StatisticalResourcesUrnUtils extends org.siemac.metamac.core.common
 
     /**
      * Splits an URN without prefix from a Dataset
-     * 
+     *
      * @param urnWithoutPrefix
      * @return
      */
@@ -32,7 +32,7 @@ public class StatisticalResourcesUrnUtils extends org.siemac.metamac.core.common
 
     /**
      * Splits an URN without prefix from a Publication
-     * 
+     *
      * @param urnWithoutPrefix
      * @return
      */
@@ -50,7 +50,7 @@ public class StatisticalResourcesUrnUtils extends org.siemac.metamac.core.common
 
     /**
      * Splits an URN without prefix from a Query
-     * 
+     *
      * @param urnWithoutPrefix
      * @return
      */

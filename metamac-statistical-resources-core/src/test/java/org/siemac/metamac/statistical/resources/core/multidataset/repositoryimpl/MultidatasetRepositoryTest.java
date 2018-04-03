@@ -1,16 +1,17 @@
 package org.siemac.metamac.statistical.resources.core.multidataset.repositoryimpl;
 
-import org.fornax.cartridges.sculptor.framework.test.AbstractDbUnitJpaTests;
 import static org.junit.Assert.fail;
-import org.junit.Test;
 
+import org.fornax.cartridges.sculptor.framework.test.AbstractDbUnitJpaTests;
+import org.junit.Test;
+import org.siemac.metamac.statistical.resources.core.multidataset.domain.MultidatasetRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Spring based transactional test with DbUnit support.
  */
-public class MultidatasetRepositoryTest extends AbstractDbUnitJpaTests
-    implements MultidatasetRepositoryTestBase {
+public class MultidatasetRepositoryTest extends AbstractDbUnitJpaTests implements MultidatasetRepositoryTestBase {
+
     @Autowired
     protected MultidatasetRepository multidatasetRepository;
 

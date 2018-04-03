@@ -130,14 +130,14 @@ public class OperationResourcesPresenter extends Presenter<OperationResourcesVie
         DatasetVersionWebCriteria datasetWebCriteria = new DatasetVersionWebCriteria();
         datasetWebCriteria.setStatisticalOperationUrn(urn);
 
-        dispatcher.execute(new GetDatasetVersionsAction(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, datasetWebCriteria), new WaitingAsyncCallbackHandlingError<GetDatasetVersionsResult>(
-                this) {
+        dispatcher.execute(new GetDatasetVersionsAction(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, datasetWebCriteria),
+                new WaitingAsyncCallbackHandlingError<GetDatasetVersionsResult>(this) {
 
-            @Override
-            public void onWaitSuccess(GetDatasetVersionsResult result) {
-                getView().setDatasets(result.getDatasetVersionBaseDtos());
-            }
-        });
+                    @Override
+                    public void onWaitSuccess(GetDatasetVersionsResult result) {
+                        getView().setDatasets(result.getDatasetVersionBaseDtos());
+                    }
+                });
 
         // PUBLICATIONS
 
