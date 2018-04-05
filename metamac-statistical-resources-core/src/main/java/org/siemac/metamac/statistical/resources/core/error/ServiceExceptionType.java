@@ -71,6 +71,9 @@ public class ServiceExceptionType extends CommonServiceExceptionType {
 
     // Cube
     public static final CommonServiceExceptionType CUBE_NOT_FOUND                                                             = create("exception.resources.cube.not_found");
+    
+    // Multidataset
+    public static final CommonServiceExceptionType MULTIDATASET_CUBE_NOT_FOUND                                                = create("exception.resources.multidatasetcube.not_found");    
 
     // Query
     public static final CommonServiceExceptionType QUERY_NOT_FOUND                                                            = create("exception.resources.query.not_found");

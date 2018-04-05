@@ -79,9 +79,9 @@ Application MultidatasetsStatisticalResources {
 			
 			 // Relations
             "Datasets"            
-            - Bag<@Dataset> datasets cascade="all-delete-orphan" fetch="lazy" databaseJoinTable="TB_MDV_DATASETS" databaseColumn="DATASET_FK" databaseJoinColumn="MULTIDATASET_VERSION_FK";
+            - Bag<@MultidatasetCube> cubes cascade="all-delete-orphan" fetch="lazy" databaseJoinTable="TB_MULTIDATASET_MD_CUBES" databaseColumn="MD_CUBE_FK" databaseJoinColumn="MULTIDATASET_VERSION_FK" orderby="orderInMultidataset asc";
             
-			// Format extent resources: Number of datasets that contains the collection
+			// Format extent resources: Number of cubes that contains the multidataset
 			Integer formatExtentResources nullable;
 			
 			"Parent"
@@ -102,6 +102,39 @@ Application MultidatasetsStatisticalResources {
 				RelatedResourceResult retrieveIsReplacedByOnlyIfPublished(@MultidatasetVersion multidatasetVersion) throws MetamacException;
 				RelatedResourceResult retrieveIsReplacedBy(@MultidatasetVersion multidatasetVersion) throws MetamacException;						
 			}
-		}              	
+		}  
+		
+		        
+        "Multidataset cube, forked from TB_CUBES because they dont have elementLevel "
+        Entity MultidatasetCube {
+            databaseTable="TB_MD_CUBES"
+            hint="idSequence=MD_CUBES"
+            gap
+            
+            "Added explicitly to avoid that Sculptor generate UUID"
+            Long id key;
+            
+            - @NameableStatisticalResource nameableStatisticalResource databaseColumn="STATISTICAL_RESOURCE_FK" not nullable cascade="all";
+            
+            "Order"
+            Long orderInMultidataset not nullable;
+            
+            // Relations
+            "Dataset"
+            - @Dataset dataset cascade="none" nullable databaseColumn="DATASET_FK";
+            "Query"
+            - @Query query cascade="none" nullable databaseColumn="QUERY_FK";
+            
+            "Provides access to Cube"
+            Repository MultidatasetCubeRepository {
+                @MultidatasetCube save(@MultidatasetCube entity);
+                findByCondition;
+                findByCondition(PagingParameter pagingParameter) throws MetamacException;
+                @MultidatasetCube retrieveCubeByUrn(String urn) throws MetamacException;
+                Boolean existAnyCubeInMultidataset(String multidatasetCode, String multidatasetVersionNumber) throws MetamacException;
+                List<String> findDatasetsLinkedWithMultidatasetVersion(String multidatasetVersionUrn) throws MetamacException;
+                List<String> findQueriesLinkedWithMultidatasetVersion(String multidatasetVersionUrn) throws MetamacException;
+            }
+        }             	
 	}
 }

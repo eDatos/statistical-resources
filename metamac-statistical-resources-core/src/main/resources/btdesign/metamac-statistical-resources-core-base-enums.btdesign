@@ -18,7 +18,8 @@ Application StatisticalResourcesEnums {
     	enum StatisticalResourceTypeEnum {
     		DATASET,
     		COLLECTION,
-    		QUERY
+    		QUERY,
+    		MULTIDATASET
     	}
     	
     	"Type Acronym Enum is used in resources codes"
@@ -71,7 +72,10 @@ Application StatisticalResourcesEnums {
     		CHAPTER,
     		CUBE,
     		DATASOURCE,
-    		CATEGORISATION
+    		CATEGORISATION,
+    		MULTIDATASET,
+    		MULTIDATASET_VERSION,
+    		MULTIDATASET_CUBE
     	}
     	
     	enum StreamMessageStatusEnum {

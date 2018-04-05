@@ -3,6 +3,9 @@ package org.siemac.metamac.statistical.resources.core.multidataset.domain;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
+import org.siemac.metamac.statistical.resources.core.base.domain.HasSiemacMetadata;
+import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatisticalResource;
+
 /**
  * Entity representing MultidatasetVersion.
  * <p>
@@ -12,9 +15,15 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "TB_MULTIDATASETS_VERSIONS")
-public class MultidatasetVersion extends MultidatasetVersionBase {
+public class MultidatasetVersion extends MultidatasetVersionBase implements HasSiemacMetadata {
+
     private static final long serialVersionUID = 1L;
 
     public MultidatasetVersion() {
+    }
+
+    @Override
+    public LifeCycleStatisticalResource getLifeCycleStatisticalResource() {
+        return getSiemacMetadataStatisticalResource();
     }
 }

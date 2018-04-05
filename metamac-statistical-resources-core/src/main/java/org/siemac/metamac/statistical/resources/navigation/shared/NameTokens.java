@@ -17,6 +17,8 @@ public class NameTokens {
     public static final String publicationPage            = "collection";
     public static final String publicationMetadataPage    = "collectionMetadata";
     public static final String publicationStructurePage   = "collectionStructure";
+    public static final String multidatasetsListPage       = "multidatasets";
+    public static final String multidatasetPage           = "multidataset";
     public static final String queriesListPage            = "queries";
     public static final String queryPage                  = "query";
 

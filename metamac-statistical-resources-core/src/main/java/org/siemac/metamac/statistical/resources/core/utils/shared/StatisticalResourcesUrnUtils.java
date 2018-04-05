@@ -74,6 +74,16 @@ public class StatisticalResourcesUrnUtils extends org.siemac.metamac.core.common
         return splitUrnWithoutPrefix(identifierSplited);
     }
 
+    /**
+     * Splits an URN without prefix from a Multidataset
+     *
+     * @param urnWithoutPrefix
+     * @return
+     */
+    public static String[] splitMultidatasetUrnWithoutPrefix(String urnWithoutPrefix) {
+        return splitUrnWithoutPrefix(urnWithoutPrefix);
+    }
+
     private static String[] splitUrnWithoutVersionWithoutPrefix(String identifier) {
         String agencyID = StringUtils.substringBefore(identifier, COLON);
         String resourceID = StringUtils.substringAfter(identifier, COLON);

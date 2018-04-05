@@ -2,6 +2,7 @@ import "classpath:/btdesign/metamac-statistical-resources-core-base-enums.btdesi
 import "classpath:/btdesign/metamac-statistical-resources-core-datasets.btdesign"
 import "classpath:/btdesign/metamac-statistical-resources-core-publications.btdesign"
 import "classpath:/btdesign/metamac-statistical-resources-core-queries.btdesign"
+import "classpath:/btdesign/metamac-statistical-resources-core-multidatasets.btdesign"
 import "classpath:/btdesign/metamac-core-common-enum.btdesign"
 
 Application CommonStatisticalResources {
@@ -39,7 +40,9 @@ Application CommonStatisticalResources {
 			- @PublicationVersion publicationVersion databaseColumn="PUBLICATION_VERSION_FK" cascade="none" nullable fetch="lazy";
 			- @Publication publication databaseColumn="PUBLICATION_FK" cascade="none" nullable fetch="lazy";
 			- @QueryVersion queryVersion databaseColumn="QUERY_VERSION_FK" cascade="none" nullable fetch="lazy";
-			- @Query query databaseColumn="QUERY_FK" cascade="none" nullable fetch="lazy"; 
+			- @Query query databaseColumn="QUERY_FK" cascade="none" nullable fetch="lazy";
+			- @MultidatasetVersion multidatasetVersion databaseColumn="MULTIDATASET_VERSION_FK" cascade="none" nullable fetch="lazy"; 
+			- @Multidataset multidataset databaseColumn="MULTIDATASET_FK" cascade="none" nullable fetch="lazy";		
     		
     		Repository RelatedResourceRepository {
 				findById;

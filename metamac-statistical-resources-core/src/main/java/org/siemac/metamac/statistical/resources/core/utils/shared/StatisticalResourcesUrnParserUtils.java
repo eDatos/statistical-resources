@@ -6,6 +6,7 @@ import static org.siemac.metamac.core.common.constants.shared.UrnConstants.URN_S
 import static org.siemac.metamac.core.common.constants.shared.UrnConstants.URN_SIEMAC_CLASS_DATASET_PREFIX;
 import static org.siemac.metamac.core.common.constants.shared.UrnConstants.URN_SIEMAC_CLASS_QUERY_PREFIX;
 
+import org.siemac.metamac.core.common.constants.shared.UrnConstants;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.core.common.util.shared.UrnUtils;
 
@@ -59,6 +60,20 @@ public class StatisticalResourcesUrnParserUtils {
         }
 
         return StatisticalResourcesUrnUtils.splitQueryUrnWithoutPrefix(tripletIdentifier)[1];
+    }
+
+    // MULTIDATASETS
+
+    public static boolean isMultidatasetUrn(String urn) {
+        return matches(UrnConstants.URN_SIEMAC_CLASS_MULTIDATASET_PREFIX, UrnUtils.extractPrefix(urn));
+    }
+
+    public static String getMultidatasetVersionCodeFromUrnWithoutPrefix(String tripletIdentifier) {
+        if (StringUtils.isBlank(tripletIdentifier)) {
+            throw new IllegalArgumentException("Triplet identifier can not be blank");
+        }
+
+        return StatisticalResourcesUrnUtils.splitMultidatasetUrnWithoutPrefix(tripletIdentifier)[1];
     }
 
     // Generic methods

@@ -15,6 +15,9 @@ import "classpath:/btdesign/metamac-statistical-resources-core-datasets-dtos.btd
 import "classpath:/btdesign/metamac-statistical-resources-core-publications.btdesign"
 import "classpath:/btdesign/metamac-statistical-resources-core-publications-dtos.btdesign"
 
+import "classpath:/btdesign/metamac-statistical-resources-core-multidatasets.btdesign"
+import "classpath:/btdesign/metamac-statistical-resources-core-multidatasets-dtos.btdesign"
+
 import "classpath:/btdesign/metamac-statistical-resources-core-constraints-enums.btdesign"
 import "classpath:/btdesign/metamac-statistical-resources-core-constraints-dtos.btdesign"
 
@@ -32,9 +35,11 @@ Application FacadeStatisticalResources {
 			> @QueryService
 			> @DatasetService
 			> @PublicationService
+			> @MultidatasetService
 			> @DatasetLifecycleService
 			> @PublicationLifecycleService
 			> @QueryLifecyleService
+			> @MultidatasetLifecyleService
 			
 			// QUERY VERSION
 			"Retrieves a query scheme by URN"
@@ -204,6 +209,45 @@ Application FacadeStatisticalResources {
     		"Creates a new version of a publication, copying metadata from version with provided urn"
     		@PublicationVersionDto versioningPublicationVersion(@PublicationVersionDto publicationVersionDto, @VersionTypeEnum versionType) throws MetamacException;
     		@PublicationVersionBaseDto versioningPublicationVersion(@PublicationVersionBaseDto publicationVersionDto, @VersionTypeEnum versionType) throws MetamacException;
+    		
+    		// MULTIDATASET
+            "Find all multidatasets"
+            MetamacCriteriaResult<@RelatedResourceDto> findMultidatasetsByCondition(MetamacCriteria criteria) throws MetamacException; 
+
+            // MULTIDATASET VERSION
+            "Creates multidataset"
+            @MultidatasetVersionDto createMultidataset(@MultidatasetVersionDto multidatasetVersionDto, @ExternalItemDto statisticalOperation) throws MetamacException;
+            "Updates multidataset"
+            @MultidatasetVersionDto updateMultidatasetVersion(@MultidatasetVersionDto multidatasetVersionDto) throws MetamacException;
+            "Deletes multidataset"
+            deleteMultidatasetVersion(String urn) throws MetamacException;
+            "Finds multidatasets by criteria"
+            MetamacCriteriaResult<@MultidatasetVersionBaseDto> findMultidatasetVersionByCondition(MetamacCriteria criteria) throws MetamacException;
+            "Retrieves a multidataset by URN"
+            @MultidatasetVersionDto retrieveMultidatasetVersionByUrn(String urn) throws MetamacException;
+            "Retrieves all multidataset versions"
+            List<@MultidatasetVersionBaseDto> retrieveMultidatasetVersions(String multidatasetVersionUrn) throws MetamacException;
+            "Retrieve latest multidatasetVersion providing multidatasetUrn"
+            @MultidatasetVersionDto retrieveLatestMultidatasetVersion(String multidatasetUrn) throws MetamacException;
+            "Retrieve latest published multidatasetVersion providing multidatasetUrn"
+            @MultidatasetVersionDto retrieveLatestPublishedMultidatasetVersion(String multidatasetUrn) throws MetamacException;
+            "Send to production validation"
+            @MultidatasetVersionDto sendMultidatasetVersionToProductionValidation(@MultidatasetVersionDto multidatasetVersionDto) throws MetamacException;
+            @MultidatasetVersionBaseDto sendMultidatasetVersionToProductionValidation(@MultidatasetVersionBaseDto multidatasetVersionDto) throws MetamacException;
+            "Send to diffusion validation"
+            @MultidatasetVersionDto sendMultidatasetVersionToDiffusionValidation(@MultidatasetVersionDto multidatasetVersionDto) throws MetamacException;
+            @MultidatasetVersionBaseDto sendMultidatasetVersionToDiffusionValidation(@MultidatasetVersionBaseDto multidatasetVersionDto) throws MetamacException;
+            "Send to validation rejected"
+            @MultidatasetVersionDto sendMultidatasetVersionToValidationRejected(@MultidatasetVersionDto multidatasetVersionDto) throws MetamacException;
+            @MultidatasetVersionBaseDto sendMultidatasetVersionToValidationRejected(@MultidatasetVersionBaseDto multidatasetVersionDto) throws MetamacException;
+            "Publishes a new version of a multidataset"
+            @MultidatasetVersionDto publishMultidatasetVersion(@MultidatasetVersionDto multidatasetVersionDto) throws MetamacException;
+            @MultidatasetVersionBaseDto publishMultidatasetVersion(@MultidatasetVersionBaseDto multidatasetVersionDto) throws MetamacException;
+            @MultidatasetVersionBaseDto resendPublishedMultidatasetVersionStreamMessage(String multidatasetVersionUrn) throws MetamacException;
+            "Creates a new version of a multidataset, copying metadata from version with provided urn"
+            @MultidatasetVersionDto versioningMultidatasetVersion(@MultidatasetVersionDto multidatasetVersionDto, @VersionTypeEnum versionType) throws MetamacException;
+            @MultidatasetVersionBaseDto versioningMultidatasetVersion(@MultidatasetVersionBaseDto multidatasetVersionDto, @VersionTypeEnum versionType) throws MetamacException;
+    		
 
 	    	// CHAPTERS
 	    	"Creates a chapter"
