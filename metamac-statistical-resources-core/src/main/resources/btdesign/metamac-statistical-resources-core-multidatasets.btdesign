@@ -124,6 +124,8 @@ Application MultidatasetsStatisticalResources {
             - @Dataset dataset cascade="none" nullable databaseColumn="DATASET_FK";
             "Query"
             - @Query query cascade="none" nullable databaseColumn="QUERY_FK";
+            "Relation to multidataset"
+            - @MultidatasetVersion multidatasetVersion cascade="none" fetch="lazy" not nullable databaseColumn="MULTIDATASET_VERSION_FK" <-> cubes;
             
             "Provides access to Cube"
             Repository MultidatasetCubeRepository {

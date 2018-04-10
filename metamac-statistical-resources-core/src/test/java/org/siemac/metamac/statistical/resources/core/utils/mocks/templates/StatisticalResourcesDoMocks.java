@@ -37,6 +37,8 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.TemporalCode
 import org.siemac.metamac.statistical.resources.core.dataset.utils.DatasetVersionUtils;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
+import org.siemac.metamac.statistical.resources.core.multidataset.domain.MultidatasetCube;
+import org.siemac.metamac.statistical.resources.core.multidataset.domain.MultidatasetVersion;
 import org.siemac.metamac.statistical.resources.core.publication.domain.Chapter;
 import org.siemac.metamac.statistical.resources.core.publication.domain.Cube;
 import org.siemac.metamac.statistical.resources.core.publication.domain.ElementLevel;
@@ -325,6 +327,23 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
         return values;
     }
 
+    // Multidataset
+    public MultidatasetCube mockQueryMultidatasetCube(MultidatasetVersion multidatasetVersion, Query query) {
+        MultidatasetCube cube = mockMultidatasetCube();
+        cube.setQuery(query);
+        cube.setMultidatasetVersion(multidatasetVersion);
+        multidatasetVersion.addCube(cube);
+        return cube;
+    }
+
+    public MultidatasetCube mockDatasetMultidatasetCube(MultidatasetVersion multidatasetVersion, Dataset dataset) {
+        MultidatasetCube cube = mockMultidatasetCube();
+        cube.setDataset(dataset);
+        cube.setMultidatasetVersion(multidatasetVersion);
+        multidatasetVersion.addCube(cube);
+        return cube;
+    }
+
     // -----------------------------------------------------------------
     // BASE HIERARCHY
     // -----------------------------------------------------------------
@@ -380,6 +399,11 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
             case QUERY_VERSION:
                 resource.setType(StatisticalResourceTypeEnum.QUERY);
                 break;
+            case MULTIDATASET:
+                resource.setType(StatisticalResourceTypeEnum.MULTIDATASET);
+                break;
+            case MULTIDATASET_VERSION:
+                resource.setType(StatisticalResourceTypeEnum.MULTIDATASET);
             default:
                 break;
         }
@@ -812,6 +836,13 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
         return resource;
     }
 
+    public static RelatedResource mockMultidatasetVersionRelated(MultidatasetVersion multidatasetVersion) {
+        RelatedResource resource = new RelatedResource(TypeRelatedResourceEnum.MULTIDATASET_VERSION);
+        resource.setMultidatasetVersion(multidatasetVersion);
+        resource.setVersion(Long.valueOf(0));
+        return resource;
+    }
+
     // -----------------------------------------------------------------
     // Temporal code
     // -----------------------------------------------------------------
@@ -824,6 +855,36 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
         code.setIdentifier(identifier);
         code.setTitle(title);
         return code;
+    }
+
+    // -----------------------------------------------------------------
+    // MULTIDATASET VERSION
+    // -----------------------------------------------------------------
+
+    public abstract MultidatasetVersion mockMultidatasetVersion();
+
+    // MULTIDATASETCUBE
+
+    private MultidatasetCube mockMultidatasetCube() {
+        MultidatasetCube cube = new MultidatasetCube();
+
+        // Metadata
+        cube.setOrderInMultidataset(Long.valueOf(0));
+        cube.setNameableStatisticalResource(mockNameableStatisticalResorce(TypeRelatedResourceEnum.MULTIDATASET_CUBE));
+        cube.setMultidatasetVersion(mockMultidatasetVersion());
+        return cube;
+    }
+
+    public MultidatasetCube mockMultidatasetCube(Dataset dataset) {
+        MultidatasetCube cube = mockMultidatasetCube();
+        cube.setDataset(dataset);
+        return cube;
+    }
+
+    public MultidatasetCube mockMultidatasetCube(Query query) {
+        MultidatasetCube cube = mockMultidatasetCube();
+        cube.setQuery(query);
+        return cube;
     }
 
     // -----------------------------------------------------------------

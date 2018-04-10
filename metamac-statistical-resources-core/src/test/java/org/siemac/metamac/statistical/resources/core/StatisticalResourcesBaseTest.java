@@ -29,6 +29,9 @@ import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.Datas
 import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasourceMockFactory;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DimensionRepresentationMappingMockFactory;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.MultidatasetCubeMockFactory;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.MultidatasetMockFactory;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.MultidatasetVersionMockFactory;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationMockFactory;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryMockFactory;
@@ -57,6 +60,10 @@ public abstract class StatisticalResourcesBaseTest extends MetamacBaseTest {
     protected PublicationVersionMockFactory                 publicationVersionMockFactory             = PublicationVersionMockFactory.getInstance();
     protected ChapterMockFactory                            chapterMockFactory                        = ChapterMockFactory.getInstance();
     protected CubeMockFactory                               cubeMockFactory                           = CubeMockFactory.getInstance();
+
+    protected MultidatasetMockFactory                       multidatasetMockFactory                   = MultidatasetMockFactory.getInstance();
+    protected MultidatasetVersionMockFactory                multidatasetVersionMockFactory            = MultidatasetVersionMockFactory.getInstance();
+    protected MultidatasetCubeMockFactory                   multidatasetCubeMockFactory               = MultidatasetCubeMockFactory.getInstance();
 
     protected DatasetMockFactory                            datasetMockFactory                        = DatasetMockFactory.getInstance();
     protected DatasetVersionMockFactory                     datasetVersionMockFactory                 = DatasetVersionMockFactory.getInstance();

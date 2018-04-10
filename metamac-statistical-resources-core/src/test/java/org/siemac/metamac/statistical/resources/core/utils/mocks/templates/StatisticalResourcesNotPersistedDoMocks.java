@@ -14,6 +14,7 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.StatisticOfficiality;
 import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryTypeEnum;
+import org.siemac.metamac.statistical.resources.core.multidataset.domain.MultidatasetVersion;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
 import org.siemac.metamac.statistical.resources.core.query.domain.CodeItem;
 import org.siemac.metamac.statistical.resources.core.query.domain.QuerySelectionItem;
@@ -233,6 +234,17 @@ public class StatisticalResourcesNotPersistedDoMocks extends StatisticalResource
         target.setQueryVersion(linkedQueryVersion);
         target.setType(TypeRelatedResourceEnum.QUERY_VERSION);
         return target;
+    }
+
+    // -----------------------------------------------------------------
+    // MULTIDATASET VERSION
+    // -----------------------------------------------------------------
+    @Override
+    public MultidatasetVersion mockMultidatasetVersion() {
+        MultidatasetVersion multidatasetVersion = new MultidatasetVersion();
+        multidatasetVersion.setMultidataset(null);
+        multidatasetVersion.setSiemacMetadataStatisticalResource(mockSiemacMetadataStatisticalResource(new SiemacMetadataStatisticalResource(), TypeRelatedResourceEnum.MULTIDATASET_VERSION));
+        return multidatasetVersion;
     }
 
     // -----------------------------------------------------------------

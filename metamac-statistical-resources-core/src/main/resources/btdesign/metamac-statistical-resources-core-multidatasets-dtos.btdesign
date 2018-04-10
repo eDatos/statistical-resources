@@ -15,6 +15,21 @@ Application MultidatasetsStatisticalResourcesDto {
 		DataTransferObject MultidatasetVersionDto extends @SiemacMetadataStatisticalResourceDto {
 			Integer formatExtentResources;
 		}
+		
+		"Dto for indicator instance"
+        DataTransferObject MultidatasetCubeDto extends @NameableStatisticalResourceDto {
+            "Dataset"
+            String datasetUrn;
+            
+            "Query"
+            String queryUrn;
+            
+            "Order in level"
+            Long orderInMultidataset;
+            
+            "Parent multidataset"
+            String parentMultidatasetUrn;
+        }
 	}
 
 }
