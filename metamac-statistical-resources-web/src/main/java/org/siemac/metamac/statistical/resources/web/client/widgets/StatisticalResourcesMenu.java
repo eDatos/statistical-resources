@@ -17,6 +17,7 @@ public class StatisticalResourcesMenu extends ToolStrip {
     private RadioToolStripButton datasetsButton;
     private RadioToolStripButton publicationsButton;
     private RadioToolStripButton queriesButton;
+    private RadioToolStripButton multidatasetsButton;
 
     private MainPageUiHandlers   uiHandlers;
 
@@ -62,6 +63,19 @@ public class StatisticalResourcesMenu extends ToolStrip {
             }
         });
         addButton(queriesButton);
+
+        // MULTIDATASETS
+
+        multidatasetsButton = new RadioToolStripButton(getConstants().multidatasets());
+        multidatasetsButton.setID(StatisticalResourcesToolStripButtonEnum.MULTIDATASETS.getValue());
+        multidatasetsButton.addClickHandler(new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                getUiHandlers().goToMultidatasets();
+            }
+        });
+        addButton(multidatasetsButton);
     }
 
     public void setUiHandlers(MainPageUiHandlers uiHandlers) {
@@ -84,6 +98,9 @@ public class StatisticalResourcesMenu extends ToolStrip {
             case QUERIES:
                 queriesButton.select();
                 break;
+            case MULTIDATASETS:
+                multidatasetsButton.select();
+                break;
         }
     }
 
@@ -91,6 +108,7 @@ public class StatisticalResourcesMenu extends ToolStrip {
         datasetsButton.deselect();
         publicationsButton.deselect();
         queriesButton.deselect();
+        multidatasetsButton.deselect();
     }
 
     public void selectLayout(StatisticalResourcesToolStripLayoutEnum resourceType) {
@@ -99,11 +117,13 @@ public class StatisticalResourcesMenu extends ToolStrip {
                 datasetsButton.setVisible(true);
                 publicationsButton.setVisible(true);
                 queriesButton.setVisible(true);
+                multidatasetsButton.setVisible(true);
                 break;
             case STATISTIC_DESKTOP:
                 datasetsButton.setVisible(false);
                 publicationsButton.setVisible(false);
                 queriesButton.setVisible(false);
+                multidatasetsButton.setVisible(false);
                 break;
         }
     }

@@ -11,6 +11,8 @@ import org.siemac.metamac.statistical.resources.core.dto.NameableStatisticalReso
 import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionBaseDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
+import org.siemac.metamac.statistical.resources.core.dto.multidataset.MultidatasetVersionBaseDto;
+import org.siemac.metamac.statistical.resources.core.dto.multidataset.MultidatasetVersionDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionBaseDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionDto;
 import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
@@ -137,5 +139,37 @@ public class RelatedResourceUtils extends RelatedResourceBaseUtils {
             }
         }
         return relatedResources;
+    }
+
+    // -------------------------------------------------------------------------------------------------------------
+    // MULTIDATASETS
+    // -------------------------------------------------------------------------------------------------------------
+
+    public static RelatedResourceDto getMultidatasetVersionDtoAsRelatedResourceDto(MultidatasetVersionDto multidatasetDto) {
+        RelatedResourceDto relatedResourceDto = getNameableResourceDtoAsRelatedResourceDto(multidatasetDto);
+        relatedResourceDto.setType(TypeRelatedResourceEnum.MULTIDATASET_VERSION);
+        return relatedResourceDto;
+    }
+
+    public static RelatedResourceDto getMultidatasetVersionBaseDtoAsRelatedResourceDto(MultidatasetVersionBaseDto multidatasetDto) {
+        RelatedResourceDto relatedResourceDto = getNameableResourceBaseDtoAsRelatedResourceDto(multidatasetDto);
+        relatedResourceDto.setType(TypeRelatedResourceEnum.MULTIDATASET_VERSION);
+        return relatedResourceDto;
+    }
+
+    public static List<RelatedResourceDto> getMultidatasetVersionDtosAsRelatedResourceDtos(List<MultidatasetVersionDto> multidatasetDtos) {
+        List<RelatedResourceDto> relatedResourceDtos = new ArrayList<RelatedResourceDto>(multidatasetDtos.size());
+        for (MultidatasetVersionDto multidatasetDto : multidatasetDtos) {
+            relatedResourceDtos.add(getMultidatasetVersionDtoAsRelatedResourceDto(multidatasetDto));
+        }
+        return relatedResourceDtos;
+    }
+
+    public static List<RelatedResourceDto> getMultidatasetVersionBaseDtosAsRelatedResourceDtos(List<MultidatasetVersionBaseDto> multidatasetDtos) {
+        List<RelatedResourceDto> relatedResourceDtos = new ArrayList<RelatedResourceDto>(multidatasetDtos.size());
+        for (MultidatasetVersionBaseDto multidatasetDto : multidatasetDtos) {
+            relatedResourceDtos.add(getMultidatasetVersionBaseDtoAsRelatedResourceDto(multidatasetDto));
+        }
+        return relatedResourceDtos;
     }
 }

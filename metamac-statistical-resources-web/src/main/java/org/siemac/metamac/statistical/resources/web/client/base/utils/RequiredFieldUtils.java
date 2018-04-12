@@ -91,4 +91,26 @@ public class RequiredFieldUtils {
                 return new String[]{};
         }
     }
+
+    // MULTIDATASET VERSION
+
+    private static final String[] multidatasetFieldsToProductionValidation = new String[]{DESCRIPTION, NEXT_VERSION, VERSION_RATIONALE_TYPES, LANGUAGE, LANGUAGES, CREATOR, PUBLISHER, COMMON_METADATA};
+    private static final String[] multidatasetFieldsToDiffusionValidation  = multidatasetFieldsToProductionValidation;
+    private static final String[] multidatasetFieldsToMultidataset         = multidatasetFieldsToDiffusionValidation;
+
+    public static String[] getMultidatasetRequiredFieldsToNextProcStatus(ProcStatusEnum currentProcStatus) {
+        switch (currentProcStatus) {
+            case DRAFT:
+                return multidatasetFieldsToProductionValidation;
+            case VALIDATION_REJECTED:
+                return multidatasetFieldsToProductionValidation;
+            case PRODUCTION_VALIDATION:
+                return multidatasetFieldsToDiffusionValidation;
+            case DIFFUSION_VALIDATION:
+                return multidatasetFieldsToMultidataset;
+            default:
+                return new String[]{};
+        }
+    }
+
 }

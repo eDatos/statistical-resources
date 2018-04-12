@@ -27,6 +27,7 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.TemporalCode
 import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.TemporalCodeDto;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
+import org.siemac.metamac.statistical.resources.core.multidataset.domain.MultidatasetVersionRepository;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersionRepository;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,13 +40,16 @@ public class CommonDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements Comm
     // ------------------------------------------------------------
 
     @Autowired
-    private DatasetVersionRepository     datasetVersionRepository;
+    private DatasetVersionRepository      datasetVersionRepository;
 
     @Autowired
-    private PublicationVersionRepository publicationVersionRepository;
+    private PublicationVersionRepository  publicationVersionRepository;
 
     @Autowired
-    private QueryVersionRepository       queryVersionRepository;
+    private QueryVersionRepository        queryVersionRepository;
+
+    @Autowired
+    private MultidatasetVersionRepository multidatasetVersionRepository;
 
     @Override
     public Collection<TemporalCodeDto> temporalCodeDoCollectionToDtoCollection(Collection<TemporalCode> source) throws MetamacException {
@@ -227,6 +231,9 @@ public class CommonDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements Comm
                 break;
             case QUERY:
                 nameableResource = queryVersionRepository.retrieveLastVersion(source.getQuery().getIdentifiableStatisticalResource().getUrn()).getLifeCycleStatisticalResource();
+                break;
+            case MULTIDATASET:
+                nameableResource = multidatasetVersionRepository.retrieveLastVersion(source.getMultidataset().getIdentifiableStatisticalResource().getUrn()).getSiemacMetadataStatisticalResource();
                 break;
             default:
                 nameableResource = RelatedResourceUtils.retrieveNameableResourceLinkedToRelatedResource(source);

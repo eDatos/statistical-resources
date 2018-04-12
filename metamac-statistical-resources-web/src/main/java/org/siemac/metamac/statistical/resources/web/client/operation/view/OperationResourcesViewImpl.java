@@ -5,10 +5,13 @@ import static org.siemac.metamac.statistical.resources.web.client.StatisticalRes
 import java.util.List;
 
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionBaseDto;
+import org.siemac.metamac.statistical.resources.core.dto.multidataset.MultidatasetVersionBaseDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionBaseDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionBaseDto;
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.record.DatasetRecord;
 import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.DatasetListGrid;
+import org.siemac.metamac.statistical.resources.web.client.multidataset.model.record.MultidatasetRecord;
+import org.siemac.metamac.statistical.resources.web.client.multidataset.widgets.MultidatasetListGrid;
 import org.siemac.metamac.statistical.resources.web.client.operation.presenter.OperationResourcesPresenter;
 import org.siemac.metamac.statistical.resources.web.client.operation.view.handlers.OperationResourcesUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.publication.model.record.PublicationRecord;
@@ -32,10 +35,12 @@ public class OperationResourcesViewImpl extends ViewWithUiHandlers<OperationReso
     private static final String DATASETS_SECTION_ID     = "datasets";
     private static final String PUBLICATIONS_SECTION_ID = "publications";
     private static final String QUERIES_SECTION_ID      = "queries";
+    private static final String  MULTIDATASETS_SECTION_ID = "multidatasets";
 
     private DatasetListGrid     datasetsListGrid;
     private PublicationListGrid publicationsListGrid;
     private QueryListGrid       queriesListGrid;
+    private MultidatasetListGrid multidatasetsListGrid;
 
     private VLayout             panel;
     private SectionStack        sections;
@@ -99,6 +104,23 @@ public class OperationResourcesViewImpl extends ViewWithUiHandlers<OperationReso
         lastModifiedQueriesSection.setItems(queriesListGrid);
         sections.addSection(lastModifiedQueriesSection);
 
+        multidatasetsListGrid = new MultidatasetListGrid();
+        multidatasetsListGrid.addRecordClickHandler(new RecordClickHandler() {
+
+            @Override
+            public void onRecordClick(RecordClickEvent event) {
+                MultidatasetRecord record = (MultidatasetRecord) event.getRecord();
+                getUiHandlers().goToMultidataset(record.getMultidatasetVersionBaseDto());
+            }
+        });
+
+        SectionStackSection lastModifiedMultidatasetsSection = new SectionStackSection();
+        lastModifiedMultidatasetsSection.setID(MULTIDATASETS_SECTION_ID);
+        lastModifiedMultidatasetsSection.setTitle(getConstants().multidatasetLastModified());
+        lastModifiedMultidatasetsSection.setExpanded(false);
+        lastModifiedMultidatasetsSection.setItems(multidatasetsListGrid);
+        sections.addSection(lastModifiedMultidatasetsSection);
+
         panel = new VLayout();
         panel.setHeight100();
         panel.setOverflow(Overflow.SCROLL);
@@ -126,5 +148,11 @@ public class OperationResourcesViewImpl extends ViewWithUiHandlers<OperationReso
     public void setQueries(List<QueryVersionBaseDto> queryVersionBaseDtos) {
         queriesListGrid.setQueries(queryVersionBaseDtos);
         sections.expandSection(QUERIES_SECTION_ID);
+    }
+
+    @Override
+    public void setMultidatasets(List<MultidatasetVersionBaseDto> multidatasetBaseDtos) {
+        multidatasetsListGrid.setMultidatasets(multidatasetBaseDtos);
+        sections.expandSection(MULTIDATASETS_SECTION_ID);
     }
 }

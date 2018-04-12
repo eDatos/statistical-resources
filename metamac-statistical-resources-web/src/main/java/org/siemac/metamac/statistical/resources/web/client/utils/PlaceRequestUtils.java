@@ -188,6 +188,50 @@ public class PlaceRequestUtils extends CommonPlaceRequestUtils {
     }
 
     // ---------------------------------------------------------------------------
+    // MULTIDATASETS
+    // ---------------------------------------------------------------------------
+
+    public static String getMultidatasetParamFromUrl(PlaceManager placeManager) {
+        for (PlaceRequest request : placeManager.getCurrentPlaceHierarchy()) {
+            if (NameTokens.multidatasetPage.equals(request.getNameToken())) {
+                return getRequestParameter(request, PlaceRequestParams.multidatasetParam);
+            }
+        }
+        return null;
+    }
+
+    public static PlaceRequest buildRelativeMultidatasetPlaceRequest(String urn) {
+        return new PlaceRequest(NameTokens.multidatasetPage).with(PlaceRequestParams.multidatasetParam, UrnUtils.removePrefix(urn));
+    }
+
+    public static PlaceRequest buildRelativeMultidatasetsPlaceRequest() {
+        return new PlaceRequest(NameTokens.multidatasetsListPage);
+    }
+
+    public static List<PlaceRequest> buildAbsoluteMultidatasetsPlaceRequest(String operationUrn) {
+        List<PlaceRequest> placeRequests = buildAbsoluteOperationPlaceRequest(operationUrn);
+        placeRequests.add(buildRelativeMultidatasetsPlaceRequest());
+        return placeRequests;
+    }
+
+    public static List<PlaceRequest> buildAbsoluteMultidatasetPlaceRequest(String operationUrn, String multidatasetUrn) {
+        List<PlaceRequest> placeRequests = buildAbsoluteMultidatasetsPlaceRequest(operationUrn);
+        placeRequests.add(buildRelativeMultidatasetPlaceRequest(multidatasetUrn));
+        return placeRequests;
+    }
+
+    public static String getMultidatasetBreadCrumbTitle(PlaceRequest placeRequest) {
+        String urnWithoutPrefix = getRequestParameter(placeRequest, PlaceRequestParams.multidatasetParam);
+        if (!StringUtils.isBlank(urnWithoutPrefix)) {
+            String multidatasetCode = StatisticalResourcesUrnParserUtils.getMultidatasetVersionCodeFromUrnWithoutPrefix(urnWithoutPrefix);
+            if (!StringUtils.isBlank(multidatasetCode)) {
+                return multidatasetCode;
+            }
+        }
+        return getConstants().breadcrumbMultidataset();
+    }
+
+    // ---------------------------------------------------------------------------
     // GENERIC METHODS
     // ---------------------------------------------------------------------------
 

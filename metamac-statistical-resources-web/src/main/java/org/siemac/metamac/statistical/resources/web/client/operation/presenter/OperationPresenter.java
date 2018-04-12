@@ -120,6 +120,8 @@ public class OperationPresenter extends Presenter<OperationView, OperationProxy>
             SelectMenuButtonEvent.fire(this, StatisticalResourcesToolStripButtonEnum.PUBLICATIONS);
         } else if (PlaceRequestUtils.isNameTokenInPlaceHierarchy(placeManager, NameTokens.queriesListPage)) {
             SelectMenuButtonEvent.fire(this, StatisticalResourcesToolStripButtonEnum.QUERIES);
+        } else if (PlaceRequestUtils.isNameTokenInPlaceHierarchy(placeManager, NameTokens.multidatasetsListPage)) {
+            SelectMenuButtonEvent.fire(this, StatisticalResourcesToolStripButtonEnum.MULTIDATASETS);
         } else {
             DeselectMenuButtonsEvent.fire(this);
         }

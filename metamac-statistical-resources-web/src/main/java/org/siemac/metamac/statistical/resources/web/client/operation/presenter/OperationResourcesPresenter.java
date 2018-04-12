@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionBaseDto;
+import org.siemac.metamac.statistical.resources.core.dto.multidataset.MultidatasetVersionBaseDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionBaseDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionBaseDto;
 import org.siemac.metamac.statistical.resources.navigation.shared.NameTokens;
@@ -19,12 +20,15 @@ import org.siemac.metamac.statistical.resources.web.client.operation.view.handle
 import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.PlaceRequestUtils;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.DatasetVersionWebCriteria;
+import org.siemac.metamac.statistical.resources.web.shared.criteria.MultidatasetVersionWebCriteria;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.PublicationVersionWebCriteria;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.QueryVersionWebCriteria;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetVersionsAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetVersionsResult;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationAction;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationResult;
+import org.siemac.metamac.statistical.resources.web.shared.multidataset.GetMultidatasetVersionsAction;
+import org.siemac.metamac.statistical.resources.web.shared.multidataset.GetMultidatasetVersionsResult;
 import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublicationVersionsAction;
 import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublicationVersionsResult;
 import org.siemac.metamac.statistical.resources.web.shared.query.GetQueryVersionsAction;
@@ -58,6 +62,7 @@ public class OperationResourcesPresenter extends Presenter<OperationResourcesVie
         void setDatasets(List<DatasetVersionBaseDto> datasetDtos);
         void setPublications(List<PublicationVersionBaseDto> publicationDtos);
         void setQueries(List<QueryVersionBaseDto> queryVersionBaseDtos);
+        void setMultidatasets(List<MultidatasetVersionBaseDto> multidatasetBaseDtos);
     }
 
     @TitleFunction
@@ -165,6 +170,20 @@ public class OperationResourcesPresenter extends Presenter<OperationResourcesVie
                         getView().setQueries(result.getQueryVersionBaseDtos());
                     }
                 });
+
+        // MULTIDATASETS
+
+        MultidatasetVersionWebCriteria multidatasetWebCriteria = new MultidatasetVersionWebCriteria();
+        multidatasetWebCriteria.setStatisticalOperationUrn(urn);
+
+        dispatcher.execute(new GetMultidatasetVersionsAction(0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS, multidatasetWebCriteria),
+                new WaitingAsyncCallbackHandlingError<GetMultidatasetVersionsResult>(this) {
+
+                    @Override
+                    public void onWaitSuccess(GetMultidatasetVersionsResult result) {
+                        getView().setMultidatasets(result.getMultidatasetBaseDtos());
+                    }
+                });
     }
 
     //
@@ -189,6 +208,14 @@ public class OperationResourcesPresenter extends Presenter<OperationResourcesVie
     public void goToQuery(QueryVersionBaseDto queryVersionBaseDto) {
         if (queryVersionBaseDto != null) {
             placeManager.revealPlaceHierarchy(PlaceRequestUtils.buildAbsoluteQueryPlaceRequest(queryVersionBaseDto.getStatisticalOperation().getUrn(), queryVersionBaseDto.getUrn()));
+        }
+    }
+
+    @Override
+    public void goToMultidataset(MultidatasetVersionBaseDto multidatasetVersionBaseDto) {
+        if (multidatasetVersionBaseDto != null) {
+            placeManager
+                    .revealPlaceHierarchy(PlaceRequestUtils.buildAbsoluteMultidatasetPlaceRequest(multidatasetVersionBaseDto.getStatisticalOperation().getUrn(), multidatasetVersionBaseDto.getUrn()));
         }
     }
 }

@@ -625,6 +625,10 @@ public class CommonUtils {
         return UrnUtils.generateUrn(UrnConstants.URN_SIEMAC_CLASS_QUERY_PREFIX, queryIdentifier);
     }
 
+    public static String generateMultidatasetUrn(String publicationIdentifier) {
+        return UrnUtils.generateUrn(UrnConstants.URN_SIEMAC_CLASS_MULTIDATASET_PREFIX, publicationIdentifier);
+    }
+
     public static void showMessageAfterResourceLifeCycleUpdate(HasHandlers source, MetamacWebException notificationException, String message) {
         if (notificationException == null) {
             ShowMessageEvent.fireSuccessMessage(source, message);

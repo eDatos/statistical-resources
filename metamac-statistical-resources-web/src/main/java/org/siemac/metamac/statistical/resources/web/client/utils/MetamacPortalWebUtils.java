@@ -3,6 +3,7 @@ package org.siemac.metamac.statistical.resources.web.client.utils;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.statistical.resources.core.dto.LifeCycleStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
+import org.siemac.metamac.statistical.resources.core.dto.multidataset.MultidatasetVersionDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionDto;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
@@ -57,6 +58,16 @@ public class MetamacPortalWebUtils {
         builder.append(PAGE_COLLECTION_RESOURCE);
         builder.append(URL_QUERY_SEPARATOR);
         builder.append(buildQueryParametersForNotVersionableResource(publicationVersionDto, StatisticalResourceTypeEnum.COLLECTION));
+
+        return builder.toString();
+    }
+
+    public static String buildMultidatasetVersionUrl(MultidatasetVersionDto multidatasetVersionDto) throws MetamacWebException {
+        StringBuilder builder = new StringBuilder();
+        builder.append(buildEndpointUrl());
+        builder.append(PAGE_DATA_RESOURCE);
+        builder.append(URL_QUERY_SEPARATOR);
+        builder.append(buildQueryParametersForNotVersionableResource(multidatasetVersionDto, StatisticalResourceTypeEnum.MULTIDATASET));
 
         return builder.toString();
     }

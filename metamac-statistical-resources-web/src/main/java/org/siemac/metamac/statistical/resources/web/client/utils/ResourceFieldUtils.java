@@ -119,4 +119,12 @@ public class ResourceFieldUtils {
 
         return ListGridUtils.addFields(getLifeCycleListGridFields(), relatedDataset, status, type);
     }
+
+    //
+    // Multidataset
+    //
+
+    public static CustomListGridField[] getMultidatasetListGridFields() {
+        return getSiemacMetadataListGridFields();
+    }
 }

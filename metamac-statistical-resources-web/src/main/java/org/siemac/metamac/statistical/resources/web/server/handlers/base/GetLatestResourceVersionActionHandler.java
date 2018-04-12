@@ -36,6 +36,8 @@ public class GetLatestResourceVersionActionHandler extends SecurityActionHandler
                 statisticalResourceDto = statisticalResourcesServiceFacade.retrieveLatestQueryVersion(ServiceContextHolder.getCurrentServiceContext(), resourceUrn);
             } else if (StatisticalResourcesUrnParserUtils.isPublicationUrn(resourceUrn)) {
                 statisticalResourceDto = statisticalResourcesServiceFacade.retrieveLatestPublicationVersion(ServiceContextHolder.getCurrentServiceContext(), resourceUrn);
+            } else if (StatisticalResourcesUrnParserUtils.isMultidatasetUrn(resourceUrn)) {
+                statisticalResourceDto = statisticalResourcesServiceFacade.retrieveLatestMultidatasetVersion(ServiceContextHolder.getCurrentServiceContext(), resourceUrn);
             }
 
             return new GetLatestResourceVersionResult(statisticalResourceDto);

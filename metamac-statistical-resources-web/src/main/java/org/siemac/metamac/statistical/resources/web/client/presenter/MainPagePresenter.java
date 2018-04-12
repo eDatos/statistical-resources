@@ -267,6 +267,13 @@ public class MainPagePresenter extends Presenter<MainPagePresenter.MainPageView,
         placeManager.revealPlaceHierarchy(operationHierarchy);
     }
 
+    @Override
+    public void goToMultidatasets() {
+        List<PlaceRequest> operationHierarchy = getHierarchyUntilNameToken(NameTokens.operationPage);
+        operationHierarchy.add(PlaceRequestUtils.buildRelativeMultidatasetsPlaceRequest());
+        placeManager.revealPlaceHierarchy(operationHierarchy);
+    }
+
     protected List<PlaceRequest> getHierarchyUntilNameToken(String nameToken) {
         List<PlaceRequest> filteredHierarchy = new ArrayList<PlaceRequest>();
         List<PlaceRequest> hierarchy = placeManager.getCurrentPlaceHierarchy();

@@ -4,7 +4,7 @@ import com.smartgwt.client.types.ValueEnum;
 
 public enum StatisticalResourcesToolStripButtonEnum implements ValueEnum {
 
-    DATASETS("datasets_button"), PUBLICATIONS("publications_button"), QUERIES("queries_button");
+    DATASETS("datasets_button"), PUBLICATIONS("publications_button"), QUERIES("queries_button"), MULTIDATASETS("multidatasets_button");
 
     private String value;
 

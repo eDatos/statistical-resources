@@ -9,6 +9,8 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
+import org.siemac.metamac.statistical.resources.core.multidataset.domain.Multidataset;
+import org.siemac.metamac.statistical.resources.core.multidataset.domain.MultidatasetVersion;
 import org.siemac.metamac.statistical.resources.core.publication.domain.Publication;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
 import org.siemac.metamac.statistical.resources.core.query.domain.Query;
@@ -24,6 +26,8 @@ public class RelatedResourceUtils {
                 return source.getPublicationVersion().getSiemacMetadataStatisticalResource();
             case QUERY_VERSION:
                 return source.getQueryVersion().getLifeCycleStatisticalResource();
+            case MULTIDATASET_VERSION:
+                return source.getMultidatasetVersion().getSiemacMetadataStatisticalResource();
             default:
                 throw new MetamacException(ServiceExceptionType.UNKNOWN, "Type of related resource not supported: " + source.getType());
         }
@@ -41,6 +45,10 @@ public class RelatedResourceUtils {
                 return source.getDataset().getIdentifiableStatisticalResource();
             case QUERY:
                 return source.getQuery().getIdentifiableStatisticalResource();
+            case MULTIDATASET:
+                return source.getMultidataset().getIdentifiableStatisticalResource();
+            case MULTIDATASET_VERSION:
+                return source.getMultidatasetVersion().getSiemacMetadataStatisticalResource();
             default:
                 throw new MetamacException(ServiceExceptionType.UNKNOWN, "Type of related resource not supported: " + source.getType());
         }
@@ -67,6 +75,12 @@ public class RelatedResourceUtils {
         } else if (resource instanceof Query) {
             relatedResource.setType(TypeRelatedResourceEnum.QUERY);
             relatedResource.setQuery((Query) resource);
+        } else if (resource instanceof MultidatasetVersion) {
+            relatedResource.setType(TypeRelatedResourceEnum.MULTIDATASET_VERSION);
+            relatedResource.setMultidatasetVersion((MultidatasetVersion) resource);
+        } else if (resource instanceof Multidataset) {
+            relatedResource.setType(TypeRelatedResourceEnum.MULTIDATASET);
+            relatedResource.setMultidataset((Multidataset) resource);
         } else {
             throw new MetamacException(ServiceExceptionType.UNKNOWN, "Undefined resource type");
         }

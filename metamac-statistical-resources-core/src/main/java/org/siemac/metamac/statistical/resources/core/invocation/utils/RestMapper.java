@@ -23,6 +23,7 @@ import org.siemac.metamac.statistical.resources.core.common.domain.LocalisedStri
 import org.siemac.metamac.statistical.resources.core.common.mapper.CommonDto2DoMapper;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
+import org.siemac.metamac.statistical.resources.core.multidataset.domain.MultidatasetVersion;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
 import org.siemac.metamac.statistical_resources.rest.common.StatisticalResourcesRestConstants;
@@ -153,6 +154,8 @@ public class RestMapper {
                 return internalWebApplicationNavigation.buildDatasetVersionUrl((DatasetVersion) item);
             case COLLECTION:
                 return internalWebApplicationNavigation.buildPublicationVersionUrl((PublicationVersion) item);
+            case MULTIDATASET:
+                return internalWebApplicationNavigation.buildMultidatasetVersionUrl((MultidatasetVersion) item);
             default:
                 throw new RuntimeException("Invalid value for statistical resource type " + item.getSiemacMetadataStatisticalResource().getType());
         }
@@ -174,6 +177,8 @@ public class RestMapper {
                 return toCollectionSelfLink(agencyID, resourceID);
             case QUERY:
                 return toQuerySelfLink(agencyID, resourceID);
+            case MULTIDATASET:
+                return toMultidatasetSelfLink(agencyID, resourceID);
             default:
                 throw new RuntimeException("Invalid value for statistical resource type " + type);
         }
@@ -207,6 +212,17 @@ public class RestMapper {
 
     private String toQueryLink(String agencyID, String resourceID) {
         String resourceSubpath = StatisticalResourcesRestConstants.LINK_SUBPATH_QUERIES;
+        String version = null; // do not return version
+        return toResourceLink(resourceSubpath, agencyID, resourceID, version);
+    }
+
+    private ResourceLink toMultidatasetSelfLink(String agencyID, String resourceID) {
+        String link = toMultidatasetLink(agencyID, resourceID);
+        return toResourceLink(StatisticalResourcesRestConstants.KIND_MULTIDATASET, link);
+    }
+
+    private String toMultidatasetLink(String agencyID, String resourceID) {
+        String resourceSubpath = StatisticalResourcesRestConstants.LINK_SUBPATH_MULTIDATASETS;
         String version = null; // do not return version
         return toResourceLink(resourceSubpath, agencyID, resourceID, version);
     }
@@ -257,6 +273,8 @@ public class RestMapper {
                 return TypeExternalArtefactsEnum.COLLECTION.getValue();
             case QUERY:
                 return TypeExternalArtefactsEnum.QUERY.getValue();
+            case MULTIDATASET:
+                return TypeExternalArtefactsEnum.MULTIDATASET.getValue();
             default:
                 throw new RuntimeException("Invalid value for statistical resource type " + type);
         }

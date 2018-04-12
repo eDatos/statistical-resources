@@ -24,6 +24,7 @@ import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdAttributeDt
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdAttributeInstanceDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdDimensionDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.TemporalCodeDto;
+import org.siemac.metamac.statistical.resources.core.dto.multidataset.MultidatasetVersionBaseDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.ChapterDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.CubeDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.ElementLevelDto;
@@ -44,6 +45,7 @@ import org.siemac.metamac.statistical.resources.web.client.model.record.SiemacMe
 import org.siemac.metamac.statistical.resources.web.client.model.record.TemporalCodeRecord;
 import org.siemac.metamac.statistical.resources.web.client.model.record.VersionRationaleTypeRecord;
 import org.siemac.metamac.statistical.resources.web.client.model.record.VersionableResourceRecord;
+import org.siemac.metamac.statistical.resources.web.client.multidataset.model.record.MultidatasetRecord;
 import org.siemac.metamac.statistical.resources.web.client.publication.model.ds.ElementLevelDS;
 import org.siemac.metamac.statistical.resources.web.client.publication.model.record.ElementLevelTreeNode;
 import org.siemac.metamac.statistical.resources.web.client.publication.model.record.PublicationRecord;
@@ -292,6 +294,35 @@ public class StatisticalResourcesRecordUtils extends RecordUtils {
             }
         }
         return queryVersionBaseDtos;
+    }
+
+    //
+    // Multidatasets
+    //
+
+    public static MultidatasetRecord[] getMultidatasetRecords(List<MultidatasetVersionBaseDto> multidatasetVersionBaseDtos) {
+        MultidatasetRecord[] records = new MultidatasetRecord[multidatasetVersionBaseDtos.size()];
+        for (int i = 0; i < multidatasetVersionBaseDtos.size(); i++) {
+            records[i] = getMultidatasetRecord(multidatasetVersionBaseDtos.get(i));
+        }
+        return records;
+    }
+
+    public static MultidatasetRecord getMultidatasetRecord(MultidatasetVersionBaseDto multidatasetVersionBaseDto) {
+        MultidatasetRecord record = (MultidatasetRecord) getSiemacMetadataRecord(new MultidatasetRecord(), multidatasetVersionBaseDto);
+        record.setMultidatasetBaseDto(multidatasetVersionBaseDto);
+        return record;
+    }
+
+    public static List<MultidatasetVersionBaseDto> getMultidatasetVersionBaseDtosFromListGridRecords(ListGridRecord[] records) {
+        List<MultidatasetVersionBaseDto> multidatasetVersionBaseDtos = new ArrayList<MultidatasetVersionBaseDto>();
+        if (records != null) {
+            for (ListGridRecord record : records) {
+                MultidatasetRecord datasetRecord = (MultidatasetRecord) record;
+                multidatasetVersionBaseDtos.add(datasetRecord.getMultidatasetVersionBaseDto());
+            }
+        }
+        return multidatasetVersionBaseDtos;
     }
 
     // Codes

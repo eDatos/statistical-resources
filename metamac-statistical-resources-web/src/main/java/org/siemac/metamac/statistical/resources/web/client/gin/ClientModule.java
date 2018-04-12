@@ -19,6 +19,12 @@ import org.siemac.metamac.statistical.resources.web.client.dataset.view.DatasetD
 import org.siemac.metamac.statistical.resources.web.client.dataset.view.DatasetListViewImpl;
 import org.siemac.metamac.statistical.resources.web.client.dataset.view.DatasetMetadataTabViewImpl;
 import org.siemac.metamac.statistical.resources.web.client.dataset.view.DatasetViewImpl;
+import org.siemac.metamac.statistical.resources.web.client.multidataset.presenter.MultidatasetListPresenter;
+import org.siemac.metamac.statistical.resources.web.client.multidataset.presenter.MultidatasetMetadataTabPresenter;
+import org.siemac.metamac.statistical.resources.web.client.multidataset.presenter.MultidatasetPresenter;
+import org.siemac.metamac.statistical.resources.web.client.multidataset.view.MultidatasetListViewImpl;
+import org.siemac.metamac.statistical.resources.web.client.multidataset.view.MultidatasetMetadataTabViewImpl;
+import org.siemac.metamac.statistical.resources.web.client.multidataset.view.MultidatasetViewImpl;
 import org.siemac.metamac.statistical.resources.web.client.operation.presenter.OperationListPresenter;
 import org.siemac.metamac.statistical.resources.web.client.operation.presenter.OperationPresenter;
 import org.siemac.metamac.statistical.resources.web.client.operation.presenter.OperationResourcesPresenter;
@@ -93,6 +99,11 @@ public class ClientModule extends AbstractPresenterModule {
                 PublicationMetadataTabPresenter.PublicationMetadataTabProxy.class);
         bindPresenter(PublicationStructureTabPresenter.class, PublicationStructureTabPresenter.PublicationStructureTabView.class, PublicationStructureTabViewImpl.class,
                 PublicationStructureTabPresenter.PublicationStructureTabProxy.class);
+
+        bindPresenter(MultidatasetListPresenter.class, MultidatasetListPresenter.MultidatasetListView.class, MultidatasetListViewImpl.class, MultidatasetListPresenter.MultidatasetListProxy.class);
+        bindPresenter(MultidatasetPresenter.class, MultidatasetPresenter.MultidatasetView.class, MultidatasetViewImpl.class, MultidatasetPresenter.MultidatasetProxy.class);
+        bindPresenter(MultidatasetMetadataTabPresenter.class, MultidatasetMetadataTabPresenter.MultidatasetMetadataTabView.class, MultidatasetMetadataTabViewImpl.class,
+                MultidatasetMetadataTabPresenter.MultidatasetMetadataTabProxy.class);
 
         bindPresenter(QueryListPresenter.class, QueryListPresenter.QueryListView.class, QueryListViewImpl.class, QueryListPresenter.QueryListProxy.class);
         bindPresenter(QueryPresenter.class, QueryPresenter.QueryView.class, QueryViewImpl.class, QueryPresenter.QueryProxy.class);
