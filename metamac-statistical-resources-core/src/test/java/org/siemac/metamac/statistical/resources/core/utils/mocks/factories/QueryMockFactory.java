@@ -364,7 +364,8 @@ public class QueryMockFactory extends StatisticalResourcesMockFactory<Query> {
 
         // PUBLISHED + NOT VISIBLE
         Publication publicationMultiNotVisible = createPublicationWithTwoVersionsOnePublishedLastNotVisibleLinkedToQueries(7, null, query);
-        registerPublicationVersionMock(PUBLICATION_VERSION_75_NOT_VISIBLE_V02_IN_PUB_WITH_PUBLISHED_AND_NOT_VISIBLE__ONLY_LAST_LINKED_TO_QUERY_13_NAME, publicationMultiNotVisible.getVersions().get(1));
+        registerPublicationVersionMock(PUBLICATION_VERSION_75_NOT_VISIBLE_V02_IN_PUB_WITH_PUBLISHED_AND_NOT_VISIBLE__ONLY_LAST_LINKED_TO_QUERY_13_NAME,
+                publicationMultiNotVisible.getVersions().get(1));
 
         // PUBLISHED + PUBLISHED
         Publication publicationMultiLastPublished = createPublicationWithTwoVersionsPublishedLinkedToQueries(10, null, query);
@@ -419,10 +420,10 @@ public class QueryMockFactory extends StatisticalResourcesMockFactory<Query> {
         // PUBLISHED + PUBLISHED
 
         Publication publicationLastPublished = createPublicationWithTwoVersionsPublishedLinkedToQueries(12, query, query);
-        registerPublicationVersionMock(PublicationVersionMockFactory.PUBLICATION_VERSION_81_PREVIOUS_VERSION_V01_IN_PUB_WITH_TWO_PUBLISHED__BOTH_LINKED_TO_QUERY_15_NAME, publicationLastPublished
-                .getVersions().get(0));
-        registerPublicationVersionMock(PublicationVersionMockFactory.PUBLICATION_VERSION_82_LAST_VERSION_V02_IN_PUB_WITH_TWO_PUBLISHED__BOTH_LINKED_TO_QUERY_15_NAME, publicationLastPublished
-                .getVersions().get(1));
+        registerPublicationVersionMock(PublicationVersionMockFactory.PUBLICATION_VERSION_81_PREVIOUS_VERSION_V01_IN_PUB_WITH_TWO_PUBLISHED__BOTH_LINKED_TO_QUERY_15_NAME,
+                publicationLastPublished.getVersions().get(0));
+        registerPublicationVersionMock(PublicationVersionMockFactory.PUBLICATION_VERSION_82_LAST_VERSION_V02_IN_PUB_WITH_TWO_PUBLISHED__BOTH_LINKED_TO_QUERY_15_NAME,
+                publicationLastPublished.getVersions().get(1));
         return new MockDescriptor(query, publicationLastDraft, publicationLastNotVisible, publicationLastPublished);
     }
 

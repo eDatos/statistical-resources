@@ -83,7 +83,7 @@ public class StatisticalResourcesMenu extends ToolStrip {
     }
 
     public MainPageUiHandlers getUiHandlers() {
-        return this.uiHandlers;
+        return uiHandlers;
     }
 
     public void selectButton(StatisticalResourcesToolStripButtonEnum type) {

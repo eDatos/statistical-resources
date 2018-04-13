@@ -30,19 +30,20 @@ public class InternalWebApplicationNavigation {
     public InternalWebApplicationNavigation(String webApplicationPath) {
         // Publication
         // @formatter:off
-        publicationVersionTemplate = new UriTemplate(webApplicationPath + SEPARATOR + PATH_STATISTICAL_RESOURCES 
-                + SEPARATOR + NameTokens.operationPage + ";" + PlaceRequestParams.operationParam + "=" + "{" + OPERATION_ID_PARAMETER + "}" 
-                + SEPARATOR + NameTokens.publicationsListPage + SEPARATOR + NameTokens.publicationPage + ";" + PlaceRequestParams.publicationParam + "=" + "{" + PUBLICATION_ID_PARAMETER + "}" 
+        publicationVersionTemplate = new UriTemplate(webApplicationPath + SEPARATOR + PATH_STATISTICAL_RESOURCES
+                + SEPARATOR + NameTokens.operationPage + ";" + PlaceRequestParams.operationParam + "=" + "{" + OPERATION_ID_PARAMETER + "}"
+                + SEPARATOR + NameTokens.publicationsListPage + SEPARATOR + NameTokens.publicationPage + ";" + PlaceRequestParams.publicationParam + "=" + "{" + PUBLICATION_ID_PARAMETER + "}"
                 );
-        
-        datasetVersionTemplate = new UriTemplate(webApplicationPath + SEPARATOR + PATH_STATISTICAL_RESOURCES 
-                + SEPARATOR + NameTokens.operationPage + ";" + PlaceRequestParams.operationParam + "=" + "{" + OPERATION_ID_PARAMETER + "}" 
-                + SEPARATOR + NameTokens.datasetsListPage + SEPARATOR + NameTokens.datasetPage + ";" + PlaceRequestParams.datasetParam + "=" + "{" + DATASET_ID_PARAMETER + "}" 
+
+        datasetVersionTemplate = new UriTemplate(webApplicationPath + SEPARATOR + PATH_STATISTICAL_RESOURCES
+                + SEPARATOR + NameTokens.operationPage + ";" + PlaceRequestParams.operationParam + "=" + "{" + OPERATION_ID_PARAMETER + "}"
+                + SEPARATOR + NameTokens.datasetsListPage + SEPARATOR + NameTokens.datasetPage + ";" + PlaceRequestParams.datasetParam + "=" + "{" + DATASET_ID_PARAMETER + "}"
                 );
-        
-        queryTemplate = new UriTemplate(webApplicationPath + SEPARATOR + PATH_STATISTICAL_RESOURCES 
-                + SEPARATOR + NameTokens.operationPage + ";" + PlaceRequestParams.operationParam + "=" + "{" + OPERATION_ID_PARAMETER + "}" 
-                + SEPARATOR + NameTokens.queriesListPage + SEPARATOR + NameTokens.queryPage + ";" + PlaceRequestParams.queryParam + "=" + "{" + QUERY_ID_PARAMETER + "}" 
+
+        queryTemplate = new UriTemplate(webApplicationPath + SEPARATOR + PATH_STATISTICAL_RESOURCES
+                + SEPARATOR + NameTokens.operationPage + ";" + PlaceRequestParams.operationParam + "=" + "{" + OPERATION_ID_PARAMETER + "}"
+                + SEPARATOR + NameTokens.queriesListPage + SEPARATOR + NameTokens.queryPage + ";" + PlaceRequestParams.queryParam + "=" + "{" + QUERY_ID_PARAMETER + "}"
+                );
                 );
         // @formatter:on
     }

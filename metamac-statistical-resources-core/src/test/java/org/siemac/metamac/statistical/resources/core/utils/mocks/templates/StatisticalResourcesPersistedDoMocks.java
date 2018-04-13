@@ -194,6 +194,7 @@ public class StatisticalResourcesPersistedDoMocks extends StatisticalResourcesDo
     // DATASET
     // -----------------------------------------------------------------
 
+    @Override
     public void mockDataset(DatasetMock dataset) {
         if (dataset.getIdentifiableStatisticalResource() == null) {
             dataset.setIdentifiableStatisticalResource(new IdentifiableStatisticalResource());
@@ -262,8 +263,8 @@ public class StatisticalResourcesPersistedDoMocks extends StatisticalResourcesDo
 
         // Statistical Operation
         if (dataset != null && dataset.getIdentifiableStatisticalResource() != null && dataset.getIdentifiableStatisticalResource().getStatisticalOperation() != null) {
-            datasetVersion.getSiemacMetadataStatisticalResource().setStatisticalOperation(
-                    mockStatisticalOperationExternalItem(dataset.getIdentifiableStatisticalResource().getStatisticalOperation().getCode()));
+            datasetVersion.getSiemacMetadataStatisticalResource()
+                    .setStatisticalOperation(mockStatisticalOperationExternalItem(dataset.getIdentifiableStatisticalResource().getStatisticalOperation().getCode()));
         }
 
         // CODE
@@ -411,8 +412,8 @@ public class StatisticalResourcesPersistedDoMocks extends StatisticalResourcesDo
         Categorisation categorisation = new Categorisation();
         categorisation.setVersionableStatisticalResource(new VersionableStatisticalResource());
         categorisation.getVersionableStatisticalResource().setCode(categorisationCode);
-        categorisation.getVersionableStatisticalResource().setUrn(
-                GeneratorUrnUtils.generateSdmxCategorisationUrn(new String[]{maintainer.getCodeNested()}, categorisationCode, StatisticalResourcesVersionUtils.INITIAL_VERSION));
+        categorisation.getVersionableStatisticalResource()
+                .setUrn(GeneratorUrnUtils.generateSdmxCategorisationUrn(new String[]{maintainer.getCodeNested()}, categorisationCode, StatisticalResourcesVersionUtils.INITIAL_VERSION));
         categorisation.setDatasetVersion(datasetVersion);
         categorisation.setCategory(category);
         categorisation.setMaintainer(maintainer);
@@ -430,8 +431,8 @@ public class StatisticalResourcesPersistedDoMocks extends StatisticalResourcesDo
 
         fillNeededMetadataToGeneratePublicationCode(publication);
 
-        publication.getIdentifiableStatisticalResource().setCode(
-                buildSequentialResourceCode(publication.getIdentifiableStatisticalResource().getStatisticalOperation().getCode(), publication.getSequentialId()));
+        publication.getIdentifiableStatisticalResource()
+                .setCode(buildSequentialResourceCode(publication.getIdentifiableStatisticalResource().getStatisticalOperation().getCode(), publication.getSequentialId()));
 
         mockIdentifiableStatisticalResource(publication.getIdentifiableStatisticalResource(), TypeRelatedResourceEnum.PUBLICATION);
 
@@ -439,8 +440,8 @@ public class StatisticalResourcesPersistedDoMocks extends StatisticalResourcesDo
 
         String[] maintainerAgencyId = new String[]{maintainerId};
 
-        publication.getIdentifiableStatisticalResource().setUrn(
-                GeneratorUrnUtils.generateSiemacStatisticalResourceDatasetUrn(maintainerAgencyId, publication.getIdentifiableStatisticalResource().getCode()));
+        publication.getIdentifiableStatisticalResource()
+                .setUrn(GeneratorUrnUtils.generateSiemacStatisticalResourceCollectionUrn(maintainerAgencyId, publication.getIdentifiableStatisticalResource().getCode()));
 
     }
 
@@ -493,8 +494,8 @@ public class StatisticalResourcesPersistedDoMocks extends StatisticalResourcesDo
 
         // Statistical Operation
         if (publication != null && publication.getIdentifiableStatisticalResource() != null && publication.getIdentifiableStatisticalResource().getStatisticalOperation() != null) {
-            publicationVersion.getSiemacMetadataStatisticalResource().setStatisticalOperation(
-                    mockStatisticalOperationExternalItem(publication.getIdentifiableStatisticalResource().getStatisticalOperation().getCode()));
+            publicationVersion.getSiemacMetadataStatisticalResource()
+                    .setStatisticalOperation(mockStatisticalOperationExternalItem(publication.getIdentifiableStatisticalResource().getStatisticalOperation().getCode()));
         }
 
         // CODE
@@ -506,8 +507,8 @@ public class StatisticalResourcesPersistedDoMocks extends StatisticalResourcesDo
             publicationVersion.getSiemacMetadataStatisticalResource().setCode(publicationCode);
         }
 
-        publicationVersion.setSiemacMetadataStatisticalResource(mockSiemacMetadataStatisticalResource(publicationVersion.getSiemacMetadataStatisticalResource(),
-                TypeRelatedResourceEnum.PUBLICATION_VERSION));
+        publicationVersion
+                .setSiemacMetadataStatisticalResource(mockSiemacMetadataStatisticalResource(publicationVersion.getSiemacMetadataStatisticalResource(), TypeRelatedResourceEnum.PUBLICATION_VERSION));
 
         // PUBLICATION CODE
         String publicationCode = publicationVersion.getSiemacMetadataStatisticalResource().getCode();
@@ -675,4 +676,5 @@ public class StatisticalResourcesPersistedDoMocks extends StatisticalResourcesDo
     protected void setSpecialCasesStatisticOfficialityMock(StatisticOfficiality officiality) {
         officiality.setVersion(0L);
     }
+
 }

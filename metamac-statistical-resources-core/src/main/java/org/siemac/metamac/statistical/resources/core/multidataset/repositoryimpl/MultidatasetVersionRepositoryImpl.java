@@ -43,19 +43,19 @@ public class MultidatasetVersionRepositoryImpl extends MultidatasetVersionReposi
 
     }
 
+    @Override
     public MultidatasetVersion retrieveByUrnPublished(String urn) {
 
         // TODO Auto-generated method stub
-        throw new UnsupportedOperationException(
-            "retrieveByUrnPublished not implemented");
+        throw new UnsupportedOperationException("retrieveByUrnPublished not implemented");
 
     }
 
+    @Override
     public MultidatasetVersion retrieveLastVersion(String multidatasetUrn) {
 
         // TODO Auto-generated method stub
-        throw new UnsupportedOperationException(
-            "retrieveLastVersion not implemented");
+        throw new UnsupportedOperationException("retrieveLastVersion not implemented");
 
     }
 
@@ -68,39 +68,35 @@ public class MultidatasetVersionRepositoryImpl extends MultidatasetVersionReposi
 
     }
 
-    public MultidatasetVersion retrieveByVersion(Long statisticalResourceId,
-        String versionLogic) {
+    @Override
+    public MultidatasetVersion retrieveByVersion(Long statisticalResourceId, String versionLogic) {
 
         // TODO Auto-generated method stub
-        throw new UnsupportedOperationException(
-            "retrieveByVersion not implemented");
+        throw new UnsupportedOperationException("retrieveByVersion not implemented");
 
     }
 
-    public RelatedResourceResult retrieveIsReplacedByOnlyLastPublished(
-        MultidatasetVersion multidatasetVersion) {
+    @Override
+    public RelatedResourceResult retrieveIsReplacedByOnlyLastPublished(MultidatasetVersion multidatasetVersion) {
 
         // TODO Auto-generated method stub
-        throw new UnsupportedOperationException(
-            "retrieveIsReplacedByOnlyLastPublished not implemented");
+        throw new UnsupportedOperationException("retrieveIsReplacedByOnlyLastPublished not implemented");
 
     }
 
-    public RelatedResourceResult retrieveIsReplacedByOnlyIfPublished(
-        MultidatasetVersion multidatasetVersion) {
+    @Override
+    public RelatedResourceResult retrieveIsReplacedByOnlyIfPublished(MultidatasetVersion multidatasetVersion) {
 
         // TODO Auto-generated method stub
-        throw new UnsupportedOperationException(
-            "retrieveIsReplacedByOnlyIfPublished not implemented");
+        throw new UnsupportedOperationException("retrieveIsReplacedByOnlyIfPublished not implemented");
 
     }
 
-    public RelatedResourceResult retrieveIsReplacedBy(
-        MultidatasetVersion multidatasetVersion) {
+    @Override
+    public RelatedResourceResult retrieveIsReplacedBy(MultidatasetVersion multidatasetVersion) {
 
         // TODO Auto-generated method stub
-        throw new UnsupportedOperationException(
-            "retrieveIsReplacedBy not implemented");
+        throw new UnsupportedOperationException("retrieveIsReplacedBy not implemented");
 
     }
 }

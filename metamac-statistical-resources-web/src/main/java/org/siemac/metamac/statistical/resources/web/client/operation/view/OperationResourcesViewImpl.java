@@ -32,18 +32,18 @@ import com.smartgwt.client.widgets.layout.VLayout;
 
 public class OperationResourcesViewImpl extends ViewWithUiHandlers<OperationResourcesUiHandlers> implements OperationResourcesPresenter.OperationResourcesView {
 
-    private static final String DATASETS_SECTION_ID     = "datasets";
-    private static final String PUBLICATIONS_SECTION_ID = "publications";
-    private static final String QUERIES_SECTION_ID      = "queries";
+    private static final String  DATASETS_SECTION_ID      = "datasets";
+    private static final String  PUBLICATIONS_SECTION_ID  = "publications";
+    private static final String  QUERIES_SECTION_ID       = "queries";
     private static final String  MULTIDATASETS_SECTION_ID = "multidatasets";
 
-    private DatasetListGrid     datasetsListGrid;
-    private PublicationListGrid publicationsListGrid;
-    private QueryListGrid       queriesListGrid;
+    private DatasetListGrid      datasetsListGrid;
+    private PublicationListGrid  publicationsListGrid;
+    private QueryListGrid        queriesListGrid;
     private MultidatasetListGrid multidatasetsListGrid;
 
-    private VLayout             panel;
-    private SectionStack        sections;
+    private SectionStack         sections;
+    private VLayout              panel;
 
     @Inject
     public OperationResourcesViewImpl() {

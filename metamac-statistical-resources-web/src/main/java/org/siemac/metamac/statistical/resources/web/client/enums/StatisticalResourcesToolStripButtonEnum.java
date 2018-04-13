@@ -14,6 +14,6 @@ public enum StatisticalResourcesToolStripButtonEnum implements ValueEnum {
 
     @Override
     public String getValue() {
-        return this.value;
+        return value;
     }
 }

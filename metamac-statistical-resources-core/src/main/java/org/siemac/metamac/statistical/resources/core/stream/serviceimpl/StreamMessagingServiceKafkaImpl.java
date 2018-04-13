@@ -59,7 +59,7 @@ public class StreamMessagingServiceKafkaImpl<K, V extends SpecificRecordBase> im
         K key = (K) message.getLifeCycleStatisticalResource().getUrn();
 
         // Serialize message
-        MessageBase<K, V> m = new AvroMessage<K, V>((K) key, (V) queryVersionAvro);
+        MessageBase<K, V> m = new AvroMessage<K, V>(key, (V) queryVersionAvro);
 
         // Topic
         String topic = statisticalResourcesConfig.retrieveKafkaTopicQueryPublication();
@@ -80,7 +80,7 @@ public class StreamMessagingServiceKafkaImpl<K, V extends SpecificRecordBase> im
         props.put(ProducerConfig.CLIENT_ID_CONFIG, CONSUMER_QUERY_1_NAME);
 
         props.put(ProducerConfig.ACKS_CONFIG, "all");
-         props.put(ProducerConfig.COMPRESSION_TYPE_CONFIG, "gzip");
+        props.put(ProducerConfig.COMPRESSION_TYPE_CONFIG, "gzip");
         props.put(ProducerConfig.RETRIES_CONFIG, 10);
         props.put(ProducerConfig.MAX_IN_FLIGHT_REQUESTS_PER_CONNECTION, 1);
 

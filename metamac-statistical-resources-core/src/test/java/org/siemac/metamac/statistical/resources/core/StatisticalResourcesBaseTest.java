@@ -168,27 +168,27 @@ public abstract class StatisticalResourcesBaseTest extends MetamacBaseTest {
     protected void clearDataBase() {
         // REPOSITORY
         {
-            List<String> tableNames = this.jdbcTemplateRepository.query("select TABLE_NAME from TB_DATASETS", new TableNameRowMapper());
+            List<String> tableNames = jdbcTemplateRepository.query("select TABLE_NAME from TB_DATASETS", new TableNameRowMapper());
 
             // Truncate tables
-            this.jdbcTemplateRepository.update("truncate table TB_LOCALISED_STRINGS");
-            this.jdbcTemplateRepository.update("truncate table TB_DATASET_DIMENSIONS");
-            this.jdbcTemplateRepository.update("truncate table TB_ATTRIBUTE_DIMENSIONS");
+            jdbcTemplateRepository.update("truncate table TB_LOCALISED_STRINGS");
+            jdbcTemplateRepository.update("truncate table TB_DATASET_DIMENSIONS");
+            jdbcTemplateRepository.update("truncate table TB_ATTRIBUTE_DIMENSIONS");
 
             // Deletes
-            this.jdbcTemplateRepository.update("delete from TB_ATTRIBUTES");
-            this.jdbcTemplateRepository.update("delete from TB_DATASETS");
-            this.jdbcTemplateRepository.update("delete from TB_INTERNATIONAL_STRINGS");
+            jdbcTemplateRepository.update("delete from TB_ATTRIBUTES");
+            jdbcTemplateRepository.update("delete from TB_DATASETS");
+            jdbcTemplateRepository.update("delete from TB_INTERNATIONAL_STRINGS");
 
             // Drop table data
             for (String tableName : tableNames) {
-                this.jdbcTemplateRepository.update("drop table " + tableName);
+                jdbcTemplateRepository.update("drop table " + tableName);
             }
         }
 
         // RESOURCES
         {
-            this.jdbcTemplateResources.update("truncate table TB_TASKS");
+            jdbcTemplateResources.update("truncate table TB_TASKS");
         }
     }
 
