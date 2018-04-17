@@ -53,9 +53,4 @@ public class MultidatasetServiceInvocationValidatorImpl {
         String multidatasetVersionUrn, List<MetamacExceptionItem> exceptions)
         throws MetamacException {
     }
-
-    public static void checkImportMultidatasetVersionStructure(
-        String multidatasetVersionUrn, URL fileURL, String language,
-        List<MetamacExceptionItem> exceptions) throws MetamacException {
-    }
 }

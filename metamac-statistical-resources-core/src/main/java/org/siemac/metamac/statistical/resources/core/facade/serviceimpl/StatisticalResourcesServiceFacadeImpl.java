@@ -62,6 +62,8 @@ import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DimensionRepresentationMappingDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdAttributeInstanceDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.StatisticOfficialityDto;
+import org.siemac.metamac.statistical.resources.core.dto.multidataset.MultidatasetVersionBaseDto;
+import org.siemac.metamac.statistical.resources.core.dto.multidataset.MultidatasetVersionDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.ChapterDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.CubeDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationStructureDto;
@@ -77,6 +79,12 @@ import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.invocation.service.NoticesRestInternalService;
 import org.siemac.metamac.statistical.resources.core.invocation.service.SrmRestInternalService;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceapi.LifecycleService;
+import org.siemac.metamac.statistical.resources.core.multidataset.criteria.mapper.MultidatasetVersionMetamacCriteria2SculptorCriteriaMapper;
+import org.siemac.metamac.statistical.resources.core.multidataset.criteria.mapper.MultidatasetVersionSculptorCriteria2MetamacCriteriaMapper;
+import org.siemac.metamac.statistical.resources.core.multidataset.domain.MultidatasetVersion;
+import org.siemac.metamac.statistical.resources.core.multidataset.domain.MultidatasetVersionRepository;
+import org.siemac.metamac.statistical.resources.core.multidataset.mapper.MultidatasetDo2DtoMapper;
+import org.siemac.metamac.statistical.resources.core.multidataset.mapper.MultidatasetDto2DoMapper;
 import org.siemac.metamac.statistical.resources.core.notices.ServiceNoticeAction;
 import org.siemac.metamac.statistical.resources.core.notices.ServiceNoticeMessage;
 import org.siemac.metamac.statistical.resources.core.publication.criteria.mapper.PublicationMetamacCriteria2SculptorCriteriaMapper;
@@ -101,9 +109,11 @@ import org.siemac.metamac.statistical.resources.core.query.mapper.QueryDo2DtoMap
 import org.siemac.metamac.statistical.resources.core.query.mapper.QueryDto2DoMapper;
 import org.siemac.metamac.statistical.resources.core.security.ConstraintsSecurityUtils;
 import org.siemac.metamac.statistical.resources.core.security.DatasetsSecurityUtils;
+import org.siemac.metamac.statistical.resources.core.security.MultidatasetsSecurityUtils;
 import org.siemac.metamac.statistical.resources.core.security.PublicationsSecurityUtils;
 import org.siemac.metamac.statistical.resources.core.security.QueriesSecurityUtils;
 import org.siemac.metamac.statistical.resources.core.security.shared.SharedDatasetsSecurityUtils;
+import org.siemac.metamac.statistical.resources.core.security.shared.SharedMultidatasetsSecurityUtils;
 import org.siemac.metamac.statistical.resources.core.security.shared.SharedPublicationsSecurityUtils;
 import org.siemac.metamac.statistical.resources.core.security.shared.SharedQueriesSecurityUtils;
 import org.siemac.metamac.statistical.resources.core.stream.serviceapi.StreamMessagingServiceFacade;
@@ -119,101 +129,118 @@ import com.arte.statistic.dataset.repository.dto.AttributeInstanceDto;
 public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesServiceFacadeImplBase {
 
     @Autowired
-    private CommonDo2DtoMapper                                       commonDo2DtoMapper;
+    private CommonDo2DtoMapper                                        commonDo2DtoMapper;
 
     @Autowired
-    private QueryDo2DtoMapper                                        queryDo2DtoMapper;
+    private QueryDo2DtoMapper                                         queryDo2DtoMapper;
 
     @Autowired
-    private QueryDto2DoMapper                                        queryDto2DoMapper;
+    private QueryDto2DoMapper                                         queryDto2DoMapper;
 
     @Autowired
-    private DatasetDo2DtoMapper                                      datasetDo2DtoMapper;
+    private DatasetDo2DtoMapper                                       datasetDo2DtoMapper;
 
     @Autowired
-    private DatasetDto2DoMapper                                      datasetDto2DoMapper;
+    private DatasetDto2DoMapper                                       datasetDto2DoMapper;
 
     @Autowired
-    private PublicationDo2DtoMapper                                  publicationDo2DtoMapper;
+    private PublicationDo2DtoMapper                                   publicationDo2DtoMapper;
 
     @Autowired
-    private PublicationDto2DoMapper                                  publicationDto2DoMapper;
+    private PublicationDto2DoMapper                                   publicationDto2DoMapper;
 
     @Autowired
-    private ConstraintDto2RestMapper                                 constraintDto2RestMapper;
+    private MultidatasetDto2DoMapper                                  multidatasetDto2DoMapper;
 
     @Autowired
-    private ConstraintRest2DtoMapper                                 constraintRest2DtoMapper;
+    private MultidatasetDo2DtoMapper                                  multidatasetDo2DtoMapper;
 
     @Autowired
-    private QueryVersionMetamacCriteria2SculptorCriteriaMapper       queryVersionMetamacCriteria2SculptorCriteriaMapper;
+    private ConstraintDto2RestMapper                                  constraintDto2RestMapper;
 
     @Autowired
-    private QueryVersionSculptorCriteria2MetamacCriteriaMapper       queryVersionSculptorCriteria2MetamacCriteriaMapper;
+    private ConstraintRest2DtoMapper                                  constraintRest2DtoMapper;
 
     @Autowired
-    private QueryMetamacCriteria2SculptorCriteriaMapper              queryMetamacCriteria2SculptorCriteriaMapper;
+    private QueryVersionMetamacCriteria2SculptorCriteriaMapper        queryVersionMetamacCriteria2SculptorCriteriaMapper;
 
     @Autowired
-    private QuerySculptorCriteria2MetamacCriteriaMapper              querySculptorCriteria2MetamacCriteriaMapper;
+    private QueryVersionSculptorCriteria2MetamacCriteriaMapper        queryVersionSculptorCriteria2MetamacCriteriaMapper;
 
     @Autowired
-    private DatasetVersionMetamacCriteria2SculptorCriteriaMapper     datasetVersionMetamacCriteria2SculptorCriteriaMapper;
+    private QueryMetamacCriteria2SculptorCriteriaMapper               queryMetamacCriteria2SculptorCriteriaMapper;
 
     @Autowired
-    private DatasetVersionSculptorCriteria2MetamacCriteriaMapper     datasetVersionSculptorCriteria2MetamacCriteriaMapper;
+    private QuerySculptorCriteria2MetamacCriteriaMapper               querySculptorCriteria2MetamacCriteriaMapper;
 
     @Autowired
-    private DatasetMetamacCriteria2SculptorCriteriaMapper            datasetMetamacCriteria2SculptorCriteriaMapper;
+    private DatasetVersionMetamacCriteria2SculptorCriteriaMapper      datasetVersionMetamacCriteria2SculptorCriteriaMapper;
 
     @Autowired
-    private DatasetSculptorCriteria2MetamacCriteriaMapper            datasetSculptorCriteria2MetamacCriteriaMapper;
+    private DatasetVersionSculptorCriteria2MetamacCriteriaMapper      datasetVersionSculptorCriteria2MetamacCriteriaMapper;
 
     @Autowired
-    private PublicationVersionMetamacCriteria2SculptorCriteriaMapper publicationVersionMetamacCriteria2SculptorCriteriaMapper;
+    private DatasetMetamacCriteria2SculptorCriteriaMapper             datasetMetamacCriteria2SculptorCriteriaMapper;
 
     @Autowired
-    private PublicationSculptorCriteria2MetamacCriteriaMapper        publicationSculptorCriteria2MetamacCriteriaMapper;
+    private DatasetSculptorCriteria2MetamacCriteriaMapper             datasetSculptorCriteria2MetamacCriteriaMapper;
 
     @Autowired
-    private PublicationMetamacCriteria2SculptorCriteriaMapper        publicationMetamacCriteria2SculptorCriteriaMapper;
+    private PublicationVersionMetamacCriteria2SculptorCriteriaMapper  publicationVersionMetamacCriteria2SculptorCriteriaMapper;
 
     @Autowired
-    private PublicationVersionSculptorCriteria2MetamacCriteriaMapper publicationVersionSculptorCriteria2MetamacCriteriaMapper;
+    private PublicationSculptorCriteria2MetamacCriteriaMapper         publicationSculptorCriteria2MetamacCriteriaMapper;
 
     @Autowired
-    private LifecycleService<DatasetVersion>                         datasetLifecycleService;
+    private PublicationMetamacCriteria2SculptorCriteriaMapper         publicationMetamacCriteria2SculptorCriteriaMapper;
 
     @Autowired
-    private LifecycleService<PublicationVersion>                     publicationLifecycleService;
+    private PublicationVersionSculptorCriteria2MetamacCriteriaMapper  publicationVersionSculptorCriteria2MetamacCriteriaMapper;
 
     @Autowired
-    private LifecycleService<QueryVersion>                           queryLifecycleService;
+    private MultidatasetVersionMetamacCriteria2SculptorCriteriaMapper multidatasetVersionMetamacCriteria2SculptorCriteriaMapper;
 
     @Autowired
-    private StatisticalResourcesDto2StatRepoDtoMapper                statisticalResourcesDto2StatRepoDtoMapper;
+    private MultidatasetVersionSculptorCriteria2MetamacCriteriaMapper multidatasetVersionSculptorCriteria2MetamacCriteriaMapper;
 
     @Autowired
-    private StatRepoDto2StatisticalResourcesDtoMapper                statRepoDto2StatisticalResourcesDtoMapper;
+    private LifecycleService<DatasetVersion>                          datasetLifecycleService;
 
     @Autowired
-    private SrmRestInternalService                                   srmRestInternalService;
+    private LifecycleService<PublicationVersion>                      publicationLifecycleService;
 
     @Autowired
-    private ConstraintsService                                       constraintsService;
+    private LifecycleService<QueryVersion>                            queryLifecycleService;
 
     @Autowired
-    private DatasetVersionRepository                                 datasetVersionRepository;
-    @Autowired
-    private PublicationVersionRepository                             publicationVersionRepository;
-    @Autowired
-    private QueryVersionRepository                                   queryVersionRepository;
+    private LifecycleService<MultidatasetVersion>                     multidatasetLifecycleService;
 
     @Autowired
-    private StreamMessagingServiceFacade                             streamMessagingServiceFacade;
+    private StatisticalResourcesDto2StatRepoDtoMapper                 statisticalResourcesDto2StatRepoDtoMapper;
 
     @Autowired
-    private NoticesRestInternalService                               noticesRestInternalService;
+    private StatRepoDto2StatisticalResourcesDtoMapper                 statRepoDto2StatisticalResourcesDtoMapper;
+
+    @Autowired
+    private SrmRestInternalService                                    srmRestInternalService;
+
+    @Autowired
+    private ConstraintsService                                        constraintsService;
+
+    @Autowired
+    private DatasetVersionRepository                                  datasetVersionRepository;
+    @Autowired
+    private PublicationVersionRepository                              publicationVersionRepository;
+    @Autowired
+    private QueryVersionRepository                                    queryVersionRepository;
+    @Autowired
+    private MultidatasetVersionRepository                             multidatasetVersionRepository;
+
+    @Autowired
+    private StreamMessagingServiceFacade                              streamMessagingServiceFacade;
+
+    @Autowired
+    private NoticesRestInternalService                                noticesRestInternalService;
 
     public StatisticalResourcesServiceFacadeImpl() {
     }
@@ -1651,7 +1678,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
 
             // Also, if is a new version of DatasetVersion and there are queries with a related dataset associated with this query version, then we send queries messages
             if (StatisticalResourceTypeEnum.DATASET.equals(version.getSiemacMetadataStatisticalResource().getType())) {
-                
+
                 List<QueryVersion> queriesDataset = queryVersionRepository.findQueriesPublishedLinkedToDataset(((DatasetVersion) version).getDataset().getId());
 
                 for (QueryVersion queryVersion : queriesDataset) {
@@ -2026,4 +2053,331 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
 
         return datasetVersion;
     }
+
+    // ------------------------------------------------------------------------
+    // MULTIDATASET VERSIONS
+    // ------------------------------------------------------------------------
+
+    @Override
+    public MultidatasetVersionDto createMultidataset(ServiceContext ctx, MultidatasetVersionDto multidatasetVersionDto, ExternalItemDto statisticalOperationDto) throws MetamacException {
+        // Security
+        MultidatasetsSecurityUtils.canCreateMultidataset(ctx, statisticalOperationDto.getCode());
+
+        // Transform
+        MultidatasetVersion multidatasetVersion = multidatasetDto2DoMapper.multidatasetVersionDtoToDo(multidatasetVersionDto);
+        ExternalItem statisticalOperation = multidatasetDto2DoMapper.externalItemDtoToDo(statisticalOperationDto, null, ServiceExceptionParameters.STATISTICAL_OPERATION);
+
+        // Retrieve
+        MultidatasetVersion multidatasetVersionCreated = getMultidatasetService().createMultidatasetVersion(ctx, multidatasetVersion, statisticalOperation);
+
+        // Transform
+        MultidatasetVersionDto multidatasetCreated = multidatasetDo2DtoMapper.multidatasetVersionDoToDto(multidatasetVersionCreated);
+
+        return multidatasetCreated;
+    }
+
+    @Override
+    public MultidatasetVersionDto updateMultidatasetVersion(ServiceContext ctx, MultidatasetVersionDto multidatasetVersionDto) throws MetamacException {
+        // Security
+        MultidatasetsSecurityUtils.canUpdateMultidatasetVersion(ctx, multidatasetVersionDto);
+
+        // Transform
+        MultidatasetVersion multidatasetVersion = multidatasetDto2DoMapper.multidatasetVersionDtoToDo(multidatasetVersionDto);
+
+        // Update
+        multidatasetVersion = getMultidatasetService().updateMultidatasetVersion(ctx, multidatasetVersion);
+
+        // Transform
+        return multidatasetDo2DtoMapper.multidatasetVersionDoToDto(multidatasetVersion);
+    }
+
+    @Override
+    public void deleteMultidatasetVersion(ServiceContext ctx, String urn) throws MetamacException {
+        // Retrieve
+        MultidatasetVersionDto multidatasetVersionDto = retrieveMultidatasetVersionByUrn(ctx, urn);
+
+        // Security
+        MultidatasetsSecurityUtils.canDeleteMultidatasetVersion(ctx, multidatasetVersionDto);
+
+        // Delete
+        getMultidatasetService().deleteMultidatasetVersion(ctx, urn);
+    }
+
+    @Override
+    public MetamacCriteriaResult<MultidatasetVersionBaseDto> findMultidatasetVersionByCondition(ServiceContext ctx, MetamacCriteria criteria) throws MetamacException {
+        // Security
+        MultidatasetsSecurityUtils.canFindMultidatasetsVersionsByCondition(ctx);
+
+        // Transform
+        SculptorCriteria sculptorCriteria = multidatasetVersionMetamacCriteria2SculptorCriteriaMapper.getMultidatasetVersionCriteriaMapper().metamacCriteria2SculptorCriteria(criteria);
+
+        // Find
+        PagedResult<MultidatasetVersion> result = getMultidatasetService().findMultidatasetVersionsByCondition(ctx, sculptorCriteria.getConditions(), sculptorCriteria.getPagingParameter());
+
+        // Transform
+        MetamacCriteriaResult<MultidatasetVersionBaseDto> metamacCriteriaResult = multidatasetVersionSculptorCriteria2MetamacCriteriaMapper.pageResultToMetamacCriteriaResultMultidatasetVersion(result,
+                sculptorCriteria.getPageSize());
+
+        return metamacCriteriaResult;
+    }
+
+    @Override
+    public MultidatasetVersionDto retrieveMultidatasetVersionByUrn(ServiceContext ctx, String urn) throws MetamacException {
+        // Retrieve
+        MultidatasetVersion multidatasetVersion = getMultidatasetService().retrieveMultidatasetVersionByUrn(ctx, urn);
+
+        // Security
+        MultidatasetsSecurityUtils.canRetrieveMultidatasetVersionByUrn(ctx, multidatasetVersion);
+
+        // Transform
+        return multidatasetDo2DtoMapper.multidatasetVersionDoToDto(multidatasetVersion);
+    }
+
+    @Override
+    public List<MultidatasetVersionBaseDto> retrieveMultidatasetVersions(ServiceContext ctx, String multidatasetVersionUrn) throws MetamacException {
+        // Security
+        MultidatasetsSecurityUtils.canRetrieveMultidatasetVersions(ctx);
+
+        // Retrieve
+        List<MultidatasetVersion> multidatasetVersions = getMultidatasetService().retrieveMultidatasetVersions(ctx, multidatasetVersionUrn);
+
+        // Transform
+        List<MultidatasetVersionBaseDto> multidatasets = multidatasetDo2DtoMapper.multidatasetVersionDoListToDtoList(multidatasetVersions);
+
+        return multidatasets;
+    }
+
+    @Override
+    public MultidatasetVersionDto retrieveLatestMultidatasetVersion(ServiceContext ctx, String multidatasetUrn) throws MetamacException {
+        // Retrieve
+        MultidatasetVersion multidataset = getMultidatasetService().retrieveLatestMultidatasetVersionByMultidatasetUrn(ctx, multidatasetUrn);
+
+        // Security
+        if (!SharedMultidatasetsSecurityUtils.canRetrieveLatestMultidatasetVersion(SecurityUtils.getMetamacPrincipal(ctx),
+                multidataset.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode(), multidataset.getSiemacMetadataStatisticalResource().getEffectiveProcStatus())) {
+            multidataset = getMultidatasetService().retrieveLatestPublishedMultidatasetVersionByMultidatasetUrn(ctx, multidatasetUrn);
+        }
+
+        // Transform
+        MultidatasetVersionDto multidatasetVersionDto = multidatasetDo2DtoMapper.multidatasetVersionDoToDto(multidataset);
+        return multidatasetVersionDto;
+    }
+
+    @Override
+    public MultidatasetVersionDto retrieveLatestPublishedMultidatasetVersion(ServiceContext ctx, String multidatasetUrn) throws MetamacException {
+        // Retrieve
+        MultidatasetVersion multidataset = getMultidatasetService().retrieveLatestMultidatasetVersionByMultidatasetUrn(ctx, multidatasetUrn);
+
+        // Security
+        if (!SharedMultidatasetsSecurityUtils.canRetrieveLatestMultidatasetVersion(SecurityUtils.getMetamacPrincipal(ctx),
+                multidataset.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode(), multidataset.getSiemacMetadataStatisticalResource().getEffectiveProcStatus())) {
+            multidataset = getMultidatasetService().retrieveLatestPublishedMultidatasetVersionByMultidatasetUrn(ctx, multidatasetUrn);
+        }
+
+        // Transform
+        MultidatasetVersionDto multidatasetVersionDto = multidatasetDo2DtoMapper.multidatasetVersionDoToDto(multidataset);
+        return multidatasetVersionDto;
+    }
+
+    @Override
+    public MultidatasetVersionDto sendMultidatasetVersionToProductionValidation(ServiceContext ctx, MultidatasetVersionDto multidatasetVersionDto) throws MetamacException {
+        // Security
+        MultidatasetsSecurityUtils.canSendMultidatasetVersionToProductionValidation(ctx, multidatasetVersionDto.getStatisticalOperation().getCode());
+
+        // Transform
+        MultidatasetVersion multidatasetVersion = multidatasetDto2DoMapper.multidatasetVersionDtoToDo(multidatasetVersionDto);
+
+        // Send to production validation and retrieve
+        multidatasetVersion = multidatasetLifecycleService.sendToProductionValidation(ctx, multidatasetVersion.getSiemacMetadataStatisticalResource().getUrn());
+
+        // Transform
+        multidatasetVersionDto = multidatasetDo2DtoMapper.multidatasetVersionDoToDto(multidatasetVersion);
+
+        return multidatasetVersionDto;
+    }
+
+    @Override
+    public MultidatasetVersionBaseDto sendMultidatasetVersionToProductionValidation(ServiceContext ctx, MultidatasetVersionBaseDto multidatasetVersionDto) throws MetamacException {
+        // Security
+        MultidatasetsSecurityUtils.canSendMultidatasetVersionToProductionValidation(ctx, multidatasetVersionDto.getStatisticalOperation().getCode());
+
+        // Check optimistic locking
+        multidatasetDto2DoMapper.checkOptimisticLocking(multidatasetVersionDto);
+
+        // Send to production validation and retrieve
+        MultidatasetVersion multidatasetVersion = multidatasetLifecycleService.sendToProductionValidation(ctx, multidatasetVersionDto.getUrn());
+
+        // Transform
+        multidatasetVersionDto = multidatasetDo2DtoMapper.multidatasetVersionDoToBaseDto(multidatasetVersion);
+
+        return multidatasetVersionDto;
+    }
+
+    @Override
+    public MultidatasetVersionDto sendMultidatasetVersionToDiffusionValidation(ServiceContext ctx, MultidatasetVersionDto multidatasetVersionDto) throws MetamacException {
+        // Security
+        MultidatasetsSecurityUtils.canSendMultidatasetVersionToDiffusionValidation(ctx, multidatasetVersionDto.getStatisticalOperation().getCode());
+
+        // Transform
+        MultidatasetVersion multidatasetVersion = multidatasetDto2DoMapper.multidatasetVersionDtoToDo(multidatasetVersionDto);
+
+        // Send to production validation and retrieve
+        multidatasetVersion = multidatasetLifecycleService.sendToDiffusionValidation(ctx, multidatasetVersion.getSiemacMetadataStatisticalResource().getUrn());
+
+        // Transform
+        multidatasetVersionDto = multidatasetDo2DtoMapper.multidatasetVersionDoToDto(multidatasetVersion);
+
+        return multidatasetVersionDto;
+    }
+
+    @Override
+    public MultidatasetVersionBaseDto sendMultidatasetVersionToDiffusionValidation(ServiceContext ctx, MultidatasetVersionBaseDto multidatasetVersionDto) throws MetamacException {
+        // Security
+        MultidatasetsSecurityUtils.canSendMultidatasetVersionToDiffusionValidation(ctx, multidatasetVersionDto.getStatisticalOperation().getCode());
+
+        // Check optimistic locking
+        multidatasetDto2DoMapper.checkOptimisticLocking(multidatasetVersionDto);
+
+        // Send to production validation and retrieve
+        MultidatasetVersion multidatasetVersion = multidatasetLifecycleService.sendToDiffusionValidation(ctx, multidatasetVersionDto.getUrn());
+
+        // Transform
+        multidatasetVersionDto = multidatasetDo2DtoMapper.multidatasetVersionDoToBaseDto(multidatasetVersion);
+
+        return multidatasetVersionDto;
+    }
+
+    @Override
+    public MultidatasetVersionDto sendMultidatasetVersionToValidationRejected(ServiceContext ctx, MultidatasetVersionDto multidatasetVersionDto) throws MetamacException {
+        // Security
+        MultidatasetsSecurityUtils.canSendMultidatasetVersionToValidationRejected(ctx, multidatasetVersionDto.getStatisticalOperation().getCode());
+
+        // Transform
+        MultidatasetVersion multidatasetVersion = multidatasetDto2DoMapper.multidatasetVersionDtoToDo(multidatasetVersionDto);
+
+        // Send to production validation and retrieve
+        multidatasetVersion = multidatasetLifecycleService.sendToValidationRejected(ctx, multidatasetVersion.getSiemacMetadataStatisticalResource().getUrn());
+
+        // Transform
+        multidatasetVersionDto = multidatasetDo2DtoMapper.multidatasetVersionDoToDto(multidatasetVersion);
+
+        return multidatasetVersionDto;
+    }
+
+    @Override
+    public MultidatasetVersionBaseDto sendMultidatasetVersionToValidationRejected(ServiceContext ctx, MultidatasetVersionBaseDto multidatasetVersionDto) throws MetamacException {
+        // Security
+        MultidatasetsSecurityUtils.canSendMultidatasetVersionToValidationRejected(ctx, multidatasetVersionDto.getStatisticalOperation().getCode());
+
+        // Check optimistic locking
+        multidatasetDto2DoMapper.checkOptimisticLocking(multidatasetVersionDto);
+
+        // Send to production validation and retrieve
+        MultidatasetVersion multidatasetVersion = multidatasetLifecycleService.sendToValidationRejected(ctx, multidatasetVersionDto.getUrn());
+
+        // Transform
+        multidatasetVersionDto = multidatasetDo2DtoMapper.multidatasetVersionDoToBaseDto(multidatasetVersion);
+
+        return multidatasetVersionDto;
+    }
+
+    @Override
+    public MultidatasetVersionDto publishMultidatasetVersion(ServiceContext ctx, MultidatasetVersionDto multidatasetVersionDto) throws MetamacException {
+        // Security
+        MultidatasetsSecurityUtils.canPublishMultidatasetVersion(ctx, multidatasetVersionDto.getStatisticalOperation().getCode());
+
+        // Transform
+        MultidatasetVersion multidatasetVersion = multidatasetDto2DoMapper.multidatasetVersionDtoToDo(multidatasetVersionDto);
+        String urn = multidatasetVersion.getSiemacMetadataStatisticalResource().getUrn();
+
+        // We set validfrom and ONLY validfrom transparently
+        multidatasetVersion = changeMultidatasetVersionValidFromAndSave(urn, new DateTime());
+
+        multidatasetVersion = multidatasetLifecycleService.sendToPublished(ctx, multidatasetVersion.getSiemacMetadataStatisticalResource().getUrn());
+
+        // Send stream message to stream messaging service (like Apache Kafka)
+        sendNewVersionPublishedStreamMessage(ctx, multidatasetVersion);
+
+        // Transform
+        multidatasetVersionDto = multidatasetDo2DtoMapper.multidatasetVersionDoToDto(multidatasetVersion);
+
+        return multidatasetVersionDto;
+    }
+
+    @Override
+    public MultidatasetVersionBaseDto publishMultidatasetVersion(ServiceContext ctx, MultidatasetVersionBaseDto multidatasetVersionDto) throws MetamacException {
+        // Security
+        MultidatasetsSecurityUtils.canPublishMultidatasetVersion(ctx, multidatasetVersionDto.getStatisticalOperation().getCode());
+
+        // Check optimistic locking
+        multidatasetDto2DoMapper.checkOptimisticLocking(multidatasetVersionDto);
+
+        String urn = multidatasetVersionDto.getUrn();
+
+        // We set validfrom and ONLY validfrom transparently
+        MultidatasetVersion multidatasetVersion = changeMultidatasetVersionValidFromAndSave(urn, new DateTime());
+
+        multidatasetVersion = multidatasetLifecycleService.sendToPublished(ctx, multidatasetVersionDto.getUrn());
+
+        // Transform
+        multidatasetVersionDto = multidatasetDo2DtoMapper.multidatasetVersionDoToBaseDto(multidatasetVersion);
+
+        return multidatasetVersionDto;
+    }
+
+    @Override
+    public MultidatasetVersionBaseDto resendPublishedMultidatasetVersionStreamMessage(ServiceContext ctx, String multidatasetVersionUrn) throws MetamacException {
+        // Retrieve Multidataset
+        MultidatasetVersion multidatasetVersion = multidatasetVersionRepository.retrieveByUrn(multidatasetVersionUrn);
+
+        // Security
+        MultidatasetsSecurityUtils.canResendPublishedMultidatasetVersionStreamMessage(ctx, multidatasetVersion.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode());
+
+        // Send stream message to stream messaging service (like Apache Kafka)
+        sendNewVersionPublishedStreamMessage(ctx, multidatasetVersion);
+
+        // Transform
+        return multidatasetDo2DtoMapper.multidatasetVersionDoToBaseDto(multidatasetVersion);
+    }
+
+    private MultidatasetVersion changeMultidatasetVersionValidFromAndSave(String urn, DateTime validFrom) throws MetamacException {
+        MultidatasetVersion multidatasetVersion = multidatasetVersionRepository.retrieveByUrn(urn);
+        multidatasetVersion.getSiemacMetadataStatisticalResource().setValidFrom(validFrom);
+        return multidatasetVersionRepository.save(multidatasetVersion);
+    }
+
+    @Override
+    public MultidatasetVersionDto versioningMultidatasetVersion(ServiceContext ctx, MultidatasetVersionDto multidatasetVersionDto, VersionTypeEnum versionType) throws MetamacException {
+        // Security
+        MultidatasetsSecurityUtils.canVersionMultidataset(ctx, multidatasetVersionDto.getStatisticalOperation().getCode());
+
+        // Transform
+        MultidatasetVersion multidatasetVersion = multidatasetDto2DoMapper.multidatasetVersionDtoToDo(multidatasetVersionDto);
+
+        // Versioning
+        multidatasetVersion = multidatasetLifecycleService.versioning(ctx, multidatasetVersion.getSiemacMetadataStatisticalResource().getUrn(), versionType);
+
+        // Transform
+        multidatasetVersionDto = multidatasetDo2DtoMapper.multidatasetVersionDoToDto(multidatasetVersion);
+
+        return multidatasetVersionDto;
+    }
+
+    @Override
+    public MultidatasetVersionBaseDto versioningMultidatasetVersion(ServiceContext ctx, MultidatasetVersionBaseDto multidatasetVersionDto, VersionTypeEnum versionType) throws MetamacException {
+        // Security
+        MultidatasetsSecurityUtils.canVersionMultidataset(ctx, multidatasetVersionDto.getStatisticalOperation().getCode());
+
+        // Check optimistic locking
+        multidatasetDto2DoMapper.checkOptimisticLocking(multidatasetVersionDto);
+
+        // Versioning
+        MultidatasetVersion multidatasetVersion = multidatasetLifecycleService.versioning(ctx, multidatasetVersionDto.getUrn(), versionType);
+
+        // Transform
+        multidatasetVersionDto = multidatasetDo2DtoMapper.multidatasetVersionDoToBaseDto(multidatasetVersion);
+
+        return multidatasetVersionDto;
+    }
+
 }

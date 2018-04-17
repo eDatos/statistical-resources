@@ -8,6 +8,7 @@ import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResour
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dto.IdentifiableStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
+import org.siemac.metamac.statistical.resources.core.multidataset.domain.MultidatasetVersion;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
 import org.siemac.metamac.statistical.resources.navigation.shared.NameTokens;
@@ -22,10 +23,12 @@ public class InternalWebApplicationNavigation {
     private final String      PUBLICATION_ID_PARAMETER   = "publicationParam";
     private final String      DATASET_ID_PARAMETER       = "datasetParam";
     private final String      QUERY_ID_PARAMETER         = "queryParam";
+    private final String      MULTIDATASET_ID_PARAMETER  = "multidatasetParam";
 
     private final UriTemplate publicationVersionTemplate;
     private final UriTemplate datasetVersionTemplate;
     private final UriTemplate queryTemplate;
+    private final UriTemplate multidatasetVersionTemplate;
 
     public InternalWebApplicationNavigation(String webApplicationPath) {
         // Publication
@@ -44,6 +47,10 @@ public class InternalWebApplicationNavigation {
                 + SEPARATOR + NameTokens.operationPage + ";" + PlaceRequestParams.operationParam + "=" + "{" + OPERATION_ID_PARAMETER + "}"
                 + SEPARATOR + NameTokens.queriesListPage + SEPARATOR + NameTokens.queryPage + ";" + PlaceRequestParams.queryParam + "=" + "{" + QUERY_ID_PARAMETER + "}"
                 );
+
+        multidatasetVersionTemplate = new UriTemplate(webApplicationPath + SEPARATOR + PATH_STATISTICAL_RESOURCES
+                + SEPARATOR + NameTokens.operationPage + ";" + PlaceRequestParams.operationParam + "=" + "{" + OPERATION_ID_PARAMETER + "}"
+                + SEPARATOR + NameTokens.multidatasetsListPage + SEPARATOR + NameTokens.multidatasetPage + ";" + PlaceRequestParams.multidatasetParam + "=" + "{" + MULTIDATASET_ID_PARAMETER + "}"
                 );
         // @formatter:on
     }
@@ -56,6 +63,8 @@ public class InternalWebApplicationNavigation {
                 return buildPublicationVersionUrl(source.getStatisticalOperation().getCode(), source.getUrn());
             case QUERY:
                 return buildQueryVersionUrl(source.getStatisticalOperation().getCode(), source.getUrn());
+            case MULTIDATASET:
+                return buildMultidatasetVersionUrl(source.getStatisticalOperation().getCode(), source.getUrn());
             default:
                 throw new RuntimeException("Invalid value for statistical resource type " + type);
         }
@@ -116,5 +125,22 @@ public class InternalWebApplicationNavigation {
         parameters.put(OPERATION_ID_PARAMETER, statisticalOperationCode);
         parameters.put(QUERY_ID_PARAMETER, UrnUtils.removePrefix(queryVersionUrn));
         return queryTemplate.expand(parameters).toString();
+    }
+
+    // MULTIDATASET
+
+    public String buildMultidatasetVersionUrl(MultidatasetVersion source) {
+        return buildMultidatasetVersionUrl(source.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode(), source.getLifeCycleStatisticalResource().getUrn());
+    }
+
+    public String buildRelatedResourceMultidatasetVersionUrl(RelatedResourceResult source) {
+        return buildMultidatasetVersionUrl(source.getStatisticalOperationCode(), source.getUrn());
+    }
+
+    public String buildMultidatasetVersionUrl(String statisticalOperationCode, String multidatasetVersionUrn) {
+        Map<String, String> parameters = new HashMap<String, String>(2);
+        parameters.put(OPERATION_ID_PARAMETER, statisticalOperationCode);
+        parameters.put(MULTIDATASET_ID_PARAMETER, UrnUtils.removePrefix(multidatasetVersionUrn));
+        return multidatasetVersionTemplate.expand(parameters).toString();
     }
 }

@@ -2,11 +2,18 @@ package org.siemac.metamac.statistical.resources.core.multidataset.repositoryimp
 
 import static org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteriaBuilder.criteriaFor;
 
+import java.util.Date;
 import java.util.List;
 
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
+import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteriaBuilder;
+import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
+import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
+import org.joda.time.DateTime;
+import org.siemac.metamac.core.common.criteria.utils.CriteriaUtils;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResourceResult;
+import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.multidataset.domain.MultidatasetVersion;
 import org.siemac.metamac.statistical.resources.core.multidataset.domain.MultidatasetVersionProperties;
@@ -59,13 +66,37 @@ public class MultidatasetVersionRepositoryImpl extends MultidatasetVersionReposi
 
     }
 
-    public MultidatasetVersion retrieveLastPublishedVersion(
-        String multidatasetUrn) {
+    @SuppressWarnings("unchecked")
+    @Override
+    public MultidatasetVersion retrieveLastPublishedVersion(String multidatasetUrn) {
+        // Prepare criteria
+        Date now = new DateTime().toDate();
+        // @formatter:off
+        List<ConditionalCriteria> conditions = ConditionalCriteriaBuilder.criteriaFor(MultidatasetVersion.class)
+                .withProperty(MultidatasetVersionProperties.multidataset().identifiableStatisticalResource().urn()).eq(multidatasetUrn)
+                .and()
+                .withProperty(MultidatasetVersionProperties.siemacMetadataStatisticalResource().procStatus()).eq(ProcStatusEnum.PUBLISHED)
+                .and()
+                    .lbrace()
+                        .withProperty(CriteriaUtils.getDatetimeLeafPropertyEmbedded(MultidatasetVersionProperties.siemacMetadataStatisticalResource().validTo(), MultidatasetVersion.class)).isNull()
+                        .or()
+                        .withProperty(CriteriaUtils.getDatetimeLeafPropertyEmbedded(MultidatasetVersionProperties.siemacMetadataStatisticalResource().validTo(), MultidatasetVersion.class)).greaterThan(now)
+                    .rbrace()
+                .orderBy(MultidatasetVersionProperties.siemacMetadataStatisticalResource().validFrom()).descending()
+                .build();
+        // @formatter:on
 
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException(
-            "retrieveLastPublishedVersion not implemented");
+        PagingParameter paging = PagingParameter.rowAccess(0, 1);
 
+        // Find
+        PagedResult<MultidatasetVersion> result = findByCondition(conditions, paging);
+
+        // Check for unique result and return
+        if (result.getRowCount() > 0) {
+            return result.getValues().get(result.getRowCount() - 1);
+        } else {
+            return null;
+        }
     }
 
     @Override

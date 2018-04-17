@@ -53,6 +53,13 @@ import org.siemac.metamac.statistical.resources.web.server.handlers.external.Get
 import org.siemac.metamac.statistical.resources.web.server.handlers.external.GetStatisticalOperationInstancesPaginatedListActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.external.GetStatisticalOperationsPaginatedListActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.external.GetTemporalGranularitiesListActionHandler;
+import org.siemac.metamac.statistical.resources.web.server.handlers.multidataset.DeleteMultidatasetVersionsActionHandler;
+import org.siemac.metamac.statistical.resources.web.server.handlers.multidataset.GetMultidatasetVersionActionHandler;
+import org.siemac.metamac.statistical.resources.web.server.handlers.multidataset.GetMultidatasetVersionsActionHandler;
+import org.siemac.metamac.statistical.resources.web.server.handlers.multidataset.GetVersionsOfMultidatasetActionHandler;
+import org.siemac.metamac.statistical.resources.web.server.handlers.multidataset.SaveMultidatasetVersionActionHandler;
+import org.siemac.metamac.statistical.resources.web.server.handlers.multidataset.UpdateMultidatasetVersionProcStatusActionHandler;
+import org.siemac.metamac.statistical.resources.web.server.handlers.multidataset.UpdateMultidatasetVersionsProcStatusActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.publication.DeletePublicationStructureElementActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.publication.DeletePublicationVersionsActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.publication.GetPublicationStructureActionHandler;
@@ -124,6 +131,13 @@ import org.siemac.metamac.statistical.resources.web.shared.external.GetStatistic
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationInstancesPaginatedListAction;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationsPaginatedListAction;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetTemporalGranularitiesListAction;
+import org.siemac.metamac.statistical.resources.web.shared.multidataset.DeleteMultidatasetVersionsAction;
+import org.siemac.metamac.statistical.resources.web.shared.multidataset.GetMultidatasetVersionAction;
+import org.siemac.metamac.statistical.resources.web.shared.multidataset.GetMultidatasetVersionsAction;
+import org.siemac.metamac.statistical.resources.web.shared.multidataset.GetVersionsOfMultidatasetAction;
+import org.siemac.metamac.statistical.resources.web.shared.multidataset.SaveMultidatasetVersionAction;
+import org.siemac.metamac.statistical.resources.web.shared.multidataset.UpdateMultidatasetVersionProcStatusAction;
+import org.siemac.metamac.statistical.resources.web.shared.multidataset.UpdateMultidatasetVersionsProcStatusAction;
 import org.siemac.metamac.statistical.resources.web.shared.publication.DeletePublicationStructureElementAction;
 import org.siemac.metamac.statistical.resources.web.shared.publication.DeletePublicationVersionsAction;
 import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublicationStructureAction;
@@ -248,6 +262,15 @@ public class ServerModule extends HandlerModule {
         bindHandler(UpdateQueryVersionsProcStatusAction.class, UpdateQueryVersionsProcStatusActionHandler.class);
         bindHandler(UpdateQueryVersionProcStatusAction.class, UpdateQueryVersionProcStatusActionHandler.class);
         bindHandler(GetVersionsOfQueryAction.class, GetVersionsOfQueryActionHandler.class);
+
+        // MULTIDATASET
+        bindHandler(GetMultidatasetVersionsAction.class, GetMultidatasetVersionsActionHandler.class);
+        bindHandler(GetMultidatasetVersionAction.class, GetMultidatasetVersionActionHandler.class);
+        bindHandler(SaveMultidatasetVersionAction.class, SaveMultidatasetVersionActionHandler.class);
+        bindHandler(DeleteMultidatasetVersionsAction.class, DeleteMultidatasetVersionsActionHandler.class);
+        bindHandler(UpdateMultidatasetVersionsProcStatusAction.class, UpdateMultidatasetVersionsProcStatusActionHandler.class);
+        bindHandler(UpdateMultidatasetVersionProcStatusAction.class, UpdateMultidatasetVersionProcStatusActionHandler.class);
+        bindHandler(GetVersionsOfMultidatasetAction.class, GetVersionsOfMultidatasetActionHandler.class);
 
         // COMMON
         bindHandler(GetLatestResourceVersionAction.class, GetLatestResourceVersionActionHandler.class);

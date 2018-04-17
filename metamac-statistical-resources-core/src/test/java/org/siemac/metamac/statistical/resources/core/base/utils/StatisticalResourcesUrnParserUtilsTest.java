@@ -69,4 +69,20 @@ public class StatisticalResourcesUrnParserUtilsTest {
         String urnWithoutPrefix = "ISTAC:query00001(001.000)";
         assertEquals("query00001", StatisticalResourcesUrnParserUtils.getQueryVersionCodeFromUrnWithoutPrefix(urnWithoutPrefix));
     }
+
+    //
+    // MULTIDATASETS
+    //
+
+    @Test
+    public void testIsMultidatasetUrn() throws Exception {
+        assertTrue(StatisticalResourcesUrnParserUtils.isMultidatasetUrn(GeneratorUrnUtils.generateSiemacStatisticalResourceMultidatasetUrn(new String[]{"maintainerAgencyId"}, "multidatasetCode")));
+        assertFalse(StatisticalResourcesUrnParserUtils.isMultidatasetUrn("dummy=dummy"));
+    }
+
+    @Test
+    public void testGetMultidatasetVersionCodeFromUrnWithoutPrefix() throws Exception {
+        String urnWithoutPrefix = "ISTAC:E30308A_000002(001.000)";
+        assertEquals("E30308A_000002", StatisticalResourcesUrnParserUtils.getMultidatasetVersionCodeFromUrnWithoutPrefix(urnWithoutPrefix));
+    }
 }
