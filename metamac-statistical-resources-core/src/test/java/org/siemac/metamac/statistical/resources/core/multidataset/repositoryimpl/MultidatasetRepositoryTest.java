@@ -10,7 +10,7 @@ import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTes
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.multidataset.domain.Multidataset;
 import org.siemac.metamac.statistical.resources.core.multidataset.domain.MultidatasetRepository;
-import org.siemac.metamac.statistical.resources.core.utils.asserts.MultidatasetAsserts;
+import org.siemac.metamac.statistical.resources.core.utils.asserts.MultidatasetsAsserts;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -32,7 +32,7 @@ public class MultidatasetRepositoryTest extends StatisticalResourcesBaseTest imp
     public void testRetrieveByUrn() throws Exception {
         Multidataset expected = multidatasetMockFactory.retrieveMock(MULTIDATASET_02_BASIC_WITH_GENERATED_VERSION_NAME);
         Multidataset actual = multidatasetRepository.retrieveByUrn(expected.getIdentifiableStatisticalResource().getUrn());
-        MultidatasetAsserts.assertEqualsMultidataset(expected, actual);
+        MultidatasetsAsserts.assertEqualsMultidataset(expected, actual);
     }
 
     @Test

@@ -79,10 +79,6 @@ public class SharedMultidatasetsSecurityUtils extends SharedSecurityUtils {
         return canRetrieveStatisticalResource(metamacPrincipal, operationCode, procStatus);
     }
 
-    public static boolean canUpdateElementLocation(MetamacPrincipal metamacPrincipal, String operationCode, ProcStatusEnum procStatus) {
-        return canModifyStatisticalResource(metamacPrincipal, operationCode, procStatus);
-    }
-
     // ------------------------------------------------------------------------
     // CUBES
     // ------------------------------------------------------------------------
@@ -92,10 +88,6 @@ public class SharedMultidatasetsSecurityUtils extends SharedSecurityUtils {
     }
 
     public static boolean canUpdateMultidatasetCube(MetamacPrincipal metamacPrincipal, String operationCode, ProcStatusEnum procStatus) {
-        return canModifyStatisticalResource(metamacPrincipal, operationCode, procStatus);
-    }
-
-    public static boolean canUpdateMultidatasetCubeLocation(MetamacPrincipal metamacPrincipal, String operationCode, ProcStatusEnum procStatus) {
         return canModifyStatisticalResource(metamacPrincipal, operationCode, procStatus);
     }
 

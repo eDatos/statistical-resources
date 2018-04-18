@@ -1,7 +1,7 @@
 package org.siemac.metamac.statistical.resources.core.multidataset.repositoryimpl;
 
 import static org.junit.Assert.fail;
-import static org.siemac.metamac.statistical.resources.core.utils.asserts.MultidatasetAsserts.assertEqualsMultidatasetVersion;
+import static org.siemac.metamac.statistical.resources.core.utils.asserts.MultidatasetsAsserts.assertEqualsMultidatasetVersion;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.MultidatasetVersionMockFactory.MULTIDATASET_VERSION_01_BASIC_NAME;
 
 import org.junit.Test;

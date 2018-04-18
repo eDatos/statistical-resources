@@ -65,10 +65,4 @@ public class MultidatasetServiceTest extends AbstractDbUnitJpaTests
         // TODO Auto-generated method stub
         fail("testDeleteMultidatasetVersion not implemented");
     }
-
-    @Test
-    public void testImportMultidatasetVersionStructure() throws Exception {
-        // TODO Auto-generated method stub
-        fail("testImportMultidatasetVersionStructure not implemented");
-    }
 }
