@@ -29,6 +29,7 @@ import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionSingl
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.invocation.service.SrmRestInternalService;
 import org.siemac.metamac.statistical.resources.core.io.serviceimpl.validators.ValidateDataVersusDsd;
+import org.siemac.metamac.statistical.resources.core.multidataset.domain.MultidatasetVersion;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
 import org.siemac.metamac.statistical.resources.core.task.domain.TaskInfoDataset;
@@ -200,5 +201,9 @@ public class LifecycleCommonMetadataChecker {
         if (QueryTypeEnum.AUTOINCREMENTAL.equals(resource.getType())) {
             checkMetadataRequired(resource.getLatestTemporalCodeInCreation(), addParameter(metadataName, ServiceExceptionSingleParameters.LATEST_TEMPORAL_CODE_IN_CREATION), exceptionItems);
         }
+    }
+
+    public void checkMultidatasetVersionCommonMetadata(MultidatasetVersion resource, String pUBLICATION_VERSION, List<MetamacExceptionItem> exceptions) {
+        // Metadata specific of multidatasetVersion are only required for published: formatExtentResources and at least one cube
     }
 }
