@@ -94,6 +94,8 @@ public class StreamMessagingServiceKafkaImpl<K, V extends SpecificRecordBase> im
                 return statisticalResourcesConfig.retrieveKafkaTopicDatasetsPublication();
             case COLLECTION:
                 return statisticalResourcesConfig.retrieveKafkaTopicCollectionPublication();
+            case MULTIDATASET:
+                return "multidatasetTopic"; // TODO METAMAC-2715 - Realizar la notificación a Kafka de los recursos Multidataset
             default:
                 return null;
         }
@@ -106,6 +108,8 @@ public class StreamMessagingServiceKafkaImpl<K, V extends SpecificRecordBase> im
                 return (V) DatasetVersionDo2AvroMapper.do2Avro((DatasetVersion) version);
             case COLLECTION:
                 return (V) PublicationVersionDo2AvroMapper.do2Avro((PublicationVersion) version);
+            case MULTIDATASET:
+                return null; // TODO METAMAC-2715 - Realizar la notificación a Kafka de los recursos Multidataset
             default:
                 return null;
         }

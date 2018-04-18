@@ -26,4 +26,7 @@ public interface MultidatasetMetadataTabUiHandlers extends StatisticalResourceUi
 
     void publish(MultidatasetVersionDto multidataset);
     void version(MultidatasetVersionDto multidataset, VersionTypeEnum versionType);
+
+    // TODO METAMAC-2715 - Realizar la notificación a Kafka de los recursos Multidataset
+    // void resendStreamMessage(MultidatasetVersionDto multidatasetVersionDto);
 }

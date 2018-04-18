@@ -24,8 +24,6 @@ import org.siemac.metamac.statistical.resources.web.client.multidataset.view.han
 import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.MetamacPortalWebUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.PlaceRequestUtils;
-import org.siemac.metamac.statistical.resources.web.shared.base.ResendStreamMessageAction;
-import org.siemac.metamac.statistical.resources.web.shared.base.ResendStreamMessageResult;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.MultidatasetVersionWebCriteria;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.VersionableStatisticalResourceWebCriteria;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationAction;
@@ -243,17 +241,18 @@ public class MultidatasetMetadataTabPresenter
                 });
     }
 
-    @Override
-    public void resendStreamMessage(MultidatasetVersionDto multidatasetVersionDto) {
-        dispatcher.execute(new ResendStreamMessageAction(multidatasetVersionDto), new WaitingAsyncCallbackHandlingError<ResendStreamMessageResult>(this) {
-
-            @Override
-            public void onWaitSuccess(ResendStreamMessageResult result) {
-                RequestMultidatasetVersionsReloadEvent.fire(MultidatasetMetadataTabPresenter.this, result.getLifeCycleStatisticalResourceResultDto().getUrn());
-                getView().setMultidataset((MultidatasetVersionDto) result.getLifeCycleStatisticalResourceResultDto());
-            }
-        });
-    }
+    // TODO METAMAC-2715 - Realizar la notificación a Kafka de los recursos Multidataset
+    // @Override
+    // public void resendStreamMessage(MultidatasetVersionDto multidatasetVersionDto) {
+    // dispatcher.execute(new ResendStreamMessageAction(multidatasetVersionDto), new WaitingAsyncCallbackHandlingError<ResendStreamMessageResult>(this) {
+    //
+    // @Override
+    // public void onWaitSuccess(ResendStreamMessageResult result) {
+    // RequestMultidatasetVersionsReloadEvent.fire(MultidatasetMetadataTabPresenter.this, result.getLifeCycleStatisticalResourceResultDto().getUrn());
+    // getView().setMultidataset((MultidatasetVersionDto) result.getLifeCycleStatisticalResourceResultDto());
+    // }
+    // });
+    // }
 
     @Override
     public void version(MultidatasetVersionDto multidataset, VersionTypeEnum versionType) {

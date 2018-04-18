@@ -237,14 +237,14 @@ public class MultidatasetMetadataTabViewImpl extends StatisticalResourceMetadata
             }
         });
 
-        // FIXME ¿kafka?
-        mainFormLayout.getResendStreamMessageButton().addClickHandler(new ClickHandler() {
-
-            @Override
-            public void onClick(ClickEvent event) {
-                getUiHandlers().resendStreamMessage(multidatasetVersionDto);
-            }
-        });
+        // TODO METAMAC-2715 - Realizar la notificación a Kafka de los recursos Multidataset
+        // mainFormLayout.getResendStreamMessageButton().addClickHandler(new ClickHandler() {
+        //
+        // @Override
+        // public void onClick(ClickEvent event) {
+        // getUiHandlers().resendStreamMessage(multidatasetVersionDto);
+        // }
+        // });
 
         mainFormLayout.getVersioningButton().addClickHandler(new ClickHandler() {
 

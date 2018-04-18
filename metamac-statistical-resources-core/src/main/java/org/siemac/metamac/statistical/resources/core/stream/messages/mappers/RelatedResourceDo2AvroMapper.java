@@ -35,6 +35,8 @@ public class RelatedResourceDo2AvroMapper {
             case QUERY:
                 nameableResource = AvroMapperUtils.getQueryVersionRepository().retrieveLastVersion(source.getQuery().getIdentifiableStatisticalResource().getUrn()).getLifeCycleStatisticalResource();
                 break;
+            case MULTIDATASET:
+                // TODO METAMAC-2715 - Realizar la notificación a Kafka de los recursos Multidataset
             default:
                 nameableResource = RelatedResourceUtils.retrieveNameableResourceLinkedToRelatedResource(source);
 
