@@ -54,6 +54,23 @@
         </xs:sequence>
         <xs:attribute name="kind" type="xs:string" use="required" />
     </xs:complexType>
+    
+    <xs:complexType name="Multidataset">
+        <xs:sequence>
+            <xs:element name="id" type="xs:string" />
+            <xs:element name="urn" type="xs:string" />
+            <xs:element name="selfLink" type="common:ResourceLink" />
+            <xs:element name="parentLink" type="common:ResourceLink" />
+            <xs:element name="childLinks" type="common:ChildLinks" minOccurs="1" />
+            <xs:element name="managementAppLink" type="xs:string" />
+            <xs:element name="name" type="common:InternationalString" />
+            <xs:element name="description" type="common:InternationalString" minOccurs="0" />
+            <xs:element name="selectedLanguages" type="tns:SelectedLanguages" minOccurs="1" />
+            <xs:element name="metadata" type="tns:MultidatasetMetadata" minOccurs="0" />
+            <xs:element name="data" type="tns:MultidatasetData" minOccurs="0" />
+        </xs:sequence>
+        <xs:attribute name="kind" type="xs:string" use="required" />
+    </xs:complexType>
 
     <xs:complexType name="DatasetMetadata">
         <xs:complexContent>
@@ -106,6 +123,22 @@
     <xs:complexType name="CollectionData">
         <xs:sequence>
             <xs:element name="nodes" type="tns:CollectionNodes" minOccurs="1" />
+        </xs:sequence>
+    </xs:complexType>
+    
+    <xs:complexType name="MultidatasetMetadata">
+        <xs:complexContent>
+            <xs:extension base="tns:StatisticalResource">
+                <xs:sequence>
+                    <xs:element name="formatExtentResources" type="xs:int" minOccurs="0" />
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    
+    <xs:complexType name="MultidatasetData">
+        <xs:sequence>
+            <xs:element name="nodes" type="tns:MultidatasetNodes" minOccurs="1" />
         </xs:sequence>
     </xs:complexType>
 
@@ -241,6 +274,32 @@
         </xs:complexContent>
     </xs:complexType>
 
+    <xs:complexType name="MultidatasetNodes">
+        <xs:sequence>
+            <xs:element name="node" type="tns:MultidatasetNode" minOccurs="1" maxOccurs="unbounded" />
+        </xs:sequence>
+    </xs:complexType>
+    
+    <xs:complexType name="MultidatasetNode" abstract="true">
+        <xs:sequence>
+            <xs:element name="name" type="common:InternationalString" />
+            <xs:element name="description" type="common:InternationalString" minOccurs="0" />
+        </xs:sequence>
+    </xs:complexType>
+    
+    <xs:complexType name="MultidatasetTable">
+        <xs:complexContent>
+            <xs:extension base="tns:MultidatasetNode">
+                <xs:choice>
+                    <xs:sequence>
+                        <xs:element name="dataset" type="tns:ResourceInternal" />
+                        <xs:element name="query" type="tns:ResourceInternal" />
+                    </xs:sequence>
+                </xs:choice>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    
     <xs:complexType name="DimensionRepresentations">
         <xs:sequence>
             <xs:element name="dimension" type="tns:DimensionRepresentation" minOccurs="1" maxOccurs="unbounded" />
@@ -476,6 +535,16 @@
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
+    
+    <xs:complexType name="Multidatasets">
+        <xs:complexContent>
+            <xs:extension base="common:ListBase">
+                <xs:sequence>
+                    <xs:element name="multidataset" type="tns:ResourceInternal" minOccurs="0" maxOccurs="unbounded" />
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
 
     <!-- Enums -->
     <xs:simpleType name="DimensionType">
@@ -509,6 +578,7 @@
             <xs:enumeration value="DATASET" />
             <xs:enumeration value="COLLECTION" />
             <xs:enumeration value="QUERY" />
+            <xs:enumeration value="MULTIDATASET" />
         </xs:restriction>
     </xs:simpleType>
 
@@ -634,6 +704,26 @@
             <xs:enumeration value="ID" />
         </xs:restriction>
     </xs:simpleType>
+    
+        <xs:simpleType name="MultidatasetCriteriaPropertyRestriction">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="ID" />
+            <xs:enumeration value="NAME" />
+            <xs:enumeration value="DESCRIPTION" />
+            <xs:enumeration value="TITLE_ALTERNATIVE" />
+            <xs:enumeration value="KEYWORD" />
+            <xs:enumeration value="NEWNESS_UNTIL_DATE" />
+            <xs:enumeration value="VALID_FROM" />
+            <xs:enumeration value="VALID_TO" />
+            <xs:enumeration value="STATISTICAL_OPERATION_URN" />
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="MultidatasetCriteriaPropertyOrder">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="ID" />
+        </xs:restriction>
+    </xs:simpleType>
 
 	<!-- Internal resources -->
     <xs:complexType name="ResourcesInternal">
@@ -671,4 +761,6 @@
     <xs:element name="collections" type="tns:Collections" />
     <xs:element name="query" type="tns:Query" />
     <xs:element name="queries" type="tns:Queries" />
+    <xs:element name="multidataset" type="tns:Multidataset" />
+    <xs:element name="multidatasets" type="tns:Multidatasets" />
 </xs:schema>
