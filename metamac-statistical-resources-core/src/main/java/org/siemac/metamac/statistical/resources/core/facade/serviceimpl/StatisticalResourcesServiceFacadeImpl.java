@@ -72,7 +72,6 @@ import org.siemac.metamac.statistical.resources.core.dto.publication.Publication
 import org.siemac.metamac.statistical.resources.core.dto.query.CodeItemDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionBaseDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionDto;
-import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StreamMessageStatusEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
@@ -116,7 +115,6 @@ import org.siemac.metamac.statistical.resources.core.security.shared.SharedDatas
 import org.siemac.metamac.statistical.resources.core.security.shared.SharedMultidatasetsSecurityUtils;
 import org.siemac.metamac.statistical.resources.core.security.shared.SharedPublicationsSecurityUtils;
 import org.siemac.metamac.statistical.resources.core.security.shared.SharedQueriesSecurityUtils;
-import org.siemac.metamac.statistical.resources.core.stream.serviceapi.StreamMessagingServiceFacade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -235,9 +233,9 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     private QueryVersionRepository                                    queryVersionRepository;
     @Autowired
     private MultidatasetVersionRepository                             multidatasetVersionRepository;
-
-    @Autowired
-    private StreamMessagingServiceFacade                              streamMessagingServiceFacade;
+    // TODO METAMAC-2715 - Realizar la notificación a Kafka de los recursos Multidataset
+    // @Autowired
+    // private StreamMessagingServiceFacade streamMessagingServiceFacade;
 
     @Autowired
     private NoticesRestInternalService                                noticesRestInternalService;
@@ -1673,30 +1671,32 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     }
 
     protected void sendNewVersionPublishedStreamMessage(ServiceContext ctx, HasSiemacMetadata version) {
-        try {
-            streamMessagingServiceFacade.sendNewVersionPublished(version);
-
-            // Also, if is a new version of DatasetVersion and there are queries with a related dataset associated with this query version, then we send queries messages
-            if (StatisticalResourceTypeEnum.DATASET.equals(version.getSiemacMetadataStatisticalResource().getType())) {
-
-                List<QueryVersion> queriesDataset = queryVersionRepository.findQueriesPublishedLinkedToDataset(((DatasetVersion) version).getDataset().getId());
-
-                for (QueryVersion queryVersion : queriesDataset) {
-                    sendNewVersionPublishedStreamMessage(ctx, queryVersion);
-                }
-            }
-
-        } catch (MetamacException e) {
-            createStreamMessageSentNotification(ctx, version);
-        }
+        // TODO METAMAC-2715 - Realizar la notificación a Kafka de los recursos Multidataset
+        // try {
+        // streamMessagingServiceFacade.sendNewVersionPublished(version);
+        //
+        // // Also, if is a new version of DatasetVersion and there are queries with a related dataset associated with this query version, then we send queries messages
+        // if (StatisticalResourceTypeEnum.DATASET.equals(version.getSiemacMetadataStatisticalResource().getType())) {
+        //
+        // List<QueryVersion> queriesDataset = queryVersionRepository.findQueriesPublishedLinkedToDataset(((DatasetVersion) version).getDataset().getId());
+        //
+        // for (QueryVersion queryVersion : queriesDataset) {
+        // sendNewVersionPublishedStreamMessage(ctx, queryVersion);
+        // }
+        // }
+        //
+        // } catch (MetamacException e) {
+        // createStreamMessageSentNotification(ctx, version);
+        // }
     }
 
     protected void sendNewVersionPublishedStreamMessage(ServiceContext ctx, QueryVersion version) {
-        try {
-            streamMessagingServiceFacade.sendNewVersionPublished(version);
-        } catch (MetamacException e) {
-            createStreamMessageSentNotification(ctx, version);
-        }
+        // TODO METAMAC-2715 - Realizar la notificación a Kafka de los recursos Multidataset
+        // try {
+        // streamMessagingServiceFacade.sendNewVersionPublished(version);
+        // } catch (MetamacException e) {
+        // createStreamMessageSentNotification(ctx, version);
+        // }
     }
 
     protected void createStreamMessageSentNotification(ServiceContext ctx, HasSiemacMetadata version) {
