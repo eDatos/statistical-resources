@@ -193,7 +193,7 @@ public class CollectionsDo2RestMapperV10Impl implements CollectionsDo2RestMapper
                 try {
                     publicationVersionRepository.retrieveByUrnPublished(urn);
                 } catch (MetamacException e) {
-                    if (!e.getExceptionItems().isEmpty() && e.getExceptionItems().iterator().next().getCode().equals(ServiceExceptionType.DATASET_VERSION_NOT_FOUND.getCode())) {
+                    if (!e.getExceptionItems().isEmpty() && e.getExceptionItems().iterator().next().getCode().equals(ServiceExceptionType.PUBLICATION_VERSION_NOT_FOUND.getCode())) {
                         return null;
                     }
                 }
