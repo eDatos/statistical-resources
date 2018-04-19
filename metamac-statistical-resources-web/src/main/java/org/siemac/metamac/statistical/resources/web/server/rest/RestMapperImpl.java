@@ -35,6 +35,7 @@ import org.siemac.metamac.statistical_resources.rest.common.StatisticalResources
 import org.siemac.metamac.statistical_resources.rest.internal.v1_0.mapper.base.CommonDo2RestMapperV10;
 import org.siemac.metamac.statistical_resources.rest.internal.v1_0.mapper.collection.CollectionsDo2RestMapperV10;
 import org.siemac.metamac.statistical_resources.rest.internal.v1_0.mapper.dataset.DatasetsDo2RestMapperV10;
+import org.siemac.metamac.statistical_resources.rest.internal.v1_0.mapper.multidataset.MultidatasetsDo2RestMapperV10;
 import org.siemac.metamac.statistical_resources.rest.internal.v1_0.mapper.query.QueriesDo2RestMapperV10;
 import org.siemac.metamac.web.common.shared.exception.MetamacWebException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,16 +45,19 @@ import org.springframework.stereotype.Component;
 public class RestMapperImpl implements RestMapper {
 
     @Autowired
-    protected CommonDo2RestMapperV10      commonDo2RestMapperV10;
+    protected CommonDo2RestMapperV10        commonDo2RestMapperV10;
 
     @Autowired
-    protected DatasetsDo2RestMapperV10    datasetsDo2RestMapperV10;
+    protected DatasetsDo2RestMapperV10      datasetsDo2RestMapperV10;
 
     @Autowired
-    protected CollectionsDo2RestMapperV10 collectionsDo2RestMapperV10;
+    protected CollectionsDo2RestMapperV10   collectionsDo2RestMapperV10;
 
     @Autowired
-    protected QueriesDo2RestMapperV10     queriesDo2RestMapperV10;
+    protected QueriesDo2RestMapperV10       queriesDo2RestMapperV10;
+
+    @Autowired
+    protected MultidatasetsDo2RestMapperV10 multidatasetsDo2RestMapperV10;
 
     @Override
     public List<DsdDimensionDto> buildDsdDimensionDtosFromDsdDimensions(List<DsdDimension> dsdDimensions) throws MetamacWebException {
@@ -213,6 +217,8 @@ public class RestMapperImpl implements RestMapper {
                 return collectionsDo2RestMapperV10.toCollectionSelfLink(resource);
             case QUERY:
                 return queriesDo2RestMapperV10.toQuerySelfLink(resource);
+            case MULTIDATASET:
+                return multidatasetsDo2RestMapperV10.toMultidatasetSelfLink(resource);
             default:
                 throw new RuntimeException("Invalid value for statistical resource type " + resourceType);
         }
@@ -226,6 +232,8 @@ public class RestMapperImpl implements RestMapper {
                 return collectionsDo2RestMapperV10.toCollectionSelfLink(resource);
             case QUERY:
                 return queriesDo2RestMapperV10.toQuerySelfLink(resource);
+            case MULTIDATASET:
+                return multidatasetsDo2RestMapperV10.toMultidatasetSelfLink(resource);
             default:
                 throw new RuntimeException("Invalid value for statistical resource type " + resourceType);
         }

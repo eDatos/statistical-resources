@@ -39,7 +39,7 @@ public class MultidatasetLifecycleServiceImpl extends LifecycleTemplateService<M
 
     @Override
     protected String getResourceMetadataName() throws MetamacException {
-        return ServiceExceptionParameters.PUBLICATION_VERSION;
+        return ServiceExceptionParameters.MULTIDATASET_VERSION;
     }
 
     // ------------------------------------------------------------------------------------------------------
@@ -114,10 +114,10 @@ public class MultidatasetLifecycleServiceImpl extends LifecycleTemplateService<M
             DatasetVersion lastVersion = datasetVersionRepository.retrieveLastVersion(datasetUrn);
             if (ProcStatusEnumUtils.isInAnyProcStatus(lastVersion, ProcStatusEnum.PUBLISHED)) {
                 if (lastVersion.getSiemacMetadataStatisticalResource().getValidFrom().isAfter(resource.getSiemacMetadataStatisticalResource().getValidFrom())) {
-                    exceptionItems.add(new MetamacExceptionItem(ServiceExceptionType.PUBLICATION_VERSION_LINKED_TO_NOT_PUBLISHED_DATASET, datasetUrn));
+                    exceptionItems.add(new MetamacExceptionItem(ServiceExceptionType.MULTIDATASET_VERSION_LINKED_TO_NOT_PUBLISHED_DATASET, datasetUrn));
                 }
             } else {
-                exceptionItems.add(new MetamacExceptionItem(ServiceExceptionType.PUBLICATION_VERSION_LINKED_TO_NOT_PUBLISHED_DATASET, datasetUrn));
+                exceptionItems.add(new MetamacExceptionItem(ServiceExceptionType.MULTIDATASET_VERSION_LINKED_TO_NOT_PUBLISHED_DATASET, datasetUrn));
             }
         }
     }
@@ -128,10 +128,10 @@ public class MultidatasetLifecycleServiceImpl extends LifecycleTemplateService<M
             QueryVersion lastVersion = queryVersionRepository.retrieveLastVersion(queryUrn);
             if (ProcStatusEnumUtils.isInAnyProcStatus(lastVersion, ProcStatusEnum.PUBLISHED)) {
                 if (lastVersion.getLifeCycleStatisticalResource().getValidFrom().isAfter(resource.getSiemacMetadataStatisticalResource().getValidFrom())) {
-                    exceptionItems.add(new MetamacExceptionItem(ServiceExceptionType.PUBLICATION_VERSION_LINKED_TO_NOT_PUBLISHED_QUERY, queryUrn));
+                    exceptionItems.add(new MetamacExceptionItem(ServiceExceptionType.MULTIDATASET_VERSION_LINKED_TO_NOT_PUBLISHED_QUERY, queryUrn));
                 }
             } else {
-                exceptionItems.add(new MetamacExceptionItem(ServiceExceptionType.PUBLICATION_VERSION_LINKED_TO_NOT_PUBLISHED_QUERY, queryUrn));
+                exceptionItems.add(new MetamacExceptionItem(ServiceExceptionType.MULTIDATASET_VERSION_LINKED_TO_NOT_PUBLISHED_QUERY, queryUrn));
             }
         }
     }
@@ -163,7 +163,7 @@ public class MultidatasetLifecycleServiceImpl extends LifecycleTemplateService<M
     @Override
     protected MultidatasetVersion updateResourceUrn(MultidatasetVersion resource) throws MetamacException {
         String[] creator = new String[]{resource.getSiemacMetadataStatisticalResource().getMaintainer().getCodeNested()};
-        resource.getSiemacMetadataStatisticalResource().setUrn(GeneratorUrnUtils.generateSiemacStatisticalResourceCollectionVersionUrn(creator,
+        resource.getSiemacMetadataStatisticalResource().setUrn(GeneratorUrnUtils.generateSiemacStatisticalResourceMultidatasetVersionUrn(creator,
                 resource.getSiemacMetadataStatisticalResource().getCode(), resource.getSiemacMetadataStatisticalResource().getVersionLogic()));
         return resource;
     }
@@ -194,7 +194,7 @@ public class MultidatasetLifecycleServiceImpl extends LifecycleTemplateService<M
 
     @Override
     protected void checkResourceMetadataAllActions(ServiceContext ctx, MultidatasetVersion resource, List<MetamacExceptionItem> exceptions) throws MetamacException {
-        lifecycleCommonMetadataChecker.checkMultidatasetVersionCommonMetadata(resource, ServiceExceptionParameters.PUBLICATION_VERSION, exceptions);
+        lifecycleCommonMetadataChecker.checkMultidatasetVersionCommonMetadata(resource, ServiceExceptionParameters.MULTIDATASET_VERSION, exceptions);
     }
 
     @Override

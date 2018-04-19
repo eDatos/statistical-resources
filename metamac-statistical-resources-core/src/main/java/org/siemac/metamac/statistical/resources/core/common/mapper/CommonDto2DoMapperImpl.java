@@ -29,6 +29,8 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetRepos
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionRepository;
 import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
+import org.siemac.metamac.statistical.resources.core.multidataset.domain.MultidatasetRepository;
+import org.siemac.metamac.statistical.resources.core.multidataset.domain.MultidatasetVersionRepository;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationRepository;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersionRepository;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryRepository;
@@ -66,6 +68,12 @@ public class CommonDto2DoMapperImpl extends BaseDto2DoMapperImpl implements Comm
 
     @Autowired
     private QueryRepository               queryRepository;
+
+    @Autowired
+    private MultidatasetRepository        multidatasetRepository;
+
+    @Autowired
+    private MultidatasetVersionRepository multidatasetVersionRepository;
 
     // ------------------------------------------------------------
     // INTERNATIONAL STRINGS
@@ -292,6 +300,12 @@ public class CommonDto2DoMapperImpl extends BaseDto2DoMapperImpl implements Comm
             case QUERY_VERSION:
                 target.setQueryVersion(queryVersionRepository.retrieveByUrn(source.getUrn()));
                 break;
+            case MULTIDATASET:
+                target.setMultidataset(multidatasetRepository.retrieveByUrn(source.getUrn()));
+                break;
+            case MULTIDATASET_VERSION:
+                target.setMultidatasetVersion(multidatasetVersionRepository.retrieveByUrn(source.getUrn()));
+                break;
             default:
                 throw new MetamacException(ServiceExceptionType.UNKNOWN, "Type of relatedResource not supported for relation with other resource");
 
@@ -361,6 +375,11 @@ public class CommonDto2DoMapperImpl extends BaseDto2DoMapperImpl implements Comm
                         return true;
                     }
                     break;
+                case MULTIDATASET_VERSION:
+                    if (source.getUrn().equals(target.getMultidatasetVersion().getSiemacMetadataStatisticalResource().getUrn())) {
+                        return true;
+                    }
+                    break;
             }
         }
         return false;
@@ -381,6 +400,11 @@ public class CommonDto2DoMapperImpl extends BaseDto2DoMapperImpl implements Comm
                     break;
                 case QUERY_VERSION:
                     if (source.getQueryVersion().getLifeCycleStatisticalResource().getUrn().equals(target.getQueryVersion().getLifeCycleStatisticalResource().getUrn())) {
+                        return true;
+                    }
+                    break;
+                case MULTIDATASET_VERSION:
+                    if (source.getMultidatasetVersion().getSiemacMetadataStatisticalResource().getUrn().equals(target.getMultidatasetVersion().getSiemacMetadataStatisticalResource().getUrn())) {
                         return true;
                     }
                     break;

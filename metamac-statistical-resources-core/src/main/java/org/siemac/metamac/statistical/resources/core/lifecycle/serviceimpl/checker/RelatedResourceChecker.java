@@ -9,6 +9,7 @@ import org.siemac.metamac.statistical.resources.core.base.domain.HasLifecycle;
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResource;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionRepository;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
+import org.siemac.metamac.statistical.resources.core.multidataset.domain.MultidatasetVersionRepository;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersionRepository;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,13 +19,16 @@ import org.springframework.stereotype.Component;
 public class RelatedResourceChecker {
 
     @Autowired
-    private DatasetVersionRepository     datasetVersionRepository;
+    private DatasetVersionRepository      datasetVersionRepository;
 
     @Autowired
-    private PublicationVersionRepository publicationVersionRepository;
+    private PublicationVersionRepository  publicationVersionRepository;
 
     @Autowired
-    private QueryVersionRepository       queryVersionRepository;
+    private QueryVersionRepository        queryVersionRepository;
+
+    @Autowired
+    private MultidatasetVersionRepository multidatasetVersionRepository;
 
     public void checkRelatedResourcesExternallyPublished(List<RelatedResource> relatedResources, DateTime referenceValidFrom, String metadataName, List<MetamacExceptionItem> exceptionItems)
             throws MetamacException {
@@ -70,6 +74,17 @@ public class RelatedResourceChecker {
             case QUERY_VERSION:
                 urn = relatedResource.getQueryVersion().getLifeCycleStatisticalResource().getUrn();
                 actualRelatedResource = queryVersionRepository.retrieveByUrn(urn);
+                checkIfRelatedResourceValidFromBeforeReferenceValidFrom(actualRelatedResource, referenceValidFrom, metadataName, exceptionItems);
+                break;
+            case MULTIDATASET:
+                urn = relatedResource.getMultidataset().getIdentifiableStatisticalResource().getUrn();
+                actualRelatedResource = multidatasetVersionRepository.retrieveLastPublishedVersion(urn);
+                expectedRelatedResource = multidatasetVersionRepository.retrieveLastVersion(urn);
+                checkIfRelatedResourceHasAPublishedVersion(actualRelatedResource, expectedRelatedResource, referenceValidFrom, urn, metadataName, exceptionItems);
+                break;
+            case MULTIDATASET_VERSION:
+                urn = relatedResource.getMultidatasetVersion().getSiemacMetadataStatisticalResource().getUrn();
+                actualRelatedResource = multidatasetVersionRepository.retrieveByUrn(urn);
                 checkIfRelatedResourceValidFromBeforeReferenceValidFrom(actualRelatedResource, referenceValidFrom, metadataName, exceptionItems);
                 break;
             default:

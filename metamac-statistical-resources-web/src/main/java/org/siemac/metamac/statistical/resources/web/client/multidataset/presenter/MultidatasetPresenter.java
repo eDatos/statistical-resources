@@ -98,7 +98,7 @@ public class MultidatasetPresenter extends Presenter<MultidatasetPresenter.Multi
 
         // Redirect to metadata tab
         getView().selectMetadataTab();
-        if (NameTokens.publicationPage.equals(placeManager.getCurrentPlaceRequest().getNameToken())) {
+        if (NameTokens.multidatasetPage.equals(placeManager.getCurrentPlaceRequest().getNameToken())) {
             goToMultidatasetMetadata();
         }
     }

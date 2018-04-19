@@ -84,6 +84,11 @@ public class ServiceExceptionType extends CommonServiceExceptionType {
     public static final CommonServiceExceptionType MULTIDATASET_VERSION_ALREADY_BEEN_REPLACED_BY_OTHER_MULTIDATASET_VERSION   = create("exception.resources.multidataset_version.already_been_replaced_by_other_multidataset_version");
     public static final CommonServiceExceptionType MULTIDATASET_VERSION_IS_REPLACED_BY_OTHER_RESOURCE                         = create("exception.resources.multidataset_version.is_replaced_by_other_multidataset");
     public static final CommonServiceExceptionType MULTIDATASET_VERSION_CANT_BE_DELETED                                       = create("exception.resources.multidataset_version.cant_be_deleted");
+    
+    // Multidataset version
+    public static final CommonServiceExceptionType MULTIDATASET_VERSION_LINKED_TO_NOT_PUBLISHED_DATASET                       = create("exception.resources.multidataset.linked_to_dataset_with_no_published_version");
+    public static final CommonServiceExceptionType MULTIDATASET_VERSION_LINKED_TO_NOT_PUBLISHED_QUERY                         = create("exception.resources.multidataset.linked_to_query_not_published");
+    
     // Query
     public static final CommonServiceExceptionType QUERY_NOT_FOUND                                                            = create("exception.resources.query.not_found");
     public static final CommonServiceExceptionType QUERY_LAST_VERSION_NOT_FOUND                                               = create("exception.resources.query.last_version_not_found");
