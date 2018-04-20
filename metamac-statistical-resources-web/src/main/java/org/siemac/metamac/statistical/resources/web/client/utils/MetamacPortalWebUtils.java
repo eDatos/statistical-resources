@@ -14,8 +14,6 @@ public class MetamacPortalWebUtils {
 
     private static final String PAGE_DATA_RESOURCE                 = "data.html";
     private static final String PAGE_COLLECTION_RESOURCE           = "collection.html";
-    private static final String URL_SINGLEPAGE_RESOURCE_DATASETS   = "datasets";
-    private static final String URL_SINGLEPAGE_RESOURCE_QUERIES    = "queries";
     private static final String URL_SEPARATOR                      = "/";
     private static final String URL_SINGLEPAGE_SEPARATOR           = "#";
     private static final String URL_QUERY_SEPARATOR                = "?";
