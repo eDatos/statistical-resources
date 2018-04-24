@@ -390,8 +390,8 @@ public class MultidatasetStructureTreeGrid extends NavigableTreeGrid {
         nodeClickAction.onNodeClick(MultidatasetCubeDto);
     }
 
-    protected void onNodeContextClick(String nodeName, MultidatasetCubeDto MultidatasetCubeDto) {
-        selectedContextClickElement = MultidatasetCubeDto;
+    protected void onNodeContextClick(String nodeName, MultidatasetCubeDto multidatasetCubeDto) {
+        selectedContextClickElement = multidatasetCubeDto;
         createCubeMenuItem.setEnabled(canCreateCube());
         deleteElementMenuItem.setEnabled(canDeleteCube(nodeName));
         showContextMenu();
