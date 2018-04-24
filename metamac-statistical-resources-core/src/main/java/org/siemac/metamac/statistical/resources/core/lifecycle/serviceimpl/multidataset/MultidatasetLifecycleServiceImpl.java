@@ -14,6 +14,7 @@ import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParam
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.lifecycle.LifecycleCommonMetadataChecker;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.LifecycleTemplateService;
+import org.siemac.metamac.statistical.resources.core.multidataset.domain.MultidatasetCube;
 import org.siemac.metamac.statistical.resources.core.multidataset.domain.MultidatasetVersion;
 import org.siemac.metamac.statistical.resources.core.multidataset.domain.MultidatasetVersionRepository;
 import org.siemac.metamac.statistical.resources.core.multidataset.utils.MultidatasetVersioningCopyUtils;
@@ -104,7 +105,34 @@ public class MultidatasetLifecycleServiceImpl extends LifecycleTemplateService<M
     }
 
     private void checkStructure(MultidatasetVersion resource, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
-        // FIXME
+        checkAtLeastOneCube(resource, exceptionItems);
+        checkAllCubesLinkToDatasetOrQuery(resource, exceptionItems);
+        checkAllResourcesMustBePublishedAndVisibleBeforeMultidataset(resource, exceptionItems);
+    }
+
+    private void checkAtLeastOneCube(MultidatasetVersion resource, List<MetamacExceptionItem> exceptionItems) {
+        if (resource.getCubes().size() > 0) {
+            return;
+        }
+        exceptionItems.add(new MetamacExceptionItem(ServiceExceptionType.MULTIDATASET_VERSION_MUST_HAVE_AT_LEAST_ONE_CUBE));
+    }
+
+    private void checkAllCubesLinkToDatasetOrQuery(MultidatasetVersion resource, List<MetamacExceptionItem> exceptionItems) {
+        for (MultidatasetCube cubes : resource.getCubes()) {
+            if (cubes.getDataset() == null && cubes.getQuery() == null) {
+                exceptionItems.add(new MetamacExceptionItem(ServiceExceptionType.MULTIDATASET_VERSION_CUBE_MUST_LINK_TO_DATASET_OR_QUERY, cubes.getNameableStatisticalResource().getUrn()));
+            }
+        }
+    }
+
+    private void checkAllResourcesMustBePublishedAndVisibleBeforeMultidataset(MultidatasetVersion resource, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
+        for (MultidatasetCube cube : resource.getCubes()) {
+            if (cube.getDataset() != null) {
+                checkDatasetMustHaveSomeVersionPublishedAndVisibleBeforeMultidataset(resource, exceptionItems, cube.getDatasetUrn());
+            } else if (cube.getQuery() != null) {
+                checkQueryMustBePublishedAndVisibleBeforeMultidataset(resource, exceptionItems, cube.getQueryUrn());
+            }
+        }
     }
 
     protected void checkDatasetMustHaveSomeVersionPublishedAndVisibleBeforeMultidataset(MultidatasetVersion resource, List<MetamacExceptionItem> exceptionItems, String datasetUrn)

@@ -2,12 +2,15 @@ package org.siemac.metamac.statistical.resources.core.multidataset.serviceimpl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
 import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
 import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
+import org.joda.time.DateTime;
 import org.siemac.metamac.core.common.criteria.utils.CriteriaUtils;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
@@ -21,10 +24,13 @@ import org.siemac.metamac.statistical.resources.core.base.validators.ProcStatusV
 import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResource;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
+import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.multidataset.domain.Multidataset;
+import org.siemac.metamac.statistical.resources.core.multidataset.domain.MultidatasetCube;
 import org.siemac.metamac.statistical.resources.core.multidataset.domain.MultidatasetVersion;
 import org.siemac.metamac.statistical.resources.core.multidataset.serviceapi.validators.MultidatasetServiceInvocationValidator;
+import org.siemac.metamac.statistical.resources.core.multidataset.utils.MultidatasetCubeComparator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -223,5 +229,191 @@ public class MultidatasetServiceImpl extends MultidatasetServiceImplBase {
         // Add version to multidataset
         multidataset.addVersion(multidatasetVersion);
         return getMultidatasetRepository().save(multidatasetVersion.getMultidataset());
+    }
+
+    @Override
+    public MultidatasetCube createMultidatasetCube(ServiceContext ctx, String multidatasetVersionUrn, MultidatasetCube cube) throws MetamacException {
+        // Validations
+        multidatasetServiceInvocationValidator.checkCreateMultidatasetCube(ctx, multidatasetVersionUrn, cube);
+        MultidatasetVersion multidatasetVersion = retrieveMultidatasetVersionByUrn(ctx, multidatasetVersionUrn);
+        ProcStatusValidator.checkStatisticalResourceStructureCanBeEdited(multidatasetVersion);
+
+        // Fill metadata for create cube
+        fillMetadataForCreateMultidatasetCube(ctx, cube, multidatasetVersion.getSiemacMetadataStatisticalResource().getStatisticalOperation());
+
+        // Create cube
+        cube = addToMultidatasetVersion(ctx, multidatasetVersion, cube);
+
+        updateLastUpdateMetadata(multidatasetVersion);
+
+        return cube;
+    }
+
+    private MultidatasetCube addToMultidatasetVersion(ServiceContext ctx, MultidatasetVersion multidatasetVersion, MultidatasetCube cube) throws MetamacException {
+        cube.setMultidatasetVersion(multidatasetVersion);
+        cube = getMultidatasetCubeRepository().save(cube);
+
+        // Update multidatasetVersion adding element
+        multidatasetVersion.addCube(cube);
+        multidatasetVersion = getMultidatasetVersionRepository().save(multidatasetVersion);
+
+        // Check order and update order of other elements
+        updateMultidatasetVersionCubesOrdersInLevelAddingCube(ctx, multidatasetVersion.getCubes(), cube);
+        return cube;
+    }
+
+    private void updateMultidatasetVersionCubesOrdersInLevelAddingCube(ServiceContext ctx, List<MultidatasetCube> cubes, MultidatasetCube cubeToAdd) throws MetamacException {
+        // Create a set with all possibles orders. At the end of this method, this set must be empty
+        Set<Long> orders = new HashSet<Long>();
+        for (int i = 1; i <= cubes.size(); i++) {
+            orders.add(Long.valueOf(i));
+        }
+
+        cubes.sort(new MultidatasetCubeComparator());
+
+        // Update orders
+        for (MultidatasetCube existingCube : cubes) {
+            // it is possible that element is already added to parent and order is already set
+            if (existingCube.getId().equals(cubeToAdd.getId())) {
+                // nothing
+            } else {
+                // Update order - Make space on the existing list to include the new cube
+                if (existingCube.getOrderInMultidataset() >= cubeToAdd.getOrderInMultidataset()) {
+                    existingCube.setOrderInMultidataset(existingCube.getOrderInMultidataset() + 1);
+                    getMultidatasetCubeRepository().save(existingCube);
+                }
+            }
+
+            boolean removed = orders.remove(existingCube.getOrderInMultidataset());
+            if (!removed) {
+                break; // order incorrect
+            }
+        }
+
+        // Checks orders
+        if (!orders.isEmpty()) {
+            throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, ServiceExceptionParameters.MULTIDATASET_CUBE__ORDER_IN_MULTIDATASET);
+        }
+
+    }
+
+    private MultidatasetCube fillMetadataForCreateMultidatasetCube(ServiceContext ctx, MultidatasetCube multidatasetcube, ExternalItem statisticalOperation) {
+        FillMetadataForCreateResourceUtils.fillMetadataForCreateNameableResource(multidatasetcube.getNameableStatisticalResource(), statisticalOperation);
+        multidatasetcube.fillCodeAndUrn();
+        return multidatasetcube;
+    }
+
+    @Override
+    public MultidatasetCube updateMultidatasetCube(ServiceContext ctx, MultidatasetCube cube) throws MetamacException {
+        // Validations
+        multidatasetServiceInvocationValidator.checkUpdateMultidatasetCube(ctx, cube);
+        MultidatasetVersion multidatasetVersion = retrieveMultidatasetVersionByUrn(ctx, cube.getMultidatasetVersion().getSiemacMetadataStatisticalResource().getUrn());
+        ProcStatusValidator.checkStatisticalResourceStructureCanBeEdited(multidatasetVersion);
+
+        updateLastUpdateMetadata(multidatasetVersion);
+
+        // Save
+        return getMultidatasetCubeRepository().save(cube);
+    }
+
+    @Override
+    public MultidatasetCube retrieveMultidatasetCube(ServiceContext ctx, String cubeUrn) throws MetamacException {
+        // Validations
+        multidatasetServiceInvocationValidator.checkRetrieveMultidatasetCube(ctx, cubeUrn);
+
+        // Retrieve
+        MultidatasetCube cube = getMultidatasetCubeRepository().retrieveCubeByUrn(cubeUrn);
+        return cube;
+    }
+
+    @Override
+    public void deleteMultidatasetCube(ServiceContext ctx, String cubeUrn) throws MetamacException {
+        // Validations
+        multidatasetServiceInvocationValidator.checkDeleteMultidatasetCube(ctx, cubeUrn);
+
+        // Retrieve
+        MultidatasetCube multidatasetCube = retrieveMultidatasetCube(ctx, cubeUrn);
+
+        // Check indicators system proc status
+        MultidatasetVersion multidatasetVersion = retrieveMultidatasetVersionByUrn(ctx, multidatasetCube.getMultidatasetVersion().getSiemacMetadataStatisticalResource().getUrn());
+        ProcStatusValidator.checkStatisticalResourceStructureCanBeEdited(multidatasetVersion);
+
+        // Delete
+        getMultidatasetCubeRepository().delete(multidatasetCube);
+
+        // Retrieve
+        multidatasetVersion = retrieveMultidatasetVersionByUrn(ctx, multidatasetVersion.getSiemacMetadataStatisticalResource().getUrn());
+
+        updateMultidatasetVersionCubesOrdersInLevelRemovingCube(ctx, multidatasetVersion.getCubes(), multidatasetCube, multidatasetCube.getOrderInMultidataset());
+
+        updateLastUpdateMetadata(multidatasetVersion);
+    }
+
+    private void updateMultidatasetVersionCubesOrdersInLevelRemovingCube(ServiceContext ctx, List<MultidatasetCube> cubes, MultidatasetCube multidatasetCubeToRemove, Long orderInLevelOfDeletedElement)
+            throws MetamacException {
+        for (MultidatasetCube existingCube : cubes) {
+            if (existingCube.getId().equals(multidatasetCubeToRemove.getId())) {
+                // nothing
+            } else if (existingCube.getOrderInMultidataset() > orderInLevelOfDeletedElement) {
+                existingCube.setOrderInMultidataset(existingCube.getOrderInMultidataset() - 1);
+                updateMultidatasetCube(ctx, existingCube);
+            }
+        }
+    }
+
+    private void updateLastUpdateMetadata(MultidatasetVersion multidatasetVersion) {
+        multidatasetVersion.getSiemacMetadataStatisticalResource().setLastUpdate(new DateTime());
+        getMultidatasetVersionRepository().save(multidatasetVersion);
+    }
+
+    @Override
+    public MultidatasetCube updateMultidatasetCubeLocation(ServiceContext ctx, String multidatasetCubeUrn, Long orderInMultidataset) throws MetamacException {
+        // Validations
+        multidatasetServiceInvocationValidator.checkUpdateMultidatasetCubeLocation(ctx, multidatasetCubeUrn, orderInMultidataset);
+
+        // Update location
+        MultidatasetCube multidatasetCube = retrieveMultidatasetCube(ctx, multidatasetCubeUrn);
+
+        // Check indicators system proc status
+        MultidatasetVersion multidatasetVersion = retrieveMultidatasetVersionByUrn(ctx, multidatasetCube.getMultidatasetVersion().getSiemacMetadataStatisticalResource().getUrn());
+        ProcStatusValidator.checkStatisticalResourceStructureCanBeEdited(multidatasetVersion);
+
+        // Change order
+        Long orderInLevelBefore = multidatasetCube.getOrderInMultidataset();
+        multidatasetCube.setOrderInMultidataset(orderInMultidataset);
+
+        // Same parent, only changes order. Check order is correct and update orders
+        List<MultidatasetCube> cubes = multidatasetCube.getMultidatasetVersion().getCubes();
+        updateMultidatasetVersionCubesOrdersInLevelChangingOrder(ctx, cubes, multidatasetCube, orderInLevelBefore, multidatasetCube.getOrderInMultidataset());
+        multidatasetCube = updateMultidatasetCube(ctx, multidatasetCube);
+
+        return multidatasetCube;
+    }
+
+    private void updateMultidatasetVersionCubesOrdersInLevelChangingOrder(ServiceContext ctx, List<MultidatasetCube> cubes, MultidatasetCube multidatasetCube, Long orderBeforeUpdate,
+            Long orderAfterUpdate) throws MetamacException {
+
+        // Checks orders
+        if (orderAfterUpdate > cubes.size()) {
+            throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, ServiceExceptionParameters.MULTIDATASET_CUBE__ORDER_IN_MULTIDATASET);
+        }
+
+        // Update orders
+        for (MultidatasetCube existingCube : cubes) {
+            if (existingCube.getId().equals(multidatasetCube.getId())) {
+                continue;
+            }
+            if (orderAfterUpdate < orderBeforeUpdate) {
+                if (existingCube.getOrderInMultidataset() >= orderAfterUpdate && existingCube.getOrderInMultidataset() < orderBeforeUpdate) {
+                    existingCube.setOrderInMultidataset(existingCube.getOrderInMultidataset() + 1);
+                    getMultidatasetCubeRepository().save(existingCube);
+                }
+            } else if (orderAfterUpdate > orderBeforeUpdate) {
+                if (existingCube.getOrderInMultidataset() > orderBeforeUpdate && existingCube.getOrderInMultidataset() <= orderAfterUpdate) {
+                    existingCube.setOrderInMultidataset(existingCube.getOrderInMultidataset() - 1);
+                    getMultidatasetCubeRepository().save(existingCube);
+                }
+            }
+        }
     }
 }

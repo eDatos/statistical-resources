@@ -24,7 +24,9 @@ import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdAttributeDt
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdAttributeInstanceDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdDimensionDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.TemporalCodeDto;
+import org.siemac.metamac.statistical.resources.core.dto.multidataset.MultidatasetCubeDto;
 import org.siemac.metamac.statistical.resources.core.dto.multidataset.MultidatasetVersionBaseDto;
+import org.siemac.metamac.statistical.resources.core.dto.multidataset.MultidatasetVersionDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.ChapterDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.CubeDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.ElementLevelDto;
@@ -45,6 +47,7 @@ import org.siemac.metamac.statistical.resources.web.client.model.record.SiemacMe
 import org.siemac.metamac.statistical.resources.web.client.model.record.TemporalCodeRecord;
 import org.siemac.metamac.statistical.resources.web.client.model.record.VersionRationaleTypeRecord;
 import org.siemac.metamac.statistical.resources.web.client.model.record.VersionableResourceRecord;
+import org.siemac.metamac.statistical.resources.web.client.multidataset.model.ds.MultidatasetCubeTreeNode;
 import org.siemac.metamac.statistical.resources.web.client.multidataset.model.record.MultidatasetRecord;
 import org.siemac.metamac.statistical.resources.web.client.publication.model.ds.ElementLevelDS;
 import org.siemac.metamac.statistical.resources.web.client.publication.model.record.ElementLevelTreeNode;
@@ -427,5 +430,32 @@ public class StatisticalResourcesRecordUtils extends RecordUtils {
             records[i] = getDsdAttributeInstanceRecord(dsdAttributeInstanceDtos.get(i));
         }
         return records;
+    }
+
+    // MULTIDATASET CUBE TREE NODE
+
+    public static MultidatasetCubeTreeNode getMultidatasetCubeNode(MultidatasetCubeDto multidatasetCubeDto) {
+        MultidatasetCubeTreeNode multidatasetCubeNode = new MultidatasetCubeTreeNode();
+
+        multidatasetCubeNode.setID(multidatasetCubeDto.getUrn());
+        multidatasetCubeNode.setUrn(multidatasetCubeDto.getUrn());
+        multidatasetCubeNode.setTitle(InternationalStringUtils.getLocalisedString(multidatasetCubeDto.getTitle()));
+        multidatasetCubeNode.setDescription(InternationalStringUtils.getLocalisedString(multidatasetCubeDto.getDescription()));
+
+        multidatasetCubeNode.setOrderInMultidataset(multidatasetCubeDto.getOrderInMultidataset());
+        multidatasetCubeNode.setIcon(org.siemac.metamac.statistical.resources.web.client.resources.GlobalResources.RESOURCE.treeFile().getURL());
+
+        multidatasetCubeNode.setAttribute(ElementLevelDS.INFO, GlobalResources.RESOURCE.info().getURL());
+
+        multidatasetCubeNode.setMultidatasetCubeDto(multidatasetCubeDto);
+
+        return multidatasetCubeNode;
+    }
+
+    public static MultidatasetCubeTreeNode getMultidatasetVersionRootNode(String schemeNodeName, MultidatasetVersionDto multidatasetVersion) { // FIXME usar base?
+        MultidatasetCubeTreeNode multidatasetCubeTreeNode = new MultidatasetCubeTreeNode();
+        multidatasetCubeTreeNode.setID(schemeNodeName);
+        multidatasetCubeTreeNode.setTitle(InternationalStringUtils.getLocalisedString(multidatasetVersion.getTitle()));
+        return multidatasetCubeTreeNode;
     }
 }

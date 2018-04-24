@@ -155,6 +155,13 @@ public class MultidatasetClientSecurityUtils extends LifecycleClientSecurityUtil
         return SharedMultidatasetsSecurityUtils.canUpdateMultidatasetCube(getMetamacPrincipal(), getCurrentStatisticalOperationCode(), multidatasetProcStatus);
     }
 
+    public static boolean canUpdateCubeLocation(ProcStatusEnum multidatasetProcStatus) {
+        if (isPublished(multidatasetProcStatus)) {
+            return false;
+        }
+        return SharedMultidatasetsSecurityUtils.canUpdateMultidatasetCubeLocation(getMetamacPrincipal(), getCurrentStatisticalOperationCode(), multidatasetProcStatus);
+    }
+
     public static boolean canDeleteCube(ProcStatusEnum multidatasetProcStatus) {
         if (isPublished(multidatasetProcStatus)) {
             return false;

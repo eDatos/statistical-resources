@@ -13,6 +13,7 @@ import org.siemac.metamac.statistical.resources.web.client.base.widgets.CustomTa
 import org.siemac.metamac.statistical.resources.web.client.multidataset.model.record.MultidatasetRecord;
 import org.siemac.metamac.statistical.resources.web.client.multidataset.presenter.MultidatasetMetadataTabPresenter.MultidatasetMetadataTabView;
 import org.siemac.metamac.statistical.resources.web.client.multidataset.presenter.MultidatasetPresenter;
+import org.siemac.metamac.statistical.resources.web.client.multidataset.presenter.MultidatasetStructureTabPresenter.MultidatasetStructureTabView;
 import org.siemac.metamac.statistical.resources.web.client.multidataset.view.handlers.MultidatasetUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.multidataset.widgets.MultidatasetVersionsSectionStack;
 import org.siemac.metamac.web.common.client.utils.InternationalStringUtils;
@@ -29,6 +30,8 @@ import com.smartgwt.client.widgets.grid.events.RecordClickEvent;
 import com.smartgwt.client.widgets.grid.events.RecordClickHandler;
 import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.tab.Tab;
+import com.smartgwt.client.widgets.tab.events.TabSelectedEvent;
+import com.smartgwt.client.widgets.tab.events.TabSelectedHandler;
 
 public class MultidatasetViewImpl extends ViewWithUiHandlers<MultidatasetUiHandlers> implements MultidatasetPresenter.MultidatasetView {
 
@@ -40,9 +43,10 @@ public class MultidatasetViewImpl extends ViewWithUiHandlers<MultidatasetUiHandl
 
     private CustomTabSet                     tabSet;
     private Tab                              multidatasetMetadataTab;
+    private Tab                              multidatasetStructureTab;
 
     @Inject
-    public MultidatasetViewImpl(MultidatasetMetadataTabView metadataView) {
+    public MultidatasetViewImpl(MultidatasetMetadataTabView metadataView, MultidatasetStructureTabView structureView) {
         super();
         panel = new VLayout();
 
@@ -73,10 +77,13 @@ public class MultidatasetViewImpl extends ViewWithUiHandlers<MultidatasetUiHandl
 
         tabSet = new CustomTabSet();
 
-        multidatasetMetadataTab = new Tab(getConstants().publicationMetadata());
+        multidatasetMetadataTab = new Tab(getConstants().multidatasetMetadata());
         multidatasetMetadataTab.setPane((Canvas) metadataView.asWidget());
 
-        tabSet.setTabs(multidatasetMetadataTab);
+        multidatasetStructureTab = new Tab(getConstants().multidatasetStructure());
+        multidatasetStructureTab.setPane((Canvas) structureView.asWidget());
+
+        tabSet.setTabs(multidatasetMetadataTab, multidatasetStructureTab);
 
         //
         // PANEL LAYOUT
@@ -95,6 +102,25 @@ public class MultidatasetViewImpl extends ViewWithUiHandlers<MultidatasetUiHandl
         subPanel.addMember(tabSubPanel);
 
         panel.addMember(subPanel);
+
+        bindEvents();
+    }
+
+    private void bindEvents() {
+        multidatasetMetadataTab.addTabSelectedHandler(new TabSelectedHandler() {
+
+            @Override
+            public void onTabSelected(TabSelectedEvent event) {
+                getUiHandlers().goToMultidatasetMetadata();
+            }
+        });
+        multidatasetStructureTab.addTabSelectedHandler(new TabSelectedHandler() {
+
+            @Override
+            public void onTabSelected(TabSelectedEvent event) {
+                getUiHandlers().goToMultidatasetStructure();
+            }
+        });
     }
 
     @Override
@@ -120,6 +146,11 @@ public class MultidatasetViewImpl extends ViewWithUiHandlers<MultidatasetUiHandl
     @Override
     public void selectMetadataTab() {
         tabSet.selectTab(multidatasetMetadataTab);
+    }
+
+    @Override
+    public void selectStructureTab() {
+        tabSet.selectTab(multidatasetStructureTab);
     }
 
     @Override

@@ -1,12 +1,7 @@
 package org.siemac.metamac.statistical.resources.web.client.multidataset.widgets.forms;
 
-import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
-
-import org.siemac.metamac.statistical.resources.core.dto.multidataset.MultidatasetVersionDto;
-import org.siemac.metamac.statistical.resources.web.client.multidataset.model.ds.MultidatasetDS;
 import org.siemac.metamac.statistical.resources.web.client.multidataset.view.handlers.MultidatasetMetadataTabUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.SiemacMetadataResourceRelationDescriptorsEditionForm;
-import org.siemac.metamac.statistical.resources.web.client.widgets.forms.fields.RelatedResourceListItem;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.VersionableStatisticalResourceWebCriteria;
 import org.siemac.metamac.web.common.client.view.handlers.BaseUiHandlers;
 
@@ -18,15 +13,6 @@ public class MultidatasetResourceRelationDescriptorsEditionForm extends SiemacMe
 
     public MultidatasetResourceRelationDescriptorsEditionForm() {
         super();
-
-        RelatedResourceListItem hasPart = new RelatedResourceListItem(MultidatasetDS.HAS_PART, getConstants().siemacMetadataStatisticalResourceHasPart(), false, getRecordNavigationHandler());
-
-        addFields(hasPart);
-    }
-
-    public void setMultidatasetVersionDto(MultidatasetVersionDto dto) {
-        setSiemacMetadataStatisticalResourceDto(dto);
-
     }
 
     @Override

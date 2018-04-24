@@ -20,6 +20,7 @@ Application MultidatasetsStatisticalResources {
 		Service MultidatasetService {
 			> @MultidatasetRepository
 			> @MultidatasetVersionRepository
+			> @MultidatasetCubeRepository
 			
 			// Multidatasets
 	    	"Creates multidataset version"
@@ -38,6 +39,13 @@ Application MultidatasetsStatisticalResources {
     		PagedResult<@MultidatasetVersion> findMultidatasetVersionsByCondition(List<ConditionalCriteria> conditions, PagingParameter pagingParameter) throws MetamacException;
 			"Deletes multidataset version. This must be last version and no published"
     		deleteMultidatasetVersion(String multidatasetVersionUrn) throws MetamacException; 	
+    		
+    		  // Cubes
+            @MultidatasetCube createMultidatasetCube(String multidatasetVersionUrn, @MultidatasetCube cube) throws MetamacException;
+            @MultidatasetCube updateMultidatasetCube(@MultidatasetCube cube) throws MetamacException;
+            @MultidatasetCube updateMultidatasetCubeLocation(String cubeUrn, Long orderInMultidataset) throws MetamacException;
+            @MultidatasetCube retrieveMultidatasetCube(String cubeUrn) throws MetamacException;
+            deleteMultidatasetCube(String cubeUrn) throws MetamacException;
 		}  
 
 
@@ -79,7 +87,7 @@ Application MultidatasetsStatisticalResources {
 			
 			 // Relations
             "Datasets"            
-            - Bag<@MultidatasetCube> cubes cascade="all-delete-orphan" fetch="lazy" databaseJoinTable="TB_MULTIDATASET_MD_CUBES" databaseColumn="MD_CUBE_FK" databaseJoinColumn="MULTIDATASET_VERSION_FK" orderby="orderInMultidataset asc";
+            - Bag<@MultidatasetCube> cubes cascade="all-delete-orphan" fetch="lazy" inverse orderby="orderInMultidataset asc" <-> multidatasetVersion;
             
 			// Format extent resources: Number of cubes that contains the multidataset
 			Integer formatExtentResources nullable;
@@ -136,6 +144,7 @@ Application MultidatasetsStatisticalResources {
                 Boolean existAnyCubeInMultidataset(String multidatasetCode, String multidatasetVersionNumber) throws MetamacException;
                 List<String> findDatasetsLinkedWithMultidatasetVersion(String multidatasetVersionUrn) throws MetamacException;
                 List<String> findQueriesLinkedWithMultidatasetVersion(String multidatasetVersionUrn) throws MetamacException;
+                delete;
             }
         }             	
 	}

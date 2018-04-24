@@ -166,4 +166,14 @@ public class MultidatasetsSecurityUtils extends SecurityUtils {
         }
     }
 
+    public static void canUpdateMultidatasetCubeLocation(ServiceContext ctx, MultidatasetCube multidatasetCube) throws MetamacException {
+        String operationCode = multidatasetCube.getMultidatasetVersion().getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode();
+        ProcStatusEnum procStatus = multidatasetCube.getMultidatasetVersion().getSiemacMetadataStatisticalResource().getEffectiveProcStatus();
+
+        if (!SharedMultidatasetsSecurityUtils.canUpdateMultidatasetCubeLocation(getMetamacPrincipal(ctx), operationCode, procStatus)) {
+            throwExceptionIfOperationNotAllowed(ctx);
+        }
+
+    }
+
 }

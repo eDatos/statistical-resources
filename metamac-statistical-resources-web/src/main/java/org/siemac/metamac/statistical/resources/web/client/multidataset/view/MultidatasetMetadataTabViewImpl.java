@@ -395,7 +395,7 @@ public class MultidatasetMetadataTabViewImpl extends StatisticalResourceMetadata
         classDescriptorsForm.setMultidatasetDto(multidatasetDto);
 
         // Resource relation descriptors
-        resourceRelationDescriptorsForm.setMultidatasetVersionDto(multidatasetDto);
+        resourceRelationDescriptorsForm.setSiemacMetadataStatisticalResourceDto(multidatasetDto);
 
         // Production descriptors
         productionDescriptorsForm.setSiemacMetadataStatisticalResourceDto(multidatasetDto);

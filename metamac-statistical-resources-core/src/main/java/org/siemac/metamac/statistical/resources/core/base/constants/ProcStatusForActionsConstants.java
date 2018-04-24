@@ -30,6 +30,9 @@ public class ProcStatusForActionsConstants {
     // Publication
     protected final static ProcStatusEnum[] procStatusForEditPublicationStructure             = {ProcStatusEnum.DRAFT, ProcStatusEnum.VALIDATION_REJECTED, ProcStatusEnum.PRODUCTION_VALIDATION, ProcStatusEnum.DIFFUSION_VALIDATION};
     
+    // Multidataset
+    protected final static ProcStatusEnum[] procStatusForEditMultidatasetStructure             = {ProcStatusEnum.DRAFT, ProcStatusEnum.VALIDATION_REJECTED, ProcStatusEnum.PRODUCTION_VALIDATION, ProcStatusEnum.DIFFUSION_VALIDATION};
+
     // @formatter:on
 
     // ----------------------------------------------------------------------

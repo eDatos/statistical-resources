@@ -24,5 +24,5 @@ public interface MultidatasetDo2DtoMapper extends BaseDo2DtoMapper {
 
     // Multidataset structure
     public MultidatasetCubeDto multidatasetCubeDoToDto(MultidatasetCube multidatasetCube) throws MetamacException;
-    public List<MultidatasetCubeDto> multidatasetCubeListToDtoList(List<MultidatasetCube> sources) throws MetamacException;
+    public List<MultidatasetCubeDto> multidatasetCubeDoListToDtoList(List<MultidatasetCube> sources) throws MetamacException;
 }

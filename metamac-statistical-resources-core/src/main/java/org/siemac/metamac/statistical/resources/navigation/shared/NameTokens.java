@@ -20,6 +20,7 @@ public class NameTokens {
     public static final String multidatasetsListPage      = "multidatasets";
     public static final String multidatasetPage           = "multidataset";
     public static final String multidatasetMetadataPage   = "multidatasetMetadata";
+    public static final String multidatasetStructurePage  = "multidatasetStructure";
     public static final String queriesListPage            = "queries";
     public static final String queryPage                  = "query";
 

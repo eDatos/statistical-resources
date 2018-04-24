@@ -31,6 +31,6 @@ public class MultidatasetCube extends MultidatasetCubeBase {
     public void fillCodeAndUrn() {
         String code = RandomStringUtils.randomAlphanumeric(CODE_MAX_LENGTH);
         getNameableStatisticalResource().setCode(code);
-        getNameableStatisticalResource().setUrn(GeneratorUrnUtils.generateSiemacStatisticalResourceCollectionCubeUrn(code));
+        getNameableStatisticalResource().setUrn(GeneratorUrnUtils.generateSiemacStatisticalResourceMultidatasetCubeUrn(code));
     }
 }

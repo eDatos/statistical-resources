@@ -4,6 +4,7 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.base.constants.ProcStatusForActionsConstants;
 import org.siemac.metamac.statistical.resources.core.base.domain.HasLifecycle;
 import org.siemac.metamac.statistical.resources.core.enume.utils.ProcStatusEnumUtils;
+import org.siemac.metamac.statistical.resources.core.multidataset.domain.MultidatasetVersion;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
 
 public abstract class ProcStatusValidator extends ProcStatusForActionsConstants {
@@ -60,5 +61,12 @@ public abstract class ProcStatusValidator extends ProcStatusForActionsConstants 
     // --------------------------------------------------------------------
     public static void checkStatisticalResourceStructureCanBeEdited(PublicationVersion resource) throws MetamacException {
         ProcStatusEnumUtils.checkPossibleProcStatus(resource, procStatusForEditPublicationStructure);
+    }
+
+    // --------------------------------------------------------------------
+    // MultidatasetVersion
+    // --------------------------------------------------------------------
+    public static void checkStatisticalResourceStructureCanBeEdited(MultidatasetVersion resource) throws MetamacException {
+        ProcStatusEnumUtils.checkPossibleProcStatus(resource, procStatusForEditMultidatasetStructure);
     }
 }

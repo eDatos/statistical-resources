@@ -123,6 +123,9 @@ public class MultidatasetDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implement
         target.setIsReplacedByVersion(relatedResourceDoToDto(source.getLifeCycleStatisticalResource().getIsReplacedByVersion()));
         target.setIsReplacedBy(relatedResourceDoToDto(source.getSiemacMetadataStatisticalResource().getIsReplacedBy()));
 
+        target.getCubes().clear();
+        target.getCubes().addAll(multidatasetCubeDoListToDtoList(source.getCubes()));
+
         // Identity
         target.setId(source.getId());
         target.setVersion(source.getVersion());
@@ -205,7 +208,7 @@ public class MultidatasetDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implement
     }
 
     @Override
-    public List<MultidatasetCubeDto> multidatasetCubeListToDtoList(List<MultidatasetCube> sources) throws MetamacException {
+    public List<MultidatasetCubeDto> multidatasetCubeDoListToDtoList(List<MultidatasetCube> sources) throws MetamacException {
         List<MultidatasetCubeDto> targets = new ArrayList<MultidatasetCubeDto>();
         for (MultidatasetCube source : sources) {
             targets.add(multidatasetCubeDoToDto(source));

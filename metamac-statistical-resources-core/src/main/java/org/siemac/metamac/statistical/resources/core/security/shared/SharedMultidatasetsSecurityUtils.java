@@ -91,6 +91,10 @@ public class SharedMultidatasetsSecurityUtils extends SharedSecurityUtils {
         return canModifyStatisticalResource(metamacPrincipal, operationCode, procStatus);
     }
 
+    public static boolean canUpdateMultidatasetCubeLocation(MetamacPrincipal metamacPrincipal, String operationCode, ProcStatusEnum procStatus) {
+        return canModifyStatisticalResource(metamacPrincipal, operationCode, procStatus);
+    }
+
     public static boolean canRetrieveMultidatasetCube(MetamacPrincipal metamacPrincipal, String operationCode, ProcStatusEnum procStatus) {
         return canRetrieveStatisticalResource(metamacPrincipal, operationCode, procStatus);
     }

@@ -244,6 +244,17 @@ Application FacadeStatisticalResources {
             @MultidatasetVersionDto versioningMultidatasetVersion(@MultidatasetVersionDto multidatasetVersionDto, @VersionTypeEnum versionType) throws MetamacException;
             @MultidatasetVersionBaseDto versioningMultidatasetVersion(@MultidatasetVersionBaseDto multidatasetVersionDto, @VersionTypeEnum versionType) throws MetamacException;
     		
+    		// MULTIDATASET CUBES
+            "Creates a multidatasetcube"
+            @MultidatasetCubeDto createMultidatasetCube(String multidatasetVersionUrn, @MultidatasetCubeDto multidatasetcubeDto) throws MetamacException;
+            "Updates multidatasetcube metadata"
+            @MultidatasetCubeDto updateMultidatasetCube(@MultidatasetCubeDto multidatasetcubeDto) throws MetamacException;
+            "Updates multidatasetcube location"
+            @MultidatasetCubeDto updateMultidatasetCubeLocation(String cubeUrn, Long orderInMultidataset) throws MetamacException;          
+            "Retrieves multidatasetcube"
+            @MultidatasetCubeDto retrieveMultidatasetCube(String multidatasetcubeUrn) throws MetamacException;
+            "Deletes multidatasetcube"
+            deleteMultidatasetCube(String multidatasetcubeUrn) throws MetamacException;
 
 	    	// CHAPTERS
 	    	"Creates a chapter"

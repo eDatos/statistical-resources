@@ -22,8 +22,10 @@ import org.siemac.metamac.statistical.resources.web.client.dataset.view.DatasetV
 import org.siemac.metamac.statistical.resources.web.client.multidataset.presenter.MultidatasetListPresenter;
 import org.siemac.metamac.statistical.resources.web.client.multidataset.presenter.MultidatasetMetadataTabPresenter;
 import org.siemac.metamac.statistical.resources.web.client.multidataset.presenter.MultidatasetPresenter;
+import org.siemac.metamac.statistical.resources.web.client.multidataset.presenter.MultidatasetStructureTabPresenter;
 import org.siemac.metamac.statistical.resources.web.client.multidataset.view.MultidatasetListViewImpl;
 import org.siemac.metamac.statistical.resources.web.client.multidataset.view.MultidatasetMetadataTabViewImpl;
+import org.siemac.metamac.statistical.resources.web.client.multidataset.view.MultidatasetStructureTabViewImpl;
 import org.siemac.metamac.statistical.resources.web.client.multidataset.view.MultidatasetViewImpl;
 import org.siemac.metamac.statistical.resources.web.client.operation.presenter.OperationListPresenter;
 import org.siemac.metamac.statistical.resources.web.client.operation.presenter.OperationPresenter;
@@ -104,6 +106,8 @@ public class ClientModule extends AbstractPresenterModule {
         bindPresenter(MultidatasetPresenter.class, MultidatasetPresenter.MultidatasetView.class, MultidatasetViewImpl.class, MultidatasetPresenter.MultidatasetProxy.class);
         bindPresenter(MultidatasetMetadataTabPresenter.class, MultidatasetMetadataTabPresenter.MultidatasetMetadataTabView.class, MultidatasetMetadataTabViewImpl.class,
                 MultidatasetMetadataTabPresenter.MultidatasetMetadataTabProxy.class);
+        bindPresenter(MultidatasetStructureTabPresenter.class, MultidatasetStructureTabPresenter.MultidatasetStructureTabView.class, MultidatasetStructureTabViewImpl.class,
+                MultidatasetStructureTabPresenter.MultidatasetStructureTabProxy.class);
 
         bindPresenter(QueryListPresenter.class, QueryListPresenter.QueryListView.class, QueryListViewImpl.class, QueryListPresenter.QueryListProxy.class);
         bindPresenter(QueryPresenter.class, QueryPresenter.QueryView.class, QueryViewImpl.class, QueryPresenter.QueryProxy.class);

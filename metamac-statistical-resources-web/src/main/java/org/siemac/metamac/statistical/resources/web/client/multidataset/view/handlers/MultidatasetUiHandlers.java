@@ -6,4 +6,5 @@ public interface MultidatasetUiHandlers extends UiHandlers {
 
     public void goToMultidatasetVersion(String urn);
     public void goToMultidatasetMetadata();
+    public void goToMultidatasetStructure();
 }

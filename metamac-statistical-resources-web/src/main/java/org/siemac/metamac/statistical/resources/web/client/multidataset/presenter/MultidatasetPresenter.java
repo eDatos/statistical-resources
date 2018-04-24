@@ -77,6 +77,7 @@ public class MultidatasetPresenter extends Presenter<MultidatasetPresenter.Multi
         void setMultidatasetVersionsAndSelectCurrent(String currentUrn, List<MultidatasetVersionBaseDto> multidatasetVersionBaseDtos);
         void showUnauthorizedResourceWarningMessage();
         void selectMetadataTab();
+        void selectStructureTab();
     }
 
     @Inject
@@ -185,6 +186,13 @@ public class MultidatasetPresenter extends Presenter<MultidatasetPresenter.Multi
     public void goToMultidatasetMetadata() {
         List<PlaceRequest> hierarchy = PlaceRequestUtils.getHierarchyUntilNameToken(placeManager, NameTokens.multidatasetPage);
         hierarchy.add(new PlaceRequest(NameTokens.multidatasetMetadataPage));
+        placeManager.revealPlaceHierarchy(hierarchy);
+    }
+
+    @Override
+    public void goToMultidatasetStructure() {
+        List<PlaceRequest> hierarchy = PlaceRequestUtils.getHierarchyUntilNameToken(placeManager, NameTokens.multidatasetPage);
+        hierarchy.add(new PlaceRequest(NameTokens.multidatasetStructurePage));
         placeManager.revealPlaceHierarchy(hierarchy);
     }
 }

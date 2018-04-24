@@ -62,6 +62,7 @@ import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DimensionRepresentationMappingDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdAttributeInstanceDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.StatisticOfficialityDto;
+import org.siemac.metamac.statistical.resources.core.dto.multidataset.MultidatasetCubeDto;
 import org.siemac.metamac.statistical.resources.core.dto.multidataset.MultidatasetVersionBaseDto;
 import org.siemac.metamac.statistical.resources.core.dto.multidataset.MultidatasetVersionDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.ChapterDto;
@@ -80,6 +81,7 @@ import org.siemac.metamac.statistical.resources.core.invocation.service.SrmRestI
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceapi.LifecycleService;
 import org.siemac.metamac.statistical.resources.core.multidataset.criteria.mapper.MultidatasetVersionMetamacCriteria2SculptorCriteriaMapper;
 import org.siemac.metamac.statistical.resources.core.multidataset.criteria.mapper.MultidatasetVersionSculptorCriteria2MetamacCriteriaMapper;
+import org.siemac.metamac.statistical.resources.core.multidataset.domain.MultidatasetCube;
 import org.siemac.metamac.statistical.resources.core.multidataset.domain.MultidatasetVersion;
 import org.siemac.metamac.statistical.resources.core.multidataset.domain.MultidatasetVersionRepository;
 import org.siemac.metamac.statistical.resources.core.multidataset.mapper.MultidatasetDo2DtoMapper;
@@ -2378,6 +2380,86 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         multidatasetVersionDto = multidatasetDo2DtoMapper.multidatasetVersionDoToBaseDto(multidatasetVersion);
 
         return multidatasetVersionDto;
+    }
+
+    // ------------------------------------------------------------------------
+    // MULTIDATASET CUBES
+    // ------------------------------------------------------------------------
+
+    @Override
+    public MultidatasetCubeDto createMultidatasetCube(ServiceContext ctx, String multidatasetUrn, MultidatasetCubeDto multidatasetcubeDto) throws MetamacException {
+        // Transform
+        MultidatasetCube multidatasetcube = multidatasetDto2DoMapper.multidatasetCubeDtoToDo(multidatasetcubeDto);
+
+        MultidatasetVersion multidatasetVersion = getMultidatasetService().retrieveMultidatasetVersionByUrn(ctx, multidatasetUrn);
+
+        // Security
+        MultidatasetsSecurityUtils.canCreateMultidatasetCube(ctx, multidatasetVersion);
+
+        // Create
+        multidatasetcube = getMultidatasetService().createMultidatasetCube(ctx, multidatasetUrn, multidatasetcube);
+
+        // Transform
+        multidatasetcubeDto = multidatasetDo2DtoMapper.multidatasetCubeDoToDto(multidatasetcube);
+        return multidatasetcubeDto;
+
+    }
+
+    @Override
+    public MultidatasetCubeDto updateMultidatasetCube(ServiceContext ctx, MultidatasetCubeDto multidatasetcubeDto) throws MetamacException {
+        // Transform
+        MultidatasetCube multidatasetcube = multidatasetDto2DoMapper.multidatasetCubeDtoToDo(multidatasetcubeDto);
+
+        // Security
+        MultidatasetsSecurityUtils.canUpdateMultidatasetCube(ctx, multidatasetcube);
+
+        // Update
+        multidatasetcube = getMultidatasetService().updateMultidatasetCube(ctx, multidatasetcube);
+
+        // Transform
+        multidatasetcubeDto = multidatasetDo2DtoMapper.multidatasetCubeDoToDto(multidatasetcube);
+        return multidatasetcubeDto;
+    }
+
+    @Override
+    public MultidatasetCubeDto retrieveMultidatasetCube(ServiceContext ctx, String multidatasetcubeUrn) throws MetamacException {
+        // Retrieve
+        MultidatasetCube multidatasetcube = getMultidatasetService().retrieveMultidatasetCube(ctx, multidatasetcubeUrn);
+
+        // Security
+        MultidatasetsSecurityUtils.canRetrieveMultidatasetCube(ctx, multidatasetcube);
+
+        // Transform
+        MultidatasetCubeDto multidatasetcubeDto = multidatasetDo2DtoMapper.multidatasetCubeDoToDto(multidatasetcube);
+        return multidatasetcubeDto;
+    }
+
+    @Override
+    public void deleteMultidatasetCube(ServiceContext ctx, String multidatasetcubeUrn) throws MetamacException {
+        // Retrieve
+        MultidatasetCube multidatasetcube = getMultidatasetService().retrieveMultidatasetCube(ctx, multidatasetcubeUrn);
+
+        // Security
+        MultidatasetsSecurityUtils.canDeleteMultidatasetCube(ctx, multidatasetcube);
+
+        // Delete
+        getMultidatasetService().deleteMultidatasetCube(ctx, multidatasetcubeUrn);
+    }
+
+    @Override
+    public MultidatasetCubeDto updateMultidatasetCubeLocation(ServiceContext ctx, String multidatasetCubeUrn, Long orderInMultidataset) throws MetamacException {
+        // Retrieve multidatasetcube for security checkings
+        MultidatasetCube multidatasetCube = getMultidatasetService().retrieveMultidatasetCube(ctx, multidatasetCubeUrn);
+
+        // Security
+        MultidatasetsSecurityUtils.canUpdateMultidatasetCubeLocation(ctx, multidatasetCube);
+
+        // Update
+        multidatasetCube = getMultidatasetService().updateMultidatasetCubeLocation(ctx, multidatasetCubeUrn, orderInMultidataset);
+
+        // Transform
+        MultidatasetCubeDto multidatasetCubeDto = multidatasetDo2DtoMapper.multidatasetCubeDoToDto(multidatasetCube);
+        return multidatasetCubeDto;
     }
 
 }
