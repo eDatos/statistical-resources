@@ -1,16 +1,16 @@
 package org.siemac.metamac.statistical.resources.core.multidataset.serviceapi;
 
-import org.fornax.cartridges.sculptor.framework.test.AbstractDbUnitJpaTests;
 import static org.junit.Assert.fail;
-import org.junit.Test;
 
+import org.fornax.cartridges.sculptor.framework.test.AbstractDbUnitJpaTests;
+import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Spring based transactional test with DbUnit support.
  */
-public class MultidatasetServiceTest extends AbstractDbUnitJpaTests
-    implements MultidatasetServiceTestBase {
+public class MultidatasetServiceTest extends AbstractDbUnitJpaTests implements MultidatasetServiceTestBase {
+
     @Autowired
     protected MultidatasetService multidatasetService;
 
@@ -33,19 +33,15 @@ public class MultidatasetServiceTest extends AbstractDbUnitJpaTests
     }
 
     @Test
-    public void testRetrieveLatestMultidatasetVersionByMultidatasetUrn()
-        throws Exception {
+    public void testRetrieveLatestMultidatasetVersionByMultidatasetUrn() throws Exception {
         // TODO Auto-generated method stub
-        fail(
-            "testRetrieveLatestMultidatasetVersionByMultidatasetUrn not implemented");
+        fail("testRetrieveLatestMultidatasetVersionByMultidatasetUrn not implemented");
     }
 
     @Test
-    public void testRetrieveLatestPublishedMultidatasetVersionByMultidatasetUrn()
-        throws Exception {
+    public void testRetrieveLatestPublishedMultidatasetVersionByMultidatasetUrn() throws Exception {
         // TODO Auto-generated method stub
-        fail(
-            "testRetrieveLatestPublishedMultidatasetVersionByMultidatasetUrn not implemented");
+        fail("testRetrieveLatestPublishedMultidatasetVersionByMultidatasetUrn not implemented");
     }
 
     @Test
