@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionBaseDto;
 import org.siemac.metamac.statistical.resources.web.client.base.widgets.SiemacMetadataResourceSectionStack;
-import org.siemac.metamac.statistical.resources.web.client.base.widgets.VersionableResourceSectionStack;
 import org.siemac.metamac.statistical.resources.web.client.publication.model.ds.PublicationDS;
 import org.siemac.metamac.statistical.resources.web.client.utils.StatisticalResourcesRecordUtils;
 

@@ -96,6 +96,8 @@ public class NoticesRestInternalFacadeImpl implements NoticesRestInternalFacade 
             case VERSION:
                 // Do not send notifications
                 break;
+            default:
+                break;
         }
     }
 
@@ -114,6 +116,8 @@ public class NoticesRestInternalFacadeImpl implements NoticesRestInternalFacade 
                     break;
                 case VERSION:
                     // Do not send notifications
+                    break;
+                default:
                     break;
             }
         }
@@ -222,8 +226,7 @@ public class NoticesRestInternalFacadeImpl implements NoticesRestInternalFacade 
             ResourceInternal[] resourceInternals = getResourceInternals(entry.getValue());
             String receiverUserName = entry.getKey();
             GroupedNotificationDto groupedNotificationDto = new GroupedNotificationDto.Builder(resourceInternals, getLifeCycleAction(entry.getValue()))
-                    .reasonOfRejection(getReasonOfRejection(entry.getValue()))
-                    .receiversUsernames(new String[]{receiverUserName}).build();
+                    .reasonOfRejection(getReasonOfRejection(entry.getValue())).receiversUsernames(new String[]{receiverUserName}).build();
             try {
                 createNotification(serviceContext, groupedNotificationDto);
             } catch (MetamacWebException e) {
@@ -324,15 +327,13 @@ public class NoticesRestInternalFacadeImpl implements NoticesRestInternalFacade 
     private GroupedNotificationDto createGroupedNotificationWithStatisticalOperation(String statisticalOperatonUrn, List<ResourceNotificationBaseDto> resources) throws MetamacWebException {
         ResourceInternal[] resourceInternals = getResourceInternals(resources);
         String reasonOfRejection = getReasonOfRejection(resources);
-        return new GroupedNotificationDto.Builder(resourceInternals, getLifeCycleAction(resources)).statisticalOperationUrn(statisticalOperatonUrn).reasonOfRejection(reasonOfRejection)
-                .build();
+        return new GroupedNotificationDto.Builder(resourceInternals, getLifeCycleAction(resources)).statisticalOperationUrn(statisticalOperatonUrn).reasonOfRejection(reasonOfRejection).build();
     }
 
     private GroupedNotificationDto createGroupedNotification(ResourceNotificationDto notification) throws MetamacWebException {
         ResourceInternal resourceInternal = restMapper.buildResourceInternal(notification.getUpdatedResource(), notification.getStatisticalResourceType());
         return new GroupedNotificationDto.Builder(new ResourceInternal[]{resourceInternal}, notification.getLifeCycleAction())
-                .statisticalOperationUrn(notification.getUpdatedResource().getStatisticalOperation().getUrn()).reasonOfRejection(notification.getReasonOfRejection())
-                .build();
+                .statisticalOperationUrn(notification.getUpdatedResource().getStatisticalOperation().getUrn()).reasonOfRejection(notification.getReasonOfRejection()).build();
     }
 
     /**
@@ -354,7 +355,6 @@ public class NoticesRestInternalFacadeImpl implements NoticesRestInternalFacade 
     private String getReasonOfRejection(List<ResourceNotificationBaseDto> notifications) {
         return notifications.get(0).getReasonOfRejection();
     }
-
 
     private String getTranslatedNotificationErrorMessage() {
         Locale locale = (Locale) ServiceContextHolder.getCurrentServiceContext().getProperty(LocaleConstants.locale);

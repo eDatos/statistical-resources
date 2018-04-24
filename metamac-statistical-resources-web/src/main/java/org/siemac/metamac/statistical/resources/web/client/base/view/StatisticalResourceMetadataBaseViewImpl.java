@@ -48,6 +48,8 @@ public abstract class StatisticalResourceMetadataBaseViewImpl<H extends Statisti
             case MEDIATOR:
                 getPublicationDescriptorsEditionForm().setOrganisationUnitSchemesForMediator(result.getOrganisationUnitSchemes(), result.getFirstResultOut(), result.getTotalResults());
                 break;
+            default:
+                break;
         }
     }
 
@@ -68,6 +70,8 @@ public abstract class StatisticalResourceMetadataBaseViewImpl<H extends Statisti
                 break;
             case MEDIATOR:
                 getPublicationDescriptorsEditionForm().setOrganisationUnitsForMediator(result.getOrganisationUnits(), result.getFirstResultOut(), result.getTotalResults());
+                break;
+            default:
                 break;
         }
     }

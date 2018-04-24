@@ -4,7 +4,6 @@ import static org.siemac.metamac.statistical.resources.web.client.StatisticalRes
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getMessages;
 import static org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils.showMessageAfterMultipleResourcesLifeCycleUpdate;
 
-import java.util.Date;
 import java.util.List;
 
 import org.siemac.metamac.core.common.constants.shared.UrnConstants;

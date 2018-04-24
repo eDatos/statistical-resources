@@ -212,8 +212,8 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
 
         RelatedResource resourcesIsReplacedBy = publicationVersion.getSiemacMetadataStatisticalResource().getIsReplacedBy();
         if (resourcesIsReplacedBy != null) {
-            exceptionItems.add(new MetamacExceptionItem(
-                    ServiceExceptionType.PUBLICATION_VERSION_IS_REPLACED_BY_OTHER_RESOURCE, resourcesIsReplacedBy.getPublicationVersion().getLifeCycleStatisticalResource().getUrn()));
+            exceptionItems.add(new MetamacExceptionItem(ServiceExceptionType.PUBLICATION_VERSION_IS_REPLACED_BY_OTHER_RESOURCE,
+                    resourcesIsReplacedBy.getPublicationVersion().getLifeCycleStatisticalResource().getUrn()));
         }
 
         if (exceptionItems.size() > 0) {
@@ -327,8 +327,8 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
         if (datasets.getTotalRows() > 0) {
             return datasets.getValues().get(0);
         }
-        throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.PUBLICATION_VERSION_STRUCTURE_IMPORTATION_CUBE_WITH_NONEXISTENT_DATASET)
-                .withMessageParameters(lineNumber, code).build();
+        throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.PUBLICATION_VERSION_STRUCTURE_IMPORTATION_CUBE_WITH_NONEXISTENT_DATASET).withMessageParameters(lineNumber, code)
+                .build();
     }
 
     private Query retrieveQueryByCode(ServiceContext ctx, String code, int lineNumber) throws MetamacException {
@@ -498,8 +498,8 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
     }
 
     private static void fillMetadataForCreatePublicationVersion(PublicationVersion publicationVersion, ExternalItem statisticalOperation, ServiceContext ctx) {
-        FillMetadataForCreateResourceUtils.fillMetadataForCretateSiemacResource(publicationVersion.getSiemacMetadataStatisticalResource(), statisticalOperation,
-                StatisticalResourceTypeEnum.COLLECTION, ctx);
+        FillMetadataForCreateResourceUtils.fillMetadataForCretateSiemacResource(publicationVersion.getSiemacMetadataStatisticalResource(), statisticalOperation, StatisticalResourceTypeEnum.COLLECTION,
+                ctx);
     }
 
     private synchronized Publication assignCodeAndSavePublicationVersion(Publication publication, PublicationVersion publicationVersion) throws MetamacException {
@@ -508,13 +508,12 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
 
         // Fill code and urn for root and version
         publication.getIdentifiableStatisticalResource().setCode(code);
-        publication.getIdentifiableStatisticalResource().setUrn(
-                GeneratorUrnUtils.generateSiemacStatisticalResourceCollectionUrn(maintainer, publication.getIdentifiableStatisticalResource().getCode()));
+        publication.getIdentifiableStatisticalResource()
+                .setUrn(GeneratorUrnUtils.generateSiemacStatisticalResourceCollectionUrn(maintainer, publication.getIdentifiableStatisticalResource().getCode()));
 
         publicationVersion.getSiemacMetadataStatisticalResource().setCode(code);
-        publicationVersion.getSiemacMetadataStatisticalResource().setUrn(
-                GeneratorUrnUtils.generateSiemacStatisticalResourceCollectionVersionUrn(maintainer, publicationVersion.getSiemacMetadataStatisticalResource().getCode(), publicationVersion
-                        .getSiemacMetadataStatisticalResource().getVersionLogic()));
+        publicationVersion.getSiemacMetadataStatisticalResource().setUrn(GeneratorUrnUtils.generateSiemacStatisticalResourceCollectionVersionUrn(maintainer,
+                publicationVersion.getSiemacMetadataStatisticalResource().getCode(), publicationVersion.getSiemacMetadataStatisticalResource().getVersionLogic()));
 
         // Checks
         identifiableStatisticalResourceRepository.checkDuplicatedUrn(publicationVersion.getSiemacMetadataStatisticalResource());

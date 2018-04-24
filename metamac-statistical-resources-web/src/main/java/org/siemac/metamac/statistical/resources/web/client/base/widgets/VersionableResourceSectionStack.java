@@ -25,6 +25,7 @@ public class VersionableResourceSectionStack extends CustomListGridSectionStack 
     protected void setListGridFields() {
         setListGridFields(null);
     }
+
     protected void setListGridFields(ListGridField... extraFields) {
         List<ListGridField> gridFields = new ArrayList<ListGridField>();
         // Add fields to listGrid

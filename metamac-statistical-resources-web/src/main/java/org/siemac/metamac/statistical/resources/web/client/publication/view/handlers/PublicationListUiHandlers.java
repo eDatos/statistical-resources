@@ -1,6 +1,5 @@
 package org.siemac.metamac.statistical.resources.web.client.publication.view.handlers;
 
-import java.util.Date;
 import java.util.List;
 
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
