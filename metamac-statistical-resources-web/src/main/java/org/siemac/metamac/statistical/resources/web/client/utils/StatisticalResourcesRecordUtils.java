@@ -452,7 +452,7 @@ public class StatisticalResourcesRecordUtils extends RecordUtils {
         return multidatasetCubeNode;
     }
 
-    public static MultidatasetCubeTreeNode getMultidatasetVersionRootNode(String schemeNodeName, MultidatasetVersionDto multidatasetVersion) { // FIXME usar base?
+    public static MultidatasetCubeTreeNode getMultidatasetVersionRootNode(String schemeNodeName, MultidatasetVersionDto multidatasetVersion) {
         MultidatasetCubeTreeNode multidatasetCubeTreeNode = new MultidatasetCubeTreeNode();
         multidatasetCubeTreeNode.setID(schemeNodeName);
         multidatasetCubeTreeNode.setTitle(InternationalStringUtils.getLocalisedString(multidatasetVersion.getTitle()));

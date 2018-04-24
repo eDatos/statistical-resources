@@ -425,7 +425,7 @@ public class MultidatasetStructureTreeGrid extends NavigableTreeGrid {
     }
 
     private boolean canCreateCube() {
-        // FIXME Cubes cannot be created under a cube && selectedContextClickElement.getCube() != null
+        // Cubes cannot be created under another cube
         if (selectedContextClickElement != null) {
             return false;
         }
