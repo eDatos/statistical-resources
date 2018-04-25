@@ -137,8 +137,6 @@ public class MultidatasetDto2DoMapperImpl extends BaseDto2DoMapperImpl implement
         MultidatasetCube target = null;
         if (source.getUrn() == null) {
             target = new MultidatasetCube();
-
-            // target.setMultidatasetVersion(source.getParentMultidatasetUrn()); // FIXME que pasa con el padre?
             target.setNameableStatisticalResource(new NameableStatisticalResource());
             target.setOrderInMultidataset(source.getOrderInMultidataset());
         } else {
@@ -148,7 +146,7 @@ public class MultidatasetDto2DoMapperImpl extends BaseDto2DoMapperImpl implement
             List<MetamacExceptionItem> exceptions = new ArrayList<MetamacExceptionItem>();
             // Modified in specific operation
             ValidationUtils.checkMetadataUnmodifiable(source.getParentMultidatasetUrn(), target.getMultidatasetVersion().getSiemacMetadataStatisticalResource().getUrn(),
-                    ServiceExceptionParameters.MULTIDATASET_CUBE__MULTIDATASET_VERSION, exceptions); // FIXME, esto es asi? antes era elementLevel.getParentUrn()
+                    ServiceExceptionParameters.MULTIDATASET_CUBE__MULTIDATASET_VERSION, exceptions);
             ValidationUtils.checkMetadataUnmodifiable(source.getOrderInMultidataset(), target.getOrderInMultidataset(), ServiceExceptionParameters.MULTIDATASET_CUBE__ORDER_IN_MULTIDATASET,
                     exceptions);
             ValidationUtils.checkMetadataUnmodifiable(source.getCode(), target.getNameableStatisticalResource().getCode(), ServiceExceptionParameters.MULTIDATASET_CUBE__CODE, exceptions);
