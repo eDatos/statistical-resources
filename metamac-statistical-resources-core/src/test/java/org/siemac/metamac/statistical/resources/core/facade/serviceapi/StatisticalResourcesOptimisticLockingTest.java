@@ -1678,4 +1678,76 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
         DataMockUtils.mockDsdAndDataRepositorySimpleDimensionsNoAttributes(datasetRepositoriesServiceFacade, srmRestInternalService);
     }
 
+    @Override
+    public void testCreateMultidataset() throws Exception {
+        // no optimistic locking in this operation
+    }
+
+    @Override
+    public void testDeleteMultidatasetVersion() throws Exception {
+        // no optimistic locking in this operation
+    }
+
+    @Override
+    public void testFindMultidatasetVersionByCondition() throws Exception {
+        // no optimistic locking in this operation
+    }
+
+    @Override
+    public void testRetrieveMultidatasetVersionByUrn() throws Exception {
+        // no optimistic locking in this operation
+    }
+
+    @Override
+    public void testRetrieveMultidatasetVersions() throws Exception {
+        // no optimistic locking in this operation
+    }
+
+    @Override
+    public void testRetrieveLatestMultidatasetVersion() throws Exception {
+        // no optimistic locking in this operation
+    }
+
+    @Override
+    public void testRetrieveLatestPublishedMultidatasetVersion() throws Exception {
+        // no optimistic locking in this operation
+    }
+
+    @Override
+    public void testSendMultidatasetVersionToProductionValidation() throws Exception {
+        // no optimistic locking in this operation
+    }
+
+
+    @Override
+    public void testSendMultidatasetVersionToValidationRejected() throws Exception {
+        // no optimistic locking in this operation
+    }
+
+
+    @Override
+    public void testResendPublishedMultidatasetVersionStreamMessage() throws Exception {
+        // no test
+    }
+
+
+    @Override
+    public void testCreateMultidatasetCube() throws Exception {
+        // no optimistic locking in this operation
+    }
+    @Override
+    public void testRetrieveMultidatasetCube() throws Exception {
+        // no optimistic locking in this operation
+    }
+
+    @Override
+    public void testDeleteMultidatasetCube() throws Exception {
+        // no optimistic locking in this operation
+    }
+
+    @Override
+    public void testUpdateMultidatasetCubeLocation() throws Exception {
+        // no optimistic locking in this operation
+    }
+
 }
