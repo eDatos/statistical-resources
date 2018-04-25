@@ -41,6 +41,10 @@ public class ServiceExceptionParameters extends ServiceExceptionBaseParameters {
     public static final String       QUERY_VERSION_URN                        = "parameter.resources.query_version_urn";
     public static final String       QUERY_VERSION__SELECTION__TIME_PERIOD    = "parameter.resources.query_version.selection.time_period";
 
+    // Multidataset
+    public static final String       MULTIDATASET_URN                         = "parameter.resources.multidataset_urn";
+    public static final String       MULTIDATASET_VERSION_URN                 = "parameter.resources.multidataset_version_urn";
+
     // Tasks
     public static final String       TASK_INFO_RESOURCE_ID                    = "parameter.resources.resource_id";
     public static final String       TASK_INFO_DATASET                        = "parameter.resources.task_info_dataset";
