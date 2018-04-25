@@ -16,6 +16,11 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_69_PUBLISHED_NO_ROOT_MAINTAINER_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_70_PREPARED_TO_PUBLISH_EXTERNAL_ITEM_FULL_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasourceMockFactory.DATASOURCE_01_BASIC_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.MultidatasetCubeMockFactory.MULTIDATASET_CUBE_01_BASIC_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.MultidatasetVersionMockFactory.MULTIDATASET_VERSION_01_BASIC_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.MultidatasetVersionMockFactory.MULTIDATASET_VERSION_29_V3_PUBLISHED_FOR_MULTIDATASET_05_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.MultidatasetVersionMockFactory.MULTIDATASET_VERSION_37_PRODUCTION_VALIDATION_READY_FOR_DIFFUSION_VALIDATION_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.MultidatasetVersionMockFactory.MULTIDATASET_VERSION_83_PREPARED_TO_PUBLISH_ONLY_VERSION_EXTERNAL_ITEM_FULL_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_01_BASIC_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_29_V3_PUBLISHED_FOR_PUBLICATION_05_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_33_DRAFT_READY_FOR_PRODUCTION_VALIDATION_NAME;
@@ -49,6 +54,9 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersi
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionBaseDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasourceDto;
+import org.siemac.metamac.statistical.resources.core.dto.multidataset.MultidatasetCubeDto;
+import org.siemac.metamac.statistical.resources.core.dto.multidataset.MultidatasetVersionBaseDto;
+import org.siemac.metamac.statistical.resources.core.dto.multidataset.MultidatasetVersionDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.ChapterDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.CubeDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionBaseDto;
@@ -1684,6 +1692,42 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
     }
 
     @Override
+    @Test
+    @MetamacMock(MULTIDATASET_VERSION_01_BASIC_NAME)
+    public void testUpdateMultidatasetVersion() throws Exception {
+        // Retrieve multidataset - session 1
+        MultidatasetVersionDto multidatasetVersionDtoSession01 = statisticalResourcesServiceFacade.retrieveMultidatasetVersionByUrn(getServiceContextAdministrador(),
+                multidatasetVersionMockFactory.retrieveMock(MULTIDATASET_VERSION_01_BASIC_NAME).getSiemacMetadataStatisticalResource().getUrn());
+        assertEquals(Long.valueOf(0), multidatasetVersionDtoSession01.getOptimisticLockingVersion());
+        multidatasetVersionDtoSession01.setTitle(StatisticalResourcesDtoMocks.mockInternationalStringDto());
+
+        // Retrieve multidataset - session 2
+        MultidatasetVersionDto multidatasetVersionDtoSession02 = statisticalResourcesServiceFacade.retrieveMultidatasetVersionByUrn(getServiceContextAdministrador(),
+                multidatasetVersionMockFactory.retrieveMock(MULTIDATASET_VERSION_01_BASIC_NAME).getSiemacMetadataStatisticalResource().getUrn());
+        assertEquals(Long.valueOf(0), multidatasetVersionDtoSession02.getOptimisticLockingVersion());
+        multidatasetVersionDtoSession02.setTitle(StatisticalResourcesDtoMocks.mockInternationalStringDto());
+
+        // Update multidataset - session 1 --> OK
+        MultidatasetVersionDto multidatasetVersionDtoSession1AfterUpdate01 = statisticalResourcesServiceFacade.updateMultidatasetVersion(getServiceContextAdministrador(),
+                multidatasetVersionDtoSession01);
+        assertTrue(multidatasetVersionDtoSession1AfterUpdate01.getOptimisticLockingVersion() > multidatasetVersionDtoSession01.getOptimisticLockingVersion());
+
+        // Update multidataset - session 2 --> FAIL
+        try {
+            statisticalResourcesServiceFacade.updateMultidatasetVersion(getServiceContextAdministrador(), multidatasetVersionDtoSession02);
+            fail("optimistic locking");
+        } catch (MetamacException e) {
+            assertEqualsMetamacExceptionItem(ServiceExceptionType.OPTIMISTIC_LOCKING, 0, null, e.getExceptionItems().get(0));
+        }
+
+        // Update multidataset - session 1 --> OK
+        multidatasetVersionDtoSession1AfterUpdate01.setTitle(StatisticalResourcesDtoMocks.mockInternationalStringDto());
+        MultidatasetVersionDto multidatasetVersionDtoSession1AfterUpdate02 = statisticalResourcesServiceFacade.updateMultidatasetVersion(getServiceContextAdministrador(),
+                multidatasetVersionDtoSession1AfterUpdate01);
+        assertTrue(multidatasetVersionDtoSession1AfterUpdate02.getOptimisticLockingVersion() > multidatasetVersionDtoSession1AfterUpdate01.getOptimisticLockingVersion());
+    }
+
+    @Override
     public void testDeleteMultidatasetVersion() throws Exception {
         // no optimistic locking in this operation
     }
@@ -1718,23 +1762,154 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
         // no optimistic locking in this operation
     }
 
+    @Override
+    @Test
+    @MetamacMock(MULTIDATASET_VERSION_37_PRODUCTION_VALIDATION_READY_FOR_DIFFUSION_VALIDATION_NAME)
+    public void testSendMultidatasetVersionToDiffusionValidation() throws Exception {
+        // Retrieve multidataset - session 1
+        MultidatasetVersionDto multidatasetVersionDtoSession01 = statisticalResourcesServiceFacade.retrieveMultidatasetVersionByUrn(getServiceContextAdministrador(),
+                multidatasetVersionMockFactory.retrieveMock(MULTIDATASET_VERSION_37_PRODUCTION_VALIDATION_READY_FOR_DIFFUSION_VALIDATION_NAME).getSiemacMetadataStatisticalResource().getUrn());
+        assertEquals(Long.valueOf(0), multidatasetVersionDtoSession01.getOptimisticLockingVersion());
+
+        // Retrieve multidataset - session 2
+        MultidatasetVersionDto multidatasetVersionDtoSession02 = statisticalResourcesServiceFacade.retrieveMultidatasetVersionByUrn(getServiceContextAdministrador(),
+                multidatasetVersionMockFactory.retrieveMock(MULTIDATASET_VERSION_37_PRODUCTION_VALIDATION_READY_FOR_DIFFUSION_VALIDATION_NAME).getSiemacMetadataStatisticalResource().getUrn());
+        assertEquals(Long.valueOf(0), multidatasetVersionDtoSession02.getOptimisticLockingVersion());
+
+        // Send to production validation - session 1 --> OK
+        MultidatasetVersionDto multidatasetVersionDtoSession1AfterUpdate01 = statisticalResourcesServiceFacade.sendMultidatasetVersionToDiffusionValidation(getServiceContextAdministrador(),
+                multidatasetVersionDtoSession01);
+        assertTrue(multidatasetVersionDtoSession1AfterUpdate01.getOptimisticLockingVersion() > multidatasetVersionDtoSession01.getOptimisticLockingVersion());
+
+        // Send to production validation - session 2 --> FAIL
+        try {
+            statisticalResourcesServiceFacade.sendMultidatasetVersionToDiffusionValidation(getServiceContextAdministrador(), multidatasetVersionDtoSession02);
+            fail("optimistic locking");
+        } catch (MetamacException e) {
+            assertEqualsMetamacExceptionItem(ServiceExceptionType.OPTIMISTIC_LOCKING, 0, null, e.getExceptionItems().get(0));
+        }
+
+        // Update multidataset - session 1 --> OK
+        multidatasetVersionDtoSession1AfterUpdate01.setTitle(StatisticalResourcesDtoMocks.mockInternationalStringDto());
+        MultidatasetVersionDto multidatasetVersionDtoSession1AfterUpdate02 = statisticalResourcesServiceFacade.updateMultidatasetVersion(getServiceContextAdministrador(),
+                multidatasetVersionDtoSession1AfterUpdate01);
+        assertTrue(multidatasetVersionDtoSession1AfterUpdate02.getOptimisticLockingVersion() > multidatasetVersionDtoSession1AfterUpdate01.getOptimisticLockingVersion());
+
+    }
 
     @Override
     public void testSendMultidatasetVersionToValidationRejected() throws Exception {
         // no optimistic locking in this operation
     }
 
+    @Override
+    @Test
+    @MetamacMock(MULTIDATASET_VERSION_83_PREPARED_TO_PUBLISH_ONLY_VERSION_EXTERNAL_ITEM_FULL_NAME)
+    public void testPublishMultidatasetVersion() throws Exception {
+        // Retrieve multidataset - session 1
+        MultidatasetVersionBaseDto multidatasetVersionDtoSession01 = statisticalResourcesServiceFacade.findMultidatasetVersionByCondition(getServiceContextAdministrador(), null).getResults().get(0);
+        assertEquals(Long.valueOf(0), multidatasetVersionDtoSession01.getOptimisticLockingVersion());
+
+        // Retrieve multidataset - session 2
+        MultidatasetVersionBaseDto multidatasetVersionDtoSession02 = statisticalResourcesServiceFacade.findMultidatasetVersionByCondition(getServiceContextAdministrador(), null).getResults().get(0);
+        assertEquals(Long.valueOf(0), multidatasetVersionDtoSession02.getOptimisticLockingVersion());
+
+        // Send to validation rejected - session 1 --> OK
+        MultidatasetVersionBaseDto multidatasetVersionDtoSession1AfterUpdate01 = statisticalResourcesServiceFacade.publishMultidatasetVersion(getServiceContextAdministrador(),
+                multidatasetVersionDtoSession01);
+        assertTrue(multidatasetVersionDtoSession1AfterUpdate01.getOptimisticLockingVersion() > multidatasetVersionDtoSession01.getOptimisticLockingVersion());
+
+        try {
+            statisticalResourcesServiceFacade.publishMultidatasetVersion(getServiceContextAdministrador(), multidatasetVersionDtoSession02);
+            fail("optimistic locking");
+        } catch (MetamacException e) {
+            assertEqualsMetamacExceptionItem(ServiceExceptionType.OPTIMISTIC_LOCKING, 0, null, e.getExceptionItems().get(0));
+        }
+    }
 
     @Override
     public void testResendPublishedMultidatasetVersionStreamMessage() throws Exception {
         // no test
     }
 
+    @Override
+    @Test
+    @MetamacMock(MULTIDATASET_VERSION_29_V3_PUBLISHED_FOR_MULTIDATASET_05_NAME)
+    public void testVersioningMultidatasetVersion() throws Exception {
+        // Retrieve multidataset - session 1
+        MultidatasetVersionDto multidatasetVersionDtoSession01 = statisticalResourcesServiceFacade.retrieveMultidatasetVersionByUrn(getServiceContextAdministrador(),
+                multidatasetVersionMockFactory.retrieveMock(MULTIDATASET_VERSION_29_V3_PUBLISHED_FOR_MULTIDATASET_05_NAME).getSiemacMetadataStatisticalResource().getUrn());
+        assertEquals(Long.valueOf(0), multidatasetVersionDtoSession01.getOptimisticLockingVersion());
+
+        // Retrieve multidataset - session 2
+        MultidatasetVersionDto multidatasetVersionDtoSession02 = statisticalResourcesServiceFacade.retrieveMultidatasetVersionByUrn(getServiceContextAdministrador(),
+                multidatasetVersionMockFactory.retrieveMock(MULTIDATASET_VERSION_29_V3_PUBLISHED_FOR_MULTIDATASET_05_NAME).getSiemacMetadataStatisticalResource().getUrn());
+        assertEquals(Long.valueOf(0), multidatasetVersionDtoSession02.getOptimisticLockingVersion());
+
+        // Versioning - session 1 --> OK
+        MultidatasetVersionDto multidatasetVersionDtoSession1NewVersion = statisticalResourcesServiceFacade.versioningMultidatasetVersion(getServiceContextAdministrador(),
+                multidatasetVersionDtoSession01, VersionTypeEnum.MAJOR);
+
+        MultidatasetVersionDto multidatasetVersionDtoSession1AfterUpdate01 = statisticalResourcesServiceFacade.retrieveMultidatasetVersionByUrn(getServiceContextAdministrador(),
+                multidatasetVersionMockFactory.retrieveMock(MULTIDATASET_VERSION_29_V3_PUBLISHED_FOR_MULTIDATASET_05_NAME).getSiemacMetadataStatisticalResource().getUrn());
+
+        assertEquals(Long.valueOf(0), multidatasetVersionDtoSession1NewVersion.getOptimisticLockingVersion());
+        assertTrue(multidatasetVersionDtoSession1AfterUpdate01.getOptimisticLockingVersion() > multidatasetVersionDtoSession01.getOptimisticLockingVersion());
+
+        // Versioning - session 2 --> FAIL
+        try {
+            statisticalResourcesServiceFacade.versioningMultidatasetVersion(getServiceContextAdministrador(), multidatasetVersionDtoSession02, VersionTypeEnum.MAJOR);
+            fail("optimistic locking");
+        } catch (MetamacException e) {
+            assertEqualsMetamacExceptionItem(ServiceExceptionType.OPTIMISTIC_LOCKING, 0, null, e.getExceptionItems().get(0));
+        }
+
+        // Update multidataset - session 1 --> OK
+        multidatasetVersionDtoSession1AfterUpdate01.setTitle(StatisticalResourcesDtoMocks.mockInternationalStringDto());
+        MultidatasetVersionDto multidatasetVersionDtoSession1AfterUpdate02 = statisticalResourcesServiceFacade.updateMultidatasetVersion(getServiceContextAdministrador(),
+                multidatasetVersionDtoSession1NewVersion);
+        assertTrue(multidatasetVersionDtoSession1AfterUpdate02.getOptimisticLockingVersion() > multidatasetVersionDtoSession1NewVersion.getOptimisticLockingVersion());
+    }
 
     @Override
     public void testCreateMultidatasetCube() throws Exception {
         // no optimistic locking in this operation
     }
+
+    @Override
+    @Test
+    @MetamacMock(MULTIDATASET_CUBE_01_BASIC_NAME)
+    public void testUpdateMultidatasetCube() throws Exception {
+        MultidatasetCubeDto multidatasetCubeDtoSession01 = statisticalResourcesServiceFacade.retrieveMultidatasetCube(getServiceContextAdministrador(),
+                multidatasetCubeMockFactory.retrieveMock(MULTIDATASET_CUBE_01_BASIC_NAME).getNameableStatisticalResource().getUrn());
+        assertEquals(Long.valueOf(0), multidatasetCubeDtoSession01.getOptimisticLockingVersion());
+        multidatasetCubeDtoSession01.setTitle(StatisticalResourcesDtoMocks.mockInternationalStringDto());
+
+        // Retrieve multidatasetCube - session 2
+        MultidatasetCubeDto multidatasetCubeDtoSession02 = statisticalResourcesServiceFacade.retrieveMultidatasetCube(getServiceContextAdministrador(),
+                multidatasetCubeMockFactory.retrieveMock(MULTIDATASET_CUBE_01_BASIC_NAME).getNameableStatisticalResource().getUrn());
+        assertEquals(Long.valueOf(0), multidatasetCubeDtoSession02.getOptimisticLockingVersion());
+        multidatasetCubeDtoSession02.setTitle(StatisticalResourcesDtoMocks.mockInternationalStringDto());
+
+        // Update multidatasetCube - session 1 --> OK
+        MultidatasetCubeDto multidatasetCubeDtoSession1AfterUpdate01 = statisticalResourcesServiceFacade.updateMultidatasetCube(getServiceContextAdministrador(), multidatasetCubeDtoSession01);
+        assertTrue(multidatasetCubeDtoSession1AfterUpdate01.getOptimisticLockingVersion() > multidatasetCubeDtoSession01.getOptimisticLockingVersion());
+
+        // Update multidatasetCube - session 2 --> FAIL
+        try {
+            statisticalResourcesServiceFacade.updateMultidatasetCube(getServiceContextAdministrador(), multidatasetCubeDtoSession02);
+            fail("optimistic locking");
+        } catch (MetamacException e) {
+            assertEqualsMetamacExceptionItem(ServiceExceptionType.OPTIMISTIC_LOCKING, 0, null, e.getExceptionItems().get(0));
+        }
+
+        // Update multidatasetCube - session 1 --> OK
+        multidatasetCubeDtoSession1AfterUpdate01.setTitle(StatisticalResourcesDtoMocks.mockInternationalStringDto());
+        MultidatasetCubeDto multidatasetCubeDtoSession1AfterUpdate02 = statisticalResourcesServiceFacade.updateMultidatasetCube(getServiceContextAdministrador(),
+                multidatasetCubeDtoSession1AfterUpdate01);
+        assertTrue(multidatasetCubeDtoSession1AfterUpdate02.getOptimisticLockingVersion() > multidatasetCubeDtoSession1AfterUpdate01.getOptimisticLockingVersion());
+    }
+
     @Override
     public void testRetrieveMultidatasetCube() throws Exception {
         // no optimistic locking in this operation
