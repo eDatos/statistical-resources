@@ -268,6 +268,15 @@ public class PlaceRequestUtils extends CommonPlaceRequestUtils {
                     break;
                 case QUERY:
                     break;
+                case MULTIDATASET:
+                    break;
+                case MULTIDATASET_CUBE:
+                    break;
+                case MULTIDATASET_VERSION:
+                    if (StatisticalResourcesUrnParserUtils.isMultidatasetUrn(urn)) {
+                        return buildAbsoluteMultidatasetPlaceRequest(relatedResourceDto.getStatisticalOperationUrn(), urn);
+                    }
+                    break;
                 default:
                     break;
             }

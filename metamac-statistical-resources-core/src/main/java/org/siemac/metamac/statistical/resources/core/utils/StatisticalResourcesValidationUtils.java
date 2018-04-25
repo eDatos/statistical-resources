@@ -288,6 +288,16 @@ public class StatisticalResourcesValidationUtils extends ValidationUtils {
                     return true;
                 }
                 break;
+            case MULTIDATASET:
+                if (parameter.getMultidataset() == null) {
+                    return true;
+                }
+                break;
+            case MULTIDATASET_VERSION:
+                if (parameter.getMultidatasetVersion() == null) {
+                    return true;
+                }
+                break;
             default:
                 return true;
         }

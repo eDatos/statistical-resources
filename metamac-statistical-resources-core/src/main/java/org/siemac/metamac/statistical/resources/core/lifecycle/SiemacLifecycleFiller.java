@@ -8,6 +8,8 @@ import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResour
 import org.siemac.metamac.statistical.resources.core.common.utils.RelatedResourceUtils;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionRepository;
+import org.siemac.metamac.statistical.resources.core.multidataset.domain.MultidatasetVersion;
+import org.siemac.metamac.statistical.resources.core.multidataset.domain.MultidatasetVersionRepository;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,13 +19,16 @@ import org.springframework.stereotype.Component;
 public class SiemacLifecycleFiller {
 
     @Autowired
-    private LifecycleFiller              lifecycleFiller;
+    private LifecycleFiller               lifecycleFiller;
 
     @Autowired
-    private DatasetVersionRepository     datasetVersionRepository;
+    private DatasetVersionRepository      datasetVersionRepository;
 
     @Autowired
-    private PublicationVersionRepository publicationVersionRepository;
+    private PublicationVersionRepository  publicationVersionRepository;
+
+    @Autowired
+    private MultidatasetVersionRepository multidatasetVersionRepository;
 
     // ------------------------------------------------------------------------------------------------------
     // >> PRODUCTION VALIDATION
@@ -81,14 +86,31 @@ public class SiemacLifecycleFiller {
     private void fillIsReplacedByOfRelatedResource(HasSiemacMetadata resource) throws MetamacException {
         RelatedResource replacedResource = resource.getSiemacMetadataStatisticalResource().getReplaces();
         if (replacedResource != null) {
-            if (replacedResource.getDatasetVersion() != null) {
-                DatasetVersion datasetVersion = replacedResource.getDatasetVersion();
-                datasetVersion.getSiemacMetadataStatisticalResource().setIsReplacedBy(RelatedResourceUtils.createRelatedResourceForHasLifecycleResource(resource));
-                datasetVersionRepository.save(datasetVersion);
-            } else if (replacedResource.getPublicationVersion() != null) {
-                PublicationVersion publicationVersion = replacedResource.getPublicationVersion();
-                publicationVersion.getSiemacMetadataStatisticalResource().setIsReplacedBy(RelatedResourceUtils.createRelatedResourceForHasLifecycleResource(resource));
-                publicationVersionRepository.save(publicationVersion);
+            // El switch no es obligatorio, pero simplifica el desarrollo posterior al tener el tipado como guía
+            switch (replacedResource.getType()) {
+                case DATASET_VERSION:
+                    if (replacedResource.getDatasetVersion() != null) {
+                        DatasetVersion datasetVersion = replacedResource.getDatasetVersion();
+                        datasetVersion.getSiemacMetadataStatisticalResource().setIsReplacedBy(RelatedResourceUtils.createRelatedResourceForHasLifecycleResource(resource));
+                        datasetVersionRepository.save(datasetVersion);
+                    }
+                    break;
+                case MULTIDATASET_VERSION:
+                    if (replacedResource.getMultidatasetVersion() != null) {
+                        MultidatasetVersion multidatasetVersion = replacedResource.getMultidatasetVersion();
+                        multidatasetVersion.getSiemacMetadataStatisticalResource().setIsReplacedBy(RelatedResourceUtils.createRelatedResourceForHasLifecycleResource(resource));
+                        multidatasetVersionRepository.save(multidatasetVersion);
+                    }
+                    break;
+                case PUBLICATION_VERSION:
+                    if (replacedResource.getPublicationVersion() != null) {
+                        PublicationVersion publicationVersion = replacedResource.getPublicationVersion();
+                        publicationVersion.getSiemacMetadataStatisticalResource().setIsReplacedBy(RelatedResourceUtils.createRelatedResourceForHasLifecycleResource(resource));
+                        publicationVersionRepository.save(publicationVersion);
+                    }
+                    break;
+                default:
+                    break;
             }
         }
     }
