@@ -51,7 +51,7 @@ public class MultidatasetVersioningCopyUtils {
         target.setNameableStatisticalResource(copyNameableStatisticalResource(source.getNameableStatisticalResource(), target.getNameableStatisticalResource()));
         target.fillCodeAndUrn();
 
-        target.setOrderInMultidataset(target.getOrderInMultidataset());
+        target.setOrderInMultidataset(source.getOrderInMultidataset());
 
         target.setQuery(source.getQuery());
         target.setDataset(source.getDataset());
