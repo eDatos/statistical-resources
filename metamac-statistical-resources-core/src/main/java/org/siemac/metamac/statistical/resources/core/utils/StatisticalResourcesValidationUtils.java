@@ -24,7 +24,7 @@ public class StatisticalResourcesValidationUtils extends ValidationUtils {
 
     /**
      * Check for a required metadata and add an exception for a failed validation.
-     * 
+     *
      * @param parameter
      * @param parameterName
      * @param exceptions
@@ -39,7 +39,7 @@ public class StatisticalResourcesValidationUtils extends ValidationUtils {
 
     /**
      * Check for a required metadata and add an exception for a failed validation.
-     * 
+     *
      * @param parameter
      * @param parameterName
      * @param exceptions
@@ -52,7 +52,7 @@ public class StatisticalResourcesValidationUtils extends ValidationUtils {
 
     /**
      * Check for a required metadata and add an exception for a failed validation.
-     * 
+     *
      * @param parameter
      * @param parameterName
      * @param exceptions
@@ -65,7 +65,7 @@ public class StatisticalResourcesValidationUtils extends ValidationUtils {
 
     /**
      * Check for a required metadata and add an exception for a failed validation.
-     * 
+     *
      * @param parameter
      * @param parameterName
      * @param exceptions
@@ -80,7 +80,7 @@ public class StatisticalResourcesValidationUtils extends ValidationUtils {
 
     /**
      * Check for a required metadata and add an exception for a failed validation.
-     * 
+     *
      * @param parameter
      * @param parameterName
      * @param exceptions
@@ -108,7 +108,7 @@ public class StatisticalResourcesValidationUtils extends ValidationUtils {
 
     /**
      * Check for a required metadata and add an exception for a failed validation.
-     * 
+     *
      * @param parameter
      * @param parameterName
      * @param exceptions
@@ -151,7 +151,7 @@ public class StatisticalResourcesValidationUtils extends ValidationUtils {
 
     /**
      * Check if a metadata is valid
-     * 
+     *
      * @param parameter
      * @param parameterName
      * @param exceptions
@@ -169,7 +169,7 @@ public class StatisticalResourcesValidationUtils extends ValidationUtils {
 
     /**
      * Check if a collection metadata is valid.
-     * 
+     *
      * @param parameter
      * @param parameterName
      * @param exceptions
@@ -222,7 +222,7 @@ public class StatisticalResourcesValidationUtils extends ValidationUtils {
 
     /**
      * Check if an ExternalItem is empty.
-     * 
+     *
      * @param parameter
      * @return
      */
@@ -235,7 +235,7 @@ public class StatisticalResourcesValidationUtils extends ValidationUtils {
 
     /**
      * Check if a RelatedResourceDto is empty.
-     * 
+     *
      * @param parameter
      * @return
      */
@@ -248,7 +248,7 @@ public class StatisticalResourcesValidationUtils extends ValidationUtils {
 
     /**
      * Check if a RelatedResource is empty.
-     * 
+     *
      * @param parameter
      * @return
      */
@@ -307,7 +307,7 @@ public class StatisticalResourcesValidationUtils extends ValidationUtils {
 
     /**
      * Check if a Set<QuerySelectionItem> is empty
-     * 
+     *
      * @param parameter
      * @return
      */
@@ -327,7 +327,7 @@ public class StatisticalResourcesValidationUtils extends ValidationUtils {
 
     /**
      * Check if a QuerySelectionItem is empty
-     * 
+     *
      * @param parameter
      * @return
      */
@@ -341,7 +341,7 @@ public class StatisticalResourcesValidationUtils extends ValidationUtils {
 
     /**
      * Check if a ElementLevel is empty
-     * 
+     *
      * @param parameter
      * @return
      */

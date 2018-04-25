@@ -118,7 +118,6 @@ public class QueryVersionRepositoryImpl extends QueryVersionRepositoryBase {
         return findByCondition(conditions);
     }
 
-
     @SuppressWarnings("unchecked")
     @Override
     public List<RelatedResourceResult> retrieveIsPartOf(QueryVersion queryVersion) throws MetamacException {
@@ -132,7 +131,7 @@ public class QueryVersionRepositoryImpl extends QueryVersionRepositoryBase {
             "        stat.version_logic, "+
             "        loc.locale, " +
             "        loc.label " +
-            "FROM    tb_elements_levels elem INNER JOIN tb_cubes cubes " + 
+            "FROM    tb_elements_levels elem INNER JOIN tb_cubes cubes " +
             "            on cubes.ID = elem.table_fk, " +
             "        tb_publications_versions pub INNER JOIN tb_stat_resources stat " +
             "            ON pub.siemac_resource_fk = stat.ID, " +
@@ -149,7 +148,7 @@ public class QueryVersionRepositoryImpl extends QueryVersionRepositoryBase {
             "    AND     elem.publication_version_all_fk = pub.ID " +
             "    AND     stat.title_fk = loc.international_string_fk " +
             "    AND     (stat.last_version = 1 " +
-            "       OR "+ RepositoryUtils.isLastPublishedVersionConditions+" ) "+    
+            "       OR "+ RepositoryUtils.isLastPublishedVersionConditions+" ) "+
             "    AND     operation.ID = stat.stat_operation_fk " +
             "    AND     maintainer.id = stat.maintainer_fk");
 
@@ -176,7 +175,7 @@ public class QueryVersionRepositoryImpl extends QueryVersionRepositoryBase {
             "        stat.version_logic, "+
             "        loc.locale, " +
             "        loc.label " +
-            "FROM    tb_elements_levels elem INNER JOIN tb_cubes cubes " + 
+            "FROM    tb_elements_levels elem INNER JOIN tb_cubes cubes " +
             "            on cubes.ID = elem.table_fk, " +
             "        tb_publications_versions pub INNER JOIN tb_stat_resources stat " +
             "            ON pub.siemac_resource_fk = stat.ID, " +
@@ -192,7 +191,7 @@ public class QueryVersionRepositoryImpl extends QueryVersionRepositoryBase {
             "    AND     stat_query.last_version = 1 " +
             "    AND     elem.publication_version_all_fk = pub.ID " +
             "    AND     stat.title_fk = loc.international_string_fk " +
-            "    AND     "+isLastPublishedVersionConditions+"  "+    
+            "    AND     "+isLastPublishedVersionConditions+"  "+
             "    AND     operation.ID = stat.stat_operation_fk " +
             "    AND     maintainer.id = stat.maintainer_fk");
 
