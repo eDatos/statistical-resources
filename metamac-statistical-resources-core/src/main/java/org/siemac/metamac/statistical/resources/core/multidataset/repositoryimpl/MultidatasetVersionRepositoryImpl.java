@@ -54,11 +54,28 @@ public class MultidatasetVersionRepositoryImpl extends MultidatasetVersionReposi
     }
 
     @Override
-    public MultidatasetVersion retrieveByUrnPublished(String urn) {
+    public MultidatasetVersion retrieveByUrnPublished(String urn) throws MetamacException {
+        // Prepare criteria
+        // @formatter:off
+        List<ConditionalCriteria> condition = criteriaFor(MultidatasetVersion.class)
+            .withProperty(MultidatasetVersionProperties.siemacMetadataStatisticalResource().urn()).eq(urn)
+            .and()
+            .withProperty(MultidatasetVersionProperties.siemacMetadataStatisticalResource().procStatus()).eq(ProcStatusEnum.PUBLISHED)
+            .distinctRoot().build();
+        // @formatter:on
 
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("retrieveByUrnPublished not implemented");
+        // Find
+        List<MultidatasetVersion> result = findByCondition(condition);
 
+        // Check for unique result and return
+        if (result.size() == 0) {
+            throw new MetamacException(ServiceExceptionType.MULTIDATASET_VERSION_NOT_FOUND, urn);
+        } else if (result.size() > 1) {
+            // Exists a database constraint that makes URN unique
+            throw new MetamacException(ServiceExceptionType.UNKNOWN, "More than one multidataset with urn " + urn);
+        }
+
+        return result.get(0);
     }
 
     @Override
