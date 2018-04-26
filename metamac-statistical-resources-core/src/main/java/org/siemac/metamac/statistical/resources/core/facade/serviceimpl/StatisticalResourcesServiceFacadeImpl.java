@@ -2167,14 +2167,11 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
 
     @Override
     public MultidatasetVersionDto retrieveLatestPublishedMultidatasetVersion(ServiceContext ctx, String multidatasetUrn) throws MetamacException {
-        // Retrieve
-        MultidatasetVersion multidataset = getMultidatasetService().retrieveLatestMultidatasetVersionByMultidatasetUrn(ctx, multidatasetUrn);
-
         // Security
-        if (!SharedMultidatasetsSecurityUtils.canRetrieveLatestMultidatasetVersion(SecurityUtils.getMetamacPrincipal(ctx),
-                multidataset.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode(), multidataset.getSiemacMetadataStatisticalResource().getEffectiveProcStatus())) {
-            multidataset = getMultidatasetService().retrieveLatestPublishedMultidatasetVersionByMultidatasetUrn(ctx, multidatasetUrn);
-        }
+        MultidatasetsSecurityUtils.canRetrieveLatestPublishedMultidatasetVersion(ctx);
+
+        // Retrieve
+        MultidatasetVersion multidataset = getMultidatasetService().retrieveLatestPublishedMultidatasetVersionByMultidatasetUrn(ctx, multidatasetUrn);
 
         // Transform
         MultidatasetVersionDto multidatasetVersionDto = multidatasetDo2DtoMapper.multidatasetVersionDoToDto(multidataset);
