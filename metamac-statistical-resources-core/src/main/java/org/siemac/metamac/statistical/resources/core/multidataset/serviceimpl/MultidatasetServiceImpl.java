@@ -385,7 +385,7 @@ public class MultidatasetServiceImpl extends MultidatasetServiceImplBase {
         // Same parent, only changes order. Check order is correct and update orders
         List<MultidatasetCube> cubes = multidatasetCube.getMultidatasetVersion().getCubes();
         updateMultidatasetVersionCubesOrdersInLevelChangingOrder(ctx, cubes, multidatasetCube, orderInLevelBefore, multidatasetCube.getOrderInMultidataset());
-        multidatasetCube = updateMultidatasetCube(ctx, multidatasetCube);
+        multidatasetCube = getMultidatasetCubeRepository().save(multidatasetCube);
 
         return multidatasetCube;
     }
