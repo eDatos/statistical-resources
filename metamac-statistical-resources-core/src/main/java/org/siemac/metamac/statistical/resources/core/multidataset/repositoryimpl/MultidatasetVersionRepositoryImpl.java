@@ -12,8 +12,11 @@ import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
 import org.joda.time.DateTime;
 import org.siemac.metamac.core.common.criteria.utils.CriteriaUtils;
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.statistical.resources.core.base.domain.utils.RelatedResourceResultUtils;
+import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResource;
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResourceResult;
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
+import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.multidataset.domain.MultidatasetVersion;
 import org.siemac.metamac.statistical.resources.core.multidataset.domain.MultidatasetVersionProperties;
@@ -59,11 +62,27 @@ public class MultidatasetVersionRepositoryImpl extends MultidatasetVersionReposi
     }
 
     @Override
-    public MultidatasetVersion retrieveLastVersion(String multidatasetUrn) {
+    public MultidatasetVersion retrieveLastVersion(String multidatasetUrn) throws MetamacException {
 
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("retrieveLastVersion not implemented");
+        // Prepare criteria
+        // @formatter:off
+        List<ConditionalCriteria> conditions = ConditionalCriteriaBuilder.criteriaFor(MultidatasetVersion.class)
+                .withProperty(MultidatasetVersionProperties.multidataset().identifiableStatisticalResource().urn()).eq(multidatasetUrn)
+                .and()
+                .withProperty(MultidatasetVersionProperties.siemacMetadataStatisticalResource().lastVersion()).eq(Boolean.TRUE)
+                .distinctRoot().build();
+        // @formatter:on
 
+        // Find
+        PagingParameter paging = PagingParameter.rowAccess(0, 1);
+        PagedResult<MultidatasetVersion> result = findByCondition(conditions, paging);
+
+        // Check for unique result and return. We have at least one multidatasetVersion
+        if (result.getRowCount() == 0) {
+            throw new MetamacException(ServiceExceptionType.MULTIDATASET_LAST_VERSION_NOT_FOUND, multidatasetUrn);
+        }
+
+        return result.getValues().get(0);
     }
 
     @SuppressWarnings("unchecked")
@@ -100,19 +119,38 @@ public class MultidatasetVersionRepositoryImpl extends MultidatasetVersionReposi
     }
 
     @Override
-    public MultidatasetVersion retrieveByVersion(Long statisticalResourceId, String versionLogic) {
+    public MultidatasetVersion retrieveByVersion(Long statisticalResourceId, String versionLogic) throws MetamacException {
 
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("retrieveByVersion not implemented");
+        // Prepare criteria
+        List<ConditionalCriteria> conditions = ConditionalCriteriaBuilder.criteriaFor(MultidatasetVersion.class).withProperty(MultidatasetVersionProperties.multidataset().id())
+                .eq(statisticalResourceId).withProperty(MultidatasetVersionProperties.siemacMetadataStatisticalResource().versionLogic()).eq(versionLogic).distinctRoot().build();
+
+        // Find
+        List<MultidatasetVersion> result = findByCondition(conditions);
+
+        // Check for unique result and return
+        if (result.size() == 0) {
+            throw new MetamacException(ServiceExceptionType.MULTIDATASET_VERSION_NOT_FOUND, statisticalResourceId, versionLogic);
+        } else if (result.size() > 1) {
+            // Exists a database constraint that makes URN unique
+            throw new MetamacException(ServiceExceptionType.UNKNOWN, "More than one multidataset with id " + statisticalResourceId + " and versionLogic " + versionLogic + " found");
+        }
+        return result.get(0);
 
     }
 
     @Override
     public RelatedResourceResult retrieveIsReplacedByOnlyLastPublished(MultidatasetVersion multidatasetVersion) {
+        MultidatasetVersion next = multidatasetVersion;
+        MultidatasetVersion replacing = null;
 
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("retrieveIsReplacedByOnlyLastPublished not implemented");
-
+        while (next != null && next.getLifeCycleStatisticalResource().getIsReplacedByVersion() != null) {
+            next = next.getLifeCycleStatisticalResource().getIsReplacedByVersion().getMultidatasetVersion();
+            if (next.getLifeCycleStatisticalResource().getProcStatus() == ProcStatusEnum.PUBLISHED) {
+                replacing = next;
+            }
+        }
+        return RelatedResourceResultUtils.from(replacing, TypeRelatedResourceEnum.MULTIDATASET_VERSION);
     }
 
     @Override
@@ -125,9 +163,13 @@ public class MultidatasetVersionRepositoryImpl extends MultidatasetVersionReposi
 
     @Override
     public RelatedResourceResult retrieveIsReplacedBy(MultidatasetVersion multidatasetVersion) {
+        RelatedResource replacingRelated = multidatasetVersion.getSiemacMetadataStatisticalResource().getIsReplacedBy();
+        RelatedResourceResult replacing = null;
+        if (replacingRelated != null) {
+            replacing = RelatedResourceResultUtils.from(replacingRelated.getMultidatasetVersion(), TypeRelatedResourceEnum.MULTIDATASET_VERSION);
+        }
 
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("retrieveIsReplacedBy not implemented");
+        return replacing;
 
     }
 }

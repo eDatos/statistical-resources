@@ -77,17 +77,18 @@ public class ServiceExceptionType extends CommonServiceExceptionType {
     
     // Multidataset Cube
     public static final CommonServiceExceptionType MULTIDATASET_CUBE_NOT_FOUND                                                = create("exception.resources.multidatasetcube.not_found");
-    
+        
     // Multidataset
     public static final CommonServiceExceptionType MULTIDATASET_VERSION_NOT_FOUND                                             = create("exception.resources.multidataset.version_not_found");
+    public static final CommonServiceExceptionType MULTIDATASET_LAST_VERSION_NOT_FOUND                                        = create("exception.resources.multidataset.last_version_not_found");    
+    
+    // Multidataset version
     public static final CommonServiceExceptionType MULTIDATASET_VERSION_CANT_REPLACE_ITSELF                                   = create("exception.resources.multidataset_version.cant_replace_itself");
     public static final CommonServiceExceptionType MULTIDATASET_VERSION_ALREADY_BEEN_REPLACED_BY_OTHER_MULTIDATASET_VERSION   = create("exception.resources.multidataset_version.already_been_replaced_by_other_multidataset_version");
     public static final CommonServiceExceptionType MULTIDATASET_VERSION_IS_REPLACED_BY_OTHER_RESOURCE                         = create("exception.resources.multidataset_version.is_replaced_by_other_multidataset");
     public static final CommonServiceExceptionType MULTIDATASET_VERSION_CANT_BE_DELETED                                       = create("exception.resources.multidataset_version.cant_be_deleted");
     public static final CommonServiceExceptionType MULTIDATASET_VERSION_MUST_HAVE_AT_LEAST_ONE_CUBE                           = create("exception.resources.multidataset_version.must_have_at_least_one_cube");
-    public static final CommonServiceExceptionType MULTIDATASET_VERSION_CUBE_MUST_LINK_TO_DATASET_OR_QUERY                    = create("exception.resources.multidataset_version.cube_must_link_to_dataset_or_query");    
- 
-    // Multidataset version
+    public static final CommonServiceExceptionType MULTIDATASET_VERSION_CUBE_MUST_LINK_TO_DATASET_OR_QUERY                    = create("exception.resources.multidataset_version.cube_must_link_to_dataset_or_query");        
     public static final CommonServiceExceptionType MULTIDATASET_VERSION_LINKED_TO_NOT_PUBLISHED_DATASET                       = create("exception.resources.multidataset_version.linked_to_dataset_with_no_published_version");
     public static final CommonServiceExceptionType MULTIDATASET_VERSION_LINKED_TO_NOT_PUBLISHED_QUERY                         = create("exception.resources.multidataset_version.linked_to_query_not_published");
     
@@ -181,7 +182,5 @@ public class ServiceExceptionType extends CommonServiceExceptionType {
     public static final CommonServiceExceptionType UNABLE_TO_SEND_STREAM_MESSAGING_TO_STREAM_MESSAGING_SERVER                 = create("stream_message.resources.exception.send_message.fails");
     public static final CommonServiceExceptionType STREAM_MESSAGING_TOPIC_IS_INVALID                                          = create("stream_message.resources.exception.topic.invalid");
     public static final CommonServiceExceptionType STREAM_MESSAGING_MISSING_MANDATORY_SETTINGS                                = create("stream_message.resources.exception.config.missing_settings");
-
-
 
 }
