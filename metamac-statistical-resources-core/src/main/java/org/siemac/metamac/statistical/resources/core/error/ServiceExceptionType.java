@@ -80,7 +80,8 @@ public class ServiceExceptionType extends CommonServiceExceptionType {
         
     // Multidataset
     public static final CommonServiceExceptionType MULTIDATASET_VERSION_NOT_FOUND                                             = create("exception.resources.multidataset.version_not_found");
-    public static final CommonServiceExceptionType MULTIDATASET_LAST_VERSION_NOT_FOUND                                        = create("exception.resources.multidataset.last_version_not_found");    
+    public static final CommonServiceExceptionType MULTIDATASET_LAST_VERSION_NOT_FOUND                                        = create("exception.resources.multidataset.last_version_not_found");
+    public static final CommonServiceExceptionType MULTIDATASET_MAX_REACHED_IN_OPERATION                                      = create("exception.resources.multidataset.max_reached_in_operation");
     
     // Multidataset version
     public static final CommonServiceExceptionType MULTIDATASET_VERSION_CANT_REPLACE_ITSELF                                   = create("exception.resources.multidataset_version.cant_replace_itself");

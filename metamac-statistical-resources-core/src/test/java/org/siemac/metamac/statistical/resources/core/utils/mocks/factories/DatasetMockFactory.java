@@ -108,6 +108,12 @@ public class DatasetMockFactory extends StatisticalResourcesMockFactory<Dataset>
     public static final String        DATASET_31_LAST_VERSION_NOT_VISIBLE_WITH_PUBLICATION_AND_QUERIES_NOT_VISIBLE_BOTH_COMPATIBLE_NAME                                                                                    = "DATASET_31_LAST_VERSION_NOT_VISIBLE_WITH_PUBLICATION_AND_QUERIES_NOT_VISIBLE_BOTH_COMPATIBLE";
     public static final String        DATASET_32_LAST_VERSION_NOT_VISIBLE_WITH_PUBLICATION_AND_QUERY_NOT_VISIBLE_COMPATIBLE_NAME                                                                                           = "DATASET_32_LAST_VERSION_NOT_VISIBLE_WITH_PUBLICATION_AND_QUERY_NOT_VISIBLE_COMPATIBLE";
 
+    public static final String        DATASET_33_DRAFT_USED_IN_MULTIDATASET_VERSION_86_NAME                                                                                                                                = "DATASET_33_DRAFT_USED_IN_MULTIDATASET_VERSION_86_NAME";
+    public static final String        DATASET_34_PRODUCTION_VALIDATION_USED_IN_MULTIDATASET_VERSION_86_NAME                                                                                                                = "DATASET_34_PRODUCTION_VALIDATION_USED_IN_MULTIDATASET_VERSION_86_NAME";
+    public static final String        DATASET_35_DIFFUSION_VALIDATION_USED_IN_MULTIDATASET_VERSION_86_NAME                                                                                                                 = "DATASET_35_DIFFUSION_VALIDATION_USED_IN_MULTIDATASET_VERSION_86_NAME";
+    public static final String        DATASET_36_VALIDATION_REJECTED_USED_IN_MULTIDATASET_VERSION_86_NAME                                                                                                                  = "DATASET_36_VALIDATION_REJECTED_USED_IN_MULTIDATASET_VERSION_86_NAME";
+    public static final String        DATASET_37_PUBLISHED_NOT_VISIBLE_USED_IN_MULTIDATASET_VERSION_86_NAME                                                                                                                = "DATASET_37_PUBLISHED_NOT_VISIBLE_USED_IN_MULTIDATASET_VERSION_86_NAME";
+
     private static DatasetMockFactory instance                                                                                                                                                                             = null;
 
     private DatasetMockFactory() {

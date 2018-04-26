@@ -247,6 +247,12 @@ public class StatisticalResourcesNotPersistedDoMocks extends StatisticalResource
         return multidatasetVersion;
     }
 
+    public MultidatasetVersion mockMultidatasetVersionWithNullableSiemacStatisticalResource() {
+        MultidatasetVersion multidatasetVersion = mockMultidatasetVersion();
+        multidatasetVersion.setSiemacMetadataStatisticalResource(null);
+        return multidatasetVersion;
+    }
+
     // -----------------------------------------------------------------
     // BASE HIERARCHY
     // -----------------------------------------------------------------

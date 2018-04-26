@@ -83,6 +83,12 @@ public class QueryMockFactory extends StatisticalResourcesMockFactory<Query> {
     public static final String      QUERY_19_VALIDATION_REJECTED_USED_IN_PUBLICATION_VERSION_86_NAME                        = "QUERY_19_VALIDATION_REJECTED_USED_IN_PUBLICATION_VERSION_86_NAME";
     public static final String      QUERY_20_PUBLISHED_NOT_VISIBLE_USED_IN_PUBLICATION_VERSION_86_NAME                      = "QUERY_20_PUBLISHED_NOT_VISIBLE_USED_IN_PUBLICATION_VERSION_86_NAME";
 
+    public static final String      QUERY_21_DRAFT_USED_IN_MULTIDATASET_VERSION_86_NAME                                     = "QUERY_21_DRAFT_USED_IN_MULTIDATASET_VERSION_86_NAME";
+    public static final String      QUERY_22_PRODUCTION_VALIDATION_USED_IN_MULTIDATASET_VERSION_86_NAME                     = "QUERY_22_PRODUCTION_VALIDATION_USED_IN_MULTIDATASET_VERSION_86_NAME";
+    public static final String      QUERY_23_DIFFUSION_VALIDATION_USED_IN_MULTIDATASET_VERSION_86_NAME                      = "QUERY_23_DIFFUSION_VALIDATION_USED_IN_MULTIDATASET_VERSION_86_NAME";
+    public static final String      QUERY_24_VALIDATION_REJECTED_USED_IN_MULTIDATASET_VERSION_86_NAME                       = "QUERY_24_VALIDATION_REJECTED_USED_IN_MULTIDATASET_VERSION_86_NAME";
+    public static final String      QUERY_25_PUBLISHED_NOT_VISIBLE_USED_IN_MULTIDATASET_VERSION_86_NAME                     = "QUERY_25_PUBLISHED_NOT_VISIBLE_USED_IN_MULTIDATASET_VERSION_86_NAME";
+
     private static QueryMockFactory instance                                                                                = null;
 
     private QueryMockFactory() {

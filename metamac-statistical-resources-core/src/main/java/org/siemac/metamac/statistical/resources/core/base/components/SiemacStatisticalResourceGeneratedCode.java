@@ -68,6 +68,9 @@ public class SiemacStatisticalResourceGeneratedCode {
             case COLLECTION:
                 exceptionType = ServiceExceptionType.PUBLICATION_MAX_REACHED_IN_OPERATION;
                 break;
+            case MULTIDATASET:
+                exceptionType = ServiceExceptionType.MULTIDATASET_MAX_REACHED_IN_OPERATION;
+                break;
             default:
                 exceptionType = ServiceExceptionType.UNKNOWN;
                 break;

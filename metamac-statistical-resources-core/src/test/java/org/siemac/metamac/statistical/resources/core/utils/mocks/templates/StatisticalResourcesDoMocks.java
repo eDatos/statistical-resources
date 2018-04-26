@@ -869,7 +869,7 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
         MultidatasetCube cube = new MultidatasetCube();
 
         // Metadata
-        cube.setOrderInMultidataset(Long.valueOf(0));
+        cube.setOrderInMultidataset(Long.valueOf(1));
         cube.setNameableStatisticalResource(mockNameableStatisticalResorce(TypeRelatedResourceEnum.MULTIDATASET_CUBE));
         cube.setMultidatasetVersion(mockMultidatasetVersion());
         return cube;

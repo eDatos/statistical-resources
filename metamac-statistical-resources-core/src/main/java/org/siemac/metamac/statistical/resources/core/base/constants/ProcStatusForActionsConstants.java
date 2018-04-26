@@ -58,4 +58,7 @@ public class ProcStatusForActionsConstants {
 
     // Publication
     public final static String              PROC_STATUS_FOR_EDIT_PUBLICATION_STRUCTURE             = BaseEnumUtils.enumToString(procStatusForEditPublicationStructure);
+
+    // Multidataset
+    public final static String              PROC_STATUS_FOR_EDIT_MULTIDATASET_STRUCTURE            = BaseEnumUtils.enumToString(procStatusForEditMultidatasetStructure);
 }

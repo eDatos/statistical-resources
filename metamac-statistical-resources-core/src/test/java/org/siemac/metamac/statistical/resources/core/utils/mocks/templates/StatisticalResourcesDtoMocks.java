@@ -37,6 +37,8 @@ import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersion
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdAttributeInstanceDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.StatisticOfficialityDto;
+import org.siemac.metamac.statistical.resources.core.dto.multidataset.MultidatasetCubeDto;
+import org.siemac.metamac.statistical.resources.core.dto.multidataset.MultidatasetVersionDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.ChapterDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.CubeDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionDto;
@@ -305,6 +307,42 @@ public class StatisticalResourcesDtoMocks extends MetamacMocks {
         mockNameableStatisticalResorceDto(cubeDto);
 
         return cubeDto;
+    }
+
+    // -----------------------------------------------------------------
+    // MULTIDATASETS
+    // -----------------------------------------------------------------
+
+    public static MultidatasetVersionDto mockMultidatasetVersionDto() {
+        MultidatasetVersionDto multidatasetVersionDto = new MultidatasetVersionDto();
+
+        multidatasetVersionDto.setFormatExtentResources(RandomUtils.nextInt(999));
+
+        mockSiemacMetadataStatisticalResource(multidatasetVersionDto, StatisticalResourceTypeEnum.MULTIDATASET);
+
+        return multidatasetVersionDto;
+    }
+
+    public static MultidatasetCubeDto mockDatasetMultidatasetCubeDto(String datasetUrn) {
+        MultidatasetCubeDto multidatasetCubeDto = mockMultidatasetCubeDto(datasetUrn, null);
+        return multidatasetCubeDto;
+    }
+
+    public static MultidatasetCubeDto mockQueryMultidatasetCubeDto(String queryUrn) {
+        MultidatasetCubeDto multidatasetCubeDto = mockMultidatasetCubeDto(null, queryUrn);
+        return multidatasetCubeDto;
+    }
+
+    private static MultidatasetCubeDto mockMultidatasetCubeDto(String datasetUrn, String queryUrn) {
+        MultidatasetCubeDto multidatasetCubeDto = new MultidatasetCubeDto();
+
+        multidatasetCubeDto.setDatasetUrn(datasetUrn);
+        multidatasetCubeDto.setQueryUrn(queryUrn);
+        multidatasetCubeDto.setOrderInMultidataset(Long.valueOf(2));
+
+        mockNameableStatisticalResorceDto(multidatasetCubeDto);
+
+        return multidatasetCubeDto;
     }
 
     // -----------------------------------------------------------------
