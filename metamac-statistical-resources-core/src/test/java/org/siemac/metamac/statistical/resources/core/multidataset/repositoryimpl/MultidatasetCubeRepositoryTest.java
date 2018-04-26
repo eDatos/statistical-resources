@@ -1,6 +1,7 @@
 package org.siemac.metamac.statistical.resources.core.multidataset.repositoryimpl;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.MultidatasetsAsserts.assertRelaxedEqualsMultidatasetCube;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetMockFactory.DATASET_22_SIMPLE_LINKED_TO_PUB_VERSION_17_NAME;
@@ -9,6 +10,7 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.MultidatasetCubeMockFactory.MULTIDATASET_CUBE_03_BASIC_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.MultidatasetMockFactory.MULTIDATASET_04_STRUCTURED_WITH_2_MULTIDATASET_VERSIONS_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.MultidatasetVersionMockFactory.MULTIDATASET_VERSION_17_WITH_STRUCTURE_FOR_MULTIDATASET_VERSION_04_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.MultidatasetVersionMockFactory.MULTIDATASET_VERSION_18_WITH_STRUCTURE_FOR_MULTIDATASET_VERSION_04_AND_LAST_VERSION_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryMockFactory.QUERY_09_SINGLE_VERSION_USED_IN_PUB_VERSION_17_NAME;
 
 import java.util.List;
@@ -52,14 +54,30 @@ public class MultidatasetCubeRepositoryTest extends StatisticalResourcesBaseTest
         assertTrue(result);
     }
 
+    @Test
+    @MetamacMock({MULTIDATASET_04_STRUCTURED_WITH_2_MULTIDATASET_VERSIONS_NAME})
+    public void testExistAnyCubeInMultidatasetReturnFalse() throws Exception {
+        boolean result = multidatasetCubeRepository.existAnyCubeInMultidataset(
+                multidatasetMockFactory.retrieveMock(MULTIDATASET_04_STRUCTURED_WITH_2_MULTIDATASET_VERSIONS_NAME).getIdentifiableStatisticalResource().getCode(), "002.000");
+        assertFalse(result);
+    }
+
     @Override
     @Test
     @MetamacMock({MULTIDATASET_VERSION_17_WITH_STRUCTURE_FOR_MULTIDATASET_VERSION_04_NAME})
     public void testFindDatasetsLinkedWithMultidatasetVersion() throws Exception {
         List<String> result = multidatasetCubeRepository.findDatasetsLinkedWithMultidatasetVersion(
                 multidatasetVersionMockFactory.retrieveMock(MULTIDATASET_VERSION_17_WITH_STRUCTURE_FOR_MULTIDATASET_VERSION_04_NAME).getSiemacMetadataStatisticalResource().getUrn());
-        assertEquals(1, result.size());
+        assertEquals(2, result.size());
         assertTrue(result.contains(datasetMockFactory.retrieveMock(DATASET_22_SIMPLE_LINKED_TO_PUB_VERSION_17_NAME).getIdentifiableStatisticalResource().getUrn()));
+    }
+
+    @Test
+    @MetamacMock({MULTIDATASET_VERSION_18_WITH_STRUCTURE_FOR_MULTIDATASET_VERSION_04_AND_LAST_VERSION_NAME})
+    public void testFindDatasetsLinkedWithMultidatasetVersionWithoutDatasets() throws Exception {
+        List<String> result = multidatasetCubeRepository.findDatasetsLinkedWithMultidatasetVersion(
+                multidatasetVersionMockFactory.retrieveMock(MULTIDATASET_VERSION_18_WITH_STRUCTURE_FOR_MULTIDATASET_VERSION_04_AND_LAST_VERSION_NAME).getSiemacMetadataStatisticalResource().getUrn());
+        assertEquals(0, result.size());
     }
 
     @Override
@@ -68,7 +86,15 @@ public class MultidatasetCubeRepositoryTest extends StatisticalResourcesBaseTest
     public void testFindQueriesLinkedWithMultidatasetVersion() throws Exception {
         List<String> result = multidatasetCubeRepository.findQueriesLinkedWithMultidatasetVersion(
                 multidatasetVersionMockFactory.retrieveMock(MULTIDATASET_VERSION_17_WITH_STRUCTURE_FOR_MULTIDATASET_VERSION_04_NAME).getSiemacMetadataStatisticalResource().getUrn());
-        assertEquals(2, result.size());
+        assertEquals(1, result.size());
         assertTrue(result.contains(queryMockFactory.retrieveMock(QUERY_09_SINGLE_VERSION_USED_IN_PUB_VERSION_17_NAME).getIdentifiableStatisticalResource().getUrn()));
+    }
+
+    @Test
+    @MetamacMock({MULTIDATASET_VERSION_18_WITH_STRUCTURE_FOR_MULTIDATASET_VERSION_04_AND_LAST_VERSION_NAME})
+    public void testFindQueriesLinkedWithMultidatasetVersionWithoutQueries() throws Exception {
+        List<String> result = multidatasetCubeRepository.findQueriesLinkedWithMultidatasetVersion(
+                multidatasetVersionMockFactory.retrieveMock(MULTIDATASET_VERSION_18_WITH_STRUCTURE_FOR_MULTIDATASET_VERSION_04_AND_LAST_VERSION_NAME).getSiemacMetadataStatisticalResource().getUrn());
+        assertEquals(0, result.size());
     }
 }
