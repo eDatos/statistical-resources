@@ -6,7 +6,8 @@
         "symbols" : [
             "DATASET",
             "COLLECTION",
-            "QUERY"
+            "QUERY",
+            "MULTIDATASET"
         ]
     }
     ,

@@ -29,7 +29,8 @@
             "STATISTICAL_OPERATION_INSTANCE",
             "DATASET",
             "COLLECTION",
-            "QUERY"
+            "QUERY",
+            "MULTIDATASET"
         ]
     }
     

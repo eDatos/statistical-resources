@@ -13,7 +13,10 @@
             "CHAPTER",
             "CUBE",
             "DATASOURCE",
-            "CATEGORISATION"
+            "CATEGORISATION",
+            "MULTIDATASET",
+            "MULTIDATASET_VERSION",
+            "MULTIDATASET_CUBE"
         ]
     }
 
