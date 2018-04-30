@@ -20,7 +20,6 @@ import org.siemac.metamac.statistical.resources.core.multidataset.domain.Multida
 import org.siemac.metamac.statistical.resources.core.multidataset.domain.MultidatasetCube;
 import org.siemac.metamac.statistical.resources.core.multidataset.domain.MultidatasetVersion;
 
-// FIXME todo esto esta por ver
 public class MultidatasetsAsserts extends BaseAsserts {
 
     // -----------------------------------------------------------------

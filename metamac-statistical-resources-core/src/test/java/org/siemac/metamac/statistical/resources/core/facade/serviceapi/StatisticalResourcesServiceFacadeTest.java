@@ -2101,7 +2101,7 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
 
     @Override
     public void testResendPublishedDatasetVersionStreamMessage() throws Exception {
-        // TODO NO Kafka Test
+        // TODO METAMAC-2504 NO Kafka Test
     }
 
     @Override
