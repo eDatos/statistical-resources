@@ -13,6 +13,8 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersi
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionRepository;
 import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
+import org.siemac.metamac.statistical.resources.core.multidataset.domain.MultidatasetRepository;
+import org.siemac.metamac.statistical.resources.core.multidataset.domain.MultidatasetVersionRepository;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationRepository;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersionRepository;
@@ -21,16 +23,19 @@ import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersionRe
 
 public class AvroMapperUtils {
 
-    protected static ConfigurationService         configurationService;
+    protected static ConfigurationService          configurationService;
 
-    protected static DatasetRepository            datasetRepository;
-    protected static DatasetVersionRepository     datasetVersionRepository;
+    protected static DatasetRepository             datasetRepository;
+    protected static DatasetVersionRepository      datasetVersionRepository;
 
-    protected static PublicationRepository        publicationRepository;
-    protected static PublicationVersionRepository publicationVersionRepository;
+    protected static PublicationRepository         publicationRepository;
+    protected static PublicationVersionRepository  publicationVersionRepository;
 
-    protected static QueryRepository              queryRepository;
-    protected static QueryVersionRepository       queryVersionRepository;
+    protected static QueryRepository               queryRepository;
+    protected static QueryVersionRepository        queryVersionRepository;
+
+    protected static MultidatasetRepository        multidatasetRepository;
+    protected static MultidatasetVersionRepository multidatasetVersionRepository;
 
     public static DatasetRepository getDatasetRepository() {
         if (datasetRepository == null) {
@@ -59,6 +64,21 @@ public class AvroMapperUtils {
         }
         return publicationVersionRepository;
     }
+
+    // METAMAC-2715 - Realizar la notificación a Kafka de los recursos Multidataset
+    // public static MultidatasetRepository getMultidatasetRepository() {
+    // if (multidatasetRepository == null) {
+    // multidatasetRepository = ApplicationContextProvider.getApplicationContext().getBean(MultidatasetRepository.class);
+    // }
+    // return multidatasetRepository;
+    // }
+    //
+    // public static MultidatasetVersionRepository getMultidatasetVersionRepository() {
+    // if (multidatasetVersionRepository == null) {
+    // multidatasetVersionRepository = ApplicationContextProvider.getApplicationContext().getBean(MultidatasetVersionRepository.class);
+    // }
+    // return multidatasetVersionRepository;
+    // }
 
     public static QueryRepository getQueryRepository() {
         if (queryRepository == null) {
@@ -143,6 +163,15 @@ public class AvroMapperUtils {
                 target.setQueryVersion(getQueryVersionRepository().retrieveByUrn(source.getUrn()));
                 target.setType(TypeRelatedResourceEnum.QUERY_VERSION);
                 break;
+            // METAMAC-2715 - Realizar la notificación a Kafka de los recursos Multidataset
+            // case MULTIDATASET:
+            // target.setMultidataset(getMultidatasetRepository().retrieveByUrn(source.getUrn()));
+            // target.setType(TypeRelatedResourceEnum.MULTIDATASET);
+            // break;
+            // case MULTIDATASET_VERSION:
+            // target.setMultidatasetVersion(getMultidatasetVersionRepository().retrieveByUrn(source.getUrn()));
+            // target.setType(TypeRelatedResourceEnum.MULTIDATASET_VERSION);
+            // break;
             default:
                 break;
         }
