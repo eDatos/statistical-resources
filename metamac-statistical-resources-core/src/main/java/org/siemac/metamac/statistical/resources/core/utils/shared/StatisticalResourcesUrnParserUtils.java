@@ -4,9 +4,9 @@ import static org.siemac.metamac.core.common.constants.shared.UrnConstants.URN_S
 import static org.siemac.metamac.core.common.constants.shared.UrnConstants.URN_SIEMAC_CLASS_COLLECTION_PREFIX;
 import static org.siemac.metamac.core.common.constants.shared.UrnConstants.URN_SIEMAC_CLASS_CUBE_PREFIX;
 import static org.siemac.metamac.core.common.constants.shared.UrnConstants.URN_SIEMAC_CLASS_DATASET_PREFIX;
+import static org.siemac.metamac.core.common.constants.shared.UrnConstants.URN_SIEMAC_CLASS_MULTIDATASET_PREFIX;
 import static org.siemac.metamac.core.common.constants.shared.UrnConstants.URN_SIEMAC_CLASS_QUERY_PREFIX;
 
-import org.siemac.metamac.core.common.constants.shared.UrnConstants;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.core.common.util.shared.UrnUtils;
 
@@ -65,7 +65,7 @@ public class StatisticalResourcesUrnParserUtils {
     // MULTIDATASETS
 
     public static boolean isMultidatasetUrn(String urn) {
-        return matches(UrnConstants.URN_SIEMAC_CLASS_MULTIDATASET_PREFIX, UrnUtils.extractPrefix(urn));
+        return matches(URN_SIEMAC_CLASS_MULTIDATASET_PREFIX, UrnUtils.extractPrefix(urn));
     }
 
     public static String getMultidatasetVersionCodeFromUrnWithoutPrefix(String tripletIdentifier) {
