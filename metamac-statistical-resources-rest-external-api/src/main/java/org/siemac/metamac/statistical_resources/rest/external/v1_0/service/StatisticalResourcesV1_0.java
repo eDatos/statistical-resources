@@ -12,6 +12,8 @@ import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Collection;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Collections;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Dataset;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Datasets;
+import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Multidataset;
+import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Multidatasets;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Queries;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Query;
 
@@ -76,5 +78,22 @@ public interface StatisticalResourcesV1_0 {
     @Produces({"application/xml", "application/json"})
     @Path("queries/{agencyID}/{resourceID}")
     Query retrieveQuery(@PathParam("agencyID") String agencyID, @PathParam("resourceID") String resourceID, @QueryParam("lang") List<String> lang, @QueryParam("fields") String fields);
+
+    @GET
+    @Produces({"application/xml", "application/json"})
+    @Path("multidatasets")
+    Multidatasets findMultidatasets(@QueryParam("query") String query, @QueryParam("orderBy") String orderBy, @QueryParam("limit") String limit, @QueryParam("offset") String offset,
+            @QueryParam("lang") List<String> lang);
+
+    @GET
+    @Produces({"application/xml", "application/json"})
+    @Path("multidatasets/{agencyID}")
+    Multidatasets findMultidatasets(@PathParam("agencyID") String agencyID, @QueryParam("query") String query, @QueryParam("orderBy") String orderBy, @QueryParam("limit") String limit,
+            @QueryParam("offset") String offset, @QueryParam("lang") List<String> lang);
+
+    @GET
+    @Produces({"application/xml", "application/json"})
+    @Path("multidatasets/{agencyID}/{resourceID}")
+    Multidataset retrieveMultidataset(@PathParam("agencyID") String agencyID, @PathParam("resourceID") String resourceID, @QueryParam("lang") List<String> lang, @QueryParam("fields") String fields);
 
 }
