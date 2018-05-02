@@ -24,6 +24,7 @@ public class RepositoryUtils {
 
     }
 
+    // METAMAC-2718 - Eliminar código muerto para evitar mantenerlo
     public static String buildRelatedResourceForeignKeyBasedOnType(TypeRelatedResourceEnum type) {
         switch (type) {
             case DATASET_VERSION:

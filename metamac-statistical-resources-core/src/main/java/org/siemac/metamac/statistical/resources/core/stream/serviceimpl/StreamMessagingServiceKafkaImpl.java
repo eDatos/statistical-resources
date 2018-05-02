@@ -110,6 +110,7 @@ public class StreamMessagingServiceKafkaImpl<K, V extends SpecificRecordBase> im
                 return (V) PublicationVersionDo2AvroMapper.do2Avro((PublicationVersion) version);
             case MULTIDATASET:
                 return null; // TODO METAMAC-2715 - Realizar la notificación a Kafka de los recursos Multidataset
+            // Nótese que las queries NO se publican y por tanto no hace falta el case aquí
             default:
                 return null;
         }

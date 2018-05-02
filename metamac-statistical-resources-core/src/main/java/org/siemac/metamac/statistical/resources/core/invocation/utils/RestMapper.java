@@ -156,6 +156,7 @@ public class RestMapper {
                 return internalWebApplicationNavigation.buildPublicationVersionUrl((PublicationVersion) item);
             case MULTIDATASET:
                 return internalWebApplicationNavigation.buildMultidatasetVersionUrl((MultidatasetVersion) item);
+            // Nótese que las queries NO se publican y por tanto no hace falta el case aquí
             default:
                 throw new RuntimeException("Invalid value for statistical resource type " + item.getSiemacMetadataStatisticalResource().getType());
         }

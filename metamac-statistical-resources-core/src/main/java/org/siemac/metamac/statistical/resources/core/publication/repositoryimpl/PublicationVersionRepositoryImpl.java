@@ -166,6 +166,7 @@ public class PublicationVersionRepositoryImpl extends PublicationVersionReposito
         return RelatedResourceResultUtils.from(replacing, TypeRelatedResourceEnum.PUBLICATION_VERSION);
     }
 
+    // TODO METAMAC-2718 Este método no parece estarse usando. Véase METAMAC-2578
     @Override
     public RelatedResourceResult retrieveIsReplacedByOnlyIfPublished(PublicationVersion publicationVersion) throws MetamacException {
         RelatedResourceResult result = null;

@@ -177,8 +177,8 @@ public class PublicationStructureTreeGrid extends NavigableTreeGrid {
 
             @Override
             public void onClick(MenuItemClickEvent event) {
-                DeleteConfirmationWindow deleteConfirmationWindow = new DeleteConfirmationWindow(getMessages().publicationStructureElementDeleteConfirmationTitle(), getMessages()
-                        .publicationStructureElementDeleteConfirmation());
+                DeleteConfirmationWindow deleteConfirmationWindow = new DeleteConfirmationWindow(getMessages().publicationStructureElementDeleteConfirmationTitle(),
+                        getMessages().publicationStructureElementDeleteConfirmation());
                 deleteConfirmationWindow.show();
                 deleteConfirmationWindow.getYesButton().addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
 
@@ -345,8 +345,8 @@ public class PublicationStructureTreeGrid extends NavigableTreeGrid {
     }
 
     public void setPublicationStructure(PublicationStructureDto publicationStructureDto) {
-        this.numberOfElementsInTheTree = 1;
-        this.publicationVersion = publicationStructureDto.getPublicationVersion();
+        numberOfElementsInTheTree = 1;
+        publicationVersion = publicationStructureDto.getPublicationVersion();
 
         // Clear filter editor
         setFilterEditorCriteria(null);
@@ -438,14 +438,14 @@ public class PublicationStructureTreeGrid extends NavigableTreeGrid {
     }
 
     protected void onNodeClick(ElementLevelDto elementLevelDto) {
-        this.treeNodeClickAction.onNodeClick(elementLevelDto);
+        treeNodeClickAction.onNodeClick(elementLevelDto);
     }
 
     protected void onNodeContextClick(String nodeName, ElementLevelDto elementLevelDto) {
-        this.selectedContextClickElement = elementLevelDto;
-        this.createChapterMenuItem.setEnabled(canCreateChapter());
-        this.createCubeMenuItem.setEnabled(canCreateCube());
-        this.deleteElementMenuItem.setEnabled(canDeleteElement(nodeName));
+        selectedContextClickElement = elementLevelDto;
+        createChapterMenuItem.setEnabled(canCreateChapter());
+        createCubeMenuItem.setEnabled(canCreateCube());
+        deleteElementMenuItem.setEnabled(canDeleteElement(nodeName));
         showContextMenu();
 
     }
