@@ -125,7 +125,7 @@
             <xs:element name="nodes" type="tns:CollectionNodes" minOccurs="1" />
         </xs:sequence>
     </xs:complexType>
-    
+
     <xs:complexType name="MultidatasetMetadata">
         <xs:complexContent>
             <xs:extension base="tns:StatisticalResource">
@@ -299,7 +299,7 @@
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
-    
+
     <xs:complexType name="DimensionRepresentations">
         <xs:sequence>
             <xs:element name="dimension" type="tns:DimensionRepresentation" minOccurs="1" maxOccurs="unbounded" />
@@ -445,7 +445,7 @@
             <xs:element name="attachmentLevel" type="tns:AttributeAttachmentLevelType" />
             <xs:element name="dimensions" type="tns:AttributeDimensions" minOccurs="0" />
             <xs:element name="attributeValues" type="tns:AttributeValues" />
-            <xs:element name="type" type="tns:componentType" />
+            <xs:element name="type" type="tns:componentType"/>
         </xs:sequence>
     </xs:complexType>
     
@@ -705,7 +705,7 @@
         </xs:restriction>
     </xs:simpleType>
     
-        <xs:simpleType name="MultidatasetCriteriaPropertyRestriction">
+    <xs:simpleType name="MultidatasetCriteriaPropertyRestriction">
         <xs:restriction base="xs:token">
             <xs:enumeration value="ID" />
             <xs:enumeration value="NAME" />

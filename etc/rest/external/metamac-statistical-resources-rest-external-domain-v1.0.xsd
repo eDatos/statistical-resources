@@ -533,7 +533,7 @@
             <xs:enumeration value="PRIMARY_MEASURE" />
         </xs:restriction>
     </xs:simpleType>
-
+    
     <xs:simpleType name="componentType">
         <xs:restriction base="xs:token">
             <xs:enumeration value="OTHER" />
@@ -542,7 +542,7 @@
             <xs:enumeration value="MEASURE" />
         </xs:restriction>
     </xs:simpleType>
-    
+
     <xs:simpleType name="StatisticalResourceType">
         <xs:restriction base="xs:token">
             <xs:enumeration value="DATASET" />
