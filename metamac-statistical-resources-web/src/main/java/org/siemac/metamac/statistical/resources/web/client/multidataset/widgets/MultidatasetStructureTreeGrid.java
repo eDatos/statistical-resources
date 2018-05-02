@@ -116,10 +116,12 @@ public class MultidatasetStructureTreeGrid extends NavigableTreeGrid {
         titleField = new TreeGridField(MultidatasetCubeDS.TITLE, getConstants().multidatasetStructureCubeTitle());
         titleField.setShowHover(false); // only show hover in info field
         titleField.setCanFilter(true);
+        titleField.setCanSort(false);
 
         urnField = new TreeGridField(MultidatasetCubeDS.URN, getConstants().multidatasetStructureCubeURN());
         urnField.setShowHover(false); // only show hover in info field
         urnField.setCanFilter(true);
+        urnField.setCanSort(false);
 
         orderField = new TreeGridField(MultidatasetCubeDS.ORDER_IN_LEVEL, getConstants().multidatasetStructureCubeOrderInLevel());
         orderField.setShowIfCondition(ListGridUtils.getFalseListGridFieldIfFunction());

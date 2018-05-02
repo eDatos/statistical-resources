@@ -134,10 +134,12 @@ public class PublicationStructureTreeGrid extends NavigableTreeGrid {
         titleField = new TreeGridField(ElementLevelDS.TITLE, getConstants().publicationStructureElementTitle());
         titleField.setShowHover(false); // only show hover in info field
         titleField.setCanFilter(true);
+        titleField.setCanSort(false);
 
         urnField = new TreeGridField(ElementLevelDS.URN, getConstants().publicationStructureElementURN());
         urnField.setShowHover(false); // only show hover in info field
         urnField.setCanFilter(true);
+        urnField.setCanSort(false);
 
         orderField = new TreeGridField(ElementLevelDS.ORDER_IN_LEVEL, getConstants().publicationStructureElementOrderInLevel());
         orderField.setShowIfCondition(ListGridUtils.getFalseListGridFieldIfFunction());
