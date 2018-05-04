@@ -1,9 +1,9 @@
 package org.siemac.metamac.statistical_resources.rest.external.v1_0.service;
 
 import static org.siemac.metamac.rest.exception.utils.RestExceptionUtils.checkParameterNotWildcardAll;
+import static org.siemac.metamac.statistical_resources.rest.external.service.utils.StatisticalResourcesRestApiExternalUtils.parseDimensionExpression;
 import static org.siemac.metamac.statistical_resources.rest.external.service.utils.StatisticalResourcesRestExternalUtils.hasField;
 import static org.siemac.metamac.statistical_resources.rest.external.service.utils.StatisticalResourcesRestExternalUtils.manageException;
-import static org.siemac.metamac.statistical_resources.rest.external.service.utils.StatisticalResourcesRestExternalUtils.parseDimensionExpression;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -19,10 +19,13 @@ import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Collection;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Collections;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Dataset;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Datasets;
+import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Multidataset;
+import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Multidatasets;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Queries;
 import org.siemac.metamac.rest.statistical_resources.v1_0.domain.Query;
 import org.siemac.metamac.statistical.resources.core.conf.StatisticalResourcesConfiguration;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
+import org.siemac.metamac.statistical.resources.core.multidataset.domain.MultidatasetVersion;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
 import org.siemac.metamac.statistical_resources.rest.external.StatisticalResourcesRestExternalConstants;
@@ -31,6 +34,8 @@ import org.siemac.metamac.statistical_resources.rest.external.v1_0.mapper.collec
 import org.siemac.metamac.statistical_resources.rest.external.v1_0.mapper.collection.CollectionsRest2DoMapper;
 import org.siemac.metamac.statistical_resources.rest.external.v1_0.mapper.dataset.DatasetsDo2RestMapperV10;
 import org.siemac.metamac.statistical_resources.rest.external.v1_0.mapper.dataset.DatasetsRest2DoMapper;
+import org.siemac.metamac.statistical_resources.rest.external.v1_0.mapper.multidataset.MultidatasetsDo2RestMapperV10;
+import org.siemac.metamac.statistical_resources.rest.external.v1_0.mapper.multidataset.MultidatasetsRest2DoMapper;
 import org.siemac.metamac.statistical_resources.rest.external.v1_0.mapper.query.QueriesDo2RestMapperV10;
 import org.siemac.metamac.statistical_resources.rest.external.v1_0.mapper.query.QueriesRest2DoMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,6 +64,12 @@ public class StatisticalResourcesRestExternalFacadeV10Impl implements Statistica
 
     @Autowired
     private QueriesRest2DoMapper                          queriesRest2DoMapper;
+
+    @Autowired
+    private MultidatasetsDo2RestMapperV10                 multidatasetsDo2RestMapper;
+
+    @Autowired
+    private MultidatasetsRest2DoMapper                    multidatasetsRest2DoMapper;
 
     @Autowired
     private StatisticalResourcesConfiguration             configurationService;
@@ -147,6 +158,32 @@ public class StatisticalResourcesRestExternalFacadeV10Impl implements Statistica
         }
     }
 
+    @Override
+    public Multidatasets findMultidatasets(String query, String orderBy, String limit, String offset, List<String> lang) {
+        return findMultidatasetsCommon(null, null, query, orderBy, limit, offset, lang);
+    }
+
+    @Override
+    public Multidatasets findMultidatasets(String agencyID, String query, String orderBy, String limit, String offset, List<String> lang) {
+        checkParameterNotWildcardAll(StatisticalResourcesRestExternalConstants.PARAMETER_AGENCY_ID, agencyID);
+        return findMultidatasetsCommon(agencyID, null, query, orderBy, limit, offset, lang);
+    }
+
+    @Override
+    public Multidataset retrieveMultidataset(String agencyID, String resourceID, List<String> lang, String fields) {
+        try {
+            MultidatasetVersion multidatasetVersion = commonService.retrieveMultidatasetVersion(agencyID, resourceID);
+
+            boolean includeMetadata = !hasField(fields, StatisticalResourcesRestExternalConstants.FIELD_EXCLUDE_METADATA);
+            boolean includeData = !hasField(fields, StatisticalResourcesRestExternalConstants.FIELD_EXCLUDE_DATA);
+            List<String> selectedLanguages = languagesRequestedToEffectiveLanguages(lang);
+            Multidataset multidataset = multidatasetsDo2RestMapper.toMultidataset(multidatasetVersion, selectedLanguages, includeMetadata, includeData);
+            return multidataset;
+        } catch (Exception e) {
+            throw manageException(e);
+        }
+    }
+
     private Datasets findDatasetsCommon(String agencyID, String resourceID, String version, String query, String orderBy, String limit, String offset, List<String> lang) {
         try {
             SculptorCriteria sculptorCriteria = datasetsRest2DoMapper.getDatasetCriteriaMapper().restCriteriaToSculptorCriteria(query, orderBy, limit, offset);
@@ -190,6 +227,22 @@ public class StatisticalResourcesRestExternalFacadeV10Impl implements Statistica
             List<String> selectedLanguages = languagesRequestedToEffectiveLanguages(lang);
             Queries queries = queriesDo2RestMapper.toQueries(entitiesPagedResult, agencyID, query, orderBy, sculptorCriteria.getLimit(), selectedLanguages);
             return queries;
+        } catch (Exception e) {
+            throw manageException(e);
+        }
+    }
+
+    private Multidatasets findMultidatasetsCommon(String agencyID, String resourceID, String query, String orderBy, String limit, String offset, List<String> lang) {
+        try {
+            SculptorCriteria sculptorCriteria = multidatasetsRest2DoMapper.getMultidatasetCriteriaMapper().restCriteriaToSculptorCriteria(query, orderBy, limit, offset);
+
+            // Find
+            PagedResult<MultidatasetVersion> entitiesPagedResult = commonService.findMultidatasetVersions(agencyID, sculptorCriteria.getConditions(), sculptorCriteria.getPagingParameter());
+
+            // Transform
+            List<String> selectedLanguages = languagesRequestedToEffectiveLanguages(lang);
+            Multidatasets multidatasets = multidatasetsDo2RestMapper.toMultidatasets(entitiesPagedResult, agencyID, resourceID, query, orderBy, sculptorCriteria.getLimit(), selectedLanguages);
+            return multidatasets;
         } catch (Exception e) {
             throw manageException(e);
         }

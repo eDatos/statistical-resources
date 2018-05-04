@@ -1,5 +1,9 @@
 package org.siemac.metamac.statistical_resources.rest.external.service;
 
+import static org.siemac.metamac.rest.exception.utils.RestExceptionUtils.checkParameterNotWildcardAll;
+import static org.siemac.metamac.statistical_resources.rest.external.StatisticalResourcesRestExternalConstants.SERVICE_CONTEXT;
+import static org.siemac.metamac.statistical_resources.rest.external.service.utils.StatisticalResourcesRestExternalUtils.manageException;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +25,9 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersi
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionProperties;
 import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.DatasetService;
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
+import org.siemac.metamac.statistical.resources.core.multidataset.domain.MultidatasetVersion;
+import org.siemac.metamac.statistical.resources.core.multidataset.domain.MultidatasetVersionProperties;
+import org.siemac.metamac.statistical.resources.core.multidataset.serviceapi.MultidatasetService;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersionProperties;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersionRepository;
@@ -35,10 +42,6 @@ import org.siemac.metamac.statistical_resources.rest.external.exception.RestServ
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import static org.siemac.metamac.rest.exception.utils.RestExceptionUtils.checkParameterNotWildcardAll;
-import static org.siemac.metamac.statistical_resources.rest.external.StatisticalResourcesRestExternalConstants.SERVICE_CONTEXT;
-import static org.siemac.metamac.statistical_resources.rest.external.service.utils.StatisticalResourcesRestExternalUtils.manageException;
-
 @Service("statisticalResourcesRestExternalCommonService")
 public class StatisticalResourcesRestExternalCommonServiceImpl implements StatisticalResourcesRestExternalCommonService {
 
@@ -52,6 +55,9 @@ public class StatisticalResourcesRestExternalCommonServiceImpl implements Statis
 
     @Autowired
     private QueryService                 queryService;
+
+    @Autowired
+    private MultidatasetService          multidatasetService;
 
     @Autowired
     private QueryVersionRepository       queryVersionRepository;
@@ -146,6 +152,34 @@ public class StatisticalResourcesRestExternalCommonServiceImpl implements Statis
         }
     }
 
+    @Override
+    public MultidatasetVersion retrieveMultidatasetVersion(String agencyID, String resourceID) {
+        try {
+            // Validations
+            checkParameterNotWildcardAll(StatisticalResourcesRestExternalConstants.PARAMETER_AGENCY_ID, agencyID);
+            checkParameterNotWildcardAll(StatisticalResourcesRestExternalConstants.PARAMETER_RESOURCE_ID, resourceID);
+
+            // Retrieve
+            PagedResult<MultidatasetVersion> entitiesPagedResult = findMultidatasetVersionsCommon(agencyID, resourceID, null, pagingParameterOneResult);
+            if (entitiesPagedResult.getValues().size() != 1) {
+                org.siemac.metamac.rest.common.v1_0.domain.Exception exception = RestExceptionUtils.getException(RestServiceExceptionType.COLLECTION_NOT_FOUND, resourceID, agencyID);
+                throw new RestException(exception, Status.NOT_FOUND);
+            }
+            return entitiesPagedResult.getValues().get(0);
+        } catch (Exception e) {
+            throw manageException(e);
+        }
+    }
+
+    @Override
+    public PagedResult<MultidatasetVersion> findMultidatasetVersions(String agencyID, List<ConditionalCriteria> conditionalCriteria, PagingParameter pagingParameter) {
+        try {
+            return findMultidatasetVersionsCommon(agencyID, null, conditionalCriteria, pagingParameter);
+        } catch (Exception e) {
+            throw manageException(e);
+        }
+    }
+
     private PagedResult<DatasetVersion> findDatasetVersionsCommon(String agencyID, String resourceID, String version, List<ConditionalCriteria> conditionalCriteriaQuery,
             PagingParameter pagingParameter) throws MetamacException {
 
@@ -202,6 +236,26 @@ public class StatisticalResourcesRestExternalCommonServiceImpl implements Statis
         PagedResult<QueryVersion> entitiesPagedResult = queryService.findQueryVersionsByCondition(SERVICE_CONTEXT, conditionalCriteria, pagingParameter);
         return entitiesPagedResult;
     }
+
+    private PagedResult<MultidatasetVersion> findMultidatasetVersionsCommon(String agencyID, String resourceID, List<ConditionalCriteria> conditionalCriteriaQuery, PagingParameter pagingParameter)
+            throws MetamacException {
+
+        // Criteria to find by criteria
+        List<ConditionalCriteria> conditionalCriteria = new ArrayList<ConditionalCriteria>();
+        if (CollectionUtils.isNotEmpty(conditionalCriteriaQuery)) {
+            conditionalCriteria.addAll(conditionalCriteriaQuery);
+        } else {
+            conditionalCriteria.addAll(ConditionalCriteriaBuilder.criteriaFor(MultidatasetVersion.class).distinctRoot().build());
+        }
+        addConditionalCriteriaAgencyIfApplicable(agencyID, MultidatasetVersion.class, MultidatasetVersionProperties.siemacMetadataStatisticalResource(), conditionalCriteria);
+        addConditionalCriteriaResourceIfApplicable(resourceID, MultidatasetVersion.class, MultidatasetVersionProperties.siemacMetadataStatisticalResource(), conditionalCriteria);
+        addConditionalCriteriaVersionIfApplicable(SrmRestConstants.WILDCARD_LATEST, MultidatasetVersion.class, MultidatasetVersionProperties.siemacMetadataStatisticalResource(), conditionalCriteria);
+
+        // Find
+        PagedResult<MultidatasetVersion> entitiesPagedResult = multidatasetService.findMultidatasetVersionsByCondition(SERVICE_CONTEXT, conditionalCriteria, pagingParameter);
+        return entitiesPagedResult;
+    }
+
     @SuppressWarnings({"unchecked", "rawtypes"})
     private void addConditionalCriteriaAgencyIfApplicable(String agencyID, Class entityClass, SiemacMetadataStatisticalResourceProperty siemacMetadataStatisticalResourceProperty,
             List<ConditionalCriteria> conditionalCriteria) {

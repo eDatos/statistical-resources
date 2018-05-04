@@ -116,6 +116,7 @@ import org.siemac.metamac.statistical_resources.rest.external.service.utils.Stat
 import org.siemac.metamac.statistical_resources.rest.external.v1_0.domain.DsdProcessorResult;
 import org.siemac.metamac.statistical_resources.rest.external.v1_0.mapper.collection.CollectionsDo2RestMapperV10;
 import org.siemac.metamac.statistical_resources.rest.external.v1_0.mapper.dataset.DatasetsDo2RestMapperV10;
+import org.siemac.metamac.statistical_resources.rest.external.v1_0.mapper.multidataset.MultidatasetsDo2RestMapperV10;
 import org.siemac.metamac.statistical_resources.rest.external.v1_0.mapper.query.QueriesDo2RestMapperV10;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -169,6 +170,9 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
 
     @Autowired
     private QueriesDo2RestMapperV10                 queriesDo2RestMapper;
+
+    @Autowired
+    private MultidatasetsDo2RestMapperV10           multidatasetsDo2RestMapper;
 
     private String                                  statisticalResourcesApiExternalEndpointV10;
     private String                                  srmApiExternalEndpoint;
@@ -603,6 +607,8 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
                 return queriesDo2RestMapper.toResource(source.getQueryVersion(), selectedLanguages);
             case PUBLICATION_VERSION:
                 return collectionsDo2RestMapper.toResource(source.getPublicationVersion(), selectedLanguages);
+            case MULTIDATASET_VERSION:
+                return multidatasetsDo2RestMapper.toResource(source.getMultidatasetVersion(), selectedLanguages);
             case DATASET:
                 DatasetVersion datasetVersion = datasetService.retrieveLatestDatasetVersionByDatasetUrn(SERVICE_CONTEXT, source.getDataset().getIdentifiableStatisticalResource().getUrn());
                 return datasetsDo2RestMapper.toResourceAsLatest(datasetVersion, selectedLanguages);
@@ -627,6 +633,8 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
                 return queriesDo2RestMapper.toResource(source, selectedLanguages);
             case PUBLICATION_VERSION:
                 return collectionsDo2RestMapper.toResource(source, selectedLanguages);
+            case MULTIDATASET_VERSION:
+                return multidatasetsDo2RestMapper.toResource(source, selectedLanguages);
             case DATASET:
                 DatasetVersion datasetVersion = datasetService.retrieveLatestDatasetVersionByDatasetUrn(SERVICE_CONTEXT, source.getUrn());
                 return datasetsDo2RestMapper.toResourceAsLatest(datasetVersion, selectedLanguages);
@@ -1124,6 +1132,8 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
                 return StatisticalResourceType.QUERY;
             case COLLECTION:
                 return StatisticalResourceType.COLLECTION;
+            case MULTIDATASET:
+                return StatisticalResourceType.MULTIDATASET;
             default:
                 logger.error("StatisticalResourceTypeEnum unsupported: " + source);
                 org.siemac.metamac.rest.common.v1_0.domain.Exception exception = RestExceptionUtils.getException(RestServiceExceptionType.UNKNOWN);
