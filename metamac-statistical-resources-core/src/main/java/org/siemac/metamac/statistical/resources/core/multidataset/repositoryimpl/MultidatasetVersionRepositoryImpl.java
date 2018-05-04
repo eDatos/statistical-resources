@@ -172,10 +172,14 @@ public class MultidatasetVersionRepositoryImpl extends MultidatasetVersionReposi
 
     @Override
     public RelatedResourceResult retrieveIsReplacedByOnlyIfPublished(MultidatasetVersion multidatasetVersion) {
-
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("retrieveIsReplacedByOnlyIfPublished not implemented");
-
+        RelatedResourceResult result = null;
+        if (multidatasetVersion != null && multidatasetVersion.getSiemacMetadataStatisticalResource().getIsReplacedBy() != null) {
+            MultidatasetVersion replacing = multidatasetVersion.getSiemacMetadataStatisticalResource().getIsReplacedBy().getMultidatasetVersion();
+            if (ProcStatusEnum.PUBLISHED == replacing.getLifeCycleStatisticalResource().getProcStatus()) {
+                result = RelatedResourceResultUtils.from(replacing, TypeRelatedResourceEnum.MULTIDATASET_VERSION);
+            }
+        }
+        return result;
     }
 
     @Override
