@@ -17,6 +17,10 @@
     <bean id="queryService" class="org.mockito.Mockito" factory-method="mock">
         <constructor-arg value="org.siemac.metamac.statistical.resources.core.query.serviceapi.QueryService" />
     </bean>
+    
+    <bean id="multidatasetService" class="org.mockito.Mockito" factory-method="mock">
+        <constructor-arg value="org.siemac.metamac.statistical.resources.core.multidataset.serviceapi.MultidatasetService" />
+    </bean>
 
     <bean id="translationService" class="org.mockito.Mockito" factory-method="mock">
         <constructor-arg value="org.siemac.metamac.statistical.resources.core.common.serviceapi.TranslationService" />
@@ -32,6 +36,10 @@
 
     <bean id="publicationVersionRepository" class="org.mockito.Mockito" factory-method="mock">
         <constructor-arg value="org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersionRepository" />
+    </bean>
+    
+    <bean id="multidatasetVersionRepository" class="org.mockito.Mockito" factory-method="mock">
+        <constructor-arg value="org.siemac.metamac.statistical.resources.core.multidataset.domain.MultidatasetVersionRepository" />
     </bean>
     
     <bean id="datasetRepositoriesServiceFacade" class="org.mockito.Mockito" factory-method="mock">
