@@ -12,21 +12,24 @@ import org.siemac.metamac.web.common.shared.exception.MetamacWebException;
 
 public class MetamacPortalWebUtils {
 
-    private static final String PAGE_DATA_RESOURCE                 = "data.html";
-    private static final String PAGE_COLLECTION_RESOURCE           = "collection.html";
-    private static final String URL_SEPARATOR                      = "/";
-    private static final String URL_SINGLEPAGE_SEPARATOR           = "#";
-    private static final String URL_QUERY_SEPARATOR                = "?";
-    private static final String URL_QUERY_EQUALS                   = "=";
-    private static final String URL_QUERY_AND                      = "&";
-    private static final String URL_QUERY_PARAMETER_RESOURCEID     = "resourceId";
-    private static final String URL_QUERY_PARAMETER_AGENCYID       = "agencyId";
-    private static final String URL_QUERY_PARAMETER_VERSION        = "version";
-    private static final String URL_QUERY_PARAMETER_RESOURCETYPE   = "resourceType";
+    private static final String PAGE_DATA_RESOURCE                  = "data.html";
+    private static final String PAGE_COLLECTION_RESOURCE            = "collection.html";
+    private static final String URL_SEPARATOR                       = "/";
+    private static final String URL_SINGLEPAGE_SEPARATOR            = "#";
+    private static final String URL_QUERY_SEPARATOR                 = "?";
+    private static final String URL_QUERY_EQUALS                    = "=";
+    private static final String URL_QUERY_AND                       = "&";
+    private static final String URL_QUERY_PARAMETER_RESOURCEID      = "resourceId";
+    private static final Object URL_QUERY_COLON                     = ":";
+    private static final String URL_QUERY_PARAMETER_AGENCYID        = "agencyId";
+    private static final String URL_QUERY_PARAMETER_VERSION         = "version";
+    private static final String URL_QUERY_PARAMETER_RESOURCETYPE    = "resourceType";
 
-    private static final String URL_QUERY_RESOURCE_TYPE_DATASET    = "dataset";
-    private static final String URL_QUERY_RESOURCE_TYPE_QUERY      = "query";
-    private static final String URL_QUERY_RESOURCE_TYPE_COLLECTION = "collection";
+    private static final String URL_QUERY_PARAMETER_MULTIDATASET_ID = "multidatasetId";
+
+    private static final String URL_QUERY_RESOURCE_TYPE_DATASET     = "dataset";
+    private static final String URL_QUERY_RESOURCE_TYPE_QUERY       = "query";
+    private static final String URL_QUERY_RESOURCE_TYPE_COLLECTION  = "collection";
 
     public static String buildDatasetVersionUrl(DatasetVersionDto datasetVersionDto) throws MetamacWebException {
         StringBuilder builder = new StringBuilder();
@@ -65,7 +68,7 @@ public class MetamacPortalWebUtils {
         builder.append(buildEndpointUrl());
         builder.append(PAGE_DATA_RESOURCE);
         builder.append(URL_QUERY_SEPARATOR);
-        builder.append(buildQueryParametersForNotVersionableResource(multidatasetVersionDto, StatisticalResourceTypeEnum.MULTIDATASET));
+        builder.append(buildQueryParametersForMultidataset(multidatasetVersionDto));
 
         return builder.toString();
     }
@@ -118,7 +121,23 @@ public class MetamacPortalWebUtils {
             builder.append(code);
         }
         return builder.toString();
+    }
 
+    private static String buildQueryParametersForMultidataset(LifeCycleStatisticalResourceDto lifeCycleStatisticalResourceDto) {
+        StringBuilder builder = new StringBuilder();
+
+        if (lifeCycleStatisticalResourceDto != null) {
+
+            String maintainerCode = lifeCycleStatisticalResourceDto.getMaintainer() != null ? lifeCycleStatisticalResourceDto.getMaintainer().getCode() : null;
+            String code = lifeCycleStatisticalResourceDto.getCode();
+
+            builder.append(URL_QUERY_PARAMETER_MULTIDATASET_ID);
+            builder.append(URL_QUERY_EQUALS);
+            builder.append(maintainerCode);
+            builder.append(URL_QUERY_COLON);
+            builder.append(code);
+        }
+        return builder.toString();
     }
 
     private static String determinateResourceType(StatisticalResourceTypeEnum type) throws MetamacWebException {
@@ -129,7 +148,6 @@ public class MetamacPortalWebUtils {
                 return URL_QUERY_RESOURCE_TYPE_DATASET;
             case COLLECTION:
                 return URL_QUERY_RESOURCE_TYPE_COLLECTION;
-
             default:
                 throw new MetamacWebException(CommonSharedConstants.EXCEPTION_UNKNOWN, "StatisticalResourceTypeEnum " + type + " not valid.");
         }
