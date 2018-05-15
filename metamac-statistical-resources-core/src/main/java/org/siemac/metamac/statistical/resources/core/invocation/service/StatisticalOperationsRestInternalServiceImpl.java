@@ -13,6 +13,7 @@ import org.apache.commons.lang.StringUtils;
 import org.siemac.metamac.core.common.enume.domain.TypeExternalArtefactsEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.rest.api.constants.RestApiConstants;
+import org.siemac.metamac.rest.statistical_operations_internal.v1_0.domain.Instance;
 import org.siemac.metamac.rest.statistical_operations_internal.v1_0.domain.Instances;
 import org.siemac.metamac.rest.statistical_operations_internal.v1_0.domain.Operation;
 import org.siemac.metamac.rest.statistical_operations_internal.v1_0.domain.Operations;
@@ -39,6 +40,15 @@ public class StatisticalOperationsRestInternalServiceImpl implements Statistical
     public Operation retrieveOperationById(String operationCode) throws MetamacException {
         try {
             return restApiLocator.getStatisticalOperationsRestInternalFacadeV10().retrieveOperationById(operationCode);
+        } catch (Exception e) {
+            throw manageStatisticalOperationsInternalRestException(e);
+        }
+    }
+
+    @Override
+    public Instance retrieveInstanceById(String operationId, String id) throws MetamacException {
+        try {
+            return restApiLocator.getStatisticalOperationsRestInternalFacadeV10().retrieveInstanceById(operationId, id);
         } catch (Exception e) {
             throw manageStatisticalOperationsInternalRestException(e);
         }

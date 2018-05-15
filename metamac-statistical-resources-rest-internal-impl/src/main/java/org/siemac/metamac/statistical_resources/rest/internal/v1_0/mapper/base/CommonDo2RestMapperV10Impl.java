@@ -24,13 +24,16 @@ import org.joda.time.DateTime;
 import org.siemac.metamac.core.common.enume.domain.IstacTimeGranularityEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.time.IstacTimeUtils;
+import org.siemac.metamac.core.common.util.shared.UrnUtils;
 import org.siemac.metamac.rest.api.constants.RestApiConstants;
 import org.siemac.metamac.rest.common.v1_0.domain.InternationalString;
 import org.siemac.metamac.rest.common.v1_0.domain.LocalisedString;
+import org.siemac.metamac.rest.common.v1_0.domain.Resource;
 import org.siemac.metamac.rest.common.v1_0.domain.ResourceLink;
 import org.siemac.metamac.rest.common_metadata.v1_0.domain.Configuration;
 import org.siemac.metamac.rest.exception.RestException;
 import org.siemac.metamac.rest.exception.utils.RestExceptionUtils;
+import org.siemac.metamac.rest.statistical_operations_internal.v1_0.domain.Instance;
 import org.siemac.metamac.rest.statistical_operations_internal.v1_0.domain.Operation;
 import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.Attribute;
 import org.siemac.metamac.rest.statistical_resources_internal.v1_0.domain.AttributeAttachmentLevelType;
@@ -421,8 +424,23 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
         }
         ResourceInternal target = new ResourceInternal();
         toResourceExternalItem(source, statisticalOperationsApiInternalEndpoint, statisticalOperationsWebApplication, target, selectedLanguages);
-        target.setName(getUpdatedStatisticalOperationName(source.getCode()));
+        updateNameForNonVersionableResource(target, source);
         return target;
+    }
+
+    private void updateNameForNonVersionableResource(Resource target, ExternalItem source) {
+        switch (source.getType()) {
+            case STATISTICAL_OPERATION:
+                target.setName(getUpdatedStatisticalOperationName(source.getCode()));
+                break;
+            case STATISTICAL_OPERATION_INSTANCE:
+                String identifier = UrnUtils.removePrefix(source.getUrn());
+                String[] parts = UrnUtils.splitUrnByDots(identifier);
+                target.setName(getUpdatedStatisticalOperationInstanceName(parts[0], parts[1]));
+                break;
+            default:
+                break;
+        }
     }
 
     @Override
@@ -1721,5 +1739,10 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
     private InternationalString getUpdatedStatisticalOperationName(String operationCode) {
         Operation operation = statisticalOperationsRestInternalFacade.retrieveOperation(operationCode);
         return operation != null ? operation.getName() : null;
+    }
+
+    private InternationalString getUpdatedStatisticalOperationInstanceName(String operationId, String instanceId) {
+        Instance instance = statisticalOperationsRestInternalFacade.retrieveInstanceById(operationId, instanceId);
+        return instance != null ? instance.getName() : null;
     }
 }

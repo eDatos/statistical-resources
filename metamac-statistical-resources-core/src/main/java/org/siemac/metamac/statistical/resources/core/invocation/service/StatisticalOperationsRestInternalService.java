@@ -3,6 +3,7 @@ package org.siemac.metamac.statistical.resources.core.invocation.service;
 import java.util.List;
 
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.rest.statistical_operations_internal.v1_0.domain.Instance;
 import org.siemac.metamac.rest.statistical_operations_internal.v1_0.domain.Instances;
 import org.siemac.metamac.rest.statistical_operations_internal.v1_0.domain.Operation;
 import org.siemac.metamac.rest.statistical_operations_internal.v1_0.domain.Operations;
@@ -14,6 +15,7 @@ public interface StatisticalOperationsRestInternalService {
     public static final String BEAN_ID = "statisticalOperationsRestInternalService";
 
     public Operation retrieveOperationById(String operationCode) throws MetamacException;
+    public Instance retrieveInstanceById(String operationId, String id) throws MetamacException;
 
     public List<ResourceInternal> findOperations(String query) throws MetamacException;
     public Operations findOperations(int firstResult, int maxResult, String query) throws MetamacException;

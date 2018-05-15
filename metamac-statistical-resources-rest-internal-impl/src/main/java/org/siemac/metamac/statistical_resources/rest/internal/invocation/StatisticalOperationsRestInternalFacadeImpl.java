@@ -1,5 +1,6 @@
 package org.siemac.metamac.statistical_resources.rest.internal.invocation;
 
+import org.siemac.metamac.rest.statistical_operations_internal.v1_0.domain.Instance;
 import org.siemac.metamac.rest.statistical_operations_internal.v1_0.domain.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -13,5 +14,10 @@ public class StatisticalOperationsRestInternalFacadeImpl implements StatisticalO
     @Override
     public Operation retrieveOperation(String operationCode) {
         return restApiLocator.getStatisticalOperationsRestInternalFacadeV10().retrieveOperationById(operationCode);
+    }
+
+    @Override
+    public Instance retrieveInstanceById(String operationId, String instanceId) {
+        return restApiLocator.getStatisticalOperationsRestInternalFacadeV10().retrieveInstanceById(operationId, instanceId);
     }
 }
