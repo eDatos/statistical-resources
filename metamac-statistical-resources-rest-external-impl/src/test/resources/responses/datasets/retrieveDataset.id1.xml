@@ -51,7 +51,7 @@
         <stat:statisticalOperationInstances total="2">
             <cdomain:resource kind="statisticalOperations#instance">
                 <cdomain:id>instance01</cdomain:id>
-                <cdomain:urn>urn:siemac:org.siemac.metamac.infomodel.statisticaloperations.Operation=instance01</cdomain:urn>
+                <cdomain:urn>urn:siemac:org.siemac.metamac.infomodel.statisticaloperations.Operation=instance01.instance01</cdomain:urn>
                 <cdomain:selfLink kind="statisticalOperations#instance" href="http://data.istac.es/apis/operations/latest/instance01"/>
                 <cdomain:name>
                     <cdomain:text xml:lang="es">title-Tn2JaF3RSI en Espanol</cdomain:text>
@@ -59,7 +59,7 @@
             </cdomain:resource>
             <cdomain:resource kind="statisticalOperations#instance">
                 <cdomain:id>instance02</cdomain:id>
-                <cdomain:urn>urn:siemac:org.siemac.metamac.infomodel.statisticaloperations.Operation=instance02</cdomain:urn>
+                <cdomain:urn>urn:siemac:org.siemac.metamac.infomodel.statisticaloperations.Operation=instance02.instance02</cdomain:urn>
                 <cdomain:selfLink kind="statisticalOperations#instance" href="http://data.istac.es/apis/operations/latest/instance02"/>
                 <cdomain:name>
                     <cdomain:text xml:lang="es">title-Tn2JaF3RSI en Espanol</cdomain:text>
