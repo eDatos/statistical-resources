@@ -668,7 +668,7 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
     }
 
     public static ExternalItem mockStatisticalOperationInstanceExternalItem(String code) {
-        return mockExternalItem(code, mockStatisticalOperationInstanceUrn(code + "." + code), TypeExternalArtefactsEnum.STATISTICAL_OPERATION_INSTANCE);
+        return mockExternalItem(code, mockStatisticalOperationInstanceUrn(code, code), TypeExternalArtefactsEnum.STATISTICAL_OPERATION_INSTANCE);
     }
 
     public static ExternalItem mockAgencyExternalItem() {
