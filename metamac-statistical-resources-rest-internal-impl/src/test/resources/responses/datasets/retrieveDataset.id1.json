@@ -1808,7 +1808,7 @@
 				{
 					"managementAppLink": "http://localhost:8080/statistical-operations-internal/instance01",
 					"id": "instance01",
-					"urn": "urn:siemac:org.siemac.metamac.infomodel.statisticaloperations.Operation=instance01",
+					"urn": "urn:siemac:org.siemac.metamac.infomodel.statisticaloperations.Operation=instance01.instance01",
 					"selfLink": {
 						"kind": "statisticalOperations#instance",
 						"href": "http://data.istac.es/apis/operations/latest/instance01"
@@ -1826,7 +1826,7 @@
 				{
 					"managementAppLink": "http://localhost:8080/statistical-operations-internal/instance02",
 					"id": "instance02",
-					"urn": "urn:siemac:org.siemac.metamac.infomodel.statisticaloperations.Operation=instance02",
+					"urn": "urn:siemac:org.siemac.metamac.infomodel.statisticaloperations.Operation=instance02.instance02",
 					"selfLink": {
 						"kind": "statisticalOperations#instance",
 						"href": "http://data.istac.es/apis/operations/latest/instance02"

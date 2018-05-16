@@ -40,7 +40,7 @@ public class PublicationVersionMock extends PublicationVersion {
     }
 
     public void setStatisticalOperationCode(String operationCode) {
-        getSiemacMetadataStatisticalResource().setStatisticalOperation(StatisticalResourcesPersistedDoMocks.mockStatisticalOperationInstanceExternalItem(operationCode));
+        getSiemacMetadataStatisticalResource().setStatisticalOperation(StatisticalResourcesPersistedDoMocks.mockStatisticalOperationExternalItem(operationCode));
     }
 
     public void setMaintainerCode(String maintainerCode) {
