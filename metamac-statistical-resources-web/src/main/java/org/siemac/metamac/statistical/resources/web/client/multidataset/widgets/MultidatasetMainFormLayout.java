@@ -45,7 +45,7 @@ public class MultidatasetMainFormLayout extends LifecycleMainFormLayout {
 
     @Override
     protected boolean canResendStreamMessage() {
-        // FIXME METAMAC-2715 - Realizar la notificación a Kafka de los recursos Multidataset
+        // TODO METAMAC-2715 - Realizar la notificación a Kafka de los recursos Multidataset
         return MultidatasetClientSecurityUtils.canResendStreamMessageDatasetVersion(multidatasetVersionDto);
     }
 

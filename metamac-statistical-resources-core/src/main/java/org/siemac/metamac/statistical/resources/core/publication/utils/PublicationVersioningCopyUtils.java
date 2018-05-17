@@ -47,7 +47,7 @@ public class PublicationVersioningCopyUtils {
             target.setPublicationVersionFirstLevel(publicationVersionTarget);
             publicationVersionTarget.getChildrenFirstLevel().add(target);
             publicationVersionTarget.getChildrenAllLevels().add(target);
-            targets.add(target); // FIXME METAMAC-2718 - Eliminar código muerto para evitar mantenerlo (revisar, esto parece innecesario)
+            targets.add(target); // TODO METAMAC-2718 - Eliminar código muerto para evitar mantenerlo (revisar, esto parece innecesario)
         }
     }
 
