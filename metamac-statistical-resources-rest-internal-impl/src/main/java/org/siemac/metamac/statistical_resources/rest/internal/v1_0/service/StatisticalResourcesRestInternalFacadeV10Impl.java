@@ -277,4 +277,5 @@ public class StatisticalResourcesRestInternalFacadeV10Impl implements Statistica
         }
         return result;
     }
+
 }

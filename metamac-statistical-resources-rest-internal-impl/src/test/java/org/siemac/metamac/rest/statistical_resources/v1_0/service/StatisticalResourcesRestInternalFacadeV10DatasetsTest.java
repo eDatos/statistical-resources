@@ -22,7 +22,7 @@ public class StatisticalResourcesRestInternalFacadeV10DatasetsTest extends Stati
 
     @Test
     public void testFindDatasets() throws Exception {
-        Datasets datasets = statisticalResourcesRestExternalFacadeClientXml.findDatasets(null, null, null, null, null);
+        Datasets datasets = statisticalResourcesRestInternalFacadeClientXml.findDatasets(null, null, null, null, null);
 
         assertEquals(4, datasets.getDatasets().size());
         assertEquals(StatisticalResourcesRestInternalConstants.KIND_DATASETS, datasets.getKind());
@@ -37,7 +37,7 @@ public class StatisticalResourcesRestInternalFacadeV10DatasetsTest extends Stati
 
     @Test
     public void testRetrieveDataset() throws Exception {
-        Dataset dataset = statisticalResourcesRestExternalFacadeClientXml.retrieveDataset(AGENCY_1, DATASET_1_CODE, VERSION_1, defaultLanguages, null, null);
+        Dataset dataset = statisticalResourcesRestInternalFacadeClientXml.retrieveDataset(AGENCY_1, DATASET_1_CODE, VERSION_1, defaultLanguages, null, null);
 
         assertEquals(DATASET_1_CODE, dataset.getId());
         assertEquals("urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Dataset=agency1:dataset1(01.000)", dataset.getUrn());
@@ -48,7 +48,7 @@ public class StatisticalResourcesRestInternalFacadeV10DatasetsTest extends Stati
 
     @Test
     public void testRetrieveDatasetAnotherLanguage() throws Exception {
-        Dataset dataset = statisticalResourcesRestExternalFacadeClientXml.retrieveDataset(AGENCY_1, DATASET_1_CODE, VERSION_1, Arrays.asList("en"), null, null);
+        Dataset dataset = statisticalResourcesRestInternalFacadeClientXml.retrieveDataset(AGENCY_1, DATASET_1_CODE, VERSION_1, Arrays.asList("en"), null, null);
 
         MetamacRestAsserts.assertEqualsInternationalString("es", "title-dataset1 en Espanol", "en", "title-dataset1 in English", dataset.getName());
     }
@@ -81,11 +81,11 @@ public class StatisticalResourcesRestInternalFacadeV10DatasetsTest extends Stati
         String resourceID = NOT_EXISTS;
         String version = VERSION_1;
         try {
-            statisticalResourcesRestExternalFacadeClientXml.retrieveDataset(agencyID, resourceID, version, null, null, null);
+            statisticalResourcesRestInternalFacadeClientXml.retrieveDataset(agencyID, resourceID, version, null, null, null);
         } catch (ServerWebApplicationException e) {
             assertEquals(Status.NOT_FOUND.getStatusCode(), e.getStatus());
 
-            org.siemac.metamac.rest.common.v1_0.domain.Exception exception = extractErrorFromException(statisticalResourcesRestExternalFacadeClientXml, e);
+            org.siemac.metamac.rest.common.v1_0.domain.Exception exception = extractErrorFromException(statisticalResourcesRestInternalFacadeClientXml, e);
             assertEquals(RestServiceExceptionType.DATASET_NOT_FOUND.getCode(), exception.getCode());
             assertEquals("Dataset " + resourceID + " not found in version " + version + " from Agency " + agencyID, exception.getMessage());
             assertEquals(3, exception.getParameters().getParameters().size());

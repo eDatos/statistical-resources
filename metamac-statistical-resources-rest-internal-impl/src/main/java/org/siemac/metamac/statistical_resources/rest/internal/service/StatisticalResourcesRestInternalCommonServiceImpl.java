@@ -294,7 +294,7 @@ public class StatisticalResourcesRestInternalCommonServiceImpl implements Statis
                 //@formatter:off
                 conditionalCriteria.add(ConditionalCriteriaBuilder.criteriaFor(entityClass)
                         .buildSingle());
-    
+
                 conditionalCriteria.add(ConditionalCriteriaBuilder.criteriaFor(entityClass)
                         .withProperty(siemacMetadataStatisticalResourceProperty.procStatus()).eq(ProcStatusEnum.PUBLISHED)
                         .buildSingle());
@@ -347,7 +347,7 @@ public class StatisticalResourcesRestInternalCommonServiceImpl implements Statis
                 //@formatter:off
                 conditionalCriteria.add(ConditionalCriteriaBuilder.criteriaFor(entityClass)
                         .buildSingle());
-    
+
                 conditionalCriteria.add(ConditionalCriteriaBuilder.criteriaFor(entityClass)
                         .withProperty(lifeCycleStatisticalResourceProperty.procStatus()).eq(ProcStatusEnum.PUBLISHED)
                         .buildSingle());
@@ -355,4 +355,5 @@ public class StatisticalResourcesRestInternalCommonServiceImpl implements Statis
             }
         }
     }
+
 }

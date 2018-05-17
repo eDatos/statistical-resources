@@ -21,7 +21,7 @@ public class StatisticalResourcesRestInternalFacadeV10CollectionsTest extends St
 
     @Test
     public void testFindCollections() throws Exception {
-        Collections collections = statisticalResourcesRestExternalFacadeClientXml.findCollections(null, null, null, null, null);
+        Collections collections = statisticalResourcesRestInternalFacadeClientXml.findCollections(null, null, null, null, null);
 
         assertEquals(4, collections.getCollections().size());
         assertEquals(StatisticalResourcesRestInternalConstants.KIND_COLLECTIONS, collections.getKind());
@@ -36,7 +36,7 @@ public class StatisticalResourcesRestInternalFacadeV10CollectionsTest extends St
 
     @Test
     public void testRetrieveCollection() throws Exception {
-        Collection collection = statisticalResourcesRestExternalFacadeClientXml.retrieveCollection(AGENCY_1, COLLECTION_1_CODE, defaultLanguages, null);
+        Collection collection = statisticalResourcesRestInternalFacadeClientXml.retrieveCollection(AGENCY_1, COLLECTION_1_CODE, defaultLanguages, null);
 
         assertEquals(COLLECTION_1_CODE, collection.getId());
         assertEquals("urn:siemac:org.siemac.metamac.infomodel.statisticalresources.Collection=agency1:collection1", collection.getUrn());
@@ -48,7 +48,7 @@ public class StatisticalResourcesRestInternalFacadeV10CollectionsTest extends St
 
     @Test
     public void testRetrieveCollectionAnotherLanguage() throws Exception {
-        Collection collection = statisticalResourcesRestExternalFacadeClientXml.retrieveCollection(AGENCY_1, COLLECTION_1_CODE, Arrays.asList("en"), null);
+        Collection collection = statisticalResourcesRestInternalFacadeClientXml.retrieveCollection(AGENCY_1, COLLECTION_1_CODE, Arrays.asList("en"), null);
 
         MetamacRestAsserts.assertEqualsInternationalString("es", "title-collection1 en Espanol", "en", "title-collection1 in English", collection.getName());
     }
@@ -80,11 +80,11 @@ public class StatisticalResourcesRestInternalFacadeV10CollectionsTest extends St
         String agencyID = AGENCY_1;
         String resourceID = NOT_EXISTS;
         try {
-            statisticalResourcesRestExternalFacadeClientXml.retrieveCollection(agencyID, resourceID, null, null);
+            statisticalResourcesRestInternalFacadeClientXml.retrieveCollection(agencyID, resourceID, null, null);
         } catch (ServerWebApplicationException e) {
             assertEquals(Status.NOT_FOUND.getStatusCode(), e.getStatus());
 
-            org.siemac.metamac.rest.common.v1_0.domain.Exception exception = extractErrorFromException(statisticalResourcesRestExternalFacadeClientXml, e);
+            org.siemac.metamac.rest.common.v1_0.domain.Exception exception = extractErrorFromException(statisticalResourcesRestInternalFacadeClientXml, e);
             assertEquals(RestServiceExceptionType.COLLECTION_NOT_FOUND.getCode(), exception.getCode());
             assertEquals("Collection " + resourceID + " not found from Agency " + agencyID, exception.getMessage());
             assertEquals(2, exception.getParameters().getParameters().size());

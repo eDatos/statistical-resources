@@ -107,7 +107,7 @@ public abstract class StatisticalResourcesRestInternalFacadeV10BaseTest extends 
     private static String                           jaxrsServerAddress = "http://localhost:" + ServerResource.PORT + "/apis/statistical-resources-internal";
     protected String                                baseApi            = jaxrsServerAddress + "/v1.0";
     protected static ApplicationContext             applicationContext = null;
-    protected static StatisticalResourcesV1_0       statisticalResourcesRestExternalFacadeClientXml;
+    protected static StatisticalResourcesV1_0       statisticalResourcesRestInternalFacadeClientXml;
     private static String                           apiEndpointv10;
 
     protected static RestDoMocks                    restDoMocks;
@@ -146,7 +146,7 @@ public abstract class StatisticalResourcesRestInternalFacadeV10BaseTest extends 
         {
             List providers = new ArrayList();
             providers.add(applicationContext.getBean("jaxbProvider", JAXBElementProvider.class));
-            statisticalResourcesRestExternalFacadeClientXml = JAXRSClientFactory.create(jaxrsServerAddress, StatisticalResourcesV1_0.class, providers, Boolean.TRUE);
+            statisticalResourcesRestInternalFacadeClientXml = JAXRSClientFactory.create(jaxrsServerAddress, StatisticalResourcesV1_0.class, providers, Boolean.TRUE);
         }
 
         mockitoMockConfig = applicationContext.getBean(MockitoMockConfig.class);
@@ -177,9 +177,9 @@ public abstract class StatisticalResourcesRestInternalFacadeV10BaseTest extends 
     }
 
     protected StatisticalResourcesV1_0 getStatisticalResourcesRestExternalFacadeClientXml() {
-        WebClient.client(statisticalResourcesRestExternalFacadeClientXml).reset();
-        WebClient.client(statisticalResourcesRestExternalFacadeClientXml).accept(APPLICATION_XML);
-        return statisticalResourcesRestExternalFacadeClientXml;
+        WebClient.client(statisticalResourcesRestInternalFacadeClientXml).reset();
+        WebClient.client(statisticalResourcesRestInternalFacadeClientXml).accept(APPLICATION_XML);
+        return statisticalResourcesRestInternalFacadeClientXml;
     }
 
     protected String getRetrieveResourceUri(String resourcePath, String agencyID, String resourceID, String version, String fields, String langs) throws Exception {
