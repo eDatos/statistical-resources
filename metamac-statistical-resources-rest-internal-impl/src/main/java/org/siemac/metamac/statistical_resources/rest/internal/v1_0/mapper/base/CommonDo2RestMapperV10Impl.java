@@ -1247,6 +1247,8 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
                 return StatisticalResourceType.QUERY;
             case COLLECTION:
                 return StatisticalResourceType.COLLECTION;
+            case MULTIDATASET:
+                return StatisticalResourceType.MULTIDATASET;
             default:
                 logger.error("StatisticalResourceTypeEnum unsupported: " + source);
                 org.siemac.metamac.rest.common.v1_0.domain.Exception exception = RestExceptionUtils.getException(RestServiceExceptionType.UNKNOWN);
