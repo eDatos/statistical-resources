@@ -23,6 +23,10 @@
       {
          "name":"Consultas estadísticas",
          "description":""
+      },
+      {
+         "name":"Multidatasets estadísticos",
+         "description":""
       }
    ],
    "definitions":{
@@ -311,6 +315,136 @@
             {
                "properties":{
                   "collection":{
+                     "description":"",
+                     "type":"array",
+                     "items":{
+                        "$ref":"#/definitions/Resource"
+                     }
+                  }
+               }
+            }
+         ],
+         "description":""
+      },
+      "Multidataset":{
+         "type":"object",
+         "title":"Multidataset",
+         "properties":{
+            "childLinks":{
+               "description":"",
+               "$ref":"#/definitions/ChildLinks"
+            },
+            "data":{
+               "description":"",
+               "$ref":"#/definitions/MultidatasetData"
+            },
+            "description":{
+               "description":"",
+               "$ref":"#/definitions/InternationalString"
+            },
+            "id":{
+               "description":"",
+               "type":"string"
+            },
+            "kind":{
+               "description":"",
+               "type":"string"
+            },
+            "metadata":{
+               "description":"",
+               "$ref":"#/definitions/MultidatasetMetadata"
+            },
+            "name":{
+               "description":"",
+               "$ref":"#/definitions/InternationalString"
+            },
+            "parentLink":{
+               "description":"",
+               "$ref":"#/definitions/ResourceLink"
+            },
+            "selectedLanguages":{
+               "description":"",
+               "$ref":"#/definitions/SelectedLanguages"
+            },
+            "selfLink":{
+               "description":"",
+               "$ref":"#/definitions/ResourceLink"
+            },
+            "urn":{
+               "description":"",
+               "type":"string"
+            }
+         },
+         "description":""
+      },
+      "MultidatasetData":{
+         "type":"object",
+         "title":"MultidatasetData",
+         "properties":{
+            "nodes":{
+               "description":"",
+               "$ref":"#/definitions/MultidatasetNodes"
+            }
+         },
+         "description":""
+      },
+      "MultidatasetMetadata":{
+         "type":"object",
+         "title":"MultidatasetMetadata",
+         "allOf":[
+            {
+               "$ref":"#/definitions/StatisticalResource"
+            },
+            {
+               "properties":{
+                  "formatExtentResources":{
+                     "description":"",
+                     "type":"number"
+                  }
+               }
+            }
+         ],
+         "description":""
+      },
+      "MultidatasetNode":{
+         "type":"object",
+         "title":"MultidatasetNode",
+         "properties":{
+            "description":{
+               "description":"",
+               "$ref":"#/definitions/InternationalString"
+            },
+            "name":{
+               "description":"",
+               "$ref":"#/definitions/InternationalString"
+            }
+         },
+         "description":""
+      },
+      "MultidatasetNodes":{
+         "type":"object",
+         "title":"MultidatasetNodes",
+         "properties":{
+            "node":{
+               "description":"",
+               "type":"array",
+               "items":{
+                  "$ref":"#/definitions/MultidatasetNode"
+               }
+            }
+         },
+         "description":""
+      },
+      "Multidatasets":{
+         "type":"object",
+         "title":"Multidatasets",
+         "allOf":[
+            {
+               "$ref":"#/definitions/ListBase"
+            },
+            {
+               "properties":{
+                  "multidataset":{
                      "description":"",
                      "type":"array",
                      "items":{
@@ -1408,7 +1542,8 @@
          "enum":[
             "DATASET",
             "COLLECTION",
-            "QUERY"
+            "QUERY",
+            "MULTIDATASET"
          ],
          "description":""
       },
@@ -1418,6 +1553,28 @@
          "allOf":[
             {
                "$ref":"#/definitions/CollectionNode"
+            },
+            {
+               "properties":{
+                  "dataset":{
+                     "description":"",
+                     "$ref":"#/definitions/Resource"
+                  },
+                  "query":{
+                     "description":"",
+                     "$ref":"#/definitions/Resource"
+                  }
+               }
+            }
+         ],
+         "description":""
+      },
+      "MultidatasetTable":{
+         "type":"object",
+         "title":"MultidatasetTable",
+         "allOf":[
+            {
+               "$ref":"#/definitions/MultidatasetNode"
             },
             {
                "properties":{
@@ -3540,7 +3697,7 @@
                   "headers":{
 
                   },
-                  "description":"Éxito. Indica que la petición ha sido resuelta correctamente."
+                  "description":"Éxito. Indica que la petición ha sido resuelta correctamente."
                },
                "406":{
                   "description":"No aceptable. El formato solicitado no es válido."
@@ -3612,7 +3769,7 @@
                   "headers":{
 
                   },
-                  "description":"Éxito. Indica que la petición ha sido resuelta correctamente."
+                  "description":"Éxito. Indica que la petición ha sido resuelta correctamente."
                },
                "406":{
                   "description":"No aceptable. El formato solicitado no es válido."
@@ -3672,7 +3829,7 @@
                   "headers":{
 
                   },
-                  "description":"Éxito. Indica que la petición ha sido resuelta correctamente."
+                  "description":"Éxito. Indica que la petición ha sido resuelta correctamente."
                },
                "404":{
                   "description":"No encontrado. El recurso solicitado no existe."
@@ -3741,7 +3898,7 @@
                   "headers":{
 
                   },
-                  "description":"Éxito. Indica que la petición ha sido resuelta correctamente."
+                  "description":"Éxito. Indica que la petición ha sido resuelta correctamente."
                },
                "406":{
                   "description":"No aceptable. El formato solicitado no es válido."
@@ -3813,7 +3970,7 @@
                   "headers":{
 
                   },
-                  "description":"Éxito. Indica que la petición ha sido resuelta correctamente."
+                  "description":"Éxito. Indica que la petición ha sido resuelta correctamente."
                },
                "406":{
                   "description":"No aceptable. El formato solicitado no es válido."
@@ -3891,7 +4048,7 @@
                   "headers":{
 
                   },
-                  "description":"Éxito. Indica que la petición ha sido resuelta correctamente."
+                  "description":"Éxito. Indica que la petición ha sido resuelta correctamente."
                },
                "406":{
                   "description":"No aceptable. El formato solicitado no es válido."
@@ -3963,7 +4120,7 @@
                   "headers":{
 
                   },
-                  "description":"Éxito. Indica que la petición ha sido resuelta correctamente."
+                  "description":"Éxito. Indica que la petición ha sido resuelta correctamente."
                },
                "404":{
                   "description":"No encontrado. El recurso solicitado no existe."
@@ -4032,7 +4189,7 @@
                   "headers":{
 
                   },
-                  "description":"Éxito. Indica que la petición ha sido resuelta correctamente."
+                  "description":"Éxito. Indica que la petición ha sido resuelta correctamente."
                },
                "406":{
                   "description":"No aceptable. El formato solicitado no es válido."
@@ -4104,7 +4261,7 @@
                   "headers":{
 
                   },
-                  "description":"Éxito. Indica que la petición ha sido resuelta correctamente."
+                  "description":"Éxito. Indica que la petición ha sido resuelta correctamente."
                },
                "406":{
                   "description":"No aceptable. El formato solicitado no es válido."
@@ -4164,7 +4321,208 @@
                   "headers":{
 
                   },
-                  "description":"Éxito. Indica que la petición ha sido resuelta correctamente."
+                  "description":"Éxito. Indica que la petición ha sido resuelta correctamente."
+               },
+               "404":{
+                  "description":"No encontrado. El recurso solicitado no existe."
+               },
+               "406":{
+                  "description":"No aceptable. El formato solicitado no es válido."
+               },
+               "500":{
+                  "description":"Error interno del servidor. Se ha producido un error que impide que se obtenga el recurso solicitado."
+               },
+               "503":{
+                  "description":"Servicio no disponible. Indica que actualmente el servidor no está disponible y por tanto, la solicitud no puede procesarse. El error puede deberse a una sobrecarga temporal o a labores de mantenimiento del servidor. Se trata de una situación temporal."
+               }
+            }
+         }
+      },
+       "/v1.0/multidatasets":{
+         "get":{
+            "tags":[
+               "Multidatasets estadísticos"
+            ],
+            "description":"Permite obtener el listado de multidatasets estadísticos.",
+            "operationId":"resource__v1.0_multidatasets_findMultidatasets_GET",
+            "produces":[
+               "application/json",
+               "application/xml"
+            ],
+            "parameters":[
+               {
+                  "name":"lang",
+                  "in":"query",
+                  "type":"string",
+                  "description":"Idiomas en los que se desea obtener la respuesta. A los idiomas especificados siempre se le incluirá el idioma por defecto de la organización. Además, en caso de no especificarse ningún idioma, la respuesta se devolverá en todos los idiomas disponibles. <br/>Ejemplos: <br/>\r\n- lang=es,en<br/>\r\n- lang=pt"
+               },
+               {
+                  "name":"limit",
+                  "in":"query",
+                  "type":"string",
+                  "description":"Número máximo de resultados a obtener"
+               },
+               {
+                  "name":"offset",
+                  "in":"query",
+                  "type":"string",
+                  "description":"Desplazamiento. Número a partir del cual se comienzan a obtener los resultados."
+               },
+               {
+                  "name":"orderBy",
+                  "in":"query",
+                  "type":"string",
+                  "description":"Permite ordenar la lista de resultados según un determinado metadato. El orden se especifica mediante un metadato y el sentido del orden (operador) que se le quiere aplicar.<br/>\r\n Los posibles operadores son ASC y DESC.<br/>\r\n El metadato que se puede usar es ID. <br/>Ejemplos:<br/>\r\n- ID ASC<br/>\r\n- ID DESC"
+               },
+               {
+                  "name":"query",
+                  "in":"query",
+                  "type":"string",
+                  "description":"Permite realizar una búsqueda sobre los resultados. <br/>\r\n Los metadatos sobre los que se puede buscar son: ID, NAME, DESCRIPTION, TITLE_ALTERNATIVE, KEYWORD, NEWNESS_UNTIL_DATE, VALID_FROM, VALID_TO y STATISTICAL_OPERATION_URN.<br/>\r\n Los operadores lógicos que se permite usar son: AND y OR.  <br/>\r\n Los operadores de comparación que se permite usar son: EQ, IEQ, LIKE, ILIKE, NE, LT, LE, GT, GE, IS_NULL, IS_NOT_NULL e IN."
+               }
+            ],
+            "responses":{
+               "200":{
+                  "schema":{
+                     "description":"",
+                     "$ref":"#/definitions/Multidatasets"
+                  },
+                  "headers":{
+
+                  },
+                  "description":"Éxito. Indica que la petición ha sido resuelta correctamente."
+               },
+               "406":{
+                  "description":"No aceptable. El formato solicitado no es válido."
+               },
+               "500":{
+                  "description":"Error interno del servidor. Se ha producido un error que impide que se obtenga el recurso solicitado."
+               },
+               "503":{
+                  "description":"Servicio no disponible. Indica que actualmente el servidor no está disponible y por tanto, la solicitud no puede procesarse. El error puede deberse a una sobrecarga temporal o a labores de mantenimiento del servidor. Se trata de una situación temporal."
+               }
+            }
+         }
+      },
+      "/v1.0/multidatasets/{agencyID}":{
+         "get":{
+            "tags":[
+                "Multidatasets estadísticos"
+            ],
+            "description":"Permite obtener todos los multidatasets estadísticos mantenidos por una determinada organización.",
+            "operationId":"resource__v1.0_multidatasets__agencyID__findMultidatasets_GET",
+            "produces":[
+               "application/json",
+               "application/xml"
+            ],
+            "parameters":[
+               {
+                  "name":"agencyID",
+                  "in":"path",
+                  "type":"string",
+                  "description":"Identificador de la organización mantenedora del recurso."
+               },
+               {
+                  "name":"lang",
+                  "in":"query",
+                  "type":"string",
+                  "description":"Idiomas en los que se desea obtener la respuesta. A los idiomas especificados siempre se le incluirá el idioma por defecto de la organización. Además, en caso de no especificarse ningún idioma, la respuesta se devolverá en todos los idiomas disponibles. <br/>Ejemplos: <br/>\r\n- lang=es,en<br/>\r\n- lang=pt"
+               },
+               {
+                  "name":"limit",
+                  "in":"query",
+                  "type":"string",
+                  "description":"Número máximo de resultados a obtener"
+               },
+               {
+                  "name":"offset",
+                  "in":"query",
+                  "type":"string",
+                  "description":"Desplazamiento. Número a partir del cual se comienzan a obtener los resultados."
+               },
+               {
+                  "name":"orderBy",
+                  "in":"query",
+                  "type":"string",
+                  "description":"Permite ordenar la lista de resultados según un determinado metadato. El orden se especifica mediante un metadato y el sentido del orden (operador) que se le quiere aplicar.<br/>\r\n Los posibles operadores son ASC y DESC.<br/>\r\n El metadato que se puede usar es ID. <br/>Ejemplos:<br/>\r\n- ID ASC<br/>\r\n- ID DESC"
+               },
+               {
+                  "name":"query",
+                  "in":"query",
+                  "type":"string",
+                  "description":"Permite realizar una búsqueda sobre los resultados. <br/>\r\n Los metadatos sobre los que se puede buscar son: ID, NAME, DESCRIPTION, TITLE_ALTERNATIVE, KEYWORD, NEWNESS_UNTIL_DATE, VALID_FROM, VALID_TO y STATISTICAL_OPERATION_URN.<br/>\r\n Los operadores lógicos que se permite usar son: AND y OR.  <br/>\r\n Los operadores de comparación que se permite usar son: EQ, IEQ, LIKE, ILIKE, NE, LT, LE, GT, GE, IS_NULL, IS_NOT_NULL e IN."
+               }
+            ],
+            "responses":{
+               "200":{
+                  "schema":{
+                     "description":"",
+                     "$ref":"#/definitions/Multidatasets"
+                  },
+                  "headers":{
+
+                  },
+                  "description":"Éxito. Indica que la petición ha sido resuelta correctamente."
+               },
+               "406":{
+                  "description":"No aceptable. El formato solicitado no es válido."
+               },
+               "500":{
+                  "description":"Error interno del servidor. Se ha producido un error que impide que se obtenga el recurso solicitado."
+               },
+               "503":{
+                  "description":"Servicio no disponible. Indica que actualmente el servidor no está disponible y por tanto, la solicitud no puede procesarse. El error puede deberse a una sobrecarga temporal o a labores de mantenimiento del servidor. Se trata de una situación temporal."
+               }
+            }
+         }
+      },
+      "/v1.0/multidatasets/{agencyID}/{resourceID}":{
+         "get":{
+            "tags":[
+               "Multidatasets estadísticos"
+            ],
+            "description":"Permite obtener el multidataset estadístico que tienen un determinado identificador y que además es mantenido por una determinada organización.",
+            "operationId":"resource__v1.0_multidatasets__agencyID___resourceID__retrieveMultidataset_GET",
+            "produces":[
+               "application/json",
+               "application/xml"
+            ],
+            "parameters":[
+               {
+                  "name":"agencyID",
+                  "in":"path",
+                  "type":"string",
+                  "description":"Identificador de la organización mantenedora del recurso."
+               },
+               {
+                  "name":"resourceID",
+                  "in":"path",
+                  "type":"string",
+                  "description":"Identificador del recurso."
+               },
+               {
+                  "name":"fields",
+                  "in":"query",
+                  "type":"string",
+                  "description":"Permite personalizar la respuesta mediante la exclusión de campos de la misma. Los posibles valores son \"-metadata\" y \"-data\".<br/>Ejemplos: <br/>\r\n- fields=-metadata<br/>\r\n- fields=-metadata,-data"
+               },
+               {
+                  "name":"lang",
+                  "in":"query",
+                  "type":"string",
+                  "description":"Idiomas en los que se desea obtener la respuesta. A los idiomas especificados siempre se le incluirá el idioma por defecto de la organización. Además, en caso de no especificarse ningún idioma, la respuesta se devolverá en todos los idiomas disponibles. <br/>Ejemplos: <br/>\r\n- lang=es,en<br/>\r\n- lang=pt"
+               }
+            ],
+            "responses":{
+               "200":{
+                  "schema":{
+                     "description":"",
+                     "$ref":"#/definitions/Multidataset"
+                  },
+                  "headers":{
+
+                  },
+                  "description":"Éxito. Indica que la petición ha sido resuelta correctamente."
                },
                "404":{
                   "description":"No encontrado. El recurso solicitado no existe."
