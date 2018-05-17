@@ -324,15 +324,17 @@ public class QueriesDo2RestMapperV10Impl implements QueriesDo2RestMapperV10 {
                 List<String> effectiveDimensionValues = new ArrayList<String>();
                 List<String> temporalCoverageCodes = commonDo2RestMapper.temporalCoverageToString(datasetVersion.getTemporalCoverage());
                 int indexLatestTemporalCodeInCreation = temporalCoverageCodes.indexOf(source.getLatestTemporalCodeInCreation());
+                effectiveDimensionValues.addAll(selectionCodes);
                 if (indexLatestTemporalCodeInCreation != 0) {
                     // add codes added after query creation
                     List<TemporalCode> temporalCodesAddedAfterQueryCreation = datasetVersion.getTemporalCoverage().subList(0, indexLatestTemporalCodeInCreation);
                     List<String> temporalCodesAddedAfterQueryCreationString = commonDo2RestMapper.temporalCoverageToString(temporalCodesAddedAfterQueryCreation);
                     for (String code : temporalCodesAddedAfterQueryCreationString) {
-                        effectiveDimensionValues.add(code);
+                        if (!effectiveDimensionValues.contains(code)) {
+                            effectiveDimensionValues.add(code);
+                        }
                     }
                 }
-                effectiveDimensionValues.addAll(selectionCodes);
                 return effectiveDimensionValues;
             } else {
                 // return exactly
