@@ -54,4 +54,13 @@
 		<!-- WEB -->
 		<jstl.version>1.2</jstl.version>
     </properties>
+    
+    <profiles>
+    	<profile>
+    		<id>avoid-tests</id>
+    		<properties>
+    			<maven.test.skip>true</maven.test.skip>
+    		</properties>
+    	</profile>
+    </profiles>
 </project>
