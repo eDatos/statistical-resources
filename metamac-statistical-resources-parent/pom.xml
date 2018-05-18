@@ -55,6 +55,24 @@
 		<jstl.version>1.2</jstl.version>
     </properties>
     
+    <build>
+    	<pluginManagement>
+    		<plugins>
+    			<plugin>
+				    <groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-release-plugin</artifactId>
+					<version>2.5</version>
+					<configuration>
+						<checkModificationExcludes>
+						    <checkModificationExclude>01-statistical-resources-schema-create.sql</checkModificationExclude>
+						    <checkModificationExclude>01-statistical-resources-schema-drop.sql</checkModificationExclude>
+					    </checkModificationExcludes>
+					</configuration>
+				</plugin>
+    		</plugins>
+    	</pluginManagement>
+    </build>
+    
     <profiles>
     	<profile>
     		<id>avoid-tests</id>
@@ -63,4 +81,5 @@
     		</properties>
     	</profile>
     </profiles>
+    
 </project>
