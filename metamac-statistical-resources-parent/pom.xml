@@ -64,8 +64,8 @@
 					<version>2.5</version>
 					<configuration>
 						<checkModificationExcludes>
-						    <checkModificationExclude>01-statistical-resources-schema-create.sql</checkModificationExclude>
-						    <checkModificationExclude>01-statistical-resources-schema-drop.sql</checkModificationExclude>
+						    <checkModificationExclude>etc/db/statistical-resources/oracle/01-create/01-statistical-resources-schema-create.sql</checkModificationExclude>
+						    <checkModificationExclude>etc/db/statistical-resources/oracle/02-drop/01-statistical-resources-schema-drop.sql</checkModificationExclude>
 					    </checkModificationExcludes>
 					</configuration>
 				</plugin>
