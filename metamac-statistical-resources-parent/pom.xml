@@ -1,85 +1,77 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
 
-    <parent>
-        <groupId>org.siemac.metamac</groupId>
-        <artifactId>metamac-parent</artifactId>
-        <version>3.0.1</version>
-    </parent>
+	<parent>
+		<groupId>org.siemac.metamac</groupId>
+		<artifactId>metamac-parent</artifactId>
+		<version>3.0.1</version>
+	</parent>
 
 
-    <groupId>org.siemac.metamac.metamac-statistical-resources</groupId>
-    <artifactId>metamac-statistical-resources-parent</artifactId>
-    <version>3.0.2-SNAPSHOT</version>
-    <packaging>pom</packaging>
-    <name>METAMAC :: STATISTICAL RESOURCES :: PARENT</name>
-    <description>METAMAC :: STATISTICAL RESOURCES :: PARENT</description>
+	<groupId>org.siemac.metamac.metamac-statistical-resources</groupId>
+	<artifactId>metamac-statistical-resources-parent</artifactId>
+	<version>3.0.2-SNAPSHOT</version>
+	<packaging>pom</packaging>
+	<name>METAMAC :: STATISTICAL RESOURCES :: PARENT</name>
+	<description>METAMAC :: STATISTICAL RESOURCES :: PARENT</description>
 
-    <issueManagement>
-        <system>Jira</system>
-        <url>http://jira.arte-consultores.com/browse/METAMAC</url>
-    </issueManagement>
+	<issueManagement>
+		<system>Jira</system>
+		<url>http://jira.arte-consultores.com/browse/METAMAC</url>
+	</issueManagement>
 
-    <repositories>
-        <repository>
-            <id>smartclient</id>
-            <name>smartclient.com</name>
-            <url>http://www.smartclient.com/maven2</url>
-        </repository>
-    </repositories>
+	<repositories>
+		<repository>
+			<id>smartclient</id>
+			<name>smartclient.com</name>
+			<url>http://www.smartclient.com/maven2</url>
+		</repository>
+	</repositories>
 
-    <properties>
-        <metamac-statistical-resources-rest-api-common.version>2.1.0</metamac-statistical-resources-rest-api-common.version>
-        <metamac-common-metadata-rest-external-api.version>2.1.0</metamac-common-metadata-rest-external-api.version>
-        <metamac-core-common.version>5.3.0</metamac-core-common.version>
-        <metamac-rest-api.version>2.0.0</metamac-rest-api.version>
-        <metamac-rest-common.version>2.0.1</metamac-rest-common.version>
-        <metamac-srm-rest-internal-api.version>2.1.0</metamac-srm-rest-internal-api.version>
-        <metamac-srm-rest-external-api.version>2.1.0</metamac-srm-rest-external-api.version>
-        <metamac-sso.version>2.1.0</metamac-sso.version>
-        <metamac-statistical-operations-rest-internal-api.version>2.0.0</metamac-statistical-operations-rest-internal-api.version>
-        <metamac-statistical-operations-rest-external-api.version>3.0.0</metamac-statistical-operations-rest-external-api.version>
-        <metamac-sdmx-data-rest-external-api.version>2.0.0</metamac-sdmx-data-rest-external-api.version>
-        <metamac-web-common.version>3.2.0</metamac-web-common.version>
-        <metamac-notifications-rest-internal-api.version>3.0.0</metamac-notifications-rest-internal-api.version>
-        
-        <metamac-statistical-resources.baseDir>${basedir}/..</metamac-statistical-resources.baseDir>
-        <metamac-statistical-resources.etcDir>${metamac-statistical-resources.baseDir}/etc</metamac-statistical-resources.etcDir>
-        
-        <statistic-dataset-repository.version>1.2.1</statistic-dataset-repository.version>
-        <statistic-parser.version>2.0.0</statistic-parser.version>
-        <statistic-sdmx-srm-rest-external-api.version>2.1.2</statistic-sdmx-srm-rest-external-api.version>
-        
+	<properties>
+		<metamac-statistical-resources-rest-api-common.version>2.1.0</metamac-statistical-resources-rest-api-common.version>
+		<metamac-common-metadata-rest-external-api.version>2.1.0</metamac-common-metadata-rest-external-api.version>
+		<metamac-core-common.version>5.3.0</metamac-core-common.version>
+		<metamac-rest-api.version>2.0.0</metamac-rest-api.version>
+		<metamac-rest-common.version>2.0.1</metamac-rest-common.version>
+		<metamac-srm-rest-internal-api.version>2.1.0</metamac-srm-rest-internal-api.version>
+		<metamac-srm-rest-external-api.version>2.1.0</metamac-srm-rest-external-api.version>
+		<metamac-sso.version>2.1.0</metamac-sso.version>
+		<metamac-statistical-operations-rest-internal-api.version>2.0.0</metamac-statistical-operations-rest-internal-api.version>
+		<metamac-statistical-operations-rest-external-api.version>3.0.0</metamac-statistical-operations-rest-external-api.version>
+		<metamac-sdmx-data-rest-external-api.version>2.0.0</metamac-sdmx-data-rest-external-api.version>
+		<metamac-web-common.version>3.2.0</metamac-web-common.version>
+		<metamac-notifications-rest-internal-api.version>3.0.0</metamac-notifications-rest-internal-api.version>
+
+		<metamac-statistical-resources.baseDir>${basedir}/..</metamac-statistical-resources.baseDir>
+		<metamac-statistical-resources.etcDir>${metamac-statistical-resources.baseDir}/etc</metamac-statistical-resources.etcDir>
+
+		<statistic-dataset-repository.version>1.2.1</statistic-dataset-repository.version>
+		<statistic-parser.version>2.0.0</statistic-parser.version>
+		<statistic-sdmx-srm-rest-external-api.version>2.1.2</statistic-sdmx-srm-rest-external-api.version>
+
 		<!-- WEB -->
 		<jstl.version>1.2</jstl.version>
-    </properties>
-    
-    <build>
-    	<pluginManagement>
-    		<plugins>
-    			<plugin>
-				    <groupId>org.apache.maven.plugins</groupId>
+	</properties>
+
+	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-release-plugin</artifactId>
 					<version>2.5</version>
 					<configuration>
 						<checkModificationExcludes>
-						    <checkModificationExclude>etc/db/statistical-resources/oracle/01-create/01-statistical-resources-schema-create.sql</checkModificationExclude>
-						    <checkModificationExclude>etc/db/statistical-resources/oracle/02-drop/01-statistical-resources-schema-drop.sql</checkModificationExclude>
-					    </checkModificationExcludes>
+							<checkModificationExclude>etc/db/statistical-resources/oracle/01-create/01-statistical-resources-schema-create.sql</checkModificationExclude>
+							<checkModificationExclude>etc/db/statistical-resources/oracle/02-drop/01-statistical-resources-schema-drop.sql</checkModificationExclude>
+						</checkModificationExcludes>
 					</configuration>
 				</plugin>
-    		</plugins>
-    	</pluginManagement>
-    </build>
-    
-    <profiles>
-    	<profile>
-    		<id>avoid-tests</id>
-    		<properties>
-    			<maven.test.skip>true</maven.test.skip>
-    		</properties>
-    	</profile>
-    </profiles>
-    
+			</plugins>
+		</pluginManagement>
+	</build>
 </project>
