@@ -108,7 +108,7 @@
     
     <profiles>
 		<profile>
-			<id>include-tests-dependencies</id>
+			<id>execute-tests</id>
 			<activation>
 				<activeByDefault>false</activeByDefault>
 			</activation>
