@@ -416,6 +416,15 @@ public class MultidatasetServiceTest extends StatisticalResourcesBaseTest implem
     }
 
     @Test
+    @MetamacMock(MULTIDATASET_VERSION_91_REPLACES_MULTIDATASET_92_NAME)
+    public void testDeleteMultidatasetVersionReplaces() throws Exception {
+        String urnReplaces = multidatasetVersionMockFactory.retrieveMock(MULTIDATASET_VERSION_91_REPLACES_MULTIDATASET_92_NAME).getSiemacMetadataStatisticalResource().getUrn();
+
+        // Delete multidataset version
+        multidatasetService.deleteMultidatasetVersion(getServiceContextWithoutPrincipal(), urnReplaces);
+    }
+
+    @Test
     @MetamacMock({MULTIDATASET_03_BASIC_WITH_2_MULTIDATASET_VERSIONS_NAME, MULTIDATASET_02_BASIC_WITH_GENERATED_VERSION_NAME})
     public void testDeleteMultidatasetVersionWithTwoVersions() throws Exception {
         String urnV1 = multidatasetVersionMockFactory.retrieveMock(MULTIDATASET_VERSION_03_FOR_MULTIDATASET_03_NAME).getSiemacMetadataStatisticalResource().getUrn();

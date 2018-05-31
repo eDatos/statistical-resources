@@ -534,6 +534,8 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
 
         checkCanDatasetVersionBeDeleted(ctx, datasetVersion);
 
+        updateReplacedResourceIsReplacedByResource(datasetVersion);
+
         // Remove dataset version
         String datasetRepositoryId = datasetVersion.getDatasetRepositoryId();
         if (VersionUtil.isInitialVersion(datasetVersion.getSiemacMetadataStatisticalResource().getVersionLogic())) {
@@ -541,15 +543,8 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
             getDatasetRepository().delete(dataset);
         } else {
             // Previous version
-            RelatedResource previousResource = datasetVersion.getSiemacMetadataStatisticalResource().getReplacesVersion();
-            if (previousResource.getDatasetVersion() != null) {
-                DatasetVersion previousVersion = previousResource.getDatasetVersion();
-                previousVersion.getSiemacMetadataStatisticalResource().setLastVersion(true);
-                RelatedResource isReplacedByVersion = previousVersion.getSiemacMetadataStatisticalResource().getIsReplacedByVersion();
-                relatedResourceRepository.delete(isReplacedByVersion);
-                previousVersion.getSiemacMetadataStatisticalResource().setIsReplacedByVersion(null);
-                getDatasetVersionRepository().save(previousVersion);
-            }
+            updateReplacedVersionIsReplacedByVersion(datasetVersion);
+
             // Delete version
             Dataset dataset = datasetVersion.getDataset();
             dataset.getVersions().remove(datasetVersion);
@@ -561,6 +556,29 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
 
         // Remove data dataset-repository
         tryToDeleteDatasetRepository(datasetRepositoryId);
+    }
+
+    private void updateReplacedVersionIsReplacedByVersion(DatasetVersion datasetVersion) {
+        RelatedResource previousResource = datasetVersion.getSiemacMetadataStatisticalResource().getReplacesVersion();
+        if (previousResource.getDatasetVersion() != null) {
+            DatasetVersion previousVersion = previousResource.getDatasetVersion();
+            previousVersion.getSiemacMetadataStatisticalResource().setLastVersion(true);
+            RelatedResource isReplacedByVersion = previousVersion.getSiemacMetadataStatisticalResource().getIsReplacedByVersion();
+            relatedResourceRepository.delete(isReplacedByVersion);
+            previousVersion.getSiemacMetadataStatisticalResource().setIsReplacedByVersion(null);
+            getDatasetVersionRepository().save(previousVersion);
+        }
+    }
+
+    private void updateReplacedResourceIsReplacedByResource(DatasetVersion datasetVersion) {
+        RelatedResource previousResource = datasetVersion.getSiemacMetadataStatisticalResource().getReplaces();
+        if (previousResource != null && previousResource.getDatasetVersion() != null) {
+            DatasetVersion previousVersion = previousResource.getDatasetVersion();
+            RelatedResource isReplacedBy = previousVersion.getSiemacMetadataStatisticalResource().getIsReplacedBy();
+            relatedResourceRepository.delete(isReplacedBy);
+            previousVersion.getSiemacMetadataStatisticalResource().setIsReplacedBy(null);
+            getDatasetVersionRepository().save(previousVersion);
+        }
     }
 
     private void checkCanDatasetVersionBeDeleted(ServiceContext ctx, DatasetVersion datasetVersion) throws MetamacException {

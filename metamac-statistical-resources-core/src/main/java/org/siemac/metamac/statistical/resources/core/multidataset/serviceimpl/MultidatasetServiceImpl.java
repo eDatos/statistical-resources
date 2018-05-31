@@ -23,6 +23,7 @@ import org.siemac.metamac.statistical.resources.core.base.utils.FillMetadataForC
 import org.siemac.metamac.statistical.resources.core.base.validators.ProcStatusValidator;
 import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResource;
+import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResourceRepository;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
@@ -48,6 +49,9 @@ public class MultidatasetServiceImpl extends MultidatasetServiceImplBase {
 
     @Autowired
     private MultidatasetServiceInvocationValidator    multidatasetServiceInvocationValidator;
+
+    @Autowired
+    private RelatedResourceRepository                 relatedResourceRepository;
 
     public MultidatasetServiceImpl() {
     }
@@ -161,24 +165,44 @@ public class MultidatasetServiceImpl extends MultidatasetServiceImplBase {
 
         checkCanMultidatasetVersionBeDeleted(multidatasetVersion);
 
+        updateReplacedResourceIsReplacedByResource(multidatasetVersion);
+
         if (VersionUtil.isInitialVersion(multidatasetVersion.getSiemacMetadataStatisticalResource().getVersionLogic())) {
             Multidataset multidataset = multidatasetVersion.getMultidataset();
             getMultidatasetRepository().delete(multidataset);
         } else {
             // Previous version
-            RelatedResource previousResource = multidatasetVersion.getSiemacMetadataStatisticalResource().getReplacesVersion();
-            if (previousResource.getMultidatasetVersion() != null) {
-                MultidatasetVersion previousVersion = previousResource.getMultidatasetVersion();
-                previousVersion.getSiemacMetadataStatisticalResource().setLastVersion(true);
-                previousVersion.getSiemacMetadataStatisticalResource().setIsReplacedByVersion(null);
-                getMultidatasetVersionRepository().save(previousVersion);
-            }
+            updateReplacedVersionIsReplacedByVersion(multidatasetVersion);
+
             // Delete version
             Multidataset multidataset = multidatasetVersion.getMultidataset();
             multidataset.getVersions().remove(multidatasetVersion);
             getMultidatasetVersionRepository().delete(multidatasetVersion);
         }
 
+    }
+
+    private void updateReplacedVersionIsReplacedByVersion(MultidatasetVersion multidatasetVersion) {
+        RelatedResource previousResource = multidatasetVersion.getSiemacMetadataStatisticalResource().getReplacesVersion();
+        if (previousResource.getMultidatasetVersion() != null) {
+            MultidatasetVersion previousVersion = previousResource.getMultidatasetVersion();
+            previousVersion.getSiemacMetadataStatisticalResource().setLastVersion(true);
+            RelatedResource isReplacedByVersion = previousVersion.getSiemacMetadataStatisticalResource().getIsReplacedByVersion();
+            relatedResourceRepository.delete(isReplacedByVersion);
+            previousVersion.getSiemacMetadataStatisticalResource().setIsReplacedByVersion(null);
+            getMultidatasetVersionRepository().save(previousVersion);
+        }
+    }
+
+    private void updateReplacedResourceIsReplacedByResource(MultidatasetVersion multidatasetVersion) {
+        RelatedResource previousResource = multidatasetVersion.getSiemacMetadataStatisticalResource().getReplaces();
+        if (previousResource != null && previousResource.getMultidatasetVersion() != null) {
+            MultidatasetVersion previousVersion = previousResource.getMultidatasetVersion();
+            RelatedResource isReplacedBy = previousVersion.getSiemacMetadataStatisticalResource().getIsReplacedBy();
+            relatedResourceRepository.delete(isReplacedBy);
+            previousVersion.getSiemacMetadataStatisticalResource().setIsReplacedBy(null);
+            getMultidatasetVersionRepository().save(previousVersion);
+        }
     }
 
     private void checkCanMultidatasetVersionBeDeleted(MultidatasetVersion multidatasetVersion) throws MetamacException {
