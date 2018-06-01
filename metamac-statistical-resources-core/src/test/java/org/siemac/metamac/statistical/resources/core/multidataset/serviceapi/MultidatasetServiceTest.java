@@ -31,6 +31,7 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.MultidatasetVersionMockFactory.MULTIDATASET_VERSION_31_V2_PUBLISHED_NO_VISIBLE_FOR_MULTIDATASET_06_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.MultidatasetVersionMockFactory.MULTIDATASET_VERSION_91_REPLACES_MULTIDATASET_92_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.MultidatasetVersionMockFactory.MULTIDATASET_VERSION_92_IS_REPLACED_BY_MULTIDATASET_91_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.MultidatasetVersionMockFactory.MULTIDATASET_VERSION_98_TO_DELETE_WITH_PREVIOUS_VERSION_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryMockFactory.QUERY_01_SIMPLE_NAME;
 
 import java.util.Arrays;
@@ -1142,5 +1143,13 @@ public class MultidatasetServiceTest extends StatisticalResourcesBaseTest implem
         expectedMetamacException(new MetamacException(ServiceExceptionType.LIFE_CYCLE_WRONG_PROC_STATUS, multidatasetVersion.getSiemacMetadataStatisticalResource().getUrn(),
                 "DRAFT, VALIDATION_REJECTED, PRODUCTION_VALIDATION, DIFFUSION_VALIDATION"));
         multidatasetService.deleteMultidatasetCube(getServiceContextAdministrador(), multidatasetCubeUrn);
+    }
+
+    @Test
+    @MetamacMock({MULTIDATASET_VERSION_98_TO_DELETE_WITH_PREVIOUS_VERSION_NAME})
+    public void testDeleteMultidatasetVersionReplacesVersion() throws Exception {
+        MultidatasetVersion multidatasetVersion = multidatasetVersionMockFactory.retrieveMock(MULTIDATASET_VERSION_98_TO_DELETE_WITH_PREVIOUS_VERSION_NAME);
+
+        multidatasetService.deleteMultidatasetVersion(getServiceContextAdministrador(), multidatasetVersion.getSiemacMetadataStatisticalResource().getUrn());
     }
 }

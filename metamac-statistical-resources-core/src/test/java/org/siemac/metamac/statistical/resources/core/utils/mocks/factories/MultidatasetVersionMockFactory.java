@@ -227,6 +227,8 @@ public class MultidatasetVersionMockFactory extends StatisticalResourcesMockFact
 
     public static final String                    MULTIDATASET_VERSION_97_NOT_VISIBLE_HAS_PART_NOT_VISIBLE_QUERY_NAME                                                 = "MULTIDATASET_VERSION_97_NOT_VISIBLE_HAS_PART_NOT_VISIBLE_QUERY";
 
+    public static final String                    MULTIDATASET_VERSION_98_TO_DELETE_WITH_PREVIOUS_VERSION_NAME                                                        = "MULTIDATASET_VERSION_98_TO_DELETE_WITH_PREVIOUS_VERSION";
+
     private static MultidatasetVersionMockFactory instance                                                                                                            = null;
 
     private MultidatasetVersionMockFactory() {
@@ -665,6 +667,20 @@ public class MultidatasetVersionMockFactory extends StatisticalResourcesMockFact
         registerMultidatasetVersionMock(MULTIDATASET_VERSION_96_NOT_VISIBLE_REPLACES_MULTIDATASET_VERSION_95_NAME, multidatasetVersionReplaces);
 
         return new MockDescriptor(multidatasetReplaced, multidatasetVersionReplaces);
+    }
+
+    private static MultidatasetVersion getMultidatasetVersion98ToDeleteWithPreviousVersion() {
+        MultidatasetVersion multidatasetVersionToReplace = createMultidatasetVersionWithSequenceAndVersion(1, INIT_VERSION);
+        prepareToVersioning(multidatasetVersionToReplace);
+
+        MultidatasetVersion multidatasetVersion = createMultidatasetVersionWithSequenceAndVersion(1, SECOND_VERSION);
+        registerMultidatasetVersionMock(MULTIDATASET_VERSION_98_TO_DELETE_WITH_PREVIOUS_VERSION_NAME, multidatasetVersion);
+
+        multidatasetVersion.getSiemacMetadataStatisticalResource().setReplacesVersion(StatisticalResourcesPersistedDoMocks.mockMultidatasetVersionRelated(multidatasetVersionToReplace));
+        multidatasetVersionToReplace.getSiemacMetadataStatisticalResource().setIsReplacedByVersion(StatisticalResourcesPersistedDoMocks.mockMultidatasetVersionRelated(multidatasetVersion));
+
+        multidatasetVersion.getSiemacMetadataStatisticalResource().setProcStatus(ProcStatusEnum.DRAFT);
+        return multidatasetVersion;
     }
 
     // -----------------------------------------------------------------
