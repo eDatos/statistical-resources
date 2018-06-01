@@ -532,12 +532,12 @@ public class PublicationVersionMockFactory extends StatisticalResourcesMockFacto
         List<Dataset> datasets = Arrays.asList(datasetSingleVersionPublished, datasetWithPublishedAndNotVisible, datasetWithTwoPublishedVersions);
 
         // queries
-        Query queryPublishedLinkedToDataset = createPublishedQueryLinkedToDataset("Q01", datasetSingleVersionPublished, datasetSingleVersionPublished.getVersions().get(0)
-                .getSiemacMetadataStatisticalResource().getValidFrom());
+        Query queryPublishedLinkedToDataset = createPublishedQueryLinkedToDataset("Q01", datasetSingleVersionPublished,
+                datasetSingleVersionPublished.getVersions().get(0).getSiemacMetadataStatisticalResource().getValidFrom());
 
         DatasetVersion datasetVersionLinkedToQuery = createDatasetVersionPublishedLastVersion(5, INIT_VERSION, new DateTime().minusDays(3));
-        Query queryPublishedLinekdToDatasetVersion = QueryMockFactory.createPublishedQueryLinkedToDatasetVersion("Q02", datasetVersionLinkedToQuery, datasetVersionLinkedToQuery
-                .getSiemacMetadataStatisticalResource().getValidFrom());
+        Query queryPublishedLinekdToDatasetVersion = QueryMockFactory.createPublishedQueryLinkedToDatasetVersion("Q02", datasetVersionLinkedToQuery,
+                datasetVersionLinkedToQuery.getSiemacMetadataStatisticalResource().getValidFrom());
 
         List<Query> queries = Arrays.asList(queryPublishedLinkedToDataset, queryPublishedLinekdToDatasetVersion);
 
@@ -977,8 +977,8 @@ public class PublicationVersionMockFactory extends StatisticalResourcesMockFacto
     }
 
     private static void fillOptionalRelatedResourcesNotPublished(PublicationVersion publicationVersion) {
-        publicationVersion.getSiemacMetadataStatisticalResource().setReplaces(
-                StatisticalResourcesPersistedDoMocks.mockPublicationVersionRelated(createPublicationVersionWithSequenceAndVersion(1, INIT_VERSION)));
+        publicationVersion.getSiemacMetadataStatisticalResource()
+                .setReplaces(StatisticalResourcesPersistedDoMocks.mockPublicationVersionRelated(createPublicationVersionWithSequenceAndVersion(1, INIT_VERSION)));
     }
 
 }
