@@ -614,9 +614,10 @@ public class MultidatasetVersionMockFactory extends StatisticalResourcesMockFact
         MultidatasetVersionMock template = new MultidatasetVersionMock();
         template.setSequentialId(1);
         template.getSiemacMetadataStatisticalResource().setValidFrom(new DateTime().plusDays(1));
-        MultidatasetVersion multidatasetVersionReplaces = createMultidatasetVersionFromTemplate(template);
 
+        MultidatasetVersion multidatasetVersionReplaces = createMultidatasetVersionFromTemplate(template);
         MultidatasetVersion multidatasetReplaced = createMultidatasetVersionWithSequenceAndVersion(2, INIT_VERSION);
+
         registerMultidatasetVersionMock(MULTIDATASET_VERSION_91_REPLACES_MULTIDATASET_92_NAME, multidatasetVersionReplaces);
 
         multidatasetVersionReplaces.getSiemacMetadataStatisticalResource().setReplaces(StatisticalResourcesPersistedDoMocks.mockMultidatasetVersionRelated(multidatasetReplaced));

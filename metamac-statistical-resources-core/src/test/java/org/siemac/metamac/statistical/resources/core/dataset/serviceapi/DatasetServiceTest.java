@@ -143,22 +143,22 @@ import com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceF
 public class DatasetServiceTest extends StatisticalResourcesBaseTest implements DatasetServiceTestBase {
 
     @Autowired
-    private DatasetService datasetService;
+    private DatasetService                           datasetService;
 
     @Autowired
-    private DatasetVersionRepository datasetVersionRepository;
+    private DatasetVersionRepository                 datasetVersionRepository;
 
     @Autowired
     private DimensionRepresentationMappingRepository dimensionRepresentationMappingRepository;
 
     @Autowired
-    private DatasetRepositoriesServiceFacade datasetRepositoriesServiceFacade;
+    private DatasetRepositoriesServiceFacade         datasetRepositoriesServiceFacade;
 
     @Autowired
-    private SrmRestInternalService srmRestInternalService;
+    private SrmRestInternalService                   srmRestInternalService;
 
     @Autowired
-    private TaskService taskService;
+    private TaskService                              taskService;
 
     @Before
     public void setUp() throws Exception {
