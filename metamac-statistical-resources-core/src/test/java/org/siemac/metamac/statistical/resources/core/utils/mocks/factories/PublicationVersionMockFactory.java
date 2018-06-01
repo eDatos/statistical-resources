@@ -227,6 +227,7 @@ public class PublicationVersionMockFactory extends StatisticalResourcesMockFacto
     public static final String                   PUBLICATION_VERSION_96_NOT_VISIBLE_REPLACES_PUBLICATION_VERSION_95_NAME                                            = "PUBLICATION_VERSION_96_NOT_VISIBLE_REPLACES_PUBLICATION_VERSION_95";
 
     public static final String                   PUBLICATION_VERSION_97_NOT_VISIBLE_HAS_PART_NOT_VISIBLE_QUERY_NAME                                                 = "PUBLICATION_VERSION_97_NOT_VISIBLE_HAS_PART_NOT_VISIBLE_QUERY";
+    public static final String                   PUBLICATION_VERSION_98_TO_DELETE_WITH_PREVIOUS_VERSION_NAME                                                        = "PUBLICATION_VERSION_98_TO_DELETE_WITH_PREVIOUS_VERSION";
 
     private static PublicationVersionMockFactory instance                                                                                                           = null;
 
@@ -657,6 +658,21 @@ public class PublicationVersionMockFactory extends StatisticalResourcesMockFacto
         return publicationVersion;
     }
 
+    private static MockDescriptor getPublicationVersion91ReplacesPublication92() {
+        PublicationVersionMock template = new PublicationVersionMock();
+        template.setSequentialId(1);
+        template.getSiemacMetadataStatisticalResource().setValidFrom(new DateTime().plusDays(1));
+        PublicationVersion publicationVersionReplaces = createPublicationVersionFromTemplate(template);
+
+        PublicationVersion publicationReplaced = createPublicationVersionWithSequenceAndVersion(2, INIT_VERSION);
+        registerPublicationVersionMock(PUBLICATION_VERSION_92_IS_REPLACED_BY_PUBLICATION_91_NAME, publicationReplaced);
+
+        publicationVersionReplaces.getSiemacMetadataStatisticalResource().setReplaces(StatisticalResourcesPersistedDoMocks.mockPublicationVersionRelated(publicationReplaced));
+        publicationReplaced.getSiemacMetadataStatisticalResource().setIsReplacedBy(StatisticalResourcesPersistedDoMocks.mockPublicationVersionRelated(publicationVersionReplaces));
+
+        return new MockDescriptor(publicationVersionReplaces, publicationReplaced);
+    }
+
     private static MockDescriptor getPublicationVersion92IsReplacedByPublication91() {
         PublicationVersionMock template = new PublicationVersionMock();
         template.setSequentialId(1);
@@ -695,6 +711,20 @@ public class PublicationVersionMockFactory extends StatisticalResourcesMockFacto
         registerPublicationVersionMock(PUBLICATION_VERSION_96_NOT_VISIBLE_REPLACES_PUBLICATION_VERSION_95_NAME, publicationVersionReplaces);
 
         return new MockDescriptor(publicationReplaced, publicationVersionReplaces);
+    }
+
+    private static PublicationVersion getPublicationVersion98ToDeleteWithPreviousVersion() {
+        PublicationVersion publicationVersionToReplace = createPublicationVersionWithSequenceAndVersion(1, INIT_VERSION);
+        prepareToVersioning(publicationVersionToReplace);
+
+        PublicationVersion publicationVersion = createPublicationVersionWithSequenceAndVersion(1, SECOND_VERSION);
+        registerPublicationVersionMock(PUBLICATION_VERSION_98_TO_DELETE_WITH_PREVIOUS_VERSION_NAME, publicationVersion);
+
+        publicationVersion.getSiemacMetadataStatisticalResource().setReplacesVersion(StatisticalResourcesPersistedDoMocks.mockPublicationVersionRelated(publicationVersionToReplace));
+        publicationVersionToReplace.getSiemacMetadataStatisticalResource().setIsReplacedByVersion(StatisticalResourcesPersistedDoMocks.mockPublicationVersionRelated(publicationVersion));
+
+        publicationVersion.getSiemacMetadataStatisticalResource().setProcStatus(ProcStatusEnum.DRAFT);
+        return publicationVersion;
     }
 
     // -----------------------------------------------------------------

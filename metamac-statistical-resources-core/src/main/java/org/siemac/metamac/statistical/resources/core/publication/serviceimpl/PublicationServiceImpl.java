@@ -30,6 +30,7 @@ import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
 import org.siemac.metamac.statistical.resources.core.common.domain.InternationalString;
 import org.siemac.metamac.statistical.resources.core.common.domain.LocalisedString;
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResource;
+import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResourceRepository;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetProperties;
 import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.DatasetService;
@@ -80,6 +81,9 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
 
     @Autowired
     private QueryService                              queryService;
+
+    @Autowired
+    private RelatedResourceRepository                 relatedResourceRepository;
 
     public PublicationServiceImpl() {
     }
@@ -188,22 +192,42 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
 
         checkCanPublicationVersionBeDeleted(publicationVersion);
 
+        updateReplacedResourceIsReplacedByResource(publicationVersion);
+
         if (VersionUtil.isInitialVersion(publicationVersion.getSiemacMetadataStatisticalResource().getVersionLogic())) {
             Publication publication = publicationVersion.getPublication();
             getPublicationRepository().delete(publication);
         } else {
             // Previous version
-            RelatedResource previousResource = publicationVersion.getSiemacMetadataStatisticalResource().getReplacesVersion();
-            if (previousResource.getPublicationVersion() != null) {
-                PublicationVersion previousVersion = previousResource.getPublicationVersion();
-                previousVersion.getSiemacMetadataStatisticalResource().setLastVersion(true);
-                previousVersion.getSiemacMetadataStatisticalResource().setIsReplacedByVersion(null);
-                getPublicationVersionRepository().save(previousVersion);
-            }
+            updateReplacedVersionIsReplacedByVersion(publicationVersion);
+
             // Delete version
             Publication publication = publicationVersion.getPublication();
             publication.getVersions().remove(publicationVersion);
             getPublicationVersionRepository().delete(publicationVersion);
+        }
+    }
+
+    private void updateReplacedVersionIsReplacedByVersion(PublicationVersion publicationVersion) {
+        RelatedResource previousResource = publicationVersion.getSiemacMetadataStatisticalResource().getReplacesVersion();
+        if (previousResource.getPublicationVersion() != null) {
+            PublicationVersion previousVersion = previousResource.getPublicationVersion();
+            previousVersion.getSiemacMetadataStatisticalResource().setLastVersion(true);
+            RelatedResource isReplacedByVersion = previousVersion.getSiemacMetadataStatisticalResource().getIsReplacedByVersion();
+            relatedResourceRepository.delete(isReplacedByVersion);
+            previousVersion.getSiemacMetadataStatisticalResource().setIsReplacedByVersion(null);
+            getPublicationVersionRepository().save(previousVersion);
+        }
+    }
+
+    private void updateReplacedResourceIsReplacedByResource(PublicationVersion publicationVersion) {
+        RelatedResource previousResource = publicationVersion.getSiemacMetadataStatisticalResource().getReplaces();
+        if (previousResource != null && previousResource.getPublicationVersion() != null) {
+            PublicationVersion previousVersion = previousResource.getPublicationVersion();
+            RelatedResource isReplacedBy = previousVersion.getSiemacMetadataStatisticalResource().getIsReplacedBy();
+            relatedResourceRepository.delete(isReplacedBy);
+            previousVersion.getSiemacMetadataStatisticalResource().setIsReplacedBy(null);
+            getPublicationVersionRepository().save(previousVersion);
         }
     }
 

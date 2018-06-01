@@ -40,6 +40,7 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_31_V2_PUBLISHED_NO_VISIBLE_FOR_PUBLICATION_06_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_91_REPLACES_PUBLICATION_92_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_92_IS_REPLACED_BY_PUBLICATION_91_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_98_TO_DELETE_WITH_PREVIOUS_VERSION_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryMockFactory.QUERY_01_SIMPLE_NAME;
 
 import java.io.File;
@@ -445,6 +446,15 @@ public class PublicationServiceTest extends StatisticalResourcesBaseTest impleme
 
         // Delete publication version
         publicationService.deletePublicationVersion(getServiceContextWithoutPrincipal(), urn);
+    }
+
+    @Test
+    @MetamacMock(PUBLICATION_VERSION_91_REPLACES_PUBLICATION_92_NAME)
+    public void testDeletePublicationVersionReplaces() throws Exception {
+        String urnReplaces = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_91_REPLACES_PUBLICATION_92_NAME).getSiemacMetadataStatisticalResource().getUrn();
+
+        // Delete publication version
+        publicationService.deletePublicationVersion(getServiceContextWithoutPrincipal(), urnReplaces);
     }
 
     @Test
