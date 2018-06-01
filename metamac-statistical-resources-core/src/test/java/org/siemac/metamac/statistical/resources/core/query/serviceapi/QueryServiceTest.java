@@ -49,6 +49,7 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_33_CHECK_COMPAT_DATASET_86_INVALID_LATEST_TEMPORAL_CODE_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_34_CHECK_COMPAT_DATASET_87_INVALID_QUERY_TYPE_AUTOINC_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_35_CHECK_COMPAT_DATASET_87_INVALID_QUERY_TYPE_LATEST_DATA_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_57_REPLACES_QUERY_58_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.buildSelectionItemWithDimensionAndCodes;
 
 import java.util.Arrays;
@@ -1178,5 +1179,19 @@ public class QueryServiceTest extends StatisticalResourcesBaseTest implements Qu
 
         QueryVersion queryInvalidTypeLatest = queryVersionMockFactory.retrieveMock(QUERY_VERSION_35_CHECK_COMPAT_DATASET_87_INVALID_QUERY_TYPE_LATEST_DATA_NAME);
         assertFalse(queryService.checkQueryCompatibility(getServiceContextAdministrador(), queryInvalidTypeLatest, dataset));
+    }
+
+    @Test
+    @MetamacMock(QUERY_VERSION_57_REPLACES_QUERY_58_NAME)
+    public void testDeleteQueryVersionReplacedVersion() throws Exception {
+        QueryVersion queryVersion = queryVersionMockFactory.retrieveMock(QUERY_VERSION_57_REPLACES_QUERY_58_NAME);
+        String urn = queryVersion.getLifeCycleStatisticalResource().getUrn();
+
+        String datasetVersionUrn = queryVersion.getFixedDatasetVersion().getSiemacMetadataStatisticalResource().getUrn();
+
+        queryService.deleteQueryVersion(getServiceContextWithoutPrincipal(), urn);
+
+        assertNotNull(datasetService.retrieveDatasetVersionByUrn(getServiceContextAdministrador(), datasetVersionUrn));
+
     }
 }

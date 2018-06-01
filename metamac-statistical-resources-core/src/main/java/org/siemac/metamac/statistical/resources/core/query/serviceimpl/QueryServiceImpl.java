@@ -30,6 +30,7 @@ import org.siemac.metamac.statistical.resources.core.base.utils.FillMetadataForC
 import org.siemac.metamac.statistical.resources.core.base.validators.ProcStatusValidator;
 import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResource;
+import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResourceRepository;
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResourceResult;
 import org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConstants;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.CodeDimension;
@@ -76,6 +77,9 @@ public class QueryServiceImpl extends QueryServiceImplBase {
 
     @Autowired
     private QueryLifecycleService                     queryLifecycleService;
+
+    @Autowired
+    private RelatedResourceRepository                 relatedResourceRepository;
 
     public QueryServiceImpl() {
     }
@@ -213,17 +217,24 @@ public class QueryServiceImpl extends QueryServiceImplBase {
             getQueryRepository().delete(query);
         } else {
             // Previous version
-            RelatedResource previousResource = queryVersion.getLifeCycleStatisticalResource().getReplacesVersion();
-            if (previousResource.getQueryVersion() != null) {
-                QueryVersion previousVersion = previousResource.getQueryVersion();
-                previousVersion.getLifeCycleStatisticalResource().setLastVersion(Boolean.TRUE);
-                previousVersion.getLifeCycleStatisticalResource().setIsReplacedByVersion(null);
-                getQueryVersionRepository().save(previousVersion);
-            }
+            updateReplacedVersionIsReplacedByVersion(queryVersion);
+
             // Delete version
             Query query = queryVersion.getQuery();
             query.getVersions().remove(queryVersion);
             getQueryVersionRepository().delete(queryVersion);
+        }
+    }
+
+    private void updateReplacedVersionIsReplacedByVersion(QueryVersion queryVersion) {
+        RelatedResource previousResource = queryVersion.getLifeCycleStatisticalResource().getReplacesVersion();
+        if (previousResource.getQueryVersion() != null) {
+            QueryVersion previousVersion = previousResource.getQueryVersion();
+            previousVersion.getLifeCycleStatisticalResource().setLastVersion(true);
+            RelatedResource isReplacedByVersion = previousVersion.getLifeCycleStatisticalResource().getIsReplacedByVersion();
+            relatedResourceRepository.delete(isReplacedByVersion);
+            previousVersion.getLifeCycleStatisticalResource().setIsReplacedByVersion(null);
+            getQueryVersionRepository().save(previousVersion);
         }
     }
 

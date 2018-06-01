@@ -115,6 +115,7 @@ public class QueryVersionMockFactory extends StatisticalResourcesMockFactory<Que
 
     public static final String QUERY_VERSION_55_PREPARED_TO_PUBLISH_STATUS_ACTIVE_NAME = "QUERY_VERSION_55_PREPARED_TO_PUBLISH_STATUS_ACTIVE";
     public static final String QUERY_VERSION_56_PREPARED_TO_PUBLISH_STATUS_DISCONTINUED_NAME = "QUERY_VERSION_56_PREPARED_TO_PUBLISH_STATUS_DISCONTINUED";
+    public static final String             QUERY_VERSION_57_REPLACES_QUERY_58_NAME                                                                                    = "QUERY_VERSION_57_REPLACES_QUERY_58";
 
     private static QueryVersionMockFactory instance = null;
 
@@ -486,6 +487,18 @@ public class QueryVersionMockFactory extends StatisticalResourcesMockFactory<Que
         return queryMock;
     }
 
+    private static MockDescriptor getQueryVersion57ReplacesQuery58() {
+        QueryVersion queryVersionReplaced = createQueryWithGeneratedDatasetVersion();
+        QueryVersion queryVersionReplaces = createQueryWithGeneratedDatasetVersion();
+        queryVersionReplaces.getLifeCycleStatisticalResource().setVersionLogic(SECOND_VERSION);
+
+        registerQueryVersionMock(QUERY_VERSION_58_IS_REPLACED_BY_QUERY_57_NAME, queryVersionReplaced);
+
+        queryVersionReplaces.getLifeCycleStatisticalResource().setReplacesVersion(StatisticalResourcesPersistedDoMocks.mockQueryVersionRelated(queryVersionReplaced));
+        queryVersionReplaced.getLifeCycleStatisticalResource().setIsReplacedByVersion(StatisticalResourcesPersistedDoMocks.mockQueryVersionRelated(queryVersionReplaces));
+
+        return new MockDescriptor(queryVersionReplaces, queryVersionReplaced);
+    }
     private static void setQuerySelectionBasedOnDatasetVersion(QueryVersionMock queryMock, DatasetVersion datasetVersion) {
         Map<String, QuerySelectionItem> selectionItems = new HashMap<String, QuerySelectionItem>();
         for (CodeDimension codeDim : datasetVersion.getDimensionsCoverage()) {
