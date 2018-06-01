@@ -280,8 +280,8 @@ public class QueryServiceImpl extends QueryServiceImplBase {
         queryVersion.setStatus(determineQueryStatus(queryVersion));
         queryVersion.setLatestTemporalCodeInCreation(determineLatestTemporalCodeInCreation(queryVersion));
         String[] maintainerCodes = new String[]{queryVersion.getLifeCycleStatisticalResource().getMaintainer().getCodeNested()};
-        String urn = GeneratorUrnUtils.generateSiemacStatisticalResourceQueryVersionUrn(maintainerCodes, queryVersion.getLifeCycleStatisticalResource().getCode(), queryVersion
-                .getLifeCycleStatisticalResource().getVersionLogic());
+        String urn = GeneratorUrnUtils.generateSiemacStatisticalResourceQueryVersionUrn(maintainerCodes, queryVersion.getLifeCycleStatisticalResource().getCode(),
+                queryVersion.getLifeCycleStatisticalResource().getVersionLogic());
         queryVersion.getLifeCycleStatisticalResource().setUrn(urn);
     }
 
@@ -291,8 +291,8 @@ public class QueryServiceImpl extends QueryServiceImplBase {
 
         // Update URN
         String[] maintainerCodes = new String[]{queryVersion.getLifeCycleStatisticalResource().getMaintainer().getCodeNested()};
-        String urn = GeneratorUrnUtils.generateSiemacStatisticalResourceQueryVersionUrn(maintainerCodes, queryVersion.getLifeCycleStatisticalResource().getCode(), queryVersion
-                .getLifeCycleStatisticalResource().getVersionLogic());
+        String urn = GeneratorUrnUtils.generateSiemacStatisticalResourceQueryVersionUrn(maintainerCodes, queryVersion.getLifeCycleStatisticalResource().getCode(),
+                queryVersion.getLifeCycleStatisticalResource().getVersionLogic());
         queryVersion.getLifeCycleStatisticalResource().setUrn(urn);
     }
 
