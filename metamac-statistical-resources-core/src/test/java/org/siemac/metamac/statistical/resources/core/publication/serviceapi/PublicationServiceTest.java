@@ -2394,4 +2394,12 @@ public class PublicationServiceTest extends StatisticalResourcesBaseTest impleme
                 "DRAFT, VALIDATION_REJECTED, PRODUCTION_VALIDATION, DIFFUSION_VALIDATION"));
         publicationService.deleteCube(getServiceContextAdministrador(), cubeUrn);
     }
+
+    @Test
+    @MetamacMock({PUBLICATION_VERSION_98_TO_DELETE_WITH_PREVIOUS_VERSION_NAME})
+    public void testDeletePublicationVersionReplacesVersion() throws Exception {
+        PublicationVersion publicationVersion = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_98_TO_DELETE_WITH_PREVIOUS_VERSION_NAME);
+
+        publicationService.deletePublicationVersion(getServiceContextAdministrador(), publicationVersion.getSiemacMetadataStatisticalResource().getUrn());
+    }
 }
