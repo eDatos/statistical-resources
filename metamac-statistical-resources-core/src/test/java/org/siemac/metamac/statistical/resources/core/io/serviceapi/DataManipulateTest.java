@@ -108,7 +108,7 @@ public class DataManipulateTest extends StatisticalResourcesBaseTest {
     public void setDataSourceRepository(DataSource dataSource) throws Exception {
         Connection connection = null;
         try {
-            this.jdbcTemplateRepository = new JdbcTemplate(dataSource);
+            jdbcTemplateRepository = new JdbcTemplate(dataSource);
             connection = dataSource.getConnection();
             connection.setAutoCommit(true);
         } finally {
@@ -123,7 +123,7 @@ public class DataManipulateTest extends StatisticalResourcesBaseTest {
     public void setDataSourceResources(DataSource dataSource) throws Exception {
         Connection connection = null;
         try {
-            this.jdbcTemplateResources = new JdbcTemplate(dataSource);
+            jdbcTemplateResources = new JdbcTemplate(dataSource);
             connection = dataSource.getConnection();
             connection.setAutoCommit(true);
         } finally {

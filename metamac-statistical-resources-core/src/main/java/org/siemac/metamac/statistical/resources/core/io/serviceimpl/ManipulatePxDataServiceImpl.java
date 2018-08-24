@@ -97,7 +97,7 @@ public class ManipulatePxDataServiceImpl implements ManipulatePxDataService {
 
     /**
      * Read a px model
-     * 
+     *
      * @param pxFile
      * @return
      */
@@ -121,7 +121,7 @@ public class ManipulatePxDataServiceImpl implements ManipulatePxDataService {
 
     /**
      * Read a px data
-     * 
+     *
      * @param pxFile
      * @param pxModel
      * @return

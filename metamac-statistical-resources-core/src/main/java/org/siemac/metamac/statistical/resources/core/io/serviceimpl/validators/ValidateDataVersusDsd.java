@@ -132,9 +132,9 @@ public class ValidateDataVersusDsd {
         this.srmRestInternalService = srmRestInternalService;
         this.dataStructure = dataStructure;
         this.contentConstraints = contentConstraints;
-        this.translationEnumRepresentationsMap = new HashMap<String, Map<String, Map<String, String>>>();
+        translationEnumRepresentationsMap = new HashMap<String, Map<String, Map<String, String>>>();
         this.taskInfoDataset = taskInfoDataset;
-        this.datasetService = (DatasetService) ApplicationContextProvider.getApplicationContext().getBean(DatasetService.BEAN_ID);
+        datasetService = (DatasetService) ApplicationContextProvider.getApplicationContext().getBean(DatasetService.BEAN_ID);
 
         if (taskInfoDataset == null || taskInfoDataset.getDatasetVersionId() == null) {
             throw new IllegalArgumentException("The URN of datasetVersion is necessary");
@@ -202,7 +202,7 @@ public class ValidateDataVersusDsd {
     }
 
     public void setCurrentFilename(String filename) {
-        this.currentFilename = filename;
+        currentFilename = filename;
     }
 
     // ------------------------------------------------------------------------------------
@@ -225,7 +225,7 @@ public class ValidateDataVersusDsd {
             // The used dimension if correct
             previousExceptionSize = exceptions.size();
             for (CodeDimensionDto codeDimensionDto : overExtendedDto.getCodesDimension()) {
-                if (!this.dimensionsCodeSet.contains(codeDimensionDto.getDimensionId())) {
+                if (!dimensionsCodeSet.contains(codeDimensionDto.getDimensionId())) {
                     exceptions.add(new MetamacExceptionItem(ServiceExceptionType.IMPORTATION_DIM_NOT_MATCH, codeDimensionDto.getDimensionId()));
                 }
             }
@@ -234,7 +234,7 @@ public class ValidateDataVersusDsd {
             }
 
             // Number of attributes at observation level, can not exceed the maximum cardinality.
-            if (overExtendedDto.getAttributes().size() > this.attributeIdsAtObservationLevelSet.size() + 1) {
+            if (overExtendedDto.getAttributes().size() > attributeIdsAtObservationLevelSet.size() + 1) {
                 exceptions.add(new MetamacExceptionItem(ServiceExceptionType.IMPORTATION_OBSERVATION_ATTR_CARDINALITY_EXCEEDED));
                 continue;
             }
@@ -242,7 +242,7 @@ public class ValidateDataVersusDsd {
             // The used attribute if correct
             previousExceptionSize = exceptions.size();
             for (AttributeInstanceBasicDto attributeBasicDto : overExtendedDto.getAttributes()) {
-                if (!this.attributeIdsAtObservationLevelSet.contains(attributeBasicDto.getAttributeId())
+                if (!attributeIdsAtObservationLevelSet.contains(attributeBasicDto.getAttributeId())
                         && !StatisticalResourcesConstants.ATTRIBUTE_DATA_SOURCE_ID.equals(attributeBasicDto.getAttributeId())) {
                     exceptions.add(new MetamacExceptionItem(ServiceExceptionType.IMPORTATION_OBSERVATION_ATTR_NOT_MATCH, attributeBasicDto.getAttributeId()));
                 }
@@ -257,7 +257,7 @@ public class ValidateDataVersusDsd {
             for (AttributeInstanceBasicDto attributeBasicDto : overExtendedDto.getAttributes()) {
                 attributesInCurrentObservation.add(attributeBasicDto.getAttributeId());
             }
-            for (String attributeId : this.mandatoryAttributeIdsAtObservationLevel) {
+            for (String attributeId : mandatoryAttributeIdsAtObservationLevel) {
                 if (!attributesInCurrentObservation.contains(attributeId)) {
                     exceptions.add(new MetamacExceptionItem(ServiceExceptionType.IMPORTATION_OBSERVATION_MANDATORY_ATTR_NOT_FOUND, attributeId));
                 }
@@ -304,14 +304,14 @@ public class ValidateDataVersusDsd {
             previousExceptionSize = exceptions.size();
             if (StringUtils.isNotBlank(overExtendedDto.getPrimaryMeasure())) {
                 // Enumerated representation
-                checkPrimaryMeasureEnumeratedRepresentation(this.dsdPrimaryMeasure.getComponentId(), overExtendedDto.getPrimaryMeasure(), exceptions);
+                checkPrimaryMeasureEnumeratedRepresentation(dsdPrimaryMeasure.getComponentId(), overExtendedDto.getPrimaryMeasure(), exceptions);
 
                 // Non Enumerated representation
-                checkPrimaryMeasureNonEnumeratedRepresentation(this.dsdPrimaryMeasure.getComponentId(), overExtendedDto.getPrimaryMeasure(),
+                checkPrimaryMeasureNonEnumeratedRepresentation(dsdPrimaryMeasure.getComponentId(), overExtendedDto.getPrimaryMeasure(),
                         ManipulateDataUtils.toStringUnorderedKeyForObservation(overExtendedDto.getCodesDimension()), exceptions);
 
                 // Extra validation for primary measure
-                if (this.isExtraValidationForPrimaryMeasureRequired) {
+                if (isExtraValidationForPrimaryMeasureRequired) {
                     NonEnumeratedRepresentationValidator.checkExtraValidationForPrimaryMeasure(ManipulateDataUtils.toStringUnorderedKeyForObservation(overExtendedDto.getCodesDimension()),
                             overExtendedDto.getPrimaryMeasure(), exceptions);
                 }
@@ -338,9 +338,9 @@ public class ValidateDataVersusDsd {
                 for (Region region : regions) {
                     if (region.getKeys() != null) {
                         List<Key> keies = region.getKeys().getKeies();
-                        if (!ConstraintsValidator.checkObservationAgaintsConstraintsKey(overExtendedDto, keies, this.codeHierarchyMap)) {
-                            exceptions.add(new MetamacExceptionItem(ServiceExceptionType.IMPORTATION_OBSERVATION_MANDATORY_CONTENT_CONSTRAINT_FAIL, ManipulateDataUtils
-                                    .toStringUnorderedKeyForObservation(overExtendedDto.getCodesDimension()), taskInfoDataset.getDatasetVersionId()));
+                        if (!ConstraintsValidator.checkObservationAgaintsConstraintsKey(overExtendedDto, keies, codeHierarchyMap)) {
+                            exceptions.add(new MetamacExceptionItem(ServiceExceptionType.IMPORTATION_OBSERVATION_MANDATORY_CONTENT_CONSTRAINT_FAIL,
+                                    ManipulateDataUtils.toStringUnorderedKeyForObservation(overExtendedDto.getCodesDimension()), taskInfoDataset.getDatasetVersionId()));
                         }
                     }
                 }
@@ -356,7 +356,7 @@ public class ValidateDataVersusDsd {
             previousExceptionSize = exceptions.size();
 
             // The used attribute if correct
-            if (!this.attributesCodeSet.contains(attributeInstanceDto.getAttributeId()) || this.attributeIdsAtObservationLevelSet.contains(attributeInstanceDto.getAttributeId())) {
+            if (!attributesCodeSet.contains(attributeInstanceDto.getAttributeId()) || attributeIdsAtObservationLevelSet.contains(attributeInstanceDto.getAttributeId())) {
                 exceptions.add(new MetamacExceptionItem(ServiceExceptionType.IMPORTATION_ATTR_NOT_MATCH, attributeInstanceDto.getAttributeId()));
                 continue;
             }
@@ -511,8 +511,8 @@ public class ValidateDataVersusDsd {
                 if (translation != null) {
                     codeDimensionDto.setCodeDimensionId(translation);
                 } else {
-                    exceptions.add(new MetamacExceptionItem(ServiceExceptionType.IMPORTATION_DIM_CODE_ENUM_NOT_VALID_TRANSLATION, codeDimensionDto.getCodeDimensionId(), codeDimensionDto
-                            .getDimensionId()));
+                    exceptions.add(
+                            new MetamacExceptionItem(ServiceExceptionType.IMPORTATION_DIM_CODE_ENUM_NOT_VALID_TRANSLATION, codeDimensionDto.getCodeDimensionId(), codeDimensionDto.getDimensionId()));
                 }
             } else {
                 exceptions.add(new MetamacExceptionItem(ServiceExceptionType.IMPORTATION_DIM_CODE_ENUM_NOT_VALID, codeDimensionDto.getCodeDimensionId(), codeDimensionDto.getDimensionId(),
@@ -561,7 +561,7 @@ public class ValidateDataVersusDsd {
     @SuppressWarnings("unchecked")
     private void checkPrimaryMeasureEnumeratedRepresentation(String dimensionId, String value, List<MetamacExceptionItem> exceptions) throws MetamacException {
         // Enumerated representation
-        String enumeratedRepresentationUrn = this.dsdPrimaryMeasure.getEnumeratedRepresentationUrn();
+        String enumeratedRepresentationUrn = dsdPrimaryMeasure.getEnumeratedRepresentationUrn();
         if (enumeratedRepresentationUrn != null) {
             // The codes of primary measure must be defined in the enumerated representation
             Set<String> validPrimaryMeasureCodes = (Set<String>) enumerationRepresentationsMultimap.get(enumeratedRepresentationUrn);
@@ -572,8 +572,8 @@ public class ValidateDataVersusDsd {
     }
 
     private void checkPrimaryMeasureNonEnumeratedRepresentation(String dimensionId, String value, String key, List<MetamacExceptionItem> exceptions) throws MetamacException {
-        if (this.dsdPrimaryMeasure.getTextFormatRepresentation() != null) {
-            NonEnumeratedRepresentationValidator.checkTextFormatType(this.dsdPrimaryMeasure.getTextFormatRepresentation(), key, value, exceptions);
+        if (dsdPrimaryMeasure.getTextFormatRepresentation() != null) {
+            NonEnumeratedRepresentationValidator.checkTextFormatType(dsdPrimaryMeasure.getTextFormatRepresentation(), key, value, exceptions);
         }
     }
 
@@ -601,7 +601,7 @@ public class ValidateDataVersusDsd {
                 // Group Dimensions
                 List<ComponentInfo> groupDimensions = new LinkedList<ComponentInfo>();
                 for (String dimensionId : sourceGroupType.getDimensions().getDimensions()) {
-                    groupDimensions.add(this.dimensionsInfoMap.get(dimensionId));
+                    groupDimensions.add(dimensionsInfoMap.get(dimensionId));
                 }
                 groupDimensionMapInfo.put(sourceGroupType.getId(), groupDimensions);
             }
@@ -649,7 +649,7 @@ public class ValidateDataVersusDsd {
         this.attributeIdsAtObservationLevelSet = attributeIdsAtObservationLevelSet;
         this.mandatoryAttributeIdsAtObservationLevel = mandatoryAttributeIdsAtObservationLevel;
         this.mandatoryAttributeIdsAtNonObservationLevel = mandatoryAttributeIdsAtNonObservationLevel;
-        this.attributesCodeSet = attributesInfoMap.keySet();
+        attributesCodeSet = attributesInfoMap.keySet();
     }
 
     protected MultiMap calculateCacheDimensionInfo(MultiMap enumerationRepresentationsMultimap) throws MetamacException {
@@ -694,7 +694,7 @@ public class ValidateDataVersusDsd {
         this.dimensionsProcessorMap = dimensionsProcessorMap;
         this.dimensionsInfoMap = dimensionsInfoMap;
         this.dimensionsInfoList = dimensionsInfoList;
-        this.dimensionsCodeSet = dimensionsInfoMap.keySet();
+        dimensionsCodeSet = dimensionsInfoMap.keySet();
 
         return enumerationRepresentationsMultimap;
     }
@@ -759,8 +759,8 @@ public class ValidateDataVersusDsd {
                         }
 
                         // Load alternative codes
-                        Codes alternativeCodes = srmRestInternalService.retrieveCodesOfCodelistEfficiently(getAlternativeSourceEnumerationRepresentationMap(filename)
-                                .get(dsdComponent.getComponentId()));
+                        Codes alternativeCodes = srmRestInternalService
+                                .retrieveCodesOfCodelistEfficiently(getAlternativeSourceEnumerationRepresentationMap(filename).get(dsdComponent.getComponentId()));
 
                         // Create a translation Map {Key: alternativeCodeId and Value: originalCodeId}
                         Map<String, String> translationCodeMap = new HashMap<String, String>();
@@ -802,14 +802,14 @@ public class ValidateDataVersusDsd {
 
     /**
      * Note: this method works because the creation of graph is iterate in depth first order
-     * 
+     *
      * @param codeUrn
      * @param codeId
      * @param codeParentUrn
      */
     private void cacheCodeHierarchyGraph(String codeUrn, String codeId, String codeParentUrn) {
-        if (this.codeHierarchyMap == null) {
-            this.codeHierarchyMap = new LinkedHashMap<String, CodeHierarchy>();
+        if (codeHierarchyMap == null) {
+            codeHierarchyMap = new LinkedHashMap<String, CodeHierarchy>();
         }
 
         // For content constraints validate, create a auxiliary Map

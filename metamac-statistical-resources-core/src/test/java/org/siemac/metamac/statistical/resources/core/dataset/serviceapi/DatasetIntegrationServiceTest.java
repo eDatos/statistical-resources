@@ -53,15 +53,15 @@ public class DatasetIntegrationServiceTest extends StatisticalResourcesBaseTest 
         Datasource datasourceBeforeCreate = notPersistedDoMocks.mockDatasourceForPersist();
         assertNull(datasourceBeforeCreate.getIdentifiableStatisticalResource().getStatisticalOperation());
 
-        Datasource datasourceAfterCreate = datasetService.createDatasource(getServiceContextWithoutPrincipal(), datasetVersionMockFactory.retrieveMock(DATASET_VERSION_01_BASIC_NAME)
-                .getSiemacMetadataStatisticalResource().getUrn(), datasourceBeforeCreate);
+        Datasource datasourceAfterCreate = datasetService.createDatasource(getServiceContextWithoutPrincipal(),
+                datasetVersionMockFactory.retrieveMock(DATASET_VERSION_01_BASIC_NAME).getSiemacMetadataStatisticalResource().getUrn(), datasourceBeforeCreate);
         assertNotNull(datasourceAfterCreate.getIdentifiableStatisticalResource().getStatisticalOperation());
 
         Datasource datasourceAfterUpdate = datasetService.updateDatasource(getServiceContextWithoutPrincipal(), datasourceAfterCreate);
         assertNotNull(datasourceAfterUpdate.getIdentifiableStatisticalResource().getStatisticalOperation());
 
-        CommonAsserts.assertEqualsExternalItem(datasourceAfterCreate.getIdentifiableStatisticalResource().getStatisticalOperation(), datasourceAfterUpdate.getIdentifiableStatisticalResource()
-                .getStatisticalOperation());
+        CommonAsserts.assertEqualsExternalItem(datasourceAfterCreate.getIdentifiableStatisticalResource().getStatisticalOperation(),
+                datasourceAfterUpdate.getIdentifiableStatisticalResource().getStatisticalOperation());
 
     }
 
@@ -83,8 +83,8 @@ public class DatasetIntegrationServiceTest extends StatisticalResourcesBaseTest 
         DatasetVersion datasetAfterUpdate = datasetService.updateDatasetVersion(getServiceContextWithoutPrincipal(), datasetAfterCreate);
         assertNotNull(datasetAfterUpdate.getDataset().getIdentifiableStatisticalResource().getStatisticalOperation());
 
-        CommonAsserts.assertEqualsExternalItem(datasetAfterCreate.getDataset().getIdentifiableStatisticalResource().getStatisticalOperation(), datasetAfterUpdate.getDataset()
-                .getIdentifiableStatisticalResource().getStatisticalOperation());
+        CommonAsserts.assertEqualsExternalItem(datasetAfterCreate.getDataset().getIdentifiableStatisticalResource().getStatisticalOperation(),
+                datasetAfterUpdate.getDataset().getIdentifiableStatisticalResource().getStatisticalOperation());
     }
 
     // ------------------------------------------------------------------------
@@ -106,8 +106,8 @@ public class DatasetIntegrationServiceTest extends StatisticalResourcesBaseTest 
         DatasetVersion datasetAfterUpdate = datasetService.updateDatasetVersion(getServiceContextWithoutPrincipal(), datasetAfterCreate);
         assertNotNull(datasetAfterUpdate.getSiemacMetadataStatisticalResource().getStatisticalOperation());
 
-        CommonAsserts.assertEqualsExternalItem(datasetAfterCreate.getSiemacMetadataStatisticalResource().getStatisticalOperation(), datasetAfterUpdate.getSiemacMetadataStatisticalResource()
-                .getStatisticalOperation());
+        CommonAsserts.assertEqualsExternalItem(datasetAfterCreate.getSiemacMetadataStatisticalResource().getStatisticalOperation(),
+                datasetAfterUpdate.getSiemacMetadataStatisticalResource().getStatisticalOperation());
     }
 
     private void mockDsdAndDataRepositorySimpleDimensions() throws Exception {

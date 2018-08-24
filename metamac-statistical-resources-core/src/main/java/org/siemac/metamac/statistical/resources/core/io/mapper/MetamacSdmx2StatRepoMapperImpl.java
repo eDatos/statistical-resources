@@ -148,7 +148,7 @@ public class MetamacSdmx2StatRepoMapperImpl implements MetamacSdmx2StatRepoMappe
 
     /**
      * Generate a attributeObservationDtoDto form idValuePairDto and keys
-     * 
+     *
      * @param keys
      * @param idValuePair
      * @return AttributeDto
@@ -175,7 +175,7 @@ public class MetamacSdmx2StatRepoMapperImpl implements MetamacSdmx2StatRepoMappe
 
     /**
      * Generate a list of keys for an observation
-     * 
+     *
      * @param observation
      * @return list of keys for an observation
      */
@@ -185,7 +185,7 @@ public class MetamacSdmx2StatRepoMapperImpl implements MetamacSdmx2StatRepoMappe
 
     /**
      * Generate a list of keys for an observation
-     * 
+     *
      * @param sliceKey
      * @param observation
      * @return list of keys for an observation

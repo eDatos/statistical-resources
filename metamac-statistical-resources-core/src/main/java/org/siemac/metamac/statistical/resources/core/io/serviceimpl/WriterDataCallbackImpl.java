@@ -72,7 +72,7 @@ public class WriterDataCallbackImpl implements WriterDataCallback {
             PagedResult<DatasetVersion> datasetsToFetch, String querykey, RequestParameter requestParameter, String sender) throws Exception {
         this.datasetRepositoriesServiceFacade = datasetRepositoriesServiceFacade;
         this.metamac2StatRepoMapper = metamac2StatRepoMapper;
-        this.queryKey = querykey;
+        queryKey = querykey;
         this.requestParameter = requestParameter;
         this.sender = sender;
         this.dsdSdmxExtractor = dsdSdmxExtractor;
@@ -86,7 +86,7 @@ public class WriterDataCallbackImpl implements WriterDataCallback {
         header.setId(generateMessageId());
         header.setTest(false);
         header.setPrepared(CoreCommonUtil.jodaDateTime2xsDateTime(new DateTime()));
-        header.setSenderID(this.sender);
+        header.setSenderID(sender);
 
         // Structures
         for (DatasetInfo datasetInfo : getDatasetInfoCache()) {
@@ -151,8 +151,8 @@ public class WriterDataCallbackImpl implements WriterDataCallback {
 
         // Observations
         if (!isSkipData()) {
-            Map<String, ObservationExtendedDto> observationsMap = datasetRepositoriesServiceFacade.findObservationsExtendedByDimensions(getCurrentDatasetInfo().getDatasetVersion()
-                    .getDatasetRepositoryId(), metamac2StatRepoMapper.conditionsToRepositoryList(serieConditions));
+            Map<String, ObservationExtendedDto> observationsMap = datasetRepositoriesServiceFacade
+                    .findObservationsExtendedByDimensions(getCurrentDatasetInfo().getDatasetVersion().getDatasetRepositoryId(), metamac2StatRepoMapper.conditionsToRepositoryList(serieConditions));
 
             for (Map.Entry<String, ObservationExtendedDto> entry : observationsMap.entrySet()) {
                 serie.getObs().add(observationRepositoryToGroupedObservationWriter(entry.getValue(), serie.getSeriesKey(), keyParts.getRight(), true));
@@ -171,8 +171,8 @@ public class WriterDataCallbackImpl implements WriterDataCallback {
 
         // Observations
         if (!isSkipData()) {
-            Map<String, ObservationExtendedDto> observationsMap = datasetRepositoriesServiceFacade.findObservationsExtendedByDimensions(getCurrentDatasetInfo().getDatasetVersion()
-                    .getDatasetRepositoryId(), metamac2StatRepoMapper.conditionsToRepositoryList(serieConditions));
+            Map<String, ObservationExtendedDto> observationsMap = datasetRepositoriesServiceFacade
+                    .findObservationsExtendedByDimensions(getCurrentDatasetInfo().getDatasetVersion().getDatasetRepositoryId(), metamac2StatRepoMapper.conditionsToRepositoryList(serieConditions));
 
             for (Map.Entry<String, ObservationExtendedDto> entry : observationsMap.entrySet()) {
                 observations.add(observationRepositoryToGroupedObservationWriter(entry.getValue(), keyParts.getLeft(), keyParts.getRight(), false));
@@ -224,7 +224,7 @@ public class WriterDataCallbackImpl implements WriterDataCallback {
 
     @Override
     public boolean hasNextDataset() {
-        if (this.currentDatasetVersionIndex >= this.datasetInfoCache.size() - 1) {
+        if (currentDatasetVersionIndex >= datasetInfoCache.size() - 1) {
             return false;
         } else {
             return true;
@@ -233,13 +233,13 @@ public class WriterDataCallbackImpl implements WriterDataCallback {
 
     @Override
     public String nextDataset() {
-        if (this.currentDatasetVersionIndex >= datasetInfoCache.size() - 1) {
+        if (currentDatasetVersionIndex >= datasetInfoCache.size() - 1) {
             throw new NoSuchElementException();
         }
-        this.currentDatasetVersionIndex++;
+        currentDatasetVersionIndex++;
 
         // Clean datasets context info
-        this.addedAttributesKey = new HashSet<String>();
+        addedAttributesKey = new HashSet<String>();
 
         return getCurrentDatasetVersion().getDatasetRepositoryId();
     }
@@ -266,8 +266,8 @@ public class WriterDataCallbackImpl implements WriterDataCallback {
         boolean allDatasetsContainsTimeDimension = true;
         List<DatasetInfo> datasetInfoCache = new ArrayList<DatasetInfo>(datasetsToFetch.getValues().size());
         for (DatasetVersion datasetVersion : datasetsToFetch.getValues()) {
-            DatasetInfo datasetInfo = new DatasetInfo(datasetRepositoriesServiceFacade, metamac2StatRepoMapper, queryKey, datasetVersion, dataStructureDefinitionCache.get(datasetVersion
-                    .getRelatedDsd().getUrn()), getRequestParameter());
+            DatasetInfo datasetInfo = new DatasetInfo(datasetRepositoriesServiceFacade, metamac2StatRepoMapper, queryKey, datasetVersion,
+                    dataStructureDefinitionCache.get(datasetVersion.getRelatedDsd().getUrn()), getRequestParameter());
             datasetInfoCache.add(datasetInfo);
 
             if (datasetInfo.getTimeDimension() == null) {
@@ -276,7 +276,7 @@ public class WriterDataCallbackImpl implements WriterDataCallback {
         }
 
         this.datasetInfoCache = datasetInfoCache;
-        this.typeofMessage = determineTypeOfResponseMessage(allDatasetsContainsTimeDimension);
+        typeofMessage = determineTypeOfResponseMessage(allDatasetsContainsTimeDimension);
     }
 
     private TypeSDMXDataMessageEnum determineTypeOfResponseMessage(boolean allDatasetsContainsTimeDimension) throws Exception {
@@ -304,14 +304,15 @@ public class WriterDataCallbackImpl implements WriterDataCallback {
 
     /**
      * Build all instances of group for the current query conditions
-     * 
+     *
      * @param instanceGroups
      * @param groupInfo
      * @param normalizedAttributesMap
      * @param observationkeys
      * @param numDimProcess
      */
-    private void buildGroups(List<Group> instanceGroups, GroupInfo groupInfo, Map<String, List<AttributeInstanceBasicDto>> normalizedAttributesMap, List<IdValuePair> observationkeys, int numDimProcess) {
+    private void buildGroups(List<Group> instanceGroups, GroupInfo groupInfo, Map<String, List<AttributeInstanceBasicDto>> normalizedAttributesMap, List<IdValuePair> observationkeys,
+            int numDimProcess) {
 
         // If the key of current group is fully generated
         if (numDimProcess == groupInfo.getDimensionsInfoList().size()) {
@@ -436,8 +437,8 @@ public class WriterDataCallbackImpl implements WriterDataCallback {
             // Attribute add observation level
             for (AttributeInstanceBasicDto attributeBasicDto : observation.getAttributes()) {
                 if (!StatisticalResourcesConstants.ATTRIBUTE_DATA_SOURCE_ID.equals(attributeBasicDto.getAttributeId())) {
-                    result.addAttribute(new IdValuePair(attributeBasicDto.getAttributeId(), attributeBasicDto.getValue()
-                            .getLocalisedLabel(StatisticalResourcesConstants.DEFAULT_DATA_REPOSITORY_LOCALE)));
+                    result.addAttribute(
+                            new IdValuePair(attributeBasicDto.getAttributeId(), attributeBasicDto.getValue().getLocalisedLabel(StatisticalResourcesConstants.DEFAULT_DATA_REPOSITORY_LOCALE)));
                 }
             }
 
@@ -455,7 +456,7 @@ public class WriterDataCallbackImpl implements WriterDataCallback {
 
     private String generateMessageId() {
         StringBuilder stringBuilder = new StringBuilder("DATA_");
-        stringBuilder.append(this.sender).append("_").append(UUID.randomUUID());
+        stringBuilder.append(sender).append("_").append(UUID.randomUUID());
         return stringBuilder.toString();
     }
 
@@ -522,7 +523,7 @@ public class WriterDataCallbackImpl implements WriterDataCallback {
     }
 
     private void addAttributeInstanceToAddedSet(String key) {
-        this.addedAttributesKey.add(key);
+        addedAttributesKey.add(key);
     }
 
 }

@@ -42,8 +42,8 @@ public class FindQueriesByRelatedDatasetUrnMatcher extends ConditionalCriteriasM
         expected.add(ConditionalCriteriaBuilder.criteriaFor(QueryVersion.class).distinctRoot().buildSingle());
 
         // maintainer
-        expected.add(ConditionalCriteriaBuilder.criteriaFor(QueryVersion.class).withProperty(QueryVersionProperties.lifeCycleStatisticalResource().maintainer().codeNested()).eq("agency1")
-                .buildSingle());
+        expected.add(
+                ConditionalCriteriaBuilder.criteriaFor(QueryVersion.class).withProperty(QueryVersionProperties.lifeCycleStatisticalResource().maintainer().codeNested()).eq("agency1").buildSingle());
 
         // Compare
         return super.matches(expected, actual);
@@ -73,7 +73,7 @@ public class FindQueriesByRelatedDatasetUrnMatcher extends ConditionalCriteriasM
               .withProperty(QueryVersionProperties.fixedDatasetVersion().siemacMetadataStatisticalResource().urn()).eq("URN_TEST")
               .buildSingle()
         );
-        
+
         expected.add(ConditionalCriteriaBuilder.criteriaFor(QueryVersion.class)
               .lbrace()
                   .withProperty(QueryVersionProperties.lifeCycleStatisticalResource().validTo()).greaterThan(now)

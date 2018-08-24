@@ -131,7 +131,7 @@ public class MetamacPx2StatRepoMapperImpl implements MetamacPx2StatRepoMapper {
     /**
      * Transform observations attributes (only attributes for one observation)
      * Only are valid CELLNOTE y CELNOTEX attributes.
-     * 
+     *
      * @return Map with key = unique key of observations; value = list of attributes of observation
      */
     @Override
@@ -172,8 +172,8 @@ public class MetamacPx2StatRepoMapperImpl implements MetamacPx2StatRepoMapper {
         return attributes;
     }
 
-    public void addValidAttributesForCurrentObservation(List<CodeDimensionDto> keys, Map<String, AttributeInstanceObservationDto> attributesObservations,
-            ObservationExtendedDto observationExtendedDto, final List<String> codesDimension, int index) {
+    public void addValidAttributesForCurrentObservation(List<CodeDimensionDto> keys, Map<String, AttributeInstanceObservationDto> attributesObservations, ObservationExtendedDto observationExtendedDto,
+            final List<String> codesDimension, int index) {
 
         if (attributesObservations == null || attributesObservations.isEmpty()) {
             return;

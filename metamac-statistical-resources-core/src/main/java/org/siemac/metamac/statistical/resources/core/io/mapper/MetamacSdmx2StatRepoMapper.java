@@ -16,7 +16,7 @@ public interface MetamacSdmx2StatRepoMapper {
 
     /**
      * Convert Datas and Attributes into statistic-dataset-repository-model
-     * 
+     *
      * @param dataContainerDto
      * @param attributesMap
      * @param dataDtos
@@ -28,7 +28,7 @@ public interface MetamacSdmx2StatRepoMapper {
 
     /**
      * Convert parser conditions into repository conditions Map to query attributes
-     * 
+     *
      * @param serieConditions
      * @return
      * @throws MetamacException
@@ -37,7 +37,7 @@ public interface MetamacSdmx2StatRepoMapper {
 
     /**
      * Convert parser conditions into repository conditions List to query observations
-     * 
+     *
      * @param serieConditions
      * @return
      * @throws MetamacException

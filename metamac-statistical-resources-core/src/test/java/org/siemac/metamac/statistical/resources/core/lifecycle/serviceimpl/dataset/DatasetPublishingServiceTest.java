@@ -184,10 +184,10 @@ public class DatasetPublishingServiceTest extends StatisticalResourcesMockRestBa
     private List<MetamacExceptionItem> getExceptionItemsForExternalItemNotPublishedDataset(DatasetVersion datasetVersion) {
         String prefix = ServiceExceptionParameters.DATASET_VERSION;
         List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
-        
+
         Set<ExternalItem> geographicGranularities = StatisticalResourcesExternalItemUtils.extractCodelistsUsedFromExternalItemCodes(datasetVersion.getGeographicGranularities());
         exceptionItems.addAll(buildExternalItemsNotPublishedExceptions(geographicGranularities, prefix, "geographic_granularities"));
-        
+
         Set<ExternalItem> measureCoverages = StatisticalResourcesExternalItemUtils.extractCodelistsUsedFromExternalItemCodes(datasetVersion.getTemporalGranularities());
         exceptionItems.addAll(buildExternalItemsNotPublishedExceptions(measureCoverages, prefix, "temporal_granularities"));
         exceptionItems.addAll(buildExternalItemsNotPublishedExceptions(datasetVersion.getStatisticalUnit(), prefix, "statistical_unit"));

@@ -404,8 +404,8 @@ public class DatasetServiceDatasourceManagementTest extends StatisticalResources
     @Test
     @MetamacMock({DATASOURCE_01_BASIC_NAME, DATASOURCE_02_BASIC_NAME})
     public void testRetrieveDatasourceByUrn() throws Exception {
-        Datasource actual = datasetService.retrieveDatasourceByUrn(getServiceContextWithoutPrincipal(), datasourceMockFactory.retrieveMock(DATASOURCE_01_BASIC_NAME)
-                .getIdentifiableStatisticalResource().getUrn());
+        Datasource actual = datasetService.retrieveDatasourceByUrn(getServiceContextWithoutPrincipal(),
+                datasourceMockFactory.retrieveMock(DATASOURCE_01_BASIC_NAME).getIdentifiableStatisticalResource().getUrn());
         assertEqualsDatasource(datasourceMockFactory.retrieveMock(DATASOURCE_01_BASIC_NAME), actual);
     }
 
@@ -532,8 +532,8 @@ public class DatasetServiceDatasourceManagementTest extends StatisticalResources
 
         String datasourceUrn = expected.getIdentifiableStatisticalResource().getUrn();
 
-        Mockito.doThrow(ApplicationException.class).when(datasetRepositoriesServiceFacade)
-                .deleteObservationsByAttributeInstanceValue(Mockito.anyString(), Mockito.anyString(), Mockito.any(InternationalStringDto.class));
+        Mockito.doThrow(ApplicationException.class).when(datasetRepositoriesServiceFacade).deleteObservationsByAttributeInstanceValue(Mockito.anyString(), Mockito.anyString(),
+                Mockito.any(InternationalStringDto.class));
 
         expectedMetamacException(new MetamacException(ServiceExceptionType.DATASOURCE_DATA_DELETE_ERROR, expected.getIdentifiableStatisticalResource().getCode()));
 

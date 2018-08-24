@@ -33,7 +33,7 @@ public class ManipulateDataUtils {
 
     /**
      * Create a data source extra identification attribute
-     * 
+     *
      * @param keys
      * @param dataSourceId
      * @return AttributeDto
@@ -60,7 +60,7 @@ public class ManipulateDataUtils {
 
     /**
      * Generate key for attribute
-     * 
+     *
      * @param codesByDimension
      * @return
      */
@@ -74,7 +74,7 @@ public class ManipulateDataUtils {
 
     /**
      * Generate key for observation
-     * 
+     *
      * @param codesDimension
      * @return
      */
@@ -112,7 +112,7 @@ public class ManipulateDataUtils {
 
     /**
      * Extract definition of attributes in the DSD to the repository definition
-     * 
+     *
      * @param attributes
      * @return
      */
@@ -149,7 +149,7 @@ public class ManipulateDataUtils {
 
     /**
      * Generate a key from a list of CodeDimensionDto
-     * 
+     *
      * @param codesDimension
      * @return
      */
@@ -168,7 +168,7 @@ public class ManipulateDataUtils {
 
     /**
      * Generate a key from a list of IdValuePair
-     * 
+     *
      * @param codesDimensions
      * @return
      */
@@ -187,7 +187,7 @@ public class ManipulateDataUtils {
 
     /**
      * Generate a key for attribute adding attribute id to an existing partial key
-     * 
+     *
      * @param attributeId
      * @param partialKey
      * @return
@@ -200,7 +200,7 @@ public class ManipulateDataUtils {
 
     /**
      * Instance of repository attribute to writer attribute
-     * 
+     *
      * @param attributeBasicDto
      * @return
      */

@@ -313,9 +313,8 @@ public class Mocks {
         Dimensions dimensions = new Dimensions();
         dimensions.getDimensions().add(SrmMockUtils.buildDimension("FREQ", "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS(1.0).FREQ", null));
 
-        dimensions.getDimensions().add(
-                SrmMockUtils.buildDimension("CURRENCY", "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS(1.0).FREQ",
-                        "urn:sdmx:org.sdmx.infomodel.codelist.Codelist=ISO:CL_CURRENCY(1.0)"));
+        dimensions.getDimensions().add(SrmMockUtils.buildDimension("CURRENCY", "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS(1.0).FREQ",
+                "urn:sdmx:org.sdmx.infomodel.codelist.Codelist=ISO:CL_CURRENCY(1.0)"));
 
         dimensions.getDimensions().add(SrmMockUtils.buildDimension("CURRENCY_DENOM", "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=ECB:ECB_CONCEPTS(1.0).CURRENCY_DENOM", null));
 
@@ -336,34 +335,30 @@ public class Mocks {
         // Components: Attributes
         Attributes attributes = new Attributes();
 
-        attributes.getAttributes().add(
-                SrmMockUtils.buildAttributeTypeWithGroupRelationship("COLL_METHOD", "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS(1.0).COLL_METHOD", null,
-                        AttributeUsageStatusType.CONDITIONAL, "RateGroup"));
+        attributes.getAttributes().add(SrmMockUtils.buildAttributeTypeWithGroupRelationship("COLL_METHOD",
+                "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS(1.0).COLL_METHOD", null, AttributeUsageStatusType.CONDITIONAL, "RateGroup"));
 
-        attributes.getAttributes().add(
-                SrmMockUtils.buildAttributeTypeWithDimensionRelationship("DECIMALS", "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS(1.0).DECIMALS", null,
+        attributes.getAttributes()
+                .add(SrmMockUtils.buildAttributeTypeWithDimensionRelationship("DECIMALS", "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS(1.0).DECIMALS", null,
                         AttributeUsageStatusType.MANDATORY, Arrays.asList("CURRENCY", "CURRENCY_DENOM", "EXR_TYPE"), Arrays.asList("SiblingGroup")));
 
-        attributes.getAttributes().add(
-                SrmMockUtils.buildAttributeTypeWithDimensionRelationship("UNIT_MEASURE", "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS(1.0).UNIT_MEASURE",
+        attributes.getAttributes()
+                .add(SrmMockUtils.buildAttributeTypeWithDimensionRelationship("UNIT_MEASURE", "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS(1.0).UNIT_MEASURE",
                         "urn:sdmx:org.sdmx.infomodel.codelist.Codelist=ISO:CL_CURRENCY(1.0)", AttributeUsageStatusType.MANDATORY, Arrays.asList("CURRENCY", "CURRENCY_DENOM", "EXR_TYPE"),
                         Arrays.asList("SiblingGroup")));
 
-        attributes.getAttributes().add(
-                SrmMockUtils.buildAttributeTypeWithDimensionRelationship("UNIT_MULT", "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS(1.0).UNIT_MULT", null,
+        attributes.getAttributes()
+                .add(SrmMockUtils.buildAttributeTypeWithDimensionRelationship("UNIT_MULT", "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS(1.0).UNIT_MULT", null,
                         AttributeUsageStatusType.MANDATORY, Arrays.asList("CURRENCY", "CURRENCY_DENOM", "EXR_TYPE"), Arrays.asList("SiblingGroup")));
 
-        attributes.getAttributes().add(
-                SrmMockUtils.buildAttributeTypeWithPrimaryMeasureRelationship("CONF_STATUS_OBS", "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS(1.0).CONF_STATUS", null,
-                        AttributeUsageStatusType.CONDITIONAL));
+        attributes.getAttributes().add(SrmMockUtils.buildAttributeTypeWithPrimaryMeasureRelationship("CONF_STATUS_OBS",
+                "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS(1.0).CONF_STATUS", null, AttributeUsageStatusType.CONDITIONAL));
 
-        attributes.getAttributes().add(
-                SrmMockUtils.buildAttributeTypeWithPrimaryMeasureRelationship("OBS_STATUS", "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS(1.0).OBS_STATUS", null,
-                        AttributeUsageStatusType.MANDATORY));
+        attributes.getAttributes().add(SrmMockUtils.buildAttributeTypeWithPrimaryMeasureRelationship("OBS_STATUS",
+                "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS(1.0).OBS_STATUS", null, AttributeUsageStatusType.MANDATORY));
 
-        attributes.getAttributes().add(
-                SrmMockUtils.buildAttributeTypeWithGroupRelationship("TITLE", "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS(1.0).TITLE", null,
-                        AttributeUsageStatusType.MANDATORY, "SiblingGroup"));
+        attributes.getAttributes().add(SrmMockUtils.buildAttributeTypeWithGroupRelationship("TITLE", "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS(1.0).TITLE", null,
+                AttributeUsageStatusType.MANDATORY, "SiblingGroup"));
 
         dataStructure.getDataStructureComponents().setAttributes(attributes);
 
@@ -377,7 +372,7 @@ public class Mocks {
 
     /**
      * mock the DSD_ECB_EXR_RG dsd's without mandatory in attribute observation and add a attribute observation level with OBS_NOTE code.
-     * 
+     *
      * @return
      */
     public static DataStructure mock_DSD_ECB_EXR_RG_for_PX() {
@@ -794,43 +789,43 @@ public class Mocks {
         Mockito.when(srmRestInternalService.retrieveCodesOfCodelistEfficiently("urn:sdmx:org.sdmx.infomodel.codelist.Codelist=SDMX:CL_DEMO(1.0)")).thenReturn(Mocks.mock_CL_DEMO());
 
         // CONCEPT SCHEME
-        Mockito.when(srmRestInternalService.retrieveConceptsOfConceptSchemeEfficiently("urn:sdmx:org.sdmx.infomodel.conceptscheme.ConceptScheme=SDMX:CROSS_DOMAIN_CONCEPTS(1.0)")).thenReturn(
-                Mocks.mock_CROSS_DOMAIN_CONCEPTS());
+        Mockito.when(srmRestInternalService.retrieveConceptsOfConceptSchemeEfficiently("urn:sdmx:org.sdmx.infomodel.conceptscheme.ConceptScheme=SDMX:CROSS_DOMAIN_CONCEPTS(1.0)"))
+                .thenReturn(Mocks.mock_CROSS_DOMAIN_CONCEPTS());
 
-        Mockito.when(srmRestInternalService.retrieveConceptsOfConceptSchemeEfficiently("urn:sdmx:org.sdmx.infomodel.conceptscheme.ConceptScheme=ECB:ECB_CONCEPTS(1.0)")).thenReturn(
-                Mocks.mock_ECB_CONCEPTS());
+        Mockito.when(srmRestInternalService.retrieveConceptsOfConceptSchemeEfficiently("urn:sdmx:org.sdmx.infomodel.conceptscheme.ConceptScheme=ECB:ECB_CONCEPTS(1.0)"))
+                .thenReturn(Mocks.mock_ECB_CONCEPTS());
 
         // CONCEPT
-        Mockito.when(srmRestInternalService.retrieveConceptByUrn("urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS(1.0).FREQ")).thenReturn(
-                Mocks.mock_SDMX_CROSS_DOMAIN_CONCEPTS_1_0_FREQ());
+        Mockito.when(srmRestInternalService.retrieveConceptByUrn("urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS(1.0).FREQ"))
+                .thenReturn(Mocks.mock_SDMX_CROSS_DOMAIN_CONCEPTS_1_0_FREQ());
 
-        Mockito.when(srmRestInternalService.retrieveConceptByUrn("urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=ECB:ECB_CONCEPTS(1.0).CURRENCY_DENOM")).thenReturn(
-                Mocks.mock_ECB_CONCEPTS_1_0_CURRENCY_DENOM());
+        Mockito.when(srmRestInternalService.retrieveConceptByUrn("urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=ECB:ECB_CONCEPTS(1.0).CURRENCY_DENOM"))
+                .thenReturn(Mocks.mock_ECB_CONCEPTS_1_0_CURRENCY_DENOM());
 
         Mockito.when(srmRestInternalService.retrieveConceptByUrn("urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=ECB:ECB_CONCEPTS(1.0).EXR_TYPE"))
                 .thenReturn(Mocks.mock_ECB_CONCEPTS_1_0_EXR_TYPE());
 
         Mockito.when(srmRestInternalService.retrieveConceptByUrn("urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=ECB:ECB_CONCEPTS(1.0).EXR_VAR")).thenReturn(Mocks.mock_ECB_CONCEPTS_1_0_EXR_VAR());
 
-        Mockito.when(srmRestInternalService.retrieveConceptByUrn("urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS(1.0).COLL_METHOD")).thenReturn(
-                Mocks.mock_SDMX_CROSS_DOMAIN_CONCEPTS_1_0_COLL_METHOD());
+        Mockito.when(srmRestInternalService.retrieveConceptByUrn("urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS(1.0).COLL_METHOD"))
+                .thenReturn(Mocks.mock_SDMX_CROSS_DOMAIN_CONCEPTS_1_0_COLL_METHOD());
 
-        Mockito.when(srmRestInternalService.retrieveConceptByUrn("urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS(1.0).DECIMALS")).thenReturn(
-                Mocks.mock_SDMX_CROSS_DOMAIN_CONCEPTS_1_0_DECIMALS());
+        Mockito.when(srmRestInternalService.retrieveConceptByUrn("urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS(1.0).DECIMALS"))
+                .thenReturn(Mocks.mock_SDMX_CROSS_DOMAIN_CONCEPTS_1_0_DECIMALS());
 
-        Mockito.when(srmRestInternalService.retrieveConceptByUrn("urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS(1.0).UNIT_MULT")).thenReturn(
-                Mocks.mock_SDMX_CROSS_DOMAIN_CONCEPTS_1_0_UNIT_MULT());
+        Mockito.when(srmRestInternalService.retrieveConceptByUrn("urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS(1.0).UNIT_MULT"))
+                .thenReturn(Mocks.mock_SDMX_CROSS_DOMAIN_CONCEPTS_1_0_UNIT_MULT());
 
-        Mockito.when(srmRestInternalService.retrieveConceptByUrn("urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS(1.0).CONF_STATUS")).thenReturn(
-                Mocks.mock_SDMX_CROSS_DOMAIN_CONCEPTS_1_0_CONF_STATUS());
+        Mockito.when(srmRestInternalService.retrieveConceptByUrn("urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS(1.0).CONF_STATUS"))
+                .thenReturn(Mocks.mock_SDMX_CROSS_DOMAIN_CONCEPTS_1_0_CONF_STATUS());
 
-        Mockito.when(srmRestInternalService.retrieveConceptByUrn("urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS(1.0).OBS_STATUS")).thenReturn(
-                Mocks.mock_SDMX_CROSS_DOMAIN_CONCEPTS_1_0_OBS_STATUS());
+        Mockito.when(srmRestInternalService.retrieveConceptByUrn("urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS(1.0).OBS_STATUS"))
+                .thenReturn(Mocks.mock_SDMX_CROSS_DOMAIN_CONCEPTS_1_0_OBS_STATUS());
 
-        Mockito.when(srmRestInternalService.retrieveConceptByUrn("urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS(1.0).TITLE")).thenReturn(
-                Mocks.mock_SDMX_CROSS_DOMAIN_1_0_TITLE());
+        Mockito.when(srmRestInternalService.retrieveConceptByUrn("urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS(1.0).TITLE"))
+                .thenReturn(Mocks.mock_SDMX_CROSS_DOMAIN_1_0_TITLE());
 
-        Mockito.when(srmRestInternalService.retrieveConceptByUrn("urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS(1.0).OBS_VALUE")).thenReturn(
-                Mocks.mock_SDMX_CROSS_DOMAIN_1_0_TITLE());
+        Mockito.when(srmRestInternalService.retrieveConceptByUrn("urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SDMX:CROSS_DOMAIN_CONCEPTS(1.0).OBS_VALUE"))
+                .thenReturn(Mocks.mock_SDMX_CROSS_DOMAIN_1_0_TITLE());
     }
 }

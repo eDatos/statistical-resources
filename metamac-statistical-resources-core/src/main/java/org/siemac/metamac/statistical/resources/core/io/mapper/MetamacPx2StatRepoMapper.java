@@ -23,7 +23,7 @@ public interface MetamacPx2StatRepoMapper {
 
     /**
      * Calculate map of attributes
-     * 
+     *
      * @param pxModel
      * @param preferredLanguage
      * @return

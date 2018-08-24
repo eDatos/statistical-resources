@@ -50,25 +50,25 @@ public class DatasetInfo {
         DatasetRepositoryDto datasetRepository = datasetRepositoriesServiceFacade.retrieveDatasetRepository(datasetVersion.getDatasetRepositoryId());
 
         // 1- Calculate coverage
-        this.coverage = calculateCoverage(datasetRepositoriesServiceFacade, datasetRepository);
+        coverage = calculateCoverage(datasetRepositoriesServiceFacade, datasetRepository);
 
         // 2- Calculate conditions
-        this.conditions = calculateConditionsFromQuery(datasetRepository, queryKey);
+        conditions = calculateConditionsFromQuery(datasetRepository, queryKey);
 
         // 3- Calculate conditions map
-        this.conditionsMap = metamac2StatRepoMapper.conditionsToRepositoryMap(this.conditions);
+        conditionsMap = metamac2StatRepoMapper.conditionsToRepositoryMap(conditions);
 
         // 4- Calculate MeasureDimension
-        this.measureDimension = calculateMeasureDimension();
+        measureDimension = calculateMeasureDimension();
 
         // 5- Calculate TimeDimension
-        this.timeDimension = calculateTimeDimension();
+        timeDimension = calculateTimeDimension();
 
         // 6- Calculate DimensionAtObservation
-        this.dimensionAtObservation = calculateDimensionAtObservation(requestParameter);
+        dimensionAtObservation = calculateDimensionAtObservation(requestParameter);
 
         // 7- Calculate attributeInstances
-        this.attributeInstances = calculateAttributes(datasetRepositoriesServiceFacade);
+        attributeInstances = calculateAttributes(datasetRepositoriesServiceFacade);
     }
 
     public void setAttributeInstances(Map<String, List<AttributeInstanceBasicDto>> attributeInstances) {
@@ -139,8 +139,8 @@ public class DatasetInfo {
                     // If is a wildcard dimension, all dimension codes are needed
                     addAllCodesConditionForDimension(datasetRepository, i, conditions);
                 } else {
-                    DimensionCodeInfo dimensionCodeInfo = new DimensionCodeInfo(datasetRepository.getDimensions().get(i), getDsdSdmxInfo().getDimensions()
-                            .get(datasetRepository.getDimensions().get(i)).getTypeComponentInfo());
+                    DimensionCodeInfo dimensionCodeInfo = new DimensionCodeInfo(datasetRepository.getDimensions().get(i),
+                            getDsdSdmxInfo().getDimensions().get(datasetRepository.getDimensions().get(i)).getTypeComponentInfo());
                     // Split the code by '+' to find OR operators for codes
                     String[] codes = split[i].split("\\+");
                     for (int j = 0; j < codes.length; j++) {
