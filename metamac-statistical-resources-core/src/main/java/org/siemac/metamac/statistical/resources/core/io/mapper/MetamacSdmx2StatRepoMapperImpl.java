@@ -13,17 +13,18 @@ import org.siemac.metamac.statistical.resources.core.constants.StatisticalResour
 import org.siemac.metamac.statistical.resources.core.io.utils.ManipulateDataUtils;
 import org.springframework.stereotype.Component;
 
-import com.arte.statistic.dataset.repository.dto.AttributeInstanceObservationDto;
-import com.arte.statistic.dataset.repository.dto.CodeDimensionDto;
-import com.arte.statistic.dataset.repository.dto.ConditionDimensionDto;
-import com.arte.statistic.dataset.repository.dto.InternationalStringDto;
-import com.arte.statistic.dataset.repository.dto.LocalisedStringDto;
-import com.arte.statistic.dataset.repository.dto.ObservationExtendedDto;
 import com.arte.statistic.parser.sdmx.v2_1.domain.DataContainer;
 import com.arte.statistic.parser.sdmx.v2_1.domain.DimensionCodeInfo;
 import com.arte.statistic.parser.sdmx.v2_1.domain.IdValuePair;
 import com.arte.statistic.parser.sdmx.v2_1.domain.Observation;
 import com.arte.statistic.parser.sdmx.v2_1.domain.Serie;
+
+import es.gobcan.istac.edatos.dataset.repository.dto.AttributeInstanceObservationDto;
+import es.gobcan.istac.edatos.dataset.repository.dto.CodeDimensionDto;
+import es.gobcan.istac.edatos.dataset.repository.dto.ConditionDimensionDto;
+import es.gobcan.istac.edatos.dataset.repository.dto.InternationalStringDto;
+import es.gobcan.istac.edatos.dataset.repository.dto.LocalisedStringDto;
+import es.gobcan.istac.edatos.dataset.repository.dto.ObservationExtendedDto;
 
 @Component(value = "metamacSdmx2StatRepoMapper")
 public class MetamacSdmx2StatRepoMapperImpl implements MetamacSdmx2StatRepoMapper {

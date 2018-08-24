@@ -125,12 +125,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.arte.statistic.dataset.repository.dto.AttributeInstanceBasicDto;
-import com.arte.statistic.dataset.repository.dto.AttributeInstanceDto;
-import com.arte.statistic.dataset.repository.dto.AttributeInstanceObservationDto;
-import com.arte.statistic.dataset.repository.dto.ConditionDimensionDto;
-import com.arte.statistic.dataset.repository.dto.ObservationExtendedDto;
-import com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceFacade;
+import es.gobcan.istac.edatos.dataset.repository.dto.AttributeInstanceBasicDto;
+import es.gobcan.istac.edatos.dataset.repository.dto.AttributeInstanceDto;
+import es.gobcan.istac.edatos.dataset.repository.dto.AttributeInstanceObservationDto;
+import es.gobcan.istac.edatos.dataset.repository.dto.ConditionDimensionDto;
+import es.gobcan.istac.edatos.dataset.repository.dto.ObservationExtendedDto;
+import es.gobcan.istac.edatos.dataset.repository.service.DatasetRepositoriesServiceFacade;
 
 @Component
 public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {

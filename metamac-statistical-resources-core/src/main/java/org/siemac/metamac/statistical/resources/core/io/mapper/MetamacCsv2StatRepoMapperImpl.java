@@ -9,14 +9,15 @@ import org.siemac.metamac.statistical.resources.core.constants.StatisticalResour
 import org.siemac.metamac.statistical.resources.core.io.utils.ManipulateDataUtils;
 import org.springframework.stereotype.Component;
 
-import com.arte.statistic.dataset.repository.dto.AttributeInstanceObservationDto;
-import com.arte.statistic.dataset.repository.dto.CodeDimensionDto;
-import com.arte.statistic.dataset.repository.dto.InternationalStringDto;
-import com.arte.statistic.dataset.repository.dto.LocalisedStringDto;
-import com.arte.statistic.dataset.repository.dto.ObservationExtendedDto;
 import com.arte.statistic.parser.csv.domain.CsvObservation;
 import com.arte.statistic.parser.csv.domain.CsvObservationAttribute;
 import com.arte.statistic.parser.csv.domain.CsvObservationCodeDimension;
+
+import es.gobcan.istac.edatos.dataset.repository.dto.AttributeInstanceObservationDto;
+import es.gobcan.istac.edatos.dataset.repository.dto.CodeDimensionDto;
+import es.gobcan.istac.edatos.dataset.repository.dto.InternationalStringDto;
+import es.gobcan.istac.edatos.dataset.repository.dto.LocalisedStringDto;
+import es.gobcan.istac.edatos.dataset.repository.dto.ObservationExtendedDto;
 
 @Component(MetamacCsv2StatRepoMapper.BEAN_ID)
 public class MetamacCsv2StatRepoMapperImpl implements MetamacCsv2StatRepoMapper {

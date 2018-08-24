@@ -21,7 +21,7 @@ import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesE
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.arte.statistic.dataset.repository.dto.AttributeInstanceDto;
+import es.gobcan.istac.edatos.dataset.repository.dto.AttributeInstanceDto;
 
 @Component(StatRepoDto2StatisticalResourcesDtoMapper.BEAN_ID)
 public class StatRepoDto2StatisticalResourcesDtoMapperImpl implements StatRepoDto2StatisticalResourcesDtoMapper {

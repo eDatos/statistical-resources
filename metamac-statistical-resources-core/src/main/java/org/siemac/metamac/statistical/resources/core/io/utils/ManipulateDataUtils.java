@@ -15,14 +15,15 @@ import org.siemac.metamac.statistical.resources.core.constants.StatisticalResour
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 
-import com.arte.statistic.dataset.repository.domain.AttributeAttachmentLevelEnum;
-import com.arte.statistic.dataset.repository.dto.AttributeDto;
-import com.arte.statistic.dataset.repository.dto.AttributeInstanceBasicDto;
-import com.arte.statistic.dataset.repository.dto.AttributeInstanceObservationDto;
-import com.arte.statistic.dataset.repository.dto.CodeDimensionDto;
-import com.arte.statistic.dataset.repository.dto.InternationalStringDto;
-import com.arte.statistic.dataset.repository.dto.LocalisedStringDto;
 import com.arte.statistic.parser.sdmx.v2_1.domain.IdValuePair;
+
+import es.gobcan.istac.edatos.dataset.repository.domain.AttributeAttachmentLevelEnum;
+import es.gobcan.istac.edatos.dataset.repository.dto.AttributeDto;
+import es.gobcan.istac.edatos.dataset.repository.dto.AttributeInstanceBasicDto;
+import es.gobcan.istac.edatos.dataset.repository.dto.AttributeInstanceObservationDto;
+import es.gobcan.istac.edatos.dataset.repository.dto.CodeDimensionDto;
+import es.gobcan.istac.edatos.dataset.repository.dto.InternationalStringDto;
+import es.gobcan.istac.edatos.dataset.repository.dto.LocalisedStringDto;
 
 public class ManipulateDataUtils {
 

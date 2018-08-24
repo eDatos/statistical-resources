@@ -2,10 +2,9 @@ package org.siemac.metamac.statistical.resources.core.utils;
 
 import java.util.Arrays;
 
-import com.arte.statistic.dataset.repository.dto.CodeDimensionDto;
-import com.arte.statistic.dataset.repository.dto.ConditionObservationDto;
-import com.arte.statistic.dataset.repository.dto.DatasetRepositoryDto;
-
+import es.gobcan.istac.edatos.dataset.repository.dto.CodeDimensionDto;
+import es.gobcan.istac.edatos.dataset.repository.dto.ConditionObservationDto;
+import es.gobcan.istac.edatos.dataset.repository.dto.DatasetRepositoryDto;
 
 public class DsRepositoryMockUtils {
 

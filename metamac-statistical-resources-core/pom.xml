@@ -119,15 +119,20 @@
             <artifactId>statistic-parser</artifactId>
             <version>${statistic-parser.version}</version>
         </dependency>
+        <!-- Dataset repository -->
         <dependency>
-            <groupId>com.arte.statistic</groupId>
-            <artifactId>statistic-dataset-repository</artifactId>
-            <version>${statistic-dataset-repository.version}</version>
+            <groupId>es.gobcan.istac</groupId>
+            <artifactId>edatos-dataset-repository</artifactId>
+            <version>${edatos-dataset-repository.version}</version>
             <classifier>client</classifier>
             <exclusions>
                 <exclusion>
-                    <artifactId>fornax-cartridges-sculptor-framework</artifactId>
-                    <groupId>org.fornax.cartridges</groupId>
+                    <groupId>org.aspectj</groupId>
+                    <artifactId>aspectjweaver</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.aspectj</groupId>
+                    <artifactId>aspectjrt</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>

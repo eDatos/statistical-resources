@@ -24,8 +24,8 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.TemporalCode
 import org.siemac.metamac.statistical.resources.core.invocation.service.MetamacApisLocator;
 import org.siemac.metamac.statistical.resources.core.invocation.service.SrmRestInternalService;
 
-import com.arte.statistic.dataset.repository.dto.DatasetRepositoryDto;
-import com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceFacade;
+import es.gobcan.istac.edatos.dataset.repository.dto.DatasetRepositoryDto;
+import es.gobcan.istac.edatos.dataset.repository.service.DatasetRepositoriesServiceFacade;
 
 public class DataMockUtils {
 

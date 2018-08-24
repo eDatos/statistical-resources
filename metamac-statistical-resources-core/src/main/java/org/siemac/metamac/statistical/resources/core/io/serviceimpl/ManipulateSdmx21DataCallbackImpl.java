@@ -10,13 +10,14 @@ import org.siemac.metamac.statistical.resources.core.invocation.service.SrmRestI
 import org.siemac.metamac.statistical.resources.core.io.mapper.MetamacSdmx2StatRepoMapper;
 import org.siemac.metamac.statistical.resources.core.io.serviceimpl.validators.ValidateDataVersusDsd;
 
-import com.arte.statistic.dataset.repository.dto.DatasetRepositoryDto;
-import com.arte.statistic.dataset.repository.dto.ObservationExtendedDto;
-import com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceFacade;
 import com.arte.statistic.parser.sdmx.v2_1.ManipulateDataCallback;
 import com.arte.statistic.parser.sdmx.v2_1.domain.ComponentInfo;
 import com.arte.statistic.parser.sdmx.v2_1.domain.DataContainer;
 import com.arte.statistic.parser.sdmx.v2_1.domain.Header;
+
+import es.gobcan.istac.edatos.dataset.repository.dto.DatasetRepositoryDto;
+import es.gobcan.istac.edatos.dataset.repository.dto.ObservationExtendedDto;
+import es.gobcan.istac.edatos.dataset.repository.service.DatasetRepositoriesServiceFacade;
 
 public class ManipulateSdmx21DataCallbackImpl implements ManipulateDataCallback {
 

@@ -13,9 +13,9 @@ import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdAttributeIn
 import org.siemac.metamac.statistical.resources.core.dto.query.CodeItemDto;
 import org.springframework.stereotype.Component;
 
-import com.arte.statistic.dataset.repository.dto.AttributeInstanceDto;
-import com.arte.statistic.dataset.repository.dto.InternationalStringDto;
-import com.arte.statistic.dataset.repository.dto.LocalisedStringDto;
+import es.gobcan.istac.edatos.dataset.repository.dto.AttributeInstanceDto;
+import es.gobcan.istac.edatos.dataset.repository.dto.InternationalStringDto;
+import es.gobcan.istac.edatos.dataset.repository.dto.LocalisedStringDto;
 
 @Component(StatisticalResourcesDto2StatRepoDtoMapper.BEAN_ID)
 public class StatisticalResourcesDto2StatRepoDtoMapperImpl implements StatisticalResourcesDto2StatRepoDtoMapper {

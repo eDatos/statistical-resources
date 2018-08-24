@@ -9,7 +9,7 @@ import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTes
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdAttributeInstanceDto;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesDtoMocks;
 
-import com.arte.statistic.dataset.repository.dto.AttributeInstanceDto;
+import es.gobcan.istac.edatos.dataset.repository.dto.AttributeInstanceDto;
 
 public class StatisticalResourcesDto2StatRepoDtoMapperTest extends StatisticalResourcesBaseTest {
 

@@ -20,13 +20,6 @@ import org.siemac.metamac.statistical.resources.core.io.utils.ManipulateDataUtil
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.arte.statistic.dataset.repository.dto.AttributeInstanceBasicDto;
-import com.arte.statistic.dataset.repository.dto.AttributeInstanceObservationDto;
-import com.arte.statistic.dataset.repository.dto.CodeDimensionDto;
-import com.arte.statistic.dataset.repository.dto.InternationalStringDto;
-import com.arte.statistic.dataset.repository.dto.LocalisedStringDto;
-import com.arte.statistic.dataset.repository.dto.ObservationExtendedDto;
-import com.arte.statistic.dataset.repository.util.DtoUtils;
 import com.arte.statistic.parser.domain.InternationalString;
 import com.arte.statistic.parser.px.domain.PxAttribute;
 import com.arte.statistic.parser.px.domain.PxAttributeCodes;
@@ -36,6 +29,14 @@ import com.arte.statistic.parser.px.domain.PxModel;
 import com.arte.statistic.parser.px.domain.PxObservation;
 import com.arte.statistic.parser.px.domain.PxObservationCodeDimension;
 import com.arte.statistic.parser.sdmx.v2_1.domain.ComponentInfo;
+
+import es.gobcan.istac.edatos.dataset.repository.dto.AttributeInstanceBasicDto;
+import es.gobcan.istac.edatos.dataset.repository.dto.AttributeInstanceObservationDto;
+import es.gobcan.istac.edatos.dataset.repository.dto.CodeDimensionDto;
+import es.gobcan.istac.edatos.dataset.repository.dto.InternationalStringDto;
+import es.gobcan.istac.edatos.dataset.repository.dto.LocalisedStringDto;
+import es.gobcan.istac.edatos.dataset.repository.dto.ObservationExtendedDto;
+import es.gobcan.istac.edatos.dataset.repository.util.DtoUtils;
 
 @Component(MetamacPx2StatRepoMapper.BEAN_ID)
 public class MetamacPx2StatRepoMapperImpl implements MetamacPx2StatRepoMapper {
@@ -212,13 +213,12 @@ public class MetamacPx2StatRepoMapperImpl implements MetamacPx2StatRepoMapper {
         return pxDimensionOrder;
     }
 
-    private com.arte.statistic.dataset.repository.dto.InternationalStringDto toInternationalStringStatisticRepository(InternationalString source, String preferredLanguage, String defaultLanguage)
-            throws MetamacException {
+    private InternationalStringDto toInternationalStringStatisticRepository(InternationalString source, String preferredLanguage, String defaultLanguage) throws MetamacException {
         if (source == null) {
             return null;
         }
 
-        com.arte.statistic.dataset.repository.dto.InternationalStringDto target = new com.arte.statistic.dataset.repository.dto.InternationalStringDto();
+        InternationalStringDto target = new InternationalStringDto();
 
         // In SDMX the attributes aren't localized. For use localised in SDMX must be use a enumerated representation.
         // In this case, in the repository exists the code of enumerated representation, never the i18n of code.
@@ -231,7 +231,7 @@ public class MetamacPx2StatRepoMapperImpl implements MetamacPx2StatRepoMapper {
             }
         }
 
-        com.arte.statistic.dataset.repository.dto.LocalisedStringDto targetLocalisedString = new com.arte.statistic.dataset.repository.dto.LocalisedStringDto();
+        LocalisedStringDto targetLocalisedString = new LocalisedStringDto();
         targetLocalisedString.setLabel(localisedLabel);
         targetLocalisedString.setLocale(StatisticalResourcesConstants.DEFAULT_DATA_REPOSITORY_LOCALE);
 

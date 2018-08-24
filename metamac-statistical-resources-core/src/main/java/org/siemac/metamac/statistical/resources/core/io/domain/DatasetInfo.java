@@ -16,15 +16,16 @@ import org.siemac.metamac.statistical.resources.core.io.domain.AttributeInfo.Att
 import org.siemac.metamac.statistical.resources.core.io.mapper.MetamacSdmx2StatRepoMapper;
 import org.siemac.metamac.statistical.resources.core.io.utils.ManipulateDataUtils;
 
-import com.arte.statistic.dataset.repository.dto.AttributeInstanceBasicDto;
-import com.arte.statistic.dataset.repository.dto.AttributeInstanceDto;
-import com.arte.statistic.dataset.repository.dto.DatasetRepositoryDto;
-import com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceFacade;
 import com.arte.statistic.parser.sdmx.v2_1.domain.ComponentInfo;
 import com.arte.statistic.parser.sdmx.v2_1.domain.ComponentInfoTypeEnum;
 import com.arte.statistic.parser.sdmx.v2_1.domain.DimensionCodeInfo;
 import com.arte.statistic.parser.sdmx.v2_1.domain.IdValuePair;
 import com.arte.statistic.parser.sdmx.v2_1.mapper.DataSetDo2JaxbDomainMapper;
+
+import es.gobcan.istac.edatos.dataset.repository.dto.AttributeInstanceBasicDto;
+import es.gobcan.istac.edatos.dataset.repository.dto.AttributeInstanceDto;
+import es.gobcan.istac.edatos.dataset.repository.dto.DatasetRepositoryDto;
+import es.gobcan.istac.edatos.dataset.repository.service.DatasetRepositoriesServiceFacade;
 
 public class DatasetInfo {
 

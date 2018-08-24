@@ -122,7 +122,7 @@ import org.siemac.metamac.statistical.resources.core.stream.serviceapi.StreamMes
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.arte.statistic.dataset.repository.dto.AttributeInstanceDto;
+import es.gobcan.istac.edatos.dataset.repository.dto.AttributeInstanceDto;
 
 /**
  * Implementation of StatisticalResourcesServiceFacade.

@@ -18,15 +18,16 @@ import org.siemac.metamac.statistical.resources.core.io.serviceimpl.validators.V
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.arte.statistic.dataset.repository.dto.AttributeInstanceObservationDto;
-import com.arte.statistic.dataset.repository.dto.ObservationExtendedDto;
-import com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceFacade;
 import com.arte.statistic.parser.px.PxParser;
 import com.arte.statistic.parser.px.PxParser.PxDataByDimensionsIterator;
 import com.arte.statistic.parser.px.domain.PxAttributeCodes;
 import com.arte.statistic.parser.px.domain.PxModel;
 import com.arte.statistic.parser.px.domain.PxObservation;
 import com.arte.statistic.parser.sdmx.v2_1.domain.ComponentInfo;
+
+import es.gobcan.istac.edatos.dataset.repository.dto.AttributeInstanceObservationDto;
+import es.gobcan.istac.edatos.dataset.repository.dto.ObservationExtendedDto;
+import es.gobcan.istac.edatos.dataset.repository.service.DatasetRepositoriesServiceFacade;
 
 @Component(ManipulatePxDataService.BEAN_ID)
 public class ManipulatePxDataServiceImpl implements ManipulatePxDataService {

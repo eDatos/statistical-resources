@@ -51,13 +51,14 @@ import org.siemac.metamac.statistical.resources.core.io.utils.ManipulateDataUtil
 import org.siemac.metamac.statistical.resources.core.task.domain.FileDescriptor;
 import org.siemac.metamac.statistical.resources.core.task.domain.TaskInfoDataset;
 
-import com.arte.statistic.dataset.repository.dto.AttributeInstanceBasicDto;
-import com.arte.statistic.dataset.repository.dto.AttributeInstanceDto;
-import com.arte.statistic.dataset.repository.dto.CodeDimensionDto;
-import com.arte.statistic.dataset.repository.dto.ObservationExtendedDto;
 import com.arte.statistic.parser.sdmx.v2_1.domain.ComponentInfo;
 import com.arte.statistic.parser.sdmx.v2_1.domain.ComponentInfoTypeEnum;
 import com.arte.statistic.parser.sdmx.v2_1.domain.IdValuePair;
+
+import es.gobcan.istac.edatos.dataset.repository.dto.AttributeInstanceBasicDto;
+import es.gobcan.istac.edatos.dataset.repository.dto.AttributeInstanceDto;
+import es.gobcan.istac.edatos.dataset.repository.dto.CodeDimensionDto;
+import es.gobcan.istac.edatos.dataset.repository.dto.ObservationExtendedDto;
 
 public class ValidateDataVersusDsd {
 

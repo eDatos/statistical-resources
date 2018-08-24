@@ -47,7 +47,9 @@
 		<metamac-statistical-resources.baseDir>${basedir}/..</metamac-statistical-resources.baseDir>
 		<metamac-statistical-resources.etcDir>${metamac-statistical-resources.baseDir}/etc</metamac-statistical-resources.etcDir>
 
-		<statistic-dataset-repository.version>1.2.1</statistic-dataset-repository.version>
+        <!-- EDATOS DATASET REPOSITORY -->
+        <edatos-dataset-repository.version>1.0.1-SNAPSHOT</edatos-dataset-repository.version>
+        
 		<statistic-parser.version>2.0.0</statistic-parser.version>
 		<statistic-sdmx-srm-rest-external-api.version>2.1.2</statistic-sdmx-srm-rest-external-api.version>
 

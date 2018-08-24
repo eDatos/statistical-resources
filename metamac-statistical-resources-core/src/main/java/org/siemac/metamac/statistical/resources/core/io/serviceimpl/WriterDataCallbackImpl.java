@@ -31,10 +31,6 @@ import org.siemac.metamac.statistical.resources.core.io.domain.RequestParameter;
 import org.siemac.metamac.statistical.resources.core.io.mapper.MetamacSdmx2StatRepoMapper;
 import org.siemac.metamac.statistical.resources.core.io.utils.ManipulateDataUtils;
 
-import com.arte.statistic.dataset.repository.dto.AttributeInstanceBasicDto;
-import com.arte.statistic.dataset.repository.dto.AttributeInstanceDto;
-import com.arte.statistic.dataset.repository.dto.ObservationExtendedDto;
-import com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceFacade;
 import com.arte.statistic.parser.sdmx.v2_1.WriterDataCallback;
 import com.arte.statistic.parser.sdmx.v2_1.constants.MappingConstants;
 import com.arte.statistic.parser.sdmx.v2_1.domain.ComponentInfo;
@@ -48,6 +44,11 @@ import com.arte.statistic.parser.sdmx.v2_1.domain.Serie;
 import com.arte.statistic.parser.sdmx.v2_1.domain.StructureReferenceBase;
 import com.arte.statistic.parser.sdmx.v2_1.domain.TypeSDMXDataMessageEnum;
 import com.arte.statistic.parser.sdmx.v2_1.mapper.DataSetDo2JaxbDomainMapper;
+
+import es.gobcan.istac.edatos.dataset.repository.dto.AttributeInstanceBasicDto;
+import es.gobcan.istac.edatos.dataset.repository.dto.AttributeInstanceDto;
+import es.gobcan.istac.edatos.dataset.repository.dto.ObservationExtendedDto;
+import es.gobcan.istac.edatos.dataset.repository.service.DatasetRepositoriesServiceFacade;
 
 public class WriterDataCallbackImpl implements WriterDataCallback {
 

@@ -51,7 +51,7 @@ import org.siemac.metamac.statistical.resources.core.enume.domain.VersionRationa
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryTypeEnum;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
 
-import com.arte.statistic.dataset.repository.dto.AttributeInstanceDto;
+import es.gobcan.istac.edatos.dataset.repository.dto.AttributeInstanceDto;
 
 public class StatisticalResourcesDtoMocks extends MetamacMocks {
 
@@ -154,8 +154,8 @@ public class StatisticalResourcesDtoMocks extends MetamacMocks {
         AttributeInstanceDto attributeInstanceDto = new AttributeInstanceDto();
         attributeInstanceDto.setAttributeId("attribute_" + mockString(8));
 
-        attributeInstanceDto.setValue(new com.arte.statistic.dataset.repository.dto.InternationalStringDto());
-        com.arte.statistic.dataset.repository.dto.LocalisedStringDto localisedValue = new com.arte.statistic.dataset.repository.dto.LocalisedStringDto();
+        attributeInstanceDto.setValue(new es.gobcan.istac.edatos.dataset.repository.dto.InternationalStringDto());
+        es.gobcan.istac.edatos.dataset.repository.dto.LocalisedStringDto localisedValue = new es.gobcan.istac.edatos.dataset.repository.dto.LocalisedStringDto();
         localisedValue.setLocale(StatisticalResourcesConstants.DEFAULT_DATA_REPOSITORY_LOCALE);
         localisedValue.setLabel(mockString(10));
         attributeInstanceDto.getValue().addText(localisedValue);
