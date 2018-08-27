@@ -247,7 +247,7 @@ public class SdmxDataRestExternalFacadeV21Impl implements SdmxDataRestExternalFa
     /**
      * FLOWREF = "AGENCY_ID,FLOW_ID,VERSION" with AGENCY_ID or VERSION optional
      * NOTE: Nothing to do with providerRef in this implementation of the API
-     * 
+     *
      * @param flowRef
      * @param providerRef
      * @return
@@ -306,11 +306,11 @@ public class SdmxDataRestExternalFacadeV21Impl implements SdmxDataRestExternalFa
                 and().
                 withProperty(CategorisationProperties.datasetVersion().siemacMetadataStatisticalResource().procStatus()).eq(ProcStatusEnum.PUBLISHED).
                 buildSingle());
-        
+
        conditions.add(ConditionalCriteriaBuilder.criteriaFor(Categorisation.class).
                 withProperty(CriteriaUtils.getDatetimeLeafPropertyEmbedded(CategorisationProperties.datasetVersion().siemacMetadataStatisticalResource().validFrom(), Categorisation.class)).lessThanOrEqual(new DateTime().toDate()).
                 buildSingle());
-        
+
         conditions.add(ConditionalCriteriaBuilder.criteriaFor(Categorisation.class).
                 withProperty(CriteriaUtils.getDatetimeLeafPropertyEmbedded(CategorisationProperties.datasetVersion().siemacMetadataStatisticalResource().validTo(), Categorisation.class)).isNull().
                 or().
@@ -361,7 +361,7 @@ public class SdmxDataRestExternalFacadeV21Impl implements SdmxDataRestExternalFa
                     or().
                     withProperty(CriteriaUtils.getDatetimeLeafPropertyEmbedded(DatasetVersionProperties.siemacMetadataStatisticalResource().validTo(), DatasetVersion.class)).greaterThan(new DateTime().toDate())
             .buildSingle());
-            
+
             //@formatter:on
         }
         conditions.add(ConditionalCriteriaBuilder.criteriaFor(DatasetVersion.class).distinctRoot().buildSingle());
