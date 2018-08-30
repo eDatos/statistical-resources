@@ -1,6 +1,7 @@
 package org.siemac.metamac.statistical.resources.core.io.serviceimpl;
 
 import java.util.Date;
+import java.util.List;
 
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.quartz.Job;
@@ -20,6 +21,8 @@ import org.siemac.metamac.statistical.resources.core.task.serviceapi.TaskService
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import es.gobcan.istac.edatos.dataset.repository.dto.Mapping;
+
 public class DuplicationDatasetJob implements Job {
 
     private static Logger      logger                 = LoggerFactory.getLogger(DuplicationDatasetJob.class);
@@ -27,6 +30,7 @@ public class DuplicationDatasetJob implements Job {
     public static final String USER                   = "user";
     public static final String DATASET_VERSION_ID     = "datasetVersionId";
     public static final String NEW_DATASET_VERSION_ID = "newDatasetVersionId";
+    public static final String DATASOURCE_MAPPINGS    = "datasourceMappings";
 
     private TaskServiceFacade  taskServiceFacade      = null;
 
@@ -52,6 +56,7 @@ public class DuplicationDatasetJob implements Job {
         String datasetVersionId = data.getString(DATASET_VERSION_ID);
         String newDatasetVersionId = data.getString(NEW_DATASET_VERSION_ID);
         String user = data.getString(USER);
+        List<Mapping> datasourcesMapping = (List<Mapping>) data.get(DATASOURCE_MAPPINGS);
         ServiceContext serviceContext = new ServiceContext(user, context.getFireInstanceId(), "statistical-resources-core");
 
         try {
@@ -60,7 +65,7 @@ public class DuplicationDatasetJob implements Job {
             TaskInfoDataset taskInfoDataset = new TaskInfoDataset();
             taskInfoDataset.setDatasetVersionId(datasetVersionId);
 
-            getTaskServiceFacade().executeDuplicationTask(serviceContext, jobKey.getName(), taskInfoDataset, newDatasetVersionId);
+            getTaskServiceFacade().executeDuplicationTask(serviceContext, jobKey.getName(), taskInfoDataset, newDatasetVersionId, datasourcesMapping);
             logger.info("DuplicationDatasetJob: " + jobKey + " finished at " + new Date());
             getNoticesRestInternalService().createSuccessBackgroundNotification(user, ServiceNoticeAction.DUPLICATION_DATASET_JOB, ServiceNoticeMessage.DUPLICATION_DATASET_JOB_OK, datasetVersionId,
                     newDatasetVersionId);

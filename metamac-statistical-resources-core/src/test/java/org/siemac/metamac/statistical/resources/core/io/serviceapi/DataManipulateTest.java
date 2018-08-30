@@ -8,6 +8,7 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 import java.io.File;
 import java.net.URISyntaxException;
 import java.sql.Connection;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -61,6 +62,7 @@ import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import es.gobcan.istac.edatos.dataset.repository.dto.DatasetRepositoryDto;
+import es.gobcan.istac.edatos.dataset.repository.dto.Mapping;
 import es.gobcan.istac.edatos.dataset.repository.service.DatasetRepositoriesServiceFacade;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -497,7 +499,7 @@ public class DataManipulateTest extends StatisticalResourcesBaseTest {
                     taskInfoDataset.setDataStructureUrn(URN_DSD_ECB_EXR_RG);
                     taskInfoDataset.setDatasetVersionId(datasetVersionUrn);
 
-                    jobKey = taskService.planifyDuplicationDataset(getServiceContextWithoutPrincipal(), taskInfoDataset, "TESTDATA_STR_ECB_EXR_RG_NEW");
+                    jobKey = taskService.planifyDuplicationDataset(getServiceContextWithoutPrincipal(), taskInfoDataset, "TESTDATA_STR_ECB_EXR_RG_NEW", new ArrayList<Mapping>());
 
                 } catch (MetamacException e) {
                     e.printStackTrace();

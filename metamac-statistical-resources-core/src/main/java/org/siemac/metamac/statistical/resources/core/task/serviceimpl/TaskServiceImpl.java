@@ -10,6 +10,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -29,6 +30,7 @@ import org.fornax.cartridges.sculptor.framework.errorhandling.ExceptionHelper;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.joda.time.DateTime;
 import org.quartz.DateBuilder.IntervalUnit;
+import org.quartz.JobDataMap;
 import org.quartz.JobDetail;
 import org.quartz.JobKey;
 import org.quartz.Scheduler;
@@ -86,6 +88,7 @@ import es.gobcan.istac.edatos.dataset.repository.domain.DatasetRepositoryExcepti
 import es.gobcan.istac.edatos.dataset.repository.dto.DatasetRepositoryDto;
 import es.gobcan.istac.edatos.dataset.repository.dto.InternationalStringDto;
 import es.gobcan.istac.edatos.dataset.repository.dto.LocalisedStringDto;
+import es.gobcan.istac.edatos.dataset.repository.dto.Mapping;
 import es.gobcan.istac.edatos.dataset.repository.service.DatasetRepositoriesServiceFacade;
 
 /**
@@ -258,9 +261,9 @@ public class TaskServiceImpl extends TaskServiceImplBase {
     }
 
     @Override
-    public synchronized String planifyDuplicationDataset(ServiceContext ctx, TaskInfoDataset taskInfoDataset, String newDatasetId) throws MetamacException {
+    public synchronized String planifyDuplicationDataset(ServiceContext ctx, TaskInfoDataset taskInfoDataset, String newDatasetId, List<Mapping> datasourcesMapping) throws MetamacException {
         // Validation
-        taskServiceInvocationValidator.checkPlanifyDuplicationDataset(ctx, taskInfoDataset, newDatasetId);
+        taskServiceInvocationValidator.checkPlanifyDuplicationDataset(ctx, taskInfoDataset, newDatasetId, datasourcesMapping);
 
         String datasetId = taskInfoDataset.getDatasetVersionId();
 
@@ -288,9 +291,16 @@ public class TaskServiceImpl extends TaskServiceImplBase {
             }
 
             // put triggers in group named after the cluster node instance just to distinguish (in logging) what was scheduled from where
+            HashMap<String, List<Mapping>> jobDataMap = new HashMap<String, List<Mapping>>();
+            jobDataMap.put(DuplicationDatasetJob.DATASOURCE_MAPPINGS, datasourcesMapping);
+            // @formatter:off
             JobDetail duplicationImportJob = newJob(DuplicationDatasetJob.class).withIdentity(duplicationJobKey)
-                    .usingJobData(DuplicationDatasetJob.DATASET_VERSION_ID, taskInfoDataset.getDatasetVersionId()).usingJobData(DuplicationDatasetJob.USER, ctx.getUserId())
-                    .usingJobData(DuplicationDatasetJob.NEW_DATASET_VERSION_ID, newDatasetId).requestRecovery().build();
+                    .usingJobData(DuplicationDatasetJob.DATASET_VERSION_ID, taskInfoDataset.getDatasetVersionId())
+                    .usingJobData(DuplicationDatasetJob.USER, ctx.getUserId())
+                    .usingJobData(DuplicationDatasetJob.NEW_DATASET_VERSION_ID, newDatasetId)
+                    .usingJobData(new JobDataMap(jobDataMap))
+                    .requestRecovery().build();
+            // @formatter:on
 
             Task task = new Task(duplicationJobKey.getName());
             task.setStatus(TaskStatusTypeEnum.IN_PROGRESS);
@@ -373,12 +383,12 @@ public class TaskServiceImpl extends TaskServiceImplBase {
     }
 
     @Override
-    public void processDuplicationTask(ServiceContext ctx, String duplicationJobKey, TaskInfoDataset taskInfoDataset, String newDatasetId) throws MetamacException {
+    public void processDuplicationTask(ServiceContext ctx, String duplicationJobKey, TaskInfoDataset taskInfoDataset, String newDatasetId, List<Mapping> datasourceMappings) throws MetamacException {
         // Validation
-        taskServiceInvocationValidator.checkProcessDuplicationTask(ctx, duplicationJobKey, taskInfoDataset, newDatasetId);
+        taskServiceInvocationValidator.checkProcessDuplicationTask(ctx, duplicationJobKey, taskInfoDataset, newDatasetId, datasourceMappings);
 
         try {
-            datasetRepositoriesServiceFacade.duplicateDatasetRepository(taskInfoDataset.getDatasetVersionId(), newDatasetId);
+            datasetRepositoriesServiceFacade.duplicateDatasetRepository(taskInfoDataset.getDatasetVersionId(), newDatasetId, datasourceMappings);
         } catch (Exception e) {
             // Convert parser exception to metamac exception
             MetamacException throwableMetamacException = null;

@@ -2,6 +2,7 @@ package org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.data
 
 import static org.siemac.metamac.statistical.resources.core.error.utils.ServiceExceptionParametersUtils.addParameter;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -32,6 +33,8 @@ import org.siemac.metamac.statistical.resources.core.task.serviceapi.TaskService
 import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesExternalItemUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import es.gobcan.istac.edatos.dataset.repository.dto.Mapping;
 
 @Service("datasetLifecycleService")
 public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<DatasetVersion> {
@@ -218,9 +221,15 @@ public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<Datase
         String oldDatasetRepositoryId = previous.getDatasetRepositoryId();
         resource.setDatasetRepositoryId(resource.getSiemacMetadataStatisticalResource().getUrn());
 
+        ArrayList<Mapping> datasourcesMapping = new ArrayList<Mapping>();
+        for (int i = 0; i < resource.getDatasources().size(); i++) {
+            datasourcesMapping
+                    .add(new Mapping(resource.getDatasources().get(i).getIdentifiableStatisticalResource().getCode(), previous.getDatasources().get(i).getIdentifiableStatisticalResource().getCode()));
+        }
+
         TaskInfoDataset taskInfo = new TaskInfoDataset();
         taskInfo.setDatasetVersionId(oldDatasetRepositoryId);
-        taskService.planifyDuplicationDataset(ctx, taskInfo, resource.getDatasetRepositoryId());
+        taskService.planifyDuplicationDataset(ctx, taskInfo, resource.getDatasetRepositoryId(), datasourcesMapping);
     }
 
     private VersionTypeEnum guessVersionTypeEnum(DatasetVersion resource, DatasetVersion previous) {
