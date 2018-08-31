@@ -134,6 +134,7 @@ public abstract class SdmxRestExternalFacadeV21BaseTest extends MetamacRestBaseT
         return sdmxDataRestExternalFacadeClientXml;
     }
 
+    @Override
     protected void incrementRequestTimeOut(WebClient create) {
         ClientConfiguration config = WebClient.getConfig(create);
         HTTPConduit conduit = config.getHttpConduit();
@@ -174,8 +175,8 @@ public abstract class SdmxRestExternalFacadeV21BaseTest extends MetamacRestBaseT
 
     @SuppressWarnings("unchecked")
     protected void mockFindAttributesInstancesWithDimensionAttachmentLevelDenormalized() throws Exception {
-        when(datasetRepositoriesServiceFacade.findAttributesInstancesWithDimensionAttachmentLevelDenormalized(any(String.class), any(String.class), any(Map.class))).thenAnswer(
-                new Answer<List<AttributeInstanceDto>>() {
+        when(datasetRepositoriesServiceFacade.findAttributesInstancesWithDimensionAttachmentLevelDenormalized(any(String.class), any(String.class), any(Map.class)))
+                .thenAnswer(new Answer<List<AttributeInstanceDto>>() {
 
                     @Override
                     public List<AttributeInstanceDto> answer(InvocationOnMock invocation) throws Throwable {
@@ -521,25 +522,26 @@ public abstract class SdmxRestExternalFacadeV21BaseTest extends MetamacRestBaseT
 
     private String getAgencyIdFromConditionalCriteria(List<ConditionalCriteria> conditions) {
         // can use PublicationVersionProperties or DatasetVersionProperties...
-        ConditionalCriteria conditionalCriteria = ConditionalCriteriaUtils.getConditionalCriteriaByPropertyName(conditions, Operator.Equal, DatasetVersionProperties
-                .siemacMetadataStatisticalResource().maintainer().codeNested());
+        ConditionalCriteria conditionalCriteria = ConditionalCriteriaUtils.getConditionalCriteriaByPropertyName(conditions, Operator.Equal,
+                DatasetVersionProperties.siemacMetadataStatisticalResource().maintainer().codeNested());
         return conditionalCriteria != null ? (String) conditionalCriteria.getFirstOperant() : null;
     }
 
     private String getResourceIdFromConditionalCriteria(List<ConditionalCriteria> conditions) {
         // can use PublicationVersionProperties or DatasetVersionProperties...
-        ConditionalCriteria conditionalCriteria = ConditionalCriteriaUtils.getConditionalCriteriaByPropertyName(conditions, Operator.Equal, DatasetVersionProperties
-                .siemacMetadataStatisticalResource().code());
+        ConditionalCriteria conditionalCriteria = ConditionalCriteriaUtils.getConditionalCriteriaByPropertyName(conditions, Operator.Equal,
+                DatasetVersionProperties.siemacMetadataStatisticalResource().code());
         return conditionalCriteria != null ? (String) conditionalCriteria.getFirstOperant() : null;
     }
 
     private String getVersionFromConditionalCriteria(List<ConditionalCriteria> conditions) {
         // can use PublicationVersionProperties or DatasetVersionProperties...
-        ConditionalCriteria conditionalCriteria = ConditionalCriteriaUtils.getConditionalCriteriaByPropertyName(conditions, Operator.Equal, DatasetVersionProperties
-                .siemacMetadataStatisticalResource().versionLogic());
+        ConditionalCriteria conditionalCriteria = ConditionalCriteriaUtils.getConditionalCriteriaByPropertyName(conditions, Operator.Equal,
+                DatasetVersionProperties.siemacMetadataStatisticalResource().versionLogic());
         return conditionalCriteria != null ? (String) conditionalCriteria.getFirstOperant() : null;
     }
 
+    @Override
     protected void assertInputStream(InputStream expected, InputStream actual, boolean onlyPrint) throws IOException {
         byte[] byteArray = IOUtils.toByteArray(actual);
         if (logger.isDebugEnabled()) {
