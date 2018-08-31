@@ -98,9 +98,9 @@ import org.siemac.metamac.statistical_resources.rest.internal.invocation.Statist
 import org.siemac.metamac.statistical_resources.rest.internal.v1_0.service.StatisticalResourcesV1_0;
 import org.springframework.context.ApplicationContext;
 
-import com.arte.statistic.dataset.repository.dto.AttributeInstanceDto;
-import com.arte.statistic.dataset.repository.dto.ObservationExtendedDto;
-import com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceFacade;
+import es.gobcan.istac.edatos.dataset.repository.dto.AttributeInstanceDto;
+import es.gobcan.istac.edatos.dataset.repository.dto.ObservationExtendedDto;
+import es.gobcan.istac.edatos.dataset.repository.service.DatasetRepositoriesServiceFacade;
 
 public abstract class StatisticalResourcesRestInternalFacadeV10BaseTest extends MetamacRestBaseTest {
 
