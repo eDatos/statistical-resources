@@ -43,7 +43,7 @@
     </bean>
     
     <bean id="datasetRepositoriesServiceFacade" class="org.mockito.Mockito" factory-method="mock">
-        <constructor-arg value="com.arte.statistic.dataset.repository.service.DatasetRepositoriesServiceFacade" />
+        <constructor-arg value="es.gobcan.istac.edatos.dataset.repository.service.DatasetRepositoriesServiceFacade" />
     </bean>
 
     <bean id="srmRestExternalFacade" class="org.mockito.Mockito" factory-method="mock">
