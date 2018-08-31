@@ -19,7 +19,6 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
 import com.smartgwt.client.types.Alignment;
-import com.smartgwt.client.types.Autofit;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.events.RecordClickEvent;
 import com.smartgwt.client.widgets.grid.events.RecordClickHandler;
@@ -43,7 +42,6 @@ public class OperationListViewImpl extends ViewWithUiHandlers<OperationListUiHan
             }
         });
         operationsList.getListGrid().setAutoFitMaxRecords(StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS);
-        operationsList.getListGrid().setAutoFitData(Autofit.VERTICAL);
         operationsList.getListGrid().setDataSource(new OperationDS());
         operationsList.getListGrid().setUseAllDataSourceFields(false);
 
@@ -51,6 +49,8 @@ public class OperationListViewImpl extends ViewWithUiHandlers<OperationListUiHan
         fieldIdentifier.setAlign(Alignment.LEFT);
         ListGridField fieldTitle = new ListGridField(OperationDS.TITLE, getConstants().nameableStatisticalResourceTitle());
         operationsList.getListGrid().setFields(fieldIdentifier, fieldTitle);
+
+        operationsList.setHeight100();
 
         panel = new VLayout();
         panel.addMember(operationsList);

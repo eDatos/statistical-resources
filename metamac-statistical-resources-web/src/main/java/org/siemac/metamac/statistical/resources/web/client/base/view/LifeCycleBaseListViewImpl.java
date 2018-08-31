@@ -20,8 +20,6 @@ import org.siemac.metamac.web.common.client.widgets.actions.PaginatedAction;
 
 import com.gwtplatform.mvp.client.UiHandlers;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
-import com.smartgwt.client.types.Autofit;
-import com.smartgwt.client.types.Overflow;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
@@ -73,7 +71,6 @@ public abstract class LifeCycleBaseListViewImpl<C extends UiHandlers> extends Vi
         publishButton = createPublishButton();
         toolStrip.addButton(publishButton);
 
-
         versionButton = createVersionButton();
         toolStrip.addButton(versionButton);
 
@@ -87,7 +84,6 @@ public abstract class LifeCycleBaseListViewImpl<C extends UiHandlers> extends Vi
             }
         });
         listGrid.getListGrid().setAutoFitMaxRecords(StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS);
-        listGrid.getListGrid().setAutoFitData(Autofit.VERTICAL);
         listGrid.getListGrid().setUseAllDataSourceFields(false);
         listGrid.getListGrid().addSelectionChangedHandler(new SelectionChangedHandler() {
 
@@ -96,19 +92,15 @@ public abstract class LifeCycleBaseListViewImpl<C extends UiHandlers> extends Vi
                 updateListGridButtonsVisibility();
             }
         });
+        listGrid.setHeight100();
 
         // Panel
 
         panel = new VLayout();
-        panel.setHeight100();
 
-        VLayout subpanel = new VLayout();
-        subpanel.setOverflow(Overflow.SCROLL);
-        subpanel.addMember(toolStrip);
-        subpanel.addMember(createAdvacedSearchSectionStack());
-        subpanel.addMember(listGrid);
-
-        panel.addMember(subpanel);
+        panel.addMember(toolStrip);
+        panel.addMember(createAdvacedSearchSectionStack());
+        panel.addMember(listGrid);
 
         // Delete confirmation window
 
@@ -253,7 +245,6 @@ public abstract class LifeCycleBaseListViewImpl<C extends UiHandlers> extends Vi
         }
     }
 
-
     // Version
 
     private CustomToolStripButton createVersionButton() {
@@ -332,7 +323,6 @@ public abstract class LifeCycleBaseListViewImpl<C extends UiHandlers> extends Vi
     protected abstract ClickHandler getSendToDiffusionValidationClickHandler();
     protected abstract ClickHandler getRejectValidationClickHandler();
     protected abstract ClickHandler getPublishClickHandler();
-
 
     protected abstract boolean canCreate();
     protected abstract boolean canDelete(ListGridRecord record);

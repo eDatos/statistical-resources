@@ -205,8 +205,8 @@ public class DatasetDatasourcesTabViewImpl extends ViewWithUiHandlers<DatasetDat
         }
 
         private CustomToolStripButton createImportDatasourceButton() {
-            CustomToolStripButton importDatasourcesButton = new CustomToolStripButton(getConstants().actionLoadDatasource(), org.siemac.metamac.web.common.client.resources.GlobalResources.RESOURCE
-                    .importResource().getURL());
+            CustomToolStripButton importDatasourcesButton = new CustomToolStripButton(getConstants().actionLoadDatasource(),
+                    org.siemac.metamac.web.common.client.resources.GlobalResources.RESOURCE.importResource().getURL());
             importDatasourcesButton.addClickHandler(new ClickHandler() {
 
                 @Override
@@ -263,6 +263,7 @@ public class DatasetDatasourcesTabViewImpl extends ViewWithUiHandlers<DatasetDat
                 records[index++] = StatisticalResourcesRecordUtils.getDatasourceRecord(datasourceDto);
             }
             datasourcesList.setData(records);
+            datasourcesList.setAutoFitMaxRecords(datasources.size());
         }
 
         private void createImportDatasourcesWindow(String datasetVersionUrn) {
