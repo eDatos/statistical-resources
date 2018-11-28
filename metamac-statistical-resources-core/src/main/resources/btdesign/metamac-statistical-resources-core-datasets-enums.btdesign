@@ -21,5 +21,10 @@ Application DatasetsStatisticalResourcesEnums {
 		enum AttributeRepresentationTypeEnum {
 			ENUMERATION, TEXT_FORMAT;
 		}
+		
+		enum DataSourceTypeEnum {
+			FILE, 
+			DATABASE;
+		}
 	}
 }

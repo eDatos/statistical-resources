@@ -31,7 +31,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class DatasetDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements DatasetDo2DtoMapper {
 
     @Autowired
-    private TaskService              taskService;
+    private TaskService taskService;
 
     @Autowired
     private DatasetVersionRepository datasetVersionRepository;
@@ -262,6 +262,8 @@ public class DatasetDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements Dat
         target.getIsRequiredBy().addAll(relatedResourceResultCollectionToDtoCollection(isRequiredBy));
 
         target.setIsTaskInBackground(taskService.existsTaskForResource(ctx, source.getSiemacMetadataStatisticalResource().getUrn()));
+
+        target.setDataSourceType(source.getDataSourceType());
 
         return target;
     }

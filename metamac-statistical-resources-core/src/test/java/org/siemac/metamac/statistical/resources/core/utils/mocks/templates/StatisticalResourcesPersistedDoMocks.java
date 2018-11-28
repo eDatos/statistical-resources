@@ -23,6 +23,7 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.StatisticOfficiality;
+import org.siemac.metamac.statistical.resources.core.enume.dataset.domain.DataSourceTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryStatusEnum;
@@ -305,6 +306,8 @@ public class StatisticalResourcesPersistedDoMocks extends StatisticalResourcesDo
         }
 
         computeCoverageRelatedMetadata(datasetVersion);
+
+        datasetVersion.setDataSourceType(DataSourceTypeEnum.FILE);
 
         return datasetVersion;
     }

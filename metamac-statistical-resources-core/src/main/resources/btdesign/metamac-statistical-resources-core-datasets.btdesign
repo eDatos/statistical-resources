@@ -3,7 +3,9 @@ import "classpath:/btdesign/metamac-statistical-resources-core-base-enums.btdesi
 import "classpath:/btdesign/metamac-statistical-resources-core-tasks-dtos.btdesign"
 import "classpath:/btdesign/metamac-statistical-resources-core-tasks.btdesign"
 import "classpath:/btdesign/metamac-statistical-resources-core-common.btdesign"
+import "classpath:/btdesign/metamac-statistical-resources-core-datasets-enums.btdesign"
 import "classpath:/btdesign/metamac-core-common-enum.btdesign"
+
 
 Application DatasetsStatisticalResources { 
 	basePackage=unused
@@ -174,7 +176,8 @@ Application DatasetsStatisticalResources {
 			Long id key;
 
 			- @SiemacMetadataStatisticalResource siemacMetadataStatisticalResource databaseColumn="SIEMAC_RESOURCE_FK" not nullable cascade="all";
-
+			
+			- @DataSourceTypeEnum dataSourceType;
 			//Content descriptors
 
 			// Dimension or attribute id marked as geographic

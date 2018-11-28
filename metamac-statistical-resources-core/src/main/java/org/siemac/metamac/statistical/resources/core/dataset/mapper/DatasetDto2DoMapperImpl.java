@@ -17,7 +17,6 @@ import org.siemac.metamac.statistical.resources.core.base.domain.VersionableStat
 import org.siemac.metamac.statistical.resources.core.base.mapper.BaseDto2DoMapperImpl;
 import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResource;
-import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResourceResult;
 import org.siemac.metamac.statistical.resources.core.dataset.checks.DatasetMetadataEditionChecks;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Categorisation;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
@@ -42,10 +41,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class DatasetDto2DoMapperImpl extends BaseDto2DoMapperImpl implements DatasetDto2DoMapper {
 
     @Autowired
-    private DatasourceRepository           datasourceRepository;
+    private DatasourceRepository datasourceRepository;
 
     @Autowired
-    private DatasetVersionRepository       datasetVersionRepository;
+    private DatasetVersionRepository datasetVersionRepository;
 
     @Autowired
     private StatisticOfficialityRepository statisticOfficialityRepository;
@@ -161,8 +160,10 @@ public class DatasetDto2DoMapperImpl extends BaseDto2DoMapperImpl implements Dat
         }
 
         target.setUpdateFrequency(externalItemDtoToDo(source.getUpdateFrequency(), target.getUpdateFrequency(), ServiceExceptionParameters.DATASET_VERSION__UPDATE_FREQUENCY));
-        target.setStatisticOfficiality(statisticOfficialityDtoToDo(source.getStatisticOfficiality(), target.getStatisticOfficiality(),
-                ServiceExceptionParameters.DATASET_VERSION__STATISTIC_OFFICIALITY));
+        target.setStatisticOfficiality(
+                statisticOfficialityDtoToDo(source.getStatisticOfficiality(), target.getStatisticOfficiality(), ServiceExceptionParameters.DATASET_VERSION__STATISTIC_OFFICIALITY));
+
+        target.setDataSourceType(source.getDataSourceType());
 
         return target;
     }
@@ -202,8 +203,8 @@ public class DatasetDto2DoMapperImpl extends BaseDto2DoMapperImpl implements Dat
         } else {
             boolean changedDsd = false;
             if (areDifferentDsd(target.getRelatedDsd(), source.getRelatedDsd())) {
-                if (DatasetMetadataEditionChecks.canDsdBeReplacedByAnyOtherDsd(target.getId(), target.getSiemacMetadataStatisticalResource().getVersionLogic(), target
-                        .getSiemacMetadataStatisticalResource().getProcStatus())) {
+                if (DatasetMetadataEditionChecks.canDsdBeReplacedByAnyOtherDsd(target.getId(), target.getSiemacMetadataStatisticalResource().getVersionLogic(),
+                        target.getSiemacMetadataStatisticalResource().getProcStatus())) {
                     changedDsd = true;
                 }
             } else if (areSameDsdDifferentVersion(target.getRelatedDsd(), source.getRelatedDsd())) {
