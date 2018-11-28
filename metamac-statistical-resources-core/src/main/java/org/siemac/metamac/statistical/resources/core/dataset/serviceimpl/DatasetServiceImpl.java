@@ -111,46 +111,46 @@ import es.gobcan.istac.edatos.dataset.repository.service.DatasetRepositoriesServ
 @Service("datasetService")
 public class DatasetServiceImpl extends DatasetServiceImplBase {
 
-    private static final Logger                       log = LoggerFactory.getLogger(DatasetServiceImpl.class);
+    private static final Logger log = LoggerFactory.getLogger(DatasetServiceImpl.class);
 
     @Autowired
     private IdentifiableStatisticalResourceRepository identifiableStatisticalResourceRepository;
 
     @Autowired
-    private DatasetServiceInvocationValidator         datasetServiceInvocationValidator;
+    private DatasetServiceInvocationValidator datasetServiceInvocationValidator;
 
     @Autowired
-    private SiemacStatisticalResourceGeneratedCode    siemacStatisticalResourceGeneratedCode;
+    private SiemacStatisticalResourceGeneratedCode siemacStatisticalResourceGeneratedCode;
 
     @Autowired
-    private SrmRestInternalService                    srmRestInternalService;
+    private SrmRestInternalService srmRestInternalService;
 
     @Autowired
-    private QueryVersionRepository                    queryVersionRepository;
+    private QueryVersionRepository queryVersionRepository;
 
     @Autowired
-    private QueryService                              queryService;
+    private QueryService queryService;
 
     @Autowired
-    private DatasetRepositoriesServiceFacade          statisticsDatasetRepositoriesServiceFacade;
+    private DatasetRepositoriesServiceFacade statisticsDatasetRepositoriesServiceFacade;
 
     @Autowired
-    private RestMapper                                restMapper;
+    private RestMapper restMapper;
 
     @Autowired
-    private ExternalItemChecker                       externalItemChecker;
+    private ExternalItemChecker externalItemChecker;
 
     @Autowired
-    private DatasetVersionRepository                  datasetVersionRepository;
+    private DatasetVersionRepository datasetVersionRepository;
 
     @Autowired
-    private StatisticalResourcesConfiguration         configurationService;
+    private StatisticalResourcesConfiguration configurationService;
 
     @Autowired
-    private ConstraintsService                        constraintsService;
+    private ConstraintsService constraintsService;
 
     @Autowired
-    private RelatedResourceRepository                 relatedResourceRepository;
+    private RelatedResourceRepository relatedResourceRepository;
 
     // ------------------------------------------------------------------------
     // DATASOURCES
@@ -264,8 +264,8 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
     }
 
     private void deleteDatasourceDimensionRepresentationMappings(DatasetVersion datasetVersion, Datasource datasource) throws MetamacException {
-        String filename = datasource.getFilename();
-        List<Datasource> datasources = retrieveDatasourcesByDatasetAndFilename(datasetVersion.getSiemacMetadataStatisticalResource().getUrn(), filename);
+        String filename = datasource.getSourceName();
+        List<Datasource> datasources = retrieveDatasourcesByDatasetAndSourceName(datasetVersion.getSiemacMetadataStatisticalResource().getUrn(), filename);
         // The dimension representation mapping is only deleted if there is no more datasources associated with the same file
         if (datasources.isEmpty()) {
             DimensionRepresentationMapping dimensionRepresentationMapping = getDimensionRepresentationMappingRepository()
@@ -276,9 +276,9 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         }
     }
 
-    private List<Datasource> retrieveDatasourcesByDatasetAndFilename(String datasetVersionUrn, String filename) {
+    private List<Datasource> retrieveDatasourcesByDatasetAndSourceName(String datasetVersionUrn, String sourceName) {
         List<ConditionalCriteria> condition = criteriaFor(Datasource.class).withProperty(DatasourceProperties.datasetVersion().siemacMetadataStatisticalResource().urn()).eq(datasetVersionUrn).and()
-                .withProperty(DatasourceProperties.filename()).eq(filename).distinctRoot().build();
+                .withProperty(DatasourceProperties.sourceName()).eq(sourceName).distinctRoot().build();
         return getDatasourceRepository().findByCondition(condition);
     }
 
@@ -700,7 +700,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
         for (URL url : fileUrls) {
             String filename = getFilenameFromPath(url.getPath());
-            String linkedDatasetVersionUrn = getDatasetRepository().findDatasetUrnLinkedToDatasourceFile(filename);
+            String linkedDatasetVersionUrn = getDatasetRepository().findDatasetUrnLinkedToDatasourceSourceName(filename);
             if (linkedDatasetVersionUrn != null && !StringUtils.equals(datasetUrn, linkedDatasetVersionUrn)) {
                 exceptionItems.add(new MetamacExceptionItem(ServiceExceptionType.INVALID_FILE_FOR_DATASET_VERSION, filename, datasetVersionUrn));
             }
@@ -759,7 +759,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
         for (URL url : fileUrls) {
             String filename = getFilenameFromPath(url.getPath());
-            String datasetUrn = getDatasetRepository().findDatasetUrnLinkedToDatasourceFile(filename);
+            String datasetUrn = getDatasetRepository().findDatasetUrnLinkedToDatasourceSourceName(filename);
             DatasetVersion datasetVersion = null;
             if (datasetUrn != null) {
                 datasetVersion = getDatasetVersionRepository().retrieveLastVersion(datasetUrn);
@@ -790,7 +790,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
             Datasource datasource = new Datasource();
             datasource.setIdentifiableStatisticalResource(new IdentifiableStatisticalResource());
             datasource.getIdentifiableStatisticalResource().setCode(fileDescriptor.getDatasourceId());
-            datasource.setFilename(fileDescriptor.getFileName());
+            datasource.setSourceName(fileDescriptor.getFileName());
             if (DatasetFileFormatEnum.PX.equals(fileDescriptor.getDatasetFileFormatEnum())) {
                 datasource.setDateNextUpdate(new DateTime(fileDescriptor.getNextUpdate()));
             }

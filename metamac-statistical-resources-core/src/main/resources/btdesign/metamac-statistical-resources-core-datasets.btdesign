@@ -122,7 +122,7 @@ Application DatasetsStatisticalResources {
 
 			"Value of next update metadata if the source of datasource is a px"
 			DateTimeTZ dateNextUpdate nullable;
-			String filename not nullable;
+			String sourceName not nullable;
 
 			// Relations
             "Dataset version"
@@ -159,7 +159,7 @@ Application DatasetsStatisticalResources {
 				findByCondition;
 				findByCondition(PagingParameter pagingParameter);
 				findByQuery;
-				String findDatasetUrnLinkedToDatasourceFile(String filename);
+				String findDatasetUrnLinkedToDatasourceSourceName(String sourceName);
 				save;
 				delete;
 				@Dataset retrieveByUrn(String urn) throws MetamacException;

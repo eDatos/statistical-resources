@@ -38,7 +38,7 @@ public class DatasourceAvroMapperTest {
 
     protected void assertEqualDatasourceDo(Datasource expected, Datasource actual) throws MetamacException {
         assertThat(actual.getDateNextUpdate(), is(equalTo(expected.getDateNextUpdate())));
-        assertThat(actual.getFilename(), is(equalTo(expected.getFilename())));
+        assertThat(actual.getSourceName(), is(equalTo(expected.getSourceName())));
         assertEquals(actual.getIdentifiableStatisticalResource(), actual.getIdentifiableStatisticalResource());
 
         DatasetsAsserts.assertEqualsDatasetVersion(expected.getDatasetVersion(), actual.getDatasetVersion());

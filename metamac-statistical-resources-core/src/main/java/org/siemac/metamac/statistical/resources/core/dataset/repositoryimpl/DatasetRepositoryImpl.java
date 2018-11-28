@@ -24,7 +24,7 @@ public class DatasetRepositoryImpl extends DatasetRepositoryBase {
 
     @Override
     public Dataset retrieveByUrn(String urn) throws MetamacException {
-     // Prepare criteria
+        // Prepare criteria
         List<ConditionalCriteria> condition = criteriaFor(Dataset.class).withProperty(DatasetProperties.identifiableStatisticalResource().urn()).eq(urn).distinctRoot().build();
 
         // Find
@@ -40,19 +40,20 @@ public class DatasetRepositoryImpl extends DatasetRepositoryBase {
 
         return result.get(0);
     }
-    
+
     @Override
-    public String findDatasetUrnLinkedToDatasourceFile(String filename) {
-        String query = "select ds " +
-        		        "from Dataset ds "+
-                        "join ds.versions version " +
-                        "join version.datasources datasource "+
-                        "where datasource.filename = :filenameExpr";
-        
+    public String findDatasetUrnLinkedToDatasourceSourceName(String sourceName) {
+        // @formatter:off
+        String query = "select ds " + 
+                        "from Dataset ds " + 
+                        "join ds.versions version " + 
+                        "join version.datasources datasource " + 
+                        "where datasource.sourceName = :sourceNameExpr";
+        // @formatter:on
         Map<String, Object> parameters = new HashMap<String, Object>();
-        parameters.put("filenameExpr", filename);
+        parameters.put("sourceNameExpr", sourceName);
         List<Dataset> result = findByQuery(query, parameters);
-        
+
         if (result.size() == 0) {
             return null;
         }

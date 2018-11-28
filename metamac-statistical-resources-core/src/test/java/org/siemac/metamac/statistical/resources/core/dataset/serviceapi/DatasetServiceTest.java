@@ -145,22 +145,22 @@ import es.gobcan.istac.edatos.dataset.repository.service.DatasetRepositoriesServ
 public class DatasetServiceTest extends StatisticalResourcesBaseTest implements DatasetServiceTestBase {
 
     @Autowired
-    private DatasetService                           datasetService;
+    private DatasetService datasetService;
 
     @Autowired
-    private DatasetVersionRepository                 datasetVersionRepository;
+    private DatasetVersionRepository datasetVersionRepository;
 
     @Autowired
     private DimensionRepresentationMappingRepository dimensionRepresentationMappingRepository;
 
     @Autowired
-    private DatasetRepositoriesServiceFacade         datasetRepositoriesServiceFacade;
+    private DatasetRepositoriesServiceFacade datasetRepositoriesServiceFacade;
 
     @Autowired
-    private SrmRestInternalService                   srmRestInternalService;
+    private SrmRestInternalService srmRestInternalService;
 
     @Autowired
-    private TaskService                              taskService;
+    private TaskService taskService;
 
     @Before
     public void setUp() throws Exception {
@@ -1013,9 +1013,9 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
     @MetamacMock({DATASET_VERSION_37_WITH_SINGLE_DATASOURCE_IN_OPERATION_0001_NAME, DATASET_VERSION_38_WITH_SINGLE_DATASOURCE_IN_OPERATION_0001_NAME})
     public void testImportDatasourcesInStatisticalOperation() throws Exception {
         DatasetVersion datasetVersion37 = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_37_WITH_SINGLE_DATASOURCE_IN_OPERATION_0001_NAME);
-        String fileForDatasetVersion37 = datasetVersion37.getDatasources().get(0).getFilename();
+        String fileForDatasetVersion37 = datasetVersion37.getDatasources().get(0).getSourceName();
         DatasetVersion datasetVersion38 = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_38_WITH_SINGLE_DATASOURCE_IN_OPERATION_0001_NAME);
-        String fileForDatasetVersion38 = datasetVersion38.getDatasources().get(0).getFilename();
+        String fileForDatasetVersion38 = datasetVersion38.getDatasources().get(0).getSourceName();
 
         String statisticalOperationCode = datasetVersion37.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode();
 
@@ -1027,9 +1027,10 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
     @MetamacMock({DATASET_VERSION_37_WITH_SINGLE_DATASOURCE_IN_OPERATION_0001_NAME, DATASET_VERSION_38_WITH_SINGLE_DATASOURCE_IN_OPERATION_0001_NAME})
     public void testImportDatasourcesInStatisticalOperationImportationTaskInProgress() throws Exception {
         DatasetVersion datasetVersion37 = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_37_WITH_SINGLE_DATASOURCE_IN_OPERATION_0001_NAME);
-        String fileForDatasetVersion37 = datasetVersion37.getDatasources().get(0).getFilename();
+
+        String fileForDatasetVersion37 = datasetVersion37.getDatasources().get(0).getSourceName();
         DatasetVersion datasetVersion38 = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_38_WITH_SINGLE_DATASOURCE_IN_OPERATION_0001_NAME);
-        String fileForDatasetVersion38 = datasetVersion38.getDatasources().get(0).getFilename();
+        String fileForDatasetVersion38 = datasetVersion38.getDatasources().get(0).getSourceName();
 
         mockTaskInProgressForResource(datasetVersion37.getSiemacMetadataStatisticalResource().getUrn(), true);
 
@@ -1050,7 +1051,7 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
     public void testImportDatasourcesInStatisticalOperationNotLinkedFile() throws Exception {
         DatasetVersion datasetVersion37 = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_37_WITH_SINGLE_DATASOURCE_IN_OPERATION_0001_NAME);
         DatasetVersion datasetVersion38 = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_38_WITH_SINGLE_DATASOURCE_IN_OPERATION_0001_NAME);
-        String fileForDatasetVersion38 = datasetVersion38.getDatasources().get(0).getFilename();
+        String fileForDatasetVersion38 = datasetVersion38.getDatasources().get(0).getSourceName();
 
         String statisticalOperationCode = datasetVersion37.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode();
 
@@ -1084,7 +1085,7 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
         List<Datasource> datasources = datasetService.retrieveDatasourcesByDatasetVersion(getServiceContextAdministrador(), datasetVersionUrn);
         assertEquals(1, datasources.size());
         assertEquals(fileDescriptor.getDatasourceId(), datasources.get(0).getIdentifiableStatisticalResource().getCode());
-        assertEquals(fileDescriptor.getFileName(), datasources.get(0).getFilename());
+        assertEquals(fileDescriptor.getFileName(), datasources.get(0).getSourceName());
         assertNull(datasources.get(0).getDateNextUpdate());
     }
 

@@ -9,8 +9,9 @@ public class DatasourceDo2AvroMapper {
     }
 
     public static DatasourceAvro do2Avro(Datasource source) {
+        // FIXME METAMAC-2866 Change avro?
         DatasourceAvro target = DatasourceAvro.newBuilder().setDatasetVersionUrn(source.getDatasetVersion().getLifeCycleStatisticalResource().getUrn())
-                .setDateNextUpdate(DateTimeDo2AvroMapper.do2Avro(source.getDateNextUpdate())).setFileName(source.getFilename())
+                .setDateNextUpdate(DateTimeDo2AvroMapper.do2Avro(source.getDateNextUpdate())).setFileName(source.getSourceName())
                 .setIdentifiableStatisticalResource(IdentifiableStatisticalResourceDo2AvroMapper.do2Avro(source.getIdentifiableStatisticalResource())).build();
         return target;
     }
