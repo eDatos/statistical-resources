@@ -9,7 +9,9 @@ import java.util.Map;
 
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasourceDto;
+import org.siemac.metamac.statistical.resources.core.enume.dataset.domain.DataSourceTypeEnum;
 import org.siemac.metamac.statistical.resources.web.client.constants.StatisticalResourceWebConstants;
+import org.siemac.metamac.statistical.resources.web.client.dataset.model.ds.DatasetDS;
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.ds.DatasourceDS;
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.record.DatasourceRecord;
 import org.siemac.metamac.statistical.resources.web.client.dataset.presenter.DatasetDatasourcesTabPresenter.DatasetDatasourcesTabView;
@@ -17,12 +19,16 @@ import org.siemac.metamac.statistical.resources.web.client.dataset.utils.Dataset
 import org.siemac.metamac.statistical.resources.web.client.dataset.view.handlers.DatasetDatasourcesTabUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.ImportDatasourceWithMappingWindow;
 import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.ImportDatasourcesWindow;
+import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.ImportDbDatasourceWindow;
+import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.StatisticalResourcesRecordUtils;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetCodelistsWithVariableResult;
 import org.siemac.metamac.web.common.client.listener.UploadListener;
 import org.siemac.metamac.web.common.client.widgets.CustomListGrid;
 import org.siemac.metamac.web.common.client.widgets.CustomToolStripButton;
 import org.siemac.metamac.web.common.client.widgets.DeleteConfirmationWindow;
+import org.siemac.metamac.web.common.client.widgets.form.CustomDynamicForm;
+import org.siemac.metamac.web.common.client.widgets.form.fields.ViewTextItem;
 
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
@@ -39,11 +45,11 @@ import com.smartgwt.client.widgets.toolbar.ToolStrip;
 
 public class DatasetDatasourcesTabViewImpl extends ViewWithUiHandlers<DatasetDatasourcesTabUiHandlers> implements DatasetDatasourcesTabView {
 
-    private VLayout              panel;
+    private VLayout panel;
 
     private DatasourcesListPanel datasourcesListPanel;
 
-    private DatasetVersionDto    datasetVersionDto;
+    private DatasetVersionDto datasetVersionDto;
 
     public DatasetDatasourcesTabViewImpl() {
         panel = new VLayout();
@@ -59,6 +65,7 @@ public class DatasetDatasourcesTabViewImpl extends ViewWithUiHandlers<DatasetDat
     @Override
     public void setDatasetVersion(DatasetVersionDto datasetVersionDto) {
         this.datasetVersionDto = datasetVersionDto;
+        datasourcesListPanel.updateDataSourceType();
         datasourcesListPanel.updateButtonsVisibility();
     }
 
@@ -66,6 +73,7 @@ public class DatasetDatasourcesTabViewImpl extends ViewWithUiHandlers<DatasetDat
     public void setDatasources(String datasetUrn, List<DatasourceDto> datasources) {
         setDatasetUrn(datasetUrn);
         datasourcesListPanel.setDatasources(datasources);
+        datasourcesListPanel.updateImportDbDatasourcesButtonVisibility(datasources);
     }
 
     private void setDatasetUrn(String urn) {
@@ -104,16 +112,31 @@ public class DatasetDatasourcesTabViewImpl extends ViewWithUiHandlers<DatasetDat
 
     private class DatasourcesListPanel extends VLayout {
 
-        private CustomToolStripButton             deleteDatasourceButton;
-        private CustomToolStripButton             importZipDatasourcesButton;
-        private CustomToolStripButton             importDatasourceButton;
-        private CustomListGrid                    datasourcesList;
+        private CustomToolStripButton deleteDatasourceButton;
+        private CustomToolStripButton importZipDatasourcesButton;
+        private CustomToolStripButton importDbDatasourcesButton;
+        private CustomToolStripButton importDatasourceButton;
+        private CustomListGrid datasourcesList;
 
-        private DeleteConfirmationWindow          deleteConfirmationWindow;
-        private ImportDatasourcesWindow           importDatasourcesWindow;
+        private DeleteConfirmationWindow deleteConfirmationWindow;
+        private ImportDatasourcesWindow importDatasourcesWindow;
+        private ImportDbDatasourceWindow importDbDatasourceWindow;
         private ImportDatasourceWithMappingWindow importDatasourceWithMappingWindow;
+        private ViewTextItem dataSourceTypeItem;
 
         public DatasourcesListPanel() {
+
+            dataSourceTypeItem = new ViewTextItem(DatasetDS.DATA_SOURCE_TYPE, getConstants().datasetVersionDataSourceType());
+            dataSourceTypeItem.setValueMap(CommonUtils.getDataSourceTypeHashMap());
+            dataSourceTypeItem.setAlign(Alignment.LEFT);
+            dataSourceTypeItem.setCanEdit(Boolean.FALSE);
+
+            CustomDynamicForm form = new CustomDynamicForm();
+            form.setIsGroup(Boolean.FALSE);
+            form.setNumCols(2);
+            form.setColWidths("8%", "92%");
+            form.setFields(dataSourceTypeItem);
+
             // Toolstrip
 
             ToolStrip toolStrip = new ToolStrip();
@@ -127,6 +150,9 @@ public class DatasetDatasourcesTabViewImpl extends ViewWithUiHandlers<DatasetDat
 
             importZipDatasourcesButton = createImportZipDatasourcesButton();
             toolStrip.addButton(importZipDatasourcesButton);
+
+            importDbDatasourcesButton = createImportDbDatasourcesButton();
+            toolStrip.addButton(importDbDatasourcesButton);
 
             // List
 
@@ -154,11 +180,22 @@ public class DatasetDatasourcesTabViewImpl extends ViewWithUiHandlers<DatasetDat
             deleteConfirmationWindow = new DeleteConfirmationWindow(getConstants().actionConfirmDeleteTitle(), getConstants().datasourceDeleteConfirmation());
             deleteConfirmationWindow.setVisible(false);
 
+            // Import datasource from DB window
+
+            importDbDatasourceWindow = new ImportDbDatasourceWindow();
+            importDbDatasourceWindow.setVisible(Boolean.FALSE);
+
             // Import datasources window
 
+            addMember(form);
             addMember(toolStrip);
             addMember(datasourcesList);
             bindEvents();
+
+        }
+
+        public void updateDataSourceType() {
+            dataSourceTypeItem.setValue(datasetVersionDto.getDataSourceType());
         }
 
         private void updateListGridButtonsVisibilityBasedOnSelection(ListGridRecord[] selection) {
@@ -192,6 +229,7 @@ public class DatasetDatasourcesTabViewImpl extends ViewWithUiHandlers<DatasetDat
         private CustomToolStripButton createImportZipDatasourcesButton() {
             CustomToolStripButton importDatasourcesButton = new CustomToolStripButton(getConstants().actionLoadDatasourcesZip(),
                     org.siemac.metamac.web.common.client.resources.GlobalResources.RESOURCE.importResource().getURL());
+            importDatasourcesButton.setVisible(Boolean.FALSE);
             importDatasourcesButton.addClickHandler(new ClickHandler() {
 
                 @Override
@@ -204,9 +242,26 @@ public class DatasetDatasourcesTabViewImpl extends ViewWithUiHandlers<DatasetDat
             return importDatasourcesButton;
         }
 
+        private CustomToolStripButton createImportDbDatasourcesButton() {
+            CustomToolStripButton importDatasourcesButton = new CustomToolStripButton(getConstants().actionLoadDatasourceDatabase(),
+                    org.siemac.metamac.web.common.client.resources.GlobalResources.RESOURCE.databaseImport().getURL());
+            importDatasourcesButton.setVisible(Boolean.FALSE);
+            importDatasourcesButton.addClickHandler(new ClickHandler() {
+
+                @Override
+                public void onClick(ClickEvent event) {
+                    if (importDbDatasourceWindow != null) {
+                        importDbDatasourceWindow.show();
+                    }
+                }
+            });
+            return importDatasourcesButton;
+        }
+
         private CustomToolStripButton createImportDatasourceButton() {
             CustomToolStripButton importDatasourcesButton = new CustomToolStripButton(getConstants().actionLoadDatasource(),
                     org.siemac.metamac.web.common.client.resources.GlobalResources.RESOURCE.importResource().getURL());
+            importDatasourcesButton.setVisible(Boolean.FALSE);
             importDatasourcesButton.addClickHandler(new ClickHandler() {
 
                 @Override
@@ -237,6 +292,18 @@ public class DatasetDatasourcesTabViewImpl extends ViewWithUiHandlers<DatasetDat
                 @Override
                 public void onClick(ClickEvent event) {
                     getUiHandlers().deleteDatasources(getUrnsFromSelected());
+                }
+            });
+
+            importDbDatasourceWindow.getSaveButtonHandlers().addClickHandler(new com.smartgwt.client.widgets.form.fields.events.ClickHandler() {
+
+                @Override
+                public void onClick(com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
+                    if (importDbDatasourceWindow.validate()) {
+                        getUiHandlers().dbDatasourceImportation(datasetVersionDto.getUrn(), importDbDatasourceWindow.getTableNameItemValue());
+                        importDbDatasourceWindow.hide();
+                    }
+
                 }
             });
         }
@@ -301,9 +368,21 @@ public class DatasetDatasourcesTabViewImpl extends ViewWithUiHandlers<DatasetDat
         }
 
         private void updateButtonsVisibility() {
-            importZipDatasourcesButton.setVisible(DatasetClientSecurityUtils.canImportDatasourcesInDatasetVersion(datasetVersionDto));
-            importDatasourceButton.setVisible(DatasetClientSecurityUtils.canImportDatasourcesInDatasetVersion(datasetVersionDto));
+            importZipDatasourcesButton.setVisible(getButtonsVisibility(datasetVersionDto, DataSourceTypeEnum.FILE));
+            importDatasourceButton.setVisible(getButtonsVisibility(datasetVersionDto, DataSourceTypeEnum.FILE));
+            importDbDatasourcesButton.setVisible(getButtonsVisibility(datasetVersionDto, DataSourceTypeEnum.DATABASE)); // TODO METAMAC-2866 check security for import datasources from DB
+
             updateListGridButtonsVisibilityBasedOnSelection(datasourcesList.getSelectedRecords());
+        }
+
+        private boolean getButtonsVisibility(DatasetVersionDto datasetVersionDto, DataSourceTypeEnum dataSourceTypeEnum) {
+            return dataSourceTypeEnum.equals(datasetVersionDto.getDataSourceType()) && DatasetClientSecurityUtils.canImportDatasourcesInDatasetVersion(datasetVersionDto);
+        }
+
+        private void updateImportDbDatasourcesButtonVisibility(List<DatasourceDto> datasources) {
+            if (DataSourceTypeEnum.DATABASE.equals(datasetVersionDto.getDataSourceType()) && datasources != null && !datasources.isEmpty()) {
+                importDbDatasourcesButton.setVisible(Boolean.FALSE);
+            }
         }
     }
 }

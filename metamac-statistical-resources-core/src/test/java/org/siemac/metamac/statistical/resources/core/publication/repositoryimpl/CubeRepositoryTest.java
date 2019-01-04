@@ -73,7 +73,7 @@ public class CubeRepositoryTest extends StatisticalResourcesBaseTest implements 
         assertFalse(result);
     }
 
-    // TODO Remove @Ignore annotation, it's only for testing in local environment
+    // TODO METAMAC-2866 Remove @Ignore annotation, it's only for testing in local environment
     @Ignore
     @Override
     @Test
@@ -94,7 +94,7 @@ public class CubeRepositoryTest extends StatisticalResourcesBaseTest implements 
         assertEquals(0, result.size());
     }
 
-    // TODO Remove @Ignore annotation, it's only for testing in local environment
+    // TODO METAMAC-2866 Remove @Ignore annotation, it's only for testing in local environment
     @Ignore
     @Override
     @Test

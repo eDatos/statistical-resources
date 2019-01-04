@@ -87,10 +87,10 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
     private StatisticalResourcesServiceFacade statisticalResourcesServiceFacade;
 
     @Autowired
-    private SrmRestInternalService            srmRestInternalService;
+    private SrmRestInternalService srmRestInternalService;
 
     @Autowired
-    private DatasetRepositoriesServiceFacade  datasetRepositoriesServiceFacade;
+    private DatasetRepositoriesServiceFacade datasetRepositoriesServiceFacade;
 
     @Before
     public void onBeforeTest() throws Exception {
@@ -1923,6 +1923,11 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
     @Override
     public void testUpdateMultidatasetCubeLocation() throws Exception {
         // no optimistic locking in this operation
+    }
+
+    @Override
+    public void testImportDbDatasourceInDatasetVersion() throws Exception {
+        // TODO METAMAC-2866 It's necessary to define what should be tested
     }
 
 }

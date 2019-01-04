@@ -55,7 +55,8 @@ Application DatasetsStatisticalResources {
     		deleteDatasetVersion(String datasetVersionUrn) throws MetamacException;
     		
     		proccessDatasetFileImportationResult(String datasetImportationId, List<@FileDescriptorResult> fileDescriptors) throws MetamacException;
-    		importDatasourcesInDatasetVersion(String datasetVersionUrn, List<URL> fileUrls,  Map<String,String> dimensionRepresentationMapping, boolean storeDimensionRepresentationMapping) throws MetamacException; 
+    		importDatasourcesInDatasetVersion(String datasetVersionUrn, List<URL> fileUrls,  Map<String,String> dimensionRepresentationMapping, boolean storeDimensionRepresentationMapping) throws MetamacException;
+    		importDbDatasourceInDatasetVersion(String datasetVersionUrn, String tableName) throws MetamacException; 
     		importDatasourcesInStatisticalOperation(String statisticalOperationUrn, List<URL> fileUrls) throws MetamacException; 
 
     		// Datasets

@@ -1670,4 +1670,10 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
         Mockito.when(srmRestInternalService.findOrganisationsAsUrnsList(anyString())).thenReturn(new ArrayList<String>());
     }
 
+    @Override
+    public void testImportDbDatasourceInDatasetVersion() throws Exception {
+        // TODO METAMAC-2866 It's necessary to define what should be tested
+
+    }
+
 }

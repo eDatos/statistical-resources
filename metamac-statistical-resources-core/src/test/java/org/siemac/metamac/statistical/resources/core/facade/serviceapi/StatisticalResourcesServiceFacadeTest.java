@@ -3414,7 +3414,7 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         assertNotNull(newMultidatasetVersionDto.getUrn());
     }
 
-    // TODO Remove @Ignore annotation, it's only for testing in local environment
+    // TODO METAMAC-2866 Remove @Ignore annotation, it's only for testing in local environment
     @Ignore
     @Test
     public void testCreateMultidatasetHasExpectedUrn() throws Exception {
@@ -4103,6 +4103,11 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
 
         statisticalResourcesServiceFacade.deleteMultidatasetCube(getServiceContextAdministrador(), urn);
         statisticalResourcesServiceFacade.retrieveMultidatasetCube(getServiceContextAdministrador(), urn);
+    }
+
+    @Override
+    public void testImportDbDatasourceInDatasetVersion() throws Exception {
+        // TODO METAMAC-2866 It's necessary to define what should be tested
     }
 
 }

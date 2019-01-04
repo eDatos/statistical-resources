@@ -26,6 +26,7 @@ import org.fornax.cartridges.sculptor.framework.errorhandling.ApplicationExcepti
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.joda.time.DateTime;
 import org.siemac.metamac.core.common.criteria.utils.CriteriaUtils;
+import org.siemac.metamac.core.common.exception.CommonServiceExceptionType;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionBuilder;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
@@ -72,6 +73,7 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.StatisticOff
 import org.siemac.metamac.statistical.resources.core.dataset.domain.TemporalCode;
 import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.validators.DatasetServiceInvocationValidator;
 import org.siemac.metamac.statistical.resources.core.dataset.utils.DatasetVersionUtils;
+import org.siemac.metamac.statistical.resources.core.enume.dataset.domain.DataSourceTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.NextVersionTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
@@ -660,6 +662,8 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
 
         ProcStatusValidator.checkDatasetVersionCanImportDatasources(datasetVersion);
 
+        checkValidDataSourceTypeForImportationTask(DataSourceTypeEnum.FILE, ServiceExceptionType.INVALID_DATA_SOURCE_TYPE_FOR_FILE_IMPORTATION, datasetVersion);
+
         String datasetUrn = datasetVersion.getDataset().getIdentifiableStatisticalResource().getUrn();
 
         checkFilesCanBeAssociatedWithDataset(datasetUrn, datasetVersionUrn, fileUrls);
@@ -667,6 +671,20 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         TaskInfoDataset taskInfo = buildImportationTaskInfo(datasetVersion, fileUrls, dimensionRepresentationMapping, storeDimensionRepresentationMapping);
 
         getTaskService().planifyImportationDataset(ctx, taskInfo);
+    }
+
+    private void checkValidDataSourceTypeForImportationTask(DataSourceTypeEnum dataSourceTypeExpected, CommonServiceExceptionType exceptionType, DatasetVersion datasetVersion)
+            throws MetamacException {
+        List<MetamacExceptionItem> exceptionItems = new ArrayList<>();
+        DataSourceTypeEnum dataSourceType = datasetVersion.getDataSourceType();
+
+        if (!dataSourceTypeExpected.equals(dataSourceType)) {
+            exceptionItems.add(new MetamacExceptionItem(exceptionType, dataSourceType));
+        }
+
+        if (!exceptionItems.isEmpty()) {
+            throw new MetamacException(exceptionItems);
+        }
     }
 
     private TaskInfoDataset buildImportationTaskInfo(DatasetVersion datasetVersion, List<URL> fileUrls, Map<String, String> dimensionRepresentationMapping,
@@ -1616,6 +1634,63 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         }
         categorisation.getVersionableStatisticalResource().setValidTo(null);
 
+    }
+
+    @Override
+    public void importDbDatasourceInDatasetVersion(ServiceContext ctx, String datasetVersionUrn, String tableName) throws MetamacException {
+        // TODO METAMAC-2866 Job for data importation?
+        datasetServiceInvocationValidator.checkImportDbDatasourceInDatasetVersion(ctx, datasetVersionUrn, tableName);
+
+        DatasetVersion datasetVersion = getDatasetVersionRepository().retrieveByUrn(datasetVersionUrn);
+
+        checkNotTasksInProgress(ctx, datasetVersionUrn);
+
+        ProcStatusValidator.checkDatasetVersionCanImportDatasources(datasetVersion);
+
+        checkValidDataSourceTypeForImportationTask(DataSourceTypeEnum.DATABASE, ServiceExceptionType.INVALID_DATA_SOURCE_TYPE_FOR_DATABASE_IMPORTATION, datasetVersion);
+
+        checkNotDatasourceForDataset(ctx, datasetVersionUrn);
+
+        checkTableNameCanBeAssociatedWithDataset(tableName, datasetVersionUrn);
+
+        Datasource datasource = buildDatasource(tableName);
+
+        createDatasource(ctx, datasetVersionUrn, datasource);
+
+    }
+
+    private Datasource buildDatasource(String tableName) {
+        Datasource datasource = new Datasource();
+        datasource.setIdentifiableStatisticalResource(new IdentifiableStatisticalResource());
+        datasource.getIdentifiableStatisticalResource().setCode(Datasource.generateDataSourceId(tableName, new DateTime()));
+        datasource.setSourceName(tableName);
+        return datasource;
+    }
+
+    private void checkTableNameCanBeAssociatedWithDataset(String tableName, String datasetVersionUrn) throws MetamacException {
+        List<MetamacExceptionItem> exceptionItems = new ArrayList<>();
+
+        String linkedDatasetVersionUrn = getDatasetRepository().findDatasetUrnLinkedToDatasourceSourceName(tableName);
+        if (linkedDatasetVersionUrn != null && !StringUtils.equals(datasetVersionUrn, linkedDatasetVersionUrn)) {
+            exceptionItems.add(new MetamacExceptionItem(ServiceExceptionType.INVALID_TABLENAME_FOR_DATASET_VERSION, tableName, datasetVersionUrn));
+        }
+
+        if (!exceptionItems.isEmpty()) {
+            throw new MetamacException(exceptionItems);
+        }
+    }
+
+    private void checkNotDatasourceForDataset(ServiceContext ctx, String datasetVersionUrn) throws MetamacException {
+        List<MetamacExceptionItem> exceptionItems = new ArrayList<>();
+        List<Datasource> datasources = retrieveDatasourcesByDatasetVersion(ctx, datasetVersionUrn);
+
+        if (datasources != null && !datasources.isEmpty()) {
+            exceptionItems.add(new MetamacExceptionItem(ServiceExceptionType.IMPORTATION_MORE_THAN_ONE_DATASOURCE_FOR_DATABASE_IMPORTATION_ERROR));
+        }
+
+        if (!exceptionItems.isEmpty()) {
+            throw new MetamacException(exceptionItems);
+        }
     }
 
 }

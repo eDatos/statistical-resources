@@ -7,30 +7,34 @@ import java.util.List;
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.dto.InternationalStringDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
+import org.siemac.metamac.statistical.resources.core.enume.dataset.domain.DataSourceTypeEnum;
 import org.siemac.metamac.statistical.resources.web.client.base.widgets.NewStatisticalResourceWindow;
 import org.siemac.metamac.statistical.resources.web.client.constants.StatisticalResourceWebConstants;
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.ds.DatasetDS;
 import org.siemac.metamac.statistical.resources.web.client.dataset.view.handlers.DatasetListUiHandlers;
+import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
 import org.siemac.metamac.statistical.resources.web.client.widgets.windows.search.SearchSingleDsdPaginatedWindow;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.DsdWebCriteria;
 import org.siemac.metamac.web.common.client.utils.InternationalStringUtils;
 import org.siemac.metamac.web.common.client.widgets.actions.search.SearchPaginatedAction;
 import org.siemac.metamac.web.common.client.widgets.form.CustomDynamicForm;
 import org.siemac.metamac.web.common.client.widgets.form.fields.CustomButtonItem;
+import org.siemac.metamac.web.common.client.widgets.form.fields.RequiredSelectItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.RequiredTextItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.external.SearchExternalItemLinkItem;
 
+import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.widgets.form.fields.events.ClickEvent;
 import com.smartgwt.client.widgets.form.fields.events.ClickHandler;
 import com.smartgwt.client.widgets.form.fields.events.HasClickHandlers;
 
 public class NewDatasetWindow extends NewStatisticalResourceWindow {
 
-    private static final String            FIELD_SAVE             = "save-sch";
+    private static final String FIELD_SAVE = "save-sch";
 
-    private DatasetListUiHandlers          uiHandlers;
+    private DatasetListUiHandlers uiHandlers;
 
-    private SearchExternalItemLinkItem     relatedDsdItem;
+    private SearchExternalItemLinkItem relatedDsdItem;
 
     private SearchSingleDsdPaginatedWindow searchDsdWindow;
 
@@ -44,11 +48,15 @@ public class NewDatasetWindow extends NewStatisticalResourceWindow {
         relatedDsdItem = createDsdItem();
         relatedDsdItem.setRequired(true);
 
+        RequiredSelectItem dataSourceTypeItem = new RequiredSelectItem(DatasetDS.DATA_SOURCE_TYPE, getConstants().datasetVersionDataSourceType());
+        dataSourceTypeItem.setValueMap(CommonUtils.getDataSourceTypeHashMap());
+        dataSourceTypeItem.setAlign(Alignment.LEFT);
+
         CustomButtonItem saveItem = new CustomButtonItem(FIELD_SAVE, getConstants().datasetCreate());
 
         form = new CustomDynamicForm();
         form.setMargin(5);
-        form.setFields(nameItem, relatedDsdItem, languageItem, maintainerItem, saveItem);
+        form.setFields(nameItem, relatedDsdItem, languageItem, maintainerItem, dataSourceTypeItem, saveItem);
         form.setWidth100();
 
         addItem(form);
@@ -63,6 +71,7 @@ public class NewDatasetWindow extends NewStatisticalResourceWindow {
         DatasetVersionDto datasetDto = new DatasetVersionDto();
         datasetDto.setTitle(InternationalStringUtils.updateInternationalString(new InternationalStringDto(), form.getValueAsString(DatasetDS.TITLE)));
         datasetDto.setRelatedDsd(form.getValueAsExternalItemDto(DatasetDS.RELATED_DSD));
+        datasetDto.setDataSourceType(DataSourceTypeEnum.valueOf(form.getValueAsString(DatasetDS.DATA_SOURCE_TYPE)));
         populateSiemacResourceDto(datasetDto);
 
         return datasetDto;

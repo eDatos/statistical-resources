@@ -35,6 +35,7 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersi
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionRepository;
 import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.validators.DatasetServiceInvocationValidator;
 import org.siemac.metamac.statistical.resources.core.dataset.serviceimpl.DatasetServiceImpl;
+import org.siemac.metamac.statistical.resources.core.enume.dataset.domain.DataSourceTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.task.domain.DatasetFileFormatEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.task.domain.AlternativeEnumeratedRepresentation;
@@ -99,6 +100,25 @@ public class DatasetServiceImportationTest extends StatisticalResourcesBaseTest 
         Mockito.when(datasetRepository.findDatasetUrnLinkedToDatasourceSourceName(filename)).thenReturn(DATASET_MOCK_URN);
 
         expectedMetamacException(new MetamacException(Arrays.asList(new MetamacExceptionItem(ServiceExceptionType.INVALID_FILE_FOR_DATASET_VERSION, "prueba.px", datasetVersionUrn))));
+
+        List<URL> urls = Arrays.asList(buildFileUrl(filename));
+        HashMap<String, String> mappings = new HashMap<String, String>();
+        datasetService.importDatasourcesInDatasetVersion(getServiceContextWithoutPrincipal(), datasetVersionUrn, urls, mappings, false);
+    }
+
+    @Test
+    public void testImportDatasourcesInDatasetVersionInvalidSourceType() throws Exception {
+        String filename = "prueba.px";
+
+        DatasetVersion datasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_29_WITHOUT_DATASOURCES_NAME);
+        datasetVersion.setDataSourceType(DataSourceTypeEnum.DATABASE);
+
+        String datasetVersionUrn = datasetVersion.getSiemacMetadataStatisticalResource().getUrn();
+
+        Mockito.when(datasetVersionRepository.retrieveByUrn(Mockito.eq(datasetVersionUrn))).thenReturn(datasetVersion);
+        Mockito.when(datasetRepository.findDatasetUrnLinkedToDatasourceSourceName(filename)).thenReturn(DATASET_MOCK_URN);
+
+        expectedMetamacException(new MetamacException(Arrays.asList(new MetamacExceptionItem(ServiceExceptionType.INVALID_DATA_SOURCE_TYPE_FOR_FILE_IMPORTATION, DataSourceTypeEnum.DATABASE))));
 
         List<URL> urls = Arrays.asList(buildFileUrl(filename));
         HashMap<String, String> mappings = new HashMap<String, String>();

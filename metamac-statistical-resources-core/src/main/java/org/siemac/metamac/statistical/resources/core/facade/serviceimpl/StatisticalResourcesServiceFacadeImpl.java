@@ -131,73 +131,73 @@ import es.gobcan.istac.edatos.dataset.repository.dto.AttributeInstanceDto;
 public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesServiceFacadeImplBase {
 
     @Autowired
-    private CommonDo2DtoMapper                                        commonDo2DtoMapper;
+    private CommonDo2DtoMapper commonDo2DtoMapper;
 
     @Autowired
-    private QueryDo2DtoMapper                                         queryDo2DtoMapper;
+    private QueryDo2DtoMapper queryDo2DtoMapper;
 
     @Autowired
-    private QueryDto2DoMapper                                         queryDto2DoMapper;
+    private QueryDto2DoMapper queryDto2DoMapper;
 
     @Autowired
-    private DatasetDo2DtoMapper                                       datasetDo2DtoMapper;
+    private DatasetDo2DtoMapper datasetDo2DtoMapper;
 
     @Autowired
-    private DatasetDto2DoMapper                                       datasetDto2DoMapper;
+    private DatasetDto2DoMapper datasetDto2DoMapper;
 
     @Autowired
-    private PublicationDo2DtoMapper                                   publicationDo2DtoMapper;
+    private PublicationDo2DtoMapper publicationDo2DtoMapper;
 
     @Autowired
-    private PublicationDto2DoMapper                                   publicationDto2DoMapper;
+    private PublicationDto2DoMapper publicationDto2DoMapper;
 
     @Autowired
-    private MultidatasetDto2DoMapper                                  multidatasetDto2DoMapper;
+    private MultidatasetDto2DoMapper multidatasetDto2DoMapper;
 
     @Autowired
-    private MultidatasetDo2DtoMapper                                  multidatasetDo2DtoMapper;
+    private MultidatasetDo2DtoMapper multidatasetDo2DtoMapper;
 
     @Autowired
-    private ConstraintDto2RestMapper                                  constraintDto2RestMapper;
+    private ConstraintDto2RestMapper constraintDto2RestMapper;
 
     @Autowired
-    private ConstraintRest2DtoMapper                                  constraintRest2DtoMapper;
+    private ConstraintRest2DtoMapper constraintRest2DtoMapper;
 
     @Autowired
-    private QueryVersionMetamacCriteria2SculptorCriteriaMapper        queryVersionMetamacCriteria2SculptorCriteriaMapper;
+    private QueryVersionMetamacCriteria2SculptorCriteriaMapper queryVersionMetamacCriteria2SculptorCriteriaMapper;
 
     @Autowired
-    private QueryVersionSculptorCriteria2MetamacCriteriaMapper        queryVersionSculptorCriteria2MetamacCriteriaMapper;
+    private QueryVersionSculptorCriteria2MetamacCriteriaMapper queryVersionSculptorCriteria2MetamacCriteriaMapper;
 
     @Autowired
-    private QueryMetamacCriteria2SculptorCriteriaMapper               queryMetamacCriteria2SculptorCriteriaMapper;
+    private QueryMetamacCriteria2SculptorCriteriaMapper queryMetamacCriteria2SculptorCriteriaMapper;
 
     @Autowired
-    private QuerySculptorCriteria2MetamacCriteriaMapper               querySculptorCriteria2MetamacCriteriaMapper;
+    private QuerySculptorCriteria2MetamacCriteriaMapper querySculptorCriteria2MetamacCriteriaMapper;
 
     @Autowired
-    private DatasetVersionMetamacCriteria2SculptorCriteriaMapper      datasetVersionMetamacCriteria2SculptorCriteriaMapper;
+    private DatasetVersionMetamacCriteria2SculptorCriteriaMapper datasetVersionMetamacCriteria2SculptorCriteriaMapper;
 
     @Autowired
-    private DatasetVersionSculptorCriteria2MetamacCriteriaMapper      datasetVersionSculptorCriteria2MetamacCriteriaMapper;
+    private DatasetVersionSculptorCriteria2MetamacCriteriaMapper datasetVersionSculptorCriteria2MetamacCriteriaMapper;
 
     @Autowired
-    private DatasetMetamacCriteria2SculptorCriteriaMapper             datasetMetamacCriteria2SculptorCriteriaMapper;
+    private DatasetMetamacCriteria2SculptorCriteriaMapper datasetMetamacCriteria2SculptorCriteriaMapper;
 
     @Autowired
-    private DatasetSculptorCriteria2MetamacCriteriaMapper             datasetSculptorCriteria2MetamacCriteriaMapper;
+    private DatasetSculptorCriteria2MetamacCriteriaMapper datasetSculptorCriteria2MetamacCriteriaMapper;
 
     @Autowired
-    private PublicationVersionMetamacCriteria2SculptorCriteriaMapper  publicationVersionMetamacCriteria2SculptorCriteriaMapper;
+    private PublicationVersionMetamacCriteria2SculptorCriteriaMapper publicationVersionMetamacCriteria2SculptorCriteriaMapper;
 
     @Autowired
-    private PublicationSculptorCriteria2MetamacCriteriaMapper         publicationSculptorCriteria2MetamacCriteriaMapper;
+    private PublicationSculptorCriteria2MetamacCriteriaMapper publicationSculptorCriteria2MetamacCriteriaMapper;
 
     @Autowired
-    private PublicationMetamacCriteria2SculptorCriteriaMapper         publicationMetamacCriteria2SculptorCriteriaMapper;
+    private PublicationMetamacCriteria2SculptorCriteriaMapper publicationMetamacCriteria2SculptorCriteriaMapper;
 
     @Autowired
-    private PublicationVersionSculptorCriteria2MetamacCriteriaMapper  publicationVersionSculptorCriteria2MetamacCriteriaMapper;
+    private PublicationVersionSculptorCriteria2MetamacCriteriaMapper publicationVersionSculptorCriteria2MetamacCriteriaMapper;
 
     @Autowired
     private MultidatasetVersionMetamacCriteria2SculptorCriteriaMapper multidatasetVersionMetamacCriteria2SculptorCriteriaMapper;
@@ -206,43 +206,43 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     private MultidatasetVersionSculptorCriteria2MetamacCriteriaMapper multidatasetVersionSculptorCriteria2MetamacCriteriaMapper;
 
     @Autowired
-    private LifecycleService<DatasetVersion>                          datasetLifecycleService;
+    private LifecycleService<DatasetVersion> datasetLifecycleService;
 
     @Autowired
-    private LifecycleService<PublicationVersion>                      publicationLifecycleService;
+    private LifecycleService<PublicationVersion> publicationLifecycleService;
 
     @Autowired
-    private LifecycleService<QueryVersion>                            queryLifecycleService;
+    private LifecycleService<QueryVersion> queryLifecycleService;
 
     @Autowired
-    private LifecycleService<MultidatasetVersion>                     multidatasetLifecycleService;
+    private LifecycleService<MultidatasetVersion> multidatasetLifecycleService;
 
     @Autowired
-    private StatisticalResourcesDto2StatRepoDtoMapper                 statisticalResourcesDto2StatRepoDtoMapper;
+    private StatisticalResourcesDto2StatRepoDtoMapper statisticalResourcesDto2StatRepoDtoMapper;
 
     @Autowired
-    private StatRepoDto2StatisticalResourcesDtoMapper                 statRepoDto2StatisticalResourcesDtoMapper;
+    private StatRepoDto2StatisticalResourcesDtoMapper statRepoDto2StatisticalResourcesDtoMapper;
 
     @Autowired
-    private SrmRestInternalService                                    srmRestInternalService;
+    private SrmRestInternalService srmRestInternalService;
 
     @Autowired
-    private ConstraintsService                                        constraintsService;
+    private ConstraintsService constraintsService;
 
     @Autowired
-    private DatasetVersionRepository                                  datasetVersionRepository;
+    private DatasetVersionRepository datasetVersionRepository;
     @Autowired
-    private PublicationVersionRepository                              publicationVersionRepository;
+    private PublicationVersionRepository publicationVersionRepository;
     @Autowired
-    private QueryVersionRepository                                    queryVersionRepository;
+    private QueryVersionRepository queryVersionRepository;
     @Autowired
-    private MultidatasetVersionRepository                             multidatasetVersionRepository;
+    private MultidatasetVersionRepository multidatasetVersionRepository;
 
     @Autowired
-    private StreamMessagingServiceFacade                              streamMessagingServiceFacade;
+    private StreamMessagingServiceFacade streamMessagingServiceFacade;
 
     @Autowired
-    private NoticesRestInternalService                                noticesRestInternalService;
+    private NoticesRestInternalService noticesRestInternalService;
 
     public StatisticalResourcesServiceFacadeImpl() {
     }
@@ -2459,6 +2459,23 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         // Transform
         MultidatasetCubeDto multidatasetCubeDto = multidatasetDo2DtoMapper.multidatasetCubeDoToDto(multidatasetCube);
         return multidatasetCubeDto;
+    }
+
+    @Override
+    public void importDbDatasourceInDatasetVersion(ServiceContext ctx, String datasetVersionUrn, String tableName) throws MetamacException {
+        // TODO METAMAC-2866 It's necessary check if functionality is well defined
+
+        // Retrieve
+        DatasetVersionDto datasetVersionDto = retrieveDatasetVersionByUrn(ctx, datasetVersionUrn);
+
+        // Security
+        DatasetsSecurityUtils.canImportDatasourcesInDatasetVersion(ctx, datasetVersionDto.getStatisticalOperation().getCode());
+
+        // Transform for optimistic locking
+        DatasetVersion datasetVersion = datasetDto2DoMapper.datasetVersionDtoToDo(datasetVersionDto);
+
+        // Service
+        getDatasetService().importDbDatasourceInDatasetVersion(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getUrn(), tableName);
     }
 
 }

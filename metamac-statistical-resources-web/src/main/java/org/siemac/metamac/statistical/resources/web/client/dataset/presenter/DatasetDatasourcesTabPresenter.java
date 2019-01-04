@@ -29,6 +29,8 @@ import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetDim
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetDimensionsVariableMappingResult;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasourcesByDatasetAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasourcesByDatasetResult;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.SetDbDatasourceImportationAction;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.SetDbDatasourceImportationResult;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationAction;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationResult;
 import org.siemac.metamac.web.common.client.events.ChangeWaitPopupVisibilityEvent;
@@ -57,8 +59,8 @@ public class DatasetDatasourcesTabPresenter extends Presenter<DatasetDatasources
         implements
             DatasetDatasourcesTabUiHandlers {
 
-    private DispatchAsync     dispatcher;
-    private PlaceManager      placeManager;
+    private DispatchAsync dispatcher;
+    private PlaceManager placeManager;
 
     private DatasetVersionDto datasetVersion;
 
@@ -216,5 +218,16 @@ public class DatasetDatasourcesTabPresenter extends Presenter<DatasetDatasources
     @Override
     public void showWaitPopup() {
         ChangeWaitPopupVisibilityEvent.fire(this, true);
+    }
+
+    @Override
+    public void dbDatasourceImportation(String urn, String tablename) {
+        dispatcher.execute(new SetDbDatasourceImportationAction(urn, tablename), new WaitingAsyncCallbackHandlingError<SetDbDatasourceImportationResult>(this) {
+
+            @Override
+            public void onWaitSuccess(SetDbDatasourceImportationResult result) {
+                ShowMessageEvent.fireSuccessMessage(DatasetDatasourcesTabPresenter.this, getMessages().datasourcesImportationPlanned());
+            }
+        });
     }
 }

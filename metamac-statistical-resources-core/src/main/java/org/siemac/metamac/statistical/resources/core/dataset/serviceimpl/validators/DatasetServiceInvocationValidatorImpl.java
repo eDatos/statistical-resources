@@ -20,6 +20,7 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersi
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
 import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
+import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionSingleBaseParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionSingleParameters;
 import org.siemac.metamac.statistical.resources.core.task.domain.FileDescriptorResult;
 import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesValidationUtils;
@@ -242,6 +243,7 @@ public class DatasetServiceInvocationValidatorImpl extends BaseInvocationValidat
     }
 
     private static void checkDatasetVersion(DatasetVersion datasetVersion, String metadataName, List<MetamacExceptionItem> exceptions) {
+        StatisticalResourcesValidationUtils.checkParameterRequired(datasetVersion.getDataSourceType(), addParameter(metadataName, ServiceExceptionSingleBaseParameters.DATA_SOURCE_TYPE), exceptions);
     }
 
     public static void checkFindStatisticOfficialities(List<MetamacExceptionItem> exceptions) {
@@ -306,6 +308,11 @@ public class DatasetServiceInvocationValidatorImpl extends BaseInvocationValidat
 
     public static void checkInitializeCategorisationMetadataForCreation(Categorisation categorisation, List<MetamacExceptionItem> exceptions) {
         StatisticalResourcesValidationUtils.checkParameterRequired(categorisation, ServiceExceptionParameters.CATEGORISATION, exceptions);
+    }
+
+    public static void checkImportDbDatasourceInDatasetVersion(String datasetVersionUrn, String tableName, List<MetamacExceptionItem> exceptions) {
+        StatisticalResourcesValidationUtils.checkParameterRequired(datasetVersionUrn, ServiceExceptionParameters.DATASET_VERSION_URN, exceptions);
+        StatisticalResourcesValidationUtils.checkParameterRequired(tableName, ServiceExceptionParameters.TABLE_NAME, exceptions);
     }
 
 }
