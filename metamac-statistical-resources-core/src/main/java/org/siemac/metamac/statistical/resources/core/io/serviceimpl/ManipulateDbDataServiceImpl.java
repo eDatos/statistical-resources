@@ -15,7 +15,7 @@ public class ManipulateDbDataServiceImpl extends ManipulateDataServiceImplBase<S
 
     @Override
     protected void closeReader() throws Exception {
-        // TODO Auto-generated method stub
+        // TODO METAMAC-2866 it's necessary to define the functionality
 
     }
 
