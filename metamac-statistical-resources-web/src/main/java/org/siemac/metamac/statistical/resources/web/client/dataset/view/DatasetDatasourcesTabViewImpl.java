@@ -23,6 +23,7 @@ import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.Impor
 import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.StatisticalResourcesRecordUtils;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetCodelistsWithVariableResult;
+import org.siemac.metamac.web.common.client.MetamacWebCommon;
 import org.siemac.metamac.web.common.client.listener.UploadListener;
 import org.siemac.metamac.web.common.client.widgets.CustomListGrid;
 import org.siemac.metamac.web.common.client.widgets.CustomToolStripButton;
@@ -66,6 +67,7 @@ public class DatasetDatasourcesTabViewImpl extends ViewWithUiHandlers<DatasetDat
     public void setDatasetVersion(DatasetVersionDto datasetVersionDto) {
         this.datasetVersionDto = datasetVersionDto;
         datasourcesListPanel.updateDataSourceType();
+        datasourcesListPanel.updateVersionable();
         datasourcesListPanel.updateButtonsVisibility();
     }
 
@@ -123,6 +125,7 @@ public class DatasetDatasourcesTabViewImpl extends ViewWithUiHandlers<DatasetDat
         private ImportDbDatasourceWindow importDbDatasourceWindow;
         private ImportDatasourceWithMappingWindow importDatasourceWithMappingWindow;
         private ViewTextItem dataSourceTypeItem;
+        private ViewTextItem versionableCheckBoxItem;
 
         public DatasourcesListPanel() {
 
@@ -131,11 +134,15 @@ public class DatasetDatasourcesTabViewImpl extends ViewWithUiHandlers<DatasetDat
             dataSourceTypeItem.setAlign(Alignment.LEFT);
             dataSourceTypeItem.setCanEdit(Boolean.FALSE);
 
+            versionableCheckBoxItem = new ViewTextItem(DatasetDS.VERSIONABLE, getConstants().versionable());
+            versionableCheckBoxItem.setAlign(Alignment.LEFT);
+            versionableCheckBoxItem.setCanEdit(Boolean.FALSE);
+
             CustomDynamicForm form = new CustomDynamicForm();
             form.setIsGroup(Boolean.FALSE);
-            form.setNumCols(2);
-            form.setColWidths("8%", "92%");
-            form.setFields(dataSourceTypeItem);
+            form.setNumCols(4);
+            form.setColWidths("8%", "42%", "8%", "42%");
+            form.setFields(dataSourceTypeItem, versionableCheckBoxItem);
 
             // Toolstrip
 
@@ -192,6 +199,10 @@ public class DatasetDatasourcesTabViewImpl extends ViewWithUiHandlers<DatasetDat
             addMember(datasourcesList);
             bindEvents();
 
+        }
+
+        public void updateVersionable() {
+            versionableCheckBoxItem.setValue(Boolean.TRUE.equals(datasetVersionDto.getVersionable()) ? MetamacWebCommon.getConstants().yes() : MetamacWebCommon.getConstants().no());
         }
 
         public void updateDataSourceType() {

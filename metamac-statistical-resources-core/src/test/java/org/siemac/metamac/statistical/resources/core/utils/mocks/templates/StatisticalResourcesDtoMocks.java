@@ -233,6 +233,7 @@ public class StatisticalResourcesDtoMocks extends MetamacMocks {
         mockSiemacMetadataStatisticalResource(datasetVersionDto, StatisticalResourceTypeEnum.DATASET);
 
         datasetVersionDto.setDataSourceType(DataSourceTypeEnum.FILE);
+        datasetVersionDto.setVersionable(Boolean.TRUE);
 
         return datasetVersionDto;
     }

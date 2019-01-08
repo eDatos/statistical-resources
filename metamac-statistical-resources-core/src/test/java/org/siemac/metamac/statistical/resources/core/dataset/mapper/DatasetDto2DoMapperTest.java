@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts.assertEqualsCategorisation;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts.assertEqualsDatasetVersion;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts.assertEqualsDatasource;
@@ -331,20 +332,24 @@ public class DatasetDto2DoMapperTest extends StatisticalResourcesBaseTest {
 
     @Test
     @MetamacMock(STATISTIC_OFFICIALITY_01_BASIC_NAME)
-    public void testDatasetDtoToDoCheckDataSourceTypeAttribute() throws MetamacException {
+    public void testDatasetDtoToDoCheckDataSourceTypeAndVersionableAttributes() throws MetamacException {
         StatisticOfficiality officiality = statisticOfficialityMockFactory.retrieveMock(STATISTIC_OFFICIALITY_01_BASIC_NAME);
         DatasetVersionDto dto = StatisticalResourcesDtoMocks.mockDatasetVersionDto(officiality);
         DatasetVersion entity = datasetDto2DoMapper.datasetVersionDtoToDo(dto);
         assertEquals(dto.getDataSourceType(), entity.getDataSourceType());
+        assertEquals(dto.getVersionable(), entity.getVersionable());
 
         dto.setDataSourceType(DataSourceTypeEnum.DATABASE);
+        dto.setVersionable(Boolean.FALSE);
         entity = datasetDto2DoMapper.datasetVersionDtoToDo(dto);
         assertEquals(DataSourceTypeEnum.DATABASE, entity.getDataSourceType());
+        assertFalse(entity.getVersionable());
 
         dto.setDataSourceType(DataSourceTypeEnum.FILE);
+        dto.setVersionable(Boolean.TRUE);
         entity = datasetDto2DoMapper.datasetVersionDtoToDo(dto);
         assertEquals(DataSourceTypeEnum.FILE, entity.getDataSourceType());
-
+        assertTrue(entity.getVersionable());
     }
 
     private void checkCanChangeDsdByOtherVersion(String datasetVersionMockName) throws MetamacException {

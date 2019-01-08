@@ -118,6 +118,7 @@ public class DatasetVersioningCopyUtils extends CommonVersioningCopyUtils {
         target.setStatisticOfficiality(source.getStatisticOfficiality());
 
         target.setDataSourceType(source.getDataSourceType());
+        target.setVersionable(source.getVersionable());
     }
 
     private static Collection<TemporalCode> copyListTemporalCode(List<TemporalCode> source) {

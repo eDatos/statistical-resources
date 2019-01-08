@@ -21,7 +21,7 @@ public class ImportDbDatasourceWindow extends Window {
     public ImportDbDatasourceWindow() {
         super();
 
-        setWidth(380);
+        setWidth(450);
         setHeight(130);
         setTitle(getConstants().actionLoadDatasources());
         setShowMinimizeButton(false);
@@ -58,7 +58,7 @@ public class ImportDbDatasourceWindow extends Window {
     }
 
     public String getTableNameItemValue() {
-        return form.getValueAsString("Name RequiredTextItem");
+        return form.getValueAsString("Name RequiredTextItem"); // METAMAC-2866 Components name, where they should be defined?
     }
 
     private class ImportDbDataSourceForm extends CustomDynamicForm {
@@ -67,9 +67,11 @@ public class ImportDbDatasourceWindow extends Window {
             super();
             setMargin(5);
 
-            RequiredTextItem tableNameTextItem = new RequiredTextItem("Name RequiredTextItem", getConstants().datasetDatasource());
+            // METAMAC-2866 Components name, where they should be defined?
+            RequiredTextItem tableNameTextItem = new RequiredTextItem("Name RequiredTextItem", getConstants().datasetTableName());
             tableNameTextItem.setWidth("*");
 
+            // METAMAC-2866 Components name, where they should be defined?
             CustomButtonItem saveButtonItem = new CustomButtonItem("Name CustomButtonItem", MetamacWebCommon.getConstants().accept());
 
             setFields(tableNameTextItem, saveButtonItem);

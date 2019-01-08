@@ -1,6 +1,8 @@
 package org.siemac.metamac.statistical.resources.core.dataset.mapper;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.BaseAsserts.assertEqualsStatisticOfficiality;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts.assertEqualsCategorisation;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts.assertEqualsCategorisationDoAndDtoCollection;
@@ -155,19 +157,24 @@ public class DatasetDo2DtoMapperTest extends StatisticalResourcesBaseTest {
 
     @Test
     @MetamacMock({DATASET_VERSION_05_FOR_DATASET_04_NAME})
-    public void testDatasetVersionDoToDtoCheckDataSourceTypeAttribute() throws MetamacException {
+    public void testDatasetVersionDoToDtoCheckDataSourceTypeAndVersionableAttributes() throws MetamacException {
 
         DatasetVersion expected = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_05_FOR_DATASET_04_NAME);
         DatasetVersionDto actual = datasetDo2DtoMapper.datasetVersionDoToDto(getServiceContextAdministrador(), expected);
         assertEquals(expected.getDataSourceType(), actual.getDataSourceType());
+        assertEquals(expected.getVersionable(), actual.getVersionable());
 
         expected.setDataSourceType(DataSourceTypeEnum.DATABASE);
+        expected.setVersionable(Boolean.FALSE);
         actual = datasetDo2DtoMapper.datasetVersionDoToDto(getServiceContextAdministrador(), expected);
         assertEquals(DataSourceTypeEnum.DATABASE, actual.getDataSourceType());
+        assertFalse(actual.getVersionable());
 
         expected.setDataSourceType(DataSourceTypeEnum.FILE);
+        expected.setVersionable(Boolean.TRUE);
         actual = datasetDo2DtoMapper.datasetVersionDoToDto(getServiceContextAdministrador(), expected);
         assertEquals(DataSourceTypeEnum.FILE, actual.getDataSourceType());
+        assertTrue(actual.getVersionable());
 
     }
 

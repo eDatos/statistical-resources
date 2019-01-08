@@ -60,6 +60,7 @@ Application DatasetsStatisticalResourcesDto {
 			Boolean isTaskInBackground;
 			
 			- @DataSourceTypeEnum dataSourceType;
+			Boolean versionable;
 		}
 
 		DataTransferObject DatasourceDto extends @IdentifiableStatisticalResourceDto {

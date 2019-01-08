@@ -19,6 +19,7 @@ import org.siemac.metamac.web.common.client.utils.InternationalStringUtils;
 import org.siemac.metamac.web.common.client.widgets.actions.search.SearchPaginatedAction;
 import org.siemac.metamac.web.common.client.widgets.form.CustomDynamicForm;
 import org.siemac.metamac.web.common.client.widgets.form.fields.CustomButtonItem;
+import org.siemac.metamac.web.common.client.widgets.form.fields.CustomCheckboxItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.RequiredSelectItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.RequiredTextItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.external.SearchExternalItemLinkItem;
@@ -52,11 +53,15 @@ public class NewDatasetWindow extends NewStatisticalResourceWindow {
         dataSourceTypeItem.setValueMap(CommonUtils.getDataSourceTypeHashMap());
         dataSourceTypeItem.setAlign(Alignment.LEFT);
 
+        CustomCheckboxItem versionableCheckBoxItem = new CustomCheckboxItem(DatasetDS.VERSIONABLE, getConstants().versionable());
+        versionableCheckBoxItem.setAlign(Alignment.LEFT);
+        versionableCheckBoxItem.setCanEdit(Boolean.TRUE);
+
         CustomButtonItem saveItem = new CustomButtonItem(FIELD_SAVE, getConstants().datasetCreate());
 
         form = new CustomDynamicForm();
         form.setMargin(5);
-        form.setFields(nameItem, relatedDsdItem, languageItem, maintainerItem, dataSourceTypeItem, saveItem);
+        form.setFields(nameItem, relatedDsdItem, languageItem, maintainerItem, dataSourceTypeItem, versionableCheckBoxItem, saveItem);
         form.setWidth100();
 
         addItem(form);
@@ -72,6 +77,7 @@ public class NewDatasetWindow extends NewStatisticalResourceWindow {
         datasetDto.setTitle(InternationalStringUtils.updateInternationalString(new InternationalStringDto(), form.getValueAsString(DatasetDS.TITLE)));
         datasetDto.setRelatedDsd(form.getValueAsExternalItemDto(DatasetDS.RELATED_DSD));
         datasetDto.setDataSourceType(DataSourceTypeEnum.valueOf(form.getValueAsString(DatasetDS.DATA_SOURCE_TYPE)));
+        datasetDto.setVersionable(Boolean.valueOf(form.getValueAsString(DatasetDS.VERSIONABLE)));
         populateSiemacResourceDto(datasetDto);
 
         return datasetDto;

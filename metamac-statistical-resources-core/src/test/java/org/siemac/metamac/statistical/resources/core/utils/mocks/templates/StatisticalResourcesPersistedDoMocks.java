@@ -307,7 +307,8 @@ public class StatisticalResourcesPersistedDoMocks extends StatisticalResourcesDo
 
         computeCoverageRelatedMetadata(datasetVersion);
 
-        datasetVersion.setDataSourceType(DataSourceTypeEnum.FILE);
+        datasetVersion.setDataSourceType(DataSourceTypeEnum.FILE); // METAMAC-2866 dirty cheat?
+        datasetVersion.setVersionable(Boolean.TRUE);
 
         return datasetVersion;
     }
