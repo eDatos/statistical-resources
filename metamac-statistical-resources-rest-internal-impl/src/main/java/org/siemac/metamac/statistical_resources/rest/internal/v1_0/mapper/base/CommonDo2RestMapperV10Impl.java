@@ -841,7 +841,7 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
             codes = srmRestExternalFacade.retrieveCodesByCodelistUrn(codelistUrn, order, openness, INCLUDE_ALL_FIELDS); // note: srm api returns codes in order
         } else {
             codes = srmRestExternalFacade.retrieveCodesByCodelistUrn(codelistUrn, order, openness,
-                    SrmRestConstants.FIELD_INCLUDE_OPENNES + RestApiConstants.COMMA + SrmRestConstants.FIELD_INCLUDE_ORDER + RestApiConstants.COMMA + SrmRestConstants.FIELD_DESCRIPTION); // note: srm api returns codes in order
+                    SrmRestConstants.FIELD_INCLUDE_OPENNES + RestApiConstants.COMMA + SrmRestConstants.FIELD_INCLUDE_ORDER + RestApiConstants.COMMA + SrmRestConstants.FIELD_INCLUDE_DESCRIPTION); // note: srm api returns codes in order
         }
         for (CodeResourceInternal code : codes.getCodes()) {
             String id = code.getId();
