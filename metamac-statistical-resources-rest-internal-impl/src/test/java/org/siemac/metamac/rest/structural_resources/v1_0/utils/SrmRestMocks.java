@@ -199,23 +199,23 @@ public class SrmRestMocks {
     public static Codes mockCodesByCodelistWithHierarchy(String agencyID, String resourceID, String version) {
         Codes codes = new Codes();
         {
-            CodeResourceInternal parent = mockCodeResource(agencyID, resourceID, version, resourceID + "-code01", null, 1, true);
+            CodeResourceInternal parent = mockCodeResourceWithDescription(agencyID, resourceID, version, resourceID + "-code01", null, 1, true);
             codes.getCodes().add(parent);
         }
         {
-            CodeResourceInternal parent = mockCodeResource(agencyID, resourceID, version, resourceID + "-code02", null, 2, false);
+            CodeResourceInternal parent = mockCodeResourceWithDescription(agencyID, resourceID, version, resourceID + "-code02", null, 2, false);
             codes.getCodes().add(parent);
             {
-                CodeResourceInternal child = mockCodeResource(agencyID, resourceID, version, resourceID + "-code03", parent.getUrn(), 1, true);
+                CodeResourceInternal child = mockCodeResourceWithDescription(agencyID, resourceID, version, resourceID + "-code03", parent.getUrn(), 1, true);
                 codes.getCodes().add(child);
             }
         }
         {
-            CodeResourceInternal parent = mockCodeResource(agencyID, resourceID, version, resourceID + "-code04", null, 3, true);
+            CodeResourceInternal parent = mockCodeResourceWithDescription(agencyID, resourceID, version, resourceID + "-code04", null, 3, true);
             codes.getCodes().add(parent);
         }
         {
-            CodeResourceInternal parent = mockCodeResource(agencyID, resourceID, version, resourceID + "-code05", null, 4, false);
+            CodeResourceInternal parent = mockCodeResourceWithDescription(agencyID, resourceID, version, resourceID + "-code05", null, 4, false);
             codes.getCodes().add(parent);
         }
         return codes;
@@ -240,17 +240,18 @@ public class SrmRestMocks {
 
     public static Concepts mockConceptsByConceptSchemeWithHierarchy(String agencyID, String resourceID, String version) {
         Concepts concepts = new Concepts();
-        concepts.getConcepts().add(mockConceptResource(agencyID, resourceID, version, resourceID + "-concept01", null));
-        concepts.getConcepts().add(mockConceptResource(agencyID, resourceID, version, resourceID + "-concept02", concepts.getConcepts().get(0).getUrn()));
-        concepts.getConcepts().add(mockConceptResource(agencyID, resourceID, version, resourceID + "-concept03", null));
-        concepts.getConcepts().add(mockConceptResource(agencyID, resourceID, version, resourceID + "-concept04", null));
-        concepts.getConcepts().add(mockConceptResource(agencyID, resourceID, version, resourceID + "-concept05", null));
+        concepts.getConcepts().add(mockConceptResourceWithDescription(agencyID, resourceID, version, resourceID + "-concept01", null));
+        concepts.getConcepts().add(mockConceptResourceWithDescription(agencyID, resourceID, version, resourceID + "-concept02", concepts.getConcepts().get(0).getUrn()));
+        concepts.getConcepts().add(mockConceptResourceWithDescription(agencyID, resourceID, version, resourceID + "-concept03", null));
+        concepts.getConcepts().add(mockConceptResourceWithDescription(agencyID, resourceID, version, resourceID + "-concept04", null));
+        concepts.getConcepts().add(mockConceptResourceWithDescription(agencyID, resourceID, version, resourceID + "-concept05", null));
         return concepts;
     }
 
     public static CodeResourceInternal mockCodeResourceGeographical(String agencyID, String maintainableParentID, String maintainableVersionID, String resourceID, String parentUrn, Integer order,
             Boolean open) {
         CodeResourceInternal code = mockCodeResource(agencyID, maintainableParentID, maintainableVersionID, resourceID, parentUrn, order, open);
+        code.setDescription(mockInternationalString("Description " + resourceID));
         code.setVariableElement(mockVariableElementResource("variableElement-" + resourceID));
         return code;
     }
@@ -268,6 +269,12 @@ public class SrmRestMocks {
         code.setOpen(open);
         return code;
     }
+    
+    public static CodeResourceInternal mockCodeResourceWithDescription(String agencyID, String maintainableParentID, String maintainableVersionID, String resourceID, String parentUrn, Integer order, Boolean open) {
+        CodeResourceInternal code = mockCodeResource(agencyID, maintainableParentID, maintainableVersionID, resourceID, parentUrn, order, open);
+        code.setDescription(mockInternationalString("Description " + resourceID));
+        return code;
+    }
 
     public static ItemResourceInternal mockConceptResource(String agencyID, String maintainableParentID, String maintainableVersionID, String resourceID, String parentUrn) {
         ItemResourceInternal concept = new ItemResourceInternal();
@@ -278,6 +285,12 @@ public class SrmRestMocks {
         concept.setKind("structuralResources#concept");
         concept.setSelfLink(mockResourceLink("http://apis.metamac.org/metamac-srm-web/apis/structural-resources-internal/v1.0/conceptschemes/" + agencyID + "/" + maintainableParentID + "/"
                 + maintainableVersionID + "/concepts/" + resourceID));
+        return concept;
+    }
+    
+    public static ItemResourceInternal mockConceptResourceWithDescription(String agencyID, String maintainableParentID, String maintainableVersionID, String resourceID, String parentUrn) {
+        ItemResourceInternal concept = mockConceptResource(agencyID, maintainableParentID, maintainableVersionID, resourceID, parentUrn);
+        concept.setDescription(mockInternationalString("Description " + resourceID));
         return concept;
     }
 
