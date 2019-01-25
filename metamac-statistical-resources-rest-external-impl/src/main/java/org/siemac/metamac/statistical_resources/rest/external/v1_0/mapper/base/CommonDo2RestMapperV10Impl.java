@@ -138,7 +138,7 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
     private static final Logger                     logger             = LoggerFactory.getLogger(CommonDo2RestMapperV10.class);
 
     private String                                  INCLUDE_ALL_FIELDS = SrmRestConstants.FIELD_INCLUDE_OPENNES + RestApiConstants.COMMA + SrmRestConstants.FIELD_INCLUDE_ORDER + RestApiConstants.COMMA
-            + SrmRestConstants.FIELD_INCLUDE_VARIABLE_ELEMENT;
+            + SrmRestConstants.FIELD_INCLUDE_VARIABLE_ELEMENT + RestApiConstants.COMMA + SrmRestConstants.FIELD_INCLUDE_DESCRIPTION;
 
     @Autowired
     private StatisticalResourcesConfiguration       configurationService;
