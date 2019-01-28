@@ -141,7 +141,7 @@ public class StatisticalResourcesMockRestBaseTest extends StatisticalResourcesBa
         List<String> urns = getUrnsFromExternalItems(allItems);
         List<String> publishedUrns = getUrnsFromExternalItems(publishedItems);
         Mockito.when(srmRestInternalFacadeV10.findConcepts(Mockito.eq(RestApiConstants.WILDCARD_ALL), Mockito.eq(RestApiConstants.WILDCARD_ALL), Mockito.eq(RestApiConstants.WILDCARD_ALL),
-                Mockito.eq(SrmRestInternalFacadeV10MockUtils.mockQueryFindPublishedConceptsUrnsAsList(urns)), Mockito.isNull(String.class), Mockito.anyString(), Mockito.anyString()))
+                Mockito.eq(SrmRestInternalFacadeV10MockUtils.mockQueryFindPublishedConceptsUrnsAsList(urns)), Mockito.isNull(String.class), Mockito.anyString(), Mockito.anyString(), null))
                 .thenReturn(SrmRestInternalFacadeV10MockUtils.mockConceptsWithOnlyUrns(publishedUrns));
     }
 
