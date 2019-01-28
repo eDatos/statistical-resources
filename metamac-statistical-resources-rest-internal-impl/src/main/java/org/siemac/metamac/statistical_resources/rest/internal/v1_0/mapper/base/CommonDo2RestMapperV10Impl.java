@@ -141,7 +141,7 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
     private static final Logger                     logger             = LoggerFactory.getLogger(CommonDo2RestMapperV10.class);
 
     private String                                  INCLUDE_ALL_FIELDS = SrmRestConstants.FIELD_INCLUDE_OPENNES + RestApiConstants.COMMA + SrmRestConstants.FIELD_INCLUDE_ORDER + RestApiConstants.COMMA
-            + SrmRestConstants.FIELD_INCLUDE_VARIABLE_ELEMENT;
+            + SrmRestConstants.FIELD_INCLUDE_VARIABLE_ELEMENT + RestApiConstants.COMMA + SrmRestConstants.FIELD_INCLUDE_DESCRIPTION;
 
     @Autowired
     private StatisticalResourcesConfiguration       configurationService;
@@ -572,6 +572,7 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
         target.setUrn(source.getUrn());
         target.setKind(source.getKind());
         target.setName(toInternationalString(source.getName(), selectedLanguages));
+        target.setDescription(toInternationalString(source.getDescription(), selectedLanguages));
         target.setNestedId(source.getNestedId());
         target.setSelfLink(source.getSelfLink());
     }
@@ -584,6 +585,7 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
         target.setUrn(source.getUrn());
         target.setKind(source.getKind());
         target.setName(toInternationalString(source.getName(), selectedLanguages));
+        target.setDescription(toInternationalString(source.getDescription(), selectedLanguages));
         target.setNestedId(source.getNestedId());
         target.setSelfLink(source.getSelfLink());
         if (source.getManagementAppLink() != null) {
@@ -600,6 +602,7 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
         target.setUrn(source.getUrn());
         target.setKind(source.getKind());
         target.setName(toInternationalString(source.getName(), selectedLanguages));
+        target.setDescription(toInternationalString(source.getDescription(), selectedLanguages));
         target.setNestedId(source.getNestedId());
         target.setSelfLink(source.getSelfLink());
         if (source.getManagementAppLink() != null) {
@@ -840,7 +843,7 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
             codes = srmRestExternalFacade.retrieveCodesByCodelistUrn(codelistUrn, order, openness, INCLUDE_ALL_FIELDS); // note: srm api returns codes in order
         } else {
             codes = srmRestExternalFacade.retrieveCodesByCodelistUrn(codelistUrn, order, openness,
-                    SrmRestConstants.FIELD_INCLUDE_OPENNES + RestApiConstants.COMMA + SrmRestConstants.FIELD_INCLUDE_ORDER); // note: srm api returns codes in order
+                    SrmRestConstants.FIELD_INCLUDE_OPENNES + RestApiConstants.COMMA + SrmRestConstants.FIELD_INCLUDE_ORDER + RestApiConstants.COMMA + SrmRestConstants.FIELD_INCLUDE_DESCRIPTION); // note: srm api returns codes in order
         }
         for (CodeResourceInternal code : codes.getCodes()) {
             String id = code.getId();
@@ -887,7 +890,7 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
         // This map contains nodes that are not in the result. If a child of this nodes is in the result, we use this map to put it inside the nearest parent node in result
         Map<String, String> parentsReplacedToVisualisation = new HashMap<String, String>();
 
-        Concepts concepts = srmRestExternalFacade.retrieveConceptsByConceptSchemeByUrn(conceptSchemeUrn);
+        Concepts concepts = srmRestExternalFacade.retrieveConceptsByConceptSchemeByUrn(conceptSchemeUrn, SrmRestConstants.FIELD_INCLUDE_DESCRIPTION);
         for (ItemResourceInternal concept : concepts.getConcepts()) {
             String id = concept.getId();
             boolean skip = false;
@@ -1148,7 +1151,7 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
             return null;
         }
         EnumeratedAttributeValues targets = new EnumeratedAttributeValues();
-        Concepts concepts = srmRestExternalFacade.retrieveConceptsByConceptSchemeByUrn(conceptSchemeUrn);
+        Concepts concepts = srmRestExternalFacade.retrieveConceptsByConceptSchemeByUrn(conceptSchemeUrn, null);
         for (ItemResourceInternal concept : concepts.getConcepts()) {
             String id = concept.getId();
             if (!coveragesById.containsKey(id)) {

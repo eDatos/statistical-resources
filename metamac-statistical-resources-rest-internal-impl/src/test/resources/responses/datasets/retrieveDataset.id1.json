@@ -653,6 +653,14 @@
 										}
 									]
 								},
+								"description": {
+									"text": [
+										{
+											"value": "Description santa-cruz-tenerife en Español",
+											"lang": "es"
+										}
+									]
+								},
 								"kind": "structuralResources#code"
 							},
 							{
@@ -683,6 +691,14 @@
 									"text": [
 										{
 											"value": "tenerife en Español",
+											"lang": "es"
+										}
+									]
+								},
+								"description": {
+									"text": [
+										{
+											"value": "Description tenerife en Español",
 											"lang": "es"
 										}
 									]
@@ -721,6 +737,14 @@
 										}
 									]
 								},
+								"description": {
+									"text": [
+										{
+											"value": "Description la-laguna en Español",
+											"lang": "es"
+										}
+									]
+								},
 								"kind": "structuralResources#code"
 							},
 							{
@@ -751,6 +775,14 @@
 									"text": [
 										{
 											"value": "santa-cruz en Español",
+											"lang": "es"
+										}
+									]
+								},
+								"description": {
+									"text": [
+										{
+											"value": "Description santa-cruz en Español",
 											"lang": "es"
 										}
 									]
@@ -789,6 +821,14 @@
 										}
 									]
 								},
+								"description": {
+									"text": [
+										{
+											"value": "Description la-palma en Español",
+											"lang": "es"
+										}
+									]
+								},
 								"kind": "structuralResources#code"
 							},
 							{
@@ -819,6 +859,14 @@
 									"text": [
 										{
 											"value": "los-llanos-de-aridane en Español",
+											"lang": "es"
+										}
+									]
+								},
+								"description": {
+									"text": [
+										{
+											"value": "Description los-llanos-de-aridane en Español",
 											"lang": "es"
 										}
 									]
@@ -857,6 +905,14 @@
 										}
 									]
 								},
+								"description": {
+									"text": [
+										{
+											"value": "Description santa-cruz-la-palma en Español",
+											"lang": "es"
+										}
+									]
+								},
 								"kind": "structuralResources#code"
 							},
 							{
@@ -887,6 +943,14 @@
 									"text": [
 										{
 											"value": "la-gomera en Español",
+											"lang": "es"
+										}
+									]
+								},
+								"description": {
+									"text": [
+										{
+											"value": "Description la-gomera en Español",
 											"lang": "es"
 										}
 									]
@@ -925,6 +989,14 @@
 										}
 									]
 								},
+								"description": {
+									"text": [
+										{
+											"value": "Description el-hierro en Español",
+											"lang": "es"
+										}
+									]
+								},
 								"kind": "structuralResources#code"
 							},
 							{
@@ -954,6 +1026,14 @@
 									"text": [
 										{
 											"value": "las-palmas-gran-canaria en Español",
+											"lang": "es"
+										}
+									]
+								},
+								"description": {
+									"text": [
+										{
+											"value": "Description las-palmas-gran-canaria en Español",
 											"lang": "es"
 										}
 									]
@@ -992,6 +1072,14 @@
 										}
 									]
 								},
+								"description": {
+									"text": [
+										{
+											"value": "Description gran-canaria en Español",
+											"lang": "es"
+										}
+									]
+								},
 								"kind": "structuralResources#code"
 							},
 							{
@@ -1026,6 +1114,14 @@
 										}
 									]
 								},
+								"description": {
+									"text": [
+										{
+											"value": "Description fuerteventura en Español",
+											"lang": "es"
+										}
+									]
+								},
 								"kind": "structuralResources#code"
 							},
 							{
@@ -1056,6 +1152,14 @@
 									"text": [
 										{
 											"value": "lanzarote en Español",
+											"lang": "es"
+										}
+									]
+								},
+								"description": {
+									"text": [
+										{
+											"value": "Description lanzarote en Español",
 											"lang": "es"
 										}
 									]
@@ -1177,6 +1281,14 @@
 										}
 									]
 								},
+								"description": {
+									"text": [
+										{
+											"value": "Description measure01-conceptScheme01-concept01 en Español",
+											"lang": "es"
+										}
+									]
+								},
 								"kind": "structuralResources#concept"
 							},
 							{
@@ -1208,6 +1320,14 @@
 									"text": [
 										{
 											"value": "measure01-conceptScheme01-concept02 en Español",
+											"lang": "es"
+										}
+									]
+								},
+								"description": {
+									"text": [
+										{
+											"value": "Description measure01-conceptScheme01-concept02 en Español",
 											"lang": "es"
 										}
 									]
@@ -1247,6 +1367,14 @@
 										}
 									]
 								},
+								"description": {
+									"text": [
+										{
+											"value": "Description measure01-conceptScheme01-concept05 en Español",
+											"lang": "es"
+										}
+									]
+								},
 								"kind": "structuralResources#concept"
 							}
 						],
@@ -1281,6 +1409,14 @@
 										}
 									]
 								},
+								"description": {
+									"text": [
+										{
+											"value": "Description dim01-codelist01-code01 en Español",
+											"lang": "es"
+										}
+									]
+								},
 								"kind": "structuralResources#code"
 							},
 							{
@@ -1298,6 +1434,14 @@
 										}
 									]
 								},
+								"description": {
+									"text": [
+										{
+											"value": "Description dim01-codelist01-code03 en Español",
+											"lang": "es"
+										}
+									]
+								},
 								"kind": "structuralResources#code"
 							},
 							{
@@ -1311,6 +1455,14 @@
 									"text": [
 										{
 											"value": "dim01-codelist01-code04 en Español",
+											"lang": "es"
+										}
+									]
+								},
+								"description": {
+									"text": [
+										{
+											"value": "Description dim01-codelist01-code04 en Español",
 											"lang": "es"
 										}
 									]
