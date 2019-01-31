@@ -67,4 +67,9 @@ public class TaskServiceFacadeImpl extends TaskServiceFacadeImplBase {
             taskservice.markTasksAsFailedOnApplicationStartup(ctx, task.getJob());
         }
     }
+
+    @Override
+    public void markTaskAsFinished(ServiceContext ctx, String job) throws MetamacException {
+        taskservice.markTaskAsFinished(ctx, job);
+    }
 }

@@ -32,4 +32,9 @@ public class TaskServiceFacadeTest extends StatisticalResourcesBaseTest implemen
     public void testExecuteDuplicationTask() throws Exception {
         // See integration test in DataManipulateTest
     }
+
+    @Override
+    public void testMarkTaskAsFinished() throws Exception {
+        // TODO METAMAC-2866 Testing?
+    }
 }

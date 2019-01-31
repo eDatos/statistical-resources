@@ -316,4 +316,8 @@ public class DatasetServiceInvocationValidatorImpl extends BaseInvocationValidat
         StatisticalResourcesValidationUtils.checkParameterRequired(tableName, ServiceExceptionParameters.TABLE_NAME, exceptions);
     }
 
+    public static void checkCreateDbImportDatasetJob(List<MetamacExceptionItem> exceptions) {
+        // NOTHING TO DO HERE
+    }
+
 }

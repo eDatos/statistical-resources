@@ -17,8 +17,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-import javax.annotation.PostConstruct;
-
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
@@ -29,7 +27,10 @@ import org.fornax.cartridges.sculptor.framework.errorhandling.ApplicationExcepti
 import org.fornax.cartridges.sculptor.framework.errorhandling.ExceptionHelper;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.joda.time.DateTime;
+import org.quartz.CronScheduleBuilder;
+import org.quartz.CronTrigger;
 import org.quartz.DateBuilder.IntervalUnit;
+import org.quartz.JobBuilder;
 import org.quartz.JobDataMap;
 import org.quartz.JobDetail;
 import org.quartz.JobKey;
@@ -37,6 +38,7 @@ import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.quartz.SchedulerFactory;
 import org.quartz.SimpleTrigger;
+import org.quartz.TriggerBuilder;
 import org.quartz.TriggerKey;
 import org.quartz.impl.SchedulerRepository;
 import org.quartz.impl.StdSchedulerFactory;
@@ -47,6 +49,7 @@ import org.siemac.metamac.core.common.util.ApplicationContextProvider;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ContentConstraint;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructure;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ResourceInternal;
+import org.siemac.metamac.statistical.resources.core.conf.StatisticalResourcesConfiguration;
 import org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConstants;
 import org.siemac.metamac.statistical.resources.core.constraint.api.ConstraintsService;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
@@ -58,6 +61,9 @@ import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.invocation.service.NoticesRestInternalService;
 import org.siemac.metamac.statistical.resources.core.invocation.service.SrmRestInternalService;
 import org.siemac.metamac.statistical.resources.core.io.mapper.MetamacSdmx2StatRepoMapper;
+import org.siemac.metamac.statistical.resources.core.io.serviceimpl.AbstractImportDatasetJob;
+import org.siemac.metamac.statistical.resources.core.io.serviceimpl.CustomImportDatasetJobForDbImport;
+import org.siemac.metamac.statistical.resources.core.io.serviceimpl.DbImportDatasetJob;
 import org.siemac.metamac.statistical.resources.core.io.serviceimpl.DuplicationDatasetJob;
 import org.siemac.metamac.statistical.resources.core.io.serviceimpl.ImportDatasetJob;
 import org.siemac.metamac.statistical.resources.core.io.serviceimpl.ManipulateCsvDataService;
@@ -79,6 +85,8 @@ import org.siemac.metamac.statistical.resources.core.task.utils.JobUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationListener;
+import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Service;
 
 import com.arte.statistic.parser.px.domain.PxModel;
@@ -95,44 +103,54 @@ import es.gobcan.istac.edatos.dataset.repository.service.DatasetRepositoriesServ
  * Implementation of TaskService.
  */
 @Service("taskService")
-public class TaskServiceImpl extends TaskServiceImplBase {
+public class TaskServiceImpl extends TaskServiceImplBase implements ApplicationListener<ContextRefreshedEvent> {
 
-    private static Logger logger = LoggerFactory.getLogger(TaskServiceImpl.class);
+    private static Logger                     logger                              = LoggerFactory.getLogger(TaskServiceImpl.class);
 
-    public static final String SCHEDULER_INSTANCE_NAME = "StatisticalResourcesScheduler";
-    public static final String PREFIX_JOB_IMPORT_DATA = "job_importdata_";
-    public static final String PREFIX_JOB_RECOVERY_IMPORT_DATA = "job_recoveryimportdata_";
-    public static final String PREFIX_JOB_DUPLICATION_DATA = "job_duplicationdata_";
-    public static final String PREFIX_TRIGGER_IMPORT_DATA = "trigger_importdata_";
-    public static final String PREFIX_TRIGGER_RECOVERY_IMPORT_DATA = "trigger_recoveryimportdata_";
-    public static final String GROUP_IMPORTATION = "importation";
+    public static final String                SCHEDULER_INSTANCE_NAME             = "StatisticalResourcesScheduler";
+    public static final String                PREFIX_JOB_IMPORT_DATA              = "job_importdata_";
 
-    @Autowired
-    private TaskServiceInvocationValidator taskServiceInvocationValidator;
-
-    @Autowired
-    private MetamacSdmx2StatRepoMapper metamac2StatRepoMapper;
+    public static final String                PREFIX_JOB_DB_IMPORT_DATA           = "job_dbimportdata_";
+    public static final String                PREFIX_JOB_RECOVERY_IMPORT_DATA     = "job_recoveryimportdata_";
+    public static final String                PREFIX_JOB_DUPLICATION_DATA         = "job_duplicationdata_";
+    public static final String                PREFIX_TRIGGER_IMPORT_DATA          = "trigger_importdata_";
+    public static final String                PREFIX_TRIGGER_RECOVERY_IMPORT_DATA = "trigger_recoveryimportdata_";
+    public static final String                GROUP_IMPORTATION                   = "importation";
 
     @Autowired
-    private SrmRestInternalService srmRestInternalService;
+    private TaskServiceInvocationValidator    taskServiceInvocationValidator;
 
     @Autowired
-    private DatasetRepositoriesServiceFacade datasetRepositoriesServiceFacade;
+    private MetamacSdmx2StatRepoMapper        metamac2StatRepoMapper;
 
     @Autowired
-    private ManipulatePxDataService manipulatePxDataService;
+    private SrmRestInternalService            srmRestInternalService;
 
     @Autowired
-    private ManipulateCsvDataService manipulateCsvDataService;
+    private DatasetRepositoriesServiceFacade  datasetRepositoriesServiceFacade;
 
     @Autowired
-    private ConstraintsService constraintsService;
+    private ManipulatePxDataService           manipulatePxDataService;
 
     @Autowired
-    private DatasetService datasetService;
+    private ManipulateCsvDataService          manipulateCsvDataService;
 
-    @PostConstruct
-    public void afterPropertiesSet() throws Exception {
+    @Autowired
+    private ConstraintsService                constraintsService;
+
+    @Autowired
+    private DatasetService                    datasetService;
+
+    @Autowired
+    private StatisticalResourcesConfiguration configurationService;
+
+    private SchedulerFactory                  sf                                  = null;
+
+    @Override
+    public void onApplicationEvent(ContextRefreshedEvent event) {
+        if (sf != null) {
+            return;
+        }
 
         // Quartz Properties
         Properties quartzProps = new Properties();
@@ -144,11 +162,22 @@ public class TaskServiceImpl extends TaskServiceImplBase {
         quartzProps.put("org.quartz.threadPool.threadCount", "10");
         quartzProps.put("org.quartz.threadPool.threadPriority", "5");
 
-        SchedulerFactory sf = new StdSchedulerFactory(quartzProps);
-        Scheduler sched = sf.getScheduler();
+        try {
+            sf = new StdSchedulerFactory(quartzProps);
+            Scheduler sched = sf.getScheduler();
 
-        // Start now
-        sched.start();
+            // Start now
+            sched.start();
+
+            JobDetail job = newJob(DbImportDatasetJob.class).build();
+
+            CronTrigger cronTrigger = TriggerBuilder.newTrigger().withSchedule(CronScheduleBuilder.cronSchedule(configurationService.retriveCronExpressionForDbDataImport())).build();
+
+            sched.scheduleJob(job, cronTrigger);
+        } catch (SchedulerException | MetamacException e) {
+            logger.error("An unexpected error has occurred during quartz initialization", e);
+            throw new RuntimeException("An unexpected error has occurred during quartz initialization", e);
+        }
 
     }
 
@@ -158,7 +187,7 @@ public class TaskServiceImpl extends TaskServiceImplBase {
         taskServiceInvocationValidator.checkPlanifyImportationDataset(ctx, taskInfoDataset);
 
         // job keys
-        JobKey jobKey = createJobKeyForImportationResource(taskInfoDataset.getDatasetVersionId());
+        JobKey jobKey = createJobKey(ctx, taskInfoDataset);
         TriggerKey triggerKey = createTriggerKeyForImportationDataset(taskInfoDataset.getDatasetVersionId());
 
         Task task = null;
@@ -202,13 +231,7 @@ public class TaskServiceImpl extends TaskServiceImplBase {
                 throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.TASKS_JOB_RECOVERY_IN_PROCESS).withLoggedLevel(ExceptionLevelEnum.ERROR).build(); // Error
             }
 
-            // put triggers in group named after the cluster node instance just to distinguish (in logging) what was scheduled from where
-            JobDetail job = newJob(ImportDatasetJob.class).withIdentity(jobKey).usingJobData(ImportDatasetJob.FILE_PATHS, filePaths.toString())
-                    .usingJobData(ImportDatasetJob.FILE_FORMATS, fileFormats.toString()).usingJobData(ImportDatasetJob.FILE_NAMES, fileNames.toString())
-                    .usingJobData(ImportDatasetJob.ALTERNATIVE_REPRESENTATIONS, alternativeRepresentations.toString())
-                    .usingJobData(ImportDatasetJob.STORE_ALTERNATIVE_REPRESENTATIONS, taskInfoDataset.getStoreAlternativeRepresentations())
-                    .usingJobData(ImportDatasetJob.DATASET_URN, taskInfoDataset.getDatasetUrn()).usingJobData(ImportDatasetJob.DATA_STRUCTURE_URN, taskInfoDataset.getDataStructureUrn())
-                    .usingJobData(ImportDatasetJob.DATASET_VERSION_ID, taskInfoDataset.getDatasetVersionId()).usingJobData(ImportDatasetJob.USER, ctx.getUserId()).requestRecovery().build();
+            JobDetail job = createJob(ctx, jobKey, filePaths, fileNames, fileFormats, alternativeRepresentations, taskInfoDataset);
 
             // No existing Job
             task = new Task(jobKey.getName());
@@ -224,6 +247,44 @@ public class TaskServiceImpl extends TaskServiceImplBase {
         }
 
         return jobKey.getName();
+    }
+
+    protected JobKey createJobKey(ServiceContext ctx, TaskInfoDataset taskInfoDataset) {
+        return (isDbImportJob(ctx) ? createJobKeyForDbImportationResource(taskInfoDataset.getDatasetVersionId()) : createJobKeyForImportationResource(taskInfoDataset.getDatasetVersionId()));
+    }
+
+    private JobDetail createJob(ServiceContext serviceContext, JobKey jobKey, StringBuilder filePaths, StringBuilder fileNames, StringBuilder fileFormats, StringBuilder alternativeRepresentations,
+            TaskInfoDataset taskInfoDataset) {
+        // @formatter:off
+        JobBuilder jobBuilder = 
+                newJob().withIdentity(jobKey)
+                    .usingJobData(AbstractImportDatasetJob.FILE_PATHS, filePaths.toString())
+                    .usingJobData(AbstractImportDatasetJob.FILE_FORMATS, fileFormats.toString()).usingJobData(AbstractImportDatasetJob.FILE_NAMES, fileNames.toString())
+                    .usingJobData(AbstractImportDatasetJob.ALTERNATIVE_REPRESENTATIONS, alternativeRepresentations.toString())
+                    .usingJobData(AbstractImportDatasetJob.STORE_ALTERNATIVE_REPRESENTATIONS, taskInfoDataset.getStoreAlternativeRepresentations())
+                    .usingJobData(AbstractImportDatasetJob.DATASET_URN, taskInfoDataset.getDatasetUrn()).usingJobData(AbstractImportDatasetJob.DATA_STRUCTURE_URN, taskInfoDataset.getDataStructureUrn())
+                    .usingJobData(AbstractImportDatasetJob.DATASET_VERSION_ID, taskInfoDataset.getDatasetVersionId()).usingJobData(AbstractImportDatasetJob.USER, serviceContext.getUserId());
+        // @formatter:on
+
+        if (isDbImportJob(serviceContext)) {
+            DateTime dt = (DateTime) serviceContext.getProperty(CustomImportDatasetJobForDbImport.DB_IMPORT_JOB_EXECUTION_DATE);
+
+            // @formatter:off
+            jobBuilder.ofType(CustomImportDatasetJobForDbImport.class)
+                .usingJobData(CustomImportDatasetJobForDbImport.DB_IMPORT_JOB_FLAG, Boolean.TRUE)
+                .usingJobData(CustomImportDatasetJobForDbImport.DB_IMPORT_JOB_EXECUTION_DATE, dt.getMillis())
+                .usingJobData(AbstractImportDatasetJob.STATISTICAL_OPERATION_URN, taskInfoDataset.getStatisticalOperationUrn())
+                .usingJobData(CustomImportDatasetJobForDbImport.DB_IMPORT_JOB_DATASOURCE_IDENTIFIER, (String) serviceContext.getProperty(CustomImportDatasetJobForDbImport.DB_IMPORT_JOB_DATASOURCE_IDENTIFIER));
+            // @formatter:on
+        } else {
+            jobBuilder.ofType(ImportDatasetJob.class);
+        }
+
+        return jobBuilder.requestRecovery().build();
+    }
+
+    protected boolean isDbImportJob(ServiceContext serviceContext) {
+        return Boolean.TRUE.equals(serviceContext.getProperty(CustomImportDatasetJobForDbImport.DB_IMPORT_JOB_FLAG));
     }
 
     @Override
@@ -343,7 +404,9 @@ public class TaskServiceImpl extends TaskServiceImplBase {
             throw throwableMetamacException;
         }
 
-        markTaskAsFinished(ctx, importationJobKey); // Finish the importation
+        if (!isDbImportJob(ctx)) {
+            markTaskAsFinished(ctx, importationJobKey); // Finish the importation
+        }
     }
 
     @Override
@@ -556,6 +619,10 @@ public class TaskServiceImpl extends TaskServiceImplBase {
         return new JobKey(PREFIX_JOB_IMPORT_DATA + resourceId, GROUP_IMPORTATION);
     }
 
+    private JobKey createJobKeyForDbImportationResource(String resourceId) {
+        return new JobKey(PREFIX_JOB_DB_IMPORT_DATA + resourceId, GROUP_IMPORTATION);
+    }
+
     private JobKey createJobKeyForRecoveryImportationResource(String resourceId) {
         return new JobKey(PREFIX_JOB_RECOVERY_IMPORT_DATA + resourceId, GROUP_IMPORTATION);
     }
@@ -633,7 +700,8 @@ public class TaskServiceImpl extends TaskServiceImplBase {
 
             validateDataVersusDsd.setCurrentFilename(fileDescriptor.getFileName());
 
-            String dataSourceId = Datasource.generateDataSourceId(fileDescriptor.getFileName(), dateTime);
+            String dataSourceId = generateDataSourceId(ctx, fileDescriptor.getFileName(), dateTime);
+
             Date nextUpdate = null;
             if (DatasetFileFormatEnum.SDMX_2_1.equals(fileDescriptor.getDatasetFileFormatEnum())) {
                 if (callback == null) {
@@ -649,7 +717,7 @@ public class TaskServiceImpl extends TaskServiceImplBase {
                 PxModel pxModel = manipulatePxDataService.importPx(ctx, fileDescriptor.getFile(), dataStructure, taskInfoDataset.getDatasetVersionId(), dataSourceId, validateDataVersusDsd);
                 nextUpdate = pxModel.getNextUpdate();
             } else if (DatasetFileFormatEnum.CSV.equals(fileDescriptor.getDatasetFileFormatEnum())) {
-                manipulateCsvDataService.importData(fileDescriptor.getFile(), dataStructure, taskInfoDataset.getDatasetVersionId(), dataSourceId, validateDataVersusDsd);
+                manipulateCsvDataService.importCsv(ctx, fileDescriptor.getFile(), dataStructure, taskInfoDataset.getDatasetVersionId(), dataSourceId, validateDataVersusDsd);
             }
 
             FileDescriptorResult fileDescriptorResult = new FileDescriptorResult();
@@ -668,6 +736,18 @@ public class TaskServiceImpl extends TaskServiceImplBase {
 
         // Callback
         getDatasetService().proccessDatasetFileImportationResult(ctx, taskInfoDataset.getDatasetVersionId(), filesResult);
+    }
+
+    private String generateDataSourceId(ServiceContext serviceContext, String fileName, DateTime dateTime) {
+        String generateDataSourceId;
+
+        if (isDbImportJob(serviceContext)) {
+            generateDataSourceId = (String) serviceContext.getProperty(CustomImportDatasetJobForDbImport.DB_IMPORT_JOB_DATASOURCE_IDENTIFIER);
+        } else {
+            generateDataSourceId = Datasource.generateDataSourceId(fileName, dateTime);
+        }
+
+        return generateDataSourceId;
     }
 
     private NoticesRestInternalService getNoticesRestInternalService() {
@@ -714,4 +794,16 @@ public class TaskServiceImpl extends TaskServiceImplBase {
         }
         return mappings;
     }
+
+    @Override
+    public boolean existDbImportationTaskInResource(ServiceContext ctx, String resourceId) throws MetamacException {
+        taskServiceInvocationValidator.checkExistDbImportationTaskInResource(ctx, resourceId);
+        try {
+            Scheduler sched = SchedulerRepository.getInstance().lookup(SCHEDULER_INSTANCE_NAME); // get a reference to a scheduler
+            return sched.checkExists(createJobKeyForDbImportationResource(resourceId));
+        } catch (SchedulerException e) {
+            throw MetamacExceptionBuilder.builder().withCause(e).withExceptionItems(ServiceExceptionType.TASKS_SCHEDULER_ERROR).withMessageParameters(e.getMessage()).build();
+        }
+    }
+
 }

@@ -25,6 +25,7 @@ import org.siemac.metamac.statistical.resources.web.client.utils.StatisticalReso
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetCodelistsWithVariableResult;
 import org.siemac.metamac.web.common.client.MetamacWebCommon;
 import org.siemac.metamac.web.common.client.listener.UploadListener;
+import org.siemac.metamac.web.common.client.utils.DateUtils;
 import org.siemac.metamac.web.common.client.widgets.CustomListGrid;
 import org.siemac.metamac.web.common.client.widgets.CustomToolStripButton;
 import org.siemac.metamac.web.common.client.widgets.DeleteConfirmationWindow;
@@ -46,11 +47,11 @@ import com.smartgwt.client.widgets.toolbar.ToolStrip;
 
 public class DatasetDatasourcesTabViewImpl extends ViewWithUiHandlers<DatasetDatasourcesTabUiHandlers> implements DatasetDatasourcesTabView {
 
-    private VLayout panel;
+    private VLayout              panel;
 
     private DatasourcesListPanel datasourcesListPanel;
 
-    private DatasetVersionDto datasetVersionDto;
+    private DatasetVersionDto    datasetVersionDto;
 
     public DatasetDatasourcesTabViewImpl() {
         panel = new VLayout();
@@ -68,6 +69,7 @@ public class DatasetDatasourcesTabViewImpl extends ViewWithUiHandlers<DatasetDat
         this.datasetVersionDto = datasetVersionDto;
         datasourcesListPanel.updateDataSourceType();
         datasourcesListPanel.updateVersionable();
+        datasourcesListPanel.updateDateLastTimeDataImport();
         datasourcesListPanel.updateButtonsVisibility();
     }
 
@@ -114,18 +116,19 @@ public class DatasetDatasourcesTabViewImpl extends ViewWithUiHandlers<DatasetDat
 
     private class DatasourcesListPanel extends VLayout {
 
-        private CustomToolStripButton deleteDatasourceButton;
-        private CustomToolStripButton importZipDatasourcesButton;
-        private CustomToolStripButton importDbDatasourcesButton;
-        private CustomToolStripButton importDatasourceButton;
-        private CustomListGrid datasourcesList;
+        private CustomToolStripButton             deleteDatasourceButton;
+        private CustomToolStripButton             importZipDatasourcesButton;
+        private CustomToolStripButton             importDbDatasourcesButton;
+        private CustomToolStripButton             importDatasourceButton;
+        private CustomListGrid                    datasourcesList;
 
-        private DeleteConfirmationWindow deleteConfirmationWindow;
-        private ImportDatasourcesWindow importDatasourcesWindow;
-        private ImportDbDatasourceWindow importDbDatasourceWindow;
+        private DeleteConfirmationWindow          deleteConfirmationWindow;
+        private ImportDatasourcesWindow           importDatasourcesWindow;
+        private ImportDbDatasourceWindow          importDbDatasourceWindow;
         private ImportDatasourceWithMappingWindow importDatasourceWithMappingWindow;
-        private ViewTextItem dataSourceTypeItem;
-        private ViewTextItem versionableCheckBoxItem;
+        private ViewTextItem                      dataSourceTypeItem;
+        private ViewTextItem                      versionableCheckBoxItem;
+        private ViewTextItem                      dateLastTimeDataImportItem;
 
         public DatasourcesListPanel() {
 
@@ -138,11 +141,15 @@ public class DatasetDatasourcesTabViewImpl extends ViewWithUiHandlers<DatasetDat
             versionableCheckBoxItem.setAlign(Alignment.LEFT);
             versionableCheckBoxItem.setCanEdit(Boolean.FALSE);
 
+            dateLastTimeDataImportItem = new ViewTextItem(DatasetDS.DATE_LAST_TIME_DATA_IMPORT, getConstants().dateLastTimeDataImport());
+            dateLastTimeDataImportItem.setAlign(Alignment.LEFT);
+            dateLastTimeDataImportItem.setCanEdit(Boolean.FALSE);
+
             CustomDynamicForm form = new CustomDynamicForm();
             form.setIsGroup(Boolean.FALSE);
             form.setNumCols(4);
             form.setColWidths("8%", "42%", "8%", "42%");
-            form.setFields(dataSourceTypeItem, versionableCheckBoxItem);
+            form.setFields(dataSourceTypeItem, versionableCheckBoxItem, dateLastTimeDataImportItem);
 
             // Toolstrip
 
@@ -199,6 +206,10 @@ public class DatasetDatasourcesTabViewImpl extends ViewWithUiHandlers<DatasetDat
             addMember(datasourcesList);
             bindEvents();
 
+        }
+
+        public void updateDateLastTimeDataImport() {
+            dateLastTimeDataImportItem.setValue(DateUtils.getFormattedDateTime(datasetVersionDto.getDateLastTimeDataImport()));
         }
 
         public void updateVersionable() {

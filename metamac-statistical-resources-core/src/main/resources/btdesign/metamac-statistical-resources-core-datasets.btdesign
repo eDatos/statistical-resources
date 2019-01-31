@@ -56,7 +56,8 @@ Application DatasetsStatisticalResources {
     		
     		proccessDatasetFileImportationResult(String datasetImportationId, List<@FileDescriptorResult> fileDescriptors) throws MetamacException;
     		importDatasourcesInDatasetVersion(String datasetVersionUrn, List<URL> fileUrls,  Map<String,String> dimensionRepresentationMapping, boolean storeDimensionRepresentationMapping) throws MetamacException;
-    		importDbDatasourceInDatasetVersion(String datasetVersionUrn, String tableName) throws MetamacException; 
+    		importDbDatasourceInDatasetVersion(String datasetVersionUrn, String tableName) throws MetamacException;
+    		createDbImportDatasetJob() throws MetamacException; 
     		importDatasourcesInStatisticalOperation(String statisticalOperationUrn, List<URL> fileUrls) throws MetamacException; 
 
     		// Datasets
@@ -180,6 +181,7 @@ Application DatasetsStatisticalResources {
 			
 			- @DataSourceTypeEnum dataSourceType;
 			Boolean versionable;
+			DateTimeTZ dateLastTimeDataImport nullable;
 			//Content descriptors
 
 			// Dimension or attribute id marked as geographic

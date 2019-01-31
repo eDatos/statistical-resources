@@ -251,26 +251,26 @@ import es.gobcan.istac.edatos.dataset.repository.service.DatasetRepositoriesServ
 @Transactional
 public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesBaseTest implements StatisticalResourcesServiceFacadeTestBase {
 
-    private static final String SIEMAC_METADATA_URN_FIELD = "siemacMetadataStatisticalResource.urn";
-    private static final String URN_FIELD = "urn";
+    private static final String               SIEMAC_METADATA_URN_FIELD = "siemacMetadataStatisticalResource.urn";
+    private static final String               URN_FIELD                 = "urn";
 
     @Autowired
     private StatisticalResourcesServiceFacade statisticalResourcesServiceFacade;
 
     @Autowired
-    private QuerySelectionItemRepository querySelectionItemRepository;
+    private QuerySelectionItemRepository      querySelectionItemRepository;
 
     @Autowired
-    private CodeItemRepository codeItemRepository;
+    private CodeItemRepository                codeItemRepository;
 
     @Autowired
-    private SrmRestInternalService srmRestInternalService;
+    private SrmRestInternalService            srmRestInternalService;
 
     @Autowired
-    private DatasetRepositoriesServiceFacade datasetRepositoriesServiceFacade;
+    private DatasetRepositoriesServiceFacade  datasetRepositoriesServiceFacade;
 
     @Autowired
-    StreamMessagingServiceFacade streamMessagingServiceFacade;
+    StreamMessagingServiceFacade              streamMessagingServiceFacade;
 
     @Before
     public void onBeforeTest() throws Exception {
@@ -4107,6 +4107,11 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
 
     @Override
     public void testImportDbDatasourceInDatasetVersion() throws Exception {
+        // TODO METAMAC-2866 It's necessary to define what should be tested
+    }
+
+    @Override
+    public void testCreateDbImportDatasetJob() throws Exception {
         // TODO METAMAC-2866 It's necessary to define what should be tested
     }
 

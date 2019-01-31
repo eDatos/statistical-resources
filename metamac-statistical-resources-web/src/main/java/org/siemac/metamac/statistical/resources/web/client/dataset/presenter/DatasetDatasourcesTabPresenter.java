@@ -59,8 +59,8 @@ public class DatasetDatasourcesTabPresenter extends Presenter<DatasetDatasources
         implements
             DatasetDatasourcesTabUiHandlers {
 
-    private DispatchAsync dispatcher;
-    private PlaceManager placeManager;
+    private DispatchAsync     dispatcher;
+    private PlaceManager      placeManager;
 
     private DatasetVersionDto datasetVersion;
 
@@ -226,7 +226,8 @@ public class DatasetDatasourcesTabPresenter extends Presenter<DatasetDatasources
 
             @Override
             public void onWaitSuccess(SetDbDatasourceImportationResult result) {
-                ShowMessageEvent.fireSuccessMessage(DatasetDatasourcesTabPresenter.this, getMessages().datasourcesImportationPlanned());
+                ShowMessageEvent.fireSuccessMessage(DatasetDatasourcesTabPresenter.this, getMessages().dbDatasourceCreated());
+                retrieveDatasourcesByDataset(datasetVersion.getUrn(), 0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS);
             }
         });
     }

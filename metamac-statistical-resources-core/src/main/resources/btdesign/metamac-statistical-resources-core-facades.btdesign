@@ -145,6 +145,7 @@ Application FacadeStatisticalResources {
     		importDatasourcesInDatasetVersion(@DatasetVersionDto datasetVersionDto, List<URL> fileUrls, Map<String,String> dimensionRepresentationMapping, boolean storeDimensionRepresentationMapping) throws MetamacException;
     		"Import a database table data as datasource in a datasetVersion"
     		importDbDatasourceInDatasetVersion(String datasetVersionUrn, String tableName) throws MetamacException;
+    		createDbImportDatasetJob() throws MetamacException;
     		importDatasourcesInStatisticalOperation(String statisticalOperationUrn, List<URL> fileUrls) throws MetamacException;
     		"Create an attribute instance"
     		@DsdAttributeInstanceDto createAttributeInstance(String datasetVersionUrn, @DsdAttributeInstanceDto dsdAttributeInstanceDto) throws MetamacException;

@@ -41,10 +41,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class DatasetDto2DoMapperImpl extends BaseDto2DoMapperImpl implements DatasetDto2DoMapper {
 
     @Autowired
-    private DatasourceRepository datasourceRepository;
+    private DatasourceRepository           datasourceRepository;
 
     @Autowired
-    private DatasetVersionRepository datasetVersionRepository;
+    private DatasetVersionRepository       datasetVersionRepository;
 
     @Autowired
     private StatisticOfficialityRepository statisticOfficialityRepository;
@@ -165,6 +165,7 @@ public class DatasetDto2DoMapperImpl extends BaseDto2DoMapperImpl implements Dat
 
         target.setDataSourceType(source.getDataSourceType());
         target.setVersionable(source.getVersionable());
+        target.setDateLastTimeDataImport(dateDtoToDo(source.getDateLastTimeDataImport()));
 
         return target;
     }

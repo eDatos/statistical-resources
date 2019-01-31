@@ -24,6 +24,7 @@ Application DatasetsStatisticalResources {
 
     		// General JOBS
     		markTaskAsFailed(String job, java.lang.Exception exception) throws MetamacException;
+    		markTaskAsFinished(String job) throws MetamacException;
     		markAllInProgressTaskToFailed() throws MetamacException;
 		}
 		
@@ -56,6 +57,9 @@ Application DatasetsStatisticalResources {
 
 			"Check if exists a duplication job task in the @param resourceId"
 			boolean existDuplicationTaskInResource(String resourceId) throws MetamacException;
+			
+			"Check if exists an db importation job task in the @param resourceId"
+    		boolean existDbImportationTaskInResource(String resourceId) throws MetamacException;
     		
     		"Creates a task"
 			@Task createTask(@Task task) throws MetamacException;

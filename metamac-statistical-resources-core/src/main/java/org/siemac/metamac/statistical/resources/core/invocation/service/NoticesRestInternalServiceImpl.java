@@ -63,6 +63,35 @@ public class NoticesRestInternalServiceImpl implements NoticesRestInternalServic
     }
 
     @Override
+    public void createDbImportErrorBackgroundNotification(String statisticalOperationUrn, String actionCode, MetamacException exception) {
+        try {
+            Locale locale = configurationService.retrieveLanguageDefaultLocale();
+
+            Throwable localisedException = translateExceptions.translateException(locale, exception);
+            String localisedMessage = localisedException.getMessage();
+            localisedMessage = ERROR + " - " + localisedMessage;
+
+            String subject = LocaleUtil.getMessageForCode(actionCode, locale);
+            String sendingApp = MetamacApplicationsEnum.GESTOR_RECURSOS_ESTADISTICOS.getName();
+
+            // @formatter:off
+            Notice notification = NoticeBuilder.notification()
+                    .withMessagesWithoutResources(localisedMessage)
+                    .withSendingApplication(sendingApp)
+                    .withRoles(MetamacRolesEnum.ADMINISTRADOR, MetamacRolesEnum.TECNICO_PRODUCCION)
+                    .withSubject(subject)
+                    .withApplications(sendingApp)
+                    .withStatisticalOperations(statisticalOperationUrn)
+                    .build();
+            // @formatter:on
+
+            restApiLocator.getNoticesRestInternalFacadeV10().createNotice(notification);
+        } catch (MetamacException e) {
+            logger.error("Error creating createDbImportErrorBackgroundNotification:", e);
+        }
+    }
+
+    @Override
     public void createSuccessBackgroundNotification(String user, String actionCode, String successMessageCode, Serializable... successMessageParameters) {
         try {
             Locale locale = configurationService.retrieveLanguageDefaultLocale();

@@ -95,4 +95,10 @@ public class TaskServiceTest extends StatisticalResourcesBaseTest implements Tas
     public void testMarkTasksAsFailedOnApplicationStartup() throws Exception {
         // See integration test in DataManipulateTest
     }
+
+    @Override
+    public void testExistDbImportationTaskInResource() throws Exception {
+        // TODO METAMAC-2866 Testing?
+
+    }
 }

@@ -145,22 +145,22 @@ import es.gobcan.istac.edatos.dataset.repository.service.DatasetRepositoriesServ
 public class DatasetServiceTest extends StatisticalResourcesBaseTest implements DatasetServiceTestBase {
 
     @Autowired
-    private DatasetService datasetService;
+    private DatasetService                           datasetService;
 
     @Autowired
-    private DatasetVersionRepository datasetVersionRepository;
+    private DatasetVersionRepository                 datasetVersionRepository;
 
     @Autowired
     private DimensionRepresentationMappingRepository dimensionRepresentationMappingRepository;
 
     @Autowired
-    private DatasetRepositoriesServiceFacade datasetRepositoriesServiceFacade;
+    private DatasetRepositoriesServiceFacade         datasetRepositoriesServiceFacade;
 
     @Autowired
-    private SrmRestInternalService srmRestInternalService;
+    private SrmRestInternalService                   srmRestInternalService;
 
     @Autowired
-    private TaskService taskService;
+    private TaskService                              taskService;
 
     @Before
     public void setUp() throws Exception {
@@ -1674,6 +1674,11 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
     public void testImportDbDatasourceInDatasetVersion() throws Exception {
         // TODO METAMAC-2866 It's necessary to define what should be tested
 
+    }
+
+    @Override
+    public void testCreateDbImportDatasetJob() throws Exception {
+        // TODO METAMAC-2866 It's necessary to define what should be tested
     }
 
 }

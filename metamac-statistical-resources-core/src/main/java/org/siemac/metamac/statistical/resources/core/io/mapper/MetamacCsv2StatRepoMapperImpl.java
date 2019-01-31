@@ -9,9 +9,9 @@ import org.siemac.metamac.statistical.resources.core.constants.StatisticalResour
 import org.siemac.metamac.statistical.resources.core.io.utils.ManipulateDataUtils;
 import org.springframework.stereotype.Component;
 
-import com.arte.statistic.parser.generic.domain.Observation;
-import com.arte.statistic.parser.generic.domain.ObservationAttribute;
-import com.arte.statistic.parser.generic.domain.ObservationCodeDimension;
+import com.arte.statistic.parser.csv.domain.CsvObservation;
+import com.arte.statistic.parser.csv.domain.CsvObservationAttribute;
+import com.arte.statistic.parser.csv.domain.CsvObservationCodeDimension;
 
 import es.gobcan.istac.edatos.dataset.repository.dto.AttributeInstanceObservationDto;
 import es.gobcan.istac.edatos.dataset.repository.dto.CodeDimensionDto;
@@ -19,11 +19,11 @@ import es.gobcan.istac.edatos.dataset.repository.dto.InternationalStringDto;
 import es.gobcan.istac.edatos.dataset.repository.dto.LocalisedStringDto;
 import es.gobcan.istac.edatos.dataset.repository.dto.ObservationExtendedDto;
 
-@Component(MetamacObservation2StatRepoMapper.BEAN_ID)
-public class MetamacObservation2StatRepoMapperImpl implements MetamacObservation2StatRepoMapper {
+@Component(MetamacCsv2StatRepoMapper.BEAN_ID)
+public class MetamacCsv2StatRepoMapperImpl implements MetamacCsv2StatRepoMapper {
 
     @Override
-    public ObservationExtendedDto toObservation(Observation observation, String datasourceId) throws MetamacException {
+    public ObservationExtendedDto toObservation(CsvObservation observation, String datasourceId) throws MetamacException {
         ObservationExtendedDto observationExtendedDto = null;
 
         if (observation == null) {
@@ -41,7 +41,7 @@ public class MetamacObservation2StatRepoMapperImpl implements MetamacObservation
         // Attributes
         observationExtendedDto.addAttribute(ManipulateDataUtils.createDataSourceIdentificationAttribute(observationExtendedDto.getCodesDimension(), datasourceId)); // Add identification datasource
 
-        for (ObservationAttribute csvObservationAttribute : observation.getAttributes()) {
+        for (CsvObservationAttribute csvObservationAttribute : observation.getAttributes()) {
             // All attributes of CSV are in observation level
             AttributeInstanceObservationDto attributeObservationDto = processAttribute(observationExtendedDto.getCodesDimension(), csvObservationAttribute);
             observationExtendedDto.addAttribute(attributeObservationDto);
@@ -49,10 +49,10 @@ public class MetamacObservation2StatRepoMapperImpl implements MetamacObservation
 
         return observationExtendedDto;
     }
-    private List<CodeDimensionDto> processKeyOfObservation(List<ObservationCodeDimension> observations) {
+    private List<CodeDimensionDto> processKeyOfObservation(List<CsvObservationCodeDimension> observations) {
         List<CodeDimensionDto> codeDimensionDtos = new ArrayList<>(observations.size());
 
-        for (ObservationCodeDimension csvObservationCodeDimension : observations) {
+        for (CsvObservationCodeDimension csvObservationCodeDimension : observations) {
             codeDimensionDtos.add(new CodeDimensionDto(csvObservationCodeDimension.getDimensionId(), csvObservationCodeDimension.getCodeDimensionId()));
         }
 
@@ -66,7 +66,7 @@ public class MetamacObservation2StatRepoMapperImpl implements MetamacObservation
      * @param idValuePair
      * @return AttributeDto
      */
-    private AttributeInstanceObservationDto processAttribute(List<CodeDimensionDto> keys, ObservationAttribute csvObservationAttribute) {
+    private AttributeInstanceObservationDto processAttribute(List<CodeDimensionDto> keys, CsvObservationAttribute csvObservationAttribute) {
         if (StringUtils.isEmpty(csvObservationAttribute.getAttributeValue())) {
             return null;
         }

@@ -61,6 +61,7 @@ Application DatasetsStatisticalResourcesDto {
 			
 			- @DataSourceTypeEnum dataSourceType;
 			Boolean versionable;
+			JAVADATE dateLastTimeDataImport nullable;
 		}
 
 		DataTransferObject DatasourceDto extends @IdentifiableStatisticalResourceDto {
