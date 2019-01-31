@@ -2,6 +2,7 @@ package org.siemac.metamac.statistical_resources.rest.internal.v1_0.mapper.datas
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
 import org.siemac.metamac.rest.common.v1_0.domain.ResourceLink;
@@ -16,7 +17,7 @@ import org.siemac.metamac.statistical.resources.core.dto.LifeCycleStatisticalRes
 public interface DatasetsDo2RestMapperV10 {
 
     public Datasets toDatasets(PagedResult<DatasetVersion> sources, String agencyID, String resourceID, String query, String orderBy, Integer limit, List<String> selectedLanguages);
-    public Dataset toDataset(DatasetVersion source, Map<String, List<String>> dimensions, List<String> selectedLanguages, boolean includeMetadata, boolean includeData) throws Exception;
+    public Dataset toDataset(DatasetVersion source, Map<String, List<String>> dimensions, List<String> selectedLanguages, Set<String> fields) throws Exception;
     public ResourceLink toDatasetSelfLink(LifeCycleStatisticalResourceDto source);
     public ResourceLink toDatasetSelfLink(LifeCycleStatisticalResourceBaseDto source);
     public ResourceInternal toResource(DatasetVersion source, List<String> selectedLanguages);
