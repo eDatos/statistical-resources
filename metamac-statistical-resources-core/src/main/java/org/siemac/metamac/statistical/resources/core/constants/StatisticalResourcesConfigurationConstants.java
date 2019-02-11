@@ -30,7 +30,7 @@ public class StatisticalResourcesConfigurationConstants extends ConfigurationCon
 
     public static final String DB_DATA_IMPORT_URL                    = "metamac.statistical_resources.data_import.db.url";
     public static final String DB_DATA_IMPORT_USERNAME               = "metamac.statistical_resources.data_import.db.username";
-    public static final String DB_DATA_IMPORT_PASSWORD               = "metamac.statistical_resources.data_import.db.password";
+    public static final String DB_DATA_IMPORT_PASSWORD               = "metamac.statistical_resources.data_import.db.password";       // NOSONAR
     public static final String DB_DATA_IMPORT_DRIVER_NAME            = "metamac.statistical_resources.data_import.db.driver_name";
 
 }

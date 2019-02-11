@@ -6,6 +6,7 @@ import static org.siemac.metamac.statistical.resources.core.base.domain.utils.Re
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URL;
 import java.util.ArrayList;
@@ -22,7 +23,6 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
@@ -1792,21 +1792,24 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
     }
 
     private File generateCsvFile(String tableName, List<String> columnsName, List<String[]> observations) throws MetamacException {
-        OutputStream os = null;
-        CsvWriter csvWriter = null;
+        return writeTempCsvFile(createTempCsvFile(tableName), observations, columnsName);
+    }
 
-        try {
-            File file = File.createTempFile("dbImport_" + tableName + "_", ".csv");
+    private File writeTempCsvFile(File file, List<String[]> observations, List<String> columnsName) throws MetamacException {
+        try (OutputStream os = new FileOutputStream(file); CsvWriter csvWriter = new CsvWriter(os, "UTF-8", CsvConstants.SEPARATOR_TAB)) {
             log.debug("Temporary csv file created {}", file.getAbsolutePath());
-            os = new FileOutputStream(file);
-            csvWriter = new CsvWriter(os, "UTF-8", CsvConstants.SEPARATOR_TAB);
             csvWriter.write(columnsName.toArray(new String[0]), observations);
             return file;
-        } catch (Exception e) { // TODO METAMAC-2866 throwing right exception?
-            throw MetamacExceptionBuilder.builder().withCause(e).withExceptionItems(ServiceExceptionType.TASKS_ERROR).withMessageParameters(ExceptionHelper.excMessage(e)).build();
-        } finally {
-            IOUtils.closeQuietly(csvWriter);
-            IOUtils.closeQuietly(os);
+        } catch (Exception e) {
+            throw MetamacExceptionBuilder.builder().withCause(e).withExceptionItems(ServiceExceptionType.IMPORTATION_CSV_FILE_ERROR).withMessageParameters(ExceptionHelper.excMessage(e)).build();
+        }
+    }
+
+    private File createTempCsvFile(String tableName) throws MetamacException {
+        try {
+            return File.createTempFile("dbImport_" + tableName + "_", ".csv");
+        } catch (IOException e) {
+            throw MetamacExceptionBuilder.builder().withCause(e).withExceptionItems(ServiceExceptionType.IMPORTATION_CSV_FILE_ERROR).withMessageParameters(ExceptionHelper.excMessage(e)).build();
         }
     }
 

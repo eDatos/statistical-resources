@@ -647,8 +647,8 @@ public class CommonUtils {
         }
     }
 
-    public static LinkedHashMap<String, String> getDataSourceTypeHashMap() {
-        LinkedHashMap<String, String> dataSourceTypeHashMap = new LinkedHashMap<String, String>();
+    public static LinkedHashMap<String, String> getDataSourceTypeHashMap() { // NOSONAR
+        LinkedHashMap<String, String> dataSourceTypeHashMap = new LinkedHashMap<String, String>(); // NOSONAR
         for (DataSourceTypeEnum dataSourceTypeEnum : DataSourceTypeEnum.values()) {
             dataSourceTypeHashMap.put(dataSourceTypeEnum.name(), getDataSourceName(dataSourceTypeEnum));
         }

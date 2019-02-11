@@ -268,7 +268,7 @@ public class DatasetDatasourcesTabViewImpl extends ViewWithUiHandlers<DatasetDat
             CustomToolStripButton importDatasourcesButton = new CustomToolStripButton(getConstants().actionLoadDatasourceDatabase(),
                     org.siemac.metamac.web.common.client.resources.GlobalResources.RESOURCE.databaseImport().getURL());
             importDatasourcesButton.setVisible(Boolean.FALSE);
-            importDatasourcesButton.addClickHandler(new ClickHandler() {
+            importDatasourcesButton.addClickHandler(new ClickHandler() { // NOSONAR
 
                 @Override
                 public void onClick(ClickEvent event) {
@@ -317,7 +317,7 @@ public class DatasetDatasourcesTabViewImpl extends ViewWithUiHandlers<DatasetDat
                 }
             });
 
-            importDbDatasourceWindow.getSaveButtonHandlers().addClickHandler(new com.smartgwt.client.widgets.form.fields.events.ClickHandler() {
+            importDbDatasourceWindow.getSaveButtonHandlers().addClickHandler(new com.smartgwt.client.widgets.form.fields.events.ClickHandler() { // NOSONAR
 
                 @Override
                 public void onClick(com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
