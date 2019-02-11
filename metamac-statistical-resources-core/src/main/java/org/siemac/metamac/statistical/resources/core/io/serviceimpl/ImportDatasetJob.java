@@ -38,12 +38,8 @@ public class ImportDatasetJob extends AbstractImportDatasetJob {
     }
 
     @Override
-    protected void executeImportTask(ServiceContext serviceContext, String jobName, TaskInfoDataset taskInfoDataset) {
-        try {
-            getTaskServiceFacade().executeImportationTask(serviceContext, jobName, taskInfoDataset);
-        } catch (MetamacException e) {
-            throw new RuntimeException(e);
-        }
+    protected void executeImportTask(ServiceContext serviceContext, String jobName, TaskInfoDataset taskInfoDataset) throws MetamacException {
+        getTaskServiceFacade().executeImportationTask(serviceContext, jobName, taskInfoDataset);
     }
 
     @Override

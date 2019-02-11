@@ -97,6 +97,7 @@ import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.invocation.service.SrmRestInternalService;
 import org.siemac.metamac.statistical.resources.core.invocation.utils.RestMapper;
 import org.siemac.metamac.statistical.resources.core.io.serviceimpl.CustomImportDatasetJobForDbImport;
+import org.siemac.metamac.statistical.resources.core.io.utils.DbImportDatasetUtils;
 import org.siemac.metamac.statistical.resources.core.io.utils.ManipulateDataUtils;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.checker.ExternalItemChecker;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
@@ -203,12 +204,16 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         // Update dataset version (add datasource)
         datasetVersion = addDatasourceForDatasetVersion(datasource, datasetVersion);
 
-        computeDataRelatedMetadataAndSaveDataSet(datasetVersion);
+        computeDataRelatedMetadata(datasetVersion);
+
+        getDatasetVersionRepository().save(datasetVersion);
 
         return datasource;
     }
 
-    protected void computeDataRelatedMetadataAndSaveDataSet(DatasetVersion datasetVersion) throws MetamacException {
+    protected void updateDbDatasource(DatasetVersion datasetVersion) throws MetamacException {
+        datasetVersion.getSiemacMetadataStatisticalResource().setLastUpdate(new DateTime());
+
         computeDataRelatedMetadata(datasetVersion);
 
         getDatasetVersionRepository().save(datasetVersion);
@@ -272,7 +277,9 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
 
         deleteAttributeInstancesLowerThanDatasetLevel(datasetVersion);
 
-        computeDataRelatedMetadataAndSaveDataSet(datasetVersion);
+        computeDataRelatedMetadata(datasetVersion);
+
+        getDatasetVersionRepository().save(datasetVersion);
 
         if (datasetVersion.getDatasources().isEmpty()) {
             // Revert to draft if there aren't datasources. This is possible because one will never be published without constraints datasources. And if you can delete datasources, then it is because
@@ -686,10 +693,11 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
 
         checkNotTasksInProgress(ctx, datasetVersionUrn);
 
-        ProcStatusValidator.checkDatasetVersionCanImportDatasources(datasetVersion);
-
-        if (!isDbImportDatasetJob(ctx)) {
+        if (!DbImportDatasetUtils.isDbImportDatasetJob(ctx)) {
+            ProcStatusValidator.checkDatasetVersionCanImportDatasources(datasetVersion);
             checkValidDataSourceTypeForImportationTask(DataSourceTypeEnum.FILE, ServiceExceptionType.INVALID_DATA_SOURCE_TYPE_FOR_FILE_IMPORTATION, datasetVersion);
+        } else {
+            checkValidDataSourceTypeForImportationTask(DataSourceTypeEnum.DATABASE, ServiceExceptionType.INVALID_DATA_SOURCE_TYPE_FOR_DATABASE_IMPORTATION, datasetVersion);
         }
 
         String datasetUrn = datasetVersion.getDataset().getIdentifiableStatisticalResource().getUrn();
@@ -699,10 +707,6 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         TaskInfoDataset taskInfo = buildImportationTaskInfo(datasetVersion, fileUrls, dimensionRepresentationMapping, storeDimensionRepresentationMapping);
 
         getTaskService().planifyImportationDataset(ctx, taskInfo);
-    }
-
-    private boolean isDbImportDatasetJob(ServiceContext ctx) {
-        return Boolean.TRUE.equals(ctx.getProperty(CustomImportDatasetJobForDbImport.DB_IMPORT_JOB_FLAG));
     }
 
     private TaskInfoDataset buildImportationTaskInfo(DatasetVersion datasetVersion, List<URL> fileUrls, Map<String, String> dimensionRepresentationMapping,
@@ -825,7 +829,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
 
         getDatasetVersionRepository().save(datasetVersion);
 
-        if (!isDbImportDatasetJob(ctx)) {
+        if (!DbImportDatasetUtils.isDbImportDatasetJob(ctx)) {
             for (FileDescriptorResult fileDescriptor : fileDescriptors) {
                 Datasource datasource = new Datasource();
                 datasource.setIdentifiableStatisticalResource(new IdentifiableStatisticalResource());
@@ -837,19 +841,12 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
                 createDatasource(ctx, datasetImportationId, datasource);
             }
         } else {
-            computeDataRelatedMetadataAndSaveDataSet(datasetVersion);
+            updateDbDatasource(datasetVersion);
         }
     }
 
     private DateTime getDateLastTimeDataImport(ServiceContext ctx) {
-        DateTime returnedDate;
-
-        if (isDbImportDatasetJob(ctx)) {
-            returnedDate = (DateTime) ctx.getProperty(CustomImportDatasetJobForDbImport.DB_IMPORT_JOB_EXECUTION_DATE);
-        } else {
-            returnedDate = new DateTime();
-        }
-        return returnedDate;
+        return (DbImportDatasetUtils.isDbImportDatasetJob(ctx) ? (DateTime) ctx.getProperty(CustomImportDatasetJobForDbImport.DB_IMPORT_JOB_EXECUTION_DATE) : new DateTime());
     }
 
     @Override
@@ -1198,18 +1195,21 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
 
         DateTime executionDate = new DateTime();
 
-        if (CollectionUtils.isEmpty(datasetsVersion))
+        if (CollectionUtils.isEmpty(datasetsVersion)) {
             log.debug("There are no DB datasets configured yet");
+        } else {
 
-        for (DatasetVersion datasetVersion : datasetsVersion) {
+            for (DatasetVersion datasetVersion : datasetsVersion) {
 
-            String datasetVersionUrn = datasetVersion.getSiemacMetadataStatisticalResource().getUrn();
-            List<Datasource> datasources = datasetVersion.getDatasources();
+                String datasetVersionUrn = datasetVersion.getSiemacMetadataStatisticalResource().getUrn();
+                List<Datasource> datasources = datasetVersion.getDatasources();
 
-            if (CollectionUtils.isEmpty(datasources))
-                log.debug("There are no datasources configured yet for dataset {}", datasetVersionUrn);
-
-            updateDataFromDatasources(ctx, executionDate, datasetVersion, datasetVersionUrn, datasources);
+                if (CollectionUtils.isEmpty(datasources)) {
+                    log.debug("There are no datasources configured yet for dataset {}", datasetVersionUrn);
+                } else {
+                    updateDataFromDatasources(ctx, executionDate, datasetVersion, datasetVersionUrn, datasources);
+                }
+            }
         }
     }
 
@@ -1868,17 +1868,13 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
 
     private List<DatasetVersion> retrieveDbDatasets(ServiceContext ctx) throws MetamacException {
         // @formatter:off
-        List<ConditionalCriteria> conditions = ConditionalCriteriaBuilder.criteriaFor(DatasetVersion.class).
-                withProperty(DatasetVersionProperties.dataSourceType()).eq(DataSourceTypeEnum.DATABASE).
-                and().
-                withProperty(DatasetVersionProperties.datasources()).isNotEmpty().
-                and().
-                    lbrace().
-                        withProperty(DatasetVersionProperties.siemacMetadataStatisticalResource().procStatus()).eq(ProcStatusEnum.DRAFT).
-                        or().
-                        withProperty(DatasetVersionProperties.siemacMetadataStatisticalResource().procStatus()).eq(ProcStatusEnum.VALIDATION_REJECTED).
-                    rbrace().
-                distinctRoot().build();
+        List<ConditionalCriteria> conditions = ConditionalCriteriaBuilder.criteriaFor(DatasetVersion.class)
+                .withProperty(DatasetVersionProperties.dataSourceType()).eq(DataSourceTypeEnum.DATABASE)
+                .and()
+                .withProperty(DatasetVersionProperties.datasources()).isNotEmpty()
+                .and()
+                .withProperty(DatasetVersionProperties.siemacMetadataStatisticalResource().lastVersion()).eq(Boolean.TRUE)
+                .distinctRoot().build();
         // @formatter:off
 
         List<DatasetVersion> datasetsVersion = datasetVersionRepository.findByCondition(conditions);
@@ -1890,7 +1886,8 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         if (datasetsVersion != null) {
             for (DatasetVersion datasetVersion : datasetsVersion) {
                 if (!getTaskService().existsTaskForResource(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getUrn()) && 
-                        !getTaskService().existDbImportationTaskInResource(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getUrn())) {
+                        !getTaskService().existDbImportationTaskInResource(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getUrn()) &&
+                        !getTaskService().existsAnyTaskInResource(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getCode())) {
                     dsv.add(datasetVersion);
                 }
             }

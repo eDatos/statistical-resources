@@ -83,7 +83,7 @@ public class DbDataImportRepositoryImpl implements DbDataImportRepository {
         StringBuilder statement = new StringBuilder("SELECT ").append(getColumnsNameAsString(columnsName)).append(" FROM ").append(tableName);
 
         if (filterValue != null) {
-            statement.append(" WHERE ").append(filterColumnName).append(" > ").append("to_timestamp('").append(getFilterValueAsString(filterValue)).append("', 'DD-MM-YYYY HH24:MI:SS')");
+            statement.append(" WHERE ").append(filterColumnName).append(" >= ").append("to_timestamp('").append(getFilterValueAsString(filterValue)).append("', 'DD-MM-YYYY HH24:MI:SS,MS')");
         }
 
         return statement.toString();
@@ -94,7 +94,7 @@ public class DbDataImportRepositoryImpl implements DbDataImportRepository {
     }
 
     private String getFilterValueAsString(DateTime filterValue) {
-        return filterValue.toString("dd-MM-yyyy HH:mm:ss");
+        return filterValue.toString("dd-MM-yyyy HH:mm:ss,SSS");
     }
 
     private class ObservationMapper implements RowMapper<String[]> {

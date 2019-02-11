@@ -13,6 +13,9 @@
     <artifactId>metamac-statistical-resources-core</artifactId>
     <name>METAMAC :: STATISTICAL RESOURCES :: CORE</name>
 
+    <properties>
+    	<postgresql.version>9.4.1212</postgresql.version>
+    </properties>
 
     <dependencies>
         <!-- METAMAC -->
@@ -381,6 +384,13 @@
             <version>${avro.version}</version>
         </dependency>
     <!-- END Apache Kafka && Confluent -->
+		
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<version>${postgresql.version}</version>
+		</dependency>
+    
     </dependencies>
 
     <build>

@@ -116,4 +116,8 @@ public class TaskServiceInvocationValidatorImpl {
     public static void checkExistDbImportationTaskInResource(String resourceId, List<MetamacExceptionItem> exceptions) {
         StatisticalResourcesValidationUtils.checkParameterRequired(resourceId, ServiceExceptionParameters.TASK_INFO_RESOURCE_ID, exceptions);
     }
+
+    public static void checkExistsAnyTaskInResource(String resourceId, List<MetamacExceptionItem> exceptions) {
+        StatisticalResourcesValidationUtils.checkParameterRequired(resourceId, ServiceExceptionParameters.TASK_INFO_RESOURCE_ID, exceptions);
+    }
 }

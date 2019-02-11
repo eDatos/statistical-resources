@@ -29,10 +29,6 @@ import org.siemac.metamac.statistical.resources.core.task.serviceapi.TaskService
 import org.siemac.metamac.statistical.resources.core.task.utils.JobUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.support.TransactionCallbackWithoutResult;
-import org.springframework.transaction.support.TransactionTemplate;
 
 public abstract class AbstractImportDatasetJob implements Job {
 
@@ -57,7 +53,7 @@ public abstract class AbstractImportDatasetJob implements Job {
     protected abstract ServiceContext setAdditionalProperties(ServiceContext serviceContext, JobDataMap jobDataMap);
     protected abstract void sendSuccessNotification(String fileNames, String user);
     protected abstract void sendErrorNotification(MetamacException metamacException);
-    protected abstract void executeImportTask(ServiceContext serviceContext, String jobName, TaskInfoDataset taskInfoDataset);
+    protected abstract void executeImportTask(ServiceContext serviceContext, String jobName, TaskInfoDataset taskInfoDataset) throws MetamacException;
     protected abstract void processImportJobError(JobKey jobKey, String fileNames, MetamacException metamacException);
 
     @Override
@@ -91,36 +87,25 @@ public abstract class AbstractImportDatasetJob implements Job {
             taskInfoDataset.getAlternativeRepresentations().addAll(inflateAlternativeRepresentations(alternativeRepresentations));
             taskInfoDataset.setStoreAlternativeRepresentations(storeAlternativeRepresentations);
 
-            TransactionTemplate transactionTemplate = new TransactionTemplate(getPlatformTransactionManager());
-            transactionTemplate.execute(new TransactionCallbackWithoutResult() {
-
-                @Override
-                protected void doInTransactionWithoutResult(TransactionStatus status) {
-                    executeImportTask(serviceContext, jobKey.getName(), taskInfoDataset);
-                }
-            });
+            executeImportTask(serviceContext, jobKey.getName(), taskInfoDataset);
 
             logger.info("ImportationJob: {} finished at {}", jobKey, new Date());
 
             sendSuccessNotification(fileNames, user);
 
         } catch (UnsupportedEncodingException e) {
-            logger.error("ImportationJob: the importation with key {} has failed  has failed due to an unsupported encoding", jobKey.getName(), e);
+            logger.error("ImportationJob: the importation with key {} has failed due to an unsupported encoding", jobKey.getName(), e);
             MetamacException metamacException = MetamacExceptionBuilder.builder().withCause(e).withExceptionItems(ServiceExceptionType.TASKS_ERROR).withMessageParameters(ExceptionHelper.excMessage(e))
                     .build();
 
             processImportJobError(jobKey, fileNames, metamacException);
+        } catch (MetamacException e) {
+            logger.error("ImportationJob: the importation with key {} has failed", jobKey.getName(), e);
+            processImportJobError(jobKey, fileNames, e);
         } catch (Exception e) {
-            MetamacException metamacException;
-            Throwable t = e.getCause();
-
-            if (t instanceof MetamacException) {
-                logger.error("ImportationJob: the importation with key {} has failed", jobKey.getName(), t);
-                metamacException = (MetamacException) t;
-            } else {
-                logger.error("ImportationJob: unexpected error in the importation with key {}", jobKey.getName(), e);
-                metamacException = MetamacExceptionBuilder.builder().withCause(t).withExceptionItems(ServiceExceptionType.TASKS_ERROR).withMessageParameters(ExceptionHelper.excMessage(e)).build();
-            }
+            logger.error("ImportationJob: unexpected error in the importation with key {}", jobKey.getName(), e);
+            MetamacException metamacException = MetamacExceptionBuilder.builder().withCause(e).withExceptionItems(ServiceExceptionType.TASKS_ERROR).withMessageParameters(ExceptionHelper.excMessage(e))
+                    .build();
             processImportJobError(jobKey, fileNames, metamacException);
         }
     }
@@ -142,10 +127,6 @@ public abstract class AbstractImportDatasetJob implements Job {
 
     protected JobDataMap getData() {
         return data;
-    }
-
-    private PlatformTransactionManager getPlatformTransactionManager() {
-        return ApplicationContextProvider.getApplicationContext().getBean("txManager", PlatformTransactionManager.class);
     }
 
     private List<FileDescriptor> inflateFileDescriptors(String filePaths, String fileNames, String fileFormats) throws UnsupportedEncodingException {

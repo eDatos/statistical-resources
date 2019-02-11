@@ -26,7 +26,7 @@ public abstract class ProcStatusForActionsConstants {
 
     // DatasetVersion
     protected static final ProcStatusEnum[] procStatusForImportDatasourcesInDatasetVersion    = {ProcStatusEnum.DRAFT, ProcStatusEnum.VALIDATION_REJECTED};
-
+    
     // Publication
     protected static final ProcStatusEnum[] procStatusForEditPublicationStructure             = {ProcStatusEnum.DRAFT, ProcStatusEnum.VALIDATION_REJECTED, ProcStatusEnum.PRODUCTION_VALIDATION, ProcStatusEnum.DIFFUSION_VALIDATION};
 
