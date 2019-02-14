@@ -1198,9 +1198,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         if (CollectionUtils.isEmpty(datasetsVersion)) {
             log.debug("There are no DB datasets configured yet");
         } else {
-
             for (DatasetVersion datasetVersion : datasetsVersion) {
-
                 String datasetVersionUrn = datasetVersion.getSiemacMetadataStatisticalResource().getUrn();
                 List<Datasource> datasources = datasetVersion.getDatasources();
 
@@ -1813,7 +1811,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         }
     }
 
-    private List<String[]> getObservations(String tableName, List<String> columnsName, String filterColumnName, DateTime filterColumnValue) {
+    private List<String[]> getObservations(String tableName, List<String> columnsName, String filterColumnName, DateTime filterColumnValue) throws MetamacException {
         return dbDataImportRepository.getObservations(tableName, columnsName, filterColumnName, filterColumnValue);
     }
 

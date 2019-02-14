@@ -1,6 +1,7 @@
 package org.siemac.metamac.statistical.resources.core.dataset.repositoryimpl;
 
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -8,9 +9,15 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
+import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.core.common.exception.MetamacExceptionBuilder;
+import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.statistical.resources.core.dataset.repository.api.DbDataImportRepository;
+import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
+import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +41,9 @@ public class DbDataImportRepositoryImpl implements DbDataImportRepository {
     }
 
     @Override
-    public List<String[]> getObservations(String tableName, List<String> columnsName, String filterColumnName, DateTime filterValue) {
+    public List<String[]> getObservations(String tableName, List<String> columnsName, String filterColumnName, DateTime filterValue) throws MetamacException {
+        checkGetObservations(tableName, columnsName, filterColumnName, filterValue);
+
         String sqlQuery = buildQuery(tableName, columnsName, filterColumnName, filterValue);
         logger.debug(sqlQuery);
 
@@ -43,14 +52,15 @@ public class DbDataImportRepositoryImpl implements DbDataImportRepository {
 
     @Override
     public boolean checkTableExists(String tableName) {
-
-        return jdbcTemplate.execute(new ConnectionCallback<Boolean>() {
+        return StringUtils.isNotBlank(tableName) && jdbcTemplate.execute(new ConnectionCallback<Boolean>() {
 
             @Override
             public Boolean doInConnection(Connection con) throws SQLException {
                 boolean found = Boolean.FALSE;
 
-                ResultSet resultSet = con.getMetaData().getTables(null, null, tableName.toLowerCase(), null);
+                DatabaseMetaData databaseMetaData = con.getMetaData();
+
+                ResultSet resultSet = databaseMetaData.getTables(null, null, getNonCaseSensitiveIdentifier(databaseMetaData, tableName), null);
 
                 while (resultSet.next() && !found) {
                     found = StringUtils.equalsIgnoreCase(resultSet.getString("TABLE_NAME"), tableName);
@@ -61,17 +71,19 @@ public class DbDataImportRepositoryImpl implements DbDataImportRepository {
     }
 
     @Override
-    public boolean checkTableHasColumn(String tableName, String filterColumnName) {
-        return jdbcTemplate.execute(new ConnectionCallback<Boolean>() {
+    public boolean checkTableHasColumn(String tableName, String columnName) {
+        return StringUtils.isNotBlank(tableName) && StringUtils.isNotBlank(columnName) && jdbcTemplate.execute(new ConnectionCallback<Boolean>() {
 
             @Override
             public Boolean doInConnection(Connection con) throws SQLException {
                 boolean found = Boolean.FALSE;
 
-                ResultSet resultSet = con.getMetaData().getColumns(null, null, tableName.toLowerCase(), null);
+                DatabaseMetaData databaseMetaData = con.getMetaData();
+
+                ResultSet resultSet = databaseMetaData.getColumns(null, null, getNonCaseSensitiveIdentifier(databaseMetaData, tableName), getNonCaseSensitiveIdentifier(databaseMetaData, columnName));
 
                 while (resultSet.next() && !found) {
-                    found = StringUtils.equalsIgnoreCase(resultSet.getString("COLUMN_NAME"), filterColumnName);
+                    found = StringUtils.equalsIgnoreCase(resultSet.getString("COLUMN_NAME"), columnName);
                 }
 
                 return found;
@@ -79,11 +91,48 @@ public class DbDataImportRepositoryImpl implements DbDataImportRepository {
         });
     }
 
+    private void checkGetObservations(String tableName, List<String> columnsName, String filterColumnName, DateTime filterValue) throws MetamacException {
+        List<MetamacExceptionItem> exceptionItems = new ArrayList<>();
+
+        checkTableName(tableName, exceptionItems);
+        checkColumnsName(columnsName, exceptionItems);
+        checkFilterColumnName(filterColumnName, filterValue, exceptionItems);
+
+        if (!exceptionItems.isEmpty()) {
+            throw MetamacExceptionBuilder.builder().withExceptionItems(exceptionItems).build();
+        }
+
+    }
+
+    private void checkTableName(String tableName, List<MetamacExceptionItem> exceptionItems) {
+        if (StringUtils.isBlank(tableName)) {
+            exceptionItems.add(new MetamacExceptionItem(ServiceExceptionType.PARAMETER_REQUIRED, ServiceExceptionParameters.TABLE_NAME));
+        }
+    }
+
+    private void checkColumnsName(List<String> columnsName, List<MetamacExceptionItem> exceptionItems) {
+        if (CollectionUtils.isEmpty(columnsName)) {
+            exceptionItems.add(new MetamacExceptionItem(ServiceExceptionType.PARAMETER_REQUIRED, ServiceExceptionParameters.COLUMNS_NAME));
+        } else {
+            for (String columnName : columnsName) {
+                if (StringUtils.isBlank(columnName)) {
+                    exceptionItems.add(new MetamacExceptionItem(ServiceExceptionType.PARAMETER_REQUIRED, ServiceExceptionParameters.COLUMNS_NAME));
+                }
+            }
+        }
+    }
+
+    private void checkFilterColumnName(String filterColumnName, DateTime filterValue, List<MetamacExceptionItem> exceptionItems) {
+        if ((filterValue != null) && StringUtils.isBlank(filterColumnName)) {
+            exceptionItems.add(new MetamacExceptionItem(ServiceExceptionType.PARAMETER_REQUIRED, ServiceExceptionParameters.FILTER_COLUMN_NAME));
+        }
+    }
+
     private String buildQuery(String tableName, List<String> columnsName, String filterColumnName, DateTime filterValue) {
         StringBuilder statement = new StringBuilder("SELECT ").append(getColumnsNameAsString(columnsName)).append(" FROM ").append(tableName);
 
         if (filterValue != null) {
-            statement.append(" WHERE ").append(filterColumnName).append(" >= ").append("to_timestamp('").append(getFilterValueAsString(filterValue)).append("', 'DD-MM-YYYY HH24:MI:SS,MS')");
+            statement.append(" WHERE ").append(filterColumnName).append(" >= ").append("TO_TIMESTAMP('").append(getFilterValueAsString(filterValue)).append("', 'DD-MM-YYYY HH24:MI:SS')");
         }
 
         return statement.toString();
@@ -94,7 +143,20 @@ public class DbDataImportRepositoryImpl implements DbDataImportRepository {
     }
 
     private String getFilterValueAsString(DateTime filterValue) {
-        return filterValue.toString("dd-MM-yyyy HH:mm:ss,SSS");
+        return filterValue.toString("dd-MM-yyyy HH:mm:ss");
+    }
+
+    private String getNonCaseSensitiveIdentifier(DatabaseMetaData databaseMetaData, String tableName) throws SQLException {
+        String checkedTableName = tableName;
+
+        if (!databaseMetaData.storesMixedCaseIdentifiers()) {
+            if (databaseMetaData.storesUpperCaseIdentifiers()) {
+                checkedTableName = tableName.toUpperCase();
+            } else if (databaseMetaData.storesLowerCaseIdentifiers()) {
+                checkedTableName = tableName.toLowerCase();
+            }
+        }
+        return checkedTableName;
     }
 
     private class ObservationMapper implements RowMapper<String[]> {

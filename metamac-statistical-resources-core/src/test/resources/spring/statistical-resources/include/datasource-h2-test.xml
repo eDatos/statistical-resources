@@ -65,6 +65,13 @@
         <property name="user" value="${datasource.repository.username}" />
         <property name="password" value="${datasource.repository.password}" />
     </bean>
+    
+    <bean id="dataSourceDbDataImportRepository" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="org.h2.Driver" />
+        <property name="url" value="jdbc:h2:mem/${datasource.username};MODE=ORACLE;INIT=CREATE SCHEMA IF NOT EXISTS ${datasource.username}" />
+        <property name="username" value="sa" />
+        <property name="password" value="" />
+    </bean>
 
     <bean id="txManager" class="org.springframework.orm.jpa.JpaTransactionManager">
         <property name="entityManagerFactory" ref="entityManagerFactory" />

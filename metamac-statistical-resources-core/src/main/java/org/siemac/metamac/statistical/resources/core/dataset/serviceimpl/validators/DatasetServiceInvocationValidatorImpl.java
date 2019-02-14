@@ -134,19 +134,19 @@ public class DatasetServiceInvocationValidatorImpl extends BaseInvocationValidat
     public static void checkCreateAttributeInstance(String datasetVersionUrn, AttributeInstanceDto attributeInstanceDto, List<MetamacExceptionItem> exceptions) {
         StatisticalResourcesValidationUtils.checkParameterRequired(attributeInstanceDto, ServiceExceptionParameters.DATASET_ATTRIBUTE, exceptions);
         if (attributeInstanceDto != null) {
-            StatisticalResourcesValidationUtils.checkParameterRequired(attributeInstanceDto.getValue(), ServiceExceptionParameters.DATASET_ATTRIBUTE__VALUE, exceptions);
+            StatisticalResourcesValidationUtils.checkParameterRequired(attributeInstanceDto.getValue(), ServiceExceptionParameters.DATASET_ATTRIBUTE_VALUE, exceptions);
         }
     }
 
     public static void checkUpdateAttributeInstance(String datasetVersionUrn, AttributeInstanceDto attributeInstanceDto, List<MetamacExceptionItem> exceptions) {
         StatisticalResourcesValidationUtils.checkParameterRequired(attributeInstanceDto, ServiceExceptionParameters.DATASET_ATTRIBUTE, exceptions);
         if (attributeInstanceDto != null) {
-            StatisticalResourcesValidationUtils.checkParameterRequired(attributeInstanceDto.getValue(), ServiceExceptionParameters.DATASET_ATTRIBUTE__VALUE, exceptions);
+            StatisticalResourcesValidationUtils.checkParameterRequired(attributeInstanceDto.getValue(), ServiceExceptionParameters.DATASET_ATTRIBUTE_VALUE, exceptions);
         }
     }
 
     public static void checkDeleteAttributeInstance(String datasetVersionUrn, String attributeInstanceUuid, List<MetamacExceptionItem> exceptions) {
-        StatisticalResourcesValidationUtils.checkParameterRequired(attributeInstanceUuid, ServiceExceptionParameters.DATASET_ATTRIBUTE__UUID, exceptions);
+        StatisticalResourcesValidationUtils.checkParameterRequired(attributeInstanceUuid, ServiceExceptionParameters.DATASET_ATTRIBUTE_UUID, exceptions);
     }
 
     public static void checkRetrieveAttributeInstances(String datasetVersionUrn, String attributeId, List<MetamacExceptionItem> exceptions) {

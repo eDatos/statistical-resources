@@ -45,6 +45,12 @@
         <property name="user" value="${datasource.repository.username}" />
         <property name="password" value="${datasource.repository.password}" />
     </bean>
+    
+    <bean id="dataSourceDbDataImportRepository" class="oracle.jdbc.pool.OracleDataSource" destroy-method="close">
+        <property name="URL" value="${datasource.url}" />
+        <property name="user" value="${datasource.username}" />
+        <property name="password" value="${datasource.password}" />
+    </bean>
 
     <bean id="txManager" class="org.springframework.orm.jpa.JpaTransactionManager">
         <property name="entityManagerFactory" ref="entityManagerFactory" />
