@@ -146,6 +146,7 @@ public class MultidatasetsDo2RestMapperV10Impl implements MultidatasetsDo2RestMa
         }
         MultidatasetMetadata target = new MultidatasetMetadata();
         target.setFormatExtentResources(source.getFormatExtentResources());
+        target.setFilteringDimension(commonDo2RestMapper.toInternationalString(source.getFilteringDimension(), selectedLanguages));
         target.setReplaces(toMultidatasetReplaces(source, selectedLanguages));
         target.setIsReplacedBy(toMultidatasetIsReplacedBy(source, selectedLanguages));
         commonDo2RestMapper.toMetadataStatisticalResource(source.getSiemacMetadataStatisticalResource(), target, selectedLanguages);

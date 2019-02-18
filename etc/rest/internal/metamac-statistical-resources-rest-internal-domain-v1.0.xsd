@@ -131,6 +131,7 @@
             <xs:extension base="tns:StatisticalResource">
                 <xs:sequence>
                     <xs:element name="formatExtentResources" type="xs:int" minOccurs="0" />
+                    <xs:element name="filteringDimension" type="common:InternationalString" minOccurs="0" />
                 </xs:sequence>
             </xs:extension>
         </xs:complexContent>
