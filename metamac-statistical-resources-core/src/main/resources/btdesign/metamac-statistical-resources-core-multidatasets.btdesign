@@ -94,6 +94,8 @@ Application MultidatasetsStatisticalResources {
 			
 			"Parent"
             - @Multidataset multidataset not nullable cascade="none" databaseColumn="MULTIDATASET_FK" <-> versions;
+            
+            - @InternationalString filteringDimension cascade="all" fetch="lazy" databaseColumn="FILTERING_DIMENSION_FK" nullable;
 			
 			Repository MultidatasetVersionRepository {
 				save;

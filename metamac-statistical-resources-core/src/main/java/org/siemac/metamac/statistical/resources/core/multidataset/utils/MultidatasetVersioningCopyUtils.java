@@ -2,6 +2,7 @@ package org.siemac.metamac.statistical.resources.core.multidataset.utils;
 
 import static org.siemac.metamac.statistical.resources.core.base.utils.BaseVersioningCopyUtils.copyNameableStatisticalResource;
 import static org.siemac.metamac.statistical.resources.core.base.utils.BaseVersioningCopyUtils.copySiemacMetadataStatisticalResource;
+import static org.siemac.metamac.statistical.resources.core.common.utils.CommonVersioningCopyUtils.copyInternationalString;
 
 import java.util.List;
 
@@ -29,6 +30,8 @@ public class MultidatasetVersioningCopyUtils {
         target.setSiemacMetadataStatisticalResource(copySiemacMetadataStatisticalResource(source.getSiemacMetadataStatisticalResource(), target.getSiemacMetadataStatisticalResource()));
         target.setFormatExtentResources(null);
         target.setMultidataset(source.getMultidataset());
+
+        target.setFilteringDimension(copyInternationalString(source.getFilteringDimension()));
 
         // Structure
         copyMultidatasetCubes(source, target);
