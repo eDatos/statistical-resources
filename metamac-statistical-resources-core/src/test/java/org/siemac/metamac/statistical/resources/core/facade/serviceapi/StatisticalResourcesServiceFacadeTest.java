@@ -7,6 +7,7 @@ import static org.junit.Assert.assertTrue;
 import static org.siemac.metamac.common.test.utils.MetamacAsserts.assertEqualsDate;
 import static org.siemac.metamac.common.test.utils.MetamacAsserts.assertEqualsDay;
 import static org.siemac.metamac.common.test.utils.MetamacAsserts.assertEqualsInternationalStringDto;
+import static org.siemac.metamac.statistical.resources.core.error.utils.ServiceExceptionParametersUtils.addParameter;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.CommonAsserts.assertEqualsCollectionByField;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts.assertEqualsCategorisation;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts.assertEqualsDataset;
@@ -216,6 +217,7 @@ import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum
 import org.siemac.metamac.statistical.resources.core.enume.domain.VersionRationaleTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryStatusEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
+import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionSingleParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.invocation.service.SrmRestInternalService;
 import org.siemac.metamac.statistical.resources.core.multidataset.domain.MultidatasetCube;
@@ -4101,6 +4103,84 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
 
         statisticalResourcesServiceFacade.deleteMultidatasetCube(getServiceContextAdministrador(), urn);
         statisticalResourcesServiceFacade.retrieveMultidatasetCube(getServiceContextAdministrador(), urn);
+    }
+
+    @Test
+    @MetamacMock(MULTIDATASET_VERSION_33_DRAFT_READY_FOR_PRODUCTION_VALIDATION_NAME)
+    public void testSendMultidatasetVersionToProductionValidationWithNoFilteringDimension() throws Exception {
+        String multidatasetVersionUrn = multidatasetVersionMockFactory.retrieveMock(MULTIDATASET_VERSION_33_DRAFT_READY_FOR_PRODUCTION_VALIDATION_NAME).getSiemacMetadataStatisticalResource().getUrn();
+        MultidatasetVersionDto multidatasetVersionDto = statisticalResourcesServiceFacade.retrieveMultidatasetVersionByUrn(getServiceContextAdministrador(), multidatasetVersionUrn);
+        multidatasetVersionDto.setFilteringDimension(null);
+
+        expectedMetamacException(
+                new MetamacException(ServiceExceptionType.METADATA_REQUIRED, addParameter(ServiceExceptionParameters.MULTIDATASET_VERSION, ServiceExceptionSingleParameters.FILTERING_DIMENSION)));
+
+        statisticalResourcesServiceFacade.sendMultidatasetVersionToProductionValidation(getServiceContextAdministrador(), multidatasetVersionDto);
+
+        Assert.fail("Should have thrown Exception and should not send to production");
+    }
+
+    @Test
+    @MetamacMock(MULTIDATASET_VERSION_37_PRODUCTION_VALIDATION_READY_FOR_DIFFUSION_VALIDATION_NAME)
+    public void testSendMultidatasetVersionToDiffusionValidationWithNoFilteringDimension() throws Exception {
+        String multidatasetVersionUrn = multidatasetVersionMockFactory.retrieveMock(MULTIDATASET_VERSION_37_PRODUCTION_VALIDATION_READY_FOR_DIFFUSION_VALIDATION_NAME)
+                .getSiemacMetadataStatisticalResource().getUrn();
+        MultidatasetVersionDto multidatasetVersionDto = statisticalResourcesServiceFacade.retrieveMultidatasetVersionByUrn(getServiceContextAdministrador(), multidatasetVersionUrn);
+        multidatasetVersionDto.setFilteringDimension(null);
+
+        expectedMetamacException(
+                new MetamacException(ServiceExceptionType.METADATA_REQUIRED, addParameter(ServiceExceptionParameters.MULTIDATASET_VERSION, ServiceExceptionSingleParameters.FILTERING_DIMENSION)));
+
+        statisticalResourcesServiceFacade.sendMultidatasetVersionToDiffusionValidation(getServiceContextAdministrador(), multidatasetVersionDto);
+
+        Assert.fail("Should have thrown Exception and should not send to diffusion");
+    }
+
+    @Test
+    @MetamacMock(MULTIDATASET_VERSION_83_PREPARED_TO_PUBLISH_ONLY_VERSION_EXTERNAL_ITEM_FULL_NAME)
+    public void testPublishMultidatasetVersionWithNoFilteringDimension() throws Exception {
+        String multidatasetVersionUrn = multidatasetVersionMockFactory.retrieveMock(MULTIDATASET_VERSION_83_PREPARED_TO_PUBLISH_ONLY_VERSION_EXTERNAL_ITEM_FULL_NAME)
+                .getSiemacMetadataStatisticalResource().getUrn();
+        MultidatasetVersionDto multidatasetVersionDto = statisticalResourcesServiceFacade.retrieveMultidatasetVersionByUrn(getServiceContextAdministrador(), multidatasetVersionUrn);
+        multidatasetVersionDto.setFilteringDimension(null);
+
+        expectedMetamacException(
+                new MetamacException(ServiceExceptionType.METADATA_REQUIRED, addParameter(ServiceExceptionParameters.MULTIDATASET_VERSION, ServiceExceptionSingleParameters.FILTERING_DIMENSION)));
+
+        statisticalResourcesServiceFacade.publishMultidatasetVersion(getServiceContextAdministrador(), multidatasetVersionDto);
+
+        Assert.fail("Should have thrown Exception and should not be published");
+    }
+
+    @Test
+    @MetamacMock(MULTIDATASET_VERSION_16_PUBLISHED_NAME)
+    public void testVersioningMultidatasetVersionWithNoFilteringDimension() throws Exception {
+        String multidatasetVersionUrn = multidatasetVersionMockFactory.retrieveMock(MULTIDATASET_VERSION_16_PUBLISHED_NAME).getSiemacMetadataStatisticalResource().getUrn();
+        MultidatasetVersionDto multidatasetVersionDto = statisticalResourcesServiceFacade.retrieveMultidatasetVersionByUrn(getServiceContextAdministrador(), multidatasetVersionUrn);
+        multidatasetVersionDto.setFilteringDimension(null);
+
+        expectedMetamacException(
+                new MetamacException(ServiceExceptionType.METADATA_REQUIRED, addParameter(ServiceExceptionParameters.MULTIDATASET_VERSION, ServiceExceptionSingleParameters.FILTERING_DIMENSION)));
+
+        statisticalResourcesServiceFacade.versioningMultidatasetVersion(getServiceContextAdministrador(), multidatasetVersionDto, VersionTypeEnum.MINOR);
+
+        Assert.fail("Should have thrown Exception and should not be versioned");
+    }
+
+    @Test
+    @MetamacMock(MULTIDATASET_VERSION_38_PRODUCTION_VALIDATION_READY_FOR_VALIDATION_REJECTED_NAME)
+    public void testSendMultidatasetVersionToValidationRejectedWithNoFilteringDimension() throws Exception {
+        String multidatasetVersionUrn = multidatasetVersionMockFactory.retrieveMock(MULTIDATASET_VERSION_38_PRODUCTION_VALIDATION_READY_FOR_VALIDATION_REJECTED_NAME)
+                .getSiemacMetadataStatisticalResource().getUrn();
+        MultidatasetVersionDto multidatasetVersionDto = statisticalResourcesServiceFacade.retrieveMultidatasetVersionByUrn(getServiceContextAdministrador(), multidatasetVersionUrn);
+        multidatasetVersionDto.setFilteringDimension(null);
+
+        expectedMetamacException(
+                new MetamacException(ServiceExceptionType.METADATA_REQUIRED, addParameter(ServiceExceptionParameters.MULTIDATASET_VERSION, ServiceExceptionSingleParameters.FILTERING_DIMENSION)));
+
+        statisticalResourcesServiceFacade.sendMultidatasetVersionToValidationRejected(getServiceContextAdministrador(), multidatasetVersionDto);
+
+        Assert.fail("Should have thrown Exception and should not be rejected");
     }
 
 }

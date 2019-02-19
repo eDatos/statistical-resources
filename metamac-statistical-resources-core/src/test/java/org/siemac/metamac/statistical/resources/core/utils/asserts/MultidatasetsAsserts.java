@@ -83,6 +83,7 @@ public class MultidatasetsAsserts extends BaseAsserts {
 
     private static void assertEqualsMultidatasetVersionMetadata(MultidatasetVersion expected, MultidatasetVersion actual) {
         assertEquals(expected.getFormatExtentResources(), actual.getFormatExtentResources());
+        assertEquals(expected.getFilteringDimension(), actual.getFilteringDimension());
     }
 
     // -----------------------------------------------------------------
@@ -219,6 +220,7 @@ public class MultidatasetsAsserts extends BaseAsserts {
             assertNotNull(entity.getVersion());
             assertEquals(entity.getVersion(), dto.getVersion());
         }
+        assertEquals(entity.getFilteringDimension(), dto.getFilteringDimension());
     }
 
     public static void assertEqualsMultidatasetVersionBase(MultidatasetVersion entity, MultidatasetVersionBaseDto dto) throws MetamacException {

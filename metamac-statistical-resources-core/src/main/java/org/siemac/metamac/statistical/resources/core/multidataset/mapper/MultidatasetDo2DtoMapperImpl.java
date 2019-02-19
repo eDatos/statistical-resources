@@ -137,6 +137,8 @@ public class MultidatasetDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implement
             target.setFormatExtentResources(source.getCubes().size());
         }
 
+        target.setFilteringDimension(internationalStringDoToDto(source.getFilteringDimension()));
+
         return target;
     }
 

@@ -1,5 +1,7 @@
 package org.siemac.metamac.statistical.resources.core.multidataset.mapper;
 
+import static org.siemac.metamac.statistical.resources.core.error.utils.ServiceExceptionParametersUtils.addParameter;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,6 +22,7 @@ import org.siemac.metamac.statistical.resources.core.dto.multidataset.Multidatas
 import org.siemac.metamac.statistical.resources.core.dto.multidataset.MultidatasetVersionBaseDto;
 import org.siemac.metamac.statistical.resources.core.dto.multidataset.MultidatasetVersionDto;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
+import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionSingleParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.multidataset.domain.MultidatasetCube;
 import org.siemac.metamac.statistical.resources.core.multidataset.domain.MultidatasetCubeRepository;
@@ -102,6 +105,9 @@ public class MultidatasetDto2DoMapperImpl extends BaseDto2DoMapperImpl implement
         siemacMetadataStatisticalResourceDtoToDo(source, target.getSiemacMetadataStatisticalResource(), ServiceExceptionParameters.MULTIDATASET_VERSION);
 
         // Other
+        target.setFilteringDimension(internationalStringDtoToDo(source.getFilteringDimension(), target.getFilteringDimension(),
+                addParameter(ServiceExceptionParameters.MULTIDATASET_VERSION, ServiceExceptionSingleParameters.FILTERING_DIMENSION)));
+
         // We don't copy formatExtentResources because it is a calculated metadata
 
         return target;

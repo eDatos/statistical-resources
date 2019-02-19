@@ -203,7 +203,8 @@ public class LifecycleCommonMetadataChecker {
         }
     }
 
-    public void checkMultidatasetVersionCommonMetadata(MultidatasetVersion resource, String pUBLICATION_VERSION, List<MetamacExceptionItem> exceptions) {
-        // Metadata specific of multidatasetVersion are only required for published: formatExtentResources and at least one cube
+    // Metadata specific of multidatasetVersion are only required for published: formatExtentResources and at least one cube
+    public void checkMultidatasetVersionCommonMetadata(MultidatasetVersion resource, String publicationVersion, List<MetamacExceptionItem> exceptions) {
+        checkMetadataRequired(resource.getFilteringDimension(), addParameter(publicationVersion, ServiceExceptionSingleParameters.FILTERING_DIMENSION), exceptions);
     }
 }

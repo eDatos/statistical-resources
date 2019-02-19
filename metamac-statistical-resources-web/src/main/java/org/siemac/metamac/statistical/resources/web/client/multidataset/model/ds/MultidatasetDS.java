@@ -6,4 +6,5 @@ public class MultidatasetDS extends SiemacMetadataDS {
 
     // CLASS DESCRIPTORS
     public static final String FORMAT_EXTENT_RESOURCES = "multi-form-ext-res";
+    public static final String FILTERING_DIMENSION     = "multi-filtering-dimension";
 }

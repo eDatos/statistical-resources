@@ -15,6 +15,7 @@ Application MultidatasetsStatisticalResourcesDto {
 		DataTransferObject MultidatasetVersionDto extends @SiemacMetadataStatisticalResourceDto {
 			Integer formatExtentResources;
 			- List<@MultidatasetCubeDto> cubes;
+			- @InternationalStringDto filteringDimension;
 		}
 		
 		"Dto for indicator instance"
