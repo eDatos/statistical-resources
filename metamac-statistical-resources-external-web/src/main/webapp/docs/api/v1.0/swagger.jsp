@@ -400,7 +400,11 @@
                   "formatExtentResources":{
                      "description":"",
                      "type":"number"
-                  }
+                  },
+                  "filteringDimension":{
+                     "description":"",
+                     "$ref":"#/definitions/InternationalString"
+                  }                 
                }
             }
          ],
