@@ -229,6 +229,7 @@ public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<Datase
 
         TaskInfoDataset taskInfo = new TaskInfoDataset();
         taskInfo.setDatasetVersionId(oldDatasetRepositoryId);
+        taskInfo.setDatasetId(resource.getDataset().getIdentifiableStatisticalResource().getUrn());
         taskService.planifyDuplicationDataset(ctx, taskInfo, resource.getDatasetRepositoryId(), datasourcesMapping);
     }
 

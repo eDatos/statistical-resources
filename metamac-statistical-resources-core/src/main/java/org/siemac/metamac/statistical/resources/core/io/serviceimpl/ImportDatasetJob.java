@@ -14,6 +14,7 @@ import org.fornax.cartridges.sculptor.framework.errorhandling.ExceptionHelper;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.quartz.Job;
 import org.quartz.JobDataMap;
+import org.quartz.JobDetail;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.quartz.JobKey;
@@ -47,6 +48,8 @@ public class ImportDatasetJob implements Job {
     public static final String DATASET_VERSION_ID                = "datasetVersionId";
     public static final String ALTERNATIVE_REPRESENTATIONS       = "alternativeRepresentations";
     public static final String STORE_ALTERNATIVE_REPRESENTATIONS = "storeAlternativeRepresentations";
+    public static final String DATASET_ID                        = "datasetId";
+    public static final String TASK_NAME                         = "taskName";
 
     private TaskServiceFacade  taskServiceFacade                 = null;
 
@@ -67,10 +70,12 @@ public class ImportDatasetJob implements Job {
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
 
-        JobKey jobKey = context.getJobDetail().getKey();
+        JobDetail jobDetail = context.getJobDetail();
+
+        JobKey jobKey = jobDetail.getKey();
 
         // Parameters
-        JobDataMap data = context.getJobDetail().getJobDataMap();
+        JobDataMap data = jobDetail.getJobDataMap();
         String dataStructureUrn = data.getString(DATA_STRUCTURE_URN);
         String filePaths = data.getString(FILE_PATHS);
         String fileNames = data.getString(FILE_NAMES);
@@ -79,6 +84,8 @@ public class ImportDatasetJob implements Job {
         String datasetVersionId = data.getString(DATASET_VERSION_ID);
         String alternativeRepresentations = data.getString(ALTERNATIVE_REPRESENTATIONS);
         Boolean storeAlternativeRepresentations = data.getBoolean(STORE_ALTERNATIVE_REPRESENTATIONS);
+        String datasetId = data.getString(DATASET_ID);
+        String taskName = data.getString(TASK_NAME);
         String user = data.getString(USER);
 
         // Execution
@@ -95,7 +102,7 @@ public class ImportDatasetJob implements Job {
             taskInfoDataset.getAlternativeRepresentations().addAll(inflateAlternativeRepresentations(alternativeRepresentations));
             taskInfoDataset.setStoreAlternativeRepresentations(storeAlternativeRepresentations);
 
-            getTaskServiceFacade().executeImportationTask(serviceContext, jobKey.getName(), taskInfoDataset);
+            getTaskServiceFacade().executeImportationTask(serviceContext, taskName, taskInfoDataset);
             logger.info("ImportationJob: " + jobKey + " finished at " + new Date());
             getNoticesRestInternalService().createSuccessBackgroundNotification(user, ServiceNoticeAction.IMPORT_DATASET_JOB, ServiceNoticeMessage.IMPORT_DATASET_JOB_OK, fileNames);
         } catch (Exception e) {
@@ -113,7 +120,7 @@ public class ImportDatasetJob implements Job {
             }
 
             try {
-                getTaskServiceFacade().markTaskAsFailed(serviceContext, jobKey.getName(), metamacException);
+                getTaskServiceFacade().markTaskAsFailed(serviceContext, taskName, datasetVersionId, datasetId, metamacException);
                 logger.info("ImportationJob: " + jobKey + " marked as error at " + new Date());
                 metamacException.setPrincipalException(new MetamacExceptionItem(ServiceExceptionType.IMPORT_DATASET_JOB_ERROR, fileNames));
                 getNoticesRestInternalService().createErrorBackgroundNotification(user, ServiceNoticeAction.IMPORT_DATASET_JOB, metamacException);
