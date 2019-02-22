@@ -198,7 +198,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
 
         checkCanAlterDatasourcesInDatasetVersion(datasource.getDatasetVersion());
 
-        checkNotTasksInProgress(ctx, datasource.getDatasetVersion().getSiemacMetadataStatisticalResource().getUrn());
+        checkNotTasksInProgress(ctx, datasource.getDatasetVersion().getDataset().getIdentifiableStatisticalResource().getUrn());
 
         // Update
         Datasource updatedDataSource = getDatasourceRepository().save(datasource);
@@ -230,7 +230,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
 
         checkCanAlterDatasourcesInDatasetVersion(datasource.getDatasetVersion());
 
-        checkNotTasksInProgress(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getUrn());
+        checkNotTasksInProgress(ctx, datasetVersion.getDataset().getIdentifiableStatisticalResource().getUrn());
 
         checkDatasetVersionForDatasourceHasNoQueries(datasource);
 
@@ -399,7 +399,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         // Validations
         datasetServiceInvocationValidator.checkUpdateDatasetVersion(ctx, datasetVersion);
 
-        checkNotTasksInProgress(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getUrn());
+        checkNotTasksInProgress(ctx, datasetVersion.getDataset().getIdentifiableStatisticalResource().getUrn());
 
         checkDsdChanges(datasetVersion);
 
@@ -527,7 +527,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         // Retrieve version to delete
         DatasetVersion datasetVersion = retrieveDatasetVersionByUrn(ctx, datasetVersionUrn);
 
-        checkNotTasksInProgress(ctx, datasetVersionUrn);
+        checkNotTasksInProgress(ctx, datasetVersion.getDataset().getIdentifiableStatisticalResource().getUrn());
 
         // Check can be deleted
         ProcStatusValidator.checkStatisticalResourceCanBeDeleted(datasetVersion);
@@ -656,7 +656,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
 
         DatasetVersion datasetVersion = getDatasetVersionRepository().retrieveByUrn(datasetVersionUrn);
 
-        checkNotTasksInProgress(ctx, datasetVersionUrn);
+        checkNotTasksInProgress(ctx, datasetVersion.getDataset().getIdentifiableStatisticalResource().getUrn());
 
         ProcStatusValidator.checkDatasetVersionCanImportDatasources(datasetVersion);
 
@@ -805,7 +805,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
 
         DatasetVersion datasetVersion = retrieveDatasetVersionByUrn(ctx, datasetVersionUrn);
 
-        checkNotTasksInProgress(ctx, datasetVersionUrn);
+        checkNotTasksInProgress(ctx, datasetVersion.getDataset().getIdentifiableStatisticalResource().getUrn());
 
         List<String> dimensionsIds = getDatasetVersionRepository().retrieveDimensionsIds(datasetVersion);
         if (dimensionsIds.size() > 0) {
@@ -821,7 +821,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
 
         DatasetVersion datasetVersion = retrieveDatasetVersionByUrn(ctx, datasetVersionUrn);
 
-        checkNotTasksInProgress(ctx, datasetVersionUrn);
+        checkNotTasksInProgress(ctx, datasetVersion.getDataset().getIdentifiableStatisticalResource().getUrn());
 
         return getCodeDimensionRepository().findCodesForDatasetVersionByDimensionId(datasetVersion.getId(), dimensionId, null);
     }
@@ -832,7 +832,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
 
         DatasetVersion datasetVersion = retrieveDatasetVersionByUrn(ctx, datasetVersionUrn);
 
-        checkNotTasksInProgress(ctx, datasetVersionUrn);
+        checkNotTasksInProgress(ctx, datasetVersion.getDataset().getIdentifiableStatisticalResource().getUrn());
 
         return getCodeDimensionRepository().findCodesForDatasetVersionByDimensionId(datasetVersion.getId(), dimensionId, filter);
     }
@@ -988,7 +988,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         // Retrieve the datasetVersion to get the datasetRepositoryId
         DatasetVersion datasetVersion = retrieveDatasetVersionByUrn(ctx, datasetVersionUrn);
 
-        checkNotTasksInProgress(ctx, datasetVersionUrn);
+        checkNotTasksInProgress(ctx, datasetVersion.getDataset().getIdentifiableStatisticalResource().getUrn());
 
         return getAttributeValueRepository().findValuesForDatasetVersionByAttributeId(datasetVersion.getId(), dsdAttributeId);
     }
@@ -1005,7 +1005,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
 
         DatasetVersion datasetVersion = datasetVersionRepository.retrieveByUrn(datasetVersionUrn);
 
-        checkNotTasksInProgress(ctx, datasetVersionUrn);
+        checkNotTasksInProgress(ctx, datasetVersion.getDataset().getIdentifiableStatisticalResource().getUrn());
 
         if (ProcStatusEnum.PUBLISHED.equals(datasetVersion.getLifeCycleStatisticalResource().getProcStatus())) {
             // Check external items are externally published
@@ -1073,7 +1073,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         DatasetVersion datasetVersion = categorisation.getDatasetVersion();
 
         // Check is not final
-        checkNotTasksInProgress(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getUrn());
+        checkNotTasksInProgress(ctx, datasetVersion.getDataset().getIdentifiableStatisticalResource().getUrn());
         ProcStatusValidator.checkStatisticalResourceCanBeEdited(datasetVersion);
 
         // Delete
@@ -1091,7 +1091,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         if (validTo != null && validTo.isBefore(categorisation.getValidFromEffective())) {
             throw new MetamacException(ServiceExceptionType.CATEGORISATION_CANT_END_VALIDITY_BEFORE_VALIDITY_STARTED, urn);
         }
-        checkNotTasksInProgress(ctx, categorisation.getDatasetVersion().getSiemacMetadataStatisticalResource().getUrn());
+        checkNotTasksInProgress(ctx, categorisation.getDatasetVersion().getDataset().getIdentifiableStatisticalResource().getUrn());
 
         if (validTo == null) {
             validTo = new DateTime();
@@ -1116,9 +1116,9 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
     // PRIVATE METHODS
     // ------------------------------------------------------------------------
 
-    private void checkNotTasksInProgress(ServiceContext ctx, String datasetVersionUrn) throws MetamacException {
-        if (getTaskService().existsTaskForResource(ctx, datasetVersionUrn)) {
-            throw new MetamacException(ServiceExceptionType.TASKS_IN_PROGRESS, datasetVersionUrn);
+    private void checkNotTasksInProgress(ServiceContext ctx, String datasetUrn) throws MetamacException {
+        if (getTaskService().existsTaskForResource(ctx, datasetUrn)) {
+            throw new MetamacException(ServiceExceptionType.TASKS_IN_PROGRESS, datasetUrn);
         }
     }
 

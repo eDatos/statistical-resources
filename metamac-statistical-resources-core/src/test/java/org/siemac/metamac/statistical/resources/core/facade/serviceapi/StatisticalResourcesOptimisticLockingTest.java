@@ -1199,8 +1199,10 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
     @MetamacMock(DATASET_VERSION_14_OPER_03_CODE_01_PUBLISHED_NAME)
     public void testVersioningDatasetVersion() throws Exception {
         // Retrieve dataset - session 1
+        DatasetVersion datasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_14_OPER_03_CODE_01_PUBLISHED_NAME);
+
         DatasetVersionDto datasetVersionDtoSession01 = statisticalResourcesServiceFacade.retrieveDatasetVersionByUrn(getServiceContextAdministrador(),
-                datasetVersionMockFactory.retrieveMock(DATASET_VERSION_14_OPER_03_CODE_01_PUBLISHED_NAME).getSiemacMetadataStatisticalResource().getUrn());
+                datasetVersion.getSiemacMetadataStatisticalResource().getUrn());
         assertEquals(Long.valueOf(0), datasetVersionDtoSession01.getOptimisticLockingVersion());
 
         // Retrieve dataset - session 2
@@ -1226,10 +1228,17 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
             assertEqualsMetamacExceptionItem(ServiceExceptionType.OPTIMISTIC_LOCKING, 0, null, e.getExceptionItems().get(0));
         }
 
-        // Update dataset versioned --> OK
-        datasetVersionDtoSession1NewResource.setTitle(StatisticalResourcesDtoMocks.mockInternationalStringDto());
-        DatasetVersionDto datasetVersionDtoSession1AfterUpdate02 = statisticalResourcesServiceFacade.updateDatasetVersion(getServiceContextAdministrador(), datasetVersionDtoSession1NewResource);
-        assertTrue(datasetVersionDtoSession1AfterUpdate02.getOptimisticLockingVersion() > datasetVersionDtoSession1NewResource.getOptimisticLockingVersion());
+        // Update dataset versioned before job finished --> FAIL
+        try {
+            datasetVersionDtoSession1NewResource.setTitle(StatisticalResourcesDtoMocks.mockInternationalStringDto());
+            DatasetVersionDto datasetVersionDtoSession1AfterUpdate02 = statisticalResourcesServiceFacade.updateDatasetVersion(getServiceContextAdministrador(), datasetVersionDtoSession1NewResource);
+            fail("update dataset versioned");
+        } catch (MetamacException e) {
+            assertEqualsMetamacExceptionItem(ServiceExceptionType.TASKS_IN_PROGRESS, 1, new String[]{datasetVersion.getDataset().getIdentifiableStatisticalResource().getUrn()},
+                    e.getExceptionItems().get(0));
+        }
+
+        // TODO METAMAC-2767 shoul be tested update dataset versioned after job finished? how to?
     }
 
     @Test

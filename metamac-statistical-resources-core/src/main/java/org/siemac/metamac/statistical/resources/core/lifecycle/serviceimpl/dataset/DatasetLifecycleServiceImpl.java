@@ -290,6 +290,6 @@ public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<Datase
 
     @Override
     protected String getResourceUrn(DatasetVersion resource) {
-        return resource.getSiemacMetadataStatisticalResource().getUrn();
+        return resource.getDataset().getIdentifiableStatisticalResource().getUrn();
     }
 }

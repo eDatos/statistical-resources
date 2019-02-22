@@ -369,12 +369,6 @@ public class TaskServiceImpl extends TaskServiceImplBase {
             throw throwableMetamacException;
         }
 
-        // TODO METAMAC-2767 Remove it!
-//        if (true) {
-//            throw org.siemac.metamac.core.common.exception.MetamacExceptionBuilder.builder()
-//                    .withExceptionItems(org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType.DATASET_NO_DATA).build();
-//        }
-
         markTaskAsFinished(ctx, importationJobKey); // Finish the importation
     }
 
@@ -433,12 +427,6 @@ public class TaskServiceImpl extends TaskServiceImplBase {
             throw throwableMetamacException;
         }
 
-        // TODO METAMAC-2767 Remove it!
-//        if (true) {
-//            throw org.siemac.metamac.core.common.exception.MetamacExceptionBuilder.builder()
-//                    .withExceptionItems(org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType.DATASET_NO_DATA).build();
-//        }
-
         markTaskAsFinished(ctx, duplicationJobKey); // Finish the importation
     }
 
@@ -481,17 +469,8 @@ public class TaskServiceImpl extends TaskServiceImplBase {
     public boolean existImportationTaskInResource(ServiceContext ctx, String resourceId) throws MetamacException {
         taskServiceInvocationValidator.checkExistImportationTaskInResource(ctx, resourceId);
         try {
-            boolean existImportationTaskInResource;
             Scheduler sched = SchedulerRepository.getInstance().lookup(SCHEDULER_INSTANCE_NAME); // get a reference to a scheduler
-
-            if (sched.checkExists(createJobKeyForImportationResource(resourceId))) {
-                existImportationTaskInResource = Boolean.TRUE;
-            } else {
-                DatasetVersion datasetVersion = datasetService.retrieveDatasetVersionByUrn(ctx, resourceId);
-                existImportationTaskInResource = sched.checkExists(createJobKeyForImportationResource(datasetVersion.getDataset().getIdentifiableStatisticalResource().getUrn()));
-            }
-
-            return existImportationTaskInResource;
+            return sched.checkExists(createJobKeyForImportationResource(resourceId));
         } catch (SchedulerException e) {
             throw MetamacExceptionBuilder.builder().withCause(e).withExceptionItems(ServiceExceptionType.TASKS_SCHEDULER_ERROR).withMessageParameters(e.getMessage()).build();
         }
@@ -501,17 +480,8 @@ public class TaskServiceImpl extends TaskServiceImplBase {
     public boolean existRecoveryImportationTaskInResource(ServiceContext ctx, String resourceId) throws MetamacException {
         taskServiceInvocationValidator.checkExistRecoveryImportationTaskInResource(ctx, resourceId);
         try {
-            boolean existRecoveryImportationTaskInResource;
-
             Scheduler sched = SchedulerRepository.getInstance().lookup(SCHEDULER_INSTANCE_NAME); // get a reference to a scheduler
-            if (sched.checkExists(createJobKeyForRecoveryImportationResource(resourceId))) {
-                existRecoveryImportationTaskInResource = Boolean.TRUE;
-            } else {
-                DatasetVersion datasetVersion = datasetService.retrieveDatasetVersionByUrn(ctx, resourceId);
-                existRecoveryImportationTaskInResource = sched.checkExists(createJobKeyForRecoveryImportationResource(datasetVersion.getDataset().getIdentifiableStatisticalResource().getUrn()));
-            }
-
-            return existRecoveryImportationTaskInResource;
+            return sched.checkExists(createJobKeyForRecoveryImportationResource(resourceId));
         } catch (SchedulerException e) {
             throw MetamacExceptionBuilder.builder().withCause(e).withExceptionItems(ServiceExceptionType.TASKS_SCHEDULER_ERROR).withMessageParameters(e.getMessage()).build();
         }
@@ -521,17 +491,8 @@ public class TaskServiceImpl extends TaskServiceImplBase {
     public boolean existDuplicationTaskInResource(ServiceContext ctx, String resourceId) throws MetamacException {
         taskServiceInvocationValidator.checkExistDuplicationTaskInResource(ctx, resourceId);
         try {
-            boolean existDuplicationTaskInResource;
             Scheduler sched = SchedulerRepository.getInstance().lookup(SCHEDULER_INSTANCE_NAME); // get a reference to a scheduler
-
-            if (sched.checkExists(createJobKeyForDuplicationResource(resourceId))) {
-                existDuplicationTaskInResource = Boolean.TRUE;
-            } else {
-                DatasetVersion datasetVersion = datasetService.retrieveDatasetVersionByUrn(ctx, resourceId);
-                existDuplicationTaskInResource = sched.checkExists(createJobKeyForDuplicationResource(datasetVersion.getDataset().getIdentifiableStatisticalResource().getUrn()));
-            }
-
-            return existDuplicationTaskInResource;
+            return sched.checkExists(createJobKeyForDuplicationResource(resourceId));
         } catch (SchedulerException e) {
             throw MetamacExceptionBuilder.builder().withCause(e).withExceptionItems(ServiceExceptionType.TASKS_SCHEDULER_ERROR).withMessageParameters(e.getMessage()).build();
         }
