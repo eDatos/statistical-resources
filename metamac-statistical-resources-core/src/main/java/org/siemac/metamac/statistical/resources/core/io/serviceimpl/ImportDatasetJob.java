@@ -48,7 +48,6 @@ public class ImportDatasetJob implements Job {
     public static final String DATASET_VERSION_ID                = "datasetVersionId";
     public static final String ALTERNATIVE_REPRESENTATIONS       = "alternativeRepresentations";
     public static final String STORE_ALTERNATIVE_REPRESENTATIONS = "storeAlternativeRepresentations";
-    public static final String DATASET_ID                        = "datasetId";
     public static final String TASK_NAME                         = "taskName";
 
     private TaskServiceFacade  taskServiceFacade                 = null;
@@ -84,7 +83,6 @@ public class ImportDatasetJob implements Job {
         String datasetVersionId = data.getString(DATASET_VERSION_ID);
         String alternativeRepresentations = data.getString(ALTERNATIVE_REPRESENTATIONS);
         Boolean storeAlternativeRepresentations = data.getBoolean(STORE_ALTERNATIVE_REPRESENTATIONS);
-        String datasetId = data.getString(DATASET_ID);
         String taskName = data.getString(TASK_NAME);
         String user = data.getString(USER);
 
@@ -120,7 +118,7 @@ public class ImportDatasetJob implements Job {
             }
 
             try {
-                getTaskServiceFacade().markTaskAsFailed(serviceContext, taskName, datasetVersionId, datasetId, metamacException);
+                getTaskServiceFacade().markTaskAsFailed(serviceContext, taskName, datasetVersionId, datasetUrn, metamacException);
                 logger.info("ImportationJob: " + jobKey + " marked as error at " + new Date());
                 metamacException.setPrincipalException(new MetamacExceptionItem(ServiceExceptionType.IMPORT_DATASET_JOB_ERROR, fileNames));
                 getNoticesRestInternalService().createErrorBackgroundNotification(user, ServiceNoticeAction.IMPORT_DATASET_JOB, metamacException);

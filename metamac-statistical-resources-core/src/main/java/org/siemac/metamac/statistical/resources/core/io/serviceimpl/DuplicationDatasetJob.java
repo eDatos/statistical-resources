@@ -31,7 +31,7 @@ public class DuplicationDatasetJob implements Job {
     public static final String DATASET_VERSION_ID     = "datasetVersionId";
     public static final String NEW_DATASET_VERSION_ID = "newDatasetVersionId";
     public static final String DATASOURCE_MAPPINGS    = "datasourceMappings";
-    public static final String DATASET_ID             = "datasetId";
+    public static final String DATASET_URN            = "datasetUrn";
     public static final String TASK_NAME              = "taskName";
 
     private TaskServiceFacade  taskServiceFacade      = null;
@@ -59,7 +59,7 @@ public class DuplicationDatasetJob implements Job {
         String newDatasetVersionId = data.getString(NEW_DATASET_VERSION_ID);
         String user = data.getString(USER);
         List<Mapping> datasourcesMapping = (List<Mapping>) data.get(DATASOURCE_MAPPINGS);
-        String datasetId = data.getString(DATASET_ID);
+        String datasetUrn = data.getString(DATASET_URN);
         String taskName = data.getString(TASK_NAME);
         ServiceContext serviceContext = new ServiceContext(user, context.getFireInstanceId(), "statistical-resources-core");
 
@@ -69,7 +69,7 @@ public class DuplicationDatasetJob implements Job {
             TaskInfoDataset taskInfoDataset = new TaskInfoDataset();
             taskInfoDataset.setDatasetVersionId(datasetVersionId);
 
-            getTaskServiceFacade().executeDuplicationTask(serviceContext, jobKey.getName(), taskInfoDataset, newDatasetVersionId, datasourcesMapping);
+            getTaskServiceFacade().executeDuplicationTask(serviceContext, taskName, taskInfoDataset, newDatasetVersionId, datasourcesMapping);
             logger.info("DuplicationDatasetJob: " + jobKey + " finished at " + new Date());
             getNoticesRestInternalService().createSuccessBackgroundNotification(user, ServiceNoticeAction.DUPLICATION_DATASET_JOB, ServiceNoticeMessage.DUPLICATION_DATASET_JOB_OK, datasetVersionId,
                     newDatasetVersionId);
@@ -77,7 +77,7 @@ public class DuplicationDatasetJob implements Job {
             logger.error("DuplicationDatasetJob: the duplication with key " + jobKey.getName() + " has failed", e);
 
             try {
-                getTaskServiceFacade().markTaskAsFailed(serviceContext, taskName, datasetVersionId, datasetId, e);
+                getTaskServiceFacade().markTaskAsFailed(serviceContext, taskName, datasetVersionId, datasetUrn, e);
                 logger.info("ImportationJob: " + jobKey + " marked as error at " + new Date());
                 e.setPrincipalException(new MetamacExceptionItem(ServiceExceptionType.DUPLICATION_DATASET_JOB_ERROR, datasetVersionId));
                 getNoticesRestInternalService().createErrorBackgroundNotification(user, ServiceNoticeAction.DUPLICATION_DATASET_JOB, e);

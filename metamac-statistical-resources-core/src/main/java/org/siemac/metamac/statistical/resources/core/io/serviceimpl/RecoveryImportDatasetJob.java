@@ -26,8 +26,8 @@ public class RecoveryImportDatasetJob implements Job {
     public static final String USER               = "user";
     public static final String DATASET_VERSION_ID = "datasetVersionId";
     public static final String NOTIFY_TO_USER     = "notifyToUser";
-    public static final String DATASET_ID         = "datasetId";
-    
+    public static final String DATASET_URN        = "datasetUrn";
+
     private TaskServiceFacade  taskServiceFacade  = null;
 
     /**
@@ -53,7 +53,7 @@ public class RecoveryImportDatasetJob implements Job {
         JobDataMap data = context.getJobDetail().getJobDataMap();
         String user = data.getString(USER);
         String datasetVersionId = data.getString(DATASET_VERSION_ID);
-        String datasetId = data.getString(DATASET_ID);
+        String datasetUrn = data.getString(DATASET_URN);
         Boolean notifyToUser = data.getBoolean(NOTIFY_TO_USER);
 
         // Execution
@@ -64,7 +64,7 @@ public class RecoveryImportDatasetJob implements Job {
 
             TaskInfoDataset taskInfoDataset = new TaskInfoDataset();
             taskInfoDataset.setDatasetVersionId(datasetVersionId);
-            taskInfoDataset.setDatasetId(datasetId);
+            taskInfoDataset.setDatasetUrn(datasetUrn);
 
             getTaskServiceFacade().executeRecoveryImportationTask(serviceContext, jobKey.getName(), taskInfoDataset);
             logger.info("RecoveryImportationJob: " + jobKey + " finished at " + new Date());

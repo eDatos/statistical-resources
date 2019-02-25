@@ -345,7 +345,7 @@ public class DatasetServiceDatasourceManagementTest extends StatisticalResources
     }
 
     @Test
-    @MetamacMock(DATASET_VERSION_54_IN_VALIDATION_REJECTED_WITH_DATASOURCE_NAME)
+    @MetamacMock({DATASET_VERSION_54_IN_VALIDATION_REJECTED_WITH_DATASOURCE_NAME, DATASET_VERSION_55_PUBLISHED_WITH_DATASOURCE_NAME})
     public void testUpdateDatasourceValidationRejected() throws Exception {
         mockDsdAndDataRepositorySimpleDimensionsNoAttributes();
 

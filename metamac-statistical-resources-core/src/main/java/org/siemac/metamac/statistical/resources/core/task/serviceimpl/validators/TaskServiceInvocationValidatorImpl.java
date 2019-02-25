@@ -43,8 +43,8 @@ public class TaskServiceInvocationValidatorImpl {
     public static void checkPlanifyDuplicationDataset(TaskInfoDataset taskInfoDataset, String newDatasetId, List<MetamacExceptionItem> exceptions) {
         StatisticalResourcesValidationUtils.checkParameterRequired(taskInfoDataset, ServiceExceptionParameters.TASK_INFO_DATASET, exceptions);
         StatisticalResourcesValidationUtils.checkMetadataRequired(taskInfoDataset.getDatasetVersionId(), ServiceExceptionParameters.TASK_INFO_DATASET_DATASET_VERSION_ID, exceptions);
+        StatisticalResourcesValidationUtils.checkMetadataRequired(taskInfoDataset.getDatasetUrn(), ServiceExceptionParameters.DATASET_URN, exceptions);
         StatisticalResourcesValidationUtils.checkParameterRequired(newDatasetId, ServiceExceptionParameters.TASK_INFO_DATASET_NEW_DATASET_VERSION_ID, exceptions);
-        // TODO METAMAC-2767 check new parameter
     }
 
     public static void checkProcessImportationTask(String importationJobKey, TaskInfoDataset taskInfoDataset, List<MetamacExceptionItem> exceptions) throws MetamacException {
@@ -86,11 +86,10 @@ public class TaskServiceInvocationValidatorImpl {
         StatisticalResourcesValidationUtils.checkParameterRequired(job, ServiceExceptionParameters.TASK_DATASET_JOB_KEY, exceptions);
     }
 
-    public static void checkMarkTaskAsFailed(String job, String datasetIdVersion, String datasetId, List<MetamacExceptionItem> exceptions) {
+    public static void checkMarkTaskAsFailed(String job, String datasetIdVersion, String datasetUrn, List<MetamacExceptionItem> exceptions) {
         StatisticalResourcesValidationUtils.checkParameterRequired(job, ServiceExceptionParameters.TASK_DATASET_JOB_KEY, exceptions);
-        StatisticalResourcesValidationUtils.checkParameterRequired(datasetIdVersion, ServiceExceptionParameters.TASK_DATASET_JOB_KEY, exceptions);
-        StatisticalResourcesValidationUtils.checkParameterRequired(datasetId, ServiceExceptionParameters.TASK_DATASET_JOB_KEY, exceptions);
-        // TODO METAMAC-2767 check It!
+        StatisticalResourcesValidationUtils.checkParameterRequired(datasetIdVersion, ServiceExceptionParameters.TASK_INFO_DATASET_DATASET_VERSION_ID, exceptions);
+        StatisticalResourcesValidationUtils.checkParameterRequired(datasetUrn, ServiceExceptionParameters.DATASET_URN, exceptions);
     }
 
     public static void checkMarkTasksAsFailedOnApplicationStartup(String job, List<MetamacExceptionItem> exceptions) {
