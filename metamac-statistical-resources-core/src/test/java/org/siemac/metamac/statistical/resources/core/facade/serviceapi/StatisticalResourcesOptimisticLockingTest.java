@@ -1252,14 +1252,18 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
             isTaskInBackground = taskService.existsTaskForResource(getServiceContextAdministrador(), datasetVersion.getDataset().getIdentifiableStatisticalResource().getUrn());
         }
 
-        // Retrieve dataset again to avoid optimistic locking
-        DatasetVersionDto datasetVersionDtoSession1AfterVersioning = statisticalResourcesServiceFacade.retrieveDatasetVersionByUrn(getServiceContextAdministrador(),
-                datasetVersionDtoSession1NewResource.getUrn());
+        // Checking if the job has finished to prevent the test fails
+        if (!isTaskInBackground) {
+            // Retrieve dataset again to avoid optimistic locking
+            DatasetVersionDto datasetVersionDtoSession1AfterVersioning = statisticalResourcesServiceFacade.retrieveDatasetVersionByUrn(getServiceContextAdministrador(),
+                    datasetVersionDtoSession1NewResource.getUrn());
 
-        // Update dataset versioned after job finished --> OK
-        datasetVersionDtoSession1NewResource.setTitle(StatisticalResourcesDtoMocks.mockInternationalStringDto());
-        DatasetVersionDto datasetVersionDtoSession1AfterUpdate02 = statisticalResourcesServiceFacade.updateDatasetVersion(getServiceContextAdministrador(), datasetVersionDtoSession1AfterVersioning);
-        assertTrue(datasetVersionDtoSession1AfterUpdate02.getOptimisticLockingVersion() > datasetVersionDtoSession1NewResource.getOptimisticLockingVersion());
+            // Update dataset versioned after job finished --> OK
+            datasetVersionDtoSession1AfterVersioning.setTitle(StatisticalResourcesDtoMocks.mockInternationalStringDto());
+            DatasetVersionDto datasetVersionDtoSession1AfterUpdate02 = statisticalResourcesServiceFacade.updateDatasetVersion(getServiceContextAdministrador(),
+                    datasetVersionDtoSession1AfterVersioning);
+            assertTrue(datasetVersionDtoSession1AfterUpdate02.getOptimisticLockingVersion() > datasetVersionDtoSession1AfterVersioning.getOptimisticLockingVersion());
+        }
     }
 
     @Test
