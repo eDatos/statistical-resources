@@ -103,7 +103,7 @@ public class DatasetPublishingServiceTest extends StatisticalResourcesMockRestBa
 
         mockDatasetVersionExternalItemsPublished(datasetVersion);
 
-        expectedMetamacException(new MetamacException(ServiceExceptionType.TASKS_IN_PROGRESS, datasetVersionUrn));
+        expectedMetamacException(new MetamacException(ServiceExceptionType.TASKS_IN_PROGRESS, datasetVersion.getDataset().getIdentifiableStatisticalResource().getUrn()));
 
         datasetVersionLifecycleService.sendToPublished(getServiceContextAdministrador(), datasetVersionUrn);
     }

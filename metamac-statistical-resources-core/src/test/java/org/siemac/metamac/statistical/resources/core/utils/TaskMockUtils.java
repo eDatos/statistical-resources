@@ -7,8 +7,8 @@ import org.siemac.metamac.statistical.resources.core.task.serviceapi.TaskService
 
 public class TaskMockUtils {
 
-    public static void mockTaskInProgressForDatasetVersion(TaskService taskService, String datasetVersionUrn, boolean status) throws MetamacException {
-        Mockito.when(taskService.existsTaskForResource(Mockito.any(ServiceContext.class), Mockito.eq(datasetVersionUrn))).thenReturn(status);
+    public static void mockTaskInProgressForDatasetVersion(TaskService taskService, String datasetUrn, boolean status) throws MetamacException {
+        Mockito.when(taskService.existsTaskForResource(Mockito.any(ServiceContext.class), Mockito.eq(datasetUrn))).thenReturn(status);
     }
 
     public static void mockAllTaskInProgressForDatasetVersion(TaskService taskService, boolean status) throws MetamacException {

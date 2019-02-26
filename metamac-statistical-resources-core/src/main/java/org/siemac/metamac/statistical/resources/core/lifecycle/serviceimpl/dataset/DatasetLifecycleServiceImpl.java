@@ -229,6 +229,7 @@ public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<Datase
 
         TaskInfoDataset taskInfo = new TaskInfoDataset();
         taskInfo.setDatasetVersionId(oldDatasetRepositoryId);
+        taskInfo.setDatasetUrn(resource.getDataset().getIdentifiableStatisticalResource().getUrn());
         taskService.planifyDuplicationDataset(ctx, taskInfo, resource.getDatasetRepositoryId(), datasourcesMapping);
     }
 
@@ -289,6 +290,6 @@ public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<Datase
 
     @Override
     protected String getResourceUrn(DatasetVersion resource) {
-        return resource.getSiemacMetadataStatisticalResource().getUrn();
+        return resource.getDataset().getIdentifiableStatisticalResource().getUrn();
     }
 }

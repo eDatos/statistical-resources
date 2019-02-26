@@ -216,12 +216,14 @@ public class DatasetVersioningServiceTest extends StatisticalResourcesBaseTest {
     @MetamacMock(DATASET_VERSION_14_OPER_03_CODE_01_PUBLISHED_NAME)
     public void testVersioningDatasetVersionImportationTaskInProgress() throws Exception {
         DatasetVersion datasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_14_OPER_03_CODE_01_PUBLISHED_NAME);
-        String urn = datasetVersion.getSiemacMetadataStatisticalResource().getUrn();
-        mockTaskInProgressForResource(urn, true);
 
-        expectedMetamacException(new MetamacException(ServiceExceptionType.TASKS_IN_PROGRESS, urn));
+        String datasetVersionUrn = datasetVersion.getSiemacMetadataStatisticalResource().getUrn();
+        String datasetUrn = datasetVersion.getDataset().getIdentifiableStatisticalResource().getUrn();
 
-        datasetVersionLifecycleService.versioning(getServiceContextWithoutPrincipal(), urn, VersionTypeEnum.MINOR);
+        mockTaskInProgressForResource(datasetUrn, true);
+        expectedMetamacException(new MetamacException(ServiceExceptionType.TASKS_IN_PROGRESS, datasetUrn));
+
+        datasetVersionLifecycleService.versioning(getServiceContextWithoutPrincipal(), datasetVersionUrn, VersionTypeEnum.MINOR);
     }
 
     // -------------------------------------------------------------------------------------------
@@ -351,8 +353,8 @@ public class DatasetVersioningServiceTest extends StatisticalResourcesBaseTest {
         BaseAsserts.assertEqualsStatisticalResource(expected, actual);
     }
 
-    private void mockTaskInProgressForResource(String datasetVersionUrn, boolean status) throws MetamacException {
-        TaskMockUtils.mockTaskInProgressForDatasetVersion(taskService, datasetVersionUrn, status);
+    private void mockTaskInProgressForResource(String datasetUrn, boolean status) throws MetamacException {
+        TaskMockUtils.mockTaskInProgressForDatasetVersion(taskService, datasetUrn, status);
     }
 
     private void mockDsdAndDataRepositorySimpleDimensionsNoAttributes() throws Exception {

@@ -157,6 +157,7 @@ public class DataManipulateTest extends StatisticalResourcesBaseTest {
                     TaskInfoDataset taskInfoDataset = new TaskInfoDataset();
                     taskInfoDataset.setDataStructureUrn(URN_DSD_ECB_EXR_RG);
                     taskInfoDataset.setDatasetVersionId("TESTDATA_STR_ECB_EXR_RG");
+                    taskInfoDataset.setDatasetUrn("TESTDATA_STR_ECB_EXR_RG");
 
                     // File 01
                     {
@@ -498,6 +499,7 @@ public class DataManipulateTest extends StatisticalResourcesBaseTest {
                     TaskInfoDataset taskInfoDataset = new TaskInfoDataset();
                     taskInfoDataset.setDataStructureUrn(URN_DSD_ECB_EXR_RG);
                     taskInfoDataset.setDatasetVersionId(datasetVersionUrn);
+                    taskInfoDataset.setDatasetUrn(datasetVersion.getDataset().getIdentifiableStatisticalResource().getUrn());
 
                     jobKey = taskService.planifyDuplicationDataset(getServiceContextWithoutPrincipal(), taskInfoDataset, "TESTDATA_STR_ECB_EXR_RG_NEW", new ArrayList<Mapping>());
 

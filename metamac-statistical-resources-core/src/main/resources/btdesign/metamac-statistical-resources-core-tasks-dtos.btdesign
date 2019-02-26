@@ -14,7 +14,7 @@ Application DatasetsStatisticalResourcesDto {
 			String datasetVersionId;
 			String datasetUrn;
 			Boolean storeAlternativeRepresentations
-		}
+ 		}
 
 		DataTransferObject FileDescriptor {
 			gap

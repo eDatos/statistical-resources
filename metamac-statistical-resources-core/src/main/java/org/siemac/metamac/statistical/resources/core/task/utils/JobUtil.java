@@ -8,8 +8,12 @@ import java.io.OutputStream;
 
 import org.apache.commons.io.IOUtils;
 import org.siemac.metamac.statistical.resources.core.enume.task.domain.DatasetFileFormatEnum;
+import org.siemac.metamac.statistical.resources.core.task.serviceimpl.TaskServiceImpl;
 
 public class JobUtil {
+
+    private JobUtil() {
+    }
 
     public static final String SERIALIZATION_SEPARATOR      = "|";
     public static final String SERIALIZATION_PAIR_SEPARATOR = "<>";
@@ -27,6 +31,18 @@ public class JobUtil {
             IOUtils.closeQuietly(os);
         }
         return file;
+    }
+
+    public static String createJobNameForImportationResource(String resourceId) {
+        return TaskServiceImpl.PREFIX_JOB_IMPORT_DATA + resourceId;
+    }
+
+    public static String createJobNameForRecoveryImportationResource(String resourceId) {
+        return TaskServiceImpl.PREFIX_JOB_RECOVERY_IMPORT_DATA + resourceId;
+    }
+
+    public static String createJobNameForDuplicationResource(String resourceId) {
+        return TaskServiceImpl.PREFIX_JOB_DUPLICATION_DATA + resourceId;
     }
 
 }
