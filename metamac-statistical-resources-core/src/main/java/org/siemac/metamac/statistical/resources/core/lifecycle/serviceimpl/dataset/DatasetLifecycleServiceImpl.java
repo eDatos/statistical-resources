@@ -2,7 +2,6 @@ package org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.data
 
 import static org.siemac.metamac.statistical.resources.core.error.utils.ServiceExceptionParametersUtils.addParameter;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -221,11 +220,7 @@ public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<Datase
         String oldDatasetRepositoryId = previous.getDatasetRepositoryId();
         resource.setDatasetRepositoryId(resource.getSiemacMetadataStatisticalResource().getUrn());
 
-        ArrayList<Mapping> datasourcesMapping = new ArrayList<Mapping>();
-        for (int i = 0; i < resource.getDatasources().size(); i++) {
-            datasourcesMapping
-                    .add(new Mapping(resource.getDatasources().get(i).getIdentifiableStatisticalResource().getCode(), previous.getDatasources().get(i).getIdentifiableStatisticalResource().getCode()));
-        }
+        List<Mapping> datasourcesMapping = DatasetVersioningCopyUtils.createDatasourceMapping(previous, resource);
 
         TaskInfoDataset taskInfo = new TaskInfoDataset();
         taskInfo.setDatasetVersionId(oldDatasetRepositoryId);
