@@ -1,6 +1,8 @@
 package org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.dataset;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyListOf;
@@ -13,7 +15,10 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_19_PRODUCTION_VALIDATION_NOT_READY_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_20_PRODUCTION_VALIDATION_READY_FOR_DIFFUSION_VALIDATION_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_21_PRODUCTION_VALIDATION_READY_FOR_VALIDATION_REJECTED_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_32_WITH_MULTIPLE_DATASOURCES_LINKED_TO_FILE_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_70_PREPARED_TO_PUBLISH_EXTERNAL_ITEM_FULL_NAME;
+
+import java.util.List;
 
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.junit.After;
@@ -41,6 +46,7 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.Categorisati
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionRepository;
 import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.DatasetService;
+import org.siemac.metamac.statistical.resources.core.dataset.utils.DatasetVersioningCopyUtils;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.invocation.service.SrmRestInternalService;
 import org.siemac.metamac.statistical.resources.core.invocation.utils.RestMapper;
@@ -55,6 +61,7 @@ import org.siemac.metamac.statistical.resources.core.utils.DatasetLifecycleTestU
 import org.siemac.metamac.statistical.resources.core.utils.TaskMockUtils;
 import org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts;
 
+import es.gobcan.istac.edatos.dataset.repository.dto.Mapping;
 import es.gobcan.istac.edatos.dataset.repository.service.DatasetRepositoriesServiceFacade;
 
 public class DatasetLifecycleServiceTest extends StatisticalResourcesBaseTest implements LifecycleServiceBaseTest {
@@ -390,6 +397,24 @@ public class DatasetLifecycleServiceTest extends StatisticalResourcesBaseTest im
             Categorisation actual = target.getCategorisations().get(i);
             DatasetsAsserts.assertEqualsExternalItem(expected.getCategory(), actual.getCategory());
             DatasetsAsserts.assertEqualsExternalItem(expected.getMaintainer(), actual.getMaintainer());
+        }
+    }
+
+    @Test
+    public void testCreateDatasourceMapping() throws Exception {
+        DatasetVersion previous = mockDatasetVersionInRepoFromMockFactory(DATASET_VERSION_32_WITH_MULTIPLE_DATASOURCES_LINKED_TO_FILE_NAME);
+        DatasetVersion resource = datasetLifecycleService.copyResourceForVersioning(getServiceContextAdministrador(), previous);
+
+        List<Mapping> datasourcesMapping = DatasetVersioningCopyUtils.createDatasourceMapping(resource, previous);
+
+        assertEquals(previous.getDatasources().size(), datasourcesMapping.size());
+        assertEquals(resource.getDatasources().size(), datasourcesMapping.size());
+
+        for (int i = 0; i < datasourcesMapping.size(); i++) {
+            assertTrue(previous.getDatasources().get(i).getIdentifiableStatisticalResource().getCode().equals(datasourcesMapping.get(i).getOldValue()));
+            assertTrue(resource.getDatasources().get(i).getIdentifiableStatisticalResource().getCode().equals(datasourcesMapping.get(i).getNewValue()));
+            assertFalse(previous.getDatasources().get(i).getIdentifiableStatisticalResource().getCode().equals(datasourcesMapping.get(i).getNewValue()));
+            assertFalse(resource.getDatasources().get(i).getIdentifiableStatisticalResource().getCode().equals(datasourcesMapping.get(i).getOldValue()));
         }
     }
 

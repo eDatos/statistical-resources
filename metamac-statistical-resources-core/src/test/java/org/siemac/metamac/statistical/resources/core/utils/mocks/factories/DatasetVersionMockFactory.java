@@ -445,6 +445,9 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
         DatasetVersion datasetVersion = createDatasetVersionWithSequence(1);
         datasetVersion.addDatasource(DatasourceMockFactory.generateSimpleDatasource());
         datasetVersion.addDatasource(DatasourceMockFactory.generateSimpleDatasource());
+        datasetVersion.addDatasource(DatasourceMockFactory.generateSimpleDatasource());
+        datasetVersion.addDatasource(DatasourceMockFactory.generateSimpleDatasource());
+        datasetVersion.addDatasource(DatasourceMockFactory.generateSimpleDatasource());
         return datasetVersion;
     }
 
