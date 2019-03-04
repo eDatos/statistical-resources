@@ -220,7 +220,7 @@ public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<Datase
         String oldDatasetRepositoryId = previous.getDatasetRepositoryId();
         resource.setDatasetRepositoryId(resource.getSiemacMetadataStatisticalResource().getUrn());
 
-        List<Mapping> datasourcesMapping = DatasetVersioningCopyUtils.createDatasourceMapping(resource, previous);
+        List<Mapping> datasourcesMapping = DatasetVersioningCopyUtils.createDatasourceMapping(previous, resource);
 
         TaskInfoDataset taskInfo = new TaskInfoDataset();
         taskInfo.setDatasetVersionId(oldDatasetRepositoryId);

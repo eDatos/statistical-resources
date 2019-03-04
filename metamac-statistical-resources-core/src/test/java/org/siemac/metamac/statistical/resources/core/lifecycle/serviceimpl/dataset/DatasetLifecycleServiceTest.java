@@ -402,19 +402,19 @@ public class DatasetLifecycleServiceTest extends StatisticalResourcesBaseTest im
 
     @Test
     public void testCreateDatasourceMapping() throws Exception {
-        DatasetVersion previous = mockDatasetVersionInRepoFromMockFactory(DATASET_VERSION_32_WITH_MULTIPLE_DATASOURCES_LINKED_TO_FILE_NAME);
-        DatasetVersion resource = datasetLifecycleService.copyResourceForVersioning(getServiceContextAdministrador(), previous);
+        DatasetVersion datasetVersionOld = mockDatasetVersionInRepoFromMockFactory(DATASET_VERSION_32_WITH_MULTIPLE_DATASOURCES_LINKED_TO_FILE_NAME);
+        DatasetVersion datasetVersionNew = datasetLifecycleService.copyResourceForVersioning(getServiceContextAdministrador(), datasetVersionOld);
 
-        List<Mapping> datasourcesMapping = DatasetVersioningCopyUtils.createDatasourceMapping(resource, previous);
+        List<Mapping> datasourcesMapping = DatasetVersioningCopyUtils.createDatasourceMapping(datasetVersionOld, datasetVersionNew);
 
-        assertEquals(previous.getDatasources().size(), datasourcesMapping.size());
-        assertEquals(resource.getDatasources().size(), datasourcesMapping.size());
+        assertEquals(datasetVersionOld.getDatasources().size(), datasourcesMapping.size());
+        assertEquals(datasetVersionNew.getDatasources().size(), datasourcesMapping.size());
 
         for (int i = 0; i < datasourcesMapping.size(); i++) {
-            assertTrue(previous.getDatasources().get(i).getIdentifiableStatisticalResource().getCode().equals(datasourcesMapping.get(i).getOldValue()));
-            assertTrue(resource.getDatasources().get(i).getIdentifiableStatisticalResource().getCode().equals(datasourcesMapping.get(i).getNewValue()));
-            assertFalse(previous.getDatasources().get(i).getIdentifiableStatisticalResource().getCode().equals(datasourcesMapping.get(i).getNewValue()));
-            assertFalse(resource.getDatasources().get(i).getIdentifiableStatisticalResource().getCode().equals(datasourcesMapping.get(i).getOldValue()));
+            assertTrue(datasetVersionOld.getDatasources().get(i).getIdentifiableStatisticalResource().getCode().equals(datasourcesMapping.get(i).getOldValue()));
+            assertTrue(datasetVersionNew.getDatasources().get(i).getIdentifiableStatisticalResource().getCode().equals(datasourcesMapping.get(i).getNewValue()));
+            assertFalse(datasetVersionOld.getDatasources().get(i).getIdentifiableStatisticalResource().getCode().equals(datasourcesMapping.get(i).getNewValue()));
+            assertFalse(datasetVersionNew.getDatasources().get(i).getIdentifiableStatisticalResource().getCode().equals(datasourcesMapping.get(i).getOldValue()));
         }
     }
 
