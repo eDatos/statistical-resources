@@ -29,7 +29,7 @@ public class SiemacMetadataContentDescriptorsEditionForm extends LifeCycleResour
         setValue(SiemacMetadataDS.SUBTITLE, siemacMetadataStatisticalResourceDto.getSubtitle());
         setValue(SiemacMetadataDS.TITLE_ALTERNATIVE, siemacMetadataStatisticalResourceDto.getTitleAlternative());
         setValue(SiemacMetadataDS.ABSTRACT, siemacMetadataStatisticalResourceDto.getAbstractLogic());
-        setValue(SiemacMetadataDS.KEYWORDS, siemacMetadataStatisticalResourceDto.getAbstractLogic());
+        setValue(SiemacMetadataDS.KEYWORDS, siemacMetadataStatisticalResourceDto.getKeywords());
     }
 
     public SiemacMetadataStatisticalResourceDto getSiemacMetadataStatisticalResourceDto(SiemacMetadataStatisticalResourceDto siemacMetadataStatisticalResourceDto) {
