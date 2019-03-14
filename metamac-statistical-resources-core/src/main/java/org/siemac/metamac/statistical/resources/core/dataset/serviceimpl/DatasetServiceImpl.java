@@ -908,9 +908,36 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         }
 
         processNonObservationAttributeCoverage(datasetVersion, attribute);
+
+        processSpecificCoveragesFromAttribute(datasetVersion, dsd, attribute);
+
         getDatasetVersionRepository().save(datasetVersion);
 
         return attributeInstance;
+    }
+
+    protected void processSpecificCoveragesFromAttribute(DatasetVersion datasetVersion, DataStructure dsd, DsdAttribute attribute) throws MetamacException {
+        switch (attribute.getType()) {
+            case SPATIAL:
+                datasetVersion.getGeographicCoverage().clear();
+                List<ExternalItem> spatialCodeItems = processExternalItemsCodeFromAttributeByType(datasetVersion, dsd, DsdComponentType.SPATIAL);
+                datasetVersion.getGeographicCoverage().addAll(spatialCodeItems);
+                break;
+            case TEMPORAL:
+                datasetVersion.getTemporalCoverage().clear();
+                List<CodeDimension> temporalCodeItems = processCodeFromAttributeByType(datasetVersion, dsd, DsdComponentType.TEMPORAL);
+                DatasetVersionUtils.sortTemporalCodeDimensions(temporalCodeItems);
+                datasetVersion.getTemporalCoverage().addAll(buildTemporalCodeFromCodeDimensions(temporalCodeItems));
+                processStartEndDates(datasetVersion);
+                break;
+            case MEASURE:
+                datasetVersion.getMeasureCoverage().clear();
+                List<ExternalItem> mesureCodeItems = processExternalItemsCodeFromAttributeByType(datasetVersion, dsd, DsdComponentType.MEASURE);
+                datasetVersion.getMeasureCoverage().addAll(mesureCodeItems);
+                break;
+            default:
+                break;
+        }
     }
 
     @Override
@@ -934,6 +961,9 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         }
 
         processNonObservationAttributeCoverage(datasetVersion, attribute);
+
+        processSpecificCoveragesFromAttribute(datasetVersion, dsd, attribute);
+
         getDatasetVersionRepository().save(datasetVersion);
 
         return attributeInstance;
@@ -956,6 +986,9 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
             statisticsDatasetRepositoriesServiceFacade.deleteAttributeInstance(attributeInstanceUuid);
 
             processNonObservationAttributeCoverage(datasetVersion, attribute);
+
+            processSpecificCoveragesFromAttribute(datasetVersion, dsd, attribute);
+
             getDatasetVersionRepository().save(datasetVersion);
         } catch (ApplicationException e) {
             throw new MetamacException(e, ServiceExceptionType.UNKNOWN, "Error updating attribute instance in datasetRepository " + attributeInstanceUuid + ".");
