@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdAttributeDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdAttributeInstanceDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.CodeItemDto;
@@ -80,8 +81,9 @@ public class DatasetAttributesTabViewImpl extends ViewWithUiHandlers<DatasetAttr
     }
 
     @Override
-    public void setAttributes(List<DsdAttributeDto> attributes) {
+    public void setAttributes(DatasetVersionDto datasetVersionDto, List<DsdAttributeDto> attributes) {
         listGrid.setData(StatisticalResourcesRecordUtils.getDsdAttributeRecords(attributes));
+        attributePanel.updateButtonsVisibility(datasetVersionDto);
         attributePanel.hide();
     }
 

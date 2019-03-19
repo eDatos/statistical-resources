@@ -6,9 +6,11 @@ import java.util.List;
 import java.util.Map;
 
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdAttributeDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdAttributeInstanceDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.CodeItemDto;
+import org.siemac.metamac.statistical.resources.web.client.dataset.utils.DatasetClientSecurityUtils;
 import org.siemac.metamac.statistical.resources.web.client.dataset.view.handlers.DatasetAttributesTabUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.model.record.DsdAttributeInstanceRecord;
 import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
@@ -172,5 +174,17 @@ public class AttributePanel extends VLayout {
 
     public void setItemsForDimensionOrGroupLevelAttributeValueSelection(List<ExternalItemDto> externalItemDtos, int firstResult, int totalResults) {
         mainFormLayout.setItemsForDimensionOrGroupLevelAttributeValueSelection(externalItemDtos, firstResult, totalResults);
+    }
+
+    public void updateButtonsVisibility(DatasetVersionDto datasetVersionDto) {
+        boolean canCreateAttributeInstance = DatasetClientSecurityUtils.canCreateAttributeInstance(datasetVersionDto);
+        boolean canUpdateAttributeInstance = DatasetClientSecurityUtils.canUpdateAttributeInstance(datasetVersionDto);
+        boolean canDeleteAttributeInstance = DatasetClientSecurityUtils.canDeleteAttributeInstance(datasetVersionDto);
+
+        instancesSectionStack.setCanCreate(canCreateAttributeInstance);
+        instancesSectionStack.setCanDelete(canDeleteAttributeInstance);
+
+        mainFormLayout.setCanEdit(canUpdateAttributeInstance);
+        mainFormLayout.setCanDelete(canDeleteAttributeInstance);
     }
 }
