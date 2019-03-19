@@ -208,4 +208,38 @@ public class DatasetClientSecurityUtils extends LifecycleClientSecurityUtils {
                 dto.getProcStatus());
     }
 
+    // ------------------------------------------------------------------------
+    // ATTRIBUTES
+    // ------------------------------------------------------------------------
+
+    public static boolean canCreateAttributeInstance(DatasetVersionDto dto) {
+        if (BooleanUtils.isTrue(dto.getIsTaskInBackground())) {
+            return false;
+        }
+        if (isPublished(dto.getProcStatus())) {
+            return false;
+        }
+        return SharedDatasetsSecurityUtils.canCreateAttributeInstance(getMetamacPrincipal(), dto.getStatisticalOperation().getCode(), dto.getProcStatus());
+    }
+
+    public static boolean canUpdateAttributeInstance(DatasetVersionDto dto) {
+        if (BooleanUtils.isTrue(dto.getIsTaskInBackground())) {
+            return false;
+        }
+        if (isPublished(dto.getProcStatus())) {
+            return false;
+        }
+        return SharedDatasetsSecurityUtils.canUpdateAttributeInstance(getMetamacPrincipal(), dto.getStatisticalOperation().getCode(), dto.getProcStatus());
+    }
+
+    public static boolean canDeleteAttributeInstance(DatasetVersionDto dto) {
+        if (BooleanUtils.isTrue(dto.getIsTaskInBackground())) {
+            return false;
+        }
+        if (isPublished(dto.getProcStatus())) {
+            return false;
+        }
+        return SharedDatasetsSecurityUtils.canDeleteAttributeInstance(getMetamacPrincipal(), dto.getStatisticalOperation().getCode(), dto.getProcStatus());
+    }
+
 }

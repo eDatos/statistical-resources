@@ -8,6 +8,7 @@ import java.util.Map;
 
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.util.shared.StringUtils;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdAttributeDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DsdAttributeInstanceDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.RepresentationDto;
@@ -73,7 +74,7 @@ public class DatasetAttributesTabPresenter extends Presenter<DatasetAttributesTa
 
     public interface DatasetAttributesTabView extends View, HasUiHandlers<DatasetAttributesTabUiHandlers> {
 
-        void setAttributes(List<DsdAttributeDto> attributes);
+        void setAttributes(DatasetVersionDto datasetVersionDto, List<DsdAttributeDto> attributes);
         void setAttributeInstances(DsdAttributeDto dsdAttributeDto, List<DsdAttributeInstanceDto> dsdAttributeInstanceDtos);
         void setDimensionsCoverageValues(Map<String, List<CodeItemDto>> dimensionsCoverages);
         void setItemsForDatasetLevelAttributeValueSelection(List<ExternalItemDto> externalItemDtos, int firstResult, int totalResults);
@@ -144,11 +145,10 @@ public class DatasetAttributesTabPresenter extends Presenter<DatasetAttributesTa
     private void loadInitialData() {
         String datasetCode = PlaceRequestUtils.getDatasetParamFromUrl(placeManager);
         datasetVersionUrn = CommonUtils.generateDatasetUrn(datasetCode);
-        retrieveDataset(datasetVersionUrn);
-        retrieveAttributes(datasetVersionUrn);
+        retrieveDatasetAndAttributes(datasetVersionUrn);
     }
 
-    private void retrieveDataset(final String datasetUrn) {
+    private void retrieveDatasetAndAttributes(final String datasetUrn) {
         dispatcher.execute(new GetDatasetVersionAction(datasetUrn), new WaitingAsyncCallbackHandlingError<GetDatasetVersionResult>(this) {
 
             @Override
@@ -162,24 +162,25 @@ public class DatasetAttributesTabPresenter extends Presenter<DatasetAttributesTa
             @Override
             public void onWaitSuccess(GetDatasetVersionResult result) {
                 SetDatasetEvent.fire(DatasetAttributesTabPresenter.this, result.getDatasetVersionDto());
+                retrieveAttributes(result.getDatasetVersionDto());
             }
         });
     }
 
-    private void retrieveAttributes(final String datasetUrn) {
-        dispatcher.execute(new GetDatasetAttributesAction(datasetUrn), new WaitingAsyncCallbackHandlingError<GetDatasetAttributesResult>(this) {
+    private void retrieveAttributes(final DatasetVersionDto datasetVersionDto) {
+        dispatcher.execute(new GetDatasetAttributesAction(datasetVersionDto.getUrn()), new WaitingAsyncCallbackHandlingError<GetDatasetAttributesResult>(this) {
 
             @Override
             public void onWaitFailure(Throwable caught) {
                 if (CommonErrorUtils.isOperationNotAllowedException(caught)) {
-                    ShowUnauthorizedDatasetWarningMessageEvent.fire(DatasetAttributesTabPresenter.this, datasetUrn);
+                    ShowUnauthorizedDatasetWarningMessageEvent.fire(DatasetAttributesTabPresenter.this, datasetVersionDto.getUrn());
                 } else {
                     super.onWaitFailure(caught);
                 }
             }
             @Override
             public void onWaitSuccess(GetDatasetAttributesResult result) {
-                getView().setAttributes(result.getDatasetVersionAttributes());
+                getView().setAttributes(datasetVersionDto, result.getDatasetVersionAttributes());
             }
         });
     }
