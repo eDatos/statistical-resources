@@ -98,7 +98,7 @@ public class AttributeMainFormLayout extends MainFormLayout {
             this.setViewMode();
         }
 
-        setCanDelete(canDeleteBck);
+        canDelete = canDeleteBck;
     }
 
     private void showDatasetLevelForm(DsdAttributeDto dsdAttributeDto, DsdAttributeInstanceDto dsdAttributeInstanceDto) {
