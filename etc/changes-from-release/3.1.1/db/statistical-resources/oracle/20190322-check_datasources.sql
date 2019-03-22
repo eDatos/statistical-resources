@@ -5,11 +5,11 @@
 SET SERVEROUTPUT ON
 
 DECLARE
-    str_sql            VARCHAR2(500);
-    str_sql_count      VARCHAR2(500);
-    v_attribute_0_es   VARCHAR2(500 BYTE);
-    cur_str_sql        SYS_REFCURSOR;
-    v_str_sql_count    NUMBER;
+    l_count_ds_dataset_query   VARCHAR2(500);
+    l_ds_dataset_number        NUMBER;
+    l_ds_dataset_query         VARCHAR2(500);
+    ds_per_dataset_cur         SYS_REFCURSOR;
+    ds_filename_cv             VARCHAR2(500 BYTE);
 BEGIN
     FOR table_rec IN (
         SELECT
@@ -20,24 +20,24 @@ BEGIN
         ORDER BY
             id DESC
     ) LOOP
-        str_sql_count := 'select count(distinct attribute_0_es) from ' || table_rec.table_name;
-        EXECUTE IMMEDIATE str_sql_count
-        INTO v_str_sql_count;
-        IF v_str_sql_count >= 1 THEN
+        l_count_ds_dataset_query := 'select count(distinct attribute_0_es) from ' || table_rec.table_name;
+        EXECUTE IMMEDIATE l_count_ds_dataset_query
+        INTO l_ds_dataset_number;
+        IF l_ds_dataset_number >= 1 THEN
             dbms_output.put_line('DATASET: ' || table_rec.dataset_id);
             dbms_output.put_line('TABLENAME: ' || table_rec.table_name);
-            str_sql := 'select distinct attribute_0_es from ' || table_rec.table_name;
-            OPEN cur_str_sql FOR str_sql;
+            l_ds_dataset_query := 'select distinct attribute_0_es from ' || table_rec.table_name;
+            OPEN ds_per_dataset_cur FOR l_ds_dataset_query;
 
             LOOP
-                FETCH cur_str_sql INTO v_attribute_0_es;
-                EXIT WHEN cur_str_sql%notfound;
-                dbms_output.put_line('DATASOURCE: ' || v_attribute_0_es);
+                FETCH ds_per_dataset_cur INTO ds_filename_cv;
+                EXIT WHEN ds_per_dataset_cur%notfound;
+                dbms_output.put_line('DATASOURCE: ' || ds_filename_cv);
                 dbms_output.put_line('SQL: '
                                      || 'select * from tb_datasets_versions dv where dv.dataset_repository_id = '''
                                      || table_rec.dataset_id
                                      || ''' and not exists (select 1 from tb_datasources ds where ds.dataset_version_fk = dv.id and ds.filename = substr('''
-                                     || v_attribute_0_es
+                                     || ds_filename_cv
                                      || ''',1,length(ds.filename)));');
 
             END LOOP;
