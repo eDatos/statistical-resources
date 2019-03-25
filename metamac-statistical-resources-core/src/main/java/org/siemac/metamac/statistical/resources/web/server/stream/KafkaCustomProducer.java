@@ -34,6 +34,7 @@ public class KafkaCustomProducer<K, V extends SpecificRecordBase> implements Pro
         DEFAULT_SETTINGS.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         DEFAULT_SETTINGS.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, KafkaAvroSerializer.class);
         DEFAULT_SETTINGS.put(ProducerConfig.MAX_BLOCK_MS_CONFIG, 5000); // Time to wait if Kafka cluster is down or buffer is full
+        DEFAULT_SETTINGS.put(ProducerConfig.MAX_REQUEST_SIZE_CONFIG, 10485760); // 10 MB, note: The Broker has: message.max.bytes=10485760 (10MB)
     };
 
     public KafkaCustomProducer(Properties props) throws MetamacException {
