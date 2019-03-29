@@ -2,7 +2,7 @@ package org.siemac.metamac.statistical.resources.core.base.checks;
 
 import org.siemac.metamac.statistical.resources.core.enume.domain.NextVersionTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
-import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesVersionUtils;
+import org.siemac.metamac.statistical.resources.core.utils.shared.StatisticalResourcesVersionSharedUtils;
 
 public class MetadataEditionChecks {
 
@@ -43,7 +43,7 @@ public class MetadataEditionChecks {
     }
 
     public static boolean canVersionRationaleTypesBeEdited(String versionLogic) {
-        if (StatisticalResourcesVersionUtils.getInitialVersion().equals(versionLogic)) {
+        if (StatisticalResourcesVersionSharedUtils.getInitialVersion().equals(versionLogic)) {
             return false;
         }
         return true;
