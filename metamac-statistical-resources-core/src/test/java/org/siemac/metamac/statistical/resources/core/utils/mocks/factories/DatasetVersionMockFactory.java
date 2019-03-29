@@ -251,8 +251,8 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
 
     public static final String               DATASET_VERSION_101_TO_DELETE_WITH_PREVIOUS_VERSION_NAME                                                      = "DATASET_VERSION_101_TO_DELETE_WITH_PREVIOUS_VERSION";
 
-    private static final String              INIT_VERSION                                                                                                  = "001.000";
-    private static final String              SECOND_VERSION                                                                                                = "002.000";
+    private static final String              INIT_VERSION                                                                                                  = "1.0";
+    private static final String              SECOND_VERSION                                                                                                = "2.0";
 
     private static DatasetVersionMockFactory instance                                                                                                      = null;
 
@@ -652,31 +652,31 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
 
     private static DatasetVersion getDatasetVersion57DraftInitialVersion() {
         DatasetVersion datasetVersion = createDatasetVersionInStatusWithGeneratedDatasource(1, ProcStatusEnum.DRAFT);
-        datasetVersion.getSiemacMetadataStatisticalResource().setVersionLogic(StatisticalResourcesVersionUtils.INITIAL_VERSION);
+        datasetVersion.getSiemacMetadataStatisticalResource().setVersionLogic(StatisticalResourcesVersionUtils.getInitialVersion());
         return datasetVersion;
     }
 
     private static DatasetVersion getDatasetVersion58ProductionValidationInitialVersion() {
         DatasetVersion datasetVersion = createDatasetVersionInStatusWithGeneratedDatasource(1, ProcStatusEnum.PRODUCTION_VALIDATION);
-        datasetVersion.getSiemacMetadataStatisticalResource().setVersionLogic(StatisticalResourcesVersionUtils.INITIAL_VERSION);
+        datasetVersion.getSiemacMetadataStatisticalResource().setVersionLogic(StatisticalResourcesVersionUtils.getInitialVersion());
         return datasetVersion;
     }
 
     private static DatasetVersion getDatasetVersion59DiffusionValidationInitialVersion() {
         DatasetVersion datasetVersion = createDatasetVersionInStatusWithGeneratedDatasource(1, ProcStatusEnum.DIFFUSION_VALIDATION);
-        datasetVersion.getSiemacMetadataStatisticalResource().setVersionLogic(StatisticalResourcesVersionUtils.INITIAL_VERSION);
+        datasetVersion.getSiemacMetadataStatisticalResource().setVersionLogic(StatisticalResourcesVersionUtils.getInitialVersion());
         return datasetVersion;
     }
 
     private static DatasetVersion getDatasetVersion60ValidationRejectedInitialVersion() {
         DatasetVersion datasetVersion = createDatasetVersionInStatusWithGeneratedDatasource(1, ProcStatusEnum.VALIDATION_REJECTED);
-        datasetVersion.getSiemacMetadataStatisticalResource().setVersionLogic(StatisticalResourcesVersionUtils.INITIAL_VERSION);
+        datasetVersion.getSiemacMetadataStatisticalResource().setVersionLogic(StatisticalResourcesVersionUtils.getInitialVersion());
         return datasetVersion;
     }
 
     private static DatasetVersion getDatasetVersion61PublishedInitialVersion() {
         DatasetVersion datasetVersion = createDatasetVersionInStatusWithGeneratedDatasource(1, ProcStatusEnum.PUBLISHED);
-        datasetVersion.getSiemacMetadataStatisticalResource().setVersionLogic(StatisticalResourcesVersionUtils.INITIAL_VERSION);
+        datasetVersion.getSiemacMetadataStatisticalResource().setVersionLogic(StatisticalResourcesVersionUtils.getInitialVersion());
         return datasetVersion;
     }
 

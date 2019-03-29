@@ -16,7 +16,7 @@ public class MultidatasetVersionMock extends MultidatasetVersion {
         MultidatasetVersionMock instance = new MultidatasetVersionMock();
         instance.setSequentialId(sequenceId);
         instance.getSiemacMetadataStatisticalResource().setLastVersion(true);
-        instance.setVersionLogic(StatisticalResourcesVersionUtils.INITIAL_VERSION);
+        instance.setVersionLogic(StatisticalResourcesVersionUtils.getInitialVersion());
         return instance;
     }
 

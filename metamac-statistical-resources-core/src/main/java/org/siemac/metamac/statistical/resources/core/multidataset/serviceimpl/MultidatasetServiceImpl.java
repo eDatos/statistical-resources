@@ -15,7 +15,6 @@ import org.siemac.metamac.core.common.criteria.utils.CriteriaUtils;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.core.common.util.GeneratorUrnUtils;
-import org.siemac.metamac.core.common.util.shared.VersionUtil;
 import org.siemac.metamac.statistical.resources.core.base.components.SiemacStatisticalResourceGeneratedCode;
 import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableStatisticalResourceRepository;
@@ -32,6 +31,7 @@ import org.siemac.metamac.statistical.resources.core.multidataset.domain.Multida
 import org.siemac.metamac.statistical.resources.core.multidataset.domain.MultidatasetVersion;
 import org.siemac.metamac.statistical.resources.core.multidataset.serviceapi.validators.MultidatasetServiceInvocationValidator;
 import org.siemac.metamac.statistical.resources.core.multidataset.utils.MultidatasetCubeComparator;
+import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesVersionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -167,7 +167,7 @@ public class MultidatasetServiceImpl extends MultidatasetServiceImplBase {
 
         updateReplacedResourceIsReplacedByResource(multidatasetVersion);
 
-        if (VersionUtil.isInitialVersion(multidatasetVersion.getSiemacMetadataStatisticalResource().getVersionLogic())) {
+        if (StatisticalResourcesVersionUtils.isInitialVersion(multidatasetVersion.getSiemacMetadataStatisticalResource().getVersionLogic())) {
             Multidataset multidataset = multidatasetVersion.getMultidataset();
             getMultidatasetRepository().delete(multidataset);
         } else {

@@ -43,7 +43,7 @@ public class MetadataEditionChecks {
     }
 
     public static boolean canVersionRationaleTypesBeEdited(String versionLogic) {
-        if (StatisticalResourcesVersionUtils.INITIAL_VERSION.equals(versionLogic)) {
+        if (StatisticalResourcesVersionUtils.getInitialVersion().equals(versionLogic)) {
             return false;
         }
         return true;

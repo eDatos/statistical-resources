@@ -8,7 +8,6 @@ import java.util.Map;
 import org.joda.time.DateTime;
 import org.siemac.metamac.core.common.util.GeneratorUrnUtils;
 import org.siemac.metamac.core.common.util.SdmxTimeUtils;
-import org.siemac.metamac.core.common.util.shared.VersionUtil;
 import org.siemac.metamac.statistical.resources.core.base.domain.HasLifecycle;
 import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatisticalResource;
@@ -417,7 +416,7 @@ public class StatisticalResourcesPersistedDoMocks extends StatisticalResourcesDo
         categorisation.setVersionableStatisticalResource(new VersionableStatisticalResource());
         categorisation.getVersionableStatisticalResource().setCode(categorisationCode);
         categorisation.getVersionableStatisticalResource()
-                .setUrn(GeneratorUrnUtils.generateSdmxCategorisationUrn(new String[]{maintainer.getCodeNested()}, categorisationCode, StatisticalResourcesVersionUtils.INITIAL_VERSION));
+                .setUrn(GeneratorUrnUtils.generateSdmxCategorisationUrn(new String[]{maintainer.getCodeNested()}, categorisationCode, StatisticalResourcesVersionUtils.getInitialVersion()));
         categorisation.setDatasetVersion(datasetVersion);
         categorisation.setCategory(category);
         categorisation.setMaintainer(maintainer);
@@ -761,7 +760,7 @@ public class StatisticalResourcesPersistedDoMocks extends StatisticalResourcesDo
     @Override
     protected void setSpecialCasesVersionableStatisticalResourceMock(VersionableStatisticalResource resource) {
         if (resource.getVersionLogic() == null) {
-            resource.setVersionLogic(VersionUtil.PATTERN_XXX_YYY_INITIAL_VERSION);
+            resource.setVersionLogic(StatisticalResourcesVersionUtils.getInitialVersion());
         }
     }
 

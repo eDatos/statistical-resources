@@ -16,7 +16,7 @@ public class PublicationVersionMock extends PublicationVersion {
         PublicationVersionMock instance = new PublicationVersionMock();
         instance.setSequentialId(sequenceId);
         instance.getSiemacMetadataStatisticalResource().setLastVersion(true);
-        instance.setVersionLogic(StatisticalResourcesVersionUtils.INITIAL_VERSION);
+        instance.setVersionLogic(StatisticalResourcesVersionUtils.getInitialVersion());
         return instance;
     }
 

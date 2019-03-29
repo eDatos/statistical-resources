@@ -24,7 +24,6 @@ import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
 import org.siemac.metamac.statistical.resources.core.base.domain.HasLifecycle;
-import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResource;
 import org.siemac.metamac.statistical.resources.core.common.utils.RelatedResourceUtils;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
@@ -88,7 +87,7 @@ public class LifecycleFillerTest extends StatisticalResourcesBaseTest {
     public void testLifeCycleResourceApplySendToPublishedActionsDatasetVersionWithoutPreviousVersion() throws Exception {
         DatasetVersion resource = persistedDoMocks.mockDatasetVersion();
         DatasetLifecycleTestUtils.prepareToPublished(resource);
-        resource.getSiemacMetadataStatisticalResource().setVersionLogic(StatisticalResourcesVersionUtils.INITIAL_VERSION);
+        resource.getSiemacMetadataStatisticalResource().setVersionLogic(StatisticalResourcesVersionUtils.getInitialVersion());
 
         lifecycleFiller.applySendToPublishedCurrentResourceActions(getServiceContextWithoutPrincipal(), resource, null);
         assertNotNullAutomaticallyFilledMetadataLifecycleSendToPublished(resource, null);
@@ -98,7 +97,7 @@ public class LifecycleFillerTest extends StatisticalResourcesBaseTest {
     public void testLifeCycleResourceApplySendToPublishedActionsPublicationVersionWithoutPreviousVersion() throws Exception {
         PublicationVersion resource = persistedDoMocks.mockPublicationVersion();
         PublicationLifecycleTestUtils.prepareToPublished(resource);
-        resource.getSiemacMetadataStatisticalResource().setVersionLogic(StatisticalResourcesVersionUtils.INITIAL_VERSION);
+        resource.getSiemacMetadataStatisticalResource().setVersionLogic(StatisticalResourcesVersionUtils.getInitialVersion());
 
         lifecycleFiller.applySendToPublishedCurrentResourceActions(getServiceContextWithoutPrincipal(), resource, null);
         assertNotNullAutomaticallyFilledMetadataLifecycleSendToPublished(resource, null);
@@ -209,7 +208,5 @@ public class LifecycleFillerTest extends StatisticalResourcesBaseTest {
         assertThat(oldVersion, is(equalTo(previousResource)));
 
     }
-    
-
 
 }

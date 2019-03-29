@@ -19,7 +19,7 @@ public class DatasetVersionMock extends DatasetVersion {
         DatasetVersionMock instance = new DatasetVersionMock();
         instance.setSequentialId(sequenceId);
         instance.getSiemacMetadataStatisticalResource().setLastVersion(true);
-        instance.setVersionLogic(StatisticalResourcesVersionUtils.INITIAL_VERSION);
+        instance.setVersionLogic(StatisticalResourcesVersionUtils.getInitialVersion());
         return instance;
     }
 

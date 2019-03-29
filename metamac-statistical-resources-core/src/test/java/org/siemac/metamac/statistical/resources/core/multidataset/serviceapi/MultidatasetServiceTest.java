@@ -57,6 +57,7 @@ import org.siemac.metamac.statistical.resources.core.multidataset.domain.Multida
 import org.siemac.metamac.statistical.resources.core.multidataset.domain.MultidatasetVersion;
 import org.siemac.metamac.statistical.resources.core.multidataset.domain.MultidatasetVersionProperties;
 import org.siemac.metamac.statistical.resources.core.query.domain.Query;
+import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesVersionUtils;
 import org.siemac.metamac.statistical.resources.core.utils.asserts.CommonAsserts;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesNotPersistedDoMocks;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -93,7 +94,7 @@ public class MultidatasetServiceTest extends StatisticalResourcesBaseTest implem
         MultidatasetVersion actual = multidatasetService.createMultidatasetVersion(getServiceContextWithoutPrincipal(), expected, statisticalOperation);
         String operationCode = actual.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode();
 
-        assertEquals("001.000", actual.getSiemacMetadataStatisticalResource().getVersionLogic());
+        assertEquals(StatisticalResourcesVersionUtils.getInitialVersion(), actual.getSiemacMetadataStatisticalResource().getVersionLogic());
         assertEquals(operationCode + "_000001", actual.getSiemacMetadataStatisticalResource().getCode());
         assertEquals(buildMultidatasetVersionUrn(expected.getSiemacMetadataStatisticalResource().getMaintainer().getCodeNested(), operationCode, 1,
                 expected.getSiemacMetadataStatisticalResource().getVersionLogic()), actual.getSiemacMetadataStatisticalResource().getUrn());
@@ -111,7 +112,7 @@ public class MultidatasetServiceTest extends StatisticalResourcesBaseTest implem
         MultidatasetVersion expected = notPersistedDoMocks.mockMultidatasetVersion();
 
         MultidatasetVersion actual = multidatasetService.createMultidatasetVersion(getServiceContextWithoutPrincipal(), expected, statisticalOperation);
-        assertEquals("001.000", actual.getSiemacMetadataStatisticalResource().getVersionLogic());
+        assertEquals(StatisticalResourcesVersionUtils.getInitialVersion(), actual.getSiemacMetadataStatisticalResource().getVersionLogic());
         assertEquals(operationCode + "_000004", actual.getSiemacMetadataStatisticalResource().getCode());
         assertEquals(buildMultidatasetVersionUrn(expected.getSiemacMetadataStatisticalResource().getMaintainer().getCodeNested(), operationCode, 4,
                 expected.getSiemacMetadataStatisticalResource().getVersionLogic()), actual.getSiemacMetadataStatisticalResource().getUrn());
@@ -129,7 +130,7 @@ public class MultidatasetServiceTest extends StatisticalResourcesBaseTest implem
             MultidatasetVersion expected = notPersistedDoMocks.mockMultidatasetVersion();
             MultidatasetVersion actual = multidatasetService.createMultidatasetVersion(getServiceContextWithoutPrincipal(), expected, statisticalOperation);
 
-            assertEquals("001.000", actual.getSiemacMetadataStatisticalResource().getVersionLogic());
+            assertEquals(StatisticalResourcesVersionUtils.getInitialVersion(), actual.getSiemacMetadataStatisticalResource().getVersionLogic());
             assertEquals(operationCode + "_000004", actual.getSiemacMetadataStatisticalResource().getCode());
             assertEquals(buildMultidatasetVersionUrn(expected.getSiemacMetadataStatisticalResource().getMaintainer().getCodeNested(), operationCode, 4,
                     expected.getSiemacMetadataStatisticalResource().getVersionLogic()), actual.getSiemacMetadataStatisticalResource().getUrn());
@@ -140,7 +141,7 @@ public class MultidatasetServiceTest extends StatisticalResourcesBaseTest implem
             MultidatasetVersion expected = notPersistedDoMocks.mockMultidatasetVersion();
             MultidatasetVersion actual = multidatasetService.createMultidatasetVersion(getServiceContextWithoutPrincipal(), expected, statisticalOperation);
 
-            assertEquals("001.000", actual.getSiemacMetadataStatisticalResource().getVersionLogic());
+            assertEquals(StatisticalResourcesVersionUtils.getInitialVersion(), actual.getSiemacMetadataStatisticalResource().getVersionLogic());
             assertEquals(operationCode + "_000005", actual.getSiemacMetadataStatisticalResource().getCode());
             assertEquals(buildMultidatasetVersionUrn(expected.getSiemacMetadataStatisticalResource().getMaintainer().getCodeNested(), operationCode, 5,
                     expected.getSiemacMetadataStatisticalResource().getVersionLogic()), actual.getSiemacMetadataStatisticalResource().getUrn());
