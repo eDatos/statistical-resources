@@ -248,6 +248,8 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
 
     public static final String               DATASET_VERSION_101_TO_DELETE_WITH_PREVIOUS_VERSION_NAME                                                      = "DATASET_VERSION_101_TO_DELETE_WITH_PREVIOUS_VERSION";
 
+    public static final String               DATASET_VERSION_102_MAXIMUM_VERSION_REACHED                                                                   = "DATASET_VERSION_102_MAXIMUM_VERSION_REACHED";
+
     private static DatasetVersionMockFactory instance                                                                                                      = null;
 
     private DatasetVersionMockFactory() {
@@ -1093,6 +1095,13 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
         datasetVersion.getSiemacMetadataStatisticalResource().setReplacesVersion(StatisticalResourcesPersistedDoMocks.mockDatasetVersionRelated(datasetVersionToReplace));
         datasetVersionToReplace.getSiemacMetadataStatisticalResource().setIsReplacedByVersion(StatisticalResourcesPersistedDoMocks.mockDatasetVersionRelated(datasetVersion));
         fillDatasetVersionInStatusWithGeneratedDatasource(datasetVersion, ProcStatusEnum.DRAFT);
+        return datasetVersion;
+    }
+
+    private static DatasetVersion getDatasetVersion102MaximumVersionReached() {
+        DatasetVersion datasetVersion = createDatasetVersionInSpecificOperation(OPERATION_03_CODE, 1);
+        fillAsPublished(datasetVersion);
+        datasetVersion.getSiemacMetadataStatisticalResource().setVersionLogic(StatisticalResourcesMockFactory.MAXIMUM_VERSION_AVAILABLE);
         return datasetVersion;
     }
 

@@ -30,6 +30,7 @@ public abstract class StatisticalResourcesMockFactory<EntityMock> extends MockFa
     public static final String THIRD_VERSION               = "3.0";
     public static final String NOT_INITIAL_VERSION         = "2.2";
     public static final String ANOTHER_NOT_INITIAL_VERSION = "1.5";
+    public static final String MAXIMUM_VERSION_AVAILABLE   = "99999.9";
 
     protected static StatisticalResourcesPersistedDoMocks getStatisticalResourcesPersistedDoMocks() {
         return StatisticalResourcesPersistedDoMocks.getInstance();

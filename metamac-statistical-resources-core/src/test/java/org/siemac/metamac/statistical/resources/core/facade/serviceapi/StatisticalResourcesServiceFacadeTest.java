@@ -2128,7 +2128,6 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         assertNotNull(newVersion);
         List<CategorisationDto> categorisationsNewVersion = statisticalResourcesServiceFacade.retrieveCategorisationsByDatasetVersion(getServiceContextAdministrador(), newVersion.getUrn());
         assertEquals(categorisations.size(), categorisationsNewVersion.size());
-        // TODO METAMAC-2912 Check number version
         assertEquals("urn:sdmx:org.sdmx.infomodel.categoryscheme.Categorisation=ISTAC.agency01:cat_data_1(1.0)", categorisationsNewVersion.get(0).getUrn());
         assertEquals("urn:sdmx:org.sdmx.infomodel.categoryscheme.Categorisation=ISTAC.agency01:cat_data_2(1.0)", categorisationsNewVersion.get(1).getUrn());
         assertEquals("urn:sdmx:org.sdmx.infomodel.categoryscheme.Categorisation=ISTAC.agency01:cat_data_3(1.0)", categorisationsNewVersion.get(2).getUrn());
