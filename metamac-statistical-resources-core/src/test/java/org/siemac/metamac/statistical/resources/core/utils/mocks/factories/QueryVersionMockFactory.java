@@ -119,6 +119,10 @@ public class QueryVersionMockFactory extends StatisticalResourcesMockFactory<Que
     public static final String             QUERY_VERSION_57_REPLACES_QUERY_58_NAME                                                                                    = "QUERY_VERSION_57_REPLACES_QUERY_58";
     public static final String             QUERY_VERSION_58_IS_REPLACED_BY_QUERY_57_NAME                                                                              = "QUERY_VERSION_58_IS_REPLACED_BY_QUERY_57";
 
+    public static final String             QUERY_VERSION_59_MAXIMUM_VERSION_REACHED                                                                                   = "QUERY_VERSION_59_MAXIMUM_VERSION_REACHED";
+
+    public static final String             QUERY_VERSION_60_MAXIMUM_MINOR_VERSION_REACHED                                                                             = "QUERY_VERSION_60_MAXIMUM_MINOR_VERSION_REACHED";
+
     private static QueryVersionMockFactory instance                                                                                                                   = null;
 
     private QueryVersionMockFactory() {
@@ -487,6 +491,32 @@ public class QueryVersionMockFactory extends StatisticalResourcesMockFactory<Que
         QueryLifecycleTestUtils.prepareToPublished(queryMock);
         queryMock.setStatus(QueryStatusEnum.DISCONTINUED);
         return queryMock;
+    }
+
+    private static QueryVersion getQueryVersion59MaximumVersionReached() {
+        DatasetVersion datasetVersion = getStatisticalResourcesPersistedDoMocks().mockDatasetVersion();
+        datasetVersion.getSiemacMetadataStatisticalResource().setValidFrom(new DateTime().minusDays(2));
+        StatisticalResourcesPersistedDoMocks.mockDatasetVersionCoverages(datasetVersion);
+        DatasetLifecycleTestUtils.fillAsPublished(datasetVersion);
+
+        QueryVersion queryVersion = createQueryWithDatasetVersion(datasetVersion, true);
+        queryVersion.getLifeCycleStatisticalResource().setProcStatus(ProcStatusEnum.PUBLISHED);
+        queryVersion.getLifeCycleStatisticalResource().setValidFrom(new DateTime().minusDays(1));
+        queryVersion.getLifeCycleStatisticalResource().setVersionLogic(StatisticalResourcesMockFactory.MAXIMUM_VERSION_AVAILABLE);
+        return queryVersion;
+    }
+
+    private static QueryVersion getQueryVersion60MaximumMinorVersionReached() {
+        DatasetVersion datasetVersion = getStatisticalResourcesPersistedDoMocks().mockDatasetVersion();
+        datasetVersion.getSiemacMetadataStatisticalResource().setValidFrom(new DateTime().minusDays(2));
+        StatisticalResourcesPersistedDoMocks.mockDatasetVersionCoverages(datasetVersion);
+        DatasetLifecycleTestUtils.fillAsPublished(datasetVersion);
+
+        QueryVersion queryVersion = createQueryWithDatasetVersion(datasetVersion, true);
+        queryVersion.getLifeCycleStatisticalResource().setProcStatus(ProcStatusEnum.PUBLISHED);
+        queryVersion.getLifeCycleStatisticalResource().setValidFrom(new DateTime().minusDays(1));
+        queryVersion.getLifeCycleStatisticalResource().setVersionLogic(StatisticalResourcesMockFactory.MAXIMUM_MINOR_VERSION_AVAILABLE);
+        return queryVersion;
     }
 
     private static MockDescriptor getQueryVersion57ReplacesQuery58() {

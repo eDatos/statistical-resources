@@ -1194,6 +1194,5 @@ public class QueryServiceTest extends StatisticalResourcesBaseTest implements Qu
         queryService.deleteQueryVersion(getServiceContextWithoutPrincipal(), urn);
 
         assertNotNull(datasetService.retrieveDatasetVersionByUrn(getServiceContextAdministrador(), datasetVersionUrn));
-
     }
 }

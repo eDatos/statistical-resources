@@ -250,6 +250,8 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
 
     public static final String               DATASET_VERSION_102_MAXIMUM_VERSION_REACHED                                                                   = "DATASET_VERSION_102_MAXIMUM_VERSION_REACHED";
 
+    public static final String               DATASET_VERSION_103_MAXIMUM_MINOR_VERSION_REACHED                                                             = "DATASET_VERSION_103_MAXIMUM_MINOR_VERSION_REACHED";
+
     private static DatasetVersionMockFactory instance                                                                                                      = null;
 
     private DatasetVersionMockFactory() {
@@ -1102,6 +1104,13 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
         DatasetVersion datasetVersion = createDatasetVersionInSpecificOperation(OPERATION_03_CODE, 1);
         fillAsPublished(datasetVersion);
         datasetVersion.getSiemacMetadataStatisticalResource().setVersionLogic(StatisticalResourcesMockFactory.MAXIMUM_VERSION_AVAILABLE);
+        return datasetVersion;
+    }
+
+    private static DatasetVersion getDatasetVersion103MaximumMinorVersionReached() {
+        DatasetVersion datasetVersion = createDatasetVersionInSpecificOperation(OPERATION_03_CODE, 1);
+        fillAsPublished(datasetVersion);
+        datasetVersion.getSiemacMetadataStatisticalResource().setVersionLogic(StatisticalResourcesMockFactory.MAXIMUM_MINOR_VERSION_AVAILABLE);
         return datasetVersion;
     }
 
