@@ -124,10 +124,10 @@ import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
 import org.siemac.metamac.statistical.resources.core.task.domain.FileDescriptorResult;
 import org.siemac.metamac.statistical.resources.core.task.serviceapi.TaskService;
 import org.siemac.metamac.statistical.resources.core.utils.DataMockUtils;
-import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesVersionUtils;
 import org.siemac.metamac.statistical.resources.core.utils.TaskMockUtils;
 import org.siemac.metamac.statistical.resources.core.utils.asserts.BaseAsserts;
 import org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.StatisticalResourcesMockFactory;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesDoMocks;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesNotPersistedDoMocks;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -221,9 +221,9 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
 
         DatasetVersion actual = datasetService.createDatasetVersion(getServiceContextWithoutPrincipal(), expected, statisticalOperation);
         String operationCode = actual.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode();
-        assertEquals(StatisticalResourcesVersionUtils.getInitialVersion(), actual.getSiemacMetadataStatisticalResource().getVersionLogic());
+        assertEquals(StatisticalResourcesMockFactory.INIT_VERSION, actual.getSiemacMetadataStatisticalResource().getVersionLogic());
         assertEquals(operationCode + "_000001", actual.getSiemacMetadataStatisticalResource().getCode());
-        assertEquals(buildDatasetUrn(expected.getSiemacMetadataStatisticalResource().getMaintainer().getCodeNested(), operationCode, 1, StatisticalResourcesVersionUtils.getInitialVersion()),
+        assertEquals(buildDatasetUrn(expected.getSiemacMetadataStatisticalResource().getMaintainer().getCodeNested(), operationCode, 1, StatisticalResourcesMockFactory.INIT_VERSION),
                 actual.getSiemacMetadataStatisticalResource().getUrn());
         assertEqualsDatasetVersionNotChecksDataset(expected, actual);
         assertNotNull(actual.getSiemacMetadataStatisticalResource().getCreatedDate());
@@ -245,9 +245,9 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
         mockDsdAndCreateDatasetRepository(expected, statisticalOperation);
 
         DatasetVersion actual = datasetService.createDatasetVersion(getServiceContextWithoutPrincipal(), expected, statisticalOperation);
-        assertEquals(StatisticalResourcesVersionUtils.getInitialVersion(), actual.getSiemacMetadataStatisticalResource().getVersionLogic());
+        assertEquals(StatisticalResourcesMockFactory.INIT_VERSION, actual.getSiemacMetadataStatisticalResource().getVersionLogic());
         assertEquals(operationCode + "_000004", actual.getSiemacMetadataStatisticalResource().getCode());
-        assertEquals(buildDatasetUrn(expected.getSiemacMetadataStatisticalResource().getMaintainer().getCodeNested(), operationCode, 4, StatisticalResourcesVersionUtils.getInitialVersion()),
+        assertEquals(buildDatasetUrn(expected.getSiemacMetadataStatisticalResource().getMaintainer().getCodeNested(), operationCode, 4, StatisticalResourcesMockFactory.INIT_VERSION),
                 actual.getSiemacMetadataStatisticalResource().getUrn());
 
         assertEqualsDatasetVersionNotChecksDataset(expected, actual);
@@ -264,9 +264,9 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
             DatasetVersion expected = notPersistedDoMocks.mockDatasetVersion();
             mockDsdAndCreateDatasetRepository(expected, statisticalOperation);
             DatasetVersion actual = datasetService.createDatasetVersion(getServiceContextWithoutPrincipal(), expected, statisticalOperation);
-            assertEquals(StatisticalResourcesVersionUtils.getInitialVersion(), actual.getSiemacMetadataStatisticalResource().getVersionLogic());
+            assertEquals(StatisticalResourcesMockFactory.INIT_VERSION, actual.getSiemacMetadataStatisticalResource().getVersionLogic());
             assertEquals(operationCode + "_000004", actual.getSiemacMetadataStatisticalResource().getCode());
-            assertEquals(buildDatasetUrn(expected.getSiemacMetadataStatisticalResource().getMaintainer().getCodeNested(), operationCode, 4, StatisticalResourcesVersionUtils.getInitialVersion()),
+            assertEquals(buildDatasetUrn(expected.getSiemacMetadataStatisticalResource().getMaintainer().getCodeNested(), operationCode, 4, StatisticalResourcesMockFactory.INIT_VERSION),
                     actual.getSiemacMetadataStatisticalResource().getUrn());
             assertEqualsDatasetVersionNotChecksDataset(expected, actual);
         }
@@ -275,9 +275,9 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
             DatasetVersion expected = notPersistedDoMocks.mockDatasetVersion();
             mockDsdAndCreateDatasetRepository(expected, statisticalOperation);
             DatasetVersion actual = datasetService.createDatasetVersion(getServiceContextWithoutPrincipal(), expected, statisticalOperation);
-            assertEquals(StatisticalResourcesVersionUtils.getInitialVersion(), actual.getSiemacMetadataStatisticalResource().getVersionLogic());
+            assertEquals(StatisticalResourcesMockFactory.INIT_VERSION, actual.getSiemacMetadataStatisticalResource().getVersionLogic());
             assertEquals(operationCode + "_000005", actual.getSiemacMetadataStatisticalResource().getCode());
-            assertEquals(buildDatasetUrn(expected.getSiemacMetadataStatisticalResource().getMaintainer().getCodeNested(), operationCode, 5, StatisticalResourcesVersionUtils.getInitialVersion()),
+            assertEquals(buildDatasetUrn(expected.getSiemacMetadataStatisticalResource().getMaintainer().getCodeNested(), operationCode, 5, StatisticalResourcesMockFactory.INIT_VERSION),
                     actual.getSiemacMetadataStatisticalResource().getUrn());
             assertEqualsDatasetVersionNotChecksDataset(expected, actual);
         }
@@ -322,7 +322,7 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
     }
 
     private void mockDsdAndCreateDatasetRepository(DatasetVersion expected, ExternalItem statisticalOperation) throws Exception, ApplicationException {
-        String urn = buildDatasetUrn(expected.getSiemacMetadataStatisticalResource().getMaintainer().getCodeNested(), statisticalOperation.getCode(), 1, "001.000");
+        String urn = buildDatasetUrn(expected.getSiemacMetadataStatisticalResource().getMaintainer().getCodeNested(), statisticalOperation.getCode(), 1, StatisticalResourcesMockFactory.INIT_VERSION);
         DataMockUtils.mockDsdAndCreateDatasetRepository(datasetRepositoriesServiceFacade, srmRestInternalService, urn);
     }
 
@@ -630,7 +630,7 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
     public void testFindDatasetVersionsByCondition() throws Exception {
         // Find by version number
         List<ConditionalCriteria> conditions = ConditionalCriteriaBuilder.criteriaFor(DatasetVersion.class).withProperty(DatasetVersionProperties.siemacMetadataStatisticalResource().versionLogic())
-                .eq("002.000").orderBy(DatasetVersionProperties.siemacMetadataStatisticalResource().id()).ascending().build();
+                .eq(StatisticalResourcesMockFactory.SECOND_VERSION).orderBy(DatasetVersionProperties.siemacMetadataStatisticalResource().id()).ascending().build();
 
         PagingParameter pagingParameter = PagingParameter.rowAccess(0, Integer.MAX_VALUE, true);
         PagedResult<DatasetVersion> datasetVersionPagedResult = datasetService.findDatasetVersionsByCondition(getServiceContextWithoutPrincipal(), conditions, pagingParameter);
@@ -1312,8 +1312,8 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
 
         // Validation
         assertEquals("cat_data_101", categorisation.getVersionableStatisticalResource().getCode());
-        assertEquals(StatisticalResourcesVersionUtils.getInitialVersion(), categorisation.getVersionableStatisticalResource().getVersionLogic());
-        assertEquals(buildCategorisationUrn(categorisation.getMaintainer().getCodeNested(), "cat_data_101", StatisticalResourcesVersionUtils.getInitialVersion()),
+        assertEquals(StatisticalResourcesMockFactory.INIT_VERSION, categorisation.getVersionableStatisticalResource().getVersionLogic());
+        assertEquals(buildCategorisationUrn(categorisation.getMaintainer().getCodeNested(), "cat_data_101", StatisticalResourcesMockFactory.INIT_VERSION),
                 categorisation.getVersionableStatisticalResource().getUrn());
         assertEquals("Categoría cat_data_101", categorisation.getVersionableStatisticalResource().getTitle().getLocalisedLabel("es"));
         assertEquals("Category cat_data_101", categorisation.getVersionableStatisticalResource().getTitle().getLocalisedLabel("en"));
@@ -1338,9 +1338,9 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
 
         // Validate
         assertEqualsCategorisation(expected, actual);
-        assertEquals(StatisticalResourcesVersionUtils.getInitialVersion(), actual.getVersionableStatisticalResource().getVersionLogic());
+        assertEquals(StatisticalResourcesMockFactory.INIT_VERSION, actual.getVersionableStatisticalResource().getVersionLogic());
         assertEquals("cat_data_101", actual.getVersionableStatisticalResource().getCode());
-        assertEquals(buildCategorisationUrn(expected.getMaintainer().getCodeNested(), "cat_data_101", StatisticalResourcesVersionUtils.getInitialVersion()),
+        assertEquals(buildCategorisationUrn(expected.getMaintainer().getCodeNested(), "cat_data_101", StatisticalResourcesMockFactory.INIT_VERSION),
                 actual.getVersionableStatisticalResource().getUrn());
         assertEquals("Categoría cat_data_101", actual.getVersionableStatisticalResource().getTitle().getLocalisedLabel("es"));
         assertNotNull(actual.getVersionableStatisticalResource().getCreatedDate());

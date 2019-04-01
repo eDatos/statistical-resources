@@ -21,6 +21,7 @@ import org.siemac.metamac.core.common.test.utils.mocks.configuration.MetamacMock
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
 import org.siemac.metamac.statistical.resources.core.multidataset.domain.MultidatasetCube;
 import org.siemac.metamac.statistical.resources.core.multidataset.domain.MultidatasetCubeRepository;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.StatisticalResourcesMockFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -50,7 +51,8 @@ public class MultidatasetCubeRepositoryTest extends StatisticalResourcesBaseTest
     @MetamacMock({MULTIDATASET_04_STRUCTURED_WITH_2_MULTIDATASET_VERSIONS_NAME})
     public void testExistAnyCubeInMultidataset() throws Exception {
         boolean result = multidatasetCubeRepository.existAnyCubeInMultidataset(
-                multidatasetMockFactory.retrieveMock(MULTIDATASET_04_STRUCTURED_WITH_2_MULTIDATASET_VERSIONS_NAME).getIdentifiableStatisticalResource().getCode(), INIT_VERSION);
+                multidatasetMockFactory.retrieveMock(MULTIDATASET_04_STRUCTURED_WITH_2_MULTIDATASET_VERSIONS_NAME).getIdentifiableStatisticalResource().getCode(),
+                StatisticalResourcesMockFactory.INIT_VERSION);
         assertTrue(result);
     }
 
@@ -58,7 +60,8 @@ public class MultidatasetCubeRepositoryTest extends StatisticalResourcesBaseTest
     @MetamacMock({MULTIDATASET_04_STRUCTURED_WITH_2_MULTIDATASET_VERSIONS_NAME})
     public void testExistAnyCubeInMultidatasetReturnFalse() throws Exception {
         boolean result = multidatasetCubeRepository.existAnyCubeInMultidataset(
-                multidatasetMockFactory.retrieveMock(MULTIDATASET_04_STRUCTURED_WITH_2_MULTIDATASET_VERSIONS_NAME).getIdentifiableStatisticalResource().getCode(), "002.000");
+                multidatasetMockFactory.retrieveMock(MULTIDATASET_04_STRUCTURED_WITH_2_MULTIDATASET_VERSIONS_NAME).getIdentifiableStatisticalResource().getCode(),
+                StatisticalResourcesMockFactory.SECOND_VERSION);
         assertFalse(result);
     }
 

@@ -10,6 +10,7 @@ import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
 import org.siemac.metamac.statistical.resources.core.enume.domain.NextVersionTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.VersionRationaleTypeEnum;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.StatisticalResourcesMockFactory;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesPersistedDoMocks;
 
 public class LifecycleTestUtils {
@@ -207,7 +208,7 @@ public class LifecycleTestUtils {
         }
 
         if (lifeCycleStatisticalResource.getVersionLogic() == null) {
-            lifeCycleStatisticalResource.setVersionLogic("002.000");
+            lifeCycleStatisticalResource.setVersionLogic(StatisticalResourcesMockFactory.SECOND_VERSION);
         }
 
         if (lifeCycleStatisticalResource.getVersionRationaleTypes().isEmpty()) {
@@ -301,7 +302,7 @@ public class LifecycleTestUtils {
         }
 
         if (lifeCycleStatisticalResource.getVersionLogic() == null) {
-            lifeCycleStatisticalResource.setVersionLogic("001.000");
+            lifeCycleStatisticalResource.setVersionLogic(StatisticalResourcesMockFactory.INIT_VERSION);
         }
 
         if (lifeCycleStatisticalResource.getVersionRationaleTypes().isEmpty()) {

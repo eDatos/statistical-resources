@@ -51,7 +51,6 @@ public abstract class StatisticalResourcesBaseTest extends MetamacBaseTest {
     protected static Long                                   ID_NOT_EXISTS                             = Long.valueOf(-1);
     protected static String                                 URN_NOT_EXISTS                            = "not_exists";
     protected static String                                 CODE_NOT_EXISTS                           = "NOT_EXISTS";
-    public static final String                              INIT_VERSION                              = "001.000";
 
     protected QueryMockFactory                              queryMockFactory                          = QueryMockFactory.getInstance();
     protected QueryVersionMockFactory                       queryVersionMockFactory                   = QueryVersionMockFactory.getInstance();

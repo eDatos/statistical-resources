@@ -3,7 +3,7 @@ package org.siemac.metamac.statistical.resources.core.utils.mocks;
 import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.multidataset.domain.Multidataset;
 import org.siemac.metamac.statistical.resources.core.multidataset.domain.MultidatasetVersion;
-import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesVersionUtils;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.StatisticalResourcesMockFactory;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesPersistedDoMocks;
 
 public class MultidatasetVersionMock extends MultidatasetVersion {
@@ -16,7 +16,7 @@ public class MultidatasetVersionMock extends MultidatasetVersion {
         MultidatasetVersionMock instance = new MultidatasetVersionMock();
         instance.setSequentialId(sequenceId);
         instance.getSiemacMetadataStatisticalResource().setLastVersion(true);
-        instance.setVersionLogic(StatisticalResourcesVersionUtils.getInitialVersion());
+        instance.setVersionLogic(StatisticalResourcesMockFactory.INIT_VERSION);
         return instance;
     }
 

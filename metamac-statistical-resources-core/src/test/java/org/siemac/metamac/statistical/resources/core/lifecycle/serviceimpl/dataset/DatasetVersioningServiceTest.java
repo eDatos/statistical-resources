@@ -21,7 +21,6 @@ import java.util.List;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -107,8 +106,6 @@ public class DatasetVersioningServiceTest extends StatisticalResourcesBaseTest {
         checkNewDatasetVersionCreated(previousDatasetVersion, newDatasetVersion);
     }
 
-    // TODO METAMAC-2912 remove @Ignore annontation
-    @Ignore
     @Test
     @MetamacMock(DATASET_VERSION_14_OPER_03_CODE_01_PUBLISHED_NAME)
     public void testVersioningDatasetVersionCheckUrnIsCorrectForMinorChange() throws Exception {
@@ -132,8 +129,6 @@ public class DatasetVersioningServiceTest extends StatisticalResourcesBaseTest {
         assertEquals(expectedUrn, newDatasetVersion.getSiemacMetadataStatisticalResource().getUrn());
     }
 
-    // TODO METAMAC-2912 remove @Ignore annontation
-    @Ignore
     @Test
     @MetamacMock(DATASET_VERSION_14_OPER_03_CODE_01_PUBLISHED_NAME)
     public void testVersioningDatasetVersionCheckUrnIsCorrectForMayorChange() throws Exception {

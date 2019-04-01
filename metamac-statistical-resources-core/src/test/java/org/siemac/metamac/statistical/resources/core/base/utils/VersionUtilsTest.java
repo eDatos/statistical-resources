@@ -9,8 +9,14 @@ import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.statistical.resources.core.base.domain.HasLifecycle;
 import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesVersionUtils;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.StatisticalResourcesMockFactory;
 
 public class VersionUtilsTest {
+
+    @Test
+    public void testInitialVersion() throws Exception {
+        assertEquals(StatisticalResourcesMockFactory.INIT_VERSION, StatisticalResourcesVersionUtils.getInitialVersion());
+    }
 
     @Test
     public void testIsInitialVersion() throws Exception {

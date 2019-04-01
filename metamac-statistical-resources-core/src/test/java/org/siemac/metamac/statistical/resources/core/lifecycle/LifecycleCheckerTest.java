@@ -37,8 +37,7 @@ import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionSingl
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.checker.ExternalItemChecker;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.checker.RelatedResourceChecker;
-import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesVersionUtils;
-import org.siemac.metamac.statistical.resources.core.utils.shared.StatisticalResourcesVersionSharedUtils;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.StatisticalResourcesMockFactory;
 
 @RunWith(MockitoJUnitRunner.class)
 public class LifecycleCheckerTest extends StatisticalResourcesBaseTest {
@@ -81,7 +80,7 @@ public class LifecycleCheckerTest extends StatisticalResourcesBaseTest {
     @Test
     public void testLifeCycleResourceCheckSendToProductionValidationIncorrectVersionRationaleType() throws Exception {
         HasLifecycle mockedResource = mockHasLifecycleStatisticalResourcePrepareToProductionValidation();
-        mockedResource.getLifeCycleStatisticalResource().setVersionLogic(StatisticalResourcesVersionUtils.getInitialVersion());
+        mockedResource.getLifeCycleStatisticalResource().setVersionLogic(StatisticalResourcesMockFactory.INIT_VERSION);
 
         for (VersionRationaleTypeEnum versionRationaleType2Test : VersionRationaleTypeEnum.values()) {
             mockedResource.getLifeCycleStatisticalResource().getVersionRationaleTypes().clear();
@@ -261,7 +260,7 @@ public class LifecycleCheckerTest extends StatisticalResourcesBaseTest {
     public void testLifeCycleResourceCheckSendToPublishedProcStatusErrorRequiredPreviousVersion() throws Exception {
 
         HasLifecycle mockedResource = mockHasLifecycleStatisticalResourcePrepareToPublished();
-        mockedResource.getLifeCycleStatisticalResource().setVersionLogic("002.000");
+        mockedResource.getLifeCycleStatisticalResource().setVersionLogic(StatisticalResourcesMockFactory.SECOND_VERSION);
         mockedResource.getLifeCycleStatisticalResource().setValidFrom(new DateTime().minusMinutes(10));
 
         ArrayList<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
@@ -273,7 +272,7 @@ public class LifecycleCheckerTest extends StatisticalResourcesBaseTest {
     public void testLifeCycleResourceCheckSendToPublishedProcStatusWithPreviousVersionNullInAnInitialVersion() throws Exception {
 
         HasLifecycle mockedResource = mockHasLifecycleStatisticalResourcePrepareToPublished();
-        mockedResource.getLifeCycleStatisticalResource().setVersionLogic(StatisticalResourcesVersionSharedUtils.getInitialVersion());
+        mockedResource.getLifeCycleStatisticalResource().setVersionLogic(StatisticalResourcesMockFactory.INIT_VERSION);
         mockedResource.getLifeCycleStatisticalResource().setValidFrom(new DateTime().minusMinutes(10));
 
         ArrayList<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();

@@ -30,7 +30,7 @@ import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionSingl
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
-import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesVersionUtils;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.StatisticalResourcesMockFactory;
 
 public class LifecycleCommonMetadataCheckerTest extends StatisticalResourcesBaseTest {
 
@@ -74,7 +74,7 @@ public class LifecycleCommonMetadataCheckerTest extends StatisticalResourcesBase
     public void testCheckLifecycleCommonMetadataReplacesVersionNotRequired() throws Exception {
         HasLifecycle mockedResource = mock(HasLifecycle.class);
         when(mockedResource.getLifeCycleStatisticalResource()).thenReturn(new LifeCycleStatisticalResource());
-        mockedResource.getLifeCycleStatisticalResource().setVersionLogic(StatisticalResourcesVersionUtils.getInitialVersion());
+        mockedResource.getLifeCycleStatisticalResource().setVersionLogic(StatisticalResourcesMockFactory.INIT_VERSION);
 
         String baseMetadata = ServiceExceptionSingleParameters.DATASET_VERSION;
         expectedMetamacException(
@@ -97,7 +97,7 @@ public class LifecycleCommonMetadataCheckerTest extends StatisticalResourcesBase
     public void testCheckLifecycleCommonMetadataReplacesVersionRequired() throws Exception {
         HasLifecycle mockedResource = mock(HasLifecycle.class);
         when(mockedResource.getLifeCycleStatisticalResource()).thenReturn(new LifeCycleStatisticalResource());
-        mockedResource.getLifeCycleStatisticalResource().setVersionLogic("0002.000");
+        mockedResource.getLifeCycleStatisticalResource().setVersionLogic(StatisticalResourcesMockFactory.SECOND_VERSION);
 
         String baseMetadata = ServiceExceptionSingleParameters.DATASET_VERSION;
         expectedMetamacException(

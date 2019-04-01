@@ -42,7 +42,6 @@ import org.siemac.metamac.statistical.resources.core.publication.domain.Publicat
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
 import org.siemac.metamac.statistical.resources.core.utils.DatasetLifecycleTestUtils;
 import org.siemac.metamac.statistical.resources.core.utils.LifecycleTestUtils;
-import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesVersionUtils;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.DatasetMock;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.DatasetVersionMock;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.PublicationMock;
@@ -54,8 +53,6 @@ import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.Stati
 @MockProvider
 @SuppressWarnings("unused")
 public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<DatasetVersion> {
-
-    private static final String              NOT_INITIAL_VERSION                                                                                           = "002.002";
 
     public static final String               DATASET_VERSION_01_BASIC_NAME                                                                                 = "DATASET_VERSION_01_BASIC";
 
@@ -250,9 +247,6 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
     public static final String               DATASET_VERSION_100_WITH_STATISTIC_OFFICIALITY_NAME                                                           = "DATASET_VERSION_100_WITH_STATISTIC_OFFICIALITY";
 
     public static final String               DATASET_VERSION_101_TO_DELETE_WITH_PREVIOUS_VERSION_NAME                                                      = "DATASET_VERSION_101_TO_DELETE_WITH_PREVIOUS_VERSION";
-
-    private static final String              INIT_VERSION                                                                                                  = "1.0";
-    private static final String              SECOND_VERSION                                                                                                = "2.0";
 
     private static DatasetVersionMockFactory instance                                                                                                      = null;
 
@@ -493,28 +487,28 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
 
     private static DatasetVersion getDatasetVersion39VersionRationaleTypeMajorNewResource() {
         DatasetVersion datasetVersion = createDatasetVersionEmpty();
-        datasetVersion.getSiemacMetadataStatisticalResource().setVersionLogic(INIT_VERSION);
+        datasetVersion.getSiemacMetadataStatisticalResource().setVersionLogic(StatisticalResourcesMockFactory.INIT_VERSION);
         datasetVersion.getSiemacMetadataStatisticalResource().getVersionRationaleTypes().add(new VersionRationaleType(VersionRationaleTypeEnum.MAJOR_NEW_RESOURCE));
         return datasetVersion;
     }
 
     private static DatasetVersion getDatasetVersion40VersionRationaleTypeMajorEstimators() {
         DatasetVersion datasetVersion = createDatasetVersionEmpty();
-        datasetVersion.getSiemacMetadataStatisticalResource().setVersionLogic(SECOND_VERSION);
+        datasetVersion.getSiemacMetadataStatisticalResource().setVersionLogic(StatisticalResourcesMockFactory.SECOND_VERSION);
         datasetVersion.getSiemacMetadataStatisticalResource().getVersionRationaleTypes().add(new VersionRationaleType(VersionRationaleTypeEnum.MAJOR_ESTIMATORS));
         return datasetVersion;
     }
 
     private static DatasetVersion getDatasetVersion41VersionRationaleTypeMinorErratas() {
         DatasetVersion datasetVersion = createDatasetVersionEmpty();
-        datasetVersion.getSiemacMetadataStatisticalResource().setVersionLogic(SECOND_VERSION);
+        datasetVersion.getSiemacMetadataStatisticalResource().setVersionLogic(StatisticalResourcesMockFactory.SECOND_VERSION);
         datasetVersion.getSiemacMetadataStatisticalResource().getVersionRationaleTypes().add(new VersionRationaleType(VersionRationaleTypeEnum.MINOR_ERRATA));
         return datasetVersion;
     }
 
     private static DatasetVersion getDatasetVersion42VersionRationaleTypeMinorErratasAndMajorEstimators() {
         DatasetVersion datasetVersion = createDatasetVersionEmpty();
-        datasetVersion.getSiemacMetadataStatisticalResource().setVersionLogic(SECOND_VERSION);
+        datasetVersion.getSiemacMetadataStatisticalResource().setVersionLogic(StatisticalResourcesMockFactory.SECOND_VERSION);
         datasetVersion.getSiemacMetadataStatisticalResource().getVersionRationaleTypes().add(new VersionRationaleType(VersionRationaleTypeEnum.MINOR_ERRATA));
         datasetVersion.getSiemacMetadataStatisticalResource().getVersionRationaleTypes().add(new VersionRationaleType(VersionRationaleTypeEnum.MAJOR_ESTIMATORS));
         return datasetVersion;
@@ -522,7 +516,7 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
 
     private static DatasetVersion getDatasetVersion43NextVersionNoUpdates() {
         DatasetVersion datasetVersion = createDatasetVersionEmpty();
-        datasetVersion.getSiemacMetadataStatisticalResource().setVersionLogic(INIT_VERSION);
+        datasetVersion.getSiemacMetadataStatisticalResource().setVersionLogic(StatisticalResourcesMockFactory.INIT_VERSION);
         datasetVersion.getSiemacMetadataStatisticalResource().setNextVersion(NextVersionTypeEnum.NO_UPDATES);
         datasetVersion.getSiemacMetadataStatisticalResource().setNextVersionDate(null);
         return datasetVersion;
@@ -530,7 +524,7 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
 
     private static DatasetVersion getDatasetVersion44NextVersionNonScheduledUpdate() {
         DatasetVersion datasetVersion = createDatasetVersionEmpty();
-        datasetVersion.getSiemacMetadataStatisticalResource().setVersionLogic(INIT_VERSION);
+        datasetVersion.getSiemacMetadataStatisticalResource().setVersionLogic(StatisticalResourcesMockFactory.INIT_VERSION);
         datasetVersion.getSiemacMetadataStatisticalResource().setNextVersion(NextVersionTypeEnum.NON_SCHEDULED_UPDATE);
         datasetVersion.getSiemacMetadataStatisticalResource().setNextVersionDate(null);
         return datasetVersion;
@@ -538,7 +532,7 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
 
     private static DatasetVersion getDatasetVersion45NextVersionScheduledUpdateJanuary() {
         DatasetVersion datasetVersion = createDatasetVersionEmpty();
-        datasetVersion.getSiemacMetadataStatisticalResource().setVersionLogic(INIT_VERSION);
+        datasetVersion.getSiemacMetadataStatisticalResource().setVersionLogic(StatisticalResourcesMockFactory.INIT_VERSION);
         datasetVersion.getSiemacMetadataStatisticalResource().setNextVersion(NextVersionTypeEnum.SCHEDULED_UPDATE);
         datasetVersion.getSiemacMetadataStatisticalResource().setNextVersionDate(new DateTime(2013, 1, 15, 12, 0, 0, 0));
         return datasetVersion;
@@ -546,7 +540,7 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
 
     private static DatasetVersion getDatasetVersion46NextVersionScheduledUpdateJuly() {
         DatasetVersion datasetVersion = createDatasetVersionEmpty();
-        datasetVersion.getSiemacMetadataStatisticalResource().setVersionLogic(INIT_VERSION);
+        datasetVersion.getSiemacMetadataStatisticalResource().setVersionLogic(StatisticalResourcesMockFactory.INIT_VERSION);
         datasetVersion.getSiemacMetadataStatisticalResource().setNextVersion(NextVersionTypeEnum.SCHEDULED_UPDATE);
         datasetVersion.getSiemacMetadataStatisticalResource().setNextVersionDate(new DateTime(2013, 7, 15, 12, 0, 0, 0));
         return datasetVersion;
@@ -570,7 +564,7 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
     }
 
     private static DatasetVersion getDatasetVersion48WithTemporalCoverageFilled() {
-        DatasetVersionMock template = buildDatasetVersionWithSequenceAndVersion(1, INIT_VERSION);
+        DatasetVersionMock template = buildDatasetVersionWithSequenceAndVersion(1, StatisticalResourcesMockFactory.INIT_VERSION);
         template.addDimensionsCoverage(new CodeDimension("TIME_PERIOD", "2012", "2012"));
         template.addDimensionsCoverage(new CodeDimension("TIME_PERIOD", "2011", "2011"));
         template.addDimensionsCoverage(new CodeDimension("TIME_PERIOD", "2010", "2010"));
@@ -652,61 +646,61 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
 
     private static DatasetVersion getDatasetVersion57DraftInitialVersion() {
         DatasetVersion datasetVersion = createDatasetVersionInStatusWithGeneratedDatasource(1, ProcStatusEnum.DRAFT);
-        datasetVersion.getSiemacMetadataStatisticalResource().setVersionLogic(StatisticalResourcesVersionUtils.getInitialVersion());
+        datasetVersion.getSiemacMetadataStatisticalResource().setVersionLogic(StatisticalResourcesMockFactory.INIT_VERSION);
         return datasetVersion;
     }
 
     private static DatasetVersion getDatasetVersion58ProductionValidationInitialVersion() {
         DatasetVersion datasetVersion = createDatasetVersionInStatusWithGeneratedDatasource(1, ProcStatusEnum.PRODUCTION_VALIDATION);
-        datasetVersion.getSiemacMetadataStatisticalResource().setVersionLogic(StatisticalResourcesVersionUtils.getInitialVersion());
+        datasetVersion.getSiemacMetadataStatisticalResource().setVersionLogic(StatisticalResourcesMockFactory.INIT_VERSION);
         return datasetVersion;
     }
 
     private static DatasetVersion getDatasetVersion59DiffusionValidationInitialVersion() {
         DatasetVersion datasetVersion = createDatasetVersionInStatusWithGeneratedDatasource(1, ProcStatusEnum.DIFFUSION_VALIDATION);
-        datasetVersion.getSiemacMetadataStatisticalResource().setVersionLogic(StatisticalResourcesVersionUtils.getInitialVersion());
+        datasetVersion.getSiemacMetadataStatisticalResource().setVersionLogic(StatisticalResourcesMockFactory.INIT_VERSION);
         return datasetVersion;
     }
 
     private static DatasetVersion getDatasetVersion60ValidationRejectedInitialVersion() {
         DatasetVersion datasetVersion = createDatasetVersionInStatusWithGeneratedDatasource(1, ProcStatusEnum.VALIDATION_REJECTED);
-        datasetVersion.getSiemacMetadataStatisticalResource().setVersionLogic(StatisticalResourcesVersionUtils.getInitialVersion());
+        datasetVersion.getSiemacMetadataStatisticalResource().setVersionLogic(StatisticalResourcesMockFactory.INIT_VERSION);
         return datasetVersion;
     }
 
     private static DatasetVersion getDatasetVersion61PublishedInitialVersion() {
         DatasetVersion datasetVersion = createDatasetVersionInStatusWithGeneratedDatasource(1, ProcStatusEnum.PUBLISHED);
-        datasetVersion.getSiemacMetadataStatisticalResource().setVersionLogic(StatisticalResourcesVersionUtils.getInitialVersion());
+        datasetVersion.getSiemacMetadataStatisticalResource().setVersionLogic(StatisticalResourcesMockFactory.INIT_VERSION);
         return datasetVersion;
     }
 
     private static DatasetVersion getDatasetVersion62DraftNotInitialVersion() {
         DatasetVersion datasetVersion = createDatasetVersionInStatusWithGeneratedDatasource(1, ProcStatusEnum.DRAFT);
-        datasetVersion.getSiemacMetadataStatisticalResource().setVersionLogic(NOT_INITIAL_VERSION);
+        datasetVersion.getSiemacMetadataStatisticalResource().setVersionLogic(StatisticalResourcesMockFactory.NOT_INITIAL_VERSION);
         return datasetVersion;
     }
 
     private static DatasetVersion getDatasetVersion63ProductionValidationNotInitialVersion() {
         DatasetVersion datasetVersion = createDatasetVersionInStatusWithGeneratedDatasource(1, ProcStatusEnum.PRODUCTION_VALIDATION);
-        datasetVersion.getSiemacMetadataStatisticalResource().setVersionLogic(NOT_INITIAL_VERSION);
+        datasetVersion.getSiemacMetadataStatisticalResource().setVersionLogic(StatisticalResourcesMockFactory.NOT_INITIAL_VERSION);
         return datasetVersion;
     }
 
     private static DatasetVersion getDatasetVersion64DiffusionValidationNotInitialVersion() {
         DatasetVersion datasetVersion = createDatasetVersionInStatusWithGeneratedDatasource(1, ProcStatusEnum.DIFFUSION_VALIDATION);
-        datasetVersion.getSiemacMetadataStatisticalResource().setVersionLogic(NOT_INITIAL_VERSION);
+        datasetVersion.getSiemacMetadataStatisticalResource().setVersionLogic(StatisticalResourcesMockFactory.NOT_INITIAL_VERSION);
         return datasetVersion;
     }
 
     private static DatasetVersion getDatasetVersion65ValidationRejectedNotInitialVersion() {
         DatasetVersion datasetVersion = createDatasetVersionInStatusWithGeneratedDatasource(1, ProcStatusEnum.VALIDATION_REJECTED);
-        datasetVersion.getSiemacMetadataStatisticalResource().setVersionLogic(NOT_INITIAL_VERSION);
+        datasetVersion.getSiemacMetadataStatisticalResource().setVersionLogic(StatisticalResourcesMockFactory.NOT_INITIAL_VERSION);
         return datasetVersion;
     }
 
     private static DatasetVersion getDatasetVersion66PublishedNotInitialVersion() {
         DatasetVersion datasetVersion = createDatasetVersionInStatusWithGeneratedDatasource(1, ProcStatusEnum.PUBLISHED);
-        datasetVersion.getSiemacMetadataStatisticalResource().setVersionLogic(NOT_INITIAL_VERSION);
+        datasetVersion.getSiemacMetadataStatisticalResource().setVersionLogic(StatisticalResourcesMockFactory.NOT_INITIAL_VERSION);
         return datasetVersion;
     }
 
@@ -797,7 +791,7 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
     private static DatasetVersion getDatasetVersion69PublishedNoRootMaintainer() {
         DatasetVersionMock template = new DatasetVersionMock();
         template.setSequentialId(1);
-        template.setVersionLogic(INIT_VERSION);
+        template.setVersionLogic(StatisticalResourcesMockFactory.INIT_VERSION);
         template.getSiemacMetadataStatisticalResource().setMaintainer(StatisticalResourcesDoMocks.mockAgencyExternalItem("agency01", "SIEMAC.agency01"));
         DatasetVersion datasetVersion = createDatasetVersionFromTemplate(template);
         prepareToVersioning(datasetVersion);
@@ -812,7 +806,7 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
     }
 
     private static DatasetVersion getDatasetVersion71RelatedResourcesUnpublished() {
-        DatasetVersion datasetVersion = createDatasetVersionWithSequenceAndVersion(1, INIT_VERSION);
+        DatasetVersion datasetVersion = createDatasetVersionWithSequenceAndVersion(1, StatisticalResourcesMockFactory.INIT_VERSION);
         prepareToPublished(datasetVersion);
 
         fillOptionalRelatedResourcesNotPublished(datasetVersion);
@@ -820,7 +814,7 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
     }
 
     private static DatasetVersion getDatasetVersion72PreparedToPublishWithPreviousVersion() {
-        DatasetVersion datasetVersion = createDatasetVersionWithSequenceAndVersion(1, SECOND_VERSION);
+        DatasetVersion datasetVersion = createDatasetVersionWithSequenceAndVersion(1, StatisticalResourcesMockFactory.SECOND_VERSION);
         prepareToPublished(datasetVersion);
 
         fillOptionalExternalItems(datasetVersion);
@@ -854,7 +848,7 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
     private static DatasetVersion getDatasetVersion81PubNotVisibleReplacesDataset82() {
         DatasetVersionMock template = new DatasetVersionMock();
         template.setSequentialId(1);
-        template.setVersionLogic(INIT_VERSION);
+        template.setVersionLogic(StatisticalResourcesMockFactory.INIT_VERSION);
         template.getSiemacMetadataStatisticalResource().setValidFrom(new DateTime().plusDays(1));
         DatasetVersion datasetVersion = createDatasetVersionFromTemplate(template);
 
@@ -1021,7 +1015,7 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
 
     public static MockDescriptor getDatasetVersion91SingleVersionPublishedNotVisibleInNotVisiblePubAndUsedByNotVisibleQuery() {
         DateTime datasetValidFrom = new DateTime().plusDays(2);
-        DatasetVersionMock datasetVersion = buildDatasetVersionWithSequenceAndVersion(1, INIT_VERSION);
+        DatasetVersionMock datasetVersion = buildDatasetVersionWithSequenceAndVersion(1, StatisticalResourcesMockFactory.INIT_VERSION);
         datasetVersion.getSiemacMetadataStatisticalResource().setValidFrom(datasetValidFrom);
         addCodesToDimensionCoverage(datasetVersion, "DIM_01", "D1_C01", "D1_C02", "D1_C03");
         addCodesToDimensionCoverage(datasetVersion, "DIM_02", "D2_C01", "D2_C02", "D2_C03");
@@ -1029,7 +1023,8 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
         getStatisticalResourcesPersistedDoMocks().mockDatasetVersion(datasetVersion);
         fillDatasetVersionInStatusWithGeneratedDatasource(datasetVersion, ProcStatusEnum.PUBLISHED);
 
-        PublicationVersionMock publicationVersion = PublicationVersionMockFactory.buildPublishedReadyPublicationVersion(new PublicationMock(), INIT_VERSION, datasetValidFrom.plusDays(1), null, true);
+        PublicationVersionMock publicationVersion = PublicationVersionMockFactory.buildPublishedReadyPublicationVersion(new PublicationMock(), StatisticalResourcesMockFactory.INIT_VERSION,
+                datasetValidFrom.plusDays(1), null, true);
         PublicationVersionMockFactory.createDatasetCubeElementLevel(publicationVersion, datasetVersion.getDataset());
         PublicationVersionMockFactory.createPublicationVersionInStatus(publicationVersion, ProcStatusEnum.PUBLISHED);
         registerPublicationVersionMock(PUBLICATION_VERSION_93_NOT_VISIBLE_HAS_PART_NOT_VISIBLE_DATASET_VERSION_NAME, publicationVersion);
@@ -1052,13 +1047,13 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
 
     public static MockDescriptor getDatasetVersion97NotVisibleReplacedByDataset98NotVisible() {
         DateTime datasetValidFrom = new DateTime().plusDays(2);
-        DatasetVersionMock datasetVersion = buildDatasetVersionWithSequenceAndVersion(1, INIT_VERSION);
+        DatasetVersionMock datasetVersion = buildDatasetVersionWithSequenceAndVersion(1, StatisticalResourcesMockFactory.INIT_VERSION);
         datasetVersion.getSiemacMetadataStatisticalResource().setValidFrom(datasetValidFrom);
         getStatisticalResourcesPersistedDoMocks().mockDatasetVersion(datasetVersion);
         fillDatasetVersionInStatusWithGeneratedDatasource(datasetVersion, ProcStatusEnum.PUBLISHED);
 
         DateTime datasetReplacesValidFrom = new DateTime().plusDays(3);
-        DatasetVersionMock datasetReplacesVersion = buildDatasetVersionWithSequenceAndVersion(2, INIT_VERSION);
+        DatasetVersionMock datasetReplacesVersion = buildDatasetVersionWithSequenceAndVersion(2, StatisticalResourcesMockFactory.INIT_VERSION);
         datasetReplacesVersion.getSiemacMetadataStatisticalResource().setValidFrom(datasetReplacesValidFrom);
         datasetReplacesVersion.getSiemacMetadataStatisticalResource().setReplaces(StatisticalResourcesDoMocks.mockDatasetVersionRelated(datasetVersion));
         getStatisticalResourcesPersistedDoMocks().mockDatasetVersion(datasetReplacesVersion);
@@ -1070,7 +1065,7 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
 
     public static DatasetVersion getDatasetVersion99NotVisibleSingleVersion() {
         DateTime datasetValidFrom = new DateTime().plusDays(2);
-        DatasetVersionMock datasetVersion = buildDatasetVersionWithSequenceAndVersion(1, INIT_VERSION);
+        DatasetVersionMock datasetVersion = buildDatasetVersionWithSequenceAndVersion(1, StatisticalResourcesMockFactory.INIT_VERSION);
         datasetVersion.getSiemacMetadataStatisticalResource().setValidFrom(datasetValidFrom);
         getStatisticalResourcesPersistedDoMocks().mockDatasetVersion(datasetVersion);
         fillDatasetVersionInStatusWithGeneratedDatasource(datasetVersion, ProcStatusEnum.PUBLISHED);
@@ -1089,10 +1084,10 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
     }
 
     private static DatasetVersion getDatasetVersion101ToDeleteWithPreviousVersion() {
-        DatasetVersion datasetVersionToReplace = createDatasetVersionWithSequenceAndVersion(1, INIT_VERSION);
+        DatasetVersion datasetVersionToReplace = createDatasetVersionWithSequenceAndVersion(1, StatisticalResourcesMockFactory.INIT_VERSION);
         prepareToVersioning(datasetVersionToReplace);
 
-        DatasetVersion datasetVersion = createDatasetVersionWithSequenceAndVersion(1, SECOND_VERSION);
+        DatasetVersion datasetVersion = createDatasetVersionWithSequenceAndVersion(1, StatisticalResourcesMockFactory.SECOND_VERSION);
         registerDatasetVersionMock(DATASET_VERSION_101_TO_DELETE_WITH_PREVIOUS_VERSION_NAME, datasetVersion);
 
         datasetVersion.getSiemacMetadataStatisticalResource().setReplacesVersion(StatisticalResourcesPersistedDoMocks.mockDatasetVersionRelated(datasetVersionToReplace));
@@ -1106,7 +1101,7 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
     // -----------------------------------------------------------------
 
     private static DatasetVersion createDatasetVersionWithSequence(Integer sequentialId) {
-        return createDatasetVersionWithSequenceAndVersion(sequentialId, INIT_VERSION);
+        return createDatasetVersionWithSequenceAndVersion(sequentialId, StatisticalResourcesMockFactory.INIT_VERSION);
     }
 
     private static DatasetVersion createDatasetVersionWithSequenceAndVersion(Integer sequentialId, String version) {
@@ -1241,7 +1236,7 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
 
         DatasetVersionMock replacesVersionTemplate = new DatasetVersionMock();
         replacesVersionTemplate.setSequentialId(1);
-        replacesVersionTemplate.setVersionLogic(INIT_VERSION);
+        replacesVersionTemplate.setVersionLogic(StatisticalResourcesMockFactory.INIT_VERSION);
         replacesVersionTemplate.setDataset(datasetVersion.getDataset());
         replacesVersionTemplate.getSiemacMetadataStatisticalResource().setValidFrom(currentValidFrom.minusDays(3));
         replacesVersionTemplate.getSiemacMetadataStatisticalResource().setPublicationDate(currentValidFrom.minusDays(3));
@@ -1254,7 +1249,7 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
 
         DatasetVersionMock replacesTemplate = new DatasetVersionMock();
         replacesTemplate.setSequentialId(2);
-        replacesVersionTemplate.setVersionLogic(INIT_VERSION);
+        replacesVersionTemplate.setVersionLogic(StatisticalResourcesMockFactory.INIT_VERSION);
         replacesTemplate.getSiemacMetadataStatisticalResource().setValidFrom(currentValidFrom.minusDays(3));
         replacesTemplate.getSiemacMetadataStatisticalResource().setPublicationDate(currentValidFrom.minusDays(3));
         DatasetVersion replacesDatasetVersion = createDatasetVersionFromTemplate(replacesTemplate);
