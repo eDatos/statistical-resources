@@ -75,8 +75,6 @@ public class CubeRepositoryTest extends StatisticalResourcesBaseTest implements 
         assertFalse(result);
     }
 
-    // TODO METAMAC-2912 Remove this Ignore annotation
-    // @Ignore
     @Override
     @Test
     @MetamacMock({PUBLICATION_VERSION_17_WITH_STRUCTURE_FOR_PUBLICATION_VERSION_04_NAME})
@@ -96,8 +94,6 @@ public class CubeRepositoryTest extends StatisticalResourcesBaseTest implements 
         assertEquals(0, result.size());
     }
 
-    // TODO METAMAC-2912 Remove this Ignore annotation
-    // @Ignore
     @Override
     @Test
     @MetamacMock({PUBLICATION_VERSION_17_WITH_STRUCTURE_FOR_PUBLICATION_VERSION_04_NAME})
