@@ -43,10 +43,7 @@ public class MetadataEditionChecks {
     }
 
     public static boolean canVersionRationaleTypesBeEdited(String versionLogic) {
-        if (StatisticalResourcesVersionSharedUtils.getInitialVersion().equals(versionLogic)) {
-            return false;
-        }
-        return true;
+        return !StatisticalResourcesVersionSharedUtils.INITIAL_VERSION.equals(versionLogic);
     }
 
     public static boolean isDraftOrValidationRejected(ProcStatusEnum procStatus) {

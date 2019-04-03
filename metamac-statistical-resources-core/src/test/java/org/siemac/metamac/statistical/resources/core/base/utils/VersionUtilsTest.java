@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.statistical.resources.core.base.domain.HasLifecycle;
@@ -15,7 +16,7 @@ public class VersionUtilsTest {
 
     @Test
     public void testInitialVersion() throws Exception {
-        assertEquals(StatisticalResourcesMockFactory.INIT_VERSION, StatisticalResourcesVersionUtils.getInitialVersion());
+        assertTrue(StringUtils.equals(StatisticalResourcesMockFactory.INIT_VERSION, StatisticalResourcesVersionUtils.INITIAL_VERSION));
     }
 
     @Test

@@ -4,12 +4,9 @@ import org.siemac.metamac.core.common.util.shared.VersionUtil;
 
 public class StatisticalResourcesVersionSharedUtils {
 
+    public static final String INITIAL_VERSION = VersionUtil.INITIAL_VERSION;
+
     protected StatisticalResourcesVersionSharedUtils() {
-
-    }
-
-    public static String getInitialVersion() {
-        return VersionUtil.getInitialVersion();
     }
 
     public static Boolean isInitialVersion(String version) {
@@ -17,6 +14,6 @@ public class StatisticalResourcesVersionSharedUtils {
     }
 
     public static long getVersionToLong(String version) {
-        return VersionUtil.getVersionToLong(version);
+        return VersionUtil.versionStringToLong(version);
     }
 }

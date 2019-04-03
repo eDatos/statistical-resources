@@ -297,7 +297,7 @@ public class SdmxDataRestExternalFacadeV21Impl implements SdmxDataRestExternalFa
 
         // Add version query
         if (version == null) {
-            version = StatisticalResourcesVersionUtils.getInitialVersion();
+            version = StatisticalResourcesVersionUtils.INITIAL_VERSION;
         }
 
         //@formatter:off
