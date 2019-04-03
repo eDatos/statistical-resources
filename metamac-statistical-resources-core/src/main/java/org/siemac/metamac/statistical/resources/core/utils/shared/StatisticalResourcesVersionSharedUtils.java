@@ -13,7 +13,7 @@ public class StatisticalResourcesVersionSharedUtils {
         return VersionUtil.isInitialVersion(version);
     }
 
-    public static long getVersionToLong(String version) {
+    public static long versionStringToLong(String version) {
         return VersionUtil.versionStringToLong(version);
     }
 }

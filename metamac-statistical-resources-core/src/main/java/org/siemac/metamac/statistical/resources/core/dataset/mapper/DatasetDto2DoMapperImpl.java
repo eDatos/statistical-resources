@@ -236,7 +236,7 @@ public class DatasetDto2DoMapperImpl extends BaseDto2DoMapperImpl implements Dat
 
         boolean sameDsd = StringUtils.equals(oldDsdAgency, newDsdAgency) && StringUtils.equals(oldDsdCode, newDsdCode);
 
-        boolean differentDsdVersion = Long.compare(StatisticalResourcesVersionUtils.getVersionToLong(oldDsdVersion), StatisticalResourcesVersionUtils.getVersionToLong(newDsdVersion)) != 0;
+        boolean differentDsdVersion = Long.compare(StatisticalResourcesVersionUtils.versionStringToLong(oldDsdVersion), StatisticalResourcesVersionUtils.versionStringToLong(newDsdVersion)) != 0;
 
         return sameDsd && differentDsdVersion;
     }
