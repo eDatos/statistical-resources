@@ -11,6 +11,7 @@ import org.siemac.metamac.statistical.resources.web.client.query.model.ds.QueryD
 import org.siemac.metamac.web.common.client.utils.ListGridUtils;
 import org.siemac.metamac.web.common.client.widgets.CustomLinkListGridField;
 import org.siemac.metamac.web.common.client.widgets.CustomListGridField;
+import org.siemac.metamac.web.common.client.widgets.utils.VersionFieldSortNormalizer;
 
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.ListGridFieldType;
@@ -49,6 +50,7 @@ public class ResourceFieldUtils {
     public static CustomListGridField[] getVersionableListGridFields() {
 
         CustomListGridField version = new CustomListGridField(VersionableResourceDS.VERSION, getConstants().versionableVersion());
+        version.setSortNormalizer(new VersionFieldSortNormalizer());
 
         return ListGridUtils.addFields(getNameableListGridFields(), version);
     }
