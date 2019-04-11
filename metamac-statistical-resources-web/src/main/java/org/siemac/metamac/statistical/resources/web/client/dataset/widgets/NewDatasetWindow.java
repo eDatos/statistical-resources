@@ -17,16 +17,18 @@ import org.siemac.metamac.web.common.client.utils.InternationalStringUtils;
 import org.siemac.metamac.web.common.client.widgets.actions.search.SearchPaginatedAction;
 import org.siemac.metamac.web.common.client.widgets.form.CustomDynamicForm;
 import org.siemac.metamac.web.common.client.widgets.form.fields.CustomButtonItem;
+import org.siemac.metamac.web.common.client.widgets.form.fields.CustomCheckboxItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.RequiredTextItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.external.SearchExternalItemLinkItem;
 
+import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.widgets.form.fields.events.ClickEvent;
 import com.smartgwt.client.widgets.form.fields.events.ClickHandler;
 import com.smartgwt.client.widgets.form.fields.events.HasClickHandlers;
 
 public class NewDatasetWindow extends NewStatisticalResourceWindow {
 
-    private static final String            FIELD_SAVE             = "save-sch";
+    private static final String            FIELD_SAVE = "save-sch";
 
     private DatasetListUiHandlers          uiHandlers;
 
@@ -44,11 +46,16 @@ public class NewDatasetWindow extends NewStatisticalResourceWindow {
         relatedDsdItem = createDsdItem();
         relatedDsdItem.setRequired(true);
 
+        CustomCheckboxItem keepAllDataCheckBoxItem = new CustomCheckboxItem(DatasetDS.KEEP_ALL_DATA, getConstants().keepAllData());
+        keepAllDataCheckBoxItem.setAlign(Alignment.LEFT);
+        keepAllDataCheckBoxItem.setCanEdit(Boolean.TRUE);
+        keepAllDataCheckBoxItem.setValue(Boolean.TRUE);
+
         CustomButtonItem saveItem = new CustomButtonItem(FIELD_SAVE, getConstants().datasetCreate());
 
         form = new CustomDynamicForm();
         form.setMargin(5);
-        form.setFields(nameItem, relatedDsdItem, languageItem, maintainerItem, saveItem);
+        form.setFields(nameItem, relatedDsdItem, languageItem, maintainerItem, keepAllDataCheckBoxItem, saveItem);
         form.setWidth100();
 
         addItem(form);
