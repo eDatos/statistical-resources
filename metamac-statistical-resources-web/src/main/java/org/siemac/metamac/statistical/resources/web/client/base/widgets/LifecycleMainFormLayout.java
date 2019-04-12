@@ -18,7 +18,7 @@ public abstract class LifecycleMainFormLayout extends InternationalMainFormLayou
     private MainFormLayoutButton versioning;
     private MainFormLayoutButton preview;
 
-    private boolean lastVersion;
+    private boolean              lastVersion;
 
     public LifecycleMainFormLayout() {
         super();
@@ -136,7 +136,7 @@ public abstract class LifecycleMainFormLayout extends InternationalMainFormLayou
         }
     }
 
-    private void showPreviewButton() {
+    protected void showPreviewButton() {
         if (canPreviewData()) {
             preview.show();
         }
@@ -168,6 +168,10 @@ public abstract class LifecycleMainFormLayout extends InternationalMainFormLayou
 
     public HasClickHandlers getPreviewButton() {
         return preview;
+    }
+
+    public boolean isLastVersion() {
+        return lastVersion;
     }
 
     //

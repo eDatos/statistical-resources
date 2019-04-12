@@ -10,23 +10,20 @@ import java.util.Map;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasourceDto;
 import org.siemac.metamac.statistical.resources.web.client.constants.StatisticalResourceWebConstants;
-import org.siemac.metamac.statistical.resources.web.client.dataset.model.ds.DatasetDS;
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.ds.DatasourceDS;
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.record.DatasourceRecord;
 import org.siemac.metamac.statistical.resources.web.client.dataset.presenter.DatasetDatasourcesTabPresenter.DatasetDatasourcesTabView;
 import org.siemac.metamac.statistical.resources.web.client.dataset.utils.DatasetClientSecurityUtils;
 import org.siemac.metamac.statistical.resources.web.client.dataset.view.handlers.DatasetDatasourcesTabUiHandlers;
+import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.DatasourceMainFormLayout;
 import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.ImportDatasourceWithMappingWindow;
 import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.ImportDatasourcesWindow;
 import org.siemac.metamac.statistical.resources.web.client.utils.StatisticalResourcesRecordUtils;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetCodelistsWithVariableResult;
-import org.siemac.metamac.web.common.client.MetamacWebCommon;
 import org.siemac.metamac.web.common.client.listener.UploadListener;
 import org.siemac.metamac.web.common.client.widgets.CustomListGrid;
 import org.siemac.metamac.web.common.client.widgets.CustomToolStripButton;
 import org.siemac.metamac.web.common.client.widgets.DeleteConfirmationWindow;
-import org.siemac.metamac.web.common.client.widgets.form.CustomDynamicForm;
-import org.siemac.metamac.web.common.client.widgets.form.fields.ViewTextItem;
 
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
@@ -43,27 +40,32 @@ import com.smartgwt.client.widgets.toolbar.ToolStrip;
 
 public class DatasetDatasourcesTabViewImpl extends ViewWithUiHandlers<DatasetDatasourcesTabUiHandlers> implements DatasetDatasourcesTabView {
 
-    private VLayout              panel;
+    private VLayout                  panel;
 
-    private DatasourcesListPanel datasourcesListPanel;
+    private DatasourceMainFormLayout datasourceMainFormLayout;
 
-    private DatasetVersionDto    datasetVersionDto;
+    private DatasourcesListPanel     datasourcesListPanel;
+
+    private DatasetVersionDto        datasetVersionDto;
 
     public DatasetDatasourcesTabViewImpl() {
         panel = new VLayout();
         panel.setMargin(5);
         panel.setHeight100();
+        panel.setMembersMargin(10);
+
+        datasourceMainFormLayout = new DatasourceMainFormLayout();
 
         datasourcesListPanel = new DatasourcesListPanel();
-        datasourcesListPanel.setWidth("99%");
 
+        panel.addMember(datasourceMainFormLayout);
         panel.addMember(datasourcesListPanel);
     }
 
     @Override
     public void setDatasetVersion(DatasetVersionDto datasetVersionDto) {
         this.datasetVersionDto = datasetVersionDto;
-        datasourcesListPanel.updateKeepAllData();
+        datasourceMainFormLayout.setDatasetVersionDto(datasetVersionDto);
         datasourcesListPanel.updateButtonsVisibility();
     }
 
@@ -95,6 +97,7 @@ public class DatasetDatasourcesTabViewImpl extends ViewWithUiHandlers<DatasetDat
     @Override
     public void setUiHandlers(DatasetDatasourcesTabUiHandlers uiHandlers) {
         super.setUiHandlers(uiHandlers);
+        datasourceMainFormLayout.setUiHandlers(uiHandlers);
         datasourcesListPanel.setUiHandlers(uiHandlers);
     }
 
@@ -118,19 +121,7 @@ public class DatasetDatasourcesTabViewImpl extends ViewWithUiHandlers<DatasetDat
         private ImportDatasourcesWindow           importDatasourcesWindow;
         private ImportDatasourceWithMappingWindow importDatasourceWithMappingWindow;
 
-        private ViewTextItem                      keepAllDataViewTextItem;
-
         public DatasourcesListPanel() {
-            keepAllDataViewTextItem = new ViewTextItem(DatasetDS.KEEP_ALL_DATA, getConstants().keepAllData());
-            keepAllDataViewTextItem.setAlign(Alignment.LEFT);
-            keepAllDataViewTextItem.setCanEdit(Boolean.FALSE);
-
-            CustomDynamicForm form = new CustomDynamicForm();
-            form.setIsGroup(Boolean.FALSE);
-            form.setNumCols(4);
-            form.setColWidths("8%", "42%", "8%", "42%");
-            form.setFields(keepAllDataViewTextItem);
-
             // Toolstrip
 
             ToolStrip toolStrip = new ToolStrip();
@@ -172,15 +163,9 @@ public class DatasetDatasourcesTabViewImpl extends ViewWithUiHandlers<DatasetDat
             deleteConfirmationWindow.setVisible(false);
 
             // Import datasources window
-
-            addMember(form);
             addMember(toolStrip);
             addMember(datasourcesList);
             bindEvents();
-        }
-
-        public void updateKeepAllData() {
-            keepAllDataViewTextItem.setValue(Boolean.TRUE.equals(datasetVersionDto.isKeepAllData()) ? MetamacWebCommon.getConstants().yes() : MetamacWebCommon.getConstants().no());
         }
 
         private void updateListGridButtonsVisibilityBasedOnSelection(ListGridRecord[] selection) {
