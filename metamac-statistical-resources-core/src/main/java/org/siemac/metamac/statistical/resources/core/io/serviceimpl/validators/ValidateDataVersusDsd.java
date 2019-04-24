@@ -367,8 +367,7 @@ public class ValidateDataVersusDsd {
             checkAttributeEnumeratedRepresentation(attributeInstanceDto.getAttributeId(), value, exceptions);
 
             // Non Enumerated representation
-            checkAttributeNonEnumeratedRepresentation(attributeInstanceDto.getAttributeId(), value, ManipulateDataUtils.toStringUnorderedKeyForAttribute(attributeInstanceDto.getCodesByDimension()),
-                    exceptions);
+            checkAttributeNonEnumeratedRepresentation(attributeInstanceDto.getAttributeId(), value, exceptions);
 
             if (exceptions.size() != previousExceptionSize) {
                 continue;
@@ -556,6 +555,10 @@ public class ValidateDataVersusDsd {
         if (dsdAttribute.getTextFormatRepresentation() != null) {
             NonEnumeratedRepresentationValidator.checkTextFormatType(dsdAttribute.getTextFormatRepresentation(), key, value, exceptions);
         }
+    }
+
+    private void checkAttributeNonEnumeratedRepresentation(String attributeId, String value, List<MetamacExceptionItem> exceptions) throws MetamacException {
+        checkAttributeNonEnumeratedRepresentation(attributeId, value, attributeId, exceptions);
     }
 
     @SuppressWarnings("unchecked")
