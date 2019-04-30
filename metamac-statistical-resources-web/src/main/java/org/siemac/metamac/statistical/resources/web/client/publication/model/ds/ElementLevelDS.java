@@ -17,6 +17,7 @@ public class ElementLevelDS extends DataSource {
     public static final String RESOURCE_TYPE_TO_LINK = "str-type-link";      // Not mapped in DTO
     public static final String DATASET               = "str-dataset";
     public static final String QUERY                 = "str-query";
+    public static final String MULTIDATASET          = "str-multidataset";
 
     public static final String INFO                  = "str-info";
 

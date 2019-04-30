@@ -320,10 +320,18 @@ public class CommonUtils {
         return statisticalResourceTypeHashMap;
     }
 
-    public static LinkedHashMap<String, String> getStatisticalResourceTypeThatCanBeAddIntoACubeHashMap() {
+    public static LinkedHashMap<String, String> getStatisticalResourceTypeThatCanBeAddIntoACubeInMultidatasetHashMap() {
         LinkedHashMap<String, String> statisticalResourceTypeHashMap = new LinkedHashMap<String, String>();
         statisticalResourceTypeHashMap.put(StatisticalResourceTypeEnum.DATASET.name(), getCoreMessages().statisticalResourceTypeEnumDATASET());
         statisticalResourceTypeHashMap.put(StatisticalResourceTypeEnum.QUERY.name(), getCoreMessages().statisticalResourceTypeEnumQUERY());
+        return statisticalResourceTypeHashMap;
+    }
+
+    public static LinkedHashMap<String, String> getStatisticalResourceTypeThatCanBeAddIntoACubeInPublicationHashMap() {
+        LinkedHashMap<String, String> statisticalResourceTypeHashMap = new LinkedHashMap<String, String>();
+        statisticalResourceTypeHashMap.put(StatisticalResourceTypeEnum.DATASET.name(), getCoreMessages().statisticalResourceTypeEnumDATASET());
+        statisticalResourceTypeHashMap.put(StatisticalResourceTypeEnum.QUERY.name(), getCoreMessages().statisticalResourceTypeEnumQUERY());
+        statisticalResourceTypeHashMap.put(StatisticalResourceTypeEnum.MULTIDATASET.name(), getCoreMessages().statisticalResourceTypeEnumMULTIDATASET());
         return statisticalResourceTypeHashMap;
     }
 

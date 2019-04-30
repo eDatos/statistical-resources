@@ -31,6 +31,8 @@ import org.siemac.metamac.statistical.resources.web.shared.external.GetStatistic
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationResult;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationsPaginatedListAction;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationsPaginatedListResult;
+import org.siemac.metamac.statistical.resources.web.shared.multidataset.GetMultidatasetsAction;
+import org.siemac.metamac.statistical.resources.web.shared.multidataset.GetMultidatasetsResult;
 import org.siemac.metamac.statistical.resources.web.shared.publication.DeletePublicationStructureElementAction;
 import org.siemac.metamac.statistical.resources.web.shared.publication.DeletePublicationStructureElementResult;
 import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublicationStructureAction;
@@ -79,6 +81,9 @@ public class PublicationStructureTabPresenter extends Presenter<PublicationStruc
         void setStatisticalOperationsForDatasetSelection(GetStatisticalOperationsPaginatedListResult result);
         void setQueriesForCubes(GetQueriesResult result);
         void setStatisticalOperationsForQuerySelection(GetStatisticalOperationsPaginatedListResult result);
+
+        void setMultidatasetsForCubes(GetMultidatasetsResult result);
+        void setStatisticalOperationsForMultidatasetSelection(GetStatisticalOperationsPaginatedListResult result);
     }
 
     @ProxyCodeSplit
@@ -244,6 +249,28 @@ public class PublicationStructureTabPresenter extends Presenter<PublicationStruc
             @Override
             public void onWaitSuccess(GetStatisticalOperationsPaginatedListResult result) {
                 getView().setStatisticalOperationsForQuerySelection(result);
+            }
+        });
+    }
+
+    @Override
+    public void retrieveMultidatasetsForCubes(int firstResult, int maxResults, StatisticalResourceWebCriteria criteria) {
+        dispatcher.execute(new GetMultidatasetsAction(firstResult, maxResults, criteria), new WaitingAsyncCallbackHandlingError<GetMultidatasetsResult>(this) {
+
+            @Override
+            public void onWaitSuccess(GetMultidatasetsResult result) {
+                getView().setMultidatasetsForCubes(result);
+            }
+        });
+    }
+
+    @Override
+    public void retrieveStatisticalOperationsForMultidatasetSelection() {
+        dispatcher.execute(new GetStatisticalOperationsPaginatedListAction(0, Integer.MAX_VALUE, null), new WaitingAsyncCallbackHandlingError<GetStatisticalOperationsPaginatedListResult>(this) {
+
+            @Override
+            public void onWaitSuccess(GetStatisticalOperationsPaginatedListResult result) {
+                getView().setStatisticalOperationsForMultidatasetSelection(result);
             }
         });
     }

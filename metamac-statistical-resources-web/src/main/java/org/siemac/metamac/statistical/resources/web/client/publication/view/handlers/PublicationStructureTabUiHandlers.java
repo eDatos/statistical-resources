@@ -17,6 +17,9 @@ public interface PublicationStructureTabUiHandlers extends BaseUiHandlers {
     void retrieveQueriesForCubes(int firstResult, int maxResults, StatisticalResourceWebCriteria criteria);
     void retrieveStatisticalOperationsForQuerySelection();
 
+    void retrieveMultidatasetsForCubes(int firstResult, int maxResults, StatisticalResourceWebCriteria criteria);
+    void retrieveStatisticalOperationsForMultidatasetSelection();
+
     // Importation
 
     void resourceImportationFailed(String errorMessage);
