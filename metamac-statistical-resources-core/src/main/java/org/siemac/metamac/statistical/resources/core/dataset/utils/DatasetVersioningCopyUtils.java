@@ -11,6 +11,7 @@ import org.joda.time.DateTime;
 import org.siemac.metamac.core.common.util.GeneratorUrnUtils;
 import org.siemac.metamac.statistical.resources.core.base.domain.VersionableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.common.utils.CommonVersioningCopyUtils;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.AttributeValue;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Categorisation;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.CodeDimension;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
@@ -36,13 +37,29 @@ public class DatasetVersioningCopyUtils extends CommonVersioningCopyUtils {
     public static void copyDatasetVersion(DatasetVersion source, DatasetVersion target) {
         // Metadata
         copyMetadata(source, target);
-        copyCoverages(source, target);
+        copyDimensionsCoverage(source, target);
+        copyAttributesCoverage(source, target);
 
         // Relations
         target.setDataset(source.getDataset());
         copyDatasources(source, target);
         changeDatasourcesCodesAndUrns(target.getDatasources());
         copyCategorisations(source, target);
+    }
+
+    private static void copyAttributesCoverage(DatasetVersion source, DatasetVersion target) {
+        target.getAttributesCoverage().clear();
+        for (AttributeValue attributeValue : source.getAttributesCoverage()) {
+            AttributeValue newAttributeValue = new AttributeValue();
+            copyAttributeValue(attributeValue, newAttributeValue);
+            target.addAttributesCoverage(newAttributeValue);
+        }
+    }
+
+    private static void copyAttributeValue(AttributeValue source, AttributeValue target) {
+        target.setDsdComponentId(source.getDsdComponentId());
+        target.setIdentifier(source.getIdentifier());
+        target.setTitle(source.getTitle());
     }
 
     private static void changeDatasourcesCodesAndUrns(List<Datasource> datasources) {
@@ -75,7 +92,7 @@ public class DatasetVersioningCopyUtils extends CommonVersioningCopyUtils {
         }
     }
 
-    private static void copyCoverages(DatasetVersion source, DatasetVersion target) {
+    private static void copyDimensionsCoverage(DatasetVersion source, DatasetVersion target) {
         target.getDimensionsCoverage().clear();
         for (CodeDimension codeDimension : source.getDimensionsCoverage()) {
             CodeDimension newCodeDimension = new CodeDimension();

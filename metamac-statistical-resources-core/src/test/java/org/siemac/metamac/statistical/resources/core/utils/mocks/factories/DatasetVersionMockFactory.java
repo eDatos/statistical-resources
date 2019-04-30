@@ -23,6 +23,7 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.buildQueryVersionMockSimpleWithFixedDatasetVersion;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.buildSelectionItemWithDimensionAndCodes;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.createQueryVersionFromTemplate;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesDoMocks.mockAttributeValuesWithIdentifiers;
 
 import org.joda.time.DateTime;
 import org.siemac.metamac.core.common.test.utils.mocks.configuration.MockDescriptor;
@@ -250,6 +251,8 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
     public static final String               DATASET_VERSION_100_WITH_STATISTIC_OFFICIALITY_NAME                                                           = "DATASET_VERSION_100_WITH_STATISTIC_OFFICIALITY";
 
     public static final String               DATASET_VERSION_101_TO_DELETE_WITH_PREVIOUS_VERSION_NAME                                                      = "DATASET_VERSION_101_TO_DELETE_WITH_PREVIOUS_VERSION";
+
+    public static final String               DATASET_VERSION_102_PREPARED_TO_PUBLISH_WITH_ATTRIBUTE_VALUES_NAME                                            = "DATASET_VERSION_102_PREPARED_TO_PUBLISH_WITH_ATTRIBUTE_VALUES";
 
     private static final String              INIT_VERSION                                                                                                  = "001.000";
     private static final String              SECOND_VERSION                                                                                                = "002.000";
@@ -1098,6 +1101,18 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
         datasetVersion.getSiemacMetadataStatisticalResource().setReplacesVersion(StatisticalResourcesPersistedDoMocks.mockDatasetVersionRelated(datasetVersionToReplace));
         datasetVersionToReplace.getSiemacMetadataStatisticalResource().setIsReplacedByVersion(StatisticalResourcesPersistedDoMocks.mockDatasetVersionRelated(datasetVersion));
         fillDatasetVersionInStatusWithGeneratedDatasource(datasetVersion, ProcStatusEnum.DRAFT);
+        return datasetVersion;
+    }
+
+    public static DatasetVersion getDatasetVersion102PreparedToPublishWithAttributeValues() {
+        DatasetVersion datasetVersion = createDatasetVersionWithSequence(1);
+        prepareToPublished(datasetVersion);
+
+        datasetVersion.getAttributesCoverage().clear();
+        datasetVersion.getAttributesCoverage().addAll(mockAttributeValuesWithIdentifiers(datasetVersion, "attr1", "value-a1-1", "value-a1-2"));
+        datasetVersion.getAttributesCoverage().addAll(mockAttributeValuesWithIdentifiers(datasetVersion, "attr2", "value-a2-1", "value-a2-2"));
+        datasetVersion.getAttributesCoverage().addAll(mockAttributeValuesWithIdentifiers(datasetVersion, "attr3", "value-a3-1"));
+
         return datasetVersion;
     }
 
