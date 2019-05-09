@@ -440,4 +440,15 @@ public class MultidatasetServiceImpl extends MultidatasetServiceImplBase {
             }
         }
     }
+
+    @Override
+    public PagedResult<Multidataset> findMultidatasetsByCondition(ServiceContext ctx, List<ConditionalCriteria> conditions, PagingParameter pagingParameter) throws MetamacException {
+        // Validations
+        multidatasetServiceInvocationValidator.checkFindMultidatasetsByCondition(ctx, conditions, pagingParameter);
+
+        conditions = CriteriaUtils.initConditions(conditions, MultidatasetVersion.class);
+        pagingParameter = CriteriaUtils.initPagingParameter(pagingParameter);
+
+        return getMultidatasetRepository().findByCondition(conditions, pagingParameter);
+    }
 }

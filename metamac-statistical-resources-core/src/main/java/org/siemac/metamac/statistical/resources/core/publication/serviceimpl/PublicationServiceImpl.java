@@ -38,6 +38,9 @@ import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalRes
 import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
+import org.siemac.metamac.statistical.resources.core.multidataset.domain.Multidataset;
+import org.siemac.metamac.statistical.resources.core.multidataset.domain.MultidatasetProperties;
+import org.siemac.metamac.statistical.resources.core.multidataset.serviceapi.MultidatasetService;
 import org.siemac.metamac.statistical.resources.core.publication.domain.Chapter;
 import org.siemac.metamac.statistical.resources.core.publication.domain.Cube;
 import org.siemac.metamac.statistical.resources.core.publication.domain.ElementLevel;
@@ -81,6 +84,9 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
 
     @Autowired
     private QueryService                              queryService;
+
+    @Autowired
+    private MultidatasetService                       multidatasetService;
 
     @Autowired
     private RelatedResourceRepository                 relatedResourceRepository;
@@ -337,11 +343,25 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
         if (StatisticalResourceTypeEnum.DATASET.equals(type)) {
             Dataset dataset = retrieveDatasetByCode(ctx, element.getRelatedResourceCode(), element.getLineNumber());
             cube.setDataset(dataset);
-
         } else if (StatisticalResourceTypeEnum.QUERY.equals(type)) {
             Query query = retrieveQueryByCode(ctx, element.getRelatedResourceCode(), element.getLineNumber());
             cube.setQuery(query);
+        } else if (StatisticalResourceTypeEnum.MULTIDATASET.equals(type)) {
+            Multidataset multidataset = retrieveMultidatasetByCode(ctx, element.getRelatedResourceCode(), element.getLineNumber());
+            cube.setMultidataset(multidataset);
         }
+    }
+
+    private Multidataset retrieveMultidatasetByCode(ServiceContext ctx, String code, int lineNumber) throws MetamacException {
+        List<ConditionalCriteria> conditions = ConditionalCriteriaBuilder.criteriaFor(Multidataset.class).withProperty(MultidatasetProperties.identifiableStatisticalResource().code()).eq(code)
+                .build();
+        PagingParameter pagingParameter = PagingParameter.rowAccess(0, 1, true);
+        PagedResult<Multidataset> multidatasets = multidatasetService.findMultidatasetsByCondition(ctx, conditions, pagingParameter);
+        if (multidatasets.getTotalRows() > 0) {
+            return multidatasets.getValues().get(0);
+        }
+        throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.PUBLICATION_VERSION_STRUCTURE_IMPORTATION_CUBE_WITH_NONEXISTENT_MULTIDATASET)
+                .withMessageParameters(lineNumber, code).build();
     }
 
     private Dataset retrieveDatasetByCode(ServiceContext ctx, String code, int lineNumber) throws MetamacException {

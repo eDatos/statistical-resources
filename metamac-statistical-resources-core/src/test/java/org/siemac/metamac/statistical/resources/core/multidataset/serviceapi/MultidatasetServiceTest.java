@@ -1050,4 +1050,10 @@ public class MultidatasetServiceTest extends StatisticalResourcesBaseTest implem
 
         multidatasetService.deleteMultidatasetVersion(getServiceContextAdministrador(), multidatasetVersion.getSiemacMetadataStatisticalResource().getUrn());
     }
+
+    @Override
+    public void testFindMultidatasetsByCondition() throws Exception {
+        // TODO METAMAC-2879 Check if test is necessary
+
+    }
 }

@@ -3244,6 +3244,7 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         CubeDto expected = statisticalResourcesServiceFacade.retrieveCube(getServiceContextAdministrador(), cubeUrn);
         expected.setDatasetUrn(datasetMockFactory.retrieveMock(DATASET_01_BASIC_NAME).getIdentifiableStatisticalResource().getUrn());
         expected.setQueryUrn(null);
+        expected.setMultidatasetUrn(null);
         CubeDto actual = statisticalResourcesServiceFacade.updateCube(getServiceContextAdministrador(), expected);
         assertEqualsInternationalStringDto(expected.getTitle(), actual.getTitle());
     }
@@ -3255,6 +3256,7 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         CubeDto expected = statisticalResourcesServiceFacade.retrieveCube(getServiceContextAdministrador(), cubeUrn);
         expected.setQueryUrn(queryMockFactory.retrieveMock(QUERY_01_SIMPLE_NAME).getIdentifiableStatisticalResource().getUrn());
         expected.setDatasetUrn(null);
+        expected.setMultidatasetUrn(null);
         CubeDto actual = statisticalResourcesServiceFacade.updateCube(getServiceContextAdministrador(), expected);
         assertEqualsInternationalStringDto(expected.getTitle(), actual.getTitle());
     }
@@ -4181,6 +4183,12 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         statisticalResourcesServiceFacade.sendMultidatasetVersionToValidationRejected(getServiceContextAdministrador(), multidatasetVersionDto);
 
         Assert.fail("Should have thrown Exception and should not be rejected");
+    }
+
+    @Override
+    public void testFindMultidatasetsByCondition() throws Exception {
+        // TODO METAMAC-2879 check if necessary
+
     }
 
 }

@@ -1959,4 +1959,10 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
         // no optimistic locking in this operation
     }
 
+    @Override
+    public void testFindMultidatasetsByCondition() throws Exception {
+        // TODO METAMAC-2879 check if necessary
+
+    }
+
 }

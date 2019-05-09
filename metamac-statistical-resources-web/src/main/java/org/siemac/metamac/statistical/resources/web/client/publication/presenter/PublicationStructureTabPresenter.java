@@ -9,6 +9,7 @@ import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.statistical.resources.core.dto.LifeCycleStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.NameableStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
+import org.siemac.metamac.statistical.resources.core.dto.multidataset.MultidatasetVersionDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationStructureDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionDto;
 import org.siemac.metamac.statistical.resources.navigation.shared.NameTokens;
@@ -322,6 +323,8 @@ public class PublicationStructureTabPresenter extends Presenter<PublicationStruc
                         placeManager.revealPlaceHierarchy(PlaceRequestUtils.buildAbsoluteDatasetPlaceRequest(operationUrn, resourceUrn));
                     } else if (resourceVersion instanceof QueryVersionDto) {
                         placeManager.revealPlaceHierarchy(PlaceRequestUtils.buildAbsoluteQueryPlaceRequest(operationUrn, resourceUrn));
+                    } else if (resourceVersion instanceof MultidatasetVersionDto) {
+                        placeManager.revealPlaceHierarchy(PlaceRequestUtils.buildAbsoluteMultidatasetPlaceRequest(operationUrn, resourceUrn));
                     }
                 }
             });

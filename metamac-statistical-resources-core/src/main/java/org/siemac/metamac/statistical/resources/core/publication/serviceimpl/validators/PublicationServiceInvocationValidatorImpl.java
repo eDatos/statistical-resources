@@ -223,10 +223,12 @@ public class PublicationServiceInvocationValidatorImpl extends BaseInvocationVal
     }
 
     private static void checkCube(Cube cube, List<MetamacExceptionItem> exceptions) {
-        if (cube.getDataset() != null && cube.getQuery() != null) {
-            exceptions.add(new MetamacExceptionItem(ServiceExceptionType.METADATA_UNEXPECTED, ServiceExceptionParameters.CUBE__DATASET + " / " + ServiceExceptionParameters.CUBE__QUERY));
-        } else if (cube.getDataset() == null && cube.getQuery() == null) {
-            exceptions.add(new MetamacExceptionItem(ServiceExceptionType.METADATA_REQUIRED, ServiceExceptionParameters.CUBE__DATASET + " / " + ServiceExceptionParameters.CUBE__QUERY));
+        if ((cube.getDataset() != null && cube.getQuery() != null) || (cube.getDataset() != null && cube.getMultidataset() != null) || (cube.getQuery() != null && cube.getMultidataset() != null)) {
+            exceptions.add(new MetamacExceptionItem(ServiceExceptionType.METADATA_UNEXPECTED,
+                    ServiceExceptionParameters.CUBE__DATASET + " / " + ServiceExceptionParameters.CUBE__QUERY + " / " + ServiceExceptionParameters.CUBE__MULTIDATASET));
+        } else if (cube.getDataset() == null && cube.getQuery() == null && cube.getMultidataset() == null) {
+            exceptions.add(new MetamacExceptionItem(ServiceExceptionType.METADATA_REQUIRED,
+                    ServiceExceptionParameters.CUBE__DATASET + " / " + ServiceExceptionParameters.CUBE__QUERY + " / " + ServiceExceptionParameters.CUBE__MULTIDATASET));
         }
 
         if (cube.getDataset() != null) {
@@ -235,6 +237,10 @@ public class PublicationServiceInvocationValidatorImpl extends BaseInvocationVal
 
         if (cube.getQuery() != null) {
             StatisticalResourcesValidationUtils.checkMetadataRequired(cube.getQueryUrn(), ServiceExceptionParameters.CUBE__QUERY__URN, exceptions);
+        }
+
+        if (cube.getMultidataset() != null) {
+            StatisticalResourcesValidationUtils.checkMetadataRequired(cube.getMultidatasetUrn(), ServiceExceptionParameters.CUBE__MULTIDATASET__URN, exceptions);
         }
 
         StatisticalResourcesValidationUtils.checkMetadataEmpty(cube.getElementLevel().getChildren(), ServiceExceptionParameters.CUBE__CHILDREN, exceptions);

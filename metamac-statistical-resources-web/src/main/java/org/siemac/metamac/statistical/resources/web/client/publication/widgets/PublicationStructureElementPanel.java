@@ -303,6 +303,8 @@ public class PublicationStructureElementPanel extends VLayout {
                 resourceTypeToLink = StatisticalResourceTypeEnum.DATASET.name();
             } else if (!StringUtils.isBlank(cubeDto.getQueryUrn())) {
                 resourceTypeToLink = StatisticalResourceTypeEnum.QUERY.name();
+            } else if (!StringUtils.isBlank(cubeDto.getMultidatasetUrn())) {
+                resourceTypeToLink = StatisticalResourceTypeEnum.MULTIDATASET.name();
             }
             editionForm.setValue(ElementLevelDS.RESOURCE_TYPE_TO_LINK, resourceTypeToLink);
             setDatasetInEditionForm(cubeDto.getDatasetUrn());
@@ -345,12 +347,15 @@ public class PublicationStructureElementPanel extends VLayout {
             if (StatisticalResourceTypeEnum.DATASET.name().equals(editionForm.getValueAsString(ElementLevelDS.RESOURCE_TYPE_TO_LINK))) {
                 ((CubeDto) element).setDatasetUrn(editionForm.getValueAsString(ElementLevelDS.DATASET));
                 ((CubeDto) element).setQueryUrn(null);
+                ((CubeDto) element).setMultidatasetUrn(null);
             } else if (StatisticalResourceTypeEnum.QUERY.name().equals(editionForm.getValueAsString(ElementLevelDS.RESOURCE_TYPE_TO_LINK))) {
                 ((CubeDto) element).setQueryUrn(editionForm.getValueAsString(ElementLevelDS.QUERY));
                 ((CubeDto) element).setDatasetUrn(null);
+                ((CubeDto) element).setMultidatasetUrn(null);
             } else if (StatisticalResourceTypeEnum.MULTIDATASET.name().equals(editionForm.getValueAsString(ElementLevelDS.RESOURCE_TYPE_TO_LINK))) {
                 ((CubeDto) element).setMultidatasetUrn(editionForm.getValueAsString(ElementLevelDS.MULTIDATASET));
                 ((CubeDto) element).setDatasetUrn(null);
+                ((CubeDto) element).setQueryUrn(null);
             }
         }
 

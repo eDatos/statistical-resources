@@ -37,6 +37,7 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.TemporalCode
 import org.siemac.metamac.statistical.resources.core.dataset.utils.DatasetVersionUtils;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
+import org.siemac.metamac.statistical.resources.core.multidataset.domain.Multidataset;
 import org.siemac.metamac.statistical.resources.core.multidataset.domain.MultidatasetCube;
 import org.siemac.metamac.statistical.resources.core.multidataset.domain.MultidatasetVersion;
 import org.siemac.metamac.statistical.resources.core.publication.domain.Chapter;
@@ -836,9 +837,16 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
         return resource;
     }
 
-    public static RelatedResource mockMultidatasetVersionRelated(MultidatasetVersion multidatasetVersion) {
+    public static RelatedResource mockMultidatasetVersionRelated(MultidatasetVersion multidataset) {
         RelatedResource resource = new RelatedResource(TypeRelatedResourceEnum.MULTIDATASET_VERSION);
-        resource.setMultidatasetVersion(multidatasetVersion);
+        resource.setMultidatasetVersion(multidataset);
+        resource.setVersion(Long.valueOf(0));
+        return resource;
+    }
+
+    public static RelatedResource mockMultidatasetRelated(Multidataset multidatasetVersion) {
+        RelatedResource resource = new RelatedResource(TypeRelatedResourceEnum.MULTIDATASET);
+        resource.setMultidataset(multidatasetVersion);
         resource.setVersion(Long.valueOf(0));
         return resource;
     }

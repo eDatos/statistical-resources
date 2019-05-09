@@ -269,6 +269,7 @@
                     <xs:sequence>
                         <xs:element name="dataset" type="tns:ResourceInternal" />
                         <xs:element name="query" type="tns:ResourceInternal" />
+                        <xs:element name="multidataset" type="tns:ResourceInternal" />
                     </xs:sequence>
                 </xs:choice>
             </xs:extension>
