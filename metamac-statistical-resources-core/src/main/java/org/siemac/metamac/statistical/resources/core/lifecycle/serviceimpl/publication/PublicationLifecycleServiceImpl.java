@@ -156,7 +156,7 @@ public class PublicationLifecycleServiceImpl extends LifecycleTemplateService<Pu
                 } else if (cube.getQuery() != null) {
                     checkQueryMustBePublishedAndVisibleBeforePublication(resource, exceptionItems, cube.getQueryUrn());
                 } else if (cube.getMultidataset() != null) {
-                    checkMultidatasetMustBePublishedAndVisibleBeforePublication(resource, exceptionItems, cube.getMultidatasetUrn());
+                    checkMultidatasetMustBePublishedAndVisibleBeforePublication(exceptionItems, cube.getMultidatasetUrn());
                 }
             }
         }
@@ -191,15 +191,11 @@ public class PublicationLifecycleServiceImpl extends LifecycleTemplateService<Pu
         }
     }
 
-    protected void checkMultidatasetMustBePublishedAndVisibleBeforePublication(PublicationVersion resource, List<MetamacExceptionItem> exceptionItems, String multidatasetUrn) throws MetamacException {
+    protected void checkMultidatasetMustBePublishedAndVisibleBeforePublication(List<MetamacExceptionItem> exceptionItems, String multidatasetUrn) throws MetamacException {
         MultidatasetVersion lastPublishedVersion = multidatasetVersionRepository.retrieveLastPublishedVersion(multidatasetUrn);
         if (lastPublishedVersion == null) {
             MultidatasetVersion lastVersion = multidatasetVersionRepository.retrieveLastVersion(multidatasetUrn);
-            if (ProcStatusEnumUtils.isInAnyProcStatus(lastVersion, ProcStatusEnum.PUBLISHED)) {
-                if (lastVersion.getLifeCycleStatisticalResource().getValidFrom().isAfter(resource.getSiemacMetadataStatisticalResource().getValidFrom())) {
-                    exceptionItems.add(new MetamacExceptionItem(ServiceExceptionType.PUBLICATION_VERSION_LINKED_TO_NOT_PUBLISHED_MULTIDATASET, multidatasetUrn));
-                }
-            } else {
+            if (!ProcStatusEnumUtils.isInAnyProcStatus(lastVersion, ProcStatusEnum.PUBLISHED)) {
                 exceptionItems.add(new MetamacExceptionItem(ServiceExceptionType.PUBLICATION_VERSION_LINKED_TO_NOT_PUBLISHED_MULTIDATASET, multidatasetUrn));
             }
         }

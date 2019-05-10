@@ -1961,8 +1961,6 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
 
     @Override
     public void testFindMultidatasetsByCondition() throws Exception {
-        // TODO METAMAC-2879 check if necessary
-
+        // no optimistic locking in this operation
     }
-
 }

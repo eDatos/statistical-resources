@@ -53,6 +53,11 @@ public class MultidatasetMockFactory extends StatisticalResourcesMockFactory<Mul
 
     public static final String             MULTIDATASET_07_WITH_TWO_VERSIONS_LAST_ONE_READY_TO_PUBLISHED_NAME          = "MULTIDATASET_07_WITH_TWO_VERSIONS_LAST_ONE_READY_TO_PUBLISHED";
 
+    public static final String             MULTIDATASET_08_DRAFT_USED_IN_PUBLICATION_VERSION_86_NAME                   = "MULTIDATASET_08_DRAFT_USED_IN_PUBLICATION_VERSION_86_NAME";
+    public static final String             MULTIDATASET_09_PRODUCTION_VALIDATION_USED_IN_PUBLICATION_VERSION_86_NAME   = "MULTIDATASET_09_PRODUCTION_VALIDATION_USED_IN_PUBLICATION_VERSION_86_NAME";
+    public static final String             MULTIDATASET_10_DIFFUSION_VALIDATION_USED_IN_PUBLICATION_VERSION_86_NAME    = "MULTIDATASET_10_DIFFUSION_VALIDATION_USED_IN_PUBLICATION_VERSION_86_NAME";
+    public static final String             MULTIDATASET_11_VALIDATION_REJECTED_USED_IN_PUBLICATION_VERSION_86_NAME     = "MULTIDATASET_11_VALIDATION_REJECTED_USED_IN_PUBLICATION_VERSION_86_NAME";
+
     private static MultidatasetMockFactory instance                                                                    = null;
 
     private MultidatasetMockFactory() {

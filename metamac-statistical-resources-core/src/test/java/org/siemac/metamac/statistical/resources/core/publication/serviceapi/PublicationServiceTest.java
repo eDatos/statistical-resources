@@ -5,6 +5,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.siemac.metamac.statistical.resources.core.utils.asserts.MultidatasetsAsserts.assertEqualsMultidataset;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.PublicationsAsserts.assertEqualsPublicationVersion;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.PublicationsAsserts.assertEqualsPublicationVersionCollection;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.PublicationsAsserts.assertEqualsPublicationVersionNotChecksPublication;
@@ -17,6 +18,7 @@ import static org.siemac.metamac.statistical.resources.core.utils.asserts.Public
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.PublicationsAsserts.assertRelaxedEqualsChapter;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.PublicationsAsserts.assertRelaxedEqualsCube;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetMockFactory.DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.MultidatasetMockFactory.MULTIDATASET_02_BASIC_WITH_GENERATED_VERSION_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationMockFactory.PUBLICATION_02_BASIC_WITH_GENERATED_VERSION_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationMockFactory.PUBLICATION_03_BASIC_WITH_2_PUBLICATION_VERSIONS_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_01_BASIC_NAME;
@@ -68,6 +70,7 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
 import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.DatasetService;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
+import org.siemac.metamac.statistical.resources.core.multidataset.domain.Multidataset;
 import org.siemac.metamac.statistical.resources.core.publication.domain.Chapter;
 import org.siemac.metamac.statistical.resources.core.publication.domain.Cube;
 import org.siemac.metamac.statistical.resources.core.publication.domain.ElementLevel;
@@ -1498,6 +1501,20 @@ public class PublicationServiceTest extends StatisticalResourcesBaseTest impleme
         assertEquals("Publication title", actual.getSiemacMetadataStatisticalResource().getTitle().getLocalisedLabel(locale));
     }
 
+    @Test
+    @MetamacMock({PUBLICATION_VERSION_01_BASIC_NAME})
+    public void testImportPublicationVersionStructureNonExistsMultidatasetError() throws Exception {
+        expectedMetamacException(new MetamacException(ServiceExceptionType.PUBLICATION_VERSION_STRUCTURE_IMPORTATION_CUBE_WITH_NONEXISTENT_MULTIDATASET, 3, "Y00010X_000003"));
+
+        PublicationVersion expected = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_01_BASIC_NAME);
+
+        String locale = "es";
+        File file = loadTSVFile("publication_structure-multidataset_non_exists_error.tsv");
+        URL fileUrl = file.toURI().toURL();
+
+        publicationService.importPublicationVersionStructure(getServiceContextAdministrador(), expected.getSiemacMetadataStatisticalResource().getUrn(), fileUrl, locale);
+    }
+
     // ------------------------------------------------------------------------
     // CUBES
     // ------------------------------------------------------------------------
@@ -1566,6 +1583,17 @@ public class PublicationServiceTest extends StatisticalResourcesBaseTest impleme
     }
 
     @Test
+    @MetamacMock({PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME, MULTIDATASET_02_BASIC_WITH_GENERATED_VERSION_NAME})
+    public void testCreateCubeMultidataset() throws Exception {
+        Multidataset multidataset = multidatasetMockFactory.retrieveMock(MULTIDATASET_02_BASIC_WITH_GENERATED_VERSION_NAME);
+        String publicationVersionUrn = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME).getSiemacMetadataStatisticalResource().getUrn();
+        Cube expected = notPersistedDoMocks.mockMultidatasetCube(multidataset);
+        Cube actual = publicationService.createCube(getServiceContextAdministrador(), publicationVersionUrn, expected);
+
+        assertRelaxedEqualsCube(expected, actual);
+    }
+
+    @Test
     @MetamacMock({PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME, DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME})
     public void testCreateCubeErrorParameterRequiredPublicationVersionUrn() throws Exception {
         expectedMetamacException(new MetamacException(ServiceExceptionType.PARAMETER_REQUIRED, ServiceExceptionParameters.PUBLICATION_VERSION_URN));
@@ -1585,6 +1613,32 @@ public class PublicationServiceTest extends StatisticalResourcesBaseTest impleme
         Query query = queryMockFactory.retrieveMock(QUERY_01_SIMPLE_NAME);
         Cube expected = notPersistedDoMocks.mockDatasetCube(dataset);
         expected.setQuery(query);
+        publicationService.createCube(getServiceContextAdministrador(), publicationVersionUrn, expected);
+    }
+
+    @Test
+    @MetamacMock({PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME, DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME, MULTIDATASET_02_BASIC_WITH_GENERATED_VERSION_NAME})
+    public void testCreateCubeErrorMetadataUnexpectedDatasetOrMultidataset() throws Exception {
+        expectedMetamacException(new MetamacException(ServiceExceptionType.METADATA_UNEXPECTED,
+                ServiceExceptionParameters.CUBE__DATASET + " / " + ServiceExceptionParameters.CUBE__QUERY + " / " + ServiceExceptionParameters.CUBE__MULTIDATASET));
+
+        String publicationVersionUrn = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME).getSiemacMetadataStatisticalResource().getUrn();
+        Dataset dataset = datasetMockFactory.retrieveMock(DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME);
+        Cube expected = notPersistedDoMocks.mockDatasetCube(dataset);
+        expected.setMultidataset(multidatasetMockFactory.retrieveMock(MULTIDATASET_02_BASIC_WITH_GENERATED_VERSION_NAME));
+        publicationService.createCube(getServiceContextAdministrador(), publicationVersionUrn, expected);
+    }
+
+    @Test
+    @MetamacMock({PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME, QUERY_01_SIMPLE_NAME, MULTIDATASET_02_BASIC_WITH_GENERATED_VERSION_NAME})
+    public void testCreateCubeErrorMetadataUnexpectedQueryOrMultidataset() throws Exception {
+        expectedMetamacException(new MetamacException(ServiceExceptionType.METADATA_UNEXPECTED,
+                ServiceExceptionParameters.CUBE__DATASET + " / " + ServiceExceptionParameters.CUBE__QUERY + " / " + ServiceExceptionParameters.CUBE__MULTIDATASET));
+
+        String publicationVersionUrn = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME).getSiemacMetadataStatisticalResource().getUrn();
+        Query query = queryMockFactory.retrieveMock(QUERY_01_SIMPLE_NAME);
+        Cube expected = notPersistedDoMocks.mockQueryCube(query);
+        expected.setMultidataset(multidatasetMockFactory.retrieveMock(MULTIDATASET_02_BASIC_WITH_GENERATED_VERSION_NAME));
         publicationService.createCube(getServiceContextAdministrador(), publicationVersionUrn, expected);
     }
 
@@ -1624,6 +1678,18 @@ public class PublicationServiceTest extends StatisticalResourcesBaseTest impleme
         Query query = queryMockFactory.retrieveMock(QUERY_01_SIMPLE_NAME);
         Cube expected = notPersistedDoMocks.mockQueryCube(query);
         expected.getQuery().getIdentifiableStatisticalResource().setUrn(null);
+        publicationService.createCube(getServiceContextAdministrador(), publicationVersionUrn, expected);
+    }
+
+    @Test
+    @MetamacMock({PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME, DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME, MULTIDATASET_02_BASIC_WITH_GENERATED_VERSION_NAME})
+    public void testCreateCubeErrorMetadataRequiredMultidatasetUrn() throws Exception {
+        expectedMetamacException(new MetamacException(ServiceExceptionType.METADATA_REQUIRED, ServiceExceptionParameters.CUBE__MULTIDATASET__URN));
+
+        String publicationVersionUrn = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME).getSiemacMetadataStatisticalResource().getUrn();
+        Multidataset multidataset = multidatasetMockFactory.retrieveMock(MULTIDATASET_02_BASIC_WITH_GENERATED_VERSION_NAME);
+        Cube expected = notPersistedDoMocks.mockMultidatasetCube(multidataset);
+        expected.getMultidataset().getIdentifiableStatisticalResource().setUrn(null);
         publicationService.createCube(getServiceContextAdministrador(), publicationVersionUrn, expected);
     }
 
@@ -1914,6 +1980,31 @@ public class PublicationServiceTest extends StatisticalResourcesBaseTest impleme
 
         assertRelaxedEqualsCube(expected, actual);
         CommonAsserts.assertEqualsInternationalString(expected.getNameableStatisticalResource().getTitle(), actual.getNameableStatisticalResource().getTitle());
+    }
+
+    @SuppressWarnings("static-access")
+    @Test
+    @MetamacMock({PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME, MULTIDATASET_02_BASIC_WITH_GENERATED_VERSION_NAME})
+    public void testUpdateCubeSetWithMultidataset() throws Exception {
+        Multidataset expectedMultidataset = multidatasetMockFactory.retrieveMock(MULTIDATASET_02_BASIC_WITH_GENERATED_VERSION_NAME);
+
+        PublicationVersion publicationVersion = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME);
+        Cube expected = publicationVersion.getChildrenFirstLevel().get(3).getCube();
+
+        assertNull(expected.getDataset());
+        assertNotNull(expected.getQuery());
+        assertNull(expected.getMultidataset());
+
+        expected.setQuery(null);
+        expected.setMultidataset(expectedMultidataset);
+
+        Cube actual = publicationService.updateCube(getServiceContextAdministrador(), expected);
+
+        assertRelaxedEqualsCube(expected, actual);
+        assertNull(actual.getDataset());
+        assertNull(actual.getQuery());
+        assertNotNull(actual.getMultidataset());
+        assertEqualsMultidataset(expectedMultidataset, actual.getMultidataset());
     }
 
     @SuppressWarnings("static-access")

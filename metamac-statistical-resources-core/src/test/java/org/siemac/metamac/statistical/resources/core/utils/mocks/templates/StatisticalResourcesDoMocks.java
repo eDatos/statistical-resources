@@ -221,6 +221,12 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
         return cube;
     }
 
+    public Cube mockMultidatasetCube(Multidataset multidataset) {
+        Cube cube = mockCube();
+        cube.setMultidataset(multidataset);
+        return cube;
+    }
+
     // ELEMENT LEVEL
     private ElementLevel mockElementLevel() {
         return mockElementLevel(null, null);
@@ -280,6 +286,14 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
     public ElementLevel mockQueryCubeElementLevel(PublicationVersion publicationVersion, Query query, ElementLevel parentElementLevel) {
         ElementLevel elementLevel = mockCubeElementLevel(publicationVersion, parentElementLevel, mockQueryCube(query));
         return elementLevel;
+    }
+
+    public ElementLevel mockMultidatasetCuveElementLevel(PublicationVersion publicationVersion, Multidataset multidataset) {
+        return mockMultidatasetCuveElementLevel(publicationVersion, multidataset, null);
+    }
+
+    public ElementLevel mockMultidatasetCuveElementLevel(PublicationVersion publicationVersion, Multidataset multidataset, ElementLevel parentElementLevel) {
+        return mockCubeElementLevel(publicationVersion, parentElementLevel, mockMultidatasetCube(multidataset));
     }
 
     private ElementLevel mockCubeElementLevel(PublicationVersion publicationVersion, ElementLevel parentElementLevel, Cube cube) {

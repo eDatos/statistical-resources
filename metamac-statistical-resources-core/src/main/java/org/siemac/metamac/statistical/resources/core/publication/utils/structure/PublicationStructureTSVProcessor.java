@@ -235,12 +235,17 @@ public class PublicationStructureTSVProcessor {
     }
 
     private StatisticalResourceTypeEnum getRelatedResourceType(String type) {
+        StatisticalResourceTypeEnum relatedResourceType = null;
+
         if (StatisticalResourceTypeEnum.DATASET.toString().equals(type)) {
-            return StatisticalResourceTypeEnum.DATASET;
+            relatedResourceType = StatisticalResourceTypeEnum.DATASET;
         } else if (StatisticalResourceTypeEnum.QUERY.toString().equals(type)) {
-            return StatisticalResourceTypeEnum.QUERY;
+            relatedResourceType = StatisticalResourceTypeEnum.QUERY;
+        } else if (StatisticalResourceTypeEnum.MULTIDATASET.toString().equals(type)) {
+            relatedResourceType = StatisticalResourceTypeEnum.MULTIDATASET;
         }
-        return null;
+
+        return relatedResourceType;
     }
 
     private boolean isPublication(String[] elements) {

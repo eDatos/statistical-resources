@@ -8,6 +8,10 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetMockFactory.DATASET_26_PRODUCTION_VALIDATION_USED_IN_PUBLICATION_VERSION_86_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetMockFactory.DATASET_27_DIFFUSION_VALIDATION_USED_IN_PUBLICATION_VERSION_86_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetMockFactory.DATASET_28_VALIDATION_REJECTED_USED_IN_PUBLICATION_VERSION_86_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.MultidatasetMockFactory.MULTIDATASET_08_DRAFT_USED_IN_PUBLICATION_VERSION_86_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.MultidatasetMockFactory.MULTIDATASET_09_PRODUCTION_VALIDATION_USED_IN_PUBLICATION_VERSION_86_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.MultidatasetMockFactory.MULTIDATASET_10_DIFFUSION_VALIDATION_USED_IN_PUBLICATION_VERSION_86_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.MultidatasetMockFactory.MULTIDATASET_11_VALIDATION_REJECTED_USED_IN_PUBLICATION_VERSION_86_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationMockFactory.PUBLICATION_07_WITH_TWO_VERSIONS_LAST_ONE_READY_TO_PUBLISHED_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_83_PREPARED_TO_PUBLISH_ONLY_VERSION_EXTERNAL_ITEM_FULL_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_84_PUBLISHED_FOR_PUBLICATION_07_NAME;
@@ -144,8 +148,6 @@ public class PublicationPublishingServiceTest extends StatisticalResourcesMockRe
 
         mockSiemacExternalItemsPublished(siemacResource);
 
-        // String prefix = "publicationVersion.siemacMetadataStatisticalResource";
-
         List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
 
         List<String> datasetsNotPublished = getDatasetsMocksUrns(DATASET_25_DRAFT_USED_IN_PUBLICATION_VERSION_86_NAME, DATASET_26_PRODUCTION_VALIDATION_USED_IN_PUBLICATION_VERSION_86_NAME,
@@ -162,6 +164,15 @@ public class PublicationPublishingServiceTest extends StatisticalResourcesMockRe
 
         for (String queryUrn : queryiesNotPublished) {
             exceptionItems.add(new MetamacExceptionItem(ServiceExceptionType.PUBLICATION_VERSION_LINKED_TO_NOT_PUBLISHED_QUERY, queryUrn));
+        }
+
+        // Multidataset errors
+        List<String> multidatasetsNotPublished = getMultidatasetMocksUrns(MULTIDATASET_08_DRAFT_USED_IN_PUBLICATION_VERSION_86_NAME,
+                MULTIDATASET_09_PRODUCTION_VALIDATION_USED_IN_PUBLICATION_VERSION_86_NAME, MULTIDATASET_10_DIFFUSION_VALIDATION_USED_IN_PUBLICATION_VERSION_86_NAME,
+                MULTIDATASET_11_VALIDATION_REJECTED_USED_IN_PUBLICATION_VERSION_86_NAME);
+
+        for (String multidatasetUrn : multidatasetsNotPublished) {
+            exceptionItems.add(new MetamacExceptionItem(ServiceExceptionType.PUBLICATION_VERSION_LINKED_TO_NOT_PUBLISHED_MULTIDATASET, multidatasetUrn));
         }
 
         expectedMetamacException(new MetamacException(exceptionItems));
