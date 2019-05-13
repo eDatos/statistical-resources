@@ -223,13 +223,7 @@ public class PublicationServiceInvocationValidatorImpl extends BaseInvocationVal
     }
 
     private static void checkCube(Cube cube, List<MetamacExceptionItem> exceptions) {
-        if ((cube.getDataset() != null && cube.getQuery() != null) || (cube.getDataset() != null && cube.getMultidataset() != null) || (cube.getQuery() != null && cube.getMultidataset() != null)) {
-            exceptions.add(new MetamacExceptionItem(ServiceExceptionType.METADATA_UNEXPECTED,
-                    ServiceExceptionParameters.CUBE__DATASET + " / " + ServiceExceptionParameters.CUBE__QUERY + " / " + ServiceExceptionParameters.CUBE__MULTIDATASET));
-        } else if (cube.getDataset() == null && cube.getQuery() == null && cube.getMultidataset() == null) {
-            exceptions.add(new MetamacExceptionItem(ServiceExceptionType.METADATA_REQUIRED,
-                    ServiceExceptionParameters.CUBE__DATASET + " / " + ServiceExceptionParameters.CUBE__QUERY + " / " + ServiceExceptionParameters.CUBE__MULTIDATASET));
-        }
+        checkOnlyOneRelatedResourceType(cube, exceptions);
 
         if (cube.getDataset() != null) {
             StatisticalResourcesValidationUtils.checkMetadataRequired(cube.getDatasetUrn(), ServiceExceptionParameters.CUBE__DATASET__URN, exceptions);
@@ -244,5 +238,30 @@ public class PublicationServiceInvocationValidatorImpl extends BaseInvocationVal
         }
 
         StatisticalResourcesValidationUtils.checkMetadataEmpty(cube.getElementLevel().getChildren(), ServiceExceptionParameters.CUBE__CHILDREN, exceptions);
+    }
+
+    private static void checkOnlyOneRelatedResourceType(Cube cube, List<MetamacExceptionItem> exceptions) {
+        int numberOfRelatedResourceTypes = 0;
+
+        if (cube.getDataset() != null) {
+            numberOfRelatedResourceTypes++;
+        }
+
+        if (cube.getQuery() != null) {
+            numberOfRelatedResourceTypes++;
+        }
+
+        if (cube.getMultidataset() != null) {
+            numberOfRelatedResourceTypes++;
+        }
+
+        // throw an exception if no related resources has been specified or more than one related resources has been specified
+        if (numberOfRelatedResourceTypes == 0) {
+            exceptions.add(new MetamacExceptionItem(ServiceExceptionType.METADATA_REQUIRED,
+                    ServiceExceptionParameters.CUBE__DATASET + " / " + ServiceExceptionParameters.CUBE__QUERY + " / " + ServiceExceptionParameters.CUBE__MULTIDATASET));
+        } else if (numberOfRelatedResourceTypes > 1) {
+            exceptions.add(new MetamacExceptionItem(ServiceExceptionType.METADATA_UNEXPECTED,
+                    ServiceExceptionParameters.CUBE__DATASET + " / " + ServiceExceptionParameters.CUBE__QUERY + " / " + ServiceExceptionParameters.CUBE__MULTIDATASET));
+        }
     }
 }
