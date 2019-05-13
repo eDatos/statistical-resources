@@ -239,6 +239,7 @@
                     <xs:sequence>
                         <xs:element name="dataset" type="common:Resource" />
                         <xs:element name="query" type="common:Resource" />
+                        <xs:element name="multidataset" type="common:Resource" />
                     </xs:sequence>
                 </xs:choice>
             </xs:extension>

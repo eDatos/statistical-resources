@@ -277,30 +277,31 @@ public class StatisticalResourcesDtoMocks extends MetamacMocks {
     }
 
     public static CubeDto mockDatasetCubeDto(String datasetUrn) {
-        CubeDto cubeDto = mockCubeDto(null, datasetUrn, null);
+        CubeDto cubeDto = mockCubeDto(null, datasetUrn, null, null);
         return cubeDto;
     }
 
     public static CubeDto mockDatasetCubeDtoWithParent(String parentChapterUrn, String datasetUrn) {
-        CubeDto cubeDto = mockCubeDto(parentChapterUrn, datasetUrn, null);
+        CubeDto cubeDto = mockCubeDto(parentChapterUrn, datasetUrn, null, null);
         return cubeDto;
     }
 
     public static CubeDto mockQueryCubeDto(String queryUrn) {
-        CubeDto cubeDto = mockCubeDto(null, null, queryUrn);
+        CubeDto cubeDto = mockCubeDto(null, null, queryUrn, null);
         return cubeDto;
     }
 
     public static CubeDto mockQueryCubeDtoWithParent(String parentChapterUrn, String queryUrn) {
-        CubeDto cubeDto = mockCubeDto(parentChapterUrn, null, queryUrn);
+        CubeDto cubeDto = mockCubeDto(parentChapterUrn, null, queryUrn, null);
         return cubeDto;
     }
 
-    private static CubeDto mockCubeDto(String parentChapterUrn, String datasetUrn, String queryUrn) {
+    private static CubeDto mockCubeDto(String parentChapterUrn, String datasetUrn, String queryUrn, String multidatasetUrn) {
         CubeDto cubeDto = new CubeDto();
 
         cubeDto.setDatasetUrn(datasetUrn);
         cubeDto.setQueryUrn(queryUrn);
+        cubeDto.setMultidatasetUrn(multidatasetUrn);
         cubeDto.setOrderInLevel(Long.valueOf(2));
         cubeDto.setParentChapterUrn(parentChapterUrn);
 

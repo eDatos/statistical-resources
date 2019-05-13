@@ -53,7 +53,9 @@ import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
+import org.siemac.metamac.statistical.resources.core.multidataset.domain.Multidataset;
 import org.siemac.metamac.statistical.resources.core.multidataset.domain.MultidatasetCube;
+import org.siemac.metamac.statistical.resources.core.multidataset.domain.MultidatasetProperties;
 import org.siemac.metamac.statistical.resources.core.multidataset.domain.MultidatasetVersion;
 import org.siemac.metamac.statistical.resources.core.multidataset.domain.MultidatasetVersionProperties;
 import org.siemac.metamac.statistical.resources.core.query.domain.Query;
@@ -1049,5 +1051,22 @@ public class MultidatasetServiceTest extends StatisticalResourcesBaseTest implem
         MultidatasetVersion multidatasetVersion = multidatasetVersionMockFactory.retrieveMock(MULTIDATASET_VERSION_98_TO_DELETE_WITH_PREVIOUS_VERSION_NAME);
 
         multidatasetService.deleteMultidatasetVersion(getServiceContextAdministrador(), multidatasetVersion.getSiemacMetadataStatisticalResource().getUrn());
+    }
+
+    @Override
+    @Test
+    @MetamacMock(MULTIDATASET_02_BASIC_WITH_GENERATED_VERSION_NAME)
+    public void testFindMultidatasetsByCondition() throws Exception {
+        Multidataset result = multidatasetMockFactory.retrieveMock(MULTIDATASET_02_BASIC_WITH_GENERATED_VERSION_NAME);
+
+        List<ConditionalCriteria> conditions = ConditionalCriteriaBuilder.criteriaFor(Multidataset.class).withProperty(MultidatasetProperties.identifiableStatisticalResource().code())
+                .eq(result.getIdentifiableStatisticalResource().getCode()).build();
+
+        PagingParameter pagingParameter = PagingParameter.rowAccess(0, Integer.MAX_VALUE, true);
+
+        PagedResult<Multidataset> multidatasets = multidatasetService.findMultidatasetsByCondition(getServiceContextWithoutPrincipal(), conditions, pagingParameter);
+
+        assertEquals(1, multidatasets.getTotalRows());
+        assertEquals(result.getIdentifiableStatisticalResource().getUrn(), multidatasets.getValues().get(0).getIdentifiableStatisticalResource().getUrn());
     }
 }

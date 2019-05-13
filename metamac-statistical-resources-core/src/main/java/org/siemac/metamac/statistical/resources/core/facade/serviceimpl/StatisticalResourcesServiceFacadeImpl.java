@@ -80,10 +80,13 @@ import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.invocation.service.NoticesRestInternalService;
 import org.siemac.metamac.statistical.resources.core.invocation.service.SrmRestInternalService;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceapi.LifecycleService;
+import org.siemac.metamac.statistical.resources.core.multidataset.criteria.mapper.MultidatasetMetamacCriteria2SculptorCriteriaMapper;
+import org.siemac.metamac.statistical.resources.core.multidataset.criteria.mapper.MultidatasetSculptorCriteria2MetamacCriteriaMapper;
 import org.siemac.metamac.statistical.resources.core.multidataset.criteria.mapper.MultidatasetVersionMetamacCriteria2SculptorCriteriaMapper;
 import org.siemac.metamac.statistical.resources.core.multidataset.criteria.mapper.MultidatasetVersionSculptorCriteria2MetamacCriteriaMapper;
 import org.siemac.metamac.statistical.resources.core.multidataset.domain.MultidatasetCube;
 import org.siemac.metamac.statistical.resources.core.multidataset.domain.MultidatasetVersion;
+import org.siemac.metamac.statistical.resources.core.multidataset.domain.MultidatasetVersionProperties;
 import org.siemac.metamac.statistical.resources.core.multidataset.domain.MultidatasetVersionRepository;
 import org.siemac.metamac.statistical.resources.core.multidataset.mapper.MultidatasetDo2DtoMapper;
 import org.siemac.metamac.statistical.resources.core.multidataset.mapper.MultidatasetDto2DoMapper;
@@ -204,6 +207,12 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
 
     @Autowired
     private MultidatasetVersionSculptorCriteria2MetamacCriteriaMapper multidatasetVersionSculptorCriteria2MetamacCriteriaMapper;
+
+    @Autowired
+    MultidatasetMetamacCriteria2SculptorCriteriaMapper                multidatasetMetamacCriteria2SculptorCriteriaMapper;
+
+    @Autowired
+    MultidatasetSculptorCriteria2MetamacCriteriaMapper                multidatasetSculptorCriteria2MetamacCriteriaMapper;
 
     @Autowired
     private LifecycleService<DatasetVersion>                          datasetLifecycleService;
@@ -2459,6 +2468,26 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         // Transform
         MultidatasetCubeDto multidatasetCubeDto = multidatasetDo2DtoMapper.multidatasetCubeDoToDto(multidatasetCube);
         return multidatasetCubeDto;
+    }
+
+    @Override
+    public MetamacCriteriaResult<RelatedResourceDto> findMultidatasetsByCondition(ServiceContext ctx, MetamacCriteria criteria) throws MetamacException {
+        // Security
+        MultidatasetsSecurityUtils.canFindMultidatasetsByCondition(ctx);
+
+        // Transform
+        SculptorCriteria sculptorCriteria = multidatasetMetamacCriteria2SculptorCriteriaMapper.getMultidatasetCriteriaMapper().metamacCriteria2SculptorCriteria(criteria);
+
+        // Add condition for latest multidatasetVersions
+        ConditionalCriteria latestMultidatasetVersionRestriction = ConditionalCriteriaBuilder.criteriaFor(MultidatasetVersion.class)
+                .withProperty(MultidatasetVersionProperties.siemacMetadataStatisticalResource().lastVersion()).eq(Boolean.TRUE).buildSingle();
+        sculptorCriteria.getConditions().add(latestMultidatasetVersionRestriction);
+
+        // Find
+        PagedResult<MultidatasetVersion> result = getMultidatasetService().findMultidatasetVersionsByCondition(ctx, sculptorCriteria.getConditions(), sculptorCriteria.getPagingParameter());
+
+        // Transform
+        return multidatasetSculptorCriteria2MetamacCriteriaMapper.pageResultToMetamacCriteriaResultMultidatasetRelatedResourceDto(result, sculptorCriteria.getPageSize());
     }
 
 }

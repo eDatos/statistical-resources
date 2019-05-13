@@ -111,6 +111,8 @@ import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.VersionRationaleTypeEnum;
 import org.siemac.metamac.statistical.resources.core.invocation.utils.InternalWebApplicationNavigation;
+import org.siemac.metamac.statistical.resources.core.multidataset.domain.MultidatasetVersion;
+import org.siemac.metamac.statistical.resources.core.multidataset.serviceapi.MultidatasetService;
 import org.siemac.metamac.statistical.resources.core.query.domain.CodeItem;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
 import org.siemac.metamac.statistical.resources.core.query.serviceapi.QueryService;
@@ -124,6 +126,7 @@ import org.siemac.metamac.statistical_resources.rest.internal.service.utils.Stat
 import org.siemac.metamac.statistical_resources.rest.internal.v1_0.domain.DsdProcessorResult;
 import org.siemac.metamac.statistical_resources.rest.internal.v1_0.mapper.collection.CollectionsDo2RestMapperV10;
 import org.siemac.metamac.statistical_resources.rest.internal.v1_0.mapper.dataset.DatasetsDo2RestMapperV10;
+import org.siemac.metamac.statistical_resources.rest.internal.v1_0.mapper.multidataset.MultidatasetsDo2RestMapperV10;
 import org.siemac.metamac.statistical_resources.rest.internal.v1_0.mapper.query.QueriesDo2RestMapperV10;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -140,10 +143,10 @@ import es.gobcan.istac.edatos.dataset.repository.service.DatasetRepositoriesServ
 @Component
 public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
 
-    private static final Logger                     logger             = LoggerFactory.getLogger(CommonDo2RestMapperV10.class);
+    private static final Logger                     logger                 = LoggerFactory.getLogger(CommonDo2RestMapperV10.class);
 
-    private static final String                 INCLUDE_SPATIAL_FIELDS = SrmRestConstants.FIELD_INCLUDE_OPENNES + RestApiConstants.COMMA + SrmRestConstants.FIELD_INCLUDE_ORDER + RestApiConstants.COMMA
-            + SrmRestConstants.FIELD_INCLUDE_VARIABLE_ELEMENT;
+    private static final String                     INCLUDE_SPATIAL_FIELDS = SrmRestConstants.FIELD_INCLUDE_OPENNES + RestApiConstants.COMMA + SrmRestConstants.FIELD_INCLUDE_ORDER
+            + RestApiConstants.COMMA + SrmRestConstants.FIELD_INCLUDE_VARIABLE_ELEMENT;
 
     @Autowired
     private StatisticalResourcesConfiguration       configurationService;
@@ -156,6 +159,9 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
 
     @Autowired
     private QueryService                            queryService;
+
+    @Autowired
+    private MultidatasetService                     multidatasetService;
 
     @Autowired
     private TranslationService                      translationService;
@@ -177,6 +183,9 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
 
     @Autowired
     private QueriesDo2RestMapperV10                 queriesDo2RestMapper;
+
+    @Autowired
+    private MultidatasetsDo2RestMapperV10           multidatasetsDo2RestMapper;
 
     private String                                  statisticalResourcesApiInternalEndpointV10;
     private String                                  srmApiInternalEndpoint;
@@ -333,8 +342,8 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
      * @param effectiveDimensionValuesToDataByDimension It is necessary when query is retrieved, to filter dimension values. It can be null; in this case, returns all
      */
     @Override
-    public Dimensions toDimensions(String datasetVersionUrn, DsdProcessorResult dsdProcessorResult, Map<String, List<String>> effectiveDimensionValuesToDataByDimension,
-            List<String> selectedLanguages, Set<String> fields) throws MetamacException {
+    public Dimensions toDimensions(String datasetVersionUrn, DsdProcessorResult dsdProcessorResult, Map<String, List<String>> effectiveDimensionValuesToDataByDimension, List<String> selectedLanguages,
+            Set<String> fields) throws MetamacException {
 
         List<DsdDimension> sources = dsdProcessorResult.getDimensions();
         if (CollectionUtils.isEmpty(sources)) {
@@ -700,6 +709,10 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
             case QUERY:
                 QueryVersion queryVersion = queryService.retrieveLatestPublishedQueryVersionByQueryUrn(SERVICE_CONTEXT, source.getQuery().getIdentifiableStatisticalResource().getUrn());
                 return queriesDo2RestMapper.toResource(queryVersion, selectedLanguages);
+            case MULTIDATASET:
+                MultidatasetVersion multidatasetVersion = multidatasetService.retrieveLatestPublishedMultidatasetVersionByMultidatasetUrn(SERVICE_CONTEXT,
+                        source.getMultidataset().getIdentifiableStatisticalResource().getUrn());
+                return multidatasetsDo2RestMapper.toResource(multidatasetVersion, selectedLanguages);
             default:
                 logger.error("RelatedResource unsupported: " + source.getType());
                 org.siemac.metamac.rest.common.v1_0.domain.Exception exception = RestExceptionUtils.getException(RestServiceExceptionType.UNKNOWN);
@@ -840,10 +853,10 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
 
         String order = dimensionVisualisation != null ? dimensionVisualisation.getOrder() : null;
         String openness = dimensionVisualisation != null ? dimensionVisualisation.getOpenness() : null;
-        
+
         boolean includeDescription = containsField(fields, StatisticalResourcesRestInternalConstants.FIELD_INCLUDE_DIMENSION_DESCRIPTION);
         String description = includeDescription ? RestApiConstants.COMMA + SrmRestConstants.FIELD_INCLUDE_DESCRIPTION : StringUtils.EMPTY;
-        
+
         Codes codes = null;
         if (DsdComponentType.SPATIAL.equals(dimension.getType())) {
             codes = srmRestExternalFacade.retrieveCodesByCodelistUrn(codelistUrn, order, openness, INCLUDE_SPATIAL_FIELDS + description); // note: srm api returns codes in order

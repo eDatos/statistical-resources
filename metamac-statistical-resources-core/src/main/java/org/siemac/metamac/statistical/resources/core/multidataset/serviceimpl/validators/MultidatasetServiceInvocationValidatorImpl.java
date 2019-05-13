@@ -149,4 +149,8 @@ public class MultidatasetServiceInvocationValidatorImpl extends BaseInvocationVa
         // NOTHING
     }
 
+    public static void checkFindMultidatasetsByCondition(List<ConditionalCriteria> conditions, PagingParameter pagingParameter, List<MetamacExceptionItem> exceptions) {
+        // NOTHING
+    }
+
 }

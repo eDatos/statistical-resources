@@ -11,6 +11,7 @@ import java.util.Set;
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResource;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
 import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
+import org.siemac.metamac.statistical.resources.core.multidataset.domain.Multidataset;
 import org.siemac.metamac.statistical.resources.core.publication.domain.Cube;
 import org.siemac.metamac.statistical.resources.core.publication.domain.ElementLevel;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
@@ -22,8 +23,9 @@ public final class PublicationsUtils {
     }
 
     public static List<RelatedResource> computeHasPart(PublicationVersion resource) {
-        Map<String, Dataset> datasetsByUrn = new HashMap<String, Dataset>();
-        Map<String, Query> queriesByUrn = new HashMap<String, Query>();
+        Map<String, Dataset> datasetsByUrn = new HashMap<>();
+        Map<String, Query> queriesByUrn = new HashMap<>();
+        Map<String, Multidataset> multidatasetByUrn = new HashMap<>();
 
         for (ElementLevel elementLevel : resource.getChildrenAllLevels()) {
             if (elementLevel.isCube()) {
@@ -32,18 +34,35 @@ public final class PublicationsUtils {
                     datasetsByUrn.put(cube.getDatasetUrn(), cube.getDataset());
                 } else if (cube.getQuery() != null) {
                     queriesByUrn.put(cube.getQueryUrn(), cube.getQuery());
+                } else if (cube.getMultidataset() != null) {
+                    multidatasetByUrn.put(cube.getMultidatasetUrn(), cube.getMultidataset());
                 }
             }
         }
 
-        List<RelatedResource> resources = new ArrayList<RelatedResource>();
+        List<RelatedResource> resources = new ArrayList<>();
         resources.addAll(buildRelatedResourcesForDatasets(datasetsByUrn.values()));
         resources.addAll(buildRelatedResourcesForQueries(queriesByUrn.values()));
+        resources.addAll(buildRelatedResourcesForMultidatasets(multidatasetByUrn.values()));
         return resources;
     }
 
+    private static Collection<RelatedResource> buildRelatedResourcesForMultidatasets(Collection<Multidataset> multidatasets) {
+        Set<RelatedResource> resources = new HashSet<>();
+        for (Multidataset multidataset : multidatasets) {
+            resources.add(buildRelatedResourceForMultidataset(multidataset));
+        }
+        return resources;
+    }
+
+    private static RelatedResource buildRelatedResourceForMultidataset(Multidataset multidataset) {
+        RelatedResource resource = new RelatedResource(TypeRelatedResourceEnum.MULTIDATASET);
+        resource.setMultidataset(multidataset);
+        return resource;
+    }
+
     public static Collection<RelatedResource> buildRelatedResourcesForQueries(Collection<Query> queries) {
-        Set<RelatedResource> resources = new HashSet<RelatedResource>();
+        Set<RelatedResource> resources = new HashSet<>();
         for (Query query : queries) {
             resources.add(buildRelatedResourceForQuery(query));
         }
@@ -57,7 +76,7 @@ public final class PublicationsUtils {
     }
 
     public static Collection<RelatedResource> buildRelatedResourcesForDatasets(Collection<Dataset> datasets) {
-        Set<RelatedResource> resources = new HashSet<RelatedResource>();
+        Set<RelatedResource> resources = new HashSet<>();
         for (Dataset dataset : datasets) {
             resources.add(buildRelatedResourceForDataset(dataset));
         }

@@ -159,7 +159,7 @@ public class MultidatasetStructureCubePanel extends VLayout {
         ViewTextItem urn = new ViewTextItem(MultidatasetCubeDS.URN, getConstants().multidatasetStructureCubeURN());
 
         CustomSelectItem resourceTypeToLink = new CustomSelectItem(MultidatasetCubeDS.RESOURCE_TYPE_TO_LINK, getConstants().multidatasetStructureCubeResourceTypeToLink());
-        resourceTypeToLink.setValueMap(CommonUtils.getStatisticalResourceTypeThatCanBeAddIntoACubeHashMap());
+        resourceTypeToLink.setValueMap(CommonUtils.getStatisticalResourceTypeThatCanBeAddIntoACubeInMultidatasetHashMap());
         resourceTypeToLink.setRequired(true);
         resourceTypeToLink.addChangedHandler(new ChangedHandler() {
 

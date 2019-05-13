@@ -141,8 +141,8 @@ public class StatisticalResourcesMockRestBaseTest extends StatisticalResourcesBa
         List<String> urns = getUrnsFromExternalItems(allItems);
         List<String> publishedUrns = getUrnsFromExternalItems(publishedItems);
         Mockito.when(srmRestInternalFacadeV10.findConcepts(Mockito.eq(RestApiConstants.WILDCARD_ALL), Mockito.eq(RestApiConstants.WILDCARD_ALL), Mockito.eq(RestApiConstants.WILDCARD_ALL),
-                Mockito.eq(SrmRestInternalFacadeV10MockUtils.mockQueryFindPublishedConceptsUrnsAsList(urns)), Mockito.isNull(String.class), Mockito.anyString(), Mockito.anyString(), Mockito.isNull(String.class)))
-                .thenReturn(SrmRestInternalFacadeV10MockUtils.mockConceptsWithOnlyUrns(publishedUrns));
+                Mockito.eq(SrmRestInternalFacadeV10MockUtils.mockQueryFindPublishedConceptsUrnsAsList(urns)), Mockito.isNull(String.class), Mockito.anyString(), Mockito.anyString(),
+                Mockito.isNull(String.class))).thenReturn(SrmRestInternalFacadeV10MockUtils.mockConceptsWithOnlyUrns(publishedUrns));
     }
 
     protected void mockFindPublishedCategories(Collection<ExternalItem> allItems, Collection<ExternalItem> publishedItems) {
@@ -342,6 +342,18 @@ public class StatisticalResourcesMockRestBaseTest extends StatisticalResourcesBa
         List<String> urns = new ArrayList<String>();
         for (String mockId : mockIds) {
             urns.add(getQueryMockUrn(mockId));
+        }
+        return urns;
+    }
+
+    private String getMultidatasetMockUrn(String mockId) {
+        return multidatasetMockFactory.retrieveMock(mockId).getIdentifiableStatisticalResource().getUrn();
+    }
+
+    protected List<String> getMultidatasetMocksUrns(String... mockIds) {
+        List<String> urns = new ArrayList<String>();
+        for (String mockId : mockIds) {
+            urns.add(getMultidatasetMockUrn(mockId));
         }
         return urns;
     }
