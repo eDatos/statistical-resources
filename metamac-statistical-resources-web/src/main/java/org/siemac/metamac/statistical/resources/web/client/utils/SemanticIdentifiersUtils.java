@@ -29,8 +29,8 @@ public class SemanticIdentifiersUtils {
         return validator;
     }
 
-    private static boolean isMultidatasetCubeIdentifierIdentifier(String value) {
-        return value != null ? value.matches(SDMXCommonRegExpV2_1.NCNAMEIDTYPE) : false;
+    private static boolean isMultidatasetCubeIdentifier(String value) {
+        return value != null ? value.matches(SDMXCommonRegExpV2_1.METAMAC_ID) : false;
     }
 
     public static Validator getMultidatasetCubeIdentifierValidator() {
@@ -38,7 +38,7 @@ public class SemanticIdentifiersUtils {
 
             @Override
             protected boolean condition(Object value) {
-                return value != null ? isMultidatasetCubeIdentifierIdentifier(value.toString()) : false;
+                return value != null ? isMultidatasetCubeIdentifier(value.toString()) : false;
             }
 
         };
