@@ -7,6 +7,7 @@ import com.smartgwt.client.data.fields.DataSourceIntegerField;
 
 public class MultidatasetCubeDS extends DataSource {
 
+    public static final String IDENTIFIER            = "str-identifier";
     public static final String TITLE                 = "str-title";
     public static final String DESCRIPTION           = "str-description";
     public static final String ORDER_IN_LEVEL        = "str-order-level";

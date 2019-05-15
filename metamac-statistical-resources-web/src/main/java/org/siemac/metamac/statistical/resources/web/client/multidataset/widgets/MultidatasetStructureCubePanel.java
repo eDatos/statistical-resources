@@ -12,12 +12,12 @@ import org.siemac.metamac.statistical.resources.web.client.multidataset.model.ds
 import org.siemac.metamac.statistical.resources.web.client.multidataset.utils.MultidatasetClientSecurityUtils;
 import org.siemac.metamac.statistical.resources.web.client.multidataset.view.handlers.MultidatasetStructureTabUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
+import org.siemac.metamac.statistical.resources.web.client.utils.SemanticIdentifiersUtils;
 import org.siemac.metamac.statistical.resources.web.client.widgets.windows.search.SearchSingleStatisticalRelatedResourcePaginatedWindow;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.StatisticalResourceWebCriteria;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetsResult;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationsPaginatedListResult;
 import org.siemac.metamac.statistical.resources.web.shared.query.GetQueriesResult;
-import org.siemac.metamac.web.common.client.utils.InternationalStringUtils;
 import org.siemac.metamac.web.common.client.widgets.actions.search.SearchPaginatedAction;
 import org.siemac.metamac.web.common.client.widgets.form.GroupDynamicForm;
 import org.siemac.metamac.web.common.client.widgets.form.InternationalMainFormLayout;
@@ -25,6 +25,7 @@ import org.siemac.metamac.web.common.client.widgets.form.fields.CustomLinkItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.CustomSelectItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.MultiLanguageRichTextEditorItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.MultiLanguageTextItem;
+import org.siemac.metamac.web.common.client.widgets.form.fields.RequiredTextItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.SearchCustomLinkItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewMultiLanguageTextItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.ViewTextItem;
@@ -114,6 +115,8 @@ public class MultidatasetStructureCubePanel extends VLayout {
         form.setNumCols(2);
         form.setColWidths("30%", "70%");
 
+        ViewTextItem identifier = new ViewTextItem(MultidatasetCubeDS.IDENTIFIER, getConstants().multidatasetStructureCubeIdentifier());
+
         ViewMultiLanguageTextItem title = new ViewMultiLanguageTextItem(MultidatasetCubeDS.TITLE, getConstants().multidatasetStructureCubeTitle());
 
         ViewMultiLanguageTextItem description = new ViewMultiLanguageTextItem(MultidatasetCubeDS.DESCRIPTION, getConstants().multidatasetStructureCubeDescription());
@@ -142,7 +145,7 @@ public class MultidatasetStructureCubePanel extends VLayout {
             }
         });
 
-        form.setFields(title, description, urn, dataset, query);
+        form.setFields(identifier, title, description, urn, dataset, query);
         mainFormLayout.addViewCanvas(form);
     }
 
@@ -150,6 +153,9 @@ public class MultidatasetStructureCubePanel extends VLayout {
         editionForm = new GroupDynamicForm(getConstants().multidatasetStructureCube());
         editionForm.setNumCols(2);
         editionForm.setColWidths("30%", "70%");
+
+        RequiredTextItem identifier = new RequiredTextItem(MultidatasetCubeDS.IDENTIFIER, getConstants().multidatasetStructureCubeIdentifier());
+        identifier.setValidators(SemanticIdentifiersUtils.getMultidatasetCubeIdentifierValidator());
 
         MultiLanguageTextItem title = new MultiLanguageTextItem(MultidatasetCubeDS.TITLE, getConstants().multidatasetStructureCubeTitle());
         title.setRequired(true);
@@ -215,14 +221,14 @@ public class MultidatasetStructureCubePanel extends VLayout {
             }
         });
 
-        editionForm.setFields(title, description, urn, resourceTypeToLink, dataset, query);
+        editionForm.setFields(identifier, title, description, urn, resourceTypeToLink, dataset, query);
         mainFormLayout.addEditionCanvas(editionForm);
     }
 
     public void setCube(MultidatasetCubeDto cube) {
         this.cube = cube;
 
-        mainFormLayout.setTitleLabelContents(InternationalStringUtils.getLocalisedString(cube.getTitle()));
+        mainFormLayout.setTitleLabelContents(cube.getIdentifier());
         mainFormLayout.setViewMode();
 
         setCubeViewMode(cube);
@@ -233,6 +239,7 @@ public class MultidatasetStructureCubePanel extends VLayout {
 
     private void setCubeViewMode(MultidatasetCubeDto cube) {
 
+        form.setValue(MultidatasetCubeDS.IDENTIFIER, cube.getIdentifier());
         form.setValue(MultidatasetCubeDS.TITLE, cube.getTitle());
         form.setValue(MultidatasetCubeDS.DESCRIPTION, cube.getDescription());
         form.setValue(MultidatasetCubeDS.URN, cube.getUrn());
@@ -251,6 +258,7 @@ public class MultidatasetStructureCubePanel extends VLayout {
 
     private void setCubeEditionMode(MultidatasetCubeDto cube) {
 
+        editionForm.setValue(MultidatasetCubeDS.IDENTIFIER, cube.getIdentifier());
         editionForm.setValue(MultidatasetCubeDS.TITLE, cube.getTitle());
         editionForm.setValue(MultidatasetCubeDS.DESCRIPTION, cube.getDescription());
         editionForm.setValue(MultidatasetCubeDS.URN, cube.getUrn());
@@ -292,6 +300,7 @@ public class MultidatasetStructureCubePanel extends VLayout {
 
     public MultidatasetCubeDto getSelectedCube() {
 
+        cube.setIdentifier(editionForm.getValueAsString(MultidatasetCubeDS.IDENTIFIER));
         cube.setTitle(editionForm.getValueAsInternationalStringDto(MultidatasetCubeDS.TITLE));
         cube.setDescription(editionForm.getValueAsInternationalStringDto(MultidatasetCubeDS.DESCRIPTION));
 

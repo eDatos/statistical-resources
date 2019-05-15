@@ -202,6 +202,7 @@ public class MultidatasetDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implement
         target.setVersion(source.getVersion());
 
         // Other
+        target.setIdentifier(source.getIdentifier());
         target.setParentMultidatasetUrn(source.getMultidatasetVersion().getSiemacMetadataStatisticalResource().getUrn());
         target.setOrderInMultidataset(source.getOrderInMultidataset());
         target.setQueryUrn(source.getQueryUrn());
