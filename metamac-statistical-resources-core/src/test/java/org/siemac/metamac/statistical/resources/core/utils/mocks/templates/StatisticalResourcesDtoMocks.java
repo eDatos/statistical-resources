@@ -337,6 +337,7 @@ public class StatisticalResourcesDtoMocks extends MetamacMocks {
     private static MultidatasetCubeDto mockMultidatasetCubeDto(String datasetUrn, String queryUrn) {
         MultidatasetCubeDto multidatasetCubeDto = new MultidatasetCubeDto();
 
+        multidatasetCubeDto.setIdentifier("id-" + MetamacMocks.mockString(10));
         multidatasetCubeDto.setDatasetUrn(datasetUrn);
         multidatasetCubeDto.setQueryUrn(queryUrn);
         multidatasetCubeDto.setOrderInMultidataset(Long.valueOf(2));

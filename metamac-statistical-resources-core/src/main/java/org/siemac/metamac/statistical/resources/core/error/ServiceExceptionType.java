@@ -109,6 +109,8 @@ public class ServiceExceptionType extends CommonServiceExceptionType {
     // Multidataset Cube
     public static final CommonServiceExceptionType MULTIDATASET_CUBE_NOT_FOUND                                                  = create("exception.resources.multidatasetcube.not_found");
 
+    public static final CommonServiceExceptionType MULTIDATASET_CUBE_DUPLICATE_IDENTIFIER                                       = create("exception.resources.multidatasetcube.duplicate_identifier");
+
     // Multidataset
     public static final CommonServiceExceptionType MULTIDATASET_VERSION_NOT_FOUND                                               = create("exception.resources.multidataset.version_not_found");
     public static final CommonServiceExceptionType MULTIDATASET_LAST_VERSION_NOT_FOUND                                          = create("exception.resources.multidataset.last_version_not_found");

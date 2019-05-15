@@ -20,6 +20,9 @@ Application MultidatasetsStatisticalResourcesDto {
 		
 		"Dto for indicator instance"
         DataTransferObject MultidatasetCubeDto extends @NameableStatisticalResourceDto {
+        	"Identifier"
+        	String identifier;
+        	
             "Dataset"
             String datasetUrn;
             

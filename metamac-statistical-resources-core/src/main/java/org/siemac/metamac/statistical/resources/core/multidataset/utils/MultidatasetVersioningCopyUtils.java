@@ -51,6 +51,8 @@ public class MultidatasetVersioningCopyUtils {
             return null;
         }
         MultidatasetCube target = new MultidatasetCube();
+        target.setIdentifier(source.getIdentifier());
+
         target.setNameableStatisticalResource(copyNameableStatisticalResource(source.getNameableStatisticalResource(), target.getNameableStatisticalResource()));
         target.fillCodeAndUrn();
 

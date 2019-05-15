@@ -127,6 +127,7 @@ Application MultidatasetsStatisticalResources {
             
             "Added explicitly to avoid that Sculptor generate UUID"
             Long id key;
+            String identifier;
             
             - @NameableStatisticalResource nameableStatisticalResource databaseColumn="STATISTICAL_RESOURCE_FK" not nullable cascade="all";
             
