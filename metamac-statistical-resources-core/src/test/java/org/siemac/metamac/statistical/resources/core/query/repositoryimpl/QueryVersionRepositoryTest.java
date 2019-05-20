@@ -357,6 +357,7 @@ public class QueryVersionRepositoryTest extends StatisticalResourcesBaseTest imp
         assertEqualsQueryVersion(expected, actual);
     }
 
+
     @Test
     @Override
     @MetamacMock({QUERY_VERSION_08_BASIC_DISCONTINUED_NAME, DATASET_VERSION_03_FOR_DATASET_03_NAME, QUERY_VERSION_02_BASIC_ORDERED_01_NAME, QUERY_VERSION_03_BASIC_ORDERED_02_NAME})
@@ -395,7 +396,7 @@ public class QueryVersionRepositoryTest extends StatisticalResourcesBaseTest imp
 
         Assert.assertTrue(queryVersions.size() == 2);
     }
-
+ 
     @Test
     @Override
     @MetamacMock(QUERY_10_SINGLE_VERSION_DRAFT_USED_IN_PUBLICATIONS_NAME)

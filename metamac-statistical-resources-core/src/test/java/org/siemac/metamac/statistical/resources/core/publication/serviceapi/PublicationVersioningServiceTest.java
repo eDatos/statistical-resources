@@ -5,7 +5,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.PublicationsAsserts.assertEqualsVersionedElementLevelCollection;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_100_MAXIMUM_MINOR_VERSION_REACHED;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_101_MAXIMUM_MINOR_VERSION_REACHED;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_12_DRAFT_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_13_PRODUCTION_VALIDATION_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_14_DIFFUSION_VALIDATION_NAME;
@@ -14,7 +14,7 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_26_WITH_COMPLEX_STRUCTURE_PUBLISHED_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_39_PUBLISHED_WITH_NO_ROOT_MAINTAINER_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_99_WITH_PUBLISHED_MULTIDATASET_NAME;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_99_MAXIMUM_VERSION_REACHED;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_100_MAXIMUM_VERSION_REACHED;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -212,9 +212,9 @@ public class PublicationVersioningServiceTest extends StatisticalResourcesBaseTe
     }
 
     @Test
-    @MetamacMock(PUBLICATION_VERSION_99_MAXIMUM_VERSION_REACHED)
+    @MetamacMock(PUBLICATION_VERSION_100_MAXIMUM_VERSION_REACHED)
     public void testVersioningPublicationMinorVersionErrorMaximumVersionReached() throws Exception {
-        String previousPublicationVersionUrn = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_99_MAXIMUM_VERSION_REACHED).getSiemacMetadataStatisticalResource().getUrn();
+        String previousPublicationVersionUrn = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_100_MAXIMUM_VERSION_REACHED).getSiemacMetadataStatisticalResource().getUrn();
 
         VersionTypeEnum versionType = VersionTypeEnum.MINOR;
 
@@ -225,9 +225,9 @@ public class PublicationVersioningServiceTest extends StatisticalResourcesBaseTe
     }
 
     @Test
-    @MetamacMock(PUBLICATION_VERSION_99_MAXIMUM_VERSION_REACHED)
+    @MetamacMock(PUBLICATION_VERSION_100_MAXIMUM_VERSION_REACHED)
     public void testVersioningPublicationMajorVersionErrorMaximumVersionReached() throws Exception {
-        String previousPublicationVersionUrn = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_99_MAXIMUM_VERSION_REACHED).getSiemacMetadataStatisticalResource().getUrn();
+        String previousPublicationVersionUrn = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_100_MAXIMUM_VERSION_REACHED).getSiemacMetadataStatisticalResource().getUrn();
 
         VersionTypeEnum versionType = VersionTypeEnum.MAJOR;
 
@@ -238,9 +238,9 @@ public class PublicationVersioningServiceTest extends StatisticalResourcesBaseTe
     }
 
     @Test
-    @MetamacMock(PUBLICATION_VERSION_100_MAXIMUM_MINOR_VERSION_REACHED)
+    @MetamacMock(PUBLICATION_VERSION_101_MAXIMUM_MINOR_VERSION_REACHED)
     public void testVersioningPublicationMaximumMinorVersionReached() throws Exception {
-        PublicationVersion previousPublicationVersion = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_100_MAXIMUM_MINOR_VERSION_REACHED);
+        PublicationVersion previousPublicationVersion = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_101_MAXIMUM_MINOR_VERSION_REACHED);
 
         PublicationVersion newPublicationVersion = publicationVersionLifecycleService.versioning(getServiceContextWithoutPrincipal(),
                 previousPublicationVersion.getSiemacMetadataStatisticalResource().getUrn(), VersionTypeEnum.MINOR);

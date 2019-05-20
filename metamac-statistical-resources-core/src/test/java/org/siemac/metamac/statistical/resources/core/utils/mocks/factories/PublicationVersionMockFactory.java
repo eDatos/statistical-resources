@@ -236,11 +236,11 @@ public class PublicationVersionMockFactory extends StatisticalResourcesMockFacto
     public static final String                   PUBLICATION_VERSION_98_TO_DELETE_WITH_PREVIOUS_VERSION_NAME                                                        = "PUBLICATION_VERSION_98_TO_DELETE_WITH_PREVIOUS_VERSION";
 
     public static final String                   PUBLICATION_VERSION_99_WITH_PUBLISHED_MULTIDATASET_NAME                                                            = "PUBLICATION_VERSION_99_WITH_PUBLISHED_MULTIDATASET";
-   
-    public static final String                   PUBLICATION_VERSION_99_MAXIMUM_VERSION_REACHED                                                                     = "PUBLICATION_VERSION_99_MAXIMUM_VERSION_REACHED";
 
-    public static final String                   PUBLICATION_VERSION_100_MAXIMUM_MINOR_VERSION_REACHED                                                              = "PUBLICATION_VERSION_100_MAXIMUM_MINOR_VERSION_REACHED";    
-	// TODO METAMAC-2912 RENAME 99 Constants
+    public static final String                   PUBLICATION_VERSION_100_MAXIMUM_VERSION_REACHED                                                                    = "PUBLICATION_VERSION_100_MAXIMUM_VERSION_REACHED";
+
+    public static final String                   PUBLICATION_VERSION_101_MAXIMUM_MINOR_VERSION_REACHED                                                              = "PUBLICATION_VERSION_101_MAXIMUM_MINOR_VERSION_REACHED";
+
     private static PublicationVersionMockFactory instance                                                                                                           = null;
 
     private PublicationVersionMockFactory() {
@@ -768,8 +768,8 @@ public class PublicationVersionMockFactory extends StatisticalResourcesMockFacto
         publicationVersion.getSiemacMetadataStatisticalResource().setValidFrom(new DateTime().minusDays(2));
         return publicationVersion;
     }
-    
-    private static PublicationVersion getPublicationVersion99MaximumVersionReached() {
+
+    private static PublicationVersion getPublicationVersion100MaximumVersionReached() {
         PublicationVersion publicationVersion = createPublicationVersion();
         publicationVersion.getSiemacMetadataStatisticalResource().setProcStatus(ProcStatusEnum.PUBLISHED);
         publicationVersion.getSiemacMetadataStatisticalResource().setValidFrom(new DateTime().minusDays(2));
@@ -778,7 +778,7 @@ public class PublicationVersionMockFactory extends StatisticalResourcesMockFacto
         return publicationVersion;
     }
 
-    private static PublicationVersion getPublicationVersion100MaximumMinorVersionReached() {
+    private static PublicationVersion getPublicationVersion101MaximumMinorVersionReached() {
         PublicationVersion publicationVersion = createPublicationVersion();
         publicationVersion.getSiemacMetadataStatisticalResource().setProcStatus(ProcStatusEnum.PUBLISHED);
         publicationVersion.getSiemacMetadataStatisticalResource().setValidFrom(new DateTime().minusDays(2));
