@@ -42,6 +42,7 @@ import org.siemac.metamac.statistical.resources.core.publication.domain.Publicat
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
 import org.siemac.metamac.statistical.resources.core.utils.DatasetLifecycleTestUtils;
 import org.siemac.metamac.statistical.resources.core.utils.LifecycleTestUtils;
+import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesVersionUtils;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.DatasetMock;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.DatasetVersionMock;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.PublicationMock;
@@ -248,9 +249,12 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
 
     public static final String               DATASET_VERSION_101_TO_DELETE_WITH_PREVIOUS_VERSION_NAME                                                      = "DATASET_VERSION_101_TO_DELETE_WITH_PREVIOUS_VERSION";
 
+    public static final String               DATASET_VERSION_102_PREPARED_TO_PUBLISH_WITH_ATTRIBUTE_VALUES_NAME                                            = "DATASET_VERSION_102_PREPARED_TO_PUBLISH_WITH_ATTRIBUTE_VALUES";
+    
     public static final String               DATASET_VERSION_102_MAXIMUM_VERSION_REACHED                                                                   = "DATASET_VERSION_102_MAXIMUM_VERSION_REACHED";
 
     public static final String               DATASET_VERSION_103_MAXIMUM_MINOR_VERSION_REACHED                                                             = "DATASET_VERSION_103_MAXIMUM_MINOR_VERSION_REACHED";
+    // TODO METAMAC-2912 Rename 102 constants
 
     private static DatasetVersionMockFactory instance                                                                                                      = null;
 
@@ -1100,6 +1104,18 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
         return datasetVersion;
     }
 
+    public static DatasetVersion getDatasetVersion102PreparedToPublishWithAttributeValues() {
+        DatasetVersion datasetVersion = createDatasetVersionWithSequence(1);
+        prepareToPublished(datasetVersion);
+
+        datasetVersion.getAttributesCoverage().clear();
+        datasetVersion.getAttributesCoverage().addAll(mockAttributeValuesWithIdentifiers(datasetVersion, "attr1", "value-a1-1", "value-a1-2"));
+        datasetVersion.getAttributesCoverage().addAll(mockAttributeValuesWithIdentifiers(datasetVersion, "attr2", "value-a2-1", "value-a2-2"));
+        datasetVersion.getAttributesCoverage().addAll(mockAttributeValuesWithIdentifiers(datasetVersion, "attr3", "value-a3-1"));
+
+        return datasetVersion;
+    }
+    
     private static DatasetVersion getDatasetVersion102MaximumVersionReached() {
         DatasetVersion datasetVersion = createDatasetVersionInSpecificOperation(OPERATION_03_CODE, 1);
         fillAsPublished(datasetVersion);

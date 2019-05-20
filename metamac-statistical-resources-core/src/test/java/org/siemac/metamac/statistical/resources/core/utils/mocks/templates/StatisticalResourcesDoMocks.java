@@ -37,6 +37,7 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.TemporalCode
 import org.siemac.metamac.statistical.resources.core.dataset.utils.DatasetVersionUtils;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
+import org.siemac.metamac.statistical.resources.core.multidataset.domain.Multidataset;
 import org.siemac.metamac.statistical.resources.core.multidataset.domain.MultidatasetCube;
 import org.siemac.metamac.statistical.resources.core.multidataset.domain.MultidatasetVersion;
 import org.siemac.metamac.statistical.resources.core.publication.domain.Chapter;
@@ -220,6 +221,12 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
         return cube;
     }
 
+    public Cube mockMultidatasetCube(Multidataset multidataset) {
+        Cube cube = mockCube();
+        cube.setMultidataset(multidataset);
+        return cube;
+    }
+
     // ELEMENT LEVEL
     private ElementLevel mockElementLevel() {
         return mockElementLevel(null, null);
@@ -279,6 +286,14 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
     public ElementLevel mockQueryCubeElementLevel(PublicationVersion publicationVersion, Query query, ElementLevel parentElementLevel) {
         ElementLevel elementLevel = mockCubeElementLevel(publicationVersion, parentElementLevel, mockQueryCube(query));
         return elementLevel;
+    }
+
+    public ElementLevel mockMultidatasetCuveElementLevel(PublicationVersion publicationVersion, Multidataset multidataset) {
+        return mockMultidatasetCuveElementLevel(publicationVersion, multidataset, null);
+    }
+
+    public ElementLevel mockMultidatasetCuveElementLevel(PublicationVersion publicationVersion, Multidataset multidataset, ElementLevel parentElementLevel) {
+        return mockCubeElementLevel(publicationVersion, parentElementLevel, mockMultidatasetCube(multidataset));
     }
 
     private ElementLevel mockCubeElementLevel(PublicationVersion publicationVersion, ElementLevel parentElementLevel, Cube cube) {
@@ -836,9 +851,16 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
         return resource;
     }
 
-    public static RelatedResource mockMultidatasetVersionRelated(MultidatasetVersion multidatasetVersion) {
+    public static RelatedResource mockMultidatasetVersionRelated(MultidatasetVersion multidataset) {
         RelatedResource resource = new RelatedResource(TypeRelatedResourceEnum.MULTIDATASET_VERSION);
-        resource.setMultidatasetVersion(multidatasetVersion);
+        resource.setMultidatasetVersion(multidataset);
+        resource.setVersion(Long.valueOf(0));
+        return resource;
+    }
+
+    public static RelatedResource mockMultidatasetRelated(Multidataset multidatasetVersion) {
+        RelatedResource resource = new RelatedResource(TypeRelatedResourceEnum.MULTIDATASET);
+        resource.setMultidataset(multidatasetVersion);
         resource.setVersion(Long.valueOf(0));
         return resource;
     }
@@ -867,6 +889,9 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
 
     private MultidatasetCube mockMultidatasetCube() {
         MultidatasetCube cube = new MultidatasetCube();
+
+        // Identifier
+        cube.setIdentifier("id-" + MetamacMocks.mockString(10));
 
         // Metadata
         cube.setOrderInMultidataset(Long.valueOf(1));

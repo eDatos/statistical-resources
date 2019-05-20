@@ -218,6 +218,7 @@ public class PublicationsAsserts extends BaseAsserts {
             assertEqualsVersionedNameableStatisticalResourceForResourceThatChangesCode(expected.getNameableStatisticalResource(), actual.getNameableStatisticalResource());
             assertEquals(expected.getDatasetUrn(), actual.getDatasetUrn());
             assertEquals(expected.getQueryUrn(), actual.getQueryUrn());
+            assertEquals(expected.getMultidatasetUrn(), actual.getMultidatasetUrn());
         }
     }
 
@@ -391,6 +392,7 @@ public class PublicationsAsserts extends BaseAsserts {
         assertEquals(entity.getElementLevel().getParentUrn(), dto.getParentChapterUrn());
         assertEquals(entity.getDatasetUrn(), dto.getDatasetUrn());
         assertEquals(entity.getQueryUrn(), dto.getQueryUrn());
+        assertEquals(entity.getMultidatasetUrn(), dto.getMultidatasetUrn());
     }
 
     public static void assertRelaxedEqualsElementLevelCollection(Collection<ElementLevel> entities, Collection<ElementLevelDto> dtos) {

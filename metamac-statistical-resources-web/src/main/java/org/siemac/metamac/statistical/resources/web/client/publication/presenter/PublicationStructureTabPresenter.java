@@ -9,6 +9,7 @@ import org.siemac.metamac.core.common.util.shared.StringUtils;
 import org.siemac.metamac.statistical.resources.core.dto.LifeCycleStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.NameableStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
+import org.siemac.metamac.statistical.resources.core.dto.multidataset.MultidatasetVersionDto;
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationStructureDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionDto;
 import org.siemac.metamac.statistical.resources.navigation.shared.NameTokens;
@@ -31,6 +32,8 @@ import org.siemac.metamac.statistical.resources.web.shared.external.GetStatistic
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationResult;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationsPaginatedListAction;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationsPaginatedListResult;
+import org.siemac.metamac.statistical.resources.web.shared.multidataset.GetMultidatasetsAction;
+import org.siemac.metamac.statistical.resources.web.shared.multidataset.GetMultidatasetsResult;
 import org.siemac.metamac.statistical.resources.web.shared.publication.DeletePublicationStructureElementAction;
 import org.siemac.metamac.statistical.resources.web.shared.publication.DeletePublicationStructureElementResult;
 import org.siemac.metamac.statistical.resources.web.shared.publication.GetPublicationStructureAction;
@@ -79,6 +82,9 @@ public class PublicationStructureTabPresenter extends Presenter<PublicationStruc
         void setStatisticalOperationsForDatasetSelection(GetStatisticalOperationsPaginatedListResult result);
         void setQueriesForCubes(GetQueriesResult result);
         void setStatisticalOperationsForQuerySelection(GetStatisticalOperationsPaginatedListResult result);
+
+        void setMultidatasetsForCubes(GetMultidatasetsResult result);
+        void setStatisticalOperationsForMultidatasetSelection(GetStatisticalOperationsPaginatedListResult result);
     }
 
     @ProxyCodeSplit
@@ -248,6 +254,28 @@ public class PublicationStructureTabPresenter extends Presenter<PublicationStruc
         });
     }
 
+    @Override
+    public void retrieveMultidatasetsForCubes(int firstResult, int maxResults, StatisticalResourceWebCriteria criteria) {
+        dispatcher.execute(new GetMultidatasetsAction(firstResult, maxResults, criteria), new WaitingAsyncCallbackHandlingError<GetMultidatasetsResult>(this) {
+
+            @Override
+            public void onWaitSuccess(GetMultidatasetsResult result) {
+                getView().setMultidatasetsForCubes(result);
+            }
+        });
+    }
+
+    @Override
+    public void retrieveStatisticalOperationsForMultidatasetSelection() {
+        dispatcher.execute(new GetStatisticalOperationsPaginatedListAction(0, Integer.MAX_VALUE, null), new WaitingAsyncCallbackHandlingError<GetStatisticalOperationsPaginatedListResult>(this) {
+
+            @Override
+            public void onWaitSuccess(GetStatisticalOperationsPaginatedListResult result) {
+                getView().setStatisticalOperationsForMultidatasetSelection(result);
+            }
+        });
+    }
+
     //
     // IMPORTATION
     //
@@ -295,6 +323,8 @@ public class PublicationStructureTabPresenter extends Presenter<PublicationStruc
                         placeManager.revealPlaceHierarchy(PlaceRequestUtils.buildAbsoluteDatasetPlaceRequest(operationUrn, resourceUrn));
                     } else if (resourceVersion instanceof QueryVersionDto) {
                         placeManager.revealPlaceHierarchy(PlaceRequestUtils.buildAbsoluteQueryPlaceRequest(operationUrn, resourceUrn));
+                    } else if (resourceVersion instanceof MultidatasetVersionDto) {
+                        placeManager.revealPlaceHierarchy(PlaceRequestUtils.buildAbsoluteMultidatasetPlaceRequest(operationUrn, resourceUrn));
                     }
                 }
             });

@@ -49,6 +49,9 @@ Application PublicationsStatisticalResourcesDto {
 			"Query"
 			String queryUrn;
 			
+			"Multidataset"
+			String multidatasetUrn;
+			
             "Order in level"
 			Long orderInLevel;
 			

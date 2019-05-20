@@ -5,6 +5,7 @@ import static org.siemac.metamac.statistical.resources.core.utils.PublicationLif
 import static org.siemac.metamac.statistical.resources.core.utils.PublicationLifecycleTestUtils.prepareToPublished;
 import static org.siemac.metamac.statistical.resources.core.utils.PublicationLifecycleTestUtils.prepareToValidationRejected;
 import static org.siemac.metamac.statistical.resources.core.utils.PublicationLifecycleTestUtils.prepareToVersioning;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.MultidatasetVersionMock.buildBasicSingleVersionWithSequence;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.CubeMockFactory.CUBE_08_EMPTY_IN_PUBLICATION_VERSION_90_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetMockFactory.DATASET_25_DRAFT_USED_IN_PUBLICATION_VERSION_86_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetMockFactory.DATASET_26_PRODUCTION_VALIDATION_USED_IN_PUBLICATION_VERSION_86_NAME;
@@ -15,6 +16,10 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetMockFactory.createPublishedAndDraftVersionsForDataset;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetMockFactory.createPublishedAndNotVisibleVersionsForDataset;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetMockFactory.createTwoPublishedVersionsForDataset;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.MultidatasetMockFactory.MULTIDATASET_08_DRAFT_USED_IN_PUBLICATION_VERSION_86_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.MultidatasetMockFactory.MULTIDATASET_09_PRODUCTION_VALIDATION_USED_IN_PUBLICATION_VERSION_86_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.MultidatasetMockFactory.MULTIDATASET_10_DIFFUSION_VALIDATION_USED_IN_PUBLICATION_VERSION_86_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.MultidatasetMockFactory.MULTIDATASET_11_VALIDATION_REJECTED_USED_IN_PUBLICATION_VERSION_86_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationMockFactory.PUBLICATION_04_STRUCTURED_WITH_2_PUBLICATION_VERSIONS_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationMockFactory.PUBLICATION_05_WITH_MULTIPLE_PUBLISHED_VERSIONS_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationMockFactory.PUBLICATION_06_WITH_MULTIPLE_PUBLISHED_VERSIONS_AND_LATEST_NO_VISIBLE_NAME;
@@ -39,6 +44,7 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersi
 import org.siemac.metamac.statistical.resources.core.enume.domain.NextVersionTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.VersionRationaleTypeEnum;
+import org.siemac.metamac.statistical.resources.core.multidataset.domain.Multidataset;
 import org.siemac.metamac.statistical.resources.core.publication.domain.ElementLevel;
 import org.siemac.metamac.statistical.resources.core.publication.domain.Publication;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
@@ -229,10 +235,12 @@ public class PublicationVersionMockFactory extends StatisticalResourcesMockFacto
     public static final String                   PUBLICATION_VERSION_97_NOT_VISIBLE_HAS_PART_NOT_VISIBLE_QUERY_NAME                                                 = "PUBLICATION_VERSION_97_NOT_VISIBLE_HAS_PART_NOT_VISIBLE_QUERY";
     public static final String                   PUBLICATION_VERSION_98_TO_DELETE_WITH_PREVIOUS_VERSION_NAME                                                        = "PUBLICATION_VERSION_98_TO_DELETE_WITH_PREVIOUS_VERSION";
 
+    public static final String                   PUBLICATION_VERSION_99_WITH_PUBLISHED_MULTIDATASET_NAME                                                            = "PUBLICATION_VERSION_99_WITH_PUBLISHED_MULTIDATASET";
+   
     public static final String                   PUBLICATION_VERSION_99_MAXIMUM_VERSION_REACHED                                                                     = "PUBLICATION_VERSION_99_MAXIMUM_VERSION_REACHED";
 
-    public static final String                   PUBLICATION_VERSION_100_MAXIMUM_MINOR_VERSION_REACHED                                                              = "PUBLICATION_VERSION_100_MAXIMUM_MINOR_VERSION_REACHED";
-
+    public static final String                   PUBLICATION_VERSION_100_MAXIMUM_MINOR_VERSION_REACHED                                                              = "PUBLICATION_VERSION_100_MAXIMUM_MINOR_VERSION_REACHED";    
+	// TODO METAMAC-2912 RENAME 99 Constants
     private static PublicationVersionMockFactory instance                                                                                                           = null;
 
     private PublicationVersionMockFactory() {
@@ -545,7 +553,13 @@ public class PublicationVersionMockFactory extends StatisticalResourcesMockFacto
 
         List<Query> queries = Arrays.asList(queryPublishedLinkedToDataset, queryPublishedLinekdToDatasetVersion);
 
-        populatePublicationWithStructureWithCubesOnRoot(publicationVersion, datasets, queries);
+        // multidatasets
+        Multidataset multidatasetPublished = MultidatasetVersionMockFactory
+                .createMultidatasetVersionPublishedLastVersion(MultidatasetMockFactory.createMultidatasetToAddVersions(1), INIT_VERSION, new DateTime()).getMultidataset();
+
+        List<Multidataset> multidatasets = Arrays.asList(multidatasetPublished);
+
+        populatePublicationWithStructureWithCubesOnRoot(publicationVersion, datasets, queries, multidatasets);
 
         prepareToPublished(publicationVersion);
 
@@ -579,7 +593,6 @@ public class PublicationVersionMockFactory extends StatisticalResourcesMockFacto
                 datasetSingleVersionPublishedNotVisible);
 
         // queries
-
         Query queryDraft = QueryVersionMockFactory.createQueryVersionInStatus(buildQueryVersionMockSimpleWithFixedDatasetVersion("Q01"), ProcStatusEnum.DRAFT).getQuery();
         registerQueryMock(QUERY_16_DRAFT_USED_IN_PUBLICATION_VERSION_86_NAME, queryDraft);
 
@@ -599,7 +612,25 @@ public class PublicationVersionMockFactory extends StatisticalResourcesMockFacto
 
         List<Query> queries = Arrays.asList(queryDraft, queryProductionValidation, queryDiffusionValidation, queryValidationRejected, queryPublishedNotVisible);
 
-        populatePublicationWithStructureWithCubesOnRoot(publicationVersion, datasets, queries);
+        // multidatasets
+        Multidataset multidatasetDraft = MultidatasetVersionMockFactory.createMultidatasetVersionInStatus(buildBasicSingleVersionWithSequence(1), ProcStatusEnum.DRAFT).getMultidataset();
+        registerMultidatasetMock(MULTIDATASET_08_DRAFT_USED_IN_PUBLICATION_VERSION_86_NAME, multidatasetDraft);
+
+        Multidataset multidatasetProductionValidation = MultidatasetVersionMockFactory.createMultidatasetVersionInStatus(buildBasicSingleVersionWithSequence(2), ProcStatusEnum.PRODUCTION_VALIDATION)
+                .getMultidataset();
+        registerMultidatasetMock(MULTIDATASET_09_PRODUCTION_VALIDATION_USED_IN_PUBLICATION_VERSION_86_NAME, multidatasetProductionValidation);
+
+        Multidataset multidatasetDiffusionValidation = MultidatasetVersionMockFactory.createMultidatasetVersionInStatus(buildBasicSingleVersionWithSequence(3), ProcStatusEnum.DIFFUSION_VALIDATION)
+                .getMultidataset();
+        registerMultidatasetMock(MULTIDATASET_10_DIFFUSION_VALIDATION_USED_IN_PUBLICATION_VERSION_86_NAME, multidatasetDiffusionValidation);
+
+        Multidataset multidatasetValidationRejected = MultidatasetVersionMockFactory.createMultidatasetVersionInStatus(buildBasicSingleVersionWithSequence(4), ProcStatusEnum.VALIDATION_REJECTED)
+                .getMultidataset();
+        registerMultidatasetMock(MULTIDATASET_11_VALIDATION_REJECTED_USED_IN_PUBLICATION_VERSION_86_NAME, multidatasetValidationRejected);
+
+        List<Multidataset> multidatasets = Arrays.asList(multidatasetDraft, multidatasetProductionValidation, multidatasetDiffusionValidation, multidatasetValidationRejected);
+
+        populatePublicationWithStructureWithCubesOnRoot(publicationVersion, datasets, queries, multidatasets);
 
         prepareToPublished(publicationVersion);
 
@@ -731,6 +762,13 @@ public class PublicationVersionMockFactory extends StatisticalResourcesMockFacto
         return publicationVersion;
     }
 
+    private static PublicationVersion getPublicationVersion99WithPublishedMultidataset() {
+        PublicationVersion publicationVersion = createStructureWithPublishedMultidataset();
+        publicationVersion.getSiemacMetadataStatisticalResource().setProcStatus(ProcStatusEnum.PUBLISHED);
+        publicationVersion.getSiemacMetadataStatisticalResource().setValidFrom(new DateTime().minusDays(2));
+        return publicationVersion;
+    }
+    
     private static PublicationVersion getPublicationVersion99MaximumVersionReached() {
         PublicationVersion publicationVersion = createPublicationVersion();
         publicationVersion.getSiemacMetadataStatisticalResource().setProcStatus(ProcStatusEnum.PUBLISHED);
@@ -885,7 +923,16 @@ public class PublicationVersionMockFactory extends StatisticalResourcesMockFacto
         return getStatisticalResourcesPersistedDoMocks().mockChapterElementLevel(publicationVersion);
     }
 
-    public static PublicationVersion populatePublicationWithStructureWithCubesOnRoot(PublicationVersion publicationVersion, List<Dataset> datasets, List<Query> queries) {
+    private static ElementLevel createMultidatasetCuveElementLevel(PublicationVersion publicationVersion, Multidataset multidataset) {
+        return getStatisticalResourcesPersistedDoMocks().mockMultidatasetCuveElementLevel(publicationVersion, multidataset);
+    }
+
+    private static ElementLevel createMultidatasetCuveElementLevel(PublicationVersion publicationVersion, Multidataset multidataset, ElementLevel elementLevel) {
+        return getStatisticalResourcesPersistedDoMocks().mockMultidatasetCuveElementLevel(publicationVersion, multidataset, elementLevel);
+    }
+
+    public static PublicationVersion populatePublicationWithStructureWithCubesOnRoot(PublicationVersion publicationVersion, List<Dataset> datasets, List<Query> queries,
+            List<Multidataset> multidatasets) {
 
         for (Dataset dataset : datasets) {
             ElementLevel elementLevel = createDatasetCubeElementLevel(publicationVersion, dataset);
@@ -894,6 +941,11 @@ public class PublicationVersionMockFactory extends StatisticalResourcesMockFacto
 
         for (Query query : queries) {
             ElementLevel elementLevel = createQueryCubeElementLevel(publicationVersion, query);
+            elementLevel.setOrderInLevel(Long.valueOf(publicationVersion.getChildrenFirstLevel().size() + 1));
+        }
+
+        for (Multidataset multidataset : multidatasets) {
+            ElementLevel elementLevel = createMultidatasetCuveElementLevel(publicationVersion, multidataset);
             elementLevel.setOrderInLevel(Long.valueOf(publicationVersion.getChildrenFirstLevel().size() + 1));
         }
 
@@ -982,6 +1034,21 @@ public class PublicationVersionMockFactory extends StatisticalResourcesMockFacto
         // Cube 04
         ElementLevel elementLevel04 = createQueryCubeElementLevel(publicationVersion, generateQueryWithGeneratedVersion());
         elementLevel04.setOrderInLevel(Long.valueOf(4));
+        return publicationVersion;
+    }
+
+    public static PublicationVersion createStructureWithPublishedMultidataset() {
+        PublicationVersion publicationVersion = createPublicationVersion();
+        publicationVersion.getSiemacMetadataStatisticalResource().setVersionLogic(INIT_VERSION);
+        publicationVersion.getSiemacMetadataStatisticalResource().setCreationDate(new DateTime());
+
+        ElementLevel elementLevel = createChapterElementLevel(publicationVersion);
+        elementLevel.setOrderInLevel(Long.valueOf(1));
+
+        ElementLevel elementLevelMultidataset = createMultidatasetCuveElementLevel(publicationVersion, MultidatasetVersionMockFactory
+                .createMultidatasetVersionPublishedLastVersion(MultidatasetMockFactory.createMultidatasetToAddVersions(1), INIT_VERSION, new DateTime()).getMultidataset(), elementLevel);
+        elementLevelMultidataset.setOrderInLevel(Long.valueOf(1));
+
         return publicationVersion;
     }
 

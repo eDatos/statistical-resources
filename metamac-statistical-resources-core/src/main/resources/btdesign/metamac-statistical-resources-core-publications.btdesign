@@ -4,6 +4,9 @@ import "classpath:/btdesign/metamac-statistical-resources-core-base-enums.btdesi
 import "classpath:/btdesign/metamac-statistical-resources-core-datasets.btdesign"
 
 import "classpath:/btdesign/metamac-statistical-resources-core-queries.btdesign"
+
+import "classpath:/btdesign/metamac-statistical-resources-core-multidatasets.btdesign"
+
 import "classpath:/btdesign/metamac-statistical-resources-core-common.btdesign"
 import "classpath:/btdesign/metamac-core-common-enum.btdesign"
 
@@ -208,6 +211,8 @@ Application PublicationsStatisticalResources {
 			- @Dataset dataset cascade="none" nullable databaseColumn="DATASET_FK";
 			"Query"
 			- @Query query cascade="none" nullable databaseColumn="QUERY_FK";
+			"Multidataset"
+			- @Multidataset multidataset cascade="none" nullable databaseColumn="MULTIDATASET_FK";
             
 			"Provides access to Cube"
             Repository CubeRepository {

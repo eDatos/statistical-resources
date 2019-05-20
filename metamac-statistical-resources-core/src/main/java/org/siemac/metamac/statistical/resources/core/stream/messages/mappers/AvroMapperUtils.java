@@ -73,12 +73,12 @@ public class AvroMapperUtils {
     // return multidatasetRepository;
     // }
     //
-    // public static MultidatasetVersionRepository getMultidatasetVersionRepository() {
-    // if (multidatasetVersionRepository == null) {
-    // multidatasetVersionRepository = ApplicationContextProvider.getApplicationContext().getBean(MultidatasetVersionRepository.class);
-    // }
-    // return multidatasetVersionRepository;
-    // }
+    public static MultidatasetVersionRepository getMultidatasetVersionRepository() {
+        if (multidatasetVersionRepository == null) {
+            multidatasetVersionRepository = ApplicationContextProvider.getApplicationContext().getBean(MultidatasetVersionRepository.class);
+        }
+        return multidatasetVersionRepository;
+    }
 
     public static QueryRepository getQueryRepository() {
         if (queryRepository == null) {

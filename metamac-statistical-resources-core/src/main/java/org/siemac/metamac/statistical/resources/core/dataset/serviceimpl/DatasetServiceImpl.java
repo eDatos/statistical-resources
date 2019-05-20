@@ -80,6 +80,7 @@ import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParam
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.invocation.service.SrmRestInternalService;
 import org.siemac.metamac.statistical.resources.core.invocation.utils.RestMapper;
+import org.siemac.metamac.statistical.resources.core.io.serviceimpl.validators.ValidateDataVersusDsd;
 import org.siemac.metamac.statistical.resources.core.io.utils.ManipulateDataUtils;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.checker.ExternalItemChecker;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
@@ -898,6 +899,8 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         DataStructure dsd = srmRestInternalService.retrieveDsdByUrn(datasetVersion.getRelatedDsd().getUrn());
         DsdAttribute attribute = DsdProcessor.getAttribute(dsd, attributeInstanceDto.getAttributeId());
 
+        checkAttributeInstanceRepresentation(ctx, attributeInstanceDto, datasetVersion, dsd);
+
         // Create attribute
         AttributeInstanceDto attributeInstance = null;
         try {
@@ -913,6 +916,18 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         getDatasetVersionRepository().save(datasetVersion);
 
         return attributeInstance;
+    }
+
+    protected void checkAttributeInstanceRepresentation(ServiceContext ctx, AttributeInstanceDto attributeInstanceDto, DatasetVersion datasetVersion, DataStructure dsd) throws MetamacException {
+        TaskInfoDataset taskInfoDataset = new TaskInfoDataset();
+        taskInfoDataset.setDatasetUrn(datasetVersion.getDataset().getIdentifiableStatisticalResource().getUrn());
+        taskInfoDataset.setDatasetVersionId(datasetVersion.getSiemacMetadataStatisticalResource().getUrn());
+        taskInfoDataset.setDataStructureUrn(datasetVersion.getRelatedDsd().getUrn());
+        ValidateDataVersusDsd validator = new ValidateDataVersusDsd(ctx, dsd, srmRestInternalService, null, taskInfoDataset);
+
+        List<AttributeInstanceDto> attributesInstances = Arrays.asList(attributeInstanceDto);
+
+        validator.checkAttributesInstancesRepresentation(attributesInstances);
     }
 
     protected void processSpecificCoveragesFromAttribute(DatasetVersion datasetVersion, DataStructure dsd, DsdAttribute attribute) throws MetamacException {
@@ -950,6 +965,8 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
 
         DataStructure dsd = srmRestInternalService.retrieveDsdByUrn(datasetVersion.getRelatedDsd().getUrn());
         DsdAttribute attribute = DsdProcessor.getAttribute(dsd, attributeInstanceDto.getAttributeId());
+
+        checkAttributeInstanceRepresentation(ctx, attributeInstanceDto, datasetVersion, dsd);
 
         // Update attribute
         AttributeInstanceDto attributeInstance = null;

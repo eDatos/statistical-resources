@@ -22,6 +22,8 @@ import org.siemac.metamac.statistical.resources.core.dto.publication.Publication
 import org.siemac.metamac.statistical.resources.core.dto.publication.PublicationVersionDto;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
+import org.siemac.metamac.statistical.resources.core.multidataset.domain.Multidataset;
+import org.siemac.metamac.statistical.resources.core.multidataset.domain.MultidatasetRepository;
 import org.siemac.metamac.statistical.resources.core.publication.domain.Chapter;
 import org.siemac.metamac.statistical.resources.core.publication.domain.ChapterRepository;
 import org.siemac.metamac.statistical.resources.core.publication.domain.Cube;
@@ -52,6 +54,9 @@ public class PublicationDto2DoMapperImpl extends BaseDto2DoMapperImpl implements
 
     @Autowired
     private DatasetRepository            datasetRepository;
+
+    @Autowired
+    private MultidatasetRepository       multidatasetRepository;
 
     // --------------------------------------------------------------------------------------
     // PUBLICATION VERSION
@@ -247,6 +252,13 @@ public class PublicationDto2DoMapperImpl extends BaseDto2DoMapperImpl implements
             target.setQuery(query);
         } else {
             target.setQuery(null);
+        }
+
+        if (source.getMultidatasetUrn() != null) {
+            Multidataset multidataset = multidatasetRepository.retrieveByUrn(source.getMultidatasetUrn());
+            target.setMultidataset(multidataset);
+        } else {
+            target.setMultidataset(null);
         }
 
         return target;

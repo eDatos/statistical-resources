@@ -210,6 +210,10 @@ Application FacadeStatisticalResources {
     		@PublicationVersionDto versioningPublicationVersion(@PublicationVersionDto publicationVersionDto, @VersionTypeEnum versionType) throws MetamacException;
     		@PublicationVersionBaseDto versioningPublicationVersion(@PublicationVersionBaseDto publicationVersionDto, @VersionTypeEnum versionType) throws MetamacException;
 
+			// MULTIDATASET
+			"Find all multidatasets"
+	   		MetamacCriteriaResult<@RelatedResourceDto> findMultidatasetsByCondition(MetamacCriteria criteria) throws MetamacException;
+
             // MULTIDATASET VERSION
             "Creates multidataset"
             @MultidatasetVersionDto createMultidataset(@MultidatasetVersionDto multidatasetVersionDto, @ExternalItemDto statisticalOperation) throws MetamacException;
