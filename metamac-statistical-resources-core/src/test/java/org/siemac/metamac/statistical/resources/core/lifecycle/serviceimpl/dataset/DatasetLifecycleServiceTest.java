@@ -2,6 +2,7 @@ package org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.data
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
@@ -10,6 +11,7 @@ import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.CommonAsserts.assertEmptyMethod;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_102_PREPARED_TO_PUBLISH_WITH_ATTRIBUTE_VALUES_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_14_OPER_03_CODE_01_PUBLISHED_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_16_DRAFT_READY_FOR_PRODUCTION_VALIDATION_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_19_PRODUCTION_VALIDATION_NOT_READY_NAME;
@@ -416,6 +418,21 @@ public class DatasetLifecycleServiceTest extends StatisticalResourcesBaseTest im
             assertFalse(datasetVersionOld.getDatasources().get(i).getIdentifiableStatisticalResource().getCode().equals(datasourcesMapping.get(i).getNewValue()));
             assertFalse(datasetVersionNew.getDatasources().get(i).getIdentifiableStatisticalResource().getCode().equals(datasourcesMapping.get(i).getOldValue()));
         }
+    }
+
+    @Test
+    public void copyResourceForVersioningCheckAttributesCoverage() throws Exception {
+        DatasetVersion datasetVersionSource = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_102_PREPARED_TO_PUBLISH_WITH_ATTRIBUTE_VALUES_NAME);
+        assertNotNull(datasetVersionSource.getAttributesCoverage());
+        assertTrue(datasetVersionSource.getAttributesCoverage().size() > 0);
+
+        DatasetVersion datasetVersionTarget = datasetLifecycleService.copyResourceForVersioning(getServiceContextAdministrador(), datasetVersionSource);
+        assertNotNull(datasetVersionTarget.getAttributesCoverage());
+        assertTrue(datasetVersionTarget.getAttributesCoverage().size() > 0);
+
+        assertEquals(datasetVersionSource.getAttributesCoverage().size(), datasetVersionTarget.getAttributesCoverage().size());
+
+        DatasetsAsserts.assertEqualsAttributeValuesCollection(datasetVersionSource.getAttributesCoverage(), datasetVersionTarget.getAttributesCoverage());
     }
 
     // ------------------------------------------------------------------------------------------------------

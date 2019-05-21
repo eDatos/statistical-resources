@@ -262,6 +262,7 @@ public class PublicationDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements
         target.setOrderInLevel(source.getElementLevel().getOrderInLevel());
         target.setQueryUrn(source.getQueryUrn());
         target.setDatasetUrn(source.getDatasetUrn());
+        target.setMultidatasetUrn(source.getMultidatasetUrn());
         return target;
     }
 

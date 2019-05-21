@@ -29,6 +29,8 @@ import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResour
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionRepository;
 import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
+import org.siemac.metamac.statistical.resources.core.multidataset.domain.MultidatasetVersion;
+import org.siemac.metamac.statistical.resources.core.multidataset.domain.MultidatasetVersionRepository;
 import org.siemac.metamac.statistical.resources.core.publication.domain.Cube;
 import org.siemac.metamac.statistical.resources.core.publication.domain.ElementLevel;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
@@ -40,6 +42,7 @@ import org.siemac.metamac.statistical_resources.rest.external.StatisticalResourc
 import org.siemac.metamac.statistical_resources.rest.external.exception.RestServiceExceptionType;
 import org.siemac.metamac.statistical_resources.rest.external.v1_0.mapper.base.CommonDo2RestMapperV10;
 import org.siemac.metamac.statistical_resources.rest.external.v1_0.mapper.dataset.DatasetsDo2RestMapperV10;
+import org.siemac.metamac.statistical_resources.rest.external.v1_0.mapper.multidataset.MultidatasetsDo2RestMapperV10;
 import org.siemac.metamac.statistical_resources.rest.external.v1_0.mapper.query.QueriesDo2RestMapperV10;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,24 +53,30 @@ import org.springframework.stereotype.Component;
 public class CollectionsDo2RestMapperV10Impl implements CollectionsDo2RestMapperV10 {
 
     @Autowired
-    private CommonDo2RestMapperV10       commonDo2RestMapper;
+    private CommonDo2RestMapperV10        commonDo2RestMapper;
 
     @Autowired
-    private DatasetsDo2RestMapperV10     datasetsDo2RestMapper;
+    private DatasetsDo2RestMapperV10      datasetsDo2RestMapper;
 
     @Autowired
-    private DatasetVersionRepository     datasetVersionRepository;
+    private DatasetVersionRepository      datasetVersionRepository;
 
     @Autowired
-    private QueryVersionRepository       queryVersionRepository;
+    private QueryVersionRepository        queryVersionRepository;
 
     @Autowired
-    private QueriesDo2RestMapperV10      queriesDo2RestMapper;
+    private MultidatasetVersionRepository multidatasetVersionRepository;
 
     @Autowired
-    private PublicationVersionRepository publicationVersionRepository;
+    private QueriesDo2RestMapperV10       queriesDo2RestMapper;
 
-    private static final Logger          logger = LoggerFactory.getLogger(CollectionsDo2RestMapperV10.class);
+    @Autowired
+    private MultidatasetsDo2RestMapperV10 multidatasetsDo2RestMapper;
+
+    @Autowired
+    private PublicationVersionRepository  publicationVersionRepository;
+
+    private static final Logger           logger = LoggerFactory.getLogger(CollectionsDo2RestMapperV10.class);
 
     @Override
     public Collections toCollections(PagedResult<PublicationVersion> sources, String agencyID, String resourceID, String query, String orderBy, Integer limit, List<String> selectedLanguages) {
@@ -237,6 +246,9 @@ public class CollectionsDo2RestMapperV10Impl implements CollectionsDo2RestMapper
             } else if (source.getQuery() != null) {
                 QueryVersion query = queryVersionRepository.retrieveLastVersion(source.getQueryUrn());
                 target.setQuery(queriesDo2RestMapper.toResource(query, selectedLanguages));
+            } else if (source.getMultidataset() != null) {
+                MultidatasetVersion multidatasetVersion = multidatasetVersionRepository.retrieveLastVersion(source.getMultidatasetUrn());
+                target.setMultidataset(multidatasetsDo2RestMapper.toResource(multidatasetVersion, selectedLanguages));
             }
         } else {
             if (source.getDataset() != null) {
@@ -245,6 +257,9 @@ public class CollectionsDo2RestMapperV10Impl implements CollectionsDo2RestMapper
             } else if (source.getQuery() != null) {
                 QueryVersion query = queryVersionRepository.retrieveLastPublishedVersion(source.getQueryUrn());
                 target.setQuery(queriesDo2RestMapper.toResource(query, selectedLanguages));
+            } else if (source.getMultidataset() != null) {
+                MultidatasetVersion multidatasetVersion = multidatasetVersionRepository.retrieveLastPublishedVersion(source.getMultidatasetUrn());
+                target.setMultidataset(multidatasetsDo2RestMapper.toResource(multidatasetVersion, selectedLanguages));
             }
         }
 

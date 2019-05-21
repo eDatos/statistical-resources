@@ -38,7 +38,10 @@ Application MultidatasetsStatisticalResources {
 			"Finds multidatasets by criteria"
     		PagedResult<@MultidatasetVersion> findMultidatasetVersionsByCondition(List<ConditionalCriteria> conditions, PagingParameter pagingParameter) throws MetamacException;
 			"Deletes multidataset version. This must be last version and no published"
-    		deleteMultidatasetVersion(String multidatasetVersionUrn) throws MetamacException; 	
+    		deleteMultidatasetVersion(String multidatasetVersionUrn) throws MetamacException;
+    		"Finds multidatasets by criteria"
+    		PagedResult<@Multidataset> findMultidatasetsByCondition(List<ConditionalCriteria> conditions, PagingParameter pagingParameter)  throws MetamacException;
+    		 	
     		
     		  // Cubes
             @MultidatasetCube createMultidatasetCube(String multidatasetVersionUrn, @MultidatasetCube cube) throws MetamacException;
@@ -69,6 +72,7 @@ Application MultidatasetsStatisticalResources {
 			Repository MultidatasetRepository {
 				@Multidataset retrieveByUrn(String urn) throws MetamacException;
 				findByCondition;
+				findByCondition(PagingParameter pagingParameter);
 				save;
 				delete;
 			}
@@ -123,6 +127,7 @@ Application MultidatasetsStatisticalResources {
             
             "Added explicitly to avoid that Sculptor generate UUID"
             Long id key;
+            String identifier;
             
             - @NameableStatisticalResource nameableStatisticalResource databaseColumn="STATISTICAL_RESOURCE_FK" not nullable cascade="all";
             

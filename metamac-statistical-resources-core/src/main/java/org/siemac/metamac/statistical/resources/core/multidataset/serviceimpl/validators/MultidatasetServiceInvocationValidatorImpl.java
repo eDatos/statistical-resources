@@ -81,6 +81,8 @@ public class MultidatasetServiceInvocationValidatorImpl extends BaseInvocationVa
     }
 
     private static void checkCube(MultidatasetCube cube, List<MetamacExceptionItem> exceptions) {
+        StatisticalResourcesValidationUtils.checkMetadataRequired(cube.getIdentifier(), ServiceExceptionParameters.MULTIDATASET_CUBE__IDENTIFIER, exceptions);
+
         if (cube.getDataset() != null && cube.getQuery() != null) {
             exceptions.add(new MetamacExceptionItem(ServiceExceptionType.METADATA_UNEXPECTED,
                     ServiceExceptionParameters.MULTIDATASET_CUBE__DATASET + " / " + ServiceExceptionParameters.MULTIDATASET_CUBE__QUERY));
@@ -146,6 +148,10 @@ public class MultidatasetServiceInvocationValidatorImpl extends BaseInvocationVa
     }
 
     private static void checkMultidatasetVersion(MultidatasetVersion multidatasetVersion, List<MetamacExceptionItem> exceptions) {
+        // NOTHING
+    }
+
+    public static void checkFindMultidatasetsByCondition(List<ConditionalCriteria> conditions, PagingParameter pagingParameter, List<MetamacExceptionItem> exceptions) {
         // NOTHING
     }
 

@@ -1,7 +1,6 @@
 package org.siemac.metamac.statistical.resources.web.client.multidataset.model.ds;
 
 import org.siemac.metamac.statistical.resources.core.dto.multidataset.MultidatasetCubeDto;
-import org.siemac.metamac.statistical.resources.web.client.multidataset.model.ds.MultidatasetCubeDS;
 import org.siemac.metamac.web.common.client.widgets.NavigableTreeNode;
 
 public class MultidatasetCubeTreeNode extends NavigableTreeNode {
@@ -15,6 +14,10 @@ public class MultidatasetCubeTreeNode extends NavigableTreeNode {
 
     public String getUrn() {
         return getAttributeAsString(MultidatasetCubeDS.URN);
+    }
+
+    public void setIdentifier(String value) {
+        setAttribute(MultidatasetCubeDS.IDENTIFIER, value);
     }
 
     @Override

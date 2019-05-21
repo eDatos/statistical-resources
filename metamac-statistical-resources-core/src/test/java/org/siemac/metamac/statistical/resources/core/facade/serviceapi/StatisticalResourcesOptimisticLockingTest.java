@@ -1959,4 +1959,8 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
         // no optimistic locking in this operation
     }
 
+    @Override
+    public void testFindMultidatasetsByCondition() throws Exception {
+        // no optimistic locking in this operation
+    }
 }

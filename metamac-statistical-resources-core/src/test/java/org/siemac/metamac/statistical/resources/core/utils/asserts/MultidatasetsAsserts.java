@@ -93,12 +93,14 @@ public class MultidatasetsAsserts extends BaseAsserts {
     public static void assertFilledMetadataForMultidatasetCube(MultidatasetCube cube) {
         assertNotNull(cube.getNameableStatisticalResource().getUrn());
         assertNotNull(cube.getNameableStatisticalResource().getCode());
+        assertNotNull(cube.getIdentifier());
         assertNotNull(cube.getOrderInMultidataset());
         assertNotNull(cube.getMultidatasetVersion());
     }
 
     public static void assertRelaxedEqualsMultidatasetCube(MultidatasetCube expected, MultidatasetCube actual) {
         assertEqualsNameableStatisticalResource(expected.getNameableStatisticalResource(), actual.getNameableStatisticalResource());
+        assertEquals(expected.getIdentifier(), actual.getIdentifier());
         assertEquals(expected.getOrderInMultidataset(), actual.getOrderInMultidataset());
         assertRelaxedEqualsObject(expected.getMultidatasetVersion(), actual.getMultidatasetVersion());
         assertRelaxedEqualsObject(expected.getDataset(), actual.getDataset());
@@ -147,6 +149,7 @@ public class MultidatasetsAsserts extends BaseAsserts {
     private static void assertEqualsVersionedMultidatasetCube(MultidatasetCube expected, MultidatasetCube actual) {
         if (expected != null && actual != null) {
             assertEqualsVersionedNameableStatisticalResourceForResourceThatChangesCode(expected.getNameableStatisticalResource(), actual.getNameableStatisticalResource());
+            assertEquals(expected.getIdentifier(), actual.getIdentifier());
             assertEquals(expected.getDatasetUrn(), actual.getDatasetUrn());
             assertEquals(expected.getQueryUrn(), actual.getQueryUrn());
         }
@@ -278,6 +281,7 @@ public class MultidatasetsAsserts extends BaseAsserts {
 
     public static void assertEqualsMultidatasetCube(MultidatasetCube entity, MultidatasetCubeDto dto, MapperEnum mapperEnum) {
         assertEqualsNameableStatisticalResource(entity.getNameableStatisticalResource(), dto, mapperEnum);
+        assertEquals(entity.getIdentifier(), dto.getIdentifier());
         assertEquals(entity.getOrderInMultidataset(), dto.getOrderInMultidataset());
         assertEquals(entity.getMultidatasetVersion().getSiemacMetadataStatisticalResource().getUrn(), dto.getParentMultidatasetUrn());
         assertEquals(entity.getDatasetUrn(), dto.getDatasetUrn());

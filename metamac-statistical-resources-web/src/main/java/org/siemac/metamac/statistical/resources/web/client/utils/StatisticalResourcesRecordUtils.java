@@ -439,6 +439,7 @@ public class StatisticalResourcesRecordUtils extends RecordUtils {
 
         multidatasetCubeNode.setID(multidatasetCubeDto.getUrn());
         multidatasetCubeNode.setUrn(multidatasetCubeDto.getUrn());
+        multidatasetCubeNode.setIdentifier(multidatasetCubeDto.getIdentifier());
         multidatasetCubeNode.setTitle(InternationalStringUtils.getLocalisedString(multidatasetCubeDto.getTitle()));
         multidatasetCubeNode.setDescription(InternationalStringUtils.getLocalisedString(multidatasetCubeDto.getDescription()));
 

@@ -169,6 +169,9 @@ public class MultidatasetDto2DoMapperImpl extends BaseDto2DoMapperImpl implement
         // Hierarchy
         nameableStatisticalResourceDtoToDo(source, target.getNameableStatisticalResource(), ServiceExceptionParameters.CUBE);
 
+        // Identifier
+        target.setIdentifier(source.getIdentifier());
+
         // Related entities
         if (source.getParentMultidatasetUrn() != null) {
             MultidatasetVersion parentMultidatasetVersion = multidatasetVersionRepository.retrieveByUrn(source.getParentMultidatasetUrn());
