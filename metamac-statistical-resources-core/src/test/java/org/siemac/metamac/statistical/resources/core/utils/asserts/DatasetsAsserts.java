@@ -230,6 +230,8 @@ public class DatasetsAsserts extends BaseAsserts {
 
         assertEqualsInternationalString(expected.getBibliographicCitation(), actual.getBibliographicCitation());
 
+        assertEquals(expected.isKeepAllData(), actual.isKeepAllData());
+
     }
 
     // -----------------------------------------------------------------
@@ -289,12 +291,14 @@ public class DatasetsAsserts extends BaseAsserts {
                 assertEquals(entity.getFormatExtentObservations(), dto.getFormatExtentObservations());
 
                 assertEqualsInternationalString(entity.getBibliographicCitation(), dto.getBibliographicCitation());
+                assertEquals(entity.isKeepAllData(), dto.isKeepAllData());
                 break;
             case DTO2DO:
                 assertEqualsExternalItemCollectionMapper(entity.getStatisticalUnit(), dto.getStatisticalUnit());
                 assertEqualsExternalItem(entity.getRelatedDsd(), dto.getRelatedDsd(), mapperEnum);
                 assertEqualsExternalItem(entity.getUpdateFrequency(), dto.getUpdateFrequency(), mapperEnum);
                 assertEqualsStatisticOfficiality(entity.getStatisticOfficiality(), dto.getStatisticOfficiality());
+                assertEquals(entity.isKeepAllData(), dto.isKeepAllData());
                 break;
         }
     }

@@ -1,41 +1,9 @@
 package org.siemac.metamac.statistical.resources.core.dataset.mapper;
 
-import java.util.Date;
-
-import org.joda.time.DateTime;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.siemac.metamac.core.common.dto.ExternalItemDto;
-import org.siemac.metamac.core.common.exception.MetamacException;
-import org.siemac.metamac.core.common.test.utils.mocks.configuration.MetamacMock;
-import org.siemac.metamac.core.common.util.shared.VersionUtil;
-import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
-import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
-import org.siemac.metamac.statistical.resources.core.dataset.domain.Categorisation;
-import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
-import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
-import org.siemac.metamac.statistical.resources.core.dataset.domain.StatisticOfficiality;
-import org.siemac.metamac.statistical.resources.core.dto.datasets.CategorisationDto;
-import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
-import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasourceDto;
-import org.siemac.metamac.statistical.resources.core.enume.domain.NextVersionTypeEnum;
-import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
-import org.siemac.metamac.statistical.resources.core.facade.serviceapi.StatisticalResourcesServiceFacade;
-import org.siemac.metamac.statistical.resources.core.utils.asserts.BaseAsserts;
-import org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts;
-import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesDtoMocks;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.transaction.TransactionConfiguration;
-import org.springframework.transaction.annotation.Transactional;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts.assertEqualsCategorisation;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts.assertEqualsDatasetVersion;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts.assertEqualsDatasource;
@@ -59,6 +27,38 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.StatisticOfficialityMockFactory.STATISTIC_OFFICIALITY_01_BASIC_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.StatisticOfficialityMockFactory.STATISTIC_OFFICIALITY_02_BASIC_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesDtoMocks.createStatisticOfficialityDtoFromDo;
+
+import java.util.Date;
+
+import org.joda.time.DateTime;
+import org.junit.Assert;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.siemac.metamac.core.common.dto.ExternalItemDto;
+import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.core.common.exception.MetamacExceptionBuilder;
+import org.siemac.metamac.core.common.test.utils.mocks.configuration.MetamacMock;
+import org.siemac.metamac.core.common.util.shared.VersionUtil;
+import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
+import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.Categorisation;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.StatisticOfficiality;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.CategorisationDto;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
+import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasourceDto;
+import org.siemac.metamac.statistical.resources.core.enume.domain.NextVersionTypeEnum;
+import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
+import org.siemac.metamac.statistical.resources.core.facade.serviceapi.StatisticalResourcesServiceFacade;
+import org.siemac.metamac.statistical.resources.core.utils.asserts.BaseAsserts;
+import org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesDtoMocks;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.transaction.TransactionConfiguration;
+import org.springframework.transaction.annotation.Transactional;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:spring/statistical-resources/include/rest-services-mockito.xml", "classpath:spring/statistical-resources/applicationContext-test.xml"})
@@ -246,6 +246,77 @@ public class DatasetDto2DoMapperTest extends StatisticalResourcesBaseTest {
         DatasetVersion entity = datasetDto2DoMapper.datasetVersionDtoToDo(dto);
         assertEquals(statisticOfficiality.getId(), entity.getStatisticOfficiality().getId());
         assertEquals(statisticOfficiality.getIdentifier(), entity.getStatisticOfficiality().getIdentifier());
+    }
+
+    @Test
+    @MetamacMock(DATASET_VERSION_62_DRAFT_NOT_INITIAL_VERSION_NAME)
+    public void testDatasetDtoToDoErrorCantChangeKeepAllDataNotInitialVersionDataset() throws MetamacException {
+        DatasetVersion source = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_62_DRAFT_NOT_INITIAL_VERSION_NAME);
+        DatasetVersionDto dto = buildDatasetVersionDtoFromDo(source);
+
+        dto.setKeepAllData(!source.isKeepAllData());
+
+        expectedMetamacException(MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.DATASET_VERSION_CANT_ALTER_KEEP_ALL_DATA).build());
+
+        datasetDto2DoMapper.datasetVersionDtoToDo(dto);
+    }
+
+    @Test
+    @MetamacMock(DATASET_VERSION_61_PUBLISHED_INITIAL_VERSION_NAME)
+    public void testDatasetDtoToDoErrorCantChangeKeepAllDataPublishedDataset() throws MetamacException {
+        DatasetVersion source = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_61_PUBLISHED_INITIAL_VERSION_NAME);
+        DatasetVersionDto dto = buildDatasetVersionDtoFromDo(source);
+
+        dto.setKeepAllData(!source.isKeepAllData());
+
+        expectedMetamacException(MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.DATASET_VERSION_CANT_ALTER_KEEP_ALL_DATA).build());
+
+        datasetDto2DoMapper.datasetVersionDtoToDo(dto);
+    }
+
+    @Test
+    @MetamacMock({DATASET_VERSION_57_DRAFT_INITIAL_VERSION_NAME, DATASET_VERSION_58_PRODUCTION_VALIDATION_INITIAL_VERSION_NAME, DATASET_VERSION_59_DIFFUSION_VALIDATION_INITIAL_VERSION_NAME,
+            DATASET_VERSION_60_VALIDATION_REJECTED_INITIAL_VERSION_NAME})
+    public void testDatasetDtoToDoCanChangeKeepAllData() throws MetamacException {
+        // Draft - Initial version
+        DatasetVersion source = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_57_DRAFT_INITIAL_VERSION_NAME);
+        DatasetVersionDto dto = buildDatasetVersionDtoFromDo(source);
+
+        dto.setKeepAllData(!source.isKeepAllData());
+
+        DatasetVersion entity = datasetDto2DoMapper.datasetVersionDtoToDo(dto);
+
+        assertEquals(!source.isKeepAllData(), entity.isKeepAllData());
+
+        // Production validation - Initial version
+        source = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_58_PRODUCTION_VALIDATION_INITIAL_VERSION_NAME);
+        dto = buildDatasetVersionDtoFromDo(source);
+
+        dto.setKeepAllData(!source.isKeepAllData());
+
+        entity = datasetDto2DoMapper.datasetVersionDtoToDo(dto);
+
+        assertEquals(!source.isKeepAllData(), entity.isKeepAllData());
+
+        // Diffusion validation - Initial version
+        source = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_59_DIFFUSION_VALIDATION_INITIAL_VERSION_NAME);
+        dto = buildDatasetVersionDtoFromDo(source);
+
+        dto.setKeepAllData(!source.isKeepAllData());
+
+        entity = datasetDto2DoMapper.datasetVersionDtoToDo(dto);
+
+        assertEquals(!source.isKeepAllData(), entity.isKeepAllData());
+
+        // Validation rejected - Initial version
+        source = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_60_VALIDATION_REJECTED_INITIAL_VERSION_NAME);
+        dto = buildDatasetVersionDtoFromDo(source);
+
+        dto.setKeepAllData(!source.isKeepAllData());
+
+        entity = datasetDto2DoMapper.datasetVersionDtoToDo(dto);
+
+        assertEquals(!source.isKeepAllData(), entity.isKeepAllData());
     }
 
     @Test

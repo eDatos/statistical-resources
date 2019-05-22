@@ -403,6 +403,19 @@ public class DatasetLifecycleServiceTest extends StatisticalResourcesBaseTest im
     }
 
     @Test
+    public void testCopyResourceForVersioningKeepAllData() throws Exception {
+        DatasetVersion source = mockDatasetVersionInRepoFromMockFactory(DATASET_VERSION_70_PREPARED_TO_PUBLISH_EXTERNAL_ITEM_FULL_NAME);
+
+        source.setKeepAllData(Boolean.TRUE);
+        DatasetVersion target = datasetLifecycleService.copyResourceForVersioning(getServiceContextAdministrador(), source);
+        assertEquals(source.isKeepAllData(), target.isKeepAllData());
+
+        source.setKeepAllData(Boolean.FALSE);
+        target = datasetLifecycleService.copyResourceForVersioning(getServiceContextAdministrador(), source);
+        assertEquals(source.isKeepAllData(), target.isKeepAllData());
+    }
+
+    @Test
     public void testCreateDatasourceMapping() throws Exception {
         DatasetVersion datasetVersionOld = mockDatasetVersionInRepoFromMockFactory(DATASET_VERSION_32_WITH_MULTIPLE_DATASOURCES_LINKED_TO_FILE_NAME);
         DatasetVersion datasetVersionNew = datasetLifecycleService.copyResourceForVersioning(getServiceContextAdministrador(), datasetVersionOld);
