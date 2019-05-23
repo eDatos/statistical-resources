@@ -1878,6 +1878,7 @@
 				}
 			]
 		},
+		"keepAllData": true,
 		"language": {
 			"managementAppLink": "http://localhost:8080/metamac-srm-web/language01",
 			"id": "language01",
