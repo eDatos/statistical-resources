@@ -14,6 +14,7 @@ public class QueryListGrid extends NavigableListGrid {
         super();
         this.setShowAllRecords(true);
         this.setFields(ResourceFieldUtils.getQueryListGridFields());
+        this.setCanMultiSort(Boolean.FALSE);
     }
 
     public void setQueries(List<QueryVersionBaseDto> queries) {

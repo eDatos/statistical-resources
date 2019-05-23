@@ -52,6 +52,7 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersi
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionProperties;
 import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.DatasetService;
 import org.siemac.metamac.statistical.resources.core.io.utils.ManipulateDataUtils;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.StatisticalResourcesMockFactory;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesPersistedDoMocks;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -84,7 +85,6 @@ public abstract class SdmxRestExternalFacadeV21BaseTest extends MetamacRestBaseT
     private static final String                    DATASET_ID         = "STR1";
     public static final String                     AGENCY_1           = "agency1";
     public static final String                     DATASET_1_CODE     = "dataset1";
-    public static final String                     VERSION_1          = "01.000";
 
     private static final List<String>              DIMENSIONS         = Arrays.asList("FREQ", "CURRENCY", "CURRENCY_DENOM", "EXR_TYPE", "EXR_VAR", "TIME_PERIOD");
 
@@ -307,7 +307,7 @@ public abstract class SdmxRestExternalFacadeV21BaseTest extends MetamacRestBaseT
                 }
 
                 if (StringUtils.isEmpty(version)) {
-                    version = "1.0";
+                    version = StatisticalResourcesMockFactory.INIT_VERSION;
                 }
 
                 List<DatasetVersion> datasets = new ArrayList<DatasetVersion>();
@@ -376,7 +376,7 @@ public abstract class SdmxRestExternalFacadeV21BaseTest extends MetamacRestBaseT
                 }
 
                 if (StringUtils.isEmpty(version)) {
-                    version = "1.0";
+                    version = StatisticalResourcesMockFactory.INIT_VERSION;
                 }
 
                 List<Categorisation> categorisations = new ArrayList<Categorisation>();

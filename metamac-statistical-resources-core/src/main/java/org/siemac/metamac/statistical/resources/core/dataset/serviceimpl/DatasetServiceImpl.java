@@ -32,7 +32,6 @@ import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.core.common.exception.utils.ExceptionUtils;
 import org.siemac.metamac.core.common.util.GeneratorUrnUtils;
 import org.siemac.metamac.core.common.util.SdmxTimeUtils;
-import org.siemac.metamac.core.common.util.shared.VersionUtil;
 import org.siemac.metamac.core.common.util.transformers.MetamacTransformer;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.CodeResourceInternal;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Codes;
@@ -539,7 +538,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
 
         // Remove dataset version
         String datasetRepositoryId = datasetVersion.getDatasetRepositoryId();
-        if (VersionUtil.isInitialVersion(datasetVersion.getSiemacMetadataStatisticalResource().getVersionLogic())) {
+        if (StatisticalResourcesVersionUtils.isInitialVersion(datasetVersion.getSiemacMetadataStatisticalResource().getVersionLogic())) {
             Dataset dataset = datasetVersion.getDataset();
             getDatasetRepository().delete(dataset);
         } else {

@@ -50,6 +50,7 @@ import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedRes
 import org.siemac.metamac.statistical.resources.core.enume.domain.VersionRationaleTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryTypeEnum;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.StatisticalResourcesMockFactory;
 
 import es.gobcan.istac.edatos.dataset.repository.dto.AttributeInstanceDto;
 
@@ -414,7 +415,7 @@ public class StatisticalResourcesDtoMocks extends MetamacMocks {
     }
 
     private static void mockVersionableStatisticalResourceDto(VersionableStatisticalResourceDto versionableStatisticalResourceDto) {
-        versionableStatisticalResourceDto.setVersionLogic("01.500");
+        versionableStatisticalResourceDto.setVersionLogic(StatisticalResourcesMockFactory.ANOTHER_NOT_INITIAL_VERSION);
         versionableStatisticalResourceDto.setNextVersionDate(new DateTime().toDate());
         versionableStatisticalResourceDto.setValidFrom(new DateTime().toDate());
         versionableStatisticalResourceDto.setValidTo(new DateTime().toDate());

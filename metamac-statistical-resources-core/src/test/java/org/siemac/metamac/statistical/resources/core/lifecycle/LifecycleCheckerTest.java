@@ -1,5 +1,17 @@
 package org.siemac.metamac.statistical.resources.core.lifecycle;
 
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.siemac.metamac.statistical.resources.core.error.utils.ServiceExceptionParametersUtils.addParameter;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.templates.HasLifecycleMocks.mockHasLifecycleStatisticalResourcePrepareToDiffusionValidation;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.templates.HasLifecycleMocks.mockHasLifecycleStatisticalResourcePrepareToProductionValidation;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.templates.HasLifecycleMocks.mockHasLifecycleStatisticalResourcePrepareToPublished;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.templates.HasLifecycleMocks.mockHasLifecycleStatisticalResourcePrepareToValidationRejected;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.templates.HasLifecycleMocks.mockHasLifecycleStatisticalResourcePublished;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -12,10 +24,8 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.siemac.metamac.common.test.utils.MetamacAsserts;
-import org.siemac.metamac.core.common.enume.domain.VersionPatternEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
-import org.siemac.metamac.core.common.util.shared.VersionUtil;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
 import org.siemac.metamac.statistical.resources.core.base.domain.HasLifecycle;
 import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatisticalResource;
@@ -27,19 +37,7 @@ import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionSingl
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.checker.ExternalItemChecker;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.checker.RelatedResourceChecker;
-
-import static org.junit.Assert.assertEquals;
-
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.siemac.metamac.statistical.resources.core.error.utils.ServiceExceptionParametersUtils.addParameter;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.templates.HasLifecycleMocks.mockHasLifecycleStatisticalResourcePrepareToDiffusionValidation;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.templates.HasLifecycleMocks.mockHasLifecycleStatisticalResourcePrepareToProductionValidation;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.templates.HasLifecycleMocks.mockHasLifecycleStatisticalResourcePrepareToPublished;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.templates.HasLifecycleMocks.mockHasLifecycleStatisticalResourcePrepareToValidationRejected;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.templates.HasLifecycleMocks.mockHasLifecycleStatisticalResourcePublished;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.StatisticalResourcesMockFactory;
 
 @RunWith(MockitoJUnitRunner.class)
 public class LifecycleCheckerTest extends StatisticalResourcesBaseTest {
@@ -82,7 +80,7 @@ public class LifecycleCheckerTest extends StatisticalResourcesBaseTest {
     @Test
     public void testLifeCycleResourceCheckSendToProductionValidationIncorrectVersionRationaleType() throws Exception {
         HasLifecycle mockedResource = mockHasLifecycleStatisticalResourcePrepareToProductionValidation();
-        mockedResource.getLifeCycleStatisticalResource().setVersionLogic(VersionUtil.PATTERN_XXX_YYY_INITIAL_VERSION);
+        mockedResource.getLifeCycleStatisticalResource().setVersionLogic(StatisticalResourcesMockFactory.INIT_VERSION);
 
         for (VersionRationaleTypeEnum versionRationaleType2Test : VersionRationaleTypeEnum.values()) {
             mockedResource.getLifeCycleStatisticalResource().getVersionRationaleTypes().clear();
@@ -95,8 +93,8 @@ public class LifecycleCheckerTest extends StatisticalResourcesBaseTest {
             if (VersionRationaleTypeEnum.MAJOR_NEW_RESOURCE.equals(versionRationaleType2Test)) {
                 assertEquals(0, exceptionItems.size());
             } else {
-                MetamacException expected = new MetamacException(Arrays.asList(new MetamacExceptionItem(ServiceExceptionType.METADATA_INCORRECT, addParameter(baseMetadata,
-                        ServiceExceptionSingleParameters.VERSION_RATIONALE_TYPES))));
+                MetamacException expected = new MetamacException(
+                        Arrays.asList(new MetamacExceptionItem(ServiceExceptionType.METADATA_INCORRECT, addParameter(baseMetadata, ServiceExceptionSingleParameters.VERSION_RATIONALE_TYPES))));
                 MetamacAsserts.assertEqualsMetamacException(expected, new MetamacException(exceptionItems));
             }
         }
@@ -123,8 +121,8 @@ public class LifecycleCheckerTest extends StatisticalResourcesBaseTest {
                     List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
                     lifecycleChecker.checkSendToProductionValidation(mockedResource, baseMetadata, exceptionItems);
                 } catch (MetamacException e) {
-                    MetamacAsserts.assertEqualsMetamacException(new MetamacException(ServiceExceptionType.LIFE_CYCLE_WRONG_PROC_STATUS, mockedResource.getLifeCycleStatisticalResource().getUrn(),
-                            validStatus), e);
+                    MetamacAsserts.assertEqualsMetamacException(
+                            new MetamacException(ServiceExceptionType.LIFE_CYCLE_WRONG_PROC_STATUS, mockedResource.getLifeCycleStatisticalResource().getUrn(), validStatus), e);
                 }
             }
         }
@@ -184,8 +182,8 @@ public class LifecycleCheckerTest extends StatisticalResourcesBaseTest {
                     lifecycleChecker.checkSendToValidationRejected(mockedResource, baseMetadata, exceptionItems);
                 } catch (MetamacException e) {
                     assertEquals(1, e.getExceptionItems().size());
-                    MetamacAsserts.assertEqualsMetamacExceptionItem(ServiceExceptionType.LIFE_CYCLE_WRONG_PROC_STATUS, 2, new String[]{mockedResource.getLifeCycleStatisticalResource().getUrn(),
-                            "PRODUCTION_VALIDATION, DIFFUSION_VALIDATION"}, e.getExceptionItems().get(0));
+                    MetamacAsserts.assertEqualsMetamacExceptionItem(ServiceExceptionType.LIFE_CYCLE_WRONG_PROC_STATUS, 2,
+                            new String[]{mockedResource.getLifeCycleStatisticalResource().getUrn(), "PRODUCTION_VALIDATION, DIFFUSION_VALIDATION"}, e.getExceptionItems().get(0));
                 }
             }
         }
@@ -221,8 +219,8 @@ public class LifecycleCheckerTest extends StatisticalResourcesBaseTest {
                     lifecycleChecker.checkSendToPublished(mockedResource, mockedPreviousVersion, baseMetadata, exceptionItems);
                 } catch (MetamacException e) {
                     assertEquals(1, e.getExceptionItems().size());
-                    MetamacAsserts.assertEqualsMetamacExceptionItem(ServiceExceptionType.LIFE_CYCLE_WRONG_PROC_STATUS, 2, new String[]{mockedResource.getLifeCycleStatisticalResource().getUrn(),
-                            "DIFFUSION_VALIDATION"}, e.getExceptionItems().get(0));
+                    MetamacAsserts.assertEqualsMetamacExceptionItem(ServiceExceptionType.LIFE_CYCLE_WRONG_PROC_STATUS, 2,
+                            new String[]{mockedResource.getLifeCycleStatisticalResource().getUrn(), "DIFFUSION_VALIDATION"}, e.getExceptionItems().get(0));
                 }
             }
         }
@@ -262,7 +260,7 @@ public class LifecycleCheckerTest extends StatisticalResourcesBaseTest {
     public void testLifeCycleResourceCheckSendToPublishedProcStatusErrorRequiredPreviousVersion() throws Exception {
 
         HasLifecycle mockedResource = mockHasLifecycleStatisticalResourcePrepareToPublished();
-        mockedResource.getLifeCycleStatisticalResource().setVersionLogic("002.000");
+        mockedResource.getLifeCycleStatisticalResource().setVersionLogic(StatisticalResourcesMockFactory.SECOND_VERSION);
         mockedResource.getLifeCycleStatisticalResource().setValidFrom(new DateTime().minusMinutes(10));
 
         ArrayList<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
@@ -274,7 +272,7 @@ public class LifecycleCheckerTest extends StatisticalResourcesBaseTest {
     public void testLifeCycleResourceCheckSendToPublishedProcStatusWithPreviousVersionNullInAnInitialVersion() throws Exception {
 
         HasLifecycle mockedResource = mockHasLifecycleStatisticalResourcePrepareToPublished();
-        mockedResource.getLifeCycleStatisticalResource().setVersionLogic(VersionUtil.createInitialVersion(VersionPatternEnum.XXX_YYY));
+        mockedResource.getLifeCycleStatisticalResource().setVersionLogic(StatisticalResourcesMockFactory.INIT_VERSION);
         mockedResource.getLifeCycleStatisticalResource().setValidFrom(new DateTime().minusMinutes(10));
 
         ArrayList<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();

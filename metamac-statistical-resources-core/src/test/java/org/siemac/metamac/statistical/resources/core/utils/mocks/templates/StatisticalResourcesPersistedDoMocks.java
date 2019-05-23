@@ -8,7 +8,6 @@ import java.util.Map;
 import org.joda.time.DateTime;
 import org.siemac.metamac.core.common.util.GeneratorUrnUtils;
 import org.siemac.metamac.core.common.util.SdmxTimeUtils;
-import org.siemac.metamac.core.common.util.shared.VersionUtil;
 import org.siemac.metamac.statistical.resources.core.base.domain.HasLifecycle;
 import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatisticalResource;
@@ -36,7 +35,6 @@ import org.siemac.metamac.statistical.resources.core.publication.domain.Publicat
 import org.siemac.metamac.statistical.resources.core.query.domain.Query;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
 import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesCollectionUtils;
-import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesVersionUtils;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.DatasetMock;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.DatasetVersionMock;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.MultidatasetMock;
@@ -45,6 +43,7 @@ import org.siemac.metamac.statistical.resources.core.utils.mocks.PublicationMock
 import org.siemac.metamac.statistical.resources.core.utils.mocks.PublicationVersionMock;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.QueryMock;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.QueryVersionMock;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.StatisticalResourcesMockFactory;
 import org.siemac.metamac.statistical.resources.core.utils.transformers.CodeDimensionToCodeStringTransformer;
 
 public class StatisticalResourcesPersistedDoMocks extends StatisticalResourcesDoMocks {
@@ -419,7 +418,7 @@ public class StatisticalResourcesPersistedDoMocks extends StatisticalResourcesDo
         categorisation.setVersionableStatisticalResource(new VersionableStatisticalResource());
         categorisation.getVersionableStatisticalResource().setCode(categorisationCode);
         categorisation.getVersionableStatisticalResource()
-                .setUrn(GeneratorUrnUtils.generateSdmxCategorisationUrn(new String[]{maintainer.getCodeNested()}, categorisationCode, StatisticalResourcesVersionUtils.INITIAL_VERSION));
+                .setUrn(GeneratorUrnUtils.generateSdmxCategorisationUrn(new String[]{maintainer.getCodeNested()}, categorisationCode, StatisticalResourcesMockFactory.INIT_VERSION));
         categorisation.setDatasetVersion(datasetVersion);
         categorisation.setCategory(category);
         categorisation.setMaintainer(maintainer);
@@ -763,7 +762,7 @@ public class StatisticalResourcesPersistedDoMocks extends StatisticalResourcesDo
     @Override
     protected void setSpecialCasesVersionableStatisticalResourceMock(VersionableStatisticalResource resource) {
         if (resource.getVersionLogic() == null) {
-            resource.setVersionLogic(VersionUtil.PATTERN_XXX_YYY_INITIAL_VERSION);
+            resource.setVersionLogic(StatisticalResourcesMockFactory.INIT_VERSION);
         }
     }
 

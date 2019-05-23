@@ -10,6 +10,7 @@ import org.siemac.metamac.statistical.resources.web.client.model.ds.LifeCycleRes
 import org.siemac.metamac.statistical.resources.web.client.model.ds.VersionableResourceDS;
 import org.siemac.metamac.web.common.client.widgets.BaseCustomListGrid;
 import org.siemac.metamac.web.common.client.widgets.CustomListGridSectionStack;
+import org.siemac.metamac.web.common.client.widgets.utils.VersionFieldSortNormalizer;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
@@ -35,6 +36,8 @@ public class VersionableResourceSectionStack extends CustomListGridSectionStack 
         addVersionFieldToListGrid(gridFields);
         addExtraFieldsToGrid(gridFields, extraFields);
         listGrid.setFields(gridFields.toArray(new ListGridField[gridFields.size()]));
+        // To avoid multisort problems related to version column
+        listGrid.setCanMultiSort(Boolean.FALSE);
         // Add listGrid to sectionStack
         defaultSection.setItems(listGrid);
     }
@@ -64,6 +67,7 @@ public class VersionableResourceSectionStack extends CustomListGridSectionStack 
     protected void addVersionFieldToListGrid(List<ListGridField> gridFields) {
         ListGridField versionField = new ListGridField(VersionableResourceDS.VERSION, getConstants().versionableStatisticalResourceVersionLogic());
         versionField.setWidth("15%");
+        versionField.setSortNormalizer(new VersionFieldSortNormalizer());
         gridFields.add(versionField);
     }
 

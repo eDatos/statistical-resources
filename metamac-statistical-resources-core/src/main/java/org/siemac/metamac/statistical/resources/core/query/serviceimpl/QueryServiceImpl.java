@@ -22,7 +22,6 @@ import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.core.common.util.GeneratorUrnUtils;
 import org.siemac.metamac.core.common.util.SdmxTimeUtils;
 import org.siemac.metamac.core.common.util.predicates.ObjectEqualsStringFieldPredicate;
-import org.siemac.metamac.core.common.util.shared.VersionUtil;
 import org.siemac.metamac.core.common.util.transformers.MetamacTransformer;
 import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableStatisticalResourceRepository;
@@ -212,7 +211,7 @@ public class QueryServiceImpl extends QueryServiceImplBase {
 
         checkCanQueryVersionBeDeleted(queryVersion);
 
-        if (VersionUtil.isInitialVersion(queryVersion.getLifeCycleStatisticalResource().getVersionLogic())) {
+        if (StatisticalResourcesVersionUtils.isInitialVersion(queryVersion.getLifeCycleStatisticalResource().getVersionLogic())) {
             Query query = queryVersion.getQuery();
             getQueryRepository().delete(query);
         } else {

@@ -22,13 +22,17 @@ import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.Stati
 
 public abstract class StatisticalResourcesMockFactory<EntityMock> extends MockFactory<EntityMock> {
 
-    public static final String OPERATION_01_CODE = "C00025A";
-    public static final String OPERATION_02_CODE = "C00025B";
-    public static final String OPERATION_03_CODE = "C00025C";
+    public static final String OPERATION_01_CODE               = "C00025A";
+    public static final String OPERATION_02_CODE               = "C00025B";
+    public static final String OPERATION_03_CODE               = "C00025C";
 
-    public static final String INIT_VERSION      = "001.000";
-    public static final String SECOND_VERSION    = "002.000";
-    public static final String THIRD_VERSION     = "003.000";
+    public static final String INIT_VERSION                    = "1.0";
+    public static final String SECOND_VERSION                  = "2.0";
+    public static final String THIRD_VERSION                   = "3.0";
+    public static final String NOT_INITIAL_VERSION             = "2.2";
+    public static final String ANOTHER_NOT_INITIAL_VERSION     = "1.5";
+    public static final String MAXIMUM_VERSION_AVAILABLE       = "99999.9";
+    public static final String MAXIMUM_MINOR_VERSION_AVAILABLE = "1.99999";
 
     protected static StatisticalResourcesPersistedDoMocks getStatisticalResourcesPersistedDoMocks() {
         return StatisticalResourcesPersistedDoMocks.getInstance();

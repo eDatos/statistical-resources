@@ -36,6 +36,7 @@ import org.siemac.metamac.statistical.resources.core.dto.datasets.StatisticOffic
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
+import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesVersionUtils;
 import org.siemac.metamac.statistical.resources.core.utils.shared.StatisticalResourcesVersionSharedUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -260,7 +261,8 @@ public class DatasetDto2DoMapperImpl extends BaseDto2DoMapperImpl implements Dat
         String oldDsdVersion = newDsdIdentifiers[2];
 
         boolean sameDsd = StringUtils.equals(oldDsdAgency, newDsdAgency) && StringUtils.equals(oldDsdCode, newDsdCode);
-        boolean differentDsdVersion = !StringUtils.equals(oldDsdVersion, newDsdVersion);
+
+        boolean differentDsdVersion = Long.compare(StatisticalResourcesVersionUtils.versionStringToLong(oldDsdVersion), StatisticalResourcesVersionUtils.versionStringToLong(newDsdVersion)) != 0;
 
         return sameDsd && differentDsdVersion;
     }

@@ -77,6 +77,7 @@ import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersionRe
 import org.siemac.metamac.statistical.resources.core.utils.asserts.CommonAsserts;
 import org.siemac.metamac.statistical.resources.core.utils.asserts.QueryAsserts;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.StatisticalResourcesMockFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate3.HibernateSystemException;
 import org.springframework.test.annotation.Rollback;
@@ -125,7 +126,7 @@ public class QueryVersionRepositoryTest extends StatisticalResourcesBaseTest imp
         queryVersion.setQuery(query);
 
         String queryCode = queryVersion.getLifeCycleStatisticalResource().getCode();
-        String queryVersionNumber = INIT_VERSION;
+        String queryVersionNumber = StatisticalResourcesMockFactory.INIT_VERSION;
         String queryAgency = queryVersion.getLifeCycleStatisticalResource().getMaintainer().getCodeNested();
         queryVersion.getLifeCycleStatisticalResource().setUrn(GeneratorUrnUtils.generateSiemacStatisticalResourceQueryVersionUrn(new String[]{queryAgency}, queryCode, queryVersionNumber));
 
@@ -189,7 +190,7 @@ public class QueryVersionRepositoryTest extends StatisticalResourcesBaseTest imp
         queryVersion.setQuery(query);
 
         String queryCode = queryVersion.getLifeCycleStatisticalResource().getCode();
-        String queryVersionNumber = INIT_VERSION;
+        String queryVersionNumber = StatisticalResourcesMockFactory.INIT_VERSION;
         String queryAgency = queryVersion.getLifeCycleStatisticalResource().getMaintainer().getCodeNested();
         queryVersion.getLifeCycleStatisticalResource().setUrn(GeneratorUrnUtils.generateSiemacStatisticalResourceQueryVersionUrn(new String[]{queryAgency}, queryCode, queryVersionNumber));
 

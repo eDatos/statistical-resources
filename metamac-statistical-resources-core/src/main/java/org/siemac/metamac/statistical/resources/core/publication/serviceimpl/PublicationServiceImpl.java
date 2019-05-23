@@ -19,7 +19,6 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionBuilder;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.core.common.util.GeneratorUrnUtils;
-import org.siemac.metamac.core.common.util.shared.VersionUtil;
 import org.siemac.metamac.statistical.resources.core.base.components.SiemacStatisticalResourceGeneratedCode;
 import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableStatisticalResourceRepository;
@@ -55,6 +54,7 @@ import org.siemac.metamac.statistical.resources.core.publication.utils.structure
 import org.siemac.metamac.statistical.resources.core.query.domain.Query;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryProperties;
 import org.siemac.metamac.statistical.resources.core.query.serviceapi.QueryService;
+import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesVersionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -200,7 +200,7 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
 
         updateReplacedResourceIsReplacedByResource(publicationVersion);
 
-        if (VersionUtil.isInitialVersion(publicationVersion.getSiemacMetadataStatisticalResource().getVersionLogic())) {
+        if (StatisticalResourcesVersionUtils.isInitialVersion(publicationVersion.getSiemacMetadataStatisticalResource().getVersionLogic())) {
             Publication publication = publicationVersion.getPublication();
             getPublicationRepository().delete(publication);
         } else {

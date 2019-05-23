@@ -14,6 +14,7 @@ public class PublicationListGrid extends NavigableListGrid {
         super();
         this.setShowAllRecords(true);
         this.setFields(ResourceFieldUtils.getPublicationListGridFields());
+        this.setCanMultiSort(Boolean.FALSE);
     }
 
     public void setPublications(List<PublicationVersionBaseDto> publications) {
