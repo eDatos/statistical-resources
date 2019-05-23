@@ -11,7 +11,7 @@ import static org.siemac.metamac.statistical.resources.core.utils.asserts.BaseAs
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.CommonAsserts.assertEqualsExternalItem;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.CommonAsserts.assertEqualsExternalItemCollection;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_105_MAXIMUM_VERSION_REACHED;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_104_MAXIMUM_MINOR_VERSION_REACHED;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_106_MAXIMUM_MINOR_VERSION_REACHED;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_14_OPER_03_CODE_01_PUBLISHED_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_16_DRAFT_READY_FOR_PRODUCTION_VALIDATION_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_21_PRODUCTION_VALIDATION_READY_FOR_VALIDATION_REJECTED_NAME;
@@ -256,9 +256,9 @@ public class DatasetVersioningServiceTest extends StatisticalResourcesBaseTest {
     }
 
     @Test
-    @MetamacMock(DATASET_VERSION_104_MAXIMUM_MINOR_VERSION_REACHED)
+    @MetamacMock(DATASET_VERSION_106_MAXIMUM_MINOR_VERSION_REACHED)
     public void testVersioningDatasetMaximumMinorVersionReached() throws Exception {
-        DatasetVersion previousDatasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_104_MAXIMUM_MINOR_VERSION_REACHED);
+        DatasetVersion previousDatasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_106_MAXIMUM_MINOR_VERSION_REACHED);
 
         DatasetVersion newDatasetVersion = datasetVersionLifecycleService.versioning(getServiceContextWithoutPrincipal(), previousDatasetVersion.getSiemacMetadataStatisticalResource().getUrn(),
                 VersionTypeEnum.MINOR);
