@@ -97,6 +97,7 @@
                     <xs:element name="updateFrequency" type="tns:ResourceInternal" />
                     <xs:element name="statisticOfficiality" type="common:Item" />
                     <xs:element name="bibliographicCitation" type="common:InternationalString" />
+                    <xs:element name="keepAllData" type="xs:boolean"/>
                 </xs:sequence>
             </xs:extension>
         </xs:complexContent>

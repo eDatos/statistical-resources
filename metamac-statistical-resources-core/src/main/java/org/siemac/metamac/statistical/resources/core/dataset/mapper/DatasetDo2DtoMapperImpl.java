@@ -263,6 +263,8 @@ public class DatasetDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements Dat
 
         target.setIsTaskInBackground(taskService.existsTaskForResource(ctx, source.getDataset().getIdentifiableStatisticalResource().getUrn()));
 
+        target.setKeepAllData(source.isKeepAllData());
+
         return target;
     }
 

@@ -1149,6 +1149,9 @@
         <stat:bibliographicCitation>
             <cdomain:text xml:lang="es">bibliographicCitation. More info: http://data.istac.es/apis/statistical-resources/v1.0/datasets/agency1/dataset1/01.000</cdomain:text>
         </stat:bibliographicCitation>
+        <stat:keepAllData>
+        	true
+       	</stat:keepAllData>
     </stat:metadata>
     <stat:data>
         <stat:dimensions total="4">

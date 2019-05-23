@@ -29,6 +29,8 @@ import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetDim
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetDimensionsVariableMappingResult;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasourcesByDatasetAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasourcesByDatasetResult;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.SaveDatasetVersionAction;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.SaveDatasetVersionResult;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationAction;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationResult;
 import org.siemac.metamac.web.common.client.events.ChangeWaitPopupVisibilityEvent;
@@ -216,5 +218,20 @@ public class DatasetDatasourcesTabPresenter extends Presenter<DatasetDatasources
     @Override
     public void showWaitPopup() {
         ChangeWaitPopupVisibilityEvent.fire(this, true);
+    }
+
+    @Override
+    public void saveDataset(DatasetVersionDto datasetVersionDto) {
+        dispatcher.execute(new SaveDatasetVersionAction(datasetVersionDto, datasetVersionDto.getStatisticalOperation().getCode()),
+                new WaitingAsyncCallbackHandlingError<SaveDatasetVersionResult>(this) {
+
+                    @Override
+                    public void onWaitSuccess(SaveDatasetVersionResult result) {
+                        fireSuccessMessage(getMessages().datasetSaved());
+                        getView().setDatasetVersion(result.getSavedDatasetVersion());
+
+                        SetDatasetEvent.fire(DatasetDatasourcesTabPresenter.this, result.getSavedDatasetVersion());
+                    }
+                });
     }
 }

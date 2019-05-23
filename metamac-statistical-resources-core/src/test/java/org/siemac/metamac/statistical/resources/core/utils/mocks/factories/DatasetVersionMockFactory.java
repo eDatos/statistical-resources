@@ -254,6 +254,9 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
 
     public static final String               DATASET_VERSION_102_PREPARED_TO_PUBLISH_WITH_ATTRIBUTE_VALUES_NAME                                            = "DATASET_VERSION_102_PREPARED_TO_PUBLISH_WITH_ATTRIBUTE_VALUES";
 
+    public static final String               DATASET_VERSION_103_NO_KEEP_DATA_PREPARED_TO_PUBLISH_WITH_PREVIOUS_VERSION_NAME                               = "DATASET_VERSION_103_NO_KEEP_DATA_PREPARED_TO_PUBLISH_WITH_PREVIOUS_VERSION";
+    public static final String               DATASET_VERSION_104_NO_KEEP_DATA_PREPARED_TO_PUBLISH_INITIAL_VERSION_NAME                                     = "DATASET_VERSION_104_NO_KEEP_DATA_PREPARED_TO_PUBLISH_INITIAL_VERSION";
+
     private static final String              INIT_VERSION                                                                                                  = "001.000";
     private static final String              SECOND_VERSION                                                                                                = "002.000";
 
@@ -1104,7 +1107,7 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
         return datasetVersion;
     }
 
-    public static DatasetVersion getDatasetVersion102PreparedToPublishWithAttributeValues() {
+    private static DatasetVersion getDatasetVersion102PreparedToPublishWithAttributeValues() {
         DatasetVersion datasetVersion = createDatasetVersionWithSequence(1);
         prepareToPublished(datasetVersion);
 
@@ -1112,6 +1115,30 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
         datasetVersion.getAttributesCoverage().addAll(mockAttributeValuesWithIdentifiers(datasetVersion, "attr1", "value-a1-1", "value-a1-2"));
         datasetVersion.getAttributesCoverage().addAll(mockAttributeValuesWithIdentifiers(datasetVersion, "attr2", "value-a2-1", "value-a2-2"));
         datasetVersion.getAttributesCoverage().addAll(mockAttributeValuesWithIdentifiers(datasetVersion, "attr3", "value-a3-1"));
+
+        return datasetVersion;
+    }
+
+    private static DatasetVersion getDatasetVersion103NoKeepDataPreparedToPublishWithPreviousVersion() {
+        DatasetVersion datasetVersion = createDatasetVersionWithSequenceAndVersion(1, SECOND_VERSION);
+        datasetVersion.setKeepAllData(Boolean.FALSE);
+
+        prepareToPublished(datasetVersion);
+
+        fillOptionalExternalItems(datasetVersion);
+        fillOptionalRelatedResourcesPublished(datasetVersion);
+
+        datasetVersion.getSiemacMetadataStatisticalResource().getReplacesVersion().getDatasetVersion().setKeepAllData(Boolean.FALSE);
+
+        return datasetVersion;
+    }
+
+    private static DatasetVersion getDatasetVersion104NoKeepDataPreparedToPublishInitialVersion() {
+        DatasetVersion datasetVersion = createDatasetVersionWithSequenceAndVersion(1, INIT_VERSION);
+        datasetVersion.setKeepAllData(Boolean.FALSE);
+        prepareToPublished(datasetVersion);
+
+        fillOptionalExternalItems(datasetVersion);
 
         return datasetVersion;
     }

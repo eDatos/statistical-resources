@@ -1,6 +1,10 @@
 package org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.dataset;
 
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.LifecycleAsserts.assertNotNullAutomaticallyFilledMetadataSiemacSendToPublished;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_103_NO_KEEP_DATA_PREPARED_TO_PUBLISH_WITH_PREVIOUS_VERSION_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_104_NO_KEEP_DATA_PREPARED_TO_PUBLISH_INITIAL_VERSION_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_70_PREPARED_TO_PUBLISH_EXTERNAL_ITEM_FULL_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_71_RELATED_RESOURCES_UNPUBLISHED_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_72_PREPARED_TO_PUBLISH_WITH_PREVIOUS_VERSION_NAME;
@@ -9,11 +13,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.core.common.exception.MetamacExceptionBuilder;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.core.common.test.utils.mocks.configuration.MetamacMock;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesMockRestBaseTest;
@@ -67,7 +74,16 @@ public class DatasetPublishingServiceTest extends StatisticalResourcesMockRestBa
     @Before
     public void setUp() throws MetamacException {
         super.setUp();
+
+        datasetRepositoriesServiceFacade = getReferenceToDatasetRepositoryWithoutProxy();
+        Mockito.reset(datasetRepositoriesServiceFacade);
+
         mockAllTaskInProgressForDatasetVersion(false);
+    }
+
+    @After
+    public void after() {
+        Mockito.validateMockitoUsage();
     }
 
     @Test
@@ -174,6 +190,102 @@ public class DatasetPublishingServiceTest extends StatisticalResourcesMockRestBa
         datasetVersionLifecycleService.sendToPublished(getServiceContextAdministrador(), datasetVersionUrn);
     }
 
+    @Test
+    @MetamacMock(DATASET_VERSION_103_NO_KEEP_DATA_PREPARED_TO_PUBLISH_WITH_PREVIOUS_VERSION_NAME)
+    public void testPublishDatasetVersionNoKeepDataWithPreviousVersion() throws Exception {
+        DatasetVersion datasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_103_NO_KEEP_DATA_PREPARED_TO_PUBLISH_WITH_PREVIOUS_VERSION_NAME);
+        SiemacMetadataStatisticalResource siemacResource = datasetVersion.getSiemacMetadataStatisticalResource();
+        String datasetVersionUrn = siemacResource.getUrn();
+        String datasetVersionPreviousVersionRepositoryId = datasetVersion.getSiemacMetadataStatisticalResource().getReplacesVersion().getDatasetVersion().getDatasetRepositoryId();
+
+        mockDsdAndDataRepositorySimpleDimensionsNoAttributes();
+
+        mockSiemacExternalItemsPublished(siemacResource);
+
+        mockDatasetVersionExternalItemsPublished(datasetVersion);
+
+        datasetVersionLifecycleService.sendToPublished(getServiceContextAdministrador(), datasetVersionUrn);
+
+        datasetVersion = datasetVersionRepository.retrieveByUrn(datasetVersionUrn);
+
+        assertNotNull(datasetVersion.getSiemacMetadataStatisticalResource().getReplacesVersion().getDatasetVersion());
+        assertNull(datasetVersion.getSiemacMetadataStatisticalResource().getReplacesVersion().getDatasetVersion().getDatasetRepositoryId());
+
+        assertPublishingDatasetVersion(datasetVersion, datasetVersion.getSiemacMetadataStatisticalResource().getReplacesVersion().getDatasetVersion());
+
+        Mockito.verify(datasetRepositoriesServiceFacade, Mockito.times(1)).deleteDatasetRepository(datasetVersionPreviousVersionRepositoryId);
+    }
+
+    @Test
+    @MetamacMock(DATASET_VERSION_104_NO_KEEP_DATA_PREPARED_TO_PUBLISH_INITIAL_VERSION_NAME)
+    public void testPublishDatasetVersionNoKeepDataInitialVersion() throws Exception {
+        DatasetVersion datasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_104_NO_KEEP_DATA_PREPARED_TO_PUBLISH_INITIAL_VERSION_NAME);
+        SiemacMetadataStatisticalResource siemacResource = datasetVersion.getSiemacMetadataStatisticalResource();
+        String datasetVersionUrn = siemacResource.getUrn();
+
+        mockDsdAndDataRepositorySimpleDimensionsNoAttributes();
+
+        mockSiemacExternalItemsPublished(siemacResource);
+
+        mockDatasetVersionExternalItemsPublished(datasetVersion);
+
+        datasetVersionLifecycleService.sendToPublished(getServiceContextAdministrador(), datasetVersionUrn);
+
+        datasetVersion = datasetVersionRepository.retrieveByUrn(datasetVersionUrn);
+
+        assertPublishingDatasetVersion(datasetVersion, null);
+
+        Mockito.verify(datasetRepositoriesServiceFacade, Mockito.never()).deleteDatasetRepository(Mockito.any(String.class));
+    }
+
+    @Test
+    @MetamacMock(DATASET_VERSION_72_PREPARED_TO_PUBLISH_WITH_PREVIOUS_VERSION_NAME)
+    public void testPublishDatasetVersionKeepDataWithPreviousVersion() throws Exception {
+        DatasetVersion datasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_72_PREPARED_TO_PUBLISH_WITH_PREVIOUS_VERSION_NAME);
+        SiemacMetadataStatisticalResource siemacResource = datasetVersion.getSiemacMetadataStatisticalResource();
+        String datasetVersionUrn = siemacResource.getUrn();
+
+        mockDsdAndDataRepositorySimpleDimensionsNoAttributes();
+
+        mockSiemacExternalItemsPublished(siemacResource);
+
+        mockDatasetVersionExternalItemsPublished(datasetVersion);
+
+        datasetVersionLifecycleService.sendToPublished(getServiceContextAdministrador(), datasetVersionUrn);
+
+        datasetVersion = datasetVersionRepository.retrieveByUrn(datasetVersionUrn);
+
+        assertNotNull(datasetVersion.getSiemacMetadataStatisticalResource().getReplacesVersion().getDatasetVersion());
+        assertNotNull(datasetVersion.getSiemacMetadataStatisticalResource().getReplacesVersion().getDatasetVersion().getDatasetRepositoryId());
+
+        assertPublishingDatasetVersion(datasetVersion, datasetVersion.getSiemacMetadataStatisticalResource().getReplacesVersion().getDatasetVersion());
+
+        Mockito.verify(datasetRepositoriesServiceFacade, Mockito.never())
+                .deleteDatasetRepository(datasetVersion.getSiemacMetadataStatisticalResource().getReplacesVersion().getDatasetVersion().getDatasetRepositoryId());
+    }
+
+    @Test
+    @MetamacMock(DATASET_VERSION_70_PREPARED_TO_PUBLISH_EXTERNAL_ITEM_FULL_NAME)
+    public void testPublishDatasetVersionKeepDataInitialVersion() throws Exception {
+        DatasetVersion datasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_70_PREPARED_TO_PUBLISH_EXTERNAL_ITEM_FULL_NAME);
+        SiemacMetadataStatisticalResource siemacResource = datasetVersion.getSiemacMetadataStatisticalResource();
+        String datasetVersionUrn = siemacResource.getUrn();
+
+        mockDsdAndDataRepositorySimpleDimensionsNoAttributes();
+
+        mockSiemacExternalItemsPublished(siemacResource);
+
+        mockDatasetVersionExternalItemsPublished(datasetVersion);
+
+        datasetVersionLifecycleService.sendToPublished(getServiceContextAdministrador(), datasetVersionUrn);
+
+        datasetVersion = datasetVersionRepository.retrieveByUrn(datasetVersionUrn);
+
+        assertPublishingDatasetVersion(datasetVersion, null);
+
+        Mockito.verify(datasetRepositoriesServiceFacade, Mockito.never()).deleteDatasetRepository(Mockito.any(String.class));
+    }
+
     private void assertPublishingDatasetVersion(DatasetVersion current, DatasetVersion previous) throws MetamacException {
         assertNotNullAutomaticallyFilledMetadataSiemacSendToPublished(current, previous);
 
@@ -262,5 +374,14 @@ public class DatasetPublishingServiceTest extends StatisticalResourcesMockRestBa
     private void mockDsdAndDataRepositorySimpleDimensionsNoAttributes() throws Exception {
         DataMockUtils.mockDataRepositorySimpleDimensionsNoAttributes(datasetRepositoriesServiceFacade);
         DataMockUtils.mockDsdAPIAndRelatedWithNoAttributes(metamacApisLocator);
+    }
+
+    // Get reference to dataset repository without proxy (verify not working with proxy)
+    private DatasetRepositoriesServiceFacade getReferenceToDatasetRepositoryWithoutProxy() throws MetamacException {
+        try {
+            return (DatasetRepositoriesServiceFacade) (((org.springframework.aop.framework.Advised) datasetRepositoriesServiceFacade).getTargetSource().getTarget());
+        } catch (Exception e) {
+            throw MetamacExceptionBuilder.builder().withCause(e).build();
+        }
     }
 }

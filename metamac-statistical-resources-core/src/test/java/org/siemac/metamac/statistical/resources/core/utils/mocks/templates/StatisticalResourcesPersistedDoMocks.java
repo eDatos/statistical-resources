@@ -306,6 +306,8 @@ public class StatisticalResourcesPersistedDoMocks extends StatisticalResourcesDo
 
         computeCoverageRelatedMetadata(datasetVersion);
 
+        datasetVersion.setKeepAllData(Boolean.TRUE);
+
         return datasetVersion;
     }
 

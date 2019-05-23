@@ -15,6 +15,7 @@ import org.siemac.metamac.statistical.resources.web.client.dataset.model.record.
 import org.siemac.metamac.statistical.resources.web.client.dataset.presenter.DatasetDatasourcesTabPresenter.DatasetDatasourcesTabView;
 import org.siemac.metamac.statistical.resources.web.client.dataset.utils.DatasetClientSecurityUtils;
 import org.siemac.metamac.statistical.resources.web.client.dataset.view.handlers.DatasetDatasourcesTabUiHandlers;
+import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.DatasourceMainFormLayout;
 import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.ImportDatasourceWithMappingWindow;
 import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.ImportDatasourcesWindow;
 import org.siemac.metamac.statistical.resources.web.client.utils.StatisticalResourcesRecordUtils;
@@ -39,26 +40,32 @@ import com.smartgwt.client.widgets.toolbar.ToolStrip;
 
 public class DatasetDatasourcesTabViewImpl extends ViewWithUiHandlers<DatasetDatasourcesTabUiHandlers> implements DatasetDatasourcesTabView {
 
-    private VLayout              panel;
+    private VLayout                  panel;
 
-    private DatasourcesListPanel datasourcesListPanel;
+    private DatasourceMainFormLayout datasourceMainFormLayout;
 
-    private DatasetVersionDto    datasetVersionDto;
+    private DatasourcesListPanel     datasourcesListPanel;
+
+    private DatasetVersionDto        datasetVersionDto;
 
     public DatasetDatasourcesTabViewImpl() {
         panel = new VLayout();
         panel.setMargin(5);
         panel.setHeight100();
+        panel.setMembersMargin(10);
+
+        datasourceMainFormLayout = new DatasourceMainFormLayout();
 
         datasourcesListPanel = new DatasourcesListPanel();
-        datasourcesListPanel.setWidth("99%");
 
+        panel.addMember(datasourceMainFormLayout);
         panel.addMember(datasourcesListPanel);
     }
 
     @Override
     public void setDatasetVersion(DatasetVersionDto datasetVersionDto) {
         this.datasetVersionDto = datasetVersionDto;
+        datasourceMainFormLayout.setDatasetVersionDto(datasetVersionDto);
         datasourcesListPanel.updateButtonsVisibility();
     }
 
@@ -90,6 +97,7 @@ public class DatasetDatasourcesTabViewImpl extends ViewWithUiHandlers<DatasetDat
     @Override
     public void setUiHandlers(DatasetDatasourcesTabUiHandlers uiHandlers) {
         super.setUiHandlers(uiHandlers);
+        datasourceMainFormLayout.setUiHandlers(uiHandlers);
         datasourcesListPanel.setUiHandlers(uiHandlers);
     }
 
@@ -155,7 +163,6 @@ public class DatasetDatasourcesTabViewImpl extends ViewWithUiHandlers<DatasetDat
             deleteConfirmationWindow.setVisible(false);
 
             // Import datasources window
-
             addMember(toolStrip);
             addMember(datasourcesList);
             bindEvents();
