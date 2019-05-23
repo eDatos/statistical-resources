@@ -168,8 +168,6 @@ public class DatasetDto2DoMapperImpl extends BaseDto2DoMapperImpl implements Dat
         target.setUpdateFrequency(externalItemDtoToDo(source.getUpdateFrequency(), target.getUpdateFrequency(), ServiceExceptionParameters.DATASET_VERSION__UPDATE_FREQUENCY));
         target.setStatisticOfficiality(
                 statisticOfficialityDtoToDo(source.getStatisticOfficiality(), target.getStatisticOfficiality(), ServiceExceptionParameters.DATASET_VERSION__STATISTIC_OFFICIALITY));
-        target.setStatisticOfficiality(
-                statisticOfficialityDtoToDo(source.getStatisticOfficiality(), target.getStatisticOfficiality(), ServiceExceptionParameters.DATASET_VERSION__STATISTIC_OFFICIALITY));
 
         target.setKeepAllData(source.isKeepAllData());
 
