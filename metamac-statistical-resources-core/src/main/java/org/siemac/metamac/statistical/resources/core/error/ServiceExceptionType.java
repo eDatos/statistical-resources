@@ -13,6 +13,9 @@ public class ServiceExceptionType extends CommonServiceExceptionType {
 
     // Dataset Version
     public static final CommonServiceExceptionType DATASET_VERSION_CANT_ALTER_DATASOURCES                                     = create("exception.resources.dataset_version.cant_alter_datasources");
+
+    public static final CommonServiceExceptionType DATASET_VERSION_CANT_ALTER_KEEP_ALL_DATA                                     = create(
+            "exception.resources.dataset_version.cant_alter_keep_all_data");
     public static final CommonServiceExceptionType DATASET_VERSION_CANT_CHANGE_DSD_SOME_QUERIES_EXIST                         = create(
             "exception.resources.dataset_version.cant_change_dsd_some_queries_exist");
     public static final CommonServiceExceptionType DATASET_VERSION_ALREADY_BEEN_REPLACED_BY_OTHER_DATASET_VERSION             = create(

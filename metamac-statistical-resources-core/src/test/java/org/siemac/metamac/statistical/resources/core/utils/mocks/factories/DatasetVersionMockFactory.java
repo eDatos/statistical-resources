@@ -251,9 +251,12 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
 
     public static final String               DATASET_VERSION_102_PREPARED_TO_PUBLISH_WITH_ATTRIBUTE_VALUES_NAME                                            = "DATASET_VERSION_102_PREPARED_TO_PUBLISH_WITH_ATTRIBUTE_VALUES";
 
-    public static final String               DATASET_VERSION_103_MAXIMUM_VERSION_REACHED                                                                   = "DATASET_VERSION_103_MAXIMUM_VERSION_REACHED";
+    public static final String               DATASET_VERSION_103_NO_KEEP_DATA_PREPARED_TO_PUBLISH_WITH_PREVIOUS_VERSION_NAME                               = "DATASET_VERSION_103_NO_KEEP_DATA_PREPARED_TO_PUBLISH_WITH_PREVIOUS_VERSION";
+    public static final String               DATASET_VERSION_104_NO_KEEP_DATA_PREPARED_TO_PUBLISH_INITIAL_VERSION_NAME                                     = "DATASET_VERSION_104_NO_KEEP_DATA_PREPARED_TO_PUBLISH_INITIAL_VERSION";
 
-    public static final String               DATASET_VERSION_104_MAXIMUM_MINOR_VERSION_REACHED                                                             = "DATASET_VERSION_104_MAXIMUM_MINOR_VERSION_REACHED";
+    public static final String               DATASET_VERSION_105_MAXIMUM_VERSION_REACHED                                                                   = "DATASET_VERSION_105_MAXIMUM_VERSION_REACHED";
+
+    public static final String               DATASET_VERSION_106_MAXIMUM_MINOR_VERSION_REACHED                                                             = "DATASET_VERSION_106_MAXIMUM_MINOR_VERSION_REACHED";
 
     private static DatasetVersionMockFactory instance                                                                                                      = null;
 
@@ -1103,7 +1106,7 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
         return datasetVersion;
     }
 
-    public static DatasetVersion getDatasetVersion102PreparedToPublishWithAttributeValues() {
+    private static DatasetVersion getDatasetVersion102PreparedToPublishWithAttributeValues() {
         DatasetVersion datasetVersion = createDatasetVersionWithSequence(1);
         prepareToPublished(datasetVersion);
 
@@ -1115,14 +1118,38 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
         return datasetVersion;
     }
 
-    private static DatasetVersion getDatasetVersion103MaximumVersionReached() {
+    private static DatasetVersion getDatasetVersion103NoKeepDataPreparedToPublishWithPreviousVersion() {
+        DatasetVersion datasetVersion = createDatasetVersionWithSequenceAndVersion(1, SECOND_VERSION);
+        datasetVersion.setKeepAllData(Boolean.FALSE);
+
+        prepareToPublished(datasetVersion);
+
+        fillOptionalExternalItems(datasetVersion);
+        fillOptionalRelatedResourcesPublished(datasetVersion);
+
+        datasetVersion.getSiemacMetadataStatisticalResource().getReplacesVersion().getDatasetVersion().setKeepAllData(Boolean.FALSE);
+
+        return datasetVersion;
+    }
+
+    private static DatasetVersion getDatasetVersion104NoKeepDataPreparedToPublishInitialVersion() {
+        DatasetVersion datasetVersion = createDatasetVersionWithSequenceAndVersion(1, INIT_VERSION);
+        datasetVersion.setKeepAllData(Boolean.FALSE);
+        prepareToPublished(datasetVersion);
+
+        fillOptionalExternalItems(datasetVersion);
+
+        return datasetVersion;
+    }
+
+    private static DatasetVersion getDatasetVersion105MaximumVersionReached() {
         DatasetVersion datasetVersion = createDatasetVersionInSpecificOperation(OPERATION_03_CODE, 1);
         fillAsPublished(datasetVersion);
         datasetVersion.getSiemacMetadataStatisticalResource().setVersionLogic(StatisticalResourcesMockFactory.MAXIMUM_VERSION_AVAILABLE);
         return datasetVersion;
     }
 
-    private static DatasetVersion getDatasetVersion104MaximumMinorVersionReached() {
+    private static DatasetVersion getDatasetVersion106MaximumMinorVersionReached() {
         DatasetVersion datasetVersion = createDatasetVersionInSpecificOperation(OPERATION_03_CODE, 1);
         fillAsPublished(datasetVersion);
         datasetVersion.getSiemacMetadataStatisticalResource().setVersionLogic(StatisticalResourcesMockFactory.MAXIMUM_MINOR_VERSION_AVAILABLE);

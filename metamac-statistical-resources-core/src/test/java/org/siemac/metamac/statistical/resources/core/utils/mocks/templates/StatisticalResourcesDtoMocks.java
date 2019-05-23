@@ -232,6 +232,8 @@ public class StatisticalResourcesDtoMocks extends MetamacMocks {
 
         mockSiemacMetadataStatisticalResource(datasetVersionDto, StatisticalResourceTypeEnum.DATASET);
 
+        datasetVersionDto.setKeepAllData(Boolean.TRUE);
+
         return datasetVersionDto;
     }
 

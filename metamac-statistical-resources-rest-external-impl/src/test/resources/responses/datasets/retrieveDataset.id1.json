@@ -1833,6 +1833,7 @@
 				}
 			]
 		},
+		"keepAllData": true,
 		"language": {
 			"id": "language01",
 			"urn": "urn:sdmx:org.sdmx.infomodel.codelist.Code=MaintainerMock:CodelistMock(1.0).language01",

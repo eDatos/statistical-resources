@@ -135,6 +135,8 @@ public class DatasetVersioningCopyUtils extends CommonVersioningCopyUtils {
         target.setUpdateFrequency(copyExternalItem(source.getUpdateFrequency()));
 
         target.setStatisticOfficiality(source.getStatisticOfficiality());
+
+        target.setKeepAllData(source.isKeepAllData());
     }
 
     private static Collection<TemporalCode> copyListTemporalCode(List<TemporalCode> source) {

@@ -201,6 +201,8 @@ Application DatasetsStatisticalResources {
 			- @ExternalItem relatedDsd nullable cascade="all" fetch="lazy" databaseColumn="RELATED_DSD_FK"; 
 			boolean relatedDsdChanged transient;
 			String datasetRepositoryId nullable;
+			
+			boolean keepAllData;
 
 			//Class descriptors
 

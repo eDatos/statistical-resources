@@ -661,6 +661,10 @@
                      "description":"",
                      "$ref":"#/definitions/Resources"
                   },
+                  "keepAllData":{
+                     "description":"",
+                     "type":"boolean"
+                  },
                   "measureCoverages":{
                      "description":"",
                      "$ref":"#/definitions/Resources"
@@ -2654,6 +2658,13 @@
                      },
                      "description":"",
                      "$ref":"#/definitions/Resources"
+                  },
+                  "keepAllData":{
+                  	 "xml":{
+						"namespace":"http://www.siemac.org/metamac/rest/statistical-resources/v1.0/domain"
+                     },
+                     "description":"",
+                     "type":"boolean"
                   },
                   "measureCoverages":{
                      "xml":{

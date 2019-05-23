@@ -34,4 +34,7 @@ public class DatasetDS extends SiemacMetadataDS {
     // RESOURCE RELATION DESCRIPTORS
     public static final String IS_REQUIRED_BY             = "ds-is-req-by";
     public static final String IS_PART_OF                 = "ds-is-part-of";
+
+    // OTHERS
+    public static final String KEEP_ALL_DATA              = "ds-keep-all-data";
 }

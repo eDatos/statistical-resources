@@ -10,7 +10,7 @@ import static org.siemac.metamac.common.test.utils.MetamacAsserts.assertEqualsDa
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.BaseAsserts.assertEqualsVersioningSiemacMetadata;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.CommonAsserts.assertEqualsExternalItem;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.CommonAsserts.assertEqualsExternalItemCollection;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_103_MAXIMUM_VERSION_REACHED;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_105_MAXIMUM_VERSION_REACHED;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_104_MAXIMUM_MINOR_VERSION_REACHED;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_14_OPER_03_CODE_01_PUBLISHED_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_16_DRAFT_READY_FOR_PRODUCTION_VALIDATION_NAME;
@@ -230,9 +230,9 @@ public class DatasetVersioningServiceTest extends StatisticalResourcesBaseTest {
     }
 
     @Test
-    @MetamacMock(DATASET_VERSION_103_MAXIMUM_VERSION_REACHED)
+    @MetamacMock(DATASET_VERSION_105_MAXIMUM_VERSION_REACHED)
     public void testVersioningDatasetMinorVersionErrorMaximumVersionReached() throws Exception {
-        String previousDatasetVersionUrn = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_103_MAXIMUM_VERSION_REACHED).getSiemacMetadataStatisticalResource().getUrn();
+        String previousDatasetVersionUrn = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_105_MAXIMUM_VERSION_REACHED).getSiemacMetadataStatisticalResource().getUrn();
 
         VersionTypeEnum versionType = VersionTypeEnum.MINOR;
 
@@ -243,9 +243,9 @@ public class DatasetVersioningServiceTest extends StatisticalResourcesBaseTest {
     }
 
     @Test
-    @MetamacMock(DATASET_VERSION_103_MAXIMUM_VERSION_REACHED)
+    @MetamacMock(DATASET_VERSION_105_MAXIMUM_VERSION_REACHED)
     public void testVersioningDatasetMajorVersionErrorMaximumVersionReached() throws Exception {
-        String previousDatasetVersionUrn = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_103_MAXIMUM_VERSION_REACHED).getSiemacMetadataStatisticalResource().getUrn();
+        String previousDatasetVersionUrn = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_105_MAXIMUM_VERSION_REACHED).getSiemacMetadataStatisticalResource().getUrn();
 
         VersionTypeEnum versionType = VersionTypeEnum.MAJOR;
 

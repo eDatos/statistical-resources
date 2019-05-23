@@ -62,4 +62,10 @@ public class DatasetMainFormLayout extends LifecycleMainFormLayout {
         return DatasetClientSecurityUtils.canPreviewDatasetData(datasetVersionDto);
     }
 
+    @Override
+    protected void showPreviewButton() {
+        if (datasetVersionDto.isKeepAllData() || isLastVersion()) {
+            super.showPreviewButton();
+        }
+    }
 }

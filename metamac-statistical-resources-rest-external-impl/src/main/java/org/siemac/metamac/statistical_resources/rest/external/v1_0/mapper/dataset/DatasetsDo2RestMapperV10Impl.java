@@ -48,12 +48,12 @@ import org.springframework.stereotype.Component;
 public class DatasetsDo2RestMapperV10Impl implements DatasetsDo2RestMapperV10 {
 
     @Autowired
-    private CommonDo2RestMapperV10            commonDo2RestMapper;
+    private CommonDo2RestMapperV10   commonDo2RestMapper;
 
     @Autowired
-    private DatasetVersionRepository          datasetVersionRepository;
+    private DatasetVersionRepository datasetVersionRepository;
 
-    private static final Logger               logger = LoggerFactory.getLogger(DatasetsDo2RestMapperV10.class);
+    private static final Logger      logger = LoggerFactory.getLogger(DatasetsDo2RestMapperV10.class);
 
     @Override
     public Datasets toDatasets(PagedResult<DatasetVersion> sources, String agencyID, String resourceID, String query, String orderBy, Integer limit, List<String> selectedLanguages) {
@@ -177,6 +177,7 @@ public class DatasetsDo2RestMapperV10Impl implements DatasetsDo2RestMapperV10 {
         target.setReplaces(toDatasetReplaces(source, selectedLanguages));
         target.setIsReplacedBy(toDatasetIsReplacedBy(source, selectedLanguages));
         target.setIsPartOf(toDatasetIsPartOf(source, selectedLanguages));
+        target.setKeepAllData(source.isKeepAllData());
 
         // StatisticalResource and other
         commonDo2RestMapper.toMetadataStatisticalResource(source.getSiemacMetadataStatisticalResource(), target, selectedLanguages);
