@@ -1,6 +1,9 @@
 package org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.dataset;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyListOf;
@@ -8,12 +11,16 @@ import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.CommonAsserts.assertEmptyMethod;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_102_PREPARED_TO_PUBLISH_WITH_ATTRIBUTE_VALUES_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_14_OPER_03_CODE_01_PUBLISHED_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_16_DRAFT_READY_FOR_PRODUCTION_VALIDATION_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_19_PRODUCTION_VALIDATION_NOT_READY_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_20_PRODUCTION_VALIDATION_READY_FOR_DIFFUSION_VALIDATION_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_21_PRODUCTION_VALIDATION_READY_FOR_VALIDATION_REJECTED_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_32_WITH_MULTIPLE_DATASOURCES_LINKED_TO_FILE_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_70_PREPARED_TO_PUBLISH_EXTERNAL_ITEM_FULL_NAME;
+
+import java.util.List;
 
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.junit.After;
@@ -41,6 +48,7 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.Categorisati
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionRepository;
 import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.DatasetService;
+import org.siemac.metamac.statistical.resources.core.dataset.utils.DatasetVersioningCopyUtils;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.invocation.service.SrmRestInternalService;
 import org.siemac.metamac.statistical.resources.core.invocation.utils.RestMapper;
@@ -55,6 +63,7 @@ import org.siemac.metamac.statistical.resources.core.utils.DatasetLifecycleTestU
 import org.siemac.metamac.statistical.resources.core.utils.TaskMockUtils;
 import org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts;
 
+import es.gobcan.istac.edatos.dataset.repository.dto.Mapping;
 import es.gobcan.istac.edatos.dataset.repository.service.DatasetRepositoriesServiceFacade;
 
 public class DatasetLifecycleServiceTest extends StatisticalResourcesBaseTest implements LifecycleServiceBaseTest {
@@ -132,10 +141,12 @@ public class DatasetLifecycleServiceTest extends StatisticalResourcesBaseTest im
     public void testSendToProductionValidationImportationTaskInProgress() throws Exception {
         mockDsdAndDataRepositorySimpleDimensions();
         DatasetVersion datasetVersion = mockDatasetVersionInRepoFromMockFactory(DATASET_VERSION_16_DRAFT_READY_FOR_PRODUCTION_VALIDATION_NAME);
-        String datasetVersionUrn = datasetVersion.getSiemacMetadataStatisticalResource().getUrn();
-        mockTaskInProgressForResource(datasetVersionUrn, true);
 
-        expectedMetamacException(new MetamacException(ServiceExceptionType.TASKS_IN_PROGRESS, datasetVersionUrn));
+        String datasetVersionUrn = datasetVersion.getSiemacMetadataStatisticalResource().getUrn();
+        String datasetUrn = datasetVersion.getDataset().getIdentifiableStatisticalResource().getUrn();
+
+        mockTaskInProgressForResource(datasetUrn, true);
+        expectedMetamacException(new MetamacException(ServiceExceptionType.TASKS_IN_PROGRESS, datasetUrn));
 
         DataStructure emptyDsd = new DataStructure();
         emptyDsd.setDataStructureComponents(new DataStructureComponents());
@@ -206,11 +217,12 @@ public class DatasetLifecycleServiceTest extends StatisticalResourcesBaseTest im
     @Test
     public void testSendToDiffusionValidationImportationTaskInProgress() throws Exception {
         DatasetVersion datasetVersion = mockDatasetVersionInRepoFromMockFactory(DATASET_VERSION_20_PRODUCTION_VALIDATION_READY_FOR_DIFFUSION_VALIDATION_NAME);
+
         String datasetVersionUrn = datasetVersion.getSiemacMetadataStatisticalResource().getUrn();
+        String datasetUrn = datasetVersion.getDataset().getIdentifiableStatisticalResource().getUrn();
 
-        mockTaskInProgressForResource(datasetVersionUrn, true);
-
-        expectedMetamacException(new MetamacException(ServiceExceptionType.TASKS_IN_PROGRESS, datasetVersionUrn));
+        mockTaskInProgressForResource(datasetUrn, true);
+        expectedMetamacException(new MetamacException(ServiceExceptionType.TASKS_IN_PROGRESS, datasetUrn));
 
         datasetLifecycleService.sendToDiffusionValidation(getServiceContextAdministrador(), datasetVersionUrn);
     }
@@ -271,11 +283,12 @@ public class DatasetLifecycleServiceTest extends StatisticalResourcesBaseTest im
     @Test
     public void testSendToValidationRejectedImportationTaskInProgress() throws Exception {
         DatasetVersion datasetVersion = mockDatasetVersionInRepoFromMockFactory(DATASET_VERSION_21_PRODUCTION_VALIDATION_READY_FOR_VALIDATION_REJECTED_NAME);
+
         String datasetVersionUrn = datasetVersion.getSiemacMetadataStatisticalResource().getUrn();
+        String datasetUrn = datasetVersion.getDataset().getIdentifiableStatisticalResource().getUrn();
 
-        mockTaskInProgressForResource(datasetVersionUrn, true);
-
-        expectedMetamacException(new MetamacException(ServiceExceptionType.TASKS_IN_PROGRESS, datasetVersionUrn));
+        mockTaskInProgressForResource(datasetUrn, true);
+        expectedMetamacException(new MetamacException(ServiceExceptionType.TASKS_IN_PROGRESS, datasetUrn));
 
         datasetLifecycleService.sendToValidationRejected(getServiceContextAdministrador(), datasetVersion.getSiemacMetadataStatisticalResource().getUrn());
     }
@@ -389,6 +402,52 @@ public class DatasetLifecycleServiceTest extends StatisticalResourcesBaseTest im
         }
     }
 
+    @Test
+    public void testCopyResourceForVersioningKeepAllData() throws Exception {
+        DatasetVersion source = mockDatasetVersionInRepoFromMockFactory(DATASET_VERSION_70_PREPARED_TO_PUBLISH_EXTERNAL_ITEM_FULL_NAME);
+
+        source.setKeepAllData(Boolean.TRUE);
+        DatasetVersion target = datasetLifecycleService.copyResourceForVersioning(getServiceContextAdministrador(), source);
+        assertEquals(source.isKeepAllData(), target.isKeepAllData());
+
+        source.setKeepAllData(Boolean.FALSE);
+        target = datasetLifecycleService.copyResourceForVersioning(getServiceContextAdministrador(), source);
+        assertEquals(source.isKeepAllData(), target.isKeepAllData());
+    }
+
+    @Test
+    public void testCreateDatasourceMapping() throws Exception {
+        DatasetVersion datasetVersionOld = mockDatasetVersionInRepoFromMockFactory(DATASET_VERSION_32_WITH_MULTIPLE_DATASOURCES_LINKED_TO_FILE_NAME);
+        DatasetVersion datasetVersionNew = datasetLifecycleService.copyResourceForVersioning(getServiceContextAdministrador(), datasetVersionOld);
+
+        List<Mapping> datasourcesMapping = DatasetVersioningCopyUtils.createDatasourceMapping(datasetVersionOld, datasetVersionNew);
+
+        assertEquals(datasetVersionOld.getDatasources().size(), datasourcesMapping.size());
+        assertEquals(datasetVersionNew.getDatasources().size(), datasourcesMapping.size());
+
+        for (int i = 0; i < datasourcesMapping.size(); i++) {
+            assertTrue(datasetVersionOld.getDatasources().get(i).getIdentifiableStatisticalResource().getCode().equals(datasourcesMapping.get(i).getOldValue()));
+            assertTrue(datasetVersionNew.getDatasources().get(i).getIdentifiableStatisticalResource().getCode().equals(datasourcesMapping.get(i).getNewValue()));
+            assertFalse(datasetVersionOld.getDatasources().get(i).getIdentifiableStatisticalResource().getCode().equals(datasourcesMapping.get(i).getNewValue()));
+            assertFalse(datasetVersionNew.getDatasources().get(i).getIdentifiableStatisticalResource().getCode().equals(datasourcesMapping.get(i).getOldValue()));
+        }
+    }
+
+    @Test
+    public void copyResourceForVersioningCheckAttributesCoverage() throws Exception {
+        DatasetVersion datasetVersionSource = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_102_PREPARED_TO_PUBLISH_WITH_ATTRIBUTE_VALUES_NAME);
+        assertNotNull(datasetVersionSource.getAttributesCoverage());
+        assertTrue(datasetVersionSource.getAttributesCoverage().size() > 0);
+
+        DatasetVersion datasetVersionTarget = datasetLifecycleService.copyResourceForVersioning(getServiceContextAdministrador(), datasetVersionSource);
+        assertNotNull(datasetVersionTarget.getAttributesCoverage());
+        assertTrue(datasetVersionTarget.getAttributesCoverage().size() > 0);
+
+        assertEquals(datasetVersionSource.getAttributesCoverage().size(), datasetVersionTarget.getAttributesCoverage().size());
+
+        DatasetsAsserts.assertEqualsAttributeValuesCollection(datasetVersionSource.getAttributesCoverage(), datasetVersionTarget.getAttributesCoverage());
+    }
+
     // ------------------------------------------------------------------------------------------------------
     // PRIVATE UTILS
     // ------------------------------------------------------------------------------------------------------
@@ -434,8 +493,8 @@ public class DatasetLifecycleServiceTest extends StatisticalResourcesBaseTest im
         DataMockUtils.mockDsdAndDataRepositorySimpleDimensionsNoAttributes(datasetRepositoriesServiceFacade, srmRestInternalService);
     }
 
-    private void mockTaskInProgressForResource(String datasetVersionUrn, boolean status) throws MetamacException {
-        TaskMockUtils.mockTaskInProgressForDatasetVersion(taskService, datasetVersionUrn, status);
+    private void mockTaskInProgressForResource(String datasetUrn, boolean status) throws MetamacException {
+        TaskMockUtils.mockTaskInProgressForDatasetVersion(taskService, datasetUrn, status);
     }
 
 }

@@ -46,6 +46,7 @@ import org.siemac.metamac.statistical.resources.core.utils.mocks.PublicationMock
 import org.siemac.metamac.statistical.resources.core.utils.mocks.PublicationVersionMock;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.QueryMock;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.QueryVersionMock;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.StatisticalResourcesMockFactory;
 import org.siemac.metamac.statistical.resources.core.utils.transformers.CodeDimensionToCodeStringTransformer;
 
 public class StatisticalResourcesPersistedDoMocks extends StatisticalResourcesDoMocks {
@@ -307,6 +308,7 @@ public class StatisticalResourcesPersistedDoMocks extends StatisticalResourcesDo
 
         computeCoverageRelatedMetadata(datasetVersion);
 
+        datasetVersion.setKeepAllData(Boolean.TRUE);
         datasetVersion.setDataSourceType(DataSourceTypeEnum.FILE); // TODO METAMAC-2866 dirty cheat?
 
         return datasetVersion;
@@ -420,7 +422,7 @@ public class StatisticalResourcesPersistedDoMocks extends StatisticalResourcesDo
         categorisation.setVersionableStatisticalResource(new VersionableStatisticalResource());
         categorisation.getVersionableStatisticalResource().setCode(categorisationCode);
         categorisation.getVersionableStatisticalResource()
-                .setUrn(GeneratorUrnUtils.generateSdmxCategorisationUrn(new String[]{maintainer.getCodeNested()}, categorisationCode, StatisticalResourcesVersionUtils.INITIAL_VERSION));
+                .setUrn(GeneratorUrnUtils.generateSdmxCategorisationUrn(new String[]{maintainer.getCodeNested()}, categorisationCode, StatisticalResourcesMockFactory.INIT_VERSION));
         categorisation.setDatasetVersion(datasetVersion);
         categorisation.setCategory(category);
         categorisation.setMaintainer(maintainer);
@@ -764,7 +766,7 @@ public class StatisticalResourcesPersistedDoMocks extends StatisticalResourcesDo
     @Override
     protected void setSpecialCasesVersionableStatisticalResourceMock(VersionableStatisticalResource resource) {
         if (resource.getVersionLogic() == null) {
-            resource.setVersionLogic(VersionUtil.PATTERN_XXX_YYY_INITIAL_VERSION);
+            resource.setVersionLogic(StatisticalResourcesMockFactory.INIT_VERSION);
         }
     }
 

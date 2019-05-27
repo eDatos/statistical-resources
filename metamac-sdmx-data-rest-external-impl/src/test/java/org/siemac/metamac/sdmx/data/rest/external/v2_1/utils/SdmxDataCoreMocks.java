@@ -50,6 +50,7 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersi
 import org.siemac.metamac.statistical.resources.core.dataset.domain.TemporalCode;
 import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.VersionRationaleTypeEnum;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.StatisticalResourcesMockFactory;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesDoMocks;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesPersistedDoMocks;
 
@@ -728,7 +729,7 @@ public class SdmxDataCoreMocks extends BaseJaxbMocks {
         target.setResourceCreatedDate(new DateTime(2012, 1, 2, 3, 4, 5, 0));
         target.setLastUpdate(new DateTime(2013, 1, 2, 3, 4, 5, 0));
         target.setNewnessUntilDate(new DateTime(2013, 9, 2, 15, 4, 5, 0));
-        target.setReplaces(mockDatasetRelatedResource(agencyID, "replace01", "01.000"));
+        target.setReplaces(mockDatasetRelatedResource(agencyID, "replace01", StatisticalResourcesMockFactory.INIT_VERSION));
         target.setCopyrightedDate(2014);
         mockLifeCycleStatisticalResource(agencyID, resourceID, version, target);
     }
@@ -740,7 +741,7 @@ public class SdmxDataCoreMocks extends BaseJaxbMocks {
 
     private void mockLifeCycleStatisticalResource(String agencyID, String resourceID, String version, LifeCycleStatisticalResource target) {
         target.setPublicationDate(new DateTime(2013, 1, 1, 3, 4, 13, 0));
-        target.setReplacesVersion(mockDatasetRelatedResource(agencyID, version, "00.001"));
+        target.setReplacesVersion(mockDatasetRelatedResource(agencyID, version, StatisticalResourcesMockFactory.INIT_VERSION));
         mockVersionableStatisticalResource(agencyID, resourceID, version, target);
     }
 

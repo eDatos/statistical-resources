@@ -8,6 +8,7 @@ import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.dto.InternationalStringDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.core.enume.dataset.domain.DataSourceTypeEnum;
+import org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb;
 import org.siemac.metamac.statistical.resources.web.client.base.widgets.NewStatisticalResourceWindow;
 import org.siemac.metamac.statistical.resources.web.client.constants.StatisticalResourceWebConstants;
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.ds.DatasetDS;
@@ -15,15 +16,18 @@ import org.siemac.metamac.statistical.resources.web.client.dataset.view.handlers
 import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
 import org.siemac.metamac.statistical.resources.web.client.widgets.windows.search.SearchSingleDsdPaginatedWindow;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.DsdWebCriteria;
+import org.siemac.metamac.web.common.client.resources.GlobalResources;
 import org.siemac.metamac.web.common.client.utils.InternationalStringUtils;
 import org.siemac.metamac.web.common.client.widgets.actions.search.SearchPaginatedAction;
 import org.siemac.metamac.web.common.client.widgets.form.CustomDynamicForm;
 import org.siemac.metamac.web.common.client.widgets.form.fields.CustomButtonItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.RequiredSelectItem;
+import org.siemac.metamac.web.common.client.widgets.form.fields.CustomCheckboxItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.RequiredTextItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.external.SearchExternalItemLinkItem;
 
 import com.smartgwt.client.types.Alignment;
+import com.smartgwt.client.widgets.form.fields.FormItemIcon;
 import com.smartgwt.client.widgets.form.fields.events.ClickEvent;
 import com.smartgwt.client.widgets.form.fields.events.ClickHandler;
 import com.smartgwt.client.widgets.form.fields.events.HasClickHandlers;
@@ -47,6 +51,8 @@ public class NewDatasetWindow extends NewStatisticalResourceWindow {
 
         relatedDsdItem = createDsdItem();
         relatedDsdItem.setRequired(true);
+        
+        CustomCheckboxItem keepAllDataCheckBoxItem = createKeepAllDataCheckBoxItem();
 
         RequiredSelectItem dataSourceTypeItem = new RequiredSelectItem(DatasetDS.DATA_SOURCE_TYPE, getConstants().datasetVersionDataSourceType());
         dataSourceTypeItem.setValueMap(CommonUtils.getDataSourceTypeHashMap());
@@ -56,7 +62,8 @@ public class NewDatasetWindow extends NewStatisticalResourceWindow {
 
         form = new CustomDynamicForm();
         form.setMargin(5);
-        form.setFields(nameItem, relatedDsdItem, languageItem, maintainerItem, dataSourceTypeItem, saveItem);
+        form.setFields(nameItem, relatedDsdItem, languageItem, maintainerItem, dataSourceTypeItem, keepAllDataCheckBoxItem, saveItem);
+		form.setColWidths("30%", "70%");
         form.setWidth100();
 
         addItem(form);
@@ -72,6 +79,7 @@ public class NewDatasetWindow extends NewStatisticalResourceWindow {
         datasetDto.setTitle(InternationalStringUtils.updateInternationalString(new InternationalStringDto(), form.getValueAsString(DatasetDS.TITLE)));
         datasetDto.setRelatedDsd(form.getValueAsExternalItemDto(DatasetDS.RELATED_DSD));
         datasetDto.setDataSourceType(DataSourceTypeEnum.valueOf(form.getValueAsString(DatasetDS.DATA_SOURCE_TYPE)));
+        datasetDto.setKeepAllData(Boolean.valueOf(form.getValueAsString(DatasetDS.KEEP_ALL_DATA)));
         populateSiemacResourceDto(datasetDto);
 
         return datasetDto;
@@ -105,6 +113,19 @@ public class NewDatasetWindow extends NewStatisticalResourceWindow {
 
             retrieveResourcesForRelatedDsd(0, StatisticalResourceWebConstants.FORM_LIST_MAX_RESULTS, searchDsdWindow.getDsdWebCriteria());
         }
+    }
+
+    private CustomCheckboxItem createKeepAllDataCheckBoxItem() {
+        FormItemIcon infoIcon = new FormItemIcon();
+        infoIcon.setSrc(GlobalResources.RESOURCE.info().getURL());
+        infoIcon.setPrompt(StatisticalResourcesWeb.getMessages().datasetKeepAllDataInfo());
+
+        CustomCheckboxItem keepAllDataCheckBoxItem = new CustomCheckboxItem(DatasetDS.KEEP_ALL_DATA, getConstants().keepAllData());
+        keepAllDataCheckBoxItem.setCanEdit(Boolean.TRUE);
+        keepAllDataCheckBoxItem.setValue(Boolean.TRUE);
+        keepAllDataCheckBoxItem.setIcons(infoIcon);
+
+        return keepAllDataCheckBoxItem;
     }
 
     private SearchExternalItemLinkItem createDsdItem() {

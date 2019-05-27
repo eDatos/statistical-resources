@@ -93,6 +93,7 @@ public abstract class LifeCycleBaseListViewImpl<C extends UiHandlers> extends Vi
             }
         });
         listGrid.setHeight100();
+        listGrid.getListGrid().setCanMultiSort(Boolean.FALSE);
 
         // Panel
 

@@ -75,8 +75,12 @@ public class AttributeMainFormLayout extends MainFormLayout {
     public void showInstance(DsdAttributeDto dsdAttributeDto, DsdAttributeInstanceDto dsdAttributeInstanceDto) {
         hideAllForms();
         this.dsdAttributeInstanceDto = dsdAttributeInstanceDto;
+
+        boolean canDeleteBck = canDelete;
+
         createMode = dsdAttributeInstanceDto.getUuid() == null;
-        setCanDelete(!createMode);
+        setCanDelete(canDelete && !createMode);
+
         switch (dsdAttributeDto.getAttributeRelationship().getRelationshipType()) {
             case NO_SPECIFIED_RELATIONSHIP:
                 showDatasetLevelForm(dsdAttributeDto, dsdAttributeInstanceDto);
@@ -93,6 +97,8 @@ public class AttributeMainFormLayout extends MainFormLayout {
         if (!createMode) {
             this.setViewMode();
         }
+
+        canDelete = canDeleteBck;
     }
 
     private void showDatasetLevelForm(DsdAttributeDto dsdAttributeDto, DsdAttributeInstanceDto dsdAttributeInstanceDto) {

@@ -5,30 +5,33 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.PublicationsAsserts.assertEqualsVersionedElementLevelCollection;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_101_MAXIMUM_MINOR_VERSION_REACHED;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_12_DRAFT_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_13_PRODUCTION_VALIDATION_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_14_DIFFUSION_VALIDATION_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_15_VALIDATION_REJECTED_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_16_PUBLISHED_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_26_WITH_COMPLEX_STRUCTURE_PUBLISHED_NAME;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_31_V2_PUBLISHED_NO_VISIBLE_FOR_PUBLICATION_06_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_39_PUBLISHED_WITH_NO_ROOT_MAINTAINER_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_99_WITH_PUBLISHED_MULTIDATASET_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_100_MAXIMUM_VERSION_REACHED;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.siemac.metamac.core.common.enume.domain.VersionPatternEnum;
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.core.common.exception.MetamacExceptionBuilder;
 import org.siemac.metamac.core.common.test.utils.mocks.configuration.MetamacMock;
 import org.siemac.metamac.core.common.util.GeneratorUrnUtils;
-import org.siemac.metamac.core.common.util.shared.VersionUtil;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
 import org.siemac.metamac.statistical.resources.core.base.constants.ProcStatusForActionsConstants;
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceapi.LifecycleService;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
+import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesVersionUtils;
 import org.siemac.metamac.statistical.resources.core.utils.asserts.BaseAsserts;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.StatisticalResourcesMockFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.context.ContextConfiguration;
@@ -55,8 +58,8 @@ public class PublicationVersioningServiceTest extends StatisticalResourcesBaseTe
     public void testVersioningPublicationVersion() throws Exception {
         PublicationVersion publicationVersion = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_16_PUBLISHED_NAME);
 
-        PublicationVersion publicationNewVersion = publicationVersionLifecycleService.versioning(getServiceContextWithoutPrincipal(), publicationVersion.getSiemacMetadataStatisticalResource()
-                .getUrn(), VersionTypeEnum.MINOR);
+        PublicationVersion publicationNewVersion = publicationVersionLifecycleService.versioning(getServiceContextWithoutPrincipal(),
+                publicationVersion.getSiemacMetadataStatisticalResource().getUrn(), VersionTypeEnum.MINOR);
         publicationVersion = publicationService.retrievePublicationVersionByUrn(getServiceContextWithoutPrincipal(), publicationVersion.getSiemacMetadataStatisticalResource().getUrn());
         assertNotNull(publicationNewVersion);
         assertFalse(publicationVersion.getSiemacMetadataStatisticalResource().getVersionLogic().equals(publicationNewVersion.getSiemacMetadataStatisticalResource().getVersionLogic()));
@@ -64,12 +67,26 @@ public class PublicationVersioningServiceTest extends StatisticalResourcesBaseTe
     }
 
     @Test
+    @MetamacMock(PUBLICATION_VERSION_99_WITH_PUBLISHED_MULTIDATASET_NAME)
+    public void testVersioningPublicationVersionCheckMultidatasetCopy() throws Exception {
+        PublicationVersion publicationVersion = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_99_WITH_PUBLISHED_MULTIDATASET_NAME);
+
+        PublicationVersion publicationNewVersion = publicationVersionLifecycleService.versioning(getServiceContextWithoutPrincipal(),
+                publicationVersion.getSiemacMetadataStatisticalResource().getUrn(), VersionTypeEnum.MINOR);
+        publicationVersion = publicationService.retrievePublicationVersionByUrn(getServiceContextWithoutPrincipal(), publicationVersion.getSiemacMetadataStatisticalResource().getUrn());
+        assertNotNull(publicationNewVersion);
+        assertFalse(publicationVersion.getSiemacMetadataStatisticalResource().getVersionLogic().equals(publicationNewVersion.getSiemacMetadataStatisticalResource().getVersionLogic()));
+        checkNewPublicationVersionCreated(publicationVersion, publicationNewVersion);
+        checkMultidatasetInPublicationVersioning(publicationVersion, publicationNewVersion);
+    }
+
+    @Test
     @MetamacMock(PUBLICATION_VERSION_26_WITH_COMPLEX_STRUCTURE_PUBLISHED_NAME)
     public void testVersioningPublicationVersionWithComplexStructure() throws Exception {
         PublicationVersion publicationVersion = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_26_WITH_COMPLEX_STRUCTURE_PUBLISHED_NAME);
 
-        PublicationVersion publicationNewVersion = publicationVersionLifecycleService.versioning(getServiceContextWithoutPrincipal(), publicationVersion.getSiemacMetadataStatisticalResource()
-                .getUrn(), VersionTypeEnum.MINOR);
+        PublicationVersion publicationNewVersion = publicationVersionLifecycleService.versioning(getServiceContextWithoutPrincipal(),
+                publicationVersion.getSiemacMetadataStatisticalResource().getUrn(), VersionTypeEnum.MINOR);
         publicationVersion = publicationService.retrievePublicationVersionByUrn(getServiceContextWithoutPrincipal(), publicationVersion.getSiemacMetadataStatisticalResource().getUrn());
         assertNotNull(publicationNewVersion);
         assertFalse(publicationVersion.getSiemacMetadataStatisticalResource().getVersionLogic().equals(publicationNewVersion.getSiemacMetadataStatisticalResource().getVersionLogic()));
@@ -88,12 +105,12 @@ public class PublicationVersioningServiceTest extends StatisticalResourcesBaseTe
         String versionBefore = publicationVersion.getSiemacMetadataStatisticalResource().getVersionLogic();
 
         // New publication version
-        PublicationVersion newPublicationVersion = publicationVersionLifecycleService.versioning(getServiceContextWithoutPrincipal(), publicationVersion.getSiemacMetadataStatisticalResource()
-                .getUrn(), versionType);
+        PublicationVersion newPublicationVersion = publicationVersionLifecycleService.versioning(getServiceContextWithoutPrincipal(),
+                publicationVersion.getSiemacMetadataStatisticalResource().getUrn(), versionType);
         publicationVersion = publicationService.retrievePublicationVersionByUrn(getServiceContextWithoutPrincipal(), publicationVersion.getSiemacMetadataStatisticalResource().getUrn());
 
         // Expected URN
-        String versionAfter = VersionUtil.createNextVersion(versionBefore, VersionPatternEnum.XXX_YYY, versionType);
+        String versionAfter = StatisticalResourcesVersionUtils.createNextVersion(versionBefore, versionType);
 
         // Compare URNS
         String expectedUrn = GeneratorUrnUtils.generateSiemacStatisticalResourceCollectionVersionUrn(maintainer, publicationVersionCode, versionAfter);
@@ -112,12 +129,12 @@ public class PublicationVersioningServiceTest extends StatisticalResourcesBaseTe
         String versionBefore = publicationVersion.getSiemacMetadataStatisticalResource().getVersionLogic();
 
         // New publication version
-        PublicationVersion newPublicationVersion = publicationVersionLifecycleService.versioning(getServiceContextWithoutPrincipal(), publicationVersion.getSiemacMetadataStatisticalResource()
-                .getUrn(), versionType);
+        PublicationVersion newPublicationVersion = publicationVersionLifecycleService.versioning(getServiceContextWithoutPrincipal(),
+                publicationVersion.getSiemacMetadataStatisticalResource().getUrn(), versionType);
         publicationVersion = publicationService.retrievePublicationVersionByUrn(getServiceContextWithoutPrincipal(), publicationVersion.getSiemacMetadataStatisticalResource().getUrn());
 
         // Expected URN
-        String versionAfter = VersionUtil.createNextVersion(versionBefore, VersionPatternEnum.XXX_YYY, versionType);
+        String versionAfter = StatisticalResourcesVersionUtils.createNextVersion(versionBefore, versionType);
 
         // Compare URNS
         String expectedUrn = GeneratorUrnUtils.generateSiemacStatisticalResourceCollectionVersionUrn(maintainer, publicationVersionCode, versionAfter);
@@ -136,12 +153,12 @@ public class PublicationVersioningServiceTest extends StatisticalResourcesBaseTe
         String versionBefore = publicationVersion.getSiemacMetadataStatisticalResource().getVersionLogic();
 
         // New publication version
-        PublicationVersion newPublicationVersion = publicationVersionLifecycleService.versioning(getServiceContextWithoutPrincipal(), publicationVersion.getSiemacMetadataStatisticalResource()
-                .getUrn(), versionType);
+        PublicationVersion newPublicationVersion = publicationVersionLifecycleService.versioning(getServiceContextWithoutPrincipal(),
+                publicationVersion.getSiemacMetadataStatisticalResource().getUrn(), versionType);
         publicationVersion = publicationService.retrievePublicationVersionByUrn(getServiceContextWithoutPrincipal(), publicationVersion.getSiemacMetadataStatisticalResource().getUrn());
 
         // Expected URN
-        String versionAfter = VersionUtil.createNextVersion(versionBefore, VersionPatternEnum.XXX_YYY, versionType);
+        String versionAfter = StatisticalResourcesVersionUtils.createNextVersion(versionBefore, versionType);
 
         // Compare URNS
         String expectedUrn = GeneratorUrnUtils.generateSiemacStatisticalResourceCollectionVersionUrn(maintainer, publicationVersionCode, versionAfter);
@@ -151,10 +168,10 @@ public class PublicationVersioningServiceTest extends StatisticalResourcesBaseTe
     @Test
     @MetamacMock(PUBLICATION_VERSION_12_DRAFT_NAME)
     public void testVersioningPublicationVersionErrorPublicationVersionNotVisible() throws Exception {
-        String publicationVersionUrn = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_12_DRAFT_NAME).getSiemacMetadataStatisticalResource()
-                .getUrn();
+        String publicationVersionUrn = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_12_DRAFT_NAME).getSiemacMetadataStatisticalResource().getUrn();
 
-        expectedMetamacException(new MetamacException(ServiceExceptionType.LIFE_CYCLE_WRONG_PROC_STATUS, publicationVersionUrn, ProcStatusForActionsConstants.PROC_STATUS_FOR_SEND_RESOURCE_TO_VERSION));
+        expectedMetamacException(
+                new MetamacException(ServiceExceptionType.LIFE_CYCLE_WRONG_PROC_STATUS, publicationVersionUrn, ProcStatusForActionsConstants.PROC_STATUS_FOR_SEND_RESOURCE_TO_VERSION));
         publicationVersionLifecycleService.versioning(getServiceContextWithoutPrincipal(), publicationVersionUrn, VersionTypeEnum.MAJOR);
     }
 
@@ -194,6 +211,44 @@ public class PublicationVersioningServiceTest extends StatisticalResourcesBaseTe
         publicationVersionLifecycleService.versioning(getServiceContextWithoutPrincipal(), publicationVersionUrn, VersionTypeEnum.MAJOR);
     }
 
+    @Test
+    @MetamacMock(PUBLICATION_VERSION_100_MAXIMUM_VERSION_REACHED)
+    public void testVersioningPublicationMinorVersionErrorMaximumVersionReached() throws Exception {
+        String previousPublicationVersionUrn = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_100_MAXIMUM_VERSION_REACHED).getSiemacMetadataStatisticalResource().getUrn();
+
+        VersionTypeEnum versionType = VersionTypeEnum.MINOR;
+
+        expectedMetamacException(MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.RESOURCE_MAXIMUM_VERSION_REACHED)
+                .withMessageParameters(versionType, StatisticalResourcesMockFactory.MAXIMUM_VERSION_AVAILABLE).build());
+
+        publicationVersionLifecycleService.versioning(getServiceContextWithoutPrincipal(), previousPublicationVersionUrn, versionType);
+    }
+
+    @Test
+    @MetamacMock(PUBLICATION_VERSION_100_MAXIMUM_VERSION_REACHED)
+    public void testVersioningPublicationMajorVersionErrorMaximumVersionReached() throws Exception {
+        String previousPublicationVersionUrn = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_100_MAXIMUM_VERSION_REACHED).getSiemacMetadataStatisticalResource().getUrn();
+
+        VersionTypeEnum versionType = VersionTypeEnum.MAJOR;
+
+        expectedMetamacException(MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.RESOURCE_MAXIMUM_VERSION_REACHED)
+                .withMessageParameters(versionType, StatisticalResourcesMockFactory.MAXIMUM_VERSION_AVAILABLE).build());
+
+        publicationVersionLifecycleService.versioning(getServiceContextWithoutPrincipal(), previousPublicationVersionUrn, versionType);
+    }
+
+    @Test
+    @MetamacMock(PUBLICATION_VERSION_101_MAXIMUM_MINOR_VERSION_REACHED)
+    public void testVersioningPublicationMaximumMinorVersionReached() throws Exception {
+        PublicationVersion previousPublicationVersion = publicationVersionMockFactory.retrieveMock(PUBLICATION_VERSION_101_MAXIMUM_MINOR_VERSION_REACHED);
+
+        PublicationVersion newPublicationVersion = publicationVersionLifecycleService.versioning(getServiceContextWithoutPrincipal(),
+                previousPublicationVersion.getSiemacMetadataStatisticalResource().getUrn(), VersionTypeEnum.MINOR);
+
+        assertEquals(StatisticalResourcesMockFactory.MAXIMUM_MINOR_VERSION_AVAILABLE, previousPublicationVersion.getSiemacMetadataStatisticalResource().getVersionLogic());
+        assertEquals(StatisticalResourcesMockFactory.SECOND_VERSION, newPublicationVersion.getSiemacMetadataStatisticalResource().getVersionLogic());
+    }
+
     // -------------------------------------------------------------------------------------------
     // PRIVATE UTILS
     // -------------------------------------------------------------------------------------------
@@ -205,6 +260,15 @@ public class PublicationVersioningServiceTest extends StatisticalResourcesBaseTe
         assertEqualsVersionedElementLevelCollection(previous.getChildrenAllLevels(), next.getChildrenAllLevels());
         assertEqualsVersionedElementLevelCollection(previous.getChildrenFirstLevel(), next.getChildrenFirstLevel());
         assertNull(next.getFormatExtentResources());
+    }
+
+    private void checkMultidatasetInPublicationVersioning(PublicationVersion expectPublicationVersion, PublicationVersion actualPublicationVersion) {
+        String expectedMultidatasetUrn = expectPublicationVersion.getChildrenFirstLevel().get(0).getChildren().get(0).getCube().getMultidatasetUrn();
+        String actualMultidatasetUrn = expectPublicationVersion.getChildrenFirstLevel().get(0).getChildren().get(0).getCube().getMultidatasetUrn();
+
+        assertNotNull(expectedMultidatasetUrn);
+        assertNotNull(actualMultidatasetUrn);
+        assertEquals(expectedMultidatasetUrn, actualMultidatasetUrn);
     }
 
 }

@@ -2,11 +2,11 @@ package org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.data
 
 import static org.siemac.metamac.statistical.resources.core.error.utils.ServiceExceptionParametersUtils.addParameter;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
+import org.fornax.cartridges.sculptor.framework.errorhandling.ApplicationException;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
@@ -25,6 +25,7 @@ import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.DatasetS
 import org.siemac.metamac.statistical.resources.core.dataset.utils.DatasetVersioningCopyUtils;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionSingleParameters;
+import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.lifecycle.LifecycleCommonMetadataChecker;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.LifecycleTemplateService;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.checker.ExternalItemChecker;
@@ -35,6 +36,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import es.gobcan.istac.edatos.dataset.repository.dto.Mapping;
+import es.gobcan.istac.edatos.dataset.repository.service.DatasetRepositoriesServiceFacade;
 
 @Service("datasetLifecycleService")
 public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<DatasetVersion> {
@@ -59,6 +61,9 @@ public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<Datase
 
     @Autowired
     private StatisticalResourcesConfiguration configurationService;
+
+    @Autowired
+    private DatasetRepositoriesServiceFacade  datasetRepositoriesServiceFacade;
 
     @Override
     protected String getResourceMetadataName() throws MetamacException {
@@ -155,6 +160,15 @@ public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<Datase
 
     @Override
     protected void applySendToPublishedPreviousResource(ServiceContext ctx, DatasetVersion resource) throws MetamacException {
+        try {
+            if (!resource.isKeepAllData()) {
+                datasetRepositoriesServiceFacade.deleteDatasetRepository(resource.getDatasetRepositoryId());
+                resource.setDatasetRepositoryId(null);
+            }
+        } catch (ApplicationException e) {
+            throw new MetamacException(e, ServiceExceptionType.UNKNOWN, "Error removing datasetRepository " + resource.getDatasetRepositoryId());
+        }
+
     }
 
     private InternationalString buildBibliographicCitation(DatasetVersion resource) throws MetamacException {
@@ -221,14 +235,11 @@ public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<Datase
         String oldDatasetRepositoryId = previous.getDatasetRepositoryId();
         resource.setDatasetRepositoryId(resource.getSiemacMetadataStatisticalResource().getUrn());
 
-        ArrayList<Mapping> datasourcesMapping = new ArrayList<Mapping>();
-        for (int i = 0; i < resource.getDatasources().size(); i++) {
-            datasourcesMapping
-                    .add(new Mapping(resource.getDatasources().get(i).getIdentifiableStatisticalResource().getCode(), previous.getDatasources().get(i).getIdentifiableStatisticalResource().getCode()));
-        }
+        List<Mapping> datasourcesMapping = DatasetVersioningCopyUtils.createDatasourceMapping(previous, resource);
 
         TaskInfoDataset taskInfo = new TaskInfoDataset();
         taskInfo.setDatasetVersionId(oldDatasetRepositoryId);
+        taskInfo.setDatasetUrn(resource.getDataset().getIdentifiableStatisticalResource().getUrn());
         taskService.planifyDuplicationDataset(ctx, taskInfo, resource.getDatasetRepositoryId(), datasourcesMapping);
     }
 
@@ -289,6 +300,6 @@ public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<Datase
 
     @Override
     protected String getResourceUrn(DatasetVersion resource) {
-        return resource.getSiemacMetadataStatisticalResource().getUrn();
+        return resource.getDataset().getIdentifiableStatisticalResource().getUrn();
     }
 }

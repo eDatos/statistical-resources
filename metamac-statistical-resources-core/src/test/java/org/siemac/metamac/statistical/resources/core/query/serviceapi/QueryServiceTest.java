@@ -88,6 +88,7 @@ import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersionProperties;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetMockFactory;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.StatisticalResourcesMockFactory;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesDoMocks;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesNotPersistedDoMocks;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -642,7 +643,8 @@ public class QueryServiceTest extends StatisticalResourcesBaseTest implements Qu
         assertEquals(newCode, updatedQueryVersion.getLifeCycleStatisticalResource().getCode());
 
         String[] maintainerCodes = new String[]{updatedQueryVersion.getLifeCycleStatisticalResource().getMaintainer().getCodeNested()};
-        assertEquals(GeneratorUrnUtils.generateSiemacStatisticalResourceQueryVersionUrn(maintainerCodes, newCode, "001.000"), updatedQueryVersion.getLifeCycleStatisticalResource().getUrn());
+        assertEquals(GeneratorUrnUtils.generateSiemacStatisticalResourceQueryVersionUrn(maintainerCodes, newCode, StatisticalResourcesMockFactory.INIT_VERSION),
+                updatedQueryVersion.getLifeCycleStatisticalResource().getUrn());
     }
 
     @Test

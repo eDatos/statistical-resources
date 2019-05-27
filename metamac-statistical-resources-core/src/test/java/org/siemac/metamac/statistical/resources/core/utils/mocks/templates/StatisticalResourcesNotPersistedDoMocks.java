@@ -168,6 +168,7 @@ public class StatisticalResourcesNotPersistedDoMocks extends StatisticalResource
         datasetVersion.setDataset(null);
         datasetVersion.setRelatedDsd(mockDsdExternalItem());
         datasetVersion.setSiemacMetadataStatisticalResource(mockSiemacMetadataStatisticalResource(datasetVersion.getSiemacMetadataStatisticalResource(), TypeRelatedResourceEnum.DATASET_VERSION));
+        datasetVersion.setKeepAllData(Boolean.TRUE);
         datasetVersion.setDataSourceType(DataSourceTypeEnum.FILE); // TODO METAMAC-2866 dirty cheat?
         return datasetVersion;
     }

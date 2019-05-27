@@ -71,6 +71,7 @@ public class MultidatasetStructureTreeGrid extends NavigableTreeGrid {
     protected MultidatasetVersionDto               multidatasetVersion;
 
     protected Tree                                 tree;
+    protected TreeGridField                        identifierField;
     protected TreeGridField                        titleField;
     protected TreeGridField                        urnField;
     protected TreeGridField                        orderField;
@@ -113,6 +114,11 @@ public class MultidatasetStructureTreeGrid extends NavigableTreeGrid {
         setShowOpenIcons(true);
         setShowDropIcons(true);
 
+        identifierField = new TreeGridField(MultidatasetCubeDS.IDENTIFIER, getConstants().multidatasetStructureCubeIdentifier());
+        identifierField.setShowHover(false); // only show hover in info field
+        identifierField.setCanFilter(true);
+        identifierField.setCanSort(false);
+
         titleField = new TreeGridField(MultidatasetCubeDS.TITLE, getConstants().multidatasetStructureCubeTitle());
         titleField.setShowHover(false); // only show hover in info field
         titleField.setCanFilter(true);
@@ -135,7 +141,7 @@ public class MultidatasetStructureTreeGrid extends NavigableTreeGrid {
         infoField.setCanFilter(false);
         infoField.setShowHover(true);
 
-        setFields(titleField, urnField, orderField, infoField);
+        setFields(identifierField, titleField, urnField, orderField, infoField);
 
         // Order by ORDER field
         setCanSort(true);
@@ -182,20 +188,26 @@ public class MultidatasetStructureTreeGrid extends NavigableTreeGrid {
                 event.cancel();
                 TreeNode[] treeNodes = tree.getAllNodes();
 
+                String identifierCriteria = event.getCriteria().getAttribute(MultidatasetCubeDS.IDENTIFIER);
                 String titleCriteria = event.getCriteria().getAttribute(MultidatasetCubeDS.TITLE);
                 String urnCriteria = event.getCriteria().getAttribute(MultidatasetCubeDS.URN);
 
-                if (StringUtils.isBlank(titleCriteria) && StringUtils.isBlank(urnCriteria)) {
+                if (StringUtils.isBlank(identifierCriteria) && StringUtils.isBlank(titleCriteria) && StringUtils.isBlank(urnCriteria)) {
                     setData(tree);
                     return;
                 } else {
                     List<TreeNode> matchingNodes = new ArrayList<TreeNode>();
                     for (TreeNode treeNode : treeNodes) {
                         if (!SCHEME_NODE_NAME.equals(treeNode.getName())) {
+                            String identifier = treeNode.getAttributeAsString(MultidatasetCubeDS.IDENTIFIER);
                             String title = treeNode.getAttributeAsString(MultidatasetCubeDS.TITLE);
                             String urn = treeNode.getAttributeAsString(MultidatasetCubeDS.URN);
 
                             boolean matches = true;
+
+                            if (identifierCriteria != null && !StringUtils.containsIgnoreCase(identifier, identifierCriteria)) {
+                                matches = false;
+                            }
                             if (titleCriteria != null && !StringUtils.containsIgnoreCase(title, titleCriteria)) {
                                 matches = false;
                             }
@@ -400,10 +412,11 @@ public class MultidatasetStructureTreeGrid extends NavigableTreeGrid {
 
     }
     protected DetailViewerField[] getDetailViewerFields() {
+        DetailViewerField identifier = new DetailViewerField(MultidatasetCubeDS.IDENTIFIER, getConstants().multidatasetStructureCubeIdentifier());
         DetailViewerField titleField = new DetailViewerField(MultidatasetCubeDS.TITLE, getConstants().multidatasetStructureCubeTitle());
         DetailViewerField descriptionField = new DetailViewerField(MultidatasetCubeDS.DESCRIPTION, getConstants().multidatasetStructureCubeDescription());
         DetailViewerField urnField = new DetailViewerField(MultidatasetCubeDS.URN, getConstants().multidatasetStructureCubeURN());
-        return new DetailViewerField[]{titleField, descriptionField, urnField};
+        return new DetailViewerField[]{identifier, titleField, descriptionField, urnField};
     }
 
     public void addCreateCubeMenuItemClickHandler(ClickHandler clickHandler) {

@@ -557,6 +557,9 @@
                         <cdomain:name>
                             <cdomain:text xml:lang="es">santa-cruz-tenerife en Español</cdomain:text>
                         </cdomain:name>
+                        <cdomain:description>
+                            <cdomain:text xml:lang="es">Description santa-cruz-tenerife en Español</cdomain:text>
+                        </cdomain:description>
                         <ns2:variableElement kind="structuralResources#variableElement">
                             <cdomain:id>variableElement-santa-cruz-tenerife</cdomain:id>
                             <cdomain:urn>urn:siemac:org.siemac.metamac.infomodel.structuralresources.Variable=variable01.variableElement-santa-cruz-tenerife</cdomain:urn>
@@ -574,6 +577,9 @@
                         <cdomain:name>
                             <cdomain:text xml:lang="es">tenerife en Español</cdomain:text>
                         </cdomain:name>
+                        <cdomain:description>
+                            <cdomain:text xml:lang="es">Description tenerife en Español</cdomain:text>
+                        </cdomain:description>
                         <ns2:visualisationParent>urn:sdmx:org.sdmx.infomodel.codelist.Code=agency01:GEO_DIM-codelist01(01.000).santa-cruz-tenerife</ns2:visualisationParent>
                         <ns2:variableElement kind="structuralResources#variableElement">
                             <cdomain:id>variableElement-tenerife</cdomain:id>
@@ -592,6 +598,9 @@
                         <cdomain:name>
                             <cdomain:text xml:lang="es">la-laguna en Español</cdomain:text>
                         </cdomain:name>
+                        <cdomain:description>
+                            <cdomain:text xml:lang="es">Description la-laguna en Español</cdomain:text>
+                        </cdomain:description>
                         <ns2:visualisationParent>urn:sdmx:org.sdmx.infomodel.codelist.Code=agency01:GEO_DIM-codelist01(01.000).tenerife</ns2:visualisationParent>
                         <ns2:variableElement kind="structuralResources#variableElement">
                             <cdomain:id>variableElement-la-laguna</cdomain:id>
@@ -610,6 +619,9 @@
                         <cdomain:name>
                             <cdomain:text xml:lang="es">santa-cruz en Español</cdomain:text>
                         </cdomain:name>
+                        <cdomain:description>
+                            <cdomain:text xml:lang="es">Description santa-cruz en Español</cdomain:text>
+                        </cdomain:description>
                         <ns2:visualisationParent>urn:sdmx:org.sdmx.infomodel.codelist.Code=agency01:GEO_DIM-codelist01(01.000).tenerife</ns2:visualisationParent>
                         <ns2:variableElement kind="structuralResources#variableElement">
                             <cdomain:id>variableElement-santa-cruz</cdomain:id>
@@ -628,6 +640,9 @@
                         <cdomain:name>
                             <cdomain:text xml:lang="es">la-palma en Español</cdomain:text>
                         </cdomain:name>
+                        <cdomain:description>
+                            <cdomain:text xml:lang="es">Description la-palma en Español</cdomain:text>
+                        </cdomain:description>
                         <ns2:visualisationParent>urn:sdmx:org.sdmx.infomodel.codelist.Code=agency01:GEO_DIM-codelist01(01.000).santa-cruz-tenerife</ns2:visualisationParent>
                         <ns2:variableElement kind="structuralResources#variableElement">
                             <cdomain:id>variableElement-la-palma</cdomain:id>
@@ -646,6 +661,9 @@
                         <cdomain:name>
                             <cdomain:text xml:lang="es">los-llanos-de-aridane en Español</cdomain:text>
                         </cdomain:name>
+                        <cdomain:description>
+                            <cdomain:text xml:lang="es">Description los-llanos-de-aridane en Español</cdomain:text>
+                        </cdomain:description>
                         <ns2:visualisationParent>urn:sdmx:org.sdmx.infomodel.codelist.Code=agency01:GEO_DIM-codelist01(01.000).la-palma</ns2:visualisationParent>
                         <ns2:variableElement kind="structuralResources#variableElement">
                             <cdomain:id>variableElement-los-llanos-de-aridane</cdomain:id>
@@ -664,6 +682,9 @@
                         <cdomain:name>
                             <cdomain:text xml:lang="es">santa-cruz-la-palma en Español</cdomain:text>
                         </cdomain:name>
+                        <cdomain:description>
+                            <cdomain:text xml:lang="es">Description santa-cruz-la-palma en Español</cdomain:text>
+                        </cdomain:description>
                         <ns2:visualisationParent>urn:sdmx:org.sdmx.infomodel.codelist.Code=agency01:GEO_DIM-codelist01(01.000).la-palma</ns2:visualisationParent>
                         <ns2:variableElement kind="structuralResources#variableElement">
                             <cdomain:id>variableElement-santa-cruz-la-palma</cdomain:id>
@@ -682,6 +703,9 @@
                         <cdomain:name>
                             <cdomain:text xml:lang="es">la-gomera en Español</cdomain:text>
                         </cdomain:name>
+                        <cdomain:description>
+                            <cdomain:text xml:lang="es">Description la-gomera en Español</cdomain:text>
+                        </cdomain:description>
                         <ns2:visualisationParent>urn:sdmx:org.sdmx.infomodel.codelist.Code=agency01:GEO_DIM-codelist01(01.000).santa-cruz-tenerife</ns2:visualisationParent>
                         <ns2:variableElement kind="structuralResources#variableElement">
                             <cdomain:id>variableElement-la-gomera</cdomain:id>
@@ -700,6 +724,9 @@
                         <cdomain:name>
                             <cdomain:text xml:lang="es">el-hierro en Español</cdomain:text>
                         </cdomain:name>
+                        <cdomain:description>
+                            <cdomain:text xml:lang="es">Description el-hierro en Español</cdomain:text>
+                        </cdomain:description>
                         <ns2:visualisationParent>urn:sdmx:org.sdmx.infomodel.codelist.Code=agency01:GEO_DIM-codelist01(01.000).santa-cruz-tenerife</ns2:visualisationParent>
                         <ns2:variableElement kind="structuralResources#variableElement">
                             <cdomain:id>variableElement-el-hierro</cdomain:id>
@@ -718,6 +745,9 @@
                         <cdomain:name>
                             <cdomain:text xml:lang="es">las-palmas-gran-canaria en Español</cdomain:text>
                         </cdomain:name>
+                        <cdomain:description>
+                            <cdomain:text xml:lang="es">Description las-palmas-gran-canaria en Español</cdomain:text>
+                        </cdomain:description>
                         <ns2:variableElement kind="structuralResources#variableElement">
                             <cdomain:id>variableElement-las-palmas-gran-canaria</cdomain:id>
                             <cdomain:urn>urn:siemac:org.siemac.metamac.infomodel.structuralresources.Variable=variable01.variableElement-las-palmas-gran-canaria</cdomain:urn>
@@ -735,6 +765,9 @@
                         <cdomain:name>
                             <cdomain:text xml:lang="es">gran-canaria en Español</cdomain:text>
                         </cdomain:name>
+                        <cdomain:description>
+                            <cdomain:text xml:lang="es">Description gran-canaria en Español</cdomain:text>
+                        </cdomain:description>
                         <ns2:visualisationParent>urn:sdmx:org.sdmx.infomodel.codelist.Code=agency01:GEO_DIM-codelist01(01.000).las-palmas-gran-canaria</ns2:visualisationParent>
                         <ns2:variableElement kind="structuralResources#variableElement">
                             <cdomain:id>variableElement-gran-canaria</cdomain:id>
@@ -753,6 +786,9 @@
                         <cdomain:name>
                             <cdomain:text xml:lang="es">fuerteventura en Español</cdomain:text>
                         </cdomain:name>
+                        <cdomain:description>
+                            <cdomain:text xml:lang="es">Description fuerteventura en Español</cdomain:text>
+                        </cdomain:description>
                         <ns2:visualisationParent>urn:sdmx:org.sdmx.infomodel.codelist.Code=agency01:GEO_DIM-codelist01(01.000).las-palmas-gran-canaria</ns2:visualisationParent>
                         <ns2:variableElement kind="structuralResources#variableElement">
                             <cdomain:id>variableElement-fuerteventura</cdomain:id>
@@ -771,6 +807,9 @@
                         <cdomain:name>
                             <cdomain:text xml:lang="es">lanzarote en Español</cdomain:text>
                         </cdomain:name>
+                        <cdomain:description>
+                            <cdomain:text xml:lang="es">Description lanzarote en Español</cdomain:text>
+                        </cdomain:description>
                         <ns2:visualisationParent>urn:sdmx:org.sdmx.infomodel.codelist.Code=agency01:GEO_DIM-codelist01(01.000).las-palmas-gran-canaria</ns2:visualisationParent>
                         <ns2:variableElement kind="structuralResources#variableElement">
                             <cdomain:id>variableElement-lanzarote</cdomain:id>
@@ -835,6 +874,9 @@
                         <cdomain:name>
                             <cdomain:text xml:lang="es">measure01-conceptScheme01-concept01 en Español</cdomain:text>
                         </cdomain:name>
+                        <cdomain:description>
+                            <cdomain:text xml:lang="es">Description measure01-conceptScheme01-concept01 en Español</cdomain:text>
+                        </cdomain:description>
                         <ns2:showDecimalsPrecision>4</ns2:showDecimalsPrecision>
                         <ns2:measureQuantity>
                             <ns2:unitCode kind="structuralResources#code">
@@ -854,6 +896,9 @@
                         <cdomain:name>
                             <cdomain:text xml:lang="es">measure01-conceptScheme01-concept02 en Español</cdomain:text>
                         </cdomain:name>
+                        <cdomain:description>
+                            <cdomain:text xml:lang="es">Description measure01-conceptScheme01-concept02 en Español</cdomain:text>
+                        </cdomain:description>
                         <ns2:visualisationParent>urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=agency01:measure01-conceptScheme01(01.000).measure01-conceptScheme01-concept01</ns2:visualisationParent>
                         <ns2:measureQuantity>
                             <ns2:unitCode kind="structuralResources#code">
@@ -873,6 +918,9 @@
                         <cdomain:name>
                             <cdomain:text xml:lang="es">measure01-conceptScheme01-concept05 en Español</cdomain:text>
                         </cdomain:name>
+                        <cdomain:description>
+                            <cdomain:text xml:lang="es">Description measure01-conceptScheme01-concept05 en Español</cdomain:text>
+                        </cdomain:description>
                         <ns2:showDecimalsPrecision>1</ns2:showDecimalsPrecision>
                         <ns2:measureQuantity>
                             <ns2:unitCode kind="structuralResources#code">
@@ -901,6 +949,9 @@
                         <cdomain:name>
                             <cdomain:text xml:lang="es">dim01-codelist01-code01 en Español</cdomain:text>
                         </cdomain:name>
+                        <cdomain:description>
+                            <cdomain:text xml:lang="es">Description dim01-codelist01-code01 en Español</cdomain:text>
+                        </cdomain:description>
                         <ns2:open>true</ns2:open>
                     </ns2:value>
                     <ns2:value kind="structuralResources#code">
@@ -910,6 +961,9 @@
                         <cdomain:name>
                             <cdomain:text xml:lang="es">dim01-codelist01-code03 en Español</cdomain:text>
                         </cdomain:name>
+                        <cdomain:description>
+                            <cdomain:text xml:lang="es">Description dim01-codelist01-code03 en Español</cdomain:text>
+                        </cdomain:description>
                         <ns2:open>true</ns2:open>
                     </ns2:value>
                     <ns2:value kind="structuralResources#code">
@@ -919,6 +973,9 @@
                         <cdomain:name>
                             <cdomain:text xml:lang="es">dim01-codelist01-code04 en Español</cdomain:text>
                         </cdomain:name>
+                        <cdomain:description>
+                            <cdomain:text xml:lang="es">Description dim01-codelist01-code04 en Español</cdomain:text>
+                        </cdomain:description>
                         <ns2:open>true</ns2:open>
                     </ns2:value>
                 </ns2:dimensionValues>
@@ -1164,6 +1221,9 @@
         <ns2:bibliographicCitation>
             <cdomain:text xml:lang="es">bibliographicCitation. More info: http://data.istac.es/apis/statistical-resources/v1.0/datasets/agency1/dataset1/01.000</cdomain:text>
         </ns2:bibliographicCitation>
+		<ns2:keepAllData>
+        	true
+       	</ns2:keepAllData>
     </ns2:metadata>
     <ns2:data>
         <ns2:dimensions total="4">

@@ -3,7 +3,7 @@ package org.siemac.metamac.statistical.resources.core.utils.mocks;
 import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.publication.domain.Publication;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
-import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesVersionUtils;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.StatisticalResourcesMockFactory;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesPersistedDoMocks;
 
 public class PublicationVersionMock extends PublicationVersion {
@@ -16,7 +16,7 @@ public class PublicationVersionMock extends PublicationVersion {
         PublicationVersionMock instance = new PublicationVersionMock();
         instance.setSequentialId(sequenceId);
         instance.getSiemacMetadataStatisticalResource().setLastVersion(true);
-        instance.setVersionLogic(StatisticalResourcesVersionUtils.INITIAL_VERSION);
+        instance.setVersionLogic(StatisticalResourcesMockFactory.INIT_VERSION);
         return instance;
     }
 

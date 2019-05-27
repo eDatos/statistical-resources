@@ -14,6 +14,7 @@ import static org.siemac.metamac.statistical.resources.web.client.model.ds.Siema
 import static org.siemac.metamac.statistical.resources.web.client.model.ds.SiemacMetadataDS.PUBLISHER;
 import static org.siemac.metamac.statistical.resources.web.client.model.ds.VersionableResourceDS.NEXT_VERSION;
 import static org.siemac.metamac.statistical.resources.web.client.model.ds.VersionableResourceDS.VERSION_RATIONALE_TYPES;
+import static org.siemac.metamac.statistical.resources.web.client.multidataset.model.ds.MultidatasetDS.FILTERING_DIMENSION;
 import static org.siemac.metamac.statistical.resources.web.client.query.model.ds.QueryDS.LATEST_N_DATA;
 import static org.siemac.metamac.statistical.resources.web.client.query.model.ds.QueryDS.SELECTION;
 import static org.siemac.metamac.statistical.resources.web.client.query.model.ds.QueryDS.TYPE;
@@ -94,7 +95,8 @@ public class RequiredFieldUtils {
 
     // MULTIDATASET VERSION
 
-    private static final String[] multidatasetFieldsToProductionValidation = new String[]{DESCRIPTION, NEXT_VERSION, VERSION_RATIONALE_TYPES, LANGUAGE, LANGUAGES, CREATOR, PUBLISHER, COMMON_METADATA};
+    private static final String[] multidatasetFieldsToProductionValidation = new String[]{DESCRIPTION, FILTERING_DIMENSION, NEXT_VERSION, VERSION_RATIONALE_TYPES, LANGUAGE, LANGUAGES, CREATOR,
+            PUBLISHER, COMMON_METADATA};
     private static final String[] multidatasetFieldsToDiffusionValidation  = multidatasetFieldsToProductionValidation;
     private static final String[] multidatasetFieldsToMultidataset         = multidatasetFieldsToDiffusionValidation;
 

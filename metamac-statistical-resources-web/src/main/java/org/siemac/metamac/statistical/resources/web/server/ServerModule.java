@@ -58,6 +58,7 @@ import org.siemac.metamac.statistical.resources.web.server.handlers.multidataset
 import org.siemac.metamac.statistical.resources.web.server.handlers.multidataset.DeleteMultidatasetVersionsActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.multidataset.GetMultidatasetVersionActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.multidataset.GetMultidatasetVersionsActionHandler;
+import org.siemac.metamac.statistical.resources.web.server.handlers.multidataset.GetMultidatasetsActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.multidataset.GetVersionsOfMultidatasetActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.multidataset.SaveMultidatasetCubeActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.multidataset.SaveMultidatasetVersionActionHandler;
@@ -140,6 +141,7 @@ import org.siemac.metamac.statistical.resources.web.shared.multidataset.DeleteMu
 import org.siemac.metamac.statistical.resources.web.shared.multidataset.DeleteMultidatasetVersionsAction;
 import org.siemac.metamac.statistical.resources.web.shared.multidataset.GetMultidatasetVersionAction;
 import org.siemac.metamac.statistical.resources.web.shared.multidataset.GetMultidatasetVersionsAction;
+import org.siemac.metamac.statistical.resources.web.shared.multidataset.GetMultidatasetsAction;
 import org.siemac.metamac.statistical.resources.web.shared.multidataset.GetVersionsOfMultidatasetAction;
 import org.siemac.metamac.statistical.resources.web.shared.multidataset.SaveMultidatasetCubeAction;
 import org.siemac.metamac.statistical.resources.web.shared.multidataset.SaveMultidatasetVersionAction;
@@ -283,6 +285,7 @@ public class ServerModule extends HandlerModule {
         bindHandler(SaveMultidatasetCubeAction.class, SaveMultidatasetCubeActionHandler.class);
         bindHandler(DeleteMultidatasetCubeAction.class, DeleteMultidatasetCubeActionHandler.class);
         bindHandler(UpdateMultidatasetCubeLocationAction.class, UpdateMultidatasetCubeLocationActionHandler.class);
+        bindHandler(GetMultidatasetsAction.class, GetMultidatasetsActionHandler.class);
 
         // COMMON
         bindHandler(GetLatestResourceVersionAction.class, GetLatestResourceVersionActionHandler.class);

@@ -36,6 +36,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.core.common.exception.MetamacExceptionBuilder;
 import org.siemac.metamac.core.common.test.utils.mocks.configuration.MetamacMock;
 import org.siemac.metamac.core.common.util.shared.VersionUtil;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
@@ -246,6 +247,77 @@ public class DatasetDto2DoMapperTest extends StatisticalResourcesBaseTest {
         DatasetVersion entity = datasetDto2DoMapper.datasetVersionDtoToDo(dto);
         assertEquals(statisticOfficiality.getId(), entity.getStatisticOfficiality().getId());
         assertEquals(statisticOfficiality.getIdentifier(), entity.getStatisticOfficiality().getIdentifier());
+    }
+
+    @Test
+    @MetamacMock(DATASET_VERSION_62_DRAFT_NOT_INITIAL_VERSION_NAME)
+    public void testDatasetDtoToDoErrorCantChangeKeepAllDataNotInitialVersionDataset() throws MetamacException {
+        DatasetVersion source = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_62_DRAFT_NOT_INITIAL_VERSION_NAME);
+        DatasetVersionDto dto = buildDatasetVersionDtoFromDo(source);
+
+        dto.setKeepAllData(!source.isKeepAllData());
+
+        expectedMetamacException(MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.DATASET_VERSION_CANT_ALTER_KEEP_ALL_DATA).build());
+
+        datasetDto2DoMapper.datasetVersionDtoToDo(dto);
+    }
+
+    @Test
+    @MetamacMock(DATASET_VERSION_61_PUBLISHED_INITIAL_VERSION_NAME)
+    public void testDatasetDtoToDoErrorCantChangeKeepAllDataPublishedDataset() throws MetamacException {
+        DatasetVersion source = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_61_PUBLISHED_INITIAL_VERSION_NAME);
+        DatasetVersionDto dto = buildDatasetVersionDtoFromDo(source);
+
+        dto.setKeepAllData(!source.isKeepAllData());
+
+        expectedMetamacException(MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.DATASET_VERSION_CANT_ALTER_KEEP_ALL_DATA).build());
+
+        datasetDto2DoMapper.datasetVersionDtoToDo(dto);
+    }
+
+    @Test
+    @MetamacMock({DATASET_VERSION_57_DRAFT_INITIAL_VERSION_NAME, DATASET_VERSION_58_PRODUCTION_VALIDATION_INITIAL_VERSION_NAME, DATASET_VERSION_59_DIFFUSION_VALIDATION_INITIAL_VERSION_NAME,
+            DATASET_VERSION_60_VALIDATION_REJECTED_INITIAL_VERSION_NAME})
+    public void testDatasetDtoToDoCanChangeKeepAllData() throws MetamacException {
+        // Draft - Initial version
+        DatasetVersion source = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_57_DRAFT_INITIAL_VERSION_NAME);
+        DatasetVersionDto dto = buildDatasetVersionDtoFromDo(source);
+
+        dto.setKeepAllData(!source.isKeepAllData());
+
+        DatasetVersion entity = datasetDto2DoMapper.datasetVersionDtoToDo(dto);
+
+        assertEquals(!source.isKeepAllData(), entity.isKeepAllData());
+
+        // Production validation - Initial version
+        source = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_58_PRODUCTION_VALIDATION_INITIAL_VERSION_NAME);
+        dto = buildDatasetVersionDtoFromDo(source);
+
+        dto.setKeepAllData(!source.isKeepAllData());
+
+        entity = datasetDto2DoMapper.datasetVersionDtoToDo(dto);
+
+        assertEquals(!source.isKeepAllData(), entity.isKeepAllData());
+
+        // Diffusion validation - Initial version
+        source = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_59_DIFFUSION_VALIDATION_INITIAL_VERSION_NAME);
+        dto = buildDatasetVersionDtoFromDo(source);
+
+        dto.setKeepAllData(!source.isKeepAllData());
+
+        entity = datasetDto2DoMapper.datasetVersionDtoToDo(dto);
+
+        assertEquals(!source.isKeepAllData(), entity.isKeepAllData());
+
+        // Validation rejected - Initial version
+        source = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_60_VALIDATION_REJECTED_INITIAL_VERSION_NAME);
+        dto = buildDatasetVersionDtoFromDo(source);
+
+        dto.setKeepAllData(!source.isKeepAllData());
+
+        entity = datasetDto2DoMapper.datasetVersionDtoToDo(dto);
+
+        assertEquals(!source.isKeepAllData(), entity.isKeepAllData());
     }
 
     @Test

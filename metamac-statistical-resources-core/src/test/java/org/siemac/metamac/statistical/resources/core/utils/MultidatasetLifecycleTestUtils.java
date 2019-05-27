@@ -94,9 +94,9 @@ public class MultidatasetLifecycleTestUtils {
         LifecycleTestUtils.fillAsVersionedSiemac(multidatasetVersion);
     }
 
+    // Inherited fields that need customization based on Resource's type
     private static void prepareToLifecycleCommonMultidatasetVersion(MultidatasetVersion multidatasetVersion) {
-        // Inherited fields that need customization based on Resource's type
-
+        multidatasetVersion.setFilteringDimension(StatisticalResourcesPersistedDoMocks.mockInternationalString());
     }
 
     private static void fillStructure(MultidatasetVersion multidatasetVersion) {

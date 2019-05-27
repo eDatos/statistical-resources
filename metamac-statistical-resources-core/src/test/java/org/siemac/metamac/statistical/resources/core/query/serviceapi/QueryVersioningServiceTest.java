@@ -1,30 +1,8 @@
 package org.siemac.metamac.statistical.resources.core.query.serviceapi;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.siemac.metamac.core.common.enume.domain.VersionPatternEnum;
-import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
-import org.siemac.metamac.core.common.exception.MetamacException;
-import org.siemac.metamac.core.common.test.utils.mocks.configuration.MetamacMock;
-import org.siemac.metamac.core.common.util.GeneratorUrnUtils;
-import org.siemac.metamac.core.common.util.shared.VersionUtil;
-import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
-import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
-import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
-import org.siemac.metamac.statistical.resources.core.lifecycle.serviceapi.LifecycleService;
-import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
-import org.siemac.metamac.statistical.resources.core.utils.asserts.BaseAsserts;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.transaction.TransactionConfiguration;
-import org.springframework.transaction.annotation.Transactional;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts.assertEqualsDataset;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts.assertEqualsDatasetVersion;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.QueryAsserts.assertEqualsSelection;
@@ -33,7 +11,30 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_13_DIFFUSION_VALIDATION_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_14_VALIDATION_REJECTED_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_15_PUBLISHED_NAME;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_28_V2_PUBLISHED_NO_VISIBLE_FOR_QUERY_06_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_59_MAXIMUM_VERSION_REACHED;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_60_MAXIMUM_MINOR_VERSION_REACHED;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
+import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.core.common.exception.MetamacExceptionBuilder;
+import org.siemac.metamac.core.common.test.utils.mocks.configuration.MetamacMock;
+import org.siemac.metamac.core.common.util.GeneratorUrnUtils;
+import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
+import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
+import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
+import org.siemac.metamac.statistical.resources.core.lifecycle.serviceapi.LifecycleService;
+import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
+import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesVersionUtils;
+import org.siemac.metamac.statistical.resources.core.utils.asserts.BaseAsserts;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.StatisticalResourcesMockFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.transaction.TransactionConfiguration;
+import org.springframework.transaction.annotation.Transactional;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:spring/statistical-resources/include/dataset-repository-mockito.xml", "classpath:spring/statistical-resources/include/rest-services-mockito.xml",
@@ -76,7 +77,7 @@ public class QueryVersioningServiceTest extends StatisticalResourcesBaseTest {
         queryVersion = queryService.retrieveQueryVersionByUrn(getServiceContextWithoutPrincipal(), queryVersion.getLifeCycleStatisticalResource().getUrn());
 
         // Expected URN
-        String versionAfter = VersionUtil.createNextVersion(versionBefore, VersionPatternEnum.XXX_YYY, versionType);
+        String versionAfter = StatisticalResourcesVersionUtils.createNextVersion(versionBefore, versionType);
 
         // Compare URNS
         String expectedUrn = GeneratorUrnUtils.generateSiemacStatisticalResourceQueryVersionUrn(maintainer, queryVersionCode, versionAfter);
@@ -99,7 +100,7 @@ public class QueryVersioningServiceTest extends StatisticalResourcesBaseTest {
         queryVersion = queryService.retrieveQueryVersionByUrn(getServiceContextWithoutPrincipal(), queryVersion.getLifeCycleStatisticalResource().getUrn());
 
         // Expected URN
-        String versionAfter = VersionUtil.createNextVersion(versionBefore, VersionPatternEnum.XXX_YYY, versionType);
+        String versionAfter = StatisticalResourcesVersionUtils.createNextVersion(versionBefore, versionType);
 
         // Compare URNS
         String expectedUrn = GeneratorUrnUtils.generateSiemacStatisticalResourceQueryVersionUrn(maintainer, queryVersionCode, versionAfter);
@@ -122,7 +123,7 @@ public class QueryVersioningServiceTest extends StatisticalResourcesBaseTest {
         queryVersion = queryService.retrieveQueryVersionByUrn(getServiceContextWithoutPrincipal(), queryVersion.getLifeCycleStatisticalResource().getUrn());
 
         // Expected URN
-        String versionAfter = VersionUtil.createNextVersion(versionBefore, VersionPatternEnum.XXX_YYY, versionType);
+        String versionAfter = StatisticalResourcesVersionUtils.createNextVersion(versionBefore, versionType);
 
         // Compare URNS
         String expectedUrn = GeneratorUrnUtils.generateSiemacStatisticalResourceQueryVersionUrn(maintainer, queryVersionCode, versionAfter);
@@ -163,6 +164,44 @@ public class QueryVersioningServiceTest extends StatisticalResourcesBaseTest {
 
         expectedMetamacException(new MetamacException(ServiceExceptionType.LIFE_CYCLE_WRONG_PROC_STATUS, queryVersionUrn, ProcStatusEnum.PUBLISHED.getName()));
         queryVersionLifecycleService.versioning(getServiceContextWithoutPrincipal(), queryVersionUrn, VersionTypeEnum.MAJOR);
+    }
+
+    @Test
+    @MetamacMock(QUERY_VERSION_59_MAXIMUM_VERSION_REACHED)
+    public void testVersioningDatasetMinorVersionErrorMaximumVersionReached() throws Exception {
+        String previousQueryVersionUrn = queryVersionMockFactory.retrieveMock(QUERY_VERSION_59_MAXIMUM_VERSION_REACHED).getLifeCycleStatisticalResource().getUrn();
+
+        VersionTypeEnum versionType = VersionTypeEnum.MINOR;
+
+        expectedMetamacException(MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.RESOURCE_MAXIMUM_VERSION_REACHED)
+                .withMessageParameters(versionType, StatisticalResourcesMockFactory.MAXIMUM_VERSION_AVAILABLE).build());
+
+        queryVersionLifecycleService.versioning(getServiceContextWithoutPrincipal(), previousQueryVersionUrn, versionType);
+    }
+
+    @Test
+    @MetamacMock(QUERY_VERSION_59_MAXIMUM_VERSION_REACHED)
+    public void testVersioningDatasetMajorVersionErrorMaximumVersionReached() throws Exception {
+        String previousQueryVersionUrn = queryVersionMockFactory.retrieveMock(QUERY_VERSION_59_MAXIMUM_VERSION_REACHED).getLifeCycleStatisticalResource().getUrn();
+
+        VersionTypeEnum versionType = VersionTypeEnum.MAJOR;
+
+        expectedMetamacException(MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.RESOURCE_MAXIMUM_VERSION_REACHED)
+                .withMessageParameters(versionType, StatisticalResourcesMockFactory.MAXIMUM_VERSION_AVAILABLE).build());
+
+        queryVersionLifecycleService.versioning(getServiceContextWithoutPrincipal(), previousQueryVersionUrn, versionType);
+    }
+
+    @Test
+    @MetamacMock(QUERY_VERSION_60_MAXIMUM_MINOR_VERSION_REACHED)
+    public void testVersioningDatasetMaximumMinorVersionReached() throws Exception {
+        QueryVersion previousQueryVersion = queryVersionMockFactory.retrieveMock(QUERY_VERSION_60_MAXIMUM_MINOR_VERSION_REACHED);
+
+        QueryVersion newQueryVersion = queryVersionLifecycleService.versioning(getServiceContextWithoutPrincipal(), previousQueryVersion.getLifeCycleStatisticalResource().getUrn(),
+                VersionTypeEnum.MINOR);
+
+        assertEquals(StatisticalResourcesMockFactory.MAXIMUM_MINOR_VERSION_AVAILABLE, previousQueryVersion.getLifeCycleStatisticalResource().getVersionLogic());
+        assertEquals(StatisticalResourcesMockFactory.SECOND_VERSION, newQueryVersion.getLifeCycleStatisticalResource().getVersionLogic());
     }
 
     // -------------------------------------------------------------------------------------------

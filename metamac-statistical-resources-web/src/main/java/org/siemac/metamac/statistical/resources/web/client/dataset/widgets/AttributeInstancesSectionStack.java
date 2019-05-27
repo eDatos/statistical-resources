@@ -34,6 +34,9 @@ public class AttributeInstancesSectionStack extends CustomListGridSectionStack {
 
     private DeleteConfirmationWindow deleteConfirmationWindow;
 
+    private boolean                  canCreate = Boolean.TRUE;
+    private boolean                  canDelete = Boolean.FALSE;
+
     public AttributeInstancesSectionStack() {
         super(new CustomListGrid(), getConstants().datasetAttributeInstances(), "versionSectionStackStyle");
 
@@ -41,8 +44,9 @@ public class AttributeInstancesSectionStack extends CustomListGridSectionStack {
 
         ToolStrip toolStrip = new ToolStrip();
         newInstanceButton = new CustomToolStripButton(MetamacWebCommon.getConstants().actionNew(), GlobalResources.RESOURCE.newListGrid().getURL());
+        newInstanceButton.setVisible(canCreate);
         deleteInstanceButton = new CustomToolStripButton(MetamacWebCommon.getConstants().actionDelete(), GlobalResources.RESOURCE.deleteListGrid().getURL());
-        deleteInstanceButton.setVisible(false);
+        deleteInstanceButton.setVisible(canDelete);
         toolStrip.addButton(newInstanceButton);
         toolStrip.addButton(deleteInstanceButton);
 
@@ -64,7 +68,7 @@ public class AttributeInstancesSectionStack extends CustomListGridSectionStack {
             @Override
             public void onSelectionUpdated(SelectionUpdatedEvent event) {
                 if (listGrid.getSelectedRecords() != null && listGrid.getSelectedRecords().length > 0) {
-                    deleteInstanceButton.setVisible(true);
+                    deleteInstanceButton.setVisible(canDelete);
                 } else {
                     deleteInstanceButton.setVisible(false);
                 }
@@ -107,5 +111,17 @@ public class AttributeInstancesSectionStack extends CustomListGridSectionStack {
     private void setSectionTitle(String title) {
         defaultSection.setTitle(title);
         markForRedraw();
+    }
+
+    public void setCanCreate(boolean canCreateAttributeInstance) {
+        this.canCreate = canCreateAttributeInstance;
+        newInstanceButton.setVisible(canCreateAttributeInstance);
+        newInstanceButton.markForRedraw();
+    }
+
+    public void setCanDelete(boolean canDeleteAttributeInstance) {
+        this.canDelete = canDeleteAttributeInstance;
+        deleteInstanceButton.setVisible(canDeleteAttributeInstance);
+        deleteInstanceButton.markForRedraw();
     }
 }

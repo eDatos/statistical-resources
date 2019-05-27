@@ -400,7 +400,11 @@
                   "formatExtentResources":{
                      "description":"",
                      "type":"number"
-                  }
+                  },
+                  "filteringDimension":{
+                     "description":"",
+                     "$ref":"#/definitions/InternationalString"
+                  }                 
                }
             }
          ],
@@ -656,6 +660,10 @@
                   "isRequiredBy":{
                      "description":"",
                      "$ref":"#/definitions/Resources"
+                  },
+                  "keepAllData":{
+                     "description":"",
+                     "type":"boolean"
                   },
                   "measureCoverages":{
                      "description":"",
@@ -2651,6 +2659,13 @@
                      "description":"",
                      "$ref":"#/definitions/Resources"
                   },
+                  "keepAllData":{
+                  	 "xml":{
+						"namespace":"http://www.siemac.org/metamac/rest/statistical-resources/v1.0/domain"
+                     },
+                     "description":"",
+                     "type":"boolean"
+                  },
                   "measureCoverages":{
                      "xml":{
                         "namespace":"http://www.siemac.org/metamac/rest/statistical-resources/v1.0/domain"
@@ -4102,7 +4117,7 @@
                   "name":"fields",
                   "in":"query",
                   "type":"string",
-                  "description":"Permite personalizar la respuesta mediante la exclusión de campos de la misma. Los posibles valores son \"-metadata\" y \"-data\".<br/>Ejemplos: <br/>\r\n- fields=-metadata<br/>\r\n- fields=-metadata,-data"
+                  "description":"Permite personalizar la respuesta mediante la exclusión o inclusión de campos de la misma. Los posibles valores son \"-metadata\", \"-data\" y \"+dimension.description\".<br/>Ejemplos: <br/>\r\n- fields=-metadata<br/>\r\n- fields=-metadata,-data <br/>\r\n- fields=-data,+dimension.description"
                },
                {
                   "name":"lang",

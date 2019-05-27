@@ -25,6 +25,7 @@ import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTes
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.publication.domain.Cube;
 import org.siemac.metamac.statistical.resources.core.publication.domain.CubeRepository;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.StatisticalResourcesMockFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -60,16 +61,18 @@ public class CubeRepositoryTest extends StatisticalResourcesBaseTest implements 
     @Test
     @MetamacMock({PUBLICATION_04_STRUCTURED_WITH_2_PUBLICATION_VERSIONS_NAME})
     public void testExistAnyCubeInPublication() throws Exception {
-        boolean result = cubeRepository
-                .existAnyCubeInPublication(publicationMockFactory.retrieveMock(PUBLICATION_04_STRUCTURED_WITH_2_PUBLICATION_VERSIONS_NAME).getIdentifiableStatisticalResource().getCode(), "001.000");
+        boolean result = cubeRepository.existAnyCubeInPublication(
+                publicationMockFactory.retrieveMock(PUBLICATION_04_STRUCTURED_WITH_2_PUBLICATION_VERSIONS_NAME).getIdentifiableStatisticalResource().getCode(),
+                StatisticalResourcesMockFactory.INIT_VERSION);
         assertTrue(result);
     }
 
     @Test
     @MetamacMock({PUBLICATION_04_STRUCTURED_WITH_2_PUBLICATION_VERSIONS_NAME})
     public void testExistAnyCubeInPublicationReturnFalse() throws Exception {
-        boolean result = cubeRepository
-                .existAnyCubeInPublication(publicationMockFactory.retrieveMock(PUBLICATION_04_STRUCTURED_WITH_2_PUBLICATION_VERSIONS_NAME).getIdentifiableStatisticalResource().getCode(), "002.000");
+        boolean result = cubeRepository.existAnyCubeInPublication(
+                publicationMockFactory.retrieveMock(PUBLICATION_04_STRUCTURED_WITH_2_PUBLICATION_VERSIONS_NAME).getIdentifiableStatisticalResource().getCode(),
+                StatisticalResourcesMockFactory.SECOND_VERSION);
         assertFalse(result);
     }
 

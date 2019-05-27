@@ -30,6 +30,8 @@ Application DatasetsStatisticalResourcesDto {
 
 			//Identifiers
 			String datasetRepositoryId;
+			
+			boolean keepAllData;
 
 			//Production descriptor
 

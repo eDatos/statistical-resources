@@ -2,6 +2,7 @@ package org.siemac.metamac.statistical_resources.rest.external.v1_0.mapper.base;
 
 import static org.siemac.metamac.statistical_resources.rest.external.StatisticalResourcesRestExternalConstants.KEY_DIMENSIONS_SEPARATOR;
 import static org.siemac.metamac.statistical_resources.rest.external.StatisticalResourcesRestExternalConstants.SERVICE_CONTEXT;
+import static org.siemac.metamac.statistical_resources.rest.external.service.utils.StatisticalResourcesRestExternalUtils.containsField;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -12,6 +13,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.Stack;
 
 import javax.annotation.PostConstruct;
@@ -101,6 +103,8 @@ import org.siemac.metamac.statistical.resources.core.dataset.utils.DatasetVersio
 import org.siemac.metamac.statistical.resources.core.enume.domain.NextVersionTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.VersionRationaleTypeEnum;
+import org.siemac.metamac.statistical.resources.core.multidataset.domain.MultidatasetVersion;
+import org.siemac.metamac.statistical.resources.core.multidataset.serviceapi.MultidatasetService;
 import org.siemac.metamac.statistical.resources.core.query.domain.CodeItem;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
 import org.siemac.metamac.statistical.resources.core.query.serviceapi.QueryService;
@@ -135,10 +139,10 @@ import es.gobcan.istac.edatos.dataset.repository.service.DatasetRepositoriesServ
 @Component
 public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
 
-    private static final Logger                     logger             = LoggerFactory.getLogger(CommonDo2RestMapperV10.class);
+    private static final Logger                     logger                 = LoggerFactory.getLogger(CommonDo2RestMapperV10.class);
 
-    private String                                  INCLUDE_ALL_FIELDS = SrmRestConstants.FIELD_INCLUDE_OPENNES + RestApiConstants.COMMA + SrmRestConstants.FIELD_INCLUDE_ORDER + RestApiConstants.COMMA
-            + SrmRestConstants.FIELD_INCLUDE_VARIABLE_ELEMENT;
+    private String                                  INCLUDE_SPATIAL_FIELDS = SrmRestConstants.FIELD_INCLUDE_OPENNES + RestApiConstants.COMMA + SrmRestConstants.FIELD_INCLUDE_ORDER
+            + RestApiConstants.COMMA + SrmRestConstants.FIELD_INCLUDE_VARIABLE_ELEMENT;
 
     @Autowired
     private StatisticalResourcesConfiguration       configurationService;
@@ -151,6 +155,9 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
 
     @Autowired
     private QueryService                            queryService;
+
+    @Autowired
+    private MultidatasetService                     multidatasetService;
 
     @Autowired
     private TranslationService                      translationService;
@@ -299,8 +306,8 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
      * @param effectiveDimensionValuesToDataByDimension It is necessary when query is retrieved, to filter dimension values. It can be null; in this case, returns all
      */
     @Override
-    public Dimensions toDimensions(String datasetVersionUrn, DsdProcessorResult dsdProcessorResult, Map<String, List<String>> effectiveDimensionValuesToDataByDimension, List<String> selectedLanguages)
-            throws MetamacException {
+    public Dimensions toDimensions(String datasetVersionUrn, DsdProcessorResult dsdProcessorResult, Map<String, List<String>> effectiveDimensionValuesToDataByDimension, List<String> selectedLanguages,
+            Set<String> fields) throws MetamacException {
 
         List<DsdDimension> sources = dsdProcessorResult.getDimensions();
         if (CollectionUtils.isEmpty(sources)) {
@@ -335,7 +342,7 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
             if (effectiveDimensionValuesToDataByDimension != null) {
                 effectiveDimensionValuesToData = effectiveDimensionValuesToDataByDimension.get(dimensionId);
             }
-            Dimension target = toDimension(datasetVersionUrn, dataStructure, source, dimensionVisualisation, effectiveDimensionValuesToData, selectedLanguages);
+            Dimension target = toDimension(datasetVersionUrn, dataStructure, source, dimensionVisualisation, effectiveDimensionValuesToData, selectedLanguages, fields);
             targets.getDimensions().add(target);
         }
         targets.setTotal(BigInteger.valueOf(targets.getDimensions().size()));
@@ -558,6 +565,7 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
         target.setUrn(source.getUrn());
         target.setKind(source.getKind());
         target.setName(toInternationalString(source.getName(), selectedLanguages));
+        target.setDescription(toInternationalString(source.getDescription(), selectedLanguages));
         target.setNestedId(source.getNestedId());
         target.setSelfLink(source.getSelfLink());
     }
@@ -632,6 +640,10 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
             case QUERY:
                 QueryVersion queryVersion = queryService.retrieveLatestPublishedQueryVersionByQueryUrn(SERVICE_CONTEXT, source.getQuery().getIdentifiableStatisticalResource().getUrn());
                 return queriesDo2RestMapper.toResource(queryVersion, selectedLanguages);
+            case MULTIDATASET:
+                MultidatasetVersion multidatasetVersion = multidatasetService.retrieveLatestPublishedMultidatasetVersionByMultidatasetUrn(SERVICE_CONTEXT,
+                        source.getMultidataset().getIdentifiableStatisticalResource().getUrn());
+                return multidatasetsDo2RestMapper.toResource(multidatasetVersion, selectedLanguages);
             default:
                 logger.error("RelatedResource unsupported: " + source.getType());
                 org.siemac.metamac.rest.common.v1_0.domain.Exception exception = RestExceptionUtils.getException(RestServiceExceptionType.UNKNOWN);
@@ -678,7 +690,7 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
     }
 
     private Dimension toDimension(String datasetVersionUrn, DataStructure dataStructure, DsdDimension source, DimensionVisualisation dimensionVisualisation,
-            List<String> effectiveDimensionValuesToData, List<String> selectedLanguages) throws MetamacException {
+            List<String> effectiveDimensionValuesToData, List<String> selectedLanguages, Set<String> fields) throws MetamacException {
         if (source == null) {
             return null;
         }
@@ -688,12 +700,12 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
         target.setName(toInternationalString(source.getConceptIdentity().getName(), selectedLanguages));
 
         // Dimension values
-        target.setDimensionValues(toDimensionValues(datasetVersionUrn, dataStructure, source, dimensionVisualisation, effectiveDimensionValuesToData, selectedLanguages));
+        target.setDimensionValues(toDimensionValues(datasetVersionUrn, dataStructure, source, dimensionVisualisation, effectiveDimensionValuesToData, selectedLanguages, fields));
         return target;
     }
 
     private DimensionValues toDimensionValues(String datasetVersionUrn, DataStructure dataStructure, DsdDimension dimension, DimensionVisualisation dimensionVisualisation,
-            List<String> effectiveDimensionValuesToData, List<String> selectedLanguages) throws MetamacException {
+            List<String> effectiveDimensionValuesToData, List<String> selectedLanguages, Set<String> fields) throws MetamacException {
         if (dimension == null) {
             return null;
         }
@@ -709,10 +721,10 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
         DimensionValues targets = null;
         if (dimension.getCodelistRepresentationUrn() != null) {
             targets = toEnumeratedDimensionValuesFromCodelist(coveragesById, dimension.getCodelistRepresentationUrn(), dimensionVisualisation, effectiveDimensionValuesToData, selectedLanguages,
-                    dimension);
+                    dimension, fields);
         } else if (dimension.getConceptSchemeRepresentationUrn() != null) {
             targets = toEnumeratedDimensionValuesFromConceptScheme(coveragesById, dataStructure, dimension.getType(), dimension.getConceptSchemeRepresentationUrn(), effectiveDimensionValuesToData,
-                    selectedLanguages);
+                    selectedLanguages, fields);
         } else if (dimension.getTextFormatRepresentation() != null) {
             targets = toNonEnumeratedDimensionValuesFromTextFormatType(coverages, dimension.getTextFormatRepresentation(), dimension.getType(), effectiveDimensionValuesToData, selectedLanguages);
         } else {
@@ -725,7 +737,7 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
     }
 
     private EnumeratedDimensionValues toEnumeratedDimensionValuesFromCodelist(Map<String, CodeDimension> coveragesById, String codelistUrn, DimensionVisualisation dimensionVisualisation,
-            List<String> effectiveDimensionValuesToData, List<String> selectedLanguages, DsdDimension dimension) throws MetamacException {
+            List<String> effectiveDimensionValuesToData, List<String> selectedLanguages, DsdDimension dimension, Set<String> fields) throws MetamacException {
         if (codelistUrn == null) {
             return null;
         }
@@ -736,12 +748,16 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
 
         String order = dimensionVisualisation != null ? dimensionVisualisation.getOrder() : null;
         String openness = dimensionVisualisation != null ? dimensionVisualisation.getOpenness() : null;
+
+        boolean includeDescription = containsField(fields, StatisticalResourcesRestExternalConstants.FIELD_INCLUDE_DIMENSION_DESCRIPTION);
+        String description = includeDescription ? RestApiConstants.COMMA + SrmRestConstants.FIELD_INCLUDE_DESCRIPTION : StringUtils.EMPTY;
+
         Codes codes = null;
         if (DsdComponentType.SPATIAL.equals(dimension.getType())) {
-            codes = srmRestExternalFacade.retrieveCodesByCodelistUrn(codelistUrn, order, openness, INCLUDE_ALL_FIELDS); // note: srm api returns codes in order
+            codes = srmRestExternalFacade.retrieveCodesByCodelistUrn(codelistUrn, order, openness, INCLUDE_SPATIAL_FIELDS + description); // note: srm api returns codes in order
         } else {
             codes = srmRestExternalFacade.retrieveCodesByCodelistUrn(codelistUrn, order, openness,
-                    SrmRestConstants.FIELD_INCLUDE_OPENNES + RestApiConstants.COMMA + SrmRestConstants.FIELD_INCLUDE_ORDER); // note: srm api returns codes in order
+                    SrmRestConstants.FIELD_INCLUDE_OPENNES + RestApiConstants.COMMA + SrmRestConstants.FIELD_INCLUDE_ORDER + description); // note: srm api returns codes in order
         }
 
         for (CodeResource code : codes.getCodes()) {
@@ -770,7 +786,7 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
     }
 
     private EnumeratedDimensionValues toEnumeratedDimensionValuesFromConceptScheme(Map<String, CodeDimension> coveragesById, DataStructure dataStructure, DsdComponentType dimensionType,
-            String conceptSchemeUrn, List<String> effectiveDimensionValuesToData, List<String> selectedLanguages) throws MetamacException {
+            String conceptSchemeUrn, List<String> effectiveDimensionValuesToData, List<String> selectedLanguages, Set<String> fields) throws MetamacException {
         if (conceptSchemeUrn == null) {
             return null;
         }
@@ -790,7 +806,9 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
         // This map contains nodes that are not in the result. If a child of this nodes is in the result, we use this map to put it inside the nearest parent node in result
         Map<String, String> parentsReplacedToVisualisation = new HashMap<String, String>();
 
-        Concepts concepts = srmRestExternalFacade.retrieveConceptsByConceptSchemeByUrn(conceptSchemeUrn);
+        boolean includeDescription = containsField(fields, StatisticalResourcesRestExternalConstants.FIELD_INCLUDE_DIMENSION_DESCRIPTION);
+        String conceptField = includeDescription ? SrmRestConstants.FIELD_INCLUDE_DESCRIPTION : null;
+        Concepts concepts = srmRestExternalFacade.retrieveConceptsByConceptSchemeByUrn(conceptSchemeUrn, conceptField);
         for (ItemResource concept : concepts.getConcepts()) {
             String id = concept.getId();
             boolean skip = false;
@@ -1051,7 +1069,7 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
             return null;
         }
         EnumeratedAttributeValues targets = new EnumeratedAttributeValues();
-        Concepts concepts = srmRestExternalFacade.retrieveConceptsByConceptSchemeByUrn(conceptSchemeUrn);
+        Concepts concepts = srmRestExternalFacade.retrieveConceptsByConceptSchemeByUrn(conceptSchemeUrn, null);
         for (ItemResource concept : concepts.getConcepts()) {
             String id = concept.getId();
             if (!coveragesById.containsKey(id)) {

@@ -6,6 +6,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Predicate;
+import org.apache.commons.lang.ObjectUtils;
+import org.apache.commons.lang.StringUtils;
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
 import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
 import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
@@ -13,9 +17,9 @@ import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.joda.time.DateTime;
 import org.siemac.metamac.core.common.criteria.utils.CriteriaUtils;
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.core.common.exception.MetamacExceptionBuilder;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.core.common.util.GeneratorUrnUtils;
-import org.siemac.metamac.core.common.util.shared.VersionUtil;
 import org.siemac.metamac.statistical.resources.core.base.components.SiemacStatisticalResourceGeneratedCode;
 import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableStatisticalResourceRepository;
@@ -32,6 +36,7 @@ import org.siemac.metamac.statistical.resources.core.multidataset.domain.Multida
 import org.siemac.metamac.statistical.resources.core.multidataset.domain.MultidatasetVersion;
 import org.siemac.metamac.statistical.resources.core.multidataset.serviceapi.validators.MultidatasetServiceInvocationValidator;
 import org.siemac.metamac.statistical.resources.core.multidataset.utils.MultidatasetCubeComparator;
+import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesVersionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -167,7 +172,7 @@ public class MultidatasetServiceImpl extends MultidatasetServiceImplBase {
 
         updateReplacedResourceIsReplacedByResource(multidatasetVersion);
 
-        if (VersionUtil.isInitialVersion(multidatasetVersion.getSiemacMetadataStatisticalResource().getVersionLogic())) {
+        if (StatisticalResourcesVersionUtils.isInitialVersion(multidatasetVersion.getSiemacMetadataStatisticalResource().getVersionLogic())) {
             Multidataset multidataset = multidatasetVersion.getMultidataset();
             getMultidatasetRepository().delete(multidataset);
         } else {
@@ -262,6 +267,8 @@ public class MultidatasetServiceImpl extends MultidatasetServiceImplBase {
         MultidatasetVersion multidatasetVersion = retrieveMultidatasetVersionByUrn(ctx, multidatasetVersionUrn);
         ProcStatusValidator.checkStatisticalResourceStructureCanBeEdited(multidatasetVersion);
 
+        checkMultidatasetCubeIdentifierDuplicated(multidatasetVersion, cube);
+
         // Fill metadata for create cube
         fillMetadataForCreateMultidatasetCube(ctx, cube, multidatasetVersion.getSiemacMetadataStatisticalResource().getStatisticalOperation());
 
@@ -271,6 +278,25 @@ public class MultidatasetServiceImpl extends MultidatasetServiceImplBase {
         updateLastUpdateMetadata(multidatasetVersion);
 
         return cube;
+    }
+
+    private void checkMultidatasetCubeIdentifierDuplicated(MultidatasetVersion multidatasetVersion, MultidatasetCube cube) throws MetamacException {
+        if (existsMultidataseCubeWithSameIdentifier(cube, multidatasetVersion)) {
+            throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.MULTIDATASET_CUBE_DUPLICATE_IDENTIFIER)
+                    .withMessageParameters(cube.getIdentifier(), multidatasetVersion.getSiemacMetadataStatisticalResource().getUrn()).build();
+        }
+    }
+
+    private boolean existsMultidataseCubeWithSameIdentifier(MultidatasetCube cube, MultidatasetVersion multidatasetVersion) {
+        return CollectionUtils.exists(multidatasetVersion.getCubes(), new Predicate() {
+
+            @Override
+            public boolean evaluate(Object object) {
+                MultidatasetCube multidatasetCube = (MultidatasetCube) object;
+
+                return ObjectUtils.notEqual(cube.getId(), multidatasetCube.getId()) && StringUtils.equalsIgnoreCase(cube.getIdentifier(), multidatasetCube.getIdentifier());
+            }
+        });
     }
 
     private MultidatasetCube addToMultidatasetVersion(ServiceContext ctx, MultidatasetVersion multidatasetVersion, MultidatasetCube cube) throws MetamacException {
@@ -333,6 +359,8 @@ public class MultidatasetServiceImpl extends MultidatasetServiceImplBase {
         multidatasetServiceInvocationValidator.checkUpdateMultidatasetCube(ctx, cube);
         MultidatasetVersion multidatasetVersion = retrieveMultidatasetVersionByUrn(ctx, cube.getMultidatasetVersion().getSiemacMetadataStatisticalResource().getUrn());
         ProcStatusValidator.checkStatisticalResourceStructureCanBeEdited(multidatasetVersion);
+
+        checkMultidatasetCubeIdentifierDuplicated(multidatasetVersion, cube);
 
         updateLastUpdateMetadata(multidatasetVersion);
 
@@ -439,5 +467,16 @@ public class MultidatasetServiceImpl extends MultidatasetServiceImplBase {
                 }
             }
         }
+    }
+
+    @Override
+    public PagedResult<Multidataset> findMultidatasetsByCondition(ServiceContext ctx, List<ConditionalCriteria> conditions, PagingParameter pagingParameter) throws MetamacException {
+        // Validations
+        multidatasetServiceInvocationValidator.checkFindMultidatasetsByCondition(ctx, conditions, pagingParameter);
+
+        conditions = CriteriaUtils.initConditions(conditions, MultidatasetVersion.class);
+        pagingParameter = CriteriaUtils.initPagingParameter(pagingParameter);
+
+        return getMultidatasetRepository().findByCondition(conditions, pagingParameter);
     }
 }

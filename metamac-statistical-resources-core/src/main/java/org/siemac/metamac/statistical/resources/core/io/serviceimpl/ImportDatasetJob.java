@@ -45,7 +45,7 @@ public class ImportDatasetJob extends AbstractImportDatasetJob {
     @Override
     protected void processImportJobError(JobKey jobKey, String fileNames, MetamacException metamacException) {
         try {
-            getTaskServiceFacade().markTaskAsFailed(serviceContext, jobKey.getName(), metamacException);
+            getTaskServiceFacade().markTaskAsFailed(serviceContext, getData().getString(TASK_NAME), getData().getString(DATASET_VERSION_ID), getData().getString(DATASET_URN), metamacException);
             logger.info("ImportationJob: {} marked as error at {}", jobKey, new Date());
             metamacException.setPrincipalException(new MetamacExceptionItem(ServiceExceptionType.IMPORT_DATASET_JOB_ERROR, fileNames));
             sendErrorNotification(metamacException);

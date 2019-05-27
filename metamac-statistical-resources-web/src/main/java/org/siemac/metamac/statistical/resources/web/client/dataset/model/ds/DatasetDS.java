@@ -35,6 +35,8 @@ public class DatasetDS extends SiemacMetadataDS {
     public static final String IS_REQUIRED_BY             = "ds-is-req-by";
     public static final String IS_PART_OF                 = "ds-is-part-of";
 
+    // OTHERS
+    public static final String KEEP_ALL_DATA              = "ds-keep-all-data";
     public static final String DATA_SOURCE_TYPE           = "ds-dataSourceType";
     public static final String DATE_LAST_TIME_DATA_IMPORT = "ds-dateLastTimeDataImport";
 }

@@ -50,8 +50,8 @@ public class TaskServiceFacadeImpl extends TaskServiceFacadeImplBase {
     }
 
     @Override
-    public void markTaskAsFailed(ServiceContext ctx, String job, Exception exception) throws MetamacException {
-        taskservice.markTaskAsFailed(ctx, job);
+    public void markTaskAsFailed(ServiceContext ctx, String job, String datasetVersionId, String datasetUrn, Exception exception) throws MetamacException {
+        taskservice.markTaskAsFailed(ctx, job, datasetVersionId, datasetUrn);
     }
 
     @Override

@@ -14,6 +14,8 @@ import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParam
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.lifecycle.LifecycleCommonMetadataChecker;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.LifecycleTemplateService;
+import org.siemac.metamac.statistical.resources.core.multidataset.domain.MultidatasetVersion;
+import org.siemac.metamac.statistical.resources.core.multidataset.domain.MultidatasetVersionRepository;
 import org.siemac.metamac.statistical.resources.core.publication.domain.Cube;
 import org.siemac.metamac.statistical.resources.core.publication.domain.ElementLevel;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
@@ -39,6 +41,9 @@ public class PublicationLifecycleServiceImpl extends LifecycleTemplateService<Pu
 
     @Autowired
     private QueryVersionRepository         queryVersionRepository;
+
+    @Autowired
+    private MultidatasetVersionRepository  multidatasetVersionRepository;
 
     @Override
     protected String getResourceMetadataName() throws MetamacException {
@@ -111,7 +116,7 @@ public class PublicationLifecycleServiceImpl extends LifecycleTemplateService<Pu
     private void checkStructure(PublicationVersion resource, List<MetamacExceptionItem> exceptionItems) throws MetamacException {
         checkAtLeastOneCube(resource, exceptionItems);
         checkAllLeafChaptersMustHaveCubes(resource, exceptionItems);
-        checkAllCubesLinkToDatasetOrQuery(resource, exceptionItems);
+        checkAllCubesLinkToDatasetQueryOrMultidataset(resource, exceptionItems);
         checkAllResourcesMustBePublishedAndVisibleBeforePublication(resource, exceptionItems);
     }
 
@@ -127,17 +132,17 @@ public class PublicationLifecycleServiceImpl extends LifecycleTemplateService<Pu
     private void checkAllLeafChaptersMustHaveCubes(PublicationVersion resource, List<MetamacExceptionItem> exceptionItems) {
         for (ElementLevel elementLevel : resource.getChildrenAllLevels()) {
             if (elementLevel.isChapter() && elementLevel.getChildren().isEmpty()) {
-                exceptionItems.add(new MetamacExceptionItem(ServiceExceptionType.PUBLICATION_VERSION_CHAPTER_MUST_HAVE_AT_LEAST_ONE_CUBE, elementLevel.getChapter().getNameableStatisticalResource()
-                        .getUrn()));
+                exceptionItems.add(
+                        new MetamacExceptionItem(ServiceExceptionType.PUBLICATION_VERSION_CHAPTER_MUST_HAVE_AT_LEAST_ONE_CUBE, elementLevel.getChapter().getNameableStatisticalResource().getUrn()));
             }
         }
     }
 
-    private void checkAllCubesLinkToDatasetOrQuery(PublicationVersion resource, List<MetamacExceptionItem> exceptionItems) {
+    private void checkAllCubesLinkToDatasetQueryOrMultidataset(PublicationVersion resource, List<MetamacExceptionItem> exceptionItems) {
         for (ElementLevel elementLevel : resource.getChildrenAllLevels()) {
-            if (elementLevel.isCube() && elementLevel.getCube().getDataset() == null && elementLevel.getCube().getQuery() == null) {
-                exceptionItems.add(new MetamacExceptionItem(ServiceExceptionType.PUBLICATION_VERSION_CUBE_MUST_LINK_TO_DATASET_OR_QUERY, elementLevel.getCube().getNameableStatisticalResource()
-                        .getUrn()));
+            if (elementLevel.isCube() && elementLevel.getCube().getDataset() == null && elementLevel.getCube().getQuery() == null && elementLevel.getCube().getMultidataset() == null) {
+                exceptionItems.add(new MetamacExceptionItem(ServiceExceptionType.PUBLICATION_VERSION_CUBE_MUST_LINK_TO_DATASET_QUERY_OR_MULTIDATASET,
+                        elementLevel.getCube().getNameableStatisticalResource().getUrn()));
             }
         }
     }
@@ -150,6 +155,8 @@ public class PublicationLifecycleServiceImpl extends LifecycleTemplateService<Pu
                     checkDatasetMustHaveSomeVersionPublishedAndVisibleBeforePublication(resource, exceptionItems, cube.getDatasetUrn());
                 } else if (cube.getQuery() != null) {
                     checkQueryMustBePublishedAndVisibleBeforePublication(resource, exceptionItems, cube.getQueryUrn());
+                } else if (cube.getMultidataset() != null) {
+                    checkMultidatasetMustBePublishedAndVisibleBeforePublication(exceptionItems, cube.getMultidatasetUrn());
                 }
             }
         }
@@ -184,6 +191,16 @@ public class PublicationLifecycleServiceImpl extends LifecycleTemplateService<Pu
         }
     }
 
+    protected void checkMultidatasetMustBePublishedAndVisibleBeforePublication(List<MetamacExceptionItem> exceptionItems, String multidatasetUrn) throws MetamacException {
+        MultidatasetVersion lastPublishedVersion = multidatasetVersionRepository.retrieveLastPublishedVersion(multidatasetUrn);
+        if (lastPublishedVersion == null) {
+            MultidatasetVersion lastVersion = multidatasetVersionRepository.retrieveLastVersion(multidatasetUrn);
+            if (!ProcStatusEnumUtils.isInAnyProcStatus(lastVersion, ProcStatusEnum.PUBLISHED)) {
+                exceptionItems.add(new MetamacExceptionItem(ServiceExceptionType.PUBLICATION_VERSION_LINKED_TO_NOT_PUBLISHED_MULTIDATASET, multidatasetUrn));
+            }
+        }
+    }
+
     // ------------------------------------------------------------------------------------------------------
     // >> VERSIONING
     // ------------------------------------------------------------------------------------------------------
@@ -211,9 +228,8 @@ public class PublicationLifecycleServiceImpl extends LifecycleTemplateService<Pu
     @Override
     protected PublicationVersion updateResourceUrn(PublicationVersion resource) throws MetamacException {
         String[] creator = new String[]{resource.getSiemacMetadataStatisticalResource().getMaintainer().getCodeNested()};
-        resource.getSiemacMetadataStatisticalResource().setUrn(
-                GeneratorUrnUtils.generateSiemacStatisticalResourceCollectionVersionUrn(creator, resource.getSiemacMetadataStatisticalResource().getCode(), resource
-                        .getSiemacMetadataStatisticalResource().getVersionLogic()));
+        resource.getSiemacMetadataStatisticalResource().setUrn(GeneratorUrnUtils.generateSiemacStatisticalResourceCollectionVersionUrn(creator,
+                resource.getSiemacMetadataStatisticalResource().getCode(), resource.getSiemacMetadataStatisticalResource().getVersionLogic()));
         return resource;
     }
 

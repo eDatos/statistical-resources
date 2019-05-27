@@ -2,11 +2,9 @@ package org.siemac.metamac.statistical.resources.core.lifecycle;
 
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.joda.time.DateTime;
-import org.siemac.metamac.core.common.enume.domain.VersionPatternEnum;
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.serviceimpl.utils.ValidationUtils;
-import org.siemac.metamac.core.common.util.shared.VersionUtil;
 import org.siemac.metamac.statistical.resources.core.base.domain.HasLifecycle;
 import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResource;
@@ -89,7 +87,7 @@ public class LifecycleFiller {
         lifeCycleResource.setCreationDate(new DateTime());
         lifeCycleResource.setCreationUser(ctx.getUserId());
         lifeCycleResource.setLastVersion(true);
-        lifeCycleResource.setVersionLogic(VersionUtil.createNextVersion(previousVersion.getLifeCycleStatisticalResource().getVersionLogic(), VersionPatternEnum.XXX_YYY, versionType));
+        lifeCycleResource.setVersionLogic(StatisticalResourcesVersionUtils.createNextVersion(previousVersion.getLifeCycleStatisticalResource().getVersionLogic(), versionType));
 
         // Empty metadata
         lifeCycleResource.setProductionValidationDate(null);

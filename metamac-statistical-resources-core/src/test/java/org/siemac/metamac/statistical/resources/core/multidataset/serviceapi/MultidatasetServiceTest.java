@@ -45,6 +45,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.siemac.metamac.common.test.utils.MetamacAsserts;
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.core.common.exception.MetamacExceptionBuilder;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.core.common.test.utils.mocks.configuration.MetamacMock;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
@@ -53,11 +54,14 @@ import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Dataset;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
+import org.siemac.metamac.statistical.resources.core.multidataset.domain.Multidataset;
 import org.siemac.metamac.statistical.resources.core.multidataset.domain.MultidatasetCube;
+import org.siemac.metamac.statistical.resources.core.multidataset.domain.MultidatasetProperties;
 import org.siemac.metamac.statistical.resources.core.multidataset.domain.MultidatasetVersion;
 import org.siemac.metamac.statistical.resources.core.multidataset.domain.MultidatasetVersionProperties;
 import org.siemac.metamac.statistical.resources.core.query.domain.Query;
 import org.siemac.metamac.statistical.resources.core.utils.asserts.CommonAsserts;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.StatisticalResourcesMockFactory;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesNotPersistedDoMocks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -93,7 +97,7 @@ public class MultidatasetServiceTest extends StatisticalResourcesBaseTest implem
         MultidatasetVersion actual = multidatasetService.createMultidatasetVersion(getServiceContextWithoutPrincipal(), expected, statisticalOperation);
         String operationCode = actual.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode();
 
-        assertEquals("001.000", actual.getSiemacMetadataStatisticalResource().getVersionLogic());
+        assertEquals(StatisticalResourcesMockFactory.INIT_VERSION, actual.getSiemacMetadataStatisticalResource().getVersionLogic());
         assertEquals(operationCode + "_000001", actual.getSiemacMetadataStatisticalResource().getCode());
         assertEquals(buildMultidatasetVersionUrn(expected.getSiemacMetadataStatisticalResource().getMaintainer().getCodeNested(), operationCode, 1,
                 expected.getSiemacMetadataStatisticalResource().getVersionLogic()), actual.getSiemacMetadataStatisticalResource().getUrn());
@@ -111,7 +115,7 @@ public class MultidatasetServiceTest extends StatisticalResourcesBaseTest implem
         MultidatasetVersion expected = notPersistedDoMocks.mockMultidatasetVersion();
 
         MultidatasetVersion actual = multidatasetService.createMultidatasetVersion(getServiceContextWithoutPrincipal(), expected, statisticalOperation);
-        assertEquals("001.000", actual.getSiemacMetadataStatisticalResource().getVersionLogic());
+        assertEquals(StatisticalResourcesMockFactory.INIT_VERSION, actual.getSiemacMetadataStatisticalResource().getVersionLogic());
         assertEquals(operationCode + "_000004", actual.getSiemacMetadataStatisticalResource().getCode());
         assertEquals(buildMultidatasetVersionUrn(expected.getSiemacMetadataStatisticalResource().getMaintainer().getCodeNested(), operationCode, 4,
                 expected.getSiemacMetadataStatisticalResource().getVersionLogic()), actual.getSiemacMetadataStatisticalResource().getUrn());
@@ -129,7 +133,7 @@ public class MultidatasetServiceTest extends StatisticalResourcesBaseTest implem
             MultidatasetVersion expected = notPersistedDoMocks.mockMultidatasetVersion();
             MultidatasetVersion actual = multidatasetService.createMultidatasetVersion(getServiceContextWithoutPrincipal(), expected, statisticalOperation);
 
-            assertEquals("001.000", actual.getSiemacMetadataStatisticalResource().getVersionLogic());
+            assertEquals(StatisticalResourcesMockFactory.INIT_VERSION, actual.getSiemacMetadataStatisticalResource().getVersionLogic());
             assertEquals(operationCode + "_000004", actual.getSiemacMetadataStatisticalResource().getCode());
             assertEquals(buildMultidatasetVersionUrn(expected.getSiemacMetadataStatisticalResource().getMaintainer().getCodeNested(), operationCode, 4,
                     expected.getSiemacMetadataStatisticalResource().getVersionLogic()), actual.getSiemacMetadataStatisticalResource().getUrn());
@@ -140,7 +144,7 @@ public class MultidatasetServiceTest extends StatisticalResourcesBaseTest implem
             MultidatasetVersion expected = notPersistedDoMocks.mockMultidatasetVersion();
             MultidatasetVersion actual = multidatasetService.createMultidatasetVersion(getServiceContextWithoutPrincipal(), expected, statisticalOperation);
 
-            assertEquals("001.000", actual.getSiemacMetadataStatisticalResource().getVersionLogic());
+            assertEquals(StatisticalResourcesMockFactory.INIT_VERSION, actual.getSiemacMetadataStatisticalResource().getVersionLogic());
             assertEquals(operationCode + "_000005", actual.getSiemacMetadataStatisticalResource().getCode());
             assertEquals(buildMultidatasetVersionUrn(expected.getSiemacMetadataStatisticalResource().getMaintainer().getCodeNested(), operationCode, 5,
                     expected.getSiemacMetadataStatisticalResource().getVersionLogic()), actual.getSiemacMetadataStatisticalResource().getUrn());
@@ -374,7 +378,7 @@ public class MultidatasetServiceTest extends StatisticalResourcesBaseTest implem
         {
             // Find by version number
             List<ConditionalCriteria> conditions = ConditionalCriteriaBuilder.criteriaFor(MultidatasetVersion.class)
-                    .withProperty(MultidatasetVersionProperties.siemacMetadataStatisticalResource().versionLogic()).eq("002.000")
+                    .withProperty(MultidatasetVersionProperties.siemacMetadataStatisticalResource().versionLogic()).eq(StatisticalResourcesMockFactory.SECOND_VERSION)
                     .orderBy(MultidatasetVersionProperties.siemacMetadataStatisticalResource().id()).ascending().build();
 
             PagingParameter pagingParameter = PagingParameter.rowAccess(0, Integer.MAX_VALUE, true);
@@ -651,108 +655,6 @@ public class MultidatasetServiceTest extends StatisticalResourcesBaseTest implem
         multidatasetService.createMultidatasetCube(getServiceContextAdministrador(), URN_NOT_EXISTS, expected);
     }
 
-    // @Test
-    // @MetamacMock({MULTIDATASET_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME, DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME, QUERY_01_SIMPLE_NAME})
-    // public void testCreateMultidatasetCubeWithOrderFirst() throws Exception {
-    // // Create transaction
-    // DefaultTransactionDefinition defaultTransactionDefinition = new DefaultTransactionDefinition();
-    // defaultTransactionDefinition.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
-    // TransactionStatus status = transactionManager.getTransaction(defaultTransactionDefinition);
-    //
-    // // Create multidatasetCube
-    // MultidatasetVersion multidatasetVersion = multidatasetVersionMockFactory.retrieveMock(MULTIDATASET_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME);
-    // Query query = queryMockFactory.retrieveMock(QUERY_01_SIMPLE_NAME);
-    //
-    // MultidatasetCube expected = notPersistedDoMocks.mockMultidatasetCube(query);
-    // expected.setParent(multidatasetVersion.getCubes().get(0));
-    // expected.setOrderInMultidataset(Long.valueOf(1));
-    // MultidatasetCube actual = multidatasetService.createMultidatasetCube(getServiceContextAdministrador(), multidatasetVersion.getSiemacMetadataStatisticalResource().getUrn(), expected);
-    //
-    // // Finish transaction
-    // transactionManager.commit(status);
-    //
-    // // Retrieve children and check orderInLevel
-    // List<ElementLevel> actualChildren = multidatasetService
-    // .retrieveMultidatasetVersionByUrn(getServiceContextAdministrador(),
-    // multidatasetVersionMockFactory.retrieveMock(MULTIDATASET_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME).getSiemacMetadataStatisticalResource().getUrn())
-    // .getCubes().get(0).getChildren();
-    //
-    // assertEquals(actualChildren.get(0).getId(), actual.getId());
-    //
-    // assertEquals(Long.valueOf(1), actualChildren.get(0).getOrderInMultidataset());
-    // assertEquals(Long.valueOf(2), actualChildren.get(1).getOrderInMultidataset());
-    // assertEquals(Long.valueOf(3), actualChildren.get(2).getOrderInMultidataset());
-    // assertEquals(Long.valueOf(4), actualChildren.get(3).getOrderInMultidataset());
-    // }
-    //
-    // @Test
-    // @MetamacMock({MULTIDATASET_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME, DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME, QUERY_01_SIMPLE_NAME})
-    // public void testCreateMultidatasetCubeWithOrderLast() throws Exception {
-    // // Create transaction
-    // DefaultTransactionDefinition defaultTransactionDefinition = new DefaultTransactionDefinition();
-    // defaultTransactionDefinition.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
-    // TransactionStatus status = transactionManager.getTransaction(defaultTransactionDefinition);
-    //
-    // // Create multidatasetCube
-    // MultidatasetVersion multidatasetVersion = multidatasetVersionMockFactory.retrieveMock(MULTIDATASET_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME);
-    // Query query = queryMockFactory.retrieveMock(QUERY_01_SIMPLE_NAME);
-    //
-    // MultidatasetCube expected = notPersistedDoMocks.mockMultidatasetCube(query);
-    // expected.setParent(multidatasetVersion.getCubes().get(0));
-    // expected.setOrderInMultidataset(Long.valueOf(4));
-    // MultidatasetCube actual = multidatasetService.createMultidatasetCube(getServiceContextAdministrador(), multidatasetVersion.getSiemacMetadataStatisticalResource().getUrn(), expected);
-    //
-    // // Finish transaction
-    // transactionManager.commit(status);
-    //
-    // // Retrieve children and check orderInLevel
-    // List<ElementLevel> actualChildren = multidatasetService
-    // .retrieveMultidatasetVersionByUrn(getServiceContextAdministrador(),
-    // multidatasetVersionMockFactory.retrieveMock(MULTIDATASET_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME).getSiemacMetadataStatisticalResource().getUrn())
-    // .getCubes().get(0).getChildren();
-    //
-    // assertEquals(actualChildren.get(3).getId(), actual.getId());
-    //
-    // assertEquals(Long.valueOf(1), actualChildren.get(0).getOrderInMultidataset());
-    // assertEquals(Long.valueOf(2), actualChildren.get(1).getOrderInMultidataset());
-    // assertEquals(Long.valueOf(3), actualChildren.get(2).getOrderInMultidataset());
-    // assertEquals(Long.valueOf(4), actualChildren.get(3).getOrderInMultidataset());
-    // }
-    //
-    // @Test
-    // @MetamacMock({MULTIDATASET_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME, DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME, QUERY_01_SIMPLE_NAME})
-    // public void testCreateMultidatasetCubeWithOrderMiddle() throws Exception {
-    // // Create transaction
-    // DefaultTransactionDefinition defaultTransactionDefinition = new DefaultTransactionDefinition();
-    // defaultTransactionDefinition.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
-    // TransactionStatus status = transactionManager.getTransaction(defaultTransactionDefinition);
-    //
-    // // Create multidatasetCube
-    // MultidatasetVersion multidatasetVersion = multidatasetVersionMockFactory.retrieveMock(MULTIDATASET_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME);
-    // Query query = queryMockFactory.retrieveMock(QUERY_01_SIMPLE_NAME);
-    //
-    // MultidatasetCube expected = notPersistedDoMocks.mockMultidatasetCube(query);
-    // expected.setParent(multidatasetVersion.getCubes().get(0));
-    // expected.setOrderInMultidataset(Long.valueOf(2));
-    // MultidatasetCube actual = multidatasetService.createMultidatasetCube(getServiceContextAdministrador(), multidatasetVersion.getSiemacMetadataStatisticalResource().getUrn(), expected);
-    //
-    // // Finish transaction
-    // transactionManager.commit(status);
-    //
-    // // Retrieve children and check orderInLevel
-    // List<ElementLevel> actualChildren = multidatasetService
-    // .retrieveMultidatasetVersionByUrn(getServiceContextAdministrador(),
-    // multidatasetVersionMockFactory.retrieveMock(MULTIDATASET_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME).getSiemacMetadataStatisticalResource().getUrn())
-    // .getCubes().get(0).getChildren();
-    //
-    // assertEquals(actualChildren.get(1).getId(), actual.getId());
-    //
-    // assertEquals(Long.valueOf(1), actualChildren.get(0).getOrderInMultidataset());
-    // assertEquals(Long.valueOf(2), actualChildren.get(1).getOrderInMultidataset());
-    // assertEquals(Long.valueOf(3), actualChildren.get(2).getOrderInMultidataset());
-    // assertEquals(Long.valueOf(4), actualChildren.get(3).getOrderInMultidataset());
-    // }
-
     @Test
     @MetamacMock({MULTIDATASET_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME, DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME, QUERY_01_SIMPLE_NAME})
     public void testCreateMultidatasetCubeErrorMetadataIncorrectOrderInLevelNegative() throws Exception {
@@ -790,6 +692,36 @@ public class MultidatasetServiceTest extends StatisticalResourcesBaseTest implem
         expected.setOrderInMultidataset(null);
 
         multidatasetService.createMultidatasetCube(getServiceContextAdministrador(), multidatasetVersionUrn, expected);
+    }
+
+    @Test
+    @MetamacMock({MULTIDATASET_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME, DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME})
+    public void testCreateMultidatasetCubeErrorMetadataRequiredIdentifier() throws Exception {
+        expectedMetamacException(new MetamacException(ServiceExceptionType.METADATA_REQUIRED, ServiceExceptionParameters.MULTIDATASET_CUBE__IDENTIFIER));
+
+        Dataset dataset = datasetMockFactory.retrieveMock(DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME);
+        String multidatasetVersionUrn = multidatasetVersionMockFactory.retrieveMock(MULTIDATASET_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME).getSiemacMetadataStatisticalResource().getUrn();
+        MultidatasetCube expected = notPersistedDoMocks.mockMultidatasetCube(dataset);
+        expected.setIdentifier(null);
+
+        multidatasetService.createMultidatasetCube(getServiceContextAdministrador(), multidatasetVersionUrn, expected);
+    }
+
+    @Test
+    @MetamacMock({MULTIDATASET_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME, DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME})
+    public void testCreateMultidatasetCubeErrorDuplicateIdentifier() throws Exception {
+        Dataset dataset = datasetMockFactory.retrieveMock(DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME);
+        MultidatasetVersion multidatasetVersion = multidatasetVersionMockFactory.retrieveMock(MULTIDATASET_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME);
+
+        MultidatasetCube multidatasetCubeExist = multidatasetVersion.getCubes().get(3);
+        MultidatasetCube multidatasetCubeToCreate = notPersistedDoMocks.mockMultidatasetCube(dataset);
+
+        multidatasetCubeToCreate.setIdentifier(multidatasetCubeExist.getIdentifier());
+
+        expectedMetamacException(MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.MULTIDATASET_CUBE_DUPLICATE_IDENTIFIER)
+                .withMessageParameters(multidatasetCubeExist.getIdentifier(), multidatasetVersion.getSiemacMetadataStatisticalResource().getUrn()).build());
+
+        multidatasetService.createMultidatasetCube(getServiceContextAdministrador(), multidatasetVersion.getSiemacMetadataStatisticalResource().getUrn(), multidatasetCubeToCreate);
     }
 
     @Test
@@ -868,6 +800,34 @@ public class MultidatasetServiceTest extends StatisticalResourcesBaseTest implem
 
         assertRelaxedEqualsMultidatasetCube(expected, actual);
         CommonAsserts.assertEqualsInternationalString(expected.getNameableStatisticalResource().getTitle(), actual.getNameableStatisticalResource().getTitle());
+    }
+
+    @Test
+    @MetamacMock({MULTIDATASET_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME})
+    public void testUpdateMultidatasetCubeErrorMetadataRequiredIdentifier() throws Exception {
+        expectedMetamacException(new MetamacException(ServiceExceptionType.METADATA_REQUIRED, ServiceExceptionParameters.MULTIDATASET_CUBE__IDENTIFIER));
+
+        MultidatasetVersion multidatasetVersion = multidatasetVersionMockFactory.retrieveMock(MULTIDATASET_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME);
+        MultidatasetCube expected = multidatasetVersion.getCubes().get(3);
+        expected.setIdentifier(null);
+
+        multidatasetService.updateMultidatasetCube(getServiceContextAdministrador(), expected);
+    }
+
+    @Test
+    @MetamacMock({MULTIDATASET_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME, DATASET_03_BASIC_WITH_2_DATASET_VERSIONS_NAME})
+    public void testUpdateMultidatasetCubeErrorDuplicateIdentifier() throws Exception {
+        MultidatasetVersion multidatasetVersion = multidatasetVersionMockFactory.retrieveMock(MULTIDATASET_VERSION_22_WITH_COMPLEX_STRUCTURE_DRAFT_NAME);
+
+        MultidatasetCube multidatasetCubeExists = multidatasetVersion.getCubes().get(3);
+        MultidatasetCube multidatasetCubeToUpdate = multidatasetVersion.getCubes().get(2);
+
+        multidatasetCubeToUpdate.setIdentifier(multidatasetCubeExists.getIdentifier());
+
+        expectedMetamacException(MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.MULTIDATASET_CUBE_DUPLICATE_IDENTIFIER)
+                .withMessageParameters(multidatasetCubeExists.getIdentifier(), multidatasetVersion.getSiemacMetadataStatisticalResource().getUrn()).build());
+
+        multidatasetService.updateMultidatasetCube(getServiceContextAdministrador(), multidatasetCubeToUpdate);
     }
 
     @SuppressWarnings("static-access")
@@ -1151,5 +1111,22 @@ public class MultidatasetServiceTest extends StatisticalResourcesBaseTest implem
         MultidatasetVersion multidatasetVersion = multidatasetVersionMockFactory.retrieveMock(MULTIDATASET_VERSION_98_TO_DELETE_WITH_PREVIOUS_VERSION_NAME);
 
         multidatasetService.deleteMultidatasetVersion(getServiceContextAdministrador(), multidatasetVersion.getSiemacMetadataStatisticalResource().getUrn());
+    }
+
+    @Override
+    @Test
+    @MetamacMock(MULTIDATASET_02_BASIC_WITH_GENERATED_VERSION_NAME)
+    public void testFindMultidatasetsByCondition() throws Exception {
+        Multidataset result = multidatasetMockFactory.retrieveMock(MULTIDATASET_02_BASIC_WITH_GENERATED_VERSION_NAME);
+
+        List<ConditionalCriteria> conditions = ConditionalCriteriaBuilder.criteriaFor(Multidataset.class).withProperty(MultidatasetProperties.identifiableStatisticalResource().code())
+                .eq(result.getIdentifiableStatisticalResource().getCode()).build();
+
+        PagingParameter pagingParameter = PagingParameter.rowAccess(0, Integer.MAX_VALUE, true);
+
+        PagedResult<Multidataset> multidatasets = multidatasetService.findMultidatasetsByCondition(getServiceContextWithoutPrincipal(), conditions, pagingParameter);
+
+        assertEquals(1, multidatasets.getTotalRows());
+        assertEquals(result.getIdentifiableStatisticalResource().getUrn(), multidatasets.getValues().get(0).getIdentifiableStatisticalResource().getUrn());
     }
 }

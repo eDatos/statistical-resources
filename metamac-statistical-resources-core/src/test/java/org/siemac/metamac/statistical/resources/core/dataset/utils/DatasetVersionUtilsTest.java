@@ -9,13 +9,14 @@ import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 import org.junit.Test;
 import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataStatisticalResource;
+import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.StatisticalResourcesMockFactory;
 
 public class DatasetVersionUtilsTest {
 
     @Test
     public void testGenerateDatasetRepositoryTableName() throws Exception {
-        SiemacMetadataStatisticalResource datasetVersion = mockRequieredDatasetVersionFieldsForGenerateRepositoryTableName("C00025A_000001", "001.000");
-        assertEquals("DATA_C00025A_000001_001000", DatasetVersionUtils.generateDatasetRepositoryTableName(datasetVersion));
+        SiemacMetadataStatisticalResource datasetVersion = mockRequieredDatasetVersionFieldsForGenerateRepositoryTableName("C00025A_000001", StatisticalResourcesMockFactory.INIT_VERSION);
+        assertEquals("DATA_C00025A_000001_10", DatasetVersionUtils.generateDatasetRepositoryTableName(datasetVersion));
     }
 
     private static SiemacMetadataStatisticalResource mockRequieredDatasetVersionFieldsForGenerateRepositoryTableName(String code, String version) {

@@ -33,8 +33,11 @@ import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersion
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.StatisticOfficialityDto;
+import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
+import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesVersionUtils;
+import org.siemac.metamac.statistical.resources.core.utils.shared.StatisticalResourcesVersionSharedUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @org.springframework.stereotype.Component("datasetDto2DoMapper")
@@ -135,6 +138,9 @@ public class DatasetDto2DoMapperImpl extends BaseDto2DoMapperImpl implements Dat
         // Check replaces, can't replace a dataset already replaced by other dataset
         checkCanDatasetReplacesOtherDataset(source);
 
+        // Check that only the 'keep all data' metadata can be update when it's the initial version and it's not published
+        checkCanUpdateKeepAllDataMetadata(source, target);
+
         // Hierarchy
         siemacMetadataStatisticalResourceDtoToDo(source, target.getSiemacMetadataStatisticalResource(), ServiceExceptionParameters.DATASET_VERSION);
 
@@ -163,10 +169,30 @@ public class DatasetDto2DoMapperImpl extends BaseDto2DoMapperImpl implements Dat
         target.setStatisticOfficiality(
                 statisticOfficialityDtoToDo(source.getStatisticOfficiality(), target.getStatisticOfficiality(), ServiceExceptionParameters.DATASET_VERSION__STATISTIC_OFFICIALITY));
 
+		target.setKeepAllData(source.isKeepAllData());
         target.setDataSourceType(source.getDataSourceType());
         target.setDateLastTimeDataImport(dateDtoToDo(source.getDateLastTimeDataImport()));
 
         return target;
+    }
+
+    private void checkCanUpdateKeepAllDataMetadata(DatasetVersionDto source, DatasetVersion target) throws MetamacException {
+        if (hasKeepAllDataMetadataChanged(source, target) && (isNotDatasetVersionInitialVersion(target) || isDatasetVersionPublished(target))) {
+            throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.DATASET_VERSION_CANT_ALTER_KEEP_ALL_DATA).build();
+        }
+    }
+
+    private boolean hasKeepAllDataMetadataChanged(DatasetVersionDto source, DatasetVersion target) {
+        return source.isKeepAllData() != target.isKeepAllData();
+    }
+
+    private boolean isDatasetVersionPublished(DatasetVersion target) {
+        return ProcStatusEnum.PUBLISHED.equals(target.getLifeCycleStatisticalResource().getEffectiveProcStatus());
+    }
+
+    private boolean isNotDatasetVersionInitialVersion(DatasetVersion target) {
+        return (target.getSiemacMetadataStatisticalResource().getVersionLogic() != null
+                && !StatisticalResourcesVersionSharedUtils.isInitialVersion(target.getSiemacMetadataStatisticalResource().getVersionLogic()));
     }
 
     protected void checkCanDatasetReplacesOtherDataset(DatasetVersionDto source) throws MetamacException {
@@ -237,7 +263,8 @@ public class DatasetDto2DoMapperImpl extends BaseDto2DoMapperImpl implements Dat
         String oldDsdVersion = newDsdIdentifiers[2];
 
         boolean sameDsd = StringUtils.equals(oldDsdAgency, newDsdAgency) && StringUtils.equals(oldDsdCode, newDsdCode);
-        boolean differentDsdVersion = !StringUtils.equals(oldDsdVersion, newDsdVersion);
+
+        boolean differentDsdVersion = Long.compare(StatisticalResourcesVersionUtils.versionStringToLong(oldDsdVersion), StatisticalResourcesVersionUtils.versionStringToLong(newDsdVersion)) != 0;
 
         return sameDsd && differentDsdVersion;
     }

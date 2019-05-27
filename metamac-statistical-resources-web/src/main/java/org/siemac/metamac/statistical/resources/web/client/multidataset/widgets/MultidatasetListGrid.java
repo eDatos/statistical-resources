@@ -14,6 +14,7 @@ public class MultidatasetListGrid extends NavigableListGrid {
         super();
         this.setShowAllRecords(true);
         this.setFields(ResourceFieldUtils.getMultidatasetListGridFields());
+        this.setCanMultiSort(Boolean.FALSE);
     }
 
     public void setMultidatasets(List<MultidatasetVersionBaseDto> multidatasets) {

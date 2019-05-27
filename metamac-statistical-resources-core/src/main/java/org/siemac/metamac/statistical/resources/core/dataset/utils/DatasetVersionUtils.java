@@ -9,10 +9,10 @@ import java.util.List;
 
 import org.siemac.metamac.core.common.time.TimeSdmx;
 import org.siemac.metamac.core.common.util.TimeSdmxComparator;
-import org.siemac.metamac.core.common.util.shared.VersionUtil;
 import org.siemac.metamac.statistical.resources.core.base.domain.SiemacMetadataStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.CodeDimension;
 import org.siemac.metamac.statistical.resources.core.dataset.utils.shared.DatasetVersionSharedUtils;
+import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesVersionUtils;
 
 public class DatasetVersionUtils extends DatasetVersionSharedUtils {
 
@@ -21,7 +21,7 @@ public class DatasetVersionUtils extends DatasetVersionSharedUtils {
         tableName.append(DATASET_REPOSITORY_TABLE_NAME_PREFIX);
         tableName.append(datasetVersion.getCode());
         tableName.append(DATASET_REPOSITORY_TABLE_NAME_SEPARATOR);
-        tableName.append(VersionUtil.getVersionWithoutDot(datasetVersion.getVersionLogic()));
+        tableName.append(StatisticalResourcesVersionUtils.getVersionWithoutDot(datasetVersion.getVersionLogic()));
         return tableName.toString();
     }
 

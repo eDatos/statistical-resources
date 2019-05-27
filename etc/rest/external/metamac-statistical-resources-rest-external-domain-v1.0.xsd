@@ -93,6 +93,7 @@
                     <xs:element name="updateFrequency" type="common:Resource" />
                     <xs:element name="statisticOfficiality" type="common:Item" />
                     <xs:element name="bibliographicCitation" type="common:InternationalString" />
+                    <xs:element name="keepAllData" type="xs:boolean"/>
                 </xs:sequence>
             </xs:extension>
         </xs:complexContent>
@@ -127,6 +128,7 @@
             <xs:extension base="tns:StatisticalResource">
                 <xs:sequence>
                     <xs:element name="formatExtentResources" type="xs:int" minOccurs="0" />
+                    <xs:element name="filteringDimension" type="common:InternationalString" minOccurs="0" />
                 </xs:sequence>
             </xs:extension>
         </xs:complexContent>
@@ -238,6 +240,7 @@
                     <xs:sequence>
                         <xs:element name="dataset" type="common:Resource" />
                         <xs:element name="query" type="common:Resource" />
+                        <xs:element name="multidataset" type="common:Resource" />
                     </xs:sequence>
                 </xs:choice>
             </xs:extension>
@@ -252,6 +255,7 @@
     
     <xs:complexType name="MultidatasetNode" abstract="true">
         <xs:sequence>
+        	<xs:element name="identifier" type="xs:string" />
             <xs:element name="name" type="common:InternationalString" />
             <xs:element name="description" type="common:InternationalString" minOccurs="0" />
         </xs:sequence>

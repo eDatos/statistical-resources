@@ -14,6 +14,8 @@ import org.siemac.metamac.statistical.resources.web.client.multidataset.view.han
 import org.siemac.metamac.statistical.resources.web.client.multidataset.widgets.MultidatasetMainFormLayout;
 import org.siemac.metamac.statistical.resources.web.client.multidataset.widgets.forms.MultidatasetClassDescriptorsEditionForm;
 import org.siemac.metamac.statistical.resources.web.client.multidataset.widgets.forms.MultidatasetClassDescriptorsForm;
+import org.siemac.metamac.statistical.resources.web.client.multidataset.widgets.forms.MultidatasetContentDescriptorsEditionForm;
+import org.siemac.metamac.statistical.resources.web.client.multidataset.widgets.forms.MultidatasetContentDescriptorsForm;
 import org.siemac.metamac.statistical.resources.web.client.multidataset.widgets.forms.MultidatasetIdentifiersForm;
 import org.siemac.metamac.statistical.resources.web.client.multidataset.widgets.forms.MultidatasetResourceRelationDescriptorsEditionForm;
 import org.siemac.metamac.statistical.resources.web.client.multidataset.widgets.forms.MultidatasetResourceRelationDescriptorsForm;
@@ -24,8 +26,6 @@ import org.siemac.metamac.statistical.resources.web.client.widgets.forms.LifeCyc
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.NameableResourceIdentifiersEditionForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.SiemacMetadataCommonMetadataEditionForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.SiemacMetadataCommonMetadataForm;
-import org.siemac.metamac.statistical.resources.web.client.widgets.forms.SiemacMetadataContentDescriptorsEditionForm;
-import org.siemac.metamac.statistical.resources.web.client.widgets.forms.SiemacMetadataContentDescriptorsForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.SiemacMetadataIntellectualPropertyDescriptorsEditionForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.SiemacMetadataIntellectualPropertyDescriptorsForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.SiemacMetadataLanguageEditionForm;
@@ -54,7 +54,7 @@ public class MultidatasetMetadataTabViewImpl extends StatisticalResourceMetadata
     private MultidatasetMainFormLayout                               mainFormLayout;
 
     private MultidatasetIdentifiersForm                              identifiersForm;
-    private SiemacMetadataContentDescriptorsForm                     contentDescriptorsForm;
+    private MultidatasetContentDescriptorsForm                       contentDescriptorsForm;
     private SiemacMetadataCommonMetadataForm                         commonMetadataForm;
     private SiemacMetadataThematicContentClassifiersForm             thematicContentClassifiersForm;
     private SiemacMetadataLanguageForm                               languageForm;
@@ -67,7 +67,7 @@ public class MultidatasetMetadataTabViewImpl extends StatisticalResourceMetadata
     private SiemacMetadataIntellectualPropertyDescriptorsForm        intellectualPropertyDescriptorsForm;
 
     private NameableResourceIdentifiersEditionForm                   identifiersEditionForm;
-    private SiemacMetadataContentDescriptorsEditionForm              contentDescriptorsEditionForm;
+    private MultidatasetContentDescriptorsEditionForm                contentDescriptorsEditionForm;
     private SiemacMetadataCommonMetadataEditionForm                  commonMetadataEditionForm;
     private SiemacMetadataThematicContentClassifiersEditionForm      thematicContentClassifiersEditionForm;
     private SiemacMetadataLanguageEditionForm                        languageEditionForm;
@@ -281,7 +281,7 @@ public class MultidatasetMetadataTabViewImpl extends StatisticalResourceMetadata
         mainFormLayout.addViewCanvas(identifiersForm);
 
         // Content descriptors form
-        contentDescriptorsForm = new SiemacMetadataContentDescriptorsForm();
+        contentDescriptorsForm = new MultidatasetContentDescriptorsForm();
         mainFormLayout.addViewCanvas(contentDescriptorsForm);
 
         // Common metadata form
@@ -331,7 +331,7 @@ public class MultidatasetMetadataTabViewImpl extends StatisticalResourceMetadata
         mainFormLayout.addEditionCanvas(identifiersEditionForm);
 
         // Content descriptors form
-        contentDescriptorsEditionForm = new SiemacMetadataContentDescriptorsEditionForm();
+        contentDescriptorsEditionForm = new MultidatasetContentDescriptorsEditionForm();
         mainFormLayout.addEditionCanvas(contentDescriptorsEditionForm);
 
         // Common metadata
@@ -380,7 +380,7 @@ public class MultidatasetMetadataTabViewImpl extends StatisticalResourceMetadata
         identifiersForm.setMultidatasetVersionDto(multidatasetDto);
 
         // Content descriptors form
-        contentDescriptorsForm.setSiemacMetadataStatisticalResourceDto(multidatasetDto);
+        contentDescriptorsForm.setMultidatasetVersionDto(multidatasetDto);
 
         // Common metadata form
         commonMetadataForm.setSiemacMetadataStatisticalResourceDto(multidatasetDto);
@@ -422,7 +422,7 @@ public class MultidatasetMetadataTabViewImpl extends StatisticalResourceMetadata
         identifiersEditionForm.setRequiredTitleSuffix(requiredFieldsToNextProcStatus);
 
         // Content descriptors form
-        contentDescriptorsEditionForm.setSiemacMetadataStatisticalResourceDto(multidatasetDto);
+        contentDescriptorsEditionForm.setMultidatasetDto(multidatasetDto);
         contentDescriptorsEditionForm.setRequiredTitleSuffix(requiredFieldsToNextProcStatus);
 
         // Common metadata
@@ -482,7 +482,7 @@ public class MultidatasetMetadataTabViewImpl extends StatisticalResourceMetadata
         multidatasetVersionDto = (MultidatasetVersionDto) identifiersEditionForm.getNameableStatisticalResourceDto(multidatasetVersionDto);
 
         // Content descriptors
-        multidatasetVersionDto = (MultidatasetVersionDto) contentDescriptorsEditionForm.getSiemacMetadataStatisticalResourceDto(multidatasetVersionDto);
+        multidatasetVersionDto = (MultidatasetVersionDto) contentDescriptorsEditionForm.getMultidatasetDto(multidatasetVersionDto);
 
         // Content descriptors
         multidatasetVersionDto = (MultidatasetVersionDto) commonMetadataEditionForm.getSiemacMetadataStatisticalResourceDto(multidatasetVersionDto);
