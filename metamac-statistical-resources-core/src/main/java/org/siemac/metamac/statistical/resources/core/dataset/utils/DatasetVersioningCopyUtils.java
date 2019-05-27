@@ -119,7 +119,6 @@ public class DatasetVersioningCopyUtils extends CommonVersioningCopyUtils {
 
         // TODO METAMAC-2866 This copy-properties are in the right place?
         target.setDataSourceType(source.getDataSourceType());
-        target.setVersionable(source.getVersionable());
         target.setDateLastTimeDataImport(source.getDateLastTimeDataImport());
     }
 

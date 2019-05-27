@@ -164,7 +164,6 @@ public class DatasetDto2DoMapperImpl extends BaseDto2DoMapperImpl implements Dat
                 statisticOfficialityDtoToDo(source.getStatisticOfficiality(), target.getStatisticOfficiality(), ServiceExceptionParameters.DATASET_VERSION__STATISTIC_OFFICIALITY));
 
         target.setDataSourceType(source.getDataSourceType());
-        target.setVersionable(source.getVersionable());
         target.setDateLastTimeDataImport(dateDtoToDo(source.getDateLastTimeDataImport()));
 
         return target;

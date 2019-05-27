@@ -60,7 +60,6 @@ Application DatasetsStatisticalResourcesDto {
 			Boolean isTaskInBackground;
 			
 			- @DataSourceTypeEnum dataSourceType;
-			Boolean versionable;
 			JAVADATE dateLastTimeDataImport nullable;
 		}
 

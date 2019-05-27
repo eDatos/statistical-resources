@@ -180,7 +180,6 @@ Application DatasetsStatisticalResources {
 			- @SiemacMetadataStatisticalResource siemacMetadataStatisticalResource databaseColumn="SIEMAC_RESOURCE_FK" not nullable cascade="all";
 			
 			- @DataSourceTypeEnum dataSourceType;
-			Boolean versionable;
 			DateTimeTZ dateLastTimeDataImport nullable;
 			//Content descriptors
 

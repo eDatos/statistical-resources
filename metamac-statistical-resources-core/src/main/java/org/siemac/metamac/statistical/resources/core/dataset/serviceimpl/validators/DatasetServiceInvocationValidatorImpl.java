@@ -242,9 +242,8 @@ public class DatasetServiceInvocationValidatorImpl extends BaseInvocationValidat
         StatisticalResourcesValidationUtils.checkMetadataRequired(datasetVersion.getVersion(), addParameter(metadataName, ServiceExceptionSingleParameters.VERSION), exceptions);
     }
 
-    private static void checkDatasetVersion(DatasetVersion datasetVersion, String metadataName, List<MetamacExceptionItem> exceptions) {
+    private static void checkDatasetVersion(DatasetVersion datasetVersion, String metadataName, List<MetamacExceptionItem> exceptions) { // TODO METAMAC-2866 check this!
         StatisticalResourcesValidationUtils.checkParameterRequired(datasetVersion.getDataSourceType(), addParameter(metadataName, ServiceExceptionSingleBaseParameters.DATA_SOURCE_TYPE), exceptions);
-        StatisticalResourcesValidationUtils.checkParameterRequired(datasetVersion.getVersionable(), addParameter(metadataName, ServiceExceptionSingleBaseParameters.VERSIONABLE), exceptions);
     }
 
     public static void checkFindStatisticOfficialities(List<MetamacExceptionItem> exceptions) {

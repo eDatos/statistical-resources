@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts.assertEqualsCategorisation;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts.assertEqualsDatasetVersion;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts.assertEqualsDatasource;
@@ -68,7 +67,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class DatasetDto2DoMapperTest extends StatisticalResourcesBaseTest {
 
     @Autowired
-    private DatasetDto2DoMapper datasetDto2DoMapper;
+    private DatasetDto2DoMapper               datasetDto2DoMapper;
 
     @Autowired
     private StatisticalResourcesServiceFacade statisticalResourcesServiceFacade;
@@ -337,19 +336,14 @@ public class DatasetDto2DoMapperTest extends StatisticalResourcesBaseTest {
         DatasetVersionDto dto = StatisticalResourcesDtoMocks.mockDatasetVersionDto(officiality);
         DatasetVersion entity = datasetDto2DoMapper.datasetVersionDtoToDo(dto);
         assertEquals(dto.getDataSourceType(), entity.getDataSourceType());
-        assertEquals(dto.getVersionable(), entity.getVersionable());
 
         dto.setDataSourceType(DataSourceTypeEnum.DATABASE);
-        dto.setVersionable(Boolean.FALSE);
         entity = datasetDto2DoMapper.datasetVersionDtoToDo(dto);
         assertEquals(DataSourceTypeEnum.DATABASE, entity.getDataSourceType());
-        assertFalse(entity.getVersionable());
 
         dto.setDataSourceType(DataSourceTypeEnum.FILE);
-        dto.setVersionable(Boolean.TRUE);
         entity = datasetDto2DoMapper.datasetVersionDtoToDo(dto);
         assertEquals(DataSourceTypeEnum.FILE, entity.getDataSourceType());
-        assertTrue(entity.getVersionable());
     }
 
     private void checkCanChangeDsdByOtherVersion(String datasetVersionMockName) throws MetamacException {

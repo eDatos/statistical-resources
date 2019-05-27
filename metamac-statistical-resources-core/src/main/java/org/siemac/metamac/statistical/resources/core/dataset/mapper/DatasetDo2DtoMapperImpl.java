@@ -264,7 +264,6 @@ public class DatasetDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements Dat
         target.setIsTaskInBackground(taskService.existsTaskForResource(ctx, source.getSiemacMetadataStatisticalResource().getUrn()));
 
         target.setDataSourceType(source.getDataSourceType());
-        target.setVersionable(source.getVersionable());
         target.setDateLastTimeDataImport(dateDoToDto(source.getDateLastTimeDataImport()));
 
         return target;
