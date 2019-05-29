@@ -2,6 +2,7 @@ package org.siemac.metamac.statistical.resources.core.dataset.mapper;
 
 import java.util.Date;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
@@ -141,6 +142,9 @@ public class DatasetDto2DoMapperImpl extends BaseDto2DoMapperImpl implements Dat
         // Check that only the 'keep all data' metadata can be update when it's the initial version and it's not published
         checkCanUpdateKeepAllDataMetadata(source, target);
 
+        // Check that only 'data source type' metadata can be update if there are no data sources configured
+        checkCanUpdateDataSourceTypeMetadata(source, target);
+
         // Hierarchy
         siemacMetadataStatisticalResourceDtoToDo(source, target.getSiemacMetadataStatisticalResource(), ServiceExceptionParameters.DATASET_VERSION);
 
@@ -169,11 +173,25 @@ public class DatasetDto2DoMapperImpl extends BaseDto2DoMapperImpl implements Dat
         target.setStatisticOfficiality(
                 statisticOfficialityDtoToDo(source.getStatisticOfficiality(), target.getStatisticOfficiality(), ServiceExceptionParameters.DATASET_VERSION__STATISTIC_OFFICIALITY));
 
-		target.setKeepAllData(source.isKeepAllData());
+        target.setKeepAllData(source.isKeepAllData());
         target.setDataSourceType(source.getDataSourceType());
         target.setDateLastTimeDataImport(dateDtoToDo(source.getDateLastTimeDataImport()));
 
         return target;
+    }
+
+    private void checkCanUpdateDataSourceTypeMetadata(DatasetVersionDto source, DatasetVersion target) throws MetamacException {
+        if (hasDataSourceTypeMetadataChanged(source, target) && (hasDatasetConfiguredDataSources(target) || isNotDatasetVersionInitialVersion(target) || isDatasetVersionPublished(target))) {
+            throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.DATASET_VERSION_CANT_ALTER_DATA_SOURCE_TYPE).build();
+        }
+    }
+
+    private boolean hasDatasetConfiguredDataSources(DatasetVersion target) {
+        return CollectionUtils.isNotEmpty(target.getDatasources());
+    }
+
+    private boolean hasDataSourceTypeMetadataChanged(DatasetVersionDto source, DatasetVersion target) {
+        return target.getDataSourceType() != source.getDataSourceType();
     }
 
     private void checkCanUpdateKeepAllDataMetadata(DatasetVersionDto source, DatasetVersion target) throws MetamacException {

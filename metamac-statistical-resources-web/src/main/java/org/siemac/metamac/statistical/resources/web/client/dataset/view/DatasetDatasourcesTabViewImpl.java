@@ -11,7 +11,6 @@ import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersion
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasourceDto;
 import org.siemac.metamac.statistical.resources.core.enume.dataset.domain.DataSourceTypeEnum;
 import org.siemac.metamac.statistical.resources.web.client.constants.StatisticalResourceWebConstants;
-import org.siemac.metamac.statistical.resources.web.client.dataset.model.ds.DatasetDS;
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.ds.DatasourceDS;
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.record.DatasourceRecord;
 import org.siemac.metamac.statistical.resources.web.client.dataset.presenter.DatasetDatasourcesTabPresenter.DatasetDatasourcesTabView;
@@ -21,16 +20,12 @@ import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.Datas
 import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.ImportDatasourceWithMappingWindow;
 import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.ImportDatasourcesWindow;
 import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.ImportDbDatasourceWindow;
-import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.StatisticalResourcesRecordUtils;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetCodelistsWithVariableResult;
 import org.siemac.metamac.web.common.client.listener.UploadListener;
-import org.siemac.metamac.web.common.client.utils.DateUtils;
 import org.siemac.metamac.web.common.client.widgets.CustomListGrid;
 import org.siemac.metamac.web.common.client.widgets.CustomToolStripButton;
 import org.siemac.metamac.web.common.client.widgets.DeleteConfirmationWindow;
-import org.siemac.metamac.web.common.client.widgets.form.CustomDynamicForm;
-import org.siemac.metamac.web.common.client.widgets.form.fields.ViewTextItem;
 
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
@@ -51,9 +46,9 @@ public class DatasetDatasourcesTabViewImpl extends ViewWithUiHandlers<DatasetDat
 
     private DatasourceMainFormLayout datasourceMainFormLayout;
 
-    private DatasourcesListPanel datasourcesListPanel;
+    private DatasourcesListPanel     datasourcesListPanel;
 
-    private DatasetVersionDto    datasetVersionDto;
+    private DatasetVersionDto        datasetVersionDto;
 
     public DatasetDatasourcesTabViewImpl() {
         panel = new VLayout();
@@ -74,8 +69,6 @@ public class DatasetDatasourcesTabViewImpl extends ViewWithUiHandlers<DatasetDat
     public void setDatasetVersion(DatasetVersionDto datasetVersionDto) {
         this.datasetVersionDto = datasetVersionDto;
         datasourceMainFormLayout.setDatasetVersionDto(datasetVersionDto);
-        datasourcesListPanel.updateDataSourceType(); // TODO METAMAC-2866 check this!
-        datasourcesListPanel.updateDateLastTimeDataImport();
         datasourcesListPanel.updateButtonsVisibility();
     }
 
@@ -133,26 +126,8 @@ public class DatasetDatasourcesTabViewImpl extends ViewWithUiHandlers<DatasetDat
         private ImportDatasourcesWindow           importDatasourcesWindow;
         private ImportDbDatasourceWindow          importDbDatasourceWindow;
         private ImportDatasourceWithMappingWindow importDatasourceWithMappingWindow;
-        private ViewTextItem                      dataSourceTypeItem;
-        private ViewTextItem                      dateLastTimeDataImportItem;
 
         public DatasourcesListPanel() {
-
-            dataSourceTypeItem = new ViewTextItem(DatasetDS.DATA_SOURCE_TYPE, getConstants().datasetVersionDataSourceType());
-            dataSourceTypeItem.setValueMap(CommonUtils.getDataSourceTypeHashMap());
-            dataSourceTypeItem.setAlign(Alignment.LEFT);
-            dataSourceTypeItem.setCanEdit(Boolean.FALSE);
-
-            dateLastTimeDataImportItem = new ViewTextItem(DatasetDS.DATE_LAST_TIME_DATA_IMPORT, getConstants().dateLastTimeDataImport());
-            dateLastTimeDataImportItem.setAlign(Alignment.LEFT);
-            dateLastTimeDataImportItem.setCanEdit(Boolean.FALSE);
-
-            CustomDynamicForm form = new CustomDynamicForm();
-            form.setIsGroup(Boolean.FALSE);
-            form.setNumCols(4);
-            form.setColWidths("8%", "42%", "8%", "42%");
-            form.setFields(dataSourceTypeItem, dateLastTimeDataImportItem);
-
             // Toolstrip
 
             ToolStrip toolStrip = new ToolStrip();
@@ -203,19 +178,10 @@ public class DatasetDatasourcesTabViewImpl extends ViewWithUiHandlers<DatasetDat
 
             // Import datasources window
 
-            addMember(form);
             addMember(toolStrip);
             addMember(datasourcesList);
             bindEvents();
 
-        }
-
-        public void updateDateLastTimeDataImport() {
-            dateLastTimeDataImportItem.setValue(DateUtils.getFormattedDateTime(datasetVersionDto.getDateLastTimeDataImport()));
-        }
-
-        public void updateDataSourceType() {
-            dataSourceTypeItem.setValue(datasetVersionDto.getDataSourceType());
         }
 
         private void updateListGridButtonsVisibilityBasedOnSelection(ListGridRecord[] selection) {

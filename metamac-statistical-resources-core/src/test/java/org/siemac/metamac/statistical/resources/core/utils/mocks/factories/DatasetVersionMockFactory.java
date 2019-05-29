@@ -258,6 +258,14 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
 
     public static final String               DATASET_VERSION_106_MAXIMUM_MINOR_VERSION_REACHED                                                             = "DATASET_VERSION_106_MAXIMUM_MINOR_VERSION_REACHED";
 
+    public static final String               DATASET_VERSION_107_DRAFT_NOT_INITIAL_VERSION_WITHOUT_DATASOURCES_NAME                                        = "DATASET_VERSION_107_DRAFT_NOT_INITIAL_VERSION_WITHOUT_DATASOURCES";
+    public static final String               DATASET_VERSION_108_PUBLISHED_INITIAL_VERSION_WITHOUT_DATASOURCES_NAME                                        = "DATASET_VERSION_108_PUBLISHED_INITIAL_VERSION_WITHOUT_DATASOURCES";
+
+    public static final String               DATASET_VERSION_109_DRAFT_INITIAL_VERSION_WITHOUT_DATASOURCES_NAME                                            = "DATASET_VERSION_109_DRAFT_INITIAL_VERSION_WITHOUT_DATASOURCES";
+    public static final String               DATASET_VERSION_110_PRODUCTION_VALIDATION_INITIAL_VERSION_WITHOUT_DATASOURCES_NAME                            = "DATASET_VERSION_110_PRODUCTION_VALIDATION_INITIAL_VERSION_WITHOUT_DATASOURCES";
+    public static final String               DATASET_VERSION_111_DIFFUSION_VALIDATION_INITIAL_VERSION_WITHOUT_DATASOURCES_NAME                             = "DATASET_VERSION_111_DIFFUSION_VALIDATION_INITIAL_VERSION_WITHOUT_DATASOURCES";
+    public static final String               DATASET_VERSION_112_VALIDATION_REJECTED_INITIAL_VERSION_WITHOUT_DATASOURCES_NAME                              = "DATASET_VERSION_112_VALIDATION_REJECTED_INITIAL_VERSION_WITHOUT_DATASOURCES_NAME";
+
     private static DatasetVersionMockFactory instance                                                                                                      = null;
 
     private DatasetVersionMockFactory() {
@@ -1153,6 +1161,44 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
         DatasetVersion datasetVersion = createDatasetVersionInSpecificOperation(OPERATION_03_CODE, 1);
         fillAsPublished(datasetVersion);
         datasetVersion.getSiemacMetadataStatisticalResource().setVersionLogic(StatisticalResourcesMockFactory.MAXIMUM_MINOR_VERSION_AVAILABLE);
+        return datasetVersion;
+    }
+
+    private static DatasetVersion getDatasetVersion107DraftNotInitialVersionWithoutDatasources() {
+        DatasetVersion datasetVersion = createDatasetVersionInStatusWithGeneratedDatasource(1, ProcStatusEnum.DRAFT);
+        datasetVersion.getSiemacMetadataStatisticalResource().setVersionLogic(StatisticalResourcesMockFactory.NOT_INITIAL_VERSION);
+        datasetVersion.removeAllDatasources();
+        return datasetVersion;
+    }
+
+    private static DatasetVersion getDatasetVersion108PublishedInitialVersionWithoutDatasources() {
+        DatasetVersion datasetVersion = createDatasetVersionInStatusWithGeneratedDatasource(1, ProcStatusEnum.PUBLISHED);
+        datasetVersion.getSiemacMetadataStatisticalResource().setVersionLogic(StatisticalResourcesMockFactory.INIT_VERSION);
+        datasetVersion.removeAllDatasources();
+        return datasetVersion;
+    }
+    private static DatasetVersion getDatasetVersion109DraftInitialVersionWithoutDatasources() {
+        DatasetVersion datasetVersion = createDatasetVersionInStatusWithGeneratedDatasource(1, ProcStatusEnum.DRAFT);
+        datasetVersion.getSiemacMetadataStatisticalResource().setVersionLogic(StatisticalResourcesMockFactory.INIT_VERSION);
+        datasetVersion.removeAllDatasources();
+        return datasetVersion;
+    }
+    private static DatasetVersion getDatasetVersion110ProductionValidationInitialVersionWithoutDatasources() {
+        DatasetVersion datasetVersion = createDatasetVersionInStatusWithGeneratedDatasource(1, ProcStatusEnum.PRODUCTION_VALIDATION);
+        datasetVersion.getSiemacMetadataStatisticalResource().setVersionLogic(StatisticalResourcesMockFactory.INIT_VERSION);
+        datasetVersion.removeAllDatasources();
+        return datasetVersion;
+    }
+    private static DatasetVersion getDatasetVersion111DiffusionValidationInitialVersionWithoutDatasources() {
+        DatasetVersion datasetVersion = createDatasetVersionInStatusWithGeneratedDatasource(1, ProcStatusEnum.DIFFUSION_VALIDATION);
+        datasetVersion.getSiemacMetadataStatisticalResource().setVersionLogic(StatisticalResourcesMockFactory.INIT_VERSION);
+        datasetVersion.removeAllDatasources();
+        return datasetVersion;
+    }
+    private static DatasetVersion getDatasetVersion112ValidationRejectedInitialVersionWithoutDatasourcesName() {
+        DatasetVersion datasetVersion = createDatasetVersionInStatusWithGeneratedDatasource(1, ProcStatusEnum.VALIDATION_REJECTED);
+        datasetVersion.getSiemacMetadataStatisticalResource().setVersionLogic(StatisticalResourcesMockFactory.INIT_VERSION);
+        datasetVersion.removeAllDatasources();
         return datasetVersion;
     }
 
