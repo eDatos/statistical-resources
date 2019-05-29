@@ -76,8 +76,9 @@ public class DatasetVersionMetamacCriteria2SculptorCriteriaMapperImpl implements
                     return new SculptorPropertyCriteria(DatasetVersionProperties.siemacMetadataStatisticalResource().nextVersion(), propertyRestriction.getEnumValue(),
                             propertyRestriction.getOperationType());
                 case NEXT_VERSION_DATE:
-                    return new SculptorPropertyCriteria(CriteriaUtils.getDatetimeLeafPropertyEmbedded(DatasetVersionProperties.siemacMetadataStatisticalResource().nextVersionDate(),
-                            DatasetVersion.class), propertyRestriction.getDateValue(), propertyRestriction.getOperationType());
+                    return new SculptorPropertyCriteria(
+                            CriteriaUtils.getDatetimeLeafPropertyEmbedded(DatasetVersionProperties.siemacMetadataStatisticalResource().nextVersionDate(), DatasetVersion.class),
+                            propertyRestriction.getDateValue(), propertyRestriction.getOperationType());
                 case PROC_STATUS:
                     return new SculptorPropertyCriteria(DatasetVersionProperties.siemacMetadataStatisticalResource().procStatus(), propertyRestriction.getEnumValue(),
                             propertyRestriction.getOperationType());
@@ -91,8 +92,9 @@ public class DatasetVersionMetamacCriteria2SculptorCriteriaMapperImpl implements
                     return new SculptorPropertyCriteria(DatasetVersionProperties.siemacMetadataStatisticalResource().keywords().texts().label(), propertyRestriction.getStringValue(),
                             propertyRestriction.getOperationType());
                 case NEWNESS_UNTIL_DATE:
-                    return new SculptorPropertyCriteria(CriteriaUtils.getDatetimeLeafPropertyEmbedded(DatasetVersionProperties.siemacMetadataStatisticalResource().newnessUntilDate(),
-                            DatasetVersion.class), propertyRestriction.getDateValue(), propertyRestriction.getOperationType());
+                    return new SculptorPropertyCriteria(
+                            CriteriaUtils.getDatetimeLeafPropertyEmbedded(DatasetVersionProperties.siemacMetadataStatisticalResource().newnessUntilDate(), DatasetVersion.class),
+                            propertyRestriction.getDateValue(), propertyRestriction.getOperationType());
                 case DATASET_GEOGRAPHIC_GRANULARITY_URN:
                     SculptorPropertyCriteria urnGeoCriteria = new SculptorPropertyCriteria(DatasetVersionProperties.geographicGranularities().urn(), propertyRestriction.getStringValue(),
                             OperationType.LIKE);
@@ -123,6 +125,8 @@ public class DatasetVersionMetamacCriteria2SculptorCriteriaMapperImpl implements
                     return new SculptorPropertyCriteria(DatasetVersionProperties.statisticOfficiality().identifier(), propertyRestriction.getStringValue(), propertyRestriction.getOperationType());
                 case DATA:
                     return buildDataCriteria(propertyRestriction);
+                case KEEP_ALL_DATA:
+                    return new SculptorPropertyCriteria(DatasetVersionProperties.keepAllData(), propertyRestriction.getBooleanValue(), propertyRestriction.getOperationType());
                 case LAST_VERSION:
                     return new SculptorPropertyCriteria(DatasetVersionProperties.siemacMetadataStatisticalResource().lastVersion(), propertyRestriction.getBooleanValue(),
                             propertyRestriction.getOperationType());
@@ -159,8 +163,8 @@ public class DatasetVersionMetamacCriteria2SculptorCriteriaMapperImpl implements
                 case PROC_STATUS:
                     return DatasetVersionProperties.siemacMetadataStatisticalResource().procStatus();
                 case LAST_UPDATED:
-                    return new LeafProperty<DatasetVersion>(DatasetVersionProperties.siemacMetadataStatisticalResource().lastUpdated().getName(),
-                            CoreCommonConstants.CRITERIA_DATETIME_COLUMN_DATETIME, true, DatasetVersion.class);
+                    return new LeafProperty<DatasetVersion>(DatasetVersionProperties.siemacMetadataStatisticalResource().lastUpdated().getName(), CoreCommonConstants.CRITERIA_DATETIME_COLUMN_DATETIME,
+                            true, DatasetVersion.class);
                 default:
                     throw new MetamacException(ServiceExceptionType.PARAMETER_INCORRECT, order.getPropertyName());
             }
