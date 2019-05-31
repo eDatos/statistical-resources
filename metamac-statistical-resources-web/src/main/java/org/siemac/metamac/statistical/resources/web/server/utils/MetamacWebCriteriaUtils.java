@@ -24,6 +24,9 @@ import org.siemac.metamac.web.common.shared.criteria.base.HasSimpleCriteria;
 
 public class MetamacWebCriteriaUtils {
 
+    private MetamacWebCriteriaUtils() {
+    }
+
     public static MetamacCriteriaRestriction buildMetamacCriteriaFromWebcriteria(MetamacWebCriteria webCriteria) {
         MetamacCriteriaConjunctionRestriction criteria = new MetamacCriteriaConjunctionRestriction();
 
@@ -134,6 +137,20 @@ public class MetamacWebCriteriaUtils {
     private static MetamacCriteriaRestriction buildOnlyLastVersionCriteria(HasOnlyLastVersionCriteria criteria) {
         if (criteria.isOnlyLastVersion()) {
             return new MetamacCriteriaPropertyRestriction(StatisticalResourcesCriteriaPropertyEnum.LAST_VERSION.name(), criteria.isOnlyLastVersion(), OperationType.EQ);
+        } else if (criteria instanceof DatasetVersionWebCriteria) {
+            // If the latest versions of the datasets are not searched, all versions of the dataset that save the observations and only the latest versions of the datasets that do not save the
+            // observations will be searched
+            // (KEEP_ALL_DATA == TRUE) OR (KEEP_ALL_DATA == FALSE AND LAST_VERSION == TRUE)
+            MetamacCriteriaDisjunctionRestriction disjunctionRestriction = new MetamacCriteriaDisjunctionRestriction();
+            disjunctionRestriction.getRestrictions().add(new MetamacCriteriaPropertyRestriction(StatisticalResourcesCriteriaPropertyEnum.KEEP_ALL_DATA.name(), Boolean.TRUE, OperationType.EQ));
+
+            MetamacCriteriaConjunctionRestriction conjunctionRestriction = new MetamacCriteriaConjunctionRestriction();
+            conjunctionRestriction.getRestrictions().add(new MetamacCriteriaPropertyRestriction(StatisticalResourcesCriteriaPropertyEnum.KEEP_ALL_DATA.name(), Boolean.FALSE, OperationType.EQ));
+            conjunctionRestriction.getRestrictions().add(new MetamacCriteriaPropertyRestriction(StatisticalResourcesCriteriaPropertyEnum.LAST_VERSION.name(), Boolean.TRUE, OperationType.EQ));
+
+            disjunctionRestriction.getRestrictions().add(conjunctionRestriction);
+
+            return disjunctionRestriction;
         }
         return null;
     }

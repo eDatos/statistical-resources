@@ -38,6 +38,7 @@ public enum StatisticalResourcesCriteriaPropertyEnum {
     DATASET_DATE_NEXT_UPDATE,
     DATASET_STATISTIC_OFFICIALITY_IDENTIFIER,
     DATA,
+    KEEP_ALL_DATA,
 
     // QueryResource
     QUERY_RELATED_DATASET_URN,
