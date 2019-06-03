@@ -8,7 +8,7 @@ import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.lang.LocaleUtil;
 import org.siemac.metamac.core.common.serviceimpl.utils.ValidationUtils;
-import org.siemac.metamac.core.common.util.shared.NextVersion;
+import org.siemac.metamac.core.common.util.shared.VersionResult;
 import org.siemac.metamac.statistical.resources.core.base.domain.HasLifecycle;
 import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.VersionRationaleType;
@@ -127,11 +127,11 @@ public class LifecycleFiller {
     }
 
     private void setNextVersion(HasLifecycle previousVersion, VersionTypeEnum versionType, LifeCycleStatisticalResource lifeCycleResource) throws MetamacException {
-        NextVersion nextVersion = StatisticalResourcesVersionUtils.createNextVersion(previousVersion.getLifeCycleStatisticalResource().getVersionLogic(), versionType);
+        VersionResult versionResult = StatisticalResourcesVersionUtils.createNextVersion(previousVersion.getLifeCycleStatisticalResource().getVersionLogic(), versionType);
 
-        lifeCycleResource.setVersionLogic(nextVersion.getValue());
+        lifeCycleResource.setVersionLogic(versionResult.getValue());
 
-        if (VersionTypeEnum.MINOR.equals(versionType) && VersionTypeEnum.MAJOR.equals(nextVersion.getType())) {
+        if (VersionTypeEnum.MINOR.equals(versionType) && VersionTypeEnum.MAJOR.equals(versionResult.getType())) {
             lifeCycleResource.getVersionRationaleTypes().clear();
             lifeCycleResource.addVersionRationaleType(new VersionRationaleType(VersionRationaleTypeEnum.MAJOR_OTHER));
 
