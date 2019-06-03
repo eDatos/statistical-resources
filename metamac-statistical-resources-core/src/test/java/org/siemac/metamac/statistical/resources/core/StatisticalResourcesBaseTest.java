@@ -4,6 +4,7 @@ import java.io.File;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Locale;
 
 import org.apache.commons.lang.StringUtils;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
@@ -14,13 +15,18 @@ import org.quartz.SchedulerException;
 import org.quartz.impl.SchedulerRepository;
 import org.siemac.metamac.common.test.MetamacBaseTest;
 import org.siemac.metamac.common.test.dbunit.MetamacDBUnitBaseTests.DataBaseProvider;
+import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.core.common.lang.LocaleUtil;
 import org.siemac.metamac.core.common.test.utils.mocks.configuration.MockAnnotationRule;
 import org.siemac.metamac.sso.client.MetamacPrincipal;
 import org.siemac.metamac.sso.client.MetamacPrincipalAccess;
 import org.siemac.metamac.sso.client.SsoClientConstants;
 import org.siemac.metamac.statistical.resources.core.base.domain.HasLifecycle;
+import org.siemac.metamac.statistical.resources.core.common.domain.InternationalString;
+import org.siemac.metamac.statistical.resources.core.conf.StatisticalResourcesConfiguration;
 import org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConstants;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourcesRoleEnum;
+import org.siemac.metamac.statistical.resources.core.lifecycle.LifecycleFiller;
 import org.siemac.metamac.statistical.resources.core.task.serviceimpl.TaskServiceImpl;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.CategorisationMockFactory;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.ChapterMockFactory;
@@ -39,6 +45,7 @@ import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.Query
 import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.StatisticOfficialityMockFactory;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesNotPersistedDoMocks;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesPersistedDoMocks;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.ResultSetExtractor;
@@ -86,6 +93,9 @@ public abstract class StatisticalResourcesBaseTest extends MetamacBaseTest {
 
     protected JdbcTemplate                                  jdbcTemplateRepository;
     protected JdbcTemplate                                  jdbcTemplateResources;
+
+    @Autowired
+    public StatisticalResourcesConfiguration                configurationService;
 
     protected ServiceContext getServiceContextWithoutPrincipal() {
         return mockServiceContextWithoutPrincipal();
@@ -193,5 +203,11 @@ public abstract class StatisticalResourcesBaseTest extends MetamacBaseTest {
 
     protected File loadTSVFile(String filename) throws Exception {
         return new File(this.getClass().getResource("/tsv/" + filename).getFile());
+    }
+
+    protected InternationalString getMinorChangeExpectedMajorVersionOccurredVersion() throws MetamacException {
+        Locale locale = configurationService.retrieveLanguageDefaultLocale();
+        String localisedMessage = LocaleUtil.getMessageForCode(LifecycleFiller.MINOR_CHANGE_EXPECTED_MAJOR_VERSION_OCCURRED_MESSAGE, locale);
+        return new InternationalString(locale.getLanguage(), localisedMessage);
     }
 }

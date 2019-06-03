@@ -1,22 +1,36 @@
 package org.siemac.metamac.statistical.resources.core.lifecycle;
 
+import java.util.Locale;
+
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.joda.time.DateTime;
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.core.common.lang.LocaleUtil;
 import org.siemac.metamac.core.common.serviceimpl.utils.ValidationUtils;
+import org.siemac.metamac.core.common.util.shared.NextVersion;
 import org.siemac.metamac.statistical.resources.core.base.domain.HasLifecycle;
 import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatisticalResource;
+import org.siemac.metamac.statistical.resources.core.base.domain.VersionRationaleType;
+import org.siemac.metamac.statistical.resources.core.common.domain.InternationalString;
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResource;
 import org.siemac.metamac.statistical.resources.core.common.utils.RelatedResourceUtils;
+import org.siemac.metamac.statistical.resources.core.conf.StatisticalResourcesConfiguration;
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
+import org.siemac.metamac.statistical.resources.core.enume.domain.VersionRationaleTypeEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesVersionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class LifecycleFiller {
+
+    public static final String                  MINOR_CHANGE_EXPECTED_MAJOR_VERSION_OCCURRED_MESSAGE = "lifecycle_message.resources.version_rationale.minor_version_expected_major_version_occurred";
+
+    @Autowired
+    protected StatisticalResourcesConfiguration configurationService;
 
     // ------------------------------------------------------------------------------------------------------
     // >> PRODUCTION VALIDATION
@@ -87,7 +101,8 @@ public class LifecycleFiller {
         lifeCycleResource.setCreationDate(new DateTime());
         lifeCycleResource.setCreationUser(ctx.getUserId());
         lifeCycleResource.setLastVersion(true);
-        lifeCycleResource.setVersionLogic(StatisticalResourcesVersionUtils.createNextVersion(previousVersion.getLifeCycleStatisticalResource().getVersionLogic(), versionType));
+
+        setNextVersion(previousVersion, versionType, lifeCycleResource);
 
         // Empty metadata
         lifeCycleResource.setProductionValidationDate(null);
@@ -109,5 +124,21 @@ public class LifecycleFiller {
 
         RelatedResource isReplacedBy = RelatedResourceUtils.createRelatedResourceForHasLifecycleResource(resource);
         previousVersion.getLifeCycleStatisticalResource().setIsReplacedByVersion(isReplacedBy);
+    }
+
+    private void setNextVersion(HasLifecycle previousVersion, VersionTypeEnum versionType, LifeCycleStatisticalResource lifeCycleResource) throws MetamacException {
+        NextVersion nextVersion = StatisticalResourcesVersionUtils.createNextVersion(previousVersion.getLifeCycleStatisticalResource().getVersionLogic(), versionType);
+
+        lifeCycleResource.setVersionLogic(nextVersion.getValue());
+
+        if (VersionTypeEnum.MINOR.equals(versionType) && VersionTypeEnum.MAJOR.equals(nextVersion.getType())) {
+            lifeCycleResource.getVersionRationaleTypes().clear();
+            lifeCycleResource.addVersionRationaleType(new VersionRationaleType(VersionRationaleTypeEnum.MAJOR_OTHER));
+
+            Locale locale = configurationService.retrieveLanguageDefaultLocale();
+            String localisedMessage = LocaleUtil.getMessageForCode(MINOR_CHANGE_EXPECTED_MAJOR_VERSION_OCCURRED_MESSAGE, locale);
+
+            lifeCycleResource.setVersionRationale(new InternationalString(locale.getLanguage(), localisedMessage));
+        }
     }
 }
