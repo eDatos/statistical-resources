@@ -3,7 +3,10 @@ package org.siemac.metamac.statistical.resources.core.lifecycle;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+import static org.siemac.metamac.statistical.resources.core.utils.asserts.CommonAsserts.assertEqualsInternationalString;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.LifecycleAsserts.assertNotNullAutomaticallyFilledMetadataLifecycleSendToPublished;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.LifecycleAsserts.assertNotNullAutomaticallyFilledMetadataSendToDiffusionValidation;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.LifecycleAsserts.assertNotNullAutomaticallyFilledMetadataSendToProductionValidation;
@@ -17,15 +20,25 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.template
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.templates.HasLifecycleMocks.mockHasLifecycleStatisticalResourcePublished;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.templates.HasLifecycleMocks.mockHasLifecycleStatisticalResourceVersioned;
 
+import java.util.Locale;
+
+import org.apache.commons.collections.CollectionUtils;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.core.common.lang.LocaleUtil;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
 import org.siemac.metamac.statistical.resources.core.base.domain.HasLifecycle;
+import org.siemac.metamac.statistical.resources.core.common.domain.InternationalString;
 import org.siemac.metamac.statistical.resources.core.common.utils.RelatedResourceUtils;
+import org.siemac.metamac.statistical.resources.core.conf.StatisticalResourcesConfiguration;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
+import org.siemac.metamac.statistical.resources.core.enume.domain.VersionRationaleTypeEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
@@ -35,7 +48,11 @@ import org.siemac.metamac.statistical.resources.core.utils.mocks.factories.Stati
 
 public class LifecycleFillerTest extends StatisticalResourcesBaseTest {
 
-    private final LifecycleFiller lifecycleFiller = new LifecycleFiller();
+    @InjectMocks
+    private final LifecycleFiller     lifecycleFiller = new LifecycleFiller();
+
+    @Mock
+    StatisticalResourcesConfiguration statisticalResourcesConfiguration;
 
     @Before
     public void setUp() {
@@ -164,6 +181,33 @@ public class LifecycleFillerTest extends StatisticalResourcesBaseTest {
 
         lifecycleFiller.applyVersioningNewResourceActions(getServiceContextWithoutPrincipal(), resource, previousResource, VersionTypeEnum.MAJOR);
         assertNotNullAutomaticallyFilledMetadataVersioningNewResource(resource, previousResource);
+    }
+
+    @Test
+    public void testLifeCycleResourceApplyVersioningNewResourceActionsMinorVersionExpectedMajorVersionOccurred() throws Exception {
+        PublicationVersion resource = persistedDoMocks.mockPublicationVersion();
+        PublicationVersion previousResource = persistedDoMocks.mockPublicationVersion();
+
+        previousResource.getLifeCycleStatisticalResource().setVersionLogic(StatisticalResourcesMockFactory.MAXIMUM_MINOR_VERSION_AVAILABLE);
+
+        PublicationLifecycleTestUtils.fillAsVersioned(resource);
+        PublicationLifecycleTestUtils.fillAsPublished(previousResource);
+
+        Locale locale = Locale.ENGLISH;
+
+        Mockito.when(statisticalResourcesConfiguration.retrieveLanguageDefaultLocale()).thenReturn(locale);
+
+        lifecycleFiller.applyVersioningNewResourceActions(getServiceContextWithoutPrincipal(), resource, previousResource, VersionTypeEnum.MINOR);
+        assertNotNullAutomaticallyFilledMetadataVersioningNewResource(resource, previousResource);
+
+        assertEquals(StatisticalResourcesMockFactory.SECOND_VERSION, resource.getLifeCycleStatisticalResource().getVersionLogic());
+
+        assertTrue(CollectionUtils.isNotEmpty(resource.getSiemacMetadataStatisticalResource().getVersionRationaleTypes()));
+        assertEquals(1, resource.getSiemacMetadataStatisticalResource().getVersionRationaleTypes().size());
+        assertEquals(VersionRationaleTypeEnum.MAJOR_OTHER, resource.getSiemacMetadataStatisticalResource().getVersionRationaleTypes().get(0).getValue());
+
+        String localisedMessage = LocaleUtil.getMessageForCode(LifecycleFiller.MINOR_CHANGE_EXPECTED_MAJOR_VERSION_OCCURRED_MESSAGE, locale);
+        assertEqualsInternationalString(new InternationalString(locale.getLanguage(), localisedMessage), resource.getSiemacMetadataStatisticalResource().getVersionRationale());
     }
 
     @Test

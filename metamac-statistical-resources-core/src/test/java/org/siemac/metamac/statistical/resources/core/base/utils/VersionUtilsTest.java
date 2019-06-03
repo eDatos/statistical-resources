@@ -7,6 +7,7 @@ import static org.junit.Assert.assertTrue;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
+import org.siemac.metamac.core.common.util.shared.VersionResult;
 import org.siemac.metamac.statistical.resources.core.base.domain.HasLifecycle;
 import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesVersionUtils;
@@ -38,13 +39,18 @@ public class VersionUtilsTest {
 
     @Test
     public void testCreateNextVersion() throws Exception {
-        assertEquals("1.1", StatisticalResourcesVersionUtils.createNextVersion(mockHasLifecycleWithVersion("001.000"), VersionTypeEnum.MINOR));
-        assertEquals("1.1", StatisticalResourcesVersionUtils.createNextVersion(mockHasLifecycleWithVersion("1.0"), VersionTypeEnum.MINOR));
+        assertEqualsVersionResult("1.1", VersionTypeEnum.MINOR, StatisticalResourcesVersionUtils.createNextVersion(mockHasLifecycleWithVersion("001.000"), VersionTypeEnum.MINOR));
+        assertEqualsVersionResult("1.1", VersionTypeEnum.MINOR, StatisticalResourcesVersionUtils.createNextVersion(mockHasLifecycleWithVersion("1.0"), VersionTypeEnum.MINOR));
 
-        assertEquals("2.0", StatisticalResourcesVersionUtils.createNextVersion(mockHasLifecycleWithVersion("001.000"), VersionTypeEnum.MAJOR));
-        assertEquals("2.0", StatisticalResourcesVersionUtils.createNextVersion(mockHasLifecycleWithVersion("1.0"), VersionTypeEnum.MAJOR));
+        assertEqualsVersionResult("2.0", VersionTypeEnum.MAJOR, StatisticalResourcesVersionUtils.createNextVersion(mockHasLifecycleWithVersion("001.000"), VersionTypeEnum.MAJOR));
+        assertEqualsVersionResult("2.0", VersionTypeEnum.MAJOR, StatisticalResourcesVersionUtils.createNextVersion(mockHasLifecycleWithVersion("1.0"), VersionTypeEnum.MAJOR));
 
-        assertEquals("2.0", StatisticalResourcesVersionUtils.createNextVersion(mockHasLifecycleWithVersion("1.99999"), VersionTypeEnum.MINOR));
+        assertEqualsVersionResult("2.0", VersionTypeEnum.MAJOR, StatisticalResourcesVersionUtils.createNextVersion(mockHasLifecycleWithVersion("1.99999"), VersionTypeEnum.MINOR));
+    }
+
+    private void assertEqualsVersionResult(String expectedVersion, VersionTypeEnum expectedVersionType, VersionResult versionResult) {
+        assertEquals(expectedVersion, versionResult.getValue());
+        assertEquals(expectedVersionType, versionResult.getType());
     }
 
     private HasLifecycle mockHasLifecycleWithVersion(final String version) {
