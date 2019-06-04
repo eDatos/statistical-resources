@@ -5,11 +5,13 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.siemac.metamac.common.test.utils.MetamacAsserts.assertEqualsDate;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.BaseAsserts.assertEqualsVersioningSiemacMetadata;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.CommonAsserts.assertEqualsExternalItem;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.CommonAsserts.assertEqualsExternalItemCollection;
+import static org.siemac.metamac.statistical.resources.core.utils.asserts.CommonAsserts.assertEqualsInternationalString;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_105_MAXIMUM_VERSION_REACHED;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_106_MAXIMUM_MINOR_VERSION_REACHED;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_14_OPER_03_CODE_01_PUBLISHED_NAME;
@@ -21,6 +23,7 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 
 import java.util.List;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -39,6 +42,7 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersi
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
 import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.DatasetService;
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
+import org.siemac.metamac.statistical.resources.core.enume.domain.VersionRationaleTypeEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.invocation.service.SrmRestInternalService;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceapi.LifecycleService;
@@ -111,6 +115,9 @@ public class DatasetVersioningServiceTest extends StatisticalResourcesBaseTest {
         assertNotNull(newDatasetVersion);
         assertFalse(previousDatasetVersion.getSiemacMetadataStatisticalResource().getVersionLogic().equals(newDatasetVersion.getSiemacMetadataStatisticalResource().getVersionLogic()));
         checkNewDatasetVersionCreated(previousDatasetVersion, newDatasetVersion);
+
+        assertTrue(CollectionUtils.isEmpty(newDatasetVersion.getSiemacMetadataStatisticalResource().getVersionRationaleTypes()));
+        assertNull(newDatasetVersion.getSiemacMetadataStatisticalResource().getVersionRationale());
     }
 
     // TODO METAMAC-2866 Remove @Ignore annotation, it's only for testing in local environment
@@ -131,7 +138,7 @@ public class DatasetVersioningServiceTest extends StatisticalResourcesBaseTest {
         datasetVersion = datasetService.retrieveDatasetVersionByUrn(getServiceContextWithoutPrincipal(), datasetVersion.getSiemacMetadataStatisticalResource().getUrn());
 
         // Expected URN
-        String versionAfter = StatisticalResourcesVersionUtils.createNextVersion(versionBefore, versionType);
+        String versionAfter = StatisticalResourcesVersionUtils.createNextVersion(versionBefore, versionType).getValue();
 
         // Compare URNS
         String expectedUrn = GeneratorUrnUtils.generateSiemacStatisticalResourceDatasetVersionUrn(maintainer, datasetVersionCode, versionAfter);
@@ -156,7 +163,7 @@ public class DatasetVersioningServiceTest extends StatisticalResourcesBaseTest {
         datasetVersion = datasetService.retrieveDatasetVersionByUrn(getServiceContextWithoutPrincipal(), datasetVersion.getSiemacMetadataStatisticalResource().getUrn());
 
         // Expected URN
-        String versionAfter = StatisticalResourcesVersionUtils.createNextVersion(versionBefore, versionType);
+        String versionAfter = StatisticalResourcesVersionUtils.createNextVersion(versionBefore, versionType).getValue();
 
         // Compare URNS
         String expectedUrn = GeneratorUrnUtils.generateSiemacStatisticalResourceDatasetVersionUrn(maintainer, datasetVersionCode, versionAfter);
@@ -179,7 +186,7 @@ public class DatasetVersioningServiceTest extends StatisticalResourcesBaseTest {
         datasetVersion = datasetService.retrieveDatasetVersionByUrn(getServiceContextWithoutPrincipal(), datasetVersion.getSiemacMetadataStatisticalResource().getUrn());
 
         // Expected URN
-        String versionAfter = StatisticalResourcesVersionUtils.createNextVersion(versionBefore, versionType);
+        String versionAfter = StatisticalResourcesVersionUtils.createNextVersion(versionBefore, versionType).getValue();
 
         // Compare URNS
         String expectedUrn = GeneratorUrnUtils.generateSiemacStatisticalResourceDatasetVersionUrn(maintainer, datasetVersionCode, versionAfter);
@@ -272,6 +279,11 @@ public class DatasetVersioningServiceTest extends StatisticalResourcesBaseTest {
 
         assertEquals(StatisticalResourcesMockFactory.MAXIMUM_MINOR_VERSION_AVAILABLE, previousDatasetVersion.getSiemacMetadataStatisticalResource().getVersionLogic());
         assertEquals(StatisticalResourcesMockFactory.SECOND_VERSION, newDatasetVersion.getSiemacMetadataStatisticalResource().getVersionLogic());
+
+        assertTrue(CollectionUtils.isNotEmpty(newDatasetVersion.getSiemacMetadataStatisticalResource().getVersionRationaleTypes()));
+        assertEquals(1, newDatasetVersion.getSiemacMetadataStatisticalResource().getVersionRationaleTypes().size());
+        assertEquals(VersionRationaleTypeEnum.MAJOR_OTHER, newDatasetVersion.getSiemacMetadataStatisticalResource().getVersionRationaleTypes().get(0).getValue());
+        assertEqualsInternationalString(getMinorChangeExpectedMajorVersionOccurredVersion(), newDatasetVersion.getSiemacMetadataStatisticalResource().getVersionRationale());
     }
 
     // -------------------------------------------------------------------------------------------

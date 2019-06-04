@@ -3,6 +3,7 @@ package org.siemac.metamac.statistical.resources.core.utils;
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionBuilder;
+import org.siemac.metamac.core.common.util.shared.VersionResult;
 import org.siemac.metamac.core.common.util.shared.VersionUtil;
 import org.siemac.metamac.statistical.resources.core.base.domain.HasLifecycle;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
@@ -18,11 +19,11 @@ public class StatisticalResourcesVersionUtils extends StatisticalResourcesVersio
         return hasLifecycleStatisticalResource != null ? isInitialVersion(hasLifecycleStatisticalResource.getLifeCycleStatisticalResource().getVersionLogic()) : false;
     }
 
-    public static String createNextVersion(HasLifecycle resource, VersionTypeEnum versionType) throws MetamacException {
+    public static VersionResult createNextVersion(HasLifecycle resource, VersionTypeEnum versionType) throws MetamacException {
         return createNextVersion(resource.getLifeCycleStatisticalResource().getVersionLogic(), versionType);
     }
 
-    public static String createNextVersion(String olderVersion, VersionTypeEnum versionType) throws MetamacException {
+    public static VersionResult createNextVersion(String olderVersion, VersionTypeEnum versionType) throws MetamacException {
         try {
             return VersionUtil.createNextVersion(olderVersion, versionType);
         } catch (UnsupportedOperationException e) {
