@@ -1,7 +1,6 @@
 package org.siemac.metamac.statistical.resources.core.io.serviceimpl;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
@@ -20,13 +19,10 @@ import org.quartz.JobExecutionException;
 import org.quartz.JobKey;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionBuilder;
-import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.core.common.util.ApplicationContextProvider;
 import org.siemac.metamac.statistical.resources.core.enume.task.domain.DatasetFileFormatEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.invocation.service.NoticesRestInternalService;
-import org.siemac.metamac.statistical.resources.core.notices.ServiceNoticeAction;
-import org.siemac.metamac.statistical.resources.core.notices.ServiceNoticeMessage;
 import org.siemac.metamac.statistical.resources.core.task.domain.AlternativeEnumeratedRepresentation;
 import org.siemac.metamac.statistical.resources.core.task.domain.FileDescriptor;
 import org.siemac.metamac.statistical.resources.core.task.domain.TaskInfoDataset;
@@ -37,7 +33,7 @@ import org.slf4j.LoggerFactory;
 
 public abstract class AbstractImportDatasetJob implements Job {
 
-    protected static Logger            logger                            = LoggerFactory.getLogger(ImportDatasetJob.class);
+    protected final Logger             logger                            = LoggerFactory.getLogger(getClass());
 
     public static final String         USER                              = "user";
     public static final String         FILE_PATHS                        = "filePaths";
@@ -60,15 +56,7 @@ public abstract class AbstractImportDatasetJob implements Job {
     protected abstract void sendSuccessNotification(String fileNames, String user);
     protected abstract void sendErrorNotification(MetamacException metamacException);
     protected abstract void executeImportTask(ServiceContext serviceContext, String jobName, TaskInfoDataset taskInfoDataset) throws MetamacException;
-    protected abstract void processImportJobError(JobKey jobKey, String fileNames, MetamacException metamacException);
-
-    public TaskServiceFacade getTaskServiceFacade() {
-        if (taskServiceFacade == null) {
-            taskServiceFacade = (TaskServiceFacade) ApplicationContextProvider.getApplicationContext().getBean(TaskServiceFacade.BEAN_ID);
-        }
-
-        return taskServiceFacade;
-    }
+    protected abstract void processImportJobError(String taskName, String fileNames, MetamacException metamacException);
 
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
@@ -78,7 +66,7 @@ public abstract class AbstractImportDatasetJob implements Job {
         JobKey jobKey = jobDetail.getKey();
 
         // Parameters
-        JobDataMap data = jobDetail.getJobDataMap();
+        data = jobDetail.getJobDataMap();
         String dataStructureUrn = data.getString(DATA_STRUCTURE_URN);
         String filePaths = data.getString(FILE_PATHS);
         String fileNames = data.getString(FILE_NAMES);
@@ -91,7 +79,7 @@ public abstract class AbstractImportDatasetJob implements Job {
         String user = data.getString(USER);
 
         try {
-            logger.info("ImportationJob: {} starting at {}", jobKey, new Date());
+            logger.info("Importation job: {} starting at {}", jobKey, new Date());
 
             serviceContext = new ServiceContext(user, context.getFireInstanceId(), "statistical-resources-core");
             serviceContext = setAdditionalProperties(serviceContext, data);
@@ -104,34 +92,42 @@ public abstract class AbstractImportDatasetJob implements Job {
             taskInfoDataset.getAlternativeRepresentations().addAll(inflateAlternativeRepresentations(alternativeRepresentations));
             taskInfoDataset.setStoreAlternativeRepresentations(storeAlternativeRepresentations);
 
-            getTaskServiceFacade().executeImportationTask(serviceContext, taskName, taskInfoDataset);
-            logger.info("ImportationJob: " + jobKey + " finished at " + new Date());
-            getNoticesRestInternalService().createSuccessBackgroundNotification(user, ServiceNoticeAction.IMPORT_DATASET_JOB, ServiceNoticeMessage.IMPORT_DATASET_JOB_OK, fileNames);
-        } catch (Exception e) {
-            // Concert parser exception to metamac exception
-            MetamacException metamacException = null;
-            if (e instanceof MetamacException) {
-                metamacException = (MetamacException) e;
-                logger.error("ImportationJob: the importation with key " + jobKey.getName() + " has failed", e);
-            } else if (e instanceof FileNotFoundException) {
-                metamacException = MetamacExceptionBuilder.builder().withCause(e).withExceptionItems(ServiceExceptionType.TASKS_ERROR).withMessageParameters(ExceptionHelper.excMessage(e)).build();
-                logger.error("ImportationJob: the importation with key " + jobKey.getName() + " has failed because file not exists", e);
-            } else if (e instanceof UnsupportedEncodingException) {
-                metamacException = MetamacExceptionBuilder.builder().withCause(e).withExceptionItems(ServiceExceptionType.TASKS_ERROR).withMessageParameters(ExceptionHelper.excMessage(e)).build();
-                logger.error("ImportationJob: the importation with key " + jobKey.getName() + " has failed  has failed due to an unsupported encoding", e);
-            }
+            executeImportTask(serviceContext, taskName, taskInfoDataset);
 
-            try {
-                getTaskServiceFacade().markTaskAsFailed(serviceContext, taskName, datasetVersionId, datasetUrn, metamacException);
-                logger.info("ImportationJob: " + jobKey + " marked as error at " + new Date());
-                metamacException.setPrincipalException(new MetamacExceptionItem(ServiceExceptionType.IMPORT_DATASET_JOB_ERROR, fileNames));
-                getNoticesRestInternalService().createErrorBackgroundNotification(user, ServiceNoticeAction.IMPORT_DATASET_JOB, metamacException);
-            } catch (MetamacException e1) {
-                logger.error("ImportationJob: the importation with key " + jobKey.getName() + " has failed and it can't marked as error", e1);
-                metamacException.setPrincipalException(new MetamacExceptionItem(ServiceExceptionType.IMPORT_DATASET_JOB_ERROR_AND_CANT_MARK_AS_ERROR, fileNames));
-                getNoticesRestInternalService().createErrorBackgroundNotification(user, ServiceNoticeAction.IMPORT_DATASET_JOB, metamacException);
-            }
+            logger.info("Importation job: {} finished at {}", jobKey, new Date());
+
+            sendSuccessNotification(fileNames, user);
+
+        } catch (UnsupportedEncodingException e) {
+            logger.error("The importation with key {} has failed due to an unsupported encoding", jobKey.getName(), e);
+            MetamacException metamacException = MetamacExceptionBuilder.builder().withCause(e).withExceptionItems(ServiceExceptionType.TASKS_ERROR).withMessageParameters(ExceptionHelper.excMessage(e))
+                    .build();
+
+            processImportJobError(taskName, fileNames, metamacException);
+        } catch (MetamacException e) {
+            logger.error("The importation with key {} has failed", jobKey.getName(), e);
+            processImportJobError(taskName, fileNames, e);
+        } catch (Exception e) {
+            logger.error("Unexpected error in the importation with key {}", jobKey.getName(), e);
+            MetamacException metamacException = MetamacExceptionBuilder.builder().withCause(e).withExceptionItems(ServiceExceptionType.TASKS_ERROR).withMessageParameters(ExceptionHelper.excMessage(e))
+                    .build();
+            processImportJobError(taskName, fileNames, metamacException);
         }
+    }
+
+    protected TaskServiceFacade getTaskServiceFacade() {
+        if (taskServiceFacade == null) {
+            taskServiceFacade = (TaskServiceFacade) ApplicationContextProvider.getApplicationContext().getBean(TaskServiceFacade.BEAN_ID);
+        }
+
+        return taskServiceFacade;
+    }
+
+    protected NoticesRestInternalService getNoticesRestInternalService() {
+        if (noticesRestInternalService == null) {
+            noticesRestInternalService = (NoticesRestInternalService) ApplicationContextProvider.getApplicationContext().getBean(NoticesRestInternalService.BEAN_ID);
+        }
+        return noticesRestInternalService;
     }
 
     protected JobDataMap getData() {
@@ -171,9 +167,5 @@ public abstract class AbstractImportDatasetJob implements Job {
         }
 
         return alternativeRepresentationList;
-    }
-
-    protected NoticesRestInternalService getNoticesRestInternalService() {
-        return (NoticesRestInternalService) ApplicationContextProvider.getApplicationContext().getBean(NoticesRestInternalService.BEAN_ID);
     }
 }

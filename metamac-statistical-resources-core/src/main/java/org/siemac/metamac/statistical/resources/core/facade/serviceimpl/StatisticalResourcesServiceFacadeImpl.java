@@ -775,6 +775,11 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
 
     @Override
     public DatasetVersionDto updateDatasetVersion(ServiceContext ctx, DatasetVersionDto datasetVersionDto) throws MetamacException {
+        return updateDatasetVersion(ctx, datasetVersionDto, Boolean.TRUE);
+    }
+
+    @Override
+    public DatasetVersionDto updateDatasetVersion(ServiceContext ctx, DatasetVersionDto datasetVersionDto, boolean validateExistsDatabaseImportTask) throws MetamacException {
         // Security
         DatasetsSecurityUtils.canUpdateDatasetVersion(ctx, datasetVersionDto);
 
@@ -782,7 +787,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         DatasetVersion datasetVersion = datasetDto2DoMapper.datasetVersionDtoToDo(datasetVersionDto);
 
         // Update
-        datasetVersion = getDatasetService().updateDatasetVersion(ctx, datasetVersion);
+        datasetVersion = getDatasetService().updateDatasetVersion(ctx, datasetVersion, validateExistsDatabaseImportTask);
 
         // Transform
         return datasetDo2DtoMapper.datasetVersionDoToDto(ctx, datasetVersion);
@@ -877,6 +882,11 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
 
     @Override
     public DatasetVersionDto sendDatasetVersionToProductionValidation(ServiceContext ctx, DatasetVersionDto datasetVersionDto) throws MetamacException {
+        return sendDatasetVersionToProductionValidation(ctx, datasetVersionDto, Boolean.TRUE);
+    }
+
+    @Override
+    public DatasetVersionDto sendDatasetVersionToProductionValidation(ServiceContext ctx, DatasetVersionDto datasetVersionDto, boolean validateExistsDatabaseImportTask) throws MetamacException {
         // Security
         DatasetsSecurityUtils.canSendDatasetVersionToProductionValidation(ctx, datasetVersionDto.getStatisticalOperation().getCode());
 
@@ -884,7 +894,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         DatasetVersion datasetVersion = datasetDto2DoMapper.datasetVersionDtoToDo(datasetVersionDto);
 
         // Send to production validation and retrieve
-        datasetVersion = datasetLifecycleService.sendToProductionValidation(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getUrn());
+        datasetVersion = datasetLifecycleService.sendToProductionValidation(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getUrn(), validateExistsDatabaseImportTask);
 
         // Transform
         datasetVersionDto = datasetDo2DtoMapper.datasetVersionDoToDto(ctx, datasetVersion);
@@ -911,6 +921,11 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
 
     @Override
     public DatasetVersionDto sendDatasetVersionToDiffusionValidation(ServiceContext ctx, DatasetVersionDto datasetVersionDto) throws MetamacException {
+        return sendDatasetVersionToDiffusionValidation(ctx, datasetVersionDto, Boolean.TRUE);
+    }
+
+    @Override
+    public DatasetVersionDto sendDatasetVersionToDiffusionValidation(ServiceContext ctx, DatasetVersionDto datasetVersionDto, boolean validateExistsDatabaseImportTask) throws MetamacException {
         // Security
         DatasetsSecurityUtils.canSendDatasetVersionToDiffusionValidation(ctx, datasetVersionDto.getStatisticalOperation().getCode());
 
@@ -918,7 +933,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         DatasetVersion datasetVersion = datasetDto2DoMapper.datasetVersionDtoToDo(datasetVersionDto);
 
         // Send to production validation and retrieve
-        datasetVersion = datasetLifecycleService.sendToDiffusionValidation(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getUrn());
+        datasetVersion = datasetLifecycleService.sendToDiffusionValidation(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getUrn(), validateExistsDatabaseImportTask);
 
         // Transform
         datasetVersionDto = datasetDo2DtoMapper.datasetVersionDoToDto(ctx, datasetVersion);
@@ -979,6 +994,11 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
 
     @Override
     public DatasetVersionDto publishDatasetVersion(ServiceContext ctx, DatasetVersionDto datasetVersionDto) throws MetamacException {
+        return publishDatasetVersion(ctx, datasetVersionDto, Boolean.TRUE);
+    }
+
+    @Override
+    public DatasetVersionDto publishDatasetVersion(ServiceContext ctx, DatasetVersionDto datasetVersionDto, boolean validateExistsDatabaseImportTask) throws MetamacException {
         // Security
         DatasetsSecurityUtils.canPublishDatasetVersion(ctx, datasetVersionDto.getStatisticalOperation().getCode());
 
@@ -989,7 +1009,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         // We set validfrom and ONLY validfrom transparently
         datasetVersion = changeDatasetVersionValidFromAndSave(datasetVersionUrn, new DateTime());
 
-        datasetVersion = datasetLifecycleService.sendToPublished(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getUrn());
+        datasetVersion = datasetLifecycleService.sendToPublished(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getUrn(), validateExistsDatabaseImportTask);
 
         // Send stream message to stream messaging service (like Apache Kafka)
         sendNewVersionPublishedStreamMessage(ctx, datasetVersion);
@@ -1044,6 +1064,12 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
 
     @Override
     public DatasetVersionDto versioningDatasetVersion(ServiceContext ctx, DatasetVersionDto datasetVersionDto, VersionTypeEnum versionType) throws MetamacException {
+        return versioningDatasetVersion(ctx, datasetVersionDto, versionType, Boolean.TRUE);
+    }
+
+    @Override
+    public DatasetVersionDto versioningDatasetVersion(ServiceContext ctx, DatasetVersionDto datasetVersionDto, VersionTypeEnum versionType, boolean validateExistsDatabaseImportTask)
+            throws MetamacException {
         // Security
         DatasetsSecurityUtils.canVersionDataset(ctx, datasetVersionDto.getStatisticalOperation().getCode());
 
@@ -1051,7 +1077,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         DatasetVersion datasetVersion = datasetDto2DoMapper.datasetVersionDtoToDo(datasetVersionDto);
 
         // Versioning
-        datasetVersion = datasetLifecycleService.versioning(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getUrn(), versionType);
+        datasetVersion = datasetLifecycleService.versioning(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getUrn(), versionType, validateExistsDatabaseImportTask);
 
         // Transform
         return datasetDo2DtoMapper.datasetVersionDoToDto(ctx, datasetVersion);
@@ -2469,7 +2495,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         MultidatasetCubeDto multidatasetCubeDto = multidatasetDo2DtoMapper.multidatasetCubeDoToDto(multidatasetCube);
         return multidatasetCubeDto;
     }
-    
+
     @Override
     public MetamacCriteriaResult<RelatedResourceDto> findMultidatasetsByCondition(ServiceContext ctx, MetamacCriteria criteria) throws MetamacException {
         // Security
@@ -2508,8 +2534,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     }
 
     @Override
-    public void createDbImportDatasetJob(ServiceContext ctx) throws MetamacException {
-        getDatasetService().createDbImportDatasetJob(ctx);
+    public void updateDatabaseDatasetsIfNeeded(ServiceContext ctx) throws MetamacException {
+        getDatasetService().updateDatabaseDatasetsIfNeeded(ctx);
     }
-
 }

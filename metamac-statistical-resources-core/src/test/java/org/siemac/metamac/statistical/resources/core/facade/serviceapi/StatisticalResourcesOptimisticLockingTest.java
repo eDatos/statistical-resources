@@ -1958,7 +1958,7 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
     public void testUpdateMultidatasetCubeLocation() throws Exception {
         // no optimistic locking in this operation
     }
-    
+
     @Override
     public void testFindMultidatasetsByCondition() throws Exception {
         // no optimistic locking in this operation
@@ -1970,7 +1970,7 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
     }
 
     @Override
-    public void testCreateDbImportDatasetJob() throws Exception {
+    public void testUpdateDatabaseDatasetsIfNeeded() throws Exception {
         // TODO METAMAC-2866 It's necessary to define what should be tested
     }
 

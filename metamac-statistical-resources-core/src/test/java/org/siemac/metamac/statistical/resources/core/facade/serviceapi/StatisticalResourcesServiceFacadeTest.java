@@ -4111,7 +4111,7 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         statisticalResourcesServiceFacade.deleteMultidatasetCube(getServiceContextAdministrador(), urn);
         statisticalResourcesServiceFacade.retrieveMultidatasetCube(getServiceContextAdministrador(), urn);
     }
-    
+
     @Test
     @MetamacMock(MULTIDATASET_VERSION_33_DRAFT_READY_FOR_PRODUCTION_VALIDATION_NAME)
     public void testSendMultidatasetVersionToProductionValidationWithNoFilteringDimension() throws Exception {
@@ -4214,7 +4214,7 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
     }
 
     @Override
-    public void testCreateDbImportDatasetJob() throws Exception {
+    public void testUpdateDatabaseDatasetsIfNeeded() throws Exception {
         // TODO METAMAC-2866 It's necessary to define what should be tested
     }
 

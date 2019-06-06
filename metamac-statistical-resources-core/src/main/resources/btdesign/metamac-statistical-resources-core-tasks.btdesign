@@ -48,6 +48,7 @@ Application DatasetsStatisticalResources {
     		
      		"Check if exists any kind of job task in the @param resourceId"
     		boolean existsTaskForResource(String resourceId) throws MetamacException;
+    		boolean existsTaskForResource(String resourceId, boolean validateExistsDatabaseImportTask) throws MetamacException;
     
 			"Check if exists an importation job task in the @param resourceId"
     		boolean existImportationTaskInResource(String resourceId) throws MetamacException;
@@ -59,7 +60,7 @@ Application DatasetsStatisticalResources {
 			boolean existDuplicationTaskInResource(String resourceId) throws MetamacException;
 			
 			"Check if exists an db importation job task in the @param resourceId"
-    		boolean existDbImportationTaskInResource(String resourceId) throws MetamacException;
+    		boolean existDatabaseImportationTaskInResource(String resourceId) throws MetamacException;
     		
     		"Check if exists any job task related with the @param resourceId"
     		boolean existsAnyTaskInResource(String resourceId) throws MetamacException;

@@ -1696,7 +1696,7 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
     }
 
     @Override
-    public void testCreateDbImportDatasetJob() throws Exception {
+    public void testUpdateDatabaseDatasetsIfNeeded() throws Exception {
         // TODO METAMAC-2866 It's necessary to define what should be tested
     }
 

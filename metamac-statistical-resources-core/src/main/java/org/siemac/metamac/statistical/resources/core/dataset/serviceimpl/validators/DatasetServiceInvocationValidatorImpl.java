@@ -80,6 +80,10 @@ public class DatasetServiceInvocationValidatorImpl extends BaseInvocationValidat
         checkExistingDatasetVersion(datasetVersion, ServiceExceptionParameters.DATASET_VERSION, exceptions);
     }
 
+    public static void checkUpdateDatasetVersion(DatasetVersion datasetVersion, boolean validateExistsDatabaseImportTask, List<MetamacExceptionItem> exceptions) throws MetamacException {
+        checkExistingDatasetVersion(datasetVersion, ServiceExceptionParameters.DATASET_VERSION, exceptions);
+    }
+
     public static void checkRetrieveDatasetVersionByUrn(String datasetVersionUrn, List<MetamacExceptionItem> exceptions) throws MetamacException {
         StatisticalResourcesValidationUtils.checkParameterRequired(datasetVersionUrn, ServiceExceptionParameters.DATASET_VERSION_URN, exceptions);
     }
@@ -315,7 +319,7 @@ public class DatasetServiceInvocationValidatorImpl extends BaseInvocationValidat
         StatisticalResourcesValidationUtils.checkParameterRequired(tableName, ServiceExceptionParameters.TABLE_NAME, exceptions);
     }
 
-    public static void checkCreateDbImportDatasetJob(List<MetamacExceptionItem> exceptions) {
+    public static void checkUpdateDatabaseDatasetsIfNeeded(List<MetamacExceptionItem> exceptions) {
         // NOTHING TO DO HERE
     }
 

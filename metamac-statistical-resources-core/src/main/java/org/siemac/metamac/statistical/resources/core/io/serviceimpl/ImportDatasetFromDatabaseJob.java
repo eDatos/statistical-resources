@@ -5,7 +5,6 @@ import java.util.Date;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.joda.time.DateTime;
 import org.quartz.JobDataMap;
-import org.quartz.JobKey;
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
@@ -19,31 +18,31 @@ import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourcesRoleEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.facade.serviceapi.StatisticalResourcesServiceFacade;
-import org.siemac.metamac.statistical.resources.core.io.utils.DbImportDatasetUtils;
+import org.siemac.metamac.statistical.resources.core.io.utils.DatabaseDatasetImportUtils;
 import org.siemac.metamac.statistical.resources.core.notices.ServiceNoticeAction;
 import org.siemac.metamac.statistical.resources.core.task.domain.TaskInfoDataset;
 
-public class CustomImportDatasetJobForDbImport extends AbstractImportDatasetJob {
+public class ImportDatasetFromDatabaseJob extends AbstractImportDatasetJob {
 
-    public static final String                DB_IMPORT_JOB_FLAG                  = "custom_import";
-    public static final String                DB_IMPORT_JOB_EXECUTION_DATE        = "import_excution_date";
-    public static final String                DB_IMPORT_JOB_DATASOURCE_IDENTIFIER = "datasource_identifier";
+    public static final String                DATABASE_IMPORT_JOB_FLAG                  = "custom_import";
+    public static final String                DATABASE_IMPORT_JOB_EXECUTION_DATE        = "import_excution_date";
+    public static final String                DATABASE_IMPORT_JOB_DATASOURCE_IDENTIFIER = "datasource_identifier";
 
     private StatisticalResourcesServiceFacade statisticalResourcesServiceFacade   = null;
 
     /**
      * Quartz requires a public empty constructor so that the scheduler can instantiate the class whenever it needs.
      */
-    public CustomImportDatasetJobForDbImport() {
+    public ImportDatasetFromDatabaseJob() {
         // NOTHING TO DO HERE
     }
 
     @Override
     protected ServiceContext setAdditionalProperties(ServiceContext serviceContext, JobDataMap jobDataMap) {
 
-        serviceContext.setProperty(CustomImportDatasetJobForDbImport.DB_IMPORT_JOB_FLAG, isCustomJob(jobDataMap));
-        serviceContext.setProperty(CustomImportDatasetJobForDbImport.DB_IMPORT_JOB_EXECUTION_DATE, getExecutionDate(jobDataMap));
-        serviceContext.setProperty(CustomImportDatasetJobForDbImport.DB_IMPORT_JOB_DATASOURCE_IDENTIFIER, getDatasourceIdentifier(jobDataMap));
+        serviceContext.setProperty(ImportDatasetFromDatabaseJob.DATABASE_IMPORT_JOB_FLAG, isCustomJob(jobDataMap));
+        serviceContext.setProperty(ImportDatasetFromDatabaseJob.DATABASE_IMPORT_JOB_EXECUTION_DATE, getExecutionDate(jobDataMap));
+        serviceContext.setProperty(ImportDatasetFromDatabaseJob.DATABASE_IMPORT_JOB_DATASOURCE_IDENTIFIER, getDatasourceIdentifier(jobDataMap));
         serviceContext.setProperty(SsoClientConstants.PRINCIPAL_ATTRIBUTE, getAdminUser(serviceContext));
 
         return serviceContext;
@@ -61,15 +60,15 @@ public class CustomImportDatasetJobForDbImport extends AbstractImportDatasetJob 
     }
 
     private String getDatasourceIdentifier(JobDataMap jobDataMap) {
-        return jobDataMap.getString(CustomImportDatasetJobForDbImport.DB_IMPORT_JOB_DATASOURCE_IDENTIFIER);
+        return jobDataMap.getString(ImportDatasetFromDatabaseJob.DATABASE_IMPORT_JOB_DATASOURCE_IDENTIFIER);
     }
 
     private DateTime getExecutionDate(JobDataMap jobDataMap) {
-        return new DateTime(jobDataMap.getLong(CustomImportDatasetJobForDbImport.DB_IMPORT_JOB_EXECUTION_DATE));
+        return new DateTime(jobDataMap.getLong(ImportDatasetFromDatabaseJob.DATABASE_IMPORT_JOB_EXECUTION_DATE));
     }
 
     private Boolean isCustomJob(JobDataMap jobDataMap) {
-        return jobDataMap.getBoolean(CustomImportDatasetJobForDbImport.DB_IMPORT_JOB_FLAG);
+        return jobDataMap.getBoolean(ImportDatasetFromDatabaseJob.DATABASE_IMPORT_JOB_FLAG);
     }
 
     @Override
@@ -129,62 +128,59 @@ public class CustomImportDatasetJobForDbImport extends AbstractImportDatasetJob 
     }
 
     private DatasetVersionDto retrieveDatasetVersion(ServiceContext serviceContext, String datasetVersionUrn) throws MetamacException {
-        logger.debug("ImportationJob: Retrieving dataset {}", datasetVersionUrn);
+        logger.debug("Retrieving dataset {}", datasetVersionUrn);
         return getStatisticalResourcesServiceFacade().retrieveDatasetVersionByUrn(serviceContext, datasetVersionUrn);
     }
 
     private void executeImportationTask(String jobName, TaskInfoDataset taskInfoDataset) throws MetamacException {
-        logger.debug("ImportationJob: Importing data for {}", taskInfoDataset.getDatasetVersionId());
+        logger.debug("Importing data for {}", taskInfoDataset.getDatasetVersionId());
         getTaskServiceFacade().executeImportationTask(serviceContext, jobName, taskInfoDataset);
     }
 
     private void markTaskAsFinished(String jobName) throws MetamacException {
-        logger.debug("ImportationJob: Marking as finished importation task {}", jobName);
+        logger.debug("Marking as finished importation task {}", jobName);
         getTaskServiceFacade().markTaskAsFinished(serviceContext, jobName);
     }
 
     private DatasetVersionDto versioningDatasetVersion(DatasetVersionDto datasetVersionDto) throws MetamacException {
-        logger.debug("ImportationJob: Versioning dataset {}", datasetVersionDto.getUrn());
-        return getStatisticalResourcesServiceFacade().versioningDatasetVersion(serviceContext, datasetVersionDto, VersionTypeEnum.MINOR);
+        logger.debug("Versioning dataset {}", datasetVersionDto.getUrn());
+        return getStatisticalResourcesServiceFacade().versioningDatasetVersion(serviceContext, datasetVersionDto, VersionTypeEnum.MINOR, Boolean.FALSE);
     }
 
     private void updateImportationTaskInfo(DatasetVersionDto datasetVersionDto, TaskInfoDataset taskInfoDataset) {
-        logger.debug("ImportationJob: Updating Task with the new dataset {}", datasetVersionDto.getUrn());
+        logger.debug("Updating task with the new dataset {}", datasetVersionDto.getUrn());
         taskInfoDataset.setDatasetVersionId(datasetVersionDto.getUrn());
     }
 
     private void setRequiredMetadataForProductionValidation(DatasetVersionDto datasetVersionDto) {
-        logger.debug("ImportationJob: Setting required metadata for dataset {}", datasetVersionDto.getUrn());
+        logger.debug("Setting required metadata for dataset {}", datasetVersionDto.getUrn());
 
-        // TODO METAMAC-2866 Warning: dummy data for testing
-        DbImportDatasetUtils.setDatasetVersionNextVersion(datasetVersionDto);
+        DatabaseDatasetImportUtils.setDatasetVersionVersionRationaleType(datasetVersionDto);
 
-        DbImportDatasetUtils.setDatasetVersionNextVersionDate(datasetVersionDto);
-
-        DbImportDatasetUtils.setDatasetVersionDateNextUpdate(datasetVersionDto);
-
-        DbImportDatasetUtils.setDatasetVersionVersionRationaleType(datasetVersionDto);
-
+        // TODO METAMAC-2866 How to define these metadata has not been defined yet
+        DatabaseDatasetImportUtils.setDatasetVersionNextVersion(datasetVersionDto);
+        DatabaseDatasetImportUtils.setDatasetVersionNextVersionDate(datasetVersionDto);
+        DatabaseDatasetImportUtils.setDatasetVersionDateNextUpdate(datasetVersionDto);
     }
 
     private DatasetVersionDto updateDatasetVersion(DatasetVersionDto datasetVersionDto) throws MetamacException {
-        logger.debug("ImportationJob: Updating required metada for dataset {}", datasetVersionDto.getUrn());
-        return getStatisticalResourcesServiceFacade().updateDatasetVersion(serviceContext, datasetVersionDto);
+        logger.debug("Updating required metada for dataset {}", datasetVersionDto.getUrn());
+        return getStatisticalResourcesServiceFacade().updateDatasetVersion(serviceContext, datasetVersionDto, Boolean.FALSE);
     }
 
     private DatasetVersionDto sendDatasetVersionToProductionValidation(DatasetVersionDto datasetVersionDto) throws MetamacException {
-        logger.debug("ImportationJob: Sending to production validation dataset {}", datasetVersionDto.getUrn());
-        return getStatisticalResourcesServiceFacade().sendDatasetVersionToProductionValidation(serviceContext, datasetVersionDto);
+        logger.debug("Sending to production validation dataset {}", datasetVersionDto.getUrn());
+        return getStatisticalResourcesServiceFacade().sendDatasetVersionToProductionValidation(serviceContext, datasetVersionDto, Boolean.FALSE);
     }
 
     private DatasetVersionDto sendDatasetVersionToDiffusionValidation(DatasetVersionDto datasetVersionDto) throws MetamacException {
-        logger.debug("ImportationJob: Sending to difussion validation dataset {}", datasetVersionDto.getUrn());
-        return getStatisticalResourcesServiceFacade().sendDatasetVersionToDiffusionValidation(serviceContext, datasetVersionDto);
+        logger.debug("Sending to difussion validation dataset {}", datasetVersionDto.getUrn());
+        return getStatisticalResourcesServiceFacade().sendDatasetVersionToDiffusionValidation(serviceContext, datasetVersionDto, Boolean.FALSE);
     }
 
     private void publishDatasetVersion(DatasetVersionDto datasetVersionDto) throws MetamacException {
-        logger.debug("ImportationJob: Publishing dataset {}", datasetVersionDto.getUrn());
-        getStatisticalResourcesServiceFacade().publishDatasetVersion(serviceContext, datasetVersionDto);
+        logger.debug("Publishing dataset {}", datasetVersionDto.getUrn());
+        getStatisticalResourcesServiceFacade().publishDatasetVersion(serviceContext, datasetVersionDto, Boolean.FALSE);
     }
 
     private StatisticalResourcesServiceFacade getStatisticalResourcesServiceFacade() {
@@ -195,14 +191,14 @@ public class CustomImportDatasetJobForDbImport extends AbstractImportDatasetJob 
     }
 
     @Override
-    protected void processImportJobError(JobKey jobKey, String fileNames, MetamacException metamacException) {
+    protected void processImportJobError(String taskName, String fileNames, MetamacException metamacException) {
         try {
-            getTaskServiceFacade().markTaskAsFinished(serviceContext, jobKey.getName());
-            logger.info("ImportationJob: {} marked as finished with error at {}", jobKey, new Date());
+            getTaskServiceFacade().markTaskAsFinished(serviceContext, taskName);
+            logger.info("{} marked as finished with error at {}", taskName, new Date());
             metamacException.setPrincipalException(new MetamacExceptionItem(ServiceExceptionType.DB_IMPORT_DATASET_JOB_ERROR, fileNames));
             sendErrorNotification(metamacException);
         } catch (MetamacException e1) {
-            logger.error("ImportationJob: the importation with key {} has failed and it can't marked as finished with error", jobKey.getName(), e1);
+            logger.error("The importation with key {} has failed and it can't marked as finished with error", taskName, e1);
             metamacException.setPrincipalException(new MetamacExceptionItem(ServiceExceptionType.DB_IMPORT_DATASET_JOB_ERROR_AND_CANT_MARK_AS_FINISHED, fileNames));
             sendErrorNotification(metamacException);
         }

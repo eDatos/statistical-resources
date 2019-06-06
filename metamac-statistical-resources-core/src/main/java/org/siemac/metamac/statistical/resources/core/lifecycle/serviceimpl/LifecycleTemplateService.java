@@ -58,21 +58,26 @@ public abstract class LifecycleTemplateService<E extends Object> implements Life
 
     @Override
     public E sendToProductionValidation(ServiceContext ctx, String urn) throws MetamacException {
+        return sendToProductionValidation(ctx, urn, Boolean.TRUE);
+    }
+
+    @Override
+    public E sendToProductionValidation(ServiceContext ctx, String urn, boolean validateExistsDatabaseImportTask) throws MetamacException {
         getInvocationValidator().checkSendToProductionValidation(ctx, urn);
 
         E resource = retrieveResourceByUrn(urn);
 
-        checkSendToProductionValidation(ctx, resource);
+        checkSendToProductionValidation(ctx, resource, validateExistsDatabaseImportTask);
 
         applySendToProductionValidation(ctx, resource);
 
         return saveResource(resource);
     }
 
-    protected void checkSendToProductionValidation(ServiceContext ctx, E resource) throws MetamacException {
+    protected void checkSendToProductionValidation(ServiceContext ctx, E resource, boolean validateExistsDatabaseImportTask) throws MetamacException {
         List<MetamacExceptionItem> exceptions = new ArrayList<MetamacExceptionItem>();
 
-        checkNotTasksInProgress(ctx, resource);
+        checkNotTasksInProgress(ctx, resource, validateExistsDatabaseImportTask);
         ProcStatusValidator.checkStatisticalResourceCanSendToProductionValidation((HasLifecycle) resource);
         checkSendToProductionValidationLinkedStatisticalResource(resource, exceptions);
 
@@ -118,21 +123,26 @@ public abstract class LifecycleTemplateService<E extends Object> implements Life
 
     @Override
     public E sendToDiffusionValidation(ServiceContext ctx, String urn) throws MetamacException {
+        return sendToDiffusionValidation(ctx, urn, Boolean.TRUE);
+    }
+
+    @Override
+    public E sendToDiffusionValidation(ServiceContext ctx, String urn, boolean validateExistsDatabaseImportTask) throws MetamacException {
         getInvocationValidator().checkSendToDiffusionValidation(ctx, urn);
 
         E resource = retrieveResourceByUrn(urn);
 
-        checkSendToDiffusionValidation(ctx, resource);
+        checkSendToDiffusionValidation(ctx, resource, validateExistsDatabaseImportTask);
 
         applySendToDiffusionValidation(ctx, resource);
 
         return saveResource(resource);
     }
 
-    protected void checkSendToDiffusionValidation(ServiceContext ctx, E resource) throws MetamacException {
+    protected void checkSendToDiffusionValidation(ServiceContext ctx, E resource, boolean validateExistsDatabaseImportTask) throws MetamacException {
         List<MetamacExceptionItem> exceptions = new ArrayList<MetamacExceptionItem>();
 
-        checkNotTasksInProgress(ctx, resource);
+        checkNotTasksInProgress(ctx, resource, validateExistsDatabaseImportTask);
         ProcStatusValidator.checkStatisticalResourceCanSendToDiffusionValidation((HasLifecycle) resource);
         checkSendToDiffusionValidationLinkedStatisticalResource(resource, exceptions);
 
@@ -178,21 +188,26 @@ public abstract class LifecycleTemplateService<E extends Object> implements Life
 
     @Override
     public E sendToValidationRejected(ServiceContext ctx, String urn) throws MetamacException {
+        return sendToValidationRejected(ctx, urn, Boolean.TRUE);
+    }
+
+    @Override
+    public E sendToValidationRejected(ServiceContext ctx, String urn, boolean validateExistsDatabaseImportTask) throws MetamacException {
         getInvocationValidator().checkSendToValidationRejected(ctx, urn);
 
         E resource = retrieveResourceByUrn(urn);
 
-        checkSendToValidationRejected(ctx, resource);
+        checkSendToValidationRejected(ctx, resource, validateExistsDatabaseImportTask);
 
         applySendToValidationRejected(ctx, resource);
 
         return saveResource(resource);
     }
 
-    protected void checkSendToValidationRejected(ServiceContext ctx, E resource) throws MetamacException {
+    protected void checkSendToValidationRejected(ServiceContext ctx, E resource, boolean validateExistsDatabaseImportTask) throws MetamacException {
         List<MetamacExceptionItem> exceptions = new ArrayList<MetamacExceptionItem>();
 
-        checkNotTasksInProgress(ctx, resource);
+        checkNotTasksInProgress(ctx, resource, validateExistsDatabaseImportTask);
         ProcStatusValidator.checkStatisticalResourceCanSendToValidationRejected((HasLifecycle) resource);
         checkSendToValidationRejectedLinkedStatisticalResource(resource, exceptions);
 
@@ -238,12 +253,17 @@ public abstract class LifecycleTemplateService<E extends Object> implements Life
 
     @Override
     public E sendToPublished(ServiceContext ctx, String urn) throws MetamacException {
+        return sendToPublished(ctx, urn, Boolean.TRUE);
+    }
+
+    @Override
+    public E sendToPublished(ServiceContext ctx, String urn, boolean validateExistsDatabaseImportTask) throws MetamacException {
         getInvocationValidator().checkSendToPublished(ctx, urn);
 
         E resource = retrieveResourceByUrn(urn);
         E previousResource = retrievePreviousPublishedResourceByResource(resource);
 
-        checkSendToPublished(ctx, resource, previousResource);
+        checkSendToPublished(ctx, resource, previousResource, validateExistsDatabaseImportTask);
 
         applySendToPublishedCurrentVersion(ctx, resource, previousResource);
         resource = saveResource(resource);
@@ -256,10 +276,10 @@ public abstract class LifecycleTemplateService<E extends Object> implements Life
         return retrieveResourceByResource(resource);
     }
 
-    protected void checkSendToPublished(ServiceContext ctx, E resource, E previousResource) throws MetamacException {
+    protected void checkSendToPublished(ServiceContext ctx, E resource, E previousResource, boolean validateExistsDatabaseImportTask) throws MetamacException {
         List<MetamacExceptionItem> exceptions = new ArrayList<MetamacExceptionItem>();
 
-        checkNotTasksInProgress(ctx, resource);
+        checkNotTasksInProgress(ctx, resource, validateExistsDatabaseImportTask);
         ProcStatusValidator.checkStatisticalResourceCanSendToPublish((HasLifecycle) resource);
         checkSendToPublishedLinkedStatisticalResource(resource, previousResource, exceptions);
 
@@ -323,11 +343,16 @@ public abstract class LifecycleTemplateService<E extends Object> implements Life
 
     @Override
     public E versioning(ServiceContext ctx, String urn, VersionTypeEnum versionType) throws MetamacException {
+        return versioning(ctx, urn, versionType, Boolean.TRUE);
+    }
+
+    @Override
+    public E versioning(ServiceContext ctx, String urn, VersionTypeEnum versionType, boolean validateExistsDatabaseImportTask) throws MetamacException {
         getInvocationValidator().checkVersioning(ctx, urn);
 
         E previousResource = retrieveResourceByUrn(urn);
 
-        checkVersioning(ctx, previousResource);
+        checkVersioning(ctx, previousResource, validateExistsDatabaseImportTask);
         E resource = copyResourceForVersioning(ctx, previousResource);
 
         applyVersioningNewResource(ctx, resource, previousResource, versionType);
@@ -339,10 +364,10 @@ public abstract class LifecycleTemplateService<E extends Object> implements Life
         return retrieveResourceByResource(resource);
     }
 
-    protected void checkVersioning(ServiceContext ctx, E resource) throws MetamacException {
+    protected void checkVersioning(ServiceContext ctx, E resource, boolean validateExistsDatabaseImportTask) throws MetamacException {
         List<MetamacExceptionItem> exceptions = new ArrayList<MetamacExceptionItem>();
 
-        checkNotTasksInProgress(ctx, resource);
+        checkNotTasksInProgress(ctx, resource, validateExistsDatabaseImportTask);
         ProcStatusValidator.checkStatisticalResourceCanSendToVersion((HasLifecycle) resource);
         checkVersioningLinkedStatisticalResource(resource, exceptions);
 
@@ -410,8 +435,8 @@ public abstract class LifecycleTemplateService<E extends Object> implements Life
     // GLOBAL METHODS
     // ------------------------------------------------------------------------------------------------------
 
-    private void checkNotTasksInProgress(ServiceContext ctx, E resource) throws MetamacException {
-        if (taskService.existsTaskForResource(ctx, getResourceUrn(resource))) {
+    private void checkNotTasksInProgress(ServiceContext ctx, E resource, boolean validateExistsDatabaseImportTask) throws MetamacException {
+        if (taskService.existsTaskForResource(ctx, getResourceUrn(resource), validateExistsDatabaseImportTask)) {
             throw new MetamacException(ServiceExceptionType.TASKS_IN_PROGRESS, getResourceUrn(resource));
         }
     }

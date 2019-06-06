@@ -4,7 +4,6 @@ import java.util.Date;
 
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.quartz.JobDataMap;
-import org.quartz.JobKey;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
@@ -43,14 +42,14 @@ public class ImportDatasetJob extends AbstractImportDatasetJob {
     }
 
     @Override
-    protected void processImportJobError(JobKey jobKey, String fileNames, MetamacException metamacException) {
+    protected void processImportJobError(String taskName, String fileNames, MetamacException metamacException) {
         try {
             getTaskServiceFacade().markTaskAsFailed(serviceContext, getData().getString(TASK_NAME), getData().getString(DATASET_VERSION_ID), getData().getString(DATASET_URN), metamacException);
-            logger.info("ImportationJob: {} marked as error at {}", jobKey, new Date());
+            logger.info("{} marked as error at {}", taskName, new Date());
             metamacException.setPrincipalException(new MetamacExceptionItem(ServiceExceptionType.IMPORT_DATASET_JOB_ERROR, fileNames));
             sendErrorNotification(metamacException);
         } catch (MetamacException e1) {
-            logger.error("ImportationJob: the importation with key {} has failed and it can't marked as error", jobKey.getName(), e1);
+            logger.error("The importation with key {} has failed and it can't marked as error", taskName, e1);
             metamacException.setPrincipalException(new MetamacExceptionItem(ServiceExceptionType.IMPORT_DATASET_JOB_ERROR_AND_CANT_MARK_AS_ERROR, fileNames));
             sendErrorNotification(metamacException);
         }
