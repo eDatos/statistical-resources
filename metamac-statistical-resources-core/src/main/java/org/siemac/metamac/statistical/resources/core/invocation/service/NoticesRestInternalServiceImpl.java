@@ -63,7 +63,7 @@ public class NoticesRestInternalServiceImpl implements NoticesRestInternalServic
     }
 
     @Override
-    public void createDbImportErrorBackgroundNotification(String statisticalOperationUrn, String actionCode, MetamacException exception) {
+    public void createDatabaseImportErrorBackgroundNotification(String statisticalOperationUrn, String actionCode, MetamacException exception) {
         try {
             Locale locale = configurationService.retrieveLanguageDefaultLocale();
 
@@ -87,7 +87,7 @@ public class NoticesRestInternalServiceImpl implements NoticesRestInternalServic
 
             restApiLocator.getNoticesRestInternalFacadeV10().createNotice(notification);
         } catch (MetamacException e) {
-            logger.error("Error creating createDbImportErrorBackgroundNotification:", e);
+            logger.error("Error creating createDatabaseImportErrorBackgroundNotification:", e);
         }
     }
 
