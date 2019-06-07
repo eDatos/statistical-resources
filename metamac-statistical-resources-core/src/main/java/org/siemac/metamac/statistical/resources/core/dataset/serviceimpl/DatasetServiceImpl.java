@@ -431,15 +431,10 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
 
     @Override
     public DatasetVersion updateDatasetVersion(ServiceContext ctx, DatasetVersion datasetVersion) throws MetamacException {
-        return updateDatasetVersion(ctx, datasetVersion, Boolean.TRUE);
-    }
-
-    @Override
-    public DatasetVersion updateDatasetVersion(ServiceContext ctx, DatasetVersion datasetVersion, boolean validateExistsDatabaseImportTask) throws MetamacException {
         // Validations
         datasetServiceInvocationValidator.checkUpdateDatasetVersion(ctx, datasetVersion);
 
-        checkNotTasksInProgress(ctx, datasetVersion.getDataset().getIdentifiableStatisticalResource().getUrn(), validateExistsDatabaseImportTask);
+        checkNotTasksInProgress(ctx, datasetVersion.getDataset().getIdentifiableStatisticalResource().getUrn());
 
         checkDsdChanges(datasetVersion);
 
@@ -1273,7 +1268,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
 
                 checkTableExists(tableName, datasetVersionUrn);
 
-                // Get dimensions, attributes and mesuare columns name from dsd, get filter column name from configuration in common metadata and check if they exists
+                // Get dimensions, attributes and measure columns name from dsd, get filter column name from configuration in common metadata and check if they exists
                 DataStructure dataStructure = srmRestInternalService.retrieveDsdByUrn(datasetVersion.getRelatedDsd().getUrn());
 
                 List<String> dimensionsColumnsName = getDimensionsColumnsName(dataStructure);
@@ -1291,6 +1286,8 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
                 // Get de filter column value from last data import
                 DateTime filterColumnValue = getFilterColumnValue(datasetVersion);
 
+                // TODO METAMAC-2866 A possible improve could be to do a paginated query to get the observations and write them to file progressively to avoid memory problems derivated from having a
+                // huge number of observations in memory
                 List<String[]> observations = getObservations(tableName, columnsName, filterColumnName, filterColumnValue);
 
                 if (!observations.isEmpty()) {
@@ -1320,11 +1317,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
     // ------------------------------------------------------------------------
 
     private void checkNotTasksInProgress(ServiceContext ctx, String datasetUrn) throws MetamacException {
-        checkNotTasksInProgress(ctx, datasetUrn, Boolean.TRUE);
-    }
-
-    private void checkNotTasksInProgress(ServiceContext ctx, String datasetUrn, boolean validateExistsDatabaseImportTask) throws MetamacException {
-        if (getTaskService().existsTaskForResource(ctx, datasetUrn, validateExistsDatabaseImportTask)) {
+        if (getTaskService().existsTaskForResource(ctx, datasetUrn)) {
             throw new MetamacException(ServiceExceptionType.TASKS_IN_PROGRESS, datasetUrn);
         }
     }

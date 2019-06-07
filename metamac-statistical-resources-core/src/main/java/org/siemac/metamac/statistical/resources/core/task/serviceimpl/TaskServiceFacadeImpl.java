@@ -40,6 +40,11 @@ public class TaskServiceFacadeImpl extends TaskServiceFacadeImplBase {
     }
 
     @Override
+    public void executeDatabaseImportationTask(ServiceContext ctx, String databaseImportationJobKey, TaskInfoDataset taskInfoDataset) throws MetamacException {
+        taskservice.processDatabaseImportationTask(ctx, databaseImportationJobKey, taskInfoDataset);
+    }
+
+    @Override
     public void executeRecoveryImportationTask(ServiceContext ctx, String recoveryJobKey, TaskInfoDataset taskInfoDataset) throws MetamacException {
         taskservice.processRollbackImportationTask(ctx, recoveryJobKey, taskInfoDataset);
     }
@@ -55,6 +60,11 @@ public class TaskServiceFacadeImpl extends TaskServiceFacadeImplBase {
     }
 
     @Override
+    public void markTaskAsFinished(ServiceContext ctx, String job) throws MetamacException {
+        taskservice.markTaskAsFinished(ctx, job);
+    }
+
+    @Override
     // This method is only used on application startup
     public void markAllInProgressTaskToFailed(ServiceContext ctx) throws MetamacException {
         // Mark as failed current IN_PROGRESS states, if are available and also FAILED in order to retry the recovery process
@@ -66,10 +76,5 @@ public class TaskServiceFacadeImpl extends TaskServiceFacadeImplBase {
             logger.info("Recovering task " + task.getJob() + " of the user " + task.getCreatedBy());
             taskservice.markTasksAsFailedOnApplicationStartup(ctx, task.getJob());
         }
-    }
-
-    @Override
-    public void markTaskAsFinished(ServiceContext ctx, String job) throws MetamacException {
-        taskservice.markTaskAsFinished(ctx, job);
     }
 }

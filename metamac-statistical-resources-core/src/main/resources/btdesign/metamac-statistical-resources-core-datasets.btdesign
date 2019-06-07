@@ -41,7 +41,6 @@ Application DatasetsStatisticalResources {
 			@DatasetVersion createDatasetVersion(@DatasetVersion datasetVersion, @ExternalItem statisticalOperation) throws MetamacException;
 			"Updates dataset version"
 			@DatasetVersion updateDatasetVersion(@DatasetVersion datasetVersion) throws MetamacException;
-			@DatasetVersion updateDatasetVersion(@DatasetVersion datasetVersion, boolean validateExistsDatabaseImportTask) throws MetamacException;
 			"Retrieves dataset version by urn"
 			@DatasetVersion retrieveDatasetVersionByUrn(String datasetVersionUrn) throws MetamacException;
 			"Retrieves last dataset version by dataset urn"

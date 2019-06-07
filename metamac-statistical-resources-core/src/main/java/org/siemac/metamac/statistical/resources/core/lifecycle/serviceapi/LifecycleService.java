@@ -7,17 +7,14 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 public interface LifecycleService<E extends Object> {
 
     E sendToProductionValidation(ServiceContext ctx, String urn) throws MetamacException;
-    E sendToProductionValidation(ServiceContext ctx, String urn, boolean validateExistsDatabaseImportTask) throws MetamacException;
 
     E sendToDiffusionValidation(ServiceContext ctx, String urn) throws MetamacException;
-    E sendToDiffusionValidation(ServiceContext ctx, String urn, boolean validateExistsDatabaseImportTask) throws MetamacException;
 
     E sendToValidationRejected(ServiceContext ctx, String urn) throws MetamacException;
-    E sendToValidationRejected(ServiceContext ctx, String urn, boolean validateExistsDatabaseImportTask) throws MetamacException;
 
     E sendToPublished(ServiceContext ctx, String urn) throws MetamacException;
-    E sendToPublished(ServiceContext ctx, String urn, boolean validateExistsDatabaseImportTask) throws MetamacException;
 
     E versioning(ServiceContext ctx, String urn, VersionTypeEnum versionType) throws MetamacException;
-    E versioning(ServiceContext ctx, String urn, VersionTypeEnum versionType, boolean validateExistsDatabaseImportTask) throws MetamacException;
+
+    void sendNewVersionPublishedStreamMessageByResource(ServiceContext ctx, E resource);
 }

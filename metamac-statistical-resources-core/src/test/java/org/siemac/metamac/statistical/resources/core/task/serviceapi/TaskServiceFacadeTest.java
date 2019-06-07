@@ -37,4 +37,9 @@ public class TaskServiceFacadeTest extends StatisticalResourcesBaseTest implemen
     public void testMarkTaskAsFinished() throws Exception {
         // TODO METAMAC-2866 Testing?
     }
+
+    @Override
+    public void testExecuteDatabaseImportationTask() throws Exception {
+        // TODO METAMAC-2866 Testing?
+    }
 }

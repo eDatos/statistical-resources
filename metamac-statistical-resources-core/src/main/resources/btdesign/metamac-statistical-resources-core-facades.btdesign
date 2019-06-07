@@ -104,7 +104,6 @@ Application FacadeStatisticalResources {
 	   		@DatasetVersionDto createDataset(@DatasetVersionDto datasetVersionDto, @ExternalItemDto statisticalOperation) throws MetamacException;
 	   		"Updates dataset"
             @DatasetVersionDto updateDatasetVersion(@DatasetVersionDto datasetVersionDto) throws MetamacException;
-            @DatasetVersionDto updateDatasetVersion(@DatasetVersionDto datasetVersionDto, boolean validateExistsDatabaseImportTask) throws MetamacException;
             "Deletes dataset"
             deleteDatasetVersion(String urn) throws MetamacException;
             "Finds datasets by criteria"
@@ -121,23 +120,19 @@ Application FacadeStatisticalResources {
     		@DatasetVersionMainCoveragesDto retrieveDatasetVersionMainCoverages(String datasetVersionUrn) throws MetamacException;
     		"Send to production validation"
     		@DatasetVersionDto sendDatasetVersionToProductionValidation(@DatasetVersionDto datasetVersionDto) throws MetamacException;
-    		@DatasetVersionDto sendDatasetVersionToProductionValidation(@DatasetVersionDto datasetVersionDto, boolean validateExistsDatabaseImportTask) throws MetamacException;
-    		@DatasetVersionBaseDto sendDatasetVersionToProductionValidation(@DatasetVersionBaseDto datasetVersionDto) throws MetamacException;
+			@DatasetVersionBaseDto sendDatasetVersionToProductionValidation(@DatasetVersionBaseDto datasetVersionDto) throws MetamacException;
     		"Send to diffusion validation"
     		@DatasetVersionDto sendDatasetVersionToDiffusionValidation(@DatasetVersionDto datasetVersionDto) throws MetamacException;
-    		@DatasetVersionDto sendDatasetVersionToDiffusionValidation(@DatasetVersionDto datasetVersionDto, boolean validateExistsDatabaseImportTask) throws MetamacException;
     		@DatasetVersionBaseDto sendDatasetVersionToDiffusionValidation(@DatasetVersionBaseDto datasetVersionDto) throws MetamacException;
     		"Send to validation rejected"
     		@DatasetVersionDto sendDatasetVersionToValidationRejected(@DatasetVersionDto datasetVersionDto) throws MetamacException;
     		@DatasetVersionBaseDto sendDatasetVersionToValidationRejected(@DatasetVersionBaseDto datasetVersionDto) throws MetamacException;
     		"Published a new version of a dataset"
     		@DatasetVersionDto publishDatasetVersion(@DatasetVersionDto datasetVersionDto) throws MetamacException;
-    		@DatasetVersionDto publishDatasetVersion(@DatasetVersionDto datasetVersionDto, boolean validateExistsDatabaseImportTask) throws MetamacException;
     		@DatasetVersionBaseDto publishDatasetVersion(@DatasetVersionBaseDto datasetVersionDto) throws MetamacException;
     		@DatasetVersionBaseDto resendPublishedDatasetVersionStreamMessage(String datasetVersionUrn) throws MetamacException;
     		"Creates a new version of a dataset, copying metadata from version with provided urn"
     		@DatasetVersionDto versioningDatasetVersion(@DatasetVersionDto datasetVersionDto, @VersionTypeEnum versionType) throws MetamacException;
-    		@DatasetVersionDto versioningDatasetVersion(@DatasetVersionDto datasetVersionDto, @VersionTypeEnum versionType, boolean validateExistsDatabaseImportTask) throws MetamacException;
     		@DatasetVersionBaseDto versioningDatasetVersion(@DatasetVersionBaseDto datasetVersionDto, @VersionTypeEnum versionType) throws MetamacException;
 
     		//Data related actions

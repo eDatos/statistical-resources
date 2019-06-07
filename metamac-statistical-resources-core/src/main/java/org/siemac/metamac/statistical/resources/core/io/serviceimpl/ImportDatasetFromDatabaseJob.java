@@ -14,11 +14,9 @@ import org.siemac.metamac.sso.client.MetamacPrincipalAccess;
 import org.siemac.metamac.sso.client.SsoClientConstants;
 import org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConstants;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
-import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourcesRoleEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.facade.serviceapi.StatisticalResourcesServiceFacade;
-import org.siemac.metamac.statistical.resources.core.io.utils.DatabaseDatasetImportUtils;
 import org.siemac.metamac.statistical.resources.core.notices.ServiceNoticeAction;
 import org.siemac.metamac.statistical.resources.core.task.domain.TaskInfoDataset;
 
@@ -28,7 +26,7 @@ public class ImportDatasetFromDatabaseJob extends AbstractImportDatasetJob {
     public static final String                DATABASE_IMPORT_JOB_EXECUTION_DATE        = "import_excution_date";
     public static final String                DATABASE_IMPORT_JOB_DATASOURCE_IDENTIFIER = "datasource_identifier";
 
-    private StatisticalResourcesServiceFacade statisticalResourcesServiceFacade   = null;
+    private StatisticalResourcesServiceFacade statisticalResourcesServiceFacade         = null;
 
     /**
      * Quartz requires a public empty constructor so that the scheduler can instantiate the class whenever it needs.
@@ -85,15 +83,17 @@ public class ImportDatasetFromDatabaseJob extends AbstractImportDatasetJob {
     @Override
     protected void executeImportTask(ServiceContext serviceContext, String jobName, TaskInfoDataset taskInfoDataset) throws MetamacException {
 
-        String datasetVersionUrn = getData().getString(DATASET_VERSION_ID);
+        getTaskServiceFacade().executeDatabaseImportationTask(serviceContext, jobName, taskInfoDataset);
 
-        DatasetVersionDto datasetVersionDto = retrieveDatasetVersion(serviceContext, datasetVersionUrn);
-
-        if (ProcStatusEnum.PUBLISHED.equals(datasetVersionDto.getProcStatus())) {
-            executeImportTaskForPublishedDataset(datasetVersionDto, jobName, taskInfoDataset);
-        } else {
-            executeImportTaskForNonPublishedDataset(jobName, taskInfoDataset);
-        }
+        // String datasetVersionUrn = getData().getString(DATASET_VERSION_ID);
+        //
+        // DatasetVersionDto datasetVersionDto = retrieveDatasetVersion(serviceContext, datasetVersionUrn);
+        //
+        // if (ProcStatusEnum.PUBLISHED.equals(datasetVersionDto.getProcStatus())) {
+        // executeImportTaskForPublishedDataset(datasetVersionDto, jobName, taskInfoDataset);
+        // } else {
+        // executeImportTaskForNonPublishedDataset(jobName, taskInfoDataset);
+        // }
     }
 
     private void executeImportTaskForNonPublishedDataset(String jobName, TaskInfoDataset taskInfoDataset) throws MetamacException {
@@ -103,6 +103,7 @@ public class ImportDatasetFromDatabaseJob extends AbstractImportDatasetJob {
     }
 
     private void executeImportTaskForPublishedDataset(DatasetVersionDto datasetVersionDto, String jobName, TaskInfoDataset taskInfoDataset) throws MetamacException {
+
         datasetVersionDto = versioningDatasetVersion(datasetVersionDto);
 
         // After versioning, it's necessary to update the task info because there is a new version of the dataset. The importation task should be applied to this.
@@ -144,7 +145,7 @@ public class ImportDatasetFromDatabaseJob extends AbstractImportDatasetJob {
 
     private DatasetVersionDto versioningDatasetVersion(DatasetVersionDto datasetVersionDto) throws MetamacException {
         logger.debug("Versioning dataset {}", datasetVersionDto.getUrn());
-        return getStatisticalResourcesServiceFacade().versioningDatasetVersion(serviceContext, datasetVersionDto, VersionTypeEnum.MINOR, Boolean.FALSE);
+        return getStatisticalResourcesServiceFacade().versioningDatasetVersion(serviceContext, datasetVersionDto, VersionTypeEnum.MINOR);
     }
 
     private void updateImportationTaskInfo(DatasetVersionDto datasetVersionDto, TaskInfoDataset taskInfoDataset) {
@@ -155,32 +156,32 @@ public class ImportDatasetFromDatabaseJob extends AbstractImportDatasetJob {
     private void setRequiredMetadataForProductionValidation(DatasetVersionDto datasetVersionDto) {
         logger.debug("Setting required metadata for dataset {}", datasetVersionDto.getUrn());
 
-        DatabaseDatasetImportUtils.setDatasetVersionVersionRationaleType(datasetVersionDto);
+        // DatabaseDatasetImportUtils.setDatasetVersionVersionRationaleType(datasetVersionDto);
 
         // TODO METAMAC-2866 How to define these metadata has not been defined yet
-        DatabaseDatasetImportUtils.setDatasetVersionNextVersion(datasetVersionDto);
-        DatabaseDatasetImportUtils.setDatasetVersionNextVersionDate(datasetVersionDto);
-        DatabaseDatasetImportUtils.setDatasetVersionDateNextUpdate(datasetVersionDto);
+        // DatabaseDatasetImportUtils.setDatasetVersionNextVersion(datasetVersionDto);
+        // DatabaseDatasetImportUtils.setDatasetVersionNextVersionDate(datasetVersionDto);
+        // DatabaseDatasetImportUtils.setDatasetVersionDateNextUpdate(datasetVersionDto);
     }
 
     private DatasetVersionDto updateDatasetVersion(DatasetVersionDto datasetVersionDto) throws MetamacException {
         logger.debug("Updating required metada for dataset {}", datasetVersionDto.getUrn());
-        return getStatisticalResourcesServiceFacade().updateDatasetVersion(serviceContext, datasetVersionDto, Boolean.FALSE);
+        return getStatisticalResourcesServiceFacade().updateDatasetVersion(serviceContext, datasetVersionDto);
     }
 
     private DatasetVersionDto sendDatasetVersionToProductionValidation(DatasetVersionDto datasetVersionDto) throws MetamacException {
         logger.debug("Sending to production validation dataset {}", datasetVersionDto.getUrn());
-        return getStatisticalResourcesServiceFacade().sendDatasetVersionToProductionValidation(serviceContext, datasetVersionDto, Boolean.FALSE);
+        return getStatisticalResourcesServiceFacade().sendDatasetVersionToProductionValidation(serviceContext, datasetVersionDto);
     }
 
     private DatasetVersionDto sendDatasetVersionToDiffusionValidation(DatasetVersionDto datasetVersionDto) throws MetamacException {
         logger.debug("Sending to difussion validation dataset {}", datasetVersionDto.getUrn());
-        return getStatisticalResourcesServiceFacade().sendDatasetVersionToDiffusionValidation(serviceContext, datasetVersionDto, Boolean.FALSE);
+        return getStatisticalResourcesServiceFacade().sendDatasetVersionToDiffusionValidation(serviceContext, datasetVersionDto);
     }
 
     private void publishDatasetVersion(DatasetVersionDto datasetVersionDto) throws MetamacException {
         logger.debug("Publishing dataset {}", datasetVersionDto.getUrn());
-        getStatisticalResourcesServiceFacade().publishDatasetVersion(serviceContext, datasetVersionDto, Boolean.FALSE);
+        getStatisticalResourcesServiceFacade().publishDatasetVersion(serviceContext, datasetVersionDto);
     }
 
     private StatisticalResourcesServiceFacade getStatisticalResourcesServiceFacade() {

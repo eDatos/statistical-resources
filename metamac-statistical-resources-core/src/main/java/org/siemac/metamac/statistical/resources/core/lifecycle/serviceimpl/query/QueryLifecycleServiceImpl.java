@@ -9,7 +9,6 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.core.common.exception.utils.ExceptionUtils;
 import org.siemac.metamac.core.common.util.GeneratorUrnUtils;
-import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResourceResult;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionRepository;
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
@@ -21,7 +20,6 @@ import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.lifecycle.LifecycleCommonMetadataChecker;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceapi.query.QueryLifecycleService;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.LifecycleTemplateService;
-import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersion;
 import org.siemac.metamac.statistical.resources.core.publication.domain.PublicationVersionRepository;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersionRepository;
@@ -193,9 +191,8 @@ public class QueryLifecycleServiceImpl extends LifecycleTemplateService<QueryVer
     @Override
     protected QueryVersion updateResourceUrn(QueryVersion resource) throws MetamacException {
         String[] creator = new String[]{resource.getLifeCycleStatisticalResource().getMaintainer().getCodeNested()};
-        resource.getLifeCycleStatisticalResource().setUrn(
-                GeneratorUrnUtils.generateSiemacStatisticalResourceQueryVersionUrn(creator, resource.getLifeCycleStatisticalResource().getCode(), resource.getLifeCycleStatisticalResource()
-                        .getVersionLogic()));
+        resource.getLifeCycleStatisticalResource().setUrn(GeneratorUrnUtils.generateSiemacStatisticalResourceQueryVersionUrn(creator, resource.getLifeCycleStatisticalResource().getCode(),
+                resource.getLifeCycleStatisticalResource().getVersionLogic()));
         return resource;
     }
 
@@ -231,6 +228,15 @@ public class QueryLifecycleServiceImpl extends LifecycleTemplateService<QueryVer
     @Override
     protected String getResourceUrn(QueryVersion resource) {
         return resource.getLifeCycleStatisticalResource().getUrn();
+    }
+
+    @Override
+    public void sendNewVersionPublishedStreamMessageByResource(ServiceContext ctx, QueryVersion resource) {
+        try {
+            streamMessagingServiceFacade.sendNewVersionPublished(resource);
+        } catch (MetamacException e) {
+            createStreamMessageSentNotification(ctx, resource);
+        }
     }
 
 }

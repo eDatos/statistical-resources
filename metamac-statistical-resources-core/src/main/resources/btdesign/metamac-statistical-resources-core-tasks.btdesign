@@ -17,6 +17,8 @@ Application DatasetsStatisticalResources {
 			
 			"Perform the importation task"
     		executeImportationTask(String importationJobKey, @TaskInfoDataset taskInfoDataset) throws MetamacException;
+    		"Perform the importation task from database"
+    		executeDatabaseImportationTask(String databaseImportationJobKey, @TaskInfoDataset taskInfoDataset) throws MetamacException;
     		"Perform the receovery importation task"
     		executeRecoveryImportationTask(String recoveryJobKey, @TaskInfoDataset taskInfoDataset) throws MetamacException; 
     		"Perform the duplication task"
@@ -41,6 +43,8 @@ Application DatasetsStatisticalResources {
             String planifyDuplicationDataset(@TaskInfoDataset taskInfoDataset, String newDatasetId, ListMapping datasourceMappings) throws MetamacException;
 			"Perform the importation task"
     		processImportationTask(String importationJobKey, @TaskInfoDataset taskInfoDataset) throws MetamacException;
+    		"Perform the database importation task"
+    		processDatabaseImportationTask(String databaseImportationJobKey, @TaskInfoDataset taskInfoDataset) throws MetamacException;
     		"Perform a rollback in a importation task"
     		processRollbackImportationTask(String recoveryJobKey, @TaskInfoDataset taskInfoDataset);
     		"Perform the duplication task"
@@ -48,7 +52,6 @@ Application DatasetsStatisticalResources {
     		
      		"Check if exists any kind of job task in the @param resourceId"
     		boolean existsTaskForResource(String resourceId) throws MetamacException;
-    		boolean existsTaskForResource(String resourceId, boolean validateExistsDatabaseImportTask) throws MetamacException;
     
 			"Check if exists an importation job task in the @param resourceId"
     		boolean existImportationTaskInResource(String resourceId) throws MetamacException;

@@ -230,4 +230,9 @@ public class MultidatasetLifecycleServiceImpl extends LifecycleTemplateService<M
         return resource.getSiemacMetadataStatisticalResource().getUrn();
     }
 
+    @Override
+    public void sendNewVersionPublishedStreamMessageByResource(ServiceContext ctx, MultidatasetVersion resource) {
+        // TODO METAMAC-2715 - Realizar la notificación a Kafka de los recursos Multidataset
+    }
+
 }

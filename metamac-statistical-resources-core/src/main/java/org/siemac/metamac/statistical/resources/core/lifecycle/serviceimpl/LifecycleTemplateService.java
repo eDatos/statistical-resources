@@ -1,5 +1,6 @@
 package org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,45 +13,57 @@ import org.siemac.metamac.statistical.resources.core.base.domain.HasLifecycle;
 import org.siemac.metamac.statistical.resources.core.base.domain.HasSiemacMetadata;
 import org.siemac.metamac.statistical.resources.core.base.validators.ProcStatusValidator;
 import org.siemac.metamac.statistical.resources.core.common.utils.RelatedResourceUtils;
+import org.siemac.metamac.statistical.resources.core.enume.domain.StreamMessageStatusEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
+import org.siemac.metamac.statistical.resources.core.invocation.service.NoticesRestInternalService;
 import org.siemac.metamac.statistical.resources.core.lifecycle.LifecycleChecker;
 import org.siemac.metamac.statistical.resources.core.lifecycle.LifecycleFiller;
 import org.siemac.metamac.statistical.resources.core.lifecycle.SiemacLifecycleChecker;
 import org.siemac.metamac.statistical.resources.core.lifecycle.SiemacLifecycleFiller;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceapi.LifecycleInvocationValidatorBase;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceapi.LifecycleService;
+import org.siemac.metamac.statistical.resources.core.notices.ServiceNoticeAction;
+import org.siemac.metamac.statistical.resources.core.notices.ServiceNoticeMessage;
+import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
+import org.siemac.metamac.statistical.resources.core.stream.serviceapi.StreamMessagingServiceFacade;
 import org.siemac.metamac.statistical.resources.core.task.serviceapi.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public abstract class LifecycleTemplateService<E extends Object> implements LifecycleService<E> {
 
-    private static final String      ERROR_FOUND_AN_UNKNOWN_RESOURCE_TYPE_SENDING_TO_PUBLISHED             = "Found an unknown resource type sending to published";
+    private static final String            ERROR_FOUND_AN_UNKNOWN_RESOURCE_TYPE_SENDING_TO_PUBLISHED             = "Found an unknown resource type sending to published";
 
-    private static final String      ERROR_FOUND_AN_UNKNOWN_RESOURCE_TYPE_SENDING_TO_VALIDATION_REJECTED   = "Found an unknown resource type sending to validation rejected";
+    private static final String            ERROR_FOUND_AN_UNKNOWN_RESOURCE_TYPE_SENDING_TO_VALIDATION_REJECTED   = "Found an unknown resource type sending to validation rejected";
 
-    private static final String      ERROR_FOUND_AN_UNKNOWN_RESOURCE_TYPE_SENDING_TO_DIFFUSION_VALIDATION  = "Found an unknown resource type sending to diffusion validation";
+    private static final String            ERROR_FOUND_AN_UNKNOWN_RESOURCE_TYPE_SENDING_TO_DIFFUSION_VALIDATION  = "Found an unknown resource type sending to diffusion validation";
 
-    private static final String      ERROR_FOUND_AN_UNKNOWN_RESOURCE_TYPE_SENDING_TO_PRODUCTION_VALIDATION = "Found an unknown resource type sending to production validation";
+    private static final String            ERROR_FOUND_AN_UNKNOWN_RESOURCE_TYPE_SENDING_TO_PRODUCTION_VALIDATION = "Found an unknown resource type sending to production validation";
 
-    private static final String      ERROR_FOUND_AN_UNKNOWN_RESOURCE_TYPE_FOR_VERSIONING                   = "Found an unknown resource type for versioning";
-
-    @Autowired
-    LifecycleInvocationValidatorBase lifecycleInvocationValidatorBase;
+    private static final String            ERROR_FOUND_AN_UNKNOWN_RESOURCE_TYPE_FOR_VERSIONING                   = "Found an unknown resource type for versioning";
 
     @Autowired
-    private SiemacLifecycleChecker   siemacLifecycleChecker;
+    LifecycleInvocationValidatorBase       lifecycleInvocationValidatorBase;
 
     @Autowired
-    private SiemacLifecycleFiller    siemacLifecycleFiller;
+    private SiemacLifecycleChecker         siemacLifecycleChecker;
 
     @Autowired
-    private LifecycleChecker         lifecycleChecker;
+    private SiemacLifecycleFiller          siemacLifecycleFiller;
 
     @Autowired
-    private LifecycleFiller          lifecycleFiller;
+    private LifecycleChecker               lifecycleChecker;
 
     @Autowired
-    private TaskService              taskService;
+    private LifecycleFiller                lifecycleFiller;
+
+    @Autowired
+    private TaskService                    taskService;
+
+    @Autowired
+    protected StreamMessagingServiceFacade streamMessagingServiceFacade;
+
+    @Autowired
+    private NoticesRestInternalService     noticesRestInternalService;
 
     // ------------------------------------------------------------------------------------------------------
     // >> PRODUCTION VALIDATION
@@ -58,26 +71,21 @@ public abstract class LifecycleTemplateService<E extends Object> implements Life
 
     @Override
     public E sendToProductionValidation(ServiceContext ctx, String urn) throws MetamacException {
-        return sendToProductionValidation(ctx, urn, Boolean.TRUE);
-    }
-
-    @Override
-    public E sendToProductionValidation(ServiceContext ctx, String urn, boolean validateExistsDatabaseImportTask) throws MetamacException {
         getInvocationValidator().checkSendToProductionValidation(ctx, urn);
 
         E resource = retrieveResourceByUrn(urn);
 
-        checkSendToProductionValidation(ctx, resource, validateExistsDatabaseImportTask);
+        checkSendToProductionValidation(ctx, resource);
 
         applySendToProductionValidation(ctx, resource);
 
         return saveResource(resource);
     }
 
-    protected void checkSendToProductionValidation(ServiceContext ctx, E resource, boolean validateExistsDatabaseImportTask) throws MetamacException {
+    protected void checkSendToProductionValidation(ServiceContext ctx, E resource) throws MetamacException {
         List<MetamacExceptionItem> exceptions = new ArrayList<MetamacExceptionItem>();
 
-        checkNotTasksInProgress(ctx, resource, validateExistsDatabaseImportTask);
+        checkNotTasksInProgress(ctx, resource);
         ProcStatusValidator.checkStatisticalResourceCanSendToProductionValidation((HasLifecycle) resource);
         checkSendToProductionValidationLinkedStatisticalResource(resource, exceptions);
 
@@ -123,26 +131,21 @@ public abstract class LifecycleTemplateService<E extends Object> implements Life
 
     @Override
     public E sendToDiffusionValidation(ServiceContext ctx, String urn) throws MetamacException {
-        return sendToDiffusionValidation(ctx, urn, Boolean.TRUE);
-    }
-
-    @Override
-    public E sendToDiffusionValidation(ServiceContext ctx, String urn, boolean validateExistsDatabaseImportTask) throws MetamacException {
         getInvocationValidator().checkSendToDiffusionValidation(ctx, urn);
 
         E resource = retrieveResourceByUrn(urn);
 
-        checkSendToDiffusionValidation(ctx, resource, validateExistsDatabaseImportTask);
+        checkSendToDiffusionValidation(ctx, resource);
 
         applySendToDiffusionValidation(ctx, resource);
 
         return saveResource(resource);
     }
 
-    protected void checkSendToDiffusionValidation(ServiceContext ctx, E resource, boolean validateExistsDatabaseImportTask) throws MetamacException {
+    protected void checkSendToDiffusionValidation(ServiceContext ctx, E resource) throws MetamacException {
         List<MetamacExceptionItem> exceptions = new ArrayList<MetamacExceptionItem>();
 
-        checkNotTasksInProgress(ctx, resource, validateExistsDatabaseImportTask);
+        checkNotTasksInProgress(ctx, resource);
         ProcStatusValidator.checkStatisticalResourceCanSendToDiffusionValidation((HasLifecycle) resource);
         checkSendToDiffusionValidationLinkedStatisticalResource(resource, exceptions);
 
@@ -188,26 +191,21 @@ public abstract class LifecycleTemplateService<E extends Object> implements Life
 
     @Override
     public E sendToValidationRejected(ServiceContext ctx, String urn) throws MetamacException {
-        return sendToValidationRejected(ctx, urn, Boolean.TRUE);
-    }
-
-    @Override
-    public E sendToValidationRejected(ServiceContext ctx, String urn, boolean validateExistsDatabaseImportTask) throws MetamacException {
         getInvocationValidator().checkSendToValidationRejected(ctx, urn);
 
         E resource = retrieveResourceByUrn(urn);
 
-        checkSendToValidationRejected(ctx, resource, validateExistsDatabaseImportTask);
+        checkSendToValidationRejected(ctx, resource);
 
         applySendToValidationRejected(ctx, resource);
 
         return saveResource(resource);
     }
 
-    protected void checkSendToValidationRejected(ServiceContext ctx, E resource, boolean validateExistsDatabaseImportTask) throws MetamacException {
+    protected void checkSendToValidationRejected(ServiceContext ctx, E resource) throws MetamacException {
         List<MetamacExceptionItem> exceptions = new ArrayList<MetamacExceptionItem>();
 
-        checkNotTasksInProgress(ctx, resource, validateExistsDatabaseImportTask);
+        checkNotTasksInProgress(ctx, resource);
         ProcStatusValidator.checkStatisticalResourceCanSendToValidationRejected((HasLifecycle) resource);
         checkSendToValidationRejectedLinkedStatisticalResource(resource, exceptions);
 
@@ -253,17 +251,12 @@ public abstract class LifecycleTemplateService<E extends Object> implements Life
 
     @Override
     public E sendToPublished(ServiceContext ctx, String urn) throws MetamacException {
-        return sendToPublished(ctx, urn, Boolean.TRUE);
-    }
-
-    @Override
-    public E sendToPublished(ServiceContext ctx, String urn, boolean validateExistsDatabaseImportTask) throws MetamacException {
         getInvocationValidator().checkSendToPublished(ctx, urn);
 
         E resource = retrieveResourceByUrn(urn);
         E previousResource = retrievePreviousPublishedResourceByResource(resource);
 
-        checkSendToPublished(ctx, resource, previousResource, validateExistsDatabaseImportTask);
+        checkSendToPublished(ctx, resource, previousResource);
 
         applySendToPublishedCurrentVersion(ctx, resource, previousResource);
         resource = saveResource(resource);
@@ -273,13 +266,15 @@ public abstract class LifecycleTemplateService<E extends Object> implements Life
             saveResource(previousResource);
         }
 
+        sendNewVersionPublishedStreamMessageByResource(ctx, resource);
+
         return retrieveResourceByResource(resource);
     }
 
-    protected void checkSendToPublished(ServiceContext ctx, E resource, E previousResource, boolean validateExistsDatabaseImportTask) throws MetamacException {
+    protected void checkSendToPublished(ServiceContext ctx, E resource, E previousResource) throws MetamacException {
         List<MetamacExceptionItem> exceptions = new ArrayList<MetamacExceptionItem>();
 
-        checkNotTasksInProgress(ctx, resource, validateExistsDatabaseImportTask);
+        checkNotTasksInProgress(ctx, resource);
         ProcStatusValidator.checkStatisticalResourceCanSendToPublish((HasLifecycle) resource);
         checkSendToPublishedLinkedStatisticalResource(resource, previousResource, exceptions);
 
@@ -343,16 +338,11 @@ public abstract class LifecycleTemplateService<E extends Object> implements Life
 
     @Override
     public E versioning(ServiceContext ctx, String urn, VersionTypeEnum versionType) throws MetamacException {
-        return versioning(ctx, urn, versionType, Boolean.TRUE);
-    }
-
-    @Override
-    public E versioning(ServiceContext ctx, String urn, VersionTypeEnum versionType, boolean validateExistsDatabaseImportTask) throws MetamacException {
         getInvocationValidator().checkVersioning(ctx, urn);
 
         E previousResource = retrieveResourceByUrn(urn);
 
-        checkVersioning(ctx, previousResource, validateExistsDatabaseImportTask);
+        checkVersioning(ctx, previousResource);
         E resource = copyResourceForVersioning(ctx, previousResource);
 
         applyVersioningNewResource(ctx, resource, previousResource, versionType);
@@ -364,10 +354,10 @@ public abstract class LifecycleTemplateService<E extends Object> implements Life
         return retrieveResourceByResource(resource);
     }
 
-    protected void checkVersioning(ServiceContext ctx, E resource, boolean validateExistsDatabaseImportTask) throws MetamacException {
+    protected void checkVersioning(ServiceContext ctx, E resource) throws MetamacException {
         List<MetamacExceptionItem> exceptions = new ArrayList<MetamacExceptionItem>();
 
-        checkNotTasksInProgress(ctx, resource, validateExistsDatabaseImportTask);
+        checkNotTasksInProgress(ctx, resource);
         ProcStatusValidator.checkStatisticalResourceCanSendToVersion((HasLifecycle) resource);
         checkVersioningLinkedStatisticalResource(resource, exceptions);
 
@@ -435,8 +425,8 @@ public abstract class LifecycleTemplateService<E extends Object> implements Life
     // GLOBAL METHODS
     // ------------------------------------------------------------------------------------------------------
 
-    private void checkNotTasksInProgress(ServiceContext ctx, E resource, boolean validateExistsDatabaseImportTask) throws MetamacException {
-        if (taskService.existsTaskForResource(ctx, getResourceUrn(resource), validateExistsDatabaseImportTask)) {
+    private void checkNotTasksInProgress(ServiceContext ctx, E resource) throws MetamacException {
+        if (taskService.existsTaskForResource(ctx, getResourceUrn(resource))) {
             throw new MetamacException(ServiceExceptionType.TASKS_IN_PROGRESS, getResourceUrn(resource));
         }
     }
@@ -463,4 +453,21 @@ public abstract class LifecycleTemplateService<E extends Object> implements Life
 
     protected abstract String getResourceUrn(E resource);
 
+    protected void createStreamMessageSentNotification(ServiceContext ctx, HasSiemacMetadata version) {
+        if (version.getLifeCycleStatisticalResource().getPublicationStreamStatus() != StreamMessageStatusEnum.SENT) {
+            String userId = ctx.getUserId();
+            String messageCode = ServiceNoticeAction.STREAM_MESSAGE_SEND;
+            String messageText = ServiceNoticeMessage.STREAM_MESSAGE_SEND_ERROR;
+            noticesRestInternalService.createErrorOnStreamMessagingService(userId, messageCode, version, messageText, (Serializable[]) null);
+        }
+    }
+
+    protected void createStreamMessageSentNotification(ServiceContext ctx, QueryVersion version) {
+        if (version.getLifeCycleStatisticalResource().getPublicationStreamStatus() != StreamMessageStatusEnum.SENT) {
+            String userId = ctx.getUserId();
+            String messageCode = ServiceNoticeAction.STREAM_MESSAGE_SEND;
+            String messageText = ServiceNoticeMessage.STREAM_MESSAGE_SEND_ERROR;
+            noticesRestInternalService.createErrorOnStreamMessagingService(userId, messageCode, version, messageText, (Serializable[]) null);
+        }
+    }
 }

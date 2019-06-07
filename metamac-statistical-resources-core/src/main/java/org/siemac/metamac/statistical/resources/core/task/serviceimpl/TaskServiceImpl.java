@@ -48,6 +48,7 @@ import org.quartz.TriggerBuilder;
 import org.quartz.TriggerKey;
 import org.quartz.impl.SchedulerRepository;
 import org.quartz.impl.StdSchedulerFactory;
+import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
 import org.siemac.metamac.core.common.exception.ExceptionLevelEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionBuilder;
@@ -61,6 +62,7 @@ import org.siemac.metamac.statistical.resources.core.constraint.api.ConstraintsS
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
 import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.DatasetService;
+import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.task.domain.DatasetFileFormatEnum;
 import org.siemac.metamac.statistical.resources.core.enume.task.domain.TaskStatusTypeEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
@@ -78,6 +80,7 @@ import org.siemac.metamac.statistical.resources.core.io.serviceimpl.ManipulateSd
 import org.siemac.metamac.statistical.resources.core.io.serviceimpl.RecoveryImportDatasetJob;
 import org.siemac.metamac.statistical.resources.core.io.serviceimpl.validators.ValidateDataVersusDsd;
 import org.siemac.metamac.statistical.resources.core.io.utils.DatabaseDatasetImportUtils;
+import org.siemac.metamac.statistical.resources.core.lifecycle.serviceapi.LifecycleService;
 import org.siemac.metamac.statistical.resources.core.notices.ServiceNoticeAction;
 import org.siemac.metamac.statistical.resources.core.notices.ServiceNoticeMessage;
 import org.siemac.metamac.statistical.resources.core.task.domain.AlternativeEnumeratedRepresentation;
@@ -95,6 +98,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.arte.statistic.parser.px.domain.PxModel;
 import com.arte.statistic.parser.sdmx.v2_1.Sdmx21Parser;
@@ -146,6 +151,9 @@ public class TaskServiceImpl extends TaskServiceImplBase implements ApplicationL
 
     @Autowired
     private DatasetService                    datasetService;
+
+    @Autowired
+    private LifecycleService<DatasetVersion>  datasetLifecycleService;
 
     @Autowired
     private StatisticalResourcesConfiguration configurationService;
@@ -440,6 +448,102 @@ public class TaskServiceImpl extends TaskServiceImplBase implements ApplicationL
     }
 
     @Override
+    public void processDatabaseImportationTask(ServiceContext ctx, String databaseImportationJobKey, TaskInfoDataset taskInfoDataset) throws MetamacException {
+        taskServiceInvocationValidator.checkProcessDatabaseImportationTask(ctx, databaseImportationJobKey, taskInfoDataset);
+
+        DatasetVersion datasetVersion = datasetService.retrieveDatasetVersionByUrn(ctx, taskInfoDataset.getDatasetVersionId());
+        String datasetVersionUrn = datasetVersion.getSiemacMetadataStatisticalResource().getUrn();
+
+        if (ProcStatusEnum.PUBLISHED.equals(datasetVersion.getLifeCycleStatisticalResource().getEffectiveProcStatus())) {
+
+            datasetVersionUrn = versioningDatasetVersion(ctx, datasetVersionUrn);
+
+            // After versioning, it's necessary to update the task info because there is a new version of the dataset. The importation task should be applied to this.
+            updateImportationTaskInfo(datasetVersionUrn, taskInfoDataset);
+
+            executeImportationTask(ctx, databaseImportationJobKey, taskInfoDataset);
+
+            // Retrieve dataset again to get it updated after importation task
+            datasetVersion = retrieveDatasetVersion(ctx, datasetVersionUrn);
+
+            setRequiredMetadataForProductionValidation(datasetVersion, datasetVersionUrn);
+
+            // It's necessary to save the new metadata of the dataset before continuing transiting it through the life cycle
+            updateDatasetVersion(ctx, datasetVersion, datasetVersionUrn);
+
+            sendDatasetVersionToProductionValidation(ctx, datasetVersionUrn);
+
+            sendDatasetVersionToDiffusionValidation(ctx, datasetVersionUrn);
+
+            publishDatasetVersion(ctx, datasetVersionUrn);
+        } else {
+            executeImportationTask(ctx, databaseImportationJobKey, taskInfoDataset);
+        }
+
+        markTaskAsFinishedMierdaca(ctx, databaseImportationJobKey);
+    }
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    private void markTaskAsFinishedMierdaca(ServiceContext ctx, String databaseImportationJobKey) throws MetamacException {
+        // TODO METAMAC-2866 OJO CON ESTO
+        logger.debug("Marking as finished importation task {}", databaseImportationJobKey);
+        markTaskAsFinished(ctx, databaseImportationJobKey);
+    }
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void publishDatasetVersion(ServiceContext ctx, String datasetVersionUrn) throws MetamacException {
+        logger.debug("Publishing dataset {}", datasetVersionUrn);
+        datasetLifecycleService.sendToPublished(ctx, datasetVersionUrn);
+    }
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void sendDatasetVersionToDiffusionValidation(ServiceContext ctx, String datasetVersionUrn) throws MetamacException {
+        logger.debug("Sending to difussion validation dataset {}", datasetVersionUrn);
+        datasetLifecycleService.sendToDiffusionValidation(ctx, datasetVersionUrn);
+    }
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void sendDatasetVersionToProductionValidation(ServiceContext ctx, String datasetVersionUrn) throws MetamacException {
+        logger.debug("Sending to production validation dataset {}", datasetVersionUrn);
+        datasetLifecycleService.sendToProductionValidation(ctx, datasetVersionUrn);
+    }
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void updateDatasetVersion(ServiceContext ctx, DatasetVersion datasetVersion, String datasetVersionUrn) throws MetamacException {
+        logger.debug("Updating required metada for dataset {}", datasetVersionUrn);
+        datasetService.updateDatasetVersion(ctx, datasetVersion);
+    }
+
+    private void setRequiredMetadataForProductionValidation(DatasetVersion datasetVersion, String datasetVersionUrn) {
+        logger.debug("Setting required metadata for dataset {}", datasetVersionUrn);
+        DatabaseDatasetImportUtils.setRequiredMetadataForDatabaseDatasetImportation(datasetVersion);
+    }
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public String versioningDatasetVersion(ServiceContext ctx, String datasetVersionUrn) throws MetamacException {
+        logger.debug("Versioning dataset {}", datasetVersionUrn);
+        DatasetVersion datasetVersion = datasetLifecycleService.versioning(ctx, datasetVersionUrn, VersionTypeEnum.MINOR);
+        return datasetVersion.getSiemacMetadataStatisticalResource().getUrn();
+    }
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void updateImportationTaskInfo(String datasetVersionUrn, TaskInfoDataset taskInfoDataset) {
+        logger.debug("Updating task with the new dataset {}", datasetVersionUrn);
+        taskInfoDataset.setDatasetVersionId(datasetVersionUrn);
+    }
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void executeImportationTask(ServiceContext ctx, String databaseImportationJobKey, TaskInfoDataset taskInfoDataset) throws MetamacException {
+        // TODO METAMAC-2866 OJO CON ESTO
+        processImportationTask(ctx, databaseImportationJobKey, taskInfoDataset);
+    }
+
+    public DatasetVersion retrieveDatasetVersion(ServiceContext ctx, String datasetVersionUrn) throws MetamacException {
+        logger.debug("Retrieving dataset {}", datasetVersionUrn);
+        return datasetService.retrieveDatasetVersionByUrn(ctx, datasetVersionUrn);
+    }
+
+    @Override
     public void processRollbackImportationTask(ServiceContext ctx, String recoveryJobKey, TaskInfoDataset taskInfoDataset) {
         Task task = null;
         try {
@@ -528,14 +632,9 @@ public class TaskServiceImpl extends TaskServiceImplBase implements ApplicationL
 
     @Override
     public boolean existsTaskForResource(ServiceContext ctx, String resourceId) throws MetamacException {
-        return existsTaskForResource(ctx, resourceId, Boolean.TRUE);
-    }
-
-    @Override
-    public boolean existsTaskForResource(ServiceContext ctx, String resourceId, boolean validateExistsDatabaseImportTask) throws MetamacException {
         taskServiceInvocationValidator.checkExistsTaskForResource(ctx, resourceId);
         return existImportationTaskInResource(ctx, resourceId) || existRecoveryImportationTaskInResource(ctx, resourceId) || existDuplicationTaskInResource(ctx, resourceId)
-                || (validateExistsDatabaseImportTask && existDatabaseImportationTaskInResource(ctx, resourceId));
+                || (!DatabaseDatasetImportUtils.isDatabaseDatasetImportJob(ctx) && existDatabaseImportationTaskInResource(ctx, resourceId));
     }
 
     @Override
@@ -872,5 +971,4 @@ public class TaskServiceImpl extends TaskServiceImplBase implements ApplicationL
             throw MetamacExceptionBuilder.builder().withCause(e).withExceptionItems(ServiceExceptionType.TASKS_SCHEDULER_ERROR).withMessageParameters(e.getMessage()).build();
         }
     }
-
 }
