@@ -95,11 +95,16 @@ import org.siemac.metamac.statistical.resources.core.task.utils.JobUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionDefinition;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.TransactionCallback;
+import org.springframework.transaction.support.TransactionCallbackWithoutResult;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import com.arte.statistic.parser.px.domain.PxModel;
 import com.arte.statistic.parser.sdmx.v2_1.Sdmx21Parser;
@@ -157,6 +162,10 @@ public class TaskServiceImpl extends TaskServiceImplBase implements ApplicationL
 
     @Autowired
     private StatisticalResourcesConfiguration configurationService;
+
+    @Autowired
+    @Qualifier("txManager")
+    private PlatformTransactionManager        platformTransactionManager;
 
     private SchedulerFactory                  sf                                  = null;
 
@@ -451,25 +460,18 @@ public class TaskServiceImpl extends TaskServiceImplBase implements ApplicationL
     public void processDatabaseImportationTask(ServiceContext ctx, String databaseImportationJobKey, TaskInfoDataset taskInfoDataset) throws MetamacException {
         taskServiceInvocationValidator.checkProcessDatabaseImportationTask(ctx, databaseImportationJobKey, taskInfoDataset);
 
-        DatasetVersion datasetVersion = datasetService.retrieveDatasetVersionByUrn(ctx, taskInfoDataset.getDatasetVersionId());
-        String datasetVersionUrn = datasetVersion.getSiemacMetadataStatisticalResource().getUrn();
+        String datasetVersionUrn = taskInfoDataset.getDatasetVersionId();
+        DatasetVersion datasetVersion = datasetService.retrieveDatasetVersionByUrn(ctx, datasetVersionUrn);
 
         if (ProcStatusEnum.PUBLISHED.equals(datasetVersion.getLifeCycleStatisticalResource().getEffectiveProcStatus())) {
-
-            datasetVersionUrn = versioningDatasetVersion(ctx, datasetVersionUrn);
+            datasetVersionUrn = versioningDatasetVersion(ctx, taskInfoDataset.getDatasetVersionId());
 
             // After versioning, it's necessary to update the task info because there is a new version of the dataset. The importation task should be applied to this.
             updateImportationTaskInfo(datasetVersionUrn, taskInfoDataset);
 
             executeImportationTask(ctx, databaseImportationJobKey, taskInfoDataset);
 
-            // Retrieve dataset again to get it updated after importation task
-            datasetVersion = retrieveDatasetVersion(ctx, datasetVersionUrn);
-
-            setRequiredMetadataForProductionValidation(datasetVersion, datasetVersionUrn);
-
-            // It's necessary to save the new metadata of the dataset before continuing transiting it through the life cycle
-            updateDatasetVersion(ctx, datasetVersion, datasetVersionUrn);
+            updateMetadataDatasetVersion(ctx, datasetVersionUrn);
 
             sendDatasetVersionToProductionValidation(ctx, datasetVersionUrn);
 
@@ -480,67 +482,145 @@ public class TaskServiceImpl extends TaskServiceImplBase implements ApplicationL
             executeImportationTask(ctx, databaseImportationJobKey, taskInfoDataset);
         }
 
-        markTaskAsFinishedMierdaca(ctx, databaseImportationJobKey);
+        markDatabaseImportTaskAsFinished(ctx, databaseImportationJobKey);
     }
 
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
-    private void markTaskAsFinishedMierdaca(ServiceContext ctx, String databaseImportationJobKey) throws MetamacException {
-        // TODO METAMAC-2866 OJO CON ESTO
-        logger.debug("Marking as finished importation task {}", databaseImportationJobKey);
-        markTaskAsFinished(ctx, databaseImportationJobKey);
-    }
-
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public void publishDatasetVersion(ServiceContext ctx, String datasetVersionUrn) throws MetamacException {
-        logger.debug("Publishing dataset {}", datasetVersionUrn);
-        datasetLifecycleService.sendToPublished(ctx, datasetVersionUrn);
-    }
-
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public void sendDatasetVersionToDiffusionValidation(ServiceContext ctx, String datasetVersionUrn) throws MetamacException {
-        logger.debug("Sending to difussion validation dataset {}", datasetVersionUrn);
-        datasetLifecycleService.sendToDiffusionValidation(ctx, datasetVersionUrn);
-    }
-
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public void sendDatasetVersionToProductionValidation(ServiceContext ctx, String datasetVersionUrn) throws MetamacException {
-        logger.debug("Sending to production validation dataset {}", datasetVersionUrn);
-        datasetLifecycleService.sendToProductionValidation(ctx, datasetVersionUrn);
-    }
-
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public void updateDatasetVersion(ServiceContext ctx, DatasetVersion datasetVersion, String datasetVersionUrn) throws MetamacException {
-        logger.debug("Updating required metada for dataset {}", datasetVersionUrn);
-        datasetService.updateDatasetVersion(ctx, datasetVersion);
-    }
-
-    private void setRequiredMetadataForProductionValidation(DatasetVersion datasetVersion, String datasetVersionUrn) {
-        logger.debug("Setting required metadata for dataset {}", datasetVersionUrn);
-        DatabaseDatasetImportUtils.setRequiredMetadataForDatabaseDatasetImportation(datasetVersion);
-    }
-
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public String versioningDatasetVersion(ServiceContext ctx, String datasetVersionUrn) throws MetamacException {
+    private String versioningDatasetVersion(ServiceContext ctx, String datasetVersionUrn) {
         logger.debug("Versioning dataset {}", datasetVersionUrn);
-        DatasetVersion datasetVersion = datasetLifecycleService.versioning(ctx, datasetVersionUrn, VersionTypeEnum.MINOR);
-        return datasetVersion.getSiemacMetadataStatisticalResource().getUrn();
+
+        TransactionTemplate transactionTemplate = new TransactionTemplate(platformTransactionManager);
+        transactionTemplate.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
+        return transactionTemplate.execute(new TransactionCallback<String>() {
+
+            @Override
+            public String doInTransaction(TransactionStatus status) {
+                try {
+                    DatasetVersion datasetVersion = datasetLifecycleService.versioning(ctx, datasetVersionUrn, VersionTypeEnum.MINOR);
+                    return datasetVersion.getSiemacMetadataStatisticalResource().getUrn();
+                } catch (MetamacException e) {
+                    throw new RuntimeException("Transactional method versioning dataset failed.", e);
+                }
+            }
+        });
     }
 
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public void updateImportationTaskInfo(String datasetVersionUrn, TaskInfoDataset taskInfoDataset) {
+    private void updateImportationTaskInfo(String datasetVersionUrn, TaskInfoDataset taskInfoDataset) {
         logger.debug("Updating task with the new dataset {}", datasetVersionUrn);
         taskInfoDataset.setDatasetVersionId(datasetVersionUrn);
     }
 
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public void executeImportationTask(ServiceContext ctx, String databaseImportationJobKey, TaskInfoDataset taskInfoDataset) throws MetamacException {
-        // TODO METAMAC-2866 OJO CON ESTO
-        processImportationTask(ctx, databaseImportationJobKey, taskInfoDataset);
+    private void executeImportationTask(ServiceContext ctx, String databaseImportationJobKey, TaskInfoDataset taskInfoDataset) throws MetamacException {
+        logger.debug("Execute importation dataset task {}", taskInfoDataset.getDatasetVersionId());
+
+        TransactionTemplate transactionTemplate = new TransactionTemplate(platformTransactionManager);
+        transactionTemplate.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
+        transactionTemplate.execute(new TransactionCallbackWithoutResult() {
+
+            @Override
+            protected void doInTransactionWithoutResult(TransactionStatus status) {
+                try {
+                    processImportationTask(ctx, databaseImportationJobKey, taskInfoDataset);
+                } catch (MetamacException e) {
+                    throw new RuntimeException("Transactional method execute importation dataset dataset task failed.", e);
+                }
+            }
+        });
     }
 
-    public DatasetVersion retrieveDatasetVersion(ServiceContext ctx, String datasetVersionUrn) throws MetamacException {
-        logger.debug("Retrieving dataset {}", datasetVersionUrn);
-        return datasetService.retrieveDatasetVersionByUrn(ctx, datasetVersionUrn);
+    private void updateMetadataDatasetVersion(ServiceContext ctx, String datasetVersionUrn) throws MetamacException {
+        logger.debug("Updating required metada for dataset {}", datasetVersionUrn);
+
+        TransactionTemplate transactionTemplate = new TransactionTemplate(platformTransactionManager);
+        transactionTemplate.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
+        transactionTemplate.execute(new TransactionCallbackWithoutResult() {
+
+            @Override
+            protected void doInTransactionWithoutResult(TransactionStatus status) {
+                try {
+                    // Retrieve dataset again to get it updated after importation task
+                    DatasetVersion datasetVersion = datasetService.retrieveDatasetVersionByUrn(ctx, datasetVersionUrn);
+
+                    DatabaseDatasetImportUtils.setRequiredMetadataForDatabaseDatasetImportation(datasetVersion);
+
+                    // It's necessary to save the new metadata of the dataset before continuing transiting it through the life cycle
+                    datasetService.updateDatasetVersion(ctx, datasetVersion);
+                } catch (MetamacException e) {
+                    throw new RuntimeException("Transactional method updating required metada failed.", e);
+                }
+            }
+        });
+    }
+
+    private void sendDatasetVersionToProductionValidation(ServiceContext ctx, String datasetVersionUrn) throws MetamacException {
+        logger.debug("Sending to production validation dataset {}", datasetVersionUrn);
+
+        TransactionTemplate transactionTemplate = new TransactionTemplate(platformTransactionManager);
+        transactionTemplate.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
+        transactionTemplate.execute(new TransactionCallbackWithoutResult() {
+
+            @Override
+            protected void doInTransactionWithoutResult(TransactionStatus status) {
+                try {
+                    datasetLifecycleService.sendToProductionValidation(ctx, datasetVersionUrn);
+                } catch (MetamacException e) {
+                    throw new RuntimeException("Transactional method sending to production validation failed.", e);
+                }
+            }
+        });
+    }
+
+    private void sendDatasetVersionToDiffusionValidation(ServiceContext ctx, String datasetVersionUrn) throws MetamacException {
+        logger.debug("Sending to difussion validation dataset {}", datasetVersionUrn);
+
+        TransactionTemplate transactionTemplate = new TransactionTemplate(platformTransactionManager);
+        transactionTemplate.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
+        transactionTemplate.execute(new TransactionCallbackWithoutResult() {
+
+            @Override
+            protected void doInTransactionWithoutResult(TransactionStatus status) {
+                try {
+                    datasetLifecycleService.sendToDiffusionValidation(ctx, datasetVersionUrn);
+                } catch (MetamacException e) {
+                    throw new RuntimeException("Transactional method sending to difussion validation failed.", e);
+                }
+            }
+        });
+    }
+
+    private void publishDatasetVersion(ServiceContext ctx, String datasetVersionUrn) throws MetamacException {
+        logger.debug("Publishing dataset {}", datasetVersionUrn);
+
+        TransactionTemplate transactionTemplate = new TransactionTemplate(platformTransactionManager);
+        transactionTemplate.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
+        transactionTemplate.execute(new TransactionCallbackWithoutResult() {
+
+            @Override
+            protected void doInTransactionWithoutResult(TransactionStatus status) {
+                try {
+                    datasetLifecycleService.sendToPublished(ctx, datasetVersionUrn);
+                } catch (MetamacException e) {
+                    throw new RuntimeException("Transactional method publishing dataset failed.", e);
+                }
+            }
+        });
+    }
+
+    private void markDatabaseImportTaskAsFinished(ServiceContext ctx, String databaseImportationJobKey) {
+        logger.debug("Marking databaset task as finished {}", databaseImportationJobKey);
+
+        TransactionTemplate transactionTemplate = new TransactionTemplate(platformTransactionManager);
+        transactionTemplate.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
+        transactionTemplate.execute(new TransactionCallbackWithoutResult() {
+
+            @Override
+            protected void doInTransactionWithoutResult(TransactionStatus status) {
+                try {
+                    markTaskAsFinished(ctx, databaseImportationJobKey);
+                } catch (MetamacException e) {
+                    throw new RuntimeException("Transactional method Marking databaset task failed.", e);
+                }
+            }
+        });
     }
 
     @Override

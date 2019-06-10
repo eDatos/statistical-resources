@@ -15,7 +15,7 @@ import org.joda.time.DateTime;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionBuilder;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
-import org.siemac.metamac.statistical.resources.core.dataset.repository.api.DbDataImportRepository;
+import org.siemac.metamac.statistical.resources.core.dataset.repository.api.DatabaseImportRepository;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.slf4j.Logger;
@@ -27,15 +27,15 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
-@Repository(DbDataImportRepository.BEAN_ID)
-public class DbDataImportRepositoryImpl implements DbDataImportRepository {
+@Repository(DatabaseImportRepository.BEAN_ID)
+public class DatabaseImportRepositoryImpl implements DatabaseImportRepository {
 
-    private static Logger logger = LoggerFactory.getLogger(DbDataImportRepositoryImpl.class);
+    private static Logger logger = LoggerFactory.getLogger(DatabaseImportRepositoryImpl.class);
 
     private JdbcTemplate  jdbcTemplate;
 
     @Autowired
-    @Qualifier("dataSourceDbDataImportRepository")
+    @Qualifier("dataSourceDatabaseImportRepository")
     public void setDataSource(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }

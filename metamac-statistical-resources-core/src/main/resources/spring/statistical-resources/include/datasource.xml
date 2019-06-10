@@ -23,7 +23,7 @@
         <property name="password"           value="${metamac.statistical_resources.repo.db.password}" />
     </bean>
     
-    <bean id="dataSourceDbDataImportRepository" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+    <bean id="dataSourceDatabaseImportRepository" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
         <property name="driverClassName"    value="${metamac.statistical_resources.data_import.db.driver_name}" />
         <property name="url"                value="${metamac.statistical_resources.data_import.db.url}" />
         <property name="username"           value="${metamac.statistical_resources.data_import.db.username}" />

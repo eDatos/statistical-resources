@@ -5,9 +5,9 @@ import java.util.List;
 import org.joda.time.DateTime;
 import org.siemac.metamac.core.common.exception.MetamacException;
 
-public interface DbDataImportRepository {
+public interface DatabaseImportRepository {
 
-    public static final String BEAN_ID = "dbDataImportRepository";
+    public static final String BEAN_ID = "databaseImportRepository";
 
     public boolean checkTableExists(String tableName);
     public boolean checkTableHasColumn(String tableName, String columnName);

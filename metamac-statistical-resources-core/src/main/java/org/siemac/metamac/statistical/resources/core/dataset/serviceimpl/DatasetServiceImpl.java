@@ -82,7 +82,7 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasourcePr
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DimensionRepresentationMapping;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.StatisticOfficiality;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.TemporalCode;
-import org.siemac.metamac.statistical.resources.core.dataset.repository.api.DbDataImportRepository;
+import org.siemac.metamac.statistical.resources.core.dataset.repository.api.DatabaseImportRepository;
 import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.validators.DatasetServiceInvocationValidator;
 import org.siemac.metamac.statistical.resources.core.dataset.utils.DatasetVersionUtils;
 import org.siemac.metamac.statistical.resources.core.enume.dataset.domain.DataSourceTypeEnum;
@@ -177,7 +177,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
     private RelatedResourceRepository                 relatedResourceRepository;
 
     @Autowired
-    private DbDataImportRepository                    dbDataImportRepository;
+    private DatabaseImportRepository                    databaseImportRepository;
 
     // ------------------------------------------------------------------------
     // DATASOURCES
@@ -1866,7 +1866,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
     }
 
     private List<String[]> getObservations(String tableName, List<String> columnsName, String filterColumnName, DateTime filterColumnValue) throws MetamacException {
-        return dbDataImportRepository.getObservations(tableName, columnsName, filterColumnName, filterColumnValue);
+        return databaseImportRepository.getObservations(tableName, columnsName, filterColumnName, filterColumnValue);
     }
 
     private DateTime getFilterColumnValue(DatasetVersion datasetVersion) {
@@ -1892,7 +1892,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
     }
 
     private void checkTableExists(String tableName, String datasetVersionUrn) throws MetamacException {
-        if (!dbDataImportRepository.checkTableExists(tableName)) {
+        if (!databaseImportRepository.checkTableExists(tableName)) {
             throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.TABLE_NOT_EXIST).withMessageParameters(tableName, datasetVersionUrn).build();
         }
     }
@@ -1974,7 +1974,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
     }
 
     private void checkTableHasColumn(String tableName, String filterColumn, CommonServiceExceptionType commonServiceExceptionType, String datasetVersionUrn) throws MetamacException {
-        if (!dbDataImportRepository.checkTableHasColumn(tableName, filterColumn)) {
+        if (!databaseImportRepository.checkTableHasColumn(tableName, filterColumn)) {
             throw MetamacExceptionBuilder.builder().withExceptionItems(commonServiceExceptionType).withMessageParameters(tableName, datasetVersionUrn, filterColumn).build();
         }
     }
@@ -1983,7 +1983,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         List<MetamacExceptionItem> exceptionItems = new ArrayList<>();
 
         for (String columnName : columnsName) {
-            if (!dbDataImportRepository.checkTableHasColumn(tableName, columnName)) {
+            if (!databaseImportRepository.checkTableHasColumn(tableName, columnName)) {
                 exceptionItems.add(new MetamacExceptionItem(commonServiceExceptionType, tableName, datasetVersionUrn, columnName));
             }
         }

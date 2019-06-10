@@ -21,7 +21,7 @@ import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionBuilder;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
-import org.siemac.metamac.statistical.resources.core.dataset.repository.api.DbDataImportRepository;
+import org.siemac.metamac.statistical.resources.core.dataset.repository.api.DatabaseImportRepository;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +36,7 @@ import org.springframework.transaction.annotation.Transactional;
 @ContextConfiguration(locations = {"classpath:spring/statistical-resources/include/rest-services-mockito.xml", "classpath:spring/statistical-resources/applicationContext-test.xml"})
 @TransactionConfiguration(transactionManager = "txManager", defaultRollback = true)
 @Transactional
-public class DbDataImportRepositoryTest extends StatisticalResourcesBaseTest {
+public class DatabaseImportRepositoryTest extends StatisticalResourcesBaseTest {
 
     private static final String      TABLE_NAME_FOR_TESTING         = "TESTING_TABLE";
     private static final String      TABLE_NAME_WITH_DATA           = "TESTING_TABLE_2";
@@ -53,12 +53,12 @@ public class DbDataImportRepositoryTest extends StatisticalResourcesBaseTest {
     // @formatter:on
 
     @Autowired
-    DbDataImportRepository           dbDataImportRepository;
+    DatabaseImportRepository         databaseImportRepository;
 
     private JdbcTemplate             jdbcTemplate;
 
     @Autowired
-    @Qualifier("dataSourceDbDataImportRepository")
+    @Qualifier("dataSourceDatabaseImportRepository")
     public void setDataSource(DataSource dataSource) throws SQLException {
         jdbcTemplate = new JdbcTemplate(dataSource);
     }
@@ -167,69 +167,69 @@ public class DbDataImportRepositoryTest extends StatisticalResourcesBaseTest {
     public void testGetObservationsNullTableName() throws MetamacException {
         expectedMetamacException(
                 MetamacExceptionBuilder.builder().withExceptionItems(Arrays.asList(new MetamacExceptionItem(ServiceExceptionType.PARAMETER_REQUIRED, ServiceExceptionParameters.TABLE_NAME))).build());
-        dbDataImportRepository.getObservations(null, COLUMN_LIST, FILTER_COLUMN_NAME_FOR_TESTING, new DateTime());
+        databaseImportRepository.getObservations(null, COLUMN_LIST, FILTER_COLUMN_NAME_FOR_TESTING, new DateTime());
     }
 
     @Test
     public void testGetObservationsBlankTableName() throws MetamacException {
         expectedMetamacException(
                 MetamacExceptionBuilder.builder().withExceptionItems(Arrays.asList(new MetamacExceptionItem(ServiceExceptionType.PARAMETER_REQUIRED, ServiceExceptionParameters.TABLE_NAME))).build());
-        dbDataImportRepository.getObservations("", COLUMN_LIST, FILTER_COLUMN_NAME_FOR_TESTING, new DateTime());
+        databaseImportRepository.getObservations("", COLUMN_LIST, FILTER_COLUMN_NAME_FOR_TESTING, new DateTime());
     }
 
     @Test
     public void testGetObservationsNullColumns() throws MetamacException {
         expectedMetamacException(MetamacExceptionBuilder.builder()
                 .withExceptionItems(Arrays.asList(new MetamacExceptionItem(ServiceExceptionType.PARAMETER_REQUIRED, ServiceExceptionParameters.COLUMNS_NAME))).build());
-        dbDataImportRepository.getObservations(TABLE_NAME_WITH_DATA, null, FILTER_COLUMN_NAME_FOR_TESTING, null);
+        databaseImportRepository.getObservations(TABLE_NAME_WITH_DATA, null, FILTER_COLUMN_NAME_FOR_TESTING, null);
     }
 
     @Test
     public void testGetObservationsEmptyColumns() throws MetamacException {
         expectedMetamacException(MetamacExceptionBuilder.builder()
                 .withExceptionItems(Arrays.asList(new MetamacExceptionItem(ServiceExceptionType.PARAMETER_REQUIRED, ServiceExceptionParameters.COLUMNS_NAME))).build());
-        dbDataImportRepository.getObservations(TABLE_NAME_WITH_DATA, Collections.emptyList(), FILTER_COLUMN_NAME_FOR_TESTING, null);
+        databaseImportRepository.getObservations(TABLE_NAME_WITH_DATA, Collections.emptyList(), FILTER_COLUMN_NAME_FOR_TESTING, null);
     }
 
     @Test
     public void testGetObservationsBlankColumns() throws MetamacException {
         expectedMetamacException(MetamacExceptionBuilder.builder()
                 .withExceptionItems(Arrays.asList(new MetamacExceptionItem(ServiceExceptionType.PARAMETER_REQUIRED, ServiceExceptionParameters.COLUMNS_NAME))).build());
-        dbDataImportRepository.getObservations(TABLE_NAME_WITH_DATA, Arrays.asList(""), FILTER_COLUMN_NAME_FOR_TESTING, null);
+        databaseImportRepository.getObservations(TABLE_NAME_WITH_DATA, Arrays.asList(""), FILTER_COLUMN_NAME_FOR_TESTING, null);
     }
 
     @Test
     public void testGetObservationsNullFilterColumn() throws MetamacException {
         expectedMetamacException(MetamacExceptionBuilder.builder()
                 .withExceptionItems(Arrays.asList(new MetamacExceptionItem(ServiceExceptionType.PARAMETER_REQUIRED, ServiceExceptionParameters.FILTER_COLUMN_NAME))).build());
-        dbDataImportRepository.getObservations(TABLE_NAME_WITH_DATA, COLUMN_LIST, null, new DateTime());
+        databaseImportRepository.getObservations(TABLE_NAME_WITH_DATA, COLUMN_LIST, null, new DateTime());
     }
 
     @Test
     public void testGetObservationsBlankFilterColumn() throws MetamacException {
         expectedMetamacException(MetamacExceptionBuilder.builder()
                 .withExceptionItems(Arrays.asList(new MetamacExceptionItem(ServiceExceptionType.PARAMETER_REQUIRED, ServiceExceptionParameters.FILTER_COLUMN_NAME))).build());
-        dbDataImportRepository.getObservations(TABLE_NAME_WITH_DATA, COLUMN_LIST, "", new DateTime());
+        databaseImportRepository.getObservations(TABLE_NAME_WITH_DATA, COLUMN_LIST, "", new DateTime());
     }
 
     private void assertTableExists(String tableName) {
-        assertTrue(dbDataImportRepository.checkTableExists(tableName));
+        assertTrue(databaseImportRepository.checkTableExists(tableName));
     }
 
     private void assertTableNotExists(String tableName) {
-        assertFalse(dbDataImportRepository.checkTableExists(tableName));
+        assertFalse(databaseImportRepository.checkTableExists(tableName));
     }
 
     private void assertTableHasColumn(String tableName, String columnName) {
-        assertTrue(dbDataImportRepository.checkTableHasColumn(tableName, columnName));
+        assertTrue(databaseImportRepository.checkTableHasColumn(tableName, columnName));
     }
 
     private void assertTableHasNotColumn(String tableName, String columnName) {
-        assertFalse(dbDataImportRepository.checkTableHasColumn(tableName, columnName));
+        assertFalse(databaseImportRepository.checkTableHasColumn(tableName, columnName));
     }
 
     private List<String[]> getObservations(String tableName, DateTime filterValue) throws MetamacException {
-        return dbDataImportRepository.getObservations(tableName, COLUMN_LIST, FILTER_COLUMN_NAME_FOR_TESTING, filterValue);
+        return databaseImportRepository.getObservations(tableName, COLUMN_LIST, FILTER_COLUMN_NAME_FOR_TESTING, filterValue);
     }
 
     private void createTable(String tableName) {
