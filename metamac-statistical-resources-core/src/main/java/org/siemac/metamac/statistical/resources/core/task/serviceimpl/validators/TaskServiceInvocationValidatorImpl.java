@@ -133,4 +133,8 @@ public class TaskServiceInvocationValidatorImpl {
         StatisticalResourcesValidationUtils.checkParameterRequired(databaseImportationJobKey, ServiceExceptionParameters.TASK_DATASET_JOB_KEY, exceptions);
         checkPlanifyImportationDataset(taskInfoDataset, exceptions);
     }
+
+    public static void checkProcessDatabaseDatasetPollingTask(List<MetamacExceptionItem> exceptions) {
+        // NOTHING TO DO HERE
+    }
 }

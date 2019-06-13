@@ -118,7 +118,7 @@ public class DatasetServiceImportationTest extends StatisticalResourcesBaseTest 
         Mockito.when(datasetVersionRepository.retrieveByUrn(Mockito.eq(datasetVersionUrn))).thenReturn(datasetVersion);
         Mockito.when(datasetRepository.findDatasetUrnLinkedToDatasourceSourceName(filename)).thenReturn(DATASET_MOCK_URN);
 
-        expectedMetamacException(new MetamacException(Arrays.asList(new MetamacExceptionItem(ServiceExceptionType.INVALID_DATA_SOURCE_TYPE_FOR_FILE_IMPORTATION, DataSourceTypeEnum.DATABASE))));
+        expectedMetamacException(new MetamacException(Arrays.asList(new MetamacExceptionItem(ServiceExceptionType.INVALID_DATA_SOURCE_TYPE_FOR_DATASET_DATA_IMPORTATION, DataSourceTypeEnum.DATABASE))));
 
         List<URL> urls = Arrays.asList(buildFileUrl(filename));
         HashMap<String, String> mappings = new HashMap<String, String>();

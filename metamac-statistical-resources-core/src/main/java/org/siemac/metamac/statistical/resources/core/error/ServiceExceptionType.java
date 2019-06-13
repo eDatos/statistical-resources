@@ -198,10 +198,8 @@ public class ServiceExceptionType extends CommonServiceExceptionType {
     // Dataset Importation
     public static final CommonServiceExceptionType FILE_NOT_LINKED_TO_ANY_DATASET_IN_STATISTICAL_OPERATION                      = create(
             "exception.resources.dataset.importation.file_not_linked_to_any_dataset_in_statistical_operation");
-    public static final CommonServiceExceptionType INVALID_DATA_SOURCE_TYPE_FOR_FILE_IMPORTATION                                = create(
-            "exception.resources.dataset.importation.invalid_data_source_type_for_file_importation");
-    public static final CommonServiceExceptionType INVALID_DATA_SOURCE_TYPE_FOR_DATABASE_IMPORTATION                            = create(
-            "exception.resources.dataset.importation.invalid_data_source_type_for_database_importation");
+    public static final CommonServiceExceptionType INVALID_DATA_SOURCE_TYPE_FOR_DATASET_DATA_IMPORTATION                                = create(
+            "exception.resources.dataset.importation.invalid_data_source_type_for_data_importation");
     public static final CommonServiceExceptionType INVALID_FILE_FOR_DATASET_VERSION                                             = create(
             "exception.resources.dataset.importation.invalid_file_for_dataset");
     public static final CommonServiceExceptionType INVALID_TABLENAME_FOR_DATASET_VERSION                                        = create(

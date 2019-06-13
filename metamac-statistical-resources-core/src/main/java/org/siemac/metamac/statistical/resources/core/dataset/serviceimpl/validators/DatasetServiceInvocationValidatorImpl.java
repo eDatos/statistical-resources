@@ -268,6 +268,11 @@ public class DatasetServiceInvocationValidatorImpl extends BaseInvocationValidat
         }
     }
 
+    public static void checkImportDatabaseDatasourcesInDatasetVersion(String datasetVersionUrn, List<URL> fileUrls, Map<String, String> dimensionRepresentationMapping,
+            boolean storeDimensionRepresentationMapping, List<MetamacExceptionItem> exceptions) {
+        // NOTHING TO DO HERE
+    }
+
     public static void checkImportDatasourcesInStatisticalOperation(String statisticalOperationCode, List<URL> fileUrls, List<MetamacExceptionItem> exceptions) {
         StatisticalResourcesValidationUtils.checkParameterRequired(statisticalOperationCode, ServiceExceptionParameters.STATISTICAL_OPERATION_CODE, exceptions);
         StatisticalResourcesValidationUtils.checkParameterRequired(fileUrls, ServiceExceptionParameters.FILE_URLS, exceptions);
@@ -318,9 +323,4 @@ public class DatasetServiceInvocationValidatorImpl extends BaseInvocationValidat
         StatisticalResourcesValidationUtils.checkParameterRequired(datasetVersionUrn, ServiceExceptionParameters.DATASET_VERSION_URN, exceptions);
         StatisticalResourcesValidationUtils.checkParameterRequired(tableName, ServiceExceptionParameters.TABLE_NAME, exceptions);
     }
-
-    public static void checkUpdateDatabaseDatasetsIfNeeded(List<MetamacExceptionItem> exceptions) {
-        // NOTHING TO DO HERE
-    }
-
 }

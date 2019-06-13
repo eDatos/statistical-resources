@@ -55,6 +55,11 @@ public class TaskServiceFacadeImpl extends TaskServiceFacadeImplBase {
     }
 
     @Override
+    public void executeDatabaseDatasetPollingTask(ServiceContext ctx) throws MetamacException {
+        taskservice.processDatabaseDatasetPollingTask(ctx);
+    }
+
+    @Override
     public void markTaskAsFailed(ServiceContext ctx, String job, String datasetVersionId, String datasetUrn, Exception exception) throws MetamacException {
         taskservice.markTaskAsFailed(ctx, job, datasetVersionId, datasetUrn);
     }

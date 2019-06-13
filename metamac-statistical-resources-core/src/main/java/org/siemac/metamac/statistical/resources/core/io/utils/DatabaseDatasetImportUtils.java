@@ -20,7 +20,6 @@ public class DatabaseDatasetImportUtils {
         // TODO METAMAC-2866 How to define these metadata has not been defined yet
         DatabaseDatasetImportUtils.setDatasetVersionNextVersion(datasetVersion);
         DatabaseDatasetImportUtils.setDatasetVersionNextVersionDate(datasetVersion);
-
         DatabaseDatasetImportUtils.setDatasetVersionDateNextUpdate(datasetVersion);
     }
 

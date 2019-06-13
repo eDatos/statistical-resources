@@ -1969,9 +1969,4 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
         // TODO METAMAC-2866 It's necessary to define what should be tested
     }
 
-    @Override
-    public void testUpdateDatabaseDatasetsIfNeeded() throws Exception {
-        // TODO METAMAC-2866 It's necessary to define what should be tested
-    }
-
 }

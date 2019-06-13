@@ -2382,9 +2382,4 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         // Service
         getDatasetService().importDbDatasourceInDatasetVersion(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getUrn(), tableName);
     }
-
-    @Override
-    public void updateDatabaseDatasetsIfNeeded(ServiceContext ctx) throws MetamacException {
-        getDatasetService().updateDatabaseDatasetsIfNeeded(ctx);
-    }
 }

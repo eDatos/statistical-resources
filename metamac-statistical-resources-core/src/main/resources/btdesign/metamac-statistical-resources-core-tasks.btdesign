@@ -22,7 +22,9 @@ Application DatasetsStatisticalResources {
     		"Perform the receovery importation task"
     		executeRecoveryImportationTask(String recoveryJobKey, @TaskInfoDataset taskInfoDataset) throws MetamacException; 
     		"Perform the duplication task"
-    		executeDuplicationTask(String duplicationJobKey, @TaskInfoDataset taskInfoDataset, String newDatasetId, ListMapping datasourceMappings) throws MetamacException; 
+    		executeDuplicationTask(String duplicationJobKey, @TaskInfoDataset taskInfoDataset, String newDatasetId, ListMapping datasourceMappings) throws MetamacException;
+    		"Perform the database dataset pooling task"
+    		executeDatabaseDatasetPollingTask()  throws MetamacException;
 
     		// General JOBS
     		markTaskAsFailed(String job, String datasetVersionId, String datasetUrn, java.lang.Exception exception) throws MetamacException;
@@ -49,6 +51,8 @@ Application DatasetsStatisticalResources {
     		processRollbackImportationTask(String recoveryJobKey, @TaskInfoDataset taskInfoDataset);
     		"Perform the duplication task"
     		processDuplicationTask(String duplicationJobKey, @TaskInfoDataset taskInfoDataset, String newDatasetId, ListMapping datasourceMappings) throws MetamacException;
+    		"Perform the database dataset polling task"
+    		processDatabaseDatasetPollingTask() throws MetamacException;
     		
      		"Check if exists any kind of job task in the @param resourceId"
     		boolean existsTaskForResource(String resourceId) throws MetamacException;

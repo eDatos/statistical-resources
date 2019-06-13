@@ -110,4 +110,9 @@ public class TaskServiceTest extends StatisticalResourcesBaseTest implements Tas
     public void testProcessDatabaseImportationTask() throws Exception {
         // TODO METAMAC-2866 Testing?
     }
+
+    @Override
+    public void testProcessDatabaseDatasetPollingTask() throws Exception {
+        // TODO METAMAC-2866 Testing?
+    }
 }

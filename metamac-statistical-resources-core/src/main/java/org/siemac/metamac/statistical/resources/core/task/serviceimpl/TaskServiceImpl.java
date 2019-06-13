@@ -9,10 +9,15 @@ import static org.siemac.metamac.statistical.resources.core.task.utils.JobUtil.c
 import static org.siemac.metamac.statistical.resources.core.task.utils.JobUtil.createJobNameForImportationResource;
 import static org.siemac.metamac.statistical.resources.core.task.utils.JobUtil.createJobNameForRecoveryImportationResource;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -49,19 +54,29 @@ import org.quartz.TriggerKey;
 import org.quartz.impl.SchedulerRepository;
 import org.quartz.impl.StdSchedulerFactory;
 import org.siemac.metamac.core.common.enume.domain.VersionTypeEnum;
+import org.siemac.metamac.core.common.exception.CommonServiceExceptionType;
 import org.siemac.metamac.core.common.exception.ExceptionLevelEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionBuilder;
+import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.core.common.util.ApplicationContextProvider;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Attribute;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.AttributeBase;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ContentConstraint;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStructure;
+import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DimensionBase;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ResourceInternal;
+import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor.DsdAttribute;
 import org.siemac.metamac.statistical.resources.core.conf.StatisticalResourcesConfiguration;
 import org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConstants;
 import org.siemac.metamac.statistical.resources.core.constraint.api.ConstraintsService;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionProperties;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionRepository;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
+import org.siemac.metamac.statistical.resources.core.dataset.repository.api.DatabaseImportRepository;
 import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.DatasetService;
+import org.siemac.metamac.statistical.resources.core.enume.dataset.domain.DataSourceTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.task.domain.DatasetFileFormatEnum;
 import org.siemac.metamac.statistical.resources.core.enume.task.domain.TaskStatusTypeEnum;
@@ -106,6 +121,8 @@ import org.springframework.transaction.support.TransactionCallback;
 import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 import org.springframework.transaction.support.TransactionTemplate;
 
+import com.arte.statistic.parser.csv.CsvWriter;
+import com.arte.statistic.parser.csv.constants.CsvConstants;
 import com.arte.statistic.parser.px.domain.PxModel;
 import com.arte.statistic.parser.sdmx.v2_1.Sdmx21Parser;
 
@@ -166,6 +183,12 @@ public class TaskServiceImpl extends TaskServiceImplBase implements ApplicationL
     @Autowired
     @Qualifier("txManager")
     private PlatformTransactionManager        platformTransactionManager;
+
+    @Autowired
+    private DatasetVersionRepository          datasetVersionRepository;
+
+    @Autowired
+    private DatabaseImportRepository          databaseImportRepository;
 
     private SchedulerFactory                  sf                                  = null;
 
@@ -509,7 +532,7 @@ public class TaskServiceImpl extends TaskServiceImplBase implements ApplicationL
         taskInfoDataset.setDatasetVersionId(datasetVersionUrn);
     }
 
-    private void executeImportationTask(ServiceContext ctx, String databaseImportationJobKey, TaskInfoDataset taskInfoDataset) throws MetamacException {
+    private void executeImportationTask(ServiceContext ctx, String databaseImportationJobKey, TaskInfoDataset taskInfoDataset) {
         logger.debug("Execute importation dataset task {}", taskInfoDataset.getDatasetVersionId());
 
         TransactionTemplate transactionTemplate = new TransactionTemplate(platformTransactionManager);
@@ -527,7 +550,7 @@ public class TaskServiceImpl extends TaskServiceImplBase implements ApplicationL
         });
     }
 
-    private void updateMetadataDatasetVersion(ServiceContext ctx, String datasetVersionUrn) throws MetamacException {
+    private void updateMetadataDatasetVersion(ServiceContext ctx, String datasetVersionUrn) {
         logger.debug("Updating required metada for dataset {}", datasetVersionUrn);
 
         TransactionTemplate transactionTemplate = new TransactionTemplate(platformTransactionManager);
@@ -551,7 +574,7 @@ public class TaskServiceImpl extends TaskServiceImplBase implements ApplicationL
         });
     }
 
-    private void sendDatasetVersionToProductionValidation(ServiceContext ctx, String datasetVersionUrn) throws MetamacException {
+    private void sendDatasetVersionToProductionValidation(ServiceContext ctx, String datasetVersionUrn) {
         logger.debug("Sending to production validation dataset {}", datasetVersionUrn);
 
         TransactionTemplate transactionTemplate = new TransactionTemplate(platformTransactionManager);
@@ -569,7 +592,7 @@ public class TaskServiceImpl extends TaskServiceImplBase implements ApplicationL
         });
     }
 
-    private void sendDatasetVersionToDiffusionValidation(ServiceContext ctx, String datasetVersionUrn) throws MetamacException {
+    private void sendDatasetVersionToDiffusionValidation(ServiceContext ctx, String datasetVersionUrn) {
         logger.debug("Sending to difussion validation dataset {}", datasetVersionUrn);
 
         TransactionTemplate transactionTemplate = new TransactionTemplate(platformTransactionManager);
@@ -587,7 +610,7 @@ public class TaskServiceImpl extends TaskServiceImplBase implements ApplicationL
         });
     }
 
-    private void publishDatasetVersion(ServiceContext ctx, String datasetVersionUrn) throws MetamacException {
+    private void publishDatasetVersion(ServiceContext ctx, String datasetVersionUrn) {
         logger.debug("Publishing dataset {}", datasetVersionUrn);
 
         TransactionTemplate transactionTemplate = new TransactionTemplate(platformTransactionManager);
@@ -1050,5 +1073,236 @@ public class TaskServiceImpl extends TaskServiceImplBase implements ApplicationL
         } catch (SchedulerException e) {
             throw MetamacExceptionBuilder.builder().withCause(e).withExceptionItems(ServiceExceptionType.TASKS_SCHEDULER_ERROR).withMessageParameters(e.getMessage()).build();
         }
+    }
+
+    @Override
+    public void processDatabaseDatasetPollingTask(ServiceContext ctx) throws MetamacException {
+        taskServiceInvocationValidator.checkProcessDatabaseDatasetPollingTask(ctx);
+
+        DateTime executionDate = new DateTime();
+
+        List<DatasetVersion> datasetsVersions = retrieveDatabaseDatasets(ctx);
+
+        if (!CollectionUtils.isEmpty(datasetsVersions)) {
+            for (DatasetVersion datasetVersion : datasetsVersions) {
+                if (!CollectionUtils.isEmpty(datasetVersion.getDatasources())) {
+                    updateDataFromDatasources(ctx, executionDate, datasetVersion);
+                } else {
+                    logger.debug("There are no datasources configured yet for dataset {}", datasetVersion.getSiemacMetadataStatisticalResource().getUrn());
+                }
+            }
+
+        } else {
+            logger.debug("There are no database datasets configured yet");
+        }
+    }
+
+    private List<DatasetVersion> retrieveDatabaseDatasets(ServiceContext ctx) throws MetamacException {
+        // @formatter:off
+        List<ConditionalCriteria> conditions = ConditionalCriteriaBuilder.criteriaFor(DatasetVersion.class)
+                .withProperty(DatasetVersionProperties.dataSourceType()).eq(DataSourceTypeEnum.DATABASE)
+                .and()
+                .withProperty(DatasetVersionProperties.datasources()).isNotEmpty()
+                .and()
+                .withProperty(DatasetVersionProperties.siemacMetadataStatisticalResource().lastVersion()).eq(Boolean.TRUE)
+                .distinctRoot().build();
+        // @formatter:off
+
+        List<DatasetVersion> datasetsVersion = datasetVersionRepository.findByCondition(conditions);
+        return filterDatasetsWithTaskInProgress(ctx, datasetsVersion);
+    }
+    
+    private List<DatasetVersion> filterDatasetsWithTaskInProgress(ServiceContext ctx, List<DatasetVersion> datasetsVersion) throws MetamacException {
+        // TODO METAMAC-2866 existsAnyTaskInResource call could be not necessary, check it!
+        List<DatasetVersion> dsv = new ArrayList<>();
+        if (datasetsVersion != null) {
+            for (DatasetVersion datasetVersion : datasetsVersion) {
+                if (!existsTaskForResource(ctx, datasetVersion.getDataset().getIdentifiableStatisticalResource().getUrn()) &&
+                        !existsAnyTaskInResource(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getCode())) {
+                    dsv.add(datasetVersion);
+                }
+            }
+        }
+        return dsv;
+    }
+    
+    private void updateDataFromDatasources(ServiceContext ctx, DateTime executionDate, DatasetVersion datasetVersion) {
+        String datasetVersionUrn = datasetVersion.getSiemacMetadataStatisticalResource().getUrn();
+
+        for (Datasource datasource : datasetVersion.getDatasources()) {
+            try {
+                // Get table name from datasource and check if it exists
+                String tableName = datasource.getSourceName();
+
+                checkTableExists(tableName, datasetVersionUrn);
+
+                // Get dimensions, attributes and measure columns name from dsd, get filter column name from configuration in common metadata and check if they exists
+                DataStructure dataStructure = srmRestInternalService.retrieveDsdByUrn(datasetVersion.getRelatedDsd().getUrn());
+
+                List<String> dimensionsColumnsName = getDimensionsColumnsName(dataStructure);
+
+                List<String> attributesColumnsName = getAttibutesColumnsName(dataStructure);
+
+                String measureColumnName = getMeasureColumnName(dataStructure);
+
+                String filterColumnName = getFilterColumnName();
+
+                checkTableHasRequiredColumns(tableName, dimensionsColumnsName, attributesColumnsName, measureColumnName, filterColumnName, datasetVersionUrn);
+
+                List<String> columnsName = getAllQueryColumns(dimensionsColumnsName, attributesColumnsName, measureColumnName);
+
+                // Get de filter column value from last data import
+                DateTime filterColumnValue = getFilterColumnValue(datasetVersion);
+
+                // TODO METAMAC-2866 A possible improve could be to do a paginated query to get the observations and write them to file progressively to avoid memory problems derivated from having a
+                // huge number of observations in memory
+                List<String[]> observations = getObservations(tableName, columnsName, filterColumnName, filterColumnValue);
+
+                if (!observations.isEmpty()) {
+                    File csvFile = generateCsvFile(tableName, columnsName, observations);
+
+                    List<URL> fileUrls = new ArrayList<>();
+                    fileUrls.add(csvFile.toURI().toURL());
+
+                    logger.info("Planning a database import for dataset {} generated file: {} ", datasetVersionUrn, csvFile.getName());
+
+                    setContextPropertiesForDbImportJob(ctx, executionDate, datasource);
+                    importDatabaseDatasourcesInDatasetVersion(ctx, datasetVersionUrn, fileUrls, new HashMap<>(), Boolean.FALSE);
+
+                    logger.info("Planned a database import for dataset {} generated file: {} ", datasetVersionUrn, csvFile.getName());
+
+                } else {
+                    logger.debug("There are no new observations in table {} for dataset {}", tableName, datasetVersionUrn);
+                }
+            } catch (Exception e) {
+                logger.error("An unexpected error has occurred trying to do a DB import for dataset {}", datasetVersionUrn, e);
+            }
+        }
+    }
+    
+    private void checkTableExists(String tableName, String datasetVersionUrn) throws MetamacException {
+        if (!databaseImportRepository.checkTableExists(tableName)) {
+            throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.TABLE_NOT_EXIST).withMessageParameters(tableName, datasetVersionUrn).build();
+        }
+    }
+    
+    private List<String> getDimensionsColumnsName(DataStructure dataStructure) {
+        List<String> dimensionsColumnName = new ArrayList<>();
+
+        for (DimensionBase dimensionBase : dataStructure.getDataStructureComponents().getDimensions().getDimensions()) {
+            dimensionsColumnName.add(dimensionBase.getId());
+        }
+
+        return dimensionsColumnName;
+    }
+    
+    private List<String> getAttibutesColumnsName(DataStructure dataStructure) throws MetamacException {
+        List<String> attibutesColumnName = new ArrayList<>();
+
+        for (AttributeBase attributeBase : dataStructure.getDataStructureComponents().getAttributes().getAttributes()) {
+            DsdAttribute dsdAttribute = new DsdAttribute((Attribute) attributeBase);
+            if (dsdAttribute.isAttributeAtObservationLevel()) {
+                attibutesColumnName.add(attributeBase.getId());
+            }
+        }
+
+        return attibutesColumnName;
+    }
+    
+    private String getMeasureColumnName(DataStructure dataStructure) {
+        return dataStructure.getDataStructureComponents().getMeasure().getPrimaryMeasure().getId();
+    }
+    
+    private String getFilterColumnName() throws MetamacException {
+        return configurationService.retriveFilterColumnNameForDbDataImport();
+    }
+    
+    private List<String> getAllQueryColumns(List<String> dimensionsColumnsName, List<String> attributesColumnsName, String measureColumnName) {
+        List<String> queryColumns = new ArrayList<>();
+
+        queryColumns.addAll(dimensionsColumnsName);
+        queryColumns.add(measureColumnName);
+        queryColumns.addAll(attributesColumnsName);
+
+        return queryColumns;
+    }
+    
+    private void checkTableHasRequiredColumns(String tableName, List<String> dimensionsColumnsName, List<String> attributesColumnsName, String measureColumnName, String filterColumnName,
+            String datasetVersionUrn) throws MetamacException {
+        checkTableHasDimensionColumns(tableName, dimensionsColumnsName, datasetVersionUrn);
+        checkTableHasAttibuteColumns(tableName, attributesColumnsName, datasetVersionUrn);
+        checkTableHasObservationColumn(tableName, measureColumnName, datasetVersionUrn);
+        checkTableHasFilterColumn(tableName, filterColumnName, datasetVersionUrn);
+    }
+    
+    private void checkTableHasDimensionColumns(String tableName, List<String> columnsName, String datasetVersionUrn) throws MetamacException {
+        checkTableHasColumns(ServiceExceptionType.DIMENSION_COLUMN_NOT_EXIST, datasetVersionUrn, tableName, columnsName);
+    }
+    
+    private void checkTableHasAttibuteColumns(String tableName, List<String> attributesColumnsName, String datasetVersionUrn) throws MetamacException {
+        checkTableHasColumns(ServiceExceptionType.ATTRIBUTE_COLUMN_NOT_EXIST, datasetVersionUrn, tableName, attributesColumnsName);
+    }
+    
+    private void checkTableHasObservationColumn(String tableName, String observationColumnName, String datasetVersionUrn) throws MetamacException {
+        checkTableHasColumns(ServiceExceptionType.OBS_COLUMN_NOT_EXIST, datasetVersionUrn, tableName, Arrays.asList(observationColumnName));
+    }
+    
+    private void checkTableHasFilterColumn(String tableName, String filterColumn, String datasetVersionUrn) throws MetamacException {
+        checkTableHasColumns(ServiceExceptionType.FILTER_COLUMN_NOT_EXIST, datasetVersionUrn, tableName, Arrays.asList(filterColumn));
+    }
+    
+    private void checkTableHasColumns(CommonServiceExceptionType commonServiceExceptionType, String datasetVersionUrn, String tableName, List<String> columnsName) throws MetamacException {
+        List<MetamacExceptionItem> exceptionItems = new ArrayList<>();
+
+        for (String columnName : columnsName) {
+            if (!databaseImportRepository.checkTableHasColumn(tableName, columnName)) {
+                exceptionItems.add(new MetamacExceptionItem(commonServiceExceptionType, tableName, datasetVersionUrn, columnName));
+            }
+        }
+
+        if (!exceptionItems.isEmpty()) {
+            throw MetamacExceptionBuilder.builder().withExceptionItems(exceptionItems).build();
+        }
+    }
+    
+    private DateTime getFilterColumnValue(DatasetVersion datasetVersion) {
+        return datasetVersion.getDateLastTimeDataImport();
+    }
+    
+    private List<String[]> getObservations(String tableName, List<String> columnsName, String filterColumnName, DateTime filterColumnValue) throws MetamacException {
+        return databaseImportRepository.getObservations(tableName, columnsName, filterColumnName, filterColumnValue);
+    }
+    
+    private File generateCsvFile(String tableName, List<String> columnsName, List<String[]> observations) throws MetamacException {
+        return writeTempCsvFile(createTempCsvFile(tableName), observations, columnsName);
+    }
+    
+    private File createTempCsvFile(String tableName) throws MetamacException {
+        try {
+            return File.createTempFile("dbImport_" + tableName + "_", ".csv");
+        } catch (IOException e) {
+            throw MetamacExceptionBuilder.builder().withCause(e).withExceptionItems(ServiceExceptionType.IMPORTATION_CSV_FILE_ERROR).withMessageParameters(ExceptionHelper.excMessage(e)).build();
+        }
+    }
+    
+    private File writeTempCsvFile(File file, List<String[]> observations, List<String> columnsName) throws MetamacException {
+        try (OutputStream os = new FileOutputStream(file); CsvWriter csvWriter = new CsvWriter(os, "UTF-8", CsvConstants.SEPARATOR_TAB)) {
+            logger.debug("Temporary csv file created {}", file.getAbsolutePath());
+            csvWriter.write(columnsName.toArray(new String[0]), observations);
+            return file;
+        } catch (Exception e) {
+            throw MetamacExceptionBuilder.builder().withCause(e).withExceptionItems(ServiceExceptionType.IMPORTATION_CSV_FILE_ERROR).withMessageParameters(ExceptionHelper.excMessage(e)).build();
+        }
+    }
+    
+    private void setContextPropertiesForDbImportJob(ServiceContext ctx, DateTime executionDate, Datasource datasource) {
+        ctx.setProperty(ImportDatasetFromDatabaseJob.DATABASE_IMPORT_JOB_DATASOURCE_IDENTIFIER, datasource.getIdentifiableStatisticalResource().getCode());
+        ctx.setProperty(ImportDatasetFromDatabaseJob.DATABASE_IMPORT_JOB_EXECUTION_DATE, executionDate);
+        ctx.setProperty(ImportDatasetFromDatabaseJob.DATABASE_IMPORT_JOB_FLAG, Boolean.TRUE);
+    }
+
+    public void importDatabaseDatasourcesInDatasetVersion(ServiceContext ctx, String datasetVersionUrn, List<URL> fileUrls, Map<String, String> dimensionRepresentationMapping,
+            boolean storeDimensionRepresentationMapping) throws MetamacException {
+        datasetService.importDatabaseDatasourcesInDatasetVersion(ctx, datasetVersionUrn, fileUrls, dimensionRepresentationMapping, storeDimensionRepresentationMapping);
     }
 }
