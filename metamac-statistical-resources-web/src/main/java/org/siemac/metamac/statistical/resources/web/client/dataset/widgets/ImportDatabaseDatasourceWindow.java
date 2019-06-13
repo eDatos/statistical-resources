@@ -18,11 +18,11 @@ import com.smartgwt.client.widgets.form.fields.events.HasClickHandlers;
 import com.smartgwt.client.widgets.form.validator.LengthRangeValidator;
 import com.smartgwt.client.widgets.form.validator.RegExpValidator;
 
-public class ImportDbDatasourceWindow extends Window {
+public class ImportDatabaseDatasourceWindow extends Window {
 
-    private ImportDbDataSourceForm form;
+    private ImportDatabaseDataSourceForm form;
 
-    public ImportDbDatasourceWindow() {
+    public ImportDatabaseDatasourceWindow() {
         super();
 
         setWidth(450);
@@ -49,7 +49,7 @@ public class ImportDbDatasourceWindow extends Window {
             }
         });
 
-        form = new ImportDbDataSourceForm();
+        form = new ImportDatabaseDataSourceForm();
         addItem(form);
     }
 
@@ -65,24 +65,24 @@ public class ImportDbDatasourceWindow extends Window {
         return form.getValueAsString(DatasourceDS.TABLE_NAME);
     }
 
-    private class ImportDbDataSourceForm extends CustomDynamicForm {
+    private class ImportDatabaseDataSourceForm extends CustomDynamicForm {
 
         private static final String TABLE_NAME_REGULAR_EXPRESSION = "^[a-zA-Z_][a-zA-Z0-9_]*$";
+        private static final String FIELD_SAVE                    = "button-database-import";
 
-        public ImportDbDataSourceForm() {
+        public ImportDatabaseDataSourceForm() {
             super();
             setMargin(5);
 
             RequiredTextItem tableNameTextItem = getTableNameTextItem();
 
-            // TODO METAMAC-2866 Components name, where they should be defined?
-            CustomButtonItem saveButtonItem = new CustomButtonItem("button-dbimport", MetamacWebCommon.getConstants().accept());
+            CustomButtonItem saveButtonItem = new CustomButtonItem(FIELD_SAVE, MetamacWebCommon.getConstants().accept());
 
             setFields(tableNameTextItem, saveButtonItem);
         }
 
         public HasClickHandlers getSaveButtonHandlers() {
-            return getItem("button-dbimport");
+            return getItem(FIELD_SAVE);
         }
 
         private RequiredTextItem getTableNameTextItem() {
@@ -106,7 +106,7 @@ public class ImportDbDatasourceWindow extends Window {
          * @return validator that checks the table name format and shows a custom error message in case the table name format is not valid
          */
         private RegExpValidator getTableNameFormatValidator() {
-            RegExpValidator regExpValidator = new RegExpValidator(ImportDbDataSourceForm.TABLE_NAME_REGULAR_EXPRESSION);
+            RegExpValidator regExpValidator = new RegExpValidator(ImportDatabaseDataSourceForm.TABLE_NAME_REGULAR_EXPRESSION);
             regExpValidator.setErrorMessage(getMessages().errorTableNameFormat());
             return regExpValidator;
         }

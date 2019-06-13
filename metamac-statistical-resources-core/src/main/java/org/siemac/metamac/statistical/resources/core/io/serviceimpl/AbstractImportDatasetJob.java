@@ -45,7 +45,6 @@ public abstract class AbstractImportDatasetJob implements Job {
     public static final String         ALTERNATIVE_REPRESENTATIONS       = "alternativeRepresentations";
     public static final String         STORE_ALTERNATIVE_REPRESENTATIONS = "storeAlternativeRepresentations";
     public static final String         TASK_NAME                         = "taskName";
-    public static final String         STATISTICAL_OPERATION_URN         = "statisticalOperationUrn";
 
     private TaskServiceFacade          taskServiceFacade                 = null;
     private NoticesRestInternalService noticesRestInternalService        = null;

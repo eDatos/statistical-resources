@@ -190,11 +190,11 @@ public class TaskServiceImpl extends TaskServiceImplBase implements ApplicationL
     @Autowired
     private DatabaseImportRepository          databaseImportRepository;
 
-    private SchedulerFactory                  sf                                  = null;
+    private SchedulerFactory                  schedulerFactory                    = null;
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
-        if (sf != null) {
+        if (schedulerFactory != null) {
             return;
         }
 
@@ -209,8 +209,8 @@ public class TaskServiceImpl extends TaskServiceImplBase implements ApplicationL
         quartzProps.put("org.quartz.threadPool.threadPriority", "5");
 
         try {
-            sf = new StdSchedulerFactory(quartzProps);
-            Scheduler sched = sf.getScheduler();
+            schedulerFactory = new StdSchedulerFactory(quartzProps);
+            Scheduler sched = schedulerFactory.getScheduler();
 
             // Start now
             sched.start();
@@ -335,7 +335,7 @@ public class TaskServiceImpl extends TaskServiceImplBase implements ApplicationL
                 .usingJobData(ImportDatasetFromDatabaseJob.DATABASE_IMPORT_JOB_FLAG, Boolean.TRUE)
                 .usingJobData(ImportDatasetFromDatabaseJob.DATABASE_IMPORT_JOB_EXECUTION_DATE, dt.getMillis())
                 .usingJobData(ImportDatasetFromDatabaseJob.DATABASE_IMPORT_JOB_DATASOURCE_IDENTIFIER, (String) serviceContext.getProperty(ImportDatasetFromDatabaseJob.DATABASE_IMPORT_JOB_DATASOURCE_IDENTIFIER))
-                .usingJobData(AbstractImportDatasetJob.STATISTICAL_OPERATION_URN, taskInfoDataset.getStatisticalOperationUrn());
+                .usingJobData(ImportDatasetFromDatabaseJob.STATISTICAL_OPERATION_URN, taskInfoDataset.getStatisticalOperationUrn());
             // @formatter:on
         } else {
             jobBuilder.ofType(ImportDatasetJob.class);

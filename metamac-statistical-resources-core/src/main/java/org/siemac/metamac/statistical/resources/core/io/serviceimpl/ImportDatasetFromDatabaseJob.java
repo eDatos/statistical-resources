@@ -16,6 +16,7 @@ public class ImportDatasetFromDatabaseJob extends AbstractImportDatasetJob {
     public static final String DATABASE_IMPORT_JOB_FLAG                  = "custom_import";
     public static final String DATABASE_IMPORT_JOB_EXECUTION_DATE        = "import_excution_date";
     public static final String DATABASE_IMPORT_JOB_DATASOURCE_IDENTIFIER = "datasource_identifier";
+    public static final String STATISTICAL_OPERATION_URN                 = "statistical_operation_urn";
 
     /**
      * Quartz requires a public empty constructor so that the scheduler can instantiate the class whenever it needs.
@@ -53,7 +54,7 @@ public class ImportDatasetFromDatabaseJob extends AbstractImportDatasetJob {
 
     @Override
     protected void sendErrorNotification(MetamacException metamacException) {
-        String statisticalOperationUrn = getData().getString(AbstractImportDatasetJob.STATISTICAL_OPERATION_URN);
+        String statisticalOperationUrn = getData().getString(ImportDatasetFromDatabaseJob.STATISTICAL_OPERATION_URN);
         getNoticesRestInternalService().createDatabaseImportErrorBackgroundNotification(statisticalOperationUrn, ServiceNoticeAction.IMPORT_DATASET_JOB, metamacException);
     }
 

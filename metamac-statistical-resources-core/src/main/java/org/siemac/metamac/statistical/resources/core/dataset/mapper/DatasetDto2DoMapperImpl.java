@@ -139,10 +139,8 @@ public class DatasetDto2DoMapperImpl extends BaseDto2DoMapperImpl implements Dat
         // Check replaces, can't replace a dataset already replaced by other dataset
         checkCanDatasetReplacesOtherDataset(source);
 
-        // Check that only the 'keep all data' metadata can be update when it's the initial version and it's not published
         checkCanUpdateKeepAllDataMetadata(source, target);
 
-        // Check that only 'data source type' metadata can be update if there are no data sources configured
         checkCanUpdateDataSourceTypeMetadata(source, target);
 
         // Hierarchy
@@ -180,6 +178,9 @@ public class DatasetDto2DoMapperImpl extends BaseDto2DoMapperImpl implements Dat
         return target;
     }
 
+    /**
+     * Check that only 'data source type' metadata can be update if there are no data sources configured, it's the initial version and it's not published
+     */
     private void checkCanUpdateDataSourceTypeMetadata(DatasetVersionDto source, DatasetVersion target) throws MetamacException {
         if (hasDataSourceTypeMetadataChanged(source, target) && (hasDatasetConfiguredDataSources(target) || isNotDatasetVersionInitialVersion(target) || isDatasetVersionPublished(target))) {
             throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.DATASET_VERSION_CANT_ALTER_DATA_SOURCE_TYPE).build();
@@ -194,6 +195,9 @@ public class DatasetDto2DoMapperImpl extends BaseDto2DoMapperImpl implements Dat
         return target.getDataSourceType() != source.getDataSourceType();
     }
 
+    /**
+     * Check that only the 'keep all data' metadata can be update when it's the initial version and it's not published
+     */
     private void checkCanUpdateKeepAllDataMetadata(DatasetVersionDto source, DatasetVersion target) throws MetamacException {
         if (hasKeepAllDataMetadataChanged(source, target) && (isNotDatasetVersionInitialVersion(target) || isDatasetVersionPublished(target))) {
             throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.DATASET_VERSION_CANT_ALTER_KEEP_ALL_DATA).build();

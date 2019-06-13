@@ -52,6 +52,8 @@
         
 		<statistic-parser.version>2.0.1-SNAPSHOT</statistic-parser.version>
 		<statistic-sdmx-srm-rest-external-api.version>2.1.2</statistic-sdmx-srm-rest-external-api.version>
+		
+		<postgresql.version>9.4.1212</postgresql.version>
 
 		<!-- WEB -->
 		<jstl.version>1.2</jstl.version>
