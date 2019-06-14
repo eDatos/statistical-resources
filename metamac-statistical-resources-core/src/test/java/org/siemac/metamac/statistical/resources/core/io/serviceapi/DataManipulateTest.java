@@ -23,7 +23,6 @@ import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteriaBui
 import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
 import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -66,47 +65,45 @@ import es.gobcan.istac.edatos.dataset.repository.dto.DatasetRepositoryDto;
 import es.gobcan.istac.edatos.dataset.repository.dto.Mapping;
 import es.gobcan.istac.edatos.dataset.repository.service.DatasetRepositoriesServiceFacade;
 
-// TODO METAMAC-2866 Remove @Ignore annotation, it's only for testing in local environment
-@Ignore
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:spring/statistical-resources/include/rest-services-mockito.xml", "classpath:spring/statistical-resources/applicationContext-test.xml"})
 @TransactionConfiguration(transactionManager = "txManager", defaultRollback = true)
 @Transactional
 public class DataManipulateTest extends StatisticalResourcesBaseTest {
 
-    private static Logger logger = LoggerFactory.getLogger(DataManipulateTest.class);
+    private static Logger                    logger                              = LoggerFactory.getLogger(DataManipulateTest.class);
 
     @Autowired
     private DatasetRepositoriesServiceFacade datasetRepositoriesServiceFacade;
 
     @Autowired
-    private SrmRestInternalService srmRestInternalService;
+    private SrmRestInternalService           srmRestInternalService;
 
     @Autowired
     @Qualifier("txManager")
-    protected PlatformTransactionManager transactionManager;
+    protected PlatformTransactionManager     transactionManager;
 
     @Autowired
-    private TaskService taskService;
+    private TaskService                      taskService;
 
     @Autowired
-    private DatasetService datasetService;
+    private DatasetService                   datasetService;
 
-    public String jobKey;
+    public String                            jobKey;
 
     @PersistenceContext(unitName = "StatisticalResourcesEntityManagerFactory")
-    protected EntityManager entityManager;
+    protected EntityManager                  entityManager;
 
-    public static final String DATA_STR_ECB_EXR_RG_XS = "/sdmx/2_1/dataset/structured/ecb_exr_rg_xs.xml";
-    public static final String DATA_STR_ECB_EXR_RG_XS_DENORMALIZED = "/sdmx/2_1/dataset/structured/ecb_exr_rg_xs_denormalized.xml";
-    public static final String DATA_GEN_ECB_EXR_RG_FLAT = "/sdmx/2_1/dataset/generic/ecb_exr_rg_flat.xml";
-    public static final String DATA_GEN_ECB_EXR_RG_FLAT_FAILED = "/sdmx/2_1/dataset/generic/ecb_exr_rg_flat_failed.xml";
+    public static final String               DATA_STR_ECB_EXR_RG_XS              = "/sdmx/2_1/dataset/structured/ecb_exr_rg_xs.xml";
+    public static final String               DATA_STR_ECB_EXR_RG_XS_DENORMALIZED = "/sdmx/2_1/dataset/structured/ecb_exr_rg_xs_denormalized.xml";
+    public static final String               DATA_GEN_ECB_EXR_RG_FLAT            = "/sdmx/2_1/dataset/generic/ecb_exr_rg_flat.xml";
+    public static final String               DATA_GEN_ECB_EXR_RG_FLAT_FAILED     = "/sdmx/2_1/dataset/generic/ecb_exr_rg_flat_failed.xml";
 
-    public static final String DATA_PX_ECB_EXR_RG = "/px/ecb_exr_rg.px";
+    public static final String               DATA_PX_ECB_EXR_RG                  = "/px/ecb_exr_rg.px";
 
-    public static final String DATA_TSV_ECB_EXR_RG = "/tsv/ecb_exr_rg.tsv";
+    public static final String               DATA_TSV_ECB_EXR_RG                 = "/tsv/ecb_exr_rg.tsv";
 
-    public static final String URN_DSD_ECB_EXR_RG = "urn:sdmx:org.sdmx.infomodel.datastructure.DataStructure=ECB:ECB_EXR_RG(1.0)";
+    public static final String               URN_DSD_ECB_EXR_RG                  = "urn:sdmx:org.sdmx.infomodel.datastructure.DataStructure=ECB:ECB_EXR_RG(1.0)";
 
     @Autowired
     @Qualifier("dataSourceDatasetRepository")

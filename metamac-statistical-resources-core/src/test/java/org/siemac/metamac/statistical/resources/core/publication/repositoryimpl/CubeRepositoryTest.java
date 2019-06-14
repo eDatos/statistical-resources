@@ -16,7 +16,6 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 
 import java.util.List;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.siemac.metamac.core.common.exception.MetamacException;
@@ -76,8 +75,6 @@ public class CubeRepositoryTest extends StatisticalResourcesBaseTest implements 
         assertFalse(result);
     }
 
-    // TODO METAMAC-2866 Remove @Ignore annotation, it's only for testing in local environment
-    @Ignore
     @Override
     @Test
     @MetamacMock({PUBLICATION_VERSION_17_WITH_STRUCTURE_FOR_PUBLICATION_VERSION_04_NAME})
@@ -97,8 +94,6 @@ public class CubeRepositoryTest extends StatisticalResourcesBaseTest implements 
         assertEquals(0, result.size());
     }
 
-    // TODO METAMAC-2866 Remove @Ignore annotation, it's only for testing in local environment
-    @Ignore
     @Override
     @Test
     @MetamacMock({PUBLICATION_VERSION_17_WITH_STRUCTURE_FOR_PUBLICATION_VERSION_04_NAME})

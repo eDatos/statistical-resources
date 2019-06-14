@@ -3421,8 +3421,6 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         assertNotNull(newMultidatasetVersionDto.getUrn());
     }
 
-    // TODO METAMAC-2866 Remove @Ignore annotation, it's only for testing in local environment
-    @Ignore
     @Test
     public void testCreateMultidatasetHasExpectedUrn() throws Exception {
         ExternalItemDto statisticalOperation = StatisticalResourcesDtoMocks.mockStatisticalOperationExternalItemDto(StatisticalResourcesMockFactory.OPERATION_01_CODE);

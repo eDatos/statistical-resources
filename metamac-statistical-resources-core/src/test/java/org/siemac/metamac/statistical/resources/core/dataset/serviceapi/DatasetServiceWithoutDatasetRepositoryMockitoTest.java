@@ -9,7 +9,6 @@ import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
@@ -33,13 +32,13 @@ import org.springframework.transaction.annotation.Transactional;
 public class DatasetServiceWithoutDatasetRepositoryMockitoTest extends StatisticalResourcesBaseTest {
 
     @Autowired
-    private DatasetService datasetService;
+    private DatasetService         datasetService;
 
     @Autowired
     private SrmRestInternalService srmRestInternalService;
 
     @PersistenceContext(unitName = "StatisticalResourcesEntityManagerFactory")
-    protected EntityManager entityManager;
+    protected EntityManager        entityManager;
 
     @Autowired
     @Qualifier("dataSourceDatasetRepository")
@@ -82,8 +81,6 @@ public class DatasetServiceWithoutDatasetRepositoryMockitoTest extends Statistic
     // DATASETS VERSIONS
     // ------------------------------------------------------------------------
 
-    // TODO METAMAC-2866 Remove @Ignore annotation, it's only for testing in local environment
-    @Ignore
     @Test
     public void testCreateDatasetVersion() throws Exception {
         DatasetVersion expected = notPersistedDoMocks.mockDatasetVersion();

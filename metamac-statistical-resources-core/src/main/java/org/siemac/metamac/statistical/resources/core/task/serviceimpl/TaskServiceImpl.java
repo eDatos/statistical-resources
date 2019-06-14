@@ -438,7 +438,6 @@ public class TaskServiceImpl extends TaskServiceImplBase implements ApplicationL
                 try {
                     sched.scheduleJob(duplicationImportJob, duplicationImportTrigger);
                 } catch (SchedulerException e) {
-                    // TODO METAMAC-2866 Check this, throw exception? dont catch?
                     logger.error("PlannifyRecoveryImportDataset: the recovery importation with key " + duplicationJobKey.getName() + " has failed", e);
                 }
             } else {
