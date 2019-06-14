@@ -3,6 +3,7 @@ package org.siemac.metamac.statistical.resources.web.client.dataset.widgets;
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getMessages;
 
+import org.siemac.metamac.statistical.resources.core.utils.shared.DatabaseDatasetImportSharedUtils;
 import org.siemac.metamac.statistical.resources.web.client.dataset.model.ds.DatasourceDS;
 import org.siemac.metamac.web.common.client.MetamacWebCommon;
 import org.siemac.metamac.web.common.client.widgets.form.CustomDynamicForm;
@@ -15,14 +16,13 @@ import com.smartgwt.client.widgets.events.CloseClickHandler;
 import com.smartgwt.client.widgets.events.VisibilityChangedEvent;
 import com.smartgwt.client.widgets.events.VisibilityChangedHandler;
 import com.smartgwt.client.widgets.form.fields.events.HasClickHandlers;
-import com.smartgwt.client.widgets.form.validator.LengthRangeValidator;
-import com.smartgwt.client.widgets.form.validator.RegExpValidator;
+import com.smartgwt.client.widgets.form.validator.CustomValidator;
 
-public class ImportDatabaseDatasourceWindow extends Window {
+public class CreateDatabaseDatasourceWindow extends Window {
 
-    private ImportDatabaseDataSourceForm form;
+    private CreateDatabaseDataSourceForm form;
 
-    public ImportDatabaseDatasourceWindow() {
+    public CreateDatabaseDatasourceWindow() {
         super();
 
         setWidth(450);
@@ -49,7 +49,7 @@ public class ImportDatabaseDatasourceWindow extends Window {
             }
         });
 
-        form = new ImportDatabaseDataSourceForm();
+        form = new CreateDatabaseDataSourceForm();
         addItem(form);
     }
 
@@ -65,12 +65,11 @@ public class ImportDatabaseDatasourceWindow extends Window {
         return form.getValueAsString(DatasourceDS.TABLE_NAME);
     }
 
-    private class ImportDatabaseDataSourceForm extends CustomDynamicForm {
+    private class CreateDatabaseDataSourceForm extends CustomDynamicForm {
 
-        private static final String TABLE_NAME_REGULAR_EXPRESSION = "^[a-zA-Z_][a-zA-Z0-9_]*$";
-        private static final String FIELD_SAVE                    = "button-database-import";
+        private static final String FIELD_SAVE = "button-database-import";
 
-        public ImportDatabaseDataSourceForm() {
+        public CreateDatabaseDataSourceForm() {
             super();
             setMargin(5);
 
@@ -87,42 +86,40 @@ public class ImportDatabaseDatasourceWindow extends Window {
 
         private RequiredTextItem getTableNameTextItem() {
 
-            LengthRangeValidator lengthRangeValidator = getTableNameLengthValidator();
+            CustomValidator lengthRangeValidator = getTableNameLengthValidator();
 
-            RegExpValidator regExpValidator = getTableNameFormatValidator();
+            CustomValidator tableNameFormatValidator = getTableNameFormatValidator();
 
             RequiredTextItem tableNameTextItem = new RequiredTextItem(DatasourceDS.TABLE_NAME, getConstants().datasetTableName());
             tableNameTextItem.setWidth("*");
-            tableNameTextItem.setValidators(lengthRangeValidator, regExpValidator);
+            tableNameTextItem.setValidators(lengthRangeValidator, tableNameFormatValidator);
 
             return tableNameTextItem;
 
         }
 
-        /**
-         * Create a validator to check the table name format: in sql standard must begin with a letter or an underscore, subsequent characters can be letters, underscores or digits (0-9)
-         * 
-         * @see https://www.postgresql.org/docs/8.0/sql-syntax.html#SQL-SYNTAX-IDENTIFIERS
-         * @return validator that checks the table name format and shows a custom error message in case the table name format is not valid
-         */
-        private RegExpValidator getTableNameFormatValidator() {
-            RegExpValidator regExpValidator = new RegExpValidator(ImportDatabaseDataSourceForm.TABLE_NAME_REGULAR_EXPRESSION);
-            regExpValidator.setErrorMessage(getMessages().errorTableNameFormat());
-            return regExpValidator;
+        private CustomValidator getTableNameFormatValidator() {
+            CustomValidator customValidator = new CustomValidator() {
+
+                @Override
+                protected boolean condition(Object value) {
+                    return DatabaseDatasetImportSharedUtils.checkTableNameFormat((String) value);
+                }
+            };
+            customValidator.setErrorMessage(getMessages().errorTableNameFormat());
+            return customValidator;
         }
 
-        /**
-         * Creates a validator to check table name length: in postgresql, by default, the maximum identifier length is 63, longer names will be truncated
-         * 
-         * @see https://www.postgresql.org/docs/8.0/sql-syntax.html#SQL-SYNTAX-IDENTIFIERS
-         * @return validator that checks that the table name length is between 1 and 63 and shows a custom error message in case the table name length is not valid
-         */
-        private LengthRangeValidator getTableNameLengthValidator() {
-            LengthRangeValidator lengthRangeValidator = new LengthRangeValidator();
-            lengthRangeValidator.setMin(1);
-            lengthRangeValidator.setMax(63);
-            lengthRangeValidator.setErrorMessage(getMessages().errorTableNameLength());
-            return lengthRangeValidator;
+        private CustomValidator getTableNameLengthValidator() {
+            CustomValidator customValidator = new CustomValidator() {
+
+                @Override
+                protected boolean condition(Object value) {
+                    return DatabaseDatasetImportSharedUtils.checkTableNameLength((String) value);
+                }
+            };
+            customValidator.setErrorMessage(getMessages().errorTableNameLength());
+            return customValidator;
         }
     }
 }

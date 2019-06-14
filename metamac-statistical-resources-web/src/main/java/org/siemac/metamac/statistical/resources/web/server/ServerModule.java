@@ -5,6 +5,7 @@ import org.siemac.metamac.statistical.resources.web.server.handlers.base.GetHelp
 import org.siemac.metamac.statistical.resources.web.server.handlers.base.GetInitialValuesActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.base.GetLatestResourceVersionActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.base.ResendStreamMessageActionHandler;
+import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.CreateDatabaseDatasourceActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.CreateDatasetCategorisationsActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.CreateDatasetConstraintActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.DeleteCategorisationsActionHandler;
@@ -34,7 +35,6 @@ import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.Save
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.SaveDatasetVersionActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.SaveDatasourceActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.SaveRegionActionHandler;
-import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.SetDbDatasourceImportationActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.UpdateDatasetVersionProcStatusActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.UpdateDatasetVersionsProcStatusActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.external.GetAgenciesPaginatedListActionHandler;
@@ -88,6 +88,7 @@ import org.siemac.metamac.statistical.resources.web.shared.base.GetHelpUrlAction
 import org.siemac.metamac.statistical.resources.web.shared.base.GetInitialValuesAction;
 import org.siemac.metamac.statistical.resources.web.shared.base.GetLatestResourceVersionAction;
 import org.siemac.metamac.statistical.resources.web.shared.base.ResendStreamMessageAction;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.CreateDatabaseDatasourceAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.CreateDatasetCategorisationsAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.CreateDatasetConstraintAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.DeleteCategorisationsAction;
@@ -117,7 +118,6 @@ import org.siemac.metamac.statistical.resources.web.shared.dataset.SaveDatasetAt
 import org.siemac.metamac.statistical.resources.web.shared.dataset.SaveDatasetVersionAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.SaveDatasourceAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.SaveRegionAction;
-import org.siemac.metamac.statistical.resources.web.shared.dataset.SetDbDatasourceImportationAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.UpdateDatasetVersionProcStatusAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.UpdateDatasetVersionsProcStatusAction;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetAgenciesPaginatedListAction;
@@ -219,7 +219,6 @@ public class ServerModule extends HandlerModule {
         bindHandler(GetCategorySchemesPaginatedListAction.class, GetCategorySchemesPaginatedListActionHandler.class);
         bindHandler(GetCategoriesPaginatedListAction.class, GetCategoriesPaginatedListActionHandler.class);
         bindHandler(GetItemsAction.class, GetItemsActionHandler.class);
-        bindHandler(SetDbDatasourceImportationAction.class, SetDbDatasourceImportationActionHandler.class);
 
         // DATASETS
         bindHandler(GetDatasetVersionAction.class, GetDatasetVersionActionHandler.class);
@@ -250,6 +249,7 @@ public class ServerModule extends HandlerModule {
         bindHandler(CreateDatasetConstraintAction.class, CreateDatasetConstraintActionHandler.class);
         bindHandler(DeleteDatasetConstraintAction.class, DeleteDatasetConstraintActionHandler.class);
         bindHandler(SaveRegionAction.class, SaveRegionActionHandler.class);
+        bindHandler(CreateDatabaseDatasourceAction.class, CreateDatabaseDatasourceActionHandler.class);
 
         // PUBLICATIONS
         bindHandler(GetPublicationVersionsAction.class, GetPublicationVersionsActionHandler.class);

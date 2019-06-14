@@ -1690,7 +1690,7 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
     }
 
     @Override
-    public void testImportDbDatasourceInDatasetVersion() throws Exception {
+    public void testCreateDatabaseDatasourceInDatasetVersion() throws Exception {
         // TODO METAMAC-2866 It's necessary to define what should be tested
 
     }

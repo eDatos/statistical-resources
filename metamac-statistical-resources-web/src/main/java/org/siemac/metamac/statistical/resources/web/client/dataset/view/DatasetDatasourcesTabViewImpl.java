@@ -17,7 +17,7 @@ import org.siemac.metamac.statistical.resources.web.client.dataset.presenter.Dat
 import org.siemac.metamac.statistical.resources.web.client.dataset.utils.DatasetClientSecurityUtils;
 import org.siemac.metamac.statistical.resources.web.client.dataset.view.handlers.DatasetDatasourcesTabUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.DatasourceMainFormLayout;
-import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.ImportDatabaseDatasourceWindow;
+import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.CreateDatabaseDatasourceWindow;
 import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.ImportDatasourceWithMappingWindow;
 import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.ImportDatasourcesWindow;
 import org.siemac.metamac.statistical.resources.web.client.utils.StatisticalResourcesRecordUtils;
@@ -124,7 +124,7 @@ public class DatasetDatasourcesTabViewImpl extends ViewWithUiHandlers<DatasetDat
 
         private DeleteConfirmationWindow          deleteConfirmationWindow;
         private ImportDatasourcesWindow           importDatasourcesWindow;
-        private ImportDatabaseDatasourceWindow    importDatabaseDatasourceWindow;
+        private CreateDatabaseDatasourceWindow    createDatabaseDatasourceWindow;
         private ImportDatasourceWithMappingWindow importDatasourceWithMappingWindow;
 
         public DatasourcesListPanel() {
@@ -173,8 +173,8 @@ public class DatasetDatasourcesTabViewImpl extends ViewWithUiHandlers<DatasetDat
 
             // Import datasource from DB window
 
-            importDatabaseDatasourceWindow = new ImportDatabaseDatasourceWindow();
-            importDatabaseDatasourceWindow.setVisible(Boolean.FALSE);
+            createDatabaseDatasourceWindow = new CreateDatabaseDatasourceWindow();
+            createDatabaseDatasourceWindow.setVisible(Boolean.FALSE);
 
             // Import datasources window
 
@@ -236,8 +236,8 @@ public class DatasetDatasourcesTabViewImpl extends ViewWithUiHandlers<DatasetDat
 
                 @Override
                 public void onClick(ClickEvent event) {
-                    if (importDatabaseDatasourceWindow != null) {
-                        importDatabaseDatasourceWindow.show();
+                    if (createDatabaseDatasourceWindow != null) {
+                        createDatabaseDatasourceWindow.show();
                     }
                 }
             });
@@ -281,13 +281,13 @@ public class DatasetDatasourcesTabViewImpl extends ViewWithUiHandlers<DatasetDat
                 }
             });
 
-            importDatabaseDatasourceWindow.getSaveButtonHandlers().addClickHandler(new com.smartgwt.client.widgets.form.fields.events.ClickHandler() { // NOSONAR
+            createDatabaseDatasourceWindow.getSaveButtonHandlers().addClickHandler(new com.smartgwt.client.widgets.form.fields.events.ClickHandler() { // NOSONAR
 
                 @Override
                 public void onClick(com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
-                    if (importDatabaseDatasourceWindow.validate()) {
-                        getUiHandlers().dbDatasourceImportation(datasetVersionDto.getUrn(), importDatabaseDatasourceWindow.getTableNameItemValue());
-                        importDatabaseDatasourceWindow.hide();
+                    if (createDatabaseDatasourceWindow.validate()) {
+                        getUiHandlers().createDatabaseDatasource(datasetVersionDto.getUrn(), createDatabaseDatasourceWindow.getTableNameItemValue());
+                        createDatabaseDatasourceWindow.hide();
                     }
 
                 }

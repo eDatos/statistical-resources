@@ -1,4 +1,4 @@
-package org.siemac.metamac.statistical.resources.core.io.utils;
+package org.siemac.metamac.statistical.resources.core.utils;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
@@ -7,11 +7,16 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersi
 import org.siemac.metamac.statistical.resources.core.enume.domain.NextVersionTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.VersionRationaleTypeEnum;
 import org.siemac.metamac.statistical.resources.core.io.serviceimpl.ImportDatasetFromDatabaseJob;
+import org.siemac.metamac.statistical.resources.core.utils.shared.DatabaseDatasetImportSharedUtils;
 
-public class DatabaseDatasetImportUtils {
+public class DatabaseDatasetImportUtils extends DatabaseDatasetImportSharedUtils {
 
     private DatabaseDatasetImportUtils() {
-        // NOTHING TO DO HERE
+        super();
+    }
+
+    public static boolean isDatabaseDatasetImportJob(ServiceContext ctx) {
+        return Boolean.TRUE.equals(ctx.getProperty(ImportDatasetFromDatabaseJob.DATABASE_IMPORT_JOB_FLAG));
     }
 
     public static void setRequiredMetadataForDatabaseDatasetImportation(DatasetVersion datasetVersion) {
@@ -21,10 +26,6 @@ public class DatabaseDatasetImportUtils {
         DatabaseDatasetImportUtils.setDatasetVersionNextVersion(datasetVersion);
         DatabaseDatasetImportUtils.setDatasetVersionNextVersionDate(datasetVersion);
         DatabaseDatasetImportUtils.setDatasetVersionDateNextUpdate(datasetVersion);
-    }
-
-    public static boolean isDatabaseDatasetImportJob(ServiceContext ctx) {
-        return Boolean.TRUE.equals(ctx.getProperty(ImportDatasetFromDatabaseJob.DATABASE_IMPORT_JOB_FLAG));
     }
 
     private static void setDatasetVersionVersionRationaleType(DatasetVersion datasetVersion) {

@@ -43,7 +43,6 @@ import org.quartz.DateBuilder.IntervalUnit;
 import org.quartz.JobBuilder;
 import org.quartz.JobDataMap;
 import org.quartz.JobDetail;
-import org.quartz.JobExecutionContext;
 import org.quartz.JobKey;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
@@ -94,7 +93,6 @@ import org.siemac.metamac.statistical.resources.core.io.serviceimpl.ManipulatePx
 import org.siemac.metamac.statistical.resources.core.io.serviceimpl.ManipulateSdmx21DataCallbackImpl;
 import org.siemac.metamac.statistical.resources.core.io.serviceimpl.RecoveryImportDatasetJob;
 import org.siemac.metamac.statistical.resources.core.io.serviceimpl.validators.ValidateDataVersusDsd;
-import org.siemac.metamac.statistical.resources.core.io.utils.DatabaseDatasetImportUtils;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceapi.LifecycleService;
 import org.siemac.metamac.statistical.resources.core.notices.ServiceNoticeAction;
 import org.siemac.metamac.statistical.resources.core.notices.ServiceNoticeMessage;
@@ -107,6 +105,7 @@ import org.siemac.metamac.statistical.resources.core.task.domain.TaskProperties;
 import org.siemac.metamac.statistical.resources.core.task.exception.TaskNotFoundException;
 import org.siemac.metamac.statistical.resources.core.task.serviceapi.validators.TaskServiceInvocationValidator;
 import org.siemac.metamac.statistical.resources.core.task.utils.JobUtil;
+import org.siemac.metamac.statistical.resources.core.utils.DatabaseDatasetImportUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -1052,30 +1051,6 @@ public class TaskServiceImpl extends TaskServiceImplBase implements ApplicationL
     }
 
     @Override
-    public boolean existsAnyTaskInResource(ServiceContext ctx, String resourceId) throws MetamacException {
-        taskServiceInvocationValidator.checkExistsAnyTaskInResource(ctx, resourceId);
-        try {
-            boolean existsDbimportationTask = Boolean.FALSE;
-
-            Scheduler sched = SchedulerRepository.getInstance().lookup(SCHEDULER_INSTANCE_NAME); // get a reference to a scheduler
-
-            List<JobExecutionContext> jobExecutionContexts = sched.getCurrentlyExecutingJobs();
-            if (CollectionUtils.isNotEmpty(jobExecutionContexts)) {
-                for (int i = 0; i < jobExecutionContexts.size() && !existsDbimportationTask; i++) {
-                    JobExecutionContext jobExecutionContext = jobExecutionContexts.get(i);
-                    if (StringUtils.contains(jobExecutionContext.getJobDetail().getKey().getName(), resourceId)) {
-                        existsDbimportationTask = Boolean.TRUE;
-                    }
-                }
-            }
-
-            return existsDbimportationTask;
-        } catch (SchedulerException e) {
-            throw MetamacExceptionBuilder.builder().withCause(e).withExceptionItems(ServiceExceptionType.TASKS_SCHEDULER_ERROR).withMessageParameters(e.getMessage()).build();
-        }
-    }
-
-    @Override
     public void processDatabaseDatasetPollingTask(ServiceContext ctx) throws MetamacException {
         taskServiceInvocationValidator.checkProcessDatabaseDatasetPollingTask(ctx);
 
@@ -1113,12 +1088,10 @@ public class TaskServiceImpl extends TaskServiceImplBase implements ApplicationL
     }
     
     private List<DatasetVersion> filterDatasetsWithTaskInProgress(ServiceContext ctx, List<DatasetVersion> datasetsVersion) throws MetamacException {
-        // TODO METAMAC-2866 existsAnyTaskInResource call could be not necessary, check it!
         List<DatasetVersion> dsv = new ArrayList<>();
         if (datasetsVersion != null) {
             for (DatasetVersion datasetVersion : datasetsVersion) {
-                if (!existsTaskForResource(ctx, datasetVersion.getDataset().getIdentifiableStatisticalResource().getUrn()) &&
-                        !existsAnyTaskInResource(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getCode())) {
+                if (!existsTaskForResource(ctx, datasetVersion.getDataset().getIdentifiableStatisticalResource().getUrn())) {
                     dsv.add(datasetVersion);
                 }
             }

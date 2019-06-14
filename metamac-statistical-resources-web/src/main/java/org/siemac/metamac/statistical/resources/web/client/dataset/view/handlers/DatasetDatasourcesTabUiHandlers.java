@@ -21,5 +21,5 @@ public interface DatasetDatasourcesTabUiHandlers extends UiHandlers {
     void showWaitPopup();
 
 	void saveDataset(DatasetVersionDto datasetVersionDto);
-    void dbDatasourceImportation(String urn, String tablename);
+    void createDatabaseDatasource(String urn, String tablename);
 }

@@ -319,7 +319,7 @@ public class DatasetServiceInvocationValidatorImpl extends BaseInvocationValidat
         StatisticalResourcesValidationUtils.checkParameterRequired(categorisation, ServiceExceptionParameters.CATEGORISATION, exceptions);
     }
 
-    public static void checkImportDbDatasourceInDatasetVersion(String datasetVersionUrn, String tableName, List<MetamacExceptionItem> exceptions) {
+    public static void checkCreateDatabaseDatasourceInDatasetVersion(String datasetVersionUrn, String tableName, List<MetamacExceptionItem> exceptions) {
         StatisticalResourcesValidationUtils.checkParameterRequired(datasetVersionUrn, ServiceExceptionParameters.DATASET_VERSION_URN, exceptions);
         StatisticalResourcesValidationUtils.checkParameterRequired(tableName, ServiceExceptionParameters.TABLE_NAME, exceptions);
     }

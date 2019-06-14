@@ -21,6 +21,8 @@ import org.siemac.metamac.statistical.resources.web.client.events.SetDatasetEven
 import org.siemac.metamac.statistical.resources.web.client.events.ShowUnauthorizedDatasetWarningMessageEvent;
 import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.PlaceRequestUtils;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.CreateDatabaseDatasourceAction;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.CreateDatabaseDatasourceResult;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.DeleteDatasourcesAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.DeleteDatasourcesResult;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetCodelistsWithVariableAction;
@@ -31,8 +33,6 @@ import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasource
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasourcesByDatasetResult;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.SaveDatasetVersionAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.SaveDatasetVersionResult;
-import org.siemac.metamac.statistical.resources.web.shared.dataset.SetDbDatasourceImportationAction;
-import org.siemac.metamac.statistical.resources.web.shared.dataset.SetDbDatasourceImportationResult;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationAction;
 import org.siemac.metamac.statistical.resources.web.shared.external.GetStatisticalOperationResult;
 import org.siemac.metamac.web.common.client.events.ChangeWaitPopupVisibilityEvent;
@@ -221,7 +221,7 @@ public class DatasetDatasourcesTabPresenter extends Presenter<DatasetDatasources
     public void showWaitPopup() {
         ChangeWaitPopupVisibilityEvent.fire(this, true);
     }
-    
+
     @Override
     public void saveDataset(DatasetVersionDto datasetVersionDto) {
         dispatcher.execute(new SaveDatasetVersionAction(datasetVersionDto, datasetVersionDto.getStatisticalOperation().getCode()),
@@ -238,12 +238,12 @@ public class DatasetDatasourcesTabPresenter extends Presenter<DatasetDatasources
     }
 
     @Override
-    public void dbDatasourceImportation(String urn, String tablename) {
-        dispatcher.execute(new SetDbDatasourceImportationAction(urn, tablename), new WaitingAsyncCallbackHandlingError<SetDbDatasourceImportationResult>(this) {
+    public void createDatabaseDatasource(String urn, String tablename) {
+        dispatcher.execute(new CreateDatabaseDatasourceAction(urn, tablename), new WaitingAsyncCallbackHandlingError<CreateDatabaseDatasourceResult>(this) {
 
             @Override
-            public void onWaitSuccess(SetDbDatasourceImportationResult result) {
-                ShowMessageEvent.fireSuccessMessage(DatasetDatasourcesTabPresenter.this, getMessages().dbDatasourceCreated());
+            public void onWaitSuccess(CreateDatabaseDatasourceResult result) {
+                ShowMessageEvent.fireSuccessMessage(DatasetDatasourcesTabPresenter.this, getMessages().databaseDatasourceCreated());
                 retrieveDatasourcesByDataset(datasetVersion.getUrn(), 0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS);
             }
         });

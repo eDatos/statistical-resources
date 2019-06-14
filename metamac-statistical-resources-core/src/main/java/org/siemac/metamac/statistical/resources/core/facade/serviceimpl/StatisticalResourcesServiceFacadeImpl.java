@@ -2367,9 +2367,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
     }
 
     @Override
-    public void importDbDatasourceInDatasetVersion(ServiceContext ctx, String datasetVersionUrn, String tableName) throws MetamacException {
-        // TODO METAMAC-2866 It's necessary check if functionality is well defined
-
+    public void createDatabaseDatasourceInDatasetVersion(ServiceContext ctx, String datasetVersionUrn, String tableName) throws MetamacException {
         // Retrieve
         DatasetVersionDto datasetVersionDto = retrieveDatasetVersionByUrn(ctx, datasetVersionUrn);
 
@@ -2380,6 +2378,6 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         DatasetVersion datasetVersion = datasetDto2DoMapper.datasetVersionDtoToDo(datasetVersionDto);
 
         // Service
-        getDatasetService().importDbDatasourceInDatasetVersion(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getUrn(), tableName);
+        getDatasetService().createDatabaseDatasourceInDatasetVersion(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getUrn(), tableName);
     }
 }

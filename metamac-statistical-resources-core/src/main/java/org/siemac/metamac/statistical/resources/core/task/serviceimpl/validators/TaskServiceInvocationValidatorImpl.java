@@ -124,10 +124,6 @@ public class TaskServiceInvocationValidatorImpl {
         StatisticalResourcesValidationUtils.checkParameterRequired(resourceId, ServiceExceptionParameters.TASK_INFO_RESOURCE_ID, exceptions);
     }
 
-    public static void checkExistsAnyTaskInResource(String resourceId, List<MetamacExceptionItem> exceptions) {
-        StatisticalResourcesValidationUtils.checkParameterRequired(resourceId, ServiceExceptionParameters.TASK_INFO_RESOURCE_ID, exceptions);
-    }
-
     public static void checkProcessDatabaseImportationTask(String databaseImportationJobKey, TaskInfoDataset taskInfoDataset, List<MetamacExceptionItem> exceptions) throws MetamacException {
         // TODO METAMAC-2866 Check this, new required parameters?
         StatisticalResourcesValidationUtils.checkParameterRequired(databaseImportationJobKey, ServiceExceptionParameters.TASK_DATASET_JOB_KEY, exceptions);

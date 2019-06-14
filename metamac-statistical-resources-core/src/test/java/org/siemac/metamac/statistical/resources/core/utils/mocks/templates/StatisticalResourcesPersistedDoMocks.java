@@ -8,7 +8,6 @@ import java.util.Map;
 import org.joda.time.DateTime;
 import org.siemac.metamac.core.common.util.GeneratorUrnUtils;
 import org.siemac.metamac.core.common.util.SdmxTimeUtils;
-import org.siemac.metamac.core.common.util.shared.VersionUtil;
 import org.siemac.metamac.statistical.resources.core.base.domain.HasLifecycle;
 import org.siemac.metamac.statistical.resources.core.base.domain.IdentifiableStatisticalResource;
 import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatisticalResource;
@@ -37,7 +36,6 @@ import org.siemac.metamac.statistical.resources.core.publication.domain.Publicat
 import org.siemac.metamac.statistical.resources.core.query.domain.Query;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
 import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesCollectionUtils;
-import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesVersionUtils;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.DatasetMock;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.DatasetVersionMock;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.MultidatasetMock;
@@ -309,7 +307,7 @@ public class StatisticalResourcesPersistedDoMocks extends StatisticalResourcesDo
         computeCoverageRelatedMetadata(datasetVersion);
 
         datasetVersion.setKeepAllData(Boolean.TRUE);
-        datasetVersion.setDataSourceType(DataSourceTypeEnum.FILE); // TODO METAMAC-2866 dirty cheat?
+        datasetVersion.setDataSourceType(DataSourceTypeEnum.FILE);
 
         return datasetVersion;
     }

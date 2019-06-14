@@ -69,9 +69,6 @@ Application DatasetsStatisticalResources {
 			"Check if exists an db importation job task in the @param resourceId"
     		boolean existDatabaseImportationTaskInResource(String resourceId) throws MetamacException;
     		
-    		"Check if exists any job task related with the @param resourceId"
-    		boolean existsAnyTaskInResource(String resourceId) throws MetamacException;
-    		
     		"Creates a task"
 			@Task createTask(@Task task) throws MetamacException;
 			"Updates a task"

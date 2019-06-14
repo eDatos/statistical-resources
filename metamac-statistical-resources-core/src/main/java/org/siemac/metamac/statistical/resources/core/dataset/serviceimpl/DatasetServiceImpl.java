@@ -15,8 +15,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.BooleanUtils;
@@ -85,7 +83,6 @@ import org.siemac.metamac.statistical.resources.core.invocation.service.SrmRestI
 import org.siemac.metamac.statistical.resources.core.invocation.utils.RestMapper;
 import org.siemac.metamac.statistical.resources.core.io.serviceimpl.ImportDatasetFromDatabaseJob;
 import org.siemac.metamac.statistical.resources.core.io.serviceimpl.validators.ValidateDataVersusDsd;
-import org.siemac.metamac.statistical.resources.core.io.utils.DatabaseDatasetImportUtils;
 import org.siemac.metamac.statistical.resources.core.io.utils.ManipulateDataUtils;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.checker.ExternalItemChecker;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
@@ -95,6 +92,7 @@ import org.siemac.metamac.statistical.resources.core.task.domain.AlternativeEnum
 import org.siemac.metamac.statistical.resources.core.task.domain.FileDescriptor;
 import org.siemac.metamac.statistical.resources.core.task.domain.FileDescriptorResult;
 import org.siemac.metamac.statistical.resources.core.task.domain.TaskInfoDataset;
+import org.siemac.metamac.statistical.resources.core.utils.DatabaseDatasetImportUtils;
 import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesCollectionUtils;
 import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesVersionUtils;
 import org.siemac.metamac.statistical.resources.core.utils.predicates.CodeDimensionEqualsIdentifierPredicate;
@@ -116,11 +114,7 @@ import es.gobcan.istac.edatos.dataset.repository.service.DatasetRepositoriesServ
 @Service("datasetService")
 public class DatasetServiceImpl extends DatasetServiceImplBase {
 
-    private static final Logger                       log                            = LoggerFactory.getLogger(DatasetServiceImpl.class);
-    private static final Pattern                      PATTER                         = Pattern.compile("^[a-zA-Z_][a-zA-Z0-9_]*$");
-
-    private static final int                          TABLENAME_MIN_LENGTH_PERMITTED = 1;
-    private static final int                          TABLENAME_MAX_LENGTH_PERMITTED = 63;
+    private static final Logger                       log = LoggerFactory.getLogger(DatasetServiceImpl.class);
 
     @Autowired
     private IdentifiableStatisticalResourceRepository identifiableStatisticalResourceRepository;
@@ -1204,8 +1198,8 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
     }
 
     @Override
-    public void importDbDatasourceInDatasetVersion(ServiceContext ctx, String datasetVersionUrn, String tableName) throws MetamacException {
-        datasetServiceInvocationValidator.checkImportDbDatasourceInDatasetVersion(ctx, datasetVersionUrn, tableName);
+    public void createDatabaseDatasourceInDatasetVersion(ServiceContext ctx, String datasetVersionUrn, String tableName) throws MetamacException {
+        datasetServiceInvocationValidator.checkCreateDatabaseDatasourceInDatasetVersion(ctx, datasetVersionUrn, tableName);
 
         DatasetVersion datasetVersion = getDatasetVersionRepository().retrieveByUrn(datasetVersionUrn);
 
@@ -1770,17 +1764,14 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
     }
 
     private void checkTableNameLength(String tableName, String datasetVersionUrn) throws MetamacException {
-        int tableNameLength = tableName.length();
-
-        if (tableNameLength < DatasetServiceImpl.TABLENAME_MIN_LENGTH_PERMITTED || tableNameLength > DatasetServiceImpl.TABLENAME_MAX_LENGTH_PERMITTED) {
-            throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.INVALID_TABLENAME_LENGTH)
-                    .withMessageParameters(tableNameLength, tableName, datasetVersionUrn, DatasetServiceImpl.TABLENAME_MIN_LENGTH_PERMITTED, DatasetServiceImpl.TABLENAME_MAX_LENGTH_PERMITTED).build();
+        if (!DatabaseDatasetImportUtils.checkTableNameLength(tableName)) {
+            throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.INVALID_TABLENAME_LENGTH).withMessageParameters(tableName.length(), tableName, datasetVersionUrn,
+                    DatabaseDatasetImportUtils.TABLENAME_MIN_LENGTH_PERMITTED, DatabaseDatasetImportUtils.TABLENAME_MAX_LENGTH_PERMITTED).build();
         }
     }
 
     private void checkTableNameFormat(String tableName, String datasetVersionUrn) throws MetamacException {
-        Matcher matcher = PATTER.matcher(tableName);
-        if (!matcher.matches()) {
+        if (!DatabaseDatasetImportUtils.checkTableNameFormat(tableName)) {
             throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.INVALID_TABLENAME_FORMAT).withMessageParameters(tableName, datasetVersionUrn).build();
         }
     }
