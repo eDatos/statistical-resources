@@ -250,19 +250,7 @@ public class TaskServiceImpl extends TaskServiceImplBase implements ApplicationL
             // Scheduler an importation job
             Scheduler sched = SchedulerRepository.getInstance().lookup(SCHEDULER_INSTANCE_NAME); // get a reference to a scheduler
 
-            // Validation: There shouldn't be an import processing on this dataset
-            if (sched.checkExists(jobKey)) {
-                throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.TASKS_ERROR_MAX_CURRENT_JOBS).withLoggedLevel(ExceptionLevelEnum.ERROR).build(); // Error
-            }
-            // Validation: There shouldn't be a recovery job in process, please wait
-            if (sched.checkExists(createJobKeyForRecoveryImportationResource(datasetUrn))) {
-                throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.TASKS_JOB_RECOVERY_IN_PROCESS).withLoggedLevel(ExceptionLevelEnum.ERROR).build(); // Error
-            }
-
-            // Validation: There shouldn't be an duplication processing on this dataset
-            if (sched.checkExists(createJobKeyForDuplicationResource(datasetUrn))) {
-                throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.TASKS_ERROR_MAX_CURRENT_JOBS).withLoggedLevel(ExceptionLevelEnum.ERROR).build(); // Error
-            }
+            checkThereAreNoPlanifiedJobs(sched, jobKey, datasetUrn);
 
             // Checking garbage
             List<ConditionalCriteria> conditions = ConditionalCriteriaBuilder.criteriaFor(Task.class).withProperty(TaskProperties.job()).eq(taskName).distinctRoot().build();
@@ -396,20 +384,7 @@ public class TaskServiceImpl extends TaskServiceImplBase implements ApplicationL
             // Scheduler an importation job
             Scheduler sched = SchedulerRepository.getInstance().lookup(SCHEDULER_INSTANCE_NAME); // get a reference to a scheduler
 
-            // Validation: There shouldn't be an duplication processing on this dataset
-            if (sched.checkExists(duplicationJobKey)) {
-                throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.TASKS_ERROR_MAX_CURRENT_JOBS).withLoggedLevel(ExceptionLevelEnum.ERROR).build(); // Error
-            }
-
-            // Validation: There shouldn't be a importation job in process, please wait
-            if (sched.checkExists(createJobKeyForImportationResource(datasetUrn))) {
-                throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.TASKS_JOB_IMPORTATION_IN_PROCESS).withLoggedLevel(ExceptionLevelEnum.ERROR).build(); // Error
-            }
-
-            // Validation: There shouldn't be a recovery job in process, please wait
-            if (sched.checkExists(createJobKeyForRecoveryImportationResource(datasetUrn))) {
-                throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.TASKS_JOB_RECOVERY_IN_PROCESS).withLoggedLevel(ExceptionLevelEnum.ERROR).build(); // Error
-            }
+            checkThereAreNoPlanifiedJobs(sched, duplicationJobKey, datasetUrn);
 
             // put triggers in group named after the cluster node instance just to distinguish (in logging) what was scheduled from where
             HashMap<String, List<Mapping>> jobDataMap = new HashMap<String, List<Mapping>>();
@@ -449,6 +424,52 @@ public class TaskServiceImpl extends TaskServiceImplBase implements ApplicationL
         }
 
         return duplicationJobKey.getName();
+    }
+
+    private void checkThereAreNoPlanifiedJobs(Scheduler sched, JobKey jobKey, String datasetUrn) throws SchedulerException, MetamacException {
+        checkSameJobNotExists(sched, jobKey);
+
+        checkRecoveryJobNotExists(sched, datasetUrn);
+
+        String jobKeyName = jobKey.getName();
+
+        if (!jobKeyName.startsWith(PREFIX_JOB_IMPORT_DATA)) {
+            checkImportationJobNotExists(sched, datasetUrn);
+        }
+
+        if (!jobKeyName.startsWith(PREFIX_JOB_DATABASE_IMPORT_DATA)) {
+            checkDatabaseImportationJobNotExists(sched, datasetUrn);
+        }
+
+        if (!jobKeyName.startsWith(PREFIX_JOB_DUPLICATION_DATA)) {
+            checkDuplicationJobNotExists(sched, datasetUrn);
+        }
+    }
+
+    private void checkDuplicationJobNotExists(Scheduler sched, String datasetUrn) throws SchedulerException, MetamacException {
+        checkJobNotExists(sched, createJobKeyForDuplicationResource(datasetUrn), ServiceExceptionType.TASKS_JOB_DUPLICATION_IN_PROCESS);
+    }
+
+    private void checkRecoveryJobNotExists(Scheduler sched, String datasetUrn) throws SchedulerException, MetamacException {
+        checkJobNotExists(sched, createJobKeyForRecoveryImportationResource(datasetUrn), ServiceExceptionType.TASKS_JOB_RECOVERY_IN_PROCESS);
+    }
+
+    private void checkDatabaseImportationJobNotExists(Scheduler sched, String datasetUrn) throws SchedulerException, MetamacException {
+        checkJobNotExists(sched, createJobKeyForDatabaseImportationResource(datasetUrn), ServiceExceptionType.TASKS_JOB_DATABASE_IMPORTATION_IN_PROCESS);
+    }
+
+    private void checkImportationJobNotExists(Scheduler sched, String datasetUrn) throws SchedulerException, MetamacException {
+        checkJobNotExists(sched, createJobKeyForImportationResource(datasetUrn), ServiceExceptionType.TASKS_JOB_IMPORTATION_IN_PROCESS);
+    }
+
+    private void checkSameJobNotExists(Scheduler sched, JobKey jobKey) throws SchedulerException, MetamacException {
+        checkJobNotExists(sched, jobKey, ServiceExceptionType.TASKS_ERROR_MAX_CURRENT_JOBS);
+    }
+
+    private void checkJobNotExists(Scheduler sched, JobKey jobKey, CommonServiceExceptionType exceptionType) throws SchedulerException, MetamacException {
+        if (sched.checkExists(jobKey)) {
+            throw MetamacExceptionBuilder.builder().withExceptionItems(exceptionType).withLoggedLevel(ExceptionLevelEnum.ERROR).build();
+        }
     }
 
     @Override

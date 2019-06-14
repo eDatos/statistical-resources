@@ -192,13 +192,16 @@ public class ServiceExceptionType extends CommonServiceExceptionType {
     public static final CommonServiceExceptionType TASKS_ERROR                                                                  = create("exception.resources.task.error");
     public static final CommonServiceExceptionType TASKS_SCHEDULER_ERROR                                                        = create("exception.resources.task.scheduler.error");
     public static final CommonServiceExceptionType TASKS_JOB_RECOVERY_IN_PROCESS                                                = create("exception.resources.task.error.recovery_in_process");
+    public static final CommonServiceExceptionType TASKS_JOB_DUPLICATION_IN_PROCESS                                             = create("exception.resources.task.error.duplication_in_process");
     public static final CommonServiceExceptionType TASKS_JOB_IMPORTATION_IN_PROCESS                                             = create("exception.resources.task.error.imporation_in_process");
+    public static final CommonServiceExceptionType TASKS_JOB_DATABASE_IMPORTATION_IN_PROCESS                                    = create(
+            "exception.resources.task.error.database_importation_in_process");
     public static final CommonServiceExceptionType TASKS_IN_PROGRESS                                                            = create("exception.resources.task.in_progress");
 
     // Dataset Importation
     public static final CommonServiceExceptionType FILE_NOT_LINKED_TO_ANY_DATASET_IN_STATISTICAL_OPERATION                      = create(
             "exception.resources.dataset.importation.file_not_linked_to_any_dataset_in_statistical_operation");
-    public static final CommonServiceExceptionType INVALID_DATA_SOURCE_TYPE_FOR_DATASET_DATA_IMPORTATION                                = create(
+    public static final CommonServiceExceptionType INVALID_DATA_SOURCE_TYPE_FOR_DATASET_DATA_IMPORTATION                        = create(
             "exception.resources.dataset.importation.invalid_data_source_type_for_data_importation");
     public static final CommonServiceExceptionType INVALID_FILE_FOR_DATASET_VERSION                                             = create(
             "exception.resources.dataset.importation.invalid_file_for_dataset");
