@@ -247,10 +247,7 @@ public class TaskServiceImpl extends TaskServiceImplBase implements ApplicationL
             serializeFilePathsAndNames(taskInfoDataset, filePaths, fileNames, fileFormats);
             serializeAlternativeRepresentations(taskInfoDataset, alternativeRepresentations);
 
-            // Scheduler an importation job
-            Scheduler sched = SchedulerRepository.getInstance().lookup(SCHEDULER_INSTANCE_NAME); // get a reference to a scheduler
-
-            checkExistTaskInResource(ctx, sched, jobKey, datasetUrn);
+            checkExistTaskInResource(ctx, jobKey, datasetUrn);
 
             // Checking garbage
             List<ConditionalCriteria> conditions = ConditionalCriteriaBuilder.criteriaFor(Task.class).withProperty(TaskProperties.job()).eq(taskName).distinctRoot().build();
@@ -282,6 +279,9 @@ public class TaskServiceImpl extends TaskServiceImplBase implements ApplicationL
             newTask.setExtensionPoint(taskInfoDataset.getDatasetVersionId() + JobUtil.SERIALIZATION_SEPARATOR + fileNames.toString()); // DatasetId | filename0 | ... @| filenameN
             createTask(ctx, newTask);
             SimpleTrigger trigger = newTrigger().withIdentity(triggerKey).startAt(futureDate(10, IntervalUnit.SECOND)).withSchedule(simpleSchedule()).build();
+
+            // Scheduler an importation job
+            Scheduler sched = SchedulerRepository.getInstance().lookup(SCHEDULER_INSTANCE_NAME); // get a reference to a scheduler
             sched.scheduleJob(job, trigger);
 
         } catch (Exception e) {
@@ -388,10 +388,7 @@ public class TaskServiceImpl extends TaskServiceImplBase implements ApplicationL
         TriggerKey duplicationTriggerKey = createTriggerKeyForDuplicationDataset(datasetUrn);
 
         try {
-            // Scheduler an importation job
-            Scheduler sched = SchedulerRepository.getInstance().lookup(SCHEDULER_INSTANCE_NAME); // get a reference to a scheduler
-
-            checkExistTaskInResource(ctx, sched, duplicationJobKey, datasetUrn);
+            checkExistTaskInResource(ctx, duplicationJobKey, datasetUrn);
 
             // put triggers in group named after the cluster node instance just to distinguish (in logging) what was scheduled from where
             HashMap<String, List<Mapping>> jobDataMap = new HashMap<String, List<Mapping>>();
@@ -418,6 +415,8 @@ public class TaskServiceImpl extends TaskServiceImplBase implements ApplicationL
                 SimpleTrigger duplicationImportTrigger = newTrigger().withIdentity(duplicationTriggerKey).startAt(futureDate(10, IntervalUnit.SECOND)).withSchedule(simpleSchedule()).build();
 
                 try {
+                    // Scheduler a duplication job
+                    Scheduler sched = SchedulerRepository.getInstance().lookup(SCHEDULER_INSTANCE_NAME); // get a reference to a scheduler
                     sched.scheduleJob(duplicationImportJob, duplicationImportTrigger);
                 } catch (SchedulerException e) {
                     logger.error("PlannifyRecoveryImportDataset: the recovery importation with key " + duplicationJobKey.getName() + " has failed", e);
@@ -433,7 +432,7 @@ public class TaskServiceImpl extends TaskServiceImplBase implements ApplicationL
         return duplicationJobKey.getName();
     }
 
-    private void checkExistTaskInResource(ServiceContext ctx, Scheduler sched, JobKey jobKey, String datasetUrn) throws SchedulerException, MetamacException {
+    private void checkExistTaskInResource(ServiceContext ctx, JobKey jobKey, String datasetUrn) throws MetamacException {
         checkSameJobNotExists(jobKey);
 
         checkExistRecoveryImportationTaskInResource(ctx, datasetUrn);

@@ -27,6 +27,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.core.common.exception.MetamacExceptionBuilder;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.core.common.util.MetamacCollectionUtils;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
@@ -46,22 +47,22 @@ import org.siemac.metamac.statistical.resources.core.utils.TaskInfoPredicateByDa
 
 public class DatasetServiceImportationTest extends StatisticalResourcesBaseTest {
 
-    private static final String DATASET_MOCK_URN = "MOCK_URN";
+    private static final String               DATASET_MOCK_URN = "MOCK_URN";
 
     @InjectMocks
-    private DatasetService datasetService = new DatasetServiceImpl();
+    private DatasetService                    datasetService   = new DatasetServiceImpl();
 
     @Mock
     private DatasetServiceInvocationValidator datasetServiceInvocationValidator;
 
     @Mock
-    private DatasetVersionRepository datasetVersionRepository;
+    private DatasetVersionRepository          datasetVersionRepository;
 
     @Mock
-    private DatasetRepository datasetRepository;
+    private DatasetRepository                 datasetRepository;
 
     @Mock
-    private TaskService taskService;
+    private TaskService                       taskService;
 
     @Before
     public void setUp() {
@@ -118,7 +119,8 @@ public class DatasetServiceImportationTest extends StatisticalResourcesBaseTest 
         Mockito.when(datasetVersionRepository.retrieveByUrn(Mockito.eq(datasetVersionUrn))).thenReturn(datasetVersion);
         Mockito.when(datasetRepository.findDatasetUrnLinkedToDatasourceSourceName(filename)).thenReturn(DATASET_MOCK_URN);
 
-        expectedMetamacException(new MetamacException(Arrays.asList(new MetamacExceptionItem(ServiceExceptionType.INVALID_DATA_SOURCE_TYPE_FOR_DATASET_DATA_IMPORTATION, DataSourceTypeEnum.DATABASE))));
+        expectedMetamacException(MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.INVALID_DATA_SOURCE_TYPE_FOR_DATASET_DATA_IMPORTATION)
+                .withMessageParameters(DataSourceTypeEnum.DATABASE, DataSourceTypeEnum.FILE).build());
 
         List<URL> urls = Arrays.asList(buildFileUrl(filename));
         HashMap<String, String> mappings = new HashMap<String, String>();
