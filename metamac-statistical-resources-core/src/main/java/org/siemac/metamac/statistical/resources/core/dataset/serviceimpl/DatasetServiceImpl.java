@@ -1207,7 +1207,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
 
         checkTableNameFormat(tableName, datasetVersionUrn);
 
-        checkNotTasksInProgress(ctx, datasetVersionUrn);
+        checkNotTasksInProgress(ctx, datasetVersion.getDataset().getIdentifiableStatisticalResource().getUrn());
 
         ProcStatusValidator.checkDatasetVersionCanImportDatasources(datasetVersion);
 

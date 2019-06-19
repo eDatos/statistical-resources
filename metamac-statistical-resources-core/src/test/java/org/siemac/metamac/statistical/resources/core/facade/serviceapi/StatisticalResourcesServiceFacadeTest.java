@@ -51,6 +51,7 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_06_FOR_QUERIES_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_09_OPER_0001_CODE_000003_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_10_OPER_0002_CODE_000001_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_113_DATABASE_TYPE_BASIC_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_11_OPER_0002_CODE_000002_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_12_OPER_0002_MAX_CODE_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_13_OPER_0002_CODE_000003_PROD_VAL_NAME;
@@ -164,6 +165,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.RandomStringUtils;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ApplicationException;
 import org.joda.time.DateTime;
 import org.junit.Assert;
@@ -4207,7 +4210,21 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
     }
 
     @Override
+    @Test
+    @MetamacMock({DATASET_VERSION_113_DATABASE_TYPE_BASIC_NAME})
     public void testCreateDatabaseDatasourceInDatasetVersion() throws Exception {
-        // TODO METAMAC-2866 It's necessary to define what should be tested
+        String tableName = RandomStringUtils.randomAlphabetic(10);
+        String datasetVersionUrn = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_113_DATABASE_TYPE_BASIC_NAME).getSiemacMetadataStatisticalResource().getUrn();
+
+        DataMockUtils.mockDsdAndDataRepositorySimpleDimensionsNoAttributes(datasetRepositoriesServiceFacade, srmRestInternalService);
+        statisticalResourcesServiceFacade.createDatabaseDatasourceInDatasetVersion(getServiceContextAdministrador(), datasetVersionUrn, tableName);
+
+        List<DatasourceDto> datasources = statisticalResourcesServiceFacade.retrieveDatasourcesByDatasetVersion(getServiceContextAdministrador(), datasetVersionUrn);
+
+        assertTrue(CollectionUtils.isNotEmpty(datasources));
+        assertEquals(1, datasources.size());
+        assertNotNull(datasources.get(0).getCode());
+        assertTrue(datasources.get(0).getCode().startsWith(tableName));
+
     }
 }
