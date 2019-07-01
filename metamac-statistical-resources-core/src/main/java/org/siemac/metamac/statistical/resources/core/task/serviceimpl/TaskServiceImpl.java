@@ -214,16 +214,24 @@ public class TaskServiceImpl extends TaskServiceImplBase implements ApplicationL
             // Start now
             sched.start();
 
+            scheduleDatabaseDatasetPollingJob(sched);
+        } catch (SchedulerException e) {
+            throw new IllegalStateException("An unexpected error has occurred during quartz initialization", e);
+        }
+
+    }
+
+    public void scheduleDatabaseDatasetPollingJob(Scheduler sched) {
+        try {
             JobDetail job = newJob(DatabaseDatasetPollingJob.class).build();
 
             CronTrigger cronTrigger = TriggerBuilder.newTrigger()
                     .withSchedule(CronScheduleBuilder.cronSchedule(configurationService.retriveCronExpressionForDbDataImport()).withMisfireHandlingInstructionDoNothing()).build();
-
             sched.scheduleJob(job, cronTrigger);
-        } catch (SchedulerException | MetamacException e) {
-            throw new IllegalStateException("An unexpected error has occurred during quartz initialization", e);
-        }
 
+        } catch (Exception e) {
+            logger.error("An unexpected error has occurred scheduling database dataset polling job", e);
+        }
     }
 
     @Override

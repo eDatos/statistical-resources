@@ -23,10 +23,10 @@ public class StatisticalResourcesStartupListener extends InternalApplicationStar
         checkRequiredProperty(StatisticalResourcesConfigurationConstants.DB_REPOSITORY_DIALECT);
 
         // DATASOURCE DB DATA IMPORT
-        checkRequiredProperty(StatisticalResourcesConfigurationConstants.DB_DATA_IMPORT_DRIVER_NAME);
-        checkRequiredProperty(StatisticalResourcesConfigurationConstants.DB_DATA_IMPORT_URL);
-        checkRequiredProperty(StatisticalResourcesConfigurationConstants.DB_DATA_IMPORT_USERNAME);
-        checkRequiredProperty(StatisticalResourcesConfigurationConstants.DB_DATA_IMPORT_PASSWORD);
+        checkOptionalProperty(StatisticalResourcesConfigurationConstants.DB_DATA_IMPORT_DRIVER_NAME);
+        checkOptionalProperty(StatisticalResourcesConfigurationConstants.DB_DATA_IMPORT_URL);
+        checkOptionalProperty(StatisticalResourcesConfigurationConstants.DB_DATA_IMPORT_USERNAME);
+        checkOptionalProperty(StatisticalResourcesConfigurationConstants.DB_DATA_IMPORT_PASSWORD);
     }
 
     @Override
@@ -56,8 +56,8 @@ public class StatisticalResourcesStartupListener extends InternalApplicationStar
 
         // Specific
         checkRequiredProperty(StatisticalResourcesConfigurationConstants.HELP_URL);
-        checkRequiredProperty(StatisticalResourcesConfigurationConstants.FILTER_COLUMN_NAME_FOR_DB_DATA_IMPORT);
-        checkRequiredProperty(StatisticalResourcesConfigurationConstants.CRON_EXPRESSION_FOR_DB_DATA_IMPORT);
+        checkOptionalProperty(StatisticalResourcesConfigurationConstants.FILTER_COLUMN_NAME_FOR_DB_DATA_IMPORT);
+        checkOptionalProperty(StatisticalResourcesConfigurationConstants.CRON_EXPRESSION_FOR_DB_DATA_IMPORT);
 
         // Confluent && Kafka
         checkKafkaProperties();
