@@ -98,16 +98,16 @@ public class TaskServiceTest extends StatisticalResourcesBaseTest implements Tas
 
     @Override
     public void testExistDatabaseImportationTaskInResource() throws Exception {
-        // TODO METAMAC-2866 Testing?
+        // No test
     }
 
     @Override
     public void testProcessDatabaseImportationTask() throws Exception {
-        // TODO METAMAC-2866 Testing?
+        // No test
     }
 
     @Override
     public void testProcessDatabaseDatasetPollingTask() throws Exception {
-        // TODO METAMAC-2866 Testing?
+        // No test
     }
 }

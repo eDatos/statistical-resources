@@ -229,6 +229,8 @@ public class TaskServiceImpl extends TaskServiceImplBase implements ApplicationL
                     .withSchedule(CronScheduleBuilder.cronSchedule(configurationService.retriveCronExpressionForDbDataImport()).withMisfireHandlingInstructionDoNothing()).build();
             sched.scheduleJob(job, cronTrigger);
 
+            logger.info("Database dataset polling job successfully scheduled at {} ", new Date());
+
         } catch (Exception e) {
             logger.error("An unexpected error has occurred scheduling database dataset polling job", e);
         }
@@ -272,9 +274,7 @@ public class TaskServiceImpl extends TaskServiceImplBase implements ApplicationL
                     planifyRecoveryImportDataset(ctx, recoveryTaskInfo, Boolean.FALSE); // Perform a clean recovery
                     throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.TASKS_JOB_RECOVERY_IN_PROCESS).withLoggedLevel(ExceptionLevelEnum.ERROR).build(); // Error
                 } else if (createJobKeyForDatabaseImportationResource(datasetUrn).equals(jobKey)) {
-                    // TODO METAMAC-2866 Database import recovery not defined yet, task is deleted in order to not generated side effects but this behavior is temporary until this TODO will be
-                    // resolved
-                    markTaskAsFinished(ctx, task.getJob());
+                    processRollbackDatabaseImportTask(ctx, task.getJob());
                     throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.TASKS_JOB_DATABASE_IMPORTATION_IN_PROCESS).withLoggedLevel(ExceptionLevelEnum.ERROR).build();
                 }
             }
@@ -298,6 +298,19 @@ public class TaskServiceImpl extends TaskServiceImplBase implements ApplicationL
         }
 
         return jobKey.getName();
+    }
+
+    private void processRollbackDatabaseImportTask(ServiceContext ctx, String jobKey) throws MetamacException {
+        // IDEA METAMAC-2866 Database import recovery not defined yet, task is deleted in order to not generated side effects. This behavior will be temporary until it's studied if it's
+        // necessary to create a recovery job.
+        String datasetVersionUrn = extractDatasetVersionUrnFromDatabaseImportationDatasetJobKey(jobKey);
+        DatasetVersion datasetVersion = datasetService.retrieveDatasetVersionByUrn(ctx, datasetVersionUrn);
+        String statisticalOperationUrn = datasetVersion.getSiemacMetadataStatisticalResource().getStatisticalOperation().getUrn();
+
+        getNoticesRestInternalService().createDatabaseImportSuccessBackgroundNotification(statisticalOperationUrn, ServiceNoticeAction.DATABASE_IMPORT_DATASET_JOB,
+                ServiceNoticeMessage.DATABASE_IMPORT_DATASET_JOB_DETECTED, datasetVersionUrn);
+
+        markTaskAsFinished(ctx, jobKey);
     }
 
     private String createTaskName(ServiceContext ctx, String datasetVersionId) {
@@ -864,22 +877,21 @@ public class TaskServiceImpl extends TaskServiceImplBase implements ApplicationL
             task.setStatus(TaskStatusTypeEnum.FAILED);
             updateTask(ctx, task);
 
-            String datasetVersionId = extractDatasetIdFromJobKeyImportationDataset(jobKey);
-            String datasetId = retrieveDatasetId(ctx, datasetVersionId);
+            String datasetVersionUrn = extractDatasetVersionUrnFromImportationDatasetJobKey(jobKey);
+            String datasetUrn = retrieveDatasetUrn(ctx, datasetVersionUrn);
 
             TaskInfoDataset recoveryTaskInfo = new TaskInfoDataset();
-            recoveryTaskInfo.setDatasetVersionId(datasetVersionId);
-            recoveryTaskInfo.setDatasetUrn(datasetId);
+            recoveryTaskInfo.setDatasetVersionId(datasetVersionUrn);
+            recoveryTaskInfo.setDatasetUrn(datasetUrn);
             planifyRecoveryImportDataset(ctx, recoveryTaskInfo, Boolean.TRUE);
         } else if (jobKey.startsWith(PREFIX_JOB_DUPLICATION_DATA)) {
             processRollbackDuplicationTaskOnApplicationStartup(ctx, task);
         } else if (jobKey.startsWith(PREFIX_JOB_DATABASE_IMPORT_DATA)) {
-            // TODO METAMAC-2866 Database import recovery not defined yet, task is deleted in order to not generated side effects but this behavior is temporary until this TODO will be resolved
-            markTaskAsFinished(ctx, task.getJob());
+            processRollbackDatabaseImportTask(ctx, task.getJob());
         }
     }
 
-    private String retrieveDatasetId(ServiceContext ctx, String datasetVersionUrn) throws MetamacException {
+    private String retrieveDatasetUrn(ServiceContext ctx, String datasetVersionUrn) throws MetamacException {
         DatasetVersion datasetVersion = datasetService.retrieveDatasetVersionByUrn(ctx, datasetVersionUrn);
         return datasetVersion.getDataset().getIdentifiableStatisticalResource().getUrn();
     }
@@ -900,8 +912,7 @@ public class TaskServiceImpl extends TaskServiceImplBase implements ApplicationL
         } else if (jobKey.startsWith(PREFIX_JOB_DUPLICATION_DATA)) {
             processRollbackDuplicationTask(ctx, task);
         } else if (jobKey.startsWith(PREFIX_JOB_DATABASE_IMPORT_DATA)) {
-            // TODO METAMAC-2866 Database import recovery not defined yet, task is deleted in order to not generated side effects but this behavior is temporary until this TODO will be resolved
-            markTaskAsFinished(ctx, task.getJob());
+            processRollbackDatabaseImportTask(ctx, task.getJob());
         }
     }
 
@@ -951,11 +962,19 @@ public class TaskServiceImpl extends TaskServiceImplBase implements ApplicationL
         return new TriggerKey(createJobNameForDuplicationResource(datasetId), GROUP_IMPORTATION);
     }
 
-    private String extractDatasetIdFromJobKeyImportationDataset(String jobKeyName) {
+    private String extractDatasetVersionUrnFromImportationDatasetJobKey(String jobKeyName) {
+        return extractDatasetVersionUrnFromJobKey(jobKeyName, PREFIX_JOB_IMPORT_DATA);
+    }
+
+    private String extractDatasetVersionUrnFromDatabaseImportationDatasetJobKey(String jobKeyName) {
+        return extractDatasetVersionUrnFromJobKey(jobKeyName, PREFIX_JOB_DATABASE_IMPORT_DATA);
+    }
+
+    private String extractDatasetVersionUrnFromJobKey(String jobKeyName, String prefixJob) {
         if (StringUtils.isEmpty(jobKeyName)) {
             return null;
         }
-        return StringUtils.substringAfter(jobKeyName, PREFIX_JOB_IMPORT_DATA);
+        return StringUtils.substringAfter(jobKeyName, prefixJob);
     }
 
     protected void serializeFilePathsAndNames(TaskInfoDataset taskInfoDataset, StringBuilder filePaths, StringBuilder fileNames, StringBuilder fileFormats) throws IOException, FileNotFoundException {
@@ -1174,7 +1193,7 @@ public class TaskServiceImpl extends TaskServiceImplBase implements ApplicationL
                 // Get de filter column value from last data import
                 DateTime filterColumnValue = getFilterColumnValue(datasetVersion);
 
-                // TODO METAMAC-2866 A possible improve could be to do a paginated query to get the observations and write them to file progressively to avoid memory problems derivated from having a
+                // IDEA METAMAC-2866 A possible improve could be to do a paginated query to get the observations and write them to file progressively to avoid memory problems derivated from having a
                 // huge number of observations in memory
                 List<String[]> observations = getObservations(tableName, columnsName, filterColumnName, filterColumnValue);
 
@@ -1195,7 +1214,7 @@ public class TaskServiceImpl extends TaskServiceImplBase implements ApplicationL
                     logger.debug("There are no new observations in table {} for dataset {}", tableName, datasetVersionUrn);
                 }
             } catch (Exception e) {
-                logger.error("An unexpected error has occurred trying to do a DB import for dataset {}", datasetVersionUrn, e);
+                logger.error("An unexpected error has occurred trying to do a database import for dataset {}", datasetVersionUrn, e);
             }
         }
     }

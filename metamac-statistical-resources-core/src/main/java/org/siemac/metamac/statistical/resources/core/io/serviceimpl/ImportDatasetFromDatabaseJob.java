@@ -55,7 +55,7 @@ public class ImportDatasetFromDatabaseJob extends AbstractImportDatasetJob {
     @Override
     protected void sendErrorNotification(MetamacException metamacException) {
         String statisticalOperationUrn = getData().getString(ImportDatasetFromDatabaseJob.STATISTICAL_OPERATION_URN);
-        getNoticesRestInternalService().createDatabaseImportErrorBackgroundNotification(statisticalOperationUrn, ServiceNoticeAction.IMPORT_DATASET_JOB, metamacException);
+        getNoticesRestInternalService().createDatabaseImportErrorBackgroundNotification(statisticalOperationUrn, ServiceNoticeAction.DATABASE_IMPORT_DATASET_JOB, metamacException);
     }
 
     @Override
