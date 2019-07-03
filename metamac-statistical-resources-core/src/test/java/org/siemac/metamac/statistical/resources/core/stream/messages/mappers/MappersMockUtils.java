@@ -38,7 +38,6 @@ import org.siemac.metamac.statistical.resources.core.stream.messages.Categorisat
 import org.siemac.metamac.statistical.resources.core.stream.messages.CodeDimensionAvro;
 import org.siemac.metamac.statistical.resources.core.stream.messages.DatasetAvro;
 import org.siemac.metamac.statistical.resources.core.stream.messages.DatasetVersionAvro;
-import org.siemac.metamac.statistical.resources.core.stream.messages.DatasourceAvro;
 import org.siemac.metamac.statistical.resources.core.stream.messages.DimensionRepresentationMappingAvro;
 import org.siemac.metamac.statistical.resources.core.stream.messages.ExternalItemAvro;
 import org.siemac.metamac.statistical.resources.core.stream.messages.IdentifiableStatisticalResourceAvro;
@@ -506,18 +505,6 @@ public class MappersMockUtils {
         return target;
     }
 
-    public static DatasourceAvro mockDatasourceAvro() {
-        // @formatter:off
-        DatasourceAvro target = DatasourceAvro.newBuilder()
-                .setDatasetVersionUrn(EXPECTED_URN)
-                .setDateNextUpdate(DateTimeDo2AvroMapper.do2Avro(EXPECTED_FUTURE_DATE))
-                .setFileName(EXPECTED_FILENAME)
-                .setIdentifiableStatisticalResource(mockIdentifiableStatisticalResourceAvro())
-                .build();
-        // @formatter:on
-        return target;
-    }
-
     public static Datasource mockDatasource() {
         return mockDatasource(false);
     }
@@ -699,7 +686,6 @@ public class MappersMockUtils {
                 .setUpdateFrequency(mockExternalItemAvro())
                 .setStatisticOfficiality(mockStatisticOfficialityAvro())
                 .setBibliographicCitation(mockInternationalStringAvro())
-                .setDatasources(mockDatasourceAvroList())
                 .setDimensionsCoverage(mockCodeDimensionAvroList())
                 .setAttributesCoverage(mockAttributeValueAvroList())
                 .setCategorisations(mockCategorisationAvroList())
@@ -720,13 +706,6 @@ public class MappersMockUtils {
         CodeDimensionAvro dimension = mockCodeDimensionAvro();
         dimensions.add(dimension);
         return dimensions;
-    }
-
-    protected static List<DatasourceAvro> mockDatasourceAvroList() {
-        List<DatasourceAvro> datasources = new ArrayList<DatasourceAvro>();
-        DatasourceAvro datasourceAvro = mockDatasourceAvro();
-        datasources.add(datasourceAvro);
-        return datasources;
     }
 
     protected static List<AttributeValueAvro> mockAttributeValueAvroList() {

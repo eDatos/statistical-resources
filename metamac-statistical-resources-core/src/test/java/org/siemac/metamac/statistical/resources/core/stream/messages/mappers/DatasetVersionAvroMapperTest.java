@@ -62,7 +62,6 @@ public class DatasetVersionAvroMapperTest {
         assertThat(actual.getSiemacMetadataStatisticalResource(), is(equalTo(expected.getSiemacMetadataStatisticalResource())));
         assertThat(actual.getUpdateFrequency(), is(equalTo(expected.getUpdateFrequency())));
         assertThat(actual.getTemporalCoverage(), is(equalTo(expected.getTemporalCoverage())));
-        assertThat(actual.getDatasources(), is(equalTo(expected.getDatasources())));
         assertThat(actual.getMeasureCoverage(), is(equalTo(expected.getMeasureCoverage())));
         assertThat(actual.getGeographicGranularities(), is(equalTo(expected.getGeographicGranularities())));
         assertThat(actual.getStatisticalUnit(), is(equalTo(expected.getStatisticalUnit())));

@@ -15,7 +15,6 @@
         {"name" : "updateFrequency", "type" : ["null", "ExternalItemAvro"]},
         {"name" : "statisticOfficiality", "type" : ["null", "StatisticOfficialityAvro"]},
         {"name" : "bibliographicCitation", "type" : ["null", "InternationalStringAvro"]},
-        {"name" : "datasources", "type" : ["null", {"type" : "array", "items": "DatasourceAvro"}]},
         {"name" : "dimensionsCoverage", "type" : ["null", {"type" : "array", "items" : "CodeDimensionAvro"}]},
         {"name" : "attributesCoverage", "type" : ["null", {"type" : "array", "items" : "AttributeValueAvro"}]}, 
         {"name" : "categorisations", "type" : ["null", {"type" : "array", "items" : "CategorisationAvro"}]}, 
