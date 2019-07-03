@@ -12,13 +12,11 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.AttributeVal
 import org.siemac.metamac.statistical.resources.core.dataset.domain.Categorisation;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.CodeDimension;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
-import org.siemac.metamac.statistical.resources.core.dataset.domain.Datasource;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.TemporalCode;
 import org.siemac.metamac.statistical.resources.core.stream.messages.AttributeValueAvro;
 import org.siemac.metamac.statistical.resources.core.stream.messages.CategorisationAvro;
 import org.siemac.metamac.statistical.resources.core.stream.messages.CodeDimensionAvro;
 import org.siemac.metamac.statistical.resources.core.stream.messages.DatasetVersionAvro;
-import org.siemac.metamac.statistical.resources.core.stream.messages.DatasourceAvro;
 import org.siemac.metamac.statistical.resources.core.stream.messages.ExternalItemAvro;
 import org.siemac.metamac.statistical.resources.core.stream.messages.RelatedResourceAvro;
 import org.siemac.metamac.statistical.resources.core.stream.messages.TemporalCodeAvro;
@@ -29,7 +27,6 @@ public class DatasetVersionDo2AvroMapper {
     }
 
     public static DatasetVersionAvro do2Avro(DatasetVersion source) throws MetamacException {
-        List<DatasourceAvro> datasources = datasourcesList2Avro(source);
         List<CodeDimensionAvro> dimensions = dimensionsCoverage2Avro(source);
         List<AttributeValueAvro> coverageList = attributesCoverage2Avro(source);
         List<CategorisationAvro> categorisations = categorisations2Avro(source);
@@ -47,9 +44,9 @@ public class DatasetVersionDo2AvroMapper {
                 .setDateNextUpdate(DateTimeDo2AvroMapper.do2Avro(source.getDateNextUpdate())).setUserModifiedDateNextUpdate(source.getUserModifiedDateNextUpdate())
                 .setDataset(DatasetDo2AvroMapper.do2Avro(source.getDataset())).setRelatedDsd(ExternalItemDo2AvroMapper.do2Avro(source.getRelatedDsd()))
                 .setUpdateFrequency(ExternalItemDo2AvroMapper.do2Avro(source.getUpdateFrequency())).setStatisticOfficiality(StatisticOfficialityDo2AvroMapper.do2Avro(source.getStatisticOfficiality()))
-                .setBibliographicCitation(InternationalStringDo2AvroMapper.do2Avro(source.getBibliographicCitation())).setDatasources(datasources).setDimensionsCoverage(dimensions)
-                .setAttributesCoverage(coverageList).setCategorisations(categorisations).setGeographicCoverage(geographicCoverageList).setTemporalCoverage(temporalCoverageList)
-                .setMeasureCoverage(measureCoverageList).setGeographicGranularities(geoGranList).setTemporalGranularities(temporalGranList).setStatisticalUnit(statisticalUnitList)
+                .setBibliographicCitation(InternationalStringDo2AvroMapper.do2Avro(source.getBibliographicCitation())).setDimensionsCoverage(dimensions).setAttributesCoverage(coverageList)
+                .setCategorisations(categorisations).setGeographicCoverage(geographicCoverageList).setTemporalCoverage(temporalCoverageList).setMeasureCoverage(measureCoverageList)
+                .setGeographicGranularities(geoGranList).setTemporalGranularities(temporalGranList).setStatisticalUnit(statisticalUnitList)
                 .setIsPartOf(relatedResourceList2Avro(AvroMapperUtils.getDatasetVersionRepository().retrieveIsPartOf(source))).build();
         return target;
     }
@@ -117,15 +114,6 @@ public class DatasetVersionDo2AvroMapper {
             dimensions.add(dimensionAvro);
         }
         return dimensions;
-    }
-
-    protected static List<DatasourceAvro> datasourcesList2Avro(DatasetVersion source) {
-        List<DatasourceAvro> datasources = new ArrayList<DatasourceAvro>();
-        for (Datasource datasource : source.getDatasources()) {
-            DatasourceAvro datasourceAvro = DatasourceDo2AvroMapper.do2Avro(datasource);
-            datasources.add(datasourceAvro);
-        }
-        return datasources;
     }
 
     protected static List<CategorisationAvro> categorisations2Avro(DatasetVersion source) {
