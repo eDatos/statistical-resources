@@ -60,6 +60,9 @@ Application DatasetsStatisticalResourcesDto {
 			
 			// If a task related with the dataset is being executed in background
 			Boolean isTaskInBackground;
+			
+			- @DataSourceTypeEnum dataSourceType;
+			JAVADATE dateLastTimeDataImport nullable;
 		}
 
 		DataTransferObject DatasourceDto extends @IdentifiableStatisticalResourceDto {

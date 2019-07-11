@@ -267,4 +267,13 @@ public class PublicationLifecycleServiceImpl extends LifecycleTemplateService<Pu
         return resource.getSiemacMetadataStatisticalResource().getUrn();
     }
 
+    @Override
+    public void sendNewVersionPublishedStreamMessageByResource(ServiceContext ctx, PublicationVersion resource) {
+        try {
+            streamMessagingServiceFacade.sendNewVersionPublished(resource);
+        } catch (MetamacException e) {
+            createStreamMessageSentNotification(ctx, resource);
+        }
+    }
+
 }

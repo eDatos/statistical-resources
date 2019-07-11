@@ -5,6 +5,7 @@ import org.siemac.metamac.statistical.resources.web.server.handlers.base.GetHelp
 import org.siemac.metamac.statistical.resources.web.server.handlers.base.GetInitialValuesActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.base.GetLatestResourceVersionActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.base.ResendStreamMessageActionHandler;
+import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.CreateDatabaseDatasourceActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.CreateDatasetCategorisationsActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.CreateDatasetConstraintActionHandler;
 import org.siemac.metamac.statistical.resources.web.server.handlers.dataset.DeleteCategorisationsActionHandler;
@@ -87,6 +88,7 @@ import org.siemac.metamac.statistical.resources.web.shared.base.GetHelpUrlAction
 import org.siemac.metamac.statistical.resources.web.shared.base.GetInitialValuesAction;
 import org.siemac.metamac.statistical.resources.web.shared.base.GetLatestResourceVersionAction;
 import org.siemac.metamac.statistical.resources.web.shared.base.ResendStreamMessageAction;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.CreateDatabaseDatasourceAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.CreateDatasetCategorisationsAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.CreateDatasetConstraintAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.DeleteCategorisationsAction;
@@ -247,6 +249,7 @@ public class ServerModule extends HandlerModule {
         bindHandler(CreateDatasetConstraintAction.class, CreateDatasetConstraintActionHandler.class);
         bindHandler(DeleteDatasetConstraintAction.class, DeleteDatasetConstraintActionHandler.class);
         bindHandler(SaveRegionAction.class, SaveRegionActionHandler.class);
+        bindHandler(CreateDatabaseDatasourceAction.class, CreateDatabaseDatasourceActionHandler.class);
 
         // PUBLICATIONS
         bindHandler(GetPublicationVersionsAction.class, GetPublicationVersionsActionHandler.class);

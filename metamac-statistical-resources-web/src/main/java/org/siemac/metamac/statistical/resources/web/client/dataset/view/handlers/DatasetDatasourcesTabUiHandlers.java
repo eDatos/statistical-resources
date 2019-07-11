@@ -20,5 +20,6 @@ public interface DatasetDatasourcesTabUiHandlers extends UiHandlers {
     
     void showWaitPopup();
 
-    void saveDataset(DatasetVersionDto datasetVersionDto);
+	void saveDataset(DatasetVersionDto datasetVersionDto);
+    void createDatabaseDatasource(String urn, String tablename);
 }

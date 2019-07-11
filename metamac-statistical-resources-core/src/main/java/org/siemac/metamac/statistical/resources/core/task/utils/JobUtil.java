@@ -37,6 +37,10 @@ public class JobUtil {
         return TaskServiceImpl.PREFIX_JOB_IMPORT_DATA + resourceId;
     }
 
+    public static String createJobNameForDatabaseImportationResource(String resourceId) {
+        return TaskServiceImpl.PREFIX_JOB_DATABASE_IMPORT_DATA + resourceId;
+    }
+
     public static String createJobNameForRecoveryImportationResource(String resourceId) {
         return TaskServiceImpl.PREFIX_JOB_RECOVERY_IMPORT_DATA + resourceId;
     }

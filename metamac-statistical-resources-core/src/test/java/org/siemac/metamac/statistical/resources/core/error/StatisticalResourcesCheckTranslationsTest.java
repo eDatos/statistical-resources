@@ -12,7 +12,7 @@ import org.siemac.metamac.core.common.util.MetamacReflectionUtils;
 import org.siemac.metamac.statistical.resources.core.notices.ServiceNoticeAction;
 import org.siemac.metamac.statistical.resources.core.notices.ServiceNoticeMessage;
 
-public class StatsiticalResourcesCheckTranslationsTest extends CheckTranslationsTestBase {
+public class StatisticalResourcesCheckTranslationsTest extends CheckTranslationsTestBase {
 
     // ----------------------------------------------------------------------------------------
     // MORE TESTS

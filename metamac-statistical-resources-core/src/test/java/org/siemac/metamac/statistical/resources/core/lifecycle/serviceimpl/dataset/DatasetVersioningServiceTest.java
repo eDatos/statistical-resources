@@ -395,7 +395,7 @@ public class DatasetVersioningServiceTest extends StatisticalResourcesBaseTest {
 
     private static void checkVersionedDatasource(Datasource expected, Datasource actualNewVersion) {
         assertEqualsVersionedIdentifiableDatasourceCodeIsDifferent(expected.getIdentifiableStatisticalResource(), actualNewVersion.getIdentifiableStatisticalResource());
-        assertEquals(expected.getFilename(), actualNewVersion.getFilename());
+        assertEquals(expected.getSourceName(), actualNewVersion.getSourceName());
         assertFalse(expected.getDatasetVersion().getSiemacMetadataStatisticalResource().getUrn().equals(actualNewVersion.getDatasetVersion().getSiemacMetadataStatisticalResource().getUrn()));
         assertNotNull(actualNewVersion.getIdentifiableStatisticalResource().getUrn());
     }

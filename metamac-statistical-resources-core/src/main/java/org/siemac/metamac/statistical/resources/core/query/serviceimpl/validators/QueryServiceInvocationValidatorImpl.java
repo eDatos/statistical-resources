@@ -130,7 +130,7 @@ public class QueryServiceInvocationValidatorImpl extends BaseInvocationValidator
             boolean mustHaveEmptyTimePeriod = QueryTypeEnum.LATEST_DATA.equals(queryVersion.getType());
             for (QuerySelectionItem selectionItem : queryVersion.getSelection()) {
                 if (mustHaveEmptyTimePeriod && selectionItem != null && StatisticalResourcesConstants.TEMPORAL_DIMENSION_ID.equals(selectionItem.getDimension())) {
-                    StatisticalResourcesValidationUtils.checkMetadataEmpty(selectionItem.getCodes(), ServiceExceptionParameters.QUERY_VERSION__SELECTION__TIME_PERIOD, exceptions);
+                    StatisticalResourcesValidationUtils.checkMetadataEmpty(selectionItem.getCodes(), ServiceExceptionParameters.QUERY_VERSION_SELECTION_TIME_PERIOD, exceptions);
                 } else {
                     StatisticalResourcesValidationUtils.checkMetadataOptionalIsValid(selectionItem, ServiceExceptionParameters.QUERY_VERSION__SELECTION, exceptions);
                 }

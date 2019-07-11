@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts.assertEqualsCategorisation;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts.assertEqualsDatasetVersion;
 import static org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts.assertEqualsDatasource;
@@ -11,6 +12,12 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_01_BASIC_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_02_BASIC_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_100_WITH_STATISTIC_OFFICIALITY_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_107_DRAFT_NOT_INITIAL_VERSION_WITHOUT_DATASOURCES_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_108_PUBLISHED_INITIAL_VERSION_WITHOUT_DATASOURCES_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_109_DRAFT_INITIAL_VERSION_WITHOUT_DATASOURCES_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_110_PRODUCTION_VALIDATION_INITIAL_VERSION_WITHOUT_DATASOURCES_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_111_DIFFUSION_VALIDATION_INITIAL_VERSION_WITHOUT_DATASOURCES_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_112_VALIDATION_REJECTED_INITIAL_VERSION_WITHOUT_DATASOURCES_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_49_WITH_DATASOURCE_FROM_PX_WITH_NEXT_UPDATE_IN_ONE_MONTH_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_57_DRAFT_INITIAL_VERSION_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_58_PRODUCTION_VALIDATION_INITIAL_VERSION_NAME;
@@ -30,6 +37,7 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.template
 
 import java.util.Date;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.joda.time.DateTime;
 import org.junit.Assert;
 import org.junit.Test;
@@ -48,12 +56,15 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.StatisticOff
 import org.siemac.metamac.statistical.resources.core.dto.datasets.CategorisationDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasourceDto;
+import org.siemac.metamac.statistical.resources.core.enume.dataset.domain.DataSourceTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.NextVersionTypeEnum;
+import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.facade.serviceapi.StatisticalResourcesServiceFacade;
 import org.siemac.metamac.statistical.resources.core.utils.asserts.BaseAsserts;
 import org.siemac.metamac.statistical.resources.core.utils.asserts.DatasetsAsserts;
 import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.StatisticalResourcesDtoMocks;
+import org.siemac.metamac.statistical.resources.core.utils.shared.StatisticalResourcesVersionSharedUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -275,6 +286,57 @@ public class DatasetDto2DoMapperTest extends StatisticalResourcesBaseTest {
     }
 
     @Test
+    @MetamacMock(DATASET_VERSION_107_DRAFT_NOT_INITIAL_VERSION_WITHOUT_DATASOURCES_NAME)
+    public void testDatasetDtoToDoErrorCantChangeDataSourceTypeNotInitialVersion() throws MetamacException {
+        DatasetVersion source = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_107_DRAFT_NOT_INITIAL_VERSION_WITHOUT_DATASOURCES_NAME);
+        DatasetVersionDto dto = buildDatasetVersionDtoFromDo(source);
+
+        assertTrue(CollectionUtils.isEmpty(source.getDatasources()));
+        assertFalse(StatisticalResourcesVersionSharedUtils.isInitialVersion(source.getSiemacMetadataStatisticalResource().getVersionLogic()));
+        assertFalse(ProcStatusEnum.PUBLISHED.equals(source.getSiemacMetadataStatisticalResource().getProcStatus()));
+
+        dto.setDataSourceType(DataSourceTypeEnum.FILE.equals(source.getDataSourceType()) ? DataSourceTypeEnum.DATABASE : DataSourceTypeEnum.FILE);
+
+        expectedMetamacException(MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.DATASET_VERSION_CANT_ALTER_DATA_SOURCE_TYPE).build());
+
+        datasetDto2DoMapper.datasetVersionDtoToDo(dto);
+    }
+
+    @Test
+    @MetamacMock(DATASET_VERSION_57_DRAFT_INITIAL_VERSION_NAME)
+    public void testDatasetDtoToDoErrorCantChangeDataSourceTypeDatasourcesConfigured() throws MetamacException {
+        DatasetVersion source = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_57_DRAFT_INITIAL_VERSION_NAME);
+        DatasetVersionDto dto = buildDatasetVersionDtoFromDo(source);
+
+        assertFalse(CollectionUtils.isEmpty(source.getDatasources()));
+        assertTrue(StatisticalResourcesVersionSharedUtils.isInitialVersion(source.getSiemacMetadataStatisticalResource().getVersionLogic()));
+        assertFalse(ProcStatusEnum.PUBLISHED.equals(source.getSiemacMetadataStatisticalResource().getProcStatus()));
+
+        dto.setDataSourceType(DataSourceTypeEnum.FILE.equals(source.getDataSourceType()) ? DataSourceTypeEnum.DATABASE : DataSourceTypeEnum.FILE);
+
+        expectedMetamacException(MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.DATASET_VERSION_CANT_ALTER_DATA_SOURCE_TYPE).build());
+
+        datasetDto2DoMapper.datasetVersionDtoToDo(dto);
+    }
+
+    @Test
+    @MetamacMock(DATASET_VERSION_108_PUBLISHED_INITIAL_VERSION_WITHOUT_DATASOURCES_NAME)
+    public void testDatasetDtoToDoErrorCantChangeDataSourceTypePublishedDataset() throws MetamacException {
+        DatasetVersion source = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_108_PUBLISHED_INITIAL_VERSION_WITHOUT_DATASOURCES_NAME);
+        DatasetVersionDto dto = buildDatasetVersionDtoFromDo(source);
+
+        assertTrue(CollectionUtils.isEmpty(source.getDatasources()));
+        assertTrue(StatisticalResourcesVersionSharedUtils.isInitialVersion(source.getSiemacMetadataStatisticalResource().getVersionLogic()));
+        assertTrue(ProcStatusEnum.PUBLISHED.equals(source.getSiemacMetadataStatisticalResource().getProcStatus()));
+
+        dto.setDataSourceType(DataSourceTypeEnum.FILE.equals(source.getDataSourceType()) ? DataSourceTypeEnum.DATABASE : DataSourceTypeEnum.FILE);
+
+        expectedMetamacException(MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.DATASET_VERSION_CANT_ALTER_DATA_SOURCE_TYPE).build());
+
+        datasetDto2DoMapper.datasetVersionDtoToDo(dto);
+    }
+
+    @Test
     @MetamacMock({DATASET_VERSION_57_DRAFT_INITIAL_VERSION_NAME, DATASET_VERSION_58_PRODUCTION_VALIDATION_INITIAL_VERSION_NAME, DATASET_VERSION_59_DIFFUSION_VALIDATION_INITIAL_VERSION_NAME,
             DATASET_VERSION_60_VALIDATION_REJECTED_INITIAL_VERSION_NAME})
     public void testDatasetDtoToDoCanChangeKeepAllData() throws MetamacException {
@@ -317,6 +379,59 @@ public class DatasetDto2DoMapperTest extends StatisticalResourcesBaseTest {
         entity = datasetDto2DoMapper.datasetVersionDtoToDo(dto);
 
         assertEquals(!source.isKeepAllData(), entity.isKeepAllData());
+    }
+
+    @Test
+    @MetamacMock({DATASET_VERSION_109_DRAFT_INITIAL_VERSION_WITHOUT_DATASOURCES_NAME, DATASET_VERSION_110_PRODUCTION_VALIDATION_INITIAL_VERSION_WITHOUT_DATASOURCES_NAME,
+            DATASET_VERSION_111_DIFFUSION_VALIDATION_INITIAL_VERSION_WITHOUT_DATASOURCES_NAME, DATASET_VERSION_112_VALIDATION_REJECTED_INITIAL_VERSION_WITHOUT_DATASOURCES_NAME})
+    public void testDatasetDtoToDoCanChangeDataSourceType() throws MetamacException {
+        // Draft - Initial version
+        DatasetVersion source = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_109_DRAFT_INITIAL_VERSION_WITHOUT_DATASOURCES_NAME);
+        DatasetVersionDto dto = buildDatasetVersionDtoFromDo(source);
+
+        assertEquals(DataSourceTypeEnum.FILE, source.getDataSourceType());
+
+        dto.setDataSourceType(DataSourceTypeEnum.DATABASE);
+
+        DatasetVersion entity = datasetDto2DoMapper.datasetVersionDtoToDo(dto);
+
+        assertEquals(DataSourceTypeEnum.DATABASE, entity.getDataSourceType());
+
+        // Production validation - Initial version
+        source = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_110_PRODUCTION_VALIDATION_INITIAL_VERSION_WITHOUT_DATASOURCES_NAME);
+        dto = buildDatasetVersionDtoFromDo(source);
+
+        assertEquals(DataSourceTypeEnum.FILE, source.getDataSourceType());
+
+        dto.setDataSourceType(DataSourceTypeEnum.DATABASE);
+
+        entity = datasetDto2DoMapper.datasetVersionDtoToDo(dto);
+
+        assertEquals(DataSourceTypeEnum.DATABASE, entity.getDataSourceType());
+
+        // Diffusion validation - Initial version
+        source = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_111_DIFFUSION_VALIDATION_INITIAL_VERSION_WITHOUT_DATASOURCES_NAME);
+        dto = buildDatasetVersionDtoFromDo(source);
+
+        assertEquals(DataSourceTypeEnum.FILE, source.getDataSourceType());
+
+        dto.setDataSourceType(DataSourceTypeEnum.DATABASE);
+
+        entity = datasetDto2DoMapper.datasetVersionDtoToDo(dto);
+
+        assertEquals(DataSourceTypeEnum.DATABASE, entity.getDataSourceType());
+
+        // Validation rejected - Initial version
+        source = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_112_VALIDATION_REJECTED_INITIAL_VERSION_WITHOUT_DATASOURCES_NAME);
+        dto = buildDatasetVersionDtoFromDo(source);
+
+        assertEquals(DataSourceTypeEnum.FILE, source.getDataSourceType());
+
+        dto.setDataSourceType(DataSourceTypeEnum.DATABASE);
+
+        entity = datasetDto2DoMapper.datasetVersionDtoToDo(dto);
+
+        assertEquals(DataSourceTypeEnum.DATABASE, entity.getDataSourceType());
     }
 
     @Test
@@ -398,6 +513,23 @@ public class DatasetDto2DoMapperTest extends StatisticalResourcesBaseTest {
         dto.setId(categorisation.getId());
         expectedMetamacException(new MetamacException(ServiceExceptionType.UNKNOWN, "Categorisation can not be updated"));
         datasetDto2DoMapper.categorisationDtoToDo(dto);
+    }
+
+    @Test
+    @MetamacMock(STATISTIC_OFFICIALITY_01_BASIC_NAME)
+    public void testDatasetDtoToDoCheckDataSourceTypeAndVersionableAttributes() throws MetamacException {
+        StatisticOfficiality officiality = statisticOfficialityMockFactory.retrieveMock(STATISTIC_OFFICIALITY_01_BASIC_NAME);
+        DatasetVersionDto dto = StatisticalResourcesDtoMocks.mockDatasetVersionDto(officiality);
+        DatasetVersion entity = datasetDto2DoMapper.datasetVersionDtoToDo(dto);
+        assertEquals(dto.getDataSourceType(), entity.getDataSourceType());
+
+        dto.setDataSourceType(DataSourceTypeEnum.DATABASE);
+        entity = datasetDto2DoMapper.datasetVersionDtoToDo(dto);
+        assertEquals(DataSourceTypeEnum.DATABASE, entity.getDataSourceType());
+
+        dto.setDataSourceType(DataSourceTypeEnum.FILE);
+        entity = datasetDto2DoMapper.datasetVersionDtoToDo(dto);
+        assertEquals(DataSourceTypeEnum.FILE, entity.getDataSourceType());
     }
 
     private void checkCanChangeDsdByOtherVersion(String datasetVersionMockName) throws MetamacException {

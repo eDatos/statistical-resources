@@ -21,6 +21,8 @@ import org.siemac.metamac.statistical.resources.web.client.events.SetDatasetEven
 import org.siemac.metamac.statistical.resources.web.client.events.ShowUnauthorizedDatasetWarningMessageEvent;
 import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.PlaceRequestUtils;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.CreateDatabaseDatasourceAction;
+import org.siemac.metamac.statistical.resources.web.shared.dataset.CreateDatabaseDatasourceResult;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.DeleteDatasourcesAction;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.DeleteDatasourcesResult;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetCodelistsWithVariableAction;
@@ -233,5 +235,17 @@ public class DatasetDatasourcesTabPresenter extends Presenter<DatasetDatasources
                         SetDatasetEvent.fire(DatasetDatasourcesTabPresenter.this, result.getSavedDatasetVersion());
                     }
                 });
+    }
+
+    @Override
+    public void createDatabaseDatasource(String urn, String tablename) {
+        dispatcher.execute(new CreateDatabaseDatasourceAction(urn, tablename), new WaitingAsyncCallbackHandlingError<CreateDatabaseDatasourceResult>(this) {
+
+            @Override
+            public void onWaitSuccess(CreateDatabaseDatasourceResult result) {
+                ShowMessageEvent.fireSuccessMessage(DatasetDatasourcesTabPresenter.this, getMessages().databaseDatasourceCreated());
+                retrieveDatasourcesByDataset(datasetVersion.getUrn(), 0, StatisticalResourceWebConstants.MAIN_LIST_MAX_RESULTS);
+            }
+        });
     }
 }

@@ -50,7 +50,7 @@ public class MetamacCsv2StatRepoMapperImpl implements MetamacCsv2StatRepoMapper 
         return observationExtendedDto;
     }
     private List<CodeDimensionDto> processKeyOfObservation(List<CsvObservationCodeDimension> observations) {
-        List<CodeDimensionDto> codeDimensionDtos = new ArrayList<CodeDimensionDto>(observations.size());
+        List<CodeDimensionDto> codeDimensionDtos = new ArrayList<>(observations.size());
 
         for (CsvObservationCodeDimension csvObservationCodeDimension : observations) {
             codeDimensionDtos.add(new CodeDimensionDto(csvObservationCodeDimension.getDimensionId(), csvObservationCodeDimension.getCodeDimensionId()));
@@ -72,7 +72,6 @@ public class MetamacCsv2StatRepoMapperImpl implements MetamacCsv2StatRepoMapper 
         }
 
         // Keys
-        // attributeDto.getCodesDimension().addAll(keys);
 
         // Data
         InternationalStringDto internationalStringDto = new InternationalStringDto();

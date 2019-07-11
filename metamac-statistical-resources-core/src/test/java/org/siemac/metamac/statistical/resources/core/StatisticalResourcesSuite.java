@@ -27,7 +27,7 @@ import org.siemac.metamac.statistical.resources.core.dataset.utils.DatasetVersio
 import org.siemac.metamac.statistical.resources.core.enume.utils.ProcStatusEnumUtilsTest;
 import org.siemac.metamac.statistical.resources.core.enume.utils.QueryStatusEnumUtilsTest;
 import org.siemac.metamac.statistical.resources.core.enume.utils.TypeRelatedResourceEnumUtilsTest;
-import org.siemac.metamac.statistical.resources.core.error.StatsiticalResourcesCheckTranslationsTest;
+import org.siemac.metamac.statistical.resources.core.error.StatisticalResourcesCheckTranslationsTest;
 import org.siemac.metamac.statistical.resources.core.facade.serviceapi.StatisticalResourcesOptimisticLockingTest;
 import org.siemac.metamac.statistical.resources.core.facade.serviceapi.StatisticalResourcesServiceFacadeTest;
 import org.siemac.metamac.statistical.resources.core.io.serviceapi.DataManipulateTest;
@@ -64,7 +64,7 @@ import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesC
 
 // @formatter:off
 @RunWith(Suite.class)
-@Suite.SuiteClasses({StatsiticalResourcesCheckTranslationsTest.class,
+@Suite.SuiteClasses({StatisticalResourcesCheckTranslationsTest.class,
                      StatisticalResourcesServiceFacadeTest.class,  
                      StatisticalResourcesOptimisticLockingTest.class,
                      InternationalStringRepositoryTest.class,

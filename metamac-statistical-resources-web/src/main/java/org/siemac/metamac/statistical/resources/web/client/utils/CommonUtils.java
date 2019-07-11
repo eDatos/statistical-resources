@@ -30,6 +30,7 @@ import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionDto;
 import org.siemac.metamac.statistical.resources.core.enume.constraint.domain.KeyPartTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.dataset.domain.AttributeRelationshipTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.dataset.domain.AttributeRepresentationTypeEnum;
+import org.siemac.metamac.statistical.resources.core.enume.dataset.domain.DataSourceTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.NextVersionTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
@@ -652,5 +653,17 @@ public class CommonUtils {
         } else {
             ShowMessageEvent.fireWarningMessageWithError(source, message, notificationException);
         }
+    }
+
+    public static LinkedHashMap<String, String> getDataSourceTypeHashMap() { // NOSONAR
+        LinkedHashMap<String, String> dataSourceTypeHashMap = new LinkedHashMap<String, String>(); // NOSONAR
+        for (DataSourceTypeEnum dataSourceTypeEnum : DataSourceTypeEnum.values()) {
+            dataSourceTypeHashMap.put(dataSourceTypeEnum.name(), getDataSourceName(dataSourceTypeEnum));
+        }
+        return dataSourceTypeHashMap;
+    }
+
+    private static String getDataSourceName(DataSourceTypeEnum dataSourceTypeEnum) {
+        return dataSourceTypeEnum != null ? getCoreMessages().getString(getCoreMessages().dataSourceTypeEnum() + dataSourceTypeEnum.getName()) : null;
     }
 }

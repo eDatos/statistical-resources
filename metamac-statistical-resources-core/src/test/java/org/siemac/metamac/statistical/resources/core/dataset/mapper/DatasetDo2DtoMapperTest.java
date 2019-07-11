@@ -39,6 +39,7 @@ import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersion
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DimensionRepresentationMappingDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.StatisticOfficialityDto;
+import org.siemac.metamac.statistical.resources.core.enume.dataset.domain.DataSourceTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -151,4 +152,23 @@ public class DatasetDo2DtoMapperTest extends StatisticalResourcesBaseTest {
         assertEquals(expectedList.size(), actualList.size());
         assertEqualsDimensionRepresentationMapping(expectedList.get(0), actualList.get(0));
     }
+
+    @Test
+    @MetamacMock({DATASET_VERSION_05_FOR_DATASET_04_NAME})
+    public void testDatasetVersionDoToDtoCheckDataSourceType() throws MetamacException {
+
+        DatasetVersion expected = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_05_FOR_DATASET_04_NAME);
+        DatasetVersionDto actual = datasetDo2DtoMapper.datasetVersionDoToDto(getServiceContextAdministrador(), expected);
+        assertEquals(expected.getDataSourceType(), actual.getDataSourceType());
+
+        expected.setDataSourceType(DataSourceTypeEnum.DATABASE);
+        actual = datasetDo2DtoMapper.datasetVersionDoToDto(getServiceContextAdministrador(), expected);
+        assertEquals(DataSourceTypeEnum.DATABASE, actual.getDataSourceType());
+
+        expected.setDataSourceType(DataSourceTypeEnum.FILE);
+        actual = datasetDo2DtoMapper.datasetVersionDoToDto(getServiceContextAdministrador(), expected);
+        assertEquals(DataSourceTypeEnum.FILE, actual.getDataSourceType());
+
+    }
+
 }

@@ -12,8 +12,9 @@ public interface NoticesRestInternalService {
 
     // Background Notifications
     public void createErrorBackgroundNotification(String user, String actionCode, MetamacException exception);
-
+    public void createDatabaseImportErrorBackgroundNotification(String statisticalOperationUrn, String actionCode, MetamacException exception);
     public void createSuccessBackgroundNotification(String user, String actionCode, String successMessageCode, Serializable... successMessageParameters);
+    public void createDatabaseImportSuccessBackgroundNotification(String statisticalOperationUrn, String actionCode, String successMessageCode, Serializable... successMessageParameters);
 
     // Stream Messaging Notifications
     public void createErrorOnStreamMessagingService(String user, String actionCode, HasSiemacMetadata affectedResource, String errorMessageCode, Serializable... extraParameters);

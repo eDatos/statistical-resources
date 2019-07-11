@@ -7,11 +7,11 @@ import org.siemac.metamac.statistical.resources.core.utils.mocks.templates.Stati
 @SuppressWarnings("unused")
 public class DatasourceMockFactory extends StatisticalResourcesMockFactory<Datasource> {
 
-    public static final String           DATASOURCE_01_BASIC_NAME = "DATASOURCE_01_BASIC";
+    public static final String DATASOURCE_01_BASIC_NAME = "DATASOURCE_01_BASIC";
 
-    public static final String           DATASOURCE_02_BASIC_NAME = "DATASOURCE_02_BASIC";
+    public static final String DATASOURCE_02_BASIC_NAME = "DATASOURCE_02_BASIC";
 
-    private static DatasourceMockFactory instance                 = null;
+    private static DatasourceMockFactory instance = null;
 
     private DatasourceMockFactory() {
     }
@@ -37,9 +37,9 @@ public class DatasourceMockFactory extends StatisticalResourcesMockFactory<Datas
         return getStatisticalResourcesPersistedDoMocks().mockDatasource(new Datasource());
     }
 
-    public static Datasource generateDatasource(String filename) {
+    public static Datasource generateDatasource(String sourceName) {
         Datasource template = new Datasource();
-        template.setFilename(filename);
+        template.setSourceName(sourceName);
         return getStatisticalResourcesPersistedDoMocks().mockDatasource(template);
     }
 

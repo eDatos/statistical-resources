@@ -1963,4 +1963,10 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
     public void testFindMultidatasetsByCondition() throws Exception {
         // no optimistic locking in this operation
     }
+
+    @Override
+    public void testCreateDatabaseDatasourceInDatasetVersion() throws Exception {
+        // no optimistic locking in this operation
+    }
+
 }

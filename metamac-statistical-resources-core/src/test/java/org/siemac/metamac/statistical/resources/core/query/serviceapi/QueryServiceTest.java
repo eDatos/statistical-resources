@@ -541,7 +541,7 @@ public class QueryServiceTest extends StatisticalResourcesBaseTest implements Qu
     @Test
     @MetamacMock(DATASET_VERSION_06_FOR_QUERIES_NAME)
     public void testCreateQueryVersionErrorTimeSelectionMustBeEmptyWhenTypeIsLatestData() throws Exception {
-        expectedMetamacException(new MetamacException(ServiceExceptionType.METADATA_UNEXPECTED, ServiceExceptionParameters.QUERY_VERSION__SELECTION__TIME_PERIOD));
+        expectedMetamacException(new MetamacException(ServiceExceptionType.METADATA_UNEXPECTED, ServiceExceptionParameters.QUERY_VERSION_SELECTION_TIME_PERIOD));
 
         ExternalItem statisticalOperation = StatisticalResourcesNotPersistedDoMocks.mockStatisticalOperationExternalItem();
         QueryVersion query = notPersistedDoMocks.mockQueryVersionLatestDataWithTimeSelectionNotEmpty(datasetVersionMockFactory.retrieveMock(DATASET_VERSION_06_FOR_QUERIES_NAME));

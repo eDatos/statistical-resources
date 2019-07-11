@@ -95,4 +95,19 @@ public class TaskServiceTest extends StatisticalResourcesBaseTest implements Tas
     public void testMarkTasksAsFailedOnApplicationStartup() throws Exception {
         // See integration test in DataManipulateTest
     }
+
+    @Override
+    public void testExistDatabaseImportationTaskInResource() throws Exception {
+        // No test
+    }
+
+    @Override
+    public void testProcessDatabaseImportationTask() throws Exception {
+        // No test
+    }
+
+    @Override
+    public void testProcessDatabaseDatasetPollingTask() throws Exception {
+        // No test
+    }
 }

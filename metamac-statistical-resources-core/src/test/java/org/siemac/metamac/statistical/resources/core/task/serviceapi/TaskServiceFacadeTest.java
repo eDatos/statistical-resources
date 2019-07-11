@@ -32,4 +32,19 @@ public class TaskServiceFacadeTest extends StatisticalResourcesBaseTest implemen
     public void testExecuteDuplicationTask() throws Exception {
         // See integration test in DataManipulateTest
     }
+
+    @Override
+    public void testMarkTaskAsFinished() throws Exception {
+        // No test
+    }
+
+    @Override
+    public void testExecuteDatabaseImportationTask() throws Exception {
+        // No test
+    }
+
+    @Override
+    public void testExecuteDatabaseDatasetPollingTask() throws Exception {
+        // No test
+    }
 }

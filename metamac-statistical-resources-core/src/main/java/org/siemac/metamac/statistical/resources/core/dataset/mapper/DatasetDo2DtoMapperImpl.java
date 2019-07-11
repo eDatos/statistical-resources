@@ -265,6 +265,9 @@ public class DatasetDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements Dat
 
         target.setKeepAllData(source.isKeepAllData());
 
+        target.setDataSourceType(source.getDataSourceType());
+        target.setDateLastTimeDataImport(dateDoToDto(source.getDateLastTimeDataImport()));
+
         return target;
     }
 

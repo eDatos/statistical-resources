@@ -29,6 +29,8 @@ import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.lifecycle.LifecycleCommonMetadataChecker;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.LifecycleTemplateService;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl.checker.ExternalItemChecker;
+import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
+import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersionRepository;
 import org.siemac.metamac.statistical.resources.core.task.domain.TaskInfoDataset;
 import org.siemac.metamac.statistical.resources.core.task.serviceapi.TaskService;
 import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesExternalItemUtils;
@@ -64,6 +66,9 @@ public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<Datase
 
     @Autowired
     private DatasetRepositoriesServiceFacade  datasetRepositoriesServiceFacade;
+
+    @Autowired
+    private QueryVersionRepository            queryVersionRepository;
 
     @Override
     protected String getResourceMetadataName() throws MetamacException {
@@ -301,5 +306,30 @@ public class DatasetLifecycleServiceImpl extends LifecycleTemplateService<Datase
     @Override
     protected String getResourceUrn(DatasetVersion resource) {
         return resource.getDataset().getIdentifiableStatisticalResource().getUrn();
+    }
+
+    @Override
+    public void sendNewVersionPublishedStreamMessageByResource(ServiceContext ctx, DatasetVersion resource) {
+        try {
+            streamMessagingServiceFacade.sendNewVersionPublished(resource);
+
+            // Also, A new version of DatasetVersion and there are queries with a related dataset associated with this query version, then we send queries messages
+            List<QueryVersion> queriesDataset = queryVersionRepository.findQueriesPublishedLinkedToDataset(resource.getDataset().getId());
+
+            for (QueryVersion queryVersion : queriesDataset) {
+                sendNewVersionPublishedStreamMessage(ctx, queryVersion);
+            }
+
+        } catch (MetamacException e) {
+            createStreamMessageSentNotification(ctx, resource);
+        }
+    }
+
+    protected void sendNewVersionPublishedStreamMessage(ServiceContext ctx, QueryVersion version) {
+        try {
+            streamMessagingServiceFacade.sendNewVersionPublished(version);
+        } catch (MetamacException e) {
+            createStreamMessageSentNotification(ctx, version);
+        }
     }
 }

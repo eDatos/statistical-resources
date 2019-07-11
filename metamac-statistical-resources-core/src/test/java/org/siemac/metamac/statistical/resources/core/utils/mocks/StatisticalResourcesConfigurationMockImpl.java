@@ -22,4 +22,14 @@ public class StatisticalResourcesConfigurationMockImpl extends ConfigurationServ
     public String retrieveHelpUrl() throws MetamacException {
         throw new UnsupportedOperationException("Not implemented. Not necessary for mocking purposes");
     }
+
+    @Override
+    public String retriveFilterColumnNameForDbDataImport() throws MetamacException {
+        throw new UnsupportedOperationException("Not implemented. Not necessary for mocking purposes");
+    }
+
+    @Override
+    public String retriveCronExpressionForDbDataImport() throws MetamacException {
+        throw new UnsupportedOperationException("Not implemented. Not necessary for mocking purposes");
+    }
 }

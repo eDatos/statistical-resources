@@ -67,8 +67,8 @@ public class DatasetVersioningCopyUtils extends CommonVersioningCopyUtils {
         int millisecondsOffset = 0;
         for (Datasource datasource : datasources) {
             DateTime fakeDatasourceUpdateTime = new DateTime(now.getMillis() + millisecondsOffset++);
-            String filename = datasource.getFilename();
-            String code = Datasource.generateDataSourceId(filename, fakeDatasourceUpdateTime);
+            String sourceName = datasource.getSourceName();
+            String code = Datasource.generateDataSourceId(sourceName, fakeDatasourceUpdateTime);
             datasource.getIdentifiableStatisticalResource().setCode(code);
             datasource.getIdentifiableStatisticalResource().setUrn(GeneratorUrnUtils.generateSiemacStatisticalResourceDatasourceUrn(code));
         }
@@ -137,6 +137,8 @@ public class DatasetVersioningCopyUtils extends CommonVersioningCopyUtils {
         target.setStatisticOfficiality(source.getStatisticOfficiality());
 
         target.setKeepAllData(source.isKeepAllData());
+        target.setDataSourceType(source.getDataSourceType());
+        target.setDateLastTimeDataImport(source.getDateLastTimeDataImport());
     }
 
     private static Collection<TemporalCode> copyListTemporalCode(List<TemporalCode> source) {
@@ -163,7 +165,7 @@ public class DatasetVersioningCopyUtils extends CommonVersioningCopyUtils {
 
     private static void copyDatasource(Datasource source, Datasource target) {
         target.setIdentifiableStatisticalResource(copyIdentifiableStatisticalResource(source.getIdentifiableStatisticalResource(), target.getIdentifiableStatisticalResource()));
-        target.setFilename(source.getFilename());
+        target.setSourceName(source.getSourceName());
         target.setDateNextUpdate(source.getDateNextUpdate());
     }
 

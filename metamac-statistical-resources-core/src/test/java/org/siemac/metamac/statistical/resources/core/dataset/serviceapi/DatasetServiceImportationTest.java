@@ -27,6 +27,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.core.common.exception.MetamacExceptionBuilder;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.core.common.util.MetamacCollectionUtils;
 import org.siemac.metamac.statistical.resources.core.StatisticalResourcesBaseTest;
@@ -35,6 +36,7 @@ import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersi
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionRepository;
 import org.siemac.metamac.statistical.resources.core.dataset.serviceapi.validators.DatasetServiceInvocationValidator;
 import org.siemac.metamac.statistical.resources.core.dataset.serviceimpl.DatasetServiceImpl;
+import org.siemac.metamac.statistical.resources.core.enume.dataset.domain.DataSourceTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.task.domain.DatasetFileFormatEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.task.domain.AlternativeEnumeratedRepresentation;
@@ -74,7 +76,7 @@ public class DatasetServiceImportationTest extends StatisticalResourcesBaseTest 
         String datasetVersionUrn = datasetVersion.getSiemacMetadataStatisticalResource().getUrn();
 
         Mockito.when(datasetVersionRepository.retrieveByUrn(Mockito.eq(datasetVersionUrn))).thenReturn(datasetVersion);
-        Mockito.when(datasetRepository.findDatasetUrnLinkedToDatasourceFile(filename)).thenReturn(null);
+        Mockito.when(datasetRepository.findDatasetUrnLinkedToDatasourceSourceName(filename)).thenReturn(null);
 
         List<URL> urls = Arrays.asList(buildFileUrl(filename));
         Map<String, String> mappings = new HashMap<String, String>();
@@ -96,9 +98,29 @@ public class DatasetServiceImportationTest extends StatisticalResourcesBaseTest 
         String datasetVersionUrn = datasetVersion.getSiemacMetadataStatisticalResource().getUrn();
 
         Mockito.when(datasetVersionRepository.retrieveByUrn(Mockito.eq(datasetVersionUrn))).thenReturn(datasetVersion);
-        Mockito.when(datasetRepository.findDatasetUrnLinkedToDatasourceFile(filename)).thenReturn(DATASET_MOCK_URN);
+        Mockito.when(datasetRepository.findDatasetUrnLinkedToDatasourceSourceName(filename)).thenReturn(DATASET_MOCK_URN);
 
         expectedMetamacException(new MetamacException(Arrays.asList(new MetamacExceptionItem(ServiceExceptionType.INVALID_FILE_FOR_DATASET_VERSION, "prueba.px", datasetVersionUrn))));
+
+        List<URL> urls = Arrays.asList(buildFileUrl(filename));
+        HashMap<String, String> mappings = new HashMap<String, String>();
+        datasetService.importDatasourcesInDatasetVersion(getServiceContextWithoutPrincipal(), datasetVersionUrn, urls, mappings, false);
+    }
+
+    @Test
+    public void testImportDatasourcesInDatasetVersionInvalidSourceType() throws Exception {
+        String filename = "prueba.px";
+
+        DatasetVersion datasetVersion = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_29_WITHOUT_DATASOURCES_NAME);
+        datasetVersion.setDataSourceType(DataSourceTypeEnum.DATABASE);
+
+        String datasetVersionUrn = datasetVersion.getSiemacMetadataStatisticalResource().getUrn();
+
+        Mockito.when(datasetVersionRepository.retrieveByUrn(Mockito.eq(datasetVersionUrn))).thenReturn(datasetVersion);
+        Mockito.when(datasetRepository.findDatasetUrnLinkedToDatasourceSourceName(filename)).thenReturn(DATASET_MOCK_URN);
+
+        expectedMetamacException(MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.INVALID_DATA_SOURCE_TYPE_FOR_DATASET_DATA_IMPORTATION)
+                .withMessageParameters(DataSourceTypeEnum.DATABASE, DataSourceTypeEnum.FILE).build());
 
         List<URL> urls = Arrays.asList(buildFileUrl(filename));
         HashMap<String, String> mappings = new HashMap<String, String>();
@@ -114,7 +136,7 @@ public class DatasetServiceImportationTest extends StatisticalResourcesBaseTest 
         String statisticalOperationCode = datasetVersion.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode();
 
         Mockito.when(datasetVersionRepository.retrieveByUrn(Mockito.eq(datasetVersionUrn))).thenReturn(datasetVersion);
-        Mockito.when(datasetRepository.findDatasetUrnLinkedToDatasourceFile(filename)).thenReturn(datasetUrn);
+        Mockito.when(datasetRepository.findDatasetUrnLinkedToDatasourceSourceName(filename)).thenReturn(datasetUrn);
         Mockito.when(datasetVersionRepository.retrieveLastVersion(Mockito.eq(datasetUrn))).thenReturn(datasetVersion);
 
         List<URL> urls = Arrays.asList(buildFileUrl(filename));
@@ -143,7 +165,7 @@ public class DatasetServiceImportationTest extends StatisticalResourcesBaseTest 
             datasetVersion01 = datasetVersion;
 
             Mockito.when(datasetVersionRepository.retrieveByUrn(Mockito.eq(datasetVersionUrn))).thenReturn(datasetVersion);
-            Mockito.when(datasetRepository.findDatasetUrnLinkedToDatasourceFile(filename01)).thenReturn(datasetUrn);
+            Mockito.when(datasetRepository.findDatasetUrnLinkedToDatasourceSourceName(filename01)).thenReturn(datasetUrn);
             Mockito.when(datasetVersionRepository.retrieveLastVersion(Mockito.eq(datasetUrn))).thenReturn(datasetVersion);
         }
         {
@@ -153,7 +175,7 @@ public class DatasetServiceImportationTest extends StatisticalResourcesBaseTest 
             datasetVersion02 = datasetVersion;
 
             Mockito.when(datasetVersionRepository.retrieveByUrn(Mockito.eq(datasetVersionUrn))).thenReturn(datasetVersion);
-            Mockito.when(datasetRepository.findDatasetUrnLinkedToDatasourceFile(filename02)).thenReturn(datasetUrn);
+            Mockito.when(datasetRepository.findDatasetUrnLinkedToDatasourceSourceName(filename02)).thenReturn(datasetUrn);
             Mockito.when(datasetVersionRepository.retrieveLastVersion(Mockito.eq(datasetUrn))).thenReturn(datasetVersion);
         }
 
@@ -186,7 +208,7 @@ public class DatasetServiceImportationTest extends StatisticalResourcesBaseTest 
             statisticalOperationCode = datasetVersion.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode();
 
             Mockito.when(datasetVersionRepository.retrieveByUrn(Mockito.eq(datasetVersionUrn))).thenReturn(datasetVersion);
-            Mockito.when(datasetRepository.findDatasetUrnLinkedToDatasourceFile(filename01)).thenReturn(null);
+            Mockito.when(datasetRepository.findDatasetUrnLinkedToDatasourceSourceName(filename01)).thenReturn(null);
             Mockito.when(datasetVersionRepository.retrieveLastVersion(Mockito.eq(datasetUrn))).thenReturn(datasetVersion);
         }
         {
@@ -195,7 +217,7 @@ public class DatasetServiceImportationTest extends StatisticalResourcesBaseTest 
             String datasetUrn = datasetVersion.getDataset().getIdentifiableStatisticalResource().getUrn();
 
             Mockito.when(datasetVersionRepository.retrieveByUrn(Mockito.eq(datasetVersionUrn))).thenReturn(datasetVersion);
-            Mockito.when(datasetRepository.findDatasetUrnLinkedToDatasourceFile(filename02)).thenReturn(datasetUrn);
+            Mockito.when(datasetRepository.findDatasetUrnLinkedToDatasourceSourceName(filename02)).thenReturn(datasetUrn);
             Mockito.when(datasetVersionRepository.retrieveLastVersion(Mockito.eq(datasetUrn))).thenReturn(datasetVersion);
         }
 
@@ -218,7 +240,7 @@ public class DatasetServiceImportationTest extends StatisticalResourcesBaseTest 
             statisticalOperationCode = datasetVersion.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode();
 
             Mockito.when(datasetVersionRepository.retrieveByUrn(Mockito.eq(datasetVersionUrn))).thenReturn(datasetVersion);
-            Mockito.when(datasetRepository.findDatasetUrnLinkedToDatasourceFile(filename01)).thenReturn(datasetUrn);
+            Mockito.when(datasetRepository.findDatasetUrnLinkedToDatasourceSourceName(filename01)).thenReturn(datasetUrn);
             Mockito.when(datasetVersionRepository.retrieveLastVersion(Mockito.eq(datasetUrn))).thenReturn(datasetVersion);
         }
         {
@@ -227,7 +249,7 @@ public class DatasetServiceImportationTest extends StatisticalResourcesBaseTest 
             String datasetUrn = datasetVersion.getDataset().getIdentifiableStatisticalResource().getUrn();
 
             Mockito.when(datasetVersionRepository.retrieveByUrn(Mockito.eq(datasetVersionUrn))).thenReturn(datasetVersion);
-            Mockito.when(datasetRepository.findDatasetUrnLinkedToDatasourceFile(filename02)).thenReturn(datasetUrn);
+            Mockito.when(datasetRepository.findDatasetUrnLinkedToDatasourceSourceName(filename02)).thenReturn(datasetUrn);
             Mockito.when(datasetVersionRepository.retrieveLastVersion(Mockito.eq(datasetUrn))).thenReturn(datasetVersion);
         }
 

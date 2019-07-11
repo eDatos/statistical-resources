@@ -120,7 +120,7 @@ Application FacadeStatisticalResources {
     		@DatasetVersionMainCoveragesDto retrieveDatasetVersionMainCoverages(String datasetVersionUrn) throws MetamacException;
     		"Send to production validation"
     		@DatasetVersionDto sendDatasetVersionToProductionValidation(@DatasetVersionDto datasetVersionDto) throws MetamacException;
-    		@DatasetVersionBaseDto sendDatasetVersionToProductionValidation(@DatasetVersionBaseDto datasetVersionDto) throws MetamacException;
+			@DatasetVersionBaseDto sendDatasetVersionToProductionValidation(@DatasetVersionBaseDto datasetVersionDto) throws MetamacException;
     		"Send to diffusion validation"
     		@DatasetVersionDto sendDatasetVersionToDiffusionValidation(@DatasetVersionDto datasetVersionDto) throws MetamacException;
     		@DatasetVersionBaseDto sendDatasetVersionToDiffusionValidation(@DatasetVersionBaseDto datasetVersionDto) throws MetamacException;
@@ -143,6 +143,8 @@ Application FacadeStatisticalResources {
     		List<@CodeItemDto> filterCoverageForDatasetVersionDimension(String datasetVersionUrn, String dsdDimensionId, String filter) throws MetamacException;
     		"Import a set of files provided by urn as datasources in a datasetVersion"
     		importDatasourcesInDatasetVersion(@DatasetVersionDto datasetVersionDto, List<URL> fileUrls, Map<String,String> dimensionRepresentationMapping, boolean storeDimensionRepresentationMapping) throws MetamacException;
+    		"Create a database datasource in a datasetVersion"
+    		createDatabaseDatasourceInDatasetVersion(String datasetVersionUrn, String tableName) throws MetamacException;
     		importDatasourcesInStatisticalOperation(String statisticalOperationUrn, List<URL> fileUrls) throws MetamacException;
     		"Create an attribute instance"
     		@DsdAttributeInstanceDto createAttributeInstance(String datasetVersionUrn, @DsdAttributeInstanceDto dsdAttributeInstanceDto) throws MetamacException;

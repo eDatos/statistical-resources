@@ -1,6 +1,5 @@
 package org.siemac.metamac.statistical.resources.core.facade.serviceimpl;
 
-import java.io.Serializable;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
@@ -11,7 +10,6 @@ import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteria;
 import org.fornax.cartridges.sculptor.framework.accessapi.ConditionalCriteriaBuilder;
 import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
-import org.joda.time.DateTime;
 import org.siemac.metamac.core.common.criteria.MetamacCriteria;
 import org.siemac.metamac.core.common.criteria.MetamacCriteriaResult;
 import org.siemac.metamac.core.common.criteria.SculptorCriteria;
@@ -27,7 +25,6 @@ import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.DataStr
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.RegionReference;
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ResourceInternal;
 import org.siemac.metamac.sso.utils.SecurityUtils;
-import org.siemac.metamac.statistical.resources.core.base.domain.HasSiemacMetadata;
 import org.siemac.metamac.statistical.resources.core.common.domain.ExternalItem;
 import org.siemac.metamac.statistical.resources.core.common.mapper.CommonDo2DtoMapper;
 import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor;
@@ -73,8 +70,6 @@ import org.siemac.metamac.statistical.resources.core.dto.publication.Publication
 import org.siemac.metamac.statistical.resources.core.dto.query.CodeItemDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionBaseDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionDto;
-import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
-import org.siemac.metamac.statistical.resources.core.enume.domain.StreamMessageStatusEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.siemac.metamac.statistical.resources.core.invocation.service.NoticesRestInternalService;
@@ -90,8 +85,6 @@ import org.siemac.metamac.statistical.resources.core.multidataset.domain.Multida
 import org.siemac.metamac.statistical.resources.core.multidataset.domain.MultidatasetVersionRepository;
 import org.siemac.metamac.statistical.resources.core.multidataset.mapper.MultidatasetDo2DtoMapper;
 import org.siemac.metamac.statistical.resources.core.multidataset.mapper.MultidatasetDto2DoMapper;
-import org.siemac.metamac.statistical.resources.core.notices.ServiceNoticeAction;
-import org.siemac.metamac.statistical.resources.core.notices.ServiceNoticeMessage;
 import org.siemac.metamac.statistical.resources.core.publication.criteria.mapper.PublicationMetamacCriteria2SculptorCriteriaMapper;
 import org.siemac.metamac.statistical.resources.core.publication.criteria.mapper.PublicationSculptorCriteria2MetamacCriteriaMapper;
 import org.siemac.metamac.statistical.resources.core.publication.criteria.mapper.PublicationVersionMetamacCriteria2SculptorCriteriaMapper;
@@ -535,16 +528,8 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         // Transform
         QueryVersion queryVersion = queryDto2DoMapper.queryVersionDtoToDo(queryVersionDto);
 
-        String urn = queryVersion.getLifeCycleStatisticalResource().getUrn();
-
-        // We set validfrom and ONLY validfrom transparently
-        queryVersion = changeQueryVersionValidFromAndSave(urn, new DateTime());
-
-        // Send to published
+        // Send to publish and retrieve
         queryVersion = queryLifecycleService.sendToPublished(ctx, queryVersion.getLifeCycleStatisticalResource().getUrn());
-
-        // Send stream message to stream messaging service (like Apache Kafka)
-        sendNewVersionPublishedStreamMessage(ctx, queryVersion);
 
         // Transform
         queryVersionDto = queryDo2DtoMapper.queryVersionDoToDto(queryVersion);
@@ -560,13 +545,8 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         // Check optimistic locking
         queryDto2DoMapper.checkOptimisticLocking(queryVersionDto);
 
-        String urn = queryVersionDto.getUrn();
-
-        // We set validfrom and ONLY validfrom transparently
-        QueryVersion queryVersion = changeQueryVersionValidFromAndSave(urn, new DateTime());
-
-        // Send to published
-        queryVersion = queryLifecycleService.sendToPublished(ctx, queryVersionDto.getUrn());
+        // Send to publish and retrieve
+        QueryVersion queryVersion = queryLifecycleService.sendToPublished(ctx, queryVersionDto.getUrn());
 
         // Transform
         queryVersionDto = queryDo2DtoMapper.queryVersionDoToBaseDto(queryVersion);
@@ -584,16 +564,10 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         QueriesSecurityUtils.canResendPublishedQueryVersionStreamMessage(ctx, queryVersion.getLifeCycleStatisticalResource().getStatisticalOperation().getCode());
 
         // Send stream message to stream messaging service (like Apache Kafka)
-        sendNewVersionPublishedStreamMessage(ctx, queryVersion);
+        queryLifecycleService.sendNewVersionPublishedStreamMessageByResource(ctx, queryVersion);
 
         // Transform
         return queryDo2DtoMapper.queryVersionDoToBaseDto(queryVersion);
-    }
-
-    private QueryVersion changeQueryVersionValidFromAndSave(String urn, DateTime validFrom) throws MetamacException {
-        QueryVersion queryVersion = queryVersionRepository.retrieveByUrn(urn);
-        queryVersion.getLifeCycleStatisticalResource().setValidFrom(validFrom);
-        return queryVersionRepository.save(queryVersion);
     }
 
     @Override
@@ -984,15 +958,9 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
 
         // Transform
         DatasetVersion datasetVersion = datasetDto2DoMapper.datasetVersionDtoToDo(datasetVersionDto);
-        String datasetVersionUrn = datasetVersion.getSiemacMetadataStatisticalResource().getUrn();
 
-        // We set validfrom and ONLY validfrom transparently
-        datasetVersion = changeDatasetVersionValidFromAndSave(datasetVersionUrn, new DateTime());
-
+        // Send to publish and retrieve
         datasetVersion = datasetLifecycleService.sendToPublished(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getUrn());
-
-        // Send stream message to stream messaging service (like Apache Kafka)
-        sendNewVersionPublishedStreamMessage(ctx, datasetVersion);
 
         // Transform
         datasetVersionDto = datasetDo2DtoMapper.datasetVersionDoToDto(ctx, datasetVersion);
@@ -1009,7 +977,7 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         DatasetsSecurityUtils.canResendPublishedDatasetVersionStreamMessage(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode());
 
         // Send stream message to stream messaging service (like Apache Kafka)
-        sendNewVersionPublishedStreamMessage(ctx, datasetVersion);
+        datasetLifecycleService.sendNewVersionPublishedStreamMessageByResource(ctx, datasetVersion);
 
         // Transform
         return datasetDo2DtoMapper.datasetVersionDoToBaseDto(ctx, datasetVersion);
@@ -1023,23 +991,13 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         // Check optimistic locking
         datasetDto2DoMapper.checkOptimisticLocking(datasetVersionDto);
 
-        String datasetVersionUrn = datasetVersionDto.getUrn();
-
-        // We set validfrom and ONLY validfrom transparently
-        changeDatasetVersionValidFromAndSave(datasetVersionUrn, new DateTime());
-
+        // Send to publish and retrieve
         DatasetVersion datasetVersion = datasetLifecycleService.sendToPublished(ctx, datasetVersionDto.getUrn());
 
         // Transform
         datasetVersionDto = datasetDo2DtoMapper.datasetVersionDoToBaseDto(ctx, datasetVersion);
 
         return datasetVersionDto;
-    }
-
-    private DatasetVersion changeDatasetVersionValidFromAndSave(String urn, DateTime validFrom) throws MetamacException {
-        DatasetVersion datasetVersion = datasetVersionRepository.retrieveByUrn(urn);
-        datasetVersion.getSiemacMetadataStatisticalResource().setValidFrom(validFrom);
-        return datasetVersionRepository.save(datasetVersion);
     }
 
     @Override
@@ -1591,15 +1549,9 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
 
         // Transform
         PublicationVersion publicationVersion = publicationDto2DoMapper.publicationVersionDtoToDo(publicationVersionDto);
-        String urn = publicationVersion.getSiemacMetadataStatisticalResource().getUrn();
 
-        // We set validfrom and ONLY validfrom transparently
-        publicationVersion = changePublicationVersionValidFromAndSave(urn, new DateTime());
-
+        // Send to publish and retrieve
         publicationVersion = publicationLifecycleService.sendToPublished(ctx, publicationVersion.getSiemacMetadataStatisticalResource().getUrn());
-
-        // Send stream message to stream messaging service (like Apache Kafka)
-        sendNewVersionPublishedStreamMessage(ctx, publicationVersion);
 
         // Transform
         publicationVersionDto = publicationDo2DtoMapper.publicationVersionDoToDto(publicationVersion);
@@ -1615,12 +1567,8 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         // Check optimistic locking
         publicationDto2DoMapper.checkOptimisticLocking(publicationVersionDto);
 
-        String urn = publicationVersionDto.getUrn();
-
-        // We set validfrom and ONLY validfrom transparently
-        PublicationVersion publicationVersion = changePublicationVersionValidFromAndSave(urn, new DateTime());
-
-        publicationVersion = publicationLifecycleService.sendToPublished(ctx, publicationVersionDto.getUrn());
+        // Send to publish and retrieve
+        PublicationVersion publicationVersion = publicationLifecycleService.sendToPublished(ctx, publicationVersionDto.getUrn());
 
         // Transform
         publicationVersionDto = publicationDo2DtoMapper.publicationVersionDoToBaseDto(publicationVersion);
@@ -1637,16 +1585,10 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         PublicationsSecurityUtils.canResendPublishedPublicationVersionStreamMessage(ctx, publicationVersion.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode());
 
         // Send stream message to stream messaging service (like Apache Kafka)
-        sendNewVersionPublishedStreamMessage(ctx, publicationVersion);
+        publicationLifecycleService.sendNewVersionPublishedStreamMessageByResource(ctx, publicationVersion);
 
         // Transform
         return publicationDo2DtoMapper.publicationVersionDoToBaseDto(publicationVersion);
-    }
-
-    private PublicationVersion changePublicationVersionValidFromAndSave(String urn, DateTime validFrom) throws MetamacException {
-        PublicationVersion publicationVersion = publicationVersionRepository.retrieveByUrn(urn);
-        publicationVersion.getSiemacMetadataStatisticalResource().setValidFrom(validFrom);
-        return publicationVersionRepository.save(publicationVersion);
     }
 
     @Override
@@ -1681,51 +1623,6 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         publicationVersionDto = publicationDo2DtoMapper.publicationVersionDoToBaseDto(publicationVersion);
 
         return publicationVersionDto;
-    }
-
-    protected void sendNewVersionPublishedStreamMessage(ServiceContext ctx, HasSiemacMetadata version) {
-        try {
-            streamMessagingServiceFacade.sendNewVersionPublished(version);
-
-            // Also, if is a new version of DatasetVersion and there are queries with a related dataset associated with this query version, then we send queries messages
-            if (StatisticalResourceTypeEnum.DATASET.equals(version.getSiemacMetadataStatisticalResource().getType())) {
-
-                List<QueryVersion> queriesDataset = queryVersionRepository.findQueriesPublishedLinkedToDataset(((DatasetVersion) version).getDataset().getId());
-
-                for (QueryVersion queryVersion : queriesDataset) {
-                    sendNewVersionPublishedStreamMessage(ctx, queryVersion);
-                }
-            }
-
-        } catch (MetamacException e) {
-            createStreamMessageSentNotification(ctx, version);
-        }
-    }
-
-    protected void sendNewVersionPublishedStreamMessage(ServiceContext ctx, QueryVersion version) {
-        try {
-            streamMessagingServiceFacade.sendNewVersionPublished(version);
-        } catch (MetamacException e) {
-            createStreamMessageSentNotification(ctx, version);
-        }
-    }
-
-    protected void createStreamMessageSentNotification(ServiceContext ctx, HasSiemacMetadata version) {
-        if (version.getLifeCycleStatisticalResource().getPublicationStreamStatus() != StreamMessageStatusEnum.SENT) {
-            String userId = ctx.getUserId();
-            String messageCode = ServiceNoticeAction.STREAM_MESSAGE_SEND;
-            String messageText = ServiceNoticeMessage.STREAM_MESSAGE_SEND_ERROR;
-            noticesRestInternalService.createErrorOnStreamMessagingService(userId, messageCode, version, messageText, (Serializable[]) null);
-        }
-    }
-
-    protected void createStreamMessageSentNotification(ServiceContext ctx, QueryVersion version) {
-        if (version.getLifeCycleStatisticalResource().getPublicationStreamStatus() != StreamMessageStatusEnum.SENT) {
-            String userId = ctx.getUserId();
-            String messageCode = ServiceNoticeAction.STREAM_MESSAGE_SEND;
-            String messageText = ServiceNoticeMessage.STREAM_MESSAGE_SEND_ERROR;
-            noticesRestInternalService.createErrorOnStreamMessagingService(userId, messageCode, version, messageText, (Serializable[]) null);
-        }
     }
 
     // ------------------------------------------------------------------------
@@ -2296,16 +2193,9 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
 
         // Transform
         MultidatasetVersion multidatasetVersion = multidatasetDto2DoMapper.multidatasetVersionDtoToDo(multidatasetVersionDto);
-        String urn = multidatasetVersion.getSiemacMetadataStatisticalResource().getUrn();
 
-        // We set validfrom and ONLY validfrom transparently
-        multidatasetVersion = changeMultidatasetVersionValidFromAndSave(urn, new DateTime());
-
+        // Send to publish and retrieve
         multidatasetVersion = multidatasetLifecycleService.sendToPublished(ctx, multidatasetVersion.getSiemacMetadataStatisticalResource().getUrn());
-
-        // Send stream message to stream messaging service (like Apache Kafka)
-        // TODO METAMAC-2715 - Realizar la notificación a Kafka de los recursos Multidataset
-        // sendNewVersionPublishedStreamMessage(ctx, multidatasetVersion);
 
         // Transform
         multidatasetVersionDto = multidatasetDo2DtoMapper.multidatasetVersionDoToDto(multidatasetVersion);
@@ -2321,12 +2211,8 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         // Check optimistic locking
         multidatasetDto2DoMapper.checkOptimisticLocking(multidatasetVersionDto);
 
-        String urn = multidatasetVersionDto.getUrn();
-
-        // We set validfrom and ONLY validfrom transparently
-        MultidatasetVersion multidatasetVersion = changeMultidatasetVersionValidFromAndSave(urn, new DateTime());
-
-        multidatasetVersion = multidatasetLifecycleService.sendToPublished(ctx, multidatasetVersionDto.getUrn());
+        // Send to publish and retrieve
+        MultidatasetVersion multidatasetVersion = multidatasetLifecycleService.sendToPublished(ctx, multidatasetVersionDto.getUrn());
 
         // Transform
         multidatasetVersionDto = multidatasetDo2DtoMapper.multidatasetVersionDoToBaseDto(multidatasetVersion);
@@ -2342,18 +2228,8 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         // Security
         MultidatasetsSecurityUtils.canResendPublishedMultidatasetVersionStreamMessage(ctx, multidatasetVersion.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode());
 
-        // Send stream message to stream messaging service (like Apache Kafka)
-        // TODO METAMAC-2715 - Realizar la notificación a Kafka de los recursos Multidataset
-        // sendNewVersionPublishedStreamMessage(ctx, multidatasetVersion);
-
         // Transform
         return multidatasetDo2DtoMapper.multidatasetVersionDoToBaseDto(multidatasetVersion);
-    }
-
-    private MultidatasetVersion changeMultidatasetVersionValidFromAndSave(String urn, DateTime validFrom) throws MetamacException {
-        MultidatasetVersion multidatasetVersion = multidatasetVersionRepository.retrieveByUrn(urn);
-        multidatasetVersion.getSiemacMetadataStatisticalResource().setValidFrom(validFrom);
-        return multidatasetVersionRepository.save(multidatasetVersion);
     }
 
     @Override
@@ -2490,4 +2366,18 @@ public class StatisticalResourcesServiceFacadeImpl extends StatisticalResourcesS
         return multidatasetSculptorCriteria2MetamacCriteriaMapper.pageResultToMetamacCriteriaResultMultidatasetRelatedResourceDto(result, sculptorCriteria.getPageSize());
     }
 
+    @Override
+    public void createDatabaseDatasourceInDatasetVersion(ServiceContext ctx, String datasetVersionUrn, String tableName) throws MetamacException {
+        // Retrieve
+        DatasetVersionDto datasetVersionDto = retrieveDatasetVersionByUrn(ctx, datasetVersionUrn);
+
+        // Security
+        DatasetsSecurityUtils.canImportDatasourcesInDatasetVersion(ctx, datasetVersionDto.getStatisticalOperation().getCode());
+
+        // Transform for optimistic locking
+        DatasetVersion datasetVersion = datasetDto2DoMapper.datasetVersionDtoToDo(datasetVersionDto);
+
+        // Service
+        getDatasetService().createDatabaseDatasourceInDatasetVersion(ctx, datasetVersion.getSiemacMetadataStatisticalResource().getUrn(), tableName);
+    }
 }

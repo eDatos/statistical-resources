@@ -40,6 +40,11 @@ public class TaskServiceFacadeImpl extends TaskServiceFacadeImplBase {
     }
 
     @Override
+    public void executeDatabaseImportationTask(ServiceContext ctx, String databaseImportationJobKey, TaskInfoDataset taskInfoDataset) throws MetamacException {
+        taskservice.processDatabaseImportationTask(ctx, databaseImportationJobKey, taskInfoDataset);
+    }
+
+    @Override
     public void executeRecoveryImportationTask(ServiceContext ctx, String recoveryJobKey, TaskInfoDataset taskInfoDataset) throws MetamacException {
         taskservice.processRollbackImportationTask(ctx, recoveryJobKey, taskInfoDataset);
     }
@@ -50,8 +55,18 @@ public class TaskServiceFacadeImpl extends TaskServiceFacadeImplBase {
     }
 
     @Override
+    public void executeDatabaseDatasetPollingTask(ServiceContext ctx) throws MetamacException {
+        taskservice.processDatabaseDatasetPollingTask(ctx);
+    }
+
+    @Override
     public void markTaskAsFailed(ServiceContext ctx, String job, String datasetVersionId, String datasetUrn, Exception exception) throws MetamacException {
         taskservice.markTaskAsFailed(ctx, job, datasetVersionId, datasetUrn);
+    }
+
+    @Override
+    public void markTaskAsFinished(ServiceContext ctx, String job) throws MetamacException {
+        taskservice.markTaskAsFinished(ctx, job);
     }
 
     @Override

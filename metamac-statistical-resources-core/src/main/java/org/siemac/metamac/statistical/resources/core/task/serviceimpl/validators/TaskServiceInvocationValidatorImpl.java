@@ -115,4 +115,17 @@ public class TaskServiceInvocationValidatorImpl {
 
     public static void checkFindTasksByCondition(List<ConditionalCriteria> conditions, PagingParameter pagingParameter, List<MetamacExceptionItem> exceptions) {
     }
+
+    public static void checkExistDatabaseImportationTaskInResource(String resourceId, List<MetamacExceptionItem> exceptions) {
+        StatisticalResourcesValidationUtils.checkParameterRequired(resourceId, ServiceExceptionParameters.TASK_INFO_RESOURCE_ID, exceptions);
+    }
+
+    public static void checkProcessDatabaseImportationTask(String databaseImportationJobKey, TaskInfoDataset taskInfoDataset, List<MetamacExceptionItem> exceptions) throws MetamacException {
+        StatisticalResourcesValidationUtils.checkParameterRequired(databaseImportationJobKey, ServiceExceptionParameters.TASK_DATASET_JOB_KEY, exceptions);
+        checkPlanifyImportationDataset(taskInfoDataset, exceptions);
+    }
+
+    public static void checkProcessDatabaseDatasetPollingTask(List<MetamacExceptionItem> exceptions) {
+        // NOTHING TO DO HERE
+    }
 }

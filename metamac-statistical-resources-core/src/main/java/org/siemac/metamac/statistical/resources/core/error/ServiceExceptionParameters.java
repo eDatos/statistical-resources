@@ -21,8 +21,8 @@ public class ServiceExceptionParameters extends ServiceExceptionBaseParameters {
     public static final String       DATASET_VERSION_URN                      = "parameter.resources.dataset_version_urn";
     public static final String       DATASET_VERSION_URN_TO_COPY              = "parameter.resources.dataset_version_urn_to_copy";
     public static final String       DATASET_ATTRIBUTE                        = "parameter.resources.dataset_attribute";
-    public static final String       DATASET_ATTRIBUTE__VALUE                 = "parameter.resources.dataset_attribute_value";
-    public static final String       DATASET_ATTRIBUTE__UUID                  = "parameter.resources.dataset_attribute_uuid";
+    public static final String       DATASET_ATTRIBUTE_VALUE                  = "parameter.resources.dataset_attribute_value";
+    public static final String       DATASET_ATTRIBUTE_UUID                   = "parameter.resources.dataset_attribute_uuid";
     public static final String       DATASET_DIMENSION_REPRESENTATION_MAPPING = "parameter.resources.dataset_dimension_representation_mapping";
 
     // Publication
@@ -39,7 +39,7 @@ public class ServiceExceptionParameters extends ServiceExceptionBaseParameters {
     // Query
     public static final String       QUERY_URN                                = "parameter.resources.query_urn";
     public static final String       QUERY_VERSION_URN                        = "parameter.resources.query_version_urn";
-    public static final String       QUERY_VERSION__SELECTION__TIME_PERIOD    = "parameter.resources.query_version.selection.time_period";
+    public static final String       QUERY_VERSION_SELECTION_TIME_PERIOD      = "parameter.resources.query_version.selection.time_period";
 
     // Multidataset
     public static final String       MULTIDATASET_URN                         = "parameter.resources.multidataset_urn";
@@ -76,5 +76,10 @@ public class ServiceExceptionParameters extends ServiceExceptionBaseParameters {
     // Constraints
     public static final String       CONTENT_CONSTRAINT                       = "parameter.resources.content_constraint";
     public static final String       CONTENT_CONSTRAINT_ATTACHMENT            = "parameter.resources.content_constraint.attachment";
+
+    // Db importation
+    public static final String       TABLE_NAME                               = "parameter.resources.table_name";
+    public static final String       COLUMNS_NAME                             = "parameter.resources.columns_name";
+    public static final String       FILTER_COLUMN_NAME                       = "parameter.resources.filter_column_name";
 
 }

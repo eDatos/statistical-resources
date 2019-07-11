@@ -1,5 +1,6 @@
 package org.siemac.metamac.statistical.resources.core.lifecycle.serviceimpl;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,45 +13,57 @@ import org.siemac.metamac.statistical.resources.core.base.domain.HasLifecycle;
 import org.siemac.metamac.statistical.resources.core.base.domain.HasSiemacMetadata;
 import org.siemac.metamac.statistical.resources.core.base.validators.ProcStatusValidator;
 import org.siemac.metamac.statistical.resources.core.common.utils.RelatedResourceUtils;
+import org.siemac.metamac.statistical.resources.core.enume.domain.StreamMessageStatusEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
+import org.siemac.metamac.statistical.resources.core.invocation.service.NoticesRestInternalService;
 import org.siemac.metamac.statistical.resources.core.lifecycle.LifecycleChecker;
 import org.siemac.metamac.statistical.resources.core.lifecycle.LifecycleFiller;
 import org.siemac.metamac.statistical.resources.core.lifecycle.SiemacLifecycleChecker;
 import org.siemac.metamac.statistical.resources.core.lifecycle.SiemacLifecycleFiller;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceapi.LifecycleInvocationValidatorBase;
 import org.siemac.metamac.statistical.resources.core.lifecycle.serviceapi.LifecycleService;
+import org.siemac.metamac.statistical.resources.core.notices.ServiceNoticeAction;
+import org.siemac.metamac.statistical.resources.core.notices.ServiceNoticeMessage;
+import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
+import org.siemac.metamac.statistical.resources.core.stream.serviceapi.StreamMessagingServiceFacade;
 import org.siemac.metamac.statistical.resources.core.task.serviceapi.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public abstract class LifecycleTemplateService<E extends Object> implements LifecycleService<E> {
 
-    private static final String      ERROR_FOUND_AN_UNKNOWN_RESOURCE_TYPE_SENDING_TO_PUBLISHED             = "Found an unknown resource type sending to published";
+    private static final String            ERROR_FOUND_AN_UNKNOWN_RESOURCE_TYPE_SENDING_TO_PUBLISHED             = "Found an unknown resource type sending to published";
 
-    private static final String      ERROR_FOUND_AN_UNKNOWN_RESOURCE_TYPE_SENDING_TO_VALIDATION_REJECTED   = "Found an unknown resource type sending to validation rejected";
+    private static final String            ERROR_FOUND_AN_UNKNOWN_RESOURCE_TYPE_SENDING_TO_VALIDATION_REJECTED   = "Found an unknown resource type sending to validation rejected";
 
-    private static final String      ERROR_FOUND_AN_UNKNOWN_RESOURCE_TYPE_SENDING_TO_DIFFUSION_VALIDATION  = "Found an unknown resource type sending to diffusion validation";
+    private static final String            ERROR_FOUND_AN_UNKNOWN_RESOURCE_TYPE_SENDING_TO_DIFFUSION_VALIDATION  = "Found an unknown resource type sending to diffusion validation";
 
-    private static final String      ERROR_FOUND_AN_UNKNOWN_RESOURCE_TYPE_SENDING_TO_PRODUCTION_VALIDATION = "Found an unknown resource type sending to production validation";
+    private static final String            ERROR_FOUND_AN_UNKNOWN_RESOURCE_TYPE_SENDING_TO_PRODUCTION_VALIDATION = "Found an unknown resource type sending to production validation";
 
-    private static final String      ERROR_FOUND_AN_UNKNOWN_RESOURCE_TYPE_FOR_VERSIONING                   = "Found an unknown resource type for versioning";
-
-    @Autowired
-    LifecycleInvocationValidatorBase lifecycleInvocationValidatorBase;
+    private static final String            ERROR_FOUND_AN_UNKNOWN_RESOURCE_TYPE_FOR_VERSIONING                   = "Found an unknown resource type for versioning";
 
     @Autowired
-    private SiemacLifecycleChecker   siemacLifecycleChecker;
+    LifecycleInvocationValidatorBase       lifecycleInvocationValidatorBase;
 
     @Autowired
-    private SiemacLifecycleFiller    siemacLifecycleFiller;
+    private SiemacLifecycleChecker         siemacLifecycleChecker;
 
     @Autowired
-    private LifecycleChecker         lifecycleChecker;
+    private SiemacLifecycleFiller          siemacLifecycleFiller;
 
     @Autowired
-    private LifecycleFiller          lifecycleFiller;
+    private LifecycleChecker               lifecycleChecker;
 
     @Autowired
-    private TaskService              taskService;
+    private LifecycleFiller                lifecycleFiller;
+
+    @Autowired
+    private TaskService                    taskService;
+
+    @Autowired
+    protected StreamMessagingServiceFacade streamMessagingServiceFacade;
+
+    @Autowired
+    private NoticesRestInternalService     noticesRestInternalService;
 
     // ------------------------------------------------------------------------------------------------------
     // >> PRODUCTION VALIDATION
@@ -253,6 +266,8 @@ public abstract class LifecycleTemplateService<E extends Object> implements Life
             saveResource(previousResource);
         }
 
+        sendNewVersionPublishedStreamMessageByResource(ctx, resource);
+
         return retrieveResourceByResource(resource);
     }
 
@@ -438,4 +453,21 @@ public abstract class LifecycleTemplateService<E extends Object> implements Life
 
     protected abstract String getResourceUrn(E resource);
 
+    protected void createStreamMessageSentNotification(ServiceContext ctx, HasSiemacMetadata version) {
+        if (version.getLifeCycleStatisticalResource().getPublicationStreamStatus() != StreamMessageStatusEnum.SENT) {
+            String userId = ctx.getUserId();
+            String messageCode = ServiceNoticeAction.STREAM_MESSAGE_SEND;
+            String messageText = ServiceNoticeMessage.STREAM_MESSAGE_SEND_ERROR;
+            noticesRestInternalService.createErrorOnStreamMessagingService(userId, messageCode, version, messageText, (Serializable[]) null);
+        }
+    }
+
+    protected void createStreamMessageSentNotification(ServiceContext ctx, QueryVersion version) {
+        if (version.getLifeCycleStatisticalResource().getPublicationStreamStatus() != StreamMessageStatusEnum.SENT) {
+            String userId = ctx.getUserId();
+            String messageCode = ServiceNoticeAction.STREAM_MESSAGE_SEND;
+            String messageText = ServiceNoticeMessage.STREAM_MESSAGE_SEND_ERROR;
+            noticesRestInternalService.createErrorOnStreamMessagingService(userId, messageCode, version, messageText, (Serializable[]) null);
+        }
+    }
 }

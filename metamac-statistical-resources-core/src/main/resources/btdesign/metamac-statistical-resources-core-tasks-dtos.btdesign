@@ -13,6 +13,7 @@ Application DatasetsStatisticalResourcesDto {
 			String dataStructureUrn; 
 			String datasetVersionId;
 			String datasetUrn;
+			String statisticalOperationUrn;
 			Boolean storeAlternativeRepresentations
  		}
 

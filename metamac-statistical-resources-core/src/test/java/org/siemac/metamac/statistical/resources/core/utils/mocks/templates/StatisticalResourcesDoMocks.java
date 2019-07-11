@@ -53,8 +53,8 @@ import org.siemac.metamac.statistical.resources.core.utils.mocks.DatasetVersionM
 
 public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
 
-    public static final String    DEFAULT_DATA_LOCALE = "es";
-    protected static final String USER_MOCK           = "MockedUser";
+    public static final String DEFAULT_DATA_LOCALE = "es";
+    protected static final String USER_MOCK = "MockedUser";
 
     // -----------------------------------------------------------------
     // QUERY VERSION
@@ -111,12 +111,12 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
             datasource.setIdentifiableStatisticalResource(new IdentifiableStatisticalResource());
         }
 
-        if (datasource.getFilename() == null) {
-            datasource.setFilename(mockString(10));
+        if (datasource.getSourceName() == null) {
+            datasource.setSourceName(mockString(10));
         }
 
         if (datasource.getIdentifiableStatisticalResource().getCode() == null) {
-            datasource.getIdentifiableStatisticalResource().setCode(datasource.getFilename() + "_" + new DateTime().toString());
+            datasource.getIdentifiableStatisticalResource().setCode(datasource.getSourceName() + "_" + new DateTime().toString());
         }
 
         datasource.setIdentifiableStatisticalResource(mockIdentifiableStatisticalResource(datasource.getIdentifiableStatisticalResource(), TypeRelatedResourceEnum.DATASOURCE));
@@ -126,9 +126,9 @@ public abstract class StatisticalResourcesDoMocks extends MetamacMocks {
 
     protected Datasource mockDatasourceWithGeneratedDatasetVersion() {
         Datasource datasource = new Datasource();
-        datasource.setFilename(mockString(10));
+        datasource.setSourceName(mockString(10));
         datasource.setIdentifiableStatisticalResource(mockIdentifiableStatisticalResource(new IdentifiableStatisticalResource(), TypeRelatedResourceEnum.DATASOURCE));
-        datasource.getIdentifiableStatisticalResource().setCode(datasource.getFilename() + "_" + new DateTime().toString());
+        datasource.getIdentifiableStatisticalResource().setCode(datasource.getSourceName() + "_" + new DateTime().toString());
 
         return datasource;
     }
