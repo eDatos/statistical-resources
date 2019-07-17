@@ -213,20 +213,23 @@ public class TaskServiceImpl extends TaskServiceImplBase implements ApplicationL
 
             // Start now
             sched.start();
-
-            scheduleDatabaseDatasetPollingJob(sched);
         } catch (SchedulerException e) {
             throw new IllegalStateException("An unexpected error has occurred during quartz initialization", e);
         }
 
     }
 
-    public void scheduleDatabaseDatasetPollingJob(Scheduler sched) {
+    @Override
+    public void scheduleDatabaseDatasetPollingJob(ServiceContext ctx) {
         try {
+            taskServiceInvocationValidator.checkScheduleDatabaseDatasetPollingJob(ctx);
+
             JobDetail job = newJob(DatabaseDatasetPollingJob.class).build();
 
             CronTrigger cronTrigger = TriggerBuilder.newTrigger()
                     .withSchedule(CronScheduleBuilder.cronSchedule(configurationService.retriveCronExpressionForDbDataImport()).withMisfireHandlingInstructionDoNothing()).build();
+
+            Scheduler sched = schedulerFactory.getScheduler();
             sched.scheduleJob(job, cronTrigger);
 
             logger.info("Database dataset polling job successfully scheduled at {} ", new Date());

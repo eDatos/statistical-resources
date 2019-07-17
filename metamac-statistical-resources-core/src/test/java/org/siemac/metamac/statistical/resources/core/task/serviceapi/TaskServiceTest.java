@@ -110,4 +110,9 @@ public class TaskServiceTest extends StatisticalResourcesBaseTest implements Tas
     public void testProcessDatabaseDatasetPollingTask() throws Exception {
         // No test
     }
+
+    @Override
+    public void testScheduleDatabaseDatasetPollingJob() throws Exception {
+        // No test
+    }
 }

@@ -82,4 +82,10 @@ public class TaskServiceFacadeImpl extends TaskServiceFacadeImplBase {
             taskservice.markTasksAsFailedOnApplicationStartup(ctx, task.getJob());
         }
     }
+
+    @Override
+    public void scheduleDatabaseDatasetPollingJob(ServiceContext ctx) {
+        taskservice.scheduleDatabaseDatasetPollingJob(ctx);
+
+    }
 }
