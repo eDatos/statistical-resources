@@ -56,4 +56,9 @@ public class StatisticalResourcesConfigurationImpl extends ConfigurationServiceI
     public String retriveCronExpressionForDbDataImport() throws MetamacException {
         return retrieveProperty(StatisticalResourcesConfigurationConstants.CRON_EXPRESSION_FOR_DB_DATA_IMPORT);
     }
+
+    @Override
+    public boolean retriveDatabaseDatasetImportJobIsEnabled() {
+        return environmentConfigurationProperties.getBoolean(StatisticalResourcesConfigurationConstants.DATABASE_DATASET_IMPORT_ENABLED, Boolean.FALSE);
+    }
 }

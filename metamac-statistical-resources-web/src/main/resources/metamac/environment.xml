@@ -17,5 +17,8 @@
     <!-- <entry key="environment.metamac.configuration.db.username">FILL_ME_WITH_DB_USER</entry> -->
     <!-- <entry key="environment.metamac.configuration.db.password">FILL_ME_WITH_DB_PASSWORD</entry> -->
     <!-- <entry key="environment.metamac.configuration.db.driver_name">com.microsoft.sqlserver.jdbc.SQLServerDriver</entry> -->
+    
+    <!-- Configuration property for database dataset import job -->
+    <entry key="environment.metamac.statistical_resources.data_import.enabled">true</entry>
 
 </properties>

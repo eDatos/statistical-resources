@@ -32,4 +32,9 @@ public class StatisticalResourcesConfigurationMockImpl extends ConfigurationServ
     public String retriveCronExpressionForDbDataImport() throws MetamacException {
         throw new UnsupportedOperationException("Not implemented. Not necessary for mocking purposes");
     }
+
+    @Override
+    public boolean retriveDatabaseDatasetImportJobIsEnabled() {
+        throw new UnsupportedOperationException("Not implemented. Not necessary for mocking purposes");
+    }
 }
