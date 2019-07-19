@@ -47,4 +47,9 @@ public class TaskServiceFacadeTest extends StatisticalResourcesBaseTest implemen
     public void testExecuteDatabaseDatasetPollingTask() throws Exception {
         // No test
     }
+
+    @Override
+    public void testScheduleDatabaseDatasetPollingJob() throws Exception {
+        // No test
+    }
 }

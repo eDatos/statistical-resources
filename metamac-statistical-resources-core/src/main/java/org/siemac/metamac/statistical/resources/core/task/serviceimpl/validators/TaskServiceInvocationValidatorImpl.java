@@ -128,4 +128,8 @@ public class TaskServiceInvocationValidatorImpl {
     public static void checkProcessDatabaseDatasetPollingTask(List<MetamacExceptionItem> exceptions) {
         // NOTHING TO DO HERE
     }
+
+    public static void checkScheduleDatabaseDatasetPollingJob(List<MetamacExceptionItem> exceptions) {
+        // NOTHING TO DO HERE
+    }
 }

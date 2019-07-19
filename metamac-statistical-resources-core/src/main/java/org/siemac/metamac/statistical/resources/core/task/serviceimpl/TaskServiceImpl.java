@@ -67,6 +67,7 @@ import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.Dimensi
 import org.siemac.metamac.rest.structural_resources_internal.v1_0.domain.ResourceInternal;
 import org.siemac.metamac.statistical.resources.core.common.utils.DsdProcessor.DsdAttribute;
 import org.siemac.metamac.statistical.resources.core.conf.StatisticalResourcesConfiguration;
+import org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConfigurationConstants;
 import org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConstants;
 import org.siemac.metamac.statistical.resources.core.constraint.api.ConstraintsService;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
@@ -213,23 +214,32 @@ public class TaskServiceImpl extends TaskServiceImplBase implements ApplicationL
 
             // Start now
             sched.start();
-
-            scheduleDatabaseDatasetPollingJob(sched);
         } catch (SchedulerException e) {
             throw new IllegalStateException("An unexpected error has occurred during quartz initialization", e);
         }
 
     }
 
-    public void scheduleDatabaseDatasetPollingJob(Scheduler sched) {
+    @Override
+    public void scheduleDatabaseDatasetPollingJob(ServiceContext ctx) {
         try {
-            JobDetail job = newJob(DatabaseDatasetPollingJob.class).build();
+            taskServiceInvocationValidator.checkScheduleDatabaseDatasetPollingJob(ctx);
 
-            CronTrigger cronTrigger = TriggerBuilder.newTrigger()
-                    .withSchedule(CronScheduleBuilder.cronSchedule(configurationService.retriveCronExpressionForDbDataImport()).withMisfireHandlingInstructionDoNothing()).build();
-            sched.scheduleJob(job, cronTrigger);
+            if (configurationService.retriveDatabaseDatasetImportJobIsEnabled()) {
 
-            logger.info("Database dataset polling job successfully scheduled at {} ", new Date());
+                JobDetail job = newJob(DatabaseDatasetPollingJob.class).build();
+
+                CronTrigger cronTrigger = TriggerBuilder.newTrigger()
+                        .withSchedule(CronScheduleBuilder.cronSchedule(configurationService.retriveCronExpressionForDbDataImport()).withMisfireHandlingInstructionDoNothing()).build();
+
+                Scheduler sched = schedulerFactory.getScheduler();
+                sched.scheduleJob(job, cronTrigger);
+
+                logger.info("Database dataset polling job successfully scheduled at {} ", new Date());
+            } else {
+                logger.warn("Database dataset polling job is disabled. Check " + StatisticalResourcesConfigurationConstants.DATABASE_DATASET_IMPORT_ENABLED
+                        + " property value in environment.xml file in case you want to enable it");
+            }
 
         } catch (Exception e) {
             logger.error("An unexpected error has occurred scheduling database dataset polling job", e);
