@@ -118,7 +118,6 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.TransactionCallback;
-import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import com.arte.statistic.parser.csv.CsvWriter;
@@ -574,18 +573,17 @@ public class TaskServiceImpl extends TaskServiceImplBase implements ApplicationL
     private String versioningDatasetVersion(ServiceContext ctx, String datasetVersionUrn) {
         logger.debug("Versioning dataset {}", datasetVersionUrn);
 
-        TransactionTemplate transactionTemplate = new TransactionTemplate(platformTransactionManager);
-        transactionTemplate.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
-        return transactionTemplate.execute(new TransactionCallback<String>() {
+        return getTransactionTemplate().execute(new MetamacExceptionTransactionCallback<String>() {
 
             @Override
-            public String doInTransaction(TransactionStatus status) {
-                try {
-                    DatasetVersion datasetVersion = datasetLifecycleService.versioning(ctx, datasetVersionUrn, VersionTypeEnum.MINOR);
-                    return datasetVersion.getSiemacMetadataStatisticalResource().getUrn();
-                } catch (MetamacException e) {
-                    throw new RuntimeException("Transactional method versioning dataset failed.", e);
-                }
+            protected String doInMetamacTransaction(TransactionStatus status) throws MetamacException {
+                DatasetVersion datasetVersion = datasetLifecycleService.versioning(ctx, datasetVersionUrn, VersionTypeEnum.MINOR);
+                return datasetVersion.getSiemacMetadataStatisticalResource().getUrn();
+            }
+
+            @Override
+            protected String getRuntimeExceptionMessage() {
+                return "Transactional method versioning dataset failed";
             }
         });
     }
@@ -598,17 +596,17 @@ public class TaskServiceImpl extends TaskServiceImplBase implements ApplicationL
     private void executeImportationTask(ServiceContext ctx, String databaseImportationJobKey, TaskInfoDataset taskInfoDataset) {
         logger.debug("Execute importation dataset task {}", taskInfoDataset.getDatasetVersionId());
 
-        TransactionTemplate transactionTemplate = new TransactionTemplate(platformTransactionManager);
-        transactionTemplate.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
-        transactionTemplate.execute(new TransactionCallbackWithoutResult() {
+        getTransactionTemplate().execute(new MetamacExceptionTransactionCallback<Object>() {
 
             @Override
-            protected void doInTransactionWithoutResult(TransactionStatus status) {
-                try {
-                    processImportationTask(ctx, databaseImportationJobKey, taskInfoDataset);
-                } catch (MetamacException e) {
-                    throw new RuntimeException("Transactional method execute importation dataset dataset task failed.", e);
-                }
+            protected Object doInMetamacTransaction(TransactionStatus status) throws MetamacException {
+                processImportationTask(ctx, databaseImportationJobKey, taskInfoDataset);
+                return null;
+            }
+
+            @Override
+            protected String getRuntimeExceptionMessage() {
+                return "Transactional method execute importation dataset task failed";
             }
         });
     }
@@ -616,23 +614,24 @@ public class TaskServiceImpl extends TaskServiceImplBase implements ApplicationL
     private void updateMetadataDatasetVersion(ServiceContext ctx, String datasetVersionUrn) {
         logger.debug("Updating required metada for dataset {}", datasetVersionUrn);
 
-        TransactionTemplate transactionTemplate = new TransactionTemplate(platformTransactionManager);
-        transactionTemplate.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
-        transactionTemplate.execute(new TransactionCallbackWithoutResult() {
+        getTransactionTemplate().execute(new MetamacExceptionTransactionCallback<Object>() {
 
             @Override
-            protected void doInTransactionWithoutResult(TransactionStatus status) {
-                try {
-                    // Retrieve dataset again to get it updated after importation task
-                    DatasetVersion datasetVersion = datasetService.retrieveDatasetVersionByUrn(ctx, datasetVersionUrn);
+            protected Object doInMetamacTransaction(TransactionStatus status) throws MetamacException {
+                // Retrieve dataset again to get it updated after importation task
+                DatasetVersion datasetVersion = datasetService.retrieveDatasetVersionByUrn(ctx, datasetVersionUrn);
 
-                    DatabaseDatasetImportUtils.setRequiredMetadataForDatabaseDatasetImportation(datasetVersion);
+                DatabaseDatasetImportUtils.setRequiredMetadataForDatabaseDatasetImportation(datasetVersion);
 
-                    // It's necessary to save the new metadata of the dataset before continuing transiting it through the life cycle
-                    datasetService.updateDatasetVersion(ctx, datasetVersion);
-                } catch (MetamacException e) {
-                    throw new RuntimeException("Transactional method updating required metada failed.", e);
-                }
+                // It's necessary to save the new metadata of the dataset before continuing transiting it through the life cycle
+                datasetService.updateDatasetVersion(ctx, datasetVersion);
+
+                return null;
+            }
+
+            @Override
+            protected String getRuntimeExceptionMessage() {
+                return "Transactional method update metadata dataset failed";
             }
         });
     }
@@ -640,17 +639,17 @@ public class TaskServiceImpl extends TaskServiceImplBase implements ApplicationL
     private void sendDatasetVersionToProductionValidation(ServiceContext ctx, String datasetVersionUrn) {
         logger.debug("Sending to production validation dataset {}", datasetVersionUrn);
 
-        TransactionTemplate transactionTemplate = new TransactionTemplate(platformTransactionManager);
-        transactionTemplate.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
-        transactionTemplate.execute(new TransactionCallbackWithoutResult() {
+        getTransactionTemplate().execute(new MetamacExceptionTransactionCallback<Object>() {
 
             @Override
-            protected void doInTransactionWithoutResult(TransactionStatus status) {
-                try {
-                    datasetLifecycleService.sendToProductionValidation(ctx, datasetVersionUrn);
-                } catch (MetamacException e) {
-                    throw new RuntimeException("Transactional method sending to production validation failed.", e);
-                }
+            protected Object doInMetamacTransaction(TransactionStatus status) throws MetamacException {
+                datasetLifecycleService.sendToProductionValidation(ctx, datasetVersionUrn);
+                return null;
+            }
+
+            @Override
+            protected String getRuntimeExceptionMessage() {
+                return "Transactional method send dataset to production validation failed";
             }
         });
     }
@@ -658,17 +657,17 @@ public class TaskServiceImpl extends TaskServiceImplBase implements ApplicationL
     private void sendDatasetVersionToDiffusionValidation(ServiceContext ctx, String datasetVersionUrn) {
         logger.debug("Sending to difussion validation dataset {}", datasetVersionUrn);
 
-        TransactionTemplate transactionTemplate = new TransactionTemplate(platformTransactionManager);
-        transactionTemplate.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
-        transactionTemplate.execute(new TransactionCallbackWithoutResult() {
+        getTransactionTemplate().execute(new MetamacExceptionTransactionCallback<Object>() {
 
             @Override
-            protected void doInTransactionWithoutResult(TransactionStatus status) {
-                try {
-                    datasetLifecycleService.sendToDiffusionValidation(ctx, datasetVersionUrn);
-                } catch (MetamacException e) {
-                    throw new RuntimeException("Transactional method sending to difussion validation failed.", e);
-                }
+            protected Object doInMetamacTransaction(TransactionStatus status) throws MetamacException {
+                datasetLifecycleService.sendToDiffusionValidation(ctx, datasetVersionUrn);
+                return null;
+            }
+
+            @Override
+            protected String getRuntimeExceptionMessage() {
+                return "Transactional method send dataset to difussion validation failed";
             }
         });
     }
@@ -676,17 +675,17 @@ public class TaskServiceImpl extends TaskServiceImplBase implements ApplicationL
     private void publishDatasetVersion(ServiceContext ctx, String datasetVersionUrn) {
         logger.debug("Publishing dataset {}", datasetVersionUrn);
 
-        TransactionTemplate transactionTemplate = new TransactionTemplate(platformTransactionManager);
-        transactionTemplate.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
-        transactionTemplate.execute(new TransactionCallbackWithoutResult() {
+        getTransactionTemplate().execute(new MetamacExceptionTransactionCallback<Object>() {
 
             @Override
-            protected void doInTransactionWithoutResult(TransactionStatus status) {
-                try {
-                    datasetLifecycleService.sendToPublished(ctx, datasetVersionUrn);
-                } catch (MetamacException e) {
-                    throw new RuntimeException("Transactional method publishing dataset failed.", e);
-                }
+            protected Object doInMetamacTransaction(TransactionStatus status) throws MetamacException {
+                datasetLifecycleService.sendToPublished(ctx, datasetVersionUrn);
+                return null;
+            }
+
+            @Override
+            protected String getRuntimeExceptionMessage() {
+                return "Transactional method publish dataset failed";
             }
         });
     }
@@ -694,19 +693,25 @@ public class TaskServiceImpl extends TaskServiceImplBase implements ApplicationL
     private void markDatabaseImportTaskAsFinished(ServiceContext ctx, String databaseImportationJobKey) {
         logger.debug("Marking databaset task as finished {}", databaseImportationJobKey);
 
-        TransactionTemplate transactionTemplate = new TransactionTemplate(platformTransactionManager);
-        transactionTemplate.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
-        transactionTemplate.execute(new TransactionCallbackWithoutResult() {
+        getTransactionTemplate().execute(new MetamacExceptionTransactionCallback<Object>() {
 
             @Override
-            protected void doInTransactionWithoutResult(TransactionStatus status) {
-                try {
-                    markTaskAsFinished(ctx, databaseImportationJobKey);
-                } catch (MetamacException e) {
-                    throw new RuntimeException("Transactional method Marking databaset task failed.", e);
-                }
+            protected Object doInMetamacTransaction(TransactionStatus status) throws MetamacException {
+                markTaskAsFinished(ctx, databaseImportationJobKey);
+                return null;
+            }
+
+            @Override
+            protected String getRuntimeExceptionMessage() {
+                return "Transactional method mark databaset import task as finish failed";
             }
         });
+    }
+
+    private TransactionTemplate getTransactionTemplate() {
+        TransactionTemplate transactionTemplate = new TransactionTemplate(platformTransactionManager);
+        transactionTemplate.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
+        return transactionTemplate;
     }
 
     @Override
@@ -1353,5 +1358,20 @@ public class TaskServiceImpl extends TaskServiceImplBase implements ApplicationL
     public void importDatabaseDatasourcesInDatasetVersion(ServiceContext ctx, String datasetVersionUrn, List<URL> fileUrls, Map<String, String> dimensionRepresentationMapping,
             boolean storeDimensionRepresentationMapping) throws MetamacException {
         datasetService.importDatabaseDatasourcesInDatasetVersion(ctx, datasetVersionUrn, fileUrls, dimensionRepresentationMapping, storeDimensionRepresentationMapping);
+    }
+    
+    abstract class MetamacExceptionTransactionCallback<T> implements TransactionCallback<T> {
+
+        public final T doInTransaction(TransactionStatus status) {
+            try {
+                return doInMetamacTransaction(status);
+            } catch (MetamacException e) {
+                throw new RuntimeException(getRuntimeExceptionMessage(), e);
+            }
+        }
+
+        protected abstract T doInMetamacTransaction(TransactionStatus status) throws MetamacException;
+
+        protected abstract String getRuntimeExceptionMessage();
     }
 }
