@@ -8,7 +8,6 @@ import org.quartz.JobDataMap;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionItem;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
-import org.siemac.metamac.statistical.resources.core.notices.ServiceNoticeAction;
 import org.siemac.metamac.statistical.resources.core.task.domain.TaskInfoDataset;
 
 public class ImportDatasetFromDatabaseJob extends AbstractImportDatasetJob {
@@ -54,8 +53,7 @@ public class ImportDatasetFromDatabaseJob extends AbstractImportDatasetJob {
 
     @Override
     protected void sendErrorNotification(MetamacException metamacException) {
-        String statisticalOperationUrn = getData().getString(ImportDatasetFromDatabaseJob.STATISTICAL_OPERATION_URN);
-        getNoticesRestInternalService().createDatabaseImportErrorBackgroundNotification(statisticalOperationUrn, ServiceNoticeAction.DATABASE_IMPORT_DATASET_JOB, metamacException);
+        getTaskServiceFacade().sendDatabaseImportationErrorNotification(serviceContext, getData().getString(ImportDatasetFromDatabaseJob.DATASET_VERSION_ID), metamacException);
     }
 
     @Override

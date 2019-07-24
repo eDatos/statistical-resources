@@ -314,9 +314,8 @@ public class TaskServiceImpl extends TaskServiceImplBase implements ApplicationL
         // necessary to create a recovery job.
         String datasetVersionUrn = extractDatasetVersionUrnFromDatabaseImportationDatasetJobKey(jobKey);
         DatasetVersion datasetVersion = datasetService.retrieveDatasetVersionByUrn(ctx, datasetVersionUrn);
-        String statisticalOperationUrn = datasetVersion.getSiemacMetadataStatisticalResource().getStatisticalOperation().getUrn();
 
-        getNoticesRestInternalService().createDatabaseImportSuccessBackgroundNotification(statisticalOperationUrn, ServiceNoticeAction.DATABASE_IMPORT_DATASET_JOB,
+        getNoticesRestInternalService().createDatabaseImportSuccessBackgroundNotification(datasetVersion, ServiceNoticeAction.DATABASE_IMPORT_DATASET_JOB,
                 ServiceNoticeMessage.DATABASE_IMPORT_DATASET_JOB_DETECTED, datasetVersionUrn);
 
         markTaskAsFinished(ctx, jobKey);
@@ -580,11 +579,6 @@ public class TaskServiceImpl extends TaskServiceImplBase implements ApplicationL
                 DatasetVersion datasetVersion = datasetLifecycleService.versioning(ctx, datasetVersionUrn, VersionTypeEnum.MINOR);
                 return datasetVersion.getSiemacMetadataStatisticalResource().getUrn();
             }
-
-            @Override
-            protected String getRuntimeExceptionMessage() {
-                return "Transactional method versioning dataset failed";
-            }
         });
     }
 
@@ -602,11 +596,6 @@ public class TaskServiceImpl extends TaskServiceImplBase implements ApplicationL
             protected Object doInMetamacTransaction(TransactionStatus status) throws MetamacException {
                 processImportationTask(ctx, databaseImportationJobKey, taskInfoDataset);
                 return null;
-            }
-
-            @Override
-            protected String getRuntimeExceptionMessage() {
-                return "Transactional method execute importation dataset task failed";
             }
         });
     }
@@ -628,11 +617,6 @@ public class TaskServiceImpl extends TaskServiceImplBase implements ApplicationL
 
                 return null;
             }
-
-            @Override
-            protected String getRuntimeExceptionMessage() {
-                return "Transactional method update metadata dataset failed";
-            }
         });
     }
 
@@ -645,11 +629,6 @@ public class TaskServiceImpl extends TaskServiceImplBase implements ApplicationL
             protected Object doInMetamacTransaction(TransactionStatus status) throws MetamacException {
                 datasetLifecycleService.sendToProductionValidation(ctx, datasetVersionUrn);
                 return null;
-            }
-
-            @Override
-            protected String getRuntimeExceptionMessage() {
-                return "Transactional method send dataset to production validation failed";
             }
         });
     }
@@ -664,11 +643,6 @@ public class TaskServiceImpl extends TaskServiceImplBase implements ApplicationL
                 datasetLifecycleService.sendToDiffusionValidation(ctx, datasetVersionUrn);
                 return null;
             }
-
-            @Override
-            protected String getRuntimeExceptionMessage() {
-                return "Transactional method send dataset to difussion validation failed";
-            }
         });
     }
 
@@ -682,11 +656,6 @@ public class TaskServiceImpl extends TaskServiceImplBase implements ApplicationL
                 datasetLifecycleService.sendToPublished(ctx, datasetVersionUrn);
                 return null;
             }
-
-            @Override
-            protected String getRuntimeExceptionMessage() {
-                return "Transactional method publish dataset failed";
-            }
         });
     }
 
@@ -699,11 +668,6 @@ public class TaskServiceImpl extends TaskServiceImplBase implements ApplicationL
             protected Object doInMetamacTransaction(TransactionStatus status) throws MetamacException {
                 markTaskAsFinished(ctx, databaseImportationJobKey);
                 return null;
-            }
-
-            @Override
-            protected String getRuntimeExceptionMessage() {
-                return "Transactional method mark databaset import task as finish failed";
             }
         });
     }
@@ -1360,18 +1324,29 @@ public class TaskServiceImpl extends TaskServiceImplBase implements ApplicationL
         datasetService.importDatabaseDatasourcesInDatasetVersion(ctx, datasetVersionUrn, fileUrls, dimensionRepresentationMapping, storeDimensionRepresentationMapping);
     }
     
+    @Override
+    public void sendDatabaseImportationErrorNotification(ServiceContext ctx, String datasetVersionUrn, MetamacException metamacException) {
+        try {
+            taskServiceInvocationValidator.checkSendDatabaseImportationErrorNotification(ctx, datasetVersionUrn, metamacException);
+
+            DatasetVersion datasetVersion = datasetService.retrieveDatasetVersionByUrn(ctx, datasetVersionUrn);
+            getNoticesRestInternalService().createDatabaseImportErrorBackgroundNotification(datasetVersion, ServiceNoticeAction.DATABASE_IMPORT_DATASET_JOB, metamacException);
+        } catch (MetamacException e) {
+            // If an error occurred sending the notification, it must be logged but it mustn't be threw to avoid generate more additional noise to the previous error
+            logger.error("Error sending database importation error notification:", e);
+        }        
+    }
+    
     abstract class MetamacExceptionTransactionCallback<T> implements TransactionCallback<T> {
 
         public final T doInTransaction(TransactionStatus status) {
             try {
                 return doInMetamacTransaction(status);
             } catch (MetamacException e) {
-                throw new RuntimeException(getRuntimeExceptionMessage(), e);
+                throw new RuntimeException("Error in transactional method", e);
             }
         }
 
         protected abstract T doInMetamacTransaction(TransactionStatus status) throws MetamacException;
-
-        protected abstract String getRuntimeExceptionMessage();
-    }
+    }    
 }

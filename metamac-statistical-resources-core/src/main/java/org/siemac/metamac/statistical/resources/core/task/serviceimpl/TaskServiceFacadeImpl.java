@@ -88,4 +88,9 @@ public class TaskServiceFacadeImpl extends TaskServiceFacadeImplBase {
         taskservice.scheduleDatabaseDatasetPollingJob(ctx);
 
     }
+
+    @Override
+    public void sendDatabaseImportationErrorNotification(ServiceContext ctx, String datasetVersionUrn, MetamacException metamacException) {
+        taskservice.sendDatabaseImportationErrorNotification(ctx, datasetVersionUrn, metamacException);
+    }
 }

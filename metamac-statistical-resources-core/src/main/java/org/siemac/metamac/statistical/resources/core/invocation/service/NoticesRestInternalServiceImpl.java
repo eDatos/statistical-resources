@@ -18,6 +18,7 @@ import org.siemac.metamac.rest.notices.v1_0.domain.utils.MessageBuilder;
 import org.siemac.metamac.rest.notices.v1_0.domain.utils.NoticeBuilder;
 import org.siemac.metamac.statistical.resources.core.base.domain.HasSiemacMetadata;
 import org.siemac.metamac.statistical.resources.core.conf.StatisticalResourcesConfiguration;
+import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionParameters;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionUtils;
 import org.siemac.metamac.statistical.resources.core.invocation.utils.RestMapper;
@@ -63,7 +64,7 @@ public class NoticesRestInternalServiceImpl implements NoticesRestInternalServic
     }
 
     @Override
-    public void createDatabaseImportErrorBackgroundNotification(String statisticalOperationUrn, String actionCode, MetamacException exception) {
+    public void createDatabaseImportErrorBackgroundNotification(DatasetVersion datasetVersion, String actionCode, MetamacException exception) {
         try {
             Locale locale = configurationService.retrieveLanguageDefaultLocale();
 
@@ -71,7 +72,7 @@ public class NoticesRestInternalServiceImpl implements NoticesRestInternalServic
             String localisedMessage = localisedException.getMessage();
             localisedMessage = ERROR + " - " + localisedMessage;
 
-            createDatabaseImportBackgroundNotification(locale, statisticalOperationUrn, actionCode, localisedMessage);
+            createDatabaseImportBackgroundNotification(locale, datasetVersion, actionCode, localisedMessage);
         } catch (MetamacException e) {
             logger.error("Error creating createDatabaseImportErrorBackgroundNotification:", e);
         }
@@ -92,13 +93,13 @@ public class NoticesRestInternalServiceImpl implements NoticesRestInternalServic
     }
 
     @Override
-    public void createDatabaseImportSuccessBackgroundNotification(String statisticalOperationUrn, String actionCode, String successMessageCode, Serializable... successMessageParameters) {
+    public void createDatabaseImportSuccessBackgroundNotification(DatasetVersion datasetVersion, String actionCode, String successMessageCode, Serializable... successMessageParameters) {
         try {
             Locale locale = configurationService.retrieveLanguageDefaultLocale();
             String localisedMessage = LocaleUtil.getMessageForCode(successMessageCode, locale);
             localisedMessage = MessageFormat.format(localisedMessage, successMessageParameters);
 
-            createDatabaseImportBackgroundNotification(locale, statisticalOperationUrn, actionCode, localisedMessage);
+            createDatabaseImportBackgroundNotification(locale, datasetVersion, actionCode, localisedMessage);
         } catch (MetamacException e) {
             logger.error("Error creating createDatabaseImportSuccessBackgroundNotification:", e);
         }
@@ -126,26 +127,37 @@ public class NoticesRestInternalServiceImpl implements NoticesRestInternalServic
         }
     }
 
-    private void createDatabaseImportBackgroundNotification(Locale locale, String statisticalOperationUrn, String actionCode, String localisedMessage) throws MetamacException {
+    private void createDatabaseImportBackgroundNotification(Locale locale, DatasetVersion datasetVersion, String actionCode, String localisedMessage) throws MetamacException {
         try {
             String subject = LocaleUtil.getMessageForCode(actionCode, locale);
             String sendingApp = MetamacApplicationsEnum.GESTOR_RECURSOS_ESTADISTICOS.getName();
 
-        // @formatter:off
-        Notice notification = NoticeBuilder.notification()
-                .withMessagesWithoutResources(localisedMessage)
-                .withSendingApplication(sendingApp)
-                .withRoles(MetamacRolesEnum.ADMINISTRADOR, MetamacRolesEnum.TECNICO_PRODUCCION)
-                .withSubject(subject)
-                .withApplications(sendingApp)
-                .withStatisticalOperations(statisticalOperationUrn)
-                .build();
-        // @formatter:on
+            ResourceInternal resourceInternal = datasetVersionToResourceInternal(datasetVersion);
+
+            // @formatter:off
+            Message message = MessageBuilder.message()
+                    .withText(localisedMessage)
+                    .withResources(resourceInternal)
+                    .build();  
+            
+            Notice notification = NoticeBuilder.notification()
+                    .withMessages(message)
+                    .withSendingApplication(sendingApp)
+                    .withRoles(MetamacRolesEnum.ADMINISTRADOR, MetamacRolesEnum.TECNICO_PRODUCCION)
+                    .withSubject(subject)
+                    .withApplications(sendingApp)
+                    .withStatisticalOperations(datasetVersion.getSiemacMetadataStatisticalResource().getStatisticalOperation().getUrn())
+                    .build();
+            // @formatter:on
 
             restApiLocator.getNoticesRestInternalFacadeV10().createNotice(notification);
         } catch (Exception e) {
             throw manageNoticesInternalRestException(e);
         }
+    }
+
+    private ResourceInternal datasetVersionToResourceInternal(DatasetVersion datasetVersion) {
+        return restMapper.generateResourceInternal(datasetVersion);
     }
 
     @Override
