@@ -28,7 +28,10 @@ Application DatasetsStatisticalResources {
     		
 			"Schedule database dataset polling job"
 			scheduleDatabaseDatasetPollingJob();
-
+			
+			"Send error notification for database importation task"
+			sendDatabaseImportationErrorNotification(String datasetVersionUrn, MetamacException metamacException);
+			
     		// General JOBS
     		markTaskAsFailed(String job, String datasetVersionId, String datasetUrn, java.lang.Exception exception) throws MetamacException;
     		markTaskAsFinished(String job) throws MetamacException;
@@ -89,6 +92,9 @@ Application DatasetsStatisticalResources {
 			
 			"Schedule database dataset polling job"
 			scheduleDatabaseDatasetPollingJob();
+			
+			"Send error notification for database importation task"
+			sendDatabaseImportationErrorNotification(String datasetVersionUrn, MetamacException metamacException);
 		}
 		
 		// ----------------------------------------------------------------

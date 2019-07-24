@@ -72,6 +72,7 @@ public class ServiceExceptionParameters extends ServiceExceptionBaseParameters {
 
     // Misc
     public static final String       TIME                                     = "parameter.resources.time";
+    public static final String       METAMAC_EXCEPTION                        = "parameter.resources.metamac_exception";
 
     // Constraints
     public static final String       CONTENT_CONSTRAINT                       = "parameter.resources.content_constraint";
