@@ -205,8 +205,6 @@ public class ServiceExceptionType extends CommonServiceExceptionType {
             "exception.resources.dataset.importation.invalid_data_source_type_for_data_importation");
     public static final CommonServiceExceptionType INVALID_FILE_FOR_DATASET_VERSION                                             = create(
             "exception.resources.dataset.importation.invalid_file_for_dataset");
-    public static final CommonServiceExceptionType INVALID_TABLENAME_FOR_DATASET_VERSION                                        = create(
-            "exception.resources.dataset.importation.invalid_tablename_for_dataset");
     public static final CommonServiceExceptionType TABLE_NOT_EXIST                                                              = create("exception.resources.dataset.importation.table_not_exist");
     public static final CommonServiceExceptionType DIMENSION_COLUMN_NOT_EXIST                                                   = create(
             "exception.resources.dataset.importation.dimension_column_not_exist");

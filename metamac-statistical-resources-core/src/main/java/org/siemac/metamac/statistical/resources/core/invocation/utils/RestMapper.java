@@ -5,9 +5,7 @@ import java.util.List;
 
 import javax.annotation.PostConstruct;
 
-import org.apache.commons.lang.StringUtils;
 import org.siemac.metamac.core.common.conf.ConfigurationService;
-import org.siemac.metamac.core.common.constants.CoreCommonConstants;
 import org.siemac.metamac.core.common.enume.domain.TypeExternalArtefactsEnum;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.rest.common.v1_0.domain.ResourceLink;
@@ -50,8 +48,7 @@ public class RestMapper {
         internalWebApplicationNavigation = new InternalWebApplicationNavigation(statisticalResourcesInternalWebUrlBase);
 
         String statisticalResourcesApiInternalEndpoint = configurationService.retrieveStatisticalResourcesInternalApiUrlBase();
-        statisticalResourcesApiInternalEndpointV10 = statisticalResourcesApiInternalEndpoint + StringUtils.removeStart(StatisticalResourcesRestConstants.API_VERSION_1_0, "/")
-                + CoreCommonConstants.URL_SEPARATOR;
+        statisticalResourcesApiInternalEndpointV10 = RestUtils.createLink(statisticalResourcesApiInternalEndpoint, StatisticalResourcesRestConstants.API_VERSION_1_0);
     }
 
     public List<ExternalItem> buildExternalItemsFromResourcesInternal(List<ResourceInternal> resources) throws MetamacException {
