@@ -132,7 +132,7 @@ public class NoticesRestInternalServiceImpl implements NoticesRestInternalServic
             String subject = LocaleUtil.getMessageForCode(actionCode, locale);
             String sendingApp = MetamacApplicationsEnum.GESTOR_RECURSOS_ESTADISTICOS.getName();
 
-            ResourceInternal resourceInternal = datasetVersionToResourceInternal(datasetVersion);
+            ResourceInternal resourceInternal = restMapper.generateResourceInternal(datasetVersion);
 
             // @formatter:off
             Message message = MessageBuilder.message()
@@ -154,10 +154,6 @@ public class NoticesRestInternalServiceImpl implements NoticesRestInternalServic
         } catch (Exception e) {
             throw manageNoticesInternalRestException(e);
         }
-    }
-
-    private ResourceInternal datasetVersionToResourceInternal(DatasetVersion datasetVersion) {
-        return restMapper.generateResourceInternal(datasetVersion);
     }
 
     @Override

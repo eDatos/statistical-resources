@@ -444,6 +444,7 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         }
         resource.getDatasources().clear();
         resource.getSiemacMetadataStatisticalResource().setLastUpdate(new DateTime());
+        resource.setDateLastTimeDataImport(null);
 
         // Clear coverages
         resource.getDimensionsCoverage().clear();
@@ -1215,8 +1216,6 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
 
         checkNotDatasourceForDataset(ctx, datasetVersionUrn);
 
-        checkTableNameCanBeAssociatedWithDataset(tableName, datasetVersionUrn);
-
         Datasource datasource = buildDatasource(tableName);
 
         createDatasource(ctx, datasetVersionUrn, datasource);
@@ -1736,14 +1735,6 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
         datasource.getIdentifiableStatisticalResource().setCode(Datasource.generateDataSourceId(tableName, new DateTime()));
         datasource.setSourceName(tableName);
         return datasource;
-    }
-
-    private void checkTableNameCanBeAssociatedWithDataset(String tableName, String datasetVersionUrn) throws MetamacException {
-        String linkedDatasetVersionUrn = getDatasetRepository().findDatasetUrnLinkedToDatasourceSourceName(tableName);
-
-        if (linkedDatasetVersionUrn != null && !StringUtils.equals(datasetVersionUrn, linkedDatasetVersionUrn)) {
-            throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.INVALID_TABLENAME_FOR_DATASET_VERSION).withMessageParameters(tableName, datasetVersionUrn).build();
-        }
     }
 
     private void checkNotDatasourceForDataset(ServiceContext ctx, String datasetVersionUrn) throws MetamacException {

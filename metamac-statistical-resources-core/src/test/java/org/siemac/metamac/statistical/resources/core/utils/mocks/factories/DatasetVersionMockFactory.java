@@ -771,6 +771,7 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
 
         datasetVersion.addDatasource(DatasourceMockFactory.generatePxDatasource(new DateTime().plusMonths(1)));
         datasetVersion.setDateNextUpdate(datasetVersion.getDatasources().get(0).getDateNextUpdate());
+        datasetVersion.setDateLastTimeDataImport(new DateTime());
         return datasetVersion;
     }
 
@@ -813,6 +814,7 @@ public class DatasetVersionMockFactory extends StatisticalResourcesMockFactory<D
         datasetVersion.getSiemacMetadataStatisticalResource().setLastUpdate(new DateTime().minusDays(1));
 
         datasetVersion.addDatasource(DatasourceMockFactory.generatePxDatasource(new DateTime().plusMonths(1)));
+        datasetVersion.setDateLastTimeDataImport(new DateTime());
         return datasetVersion;
     }
 

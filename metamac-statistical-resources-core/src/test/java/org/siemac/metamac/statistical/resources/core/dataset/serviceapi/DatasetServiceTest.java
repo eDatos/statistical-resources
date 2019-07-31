@@ -499,6 +499,7 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
         assertTrue(BooleanUtils.isNotTrue(updatedDataset.getUserModifiedDateNextUpdate()));
         assertNull(updatedDataset.getDateNextUpdate());
         assertNotNull(updatedDataset.getDatasetRepositoryId());
+        assertNull(updatedDataset.getDateLastTimeDataImport());
     }
 
     @Test
@@ -528,6 +529,7 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
         assertTrue(BooleanUtils.isNotTrue(updatedDataset.getUserModifiedDateNextUpdate()));
         assertNotNull(updatedDataset.getDateNextUpdate());
         assertNotNull(updatedDataset.getDatasetRepositoryId());
+        assertNotNull(updatedDataset.getDateLastTimeDataImport());
     }
 
     @Test
@@ -560,6 +562,7 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
         assertTrue(BooleanUtils.isTrue(updatedDataset.getUserModifiedDateNextUpdate()));
         BaseAsserts.assertEqualsDate(oldNextDateUpdate, updatedDataset.getDateNextUpdate());
         assertNotNull(updatedDataset.getDatasetRepositoryId());
+        assertNull(updatedDataset.getDateLastTimeDataImport());
     }
 
     @Override
@@ -1379,7 +1382,7 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
 
     @Test
     @MetamacMock({DATASET_VERSION_113_DATABASE_TYPE_BASIC_NAME, DATASET_VERSION_115_DATABASE_TYPE_BASIC_NAME})
-    public void testCreateDatabaseDatasourceInDatasetVersionTableNameAssociatedWithDatasetError() throws Exception {
+    public void testCreateDatabaseDatasourceInDatasetVersionDuplicatedSourceName() throws Exception {
         String tableName = RandomStringUtils.randomAlphabetic(10);
         String datasetVersionUrn = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_113_DATABASE_TYPE_BASIC_NAME).getSiemacMetadataStatisticalResource().getUrn();
 
@@ -1394,10 +1397,16 @@ public class DatasetServiceTest extends StatisticalResourcesBaseTest implements 
         assertEquals(tableName, datasources.get(0).getSourceName());
 
         String newDatasetVersionUrn = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_115_DATABASE_TYPE_BASIC_NAME).getSiemacMetadataStatisticalResource().getUrn();
-        expectedMetamacException(
-                MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.INVALID_TABLENAME_FOR_DATASET_VERSION).withMessageParameters(tableName, newDatasetVersionUrn).build());
-
         datasetService.createDatabaseDatasourceInDatasetVersion(getServiceContextAdministrador(), newDatasetVersionUrn, tableName);
+
+        List<Datasource> newDatasetVersiondatasources = datasetService.retrieveDatasourcesByDatasetVersion(getServiceContextAdministrador(), newDatasetVersionUrn);
+
+        assertTrue(CollectionUtils.isNotEmpty(newDatasetVersiondatasources));
+        assertEquals(1, newDatasetVersiondatasources.size());
+        assertNotNull(newDatasetVersiondatasources.get(0).getSourceName());
+        assertEquals(tableName, newDatasetVersiondatasources.get(0).getSourceName());
+        assertEquals(datasources.get(0).getSourceName(), newDatasetVersiondatasources.get(0).getSourceName());
+
     }
 
     @Override
