@@ -98,7 +98,7 @@ public class QueryListViewImpl extends LifeCycleBaseListViewImpl<QueryListUiHand
 
     @Override
     public void retrieveResultSet(int firstResult, int maxResults) {
-        getUiHandlers().retrieveQueries(firstResult, maxResults, null);
+        getUiHandlers().retrieveQueries(firstResult, maxResults, getQueryVersionWebCriteria());
     }
 
     //
@@ -225,7 +225,6 @@ public class QueryListViewImpl extends LifeCycleBaseListViewImpl<QueryListUiHand
     protected boolean canPublish(ListGridRecord record) {
         return QueryClientSecurityUtils.canPublishQueryVersion(getDtoFromRecord(record));
     }
-
 
     @Override
     protected boolean canVersion(ListGridRecord record) {

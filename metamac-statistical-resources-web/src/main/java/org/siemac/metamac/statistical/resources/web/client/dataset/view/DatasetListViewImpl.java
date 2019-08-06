@@ -149,7 +149,7 @@ public class DatasetListViewImpl extends StatisticalResourceBaseListViewImpl<Dat
 
     @Override
     protected void retrieveResultSet(int firstResult, int maxResults) {
-        getUiHandlers().retrieveDatasets(firstResult, maxResults, null);
+        getUiHandlers().retrieveDatasets(firstResult, maxResults, getDatasetVersionWebCriteria());
     }
 
     //
@@ -259,8 +259,8 @@ public class DatasetListViewImpl extends StatisticalResourceBaseListViewImpl<Dat
     // Import datasources
 
     private CustomToolStripButton createImportDatasourcesButton() {
-        CustomToolStripButton importDatasourcesButton = new CustomToolStripButton(getConstants().actionLoadDatasourcesZip(), org.siemac.metamac.web.common.client.resources.GlobalResources.RESOURCE
-                .importResource().getURL());
+        CustomToolStripButton importDatasourcesButton = new CustomToolStripButton(getConstants().actionLoadDatasourcesZip(),
+                org.siemac.metamac.web.common.client.resources.GlobalResources.RESOURCE.importResource().getURL());
         importDatasourcesButton.setVisible(DatasetClientSecurityUtils.canImportDatasourcesInStatisticalOperation());
         importDatasourcesButton.addClickHandler(new ClickHandler() {
 
@@ -306,7 +306,6 @@ public class DatasetListViewImpl extends StatisticalResourceBaseListViewImpl<Dat
     protected boolean canPublish(ListGridRecord record) {
         return DatasetClientSecurityUtils.canPublishDatasetVersion(getDtoFromRecord(record));
     }
-
 
     @Override
     protected boolean canVersion(ListGridRecord record) {
