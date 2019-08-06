@@ -101,7 +101,7 @@ public class PublicationListViewImpl extends StatisticalResourceBaseListViewImpl
 
     @Override
     public void retrieveResultSet(int firstResult, int maxResults) {
-        getUiHandlers().retrievePublications(firstResult, maxResults, null);
+        getUiHandlers().retrievePublications(firstResult, maxResults, getPublicationVersionWebCriteria());
     }
 
     //
@@ -170,8 +170,8 @@ public class PublicationListViewImpl extends StatisticalResourceBaseListViewImpl
 
             @Override
             public void onClick(ClickEvent event) {
-                final List<PublicationVersionBaseDto> publicationVersionDtos = StatisticalResourcesRecordUtils.getPublicationVersionBaseDtosFromListGridRecords(listGrid.getListGrid()
-                        .getSelectedRecords());
+                final List<PublicationVersionBaseDto> publicationVersionDtos = StatisticalResourcesRecordUtils
+                        .getPublicationVersionBaseDtosFromListGridRecords(listGrid.getListGrid().getSelectedRecords());
                 final ValidationRejectionWindow window = new ValidationRejectionWindow(getConstants().lifeCycleRejectValidation());
                 window.show();
                 window.getSave().addClickHandler(new com.smartgwt.client.widgets.form.fields.events.ClickHandler() {

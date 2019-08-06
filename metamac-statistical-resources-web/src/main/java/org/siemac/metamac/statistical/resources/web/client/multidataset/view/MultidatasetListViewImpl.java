@@ -14,8 +14,8 @@ import org.siemac.metamac.statistical.resources.web.client.multidataset.model.re
 import org.siemac.metamac.statistical.resources.web.client.multidataset.presenter.MultidatasetListPresenter;
 import org.siemac.metamac.statistical.resources.web.client.multidataset.utils.MultidatasetClientSecurityUtils;
 import org.siemac.metamac.statistical.resources.web.client.multidataset.view.handlers.MultidatasetListUiHandlers;
-import org.siemac.metamac.statistical.resources.web.client.multidataset.widgets.NewMultidatasetWindow;
 import org.siemac.metamac.statistical.resources.web.client.multidataset.widgets.MultidatasetVersionSearchSectionStack;
+import org.siemac.metamac.statistical.resources.web.client.multidataset.widgets.NewMultidatasetWindow;
 import org.siemac.metamac.statistical.resources.web.client.utils.ResourceFieldUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.StatisticalResourcesRecordUtils;
 import org.siemac.metamac.statistical.resources.web.client.widgets.windows.ValidationRejectionWindow;
@@ -101,7 +101,7 @@ public class MultidatasetListViewImpl extends StatisticalResourceBaseListViewImp
 
     @Override
     public void retrieveResultSet(int firstResult, int maxResults) {
-        getUiHandlers().retrieveMultidatasets(firstResult, maxResults, null);
+        getUiHandlers().retrieveMultidatasets(firstResult, maxResults, getMultidatasetVersionWebCriteria());
     }
 
     //
@@ -142,7 +142,8 @@ public class MultidatasetListViewImpl extends StatisticalResourceBaseListViewImp
 
             @Override
             public void onClick(ClickEvent event) {
-                List<MultidatasetVersionBaseDto> multidatasetVersionDtos = StatisticalResourcesRecordUtils.getMultidatasetVersionBaseDtosFromListGridRecords(listGrid.getListGrid().getSelectedRecords());
+                List<MultidatasetVersionBaseDto> multidatasetVersionDtos = StatisticalResourcesRecordUtils
+                        .getMultidatasetVersionBaseDtosFromListGridRecords(listGrid.getListGrid().getSelectedRecords());
                 getUiHandlers().sendToProductionValidation(multidatasetVersionDtos);
             }
         };
@@ -156,7 +157,8 @@ public class MultidatasetListViewImpl extends StatisticalResourceBaseListViewImp
 
             @Override
             public void onClick(ClickEvent event) {
-                List<MultidatasetVersionBaseDto> multidatasetVersionDtos = StatisticalResourcesRecordUtils.getMultidatasetVersionBaseDtosFromListGridRecords(listGrid.getListGrid().getSelectedRecords());
+                List<MultidatasetVersionBaseDto> multidatasetVersionDtos = StatisticalResourcesRecordUtils
+                        .getMultidatasetVersionBaseDtosFromListGridRecords(listGrid.getListGrid().getSelectedRecords());
                 getUiHandlers().sendToDiffusionValidation(multidatasetVersionDtos);
             }
         };
@@ -170,8 +172,8 @@ public class MultidatasetListViewImpl extends StatisticalResourceBaseListViewImp
 
             @Override
             public void onClick(ClickEvent event) {
-                final List<MultidatasetVersionBaseDto> multidatasetVersionDtos = StatisticalResourcesRecordUtils.getMultidatasetVersionBaseDtosFromListGridRecords(listGrid.getListGrid()
-                        .getSelectedRecords());
+                final List<MultidatasetVersionBaseDto> multidatasetVersionDtos = StatisticalResourcesRecordUtils
+                        .getMultidatasetVersionBaseDtosFromListGridRecords(listGrid.getListGrid().getSelectedRecords());
                 final ValidationRejectionWindow window = new ValidationRejectionWindow(getConstants().lifeCycleRejectValidation());
                 window.show();
                 window.getSave().addClickHandler(new com.smartgwt.client.widgets.form.fields.events.ClickHandler() {
@@ -196,7 +198,8 @@ public class MultidatasetListViewImpl extends StatisticalResourceBaseListViewImp
 
             @Override
             public void onClick(ClickEvent event) {
-                List<MultidatasetVersionBaseDto> multidatasetVersionDtos = StatisticalResourcesRecordUtils.getMultidatasetVersionBaseDtosFromListGridRecords(listGrid.getListGrid().getSelectedRecords());
+                List<MultidatasetVersionBaseDto> multidatasetVersionDtos = StatisticalResourcesRecordUtils
+                        .getMultidatasetVersionBaseDtosFromListGridRecords(listGrid.getListGrid().getSelectedRecords());
                 getUiHandlers().publish(multidatasetVersionDtos);
             }
         };

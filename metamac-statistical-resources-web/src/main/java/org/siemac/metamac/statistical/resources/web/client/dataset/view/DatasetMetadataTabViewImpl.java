@@ -59,36 +59,36 @@ import com.smartgwt.client.widgets.layout.VLayout;
 
 public class DatasetMetadataTabViewImpl extends StatisticalResourceMetadataBaseViewImpl<DatasetMetadataTabUiHandlers> implements DatasetMetadataTabView {
 
-    private VLayout panel;
-    private DatasetMainFormLayout mainFormLayout;
+    private VLayout                                                  panel;
+    private DatasetMainFormLayout                                    mainFormLayout;
 
-    private DatasetIdentifiersForm identifiersForm;
-    private DatasetContentDescriptorsForm contentDescriptorsForm;
-    private SiemacMetadataCommonMetadataForm commonMetadataForm;
-    private SiemacMetadataThematicContentClassifiersForm thematicContentClassifiersForm;
-    private SiemacMetadataLanguageForm languageForm;
-    private DatasetProductionDescriptorsForm productionDescriptorsForm;
-    private DatasetClassDescriptorsForm classDescriptorsForm;
-    private DatasetResourceRelationDescriptorsForm resourceRelationDescriptorsForm;
-    private DatasetPublicationDescriptorsForm publicationDescriptorsForm;
-    private LifeCycleResourceLifeCycleForm lifeCycleForm;
-    private DatasetVersionForm versionForm;
-    private SiemacMetadataIntellectualPropertyDescriptorsForm intellectualPropertyDescriptorsForm;
+    private DatasetIdentifiersForm                                   identifiersForm;
+    private DatasetContentDescriptorsForm                            contentDescriptorsForm;
+    private SiemacMetadataCommonMetadataForm                         commonMetadataForm;
+    private SiemacMetadataThematicContentClassifiersForm             thematicContentClassifiersForm;
+    private SiemacMetadataLanguageForm                               languageForm;
+    private DatasetProductionDescriptorsForm                         productionDescriptorsForm;
+    private DatasetClassDescriptorsForm                              classDescriptorsForm;
+    private DatasetResourceRelationDescriptorsForm                   resourceRelationDescriptorsForm;
+    private DatasetPublicationDescriptorsForm                        publicationDescriptorsForm;
+    private LifeCycleResourceLifeCycleForm                           lifeCycleForm;
+    private DatasetVersionForm                                       versionForm;
+    private SiemacMetadataIntellectualPropertyDescriptorsForm        intellectualPropertyDescriptorsForm;
 
-    private DatasetIdentifiersEditionForm identifiersEditionForm;
-    private DatasetContentDescriptorsEditionForm contentDescriptorsEditionForm;
-    private SiemacMetadataCommonMetadataEditionForm commonMetadataEditionForm;
-    private SiemacMetadataThematicContentClassifiersEditionForm thematicContentClassifiersEditionForm;
-    private SiemacMetadataLanguageEditionForm languageEditionForm;
-    private DatasetProductionDescriptorsEditionForm productionDescriptorsEditionForm;
-    private DatasetClassDescriptorsEditionForm classDescriptorsEditionForm;
-    private DatasetResourceRelationDescriptorsEditionForm resourceRelationDescriptorsEditionForm;
-    private DatasetPublicationDescriptorsEditionForm publicationDescriptorsEditionForm;
-    private LifeCycleResourceLifeCycleForm lifeCycleEditionForm;
-    private DatasetVersionEditionForm versionEditionForm;
+    private DatasetIdentifiersEditionForm                            identifiersEditionForm;
+    private DatasetContentDescriptorsEditionForm                     contentDescriptorsEditionForm;
+    private SiemacMetadataCommonMetadataEditionForm                  commonMetadataEditionForm;
+    private SiemacMetadataThematicContentClassifiersEditionForm      thematicContentClassifiersEditionForm;
+    private SiemacMetadataLanguageEditionForm                        languageEditionForm;
+    private DatasetProductionDescriptorsEditionForm                  productionDescriptorsEditionForm;
+    private DatasetClassDescriptorsEditionForm                       classDescriptorsEditionForm;
+    private DatasetResourceRelationDescriptorsEditionForm            resourceRelationDescriptorsEditionForm;
+    private DatasetPublicationDescriptorsEditionForm                 publicationDescriptorsEditionForm;
+    private LifeCycleResourceLifeCycleForm                           lifeCycleEditionForm;
+    private DatasetVersionEditionForm                                versionEditionForm;
     private SiemacMetadataIntellectualPropertyDescriptorsEditionForm intellectualPropertyDescriptorsEditionForm;
 
-    private DatasetVersionDto datasetVersionDto;
+    private DatasetVersionDto                                        datasetVersionDto;
 
     public DatasetMetadataTabViewImpl() {
         panel = new VLayout();
@@ -403,6 +403,8 @@ public class DatasetMetadataTabViewImpl extends StatisticalResourceMetadataBaseV
         if (ProcStatusEnum.PUBLISHED.equals(datasetVersionDto.getProcStatus())) {
             getUiHandlers().retrieveMainCoveragesForDatasetVersion(datasetVersionDto.getUrn());
         }
+
+        mainFormLayout.markForRedraw();
     }
 
     private void setDatasetViewMode(DatasetVersionDto datasetDto) {
