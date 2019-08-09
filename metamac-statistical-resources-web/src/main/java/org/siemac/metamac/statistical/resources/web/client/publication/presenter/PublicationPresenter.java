@@ -1,5 +1,7 @@
 package org.siemac.metamac.statistical.resources.web.client.publication.presenter;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.siemac.metamac.core.common.constants.shared.UrnConstants;
@@ -62,7 +64,14 @@ public class PublicationPresenter extends Presenter<PublicationPresenter.Publica
     private final PlaceManager                        placeManager;
 
     @ContentSlot
-    public static final Type<RevealContentHandler<?>> TYPE_SetContextAreaPublication = new Type<RevealContentHandler<?>>();
+    public static final Type<RevealContentHandler<?>> TYPE_SetContextAreaPublication   = new Type<RevealContentHandler<?>>();
+
+    // @formatter:off
+    private static final List<String>                 PUBLICATION_EXPECTED_NAME_TOKENS = Collections.unmodifiableList(
+            Arrays.asList(
+                    NameTokens.publicationMetadataPage, 
+                    NameTokens.publicationStructurePage));
+    // @formatter:on
 
     @ProxyCodeSplit
     @NameToken(NameTokens.publicationPage)
@@ -112,19 +121,23 @@ public class PublicationPresenter extends Presenter<PublicationPresenter.Publica
     protected void onReveal() {
         super.onReveal();
 
-        String operationCode = PlaceRequestUtils.getOperationParamFromUrl(placeManager);
-        String publicationCode = PlaceRequestUtils.getPublicationParamFromUrl(placeManager);
-        if (!StringUtils.isBlank(operationCode) && !StringUtils.isBlank(publicationCode)) {
-            String operationUrn = UrnUtils.generateUrn(UrnConstants.URN_SIEMAC_CLASS_OPERATION_PREFIX, operationCode);
+        // This check is a workaround to solve the issue described in METAMAC-2920. Probably isn't the best way, and the correct way should be resolving the refresh problem that consists in don't show
+        // the previous page before going to a new page.
+        if (PlaceRequestUtils.isExpectedCurrentPlaceRequestNameToken(placeManager, PublicationPresenter.PUBLICATION_EXPECTED_NAME_TOKENS)) {
+            String operationCode = PlaceRequestUtils.getOperationParamFromUrl(placeManager);
+            String publicationCode = PlaceRequestUtils.getPublicationParamFromUrl(placeManager);
+            if (!StringUtils.isBlank(operationCode) && !StringUtils.isBlank(publicationCode)) {
+                String operationUrn = UrnUtils.generateUrn(UrnConstants.URN_SIEMAC_CLASS_OPERATION_PREFIX, operationCode);
 
-            if (!CommonUtils.isUrnFromSelectedStatisticalOperation(operationUrn)) {
-                retrieveOperation(operationUrn);
+                if (!CommonUtils.isUrnFromSelectedStatisticalOperation(operationUrn)) {
+                    retrieveOperation(operationUrn);
+                } else {
+                    loadInitialData();
+                }
+
             } else {
-                loadInitialData();
+                StatisticalResourcesWeb.showErrorPage();
             }
-
-        } else {
-            StatisticalResourcesWeb.showErrorPage();
         }
     }
 
