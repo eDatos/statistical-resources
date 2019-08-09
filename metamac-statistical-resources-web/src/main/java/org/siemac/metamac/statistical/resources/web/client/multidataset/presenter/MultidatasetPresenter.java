@@ -1,5 +1,7 @@
 package org.siemac.metamac.statistical.resources.web.client.multidataset.presenter;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.siemac.metamac.core.common.constants.shared.UrnConstants;
@@ -58,7 +60,14 @@ public class MultidatasetPresenter extends Presenter<MultidatasetPresenter.Multi
     private final PlaceManager                        placeManager;
 
     @ContentSlot
-    public static final Type<RevealContentHandler<?>> TYPE_SetContextAreaMultidataset = new Type<RevealContentHandler<?>>();
+    public static final Type<RevealContentHandler<?>> TYPE_SetContextAreaMultidataset   = new Type<RevealContentHandler<?>>();
+
+    // @formatter:off
+    private static final List<String>                 MULTIDATASET_EXPECTED_NAME_TOKENS = Collections.unmodifiableList(
+            Arrays.asList(
+                    NameTokens.multidatasetMetadataPage, 
+                    NameTokens.multidatasetStructurePage));
+    // @formatter:on
 
     @ProxyCodeSplit
     @NameToken(NameTokens.multidatasetPage)
@@ -103,24 +112,28 @@ public class MultidatasetPresenter extends Presenter<MultidatasetPresenter.Multi
             goToMultidatasetMetadata();
         }
     }
-    
+
     @Override
     protected void onReveal() {
         super.onReveal();
 
-        String operationCode = PlaceRequestUtils.getOperationParamFromUrl(placeManager);
-        String multidatasetCode = PlaceRequestUtils.getMultidatasetParamFromUrl(placeManager);
-        if (!StringUtils.isBlank(operationCode) && !StringUtils.isBlank(multidatasetCode)) {
-            String operationUrn = UrnUtils.generateUrn(UrnConstants.URN_SIEMAC_CLASS_OPERATION_PREFIX, operationCode);
+        // This check is a workaround to solve the issue described in METAMAC-2920. Probably isn't the best way, and the correct way should be resolving the refresh problem that consists in don't show
+        // the previous page before going to a new page.
+        if (PlaceRequestUtils.isExpectedCurrentPlaceRequestNameToken(placeManager, MultidatasetPresenter.MULTIDATASET_EXPECTED_NAME_TOKENS)) {
+            String operationCode = PlaceRequestUtils.getOperationParamFromUrl(placeManager);
+            String multidatasetCode = PlaceRequestUtils.getMultidatasetParamFromUrl(placeManager);
+            if (!StringUtils.isBlank(operationCode) && !StringUtils.isBlank(multidatasetCode)) {
+                String operationUrn = UrnUtils.generateUrn(UrnConstants.URN_SIEMAC_CLASS_OPERATION_PREFIX, operationCode);
 
-            if (!CommonUtils.isUrnFromSelectedStatisticalOperation(operationUrn)) {
-                retrieveOperation(operationUrn);
+                if (!CommonUtils.isUrnFromSelectedStatisticalOperation(operationUrn)) {
+                    retrieveOperation(operationUrn);
+                } else {
+                    loadInitialData();
+                }
+
             } else {
-                loadInitialData();
+                StatisticalResourcesWeb.showErrorPage();
             }
-
-        } else {
-            StatisticalResourcesWeb.showErrorPage();
         }
     }
 

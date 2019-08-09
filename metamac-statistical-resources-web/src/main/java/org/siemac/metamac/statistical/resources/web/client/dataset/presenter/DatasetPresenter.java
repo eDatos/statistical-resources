@@ -1,5 +1,7 @@
 package org.siemac.metamac.statistical.resources.web.client.dataset.presenter;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.siemac.metamac.core.common.util.shared.StringUtils;
@@ -60,7 +62,17 @@ public class DatasetPresenter extends Presenter<DatasetPresenter.DatasetView, Da
     private DispatchAsync                             dispatcher;
 
     @ContentSlot
-    public static final Type<RevealContentHandler<?>> TYPE_SetContextAreaDataset = new Type<RevealContentHandler<?>>();
+    public static final Type<RevealContentHandler<?>> TYPE_SetContextAreaDataset   = new Type<RevealContentHandler<?>>();
+
+    // @formatter:off
+    private static final List<String>                 DATASET_EXPECTED_NAME_TOKENS = Collections.unmodifiableList(
+            Arrays.asList(
+                    NameTokens.datasetMetadataPage, 
+                    NameTokens.datasetConstraintsPage,
+                    NameTokens.datasetDatasourcesPage, 
+                    NameTokens.datasetAttributesPage, 
+                    NameTokens.datasetCategorisationsPage));
+    // @formatter:on
 
     public interface DatasetView extends View, HasUiHandlers<DatasetUiHandlers> {
 
@@ -113,19 +125,23 @@ public class DatasetPresenter extends Presenter<DatasetPresenter.DatasetView, Da
     protected void onReveal() {
         super.onReveal();
 
-        String operationCode = PlaceRequestUtils.getOperationParamFromUrl(placeManager);
-        String datasetCode = PlaceRequestUtils.getDatasetParamFromUrl(placeManager);
-        if (!StringUtils.isBlank(operationCode) && !StringUtils.isBlank(datasetCode)) {
-            String operationUrn = CommonUtils.generateStatisticalOperationUrn(operationCode);
+        // This check is a workaround to solve the issue described in METAMAC-2920. Probably isn't the best way, and the correct way should be resolving the refresh problem that consists in don't show
+        // the previous page before going to a new page.
+        if (PlaceRequestUtils.isExpectedCurrentPlaceRequestNameToken(placeManager, DatasetPresenter.DATASET_EXPECTED_NAME_TOKENS)) {
+            String operationCode = PlaceRequestUtils.getOperationParamFromUrl(placeManager);
+            String datasetCode = PlaceRequestUtils.getDatasetParamFromUrl(placeManager);
+            if (!StringUtils.isBlank(operationCode) && !StringUtils.isBlank(datasetCode)) {
+                String operationUrn = CommonUtils.generateStatisticalOperationUrn(operationCode);
 
-            if (!CommonUtils.isUrnFromSelectedStatisticalOperation(operationUrn)) {
-                retrieveOperation(operationUrn);
+                if (!CommonUtils.isUrnFromSelectedStatisticalOperation(operationUrn)) {
+                    retrieveOperation(operationUrn);
+                } else {
+                    loadInitialData();
+                }
+
             } else {
-                loadInitialData();
+                StatisticalResourcesWeb.showErrorPage();
             }
-
-        } else {
-            StatisticalResourcesWeb.showErrorPage();
         }
     }
 

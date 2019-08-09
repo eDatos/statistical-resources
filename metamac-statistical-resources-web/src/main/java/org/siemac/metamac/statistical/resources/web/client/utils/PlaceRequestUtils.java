@@ -283,4 +283,8 @@ public class PlaceRequestUtils extends CommonPlaceRequestUtils {
         }
         return new ArrayList<PlaceRequest>();
     }
+
+    public static boolean isExpectedCurrentPlaceRequestNameToken(PlaceManager placeManager, List<String> expectedNameTokens) {
+        return expectedNameTokens.contains(placeManager.getCurrentPlaceRequest().getNameToken());
+    }
 }
