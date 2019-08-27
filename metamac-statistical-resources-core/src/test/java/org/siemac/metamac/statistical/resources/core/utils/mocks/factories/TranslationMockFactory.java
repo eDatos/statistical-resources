@@ -29,7 +29,7 @@ public class TranslationMockFactory extends StatisticalResourcesMockFactory<Tran
         addTranslationMock(translations, StatisticalResourcesConstants.TRANSLATION_TIME_SDMX_YEAR, "{yyyy}", "{yyyy}");
         addTranslationMock(translations, StatisticalResourcesConstants.TRANSLATION_TIME_SDMX_MONTH, "{MM}/{yyyy}", "{MM}/{yyyy}");
         addTranslationMock(translations, StatisticalResourcesConstants.TRANSLATION_TIME_SDMX_DATE, "{dd}/{MM}/{yyyy}", "{dd}/{MM}/{yyyy}");
-        addTranslationMock(translations, StatisticalResourcesConstants.TRANSLATION_TIME_SDMX_DATETIME, "{dd}/{MM}/{yyyy} {hh}:{mm}:{ss}", "{dd}/{MM}/{yyyy} {hh}:{mm}:{ss}");
+        addTranslationMock(translations, StatisticalResourcesConstants.TRANSLATION_TIME_SDMX_DATETIME, "{dd}/{MM}/{yyyy} - {hh}:{mm}:{ss}", "{dd}/{MM}/{yyyy} - {hh}:{mm}:{ss}");
         addTranslationMock(translations, StatisticalResourcesConstants.TRANSLATION_TIME_SDMX_SEMESTER_PREFIX + ".S1", "{yyyy} Primer semestre", "{yyyy} First semester");
         addTranslationMock(translations, StatisticalResourcesConstants.TRANSLATION_TIME_SDMX_SEMESTER_PREFIX + ".S2", "{yyyy} Segundo semestre", "{yyyy} Second semester");
         addTranslationMock(translations, StatisticalResourcesConstants.TRANSLATION_TIME_SDMX_TRIMESTER_PREFIX + ".T3", "{yyyy} Tercer trimestre", "{yyyy} Third trimester");
@@ -38,8 +38,8 @@ public class TranslationMockFactory extends StatisticalResourcesMockFactory<Tran
         addTranslationMock(translations, StatisticalResourcesConstants.TRANSLATION_TIME_SDMX_DATE_RANGE, "{dd}/{MM}/{yyyy} a {dd_END}/{MM_END}/{yyyy_END}",
                 "{dd}/{MM}/{yyyy} to {dd_END}/{MM_END}/{yyyy_END}");
         addTranslationMock(translations, StatisticalResourcesConstants.TRANSLATION_TIME_SDMX_DATETIME_RANGE,
-                "{dd}/{MM}/{yyyy} {hh}:{mm}:{ss} a {dd_END}/{MM_END}/{yyyy_END} {hh_END}:{mm_END}:{ss_END}",
-                "{dd}/{MM}/{yyyy} {hh}:{mm}:{ss} to {dd_END}/{MM_END}/{yyyy_END} {hh_END}:{mm_END}:{ss_END}");
+                "{dd}/{MM}/{yyyy} - {hh}:{mm}:{ss} a {dd_END}/{MM_END}/{yyyy_END} - {hh_END}:{mm_END}:{ss_END}",
+                "{dd}/{MM}/{yyyy} - {hh}:{mm}:{ss} to {dd_END}/{MM_END}/{yyyy_END} - {hh_END}:{mm_END}:{ss_END}");
         return new MockDescriptor(translations.get(0), translations.subList(1, translations.size()).toArray());
     }
 

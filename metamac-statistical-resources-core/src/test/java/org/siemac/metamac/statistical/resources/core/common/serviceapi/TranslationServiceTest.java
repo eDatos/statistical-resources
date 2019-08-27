@@ -83,8 +83,8 @@ public class TranslationServiceTest extends StatisticalResourcesBaseTest impleme
         // DATETIME
         {
             Map<String, String> title = translationService.translateTime(ctx, "2013-07-24T08:21:52.519+01:00");
-            assertEquals("24/07/2013 08:21:52", title.get("es"));
-            assertEquals("24/07/2013 08:21:52", title.get("en"));
+            assertEquals("24/07/2013 - 08:21:52", title.get("es"));
+            assertEquals("24/07/2013 - 08:21:52", title.get("en"));
         }
 
         // GREGORIAN TIME
@@ -127,8 +127,8 @@ public class TranslationServiceTest extends StatisticalResourcesBaseTest impleme
         // TIME RANGES
         {
             Map<String, String> title = translationService.translateTime(ctx, "2013-07-24T13:21:52.519+01:00/P1M");
-            assertEquals("24/07/2013 13:21:52 a 24/08/2013 13:21:52", title.get("es"));
-            assertEquals("24/07/2013 13:21:52 to 24/08/2013 13:21:52", title.get("en"));
+            assertEquals("24/07/2013 - 13:21:52 a 24/08/2013 - 13:21:52", title.get("es"));
+            assertEquals("24/07/2013 - 13:21:52 to 24/08/2013 - 13:21:52", title.get("en"));
         }
         {
             Map<String, String> title = translationService.translateTime(ctx, "2013-07-24/P1M");
@@ -137,8 +137,8 @@ public class TranslationServiceTest extends StatisticalResourcesBaseTest impleme
         }
         {
             Map<String, String> title = translationService.translateTime(ctx, "1999-07-01T03:04:05.519+01:00/P1Y1M2D");
-            assertEquals("01/07/1999 03:04:05 a 03/08/2000 03:04:05", title.get("es"));
-            assertEquals("01/07/1999 03:04:05 to 03/08/2000 03:04:05", title.get("en"));
+            assertEquals("01/07/1999 - 03:04:05 a 03/08/2000 - 03:04:05", title.get("es"));
+            assertEquals("01/07/1999 - 03:04:05 to 03/08/2000 - 03:04:05", title.get("en"));
         }
     }
 }
