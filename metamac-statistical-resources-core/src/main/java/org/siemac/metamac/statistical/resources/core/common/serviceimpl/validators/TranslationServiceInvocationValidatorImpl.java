@@ -8,7 +8,7 @@ import org.siemac.metamac.statistical.resources.core.utils.StatisticalResourcesV
 
 public class TranslationServiceInvocationValidatorImpl {
 
-    public static void checkTranslateTime(String time, List<MetamacExceptionItem> exceptions) throws org.siemac.metamac.core.common.exception.MetamacException {
+    public static void checkRetrieveTimeTranslation(String time, List<MetamacExceptionItem> exceptions) throws org.siemac.metamac.core.common.exception.MetamacException {
         StatisticalResourcesValidationUtils.checkParameterRequired(time, ServiceExceptionParameters.TIME, exceptions);
     }
 }

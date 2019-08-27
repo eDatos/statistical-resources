@@ -3,6 +3,9 @@ package org.siemac.metamac.statistical.resources.core.common.serviceimpl;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
+
 import org.apache.commons.lang.StringUtils;
 import org.fornax.cartridges.sculptor.framework.errorhandling.ServiceContext;
 import org.siemac.metamac.core.common.exception.MetamacException;
@@ -23,11 +26,17 @@ import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import net.sf.ehcache.Cache;
+import net.sf.ehcache.CacheManager;
+import net.sf.ehcache.Element;
+
 /**
  * Implementation of TranslationService.
  */
 @Service("translationService")
 public class TranslationServiceImpl extends TranslationServiceImplBase {
+
+    private static final String                   TRANSLATION_SERVICE_CACHE_NAME = "translationServiceCache";
 
     @Autowired
     private TranslationServiceInvocationValidator translationServiceInvocationValidator;
@@ -35,14 +44,30 @@ public class TranslationServiceImpl extends TranslationServiceImplBase {
     @Autowired
     private StatisticalResourcesConfiguration     configurationService;
 
+    private CacheManager                          translationServiceCacheManager;
+    private Cache                                 translationServiceCache;
+
     public TranslationServiceImpl() {
     }
 
+    @PostConstruct
+    public void init() {
+        translationServiceCacheManager = CacheManager.getInstance();
+        translationServiceCacheManager.addCacheIfAbsent(TRANSLATION_SERVICE_CACHE_NAME);
+
+        translationServiceCache = translationServiceCacheManager.getCache(TRANSLATION_SERVICE_CACHE_NAME);
+    }
+
+    @PreDestroy
+    public void stop() {
+        translationServiceCacheManager.shutdown();
+    }
+
     @Override
-    public Map<String, String> translateTime(ServiceContext ctx, String time) throws MetamacException {
+    public Map<String, String> retrieveTimeTranslation(ServiceContext ctx, String time) throws MetamacException {
 
         // Validations
-        translationServiceInvocationValidator.checkTranslateTime(ctx, time);
+        translationServiceInvocationValidator.checkRetrieveTimeTranslation(ctx, time);
 
         // Parse
         TimeSdmx timeSdmx = SdmxTimeUtils.parseTime(time);
@@ -52,16 +77,30 @@ public class TranslationServiceImpl extends TranslationServiceImplBase {
 
         // Translate
         String translationCode = getTimeSdmxTranslationCode(timeSdmx);
-        Translation translationTemplate = getTranslationRepository().findTranslationByCode(translationCode);
-        if (translationTemplate == null) {
+        Translation translation = findTranslationByCode(translationCode);
+
+        if (translation == null) {
             // Put code as title
             Map<String, String> title = new HashMap<String, String>(1);
             String defaultLocale = configurationService.retrieveLanguageDefault();
             title.put(defaultLocale, time);
             return title;
         } else {
-            return translateTimeWithTemplate(timeSdmx, translationTemplate);
+            return translateTimeWithTemplate(timeSdmx, translation);
         }
+    }
+
+    private Translation findTranslationByCode(String translationCode) {
+        Element element;
+
+        if ((element = translationServiceCache.get(translationCode)) == null) {
+            Translation translation = getTranslationRepository().findTranslationByCode(translationCode);
+            element = new Element(translationCode, translation);
+            element.setEternal(Boolean.TRUE);
+            translationServiceCache.put(element);
+        }
+
+        return (Translation) element.getObjectValue();
     }
 
     /**

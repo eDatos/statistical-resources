@@ -19,7 +19,7 @@ Application CommonStatisticalResources {
 			> @TranslationRepository
 			
 	    	"Translate a SDMX time"
-			Map<String,String> translateTime(String timeSdmx) throws MetamacException;
+			Map<String,String> retrieveTimeTranslation(String timeSdmx) throws MetamacException;
 		}
 		
 		"Entity for store information about RelatedResources."	
