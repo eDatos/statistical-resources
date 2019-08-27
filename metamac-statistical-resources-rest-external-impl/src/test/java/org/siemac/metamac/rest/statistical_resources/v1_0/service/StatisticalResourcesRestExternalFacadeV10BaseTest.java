@@ -864,7 +864,7 @@ public abstract class StatisticalResourcesRestExternalFacadeV10BaseTest extends 
     }
 
     private void mockTranslationService() throws MetamacException {
-        when(translationService.translateTime(any(ServiceContext.class), any(String.class))).thenAnswer(new Answer<Map<String, String>>() {
+        when(translationService.retrieveTimeTranslation(any(ServiceContext.class), any(String.class))).thenAnswer(new Answer<Map<String, String>>() {
 
             @Override
             public Map<String, String> answer(InvocationOnMock invocation) throws Throwable {

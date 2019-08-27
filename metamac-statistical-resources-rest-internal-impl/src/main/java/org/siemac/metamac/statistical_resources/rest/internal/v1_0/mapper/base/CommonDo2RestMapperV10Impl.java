@@ -1034,7 +1034,7 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
         NonEnumeratedDimensionValue target = new NonEnumeratedDimensionValue();
         target.setId(source.getIdentifier());
         if (DsdComponentType.TEMPORAL.equals(dimensionType)) {
-            Map<String, String> title = translationService.translateTime(SERVICE_CONTEXT, source.getIdentifier());
+            Map<String, String> title = translationService.retrieveTimeTranslation(SERVICE_CONTEXT, source.getIdentifier());
             target.setName(toInternationalString(title, selectedLanguages));
             IstacTimeGranularityEnum timeGranularity = IstacTimeUtils.guessTimeGranularity(source.getIdentifier());
             target.setTemporalGranularity(timeGranularity == null ? null : timeGranularity.name());
@@ -1223,7 +1223,7 @@ public class CommonDo2RestMapperV10Impl implements CommonDo2RestMapperV10 {
         NonEnumeratedAttributeValue target = new NonEnumeratedAttributeValue();
         target.setId(source.getIdentifier());
         if (DsdComponentType.TEMPORAL.equals(attributeType)) {
-            Map<String, String> title = translationService.translateTime(SERVICE_CONTEXT, source.getIdentifier());
+            Map<String, String> title = translationService.retrieveTimeTranslation(SERVICE_CONTEXT, source.getIdentifier());
             target.setName(toInternationalString(title, selectedLanguages));
         } else {
             logger.error("Attribute must be time to add values in metadata: " + source.getDsdComponentId());
