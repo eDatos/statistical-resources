@@ -51,7 +51,7 @@
         <edatos-dataset-repository.version>1.0.2-SNAPSHOT</edatos-dataset-repository.version>
         
 		<statistic-parser.version>2.0.1-SNAPSHOT</statistic-parser.version>
-		<statistic-sdmx-srm-rest-external-api.version>2.1.2</statistic-sdmx-srm-rest-external-api.version>
+		<statistic-sdmx-srm-rest-external-api.version>2.2.1-SNAPSHOT</statistic-sdmx-srm-rest-external-api.version>
 		
 		<postgresql.version>9.4.1212</postgresql.version>
 
