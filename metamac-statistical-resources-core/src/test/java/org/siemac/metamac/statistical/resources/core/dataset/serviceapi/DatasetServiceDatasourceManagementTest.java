@@ -441,7 +441,7 @@ public class DatasetServiceDatasourceManagementTest extends StatisticalResources
 
         expectedMetamacException(new MetamacException(ServiceExceptionType.DATASOURCE_IN_DATASET_VERSION_WITH_QUERIES_DELETE_ERROR, datasourceUrn));
 
-        datasetService.deleteDatasource(getServiceContextWithoutPrincipal(), datasourceUrn);
+        datasetService.deleteDatasource(getServiceContextWithoutPrincipal(), datasourceUrn, Boolean.TRUE);
     }
 
     @Test
@@ -453,7 +453,7 @@ public class DatasetServiceDatasourceManagementTest extends StatisticalResources
 
         String datasourceUrn = expected.getIdentifiableStatisticalResource().getUrn();
 
-        datasetService.deleteDatasource(getServiceContextWithoutPrincipal(), datasourceUrn);
+        datasetService.deleteDatasource(getServiceContextWithoutPrincipal(), datasourceUrn, Boolean.TRUE);
 
         expectedMetamacException(new MetamacException(ServiceExceptionType.DATASOURCE_NOT_FOUND, datasourceUrn));
         datasetService.retrieveDatasourceByUrn(getServiceContextWithoutPrincipal(), datasourceUrn);
@@ -471,7 +471,7 @@ public class DatasetServiceDatasourceManagementTest extends StatisticalResources
         assertNotNull(datasetVersion.getDatasetRepositoryId());
         assertEquals(1, datasetVersion.getDatasources().size());
 
-        datasetService.deleteDatasource(getServiceContextWithoutPrincipal(), datasourceUrn);
+        datasetService.deleteDatasource(getServiceContextWithoutPrincipal(), datasourceUrn, Boolean.TRUE);
 
         datasetVersion = datasetService.retrieveDatasetVersionByUrn(getServiceContextAdministrador(), datasetVersion.getSiemacMetadataStatisticalResource().getUrn());
         assertNotNull(datasetVersion.getDatasetRepositoryId());
@@ -537,7 +537,7 @@ public class DatasetServiceDatasourceManagementTest extends StatisticalResources
 
         expectedMetamacException(new MetamacException(ServiceExceptionType.DATASOURCE_DATA_DELETE_ERROR, expected.getIdentifiableStatisticalResource().getCode()));
 
-        datasetService.deleteDatasource(getServiceContextWithoutPrincipal(), datasourceUrn);
+        datasetService.deleteDatasource(getServiceContextWithoutPrincipal(), datasourceUrn, Boolean.TRUE);
     }
 
     @Test
@@ -555,7 +555,7 @@ public class DatasetServiceDatasourceManagementTest extends StatisticalResources
 
         expectedMetamacException(new MetamacException(ServiceExceptionType.TASKS_IN_PROGRESS, datasetUrn));
 
-        datasetService.deleteDatasource(getServiceContextWithoutPrincipal(), datasourceUrn);
+        datasetService.deleteDatasource(getServiceContextWithoutPrincipal(), datasourceUrn, Boolean.TRUE);
     }
 
     @Test
@@ -569,7 +569,7 @@ public class DatasetServiceDatasourceManagementTest extends StatisticalResources
 
         String datasourceUrn = expected.getIdentifiableStatisticalResource().getUrn();
 
-        datasetService.deleteDatasource(getServiceContextWithoutPrincipal(), datasourceUrn);
+        datasetService.deleteDatasource(getServiceContextWithoutPrincipal(), datasourceUrn, Boolean.TRUE);
 
         DatasetVersion actualDatasetVersion = datasetService.retrieveDatasetVersionByUrn(getServiceContextWithoutPrincipal(), datasetVersionUrn);
         assertEquals(0, actualDatasetVersion.getDatasources().size());
@@ -584,7 +584,7 @@ public class DatasetServiceDatasourceManagementTest extends StatisticalResources
     public void testDeleteDatasourceErrorNotExists() throws Exception {
         expectedMetamacException(new MetamacException(ServiceExceptionType.DATASOURCE_NOT_FOUND, URN_NOT_EXISTS));
 
-        datasetService.deleteDatasource(getServiceContextWithoutPrincipal(), URN_NOT_EXISTS);
+        datasetService.deleteDatasource(getServiceContextWithoutPrincipal(), URN_NOT_EXISTS, Boolean.TRUE);
     }
 
     @Test
@@ -615,7 +615,7 @@ public class DatasetServiceDatasourceManagementTest extends StatisticalResources
 
         DateTime oldLastUpdate = expectedDatasetVersion.getSiemacMetadataStatisticalResource().getLastUpdate();
 
-        datasetService.deleteDatasource(getServiceContextWithoutPrincipal(), datasourceUrn);
+        datasetService.deleteDatasource(getServiceContextWithoutPrincipal(), datasourceUrn, Boolean.TRUE);
 
         // retrieve dataset version, lastupdate must have been changed
         DatasetVersion datasetVersion = datasetService.retrieveDatasetVersionByUrn(getServiceContextWithoutPrincipal(), datasetVersionUrn);
@@ -631,7 +631,7 @@ public class DatasetServiceDatasourceManagementTest extends StatisticalResources
 
         expectedMetamacException(new MetamacException(ServiceExceptionType.DATASET_VERSION_CANT_ALTER_DATASOURCES, datasetVersionUrn));
 
-        datasetService.deleteDatasource(getServiceContextWithoutPrincipal(), expected.getIdentifiableStatisticalResource().getUrn());
+        datasetService.deleteDatasource(getServiceContextWithoutPrincipal(), expected.getIdentifiableStatisticalResource().getUrn(), Boolean.TRUE);
 
         fail("Should have thrown Exception and should not deleted datasource");
     }
@@ -641,7 +641,7 @@ public class DatasetServiceDatasourceManagementTest extends StatisticalResources
 
         Datasource expected = expectedDatasetVersion.getDatasources().get(0);
 
-        datasetService.deleteDatasource(getServiceContextWithoutPrincipal(), expected.getIdentifiableStatisticalResource().getUrn());
+        datasetService.deleteDatasource(getServiceContextWithoutPrincipal(), expected.getIdentifiableStatisticalResource().getUrn(), Boolean.TRUE);
     }
 
     private void mockDsdAndDataRepositorySimpleDimensionsNoAttributes() throws Exception {

@@ -9,7 +9,7 @@ import com.gwtplatform.mvp.client.UiHandlers;
 
 public interface DatasetDatasourcesTabUiHandlers extends UiHandlers {
 
-    void deleteDatasources(List<String> datasourcesUrns);
+    void deleteDatasources(List<String> datasourcesUrns, boolean deleteAttributes);
 
     // Importation
 

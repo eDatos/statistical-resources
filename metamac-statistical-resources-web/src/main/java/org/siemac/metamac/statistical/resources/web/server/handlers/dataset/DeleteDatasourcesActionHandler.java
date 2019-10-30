@@ -31,7 +31,7 @@ public class DeleteDatasourcesActionHandler extends SecurityActionHandler<Delete
         List<MetamacExceptionItem> items = new ArrayList<MetamacExceptionItem>();
         for (String urn : action.getUrns()) {
             try {
-                statisticalResourcesServiceFacade.deleteDatasource(ServiceContextHolder.getCurrentServiceContext(), urn);
+                statisticalResourcesServiceFacade.deleteDatasource(ServiceContextHolder.getCurrentServiceContext(), urn, action.isDeleteAttributes());
             } catch (MetamacException e) {
                 items.addAll(e.getExceptionItems());
             }
