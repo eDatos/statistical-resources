@@ -49,8 +49,9 @@ public class DatasetServiceInvocationValidatorImpl extends BaseInvocationValidat
         StatisticalResourcesValidationUtils.checkParameterRequired(urn, ServiceExceptionParameters.URN, exceptions);
     }
 
-    public static void checkDeleteDatasource(String urn, List<MetamacExceptionItem> exceptions) throws MetamacException {
+    public static void checkDeleteDatasource(String urn, boolean deleteAttributes, List<MetamacExceptionItem> exceptions) throws MetamacException {
         StatisticalResourcesValidationUtils.checkParameterRequired(urn, ServiceExceptionParameters.URN, exceptions);
+        StatisticalResourcesValidationUtils.checkParameterRequired(deleteAttributes, ServiceExceptionParameters.DELETE_ATTRIBUTES, exceptions);
     }
 
     public static void checkRetrieveDatasourcesByDatasetVersion(String datasetVersionUrn, List<MetamacExceptionItem> exceptions) throws MetamacException {

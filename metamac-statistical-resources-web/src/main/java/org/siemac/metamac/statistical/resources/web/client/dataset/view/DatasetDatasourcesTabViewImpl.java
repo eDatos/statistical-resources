@@ -16,8 +16,9 @@ import org.siemac.metamac.statistical.resources.web.client.dataset.model.record.
 import org.siemac.metamac.statistical.resources.web.client.dataset.presenter.DatasetDatasourcesTabPresenter.DatasetDatasourcesTabView;
 import org.siemac.metamac.statistical.resources.web.client.dataset.utils.DatasetClientSecurityUtils;
 import org.siemac.metamac.statistical.resources.web.client.dataset.view.handlers.DatasetDatasourcesTabUiHandlers;
-import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.DatasourceMainFormLayout;
 import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.CreateDatabaseDatasourceWindow;
+import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.DatasourceMainFormLayout;
+import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.DeleteAttributesConfirmationWindow;
 import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.ImportDatasourceWithMappingWindow;
 import org.siemac.metamac.statistical.resources.web.client.dataset.widgets.ImportDatasourcesWindow;
 import org.siemac.metamac.statistical.resources.web.client.utils.StatisticalResourcesRecordUtils;
@@ -116,16 +117,17 @@ public class DatasetDatasourcesTabViewImpl extends ViewWithUiHandlers<DatasetDat
 
     private class DatasourcesListPanel extends VLayout {
 
-        private CustomToolStripButton             deleteDatasourceButton;
-        private CustomToolStripButton             importZipDatasourcesButton;
-        private CustomToolStripButton             importDatabaseDatasourcesButton;
-        private CustomToolStripButton             importDatasourceButton;
-        private CustomListGrid                    datasourcesList;
+        private CustomToolStripButton              deleteDatasourceButton;
+        private CustomToolStripButton              importZipDatasourcesButton;
+        private CustomToolStripButton              importDatabaseDatasourcesButton;
+        private CustomToolStripButton              importDatasourceButton;
+        private CustomListGrid                     datasourcesList;
 
-        private DeleteConfirmationWindow          deleteConfirmationWindow;
-        private ImportDatasourcesWindow           importDatasourcesWindow;
-        private CreateDatabaseDatasourceWindow    createDatabaseDatasourceWindow;
-        private ImportDatasourceWithMappingWindow importDatasourceWithMappingWindow;
+        private DeleteConfirmationWindow           deleteConfirmationWindow;
+        private DeleteAttributesConfirmationWindow deleteAttributesConfirmationWindow;
+        private ImportDatasourcesWindow            importDatasourcesWindow;
+        private CreateDatabaseDatasourceWindow     createDatabaseDatasourceWindow;
+        private ImportDatasourceWithMappingWindow  importDatasourceWithMappingWindow;
 
         public DatasourcesListPanel() {
             // Toolstrip
@@ -170,6 +172,10 @@ public class DatasetDatasourcesTabViewImpl extends ViewWithUiHandlers<DatasetDat
 
             deleteConfirmationWindow = new DeleteConfirmationWindow(getConstants().actionConfirmDeleteTitle(), getConstants().datasourceDeleteConfirmation());
             deleteConfirmationWindow.setVisible(false);
+
+            deleteAttributesConfirmationWindow = new DeleteAttributesConfirmationWindow(getConstants().actionConfirmDeleteAttributesTitle(), getConstants().datasourceDeleteAttributesConfirmation(),
+                    getConstants().datasourceDeleteAttributesConfirmationWarning());
+            deleteAttributesConfirmationWindow.setVisible(Boolean.FALSE);
 
             // Import datasource from DB window
 
@@ -277,7 +283,23 @@ public class DatasetDatasourcesTabViewImpl extends ViewWithUiHandlers<DatasetDat
 
                 @Override
                 public void onClick(ClickEvent event) {
-                    getUiHandlers().deleteDatasources(getUrnsFromSelected());
+                    deleteAttributesConfirmationWindow.show();
+                }
+            });
+
+            deleteAttributesConfirmationWindow.getYesButton().addClickHandler(new ClickHandler() {
+
+                @Override
+                public void onClick(ClickEvent event) {
+                    getUiHandlers().deleteDatasources(getUrnsFromSelected(), Boolean.TRUE);
+                }
+            });
+
+            deleteAttributesConfirmationWindow.getNoButton().addClickHandler(new ClickHandler() {
+
+                @Override
+                public void onClick(ClickEvent event) {
+                    getUiHandlers().deleteDatasources(getUrnsFromSelected(), Boolean.FALSE);
                 }
             });
 

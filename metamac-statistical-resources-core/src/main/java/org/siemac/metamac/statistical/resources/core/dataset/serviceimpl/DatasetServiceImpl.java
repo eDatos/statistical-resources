@@ -229,10 +229,10 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
     }
 
     @Override
-    public void deleteDatasource(ServiceContext ctx, String urn) throws MetamacException {
+    public void deleteDatasource(ServiceContext ctx, String urn, boolean deleteAttributes) throws MetamacException {
 
         // Validation
-        datasetServiceInvocationValidator.checkDeleteDatasource(ctx, urn);
+        datasetServiceInvocationValidator.checkDeleteDatasource(ctx, urn, deleteAttributes);
 
         // Retrieve
         Datasource datasource = getDatasourceRepository().retrieveByUrn(urn);
@@ -251,7 +251,9 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
 
         deleteDatasourceData(datasetVersion.getDatasetRepositoryId(), datasource);
 
-        deleteAttributeInstancesLowerThanDatasetLevel(datasetVersion);
+        if (deleteAttributes) {
+            deleteAttributeInstancesLowerThanDatasetLevel(datasetVersion);
+        }
 
         computeDataRelatedMetadata(datasetVersion);
 

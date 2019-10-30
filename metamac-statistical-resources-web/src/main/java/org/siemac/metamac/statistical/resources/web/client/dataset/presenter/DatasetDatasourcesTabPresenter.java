@@ -167,8 +167,8 @@ public class DatasetDatasourcesTabPresenter extends Presenter<DatasetDatasources
     }
 
     @Override
-    public void deleteDatasources(List<String> datasourcesUrns) {
-        dispatcher.execute(new DeleteDatasourcesAction(datasourcesUrns), new WaitingAsyncCallbackHandlingError<DeleteDatasourcesResult>(this) {
+    public void deleteDatasources(List<String> datasourcesUrns, boolean deleteAttributes) {
+        dispatcher.execute(new DeleteDatasourcesAction(datasourcesUrns, deleteAttributes), new WaitingAsyncCallbackHandlingError<DeleteDatasourcesResult>(this) {
 
             @Override
             public void onWaitSuccess(DeleteDatasourcesResult result) {

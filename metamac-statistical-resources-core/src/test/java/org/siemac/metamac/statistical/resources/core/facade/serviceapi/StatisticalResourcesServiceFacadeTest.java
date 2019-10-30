@@ -1037,7 +1037,7 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
 
         String datasourceUrn = datasourceMockFactory.retrieveMock(DATASOURCE_01_BASIC_NAME).getIdentifiableStatisticalResource().getUrn();
 
-        statisticalResourcesServiceFacade.deleteDatasource(getServiceContextAdministrador(), datasourceUrn);
+        statisticalResourcesServiceFacade.deleteDatasource(getServiceContextAdministrador(), datasourceUrn, Boolean.TRUE);
 
         expectedMetamacException(new MetamacException(ServiceExceptionType.DATASOURCE_NOT_FOUND, datasourceUrn));
 

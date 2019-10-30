@@ -10,4 +10,7 @@ public class DeleteDatasources {
 
     @In(1)
     List<String> urns;
+
+    @In(2)
+    boolean      deleteAttributes;
 }
