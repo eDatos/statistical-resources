@@ -9,6 +9,7 @@ import org.siemac.metamac.statistical.resources.core.dto.IdentifiableStatistical
 import org.siemac.metamac.statistical.resources.core.dto.NameableStatisticalResourceBaseDto;
 import org.siemac.metamac.statistical.resources.core.dto.NameableStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
+import org.siemac.metamac.statistical.resources.core.dto.VersionableRelatedResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionBaseDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.DatasetVersionDto;
 import org.siemac.metamac.statistical.resources.core.dto.multidataset.MultidatasetVersionBaseDto;
@@ -24,30 +25,27 @@ public class RelatedResourceUtils extends RelatedResourceBaseUtils {
     // -------------------------------------------------------------------------------------------------------------
     // IDENTIFIABLE RESOURCE
     // -------------------------------------------------------------------------------------------------------------
-
-    public static RelatedResourceDto getIdentifiableResourceDtoAsRelatedResourceDto(IdentifiableStatisticalResourceDto identifiableStatisticalResourceDto) {
-        RelatedResourceDto relatedResourceDto = new RelatedResourceDto();
-        relatedResourceDto.setCode(identifiableStatisticalResourceDto.getCode());
-        relatedResourceDto.setUrn(identifiableStatisticalResourceDto.getUrn());
-        relatedResourceDto
-                .setStatisticalOperationUrn(identifiableStatisticalResourceDto.getStatisticalOperation() != null ? identifiableStatisticalResourceDto.getStatisticalOperation().getUrn() : null);
-        return relatedResourceDto;
+    public static <T extends RelatedResourceDto> T getIdentifiableResourceDtoAsRelatedResourceDto(IdentifiableStatisticalResourceDto identifiableStatisticalResourceDto, T target) {
+        target.setCode(identifiableStatisticalResourceDto.getCode());
+        target.setUrn(identifiableStatisticalResourceDto.getUrn());
+        target.setStatisticalOperationUrn(identifiableStatisticalResourceDto.getStatisticalOperation() != null ? identifiableStatisticalResourceDto.getStatisticalOperation().getUrn() : null);
+        return target;
     }
 
     // -------------------------------------------------------------------------------------------------------------
     // NAMEABLE RESOURCE
     // -------------------------------------------------------------------------------------------------------------
 
-    public static RelatedResourceDto getNameableResourceDtoAsRelatedResourceDto(NameableStatisticalResourceDto nameableStatisticalResourceDto) {
-        RelatedResourceDto relatedResourceDto = getIdentifiableResourceDtoAsRelatedResourceDto(nameableStatisticalResourceDto);
-        relatedResourceDto.setTitle(nameableStatisticalResourceDto.getTitle());
-        return relatedResourceDto;
+    public static <T extends RelatedResourceDto> T getNameableResourceDtoAsRelatedResourceDto(NameableStatisticalResourceDto nameableStatisticalResourceDto, T target) {
+        getIdentifiableResourceDtoAsRelatedResourceDto(nameableStatisticalResourceDto, target);
+        target.setTitle(nameableStatisticalResourceDto.getTitle());
+        return target;
     }
 
-    public static RelatedResourceDto getNameableResourceBaseDtoAsRelatedResourceDto(NameableStatisticalResourceBaseDto nameableStatisticalResourceBaseDto) {
-        RelatedResourceDto relatedResourceDto = getIdentifiableResourceDtoAsRelatedResourceDto(nameableStatisticalResourceBaseDto);
-        relatedResourceDto.setTitle(nameableStatisticalResourceBaseDto.getTitle());
-        return relatedResourceDto;
+    public static <T extends RelatedResourceDto> T getNameableResourceBaseDtoAsRelatedResourceDto(NameableStatisticalResourceBaseDto nameableStatisticalResourceBaseDto, T target) {
+        getIdentifiableResourceDtoAsRelatedResourceDto(nameableStatisticalResourceBaseDto, target);
+        target.setTitle(nameableStatisticalResourceBaseDto.getTitle());
+        return target;
     }
 
     // -------------------------------------------------------------------------------------------------------------
@@ -55,13 +53,13 @@ public class RelatedResourceUtils extends RelatedResourceBaseUtils {
     // -------------------------------------------------------------------------------------------------------------
 
     public static RelatedResourceDto getPublicationVersionDtoAsRelatedResourceDto(PublicationVersionDto publicationDto) {
-        RelatedResourceDto relatedResourceDto = getNameableResourceDtoAsRelatedResourceDto(publicationDto);
+        RelatedResourceDto relatedResourceDto = getNameableResourceDtoAsRelatedResourceDto(publicationDto, new RelatedResourceDto());
         relatedResourceDto.setType(TypeRelatedResourceEnum.PUBLICATION_VERSION);
         return relatedResourceDto;
     }
 
     public static RelatedResourceDto getPublicationVersionBaseDtoAsRelatedResourceDto(PublicationVersionBaseDto publicationDto) {
-        RelatedResourceDto relatedResourceDto = getNameableResourceBaseDtoAsRelatedResourceDto(publicationDto);
+        RelatedResourceDto relatedResourceDto = getNameableResourceBaseDtoAsRelatedResourceDto(publicationDto, new RelatedResourceDto());
         relatedResourceDto.setType(TypeRelatedResourceEnum.PUBLICATION_VERSION);
         return relatedResourceDto;
     }
@@ -87,15 +85,24 @@ public class RelatedResourceUtils extends RelatedResourceBaseUtils {
     // -------------------------------------------------------------------------------------------------------------
 
     public static RelatedResourceDto getDatasetVersionDtoAsRelatedResourceDto(DatasetVersionDto DatasetVersionDto) {
-        RelatedResourceDto relatedResourceDto = getNameableResourceDtoAsRelatedResourceDto(DatasetVersionDto);
+        RelatedResourceDto relatedResourceDto = getNameableResourceDtoAsRelatedResourceDto(DatasetVersionDto, new RelatedResourceDto());
         relatedResourceDto.setType(TypeRelatedResourceEnum.DATASET_VERSION);
         return relatedResourceDto;
     }
 
     public static RelatedResourceDto getDatasetVersionBaseDtoAsRelatedResourceDto(DatasetVersionBaseDto datasetVersionBaseDto) {
-        RelatedResourceDto relatedResourceDto = getNameableResourceBaseDtoAsRelatedResourceDto(datasetVersionBaseDto);
+        RelatedResourceDto relatedResourceDto = (RelatedResourceDto) getNameableResourceBaseDtoAsRelatedResourceDto(datasetVersionBaseDto, new RelatedResourceDto());
         relatedResourceDto.setType(TypeRelatedResourceEnum.DATASET_VERSION);
         return relatedResourceDto;
+    }
+
+    public static VersionableRelatedResourceDto getDatasetVersionBaseDtoAsVersionableRelatedResourceDto(DatasetVersionBaseDto datasetVersionBaseDto) {
+
+        VersionableRelatedResourceDto versionableRelatedResourceDto = getNameableResourceBaseDtoAsRelatedResourceDto(datasetVersionBaseDto, new VersionableRelatedResourceDto());
+        versionableRelatedResourceDto.setType(TypeRelatedResourceEnum.DATASET_VERSION);
+        versionableRelatedResourceDto.setLastVersion(datasetVersionBaseDto.getLastVersion());
+        versionableRelatedResourceDto.setVersionLogic(datasetVersionBaseDto.getVersionLogic());
+        return versionableRelatedResourceDto;
     }
 
     public static List<RelatedResourceDto> getDatasetVersionDtosAsRelatedResourceDtos(List<DatasetVersionDto> DatasetVersionDtos) {
@@ -112,6 +119,14 @@ public class RelatedResourceUtils extends RelatedResourceBaseUtils {
             relatedResourceDtos.add(getDatasetVersionBaseDtoAsRelatedResourceDto(datasetVersionBaseDto));
         }
         return relatedResourceDtos;
+    }
+
+    public static List<VersionableRelatedResourceDto> getDatasetVersionBaseDtosAsVersionableRelatedResourceDtos(List<DatasetVersionBaseDto> datasetVersionBaseDtos) {
+        List<VersionableRelatedResourceDto> versionableRelatedResourceDtos = new ArrayList<VersionableRelatedResourceDto>(datasetVersionBaseDtos.size());
+        for (DatasetVersionBaseDto datasetVersionBaseDto : datasetVersionBaseDtos) {
+            versionableRelatedResourceDtos.add(getDatasetVersionBaseDtoAsVersionableRelatedResourceDto(datasetVersionBaseDto));
+        }
+        return versionableRelatedResourceDtos;
     }
 
     public static String getRelatedResourceName(RelatedResourceDto relatedResourceDto) {
@@ -145,13 +160,13 @@ public class RelatedResourceUtils extends RelatedResourceBaseUtils {
     // -------------------------------------------------------------------------------------------------------------
 
     public static RelatedResourceDto getMultidatasetVersionDtoAsRelatedResourceDto(MultidatasetVersionDto multidatasetDto) {
-        RelatedResourceDto relatedResourceDto = getNameableResourceDtoAsRelatedResourceDto(multidatasetDto);
+        RelatedResourceDto relatedResourceDto = getNameableResourceDtoAsRelatedResourceDto(multidatasetDto, new RelatedResourceDto());
         relatedResourceDto.setType(TypeRelatedResourceEnum.MULTIDATASET_VERSION);
         return relatedResourceDto;
     }
 
     public static RelatedResourceDto getMultidatasetVersionBaseDtoAsRelatedResourceDto(MultidatasetVersionBaseDto multidatasetDto) {
-        RelatedResourceDto relatedResourceDto = getNameableResourceBaseDtoAsRelatedResourceDto(multidatasetDto);
+        RelatedResourceDto relatedResourceDto = getNameableResourceBaseDtoAsRelatedResourceDto(multidatasetDto, new RelatedResourceDto());
         relatedResourceDto.setType(TypeRelatedResourceEnum.MULTIDATASET_VERSION);
         return relatedResourceDto;
     }

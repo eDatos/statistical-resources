@@ -107,7 +107,8 @@ public class QueryDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements Query
         // DatasetVersion
         DatasetVersion datasetVersion = getCurrentDatasetVersionInQuery(source);
         if (datasetVersion != null) {
-            target.setRelatedDatasetVersion(lifecycleStatisticalResourceDoToRelatedResourceDto(datasetVersion.getSiemacMetadataStatisticalResource(), TypeRelatedResourceEnum.DATASET_VERSION));
+            target.setRelatedDatasetVersion(
+                    lifecycleStatisticalResourceDoToVersionableRelatedResourceDto(datasetVersion.getSiemacMetadataStatisticalResource(), TypeRelatedResourceEnum.DATASET_VERSION));
         }
 
         // Status
@@ -133,7 +134,8 @@ public class QueryDo2DtoMapperImpl extends BaseDo2DtoMapperImpl implements Query
         // DatasetVersion
         DatasetVersion datasetVersion = getCurrentDatasetVersionInQuery(source);
         if (datasetVersion != null) {
-            target.setRelatedDatasetVersion(lifecycleStatisticalResourceDoToRelatedResourceDto(datasetVersion.getSiemacMetadataStatisticalResource(), TypeRelatedResourceEnum.DATASET_VERSION));
+            target.setRelatedDatasetVersion(
+                    lifecycleStatisticalResourceDoToVersionableRelatedResourceDto(datasetVersion.getSiemacMetadataStatisticalResource(), TypeRelatedResourceEnum.DATASET_VERSION));
         }
 
         // Status

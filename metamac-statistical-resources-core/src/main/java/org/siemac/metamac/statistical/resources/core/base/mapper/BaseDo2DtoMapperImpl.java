@@ -23,6 +23,7 @@ import org.siemac.metamac.statistical.resources.core.dto.SiemacMetadataStatistic
 import org.siemac.metamac.statistical.resources.core.dto.SiemacMetadataStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.StatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.VersionRationaleTypeDto;
+import org.siemac.metamac.statistical.resources.core.dto.VersionableRelatedResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.VersionableStatisticalResourceBaseDto;
 import org.siemac.metamac.statistical.resources.core.dto.VersionableStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
@@ -124,6 +125,7 @@ public class BaseDo2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Base
         versionableStatisticalResourceDoToBaseDto(source, target);
 
         target.setProcStatus(source.getEffectiveProcStatus());
+        target.setLastVersion(BooleanUtils.isTrue(source.getLastVersion()));
         target.setCreationDate(dateDoToDto(source.getCreationDate()));
         target.setPublicationDate(dateDoToDto(source.getPublicationDate()));
         target.setCreationUser(source.getCreationUser());
@@ -222,7 +224,18 @@ public class BaseDo2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Base
     // ------------------------------------------------------------
     @Override
     public RelatedResourceDto lifecycleStatisticalResourceDoToRelatedResourceDto(LifeCycleStatisticalResource source, TypeRelatedResourceEnum type) {
-        RelatedResourceDto target = new RelatedResourceDto();
+        return lifecycleStatisticalResourceDoToRelatedResourceDto(source, new RelatedResourceDto(), type);
+    }
+
+    @Override
+    public VersionableRelatedResourceDto lifecycleStatisticalResourceDoToVersionableRelatedResourceDto(LifeCycleStatisticalResource source, TypeRelatedResourceEnum type) {
+        VersionableRelatedResourceDto target = lifecycleStatisticalResourceDoToRelatedResourceDto(source, new VersionableRelatedResourceDto(), type);
+        target.setVersionLogic(source.getVersionLogic());
+        target.setLastVersion(source.getLastVersion());
+        return target;
+    }
+
+    private <T extends RelatedResourceDto> T lifecycleStatisticalResourceDoToRelatedResourceDto(LifeCycleStatisticalResource source, T target, TypeRelatedResourceEnum type) {
         target.setCode(source.getCode());
         target.setUrn(source.getUrn());
         target.setTitle(internationalStringDoToDto(source.getTitle()));

@@ -6,13 +6,15 @@ import java.util.List;
 
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
+import org.siemac.metamac.statistical.resources.core.dto.VersionableRelatedResourceDto;
 import org.siemac.metamac.statistical.resources.web.client.constants.StatisticalResourceWebConstants;
 import org.siemac.metamac.statistical.resources.web.client.query.model.ds.QueryDS;
+import org.siemac.metamac.statistical.resources.web.client.query.utils.QueryProductionDescriptionFormUtils;
 import org.siemac.metamac.statistical.resources.web.client.query.view.handlers.QueryListUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
 import org.siemac.metamac.statistical.resources.web.client.widgets.LifeCycleResourceSearchSectionStack;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.fields.SearchRelatedResourceLinkItem;
-import org.siemac.metamac.statistical.resources.web.client.widgets.windows.search.SearchSingleDatasetVersionRelatedResourcePaginatedWindow;
+import org.siemac.metamac.statistical.resources.web.client.widgets.windows.search.SearchSingleDatasetVersionVersionableRelatedResourcePaginatedWindow2;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.DatasetVersionWebCriteria;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.QueryVersionWebCriteria;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetVersionsResult;
@@ -29,9 +31,9 @@ import com.smartgwt.client.widgets.form.fields.events.FormItemIconClickEvent;
 
 public class QueryVersionSearchSectionStack extends LifeCycleResourceSearchSectionStack {
 
-    private SearchSingleDatasetVersionRelatedResourcePaginatedWindow searchDatasetVesionWindow;
+    private SearchSingleDatasetVersionVersionableRelatedResourcePaginatedWindow2 searchDatasetVesionWindow;
 
-    private QueryListUiHandlers                                      uiHandlers;
+    private QueryListUiHandlers                                                 uiHandlers;
 
     public QueryVersionSearchSectionStack() {
     }
@@ -51,7 +53,7 @@ public class QueryVersionSearchSectionStack extends LifeCycleResourceSearchSecti
     protected void createAdvancedSearchForm() {
         super.createAdvancedSearchForm();
 
-        SearchRelatedResourceLinkItem datasetVersion = createSearchDatasetVersionItem(QueryDS.RELATED_DATASET_VERSION, getConstants().queryDatasetVersion());
+        SearchRelatedResourceLinkItem datasetVersion = createSearchDatasetVersionItem(QueryDS.RELATED_DATASET_VERSION, getConstants().queryDataset());
 
         SelectItem status = new SelectItem(QueryDS.STATUS, getConstants().queryStatus());
         status.setValueMap(CommonUtils.getQueryStatusHashMap());
@@ -89,9 +91,9 @@ public class QueryVersionSearchSectionStack extends LifeCycleResourceSearchSecti
 
     public void setDatasetVersions(GetDatasetVersionsResult result) {
         if (searchDatasetVesionWindow != null) {
-            List<RelatedResourceDto> relatedResourceDtos = RelatedResourceUtils.getDatasetVersionBaseDtosAsRelatedResourceDtos(result.getDatasetVersionBaseDtos());
-            searchDatasetVesionWindow.setResources(relatedResourceDtos);
-            searchDatasetVesionWindow.refreshSourcePaginationInfo(result.getFirstResultOut(), relatedResourceDtos.size(), result.getTotalResults());
+            List<VersionableRelatedResourceDto> versionableRelatedResourceDtos = RelatedResourceUtils.getDatasetVersionBaseDtosAsVersionableRelatedResourceDtos(result.getDatasetVersionBaseDtos());
+            searchDatasetVesionWindow.setResources(versionableRelatedResourceDtos);
+            searchDatasetVesionWindow.refreshSourcePaginationInfo(result.getFirstResultOut(), versionableRelatedResourceDtos.size(), result.getTotalResults());
         }
     }
 
@@ -109,8 +111,8 @@ public class QueryVersionSearchSectionStack extends LifeCycleResourceSearchSecti
             @Override
             public void onFormItemClick(FormItemIconClickEvent event) {
 
-                searchDatasetVesionWindow = new SearchSingleDatasetVersionRelatedResourcePaginatedWindow(getConstants().resourceSelection(), StatisticalResourceWebConstants.FORM_LIST_MAX_RESULTS,
-                        new SearchPaginatedAction<DatasetVersionWebCriteria>() {
+                searchDatasetVesionWindow = new SearchSingleDatasetVersionVersionableRelatedResourcePaginatedWindow2(getConstants().resourceSelection(),
+                        StatisticalResourceWebConstants.FORM_LIST_MAX_RESULTS, new SearchPaginatedAction<DatasetVersionWebCriteria>() {
 
                             @Override
                             public void retrieveResultSet(int firstResult, int maxResults, DatasetVersionWebCriteria criteria) {
@@ -125,10 +127,10 @@ public class QueryVersionSearchSectionStack extends LifeCycleResourceSearchSecti
 
                     @Override
                     public void onClick(com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
-                        RelatedResourceDto selectedResource = searchDatasetVesionWindow.getSelectedResource();
+                        VersionableRelatedResourceDto selectedResource = searchDatasetVesionWindow.getSelectedResource();
                         searchDatasetVesionWindow.markForDestroy();
                         // Set selected resource in form
-                        item.setRelatedResource(selectedResource);
+                        QueryProductionDescriptionFormUtils.setRelatedDataset(selectedResource, item);
                         item.validate();
                     }
                 });

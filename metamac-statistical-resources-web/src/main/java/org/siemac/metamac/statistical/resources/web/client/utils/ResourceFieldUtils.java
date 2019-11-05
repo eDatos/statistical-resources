@@ -113,7 +113,7 @@ public class ResourceFieldUtils {
 
     public static CustomListGridField[] getQueryListGridFields() {
 
-        CustomLinkListGridField relatedDataset = new CustomLinkListGridField(QueryDS.RELATED_DATASET_VERSION, getConstants().queryDatasetVersion());
+        CustomLinkListGridField relatedDataset = new CustomLinkListGridField(QueryDS.RELATED_DATASET_VERSION, getConstants().queryDataset());
 
         CustomListGridField status = new CustomListGridField(QueryDS.STATUS, getConstants().queryStatus());
 

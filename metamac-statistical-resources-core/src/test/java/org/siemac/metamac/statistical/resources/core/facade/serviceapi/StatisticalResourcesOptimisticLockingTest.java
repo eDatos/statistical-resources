@@ -202,7 +202,7 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
         assertEquals(Long.valueOf(0), queryVersionDtoSession01.getOptimisticLockingVersion());
 
         DatasetVersion datasetVersion06 = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_06_FOR_QUERIES_NAME);
-        queryVersionDtoSession01.setRelatedDatasetVersion(StatisticalResourcesDtoMocks.mockPersistedRelatedResourceDatasetVersionDto(datasetVersion06));
+        queryVersionDtoSession01.setRelatedDatasetVersion(StatisticalResourcesDtoMocks.mockPersistedVersionableRelatedResourceDatasetVersionDto(datasetVersion06));
         // update selection because of dataset change
         queryVersionDtoSession01.getSelection().clear();
         queryVersionDtoSession01.getSelection().put("DIM_01", Arrays.asList(new CodeItemDto("CODE_01", "CODE_01")));
@@ -213,7 +213,7 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
                 queryVersionMockFactory.retrieveMock(QUERY_VERSION_05_BASIC_NAME).getLifeCycleStatisticalResource().getUrn());
         assertEquals(Long.valueOf(0), queryVersionDtoSession02.getOptimisticLockingVersion());
         DatasetVersion datasetVersion01 = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_01_BASIC_NAME);
-        queryVersionDtoSession02.setRelatedDatasetVersion(StatisticalResourcesDtoMocks.mockPersistedRelatedResourceDatasetVersionDto(datasetVersion01));
+        queryVersionDtoSession02.setRelatedDatasetVersion(StatisticalResourcesDtoMocks.mockPersistedVersionableRelatedResourceDatasetVersionDto(datasetVersion01));
 
         // Update query - session 1 --> OK
         QueryVersionDto queryVersionDtoSession1AfterUpdate01 = statisticalResourcesServiceFacade.updateQueryVersion(getServiceContextAdministrador(), queryVersionDtoSession01);

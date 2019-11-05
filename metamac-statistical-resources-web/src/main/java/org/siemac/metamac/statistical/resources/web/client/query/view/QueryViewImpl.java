@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.siemac.metamac.core.common.util.shared.StringUtils;
-import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
+import org.siemac.metamac.statistical.resources.core.dto.VersionableRelatedResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.CodeItemDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionBaseDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionDto;
@@ -149,8 +149,9 @@ public class QueryViewImpl extends ViewWithUiHandlers<QueryUiHandlers> implement
 
     @Override
     public void setDatasetsForQuery(GetDatasetVersionsResult result) {
-        List<RelatedResourceDto> relatedResourceDtos = RelatedResourceUtils.getDatasetVersionBaseDtosAsRelatedResourceDtos(result.getDatasetVersionBaseDtos());
-        queryFormPanel.productionDescriptorsEditionForm.setDatasetsForQuery(relatedResourceDtos, result.getFirstResultOut(), relatedResourceDtos.size(), result.getTotalResults());
+        List<VersionableRelatedResourceDto> versionableRelatedResourceDtos = RelatedResourceUtils.getDatasetVersionBaseDtosAsVersionableRelatedResourceDtos(result.getDatasetVersionBaseDtos());
+        queryFormPanel.productionDescriptorsEditionForm.setDatasetsForQuery(versionableRelatedResourceDtos, result.getFirstResultOut(), versionableRelatedResourceDtos.size(),
+                result.getTotalResults());
     }
 
     @Override
