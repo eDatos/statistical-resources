@@ -1,6 +1,7 @@
 package org.siemac.metamac.statistical.resources.web.client.query.view.widgets.forms;
 
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
+import static org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourcesFormUtils.getRelatedResourceValue;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,7 +11,7 @@ import java.util.Map;
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.statistical.resources.core.base.checks.MetadataEditionChecks;
 import org.siemac.metamac.statistical.resources.core.constants.StatisticalResourcesConstants;
-import org.siemac.metamac.statistical.resources.core.dto.VersionableRelatedResourceDto;
+import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.CodeItemDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionDto;
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryTypeEnum;
@@ -19,15 +20,14 @@ import org.siemac.metamac.statistical.resources.web.client.constants.Statistical
 import org.siemac.metamac.statistical.resources.web.client.model.ds.LifeCycleResourceDS;
 import org.siemac.metamac.statistical.resources.web.client.model.ds.SiemacMetadataDS;
 import org.siemac.metamac.statistical.resources.web.client.query.model.ds.QueryDS;
-import org.siemac.metamac.statistical.resources.web.client.query.utils.QueryProductionDescriptionFormUtils;
+import org.siemac.metamac.statistical.resources.web.client.query.utils.QueryRelatedDatasetUtils;
 import org.siemac.metamac.statistical.resources.web.client.query.view.handlers.QueryUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.NavigationEnabledDynamicForm;
-import org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourcesFormUtils;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.fields.CodeItemListItem;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.fields.SearchRelatedResourceLinkItem;
 import org.siemac.metamac.statistical.resources.web.client.widgets.windows.search.SearchMultipleCodeItemWindow;
-import org.siemac.metamac.statistical.resources.web.client.widgets.windows.search.SearchSingleDatasetVersionVersionableResourcePaginatedWindow;
+import org.siemac.metamac.statistical.resources.web.client.widgets.windows.search.SearchSingleDatasetVersionRelatedResourcePaginatedWindow;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.DatasetVersionWebCriteria;
 import org.siemac.metamac.web.common.client.view.handlers.BaseUiHandlers;
 import org.siemac.metamac.web.common.client.widgets.actions.search.SearchAction;
@@ -53,18 +53,18 @@ import com.smartgwt.client.widgets.form.validator.CustomValidator;
 
 public class QueryProductionDescriptorsEditionForm extends NavigationEnabledDynamicForm {
 
-    private QueryUiHandlers                                              uiHandlers;
+    private QueryUiHandlers                                          uiHandlers;
 
-    private SearchSingleDatasetVersionVersionableResourcePaginatedWindow searchDatasetWindow;
+    private SearchSingleDatasetVersionRelatedResourcePaginatedWindow searchDatasetWindow;
 
-    private Map<String, SearchMultipleCodeItemWindow>                    dimensionCodeSelectionWindow;
-    private Map<String, CodeItemListItem>                                selectionFields;
+    private Map<String, SearchMultipleCodeItemWindow>                dimensionCodeSelectionWindow;
+    private Map<String, CodeItemListItem>                            selectionFields;
 
-    protected SearchSrmItemLinkItemWithSchemeFilterItem                  maintainerItem;
+    protected SearchSrmItemLinkItemWithSchemeFilterItem              maintainerItem;
 
-    private Map<String, List<CodeItemDto>>                               dtoSelection;
+    private Map<String, List<CodeItemDto>>                           dtoSelection;
 
-    private QueryVersionDto                                              queryDto;
+    private QueryVersionDto                                          queryDto;
 
     public QueryProductionDescriptorsEditionForm() {
         super(getConstants().formProductionDescriptors());
@@ -106,8 +106,8 @@ public class QueryProductionDescriptorsEditionForm extends NavigationEnabledDyna
     }
 
     public void setQueryDto(QueryVersionDto queryDto) {
-        QueryProductionDescriptionFormUtils.setRelatedDataset(queryDto, (SearchRelatedResourceLinkItem) getItem(QueryDS.RELATED_DATASET_VERSION));
 
+        QueryRelatedDatasetUtils.setRelatedDataset(queryDto, (SearchRelatedResourceLinkItem) getItem(QueryDS.RELATED_DATASET_VERSION));
         setValue(LifeCycleResourceDS.MAINTAINER, queryDto.getMaintainer());
         setValue(LifeCycleResourceDS.MAINTAINER_VIEW, queryDto.getMaintainer());
 
@@ -127,7 +127,7 @@ public class QueryProductionDescriptorsEditionForm extends NavigationEnabledDyna
     public QueryVersionDto getQueryDto(QueryVersionDto queryDto) {
         QueryTypeEnum queryType = QueryTypeEnum.valueOf(getValueAsString(QueryDS.TYPE));
         queryDto.setMaintainer(getValueAsExternalItemDto(SiemacMetadataDS.MAINTAINER));
-        queryDto.setRelatedDatasetVersion(StatisticalResourcesFormUtils.getVersionableRelatedResourceValue(getItem(QueryDS.RELATED_DATASET_VERSION)));
+        queryDto.setRelatedDatasetVersion(getRelatedResourceValue(getItem(QueryDS.RELATED_DATASET_VERSION)));
 
         queryDto.setType(queryType);
 
@@ -165,8 +165,8 @@ public class QueryProductionDescriptorsEditionForm extends NavigationEnabledDyna
     // RELATED DATASET
     // *******************************************************
 
-    private void setSelectedDataset(VersionableRelatedResourceDto datasetResource) {
-        QueryProductionDescriptionFormUtils.setRelatedDataset(datasetResource, (SearchRelatedResourceLinkItem) getItem(QueryDS.RELATED_DATASET_VERSION));
+    private void setSelectedDataset(RelatedResourceDto datasetResource) {
+        QueryRelatedDatasetUtils.setRelatedDataset(datasetResource, (SearchRelatedResourceLinkItem) getItem(QueryDS.RELATED_DATASET_VERSION));
 
         // Get dimensions
         if (datasetResource != null) {
@@ -174,9 +174,9 @@ public class QueryProductionDescriptorsEditionForm extends NavigationEnabledDyna
         }
     }
 
-    public void setDatasetsForQuery(List<VersionableRelatedResourceDto> versionableResourcesDtos, int firstResult, int elementsInPage, int totalResults) {
+    public void setDatasetsForQuery(List<RelatedResourceDto> resourcesDtos, int firstResult, int elementsInPage, int totalResults) {
         if (searchDatasetWindow != null) {
-            searchDatasetWindow.setResources(versionableResourcesDtos);
+            searchDatasetWindow.setResources(resourcesDtos);
             searchDatasetWindow.refreshSourcePaginationInfo(firstResult, elementsInPage, totalResults);
         }
     }
@@ -196,7 +196,7 @@ public class QueryProductionDescriptorsEditionForm extends NavigationEnabledDyna
             @Override
             public void onFormItemClick(FormItemIconClickEvent event) {
 
-                searchDatasetWindow = new SearchSingleDatasetVersionVersionableResourcePaginatedWindow(getConstants().resourceSelection(), StatisticalResourceWebConstants.FORM_LIST_MAX_RESULTS,
+                searchDatasetWindow = new SearchSingleDatasetVersionRelatedResourcePaginatedWindow(getConstants().resourceSelection(), StatisticalResourceWebConstants.FORM_LIST_MAX_RESULTS,
                         new SearchPaginatedAction<DatasetVersionWebCriteria>() {
 
                             @Override
@@ -211,7 +211,7 @@ public class QueryProductionDescriptorsEditionForm extends NavigationEnabledDyna
 
                     @Override
                     public void onClick(com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
-                        VersionableRelatedResourceDto selectedResource = searchDatasetWindow.getSelectedResource();
+                        RelatedResourceDto selectedResource = searchDatasetWindow.getSelectedResource();
                         searchDatasetWindow.markForDestroy();
                         // Set selected resource in form
                         setSelectedDataset(selectedResource);
@@ -251,7 +251,7 @@ public class QueryProductionDescriptorsEditionForm extends NavigationEnabledDyna
     public void setDatasetDimensionsIds(List<String> datasetDimensions) {
 
         ExternalItemDto maintainer = getValueAsExternalItemDto(QueryDS.MAINTAINER);
-        VersionableRelatedResourceDto datasetVersion = StatisticalResourcesFormUtils.getVersionableRelatedResourceValue(getItem(QueryDS.RELATED_DATASET_VERSION));
+        RelatedResourceDto datasetVersion = getRelatedResourceValue(getItem(QueryDS.RELATED_DATASET_VERSION));
 
         List<FormItem> fields = createComponents();
 
@@ -291,9 +291,7 @@ public class QueryProductionDescriptorsEditionForm extends NavigationEnabledDyna
             }
         }
         setValue(QueryDS.MAINTAINER, maintainer);
-
-        QueryProductionDescriptionFormUtils.setRelatedDataset(datasetVersion, (SearchRelatedResourceLinkItem) getItem(QueryDS.RELATED_DATASET_VERSION));
-
+        QueryRelatedDatasetUtils.setRelatedDataset(datasetVersion, (SearchRelatedResourceLinkItem) getItem(QueryDS.RELATED_DATASET_VERSION));
         if (hasTemporalDimension && QueryTypeEnum.LATEST_DATA.equals(queryDto.getType())) {
             setValue(QueryDS.LATEST_N_DATA, queryDto.getLatestDataNumber());
         }

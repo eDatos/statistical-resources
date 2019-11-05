@@ -30,7 +30,6 @@ import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.SiemacMetadataStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.StatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.VersionRationaleTypeDto;
-import org.siemac.metamac.statistical.resources.core.dto.VersionableRelatedResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.VersionableStatisticalResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.AttributeValueDto;
 import org.siemac.metamac.statistical.resources.core.dto.datasets.CategorisationDto;
@@ -72,7 +71,7 @@ public class StatisticalResourcesDtoMocks extends MetamacMocks {
         // code is not setting in nameable becasuse some resources have generated code
         queryVersionDto.setCode(mockString(8));
 
-        queryVersionDto.setRelatedDatasetVersion(mockPersistedVersionableRelatedResourceDatasetVersionDto(datasetVersion));
+        queryVersionDto.setRelatedDatasetVersion(mockPersistedRelatedResourceDatasetVersionDto(datasetVersion));
         queryVersionDto.setType(QueryTypeEnum.FIXED);
 
         Map<String, List<CodeItemDto>> selection = new HashMap<String, List<CodeItemDto>>();
@@ -464,6 +463,10 @@ public class StatisticalResourcesDtoMocks extends MetamacMocks {
     public static RelatedResourceDto mockNotPersistedRelatedResourceDatasetVersionDto(DatasetVersion datasetVersion) {
         RelatedResourceDto resource = new RelatedResourceDto();
         populateNotPersistedRelatedResourceIdentifiable(resource, datasetVersion.getSiemacMetadataStatisticalResource(), TypeRelatedResourceEnum.DATASET_VERSION);
+
+        resource.setLastVersion(datasetVersion.getLifeCycleStatisticalResource().getLastVersion());
+        resource.setVersionLogic(datasetVersion.getLifeCycleStatisticalResource().getVersionLogic());
+
         return resource;
     }
 
@@ -473,9 +476,14 @@ public class StatisticalResourcesDtoMocks extends MetamacMocks {
         return resource;
     }
 
-    public static <T extends RelatedResourceDto> T mockPersistedRelatedResourceDatasetVersionDto(DatasetVersion datasetVersion, T target) {
-        populatePersistedRelatedResourceNameable(target, datasetVersion.getSiemacMetadataStatisticalResource(), TypeRelatedResourceEnum.DATASET_VERSION);
-        return target;
+    public static RelatedResourceDto mockPersistedRelatedResourceDatasetVersionDto(DatasetVersion datasetVersion) {
+        RelatedResourceDto resource = new RelatedResourceDto();
+        populatePersistedRelatedResourceNameable(resource, datasetVersion.getSiemacMetadataStatisticalResource(), TypeRelatedResourceEnum.DATASET_VERSION);
+
+        resource.setLastVersion(datasetVersion.getLifeCycleStatisticalResource().getLastVersion());
+        resource.setVersionLogic(datasetVersion.getLifeCycleStatisticalResource().getVersionLogic());
+
+        return resource;
     }
 
     private static void populateNotPersistedRelatedResourceIdentifiable(RelatedResourceDto relatedDto, IdentifiableStatisticalResource identifiable, TypeRelatedResourceEnum type) {
@@ -483,24 +491,15 @@ public class StatisticalResourcesDtoMocks extends MetamacMocks {
         relatedDto.setType(type);
     }
 
-    private static <T extends RelatedResourceDto> void populatePersistedRelatedResourceIdentifiable(T target, IdentifiableStatisticalResource identifiable, TypeRelatedResourceEnum type) {
-        target.setUrn(identifiable.getUrn());
-        target.setType(type);
-        target.setCode(identifiable.getCode());
+    private static void populatePersistedRelatedResourceIdentifiable(RelatedResourceDto relatedDto, IdentifiableStatisticalResource identifiable, TypeRelatedResourceEnum type) {
+        relatedDto.setUrn(identifiable.getUrn());
+        relatedDto.setType(type);
+        relatedDto.setCode(identifiable.getCode());
     }
 
-    private static <T extends RelatedResourceDto> void populatePersistedRelatedResourceNameable(T target, NameableStatisticalResource nameable, TypeRelatedResourceEnum type) {
-        populatePersistedRelatedResourceIdentifiable(target, nameable, type);
-        target.setTitle(createInternationalStringDtoFromDo(nameable.getTitle()));
-    }
-
-    public static VersionableRelatedResourceDto mockPersistedVersionableRelatedResourceDatasetVersionDto(DatasetVersion datasetVersion) {
-        VersionableRelatedResourceDto resource = mockPersistedRelatedResourceDatasetVersionDto(datasetVersion, new VersionableRelatedResourceDto());
-
-        resource.setLastVersion(datasetVersion.getLifeCycleStatisticalResource().getLastVersion());
-        resource.setVersionLogic(datasetVersion.getLifeCycleStatisticalResource().getVersionLogic());
-
-        return resource;
+    private static void populatePersistedRelatedResourceNameable(RelatedResourceDto relatedDto, NameableStatisticalResource nameable, TypeRelatedResourceEnum type) {
+        populatePersistedRelatedResourceIdentifiable(relatedDto, nameable, type);
+        relatedDto.setTitle(createInternationalStringDtoFromDo(nameable.getTitle()));
     }
 
     // STATISTIC OFFICIALITY DTOs

@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
-import org.siemac.metamac.statistical.resources.core.dto.VersionableRelatedResourceDto;
 import org.siemac.metamac.web.common.client.widgets.form.fields.CustomDateItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.RelatedResourceBaseLinkItem;
 import org.siemac.metamac.web.common.client.widgets.form.fields.RelatedResourceBaseListItem;
@@ -26,8 +25,8 @@ public class StatisticalResourcesFormUtils extends FormUtils {
     }
 
     @SuppressWarnings("unchecked")
-    public static void setVersionableRelatedResourceValue(FormItem item, VersionableRelatedResourceDto value) {
-        ((RelatedResourceBaseLinkItem<VersionableRelatedResourceDto>) item).setRelatedResourceWithVersion(value, value.getVersionLogic());
+    public static void setVersionableRelatedResourceValue(FormItem item, RelatedResourceDto value) {
+        ((RelatedResourceBaseLinkItem<RelatedResourceDto>) item).setRelatedResourceWithVersion(value, value.getVersionLogic());
     }
 
     @SuppressWarnings("unchecked")
@@ -47,11 +46,6 @@ public class StatisticalResourcesFormUtils extends FormUtils {
     @SuppressWarnings("unchecked")
     public static RelatedResourceDto getRelatedResourceValue(FormItem item) {
         return ((RelatedResourceBaseLinkItem<RelatedResourceDto>) item).getRelatedResourceDto();
-    }
-
-    @SuppressWarnings("unchecked")
-    public static VersionableRelatedResourceDto getVersionableRelatedResourceValue(FormItem item) {
-        return ((RelatedResourceBaseLinkItem<VersionableRelatedResourceDto>) item).getRelatedResourceDto();
     }
 
     public static Date getDate(FormItem item) {

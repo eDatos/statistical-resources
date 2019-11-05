@@ -9,7 +9,7 @@ import org.siemac.metamac.statistical.resources.core.constants.StatisticalResour
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionDto;
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryTypeEnum;
 import org.siemac.metamac.statistical.resources.web.client.query.model.ds.QueryDS;
-import org.siemac.metamac.statistical.resources.web.client.query.utils.QueryProductionDescriptionFormUtils;
+import org.siemac.metamac.statistical.resources.web.client.query.utils.QueryRelatedDatasetUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.NavigationEnabledDynamicForm;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.fields.CodeItemListItem;
@@ -84,7 +84,7 @@ public class QueryProductionDescriptorsForm extends NavigationEnabledDynamicForm
             }
         }
 
-        QueryProductionDescriptionFormUtils.setRelatedDataset(queryDto, (RelatedResourceLinkItem) getItem(QueryDS.RELATED_DATASET_VERSION));
+        QueryRelatedDatasetUtils.setRelatedDataset(queryDto, (RelatedResourceLinkItem) getItem(QueryDS.RELATED_DATASET_VERSION));
 
         setValue(QueryDS.MAINTAINER, queryDto.getMaintainer());
         // Status

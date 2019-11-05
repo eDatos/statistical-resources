@@ -311,5 +311,8 @@ public class QueryAsserts extends BaseAsserts {
         assertEquals(datasetLinkedToQuery.getSiemacMetadataStatisticalResource().getCode(), relatedDataset.getCode());
         assertEqualsInternationalString(datasetLinkedToQuery.getSiemacMetadataStatisticalResource().getTitle(), relatedDataset.getTitle());
 
+        assertEquals(datasetLinkedToQuery.getLifeCycleStatisticalResource().getLastVersion(), relatedDataset.getLastVersion());
+        assertEquals(datasetLinkedToQuery.getLifeCycleStatisticalResource().getVersionLogic(), relatedDataset.getVersionLogic());
+
     }
 }

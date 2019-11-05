@@ -12,11 +12,6 @@ Application StatisticalResourcesDto {
 			- @TypeRelatedResourceEnum type required;
 			
 			String statisticalOperationUrn;
-			// Boolean lastVersion;
-			// String versionLogic;
-		}
-		
-		DataTransferObject VersionableRelatedResourceDto extends @RelatedResourceDto {
 			Boolean lastVersion;
 			String versionLogic;
 		}

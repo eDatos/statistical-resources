@@ -2,15 +2,15 @@ package org.siemac.metamac.statistical.resources.web.client.query.utils;
 
 import static org.siemac.metamac.statistical.resources.web.client.StatisticalResourcesWeb.getConstants;
 
-import org.siemac.metamac.statistical.resources.core.dto.VersionableRelatedResourceDto;
+import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionDto;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourcesFormUtils;
 
 import com.smartgwt.client.widgets.form.fields.FormItem;
 
-public class QueryProductionDescriptionFormUtils { // TODO EDATOS-3047 rename this class! or not!
+public class QueryRelatedDatasetUtils {
 
-    private QueryProductionDescriptionFormUtils() {
+    private QueryRelatedDatasetUtils() {
         // NOTHING TO DO HERE!
     }
 
@@ -20,14 +20,14 @@ public class QueryProductionDescriptionFormUtils { // TODO EDATOS-3047 rename th
         }
     }
 
-    public static void setRelatedDataset(VersionableRelatedResourceDto versionableRelatedResourceDto, FormItem formItem) {
-        if (versionableRelatedResourceDto != null && versionableRelatedResourceDto.getLastVersion() != null) {
-            if (versionableRelatedResourceDto.getLastVersion()) {
+    public static void setRelatedDataset(RelatedResourceDto relatedResourceDto, FormItem formItem) {
+        if (relatedResourceDto != null && relatedResourceDto.getLastVersion() != null) {
+            if (relatedResourceDto.getLastVersion()) {
                 formItem.setTitle(getConstants().queryDataset());
-                StatisticalResourcesFormUtils.setRelatedResourceValue(formItem, versionableRelatedResourceDto);
+                StatisticalResourcesFormUtils.setRelatedResourceValue(formItem, relatedResourceDto);
             } else {
                 formItem.setTitle(getConstants().queryDatasetVersion());
-                StatisticalResourcesFormUtils.setVersionableRelatedResourceValue(formItem, versionableRelatedResourceDto);
+                StatisticalResourcesFormUtils.setVersionableRelatedResourceValue(formItem, relatedResourceDto);
             }
         } else {
             formItem.setTitle(getConstants().queryDataset());
