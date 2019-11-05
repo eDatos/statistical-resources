@@ -5,6 +5,8 @@ import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionBaseD
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.web.client.model.record.LifeCycleResourceRecord;
 import org.siemac.metamac.statistical.resources.web.client.query.model.ds.QueryDS;
+import org.siemac.metamac.web.common.client.utils.NavigationUtils;
+import org.siemac.metamac.web.common.shared.RelatedResourceBaseUtils;
 
 public class QueryRecord extends LifeCycleResourceRecord {
 
@@ -12,7 +14,9 @@ public class QueryRecord extends LifeCycleResourceRecord {
     }
 
     public void setRelatedDataset(RelatedResourceDto value) {
-        setRelatedResource(QueryDS.RELATED_DATASET_VERSION, value);
+        setAttribute(QueryDS.RELATED_DATASET_VERSION,
+                value.getLastVersion() ? RelatedResourceBaseUtils.getRelatedResourceName(value) : RelatedResourceBaseUtils.getRelatedResourceNameWithVersion(value, value.getVersionLogic()));
+        setAttribute(NavigationUtils.getDtoPropertyName(QueryDS.RELATED_DATASET_VERSION), value);
     }
 
     public void setStatus(String value) {

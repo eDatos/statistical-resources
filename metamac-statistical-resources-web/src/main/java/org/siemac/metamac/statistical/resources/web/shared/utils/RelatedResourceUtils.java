@@ -95,6 +95,10 @@ public class RelatedResourceUtils extends RelatedResourceBaseUtils {
     public static RelatedResourceDto getDatasetVersionBaseDtoAsRelatedResourceDto(DatasetVersionBaseDto datasetVersionBaseDto) {
         RelatedResourceDto relatedResourceDto = getNameableResourceBaseDtoAsRelatedResourceDto(datasetVersionBaseDto);
         relatedResourceDto.setType(TypeRelatedResourceEnum.DATASET_VERSION);
+        
+        relatedResourceDto.setLastVersion(datasetVersionBaseDto.getLastVersion());
+        relatedResourceDto.setVersionLogic(datasetVersionBaseDto.getVersionLogic());
+        
         return relatedResourceDto;
     }
 

@@ -124,6 +124,7 @@ public class BaseDo2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Base
         versionableStatisticalResourceDoToBaseDto(source, target);
 
         target.setProcStatus(source.getEffectiveProcStatus());
+        target.setLastVersion(BooleanUtils.isTrue(source.getLastVersion()));
         target.setCreationDate(dateDoToDto(source.getCreationDate()));
         target.setPublicationDate(dateDoToDto(source.getPublicationDate()));
         target.setCreationUser(source.getCreationUser());
@@ -228,6 +229,10 @@ public class BaseDo2DtoMapperImpl extends CommonDo2DtoMapperImpl implements Base
         target.setTitle(internationalStringDoToDto(source.getTitle()));
         target.setType(type);
         target.setStatisticalOperationUrn(source.getStatisticalOperation() != null ? source.getStatisticalOperation().getUrn() : null);
+
+        target.setVersionLogic(source.getVersionLogic());
+        target.setLastVersion(source.getLastVersion());
+
         return target;
     }
 

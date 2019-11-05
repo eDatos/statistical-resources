@@ -25,6 +25,11 @@ public class StatisticalResourcesFormUtils extends FormUtils {
     }
 
     @SuppressWarnings("unchecked")
+    public static void setVersionableRelatedResourceValue(FormItem item, RelatedResourceDto value) {
+        ((RelatedResourceBaseLinkItem<RelatedResourceDto>) item).setRelatedResourceWithVersion(value, value.getVersionLogic());
+    }
+
+    @SuppressWarnings("unchecked")
     public static void setRelatedResourcesValue(FormItem item, List<RelatedResourceDto> values) {
         ((RelatedResourceBaseListItem<RelatedResourceDto>) item).setRelatedResources(values);
     }

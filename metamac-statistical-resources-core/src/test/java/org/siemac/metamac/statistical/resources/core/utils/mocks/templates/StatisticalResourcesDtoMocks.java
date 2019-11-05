@@ -233,7 +233,7 @@ public class StatisticalResourcesDtoMocks extends MetamacMocks {
 
         mockSiemacMetadataStatisticalResource(datasetVersionDto, StatisticalResourceTypeEnum.DATASET);
 
-		datasetVersionDto.setKeepAllData(Boolean.TRUE);
+        datasetVersionDto.setKeepAllData(Boolean.TRUE);
         datasetVersionDto.setDataSourceType(DataSourceTypeEnum.FILE);
 
         return datasetVersionDto;
@@ -463,6 +463,10 @@ public class StatisticalResourcesDtoMocks extends MetamacMocks {
     public static RelatedResourceDto mockNotPersistedRelatedResourceDatasetVersionDto(DatasetVersion datasetVersion) {
         RelatedResourceDto resource = new RelatedResourceDto();
         populateNotPersistedRelatedResourceIdentifiable(resource, datasetVersion.getSiemacMetadataStatisticalResource(), TypeRelatedResourceEnum.DATASET_VERSION);
+
+        resource.setLastVersion(datasetVersion.getLifeCycleStatisticalResource().getLastVersion());
+        resource.setVersionLogic(datasetVersion.getLifeCycleStatisticalResource().getVersionLogic());
+
         return resource;
     }
 
@@ -475,6 +479,10 @@ public class StatisticalResourcesDtoMocks extends MetamacMocks {
     public static RelatedResourceDto mockPersistedRelatedResourceDatasetVersionDto(DatasetVersion datasetVersion) {
         RelatedResourceDto resource = new RelatedResourceDto();
         populatePersistedRelatedResourceNameable(resource, datasetVersion.getSiemacMetadataStatisticalResource(), TypeRelatedResourceEnum.DATASET_VERSION);
+
+        resource.setLastVersion(datasetVersion.getLifeCycleStatisticalResource().getLastVersion());
+        resource.setVersionLogic(datasetVersion.getLifeCycleStatisticalResource().getVersionLogic());
+
         return resource;
     }
 

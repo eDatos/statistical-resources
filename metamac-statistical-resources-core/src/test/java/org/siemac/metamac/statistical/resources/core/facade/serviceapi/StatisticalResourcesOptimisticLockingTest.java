@@ -202,7 +202,7 @@ public class StatisticalResourcesOptimisticLockingTest extends StatisticalResour
         assertEquals(Long.valueOf(0), queryVersionDtoSession01.getOptimisticLockingVersion());
 
         DatasetVersion datasetVersion06 = datasetVersionMockFactory.retrieveMock(DATASET_VERSION_06_FOR_QUERIES_NAME);
-        queryVersionDtoSession01.setRelatedDatasetVersion(StatisticalResourcesDtoMocks.mockPersistedRelatedResourceDatasetVersionDto(datasetVersion06));
+        queryVersionDtoSession01.setRelatedDatasetVersion(StatisticalResourcesDtoMocks.mockNotPersistedRelatedResourceDatasetVersionDto(datasetVersion06));
         // update selection because of dataset change
         queryVersionDtoSession01.getSelection().clear();
         queryVersionDtoSession01.getSelection().put("DIM_01", Arrays.asList(new CodeItemDto("CODE_01", "CODE_01")));

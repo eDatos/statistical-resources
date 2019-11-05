@@ -8,6 +8,7 @@ import org.siemac.metamac.core.common.dto.ExternalItemDto;
 import org.siemac.metamac.statistical.resources.core.dto.RelatedResourceDto;
 import org.siemac.metamac.statistical.resources.web.client.constants.StatisticalResourceWebConstants;
 import org.siemac.metamac.statistical.resources.web.client.query.model.ds.QueryDS;
+import org.siemac.metamac.statistical.resources.web.client.query.utils.QueryRelatedDatasetUtils;
 import org.siemac.metamac.statistical.resources.web.client.query.view.handlers.QueryListUiHandlers;
 import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
 import org.siemac.metamac.statistical.resources.web.client.widgets.LifeCycleResourceSearchSectionStack;
@@ -51,7 +52,7 @@ public class QueryVersionSearchSectionStack extends LifeCycleResourceSearchSecti
     protected void createAdvancedSearchForm() {
         super.createAdvancedSearchForm();
 
-        SearchRelatedResourceLinkItem datasetVersion = createSearchDatasetVersionItem(QueryDS.RELATED_DATASET_VERSION, getConstants().queryDatasetVersion());
+        SearchRelatedResourceLinkItem datasetVersion = createSearchDatasetVersionItem(QueryDS.RELATED_DATASET_VERSION, getConstants().queryDataset());
 
         SelectItem status = new SelectItem(QueryDS.STATUS, getConstants().queryStatus());
         status.setValueMap(CommonUtils.getQueryStatusHashMap());
@@ -128,7 +129,7 @@ public class QueryVersionSearchSectionStack extends LifeCycleResourceSearchSecti
                         RelatedResourceDto selectedResource = searchDatasetVesionWindow.getSelectedResource();
                         searchDatasetVesionWindow.markForDestroy();
                         // Set selected resource in form
-                        item.setRelatedResource(selectedResource);
+                        QueryRelatedDatasetUtils.setRelatedDataset(selectedResource, item);
                         item.validate();
                     }
                 });

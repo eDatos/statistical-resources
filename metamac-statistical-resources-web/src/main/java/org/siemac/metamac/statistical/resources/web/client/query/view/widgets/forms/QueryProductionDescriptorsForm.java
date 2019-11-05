@@ -9,9 +9,9 @@ import org.siemac.metamac.statistical.resources.core.constants.StatisticalResour
 import org.siemac.metamac.statistical.resources.core.dto.query.QueryVersionDto;
 import org.siemac.metamac.statistical.resources.core.enume.query.domain.QueryTypeEnum;
 import org.siemac.metamac.statistical.resources.web.client.query.model.ds.QueryDS;
+import org.siemac.metamac.statistical.resources.web.client.query.utils.QueryRelatedDatasetUtils;
 import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.NavigationEnabledDynamicForm;
-import org.siemac.metamac.statistical.resources.web.client.widgets.forms.StatisticalResourcesFormUtils;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.fields.CodeItemListItem;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.fields.RelatedResourceLinkItem;
 import org.siemac.metamac.web.common.client.view.handlers.BaseUiHandlers;
@@ -38,7 +38,7 @@ public class QueryProductionDescriptorsForm extends NavigationEnabledDynamicForm
         ExternalItemLinkItem maintainer = new ExternalItemLinkItem(QueryDS.MAINTAINER, getConstants().siemacMetadataStatisticalResourceMaintainer());
         fields.add(maintainer);
 
-        RelatedResourceLinkItem datasetVersion = new RelatedResourceLinkItem(QueryDS.RELATED_DATASET_VERSION, getConstants().queryDatasetVersion(), getCustomLinkItemNavigationClickHandler());
+        RelatedResourceLinkItem datasetVersion = new RelatedResourceLinkItem(QueryDS.RELATED_DATASET_VERSION, getConstants().queryDataset(), getCustomLinkItemNavigationClickHandler());
         fields.add(datasetVersion);
 
         ViewTextItem status = new ViewTextItem(QueryDS.STATUS, getConstants().queryStatus());
@@ -84,7 +84,8 @@ public class QueryProductionDescriptorsForm extends NavigationEnabledDynamicForm
             }
         }
 
-        StatisticalResourcesFormUtils.setRelatedResourceValue(getItem(QueryDS.RELATED_DATASET_VERSION), queryDto.getRelatedDatasetVersion());
+        QueryRelatedDatasetUtils.setRelatedDataset(queryDto, (RelatedResourceLinkItem) getItem(QueryDS.RELATED_DATASET_VERSION));
+
         setValue(QueryDS.MAINTAINER, queryDto.getMaintainer());
         // Status
         setValue(QueryDS.STATUS, CommonUtils.getQueryStatusName(queryDto));
