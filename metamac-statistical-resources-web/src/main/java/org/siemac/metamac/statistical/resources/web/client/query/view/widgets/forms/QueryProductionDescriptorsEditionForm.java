@@ -27,7 +27,7 @@ import org.siemac.metamac.statistical.resources.web.client.widgets.forms.Statist
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.fields.CodeItemListItem;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.fields.SearchRelatedResourceLinkItem;
 import org.siemac.metamac.statistical.resources.web.client.widgets.windows.search.SearchMultipleCodeItemWindow;
-import org.siemac.metamac.statistical.resources.web.client.widgets.windows.search.SearchSingleDatasetVersionVersionableRelatedResourcePaginatedWindow2;
+import org.siemac.metamac.statistical.resources.web.client.widgets.windows.search.SearchSingleDatasetVersionVersionableResourcePaginatedWindow;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.DatasetVersionWebCriteria;
 import org.siemac.metamac.web.common.client.view.handlers.BaseUiHandlers;
 import org.siemac.metamac.web.common.client.widgets.actions.search.SearchAction;
@@ -53,18 +53,18 @@ import com.smartgwt.client.widgets.form.validator.CustomValidator;
 
 public class QueryProductionDescriptorsEditionForm extends NavigationEnabledDynamicForm {
 
-    private QueryUiHandlers                                                     uiHandlers;
+    private QueryUiHandlers                                              uiHandlers;
 
-    private SearchSingleDatasetVersionVersionableRelatedResourcePaginatedWindow2 searchDatasetWindow;
+    private SearchSingleDatasetVersionVersionableResourcePaginatedWindow searchDatasetWindow;
 
-    private Map<String, SearchMultipleCodeItemWindow>                           dimensionCodeSelectionWindow;
-    private Map<String, CodeItemListItem>                                       selectionFields;
+    private Map<String, SearchMultipleCodeItemWindow>                    dimensionCodeSelectionWindow;
+    private Map<String, CodeItemListItem>                                selectionFields;
 
-    protected SearchSrmItemLinkItemWithSchemeFilterItem                         maintainerItem;
+    protected SearchSrmItemLinkItemWithSchemeFilterItem                  maintainerItem;
 
-    private Map<String, List<CodeItemDto>>                                      dtoSelection;
+    private Map<String, List<CodeItemDto>>                               dtoSelection;
 
-    private QueryVersionDto                                                     queryDto;
+    private QueryVersionDto                                              queryDto;
 
     public QueryProductionDescriptorsEditionForm() {
         super(getConstants().formProductionDescriptors());
@@ -196,7 +196,7 @@ public class QueryProductionDescriptorsEditionForm extends NavigationEnabledDyna
             @Override
             public void onFormItemClick(FormItemIconClickEvent event) {
 
-                searchDatasetWindow = new SearchSingleDatasetVersionVersionableRelatedResourcePaginatedWindow2(getConstants().resourceSelection(), StatisticalResourceWebConstants.FORM_LIST_MAX_RESULTS,
+                searchDatasetWindow = new SearchSingleDatasetVersionVersionableResourcePaginatedWindow(getConstants().resourceSelection(), StatisticalResourceWebConstants.FORM_LIST_MAX_RESULTS,
                         new SearchPaginatedAction<DatasetVersionWebCriteria>() {
 
                             @Override

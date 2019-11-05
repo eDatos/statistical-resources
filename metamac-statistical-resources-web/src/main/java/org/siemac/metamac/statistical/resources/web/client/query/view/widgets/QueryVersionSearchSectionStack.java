@@ -14,7 +14,7 @@ import org.siemac.metamac.statistical.resources.web.client.query.view.handlers.Q
 import org.siemac.metamac.statistical.resources.web.client.utils.CommonUtils;
 import org.siemac.metamac.statistical.resources.web.client.widgets.LifeCycleResourceSearchSectionStack;
 import org.siemac.metamac.statistical.resources.web.client.widgets.forms.fields.SearchRelatedResourceLinkItem;
-import org.siemac.metamac.statistical.resources.web.client.widgets.windows.search.SearchSingleDatasetVersionVersionableRelatedResourcePaginatedWindow2;
+import org.siemac.metamac.statistical.resources.web.client.widgets.windows.search.SearchSingleDatasetVersionVersionableResourcePaginatedWindow;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.DatasetVersionWebCriteria;
 import org.siemac.metamac.statistical.resources.web.shared.criteria.QueryVersionWebCriteria;
 import org.siemac.metamac.statistical.resources.web.shared.dataset.GetDatasetVersionsResult;
@@ -31,9 +31,9 @@ import com.smartgwt.client.widgets.form.fields.events.FormItemIconClickEvent;
 
 public class QueryVersionSearchSectionStack extends LifeCycleResourceSearchSectionStack {
 
-    private SearchSingleDatasetVersionVersionableRelatedResourcePaginatedWindow2 searchDatasetVesionWindow;
+    private SearchSingleDatasetVersionVersionableResourcePaginatedWindow searchDatasetVesionWindow;
 
-    private QueryListUiHandlers                                                 uiHandlers;
+    private QueryListUiHandlers                                          uiHandlers;
 
     public QueryVersionSearchSectionStack() {
     }
@@ -111,8 +111,8 @@ public class QueryVersionSearchSectionStack extends LifeCycleResourceSearchSecti
             @Override
             public void onFormItemClick(FormItemIconClickEvent event) {
 
-                searchDatasetVesionWindow = new SearchSingleDatasetVersionVersionableRelatedResourcePaginatedWindow2(getConstants().resourceSelection(),
-                        StatisticalResourceWebConstants.FORM_LIST_MAX_RESULTS, new SearchPaginatedAction<DatasetVersionWebCriteria>() {
+                searchDatasetVesionWindow = new SearchSingleDatasetVersionVersionableResourcePaginatedWindow(getConstants().resourceSelection(), StatisticalResourceWebConstants.FORM_LIST_MAX_RESULTS,
+                        new SearchPaginatedAction<DatasetVersionWebCriteria>() {
 
                             @Override
                             public void retrieveResultSet(int firstResult, int maxResults, DatasetVersionWebCriteria criteria) {
