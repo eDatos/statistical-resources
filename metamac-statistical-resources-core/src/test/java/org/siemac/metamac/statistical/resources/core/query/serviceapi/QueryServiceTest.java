@@ -13,6 +13,7 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_03_FOR_DATASET_03_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_04_FOR_DATASET_03_AND_LAST_VERSION_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_06_FOR_QUERIES_NAME;
+import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_121_ADD_TEMPORAL_COVERAGE_DATASET_VERSION_48;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_22_V1_PUBLISHED_FOR_DATASET_05_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_48_WITH_TEMPORAL_COVERAGE_FILLED_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_86_WITH_TEMPORAL_DIMENSION_NAME;
@@ -410,9 +411,25 @@ public class QueryServiceTest extends StatisticalResourcesBaseTest implements Qu
 
         QueryVersion expected = notPersistedDoMocks.mockQueryVersionWithDatasetVersion(datasetVersionMockFactory.retrieveMock(DATASET_VERSION_48_WITH_TEMPORAL_COVERAGE_FILLED_NAME), true);
         expected.setType(QueryTypeEnum.AUTOINCREMENTAL);
-        expected.setLatestTemporalCodeInCreation("2012");
+
         QueryVersion actual = queryService.createQueryVersion(getServiceContextWithoutPrincipal(), expected, statisticalOperation);
-        assertEqualsQueryVersion(expected, actual);
+        assertEquals("2012", actual.getLatestTemporalCodeInCreation());
+    }
+
+    @Test
+    @MetamacMock({DATASET_VERSION_48_WITH_TEMPORAL_COVERAGE_FILLED_NAME, DATASET_VERSION_121_ADD_TEMPORAL_COVERAGE_DATASET_VERSION_48})
+    public void testUpdateQueryVersionIncremental() throws Exception {
+        ExternalItem statisticalOperation = StatisticalResourcesNotPersistedDoMocks.mockStatisticalOperationExternalItem();
+
+        QueryVersion expected = notPersistedDoMocks.mockQueryVersionWithDatasetVersion(datasetVersionMockFactory.retrieveMock(DATASET_VERSION_48_WITH_TEMPORAL_COVERAGE_FILLED_NAME), true);
+        expected.setType(QueryTypeEnum.AUTOINCREMENTAL);
+
+        QueryVersion actual = queryService.createQueryVersion(getServiceContextWithoutPrincipal(), expected, statisticalOperation);
+        assertEquals("2012", actual.getLatestTemporalCodeInCreation());
+
+        actual.setFixedDatasetVersion(datasetVersionMockFactory.retrieveMock(DATASET_VERSION_121_ADD_TEMPORAL_COVERAGE_DATASET_VERSION_48));
+        QueryVersion updated = queryService.updateQueryVersion(getServiceContextWithoutPrincipal(), actual);
+        assertEquals("2019", updated.getLatestTemporalCodeInCreation());
     }
 
     @Test
