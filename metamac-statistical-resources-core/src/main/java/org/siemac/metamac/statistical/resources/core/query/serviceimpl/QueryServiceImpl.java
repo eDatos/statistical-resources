@@ -311,7 +311,7 @@ public class QueryServiceImpl extends QueryServiceImplBase {
             List<String> timeCodes = new ArrayList<String>();
             StatisticalResourcesCollectionUtils.temporalCodesToTimeCodes(temporalCodes, timeCodes);
             List<String> sortedCodes = SdmxTimeUtils.sortTimeList(timeCodes);
-            return sortedCodes.get(0);
+            return sortedCodes.get(sortedCodes.size() - 1);
         }
         return null;
     }
