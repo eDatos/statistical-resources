@@ -17,6 +17,8 @@ public class QueryRelatedDatasetUtils {
     public static void setRelatedDataset(QueryVersionDto queryVersionDto, FormItem formItem) {
         if (queryVersionDto != null && queryVersionDto.getRelatedDatasetVersion() != null) {
             setRelatedDataset(queryVersionDto.getRelatedDatasetVersion(), formItem);
+        } else {
+            StatisticalResourcesFormUtils.setRelatedResourceValue(formItem, null);
         }
     }
 
