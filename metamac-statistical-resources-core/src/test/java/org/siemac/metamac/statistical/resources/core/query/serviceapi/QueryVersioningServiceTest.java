@@ -228,7 +228,6 @@ public class QueryVersioningServiceTest extends StatisticalResourcesBaseTest {
 
         // Inherited
         assertEquals(previous.getLatestDataNumber(), next.getLatestDataNumber());
-        assertEquals(previous.getLatestTemporalCodeInCreation(), next.getLatestTemporalCodeInCreation());
         if (previous.getFixedDatasetVersion() != null) {
             assertEqualsDatasetVersion(previous.getFixedDatasetVersion(), next.getFixedDatasetVersion());
         } else if (previous.getDataset() != null) {

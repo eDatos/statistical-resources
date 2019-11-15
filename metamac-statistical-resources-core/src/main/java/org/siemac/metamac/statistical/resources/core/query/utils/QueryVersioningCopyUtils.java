@@ -1,5 +1,7 @@
 package org.siemac.metamac.statistical.resources.core.query.utils;
 
+import static org.siemac.metamac.statistical.resources.core.base.utils.BaseVersioningCopyUtils.copyLifeCycleStatisticalResource;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,8 +9,6 @@ import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatis
 import org.siemac.metamac.statistical.resources.core.query.domain.CodeItem;
 import org.siemac.metamac.statistical.resources.core.query.domain.QuerySelectionItem;
 import org.siemac.metamac.statistical.resources.core.query.domain.QueryVersion;
-
-import static org.siemac.metamac.statistical.resources.core.base.utils.BaseVersioningCopyUtils.copyLifeCycleStatisticalResource;
 
 public class QueryVersioningCopyUtils {
 
@@ -37,7 +37,6 @@ public class QueryVersioningCopyUtils {
         target.setType(source.getType());
 
         target.setLatestDataNumber(source.getLatestDataNumber());
-        target.setLatestTemporalCodeInCreation(source.getLatestTemporalCodeInCreation());
 
         target.getSelection().clear();
         target.getSelection().addAll(copyListQuerySelectionItem(source.getSelection(), target));

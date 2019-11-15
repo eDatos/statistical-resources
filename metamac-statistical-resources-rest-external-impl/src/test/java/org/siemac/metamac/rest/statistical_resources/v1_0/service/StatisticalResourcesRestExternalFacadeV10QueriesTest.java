@@ -299,10 +299,11 @@ public class StatisticalResourcesRestExternalFacadeV10QueriesTest extends Statis
             assertTrue(dimension.getDimensionValues() instanceof NonEnumeratedDimensionValues);
             {
                 NonEnumeratedDimensionValues dimensionValues = (NonEnumeratedDimensionValues) dimension.getDimensionValues();
-                assertEquals(3, dimensionValues.getValues().size());
+                assertEquals(4, dimensionValues.getValues().size());
                 assertEquals("2014", dimensionValues.getValues().get(0).getId());
                 assertEquals("2013", dimensionValues.getValues().get(1).getId());
-                assertEquals("2011", dimensionValues.getValues().get(2).getId());
+                assertEquals("2012", dimensionValues.getValues().get(2).getId());
+                assertEquals("2011", dimensionValues.getValues().get(3).getId());
 
             }
         }
@@ -316,7 +317,7 @@ public class StatisticalResourcesRestExternalFacadeV10QueriesTest extends Statis
         }
 
         // Data
-        assertEquals(18, StringUtils.splitByWholeSeparatorPreserveAllTokens(query.getData().getObservations(), StatisticalResourcesRestExternalConstants.DATA_SEPARATOR).length);
+        assertEquals(24, StringUtils.splitByWholeSeparatorPreserveAllTokens(query.getData().getObservations(), StatisticalResourcesRestExternalConstants.DATA_SEPARATOR).length);
     }
 
     @Test

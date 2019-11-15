@@ -126,7 +126,6 @@ Application QueriesStatisticalResources {
 			- Bag<@QuerySelectionItem> selection inverse <-> queryVersion cascade="all-delete-orphan";
 			- @QueryTypeEnum type not nullable;
 			Integer latestDataNumber nullable;
-			String latestTemporalCodeInCreation nullable databaseColumn="LATEST_TEMPORAL_CODE_CREATION";
 			
 			Repository QueryVersionRepository {
 				save;
