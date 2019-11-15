@@ -13,6 +13,7 @@ import javax.ws.rs.core.Response.Status;
 import org.apache.commons.collections.CollectionUtils;
 import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.core.common.util.SdmxTimeUtils;
 import org.siemac.metamac.rest.common.v1_0.domain.ChildLinks;
 import org.siemac.metamac.rest.common.v1_0.domain.Resource;
 import org.siemac.metamac.rest.common.v1_0.domain.ResourceLink;
@@ -166,8 +167,8 @@ public class QueriesDo2RestMapperV10Impl implements QueriesDo2RestMapperV10 {
         Map<String, List<String>> effectiveDimensionValuesToDataByDimension = calculateEffectiveDimensionValuesToQuery(source, datasetVersion);
 
         target.setRelatedDsd(commonDo2RestMapper.toDataStructureDefinition(datasetVersion.getRelatedDsd(), dsdProcessorResult.getDataStructure(), selectedLanguages));
-        target.setDimensions(
-                commonDo2RestMapper.toDimensions(datasetVersion.getSiemacMetadataStatisticalResource().getUrn(), dsdProcessorResult, effectiveDimensionValuesToDataByDimension, selectedLanguages, null));
+        target.setDimensions(commonDo2RestMapper.toDimensions(datasetVersion.getSiemacMetadataStatisticalResource().getUrn(), dsdProcessorResult, effectiveDimensionValuesToDataByDimension,
+                selectedLanguages, null));
         target.setAttributes(commonDo2RestMapper.toAttributes(datasetVersion.getSiemacMetadataStatisticalResource().getUrn(), dsdProcessorResult, selectedLanguages));
 
         Resource relatedDataset = null;
@@ -323,13 +324,17 @@ public class QueriesDo2RestMapperV10Impl implements QueriesDo2RestMapperV10 {
             if (isTemporalDimension(dimensionId)) {
                 List<String> effectiveDimensionValues = new ArrayList<String>();
                 List<String> temporalCoverageCodes = commonDo2RestMapper.temporalCoverageToString(datasetVersion.getTemporalCoverage());
-                int indexLatestTemporalCodeInCreation = temporalCoverageCodes.indexOf(source.getLatestTemporalCodeInCreation());
+
+                List<String> sortedSelectionCodes = SdmxTimeUtils.sortTimeList(selectionCodes);
+                String latestSelectionCode = sortedSelectionCodes.get(sortedSelectionCodes.size() - 1);
+                int indexLatestSelectionCode = temporalCoverageCodes.indexOf(latestSelectionCode);
+
                 effectiveDimensionValues.addAll(selectionCodes);
-                if (indexLatestTemporalCodeInCreation != 0) {
+                if (indexLatestSelectionCode != 0) {
                     // add codes added after query creation
-                    List<TemporalCode> temporalCodesAddedAfterQueryCreation = datasetVersion.getTemporalCoverage().subList(0, indexLatestTemporalCodeInCreation);
-                    List<String> temporalCodesAddedAfterQueryCreationString = commonDo2RestMapper.temporalCoverageToString(temporalCodesAddedAfterQueryCreation);
-                    for (String code : temporalCodesAddedAfterQueryCreationString) {
+                    List<TemporalCode> temporalCodesAddedAfterLatestSelectedCode = datasetVersion.getTemporalCoverage().subList(0, indexLatestSelectionCode);
+                    List<String> temporalCodesAddedAfterLatestSelectedCodeString = commonDo2RestMapper.temporalCoverageToString(temporalCodesAddedAfterLatestSelectedCode);
+                    for (String code : temporalCodesAddedAfterLatestSelectedCodeString) {
                         if (!effectiveDimensionValues.contains(code)) {
                             effectiveDimensionValues.add(code);
                         }

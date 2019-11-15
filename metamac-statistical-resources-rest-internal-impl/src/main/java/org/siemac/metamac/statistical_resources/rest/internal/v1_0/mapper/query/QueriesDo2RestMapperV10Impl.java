@@ -13,6 +13,7 @@ import javax.ws.rs.core.Response.Status;
 import org.apache.commons.collections.CollectionUtils;
 import org.fornax.cartridges.sculptor.framework.domain.PagedResult;
 import org.siemac.metamac.core.common.exception.MetamacException;
+import org.siemac.metamac.core.common.util.SdmxTimeUtils;
 import org.siemac.metamac.rest.common.v1_0.domain.ChildLinks;
 import org.siemac.metamac.rest.common.v1_0.domain.ResourceLink;
 import org.siemac.metamac.rest.exception.RestException;
@@ -358,16 +359,22 @@ public class QueriesDo2RestMapperV10Impl implements QueriesDo2RestMapperV10 {
             if (isTemporalDimension(dimensionId)) {
                 List<String> effectiveDimensionValues = new ArrayList<String>();
                 List<String> temporalCoverageCodes = commonDo2RestMapper.temporalCoverageToString(datasetVersion.getTemporalCoverage());
-                int indexLatestTemporalCodeInCreation = temporalCoverageCodes.indexOf(source.getLatestTemporalCodeInCreation());
-                if (indexLatestTemporalCodeInCreation != 0) {
+
+                List<String> sortedSelectionCodes = SdmxTimeUtils.sortTimeList(selectionCodes);
+                String latestSelectionCode = sortedSelectionCodes.get(sortedSelectionCodes.size() - 1);
+                int indexLatestSelectionCode = temporalCoverageCodes.indexOf(latestSelectionCode);
+
+                effectiveDimensionValues.addAll(selectionCodes);
+                if (indexLatestSelectionCode != 0) {
                     // add codes added after query creation
-                    List<TemporalCode> temporalCodesAddedAfterQueryCreation = datasetVersion.getTemporalCoverage().subList(0, indexLatestTemporalCodeInCreation);
-                    List<String> temporalCodesAddedAfterQueryCreationString = commonDo2RestMapper.temporalCoverageToString(temporalCodesAddedAfterQueryCreation);
-                    for (String code : temporalCodesAddedAfterQueryCreationString) {
-                        effectiveDimensionValues.add(code);
+                    List<TemporalCode> temporalCodesAddedAfterLatestSelectedCode = datasetVersion.getTemporalCoverage().subList(0, indexLatestSelectionCode);
+                    List<String> temporalCodesAddedAfterLatestSelectedCodeString = commonDo2RestMapper.temporalCoverageToString(temporalCodesAddedAfterLatestSelectedCode);
+                    for (String code : temporalCodesAddedAfterLatestSelectedCodeString) {
+                        if (!effectiveDimensionValues.contains(code)) {
+                            effectiveDimensionValues.add(code);
+                        }
                     }
                 }
-                effectiveDimensionValues.addAll(selectionCodes);
                 return effectiveDimensionValues;
             } else {
                 // return exactly
