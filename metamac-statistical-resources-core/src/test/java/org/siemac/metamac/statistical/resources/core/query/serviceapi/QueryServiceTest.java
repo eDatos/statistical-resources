@@ -13,9 +13,7 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_03_FOR_DATASET_03_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_04_FOR_DATASET_03_AND_LAST_VERSION_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_06_FOR_QUERIES_NAME;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_121_ADD_TEMPORAL_COVERAGE_DATASET_VERSION_48;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_22_V1_PUBLISHED_FOR_DATASET_05_NAME;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_48_WITH_TEMPORAL_COVERAGE_FILLED_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_86_WITH_TEMPORAL_DIMENSION_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.DatasetVersionMockFactory.DATASET_VERSION_87_WITH_NO_TEMPORAL_DIMENSION_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.PublicationVersionMockFactory.PUBLICATION_VERSION_61_DRAFT_WITH_PREVIOUS_VERSION__LINKED_TO_QUERY_10_NAME;
@@ -47,7 +45,6 @@ import static org.siemac.metamac.statistical.resources.core.utils.mocks.factorie
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_30_CHECK_COMPAT_DATASET_86_LESS_DIMENSIONS_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_31_CHECK_COMPAT_DATASET_86_MORE_DIMENSIONS_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_32_CHECK_COMPAT_DATASET_86_MORE_CODES_NAME;
-import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_33_CHECK_COMPAT_DATASET_86_INVALID_LATEST_TEMPORAL_CODE_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_34_CHECK_COMPAT_DATASET_87_INVALID_QUERY_TYPE_AUTOINC_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_35_CHECK_COMPAT_DATASET_87_INVALID_QUERY_TYPE_LATEST_DATA_NAME;
 import static org.siemac.metamac.statistical.resources.core.utils.mocks.factories.QueryVersionMockFactory.QUERY_VERSION_57_REPLACES_QUERY_58_NAME;
@@ -402,34 +399,6 @@ public class QueryServiceTest extends StatisticalResourcesBaseTest implements Qu
         QueryVersion expected = notPersistedDoMocks.mockQueryVersionWithDatasetVersion(datasetVersionMockFactory.retrieveMock(DATASET_VERSION_06_FOR_QUERIES_NAME), true);
         QueryVersion actual = queryService.createQueryVersion(getServiceContextWithoutPrincipal(), expected, statisticalOperation);
         assertEqualsQueryVersion(expected, actual);
-    }
-
-    @Test
-    @MetamacMock(DATASET_VERSION_48_WITH_TEMPORAL_COVERAGE_FILLED_NAME)
-    public void testCreateQueryVersionIncremental() throws Exception {
-        ExternalItem statisticalOperation = StatisticalResourcesNotPersistedDoMocks.mockStatisticalOperationExternalItem();
-
-        QueryVersion expected = notPersistedDoMocks.mockQueryVersionWithDatasetVersion(datasetVersionMockFactory.retrieveMock(DATASET_VERSION_48_WITH_TEMPORAL_COVERAGE_FILLED_NAME), true);
-        expected.setType(QueryTypeEnum.AUTOINCREMENTAL);
-
-        QueryVersion actual = queryService.createQueryVersion(getServiceContextWithoutPrincipal(), expected, statisticalOperation);
-        assertEquals("2012", actual.getLatestTemporalCodeInCreation());
-    }
-
-    @Test
-    @MetamacMock({DATASET_VERSION_48_WITH_TEMPORAL_COVERAGE_FILLED_NAME, DATASET_VERSION_121_ADD_TEMPORAL_COVERAGE_DATASET_VERSION_48})
-    public void testUpdateQueryVersionIncremental() throws Exception {
-        ExternalItem statisticalOperation = StatisticalResourcesNotPersistedDoMocks.mockStatisticalOperationExternalItem();
-
-        QueryVersion expected = notPersistedDoMocks.mockQueryVersionWithDatasetVersion(datasetVersionMockFactory.retrieveMock(DATASET_VERSION_48_WITH_TEMPORAL_COVERAGE_FILLED_NAME), true);
-        expected.setType(QueryTypeEnum.AUTOINCREMENTAL);
-
-        QueryVersion actual = queryService.createQueryVersion(getServiceContextWithoutPrincipal(), expected, statisticalOperation);
-        assertEquals("2012", actual.getLatestTemporalCodeInCreation());
-
-        actual.setFixedDatasetVersion(datasetVersionMockFactory.retrieveMock(DATASET_VERSION_121_ADD_TEMPORAL_COVERAGE_DATASET_VERSION_48));
-        QueryVersion updated = queryService.updateQueryVersion(getServiceContextWithoutPrincipal(), actual);
-        assertEquals("2019", updated.getLatestTemporalCodeInCreation());
     }
 
     @Test
@@ -1182,9 +1151,6 @@ public class QueryServiceTest extends StatisticalResourcesBaseTest implements Qu
 
         QueryVersion queryMoreCodes = queryVersionMockFactory.retrieveMock(QUERY_VERSION_32_CHECK_COMPAT_DATASET_86_MORE_CODES_NAME);
         assertFalse(queryService.checkQueryCompatibility(getServiceContextAdministrador(), queryMoreCodes, dataset));
-
-        QueryVersion queryInvalidLatestCode = queryVersionMockFactory.retrieveMock(QUERY_VERSION_33_CHECK_COMPAT_DATASET_86_INVALID_LATEST_TEMPORAL_CODE_NAME);
-        assertFalse(queryService.checkQueryCompatibility(getServiceContextAdministrador(), queryInvalidLatestCode, dataset));
 
     }
 

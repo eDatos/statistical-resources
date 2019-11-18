@@ -54,7 +54,6 @@ public class QueryAsserts extends BaseAsserts {
         DatasetsAsserts.assertEqualsDataset(expected.getDataset(), actual.getDataset());
         assertEquals(expected.getType(), actual.getType());
         assertEquals(expected.getLatestDataNumber(), actual.getLatestDataNumber());
-        assertEquals(expected.getLatestTemporalCodeInCreation(), actual.getLatestTemporalCodeInCreation());
         assertEqualsSelection(expected.getSelection(), actual.getSelection());
 
         if (!queryChecked) {

@@ -201,7 +201,6 @@ public class RestDoMocks {
         target.addSelection(mockQuerySelectionItem("measure01", Arrays.asList("measure01-conceptScheme01-concept01", "measure01-conceptScheme01-concept02", "measure01-conceptScheme01-concept05")));
         target.addSelection(mockQuerySelectionItem("dim01", Arrays.asList("dim01-codelist01-code01")));
         target.addSelection(mockQuerySelectionItem("TIME_PERIOD", Arrays.asList("2011", "2013")));
-        target.setLatestTemporalCodeInCreation(null);
         target.setLatestDataNumber(null);
     }
     private void mockQueryVersionFixedWithoutAllParents(QueryVersion target) {
@@ -211,7 +210,6 @@ public class RestDoMocks {
         target.addSelection(mockQuerySelectionItem("measure01", Arrays.asList("measure01-conceptScheme01-concept01", "measure01-conceptScheme01-concept02", "measure01-conceptScheme01-concept05")));
         target.addSelection(mockQuerySelectionItem("dim01", Arrays.asList("dim01-codelist01-code01")));
         target.addSelection(mockQuerySelectionItem("TIME_PERIOD", Arrays.asList("2011", "2013")));
-        target.setLatestTemporalCodeInCreation(null);
         target.setLatestDataNumber(null);
     }
     private void mockQueryVersionAutoincremental(QueryVersion target) {
@@ -220,7 +218,6 @@ public class RestDoMocks {
         target.addSelection(mockQuerySelectionItem("measure01", Arrays.asList("measure01-conceptScheme01-concept01", "measure01-conceptScheme01-concept02", "measure01-conceptScheme01-concept05")));
         target.addSelection(mockQuerySelectionItem("dim01", Arrays.asList("dim01-codelist01-code01")));
         target.addSelection(mockQuerySelectionItem("TIME_PERIOD", Arrays.asList("2011")));
-        target.setLatestTemporalCodeInCreation("2012");
         target.setLatestDataNumber(null);
     }
     private void mockQueryVersionLatestData(QueryVersion target) {
@@ -229,7 +226,6 @@ public class RestDoMocks {
         target.addSelection(mockQuerySelectionItem("measure01", Arrays.asList("measure01-conceptScheme01-concept01", "measure01-conceptScheme01-concept02", "measure01-conceptScheme01-concept05")));
         target.addSelection(mockQuerySelectionItem("dim01", Arrays.asList("dim01-codelist01-code01")));
         target.addSelection(mockQuerySelectionItem("TIME_PERIOD", null));
-        target.setLatestTemporalCodeInCreation(null);
         target.setLatestDataNumber(2);
     }
 
