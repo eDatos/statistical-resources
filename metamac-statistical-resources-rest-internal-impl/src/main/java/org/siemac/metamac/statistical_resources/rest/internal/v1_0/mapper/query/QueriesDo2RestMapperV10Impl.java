@@ -361,14 +361,16 @@ public class QueriesDo2RestMapperV10Impl implements QueriesDo2RestMapperV10 {
                 List<String> temporalCoverageCodes = commonDo2RestMapper.temporalCoverageToString(datasetVersion.getTemporalCoverage());
 
                 List<String> sortedSelectionCodes = SdmxTimeUtils.sortTimeList(selectionCodes);
+                List<String> sortedTemporalCoverageCodes = SdmxTimeUtils.sortTimeList(temporalCoverageCodes);
+
                 String latestSelectionCode = sortedSelectionCodes.get(sortedSelectionCodes.size() - 1);
-                int indexLatestSelectionCode = temporalCoverageCodes.indexOf(latestSelectionCode);
+                int indexLatestSelectionCode = sortedTemporalCoverageCodes.indexOf(latestSelectionCode);
 
                 effectiveDimensionValues.addAll(selectionCodes);
-                if (indexLatestSelectionCode != 0) {
-                    // add codes added after query creation
-                    List<TemporalCode> temporalCodesAddedAfterLatestSelectedCode = datasetVersion.getTemporalCoverage().subList(0, indexLatestSelectionCode);
-                    List<String> temporalCodesAddedAfterLatestSelectedCodeString = commonDo2RestMapper.temporalCoverageToString(temporalCodesAddedAfterLatestSelectedCode);
+                if (indexLatestSelectionCode >= 0) {
+                    // add codes added after lastest selected code
+                    List<String> temporalCodesAddedAfterLatestSelectedCodeString = sortedTemporalCoverageCodes.subList(indexLatestSelectionCode, sortedTemporalCoverageCodes.size());
+
                     for (String code : temporalCodesAddedAfterLatestSelectedCodeString) {
                         if (!effectiveDimensionValues.contains(code)) {
                             effectiveDimensionValues.add(code);
