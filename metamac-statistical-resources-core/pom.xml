@@ -389,6 +389,122 @@
     
     </dependencies>
 
+    <profiles>
+        <profile>
+            <id>oracle</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <version>1.6</version>
+                        <executions>
+                            <execution>
+                                <id>clean-sculptor-conf</id>
+                                <phase>initialize</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                                <configuration>
+                                    <target>
+                                        <delete file="src/main/resources/generator/sculptor-generator.properties" />
+                                        <delete file="src/main/resources/templates/db/CustomDDL.xpt" />
+                                        <copy file="src/main/resources/generator/sculptor-generator.oracle.properties" tofile="src/main/resources/generator/sculptor-generator.properties" verbose="true" />
+                                    </target>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+		                <groupId>org.apache.maven.plugins</groupId>
+		                <artifactId>maven-antrun-plugin</artifactId>
+		                <version>1.6</version>
+		                <executions>
+		                    <execution>
+		                        <phase>generate-sources</phase>
+		                        <goals>
+		                            <goal>run</goal>
+		                        </goals>
+		                        <configuration>
+		                            <target>
+		                                <copy toDir="${metamac-statistical-resources.etcDir}/db/statistical-resources/oracle/01-create">
+		                                    <fileset dir="${basedir}/src/generated/resources/dbschema/01-create" />
+		                                </copy>
+		                                <move file="${metamac-statistical-resources.etcDir}/db/statistical-resources/oracle/01-create/01-StatisticalResources-create.sql" tofile="${metamac-statistical-resources.etcDir}/db/statistical-resources/oracle/01-create/01-statistical-resources-schema-create.sql" />
+		                                <copy toDir="${metamac-statistical-resources.etcDir}/db/statistical-resources/oracle/02-drop">
+		                                    <fileset dir="${basedir}/src/generated/resources/dbschema/02-drop" />
+		                                </copy>
+		                                <move file="${metamac-statistical-resources.etcDir}/db/statistical-resources/oracle/02-drop/01-StatisticalResources-drop.sql" tofile="${metamac-statistical-resources.etcDir}/db/statistical-resources/oracle/02-drop/01-statistical-resources-schema-drop.sql" />
+		                            </target>
+		                        </configuration>
+		                    </execution>
+		                </executions>
+		            </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+			<id>postgresql</id>
+	        <activation>
+	            <activeByDefault>false</activeByDefault>
+	        </activation> 
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-antrun-plugin</artifactId>
+						<version>1.6</version>
+						<executions>
+							<execution>
+								<id>clean-sculptor-conf</id>
+								<phase>initialize</phase>
+								<goals>
+									<goal>run</goal>
+								</goals>
+								<configuration>
+									<target>
+										<delete file="src/main/resources/generator/sculptor-generator.properties" />
+										<delete file="src/main/resources/generator/CustomDDL.xpt" />
+										<copy file="src/main/resources/generator/sculptor-generator.postgresql.properties" tofile="src/main/resources/generator/sculptor-generator.properties" verbose="true" />
+									</target>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+		                <groupId>org.apache.maven.plugins</groupId>
+		                <artifactId>maven-antrun-plugin</artifactId>
+		                <version>1.6</version>
+		                <executions>
+		                    <execution>
+		                        <phase>generate-sources</phase>
+		                        <goals>
+		                            <goal>run</goal>
+		                        </goals>
+		                        <configuration>
+		                            <target>
+		                                <copy toDir="${metamac-statistical-resources.etcDir}/db/statistical-resources/postgresql/01-create">
+		                                    <fileset dir="${basedir}/src/generated/resources/dbschema/01-create" />
+		                                </copy>
+		                                <move file="${metamac-statistical-resources.etcDir}/db/statistical-resources/postgresql/01-create/01-StatisticalResources-create.sql" tofile="${metamac-statistical-resources.etcDir}/db/statistical-resources/postgresql/01-create/01-statistical-resources-schema-create.sql" />
+		                                <copy toDir="${metamac-statistical-resources.etcDir}/db/statistical-resources/postgresql/02-drop">
+		                                    <fileset dir="${basedir}/src/generated/resources/dbschema/02-drop" />
+		                                </copy>
+		                                <move file="${metamac-statistical-resources.etcDir}/db/statistical-resources/postgresql/02-drop/01-StatisticalResources-drop.sql" tofile="${metamac-statistical-resources.etcDir}/db/statistical-resources/postgresql/02-drop/01-statistical-resources-schema-drop.sql" />
+		                            </target>
+		                        </configuration>
+		                    </execution>
+		                </executions>
+		            </plugin>
+				</plugins>
+			</build>
+		</profile>
+        
+    </profiles>
+
     <build>
         <finalName>${project.artifactId}</finalName>
 
@@ -465,6 +581,45 @@
                     </execution>
                 </executions>
             </plugin>
+            
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.14</version>
+                <configuration>
+                    <forkMode>once</forkMode>
+                    <argLine>-Xms512m -Xmx1256m -XX:PermSize=64m</argLine>
+                </configuration>
+                <executions>
+                    <!-- Oracle -->
+                    <!-- The execution is called default-test because this is the name of the default execution of this plugin -->
+                    <execution>
+                        <id>default-test</id>
+                        <configuration>
+                            <skipTests>${maven.surefire.execution.oracle.skip}</skipTests>
+                            <systemPropertyVariables>
+                                <TEST_DATABASE_PROVIDER>ORACLE</TEST_DATABASE_PROVIDER>
+                            </systemPropertyVariables>
+                            <reportsDirectory>${project.build.directory}/surefire-reports/oracle</reportsDirectory>
+                        </configuration>
+                    </execution>
+                    <execution>
+						<id>postgresql</id>
+						<phase>test</phase>
+						<goals>
+							<goal>test</goal>
+						</goals>
+						<configuration>
+							<skipTests>${maven.surefire.execution.postgresql.skip}</skipTests>
+							<systemPropertyVariables>
+								<TEST_DATABASE_PROVIDER>POSTGRESQL</TEST_DATABASE_PROVIDER>
+							</systemPropertyVariables>
+							<reportsDirectory>${project.build.directory}/surefire-reports/postgresql</reportsDirectory>
+						</configuration>
+					</execution>
+                </executions>
+            </plugin>
+            
             <plugin>
                 <groupId>org.fornax.toolsupport</groupId>
                 <artifactId>fornax-oaw-m2-plugin</artifactId>
@@ -509,7 +664,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-antrun-plugin</artifactId>
-                <version>1.6</version><!--$NO-MVN-MAN-VER$ -->
+                <version>1.6</version>
                 <executions>
                     <execution>
                         <phase>generate-sources</phase>
@@ -518,14 +673,6 @@
                         </goals>
                         <configuration>
                             <target>
-                                <copy toDir="${metamac-statistical-resources.etcDir}/db/statistical-resources/oracle/01-create">
-                                    <fileset dir="${basedir}/src/generated/resources/dbschema/01-create" />
-                                </copy>
-                                <move file="${metamac-statistical-resources.etcDir}/db/statistical-resources/oracle/01-create/01-StatisticalResources-create.sql" tofile="${metamac-statistical-resources.etcDir}/db/statistical-resources/oracle/01-create/01-statistical-resources-schema-create.sql" />
-                                <copy toDir="${metamac-statistical-resources.etcDir}/db/statistical-resources/oracle/02-drop">
-                                    <fileset dir="${basedir}/src/generated/resources/dbschema/02-drop" />
-                                </copy>
-                                <move file="${metamac-statistical-resources.etcDir}/db/statistical-resources/oracle/02-drop/01-StatisticalResources-drop.sql" tofile="${metamac-statistical-resources.etcDir}/db/statistical-resources/oracle/02-drop/01-statistical-resources-schema-drop.sql" />
 
                                 <!-- Delete spring configuration files -->
                                 <delete file="${basedir}/src/main/resources/spring.properties" />

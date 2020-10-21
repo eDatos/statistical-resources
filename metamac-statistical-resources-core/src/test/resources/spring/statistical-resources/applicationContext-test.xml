@@ -21,7 +21,9 @@
         <property name="ignoreResourceNotFound" value="true" />
         <property name="locations">
             <list>
-                <value>classpath:/spring/spring-test-default.properties</value>
+                <value>classpath:/spring/spring-test-POSTGRESQL.properties</value>
+                <value>classpath:/spring/spring-test-ORACLE.properties</value>
+                <value>classpath:/spring/spring-test-${TEST_DATABASE_PROVIDER}.properties</value>
                 <value>classpath:/spring/spring-test-local.properties</value>
             </list>
         </property>
@@ -35,7 +37,20 @@
     </bean>
 
     <!-- dataset-repository -->
-    <import resource="classpath:/spring/statistic-dataset-repository-applicationContext-oracle.xml"/>
+    <import resource="classpath:/spring/include/statistic-dataset-repository-applicationContext-common.xml"/>
+	<bean id="entityManagerFactoryDatasetRepository" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+		<property name="persistenceUnitName" value="DatasetRepositoryEntityManagerFactory" />
+		<property name="persistenceXmlLocation" value="classpath:META-INF/persistence-statistic-dataset-repository.xml" />
+		<property name="jpaProperties">
+			<props>
+				<prop key="hibernate.dialect">${jpaVendorAdapter.databasePlatform}</prop>
+			</props>
+		</property>
+        <property name="jpaDialect">
+            <bean class="org.springframework.orm.jpa.vendor.HibernateJpaDialect" />
+        </property>
+		<property name="dataSource" ref="dataSourceDatasetRepository" />
+	</bean>
 
     <!-- metamac-core-common -->
     <import resource="classpath:/spring/error-beans-advice.xml" />

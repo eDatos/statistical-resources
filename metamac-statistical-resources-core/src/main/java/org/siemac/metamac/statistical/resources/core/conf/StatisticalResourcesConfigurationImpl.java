@@ -61,4 +61,16 @@ public class StatisticalResourcesConfigurationImpl extends ConfigurationServiceI
     public boolean retriveDatabaseDatasetImportJobIsEnabled() {
         return environmentConfigurationProperties.getBoolean(StatisticalResourcesConfigurationConstants.DATABASE_DATASET_IMPORT_ENABLED, Boolean.FALSE);
     }
+
+    @Override
+    public Boolean isDatabaseOracle() throws MetamacException {
+        String database = retrieveProperty(StatisticalResourcesConfigurationConstants.DB_DRIVER_NAME);
+        return StatisticalResourcesConfigurationConstants.DB_DRIVER_NAME_ORACLE.equals(database);
+    }
+
+    @Override
+    public Boolean isDatabasePostgreSQL() throws MetamacException {
+        String database = retrieveProperty(StatisticalResourcesConfigurationConstants.DB_DRIVER_NAME);
+        return StatisticalResourcesConfigurationConstants.DB_DRIVER_NAME_POSTGRESQL.equals(database);
+    }
 }

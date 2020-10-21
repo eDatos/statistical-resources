@@ -180,15 +180,15 @@ public class BaseAsserts extends CommonAsserts {
     protected static void assertEqualsLifeCycleStatisticalResource(LifeCycleStatisticalResource expected, LifeCycleStatisticalResource actual) throws MetamacException {
         assertEquals(expected.getProcStatus(), actual.getProcStatus());
 
-        assertEquals(expected.getCreationDate(), actual.getCreationDate());
+        assertEqualsDate(expected.getCreationDate(), actual.getCreationDate());
         assertEquals(expected.getCreationUser(), actual.getCreationUser());
-        assertEquals(expected.getProductionValidationDate(), actual.getProductionValidationDate());
+        assertEqualsDate(expected.getProductionValidationDate(), actual.getProductionValidationDate());
         assertEquals(expected.getProductionValidationUser(), actual.getProductionValidationUser());
-        assertEquals(expected.getDiffusionValidationDate(), actual.getDiffusionValidationDate());
+        assertEqualsDate(expected.getDiffusionValidationDate(), actual.getDiffusionValidationDate());
         assertEquals(expected.getDiffusionValidationUser(), actual.getDiffusionValidationUser());
-        assertEquals(expected.getRejectValidationDate(), actual.getRejectValidationDate());
+        assertEqualsDate(expected.getRejectValidationDate(), actual.getRejectValidationDate());
         assertEquals(expected.getRejectValidationUser(), actual.getRejectValidationUser());
-        assertEquals(expected.getPublicationDate(), actual.getPublicationDate());
+        assertEqualsDate(expected.getPublicationDate(), actual.getPublicationDate());
         assertEquals(expected.getPublicationUser(), actual.getPublicationUser());
 
         assertEqualsRelatedResource(expected.getReplacesVersion(), actual.getReplacesVersion());
@@ -207,8 +207,8 @@ public class BaseAsserts extends CommonAsserts {
         assertEquals(expected.getNextVersion(), actual.getNextVersion());
         assertEqualsVersionRationaleTypeCollection(expected.getVersionRationaleTypes(), actual.getVersionRationaleTypes());
         assertEqualsInternationalString(expected.getVersionRationale(), actual.getVersionRationale());
-        assertEquals(expected.getValidFrom(), actual.getValidFrom());
-        assertEquals(expected.getValidTo(), actual.getValidTo());
+        assertEqualsDate(expected.getValidFrom(), actual.getValidFrom());
+        assertEqualsDate(expected.getValidTo(), actual.getValidTo());
 
         assertEqualsNameableStatisticalResource(expected, actual);
     }
