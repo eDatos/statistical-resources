@@ -599,6 +599,7 @@
                             <skipTests>${maven.surefire.execution.oracle.skip}</skipTests>
                             <systemPropertyVariables>
                                 <TEST_DATABASE_PROVIDER>ORACLE</TEST_DATABASE_PROVIDER>
+                                <metamac.statistical_resources.db.driver_name>oracle.jdbc.OracleDriver</metamac.statistical_resources.db.driver_name>
                             </systemPropertyVariables>
                             <reportsDirectory>${project.build.directory}/surefire-reports/oracle</reportsDirectory>
                         </configuration>
@@ -613,6 +614,7 @@
 							<skipTests>${maven.surefire.execution.postgresql.skip}</skipTests>
 							<systemPropertyVariables>
 								<TEST_DATABASE_PROVIDER>POSTGRESQL</TEST_DATABASE_PROVIDER>
+								<metamac.statistical_resources.db.driver_name>org.postgresql.Driver</metamac.statistical_resources.db.driver_name>
 							</systemPropertyVariables>
 							<reportsDirectory>${project.build.directory}/surefire-reports/postgresql</reportsDirectory>
 						</configuration>
