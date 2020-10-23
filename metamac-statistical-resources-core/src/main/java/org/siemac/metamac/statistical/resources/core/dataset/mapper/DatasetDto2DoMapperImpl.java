@@ -238,7 +238,7 @@ public class DatasetDto2DoMapperImpl extends BaseDto2DoMapperImpl implements Dat
             return true;
         } else if (previous == null && current == null) {
             return false;
-        } else if (!previous.toDate().equals(current)) {
+        } else if (!previous.toString("yyyy-MM-dd HH:mm:ss Z").equals((new DateTime(current)).toString("yyyy-MM-dd HH:mm:ss Z"))) {
             return true;
         } else {
             return false;
