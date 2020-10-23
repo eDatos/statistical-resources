@@ -240,7 +240,7 @@ public class DatabaseImportRepositoryTest extends StatisticalResourcesBaseTest {
 
     // Drop the table and don't throw error if it doesn't exists
     private void dropTable(String tableName) {
-        if (DataBaseProvider.ORACLE.name().equals(getDatabaseProvider())) {
+        if (DataBaseProvider.ORACLE.equals(getDatabaseProvider())) {
             // @formatter:off
             jdbcTemplate.execute("BEGIN "
                                   + "EXECUTE IMMEDIATE 'DROP TABLE " + tableName + "'; "
