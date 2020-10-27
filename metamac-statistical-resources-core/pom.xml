@@ -579,19 +579,19 @@
                 <executions>
                     <!-- Oracle -->
                     <!-- The execution is called default-test because this is the name of the default execution of this plugin -->
+<!--                     <execution> -->
+<!--                         <id>default-test</id> -->
+<!--                         <configuration> -->
+<!--                             <skipTests>${maven.surefire.execution.oracle.skip}</skipTests> -->
+<!--                             <systemPropertyVariables> -->
+<!--                                 <TEST_DATABASE_PROVIDER>ORACLE</TEST_DATABASE_PROVIDER> -->
+<!--                                 <metamac.statistical_resources.db.driver_name>oracle.jdbc.OracleDriver</metamac.statistical_resources.db.driver_name> -->
+<!--                             </systemPropertyVariables> -->
+<!--                             <reportsDirectory>${project.build.directory}/surefire-reports/oracle</reportsDirectory> -->
+<!--                         </configuration> -->
+<!--                     </execution> -->
                     <execution>
-                        <id>default-test</id>
-                        <configuration>
-                            <skipTests>${maven.surefire.execution.oracle.skip}</skipTests>
-                            <systemPropertyVariables>
-                                <TEST_DATABASE_PROVIDER>ORACLE</TEST_DATABASE_PROVIDER>
-                                <metamac.statistical_resources.db.driver_name>oracle.jdbc.OracleDriver</metamac.statistical_resources.db.driver_name>
-                            </systemPropertyVariables>
-                            <reportsDirectory>${project.build.directory}/surefire-reports/oracle</reportsDirectory>
-                        </configuration>
-                    </execution>
-                    <execution>
-						<id>postgresql</id>
+						<id>default-test</id>
 						<phase>test</phase>
 						<goals>
 							<goal>test</goal>
