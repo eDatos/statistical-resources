@@ -259,26 +259,26 @@ import es.gobcan.istac.edatos.dataset.repository.service.DatasetRepositoriesServ
 @Transactional
 public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesBaseTest implements StatisticalResourcesServiceFacadeTestBase {
 
-    private static final String               SIEMAC_METADATA_URN_FIELD = "siemacMetadataStatisticalResource.urn";
-    private static final String               URN_FIELD                 = "urn";
+    private static final String SIEMAC_METADATA_URN_FIELD = "siemacMetadataStatisticalResource.urn";
+    private static final String URN_FIELD = "urn";
 
     @Autowired
     private StatisticalResourcesServiceFacade statisticalResourcesServiceFacade;
 
     @Autowired
-    private QuerySelectionItemRepository      querySelectionItemRepository;
+    private QuerySelectionItemRepository querySelectionItemRepository;
 
     @Autowired
-    private CodeItemRepository                codeItemRepository;
+    private CodeItemRepository codeItemRepository;
 
     @Autowired
-    private SrmRestInternalService            srmRestInternalService;
+    private SrmRestInternalService srmRestInternalService;
 
     @Autowired
-    private DatasetRepositoriesServiceFacade  datasetRepositoriesServiceFacade;
+    private DatasetRepositoriesServiceFacade datasetRepositoriesServiceFacade;
 
     @Autowired
-    StreamMessagingServiceFacade              streamMessagingServiceFacade;
+    StreamMessagingServiceFacade streamMessagingServiceFacade;
 
     @Before
     public void onBeforeTest() throws Exception {
@@ -1274,16 +1274,16 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
                     datasetVersionLast.getSiemacMetadataStatisticalResource().getUrn());
             assertNotNull(datasets);
             assertEquals(2, datasets.size());
-            assertEqualsDatasetVersionBase(datasetVersionFirst, datasets.get(0));
-            assertEqualsDatasetVersionBase(datasetVersionLast, datasets.get(1));
+            assertEqualsDatasetVersionBase(datasetVersionFirst, find(datasets, datasetVersionFirst.getSiemacMetadataStatisticalResource().getUrn()));
+            assertEqualsDatasetVersionBase(datasetVersionLast, find(datasets, datasetVersionLast.getSiemacMetadataStatisticalResource().getUrn()));
         }
         {
             List<DatasetVersionBaseDto> datasets = statisticalResourcesServiceFacade.retrieveDatasetVersions(getServiceContextAdministrador(),
                     datasetVersionFirst.getSiemacMetadataStatisticalResource().getUrn());
             assertNotNull(datasets);
             assertEquals(2, datasets.size());
-            assertEqualsDatasetVersionBase(datasetVersionFirst, datasets.get(0));
-            assertEqualsDatasetVersionBase(datasetVersionLast, datasets.get(1));
+            assertEqualsDatasetVersionBase(datasetVersionFirst, find(datasets, datasetVersionFirst.getSiemacMetadataStatisticalResource().getUrn()));
+            assertEqualsDatasetVersionBase(datasetVersionLast, find(datasets, datasetVersionLast.getSiemacMetadataStatisticalResource().getUrn()));
         }
     }
 
@@ -4225,6 +4225,14 @@ public class StatisticalResourcesServiceFacadeTest extends StatisticalResourcesB
         assertEquals(1, datasources.size());
         assertNotNull(datasources.get(0).getCode());
         assertTrue(datasources.get(0).getCode().startsWith(tableName));
+    }
 
+    private DatasetVersionBaseDto find(List<DatasetVersionBaseDto> datasetVersionDtos, String urn) {
+        for (DatasetVersionBaseDto datasetVersionBaseDto : datasetVersionDtos) {
+            if (urn.equals(datasetVersionBaseDto.getUrn())) {
+                return datasetVersionBaseDto;
+            }
+        }
+        return null;
     }
 }
