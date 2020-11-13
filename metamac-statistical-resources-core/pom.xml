@@ -390,59 +390,59 @@
     </dependencies>
 
     <profiles>
-<!--         <profile> -->
-<!--             <id>oracle</id> -->
-<!--             <activation> -->
-<!--                 <activeByDefault>true</activeByDefault> -->
-<!--             </activation> -->
-<!--             <build> -->
-<!--                 <plugins> -->
-<!--                     <plugin> -->
-<!-- 		                <groupId>org.apache.maven.plugins</groupId> -->
-<!-- 		                <artifactId>maven-antrun-plugin</artifactId> -->
-<!-- 		                <version>1.6</version> -->
-<!-- 		                <executions> -->
-<!-- 		                	<execution> -->
-<!--                                 <id>clean-sculptor-conf</id> -->
-<!--                                 <phase>initialize</phase> -->
-<!--                                 <goals> -->
-<!--                                     <goal>run</goal> -->
-<!--                                 </goals> -->
-<!--                                 <configuration> -->
-<!--                                     <target> -->
-<!--                                         <delete file="src/main/resources/generator/sculptor-generator.properties" /> -->
-<!--                                         <delete file="src/main/resources/templates/db/CustomDDL.xpt" /> -->
-<!--                                         <copy file="src/main/resources/generator/sculptor-generator.oracle.properties" tofile="src/main/resources/generator/sculptor-generator.properties" verbose="true" /> -->
-<!--                                     </target> -->
-<!--                                 </configuration> -->
-<!--                             </execution> -->
-<!-- 		                    <execution> -->
-<!-- 		                        <phase>generate-sources</phase> -->
-<!-- 		                        <goals> -->
-<!-- 		                            <goal>run</goal> -->
-<!-- 		                        </goals> -->
-<!-- 		                        <configuration> -->
-<!-- 		                            <target> -->
-<!-- 		                                <copy toDir="${metamac-statistical-resources.etcDir}/db/statistical-resources/oracle/01-create"> -->
-<!-- 		                                    <fileset dir="${basedir}/src/generated/resources/dbschema/01-create" /> -->
-<!-- 		                                </copy> -->
-<!-- 		                                <move file="${metamac-statistical-resources.etcDir}/db/statistical-resources/oracle/01-create/01-StatisticalResources-create.sql" tofile="${metamac-statistical-resources.etcDir}/db/statistical-resources/oracle/01-create/01-statistical-resources-schema-create.sql" /> -->
-<!-- 		                                <copy toDir="${metamac-statistical-resources.etcDir}/db/statistical-resources/oracle/02-drop"> -->
-<!-- 		                                    <fileset dir="${basedir}/src/generated/resources/dbschema/02-drop" /> -->
-<!-- 		                                </copy> -->
-<!-- 		                                <move file="${metamac-statistical-resources.etcDir}/db/statistical-resources/oracle/02-drop/01-StatisticalResources-drop.sql" tofile="${metamac-statistical-resources.etcDir}/db/statistical-resources/oracle/02-drop/01-statistical-resources-schema-drop.sql" /> -->
-<!-- 		                            </target> -->
-<!-- 		                        </configuration> -->
-<!-- 		                    </execution> -->
-<!-- 		                </executions> -->
-<!-- 		            </plugin> -->
-<!--                 </plugins> -->
-<!--             </build> -->
-<!--         </profile> -->
+        <profile>
+            <id>oracle</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+		                <groupId>org.apache.maven.plugins</groupId>
+		                <artifactId>maven-antrun-plugin</artifactId>
+		                <version>1.6</version>
+		                <executions>
+		                	<execution>
+                                <id>clean-sculptor-conf</id>
+                                <phase>initialize</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                                <configuration>
+                                    <target>
+                                        <delete file="src/main/resources/generator/sculptor-generator.properties" />
+                                        <delete file="src/main/resources/templates/db/CustomDDL.xpt" />
+                                        <copy file="src/main/resources/generator/sculptor-generator.oracle.properties" tofile="src/main/resources/generator/sculptor-generator.properties" verbose="true" />
+                                    </target>
+                                </configuration>
+                            </execution>
+		                    <execution>
+		                        <phase>generate-sources</phase>
+		                        <goals>
+		                            <goal>run</goal>
+		                        </goals>
+		                        <configuration>
+		                            <target>
+		                                <copy toDir="${metamac-statistical-resources.etcDir}/db/statistical-resources/oracle/01-create">
+		                                    <fileset dir="${basedir}/src/generated/resources/dbschema/01-create" />
+		                                </copy>
+		                                <move file="${metamac-statistical-resources.etcDir}/db/statistical-resources/oracle/01-create/01-StatisticalResources-create.sql" tofile="${metamac-statistical-resources.etcDir}/db/statistical-resources/oracle/01-create/01-statistical-resources-schema-create.sql" />
+		                                <copy toDir="${metamac-statistical-resources.etcDir}/db/statistical-resources/oracle/02-drop">
+		                                    <fileset dir="${basedir}/src/generated/resources/dbschema/02-drop" />
+		                                </copy>
+		                                <move file="${metamac-statistical-resources.etcDir}/db/statistical-resources/oracle/02-drop/01-StatisticalResources-drop.sql" tofile="${metamac-statistical-resources.etcDir}/db/statistical-resources/oracle/02-drop/01-statistical-resources-schema-drop.sql" />
+		                            </target>
+		                        </configuration>
+		                    </execution>
+		                </executions>
+		            </plugin>
+                </plugins>
+            </build>
+        </profile>
         <profile>
 			<id>postgresql</id>
 	        <activation>
-	            <activeByDefault>true</activeByDefault>
+	            <activeByDefault>false</activeByDefault>
 	        </activation> 
 			<build>
 				<plugins>
@@ -579,19 +579,19 @@
                 <executions>
                     <!-- Oracle -->
                     <!-- The execution is called default-test because this is the name of the default execution of this plugin -->
-<!--                     <execution> -->
-<!--                         <id>default-test</id> -->
-<!--                         <configuration> -->
-<!--                             <skipTests>${maven.surefire.execution.oracle.skip}</skipTests> -->
-<!--                             <systemPropertyVariables> -->
-<!--                                 <TEST_DATABASE_PROVIDER>ORACLE</TEST_DATABASE_PROVIDER> -->
-<!--                                 <metamac.statistical_resources.db.driver_name>oracle.jdbc.OracleDriver</metamac.statistical_resources.db.driver_name> -->
-<!--                             </systemPropertyVariables> -->
-<!--                             <reportsDirectory>${project.build.directory}/surefire-reports/oracle</reportsDirectory> -->
-<!--                         </configuration> -->
-<!--                     </execution> -->
                     <execution>
-						<id>default-test</id>
+                        <id>default-test</id>
+                        <configuration>
+                            <skipTests>${maven.surefire.execution.oracle.skip}</skipTests>
+                            <systemPropertyVariables>
+                                <TEST_DATABASE_PROVIDER>ORACLE</TEST_DATABASE_PROVIDER>
+                                <metamac.statistical_resources.db.driver_name>oracle.jdbc.OracleDriver</metamac.statistical_resources.db.driver_name>
+                            </systemPropertyVariables>
+                            <reportsDirectory>${project.build.directory}/surefire-reports/oracle</reportsDirectory>
+                        </configuration>
+                    </execution>
+                    <execution>
+						<id>postgresql</id>
 						<phase>test</phase>
 						<goals>
 							<goal>test</goal>
