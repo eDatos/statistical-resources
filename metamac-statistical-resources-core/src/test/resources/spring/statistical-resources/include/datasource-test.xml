@@ -19,36 +19,39 @@
         <property name="jpaProperties">
             <props>
                 <!-- These properties override persistence-test.xml -->
-                
+
                 <!-- SQL stdout logging -->
                 <prop key="hibernate.show_sql">false</prop>
                 <prop key="hibernate.format_sql">false</prop>
-                
+
                 <prop key="hibernate.hbm2ddl.auto">validate</prop>
                 <prop key="hibernate.ejb.cfgfile">hibernate.cfg.xml</prop>
                 <prop key="query.substitutions">true 1, false 0</prop>
                 <prop key="hibernate.cache.use_query_cache">true</prop>
                 <prop key="hibernate.cache.provider_class">net.sf.ehcache.hibernate.EhCacheProvider</prop>
-                <prop key="hibernate.default_schema">${datasource.username}</prop>
+                <prop key="hibernate.default_schema">${datasource.default_schema}</prop>
             </props>
         </property>
     </bean>
 
-    <bean id="dataSource" class="oracle.jdbc.pool.OracleDataSource" destroy-method="close">
-        <property name="URL" value="${datasource.url}" />
-        <property name="user" value="${datasource.username}" />
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="${datasource.driver_name}" />
+        <property name="url" value="${datasource.url}" />
+        <property name="username" value="${datasource.username}" />
         <property name="password" value="${datasource.password}" />
     </bean>
 
-    <bean id="dataSourceDatasetRepository" class="oracle.jdbc.pool.OracleDataSource" destroy-method="close">
-        <property name="URL" value="${datasource.repository.url}" />
-        <property name="user" value="${datasource.repository.username}" />
+    <bean id="dataSourceDatasetRepository" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="${datasource.driver_name}" />
+        <property name="url" value="${datasource.repository.url}" />
+        <property name="username" value="${datasource.repository.username}" />
         <property name="password" value="${datasource.repository.password}" />
     </bean>
-    
-    <bean id="dataSourceDatabaseImportRepository" class="oracle.jdbc.pool.OracleDataSource" destroy-method="close">
-        <property name="URL" value="${datasource.url}" />
-        <property name="user" value="${datasource.username}" />
+
+    <bean id="dataSourceDatabaseImportRepository" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="${datasource.driver_name}" />
+        <property name="url" value="${datasource.url}" />
+        <property name="username" value="${datasource.username}" />
         <property name="password" value="${datasource.password}" />
     </bean>
 

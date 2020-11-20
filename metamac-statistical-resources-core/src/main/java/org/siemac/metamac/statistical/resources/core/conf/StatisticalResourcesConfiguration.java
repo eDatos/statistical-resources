@@ -22,4 +22,14 @@ public interface StatisticalResourcesConfiguration extends ConfigurationService 
     public String retriveCronExpressionForDbDataImport() throws MetamacException;
 
     public boolean retriveDatabaseDatasetImportJobIsEnabled();
+
+    /**
+     * Checks if Database is Oracle
+     */
+    public Boolean isDatabaseOracle() throws MetamacException;
+
+    /**
+     * Checks if Database is PostgreSQL
+     */
+    public Boolean isDatabasePostgreSQL() throws MetamacException;
 }

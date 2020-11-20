@@ -251,6 +251,7 @@
                         <artifact>org.siemac.metamac:metamac-core-common:jar:client</artifact>
                         <artifact>org.siemac.metamac.metamac-sso:metamac-sso-client:jar</artifact>
                         <artifact>org.siemac.metamac:metamac-web-common:jar</artifact>
+                        <artifact>org.siemac.metamac:edatos-core-utils:jar:client</artifact>
                         <artifact>org.siemac.metamac.metamac-statistical-resources:metamac-statistical-resources-core:jar:client</artifact>
                     </compileSourcesArtifacts>
                     <!-- In inplace mode, the warSourceDirectory is used to match the same use case of the war:inplace http://maven.apache.org/plugins/maven-war-plugin/inplace-mojo.html goal. -->

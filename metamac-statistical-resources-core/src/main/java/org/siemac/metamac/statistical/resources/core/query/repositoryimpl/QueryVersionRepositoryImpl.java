@@ -15,9 +15,9 @@ import org.fornax.cartridges.sculptor.framework.domain.PagingParameter;
 import org.joda.time.DateTime;
 import org.siemac.metamac.core.common.criteria.utils.CriteriaUtils;
 import org.siemac.metamac.core.common.exception.MetamacException;
-import org.siemac.metamac.statistical.resources.core.base.domain.LifeCycleStatisticalResourceRepository;
 import org.siemac.metamac.statistical.resources.core.base.domain.utils.RepositoryUtils;
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResourceResult;
+import org.siemac.metamac.statistical.resources.core.conf.StatisticalResourcesConfiguration;
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
@@ -33,7 +33,7 @@ import org.springframework.stereotype.Repository;
 public class QueryVersionRepositoryImpl extends QueryVersionRepositoryBase {
 
     @Autowired
-    private LifeCycleStatisticalResourceRepository lifeCycleStatisticalResourceRepository;
+    private StatisticalResourcesConfiguration configuration;
 
     public QueryVersionRepositoryImpl() {
     }
@@ -144,10 +144,10 @@ public class QueryVersionRepositoryImpl extends QueryVersionRepositoryBase {
             "WHERE       cubes.query_fk = query.ID "+
             "    AND     query_version.query_fk = query.ID " +
             "    AND     query_version.ID = :queryVersionFk " +
-            "    AND     stat_query.last_version = 1 " +
+            "    AND     stat_query.last_version = " + getBooleanValueForDatabase(true) +
             "    AND     elem.publication_version_all_fk = pub.ID " +
             "    AND     stat.title_fk = loc.international_string_fk " +
-            "    AND     (stat.last_version = 1 " +
+            "    AND     (stat.last_version = " + getBooleanValueForDatabase(true) +
             "       OR "+ RepositoryUtils.isLastPublishedVersionConditions+" ) "+
             "    AND     operation.ID = stat.stat_operation_fk " +
             "    AND     maintainer.id = stat.maintainer_fk");
@@ -188,7 +188,7 @@ public class QueryVersionRepositoryImpl extends QueryVersionRepositoryBase {
             "WHERE       cubes.query_fk = query.ID "+
             "    AND     query_version.query_fk = query.ID " +
             "    AND     query_version.ID = :queryVersionFk " +
-            "    AND     stat_query.last_version = 1 " +
+            "    AND     stat_query.last_version = " + getBooleanValueForDatabase(true) +
             "    AND     elem.publication_version_all_fk = pub.ID " +
             "    AND     stat.title_fk = loc.international_string_fk " +
             "    AND     "+isLastPublishedVersionConditions+"  "+
@@ -203,5 +203,13 @@ public class QueryVersionRepositoryImpl extends QueryVersionRepositoryBase {
         List<Object> rows = query.getResultList();
         List<RelatedResourceResult> resources = getRelatedResourceResultsFromRows(rows, TypeRelatedResourceEnum.PUBLICATION_VERSION);
         return resources;
+    }
+
+    private String getBooleanValueForDatabase(boolean value) throws MetamacException {
+        if (configuration.isDatabaseOracle()) {
+            return value ? "1" : "0";
+        } else {
+            return value ? "true" : "false";
+        }
     }
 }

@@ -16,6 +16,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.siemac.metamac.common.test.dbunit.MetamacDBUnitBaseTests.DataBaseProvider;
 import org.siemac.metamac.common.test.utils.MetamacMocks;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.core.common.exception.MetamacExceptionBuilder;
@@ -239,15 +240,19 @@ public class DatabaseImportRepositoryTest extends StatisticalResourcesBaseTest {
 
     // Drop the table and don't throw error if it doesn't exists
     private void dropTable(String tableName) {
-        // @formatter:off
-        jdbcTemplate.execute("BEGIN "
-                                + "EXECUTE IMMEDIATE 'DROP TABLE " + tableName + "'; "
-                           + "EXCEPTION WHEN OTHERS THEN "
-                               + "IF SQLCODE != -942 THEN"
-                                   + " RAISE;"
-                               + " END IF;"
-                           + "END;");
-        // @formatter:on
+        if (DataBaseProvider.ORACLE.equals(getDatabaseProvider())) {
+            // @formatter:off
+            jdbcTemplate.execute("BEGIN "
+                                  + "EXECUTE IMMEDIATE 'DROP TABLE " + tableName + "'; "
+                                  + "EXCEPTION WHEN OTHERS THEN "
+                                  + "IF SQLCODE != -942 THEN"
+                                  + " RAISE;"
+                                  + " END IF;"
+                                  + "END;");
+            // @formatter:on
+        } else if (DataBaseProvider.POSTGRESQL.equals(getDatabaseProvider()))  {
+            jdbcTemplate.execute("DROP TABLE IF EXISTS " + tableName + ";");
+        }
     }
 
     private void populateTable() {

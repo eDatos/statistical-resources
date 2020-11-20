@@ -20,11 +20,13 @@ import org.siemac.metamac.statistical.resources.core.base.domain.utils.RelatedRe
 import org.siemac.metamac.statistical.resources.core.base.domain.utils.RepositoryUtils;
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResource;
 import org.siemac.metamac.statistical.resources.core.common.domain.RelatedResourceResult;
+import org.siemac.metamac.statistical.resources.core.conf.StatisticalResourcesConfiguration;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersion;
 import org.siemac.metamac.statistical.resources.core.dataset.domain.DatasetVersionProperties;
 import org.siemac.metamac.statistical.resources.core.enume.domain.ProcStatusEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -32,6 +34,9 @@ import org.springframework.stereotype.Repository;
  */
 @Repository("datasetVersionRepository")
 public class DatasetVersionRepositoryImpl extends DatasetVersionRepositoryBase {
+
+    @Autowired
+    private StatisticalResourcesConfiguration configuration;
 
     public DatasetVersionRepositoryImpl() {
     }
@@ -234,7 +239,7 @@ public class DatasetVersionRepositoryImpl extends DatasetVersionRepositoryBase {
 
         String queryLinkedToDatasetAndDatasetVersionIsLastVersion =
             "         (query.dataset_fk = dataset_version.dataset_fk" +
-            "           And stat_dataset.Last_Version = 1) ";
+            "           And stat_dataset.Last_Version = " + getBooleanValueForDatabase(true) + ") ";
 
         String queryLinkedToDatasetAndDatasetVersionLastPublishedVersion =
             "         (query.dataset_fk = dataset_version.dataset_fk" +
@@ -304,10 +309,10 @@ public class DatasetVersionRepositoryImpl extends DatasetVersionRepositoryBase {
             "WHERE       cubes.dataset_fk = dataset.ID "+
             "    AND     dataset_version.dataset_fk = dataset.ID " +
             "    AND     dataset_version.ID = :datasetVersionFk " +
-            "    AND     stat_dataset.last_version = 1 " +
+            "    AND     stat_dataset.last_version = " + getBooleanValueForDatabase(true) +
             "    AND     elem.publication_version_all_fk = pub.ID " +
             "    AND     stat.title_fk = loc.international_string_fk " +
-            "    AND     (stat.last_version = 1 " +
+            "    AND     (stat.last_version = " + getBooleanValueForDatabase(true) + 
             "           OR "+isLastPublishedVersionConditions+") " +
             "    AND     operation.ID = stat.stat_operation_fk " +
             "    AND     maintainer.id = stat.maintainer_fk");
@@ -442,5 +447,13 @@ public class DatasetVersionRepositoryImpl extends DatasetVersionRepositoryBase {
         }
 
         return replacing;
+    }
+
+    private String getBooleanValueForDatabase(boolean value) throws MetamacException {
+        if (configuration.isDatabaseOracle()) {
+            return value ? "1" : "0";
+        } else {
+            return value ? "true" : "false";
+        }
     }
 }

@@ -37,4 +37,14 @@ public class StatisticalResourcesConfigurationMockImpl extends ConfigurationServ
     public boolean retriveDatabaseDatasetImportJobIsEnabled() {
         throw new UnsupportedOperationException("Not implemented. Not necessary for mocking purposes");
     }
+
+    @Override
+    public Boolean isDatabaseOracle() throws MetamacException {
+        throw new UnsupportedOperationException("Not implemented. Not necessary for mocking purposes");
+    }
+
+    @Override
+    public Boolean isDatabasePostgreSQL() throws MetamacException {
+        throw new UnsupportedOperationException("Not implemented. Not necessary for mocking purposes");
+    }
 }
