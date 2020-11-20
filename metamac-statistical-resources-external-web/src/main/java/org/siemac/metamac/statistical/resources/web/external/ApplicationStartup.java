@@ -17,7 +17,7 @@ public class ApplicationStartup extends ApplicationStartupListener {
     public void contextInitialized(ServletContextEvent sce) {
         super.contextInitialized(sce);
         try {
-            WebUtils.setOrganisation(configurationService.retrieveOrganisation());
+            WebUtils.setAppsBaseUrl(configurationService.retrieveAppsInternalWebApplicationUrlBase());
             WebUtils.setApiBaseURL(configurationService.retrieveStatisticalResourcesExternalApiUrlBase());
             
             WebUtils.setApiStyleHeaderUrl(configurationService.retrieveApiStyleHeaderUrl());
