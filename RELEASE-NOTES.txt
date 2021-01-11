@@ -1,5 +1,5 @@
 ========================================================================
-METAMAC-STATISTICAL-RESOURCES -- Gestor de recursos estadísticos
+METAMAC-STATISTICAL-RESOURCES -- Gestor de recursos estadísticos 
 ========================================================================
 
 El gestor de recursos estadísticos nos permite manejar los dos recursos
