@@ -472,7 +472,15 @@ public class QueryViewImpl extends ViewWithUiHandlers<QueryUiHandlers> implement
             identifiersForm.setNameableStatisticalResourceDto(queryDto);
             contentDescriptorsForm.setLifeCycleResource(queryDto);
             thematicContentClassifiersForm.setStatisticalResourceDto(queryDto);
+
+            // EDATOS-3113 WORKAROUND, this form is continuously rebuilt
+            mainFormLayout.removeViewCanvas(productionDescriptorsForm);
+            productionDescriptorsForm = new QueryProductionDescriptorsForm();
+            productionDescriptorsForm.setUiHandlers(getUiHandlers());
             productionDescriptorsForm.setQueryDto(queryDto);
+            mainFormLayout.addViewCanvas(productionDescriptorsForm, 4);
+            // EDATOS-3113 WORKAROUND
+
             resourceRelationDescriptorsForm.setQueryDto(queryDto);
             lifeCycleForm.setLifeCycleStatisticalResourceDto(queryDto);
             versionForm.setLifeCycleStatisticalResourceDto(queryDto);
