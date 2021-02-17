@@ -27,6 +27,7 @@ public class QueryMainFormLayout extends LifecycleMainFormLayout {
         updatePublishSection(queryVersionDto.getLastVersion());
     }
 
+    // FIXME EDATOS-3113 This method should be moved to ViewMainFormLayout class in metamac-web-common dependency
     public void removeViewCanvas(Canvas canvas) {
         viewFormLayout.removeMember(canvas);
     }
