@@ -11,7 +11,7 @@
 
 	<groupId>org.siemac.metamac.metamac-statistical-resources</groupId>
 	<artifactId>metamac-statistical-resources-parent</artifactId>
-	<version>3.6.2-SNAPSHOT</version>
+	<version>3.7.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>METAMAC :: STATISTICAL RESOURCES :: PARENT</name>
 	<description>METAMAC :: STATISTICAL RESOURCES :: PARENT</description>
@@ -51,7 +51,7 @@
         <edatos-dataset-repository.version>1.0.2</edatos-dataset-repository.version>
         
 		<statistic-parser.version>2.1.0</statistic-parser.version>
-		<statistic-sdmx-srm-rest-external-api.version>2.3.2-SNAPSHOT</statistic-sdmx-srm-rest-external-api.version>
+		<statistic-sdmx-srm-rest-external-api.version>2.4.0</statistic-sdmx-srm-rest-external-api.version>
 		
 		<postgresql.version>42.2.16</postgresql.version>
 
