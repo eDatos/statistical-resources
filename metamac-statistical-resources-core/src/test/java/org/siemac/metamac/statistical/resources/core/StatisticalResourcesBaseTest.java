@@ -197,7 +197,7 @@ public abstract class StatisticalResourcesBaseTest extends MetamacBaseTest {
 
         // RESOURCES
         {
-            jdbcTemplateResources.update("truncate table TB_TASKS");
+            jdbcTemplateResources.update("delete from TB_TASKS");
         }
     }
 
