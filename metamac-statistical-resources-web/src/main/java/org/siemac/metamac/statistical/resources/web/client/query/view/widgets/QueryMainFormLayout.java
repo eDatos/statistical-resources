@@ -5,8 +5,6 @@ import org.siemac.metamac.statistical.resources.web.client.base.widgets.Lifecycl
 import org.siemac.metamac.statistical.resources.web.client.query.utils.QueryClientSecurityUtils;
 import org.siemac.metamac.web.common.client.utils.InternationalStringUtils;
 
-import com.smartgwt.client.widgets.Canvas;
-
 public class QueryMainFormLayout extends LifecycleMainFormLayout {
 
     private QueryVersionDto queryVersionDto;
@@ -25,11 +23,6 @@ public class QueryMainFormLayout extends LifecycleMainFormLayout {
         setCanEdit(QueryClientSecurityUtils.canUpdateQueryVersion(queryVersionDto));
         setCanDelete(QueryClientSecurityUtils.canDeleteQueryVersion(queryVersionDto));
         updatePublishSection(queryVersionDto.getLastVersion());
-    }
-
-    // FIXME EDATOS-3113 This method should be moved to ViewMainFormLayout class in metamac-web-common dependency
-    public void removeViewCanvas(Canvas canvas) {
-        viewFormLayout.removeMember(canvas);
     }
 
     @Override
