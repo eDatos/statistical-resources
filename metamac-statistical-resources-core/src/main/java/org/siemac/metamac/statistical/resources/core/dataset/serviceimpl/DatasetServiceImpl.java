@@ -5,7 +5,9 @@ import static org.siemac.metamac.core.common.util.MetamacCollectionUtils.isInCol
 import static org.siemac.metamac.statistical.resources.core.base.domain.utils.RelatedResourceResultUtils.getUrnsFromRelatedResourceResults;
 
 import java.io.File;
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -728,11 +730,17 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
 
     private void checkFilesCanBeAssociatedWithDataset(String datasetUrn, String datasetVersionUrn, List<URL> fileUrls) throws MetamacException {
         List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
+        String encoding = StringUtils.isEmpty(System.getProperty("file.encoding")) ? "UTF-8" : System.getProperty("file.encoding");
+
         for (URL url : fileUrls) {
-            String filename = getFilenameFromPath(url.getPath());
-            String linkedDatasetVersionUrn = getDatasetRepository().findDatasetUrnLinkedToDatasourceSourceName(filename);
-            if (linkedDatasetVersionUrn != null && !StringUtils.equals(datasetUrn, linkedDatasetVersionUrn)) {
-                exceptionItems.add(new MetamacExceptionItem(ServiceExceptionType.INVALID_FILE_FOR_DATASET_VERSION, filename, datasetVersionUrn));
+            try {
+                String filename = URLDecoder.decode(getFilenameFromPath(url.getPath()), encoding);
+                String linkedDatasetVersionUrn = getDatasetRepository().findDatasetUrnLinkedToDatasourceSourceName(filename);
+                if (linkedDatasetVersionUrn != null && !StringUtils.equals(datasetUrn, linkedDatasetVersionUrn)) {
+                    exceptionItems.add(new MetamacExceptionItem(ServiceExceptionType.INVALID_FILE_FOR_DATASET_VERSION, filename, datasetVersionUrn));
+                }
+            } catch (UnsupportedEncodingException e) {
+                throw MetamacExceptionBuilder.builder().withCause(e).withExceptionItems(ServiceExceptionType.FILE_ENCODING_ERROR).withMessageParameters(getFilenameFromPath(url.getPath())).build();
             }
         }
         if (exceptionItems.size() > 0) {
@@ -787,18 +795,24 @@ public class DatasetServiceImpl extends DatasetServiceImplBase {
     protected Map<String, List<URL>> organizeFilesByDatasetVersionCode(String statisticalOperationCode, List<URL> fileUrls) throws MetamacException {
         Map<String, List<URL>> datasetVersionsForFiles = new HashMap<String, List<URL>>();
         List<MetamacExceptionItem> exceptionItems = new ArrayList<MetamacExceptionItem>();
-        for (URL url : fileUrls) {
-            String filename = getFilenameFromPath(url.getPath());
-            String datasetUrn = getDatasetRepository().findDatasetUrnLinkedToDatasourceSourceName(filename);
-            DatasetVersion datasetVersion = null;
-            if (datasetUrn != null) {
-                datasetVersion = getDatasetVersionRepository().retrieveLastVersion(datasetUrn);
-            }
+        String encoding = StringUtils.isEmpty(System.getProperty("file.encoding")) ? "UTF-8" : System.getProperty("file.encoding");
 
-            if (datasetVersion != null && StringUtils.equals(statisticalOperationCode, datasetVersion.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode())) {
-                StatisticalResourcesCollectionUtils.addValueToMapValueList(datasetVersionsForFiles, datasetVersion.getSiemacMetadataStatisticalResource().getUrn(), url);
-            } else {
-                exceptionItems.add(new MetamacExceptionItem(ServiceExceptionType.FILE_NOT_LINKED_TO_ANY_DATASET_IN_STATISTICAL_OPERATION, filename, statisticalOperationCode));
+        for (URL url : fileUrls) {
+            try {
+                String filename = URLDecoder.decode(getFilenameFromPath(url.getPath()), encoding);
+                String datasetUrn = getDatasetRepository().findDatasetUrnLinkedToDatasourceSourceName(filename);
+                DatasetVersion datasetVersion = null;
+                if (datasetUrn != null) {
+                    datasetVersion = getDatasetVersionRepository().retrieveLastVersion(datasetUrn);
+                }
+
+                if (datasetVersion != null && StringUtils.equals(statisticalOperationCode, datasetVersion.getSiemacMetadataStatisticalResource().getStatisticalOperation().getCode())) {
+                    StatisticalResourcesCollectionUtils.addValueToMapValueList(datasetVersionsForFiles, datasetVersion.getSiemacMetadataStatisticalResource().getUrn(), url);
+                } else {
+                    exceptionItems.add(new MetamacExceptionItem(ServiceExceptionType.FILE_NOT_LINKED_TO_ANY_DATASET_IN_STATISTICAL_OPERATION, filename, statisticalOperationCode));
+                }
+            } catch (UnsupportedEncodingException e) {
+                throw MetamacExceptionBuilder.builder().withCause(e).withExceptionItems(ServiceExceptionType.FILE_ENCODING_ERROR).withMessageParameters(getFilenameFromPath(url.getPath())).build();
             }
         }
         if (exceptionItems.size() > 0) {

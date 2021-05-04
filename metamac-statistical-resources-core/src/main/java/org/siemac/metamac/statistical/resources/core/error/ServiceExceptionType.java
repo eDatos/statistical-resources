@@ -291,4 +291,6 @@ public class ServiceExceptionType extends CommonServiceExceptionType {
     public static final CommonServiceExceptionType STREAM_MESSAGING_TOPIC_IS_INVALID                                            = create("stream_message.resources.exception.topic.invalid");
     public static final CommonServiceExceptionType STREAM_MESSAGING_MISSING_MANDATORY_SETTINGS                                  = create("stream_message.resources.exception.config.missing_settings");
 
+    public static final CommonServiceExceptionType FILE_ENCODING_ERROR                                                          = create("exception.resources.dataset.importation.file_encoding_error");
+
 }
