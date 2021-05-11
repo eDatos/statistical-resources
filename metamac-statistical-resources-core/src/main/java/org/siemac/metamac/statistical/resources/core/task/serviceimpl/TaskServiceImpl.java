@@ -204,7 +204,9 @@ public class TaskServiceImpl extends TaskServiceImplBase implements ApplicationL
         quartzProps.put(StdSchedulerFactory.PROP_SCHED_SKIP_UPDATE_CHECK, "true");
         quartzProps.put(StdSchedulerFactory.PROP_JOB_STORE_CLASS, "org.quartz.simpl.RAMJobStore");
         quartzProps.put(StdSchedulerFactory.PROP_THREAD_POOL_CLASS, "org.quartz.simpl.SimpleThreadPool");
-        quartzProps.put("org.quartz.threadPool.threadCount", "10");
+        // EDATOS-3360: Se reduce el número de threads concurrentes en ejecución a 1 para evitar que el proceso de importación de tsv falle
+        // provocando el error ORA-00060 / org.hibernate.exception.LockAcquisitionException
+        quartzProps.put("org.quartz.threadPool.threadCount", "1");
         quartzProps.put("org.quartz.threadPool.threadPriority", "5");
 
         try {
