@@ -13,4 +13,4 @@
 * Actualizar el WAR
 
 ## 0.0.0 a 3.7.0
-* El proceso de actualizaciones entre versiones para versiones anteriores a la 8.1.1 está definido en "Metamac - Manual de instalación.doc"
+* El proceso de actualizaciones entre versiones para versiones anteriores a la 3.7.0 está definido en "Metamac - Manual de instalación.doc"
