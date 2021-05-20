@@ -65,7 +65,7 @@ public class ImportDatasourcesWindow extends ImportResourceWindow {
             HiddenItem datasetVersionUrnItem = new HiddenItem(StatisticalResourcesSharedTokens.UPLOAD_PARAM_DATASET_VERSION_URN);
             HiddenItem operationUrnItem = new HiddenItem(StatisticalResourcesSharedTokens.UPLOAD_PARAM_OPERATION_CODE);
             HiddenItem mustBeZip = new HiddenItem(StatisticalResourcesSharedTokens.UPLOAD_MUST_BE_ZIP_FILE);
-            mustBeZip.setValue(true);
+            mustBeZip.setDefaultValue(true);
 
             HiddenItem resourceTypeItem = new HiddenItem(UPLOAD_RESOURCE_TYPE);
             resourceTypeItem.setDefaultValue(ImportableResourceTypeEnum.DATASOURCE.name());
