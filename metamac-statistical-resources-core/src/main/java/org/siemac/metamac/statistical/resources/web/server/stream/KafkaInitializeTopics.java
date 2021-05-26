@@ -14,7 +14,6 @@ import org.apache.kafka.clients.admin.CreateTopicsOptions;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.errors.TopicExistsException;
-import org.apache.kafka.common.protocol.ApiKeys;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.conf.StatisticalResourcesConfiguration;
@@ -35,11 +34,6 @@ public class KafkaInitializeTopics implements ApplicationListener<ContextRefresh
     private static final int                 NUM_OF_PARTITIONS  = 1;
     private static final short               NUM_OF_REPLICATION = (short) 1;
     private static final int                 TIMEOUT            = 1000;
-
-    // TODO EDATOS-3324 MIGUEL: verificar si esto ya no es necesario
-    private static final short               APIKEY             = ApiKeys.CREATE_TOPICS.id;
-    private static final short               VERSION            = 0;
-    private static final short               CORRELATIONID      = -1;
 
     private static final String              RETENTION_MS       = "retention.ms";
 
