@@ -75,8 +75,8 @@ public class DatasourceImportationPreviewServlet extends BaseHttpServlet {
         String filename = new String();
 
         try {
-            StatisticalResourcesServiceFacade statisticalResourcesServiceFacade = (StatisticalResourcesServiceFacade) ApplicationContextProvider.getApplicationContext().getBean(
-                    "statisticalResourcesServiceFacade");
+            StatisticalResourcesServiceFacade statisticalResourcesServiceFacade = (StatisticalResourcesServiceFacade) ApplicationContextProvider.getApplicationContext()
+                    .getBean("statisticalResourcesServiceFacade");
 
             DiskFileItemFactory factory = new DiskFileItemFactory();
             // Get the temporary directory (this is where files that exceed the threshold will be stored)
@@ -106,7 +106,7 @@ public class DatasourceImportationPreviewServlet extends BaseHttpServlet {
             DimensionRepresentationMappingWebDto mappingExternalItem = dimensionRepresentationMappingDto2WebDto(mapping);
 
             String message = serializeResourceJson(mappingExternalItem).toJSONString();
-            sendSuccessImportationResponse(response, message);
+            sendSuccessImportationResponse(response, StringEscapeUtils.escapeJavaScript(message));
 
         } catch (Exception e) {
 
