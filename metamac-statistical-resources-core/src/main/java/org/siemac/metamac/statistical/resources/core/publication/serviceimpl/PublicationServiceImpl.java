@@ -1,6 +1,8 @@
 package org.siemac.metamac.statistical.resources.core.publication.serviceimpl;
 
 import java.io.File;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -262,8 +264,14 @@ public class PublicationServiceImpl extends PublicationServiceImplBase {
         // Validations
         publicationServiceInvocationValidator.checkImportPublicationVersionStructure(ctx, publicationVersionUrn, fileURL, language);
 
+        PublicationStructure publicationStructure;
         // Parse
-        PublicationStructure publicationStructure = publicationStructureTSVProcessor.parse(new File(fileURL.getPath()));
+        try {
+            String encoding = StringUtils.isEmpty(System.getProperty("file.encoding")) ? "UTF-8" : System.getProperty("file.encoding");
+            publicationStructure = publicationStructureTSVProcessor.parse(new File(URLDecoder.decode(fileURL.getPath(), encoding)));
+        } catch (UnsupportedEncodingException e) {
+            throw MetamacExceptionBuilder.builder().withCause(e).withExceptionItems(ServiceExceptionType.FILE_ENCODING_ERROR).withMessageParameters(fileURL.getPath()).build();
+        }
 
         // Save structure
         if (StringUtils.isNotBlank(publicationStructure.getPublicationTitle())) {

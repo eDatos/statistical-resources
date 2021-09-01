@@ -14,7 +14,6 @@ import org.apache.kafka.clients.admin.CreateTopicsOptions;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.errors.TopicExistsException;
-import org.apache.kafka.common.serialization.StringSerializer;
 import org.siemac.metamac.core.common.exception.MetamacException;
 import org.siemac.metamac.statistical.resources.core.conf.StatisticalResourcesConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,8 +21,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
-
-import io.confluent.kafka.serializers.KafkaAvroSerializer;
 
 @Component
 public class KafkaInitializeTopics implements ApplicationListener<ContextRefreshedEvent> {
@@ -73,9 +70,6 @@ public class KafkaInitializeTopics implements ApplicationListener<ContextRefresh
         Properties properties = new Properties();
 
         properties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, statisticalResourcesConfiguration.retrieveKafkaBootStrapServers());
-        properties.put(ProducerConfig.ACKS_CONFIG, "all");
-        properties.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
-        properties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, KafkaAvroSerializer.class);
 
         return properties;
     }
@@ -105,6 +99,8 @@ public class KafkaInitializeTopics implements ApplicationListener<ContextRefresh
             // Ignore if TopicExistsException, which may be valid if topic exists
             if (!(e.getCause() instanceof TopicExistsException)) {
                 throw new RuntimeException("Imposible to create/check Topic in kafka", e);
+            } else {
+                LOGGER.info("Kafka topics already exist, it's not necessary to create them. The application deploy continues in the right way...");
             }
         }
     }

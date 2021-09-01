@@ -21,6 +21,8 @@ import org.siemac.metamac.core.common.io.FileUtils;
 import org.siemac.metamac.statistical.resources.core.enume.domain.StatisticalResourceTypeEnum;
 import org.siemac.metamac.statistical.resources.core.enume.domain.TypeRelatedResourceEnum;
 import org.siemac.metamac.statistical.resources.core.error.ServiceExceptionType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 /**
@@ -49,6 +51,8 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class PublicationStructureTSVProcessor {
+
+    private static final Logger logger                      = LoggerFactory.getLogger(PublicationStructureTSVProcessor.class);
 
     private static final char   TSV_SEPARATOR               = '\t';
     private static final String RELATED_RESOURCE_SEPARATOR  = "\\.";
@@ -102,6 +106,7 @@ public class PublicationStructureTSVProcessor {
             InputStreamReader inputStreamReader = new InputStreamReader(inputStream, charset);
             return new BufferedReader(inputStreamReader);
         } catch (Exception e) {
+            logger.error("An error has occurred reading file " + file.getName(), e);
             throw MetamacExceptionBuilder.builder().withExceptionItems(ServiceExceptionType.PUBLICATION_VERSION_STRUCTURE_IMPORTATION_ERROR)
                     .withMessageParameters(file != null ? file.getName() : StringUtils.EMPTY).build();
         }
