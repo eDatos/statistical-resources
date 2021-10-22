@@ -170,14 +170,12 @@ public class DatasetVersionRepositoryImpl extends DatasetVersionRepositoryBase {
     public List<String> retrieveDimensionsIds(DatasetVersion datasetVersion) throws MetamacException {
         //@formatter:off
         Query query = getEntityManager().createQuery(
-                "select code.dsdComponentId " +
+                "select distinct code.dsdComponentId " +
                 "from   CodeDimension code " +
-                "where id in (" +
-                "   select  max(id) " +
-                "   from    CodeDimension c " +
-                "   where c.dsdComponentId = code.dsdComponentId " +
-                "       and datasetVersion = :datasetVersion) " +
-                "   order by code.id");
+                "where datasetVersion = :datasetVersion " +
+                "group by id " +
+                "having max(id) = id "
+                );
         //@formatter:on
         query.setParameter("datasetVersion", datasetVersion);
         return query.getResultList();
