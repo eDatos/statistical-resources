@@ -168,15 +168,28 @@ public class DatasetVersionRepositoryImpl extends DatasetVersionRepositoryBase {
     @SuppressWarnings("unchecked")
     @Override
     public List<String> retrieveDimensionsIds(DatasetVersion datasetVersion) throws MetamacException {
+        String queryString = null;
         //@formatter:off
-        Query query = getEntityManager().createQuery(
-                "select distinct code.dsdComponentId " +
-                "from   CodeDimension code " +
-                "where datasetVersion = :datasetVersion " +
-                "group by id " +
-                "having max(id) = id "
-                );
+        if (configuration.isDatabaseOracle()) {
+            queryString =  "select code.dsdComponentId " +
+            "from   CodeDimension code " +
+            "where id in (" +
+            "   select  max(id) " +
+            "   from    CodeDimension c " +
+            "   where c.dsdComponentId = code.dsdComponentId " +
+            "       and datasetVersion = :datasetVersion) " +
+            "   order by code.id";
+        } else {
+            queryString = "select distinct code.dsdComponentId " +
+            "from   CodeDimension code " +
+            "where datasetVersion = :datasetVersion " +
+            "group by id " +
+            "having max(id) = id " +
+            "order by id ";
+        }
         //@formatter:on
+
+        Query query = getEntityManager().createQuery(queryString);
         query.setParameter("datasetVersion", datasetVersion);
         return query.getResultList();
     }
