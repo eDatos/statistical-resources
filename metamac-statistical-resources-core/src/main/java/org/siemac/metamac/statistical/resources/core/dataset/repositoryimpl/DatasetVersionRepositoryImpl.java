@@ -175,13 +175,13 @@ public class DatasetVersionRepositoryImpl extends DatasetVersionRepositoryBase {
                 "join (" +
                 "    select DSD_COMPONENT_ID, max(id) max_id" +
                 "    from TB_CODE_DIMENSIONS c " +
-                "    where DATASET_VERSION_FK = :datasetVersion " +
+                "    where DATASET_VERSION_FK = :datasetVersionFk " +
                 "    group by DSD_COMPONENT_ID" +
                 ") code2 " +
                 "ON code.DSD_COMPONENT_ID = code2.DSD_COMPONENT_ID AND code.id = code2.max_id " +
                 "order by code.id ");
         //@formatter:on
-        query.setParameter("datasetVersion", datasetVersion);
+        query.setParameter("datasetVersionFk", datasetVersion.getId());
         return query.getResultList();
     }
 
