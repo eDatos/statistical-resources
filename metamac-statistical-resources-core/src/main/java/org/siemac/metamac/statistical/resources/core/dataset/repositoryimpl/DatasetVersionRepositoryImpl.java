@@ -168,18 +168,20 @@ public class DatasetVersionRepositoryImpl extends DatasetVersionRepositoryBase {
     @SuppressWarnings("unchecked")
     @Override
     public List<String> retrieveDimensionsIds(DatasetVersion datasetVersion) throws MetamacException {
-        //@formatter:off
-        Query query = getEntityManager().createQuery(
-                "select code.dsdComponentId " +
-                "from   CodeDimension code " +
-                "where id in (" +
-                "   select  max(id) " +
-                "   from    CodeDimension c " +
-                "   where c.dsdComponentId = code.dsdComponentId " +
-                "       and datasetVersion = :datasetVersion) " +
-                "   order by code.id");
+      //@formatter:off
+        Query query = getEntityManager().createNativeQuery(
+                "select code.DSD_COMPONENT_ID " +
+                "from TB_CODE_DIMENSIONS code " +
+                "join (" +
+                "    select DSD_COMPONENT_ID, max(id) max_id" +
+                "    from TB_CODE_DIMENSIONS c " +
+                "    where DATASET_VERSION_FK = :datasetVersionFk " +
+                "    group by DSD_COMPONENT_ID" +
+                ") code2 " +
+                "ON code.DSD_COMPONENT_ID = code2.DSD_COMPONENT_ID AND code.id = code2.max_id " +
+                "order by code.id ");
         //@formatter:on
-        query.setParameter("datasetVersion", datasetVersion);
+        query.setParameter("datasetVersionFk", datasetVersion.getId());
         return query.getResultList();
     }
 
@@ -312,7 +314,7 @@ public class DatasetVersionRepositoryImpl extends DatasetVersionRepositoryBase {
             "    AND     stat_dataset.last_version = " + getBooleanValueForDatabase(true) +
             "    AND     elem.publication_version_all_fk = pub.ID " +
             "    AND     stat.title_fk = loc.international_string_fk " +
-            "    AND     (stat.last_version = " + getBooleanValueForDatabase(true) + 
+            "    AND     (stat.last_version = " + getBooleanValueForDatabase(true) +
             "           OR "+isLastPublishedVersionConditions+") " +
             "    AND     operation.ID = stat.stat_operation_fk " +
             "    AND     maintainer.id = stat.maintainer_fk");
